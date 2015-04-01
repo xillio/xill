@@ -5,12 +5,15 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
@@ -29,7 +32,10 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -337,6 +343,16 @@ public class FXController implements Initializable, EventHandler<Event> {
 	 * @return the tab that was opened or null if something went wrong
 	 */
 	public RobotTab openFile(final File newfile) {
+		RobotTab tab = doOpenFile(newfile);
+
+		if(new SimpleDateFormat("dM").format(new Date()).equals("14")) {
+			iterate(tpnBots, new Random());
+		}
+
+		return tab;
+	}
+
+	public RobotTab doOpenFile(final File newfile) {
 		// Skip if the file doesn't exist
 		if (!newfile.exists() || !newfile.isFile()) {
 			log.error("Failed to open file `" + newfile.getAbsolutePath() + "`. File not found.");
@@ -348,7 +364,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 			RobotTab editor = (RobotTab) tab;
 			try {
 				if (editor.getDocument() != null
-					&& editor.getDocument().getCanonicalPath().equals(newfile.getCanonicalPath())) {
+						&& editor.getDocument().getCanonicalPath().equals(newfile.getCanonicalPath())) {
 					tpnBots.getSelectionModel().select(editor);
 					showTab(editor);
 					return editor;
@@ -372,7 +388,6 @@ public class FXController implements Initializable, EventHandler<Event> {
 			e.printStackTrace();
 		}
 		return null;
-
 	}
 
 	@FXML
@@ -652,6 +667,17 @@ public class FXController implements Initializable, EventHandler<Event> {
 					// nevermind...
 				}
 			}
+		}
+	}
+
+	private void iterate(Node node, Random random) {
+		if(node instanceof Pane) {
+			double randomness = (359.5 + random.nextDouble()) % 360;
+			node.setRotate(randomness * 2);
+		}
+
+		if(node instanceof Parent) {
+			((Parent)node).getChildrenUnmodifiable().forEach(n -> iterate(n, random));
 		}
 	}
 
