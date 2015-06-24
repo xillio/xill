@@ -87,6 +87,7 @@ dependencies {
 	compile project(':api')
 	plugin project(':processor')
 	plugin project(':ide')
+	plugin project(':plugin-example')
 }
 
 /*
@@ -95,15 +96,17 @@ dependencies {
 apply from: 'http://dl.bintray.com/content/shemnon/javafx-gradle/8.1.1/javafx.plugin'
 
 jfxDeploy {
-	
+	inputFiles = files(libsDir)
+}
+
+jar{
 	//We need to do this so we can have the plugins folder in the package too
 	doFirst {
 			copy {
 					from configurations.plugin
-					into new File(libsDir,'plugins')
+					into libsDir
 			}
 	}
-	inputFiles = files(libsDir)
 }
 
 javafx {
@@ -149,10 +152,6 @@ task cleanRuntime {
 }
 
 clean {
-	dependsOn cleanRuntime
-}
-
-cleanEclipse {
 	dependsOn cleanRuntime
 }
 

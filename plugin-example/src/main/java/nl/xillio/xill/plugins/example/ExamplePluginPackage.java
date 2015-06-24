@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.elasticsearch;
+package nl.xillio.xill.plugins.example;
 
 import nl.xillio.xill.api.PluginPackage;
 
