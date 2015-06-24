@@ -1,0 +1,42 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="getsheet">
+<h1>getsheet</h1>
+<p><strong>getsheet (</strong><em>workbook</em> <strong>workbook,</strong> <em>&lt;string,number&gt;</em> <strong>worksheet )</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Retrieves the indicated <code class="docutils literal"><span class="pre">worksheet</span></code> from the <code class="docutils literal"><span class="pre">workbook</span></code>. The result also provides shorthand information about the worksheet in the form of row count and column count.</p>
+</div>
+<div class="section" id="example">
+<h2>Example</h2>
+<ul>
+<li><p class="first">Fetch row and column count in a spreadsheet:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">workbook</span> <span class="o">=</span> <span class="n">openexcel</span><span class="p">(</span><span class="s">&quot;C:/projects/someproject/mapping/mapping.xls&quot;</span><span class="p">);</span>
+<span class="n">sheet</span> <span class="o">=</span> <span class="n">getsheet</span><span class="p">(</span><span class="n">workbook</span><span class="p">,</span> <span class="s">&quot;Mapping&quot;</span><span class="p">);</span>
+<span class="n">numberRows</span> <span class="o">=</span> <span class="n">sheet</span><span class="p">[</span><span class="s">&quot;rows&quot;</span><span class="p">];</span>
+<span class="n">numberColumns</span> <span class="o">=</span> <span class="n">sheet</span><span class="p">[</span><span class="s">&quot;columns&quot;</span><span class="p">];</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_excel.html"><em>Excel</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

@@ -1,0 +1,34 @@
+-------------------
+Elasticsearch
+-------------------
+
+Functions in this category perform operations upon a running external Elasticsearch instance.
+
+
+Functions
+------------------------
+
+..  toctree::
+    :maxdepth: 1
+    :titlesonly:
+    
+    es_aggregate <es_aggregate>
+    es_connect <es_connect>
+    es_delete <es_delete>
+    es_filteragg <es_filteragg>
+    es_get <es_get>
+    es_hasfieldfilter <es_hasfieldfilter>
+    es_indexexists <es_indexexists>
+    es_put <es_put>
+    es_rangefilter <es_rangefilter>
+    es_regexfilter <es_regexfilter>
+    es_search <es_search>
+    es_sort <es_sort>
+    es_statsagg <es_statsagg>
+    es_termfilter <es_termfilter>
+    es_termsagg <es_termsagg>
+
+All tags
+------------------------
+
+:doc:`_tag_browser`, :doc:`_tag_conversion`, :doc:`_tag_database`, :doc:`_tag_date`, :doc:`_tag_elasticsearch`, :doc:`_tag_encoding`, :doc:`_tag_excel`, :doc:`_tag_file`, :doc:`_tag_language`, :doc:`_tag_list`, :doc:`_tag_mongodb`, :doc:`_tag_other`, :doc:`_tag_regex`, :doc:`_tag_text`, :doc:`_tag_xmlhtml`

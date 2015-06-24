@@ -1,0 +1,57 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="random">
+<h1>random</h1>
+<p><strong>random (</strong><em>&lt;void,number,list&gt;</em> <strong>value*)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Returns a randomized value based on the optional parameter <code class="docutils literal"><span class="pre">value</span></code>. If an integer argument N is provided the return value is a random integer between 0 and N. If a list argument L is provided it is a random entry from the list. If no parameter is provided, a random floating point number between 0 and 1 will be generated.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">Roll a 6-sided die three times and print the results:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">log</span><span class="p">(</span><span class="n">random</span> <span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">log</span><span class="p">(</span><span class="n">random</span> <span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">log</span><span class="p">(</span><span class="n">random</span> <span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Note: the + 1 is needed, because the result of random is 0 to 6, but not including 6.</p>
+</li>
+<li><p class="first">Determine a random working day and print it:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nb">list</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;monday&quot;</span><span class="p">,</span> <span class="s">&quot;tuesday&quot;</span><span class="p">,</span> <span class="s">&quot;wednesday&quot;</span><span class="p">,</span> <span class="s">&quot;thursday&quot;</span><span class="p">,</span> <span class="s">&quot;friday&quot;</span><span class="p">};</span>
+<span class="n">log</span> <span class="p">(</span><span class="n">random</span> <span class="p">(</span><span class="nb">list</span><span class="p">));</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Usage without parameter:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">log</span> <span class="p">(</span><span class="n">random</span> <span class="p">());</span>
+</pre></div>
+</div>
+<p>prints a number like:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="mf">0.11632623660157837</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_other.html"><em>Other</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

@@ -1,0 +1,84 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="log">
+<h1>log</h1>
+<p><strong>log (</strong><em>any</em> <strong>text*,</strong> <em>string</em> <strong>loglevel*)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Prints the contents of variable <code class="docutils literal"><span class="pre">text</span></code> to the log (currently always the console). <code class="docutils literal"><span class="pre">text</span></code> can be of any type, depending on the type the generated output will vary. Currently all logs will be preceded by the prefix <code class="docutils literal"><span class="pre">&quot;INFO:</span> <span class="pre">&quot;</span></code>. Trying to log a <code class="docutils literal"><span class="pre">null</span></code> value has no effect.
+The optional parameter <code class="docutils literal"><span class="pre">loglevel</span></code> may contain one of the following values: debug, info, warning, error. By default logging is sent to info.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><div class="first highlight-python"><div class="highlight"><pre><span class="n">log</span> <span class="p">(</span><span class="s">&quot;Starting...&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>will print:</p>
+<div class="highlight-python"><div class="highlight"><pre>INFO: Starting...
+</pre></div>
+</div>
+</li>
+<li><div class="first highlight-python"><div class="highlight"><pre><span class="n">number</span> <span class="o">=</span> <span class="mi">150</span> <span class="o">/</span> <span class="mi">3</span><span class="p">;</span>
+<span class="n">log</span> <span class="p">(</span><span class="n">number</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>will print:</p>
+<div class="highlight-python"><div class="highlight"><pre>INFO: 50
+</pre></div>
+</div>
+</li>
+<li><div class="first highlight-python"><div class="highlight"><pre><span class="n">boolean</span> <span class="o">=</span> <span class="n">true</span><span class="p">;</span>
+<span class="n">log</span> <span class="p">(</span><span class="n">boolean</span><span class="p">,</span> <span class="s">&quot;warning&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>will print:</p>
+<div class="highlight-python"><div class="highlight"><pre>WARN: true
+</pre></div>
+</div>
+</li>
+<li><div class="first highlight-python"><div class="highlight"><pre>list = {id = 1, name = &quot;Thomas&quot;, age = 12};
+log (list, &quot;foo&quot;);
+</pre></div>
+</div>
+<p>will print:</p>
+<div class="highlight-python"><div class="highlight"><pre>INFO : {
+  &quot;age&quot;: 12,
+  &quot;id&quot;: 1,
+  &quot;name&quot;: &quot;Thomas&quot;
+}
+</pre></div>
+</div>
+</li>
+<li><div class="first highlight-python"><div class="highlight"><pre><span class="n">page</span> <span class="o">=</span> <span class="n">loadpage</span> <span class="p">(</span><span class="s">&quot;http://www.xillio.com/&quot;</span><span class="p">);</span>
+<span class="n">node</span> <span class="o">=</span> <span class="n">xpath</span> <span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s">&quot;//input[@name=&#39;q&#39;]&quot;</span><span class="p">);</span>
+<span class="n">log</span> <span class="p">(</span><span class="n">node</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>will print:</p>
+<div class="highlight-python"><div class="highlight"><pre>INFO : HtmlTextInput[&lt;input type=&quot;text&quot; name=&quot;q&quot;&gt;]
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_language.html"><em>Language</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

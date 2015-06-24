@@ -1,0 +1,270 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="datetostring">
+<h1>datetostring</h1>
+<p><strong>datetostring (</strong><em>date</em> <strong>date,</strong> <em>string</em> <strong>format,</strong> <em>&lt;string,void&gt;</em> <strong>timezone)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Returns the date as a string formatted as given in <code class="docutils literal"><span class="pre">format</span></code>, with respect to the timezone.</p>
+<p>See also <a class="reference internal" href="date.html"><em>date</em></a></p>
+</div>
+<div class="section" id="details">
+<h2>Details</h2>
+<p><code class="docutils literal"><span class="pre">timezone</span></code> can be either an abbreviation such as &#8220;PST&#8221;, a full name such as &#8220;America/Los_Angeles&#8221;, or a custom zone such as &#8220;GMT-8:00&#8221;.
+If the timezone cannot be understood, &#8220;GMT&#8221; is used.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="18%" />
+<col width="10%" />
+<col width="63%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Symbol</th>
+<th class="head">Meaning</th>
+<th class="head">Type</th>
+<th class="head">Example</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>G</td>
+<td>Era</td>
+<td>Text</td>
+<td>&#8220;GG&#8221; -&gt; &#8220;AD&#8221;</td>
+</tr>
+<tr class="row-odd"><td>y</td>
+<td>Year</td>
+<td>Number</td>
+<td><div class="first last line-block">
+<div class="line">&#8220;yy&#8221; -&gt; &#8220;03&#8221;</div>
+<div class="line">&#8220;yyyy&#8221; -&gt; &#8220;2003&#8221;</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>M</td>
+<td>Month</td>
+<td>Text
+or
+Number</td>
+<td><div class="first last line-block">
+<div class="line">&#8220;M&#8221; -&gt; &#8220;7&#8221;</div>
+<div class="line">&#8220;M&#8221; -&gt; &#8220;12&#8221;</div>
+<div class="line">&#8220;MM&#8221; -&gt; &#8220;07&#8221;</div>
+<div class="line">&#8220;MMM&#8221; -&gt; &#8220;Jul&#8221;</div>
+<div class="line">&#8220;MMMM&#8221; -&gt; &#8220;December&#8221;</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>d</td>
+<td>Day
+in
+month</td>
+<td>Number</td>
+<td><div class="first last line-block">
+<div class="line">&#8220;d&#8221; -&gt; &#8220;3&#8221;</div>
+<div class="line">&#8220;dd&#8221; -&gt; &#8220;03&#8221;</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>h</td>
+<td>Hour
+(1-12,
+AM/PM)</td>
+<td>Number</td>
+<td><div class="first last line-block">
+<div class="line">&#8220;h&#8221; -&gt; &#8220;3&#8221;</div>
+<div class="line">&#8220;hh&#8221; -&gt; &#8220;03&#8221;</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>H</td>
+<td>Hour
+(0-23)</td>
+<td>Number</td>
+<td><div class="first last line-block">
+<div class="line">&#8220;H&#8221; -&gt; &#8220;15&#8221;</div>
+<div class="line">&#8220;HH&#8221; -&gt; &#8220;15&#8221;</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>k</td>
+<td>Hour
+(1-24)</td>
+<td>Number</td>
+<td><div class="first last line-block">
+<div class="line">&#8220;k&#8221; -&gt; &#8220;3&#8221;</div>
+<div class="line">&#8220;kk&#8221; -&gt; &#8220;03&#8221;</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>K</td>
+<td>Hour
+(0-11
+AM/PM)</td>
+<td>Number</td>
+<td><div class="first last line-block">
+<div class="line-block">
+<div class="line">&#8220;K&#8221; -&gt; &#8220;15&#8221;</div>
+</div>
+<div class="line">&#8220;KK&#8221; -&gt; &#8220;15&#8221;</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>m</td>
+<td>Minute</td>
+<td>Number</td>
+<td><div class="first last line-block">
+<div class="line">&#8220;m&#8221; -&gt; &#8220;7&#8221;</div>
+<div class="line">&#8220;m&#8221; -&gt; &#8220;15&#8221;</div>
+<div class="line">&#8220;mm&#8221; -&gt; &#8220;15&#8221;</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>s</td>
+<td>Second</td>
+<td>Number</td>
+<td><div class="first last line-block">
+<div class="line">&#8220;s&#8221; -&gt; &#8220;15&#8221;</div>
+<div class="line">&#8220;ss&#8221; -&gt; &#8220;15&#8221;</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>S</td>
+<td>Millisecond
+(0-999)</td>
+<td>Number</td>
+<td>&#8220;SSS&#8221; -&gt; &#8220;007&#8221;</td>
+</tr>
+<tr class="row-odd"><td>E</td>
+<td>Day in week</td>
+<td>Text</td>
+<td><div class="first last line-block">
+<div class="line">&#8220;EEE&#8221; -&gt; &#8220;Tue&#8221;</div>
+<div class="line">&#8220;EEEE&#8221; -&gt; &#8220;Tuesday&#8221;</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>D</td>
+<td>Day in year
+(1-365
+or 1-366)</td>
+<td>Number</td>
+<td><div class="first last line-block">
+<div class="line">&#8220;D&#8221; -&gt; &#8220;65&#8221;</div>
+<div class="line">&#8220;DDD&#8221; -&gt; &#8220;065&#8221;</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>F</td>
+<td>Day of
+week in
+month (1-5)</td>
+<td>Number</td>
+<td><div class="first last line-block">
+<div class="line">&#8220;F&#8221; -&gt; &#8220;1&#8221;</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>w</td>
+<td>Week in
+year (1-53)</td>
+<td>Number</td>
+<td><div class="first last line-block">
+<div class="line">&#8220;w&#8221; -&gt; &#8220;7&#8221;</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>W</td>
+<td>Week in
+month (1-5)</td>
+<td>Number</td>
+<td><div class="first last line-block">
+<div class="line">&#8220;W&#8221; -&gt; &#8220;3&#8221;</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>a</td>
+<td>AM/PM</td>
+<td>Text</td>
+<td><div class="first last line-block">
+<div class="line">&#8220;a&#8221; -&gt; &#8220;AM&#8221;</div>
+<div class="line">&#8220;aa&#8221; -&gt; &#8220;AM&#8221;</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>z</td>
+<td>Time zone</td>
+<td>Text</td>
+<td><div class="first last line-block">
+<div class="line">&#8220;z&#8221; -&gt; &#8220;EST&#8221;</div>
+<div class="line">&#8220;zzz&#8221; -&gt; &#8220;EST&#8221;</div>
+<div class="line">&#8220;zzzz&#8221; -&gt; &#8220;Eastern Standard Time&#8221;</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>Z</td>
+<td>Time zone</td>
+<td>RFC822</td>
+<td>&#8220;Z&#8221; -&gt; &#8220;-0800&#8221;</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">'</span></code></td>
+<td>Escape for
+for text
+Delimiter</td>
+<td>&nbsp;</td>
+<td><div class="first last line-block">
+<div class="line">&#8220;<code class="docutils literal"><span class="pre">'</span></code>hour<code class="docutils literal"><span class="pre">'</span></code>h&#8221; -&gt; &#8220;hour 9&#8221;</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">''</span></code></td>
+<td>Single
+quote
+Literal</td>
+<td>&nbsp;</td>
+<td><div class="first last line-block">
+<div class="line">&#8220;ss<code class="docutils literal"><span class="pre">''</span></code>SSS&#8221; -&gt; &#8220;45<code class="docutils literal"><span class="pre">'</span></code>876&#8221;</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">Executing:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">log</span><span class="p">(</span><span class="n">datetostring</span><span class="p">(</span><span class="n">date</span><span class="p">(),</span> <span class="s">&quot;EEEE dd MMMM Y, hh:mm&quot;</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>prints:</p>
+<div class="highlight-python"><div class="highlight"><pre>vrijdag 25 oktober 2013, 09:39
+</pre></div>
+</div>
+<p>Getting the time in Los Angeles:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">timeLA</span> <span class="o">=</span> <span class="n">datetostring</span><span class="p">(</span><span class="n">date</span><span class="p">(),</span> <span class="s">&quot;hh:mm&quot;</span><span class="p">,</span> <span class="s">&quot;America/Los_Angeles&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_text.html"><em>Text</em></a>, <a class="reference internal" href="_tag_date.html"><em>Date functions</em></a>, <a class="reference internal" href="_tag_conversion.html"><em>Conversion</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

@@ -1,0 +1,25 @@
+-----------
+Excel
+-----------
+
+Functions in this category handle the reading and writing of Microsoft Excel files in both legacy XLS and modern XLSX formats.
+
+
+Functions
+------------------------
+
+..  toctree::
+    :maxdepth: 1
+    :titlesonly:
+
+    createexcel <createexcel>
+    createsheet <createsheet>
+    getcell <getcell>
+    getsheet <getsheet>
+    setcell <setcell>
+    openexcel <openexcel>
+
+All tags
+------------------------
+
+:doc:`_tag_browser`, :doc:`_tag_conversion`, :doc:`_tag_database`, :doc:`_tag_date`, :doc:`_tag_elasticsearch`, :doc:`_tag_encoding`, :doc:`_tag_excel`, :doc:`_tag_file`, :doc:`_tag_language`, :doc:`_tag_list`, :doc:`_tag_mongodb`, :doc:`_tag_other`, :doc:`_tag_regex`, :doc:`_tag_text`, :doc:`_tag_xmlhtml`

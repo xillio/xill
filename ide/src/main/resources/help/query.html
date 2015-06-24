@@ -1,0 +1,59 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="query">
+<h1>query</h1>
+<p><strong>query (</strong><em>string</em> <strong>query,</strong> <em>number</em> <strong>timeout*,</strong> <em>&lt;string,void&gt;</em> <strong>connectionstring*)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Executes the string <code class="docutils literal"><span class="pre">query</span></code> as an SQL-statement on the active database. Returns an iterable result if the query yields results or <code class="docutils literal"><span class="pre">null</span></code> if it does not. Returns the number of updated rows in case of an INSERT or UPDATE. Queries will automatically time-out after 30 seconds, you can optionally specify a different <code class="docutils literal"><span class="pre">timeout</span></code> in seconds. A timeout of 0 indicates that you do not want the query to time out. The optional parameter <code class="docutils literal"><span class="pre">connectionstring</span></code> is a string identifiying the database connection as returned by the <a class="reference internal" href="database.html"><em>database</em></a> function. If no connection is given then the last used database connection will be used.</p>
+<p>See also: <a class="reference internal" href="database.html"><em>database</em></a>.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">Loop through unvisited pages (assuming a certain database layout and a bot <code class="docutils literal"><span class="pre">settings.sbot</span></code> are present):</p>
+<div class="highlight-python"><div class="highlight"><pre>settings = global(callbot(&quot;bots/settings.sbot&quot;));
+database(settings.db_host, settings.db_port, settings.db_name, settings.db_user, settings.db_pass);
+result = query(&quot;SELECT COUNT(*) FROM pages WHERE visited = &#39;n&#39;&quot;);
+foreach(_, r, result) {
+    pagecount = r;
+}
+</pre></div>
+</div>
+</li>
+<li><p class="first">Store a log entry (assuming a certain database layout is present):</p>
+<div class="highlight-python"><div class="highlight"><pre>writeLog = routine(pageid, subject, entry){
+    if (!debug){
+        query(&quot;INSERT INTO transformation_log VALUES (&#39;&quot;+pageid+&quot;&#39;,&#39;&quot;+subject+&quot;&#39;,&#39;&quot;+entry+&quot;&#39;,CURRENT_TIMESTAMP)&quot;);
+    }
+    if (subject != &quot;&quot;){
+        log(&quot;\t&quot;+subject + &quot; - &quot; + entry);
+    }else{
+        log(&quot;\t&quot;+entry);
+    }
+}
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_database.html"><em>Database</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

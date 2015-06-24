@@ -1,0 +1,54 @@
+------------
+listtojson
+------------
+
+**listtojson (**\ *<void,list>* **value)**
+
+Description
+-----------
+
+A shorthand function for outputting a list formatted as a string of JSON. 
+
+See also :doc:`listtostring`, :doc:`jsontolist`
+
+Examples
+--------
+
+-
+    
+    Executing:
+    
+    ::
+    
+        list = {
+            "a",
+            "b",
+            cd = "ef",
+            g = {
+                h = "i",
+                j = "k"
+            },
+            "l, m" = "no"
+        };
+        log(listtojson(list));
+
+    will print:
+    
+    ::
+    
+        {
+            "0": "a",
+            "1": "b",
+            "cd": "ef",
+            "g": {
+              "h": "i",
+              "j": "k"
+            },
+            "l, m": "no"
+        }
+
+
+Tags
+----
+
+:doc:`_tag_text`, :doc:`_tag_list`, :doc:`_tag_conversion`

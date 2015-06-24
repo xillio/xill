@@ -1,0 +1,39 @@
+--------
+filesize
+--------
+
+**filesize (**\ *string* **uri)**
+
+Description
+-----------
+
+Returns the size of the file ``uri`` on the local computer. Returns 0 if the file does not exist or is a directory.
+
+See also :doc:`fileinfo`
+
+Example
+-------
+
+-
+
+    The following logs the size of the file ``download.png`` if it exists and is not a directory:
+    
+    ::
+    
+        downloadlocation = "C:/tmp/download.png";
+        size = 0;
+
+        if (fileexists (downloadlocation)) {
+            size = filesize(downloadlocation);
+            if (size == 0) {
+                log (downloadlocation + " is a directory.");
+            }
+        } else {
+            log ("file not found: " + downloadlocation);
+        }
+        log (size);        
+
+Tags
+----
+
+:doc:`_tag_file`

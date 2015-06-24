@@ -1,0 +1,61 @@
+-----------
+datediff
+-----------
+
+**datediff (**\ *date* **date1,** *date* **date2,** *boolean* **absolute*)**
+
+Description
+-----------
+
+Returns the absolute difference between date 1 and date 2. Optionally ``absolute`` can be set to false to return the relative difference.
+
+Examples
+--------
+
+-     
+
+    Executing:
+    
+    ::
+    
+        log(datediff(date(1382599121764), date()));
+    
+    prints:
+    
+    ::
+    
+        {
+          "day": 1,
+          "hour": 0,
+          "millisecond": 453,
+          "minute": 10,
+          "second": 49,
+          "timestamp": 87049453
+        }
+        
+-     
+
+    Executing:
+    
+    ::
+    
+        log(datediff(date(1382599121764), date(), false));
+    
+    prints:
+    
+    ::
+    
+        {
+          "day": -1,
+          "hour": 0,
+          "millisecond": -456,
+          "minute": -10,
+          "second": -49,
+          "timestamp": -87049456
+        }
+        
+        
+Tags
+----
+
+:doc:`_tag_date`

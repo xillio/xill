@@ -1,0 +1,761 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="curl">
+<h1>cURL</h1>
+<p><strong>curl (</strong><em>&lt;string&gt;</em> <strong>url,</strong> <em>list</em> <strong>options*)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Runs cURL to peform the specified actions on the provided url. It&#8217;s typically used to perform REST PUT/POST/GET actions and authenticate against more complex proxies (e.g. NTLMv4). This function returns the response as a string.</p>
+<p><strong>NOTE</strong>: On Mac and Linux systems you must download and install curl from <a class="reference external" href="http://curl.haxx.se/">http://curl.haxx.se/</a> or using your preferred package manager, then make sure curl is available in your path. See the INSTALLATION notes for more information.</p>
+<p>See also <a class="reference internal" href="_tag_browser.html"><em>Browser</em></a></p>
+</div>
+<div class="section" id="details">
+<h2>Details</h2>
+<p>The following options are available (H) means HTTP/HTTPS only  (F) means FTP only. Full documentation can be found at: <a class="reference external" href="http://curl.haxx.se/docs/manpage.html">http://curl.haxx.se/docs/manpage.html</a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%" />
+<col width="8%" />
+<col width="78%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Option</th>
+<th class="head">Value</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>anyauth</td>
+<td>&nbsp;</td>
+<td>Pick &#8220;any&#8221; authentication method (H)</td>
+</tr>
+<tr class="row-odd"><td>append</td>
+<td>&nbsp;</td>
+<td>Append to target file when uploading (F/SFTP)</td>
+</tr>
+<tr class="row-even"><td>basic</td>
+<td>&nbsp;</td>
+<td>Use HTTP Basic Authentication (H)</td>
+</tr>
+<tr class="row-odd"><td>cacert</td>
+<td>FILE</td>
+<td>CA certificate to verify peer against (SSL)</td>
+</tr>
+<tr class="row-even"><td>capath</td>
+<td>DIR</td>
+<td>CA directory to verify peer against (SSL)</td>
+</tr>
+<tr class="row-odd"><td>cert</td>
+<td>CERT[:PASSWD]</td>
+<td>Client certificate file and password (SSL)</td>
+</tr>
+<tr class="row-even"><td>ciphers</td>
+<td>LIST</td>
+<td>SSL ciphers to use (SSL)</td>
+</tr>
+<tr class="row-odd"><td>cert-type</td>
+<td>TYPE</td>
+<td>Certificate file type (DER/PEM/ENG) (SSL)</td>
+</tr>
+<tr class="row-even"><td>compressed</td>
+<td>&nbsp;</td>
+<td>Request compressed response (using deflate or gzip)</td>
+</tr>
+<tr class="row-odd"><td>config FILE</td>
+<td>&nbsp;</td>
+<td>Specify which config file to read</td>
+</tr>
+<tr class="row-even"><td>connect-timeout</td>
+<td>SECONDS</td>
+<td>Maximum time allowed for connection</td>
+</tr>
+<tr class="row-odd"><td>continue-at</td>
+<td>OFFSET</td>
+<td>Resumed transfer offset</td>
+</tr>
+<tr class="row-even"><td>cookie</td>
+<td>STRING/FILE</td>
+<td>String or file to read cookies from (H)</td>
+</tr>
+<tr class="row-odd"><td>cookie-jar</td>
+<td>FILE</td>
+<td>Write cookies to this file after operation (H)</td>
+</tr>
+<tr class="row-even"><td>create-dirs</td>
+<td>&nbsp;</td>
+<td>Create necessary local directory hierarchy</td>
+</tr>
+<tr class="row-odd"><td>crlf</td>
+<td>&nbsp;</td>
+<td>Convert LF to CRLF in upload</td>
+</tr>
+<tr class="row-even"><td>crlfile</td>
+<td>FILE</td>
+<td>Get a CRL list in PEM format from the given file</td>
+</tr>
+<tr class="row-odd"><td>data</td>
+<td>DATA</td>
+<td>HTTP POST data (H)</td>
+</tr>
+<tr class="row-even"><td>data-ascii</td>
+<td>DATA</td>
+<td>HTTP POST ASCII data (H)</td>
+</tr>
+<tr class="row-odd"><td>data-binary</td>
+<td>DATA</td>
+<td>HTTP POST binary data (H)</td>
+</tr>
+<tr class="row-even"><td>data-urlencode</td>
+<td>DATA</td>
+<td>HTTP POST data url encoded (H)</td>
+</tr>
+<tr class="row-odd"><td>delegation</td>
+<td>STRING</td>
+<td>GSS-API delegation permission</td>
+</tr>
+<tr class="row-even"><td>digest</td>
+<td>&nbsp;</td>
+<td>Use HTTP Digest Authentication (H)</td>
+</tr>
+<tr class="row-odd"><td>disable-eprt</td>
+<td>&nbsp;</td>
+<td>Inhibit using EPRT or LPRT (F)</td>
+</tr>
+<tr class="row-even"><td>disable-epsv</td>
+<td>&nbsp;</td>
+<td>Inhibit using EPSV (F)</td>
+</tr>
+<tr class="row-odd"><td>dns-servers</td>
+<td>&nbsp;</td>
+<td>DNS server addrs to use: 1.1.1.1;2.2.2.2</td>
+</tr>
+<tr class="row-even"><td>dns-interface</td>
+<td>&nbsp;</td>
+<td>Interface to use for DNS requests</td>
+</tr>
+<tr class="row-odd"><td>dns-ipv4-addr</td>
+<td>&nbsp;</td>
+<td>IPv4 address to use for DNS requests  dot notation</td>
+</tr>
+<tr class="row-even"><td>dns-ipv6-addr</td>
+<td>&nbsp;</td>
+<td>IPv6 address to use for DNS requests  dot notation</td>
+</tr>
+<tr class="row-odd"><td>dump-header</td>
+<td>FILE</td>
+<td>Write the headers to this file</td>
+</tr>
+<tr class="row-even"><td>egd-file</td>
+<td>FILE</td>
+<td>EGD socket path for random data (SSL)</td>
+</tr>
+<tr class="row-odd"><td>engine</td>
+<td>ENGINE</td>
+<td>Crypto engine (SSL). &#8220;&#8211;engine list&#8221; for list</td>
+</tr>
+<tr class="row-even"><td>fail</td>
+<td>&nbsp;</td>
+<td>Fail silently (no output at all) on HTTP errors (H)</td>
+</tr>
+<tr class="row-odd"><td>form</td>
+<td>CONTENT</td>
+<td>Specify HTTP multipart POST data (H)</td>
+</tr>
+<tr class="row-even"><td>form-string</td>
+<td>STRING</td>
+<td>Specify HTTP multipart POST data (H)</td>
+</tr>
+<tr class="row-odd"><td>ftp-account</td>
+<td>DATA</td>
+<td>Account data string (F)</td>
+</tr>
+<tr class="row-even"><td>ftp-alternative-to-user</td>
+<td>COMMAND</td>
+<td>String to replace &#8220;USER [name]&#8221; (F)</td>
+</tr>
+<tr class="row-odd"><td>ftp-create-dirs</td>
+<td>&nbsp;</td>
+<td>Create the remote dirs if not present (F)</td>
+</tr>
+<tr class="row-even"><td>ftp-method</td>
+<td>METHOD</td>
+<td>[MULTICWD/NOCWD/SINGLECWD] Control CWD usage (F)</td>
+</tr>
+<tr class="row-odd"><td>ftp-pasv</td>
+<td>&nbsp;</td>
+<td>Use PASV/EPSV instead of PORT (F)</td>
+</tr>
+<tr class="row-even"><td>ftp-port</td>
+<td>ADR</td>
+<td>Use PORT with given address instead of PASV (F)</td>
+</tr>
+<tr class="row-odd"><td>ftp-skip-pasv-ip</td>
+<td>&nbsp;</td>
+<td>Skip the IP address for PASV (F)</td>
+</tr>
+<tr class="row-even"><td>ftp-pret</td>
+<td>&nbsp;</td>
+<td>Send PRET before PASV (for drftpd) (F)</td>
+</tr>
+<tr class="row-odd"><td>ftp-ssl-ccc</td>
+<td>&nbsp;</td>
+<td>Send CCC after authenticating (F)</td>
+</tr>
+<tr class="row-even"><td>ftp-ssl-ccc-mode</td>
+<td>MODE</td>
+<td>[ACTIVE/PASSIVE] Set CCC mode (F)</td>
+</tr>
+<tr class="row-odd"><td>ftp-ssl-control</td>
+<td>&nbsp;</td>
+<td>Require SSL/TLS for ftp login  clear for transfer (F)</td>
+</tr>
+<tr class="row-even"><td>get</td>
+<td>&nbsp;</td>
+<td>Send the -d data with a HTTP GET (H)</td>
+</tr>
+<tr class="row-odd"><td>globoff</td>
+<td>&nbsp;</td>
+<td>Disable URL sequences and ranges using {} and []</td>
+</tr>
+<tr class="row-even"><td>header</td>
+<td>LINE</td>
+<td>Custom header to pass to server (H)</td>
+</tr>
+<tr class="row-odd"><td>head</td>
+<td>&nbsp;</td>
+<td>Show document info only</td>
+</tr>
+<tr class="row-even"><td>help</td>
+<td>&nbsp;</td>
+<td>This help text</td>
+</tr>
+<tr class="row-odd"><td>hostpubmd5</td>
+<td>MD5</td>
+<td>Hex encoded MD5 string of the host public key. (SSH)</td>
+</tr>
+<tr class="row-even"><td>http1.0</td>
+<td>&nbsp;</td>
+<td>Use HTTP 1.0 (H)</td>
+</tr>
+<tr class="row-odd"><td>http1.1</td>
+<td>&nbsp;</td>
+<td>Use HTTP 1.1 (H)</td>
+</tr>
+<tr class="row-even"><td>http2.0</td>
+<td>&nbsp;</td>
+<td>Use HTTP 2.0 (H)</td>
+</tr>
+<tr class="row-odd"><td>ignore-content-length</td>
+<td>&nbsp;</td>
+<td>Ignore the HTTP Content-Length header</td>
+</tr>
+<tr class="row-even"><td>include</td>
+<td>&nbsp;</td>
+<td>Include protocol headers in the output (H/F)</td>
+</tr>
+<tr class="row-odd"><td>insecure</td>
+<td>&nbsp;</td>
+<td>Allow connections to SSL sites without certs (H)</td>
+</tr>
+<tr class="row-even"><td>interface</td>
+<td>INTERFACE</td>
+<td>Specify network interface/address to use</td>
+</tr>
+<tr class="row-odd"><td>ipv4</td>
+<td>&nbsp;</td>
+<td>Resolve name to IPv4 address</td>
+</tr>
+<tr class="row-even"><td>ipv6</td>
+<td>&nbsp;</td>
+<td>Resolve name to IPv6 address</td>
+</tr>
+<tr class="row-odd"><td>junk-session-cookies</td>
+<td>&nbsp;</td>
+<td>Ignore session cookies read from file (H)</td>
+</tr>
+<tr class="row-even"><td>keepalive-time</td>
+<td>SECONDS</td>
+<td>Interval between keepalive probes</td>
+</tr>
+<tr class="row-odd"><td>key</td>
+<td>KEY</td>
+<td>Private key file name (SSL/SSH)</td>
+</tr>
+<tr class="row-even"><td>key-type</td>
+<td>TYPE</td>
+<td>Private key file type (DER/PEM/ENG) (SSL)</td>
+</tr>
+<tr class="row-odd"><td>krb</td>
+<td>LEVEL</td>
+<td>Enable Kerberos with specified security level (F)</td>
+</tr>
+<tr class="row-even"><td>libcurl</td>
+<td>FILE</td>
+<td>Dump libcurl equivalent code of this command line</td>
+</tr>
+<tr class="row-odd"><td>limit-rate</td>
+<td>RATE</td>
+<td>Limit transfer speed to this rate</td>
+</tr>
+<tr class="row-even"><td>list-only</td>
+<td>&nbsp;</td>
+<td>List only names of an FTP directory (F)</td>
+</tr>
+<tr class="row-odd"><td>local-port</td>
+<td>RANGE</td>
+<td>Force use of these local port numbers</td>
+</tr>
+<tr class="row-even"><td>location</td>
+<td>&nbsp;</td>
+<td>Follow redirects (H)</td>
+</tr>
+<tr class="row-odd"><td>location-trusted</td>
+<td>&nbsp;</td>
+<td>like &#8211;location and send auth to other hosts (H)</td>
+</tr>
+<tr class="row-even"><td>manual</td>
+<td>&nbsp;</td>
+<td>Display the full manual</td>
+</tr>
+<tr class="row-odd"><td>mail-from</td>
+<td>FROM</td>
+<td>Mail from this address (SMTP)</td>
+</tr>
+<tr class="row-even"><td>mail-rcpt</td>
+<td>TO</td>
+<td>Mail to this/these addresses (SMTP)</td>
+</tr>
+<tr class="row-odd"><td>mail-auth</td>
+<td>AUTH</td>
+<td>Originator address of the original email (SMTP)</td>
+</tr>
+<tr class="row-even"><td>max-filesize</td>
+<td>BYTES</td>
+<td>Maximum file size to download (H/F)</td>
+</tr>
+<tr class="row-odd"><td>max-redirs</td>
+<td>NUM</td>
+<td>Maximum number of redirects allowed (H)</td>
+</tr>
+<tr class="row-even"><td>max-time</td>
+<td>SECONDS</td>
+<td>Maximum time allowed for the transfer</td>
+</tr>
+<tr class="row-odd"><td>metalink</td>
+<td>&nbsp;</td>
+<td>Process given URLs as metalink XML file</td>
+</tr>
+<tr class="row-even"><td>negotiate</td>
+<td>&nbsp;</td>
+<td>Use HTTP Negotiate Authentication (H)</td>
+</tr>
+<tr class="row-odd"><td>netrc</td>
+<td>&nbsp;</td>
+<td>Must read .netrc for user name and password</td>
+</tr>
+<tr class="row-even"><td>netrc-optional</td>
+<td>&nbsp;</td>
+<td>Use either .netrc or URL; overrides -n</td>
+</tr>
+<tr class="row-odd"><td>netrc-file</td>
+<td>FILE</td>
+<td>Set up the netrc filename to use</td>
+</tr>
+<tr class="row-even"><td>no-buffer</td>
+<td>&nbsp;</td>
+<td>Disable buffering of the output stream</td>
+</tr>
+<tr class="row-odd"><td>no-keepalive</td>
+<td>&nbsp;</td>
+<td>Disable keepalive use on the connection</td>
+</tr>
+<tr class="row-even"><td>no-sessionid</td>
+<td>&nbsp;</td>
+<td>Disable SSL session-ID reusing (SSL)</td>
+</tr>
+<tr class="row-odd"><td>noproxy</td>
+<td>&nbsp;</td>
+<td>List of hosts which do not use proxy</td>
+</tr>
+<tr class="row-even"><td>ntlm</td>
+<td>&nbsp;</td>
+<td>Use HTTP NTLM authentication (H)</td>
+</tr>
+<tr class="row-odd"><td>oauth2-bearer</td>
+<td>BEARER</td>
+<td>XOAUTH2 Bearer Token (IMAP  POP3  SMTP)</td>
+</tr>
+<tr class="row-even"><td>output FILE</td>
+<td>&nbsp;</td>
+<td>Write output to &lt;file&gt; instead of stdout</td>
+</tr>
+<tr class="row-odd"><td>pass PASS</td>
+<td>&nbsp;</td>
+<td>Pass phrase for the private key (SSL/SSH)</td>
+</tr>
+<tr class="row-even"><td>post301</td>
+<td>&nbsp;</td>
+<td>Do not switch to GET after following a 301 redirect (H)</td>
+</tr>
+<tr class="row-odd"><td>post302</td>
+<td>&nbsp;</td>
+<td>Do not switch to GET after following a 302 redirect (H)</td>
+</tr>
+<tr class="row-even"><td>post303</td>
+<td>&nbsp;</td>
+<td>Do not switch to GET after following a 303 redirect (H)</td>
+</tr>
+<tr class="row-odd"><td>progress-bar</td>
+<td>&nbsp;</td>
+<td>Display transfer progress as a progress bar</td>
+</tr>
+<tr class="row-even"><td>proto</td>
+<td>PROTOCOLS</td>
+<td>Enable/disable specified protocols</td>
+</tr>
+<tr class="row-odd"><td>proto-redir</td>
+<td>PROTOCOLS</td>
+<td>Enable/disable specified protocols on redirect</td>
+</tr>
+<tr class="row-even"><td>proxy</td>
+<td>PROXY</td>
+<td>[PROTOCOL://]HOST[:PORT] Use proxy on given port</td>
+</tr>
+<tr class="row-odd"><td>proxy-anyauth</td>
+<td>&nbsp;</td>
+<td>Pick &#8220;any&#8221; proxy authentication method (H)</td>
+</tr>
+<tr class="row-even"><td>proxy-basic</td>
+<td>&nbsp;</td>
+<td>Use Basic authentication on the proxy (H)</td>
+</tr>
+<tr class="row-odd"><td>proxy-digest</td>
+<td>&nbsp;</td>
+<td>Use Digest authentication on the proxy (H)</td>
+</tr>
+<tr class="row-even"><td>proxy-negotiate</td>
+<td>&nbsp;</td>
+<td>Use Negotiate authentication on the proxy (H)</td>
+</tr>
+<tr class="row-odd"><td>proxy-ntlm</td>
+<td>&nbsp;</td>
+<td>Use NTLM authentication on the proxy (H)</td>
+</tr>
+<tr class="row-even"><td>proxy-user</td>
+<td>USR[:PWD]</td>
+<td>Proxy user and password</td>
+</tr>
+<tr class="row-odd"><td>proxy1.0</td>
+<td>HOST[:PORT]</td>
+<td>Use HTTP/1.0 proxy on given port</td>
+</tr>
+<tr class="row-even"><td>proxytunnel</td>
+<td>&nbsp;</td>
+<td>Operate through a HTTP proxy tunnel (using CONNECT)</td>
+</tr>
+<tr class="row-odd"><td>pubkey</td>
+<td>KEY</td>
+<td>Public key file name (SSH)</td>
+</tr>
+<tr class="row-even"><td>quote</td>
+<td>CMD</td>
+<td>Send command(s) to server before transfer (F/SFTP)</td>
+</tr>
+<tr class="row-odd"><td>random-file</td>
+<td>FILE</td>
+<td>File for reading random data from (SSL)</td>
+</tr>
+<tr class="row-even"><td>range</td>
+<td>RANGE</td>
+<td>Retrieve only the bytes within a range</td>
+</tr>
+<tr class="row-odd"><td>raw</td>
+<td>&nbsp;</td>
+<td>Do HTTP &#8220;raw&#8221;  without any transfer decoding (H)</td>
+</tr>
+<tr class="row-even"><td>referer</td>
+<td>&nbsp;</td>
+<td>Referer URL (H)</td>
+</tr>
+<tr class="row-odd"><td>remote-header-name</td>
+<td>&nbsp;</td>
+<td>Use the header-provided filename (H)</td>
+</tr>
+<tr class="row-even"><td>remote-name</td>
+<td>&nbsp;</td>
+<td>Write output to a file named as the remote file</td>
+</tr>
+<tr class="row-odd"><td>remote-name-all</td>
+<td>&nbsp;</td>
+<td>Use the remote file name for all URLs</td>
+</tr>
+<tr class="row-even"><td>remote-time</td>
+<td>&nbsp;</td>
+<td>Set the remote file&#8217;s time on the local output</td>
+</tr>
+<tr class="row-odd"><td>request</td>
+<td>COMMAND</td>
+<td>Specify request command to use [GET|POST|PUT|HEAD|DELETE|...]. Often requires extra options (e.g. HEAD also requires &#8211;head).</td>
+</tr>
+<tr class="row-even"><td>resolve</td>
+<td>HOST:PORT:ADD</td>
+<td>Force resolve of HOST:PORT to ADDRESS</td>
+</tr>
+<tr class="row-odd"><td>retry</td>
+<td>NUM</td>
+<td>Retry request NUM times if transient problems occur</td>
+</tr>
+<tr class="row-even"><td>retry-delay</td>
+<td>SECONDS</td>
+<td>When retrying  wait this many seconds between each</td>
+</tr>
+<tr class="row-odd"><td>retry-max-time</td>
+<td>SECONDS</td>
+<td>Retry only within this period</td>
+</tr>
+<tr class="row-even"><td>sasl-ir</td>
+<td>&nbsp;</td>
+<td>Enable initial response in SASL authentication</td>
+</tr>
+<tr class="row-odd"><td>show-error</td>
+<td>&nbsp;</td>
+<td>Show error. With -s  make curl show errors when they occur</td>
+</tr>
+<tr class="row-even"><td>silent</td>
+<td>&nbsp;</td>
+<td>Silent mode. Don&#8217;t output anything</td>
+</tr>
+<tr class="row-odd"><td>socks4</td>
+<td>HOST[:PORT]</td>
+<td>SOCKS4 proxy on given host + port</td>
+</tr>
+<tr class="row-even"><td>socks4a</td>
+<td>HOST[:PORT]</td>
+<td>SOCKS4a proxy on given host + port</td>
+</tr>
+<tr class="row-odd"><td>socks5</td>
+<td>HOST[:PORT]</td>
+<td>SOCKS5 proxy on given host + port</td>
+</tr>
+<tr class="row-even"><td>socks5-hostname</td>
+<td>HOST[:PORT]</td>
+<td>SOCKS5 proxy  pass host name to proxy</td>
+</tr>
+<tr class="row-odd"><td>socks5-gssapi-service</td>
+<td>NAME</td>
+<td>SOCKS5 proxy service name for gssapi</td>
+</tr>
+<tr class="row-even"><td>socks5-gssapi-nec</td>
+<td>&nbsp;</td>
+<td>Compatibility with NEC SOCKS5 server</td>
+</tr>
+<tr class="row-odd"><td>speed-limit</td>
+<td>RATE</td>
+<td>Stop transfers below speed-limit for &#8216;speed-time&#8217; secs</td>
+</tr>
+<tr class="row-even"><td>speed-time</td>
+<td>SECONDS</td>
+<td>Time for trig speed-limit abort. Defaults to 30</td>
+</tr>
+<tr class="row-odd"><td>ssl</td>
+<td>&nbsp;</td>
+<td>Try SSL/TLS (FTP  IMAP  POP3  SMTP)</td>
+</tr>
+<tr class="row-even"><td>ssl-reqd</td>
+<td>&nbsp;</td>
+<td>Require SSL/TLS (FTP  IMAP  POP3  SMTP)</td>
+</tr>
+<tr class="row-odd"><td>sslv2</td>
+<td>&nbsp;</td>
+<td>Use SSLv2 (SSL)</td>
+</tr>
+<tr class="row-even"><td>sslv3</td>
+<td>&nbsp;</td>
+<td>Use SSLv3 (SSL)</td>
+</tr>
+<tr class="row-odd"><td>ssl-allow-beast</td>
+<td>&nbsp;</td>
+<td>Allow security flaw to improve interop (SSL)</td>
+</tr>
+<tr class="row-even"><td>stderr</td>
+<td>FILE</td>
+<td>Where to redirect stderr. - means stdout</td>
+</tr>
+<tr class="row-odd"><td>tcp-nodelay</td>
+<td>&nbsp;</td>
+<td>Use the TCP_NODELAY option</td>
+</tr>
+<tr class="row-even"><td>telnet-option</td>
+<td>OPT=VAL</td>
+<td>Set telnet option</td>
+</tr>
+<tr class="row-odd"><td>tftp-blksize</td>
+<td>VALUE</td>
+<td>Set TFTP BLKSIZE option (must be &gt;512)</td>
+</tr>
+<tr class="row-even"><td>time-cond</td>
+<td>TIME</td>
+<td>Transfer based on a time condition</td>
+</tr>
+<tr class="row-odd"><td>tlsv1</td>
+<td>&nbsp;</td>
+<td>Use TLSv1 (SSL)</td>
+</tr>
+<tr class="row-even"><td>trace</td>
+<td>FILE</td>
+<td>Write a debug trace to the given file</td>
+</tr>
+<tr class="row-odd"><td>trace-ascii</td>
+<td>FILE</td>
+<td>Like &#8211;trace but without the hex output</td>
+</tr>
+<tr class="row-even"><td>trace-time</td>
+<td>&nbsp;</td>
+<td>Add time stamps to trace/verbose output</td>
+</tr>
+<tr class="row-odd"><td>tr-encoding</td>
+<td>&nbsp;</td>
+<td>Request compressed transfer encoding (H)</td>
+</tr>
+<tr class="row-even"><td>upload-file</td>
+<td>FILE</td>
+<td>Transfer FILE to destination</td>
+</tr>
+<tr class="row-odd"><td>url</td>
+<td>URL</td>
+<td>URL to work with</td>
+</tr>
+<tr class="row-even"><td>use-ascii</td>
+<td>&nbsp;</td>
+<td>Use ASCII/text transfer</td>
+</tr>
+<tr class="row-odd"><td>user</td>
+<td>USR[:PWD]</td>
+<td>Server user and password</td>
+</tr>
+<tr class="row-even"><td>tlsuser</td>
+<td>USER</td>
+<td>TLS username</td>
+</tr>
+<tr class="row-odd"><td>tlspassword</td>
+<td>STRING</td>
+<td>TLS password</td>
+</tr>
+<tr class="row-even"><td>tlsauthtype</td>
+<td>STRING</td>
+<td>TLS authentication type (default SRP)</td>
+</tr>
+<tr class="row-odd"><td>user-agent</td>
+<td>STRING</td>
+<td>User-Agent to send to server (H)</td>
+</tr>
+<tr class="row-even"><td>verbose</td>
+<td>&nbsp;</td>
+<td>Make the operation more talkative</td>
+</tr>
+<tr class="row-odd"><td>version</td>
+<td>&nbsp;</td>
+<td>Show version number and quit</td>
+</tr>
+<tr class="row-even"><td>write-out</td>
+<td>FORMAT</td>
+<td>What to output after completion</td>
+</tr>
+<tr class="row-odd"><td>xattr</td>
+<td>&nbsp;</td>
+<td>Store metadata in extended file attributes</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">Perform a basic get-operation on a webpage</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">page</span> <span class="o">=</span> <span class="n">curl</span><span class="p">(</span><span class="s">&quot;http://www.xillio.nl&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Perform a basic get-operation on a webpage and follow redirect to main page</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">page</span> <span class="o">=</span> <span class="n">curl</span><span class="p">(</span><span class="s">&quot;http://www.xillio.nl&quot;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="s">&quot;location&quot;</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Fetch information about a file without actually downloading it</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">response</span> <span class="o">=</span> <span class="n">curl</span><span class="p">(</span><span class="s">&quot;https://www.google.nl/images/srpr/logo11w.png&quot;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="s">&quot;head&quot;</span><span class="p">,</span>
+    <span class="s">&quot;insecure&quot;</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Passing multiple options for the same parameter is possible. If the curl command line call is</p>
+<div class="highlight-python"><div class="highlight"><pre>curl include -F name=myname -F filedata=@c:/temp/test.txt http://malsup.com/jquery/form/file-echo2.php
+</pre></div>
+</div>
+<p>then the following code can be used in Content Tools. Note the <code class="docutils literal"><span class="pre">form</span></code> list.</p>
+<div class="highlight-python"><div class="highlight"><pre>filetoupload = &quot;/Users/ernst/Documents/Temp/test.txt&quot;;
+
+uploadresult = curl(&quot;http://malsup.com/jquery/form/file-echo2.php&quot;, {
+    &quot;include&quot;,
+    &quot;form&quot; = {
+        &quot;filedata=@&quot;+filetoupload,
+        &quot;name=myname&quot;
+    }
+});
+log(uploadresult);
+</pre></div>
+</div>
+</li>
+<li><p class="first">Perform a basic post-operation on a rest-service (requires running Sharepoint instance)</p>
+<div class="highlight-python"><div class="highlight"><pre>xml = &quot;&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;utf-8\&quot;?&gt;
+    &lt;soap:Envelope xmlns:xsi=\&quot;http://www.w3.org/2001/XMLSchema-instance\&quot; xmlns:xsd=\&quot;http://www.w3.org/2001/XMLSchema\&quot; xmlns:soap=\&quot;http://schemas.xmlsoap.org/soap/envelope/\&quot;&gt;
+      &lt;soap:Body&gt;
+        &lt;GetContentType xmlns=\&quot;http://schemas.microsoft.com/sharepoint/soap/\&quot;&gt;
+          &lt;contentTypeId&gt;&quot; + contenttype.id + &quot;&lt;/contentTypeId&gt;
+        &lt;/GetContentType&gt;
+      &lt;/soap:Body&gt;
+    &lt;/soap:Envelope&gt;&quot;;
+
+response = curl(&quot;http://sp2013&quot;, {
+    &quot;header&quot; = &quot;Content-Type: text/xml; charset=utf-8&quot;,
+    &quot;data&quot; = xml,
+});
+</pre></div>
+</div>
+</li>
+<li><p class="first">Perform a post request and authenticate using NTLMv4 authentication</p>
+<div class="highlight-python"><div class="highlight"><pre>response = curl(&quot;http://sp2013&quot;, {
+    &quot;header&quot; = &quot;Content-Type: text/xml; charset=utf-8&quot;,
+    &quot;insecure&quot;,
+    &quot;ntlm&quot;,
+    &quot;user&quot;, settings.sp_user+&quot;:&quot;+settings.sp_pass,
+    &quot;data&quot;, &quot;@&quot; + settings.path_inventory + &quot;soap.xml&quot;,
+});
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_browser.html"><em>Browser</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

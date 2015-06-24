@@ -1,0 +1,104 @@
+----
+tidy
+----
+
+**tidy (**\ *<string,node>* **content,** *list* **options*)**
+
+Description
+-----------
+
+Cleans the HTML code in string ``content``. Returns output and an error log. The optional parameter ``options`` is a list with one or more options stored as strings.
+
+Details
+-------
+
+The following options are available: 
+
+==================   =============
+option               default value
+==================   =============
+clean                true
+cleanbackslashurls   true
+cleanfixcomments     true
+cleanmicrosoft       true
+cleanword2000        false
+inputencoding        UTF-8
+inputxml             false
+outputencoding       UTF-8
+outputindent         true
+outputraw            true
+outputxhtml          true
+outputxml            false
+wraplength           0
+==================   =============
+
+Example
+-------
+
+-
+    
+    Given the HTML-file ``untidy.html``:
+    
+    ::
+        
+        <html>
+            <body>
+                <p>here is a para <b>bold <i>bold italic</b> bold?</i> normal?
+                <li>1st list item
+                <li>2nd list item
+            </body>
+        </html>
+    
+    Executing the following code for getting the cleaned body content:
+    
+    ::
+    
+        page = loadpage("file://c:/tmp/untidy.html");
+        content = regex(tidy(page), "[\s\S]*?<body>([\s\S]*)</body>[\s\S]*");
+        log(content[1]);
+    
+    will print:
+    
+    ::
+        
+        <p>here is a para <b>bold <i>bold italic</i></b> <i>bold?</i> normal?</p>
+
+        <ul class="noindent">
+          <li>1st list item</li>
+
+          <li>2nd list item</li>
+        </ul>
+
+-
+    
+    Using options:
+    
+    ::
+    
+        page = loadpage("file://c:/tmp/untidy.html");
+        content = tidy(page, {outputindent = false, outputraw = false});
+        log(content);
+
+    will print:
+    
+    ::
+    
+        <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+        <html xmlns="http://www.w3.org/1999/xhtml">
+        <head>
+        <meta name="generator" content="HTML Tidy for Java (vers. 2009-12-01), see jtidy.sourceforge.net" />
+        <title></title>
+        </head>
+        <body>
+        <p>here is a para <b>bold <i>bold italic</i></b> <i>bold?</i> normal?</p>
+        <ul class="noindent">
+        <li>1st list item</li>
+        <li>2nd list item</li>
+        </ul>
+        </body>
+        </html>
+        
+Tags
+----
+
+:doc:`_tag_text`, :doc:`_tag_xmlhtml`

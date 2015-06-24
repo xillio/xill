@@ -11,10 +11,13 @@ dependencies{
 	compile 'org.mongodb:mongo-java-driver:2.13.0'
 	compile 'jcifs:jcifs:1.3.17'
 	compile 'org.xerial:sqlite-jdbc:3.8.7'
+	compile 'com.oracle:ojdbc7:12.1.0.1.0'
 	compile 'com.google.code.gson:gson:2.3.1'
 	compile 'org.apache.commons:commons-lang3:3.4'
+	compile 'net.sourceforge.jtds:jtds:1.3.1'
 	compile 'commons-io:commons-io:2.4'
 	compile 'nl.xillio:xill-lang:3.0'
+	compile 'org.jasypt:jasypt:1.9.1'
 	compile project(':api')
 }
 

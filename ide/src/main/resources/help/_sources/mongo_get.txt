@@ -1,0 +1,40 @@
+---------
+mongo_get
+---------
+
+**mongo_get (**\ *string* **collection,** *string* **id,** *string* **mongo*)**
+
+Description
+-----------
+
+Gets the object with the specified ``id`` from the given ``collection`` and returns it as a list. If ``mongo`` is not provided the last active connection will be used.
+
+See also :doc:`mongo_find`
+
+Examples
+--------
+
+-
+
+    Get an object from the "art" collection with id "MonaLisa", using the (local) default database:
+    
+    ::
+    
+        mongo_connect("localDB");
+        monaLisa = mongo_get("art", "MonaLisa");
+        log(monaLisa);
+
+    This will print:
+    
+    ::
+        
+        {
+            "_id": "MonaLisa",
+            "title": "Mona Lisa",
+            "artist": "Leonardo da Vinci"
+        }
+
+Tags
+----
+
+:doc:`_tag_mongodb`

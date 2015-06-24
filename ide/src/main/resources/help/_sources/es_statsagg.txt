@@ -1,0 +1,42 @@
+-----------
+es_statsagg
+-----------
+
+**es_statsagg (**\ *string* **name,** *string* **field,** *<string,void>* **parent*)**
+
+Description
+-----------
+
+Creates an aggregation ``name`` containing the minimum, maximum, average, sum and count for ``field`` as a child of the aggregation ``parent``. Returns a string identifier that can be used to identify this aggregation.
+Two sibling or same-level aggregations cannot have the same name. If a stats aggregation is given a child, that child will not be used. The ``parent`` aggregation must be created with ``es_termsagg()``.
+
+See also :doc:`es_termsagg`
+
+Examples
+--------
+
+-
+
+	Create a stats aggregation for the price field.
+	
+	::
+		
+		stats = es_statsagg("stats", "price");
+
+-
+
+	Create an aggregation "authors" that includes a field "stats" containing statistics for the "price" field grouped by "author".
+	
+	::
+	
+		es_connect();
+		//create a new aggregation "authors" which groups by field "author"
+		authors = es_termsagg("authors", "author");
+		//add the field "stats", which shows the aggregated statistics
+		es_statsagg("stats", "price", authors);
+		results = es_aggregate("art", null, authors);
+
+Tags
+----
+
+:doc:`_tag_elasticsearch`

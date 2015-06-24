@@ -1,0 +1,64 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="removeattribute">
+<h1>removeattribute</h1>
+<p><strong>removeattribute (</strong><em>&lt;node,xml,void&gt;</em> <strong>node,</strong> <em>&lt;string,void&gt;</em> <strong>property)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Remove the attribute <code class="docutils literal"><span class="pre">property</span></code> from the XML-node <code class="docutils literal"><span class="pre">node</span></code>.</p>
+<p>See also <a class="reference internal" href="setattribute.html"><em>setattribute</em></a></p>
+</div>
+<div class="section" id="example">
+<h2>Example</h2>
+<ul>
+<li><p class="first">Given an XML-file <code class="docutils literal"><span class="pre">note.xml</span></code>, which contains:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;note id=&quot;1&quot;&gt;
+    &lt;to&gt;Tove&lt;/to&gt;
+    &lt;from&gt;Jani&lt;/from&gt;
+    &lt;heading&gt;Reminder&lt;/heading&gt;
+    &lt;comment&gt;This was sent to James as well&lt;/comment&gt;
+    &lt;comment&gt;John has not responded to the invitation&lt;/comment&gt;
+    &lt;body&gt;Don&#39;t forget me this weekend!&lt;/body&gt;
+&lt;/note&gt;
+</pre></div>
+</div>
+<p>then after executing the following code:</p>
+<div class="highlight-python"><div class="highlight"><pre>xml = loadxml (&quot;C:/tmp/note.xml&quot;);
+parent = xpath(xml, &quot;//note&quot;); //get main node
+removeattribute (parent, &quot;id&quot;);
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent</span></code> contains:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;note&gt;
+    &lt;to&gt;Tove&lt;/to&gt;
+    &lt;from&gt;Jani&lt;/from&gt;
+    &lt;heading&gt;Reminder&lt;/heading&gt;
+    &lt;comment&gt;This was sent to James as well&lt;/comment&gt;
+    &lt;comment&gt;John has not responded to the invitation&lt;/comment&gt;
+    &lt;body&gt;Don&#39;t forget me this weekend!&lt;/body&gt;
+&lt;/note&gt;
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_xmlhtml.html"><em>XML / HTML</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

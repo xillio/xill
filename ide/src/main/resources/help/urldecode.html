@@ -1,0 +1,44 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="urldecode">
+<h1>urldecode</h1>
+<p><strong>urldecode (</strong><em>&lt;string,void&gt;</em> <strong>text)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Returns the URL-decoded version of string <code class="docutils literal"><span class="pre">text</span></code>. Useful for reading URL&#8217;s with GET variables in them. Note that both %20 and the plus sign are converted to a space character.</p>
+<p>See also <a class="reference internal" href="urlencode.html"><em>urlencode</em></a></p>
+</div>
+<div class="section" id="example">
+<h2>Example</h2>
+<ul>
+<li><p class="first">Executing:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">log</span> <span class="p">(</span><span class="n">urldecode</span><span class="p">(</span><span class="s">&quot;Together%2C%20we+spent</span><span class="si">%20%</span><span class="s">2450.95&quot;</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>will print:</p>
+<div class="highlight-python"><div class="highlight"><pre>Together, we spent $50.95
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_encoding.html"><em>Encoding / Decoding</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

@@ -1,0 +1,46 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="listtocsv">
+<h1>listtocsv</h1>
+<p><strong>listtocsv (</strong><em>&lt;void,list&gt;</em> <strong>value,</strong> <em>string</em> <strong>delimiter,</strong> <em>&lt;string,void&gt;</em> <strong>enclosingchar)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>A shorthand function for easily generating csv files. Merges the list into a single line string. The argument <code class="docutils literal"><span class="pre">delimiter</span></code> is used to seperate values from each other; <code class="docutils literal"><span class="pre">enclosingchar</span></code> is used to enclose the values with for example a quote.</p>
+<p>See also <a class="reference internal" href="split.html"><em>split</em></a></p>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">Executing:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">log</span><span class="p">(</span><span class="n">listtocsv</span><span class="p">({</span><span class="s">&quot;Xillio&quot;</span><span class="p">,</span> <span class="s">&quot;Xillio&quot;</span><span class="p">,</span> <span class="s">&quot;Sausage&quot;</span><span class="p">,</span> <span class="s">&quot;Xillio&quot;</span><span class="p">,</span> <span class="s">&quot;Xillio&quot;</span><span class="p">,</span> <span class="s">&quot; &quot;</span><span class="p">},</span> <span class="s">&quot;;&quot;</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">&quot;</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>will print:</p>
+<div class="highlight-python"><div class="highlight"><pre>[
+  &quot;Xillio&quot;;&quot;Xillio&quot;;&quot;Sausage&quot;;&quot;Xillio&quot;;&quot;Xillio&quot;;&quot; &quot;
+]
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_text.html"><em>Text</em></a>, <a class="reference internal" href="_tag_list.html"><em>List</em></a>, <a class="reference internal" href="_tag_conversion.html"><em>Conversion</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

@@ -1,0 +1,281 @@
+----
+cURL
+----
+
+**curl (**\ *<string>* **url,** *list* **options*)**
+
+Description
+-----------
+
+Runs cURL to peform the specified actions on the provided url. It's typically used to perform REST PUT/POST/GET actions and authenticate against more complex proxies (e.g. NTLMv4). This function returns the response as a string.
+
+**NOTE**: On Mac and Linux systems you must download and install curl from http://curl.haxx.se/ or using your preferred package manager, then make sure curl is available in your path. See the INSTALLATION notes for more information.
+
+See also :doc:`_tag_browser`
+
+Details
+-------
+
+The following options are available (H) means HTTP/HTTPS only  (F) means FTP only. Full documentation can be found at: http://curl.haxx.se/docs/manpage.html
+
+=======================   =============   ===========================================================
+Option                    Value           Description
+=======================   =============   ===========================================================
+anyauth                                   Pick "any" authentication method (H)
+append                                    Append to target file when uploading (F/SFTP)
+basic                                     Use HTTP Basic Authentication (H)
+cacert                    FILE            CA certificate to verify peer against (SSL)
+capath                    DIR             CA directory to verify peer against (SSL)
+cert                      CERT[:PASSWD]   Client certificate file and password (SSL)
+ciphers                   LIST            SSL ciphers to use (SSL)
+cert-type                 TYPE            Certificate file type (DER/PEM/ENG) (SSL)
+compressed                                Request compressed response (using deflate or gzip)
+config FILE                               Specify which config file to read
+connect-timeout           SECONDS         Maximum time allowed for connection
+continue-at               OFFSET          Resumed transfer offset
+cookie                    STRING/FILE     String or file to read cookies from (H)
+cookie-jar                FILE            Write cookies to this file after operation (H)
+create-dirs                               Create necessary local directory hierarchy
+crlf                                      Convert LF to CRLF in upload
+crlfile                   FILE            Get a CRL list in PEM format from the given file
+data                      DATA            HTTP POST data (H)
+data-ascii                DATA            HTTP POST ASCII data (H)
+data-binary               DATA            HTTP POST binary data (H)
+data-urlencode            DATA            HTTP POST data url encoded (H)
+delegation                STRING          GSS-API delegation permission
+digest                                    Use HTTP Digest Authentication (H)
+disable-eprt                              Inhibit using EPRT or LPRT (F)
+disable-epsv                              Inhibit using EPSV (F)
+dns-servers                               DNS server addrs to use: 1.1.1.1;2.2.2.2
+dns-interface                             Interface to use for DNS requests
+dns-ipv4-addr                             IPv4 address to use for DNS requests  dot notation
+dns-ipv6-addr                             IPv6 address to use for DNS requests  dot notation
+dump-header               FILE            Write the headers to this file
+egd-file                  FILE            EGD socket path for random data (SSL)
+engine                    ENGINE          Crypto engine (SSL). "--engine list" for list
+fail                                      Fail silently (no output at all) on HTTP errors (H)
+form                      CONTENT         Specify HTTP multipart POST data (H)
+form-string               STRING          Specify HTTP multipart POST data (H)
+ftp-account               DATA            Account data string (F)
+ftp-alternative-to-user   COMMAND         String to replace "USER [name]" (F)
+ftp-create-dirs                           Create the remote dirs if not present (F)
+ftp-method                METHOD          [MULTICWD/NOCWD/SINGLECWD] Control CWD usage (F)
+ftp-pasv                                  Use PASV/EPSV instead of PORT (F)
+ftp-port                  ADR             Use PORT with given address instead of PASV (F)
+ftp-skip-pasv-ip                          Skip the IP address for PASV (F)
+ftp-pret                                  Send PRET before PASV (for drftpd) (F)
+ftp-ssl-ccc                               Send CCC after authenticating (F)
+ftp-ssl-ccc-mode          MODE            [ACTIVE/PASSIVE] Set CCC mode (F)
+ftp-ssl-control                           Require SSL/TLS for ftp login  clear for transfer (F)
+get                                       Send the -d data with a HTTP GET (H)
+globoff                                   Disable URL sequences and ranges using {} and []
+header                    LINE            Custom header to pass to server (H)
+head                                      Show document info only
+help                                      This help text
+hostpubmd5                MD5             Hex encoded MD5 string of the host public key. (SSH)
+http1.0                                   Use HTTP 1.0 (H)
+http1.1                                   Use HTTP 1.1 (H)
+http2.0                                   Use HTTP 2.0 (H)
+ignore-content-length                     Ignore the HTTP Content-Length header
+include                                   Include protocol headers in the output (H/F)
+insecure                                  Allow connections to SSL sites without certs (H)
+interface                 INTERFACE       Specify network interface/address to use
+ipv4                                      Resolve name to IPv4 address
+ipv6                                      Resolve name to IPv6 address
+junk-session-cookies                      Ignore session cookies read from file (H)
+keepalive-time            SECONDS         Interval between keepalive probes
+key                       KEY             Private key file name (SSL/SSH)
+key-type                  TYPE            Private key file type (DER/PEM/ENG) (SSL)
+krb                       LEVEL           Enable Kerberos with specified security level (F)
+libcurl                   FILE            Dump libcurl equivalent code of this command line
+limit-rate                RATE            Limit transfer speed to this rate
+list-only                                 List only names of an FTP directory (F)
+local-port                RANGE           Force use of these local port numbers
+location                                  Follow redirects (H)
+location-trusted                          like --location and send auth to other hosts (H)
+manual                                    Display the full manual
+mail-from                 FROM            Mail from this address (SMTP)
+mail-rcpt                 TO              Mail to this/these addresses (SMTP)
+mail-auth                 AUTH            Originator address of the original email (SMTP)
+max-filesize              BYTES           Maximum file size to download (H/F)
+max-redirs                NUM             Maximum number of redirects allowed (H)
+max-time                  SECONDS         Maximum time allowed for the transfer
+metalink                                  Process given URLs as metalink XML file
+negotiate                                 Use HTTP Negotiate Authentication (H)
+netrc                                     Must read .netrc for user name and password
+netrc-optional                            Use either .netrc or URL; overrides -n
+netrc-file                FILE            Set up the netrc filename to use
+no-buffer                                 Disable buffering of the output stream
+no-keepalive                              Disable keepalive use on the connection
+no-sessionid                              Disable SSL session-ID reusing (SSL)
+noproxy                                   List of hosts which do not use proxy
+ntlm                                      Use HTTP NTLM authentication (H)
+oauth2-bearer             BEARER          XOAUTH2 Bearer Token (IMAP  POP3  SMTP)
+output FILE                               Write output to <file> instead of stdout
+pass PASS                                 Pass phrase for the private key (SSL/SSH)
+post301                                   Do not switch to GET after following a 301 redirect (H)
+post302                                   Do not switch to GET after following a 302 redirect (H)
+post303                                   Do not switch to GET after following a 303 redirect (H)
+progress-bar                              Display transfer progress as a progress bar
+proto                     PROTOCOLS       Enable/disable specified protocols
+proto-redir               PROTOCOLS       Enable/disable specified protocols on redirect
+proxy                     PROXY           [PROTOCOL://]HOST[:PORT] Use proxy on given port
+proxy-anyauth                             Pick "any" proxy authentication method (H)
+proxy-basic                               Use Basic authentication on the proxy (H)
+proxy-digest                              Use Digest authentication on the proxy (H)
+proxy-negotiate                           Use Negotiate authentication on the proxy (H)
+proxy-ntlm                                Use NTLM authentication on the proxy (H)
+proxy-user                USR[:PWD]       Proxy user and password
+proxy1.0                  HOST[:PORT]     Use HTTP/1.0 proxy on given port
+proxytunnel                               Operate through a HTTP proxy tunnel (using CONNECT)
+pubkey                    KEY             Public key file name (SSH)
+quote                     CMD             Send command(s) to server before transfer (F/SFTP)
+random-file               FILE            File for reading random data from (SSL)
+range                     RANGE           Retrieve only the bytes within a range
+raw                                       Do HTTP "raw"  without any transfer decoding (H)
+referer                                   Referer URL (H)
+remote-header-name                        Use the header-provided filename (H)
+remote-name                               Write output to a file named as the remote file
+remote-name-all                           Use the remote file name for all URLs
+remote-time                               Set the remote file's time on the local output
+request                   COMMAND         Specify request command to use [GET|POST|PUT|HEAD|DELETE|...]. Often requires extra options (e.g. HEAD also requires --head).
+resolve                   HOST:PORT:ADD   Force resolve of HOST:PORT to ADDRESS
+retry                     NUM             Retry request NUM times if transient problems occur
+retry-delay               SECONDS         When retrying  wait this many seconds between each
+retry-max-time            SECONDS         Retry only within this period
+sasl-ir                                   Enable initial response in SASL authentication
+show-error                                Show error. With -s  make curl show errors when they occur
+silent                                    Silent mode. Don't output anything
+socks4                    HOST[:PORT]     SOCKS4 proxy on given host + port
+socks4a                   HOST[:PORT]     SOCKS4a proxy on given host + port
+socks5                    HOST[:PORT]     SOCKS5 proxy on given host + port
+socks5-hostname           HOST[:PORT]     SOCKS5 proxy  pass host name to proxy
+socks5-gssapi-service     NAME            SOCKS5 proxy service name for gssapi
+socks5-gssapi-nec                         Compatibility with NEC SOCKS5 server
+speed-limit               RATE            Stop transfers below speed-limit for 'speed-time' secs
+speed-time                SECONDS         Time for trig speed-limit abort. Defaults to 30
+ssl                                       Try SSL/TLS (FTP  IMAP  POP3  SMTP)
+ssl-reqd                                  Require SSL/TLS (FTP  IMAP  POP3  SMTP)
+sslv2                                     Use SSLv2 (SSL)
+sslv3                                     Use SSLv3 (SSL)
+ssl-allow-beast                           Allow security flaw to improve interop (SSL)
+stderr                    FILE            Where to redirect stderr. - means stdout
+tcp-nodelay                               Use the TCP_NODELAY option
+telnet-option             OPT=VAL         Set telnet option
+tftp-blksize              VALUE           Set TFTP BLKSIZE option (must be >512)
+time-cond                 TIME            Transfer based on a time condition
+tlsv1                                     Use TLSv1 (SSL)
+trace                     FILE            Write a debug trace to the given file
+trace-ascii               FILE            Like --trace but without the hex output
+trace-time                                Add time stamps to trace/verbose output
+tr-encoding                               Request compressed transfer encoding (H)
+upload-file               FILE            Transfer FILE to destination
+url                       URL             URL to work with
+use-ascii                                 Use ASCII/text transfer
+user                      USR[:PWD]       Server user and password
+tlsuser                   USER            TLS username
+tlspassword               STRING          TLS password
+tlsauthtype               STRING          TLS authentication type (default SRP)
+user-agent                STRING          User-Agent to send to server (H)
+verbose                                   Make the operation more talkative
+version                                   Show version number and quit
+write-out                 FORMAT          What to output after completion
+xattr                                     Store metadata in extended file attributes
+=======================   =============   ===========================================================
+
+
+
+
+Examples
+--------
+
+-
+    
+    Perform a basic get-operation on a webpage
+    
+    ::
+        
+        page = curl("http://www.xillio.nl");
+        
+-
+    
+    Perform a basic get-operation on a webpage and follow redirect to main page
+    
+    ::
+        
+        page = curl("http://www.xillio.nl", {
+            "location"
+        });
+
+-
+    Fetch information about a file without actually downloading it
+    
+    ::
+    
+        response = curl("https://www.google.nl/images/srpr/logo11w.png", {
+            "head", 
+            "insecure"
+        });
+
+-
+
+    Passing multiple options for the same parameter is possible. If the curl command line call is
+    
+    ::
+    
+        curl include -F name=myname -F filedata=@c:/temp/test.txt http://malsup.com/jquery/form/file-echo2.php
+        
+    then the following code can be used in Content Tools. Note the ``form`` list.
+    
+    ::
+    
+        filetoupload = "/Users/ernst/Documents/Temp/test.txt";
+
+        uploadresult = curl("http://malsup.com/jquery/form/file-echo2.php", {
+            "include",
+            "form" = {
+                "filedata=@"+filetoupload,
+                "name=myname"
+            }
+        });
+        log(uploadresult);
+    
+-
+    
+    Perform a basic post-operation on a rest-service (requires running Sharepoint instance) 
+    
+    ::
+
+        xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
+            <soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">
+              <soap:Body>
+                <GetContentType xmlns=\"http://schemas.microsoft.com/sharepoint/soap/\">
+                  <contentTypeId>" + contenttype.id + "</contentTypeId>
+                </GetContentType>
+              </soap:Body>
+            </soap:Envelope>";
+        
+        response = curl("http://sp2013", {
+            "header" = "Content-Type: text/xml; charset=utf-8",
+            "data" = xml, 
+        });
+
+-
+    
+    Perform a post request and authenticate using NTLMv4 authentication
+    
+    ::
+    
+        response = curl("http://sp2013", {
+            "header" = "Content-Type: text/xml; charset=utf-8",
+            "insecure", 
+            "ntlm", 
+            "user", settings.sp_user+":"+settings.sp_pass, 
+            "data", "@" + settings.path_inventory + "soap.xml", 
+        });
+    
+        
+Tags
+----
+
+:doc:`_tag_browser`

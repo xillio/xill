@@ -1,0 +1,51 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="filesize">
+<h1>filesize</h1>
+<p><strong>filesize (</strong><em>string</em> <strong>uri)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Returns the size of the file <code class="docutils literal"><span class="pre">uri</span></code> on the local computer. Returns 0 if the file does not exist or is a directory.</p>
+<p>See also <a class="reference internal" href="fileinfo.html"><em>fileinfo</em></a></p>
+</div>
+<div class="section" id="example">
+<h2>Example</h2>
+<ul>
+<li><p class="first">The following logs the size of the file <code class="docutils literal"><span class="pre">download.png</span></code> if it exists and is not a directory:</p>
+<div class="highlight-python"><div class="highlight"><pre>downloadlocation = &quot;C:/tmp/download.png&quot;;
+size = 0;
+
+if (fileexists (downloadlocation)) {
+    size = filesize(downloadlocation);
+    if (size == 0) {
+        log (downloadlocation + &quot; is a directory.&quot;);
+    }
+} else {
+    log (&quot;file not found: &quot; + downloadlocation);
+}
+log (size);
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_file.html"><em>File</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

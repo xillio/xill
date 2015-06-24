@@ -1,0 +1,76 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="stringtopage">
+<h1>stringtopage</h1>
+<p><strong>stringtopage (</strong><em>string</em> <strong>content)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Returns a new page object based on the string <code class="docutils literal"><span class="pre">content</span></code>.</p>
+</div>
+<div class="section" id="example">
+<h2>Example</h2>
+<ul>
+<li><p class="first">Assuming we have an html file <code class="docutils literal"><span class="pre">choose_day.html</span></code> which contains the following:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE html
+PUBLIC &quot;-//W3C//DTD XHTML 1.0 Strict//EN&quot;
+&quot;DTD/xhtml1-strict.dtd&quot;&gt;
+&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xml:lang=&quot;en&quot; lang=&quot;en&quot;&gt;
+    &lt;head&gt;
+        &lt;title&gt; Strict DTD XHTML Example &lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;p&gt;Please Choose a Day:
+            &lt;br /&gt;
+            &lt;br /&gt;
+            &lt;select name=&quot;day&quot;&gt;
+                &lt;option selected=&quot;selected&quot;&gt;Monday&lt;/option&gt;
+                &lt;option&gt;Tuesday&lt;/option&gt;
+                &lt;option&gt;Wednesday&lt;/option&gt;
+            &lt;/select&gt;
+        &lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre></div>
+</div>
+<p>Then executing the following code:</p>
+<div class="highlight-python"><div class="highlight"><pre>htmlstring = loaddata (&quot;C:/tmp/choose_day.html&quot;);
+
+page = stringtopage (htmlstring);
+
+options = xpath(page, &quot;//option/text()&quot;);
+
+foreach (_, option, options) {
+    log (option);
+}
+</pre></div>
+</div>
+<p>will print:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Monday</span>
+<span class="n">Tuesday</span>
+<span class="n">Wednesday</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_browser.html"><em>Browser</em></a>, <a class="reference internal" href="_tag_xmlhtml.html"><em>XML / HTML</em></a>, <a class="reference internal" href="_tag_conversion.html"><em>Conversion</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

@@ -1,0 +1,34 @@
+---------
+urlencode
+---------
+
+**urlencode (**\ *<string,void>* **text)**
+
+Description
+-----------
+
+Returns the URL-encoded (percent-encoded) version of string ``text``. Essential for creating URL's with GET variables in them. Note that spaces are converted to plus signs.
+
+See also :doc:`urldecode`
+
+Example
+-------
+
+-
+
+    Executing:
+    
+    ::
+    
+        log (urlencode("Together, we spent $50.95"));
+    
+    will print:
+    
+    ::
+    
+        Together%2C+we+spent+%2450.95
+
+Tags
+----
+
+:doc:`_tag_encoding`

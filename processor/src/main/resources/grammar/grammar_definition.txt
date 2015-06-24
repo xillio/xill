@@ -1,0 +1,29 @@
+<Language name="" version="">
+	<Rules>
+		<Rule name="" allowedAtRoot=""><![CDATA[]]></Rule>
+	</Rules>
+
+	<Tokens>
+		<Token name="" length="" unescape="" matchgroup="">
+			<Pattern><![CDATA[]]></Pattern>
+			<PrefixPattern><![CDATA[]]></PrefixPattern>
+			
+			<Style>
+				<Background red="" green="" blue="" alpha=""/>
+				<Foreground red="" green="" blue="" alpha=""/>
+				<Bold></Bold>
+				<Italic></Italic>
+			</Style>
+			
+			<AlternateStyles>
+				<Style pattern="">
+					<Background red="" green="" blue="" alpha=""/>
+					<Foreground red="" green="" blue="" alpha=""/>
+					<Bold></Bold>
+					<Italic></Italic>
+				</Style>
+			</AlternateStyles>
+		</Token>
+	</Tokens>
+
+</Language>

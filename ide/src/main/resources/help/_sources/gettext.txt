@@ -1,0 +1,45 @@
+-------
+gettext
+-------
+
+**gettext (**\ *any* **element)**
+
+Description
+-----------
+
+Returns a string containing all text extracted from HTML or XML node ``element`` (without any markup). Any HTML-entities (like ``&copy;``) contained in the text will be converted to characters.
+
+Examples
+--------
+
+-
+
+    Get the text inside a searchbox:
+    
+    ::
+ 
+        page = loadpage ("http://www.xillio.com/en");
+        
+        text = "";
+
+        if (page != null) {
+            menu = xpath (page, "//div[@class='top-nav']");
+            text = gettext(menu);
+            log(text);
+        } else {
+            log ("no page");
+        }
+        
+    Now ``text`` will only contain the menu items as text
+    
+-   Get all text content on a page without any HTML-markup:
+    
+    ::
+    
+        body = xpath (page, "//body");
+        content = gettext (body);
+
+Tags
+----
+
+:doc:`_tag_xmlhtml`

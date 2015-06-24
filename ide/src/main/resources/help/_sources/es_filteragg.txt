@@ -1,0 +1,30 @@
+------------
+es_filteragg
+------------
+
+**es_filteragg (**\ *string* **name,** *filter* **filter,** *<string,void>* **parent*)**
+
+Description
+-----------
+
+Create an aggregation ``name`` using ``filter``, as a child of the existing aggregation ``parent``. ``filter`` can be any elasticsearch filter created using a filter function. 
+Returns a string identifier that can be used to identify this aggregation. Two sibling or same-level aggregations cannot have the same name.
+
+See also :doc:`es_hasfieldfilter`, :doc:`es_rangefilter`, :doc:`es_regexfilter`, :doc:`es_termfilter`
+
+Examples
+--------
+
+-
+
+	To create a filter that only looks at the color red.
+	
+	::
+		
+		redfilter = es_termfilter("color", "red");
+		colors = es_filteragg("only_red", redfilter);
+
+Tags
+----
+
+:doc:`_tag_elasticsearch`

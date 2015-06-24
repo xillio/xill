@@ -1,0 +1,67 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="stringtoxml">
+<h1>stringtoxml</h1>
+<p><strong>stringtoxml (</strong><em>string</em> <strong>value)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Loads the specified text as XML. Useful to generate (parts of) XML or HTML documents inline.</p>
+<p>See also <a class="reference internal" href="xmltostring.html"><em>xmltostring</em></a>, <a class="reference internal" href="loadxml.html"><em>loadxml</em></a></p>
+</div>
+<div class="section" id="example">
+<h2>Example</h2>
+<ul>
+<li><p class="first">Executing the following code</p>
+<div class="highlight-python"><div class="highlight"><pre>content = &quot;&lt;note id=\&quot;1\&quot;&gt;
+            &lt;to&gt;Tove&lt;/to&gt;
+            &lt;from&gt;Jani&lt;/from&gt;
+            &lt;heading&gt;Reminder&lt;/heading&gt;
+            &lt;comment&gt;This was sent to James as well&lt;/comment&gt;
+            &lt;comment&gt;John has not responded to the invitation&lt;/comment&gt;
+            &lt;body&gt;Don&#39;t forget me this weekend!&lt;/body&gt;
+        &lt;/note&gt;&quot;;
+
+xmlcontent = stringtoxml (content);
+
+comments = xpath (xmlcontent, &quot;//comment&quot;);
+
+log (comments);
+</pre></div>
+</div>
+<p>will print:</p>
+<div class="highlight-python"><div class="highlight"><pre>{
+        0 = &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt;
+                &lt;comment&gt;This was sent to James as well&lt;/comment&gt;,
+        1 = &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt;
+                &lt;comment&gt;John has not responded to the invitation&lt;/comment&gt;
+}
+</pre></div>
+</div>
+<p>However, trying to execute this line:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">comments</span> <span class="o">=</span> <span class="n">xpath</span> <span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="s">&quot;//comment&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>will throw an error.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_xmlhtml.html"><em>XML / HTML</em></a>, <a class="reference internal" href="_tag_text.html"><em>Text</em></a>, <a class="reference internal" href="_tag_conversion.html"><em>Conversion</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

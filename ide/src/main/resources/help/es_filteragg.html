@@ -1,0 +1,42 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="es-filteragg">
+<h1>es_filteragg</h1>
+<p><strong>es_filteragg (</strong><em>string</em> <strong>name,</strong> <em>filter</em> <strong>filter,</strong> <em>&lt;string,void&gt;</em> <strong>parent*)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Create an aggregation <code class="docutils literal"><span class="pre">name</span></code> using <code class="docutils literal"><span class="pre">filter</span></code>, as a child of the existing aggregation <code class="docutils literal"><span class="pre">parent</span></code>. <code class="docutils literal"><span class="pre">filter</span></code> can be any elasticsearch filter created using a filter function.
+Returns a string identifier that can be used to identify this aggregation. Two sibling or same-level aggregations cannot have the same name.</p>
+<p>See also <a class="reference internal" href="es_hasfieldfilter.html"><em>es_hasfieldfilter</em></a>, <a class="reference internal" href="es_rangefilter.html"><em>es_rangefilter</em></a>, <a class="reference internal" href="es_regexfilter.html"><em>es_regexfilter</em></a>, <a class="reference internal" href="es_termfilter.html"><em>es_termfilter</em></a></p>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">To create a filter that only looks at the color red.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">redfilter</span> <span class="o">=</span> <span class="n">es_termfilter</span><span class="p">(</span><span class="s">&quot;color&quot;</span><span class="p">,</span> <span class="s">&quot;red&quot;</span><span class="p">);</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="n">es_filteragg</span><span class="p">(</span><span class="s">&quot;only_red&quot;</span><span class="p">,</span> <span class="n">redfilter</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_elasticsearch.html"><em>Elasticsearch</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

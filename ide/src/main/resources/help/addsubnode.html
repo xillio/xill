@@ -1,0 +1,80 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="addsubnode">
+<h1>addsubnode</h1>
+<p><strong>addsubnode (</strong><em>&lt;xml,void&gt;</em> <strong>node,</strong> <em>&lt;string,void&gt;</em> <strong>newnode,</strong> <em>&lt;xml,void&gt;</em> <strong>beforenode*)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Add the provided HTML/XML string <code class="docutils literal"><span class="pre">newnode</span></code> as a child to <code class="docutils literal"><span class="pre">node</span></code>, optionally at position <code class="docutils literal"><span class="pre">beforenode</span></code>. Returns the newly created node.</p>
+<p>See also <a class="reference internal" href="removenode.html"><em>removenode</em></a></p>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">Given an XML-file note.xml, which contains:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;note&gt;
+    &lt;to&gt;Tove&lt;/to&gt;
+    &lt;from&gt;Jani&lt;/from&gt;
+    &lt;heading&gt;Reminder&lt;/heading&gt;
+    &lt;body&gt;Don&#39;t forget me this weekend!&lt;/body&gt;
+&lt;/note&gt;
+</pre></div>
+</div>
+<p>After executing the following code:</p>
+<div class="highlight-python"><div class="highlight"><pre>xml = loadxml (&quot;C:/tmp/note.xml&quot;);
+parent = xpath(xml, &quot;//note&quot;); //get main node
+addsubnode (parent, &quot;&lt;comment&gt;Comments are welcome.&lt;/comment&gt;&quot;);
+</pre></div>
+</div>
+<p>Parent contains:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;note&gt;
+    &lt;to&gt;Tove&lt;/to&gt;
+    &lt;from&gt;Jani&lt;/from&gt;
+    &lt;heading&gt;Reminder&lt;/heading&gt;
+    &lt;body&gt;Don&#39;t forget me this weekend!&lt;/body&gt;
+    &lt;comment&gt;Comments are welcome.&lt;/comment&gt;
+&lt;/note&gt;
+</pre></div>
+</div>
+</li>
+<li><p class="first">After executing the following code:</p>
+<div class="highlight-python"><div class="highlight"><pre>xml = loadxml (&quot;&lt;your path to file&gt;/note.xml&quot;);
+parent = xpath(xml, &quot;//note&quot;); //get main node
+subnode = xpath(xml, &quot;//body&quot;); //get subnode
+addsubnode (parent, &quot;&lt;comment&gt;Comments are welcome.&lt;/comment&gt;&quot;, subnode);
+</pre></div>
+</div>
+<p>Parent contains:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;note&gt;
+    &lt;to&gt;Tove&lt;/to&gt;
+    &lt;from&gt;Jani&lt;/from&gt;
+    &lt;heading&gt;Reminder&lt;/heading&gt;
+    &lt;comment&gt;Comments are welcome.&lt;/comment&gt;
+    &lt;body&gt;Don&#39;t forget me this weekend!&lt;/body&gt;
+&lt;/note&gt;
+</pre></div>
+</div>
+<p>Note: Never mind the indentation of <code class="docutils literal"><span class="pre">&lt;body&gt;</span></code>, this is a known issue. <code class="docutils literal"><span class="pre">&lt;comment&gt;</span></code> and <code class="docutils literal"><span class="pre">&lt;body&gt;</span></code> are on the same level.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_xmlhtml.html"><em>XML / HTML</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

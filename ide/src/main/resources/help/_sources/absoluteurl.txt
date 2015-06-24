@@ -1,0 +1,46 @@
+-----------
+absoluteurl
+-----------
+
+**absoluteurl (**\ *string* **pageurl,** *string* **relativeurl)**
+
+Description
+-----------
+
+Converts the relative URL string ``relativeurl`` to an absolute url using the string ``pageurl`` as base URL. Returns the resulting URL as a string.
+
+Examples
+--------
+
+- 	
+
+    Executing:
+    
+    ::
+    
+        absoluteurl("http://www.xillio.nl/calendar/", "movies");
+    
+    Returns:
+    
+    ::
+    
+        "http://www.xillio.nl/calendar/movies"
+
+- 	
+
+    Executing:
+    
+    ::
+    
+        absoluteurl("http://www.xillio.nl/calendar/", "../");
+    
+    Returns:
+    
+    ::
+    
+        "http://www.xillio.nl/"
+
+Tags
+----
+
+:doc:`_tag_text`

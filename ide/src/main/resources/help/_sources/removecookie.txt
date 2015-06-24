@@ -1,0 +1,63 @@
+------------
+removecookie
+------------
+
+**removecookie (**\ *<void,string,list,boolean>* **cookie)**
+
+Description
+-----------
+
+Removes the browser cookie with the name ``cookie``. ``cookie`` can be a string or a list. If ``cookie`` is a boolean with value ``true``, then all cookies will be cleared. Current cookie information can be obtained through ``pageinfo()``. Cookies can be set using ``setcookie()``.
+
+Due to the nature of Content Tools, all cookies will be removed with every restart.
+
+See also :doc:`setcookie`
+
+
+Example
+-------
+
+-   
+
+    Remove all cookies, set a cookie for the current page and remove it again:
+    
+    ::
+
+        homeurl = "http://www.xillio.com/";
+        page = loadpage (homeurl);
+        removecookie(page, true);
+        cookie = {name="Xillio", path="/", domain="www.xillio.com", value="123", expires="2018-10-18T09:42:15"};
+        setcookie(page, cookie);
+        log (pageinfo (page));
+        removecookie(page, "Xillio");
+        log (pageinfo (page));
+
+    This will print something like:
+    
+    ::
+    
+        {
+	        url = "http://www.xillio.com/",
+        	title = "Xillio",
+	        cookies = {
+		        Xillio = {
+			        name = "Xillio",
+			        domain = ".www.xillio.com",
+			        path = "/",
+			        value = "123",
+			        expires = 2018-10-18T09:42:15.0
+		        }
+	        }
+        }
+        {
+	        url = "http://www.xillio.com/",
+	        title = "Xillio",
+	        cookies = {
+        
+	        }
+        }
+
+Tags
+----
+
+:doc:`_tag_browser`

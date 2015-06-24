@@ -1,0 +1,38 @@
+-----------
+xmltostring
+-----------
+
+**xmltostring (**\ *<void,xml,node>* **element)**
+
+Description
+-----------
+
+Outputs the string representation of the XML or page node ``xml``. 
+
+See also :doc:`stringtoxml`
+
+
+Examples
+--------
+
+-
+    
+    Executing:
+    
+    ::
+    
+        log(xmltostring(loadpage("http://www.google.nl")));
+
+    will print:
+    
+    ::
+    
+		<html itemscope="" itemtype="http://schema.org/WebPage"><head><meta content="/images/google_favicon_128.png" itemprop="image">
+			<meta conte 
+		[...]
+
+
+Tags
+----
+
+:doc:`_tag_text`, :doc:`_tag_xmlhtml`, :doc:`_tag_conversion`

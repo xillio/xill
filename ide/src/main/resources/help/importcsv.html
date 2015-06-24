@@ -1,0 +1,51 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="importcsv">
+<h1>importcsv</h1>
+<p><strong>importcsv (</strong><em>string</em> <strong>table,</strong> <em>string</em> <strong>uri,</strong> <em>string</em> <strong>enclosingchar,</strong> <em>string</em> <strong>seperatorchar,</strong> <em>string</em> <strong>lineendchar,</strong> <em>&lt;string,void&gt;</em> <strong>connectionstring*)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Drops / creates the database table <code class="docutils literal"><span class="pre">table</span></code> and then imports the CSV data from the csv file <code class="docutils literal"><span class="pre">uri</span></code>; <code class="docutils literal"><span class="pre">enclosingchar</span></code> indicates a character that is used to enclose fields, e.g. <code class="docutils literal"><span class="pre">'&quot;'</span></code>; <code class="docutils literal"><span class="pre">seperatorchar</span></code> indicates the character used to separate fields, e.g. <code class="docutils literal"><span class="pre">','</span></code>; <code class="docutils literal"><span class="pre">lineendchar</span></code> indicates the character used to end lines, e.g <code class="docutils literal"><span class="pre">'\n'</span></code>. The optional parameter <code class="docutils literal"><span class="pre">connectionstring</span></code> is a string identifying the database connection as returned by the <code class="docutils literal"><span class="pre">database</span></code> function.</p>
+</div>
+<div class="section" id="example">
+<h2>Example</h2>
+<ul>
+<li><p class="first">Assuming we have a text file <code class="docutils literal"><span class="pre">C:\tmp\test.csv</span></code> which contains:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="s">&#39;key&#39;</span><span class="p">,</span><span class="s">&#39;value&#39;</span>
+<span class="s">&#39;10&#39;</span><span class="p">,</span><span class="s">&#39;34&#39;</span>
+<span class="s">&#39;11&#39;</span><span class="p">,</span><span class="s">&#39;56&#39;</span>
+<span class="s">&#39;12&#39;</span><span class="p">,</span><span class="s">&#39;34&#39;</span>
+<span class="s">&#39;14&#39;</span><span class="p">,</span><span class="s">&#39;100&#39;</span>
+</pre></div>
+</div>
+<p>Then to create the database table <code class="docutils literal"><span class="pre">test</span></code> we would execute:</p>
+<div class="highlight-python"><div class="highlight"><pre>settings = global(callbot(&quot;testbots/settings.sbot&quot;));
+database(settings.db_host, settings.db_port, settings.db_name, settings.db_user, settings.db_pass);
+
+importcsv (&quot;test&quot;, &quot;C:/tmp/test.csv&quot;, &quot;\\&#39;&quot;, &quot;,&quot;, &quot;\\r\\n&quot;);
+</pre></div>
+</div>
+<p>Note the needed number of escaping slashes to forward the correct commands to MySQL. Since we want MySQL to see <code class="docutils literal"><span class="pre">&quot;\n&quot;</span></code> we need to escape the backslash <code class="docutils literal"><span class="pre">\</span></code> by using <code class="docutils literal"><span class="pre">\\</span></code>.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_database.html"><em>Database</em></a>, <a class="reference internal" href="_tag_file.html"><em>File</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

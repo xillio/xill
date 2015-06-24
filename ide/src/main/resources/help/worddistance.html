@@ -1,0 +1,51 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="worddistance">
+<h1>worddistance</h1>
+<p><strong>worddistance (</strong><em>string</em> <strong>source,</strong> <em>string</em> <strong>target,</strong> <em>boolean</em> <strong>relative*)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Returns a floating point number between 0 (no likeness) and 1 (identical), indicating how similar the <code class="docutils literal"><span class="pre">source</span></code> and <code class="docutils literal"><span class="pre">target</span></code> strings are. This routine uses the Damereau Levenshtein distance to calculate the similarity. If the optional boolean argument <code class="docutils literal"><span class="pre">relative</span></code> is set to false, then the absolute distance will be returned rather than a relative distance.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">Executing the following code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">log</span> <span class="p">(</span><span class="n">worddistance</span><span class="p">(</span><span class="s">&quot;boy&quot;</span><span class="p">,</span> <span class="s">&quot;boy&quot;</span><span class="p">));</span>
+<span class="n">log</span> <span class="p">(</span><span class="n">worddistance</span><span class="p">(</span><span class="s">&quot;boy&quot;</span><span class="p">,</span> <span class="s">&quot;boys&quot;</span><span class="p">));</span>
+<span class="n">log</span> <span class="p">(</span><span class="n">worddistance</span><span class="p">(</span><span class="s">&quot;boys&quot;</span><span class="p">,</span> <span class="s">&quot;girl&quot;</span><span class="p">));</span>
+<span class="n">log</span> <span class="p">(</span><span class="n">worddistance</span><span class="p">(</span><span class="s">&quot;girls&quot;</span><span class="p">,</span> <span class="s">&quot;girlfriends&quot;</span><span class="p">));</span>
+<span class="n">log</span> <span class="p">(</span><span class="n">worddistance</span><span class="p">(</span><span class="s">&quot;girls&quot;</span><span class="p">,</span> <span class="s">&quot;girlfriends&quot;</span><span class="p">,</span> <span class="n">false</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>will print:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="mi">1</span>
+<span class="mf">0.75</span>
+<span class="mi">0</span>
+<span class="mf">0.4545454545454546</span>
+<span class="mi">6</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_other.html"><em>Other</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

@@ -1,0 +1,56 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="input">
+<h1>input</h1>
+<p><strong>input (</strong><em>node</em> <strong>element,</strong> <em>string</em> <strong>text)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>This browser function enters the string <code class="docutils literal"><span class="pre">text</span></code> into the form input-element <code class="docutils literal"><span class="pre">element</span></code>. This is useful for entering text into web forms before submitting them.</p>
+<p>See also <a class="reference internal" href="select.html"><em>select</em></a></p>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">Insert text into a searchbox:</p>
+<div class="highlight-python"><div class="highlight"><pre>page = loadpage (&quot;http://www.xillio.com/&quot;);
+text = &quot;migration&quot;;
+
+if (page != null) {
+    searchbox = xpath (page, &quot;//input[@name=&#39;q&#39;]&quot;);
+    log (gettext(searchbox));
+    input (searchbox, text);  // actually writes text into the searchbox as if a user were typing
+    log (gettext(searchbox));
+} else {
+    log (&quot;no page&quot;);
+}
+</pre></div>
+</div>
+<p>This will print:</p>
+<div class="highlight-python"><div class="highlight"><pre>INFO
+INFO   migration
+</pre></div>
+</div>
+<p>As you can see value contains the text <code class="docutils literal"><span class="pre">&quot;migration&quot;</span></code> as expected.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_browser.html"><em>Browser</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

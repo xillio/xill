@@ -1,0 +1,37 @@
+----------
+startswith
+----------
+
+**startswith (**\ *<string,void>* **value1,** *<string,void>* **value2)**
+
+Description
+-----------
+
+Returns ``true`` if the string ``value1`` starts with the (sub)string ``value2``.
+
+See also :doc:`endswith`, :doc:`contains`
+
+Examples
+--------
+
+-
+
+    The following calls to ``startswith`` all return ``true``:
+    
+    ::
+    
+        testvalue = startswith("testing", "test");
+        testvalue = startswith("Welcome to our site!", "Welcome to");
+-
+    
+    While the following would return ``false``:
+    
+    ::
+    
+        testvalue = startswith("testing", "ing");
+        
+
+Tags
+----
+
+:doc:`_tag_text`

@@ -1,0 +1,42 @@
+-----------
+es_termsagg
+-----------
+
+**es_termsagg (**\ *string* **name,** *string* **field,** *<string,void>* **parent*)**
+
+Description
+-----------
+
+Creates an aggregation ``name`` grouped by ``field`` as a child of aggregation ``parent``. Returns a string identifier that can be used to identify this filter.
+Two sibling or same-level aggregations cannot have the same name. Children of this aggregation should be created with ``es_statsagg ()``.
+
+See also :doc:`es_statsagg`
+
+Examples
+--------
+
+-
+
+	Create an aggregation "sort_color" and group by the color field:
+	
+	::
+		
+		colors = es_termsagg("sort_color", "color");
+
+-
+
+	Create an aggregation "authors" that includes a field "stats" containing statistics for the "price" field grouped by "author":
+	
+	::
+	
+		es_connect();
+		//create a new aggregation "authors" which groups by field "author"
+		authors = es_termsagg("authors", "author");
+		//add the field "stats", which shows the aggregated statistics for the field "price"
+		es_statsagg("stats", "price", authors);
+		results = es_aggregate("art", null, authors);
+
+Tags
+----
+
+:doc:`_tag_elasticsearch`

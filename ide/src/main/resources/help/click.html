@@ -1,0 +1,48 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="click">
+<h1>click</h1>
+<p><strong>click (</strong><em>node</em> <strong>element)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Performs a browser click action on the provided <code class="docutils literal"><span class="pre">element</span></code>, which must be a node from an (X)HTML document. Javascript handlers bound to the provided <code class="docutils literal"><span class="pre">element</span></code> will also be triggered.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">The following script will click all links on the given page:</p>
+<div class="highlight-python"><div class="highlight"><pre>page = loadpage (&quot;http://www.xillio.com/&quot;);
+
+if (page != null) {
+    nodes = xpath (page, &quot;//a&quot;);
+    foreach (_, node, nodes) {
+        click (node);
+    }
+} else {
+    log (&quot;page could not be loaded&quot;);
+}
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_browser.html"><em>Browser</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

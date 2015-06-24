@@ -1,0 +1,51 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="es-termsagg">
+<h1>es_termsagg</h1>
+<p><strong>es_termsagg (</strong><em>string</em> <strong>name,</strong> <em>string</em> <strong>field,</strong> <em>&lt;string,void&gt;</em> <strong>parent*)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Creates an aggregation <code class="docutils literal"><span class="pre">name</span></code> grouped by <code class="docutils literal"><span class="pre">field</span></code> as a child of aggregation <code class="docutils literal"><span class="pre">parent</span></code>. Returns a string identifier that can be used to identify this filter.
+Two sibling or same-level aggregations cannot have the same name. Children of this aggregation should be created with <code class="docutils literal"><span class="pre">es_statsagg</span> <span class="pre">()</span></code>.</p>
+<p>See also <a class="reference internal" href="es_statsagg.html"><em>es_statsagg</em></a></p>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">Create an aggregation &#8220;sort_color&#8221; and group by the color field:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">colors</span> <span class="o">=</span> <span class="n">es_termsagg</span><span class="p">(</span><span class="s">&quot;sort_color&quot;</span><span class="p">,</span> <span class="s">&quot;color&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Create an aggregation &#8220;authors&#8221; that includes a field &#8220;stats&#8221; containing statistics for the &#8220;price&#8221; field grouped by &#8220;author&#8221;:</p>
+<div class="highlight-python"><div class="highlight"><pre>es_connect();
+//create a new aggregation &quot;authors&quot; which groups by field &quot;author&quot;
+authors = es_termsagg(&quot;authors&quot;, &quot;author&quot;);
+//add the field &quot;stats&quot;, which shows the aggregated statistics for the field &quot;price&quot;
+es_statsagg(&quot;stats&quot;, &quot;price&quot;, authors);
+results = es_aggregate(&quot;art&quot;, null, authors);
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_elasticsearch.html"><em>Elasticsearch</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

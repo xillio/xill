@@ -1,0 +1,50 @@
+-------------
+mongo_connect
+-------------
+
+**mongo_connect (**\ *string* **database,** *string* **host*,** *number* **port*)**
+
+Description
+-----------
+
+Connects to a mongoDB database with name ``database`` on a server at the provided ``host`` and ``port``. Returns a string which can be used to identify this connection for use with other mongo functions. All other mongo functions take the connection string as an optional argument, when none is given they will use the first one that was connected to. 
+
+Default values
+--------------
+:host: ``localhost``
+:port: ``27017``
+
+
+Examples
+--------
+
+-
+
+	Common usage:
+	
+	::
+	
+		mongo = mongo_connect(settings.dbname, settings.host, settings.port);
+
+	Where settings might be:
+	
+	::
+	
+		settings = {
+			dbname = "remotedb",
+			host = "37.0.85.17",
+			port = 27017
+		};
+
+-
+
+	To connect using all defaults use:
+	
+	::
+	
+		mongo = mongo_connect("localdb");
+
+Tags
+----
+
+:doc:`_tag_mongodb`

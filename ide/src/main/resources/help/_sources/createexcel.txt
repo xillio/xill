@@ -1,0 +1,27 @@
+-----------
+createexcel
+-----------
+
+**createexcel (**\ *boolean* **xlsx)**
+
+Description
+-----------
+
+Creates an empty workbook to work with. By default this workbook will be in XLSX format. When ``xlsx`` is set to false a legacy XLS workbook will be created. After the workbook has been created, sheets can be created using :doc:`createsheet`.
+
+
+Example
+-------
+
+-
+    
+    Creating an empty workbook:
+    
+    ::
+        
+        workbook = createexcel();
+    
+Tags
+----
+
+:doc:`_tag_excel`

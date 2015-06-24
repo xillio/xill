@@ -1,0 +1,30 @@
+------
+abs
+------
+
+**abs (**\ *number* **value*)**
+
+Description
+-----------
+
+Returns the absolute value of the provided ``value``.
+
+Examples
+--------
+
+-   
+
+    Perform abs on three different inputs:
+
+    ::
+
+        log(abs(6));
+        log(abs(-5));
+        log(abs(-3.14));
+
+    This will print 6, 5 and 3.14.
+
+Tags
+----
+
+:doc:`_tag_other`

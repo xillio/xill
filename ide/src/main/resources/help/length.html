@@ -1,0 +1,61 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="length">
+<h1>length</h1>
+<p><strong>length (</strong><em>&lt;any&gt;</em> <strong>value)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Returns the length of <code class="docutils literal"><span class="pre">value</span></code>, which can be of any type. Supported: string, list and file list iterator, anything else will return 0.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">Executing the following:</p>
+<div class="highlight-python"><div class="highlight"><pre>shortstring = &quot;Welcome&quot;;
+emptystring = &quot;&quot;;
+
+log (length (shortstring));
+log (length (emptystring));
+
+shortlist = {column = 4, row = 5};
+emptylist = {};
+
+log (length (shortlist));
+log (length (emptylist));
+</pre></div>
+</div>
+<p>will print:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="mi">7</span>
+<span class="mi">0</span>
+<span class="mi">2</span>
+<span class="mi">0</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Possible uses with file list iterator variables:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">log</span><span class="p">(</span><span class="s">&quot;Number of files: &quot;</span> <span class="o">+</span> <span class="n">length</span><span class="p">(</span><span class="n">listfiles</span><span class="p">(</span><span class="s">&quot;c:/xillio&quot;</span><span class="p">)));</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p>String, List</p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

@@ -1,0 +1,50 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="trim">
+<h1>trim</h1>
+<p><strong>trim (</strong><em>&lt;string,void&gt;</em> <strong>text,</strong> <em>boolean</em> <strong>internal*)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Returns the trimmed version of string <code class="docutils literal"><span class="pre">text</span></code>. If the optional boolean parameter <code class="docutils literal"><span class="pre">internal</span></code> is set to <code class="docutils literal"><span class="pre">true</span></code>, the routine will also replace slack white space inside the string with a single space.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">Executing:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">log</span><span class="p">(</span><span class="n">trim</span><span class="p">(</span><span class="s">&quot;   Xillio Xillio    Xillio Xillio Xillio    &quot;</span><span class="p">));</span>
+<span class="n">log</span><span class="p">(</span><span class="n">trim</span><span class="p">(</span><span class="s">&quot;   Xillio Xillio    Xillio Xillio Xillio    &quot;</span><span class="p">,</span> <span class="n">true</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>will print:</p>
+<div class="highlight-python"><div class="highlight"><pre>Xillio Xillio    Xillio Xillio Xillio
+Xillio Xillio Xillio Xillio Xillio
+</pre></div>
+</div>
+</li>
+<li><p class="first">Trim the data read from a file:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">includepage</span> <span class="o">=</span> <span class="n">trim</span> <span class="p">(</span><span class="n">loaddata</span><span class="p">(</span><span class="n">includefile</span><span class="p">),</span> <span class="n">true</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_text.html"><em>Text</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

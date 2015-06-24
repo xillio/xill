@@ -1,0 +1,67 @@
+package nl.xillio.xill.debugging;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import nl.xillio.xill.api.PluginPackage;
+import nl.xillio.xill.components.instructions.VariableDeclaration;
+import xill.lang.xill.Target;
+import xill.lang.xill.UseStatement;
+
+/**
+ * This class represents a wrapper for various kinds of information that can be used for debugging
+ */
+public class DebugInfo implements nl.xillio.xill.api.DebugInfo {
+	
+	
+	private Map<Target, VariableDeclaration> variables = new HashMap<>();
+	private Map<UseStatement, PluginPackage> using = new HashMap<>();
+
+	/**
+	 * Add all information from into to this
+	 * @param info
+	 */
+	public void add(DebugInfo info) {
+		variables.putAll(info.getVariables());
+		using.putAll(info.getUsing());
+	}
+
+	/**
+	 * @return the variables
+	 */
+	public Map<Target, VariableDeclaration> getVariables() {
+		return variables;
+	}
+
+	/**
+	 * @param variables the variables to set
+	 */
+	public void setVariables(Map<Target, VariableDeclaration> variables) {
+		this.variables = variables;
+	}
+
+	/**
+	 * @return the using
+	 */
+	public Map<UseStatement, PluginPackage> getUsing() {
+		return using;
+	}
+
+	/**
+	 * @param using the using to set
+	 */
+	public void setUsing(Map<UseStatement, PluginPackage> using) {
+		this.using = using;
+	}
+	
+	/**
+	 * @return a set of used plugins
+	 */
+	public Set<PluginPackage> getUsedPlugins() {
+		return new HashSet<>(using.values());
+	}
+
+
+}

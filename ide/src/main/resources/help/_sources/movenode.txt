@@ -1,0 +1,59 @@
+--------
+movenode
+--------
+
+**movenode (**\ *<xml,void>* **parentnode,** *<xml,void>* **subnode,** *<xml,void>* **beforenode*)**
+
+Description
+-----------
+
+Moves the XML-node ``subnode`` to the XML-node ``parent``, optionally before ``beforenode``.
+
+See also :doc:`copynode`, :doc:`addsubnode`
+
+Example
+-------
+
+-
+
+    Given an XML-file ``note.xml``, which contains:
+    
+    ::
+    
+        <note id="1">
+            <to>Tove</to>
+            <from>Jani</from>
+            <heading>Reminder</heading>
+            <comment>This was sent to James as well</comment>
+            <comment>John has not responded to the invitation</comment>
+            <body>Don't forget me this weekend!</body>
+        </note>
+
+    then after executing the following code:
+    
+    ::
+
+        xml = loadxml ("C:/tmp/note.xml");
+        parent = xpath(xml, "//note"); //get main node
+        body = xpath(xml, "//body"); //get body
+        heading = xpath(xml, "//heading"); //get heading
+        movenode (body, heading);
+
+    ``parent`` contains:
+
+    ::
+        
+        <note id="1">
+            <to>Tove</to>
+            <from>Jani</from>
+            
+            <comment>This was sent to James as well</comment>
+            <comment>John has not responded to the invitation</comment>
+            <body>Don't forget me this weekend!<heading>Reminder</heading>
+           </body>
+        </note>
+
+Tags
+----
+
+:doc:`_tag_xmlhtml`

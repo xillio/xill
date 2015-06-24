@@ -1,0 +1,43 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="es-regexfilter">
+<h1>es_regexfilter</h1>
+<p><strong>es_regexfilter (</strong><em>string</em> <strong>field,</strong> <em>string</em> <strong>regex)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Matches the value of <code class="docutils literal"><span class="pre">field</span></code> against <code class="docutils literal"><span class="pre">regex</span></code>. This returns a string identifier that can be used to identify this filter. If the document does not have <code class="docutils literal"><span class="pre">field</span></code> it will not be included in the search query.</p>
+<p>For more information on the regex syntax see: <a class="reference external" href="http://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-regexp-query.html#regexp-syntax">http://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-regexp-query.html#regexp-syntax</a></p>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">Find the documents which have the words &#8220;color&#8221;, &#8220;colour&#8221;, &#8220;colored&#8221; or &#8220;coloured&#8221; in the field &#8220;text&#8221;:</p>
+<div class="highlight-python"><div class="highlight"><pre>es_connect();
+//This regex filter will match &quot;color&quot;, &quot;colour&quot;, &quot;colored&quot; and &quot;coloured&quot;.
+regexfilter = es_regexfilter(&quot;text&quot;, &quot;colou?r(ed)?&quot;);
+result = es_search(&quot;art&quot;, &quot;photos&quot;, regexfilter);
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_elasticsearch.html"><em>Elasticsearch</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

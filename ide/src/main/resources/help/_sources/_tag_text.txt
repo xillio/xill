@@ -1,0 +1,47 @@
+-----------
+Text
+-----------
+
+Functions in this category offer text related actions such as replacement operations, formatting, substrings etc. Some functions are regular expression capable.
+
+
+Functions
+------------------------
+
+..  toctree::
+    :maxdepth: 1
+    :titlesonly:
+
+	absoluteurl <absoluteurl>
+	contains <contains>
+	datetostring <datetostring>
+	endswith <endswith>
+	extractlist <extractlist>
+	format <format>
+	formatxml <formatxml>
+	indexof <indexof>
+	jsontolist <jsontolist>
+	length <length>
+	listtocsv <listtocsv>
+	listtojson <listtojson>
+	listtostring <listtostring>
+	lowercase <lowercase>
+	matches <matches>
+	md5 <md5>
+	metadatafromdocument <metadatafromdocument>
+	regex <regex>
+	repeat <repeat>
+	replace <replace>
+	split <split>
+	startswith <startswith>
+	substring <substring>
+	textfromdocument <textfromdocument>
+	tidy <tidy>
+	trim <trim>
+	uppercase <uppercase>
+
+
+All tags
+------------------------
+
+:doc:`_tag_browser`, :doc:`_tag_conversion`, :doc:`_tag_database`, :doc:`_tag_date`, :doc:`_tag_elasticsearch`, :doc:`_tag_encoding`, :doc:`_tag_excel`, :doc:`_tag_file`, :doc:`_tag_language`, :doc:`_tag_list`, :doc:`_tag_mongodb`, :doc:`_tag_other`, :doc:`_tag_regex`, :doc:`_tag_text`, :doc:`_tag_xmlhtml`

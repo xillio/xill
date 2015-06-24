@@ -1,0 +1,66 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="mongo-update">
+<h1>mongo_update</h1>
+<p><strong>mongo_update (</strong><em>string</em> <strong>collection,</strong> <em>&lt;string,list,void&gt;</em> <strong>query,</strong> <em>list</em> <strong>update,</strong> <em>boolean</em> <strong>upsert*,</strong> <em>boolean</em> <strong>multi*,</strong> <em>database</em> <strong>mongo*)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Update objects from <code class="docutils literal"><span class="pre">collection</span></code> based on the provided <code class="docutils literal"><span class="pre">query</span></code>, with the values contained in <code class="docutils literal"><span class="pre">update</span></code>. If <code class="docutils literal"><span class="pre">query</span></code> is a string it will only update the document with that id, otherwise it will update the documents that match the <code class="docutils literal"><span class="pre">query</span></code>. If <code class="docutils literal"><span class="pre">upsert</span></code> is <code class="docutils literal"><span class="pre">true</span></code> then the document will be created if it doesn&#8217;t exist. If <code class="docutils literal"><span class="pre">multi</span></code> is <code class="docutils literal"><span class="pre">true</span></code> then all documents matching the query will be updated, else only the first. By default <code class="docutils literal"><span class="pre">upsert</span></code> and <code class="docutils literal"><span class="pre">multi</span></code> are <code class="docutils literal"><span class="pre">false</span></code>. If <code class="docutils literal"><span class="pre">mongo</span></code> is not provided the last active connection will be used.</p>
+<p><strong>Note:</strong> Use the &#8220;$set&#8221; notation to change individual fields in documents (see examples). Simply passing an array will replace the entire document.</p>
+<p>See also <a class="reference internal" href="mongo_store.html"><em>mongo_store</em></a></p>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">Change the age of the employee with last name &#8220;Wilson&#8221; to 31.</p>
+<div class="highlight-python"><div class="highlight"><pre>mongo_connect(&quot;localDB&quot;);
+query = {
+    lastName = &quot;Wilson&quot;
+};
+
+//Note that because &quot;$set&quot; starts with a dollar sign it needs to be wrapped in quotes, while &quot;age&quot; does not.
+update = {
+    &quot;$set&quot; = { age = 31 }
+};
+
+mongo_update(&quot;employees&quot;, query, update);
+</pre></div>
+</div>
+</li>
+<li><p class="first">Change the employee type to senior for all employees that have worked longer than 5 years.</p>
+<div class="highlight-python"><div class="highlight"><pre>mongo_connect(&quot;localDB&quot;);
+senior = {
+    workYears = { &quot;$gt&quot; = 5 }
+};
+
+update = {
+    &quot;$set&quot; = { type = &quot;senior&quot; }
+};
+
+//Here we set multi to true, so all employees will bet updated.
+mongo_update(&quot;employees&quot;, senior, update, false, true);
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_mongodb.html"><em>MongoDB</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

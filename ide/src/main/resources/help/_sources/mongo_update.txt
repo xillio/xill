@@ -1,0 +1,58 @@
+------------
+mongo_update
+------------
+
+**mongo_update (**\ *string* **collection,** *<string,list,void>* **query,** *list* **update,** *boolean* **upsert*,** *boolean* **multi*,** *database* **mongo*)**
+
+Description
+-----------
+
+Update objects from ``collection`` based on the provided ``query``, with the values contained in ``update``. If ``query`` is a string it will only update the document with that id, otherwise it will update the documents that match the ``query``. If ``upsert`` is ``true`` then the document will be created if it doesn't exist. If ``multi`` is ``true`` then all documents matching the query will be updated, else only the first. By default ``upsert`` and ``multi`` are ``false``. If ``mongo`` is not provided the last active connection will be used. 
+
+**Note:** Use the "$set" notation to change individual fields in documents (see examples). Simply passing an array will replace the entire document.
+
+See also :doc:`mongo_store`
+
+Examples
+--------
+
+-
+
+    Change the age of the employee with last name "Wilson" to 31.
+    
+    ::
+    
+        mongo_connect("localDB");
+        query = {
+            lastName = "Wilson"
+        };
+        
+        //Note that because "$set" starts with a dollar sign it needs to be wrapped in quotes, while "age" does not.
+        update = {
+            "$set" = { age = 31 }
+        };
+        
+        mongo_update("employees", query, update);
+        
+-
+
+    Change the employee type to senior for all employees that have worked longer than 5 years.
+    
+    ::
+    
+        mongo_connect("localDB");
+        senior = {
+            workYears = { "$gt" = 5 }
+        };
+        
+        update = {
+            "$set" = { type = "senior" }
+        };
+        
+        //Here we set multi to true, so all employees will bet updated.
+        mongo_update("employees", senior, update, false, true);
+
+Tags
+----
+
+:doc:`_tag_mongodb`

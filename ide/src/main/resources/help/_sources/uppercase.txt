@@ -1,0 +1,34 @@
+---------
+uppercase
+---------
+
+**uppercase (**\ *<string,void>* **text)**
+
+Description
+-----------
+
+Returns the uppercase string of ``text``, which must also be a string.
+
+See also :doc:`lowercase`
+
+Example
+-------
+
+-
+    
+    Executing:
+	
+    ::
+    
+        log (uppercase("3... 2... 1... START... Genius!"));
+    
+    will print:
+    
+    ::
+    
+        3... 2... 1... START... GENIUS!
+
+Tags
+----
+
+:doc:`_tag_text`

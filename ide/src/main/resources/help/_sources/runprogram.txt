@@ -1,0 +1,126 @@
+----------
+runprogram
+----------
+
+**runprogram (**\ *string* **program,** *<void, list>* **arguments)**
+
+Description
+-----------
+
+Executes the executable file at path ``program`` and passes ``arguments`` as command line arguments. Returns a list variable containing the standard output and error messages.
+
+Examples
+--------
+
+
+
+-
+
+	Returning your Java version across Mac, Linux and Windows:
+	
+	::
+	
+		sysInfo = systeminfo();
+		path = null;
+		params = null;
+		os = sysInfo["os.name"];
+
+		if(contains(os, "Linux") || contains(os, "Mac")) {
+			path = sysInfo["java.home"] + "/bin/java";
+		} else if(contains(os, "Windows")) {
+			path = sysInfo["java.home"] + "/bin/java.exe";
+		} else {
+			log("Uknown operating system: " + os);
+			return();
+		}
+
+		params = {"-version"};
+
+		// Run application
+		if(fileexists(path)){
+			log("Running application with path: \"" + path + "\"");
+			if(params != null) {
+				log(listtocsv(runprogram(path,params)," "));
+			} else {
+				log(listtocsv(runprogram(path)," "));
+			}
+		} else {
+			log("Unable to find application to run at path: " + path);
+		}
+	
+	
+-
+    
+    Using ``ImageMagick`` to read EXIF data from images:
+    
+    ::
+    
+        imagemagick_result = runprogram(settings.bin_path + "\ImageMagick\identify", {"-verbose", "\"" + img + "\""});
+        
+        dimensions = regex(imagemagick_result.standard, "(?s).*?Geometry: (.*?)x(.*?)\+.*");
+        filesize = regex(imagemagick_result.standard, "(?s).*?Filesize: (.*?)\n.*");
+        authors = regex(imagemagick_result.standard, "(?s).*?exif:Artist: (.*?)\n.*");
+        copyright = regex(imagemagick_result.standard, "(?s).*?exif:Copyright: (.*?)\n.*");
+
+    Note that ``ImageMagick`` is external software, which you have to install separately.
+    
+-
+    
+    Using ``tidy.exe`` to clean HTML (if the internal function ``tidy()`` is not enough):
+    
+    ::
+    
+        tidyhtml = routine(html) 
+        {
+            html = ampersanddecode(html);
+            file_in = settings.bin_path + "/temp_in.html";
+            file_out = settings.bin_path + "/temp_out.html";
+            savedata(file_in, html, false);
+            
+            command = settings.bin_path + "/tidy.exe";
+            args = {
+				" --input-encoding utf8",
+				" --output-encoding utf8",
+				" --output-file " + file_out,
+				" --bare yes",
+				" --clean yes",
+				" --drop-font-tags yes",
+				" --drop-proprietary-attributes yes",
+				" --enclose-block-text yes",
+				" --logical-emphasis yes",
+				" --word-2000 yes",
+				" --wrap 0",
+				" --output-xml yes",
+				file_in
+			};
+            out = runprogram(command, args); 
+            html = loaddata(file_out); 
+            
+            html_body = regex(html, "[\s\S]*?<body>([\s\S]*)</body>[\s\S]*");
+            return(html_body[1]);
+        }
+
+-
+
+	Quotes used on the commandline are a windows-commandline-only functionality to ensure arguments with spaces are still treated as a single argument. Quotes as such must typically be omitted when using `runprogram` as shown in the example below:
+	
+	::
+	
+		exiftool.exe -xmp:description="Opa en oma met kleinkind op bankje op Binnenhof" -xmp-dc:subject="bankje,binnenhof" -overwrite_original "d:/temp/image.jpg"
+
+	Translates to:
+		
+	::
+	
+		options = {
+			"-xmp:description=Opa en oma met kleinkind op bankje op Binnenhof",
+			"-xmp-dc:subject=bankje,binnenhof",
+			"-overwrite_original",
+			"d:/temp/image.jpg"
+		};
+		runprogram("exiftool.exe", options);
+	
+Tags
+----
+
+:doc:`_tag_other`

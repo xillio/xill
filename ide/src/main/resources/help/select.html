@@ -1,0 +1,66 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="select">
+<h1>select</h1>
+<p><strong>select (</strong><em>node</em> <strong>element,</strong> <em>boolean</em> <strong>select)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>In an HTML-select box, executing <code class="docutils literal"><span class="pre">select</span></code> marks the option <code class="docutils literal"><span class="pre">node</span></code> as selected . If the boolean parameter <code class="docutils literal"><span class="pre">select</span></code> equals true, it selects the option, if false then it&#8217;s deselected.</p>
+<p><strong>NOTE</strong>: The deselection doesn&#8217;t work for <code class="docutils literal"><span class="pre">&lt;option&gt;</span></code> tag.</p>
+<p>See also <a class="reference internal" href="input.html"><em>input</em></a>, <a class="reference internal" href="selected.html"><em>selected</em></a></p>
+</div>
+<div class="section" id="example">
+<h2>Example</h2>
+<ul>
+<li><p class="first">Assuming we have an HTML-file <code class="docutils literal"><span class="pre">select.html</span></code> containing the following:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;html&gt;
+    &lt;body&gt;
+        &lt;select&gt;
+            &lt;option value=&quot;volvo&quot;&gt;Volvo&lt;/option&gt;
+            &lt;option value=&quot;saab&quot;&gt;Saab&lt;/option&gt;
+            &lt;option value=&quot;mercedes&quot;&gt;Mercedes&lt;/option&gt;
+            &lt;option value=&quot;audi&quot;&gt;Audi&lt;/option&gt;
+        &lt;/select&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre></div>
+</div>
+<p>then executing:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">page</span> <span class="o">=</span> <span class="n">loadpage</span><span class="p">(</span><span class="s">&quot;file:///C:/tmp/select.html&quot;</span><span class="p">);</span>
+<span class="n">selectbox</span> <span class="o">=</span> <span class="n">xpath</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s">&quot;//select&quot;</span><span class="p">);</span>
+<span class="n">choice</span> <span class="o">=</span> <span class="n">xpath</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s">&quot;//option[@value=&#39;saab&#39;]&quot;</span><span class="p">);</span>
+<span class="n">before</span> <span class="o">=</span> <span class="n">selected</span><span class="p">(</span><span class="n">choice</span><span class="p">);</span>
+<span class="n">select</span> <span class="p">(</span><span class="n">choice</span><span class="p">,</span> <span class="n">true</span><span class="p">);</span>
+<span class="n">after</span> <span class="o">=</span> <span class="n">selected</span><span class="p">(</span><span class="n">choice</span><span class="p">);</span>
+<span class="n">log</span><span class="p">(</span><span class="n">before</span><span class="p">);</span>
+<span class="n">log</span><span class="p">(</span><span class="n">after</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>will print:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">false</span>
+<span class="n">true</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_browser.html"><em>Browser</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

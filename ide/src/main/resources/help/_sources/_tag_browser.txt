@@ -1,0 +1,36 @@
+-----------
+Browser
+-----------
+
+Content Tools provides extensive functionality for working with (X)HTML pages via an inbuilt browser engine. Functions in this category provide operations such as loading pages, clicking links, handling frames and HTML forms etc.
+
+
+Functions
+------------------------
+
+..  toctree::
+    :maxdepth: 1
+    :titlesonly:
+    
+    click <click>
+    csspath <csspath>
+    curl <curl>
+    download <download>
+    focus <focus>
+    getframe <getframe>
+    input <input>
+    loadpage <loadpage>
+    pageinfo <pageinfo>
+    removecookie <removecookie>
+    screenshot <screenshot>
+    select <select>
+    setcookie <setcookie>
+    stringtopage <stringtopage>
+    switchframe <switchframe>
+    xmltostring <xmltostring>
+
+
+All tags
+------------------------
+
+:doc:`_tag_browser`, :doc:`_tag_conversion`, :doc:`_tag_database`, :doc:`_tag_date`, :doc:`_tag_elasticsearch`, :doc:`_tag_encoding`, :doc:`_tag_excel`, :doc:`_tag_file`, :doc:`_tag_language`, :doc:`_tag_list`, :doc:`_tag_mongodb`, :doc:`_tag_other`, :doc:`_tag_regex`, :doc:`_tag_text`, :doc:`_tag_xmlhtml`

@@ -1,0 +1,32 @@
+--------
+tonumber
+--------
+
+**tonumber (**\ *any* **value*)**
+
+Description
+-----------
+
+Attempts to convert a variable into a number. Returns null in event of failure.
+
+Examples
+--------
+
+-
+    
+    Check if a string is a number:
+    
+    ::
+        
+        log(tonumber("t332") == null);
+        
+    This will print:
+
+    ::
+    
+        true
+
+Tags
+----
+
+:doc:`_tag_conversion`

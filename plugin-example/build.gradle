@@ -1,0 +1,52 @@
+/*
+ * This build file contains an example of how to build a Xill 3.0 plugin with gradle.
+ * The main requirements is that the jar that implements the PluginPackage (found in META-INF/services/PluginPackage)
+ * contains the classpath to all it's dependencies.
+ */
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+	mavenLocal()
+  mavenCentral()
+	
+	maven {
+		url "http://192.168.0.200:8081/nexus/content/repositories/releases"
+		credentials {
+			username mavenUsername
+			password mavenPassword
+		}
+	}
+}
+
+dependencies {
+	compile project(':api');
+}
+
+description 'This plugin is to illustrate how to create plugins for the Xill 3.0 language using gradle'
+
+/*
+ * Copy all dependencies to the libs folder. An alternative to this would be to build as an application (InstallApp task)
+ * We need all dependencies to be there so we can easily copy them over as a plugin
+ */
+task copyToLib(type:Copy) {
+	description 'Copy dependencies to libs folder'
+	into libsDir
+	from configurations.runtime
+}
+
+/*
+ * Before making a jar we should be sure that all runtime dependencies are in the libs folder. 
+ * These files will be added to the classpath during this step.
+ */
+jar{
+	dependsOn copyToLib
+	manifest {
+		attributes "Class-Path": configurations.runtime.files.collect {File file-> file.name }.join(" ")
+									 
+	}
+}

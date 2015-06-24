@@ -1,0 +1,56 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="sqlescape">
+<h1>sqlescape</h1>
+<p><strong>sqlescape (</strong><em>string</em> <strong>value)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Returns an SQL-escaped version of string <code class="docutils literal"><span class="pre">value</span></code>. This is essential for sending a webpage or unchecked input to an XML database.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">To prepare the XML-file <code class="docutils literal"><span class="pre">note.xml</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;note id=&quot;1&quot;&gt;
+    &lt;to&gt;Tove&lt;/to&gt;
+    &lt;from&gt;Jani&lt;/from&gt;
+    &lt;heading&gt;Reminder&lt;/heading&gt;
+    &lt;comment&gt;This was sent to James as well&lt;/comment&gt;
+    &lt;comment&gt;John has not responded to the invitation&lt;/comment&gt;
+    &lt;body&gt;Don&#39;t forget me this weekend!&lt;/body&gt;
+&lt;/note&gt;
+</pre></div>
+</div>
+<p>for sending it to a database one might use:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">xml</span> <span class="o">=</span> <span class="n">loaddata</span> <span class="p">(</span><span class="s">&quot;c:/tmp/note.xml&quot;</span><span class="p">);</span>
+<span class="n">sqlstring</span> <span class="o">=</span> <span class="n">sqlescape</span> <span class="p">(</span><span class="n">xml</span><span class="p">);</span>
+<span class="n">query</span> <span class="p">(</span><span class="s">&quot;INSERT INTO `xmltable` VALUES(&quot;</span> <span class="o">+</span> <span class="n">sqlstring</span> <span class="o">+</span> <span class="s">&quot;)&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Now <code class="docutils literal"><span class="pre">sqlstring</span></code> will contain:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;note id=\&quot;1\&quot;&gt;\r\n    &lt;to&gt;Tove&lt;/to&gt;\r\n    &lt;from&gt;Jani&lt;/from&gt;\r\n    &lt;heading&gt;Reminder&lt;/heading&gt;\r\n    &lt;comment&gt;This was sent to James as well&lt;/comment&gt;\r\n    &lt;comment&gt;John has not responded to the invitation&lt;/comment&gt;\r\n    &lt;body&gt;Don\&#39;t forget me this weekend!&lt;/body&gt;\r\n&lt;/note&gt;
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_database.html"><em>Database</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

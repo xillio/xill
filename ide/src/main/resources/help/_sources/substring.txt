@@ -1,0 +1,34 @@
+---------
+substring
+---------
+
+**substring (**\ *<string,number>* **text,** *number* **start,** *number* **end*)**
+
+Description
+-----------
+
+Returns the substring of string ``text`` between integer positions ``start`` and position ``end``. The first character in the string is numbered 0. The last character returned by ``substring`` is the character before position ``end``. Optionally ``end`` can be left out, which means the returned string will end at the last position of ``text``.
+
+Example
+-------
+
+-
+
+    Executing the following code:
+    
+    ::
+            
+        log(substring("Welcome to our site!", 0, 7));
+        log(substring("Welcome to our site!", 0));
+        
+    will print:
+    
+    ::
+    
+        Welcome
+        Welcome to our site!
+
+Tags
+----
+
+:doc:`_tag_text`

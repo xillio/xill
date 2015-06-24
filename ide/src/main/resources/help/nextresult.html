@@ -1,0 +1,57 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="nextresult">
+<h1>nextresult</h1>
+<p><strong>nextresult (</strong><em>sqlresult</em> <strong>result)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Tries to switch to the next SQL resultset. The <code class="docutils literal"><span class="pre">result</span></code> is variable returned from <code class="docutils literal"><span class="pre">query</span></code> function. It works for <code class="docutils literal"><span class="pre">SELECT</span></code> queries that returns multiple resultset.
+The <code class="docutils literal"><span class="pre">nextresult</span></code> function returns <code class="docutils literal"><span class="pre">true</span></code> if there is another resultset and at the same time the content of the <code class="docutils literal"><span class="pre">result</span></code> variable is set to the data from the next resultset. If there is no next resultset the <code class="docutils literal"><span class="pre">false</span></code> is returned.</p>
+</div>
+<div class="section" id="remarks">
+<h2>Remarks</h2>
+<p>When <code class="docutils literal"><span class="pre">nextresult</span></code> function returns <code class="docutils literal"><span class="pre">false</span></code> the original data in <code class="docutils literal"><span class="pre">result</span></code> variable can be inaccessible!
+Some JDBC drivers may not support multiple resultsets!</p>
+<p>See also: <a class="reference internal" href="database.html"><em>database</em></a>.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">Loop through all resultsets:</p>
+<div class="highlight-python"><div class="highlight"><pre>settings = global(callbot(&quot;bots/settings.sbot&quot;));
+database(settings.db_host, settings.db_port, settings.db_name, settings.db_user, settings.db_pass);
+result = query(&quot;select * from dummy where id = 51; select * from dummy where id = 10;&quot;);
+
+while (true) {
+    foreach(_, row, result) {
+        log(row);
+    }
+    if (!nextresult(rs)) {
+        break();
+    }
+}
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_database.html"><em>Database</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

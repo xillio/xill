@@ -1,0 +1,72 @@
+-------
+include
+-------
+
+**include (**\ *<string,list>* **libraries)**
+
+Description
+-----------
+
+Includes the listed library or libraries without executing any code. ``libraries`` is a string containing one file uri or a list containing several strings with file uri's. After including a library the routines inside that library become part of the current robot.
+
+See also :doc:`callbot`
+
+Examples
+--------
+
+-
+    
+    Executing the following code:
+    
+    ::
+    
+        include ("testbots/routines.sbot");
+
+        log (cleanurlsimple("www.xillio.com/#main?parameter=test", true, true));    
+
+    will print:
+    
+    ::
+    
+        www.xillio.com
+
+    Assuming we have a text file ``routines.sbot``, which contains the following:
+    
+    ::
+    
+        cleanurlsimple = routine(url, stripanchors, stripvars) {
+            if (stripanchors == true) {
+                url = replace(url, "#.*", ""); // strip anchors
+            }
+            if (stripvars == true) {
+                url = replace(url, "\?.*|\&.*|target=.*", ""); // strip appended variables
+            }
+            url = replace(url, "/$", ""); // strip trailing slash
+            url = urldecode(url);
+            
+            return(url);
+        }
+
+        geturl = routine (url) {
+            // gets the url from a loadpage errormessage (assumes it is at the end of the message)
+            result = regex (url, ".*(https?://.*$)|.*(www\\..*$)");
+            if (variabletype (result) == "list") {
+                return (result [1]);
+            }
+            return (null);
+        }
+
+-
+    
+    We could also include the above code as two separate libraries, by splitting them into two separate files ``cleanurl.sbot`` and ``geturl.sbot``:
+    
+    ::
+    
+        include ({"testbots/cleanurl.sbot", "testbots/geturl.sbot"});
+    
+    Note that the latter is probably the most modular and maintainable way of including routines, while the former seems more convenient.
+    
+Tags
+----
+
+:doc:`_tag_language`

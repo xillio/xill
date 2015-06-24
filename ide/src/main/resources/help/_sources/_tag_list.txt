@@ -1,0 +1,31 @@
+-----------
+List
+-----------
+
+Functions in this category perform operations on lists and conversions of other data types, such as JSON or XML, to a list.
+
+
+Functions
+------------------------
+
+..  toctree::
+    :maxdepth: 1
+    :titlesonly:
+
+    contains <contains>
+    extractlist <extractlist>
+    jsontolist <jsontolist>
+    length <length>
+    listreverse <listreverse>
+    listsort <listsort>
+    listtocsv <listtocsv>
+    listtojson <listtojson>
+    listtostring <listtostring>
+    listtoxml <listtoxml>
+    split <split>
+    xmltolist <xmltolist>
+
+All tags
+------------------------
+
+:doc:`_tag_browser`, :doc:`_tag_conversion`, :doc:`_tag_database`, :doc:`_tag_date`, :doc:`_tag_elasticsearch`, :doc:`_tag_encoding`, :doc:`_tag_excel`, :doc:`_tag_file`, :doc:`_tag_language`, :doc:`_tag_list`, :doc:`_tag_mongodb`, :doc:`_tag_other`, :doc:`_tag_regex`, :doc:`_tag_text`, :doc:`_tag_xmlhtml`

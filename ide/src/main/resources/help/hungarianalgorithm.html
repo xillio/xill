@@ -1,0 +1,64 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="hungarianalgorithm">
+<h1>hungarianalgorithm</h1>
+<p><strong>hungarianalgorithm (</strong><em>list</em> <strong>matrix,</strong> <em>boolean</em> <strong>max*)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Solves the optimal assignment problem using the Hungarian Algorithm on <code class="docutils literal"><span class="pre">matrix</span></code>, which is a two-dimensional list containing numbers. Returns the optimal combination of rows / columns and the optimal sum as an object. The optional argument <code class="docutils literal"><span class="pre">max</span></code> (defaults to <code class="docutils literal"><span class="pre">true</span></code>) defines wether maximum sum or minimum sum should be returned. Useful for calculating optimal costs or income based on a matrix.</p>
+</div>
+<div class="section" id="example">
+<h2>Example</h2>
+<ul>
+<li><p class="first">Executing the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">matrix</span> <span class="o">=</span> <span class="p">{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">},</span> <span class="p">{</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">},</span> <span class="p">{</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">}};</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">hungarianalgorithm</span> <span class="p">(</span><span class="n">matrix</span><span class="p">);</span>
+
+<span class="n">log</span> <span class="p">(</span><span class="n">result</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>will print:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;cells&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s">&quot;col&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+      <span class="s">&quot;row&quot;</span><span class="p">:</span> <span class="mi">0</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="s">&quot;col&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="s">&quot;row&quot;</span><span class="p">:</span> <span class="mi">1</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="s">&quot;col&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s">&quot;row&quot;</span><span class="p">:</span> <span class="mi">2</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="s">&quot;sum&quot;</span><span class="p">:</span> <span class="mf">10.0</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Explanation: the algorithm treats the list as a matrix checks each column and calculates in which row the maximum value is found. Then it marks this row down and adds that number to the sum. However each row and each column may only be used once, so it will try all interesting combinations and return only the optimum. Thus in this case the maximum sum in this matrix is 10, using the number 3 in the first row, the number 2 in the second row and the number 5 in the last row.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_other.html"><em>Other</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

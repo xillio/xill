@@ -1,0 +1,32 @@
+---------
+lowercase
+---------
+
+**lowercase (**\ *<string,void>* **text)**
+
+Description
+-----------
+
+Returns the lowercase string of ``text``, which must also be a string.
+
+See also :doc:`uppercase`
+
+Example
+-------
+
+-
+    
+    ::
+    
+        log (lowercase("3... 2... 1... START... Genius!"));
+    
+    will print:
+    
+    ::
+    
+        3... 2... 1... start... genius!
+
+Tags
+----
+
+:doc:`_tag_text`

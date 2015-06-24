@@ -1,0 +1,91 @@
+-----
+unset
+-----
+
+**unset (**\ *list* **list,** *<number,string>* **index)**
+
+Description
+-----------
+
+Removes the entry indicated by ``index`` from ``list`` and returns true on success or false if the entry could not be found. This function can also be used to remove variables from the local (``__local``) or global state (``__global``).
+
+See also :doc:`global`
+
+Example
+-------
+
+-
+    Remove item from normal list
+    
+    ::
+
+        list = {a = 1, b = 2, c = 3};
+        unset(list, "a");
+        log(list);
+    
+    
+    Will print:
+    
+    ::
+    
+        {
+            b = 2,
+            c = 3
+        }
+
+-
+    Remove one existing and one non-existing variable from local state.
+    
+    ::
+
+        l = "local variable";
+        log(__local);
+        success1 = unset(__local, "l");
+        success2 = unset(__local, "ll");
+        log(__local);
+    
+    
+    Will print:
+    
+    ::
+    
+        {
+            l = "local variable"
+        }
+        {
+            __void = null,
+            success1 = true,
+            success2 = false
+        }
+        
+-
+    Remove item from global state
+
+    ::
+
+        g = global("global variable");
+        log(__global);
+        unset(__global, "g");
+        log(__global);
+    
+    
+    Will print:
+    
+    ::
+    
+        {
+            true = true,
+            false = false,
+            null = null,
+            g = "global variable"
+        }
+        {
+            true = true,
+            false = false,
+            null = null
+        }
+        
+Tags
+----
+
+:doc:`_tag_language`

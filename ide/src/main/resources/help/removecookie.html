@@ -1,0 +1,71 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="removecookie">
+<h1>removecookie</h1>
+<p><strong>removecookie (</strong><em>node</em> <strong>page,</strong> <em>&lt;void,string,list,boolean&gt;</em> <strong>cookie)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Removes the browser cookie with the name <code class="docutils literal"><span class="pre">cookie</span></code>. <code class="docutils literal"><span class="pre">cookie</span></code> can be a string or a list. If <code class="docutils literal"><span class="pre">cookie</span></code> is a boolean with value <code class="docutils literal"><span class="pre">true</span></code>, then all cookies will be cleared. Current cookie information can be obtained through <code class="docutils literal"><span class="pre">pageinfo()</span></code>. Cookies can be set using <code class="docutils literal"><span class="pre">setcookie()</span></code>.</p>
+<p>Due to the nature of Content Tools, all cookies will be removed with every restart.</p>
+<p>See also <a class="reference internal" href="setcookie.html"><em>setcookie</em></a></p>
+</div>
+<div class="section" id="example">
+<h2>Example</h2>
+<ul>
+<li><p class="first">Remove all cookies, set a cookie for the current page and remove it again:</p>
+<div class="highlight-python"><div class="highlight"><pre>homeurl = &quot;http://www.xillio.com/&quot;;
+page = loadpage (homeurl);
+removecookie(page, true);
+cookie = {name=&quot;Xillio&quot;, path=&quot;/&quot;, domain=&quot;www.xillio.com&quot;, value=&quot;123&quot;, expires=&quot;2018-10-18T09:42:15&quot;};
+setcookie(page, cookie);
+log (pageinfo (page));
+removecookie(page, &quot;Xillio&quot;);
+log (pageinfo (page));
+</pre></div>
+</div>
+<p>This will print something like:</p>
+<div class="highlight-python"><div class="highlight"><pre>{
+        url = &quot;http://www.xillio.com/&quot;,
+        title = &quot;Xillio&quot;,
+        cookies = {
+                Xillio = {
+                        name = &quot;Xillio&quot;,
+                        domain = &quot;.www.xillio.com&quot;,
+                        path = &quot;/&quot;,
+                        value = &quot;123&quot;,
+                        expires = 2018-10-18T09:42:15.0
+                }
+        }
+}
+{
+        url = &quot;http://www.xillio.com/&quot;,
+        title = &quot;Xillio&quot;,
+        cookies = {
+
+        }
+}
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_browser.html"><em>Browser</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

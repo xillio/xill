@@ -1,0 +1,42 @@
+--------
+es_get
+--------
+
+**es_get (**\ *string* **index,** *string* **type,** *string* **id,** *string* **client*)**
+
+Description
+-----------
+
+Returns the document with the given ``id``, ``index`` and ``type`` from cluster ``client``.
+
+Examples
+--------
+
+-
+
+	Executing the following code:
+	
+	::
+	
+		es_connect();
+		MonaLisa = es_get("art", "paintings", "monalisa");
+		log(MonaLisa);
+	
+	might print something like this:
+	
+	::
+	
+		{
+			"_index": "art",
+			"_type": "paintings",
+			"_id": "monalisa",
+			"_source": {
+				"title": "Mona Lisa",
+				"artist": "Leonardo da Vinci"
+			}
+		}
+
+Tags
+----
+
+:doc:`_tag_elasticsearch`

@@ -1,0 +1,28 @@
+-----------------
+es_hasfieldfilter
+-----------------
+
+**es_hasfieldfilter (**\ *string* **field)**
+
+Description
+-----------
+
+Creates a filter, which selects all documents that have specified ``field``. This returns a string identifier that can be used to identify this filter.
+
+Examples
+--------
+
+-
+
+	Select all documents of type "presentation" from "testingindex" which have the field "content":
+	
+	::
+	
+		es_connect();
+		contentfilter = es_hasfieldfilter("content");
+		content = es_search("testingindex", "presentation", contentfilter);
+
+Tags
+----
+
+:doc:`_tag_elasticsearch`

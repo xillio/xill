@@ -1,0 +1,43 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="metadatafromdocument">
+<h1>metadatafromdocument</h1>
+<p><strong>metadatafromdocument (</strong><em>&lt;string&gt;</em> <strong>path,</strong> <em>number</em> <strong>timeout*)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Extracts available metadata fields from file at <code class="docutils literal"><span class="pre">path</span></code>.
+By default the extraction times out at 5 seconds. To change this simply provide a timeout in milliseconds.</p>
+<p>See also <a class="reference internal" href="exiftool.html"><em>exiftool</em></a>, <a class="reference internal" href="textfromdocument.html"><em>textfromdocument</em></a></p>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">Given a document at <code class="docutils literal"><span class="pre">path</span></code>, the following might be extracted.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">metadata</span> <span class="o">=</span> <span class="n">metadatafromdocument</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
+<span class="n">log</span><span class="p">(</span><span class="s">&quot;Author: &quot;</span> <span class="o">+</span> <span class="n">metadata</span><span class="o">.</span><span class="n">Author</span><span class="p">);</span>
+<span class="n">log</span><span class="p">(</span><span class="s">&quot;Characters: &quot;</span> <span class="o">+</span> <span class="n">metadata</span><span class="p">[</span><span class="s">&quot;Character-Count&quot;</span><span class="p">]);</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_file.html"><em>File</em></a>, <a class="reference internal" href="_tag_text.html"><em>Text</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

@@ -1,0 +1,28 @@
+------------
+createfolder
+------------
+
+**createfolder (**\ *<string>* **uri)**
+
+Description
+-----------
+
+Creates a new folder at location ``uri``. This must be an absolute path and any folders in the path which do not exist will be created. Either backslashes (Windows convention) or forward slashes may be used in this path. Backslashes in literal strings must be escaped as usual.
+
+Example
+-------
+
+-
+
+	The following statement creates a new folder at ``C:/tmp/test/``:
+	
+	::
+	
+		createfolder ("C:/tmp/test");
+		
+	This will work even if ``C:/tmp/`` does not exist yet
+		
+Tags
+----
+
+:doc:`_tag_file`

@@ -1,0 +1,96 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="replace">
+<h1>replace</h1>
+<p><strong>replace (</strong><em>&lt;string,void&gt;</em> <strong>text,</strong> <em>string</em> <strong>needle,</strong> <em>string</em> <strong>replacement,</strong> <em>boolean</em> <strong>useregex*, ** *boolean* **replaceall*,</strong> <em>number</em> <strong>timeout*)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Returns a new string based on the string <code class="docutils literal"><span class="pre">text</span></code> in which occurrences of the string <code class="docutils literal"><span class="pre">needle</span></code> have been replaced by the string <code class="docutils literal"><span class="pre">replacement</span></code>. If the optional parameter <code class="docutils literal"><span class="pre">replaceall</span></code> is set to <code class="docutils literal"><span class="pre">false</span></code>, the routine will only replace the first occurrence of <code class="docutils literal"><span class="pre">needle</span></code> (defaults to <code class="docutils literal"><span class="pre">true</span></code>).</p>
+<p>Note that <code class="docutils literal"><span class="pre">needle</span></code> is by default interpreted as a regex pattern, so all special regex characters have to be escaped when used as a literal. Also in <code class="docutils literal"><span class="pre">replacement</span></code> you can use the capture groups from <code class="docutils literal"><span class="pre">needle</span></code> as <code class="docutils literal"><span class="pre">&quot;$1&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;$2&quot;</span></code>, etc. To use a literal <code class="docutils literal"><span class="pre">&quot;$&quot;</span></code> in <code class="docutils literal"><span class="pre">replacement</span></code>, you need to escape it like this: <code class="docutils literal"><span class="pre">&quot;\$&quot;</span></code>.</p>
+<p>Set <code class="docutils literal"><span class="pre">useregex</span></code> to false to have the function treat the needle and replacement as regular text.</p>
+<p>Optionally a <code class="docutils literal"><span class="pre">timeout</span></code> can be provided in seconds, the default value is 5 seconds and applies when omitted. Set <code class="docutils literal"><span class="pre">timeout</span></code> to zero to let the function run without timeout. This should only be altered when dealing with large source documents. The timeout is there to protect the system from hanging on invalid expressions.</p>
+<p>See the <a class="reference internal" href="_tag_regex.html"><em>Regular Expressions</em></a> page for more about Regular Expression support in Content Tools.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">Executing:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">log</span><span class="p">(</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;The quick brown fox.&quot;</span><span class="p">,</span> <span class="s">&quot;fox&quot;</span><span class="p">,</span> <span class="s">&quot;dog&quot;</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>will print:</p>
+<div class="highlight-python"><div class="highlight"><pre>The quick brown dog.
+</pre></div>
+</div>
+</li>
+<li><p class="first">Executing:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">log</span><span class="p">(</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;The quick brown fox. The quick brown fox.&quot;</span><span class="p">,</span> <span class="s">&quot;fox&quot;</span><span class="p">,</span> <span class="s">&quot;dog&quot;</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>will print:</p>
+<div class="highlight-python"><div class="highlight"><pre>The quick brown dog. The quick brown dog.
+</pre></div>
+</div>
+</li>
+<li><p class="first">Executing:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">log</span><span class="p">(</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;The quick brown fox. The quick brown fox.&quot;</span><span class="p">,</span> <span class="s">&quot;fox&quot;</span><span class="p">,</span> <span class="s">&quot;dog&quot;</span><span class="p">,</span> <span class="n">false</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>will print:</p>
+<div class="highlight-python"><div class="highlight"><pre>The quick brown dog. The quick brown fox.
+</pre></div>
+</div>
+</li>
+<li><p class="first">Repair misspelled URL&#8217;s (with one slash):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">url</span> <span class="o">=</span> <span class="s">&quot;http:/www.xillio.com/&quot;</span><span class="p">;</span>
+<span class="n">url</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="s">&quot;(^http:/)([^/].*)&quot;</span><span class="p">,</span> <span class="s">&quot;http://$2&quot;</span><span class="p">);</span>
+<span class="n">log</span> <span class="p">(</span><span class="n">url</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>will print:</p>
+<div class="highlight-python"><div class="highlight"><pre>http://www.xillio.com/
+</pre></div>
+</div>
+</li>
+<li><p class="first">Executing:</p>
+<div class="highlight-python"><div class="highlight"><pre>log(cleanurlsimple(&quot;http://www.xillio.com/somepage#main?live=true&amp;format=1&quot;, true, true));
+cleanurlsimple = routine(url, stripanchors, stripvars) {
+    if (stripanchors == true) {
+        url = replace(url, &quot;#.*&quot;, &quot;&quot;); // strip anchors
+    }
+    if (stripvars == true) {
+        url = replace(url, &quot;\?.*|\&amp;.*|target=.*&quot;, &quot;&quot;); // strip appended variables
+    }
+    url = replace(url, &quot;/$&quot;, &quot;&quot;); // strip trailing slash
+    url = urldecode(url);
+    return(url);
+}
+</pre></div>
+</div>
+<p>will print:</p>
+<div class="highlight-python"><div class="highlight"><pre>http://www.xillio.com/somepage
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_text.html"><em>Text</em></a>, <a class="reference internal" href="_tag_regex.html"><em>Regular Expressions</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

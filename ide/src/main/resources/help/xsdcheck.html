@@ -1,0 +1,41 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="xsdcheck">
+<h1>xsdcheck</h1>
+<p><strong>xsdcheck (</strong><em>&lt;string&gt;</em> <strong>xmlfile</strong>, <em>string</em> <strong>xsdfile*)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Validates the XML file located at uri <code class="docutils literal"><span class="pre">xmlfile</span></code> against an XSD file located at uri <code class="docutils literal"><span class="pre">xsdfile</span></code>. Returns <code class="docutils literal"><span class="pre">true</span></code> if the XML file is valid, returns <code class="docutils literal"><span class="pre">false</span></code> and logs a warning when it is not.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">Validating an XML file against an XSD.</p>
+<div class="highlight-python"><div class="highlight"><pre>if(xsdcheck(&quot;d:/temp/books.xml&quot;, &quot;d:/temp/books.xsd&quot;)) {
+    log(&quot;File is valid!&quot;);
+}
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_xmlhtml.html"><em>XML / HTML</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

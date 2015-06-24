@@ -1,0 +1,227 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="general-help">
+<h1>General Help</h1>
+<p>The Xillio bot scripting language has a javascript like syntax. It is an imperative language without user-defined classes and inheritance. Typing is handled dynamically.</p>
+<div class="section" id="basic-syntax">
+<h2>Basic syntax</h2>
+<ul class="simple">
+<li>Each command is closed with a semicolon <code class="docutils literal"><span class="pre">;</span></code></li>
+<li>Variables are assigned and defined inline using the syntax <code class="docutils literal"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">b;</span></code></li>
+<li>Operators can be used to perform simple actions like concatenating, multiplying, etc: <code class="docutils literal"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">b</span> <span class="pre">+</span> <span class="pre">1;</span></code></li>
+<li>Literal strings must always be enclosed in double quotes: <code class="docutils literal"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">&quot;Hello</span> <span class="pre">world&quot;;</span></code></li>
+<li>Functions are called with zero or more comma-separated arguments: <code class="docutils literal"><span class="pre">log(&quot;Hello</span> <span class="pre">world&quot;);</span></code></li>
+</ul>
+</div>
+<div class="section" id="comments">
+<h2>Comments</h2>
+<p>Comments are pieces of text in the robot that will not be processed. Comments can be used to provide inline documentation or disable pieces of code. There are two types of comments: single line and multi line comments.</p>
+<ul>
+<li><p class="first">Single line comment; place a double slash (<code class="docutils literal"><span class="pre">//</span></code>) at the start of the comment</p>
+<div class="highlight-python"><div class="highlight"><pre>// Log an entry to mark the start of the robot
+log(&quot;Starting robot&quot;);
+</pre></div>
+</div>
+</li>
+<li><p class="first">Multi line comment; start with <code class="docutils literal"><span class="pre">/*</span></code> and end with <code class="docutils literal"><span class="pre">*/</span></code>. Anything inbetween will be considered part of the comment:</p>
+<div class="highlight-python"><div class="highlight"><pre>// The following piece of code is disabled
+/*
+page = loadpage(&quot;http://www.google.com&quot;);
+*/
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="operators">
+<h2>Operators</h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Add:</th><td class="field-body"><code class="docutils literal"><span class="pre">+</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">And:</th><td class="field-body"><code class="docutils literal"><span class="pre">&amp;&amp;</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Concatenate:</th><td class="field-body"><code class="docutils literal"><span class="pre">+</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Decrement:</th><td class="field-body"><code class="docutils literal"><span class="pre">--</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Divide:</th><td class="field-body"><code class="docutils literal"><span class="pre">/</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Equals:</th><td class="field-body"><code class="docutils literal"><span class="pre">==</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Greater:</th><td class="field-body"><code class="docutils literal"><span class="pre">&gt;</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Greater equals:</th><td class="field-body"><code class="docutils literal"><span class="pre">&gt;=</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Increment:</th><td class="field-body"><code class="docutils literal"><span class="pre">++</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Less:</th><td class="field-body"><code class="docutils literal"><span class="pre">&lt;</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Less equals:</th><td class="field-body"><code class="docutils literal"><span class="pre">&lt;=</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Modulo:</th><td class="field-body"><code class="docutils literal"><span class="pre">%</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Multiply:</th><td class="field-body"><code class="docutils literal"><span class="pre">*</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Not:</th><td class="field-body"><code class="docutils literal"><span class="pre">!</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Not equals:</th><td class="field-body"><code class="docutils literal"><span class="pre">!=</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Or:</th><td class="field-body"><code class="docutils literal"><span class="pre">||</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Power:</th><td class="field-body"><code class="docutils literal"><span class="pre">^</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Subtract:</th><td class="field-body"><code class="docutils literal"><span class="pre">-</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>Additionally Content Tools supports shortcut operators which perform an arithmetic operation and assignment in one go: <code class="docutils literal"><span class="pre">+=</span></code>, <code class="docutils literal"><span class="pre">-=</span></code>, <code class="docutils literal"><span class="pre">*=</span></code>, <code class="docutils literal"><span class="pre">/=</span></code></p>
+</div>
+<div class="section" id="expressions">
+<h2>Expressions</h2>
+<p>Expressions are sequences of variables and/or functions stringed together with operators. Expressions can be nested into function parameters, thus creating complex expressions.</p>
+<ul>
+<li><p class="first">Simple expression</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">a</span> <span class="o">=</span> <span class="n">fac</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Complex expression</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">b</span> <span class="o">=</span> <span class="n">fac</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">fac</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="code-blocks">
+<h2>Code blocks</h2>
+<p>Curly braces are used to enclose code blocks that are executed when specific conditions are met, such as in <code class="docutils literal"><span class="pre">if</span></code>, <code class="docutils literal"><span class="pre">foreach</span></code>, <code class="docutils literal"><span class="pre">while</span></code> and <code class="docutils literal"><span class="pre">routine</span></code>.</p>
+<div class="highlight-python"><div class="highlight"><pre>if(true) {
+    log(&quot;Hello world!&quot;);
+} else {
+    log(&quot;Goodbye!&quot;);
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="lists">
+<h2>Lists</h2>
+<p>Lists can be defined in various ways using block syntax:</p>
+<ul>
+<li><p class="first">Empty list</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">emptylist</span> <span class="o">=</span> <span class="p">{};</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Simple list</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">simplelist</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;a&quot;</span><span class="p">,</span> <span class="s">&quot;b&quot;</span><span class="p">,</span> <span class="s">&quot;c&quot;</span><span class="p">};</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Associated list</p>
+<div class="highlight-python"><div class="highlight"><pre>associatedlist = {
+    first = &quot;a&quot;,
+    second = &quot;b&quot;,
+    third = &quot;c&quot;
+};
+</pre></div>
+</div>
+</li>
+<li><p class="first">Associated list with complex keys</p>
+<div class="highlight-python"><div class="highlight"><pre>complexlist = {
+    first = &quot;a&quot;,
+    &quot;second or third&quot; = &quot;b&quot;,
+    &quot;fourth&quot; = &quot;c&quot;
+};
+</pre></div>
+</div>
+</li>
+<li><p class="first">Nested list</p>
+<div class="highlight-python"><div class="highlight"><pre>complexlist = {
+    first = {
+        seventh = &quot;a&quot;,
+        tenth = &quot;b&quot;
+    },
+    second = &quot;c&quot;
+};
+</pre></div>
+</div>
+</li>
+</ul>
+<p>Individual elements of a list can be assigned or retrieved as follows:</p>
+<ul>
+<li><p class="first">Dot notation</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">firstitem</span> <span class="o">=</span> <span class="n">associatedlist</span><span class="o">.</span><span class="n">first</span><span class="p">;</span>
+<span class="n">tenthitem</span> <span class="o">=</span> <span class="n">nestedlist</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">tenth</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Square brace notation</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">firstitem</span> <span class="o">=</span> <span class="n">simplelist</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="n">seconditem</span> <span class="o">=</span> <span class="n">complexlist</span><span class="p">[</span><span class="s">&quot;second or third&quot;</span><span class="p">];</span>
+<span class="n">thirditem</span> <span class="o">=</span> <span class="n">simplelist</span><span class="p">[</span><span class="s">&quot;second&quot;</span> <span class="o">+</span> <span class="s">&quot;or third&quot;</span><span class="p">];</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="variable-scope">
+<h2>Variable scope</h2>
+<p>The scope of variables is bound to the block in which they have been defined. This implies that a variable can be accessed in subblock, but not in a super block.</p>
+<div class="highlight-python"><div class="highlight"><pre>scope1 = true;
+if(true) {
+    scope2 = true;
+
+    log(&quot;Current block accessible: &quot; + scope2);
+    log(&quot;Super block accessible: &quot; + scope 1);
+}
+
+log(&quot;Subscope accessible: &quot; + scope2);
+</pre></div>
+</div>
+<p>Produces:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">true</span>
+<span class="n">true</span>
+<span class="n">null</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="system-variables">
+<h2>System variables</h2>
+<p>The following set of variables are considered to be system variables. These variables are globally available but are immutable.</p>
+<ul class="simple">
+<li>true</li>
+<li>false</li>
+<li>null</li>
+<li>__local  (Represents the local variable state)</li>
+<li>__global (Represents the global variable state)</li>
+</ul>
+</div>
+<div class="section" id="common-language-constructs">
+<h2>Common language constructs</h2>
+<p>For more information on some commonly used language constructs, see:</p>
+<ul class="simple">
+<li><a class="reference internal" href="routine.html"><em>routine</em></a> - Define custom functions</li>
+<li><a class="reference internal" href="if.html"><em>if</em></a> - Conditional execution of code</li>
+<li><a class="reference internal" href="foreach.html"><em>foreach</em></a> - Iterate over lists or results</li>
+<li><a class="reference internal" href="while.html"><em>while</em></a> - Conditional loop</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

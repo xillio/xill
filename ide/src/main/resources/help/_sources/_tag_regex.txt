@@ -1,0 +1,27 @@
+-------------------
+Regular Expressions
+-------------------
+
+Content Tools provides support for Regular Expressions. Patterns are interpreted as Java Regular expressions, but since all backslash ``"\"`` characters will be interpreted as an escape character for the next one by Content Tools all forward slashes you want to be evaluated by the regex have to be doubled. This means that ``"\\\\"`` would denote a single literal backslash ``"\"`` and ``"\\*"`` would denote a literal asterisk ``"*"``. However, since Java is very smart in escaping, you will get away with using some single backslashes, for example for newline characters you can simply write ``"\n"``.
+
+Read more about Java regular expressions here: http://www.regular-expressions.info/reference.html
+
+
+Functions
+------------------------
+
+..  toctree::
+    :maxdepth: 1
+    :titlesonly:
+
+    es_regexfilter <es_regexfilter>    
+    matches <matches>
+    regex <regex>
+    split <split>
+    replace <replace>
+
+
+All tags
+------------------------
+
+:doc:`_tag_browser`, :doc:`_tag_conversion`, :doc:`_tag_database`, :doc:`_tag_date`, :doc:`_tag_elasticsearch`, :doc:`_tag_encoding`, :doc:`_tag_excel`, :doc:`_tag_file`, :doc:`_tag_language`, :doc:`_tag_list`, :doc:`_tag_mongodb`, :doc:`_tag_other`, :doc:`_tag_regex`, :doc:`_tag_text`, :doc:`_tag_xmlhtml`

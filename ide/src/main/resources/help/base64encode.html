@@ -1,0 +1,52 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="base64encode">
+<h1>base64encode</h1>
+<p><strong>base64encode (</strong><em>&lt;string,binary&gt;</em> <strong>file)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Returns the base-64 encoded string of file <code class="docutils literal"><span class="pre">file</span></code>. Commonly used to encode binary data for transfer over a text channel (such as attachments in e-mails). The parameter <code class="docutils literal"><span class="pre">file</span></code> is expected to be either a valid file name, or a binary variable.</p>
+<p>See also <a class="reference internal" href="base64decode.html"><em>base64decode</em></a></p>
+</div>
+<div class="section" id="example">
+<h2>Example</h2>
+<ul>
+<li><div class="first highlight-python"><div class="highlight"><pre><span class="n">base64encode</span><span class="p">(</span><span class="s">&quot;C:/tmp/note.xml&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>reads the textfile <code class="docutils literal"><span class="pre">note.xml</span></code> and returns</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="s">&quot;PG5vdGU+DQo8dG8+VG92ZTwvdG8+DQo8ZnJvbT5KYW5pPC9mcm9tPg0KPGhlYWRpbmc+UmVtaW5kZXI8L2hlYWRpbmc+DQo8Ym9keT5Eb24ndCBmb3JnZXQgbWUgdGhpcyB3ZWVrZW5kITwvYm9keT4NCjwvbm90ZT4=&quot;</span>
+</pre></div>
+</div>
+<p>assuming <code class="docutils literal"><span class="pre">note.xml</span></code> contains the following text:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;note&gt;
+&lt;to&gt;Tove&lt;/to&gt;
+&lt;from&gt;Jani&lt;/from&gt;
+&lt;heading&gt;Reminder&lt;/heading&gt;
+&lt;body&gt;Don&#39;t forget me this weekend!&lt;/body&gt;
+&lt;/note&gt;
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_encoding.html"><em>Encoding / Decoding</em></a>, <a class="reference internal" href="_tag_file.html"><em>File</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

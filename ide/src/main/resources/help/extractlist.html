@@ -1,0 +1,52 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="extractlist">
+<h1>extractlist</h1>
+<p><strong>extractlist (</strong><em>&lt;list,string,void&gt;</em> <strong>text,</strong> <em>&lt;string,void&gt;</em> <strong>regex)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Returns a list with all substrings matching <code class="docutils literal"><span class="pre">regex</span></code>.</p>
+<p>See the <a class="reference internal" href="_tag_regex.html"><em>Regular Expressions</em></a> page for more about Regular Expression support in Xillio Content Tools.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">The following code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">s</span> <span class="o">=</span> <span class="s">&quot;abc def ghi jkl. Mno&quot;</span><span class="p">;</span>
+<span class="n">l</span> <span class="o">=</span> <span class="n">extractlist</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\\</span><span class="s">w+&quot;</span><span class="p">);</span>
+<span class="n">log</span><span class="p">(</span><span class="n">l</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Prints:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s">&quot;abc&quot;</span><span class="p">,</span>
+    <span class="s">&quot;def&quot;</span><span class="p">,</span>
+    <span class="s">&quot;ghi&quot;</span><span class="p">,</span>
+    <span class="s">&quot;jkl&quot;</span><span class="p">,</span>
+    <span class="s">&quot;Mno&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_text.html"><em>Text</em></a>, <a class="reference internal" href="_tag_list.html"><em>List</em></a>, <a class="reference internal" href="_tag_regex.html"><em>Regular Expressions</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

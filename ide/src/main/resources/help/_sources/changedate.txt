@@ -1,0 +1,37 @@
+-----------
+changedate
+-----------
+
+**date (**\ *date* **date,** *list* **change)**
+
+Description
+-----------
+
+Returns a date variable in which the provided changes have been applied. Valid list arguments are: year, month, day, hour, minute, second, millisecond.
+
+Examples
+--------
+
+- 	
+
+    Executing:
+    
+    ::
+    
+        mydate = date();
+		log(mydate);
+		newdate = changedate(mydate, {year = -1});
+		log(newdate);
+    
+    prints:
+    
+    ::
+
+		2013-10-24T09:43:52.338
+		2012-10-24T09:43:52.338
+		
+		
+Tags
+----
+
+:doc:`_tag_date`

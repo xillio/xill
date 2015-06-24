@@ -1,0 +1,52 @@
+--
+if
+--
+
+**if (**\ *boolean* **__condition)**
+
+Description
+-----------
+
+Executes the code following the statement if ``condition`` evaluates to true. Executes the code in the (optional) else-statement otherwise. The code following the if statement has to be enclosed in curly brackets, even if it consists of only one line.
+
+Examples
+--------
+
+-
+    
+    Executing the following code:
+    
+    ::
+    
+        testvalue = 3;
+        
+        if (testvalue > 2) {
+            log ("Testvalue is larger than 2.");
+        } else {
+            log ("Testvalue is not larger than 2.");
+        }
+    
+    will print:
+    
+    ::
+    
+        Testvalue is larger than 2.
+
+-
+
+    Using multiple if clauses in succession:
+    
+    ::
+    
+        if ( ... ) {
+            ...
+        } else if ( ... ) {
+                ...
+        }
+        
+        
+        
+Tags
+----
+
+:doc:`_tag_language`

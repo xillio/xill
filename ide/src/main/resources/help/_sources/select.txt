@@ -1,0 +1,68 @@
+------
+select
+------
+
+**select (**\ *node* **element,** *boolean* **select)**
+
+Description
+-----------
+
+In an HTML-select box, executing ``select`` marks the option ``node`` as selected . If the boolean parameter ``select`` equals true, it selects the option, if false then it's deselected.
+
+**NOTE**: The deselection doesn't work for ``<option>`` tag.
+
+See also :doc:`input`
+
+Example
+-------
+
+-
+
+    Assuming we have an HTML-file ``select.html`` containing the following:
+    
+    ::
+    
+        <html>
+            <body>
+                <select>
+                    <option value="volvo">Volvo</option>
+                    <option value="saab">Saab</option>
+                    <option value="mercedes">Mercedes</option>
+                    <option value="audi">Audi</option>
+                </select>
+            </body>
+        </html>
+    
+    then executing:
+    
+    ::
+    
+        page = loadpage("file:///C:/tmp/select.html");
+        selectbox = xpath(page, "//select");
+        choice = xpath(page, "//option[@value='saab']");
+        select (choice, true);
+        log (xmltostring(selectbox));
+    
+    will print:
+    
+    ::
+ 
+        <select>
+          <option value="volvo">
+            Volvo
+          </option>
+          <option value="saab" selected="selected">
+            Saab
+          </option>
+          <option value="mercedes">
+            Mercedes
+          </option>
+          <option value="audi">
+            Audi
+          </option>
+        </select>
+
+Tags
+----
+
+:doc:`_tag_browser`

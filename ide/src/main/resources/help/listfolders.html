@@ -1,0 +1,51 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="listfolders">
+<h1>listfolders</h1>
+<p><strong>listfolders (</strong><em>string</em> <strong>uri,</strong> <em>boolean</em> <strong>recursive*)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Returns an iterable containing the names of all subfolders in the folder specified by <code class="docutils literal"><span class="pre">uri</span></code>. Returns <code class="docutils literal"><span class="pre">empty</span></code> if <code class="docutils literal"><span class="pre">uri</span></code> is empty or not a folder. If the optional parameter <code class="docutils literal"><span class="pre">recursive</span></code> is set to <code class="docutils literal"><span class="pre">true</span></code>, it will also return all sub-subfolders.</p>
+<p>See also <a class="reference internal" href="listfiles.html"><em>listfiles</em></a></p>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">Display a list of all subdirectories of <code class="docutils literal"><span class="pre">C:/tmp/</span></code>, including their own subdirectories:</p>
+<div class="highlight-python"><div class="highlight"><pre>folders = listfolders (&quot;C:/tmp/&quot;, true);
+foreach (_, folder, folders) {
+    log (folder);
+}
+</pre></div>
+</div>
+</li>
+<li><p class="first">There is a nice trick for getting the number of folders in the list:</p>
+<div class="highlight-python"><div class="highlight"><pre>folders = listfolders (&quot;C:/tmp/&quot;); // the files variable now contains the folder list
+number = length(folders);
+log (number);
+</pre></div>
+</div>
+<p>This will print the number of subdirectories in the given directory.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_file.html"><em>File</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

@@ -1,0 +1,40 @@
+--------
+pageinfo
+--------
+
+**pageinfo (**\ *<node>* **page)**
+
+Description
+-----------
+
+Returns a list variable with specific info on the page object ``page`` such as: cookies, title and cookies.
+
+Example
+-------
+
+-   
+    
+    Executing the following code:
+    
+    ::
+
+        homeurl = "http://www.xillio.com/";
+        page = loadpage (homeurl);
+        log (pageinfo(page));
+        
+    will print:
+    
+    ::
+    
+        {
+            url = "http://www.xillio.com/",
+            title = "Xillio",
+            cookies = {
+            ...
+            }
+        }
+
+Tags
+----
+
+:doc:`_tag_browser`

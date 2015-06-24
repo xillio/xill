@@ -1,0 +1,37 @@
+--------
+evaluate
+--------
+
+**evaluate (**\ *string* **code,** *list* **parameters*)**
+
+Description
+-----------
+
+Runs the string ``code`` as a snippet of Xillio Content Tools code. The snippet can contain multiple lines of code just like a routine, and should end with a ``return()`` statement that returns the result of the snippet. Optionally parameters can be set to be used inside the snippet. ``evaluate`` can be used to construct code during runtime or to import snippets of code from an external source such as a spreadsheet.
+
+
+Examples
+--------
+
+-   
+
+    Most basic usage of the ``evaluate`` function without a return:
+    
+    ::
+    
+        evaluate("log(\"Eval'd\");");
+    
+-
+    
+    Here the ``evaluate`` statement returns ``true``:
+    
+    ::
+    
+        var = evaluate("return(contains(text, \"y\"));", {"text" = "xyz"});
+        log(var);
+    
+
+Tags
+----
+
+:doc:`_tag_other`

@@ -5,5 +5,5 @@ dependencies {
 	compile 'log4j:log4j:1.2.17'
 	compile 'commons-io:commons-io:2.4'
 	compile 'org.apache.commons:commons-lang3:3.4'
-	compile 'nl.xillio:commons-plugins:1.0-SNAPSHOT'
+	compile 'nl.xillio:commons-plugins:1.0'
 }

@@ -1,0 +1,91 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="unset">
+<h1>unset</h1>
+<p><strong>unset (</strong><em>list</em> <strong>list,</strong> <em>&lt;number,string&gt;</em> <strong>index)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Removes the entry indicated by <code class="docutils literal"><span class="pre">index</span></code> from <code class="docutils literal"><span class="pre">list</span></code> and returns true on success or false if the entry could not be found. This function can also be used to remove variables from the local (<code class="docutils literal"><span class="pre">__local</span></code>) or global state (<code class="docutils literal"><span class="pre">__global</span></code>).</p>
+<p>See also <a class="reference internal" href="global.html"><em>global</em></a></p>
+</div>
+<div class="section" id="example">
+<h2>Example</h2>
+<ul>
+<li><p class="first">Remove item from normal list</p>
+<div class="highlight-python"><div class="highlight"><pre>list = {a = 1, b = 2, c = 3};
+unset(list, &quot;a&quot;);
+log(list);
+</pre></div>
+</div>
+<p>Will print:</p>
+<div class="highlight-python"><div class="highlight"><pre>{
+    b = 2,
+    c = 3
+}
+</pre></div>
+</div>
+</li>
+<li><p class="first">Remove one existing and one non-existing variable from local state.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">l</span> <span class="o">=</span> <span class="s">&quot;local variable&quot;</span><span class="p">;</span>
+<span class="n">log</span><span class="p">(</span><span class="n">__local</span><span class="p">);</span>
+<span class="n">success1</span> <span class="o">=</span> <span class="n">unset</span><span class="p">(</span><span class="n">__local</span><span class="p">,</span> <span class="s">&quot;l&quot;</span><span class="p">);</span>
+<span class="n">success2</span> <span class="o">=</span> <span class="n">unset</span><span class="p">(</span><span class="n">__local</span><span class="p">,</span> <span class="s">&quot;ll&quot;</span><span class="p">);</span>
+<span class="n">log</span><span class="p">(</span><span class="n">__local</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Will print:</p>
+<div class="highlight-python"><div class="highlight"><pre>{
+    l = &quot;local variable&quot;
+}
+{
+    __void = null,
+    success1 = true,
+    success2 = false
+}
+</pre></div>
+</div>
+</li>
+<li><p class="first">Remove item from global state</p>
+<div class="highlight-python"><div class="highlight"><pre>g = global(&quot;global variable&quot;);
+log(__global);
+unset(__global, &quot;g&quot;);
+log(__global);
+</pre></div>
+</div>
+<p>Will print:</p>
+<div class="highlight-python"><div class="highlight"><pre>{
+    true = true,
+    false = false,
+    null = null,
+    g = &quot;global variable&quot;
+}
+{
+    true = true,
+    false = false,
+    null = null
+}
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_language.html"><em>Language</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

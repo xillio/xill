@@ -1,0 +1,50 @@
+---------
+formatxml
+---------
+
+**formatxml (**\ *<void,xml,string>* **xml)**
+
+Description
+-----------
+
+Prettifies the formatting and indentation of the ``xml`` variable or string.
+
+Examples
+--------
+
+-
+    
+    Suppose you have a string ``xml`` containing the following badly formatted XML:
+    
+    ::
+    
+            <note><to>Tove</to><from>Jani</from><heading>Reminder</heading><body>Don't forget me this weekend!</body></note>
+            
+    or
+    
+    ::
+    
+        <note>
+        <to>Tove</to>
+            <from>Jani</from>
+                    <heading>Reminder</heading>
+            <comment>Comments are welcome.</comment>
+                       <body>Don't forget me this weekend!</body>
+        </note>
+
+    Then in either case ``formatxml(xml)`` would return:
+    
+    ::
+    
+        <note>
+            <to>Tove</to>
+            <from>Jani</from>
+            <heading>Reminder</heading>
+            <body>Don't forget me this weekend!</body>
+        </note>
+    
+
+Tags
+----
+
+:doc:`_tag_xmlhtml`, :doc:`_tag_text`

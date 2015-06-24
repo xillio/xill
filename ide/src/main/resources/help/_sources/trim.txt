@@ -1,0 +1,42 @@
+----
+trim
+----
+
+**trim (**\ *<string,void>* **text,** *boolean* **internal*)**
+
+Description
+-----------
+
+Returns the trimmed version of string ``text``. If the optional boolean parameter ``internal`` is set to ``true``, the routine will also replace slack white space inside the string with a single space.
+
+Examples
+--------
+
+-
+    
+    Executing:
+    
+    ::
+    
+        log(trim("   Xillio Xillio    Xillio Xillio Xillio    "));
+        log(trim("   Xillio Xillio    Xillio Xillio Xillio    ", true));
+
+    will print:
+    
+    ::
+    
+        Xillio Xillio    Xillio Xillio Xillio
+        Xillio Xillio Xillio Xillio Xillio
+        
+-
+    
+    Trim the data read from a file:
+    
+    ::
+    
+        includepage = trim (loaddata(includefile), true);
+
+Tags
+----
+
+:doc:`_tag_text`

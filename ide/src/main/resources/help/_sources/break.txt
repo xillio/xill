@@ -1,0 +1,34 @@
+-----
+break
+-----
+
+**break ()**
+
+Description
+-----------
+
+Breaks out of the current loop (``while``, ``for``, ``foreach``, ``repeat``). Execution is resumed at the first statement after the loop.
+
+See also :doc:`continue`
+
+Example
+-------
+
+-
+
+    This will output the numbers 1 to 5.
+    
+    ::
+
+        items = {1,2,3,4,5,6,7,8,9};
+        foreach (_, item, items) {
+          if(item > 5){
+            break();
+          }
+          log(item);
+        } 
+    
+Tags
+----
+
+:doc:`_tag_language`

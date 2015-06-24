@@ -1,0 +1,93 @@
+---------
+xmltolist
+---------
+
+**xmltolist (**\ *<void,xml>* **xml)**
+
+Description
+-----------
+
+Converts the ``xml`` to a list. 
+
+See also :doc:`listtoxml`
+
+Examples
+--------
+
+-
+    
+    Executing the following:
+    
+    ::
+	
+		xml = stringtoxml("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>
+			<root response=\"True\">
+				<!-- first comment -->
+				<Movie Title=\"The Hobbit\" Year=\"2012\"/>
+				<Movie Title=\"The Hobbit 2\" Year=\"2013\"/>
+				<!-- second comment -->
+				<a>
+					<b>value b1<c>value c1<d>value</d>value c2</c>value b2</b>
+				</a>
+				<blah attri=\"hihi\">value ? text</blah>
+				<cdatatag attri=\"hihi\"><![CDATA[this is cdata,  < and > and & .]]></cdatatag>
+				<!-- third comment -->
+				<tag> hehehe </tag>
+				<cdatatags attri=\"hihi\"><![CDATA[this is cdata,  < and > and & .]]]]>bn<![CDATA[>]]></cdatatags>
+			</root>");
+		log(xmltolist(xml));
+
+        
+    will print:
+    
+    ::
+
+        {
+            root = {
+                "@response" = "True",
+                "#001!" = " first comment ",
+                "#001Movie" = {
+                    "@Title" = "The Hobbit",
+                    "@Year" = "2012"
+                },
+                "#002Movie" = {
+                    "@Title" = "The Hobbit 2",
+                    "@Year" = "2013"
+                },
+                "#002!" = " second comment ",
+                a = {
+                    b = {
+                        "value b1",
+                        c = {
+                            "value c1",
+                            d = "value",
+                            "value c2"
+                        },
+                        "value b2"
+                    }
+                },
+                blah = {
+                    "@attri" = "hihi",
+                    "value ? text"
+                },
+                cdatatag = {
+                    "@attri" = "hihi",
+                    "#001!CDATA" = "this is cdata,  < and > and & ."
+                },
+                "#003!" = " third comment ",
+                tag = " hehehe ",
+                cdatatags = {
+                    "@attri" = "hihi",
+                    "#001!CDATA" = "this is cdata,  < and > and & .]]",
+                    "bn",
+                    "#002!CDATA" = ">"
+                }
+            }
+        }
+        
+
+
+Tags
+----
+
+:doc:`_tag_xmlhtml`, :doc:`_tag_list`, :doc:`_tag_conversion`

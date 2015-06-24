@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane prefHeight="150.0" prefWidth="500.0" styleClass="root" stylesheets="@../styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+	<children>
+		<VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+			<children>
+				<AnchorPane styleClass="dialogContent" VBox.vgrow="ALWAYS">
+					<children>
+						<HBox fillHeight="false" styleClass="dialogMessageWrapper" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+							<children>
+								<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="24.0" prefWidth="24.0" styleClass="iconWrapper" HBox.hgrow="NEVER">
+									<children>
+										<Pane styleClass="dialogIcon" />
+									</children>
+								</StackPane>
+								<TextFlow prefHeight="0.0">
+									<children>
+										<Text strokeType="OUTSIDE" strokeWidth="0.0" text="You have unsaved changes. Save the file before closing?" />
+									</children>
+								</TextFlow>
+							</children>
+						</HBox>
+					</children>
+				</AnchorPane>
+				<HBox styleClass="buttonsWrapper" VBox.vgrow="NEVER">
+					<children>
+						<Button mnemonicParsing="false" onAction="#yesBtnPressed" text="Yes" />
+						<Button mnemonicParsing="false" onAction="#noBtnPressed" text="No" />
+						<Button cancelButton="true" mnemonicParsing="false" onAction="#cancelBtnPressed" text="Cancel" />
+					</children>
+				</HBox>
+			</children>
+			<styleClass>
+				<String fx:value="dialogWrapper" />
+				<String fx:value="dialogQuestion" />
+			</styleClass>
+		</VBox>
+	</children>
+</AnchorPane>

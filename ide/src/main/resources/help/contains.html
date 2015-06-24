@@ -1,0 +1,52 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="contains">
+<h1>contains</h1>
+<p><strong>contains (</strong><em>&lt;list,string,void&gt;</em> <strong>value1,</strong> <em>&lt;string,void&gt;</em> <strong>value2)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Returns <code class="docutils literal"><span class="pre">true</span></code> if the string <code class="docutils literal"><span class="pre">value1</span></code> contains the string <code class="docutils literal"><span class="pre">value2</span></code>.
+Returns <code class="docutils literal"><span class="pre">true</span></code> if the list <code class="docutils literal"><span class="pre">value1</span></code> contains the exact value <code class="docutils literal"><span class="pre">value2</span></code> or the index <code class="docutils literal"><span class="pre">value2</span></code>.</p>
+<p>See also <a class="reference internal" href="endswith.html"><em>endswith</em></a>, <a class="reference internal" href="startswith.html"><em>startswith</em></a></p>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">The following calls to <code class="docutils literal"><span class="pre">contains</span></code> all return <code class="docutils literal"><span class="pre">true</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre>testvalue = contains(&quot;testing&quot;, &quot;ing&quot;);
+
+testvalue = contains({brand = &quot;Ferrari&quot;, colour = &quot;light silver grey&quot;}, &quot;Ferrari&quot;);
+</pre></div>
+</div>
+</li>
+<li><p class="first">While the following return <code class="docutils literal"><span class="pre">false</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre>testvalue = contains(&quot;testing&quot;, &quot;ts&quot;);
+
+testvalue = contains({brand = &quot;BMW&quot;, colour = &quot;light silver grey&quot;}, &quot;branding&quot;);
+
+testvalue = contains({brand = &quot;BMW&quot;, colour = &quot;light silver grey&quot;}, &quot;silver&quot;);
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_text.html"><em>Text</em></a>, <a class="reference internal" href="_tag_list.html"><em>List</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

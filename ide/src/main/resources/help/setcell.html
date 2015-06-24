@@ -1,0 +1,59 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="setcell">
+<h1>setcell</h1>
+<p><strong>setcell (</strong><em>sheet</em> <strong>sheet,</strong> <em>&lt;void,string,number,boolean,date&gt;</em> <strong>value,</strong> <em>&lt;string,number&gt;</em> <strong>column,</strong> <em>&lt;string,number&gt;</em> <strong>row*)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Sets <code class="docutils literal"><span class="pre">value</span></code> at cell <code class="docutils literal"><span class="pre">column</span></code>, <code class="docutils literal"><span class="pre">row</span></code> in Excel spreadsheet <code class="docutils literal"><span class="pre">sheet</span></code>. <code class="docutils literal"><span class="pre">column</span></code> and <code class="docutils literal"><span class="pre">row</span></code> can either be an index number (1,5) , or a readable indicator (A, 5). <code class="docutils literal"><span class="pre">row</span></code> can be omitted by putting the full cell indicator in the second parameter (A5). Note that <code class="docutils literal"><span class="pre">column</span></code> and <code class="docutils literal"><span class="pre">row</span></code> in numeric form are 1-based (counting starts at 1) to make them compatible with string-based lookups.
+When <code class="docutils literal"><span class="pre">value</span></code> is of type <code class="docutils literal"><span class="pre">date</span></code> the following format will be applied: <code class="docutils literal"><span class="pre">yyyy-MM-dd</span> <span class="pre">HH:mm:ss</span></code>. Please note that the provided <code class="docutils literal"><span class="pre">sheet</span></code> will not have its <code class="docutils literal"><span class="pre">row</span></code> and <code class="docutils literal"><span class="pre">column</span></code> counts updated for performance reasons. Use <code class="docutils literal"><span class="pre">getsheet</span></code> afterwards instead.</p>
+</div>
+<div class="section" id="example">
+<h2>Example</h2>
+<ul>
+<li><p class="first">Setting cell values in a spreadsheet:</p>
+<div class="highlight-python"><div class="highlight"><pre>workbook = createexcel();
+sheet = createsheet(workbook, &quot;Mapping&quot;);
+rowsToCreate = 20;
+columnsToCreate = 8;
+rowCounter = 1;
+totalCounter = 1;
+while (rowCounter &lt;= rowsToCreate){
+    colCounter = 1;
+    while (colCounter &lt;= columnsToCreate){
+        setcell(sheet, totalCounter, colCounter, rowCounter);
+        totalCounter = totalCounter+1;
+        colCounter = colCounter+1;
+    }
+    rowCounter = rowCounter+1;
+}
+</pre></div>
+</div>
+</li>
+<li><p class="first">Excel files can be saved by using <code class="docutils literal"><span class="pre">savedata</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">savedata</span><span class="p">(</span><span class="s">&quot;C:/projects/someproject/mapping/mapping.xls&quot;</span><span class="p">,</span> <span class="n">workbook</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_excel.html"><em>Excel</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

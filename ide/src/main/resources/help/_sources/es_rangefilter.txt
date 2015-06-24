@@ -1,0 +1,28 @@
+--------------
+es_rangefilter
+--------------
+
+**es_rangefilter (**\ *string* **field,** *number* **low,** *number* **high)**
+
+Description
+-----------
+
+Creates a filter, which selects all documents from a search query that have a value between ``low`` and ``high`` in the given ``field``. This returns a string identifier that can be used to identify this filter. If a document does not have ``field``, it will not be included in the search query.
+
+Examples
+--------
+
+-
+
+	Select the documents of type "invoice" from "testingindex" with a value above 100 and below 2000 in the field "word-count":
+	
+	::
+	
+		es_connect();
+		rangefilter = es_rangefilter("word-count", 100, 2000);
+		longinvoices = es_search("testingindex", "invoice", rangefilter);
+
+Tags
+----
+
+:doc:`_tag_elasticsearch`

@@ -1,0 +1,64 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="regex">
+<h1>regex</h1>
+<p><strong>regex (</strong><em>&lt;void,string&gt;</em> <strong>value,</strong> <em>string</em> <strong>regex,</strong> <em>number</em> <strong>timeout*)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Returns a list of regular expression matches of string <code class="docutils literal"><span class="pre">regex</span></code> on the string <code class="docutils literal"><span class="pre">value</span></code>. Note that the result will be a list which contains the entire string <code class="docutils literal"><span class="pre">value</span></code> as the first entry and after that one or more matching groups. <code class="docutils literal"><span class="pre">regex</span></code> must always match the entire string <code class="docutils literal"><span class="pre">value</span></code>.</p>
+<p>Optionally a <code class="docutils literal"><span class="pre">timeout</span></code> can be provided in seconds, the default value is 5 seconds. Set <code class="docutils literal"><span class="pre">timeout</span></code> to zero to let the function run without timeout. This should only be altered when dealing with large source documents. The timeout is there to protect the system from hanging on invalid expressions.</p>
+<p>See the <a class="reference internal" href="_tag_regex.html"><em>Regular Expressions</em></a> page for more about Regular Expression support in Content Tools.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">Determining the file extension contained in a URL:</p>
+<div class="highlight-python"><div class="highlight"><pre>url = &quot;http://www.xillio.com/wp-content/uploads/screenshot-ns-website.png&quot;;
+log (getextension (url));
+getextension = routine(url) {
+    file = regex(url, &quot;http.*/(.*?)\.(.*?)&quot;);
+
+    if ( file != null) {
+        return(file[2]); //get the second matching group
+    } else {
+        log(&quot;ERROR: binary url is not valid.&quot; + url);
+    }
+}
+</pre></div>
+</div>
+<p>will print:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">png</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Detect md5 hashes in &lt;a&gt; tags (to get page id&#8217;s in certain CMS&#8217;s):</p>
+<div class="highlight-python"><div class="highlight"><pre>linkid = &quot;&quot;;
+id_regex = regex(contentstring, &quot;(?is).*&lt;a\s[^&gt;]*href=\&quot;([a-f0-9]{32})\&quot;.*?&gt;.*&quot;);
+if (variabletype(id_regex) == &quot;list&quot;) {
+    linkid = id_regex[1];
+}
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_text.html"><em>Text</em></a>, <a class="reference internal" href="_tag_regex.html"><em>Regular Expressions</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

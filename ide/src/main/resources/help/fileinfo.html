@@ -1,0 +1,98 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="fileinfo">
+<h1>fileinfo</h1>
+<p><strong>fileinfo (</strong><em>string</em> <strong>uri)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Returns a list with information regarding the file <code class="docutils literal"><span class="pre">uri</span></code> on the local computer. Returns a list with <code class="docutils literal"><span class="pre">exists=false</span></code> if the file or directory doesn&#8217;t exist.</p>
+</div>
+<div class="section" id="example">
+<h2>Example</h2>
+<ul>
+<li><p class="first">The following logs info regarding file <code class="docutils literal"><span class="pre">C:\Temp\a.xlsx</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">uri</span> <span class="o">=</span> <span class="s">&quot;C:/Temp/a.xlsx&quot;</span><span class="p">;</span>
+<span class="n">fi</span> <span class="o">=</span> <span class="n">fileinfo</span><span class="p">(</span><span class="n">uri</span><span class="p">);</span>
+<span class="n">log</span> <span class="p">(</span><span class="n">fi</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python"><div class="highlight"><pre>{
+    canExecute = true,
+    canRead = true,
+    canWrite = true,
+    exists = true,
+    extension = &quot;xlsx&quot;,
+    filename = &quot;a.xlsx&quot;,
+    isDirectory = false,
+    isHidden = false,
+    isRegularFile = true,
+    isSymbolicLink = false,
+    lastAccessTime = 2014-02-12T16:11:08.536,
+    lastModifiedTime = 2014-02-12T16:11:08.542,
+    length = 11668,
+    path = &quot;c:\temp\a.xlsx&quot;
+}
+</pre></div>
+</div>
+</li>
+<li><p class="first">The following logs info regarding directory <code class="docutils literal"><span class="pre">C:\Temp</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">uri</span> <span class="o">=</span> <span class="s">&quot;C:/Temp&quot;</span><span class="p">;</span>
+<span class="n">fi</span> <span class="o">=</span> <span class="n">fileinfo</span><span class="p">(</span><span class="n">uri</span><span class="p">);</span>
+<span class="n">log</span> <span class="p">(</span><span class="n">fi</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python"><div class="highlight"><pre>{
+    canExecute = true,
+    canRead = true,
+    canWrite = true,
+    exists = true,
+    isDirectory = true,
+    isHidden = false,
+    isRegularFile = false,
+    isSymbolicLink = false,
+    lastAccessTime = 2014-02-12T16:37:29.43,
+    lastModifiedTime = 2014-02-12T16:37:29.43,
+    length = 16384,
+    path = &quot;c:\temp&quot;
+}
+</pre></div>
+</div>
+</li>
+<li><p class="first">The following is the result when the file doesn&#8217;t exist <code class="docutils literal"><span class="pre">C:\Stoemp</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">uri</span> <span class="o">=</span> <span class="s">&quot;C:/Stoemp&quot;</span><span class="p">;</span>
+<span class="n">fi</span> <span class="o">=</span> <span class="n">fileinfo</span><span class="p">(</span><span class="n">uri</span><span class="p">);</span>
+<span class="n">log</span> <span class="p">(</span><span class="n">fi</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python"><div class="highlight"><pre>{
+    exists = false,
+    path = &quot;c:\Stoemp&quot;
+}
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_file.html"><em>File</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

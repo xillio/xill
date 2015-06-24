@@ -1,0 +1,35 @@
+-----
+click
+-----
+
+**click (**\ *node* **element)**
+
+Description
+-----------
+
+Performs a browser click action on the provided ``element``, which must be a node from an (X)HTML document. Javascript handlers bound to the provided ``element`` will also be triggered.
+
+Examples
+--------
+
+-
+
+    The following script will click all links on the given page:
+    
+    ::
+    
+        page = loadpage ("http://www.xillio.com/");
+
+        if (page != null) {
+            nodes = xpath (page, "//a");
+            foreach (_, node, nodes) {
+                click (node);
+            }
+        } else {
+            log ("page could not be loaded");
+        }
+
+Tags
+----
+
+:doc:`_tag_browser`

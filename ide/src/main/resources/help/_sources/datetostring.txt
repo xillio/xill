@@ -1,0 +1,106 @@
+------------
+datetostring
+------------
+
+**datetostring (**\ *date* **date,** *string* **format,** *<string,void>* **timezone)**
+
+Description
+-----------
+
+Returns the date as a string formatted as given in ``format``, with respect to the timezone.
+
+See also :doc:`date`
+
+Details
+-------
+
+``timezone`` can be either an abbreviation such as "PST", a full name such as "America/Los_Angeles", or a custom zone such as "GMT-8:00".
+If the timezone cannot be understood, "GMT" is used.
+
+======   ===========   ======  =====================
+Symbol   Meaning       Type    Example
+======   ===========   ======  =====================
+   G     Era           Text    "GG" -> "AD"
+   y     Year          Number  | "yy" -> "03"
+                               | "yyyy" -> "2003"
+   M     Month         Text    | "M" -> "7"
+                       or      | "M" -> "12"
+                       Number  | "MM" -> "07"
+                               | "MMM" -> "Jul"
+                               | "MMMM" -> "December"
+   d     Day           Number  | "d" -> "3"
+         in                    | "dd" -> "03"
+         month       
+   h     Hour          Number  | "h" -> "3"
+         (1-12,                | "hh" -> "03"
+         AM/PM)            
+   H     Hour          Number  | "H" -> "15"
+         (0-23)                | "HH" -> "15"
+   k     Hour          Number  | "k" -> "3"
+         (1-24)                | "kk" -> "03"
+   K     Hour          Number  |  "K" -> "15"
+         (0-11                 | "KK" -> "15"
+         AM/PM)
+   m     Minute        Number  | "m" -> "7"
+                               | "m" -> "15"
+                               | "mm" -> "15"
+   s     Second        Number  | "s" -> "15"
+                               | "ss" -> "15"
+   S     Millisecond
+         (0-999)       Number  "SSS" -> "007"
+   E     Day in week   Text    | "EEE" -> "Tue"
+                               | "EEEE" -> "Tuesday"
+   D     Day in year   Number  | "D" -> "65"
+         (1-365                | "DDD" -> "065"
+         or 1-366)  
+   F     Day of        Number  | "F" -> "1"
+         week in
+         month (1-5)
+   w     Week in       Number  | "w" -> "7"
+         year (1-53)
+   W     Week in       Number  | "W" -> "3"
+         month (1-5)
+   a     AM/PM         Text    | "a" -> "AM"
+                               | "aa" -> "AM"
+   z     Time zone     Text    | "z" -> "EST"
+                               | "zzz" -> "EST"
+                               | "zzzz" -> "Eastern Standard Time"
+   Z     Time zone     RFC822  "Z" -> "-0800"
+
+``'``    Escape for            | "\ ``'``\ hour\ ``'``\ h" -> "hour 9"
+         for text 
+         Delimiter
+``''``   Single                | "ss\ ``''``\ SSS" -> "45\ ``'``\ 876"
+         quote 
+         Literal  
+======   ===========   ======  =====================
+         
+Examples
+--------
+
+- 	
+
+    Executing:
+    
+    ::
+    
+        log(datetostring(date(), "EEEE dd MMMM Y, hh:mm"));
+    
+    prints:
+    
+    ::
+    
+        vrijdag 25 oktober 2013, 09:39
+
+    Getting the time in Los Angeles:
+    
+    ::
+    
+	    timeLA = datetostring(date(), "hh:mm", "America/Los_Angeles");
+
+
+        
+Tags
+----
+
+:doc:`_tag_text`, :doc:`_tag_date`, :doc:`_tag_conversion`

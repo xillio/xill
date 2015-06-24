@@ -1,0 +1,34 @@
+--------
+download
+--------
+
+**download (**\ *string* **url,** *string* **filename)**
+
+Description
+-----------
+
+Saves the file at ``url`` to the local file system at location given by ``filename``. This is commonly used to scrape HTML or binary files from a webserver. You can use ``geterror()`` to check for any error conditions in the server-response.
+
+
+Example
+-------
+
+-
+
+    The following downloads the homepage of ``www.xillio.com`` to ``C:\tmp\download.html``:
+    
+    ::
+ 
+        url = "http://www.xillio.com/wp-content/uploads/generic-xillio-migration-framework-middle.png";
+        downloadlocation = "C:/tmp/download.png";
+
+        if (!fileexists (downloadlocation)) {
+            if (geterror (download (url, downloadlocation)) != null){
+                log ("Could not download " + url + " to " + downloadlocation + " - Check whether the path exists.");
+            }
+        }
+        
+Tags
+----
+
+:doc:`_tag_browser`, :doc:`_tag_file`

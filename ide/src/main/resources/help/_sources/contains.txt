@@ -1,0 +1,43 @@
+--------
+contains
+--------
+
+**contains (**\ *<list,string,void>* **value1,** *<string,void>* **value2)**
+
+Description
+-----------
+
+Returns ``true`` if the string ``value1`` contains the string ``value2``.
+Returns ``true`` if the list ``value1`` contains the exact value ``value2`` or the index ``value2``.
+
+See also :doc:`endswith`, :doc:`startswith`
+
+Examples
+--------
+
+-
+
+    The following calls to ``contains`` all return ``true``:
+
+    ::
+
+        testvalue = contains("testing", "ing");
+
+        testvalue = contains({brand = "Ferrari", colour = "light silver grey"}, "Ferrari");
+        
+-
+
+    While the following return ``false``:
+
+    ::
+
+        testvalue = contains("testing", "ts");
+        
+        testvalue = contains({brand = "BMW", colour = "light silver grey"}, "branding");
+
+        testvalue = contains({brand = "BMW", colour = "light silver grey"}, "silver");
+
+Tags
+----
+
+:doc:`_tag_text`, :doc:`_tag_list`

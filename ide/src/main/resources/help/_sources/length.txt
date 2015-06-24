@@ -1,0 +1,53 @@
+------
+length
+------
+
+**length (**\ *<any>* **value)**
+
+Description
+-----------
+
+Returns the length of ``value``, which can be of any type. Supported: string, list and file list iterator, anything else will return 0. 
+
+Examples
+--------
+
+-
+
+    Executing the following:
+    
+    ::
+ 
+        shortstring = "Welcome";
+        emptystring = "";
+
+        log (length (shortstring));
+        log (length (emptystring));
+
+        shortlist = {column = 4, row = 5};
+        emptylist = {};
+
+        log (length (shortlist));
+        log (length (emptylist));
+        
+    will print:
+    
+    ::
+    
+        7
+        0
+        2
+        0
+        
+-
+
+	Possible uses with file list iterator variables:
+	
+	::
+	
+		log("Number of files: " + length(listfiles("c:/xillio")));
+        
+Tags
+----
+
+String, List

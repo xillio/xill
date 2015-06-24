@@ -1,0 +1,78 @@
+----------
+addsubnode
+----------
+
+**addsubnode (**\ *<xml,void>* **node,** *<string,void>* **newnode,** *<xml,void>* **beforenode*)**
+
+Description
+-----------
+
+Add the provided HTML/XML string ``newnode`` as a child to ``node``, optionally at position ``beforenode``. Returns the newly created node.
+
+See also :doc:`removenode`
+
+Examples
+--------
+
+- 	
+
+    Given an XML-file note.xml, which contains:
+    
+    ::
+    
+        <note>
+            <to>Tove</to>
+            <from>Jani</from>
+            <heading>Reminder</heading>
+            <body>Don't forget me this weekend!</body>
+        </note>
+
+    After executing the following code:
+    
+    ::
+
+        xml = loadxml ("C:/tmp/note.xml");
+        parent = xpath(xml, "//note"); //get main node
+        addsubnode (parent, "<comment>Comments are welcome.</comment>");
+
+    Parent contains:
+
+    ::
+        
+        <note>
+            <to>Tove</to>
+            <from>Jani</from>
+            <heading>Reminder</heading>
+            <body>Don't forget me this weekend!</body>
+            <comment>Comments are welcome.</comment>
+        </note>
+
+-
+
+    After executing the following code:
+    
+    ::
+
+        xml = loadxml ("<your path to file>/note.xml");
+        parent = xpath(xml, "//note"); //get main node
+        subnode = xpath(xml, "//body"); //get subnode
+        addsubnode (parent, "<comment>Comments are welcome.</comment>", subnode);
+
+    Parent contains:
+
+    ::
+        
+        <note>
+            <to>Tove</to>
+            <from>Jani</from>
+            <heading>Reminder</heading>
+            <comment>Comments are welcome.</comment>
+            <body>Don't forget me this weekend!</body>
+        </note>
+
+    Note: Never mind the indentation of ``<body>``, this is a known issue. ``<comment>`` and ``<body>`` are on the same level.
+
+Tags
+----
+
+:doc:`_tag_xmlhtml`

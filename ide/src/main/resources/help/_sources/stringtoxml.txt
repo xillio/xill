@@ -1,0 +1,60 @@
+-----------
+stringtoxml
+-----------
+
+**stringtoxml (**\ *string* **value)**
+
+Description
+-----------
+
+Loads the specified text as XML. Useful to generate (parts of) XML or HTML documents inline.
+
+See also :doc:`xmltostring`, :doc:`loadxml`
+
+Example
+-------
+
+-   
+    
+    Executing the following code
+    
+    ::
+    
+        content = "<note id=\"1\">
+                    <to>Tove</to>
+                    <from>Jani</from>
+                    <heading>Reminder</heading>
+                    <comment>This was sent to James as well</comment>
+                    <comment>John has not responded to the invitation</comment>
+                    <body>Don't forget me this weekend!</body>
+                </note>";
+
+        xmlcontent = stringtoxml (content);
+
+        comments = xpath (xmlcontent, "//comment");
+
+        log (comments);
+    
+    will print:
+    
+    ::
+    
+		{
+			0 = <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+				<comment>This was sent to James as well</comment>,
+			1 = <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+				<comment>John has not responded to the invitation</comment>
+		}
+
+    However, trying to execute this line:
+    
+    ::
+    
+        comments = xpath (content, "//comment");
+        
+    will throw an error.
+
+Tags
+----
+
+:doc:`_tag_xmlhtml`, :doc:`_tag_text`, :doc:`_tag_conversion`

@@ -1,0 +1,37 @@
+------------
+listtocsv
+------------
+
+**listtocsv (**\ *<void,list>* **value,** *string* **delimiter,** *<string,void>* **enclosingchar)**
+
+Description
+-----------
+
+A shorthand function for easily generating csv files. Merges the list into a single line string. The argument ``delimiter`` is used to seperate values from each other; ``enclosingchar`` is used to enclose the values with for example a quote.
+
+See also :doc:`split`
+
+Examples
+--------
+
+-
+    
+    Executing:
+    
+    ::
+    
+        log(listtocsv({"Xillio", "Xillio", "Sausage", "Xillio", "Xillio", " "}, ";", "\""));
+
+    will print:
+    
+    ::
+    
+        [
+          "Xillio";"Xillio";"Sausage";"Xillio";"Xillio";" "
+        ]
+
+
+Tags
+----
+
+:doc:`_tag_text`, :doc:`_tag_list`, :doc:`_tag_conversion`

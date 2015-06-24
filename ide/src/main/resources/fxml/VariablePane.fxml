@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import nl.xillio.migrationtool.gui.*?>
+<VBox fx:id="vbxVariables" styleClass="innerPane" alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+	<children>
+		<AnchorPane fx:id="apnVariablesHeader" styleClass="paneHeader" VBox.vgrow="NEVER">
+			<children>
+				<HBox fx:id="hbxVariablesHeader" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+					<children>
+						<Label fx:id="lblVariablesHeader" focusTraversable="false" styleClass="paneHeaderTitle" text="Variables" HBox.hgrow="NEVER" />
+						<Pane fx:id="pnVariablesHeader" HBox.hgrow="ALWAYS" />
+					</children>
+				</HBox>
+			</children>
+		</AnchorPane>
+		<AnchorPane fx:id="apnVariablesBody" styleClass="paneBody" VBox.vgrow="ALWAYS">
+			<children>
+				<TableView fx:id="tblVariables" focusTraversable="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+					<columns>
+						<TableColumn fx:id="colVariableName" prefWidth="150.0" text="Name" />
+						<TableColumn fx:id="colVariableValue" prefWidth="150.0" text="Value" />
+					</columns>
+				</TableView>
+			</children>
+		</AnchorPane>
+	</children>
+</VBox>

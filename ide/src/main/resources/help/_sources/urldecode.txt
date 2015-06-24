@@ -1,0 +1,34 @@
+---------
+urldecode
+---------
+
+**urldecode (**\ *<string,void>* **text)**
+
+Description
+-----------
+
+Returns the URL-decoded version of string ``text``. Useful for reading URL's with GET variables in them. Note that both %20 and the plus sign are converted to a space character.
+
+See also :doc:`urlencode`
+
+Example
+-------
+
+-
+    
+    Executing:
+    
+    ::
+    
+        log (urldecode("Together%2C%20we+spent%20%2450.95"));
+    
+    will print:
+    
+    ::
+    
+        Together, we spent $50.95
+
+Tags
+----
+
+:doc:`_tag_encoding`

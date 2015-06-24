@@ -1,0 +1,237 @@
+------------
+General Help
+------------
+
+The Xillio bot scripting language has a javascript like syntax. It is an imperative language without user-defined classes and inheritance. Typing is handled dynamically.
+
+Basic syntax
+------------
+
+- Each command is closed with a semicolon ``;``
+- Variables are assigned and defined inline using the syntax ``a = b;``
+- Operators can be used to perform simple actions like concatenating, multiplying, etc: ``a = b + 1;``
+- Literal strings must always be enclosed in double quotes: ``a = "Hello world";``
+- Functions are called with zero or more comma-separated arguments: ``log("Hello world");``
+
+Comments
+--------
+
+Comments are pieces of text in the robot that will not be processed. Comments can be used to provide inline documentation or disable pieces of code. There are two types of comments: single line and multi line comments.
+
+-
+    
+    Single line comment; place a double slash (``//``) at the start of the comment
+    
+    ::
+        
+        // Log an entry to mark the start of the robot
+        log("Starting robot");
+
+-
+    
+    Multi line comment; start with ``/*`` and end with ``*/``. Anything inbetween will be considered part of the comment:
+    
+    ::
+        
+        // The following piece of code is disabled
+        /*
+        page = loadpage("http://www.google.com");
+        */
+
+Operators
+---------
+
+:Add: ``+``
+:And: ``&&``
+:Concatenate: ``+``
+:Decrement: ``--``
+:Divide: ``/``
+:Equals: ``==``
+:Greater: ``>``
+:Greater equals: ``>=``
+:Increment: ``++``
+:Less: ``<``
+:Less equals: ``<=``
+:Modulo: ``%``
+:Multiply: ``*``
+:Not: ``!``
+:Not equals: ``!=``
+:Or: ``||``
+:Power: ``^``
+:Subtract: ``-``
+
+Additionally Content Tools supports shortcut operators which perform an arithmetic operation and assignment in one go: ``+=``, ``-=``, ``*=``, ``/=``
+
+Expressions
+-----------
+
+Expressions are sequences of variables and/or functions stringed together with operators. Expressions can be nested into function parameters, thus creating complex expressions.
+
+-
+    
+    Simple expression
+    
+    ::
+        
+        a = fac(1);
+
+-
+    
+    Complex expression
+
+    ::
+
+        b = fac(a + fac(a - 1)) / 2;
+
+
+Code blocks
+-----------
+
+Curly braces are used to enclose code blocks that are executed when specific conditions are met, such as in ``if``, ``foreach``, ``while`` and ``routine``.
+
+::
+    
+    if(true) {
+        log("Hello world!");
+    } else {
+        log("Goodbye!");
+    }
+
+
+Lists
+-----
+
+Lists can be defined in various ways using block syntax:
+
+-
+    
+    Empty list
+    
+    ::
+        
+        emptylist = {};
+
+-
+    
+    Simple list
+
+    ::
+
+        simplelist = {"a", "b", "c"};
+
+-
+    
+    Associated list
+
+    ::
+
+        associatedlist = {
+            first = "a", 
+            second = "b", 
+            third = "c"
+        };
+
+-
+    
+    Associated list with complex keys
+
+    ::
+
+        complexlist = {
+            first = "a", 
+            "second or third" = "b", 
+            "fourth" = "c"
+        };        
+
+-
+    
+    Nested list
+
+    ::
+
+        complexlist = {
+            first = {
+                seventh = "a",
+                tenth = "b"
+            },
+            second = "c"
+        };
+        
+Individual elements of a list can be assigned or retrieved as follows:
+
+-
+    
+    Dot notation
+
+    ::
+
+        firstitem = associatedlist.first;
+        tenthitem = nestedlist.first.tenth;
+
+-
+    
+    Square brace notation
+
+    ::
+
+        firstitem = simplelist[0];
+        seconditem = complexlist["second or third"];
+        thirditem = simplelist["second" + "or third"];
+
+
+Variable scope
+--------------
+
+The scope of variables is bound to the block in which they have been defined. This implies that a variable can be accessed in subblock, but not in a super block.
+
+::
+
+    scope1 = true;
+    if(true) {
+        scope2 = true;
+        
+        log("Current block accessible: " + scope2);
+        log("Super block accessible: " + scope 1);
+    }
+
+    log("Subscope accessible: " + scope2);
+
+Produces:
+
+::
+    
+    true
+    true
+    null
+
+    
+System variables
+----------------
+
+The following set of variables are considered to be system variables. These variables are globally available but are immutable.
+
+-
+    true
+
+-
+    false
+
+-
+    null
+
+-
+    __local  (Represents the local variable state)
+
+-
+    __global (Represents the global variable state)
+
+
+Common language constructs
+--------------------------
+
+For more information on some commonly used language constructs, see:
+
+-    :doc:`routine` - Define custom functions
+-    :doc:`if` - Conditional execution of code
+-    :doc:`foreach` - Iterate over lists or results
+-    :doc:`while` - Conditional loop

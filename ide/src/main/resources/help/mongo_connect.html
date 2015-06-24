@@ -1,0 +1,65 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="mongo-connect">
+<h1>mongo_connect</h1>
+<p><strong>mongo_connect (</strong><em>string</em> <strong>database,</strong> <em>string</em> <strong>host*,</strong> <em>number</em> <strong>port*)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Connects to a mongoDB database with name <code class="docutils literal"><span class="pre">database</span></code> on a server at the provided <code class="docutils literal"><span class="pre">host</span></code> and <code class="docutils literal"><span class="pre">port</span></code>. Returns a string which can be used to identify this connection for use with other mongo functions. All other mongo functions take the connection string as an optional argument, when none is given they will use the first one that was connected to.</p>
+</div>
+<div class="section" id="default-values">
+<h2>Default values</h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">host:</th><td class="field-body"><code class="docutils literal"><span class="pre">localhost</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">port:</th><td class="field-body"><code class="docutils literal"><span class="pre">27017</span></code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">Common usage:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">mongo</span> <span class="o">=</span> <span class="n">mongo_connect</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">dbname</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">port</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Where settings might be:</p>
+<div class="highlight-python"><div class="highlight"><pre>settings = {
+        dbname = &quot;remotedb&quot;,
+        host = &quot;37.0.85.17&quot;,
+        port = 27017
+};
+</pre></div>
+</div>
+</li>
+<li><p class="first">To connect using all defaults use:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">mongo</span> <span class="o">=</span> <span class="n">mongo_connect</span><span class="p">(</span><span class="s">&quot;localdb&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_mongodb.html"><em>MongoDB</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

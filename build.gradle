@@ -45,8 +45,6 @@ allprojects {
 					classifier "sources"
 				}
 			}
-				
-			 
 		}
 		
 		 repositories {
@@ -72,6 +70,9 @@ description = 'this root project contains the overview of the contenttools appli
 def mainClassName = "nl.xillio.contenttools.Application"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+def pluginsDir = new File(buildDir, '../plugins')
+def esConsoleDir = new File(buildDir, '../ESConsole')
+def xilliosettingsFile = new File(buildDir, '../xilliosettings.db')
 
 /*
  * JAVA
@@ -82,7 +83,7 @@ configurations {
 }
 
 dependencies {
-	compile 'nl.xillio:commons-plugins:1.0-SNAPSHOT'
+	compile 'nl.xillio:commons-plugins:1.0'
 	compile project(':api')
 	plugin project(':processor')
 	plugin project(':ide')
@@ -121,11 +122,40 @@ javafx {
 	}
 }
 
+task loadPluginExample(type: Copy) {
+	dependsOn project(':plugin-example').jar
+	from project(':plugin-example').libsDir
+	into libsDir
+}
+
 task assembleContenttools(type: Copy){
 	description 'Copies output from the processor and the ide to a plugins directory so eclipse will be able to load the plugins.'
+	//The processor jars
 	from project(':processor').configurations.runtime 
 	from project(':processor').jar
+	//The ide jars
 	from project(':ide').configurations.runtime
 	from project(':ide').jar
-	into new File(buildDir, '../plugins');
+	//The example plugin
+	from loadPluginExample
+	into pluginsDir
+}
+
+task cleanRuntime {
+	description 'Deletes all the folders generated and used by contenttools running in eclipse'
+	
+	delete pluginsDir
+	delete esConsoleDir
+}
+
+clean {
+	dependsOn cleanRuntime
+}
+
+cleanEclipse {
+	dependsOn cleanRuntime
+}
+
+eclipseClasspath {
+	dependsOn assembleContenttools
 }

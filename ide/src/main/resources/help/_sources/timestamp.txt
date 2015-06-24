@@ -1,0 +1,33 @@
+----------
+timestamp
+----------
+
+**timestamp ( )**
+
+Description
+-----------
+
+Returns the UNIX timestamp of the system, in milliseconds since midnight 1970, current timezone.
+
+See also :doc:`date`
+
+Example
+--------
+
+-
+    
+    ::
+    
+        log (timestamp());
+    
+    will print:
+    
+    ::
+    
+        INFO: 1381137135
+    
+
+Tags
+----
+
+:doc:`_tag_date`

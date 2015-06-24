@@ -1,0 +1,36 @@
+---------
+es_delete
+---------
+
+**es_delete (**\ *string* **index,** *<string,void>* **type*,** *<string,void>* **id*,** *string* **client*)**
+
+Description
+-----------
+
+Deletes documents from a specified ``index``. The ``type`` and ``id`` parameters are optional. If ``id`` is not specified, the ``type`` will be deleted. Likewise, if ``type`` is not specified, the ``index`` will be deleted.
+
+Examples
+--------
+
+-
+
+	Removing the type "paintings" from the "art" index:
+	
+	::
+	
+		es_connect();
+		es_delete("art", "paintings");
+		
+-
+
+	Removing the painting with id "monalisa"
+	
+	::
+	
+		es_connect();
+		es_delete("art", "paintings", "monalisa");
+		
+Tags
+----
+
+:doc:`_tag_elasticsearch`

@@ -1,0 +1,48 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="loaddata">
+<h1>loaddata</h1>
+<p><strong>loaddata (</strong><em>string</em> <strong>uri,</strong> <em>string</em> <strong>encoding*)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Returns a string variable containing the text of the local file <code class="docutils literal"><span class="pre">uri</span></code>. The optional parameter <code class="docutils literal"><span class="pre">encoding</span></code> sets the text encoding to use. It defaults to &#8216;UTF-8&#8217;. When <code class="docutils literal"><span class="pre">encoding</span></code> is set to to &#8216;BINARY&#8217;, the file is loaded into a binary variable, which can be then be used to e.g. calculate the md5.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">Read a list of strings from a file, using <code class="docutils literal"><span class="pre">loaddata</span></code> and <code class="docutils literal"><span class="pre">split</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre>if (fileexists (file_uri)) {
+    skiplist = global (split (loaddata (file_uri), &quot;\r\n&quot;));
+    log (&quot;Skipping: \n&quot; + skiplist);
+}
+</pre></div>
+</div>
+</li>
+<li><p class="first">Read a webpage from a file and converting to node data type:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">cmspage</span> <span class="o">=</span> <span class="n">loaddata</span><span class="p">(</span><span class="n">cmsfile</span><span class="p">);</span>
+<span class="n">cmspage</span> <span class="o">=</span> <span class="n">stringtopage</span> <span class="p">(</span><span class="n">cmspage</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_file.html"><em>File</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

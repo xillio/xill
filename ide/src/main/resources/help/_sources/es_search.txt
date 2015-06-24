@@ -1,0 +1,45 @@
+---------
+es_search
+---------
+
+**es_search (**\ *<string,void>* **index*,** *<string,void>* **type*,** *<list,string>* **filter*,** *<list,string>* **sorting*,** *string* **client*)**
+
+Description
+-----------
+
+Searches cluster ``client``, with optionally an ``index`` or ``type`` for documents that conform to all filters in ``filter``. They will be sorted by the sortings in ``sorting``.
+``filter`` can be one or more elasticsearch filter(s) created using a filter function.
+``sorting`` can be one or more elasticsearch sorting(s) created using a sort function.
+
+See also :doc:`es_hasfieldfilter`, :doc:`es_rangefilter`, :doc:`es_regexfilter`, :doc:`es_termfilter`
+
+Examples
+--------
+
+-
+
+	To get all documents in the index literature that contain the word "gates" in the "content" field, sorted by author:
+	
+	::
+		
+		es_connect();
+		gatesfilter = es_termfilter("content", "gates");
+		authorSort = es_sort("author");
+		results = es_search("literature", null, gatesfilter, authorSort);
+
+-
+
+	To get all documents in the index literature that contain the word "gates" and have a title field:
+	
+	::
+		
+		es_connect();
+		filters = {};
+		filters.gatesfilter = es_termfilter("content", "gates");
+		filters.titlefilter = es_hasfieldfilter("title");
+		results = es_search("literature", null, filters);
+
+Tags
+----
+
+:doc:`_tag_elasticsearch`

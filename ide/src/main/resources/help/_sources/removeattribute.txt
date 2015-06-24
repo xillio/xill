@@ -1,0 +1,56 @@
+---------------
+removeattribute
+---------------
+
+**removeattribute (**\ *<node,xml,void>* **node,** *<string,void>* **property)**
+
+Description
+-----------
+
+Remove the attribute ``property`` from the XML-node ``node``.
+
+See also :doc:`setattribute`
+
+Example
+-------
+
+-
+
+    Given an XML-file ``note.xml``, which contains:
+    
+    ::
+    
+        <note id="1">
+            <to>Tove</to>
+            <from>Jani</from>
+            <heading>Reminder</heading>
+            <comment>This was sent to James as well</comment>
+            <comment>John has not responded to the invitation</comment>
+            <body>Don't forget me this weekend!</body>
+        </note>
+
+    then after executing the following code:
+    
+    ::
+
+        xml = loadxml ("C:/tmp/note.xml");
+        parent = xpath(xml, "//note"); //get main node
+        removeattribute (parent, "id");
+
+    ``parent`` contains:
+
+    ::
+        
+        <note>
+            <to>Tove</to>
+            <from>Jani</from>
+            <heading>Reminder</heading>
+            <comment>This was sent to James as well</comment>
+            <comment>John has not responded to the invitation</comment>
+            <body>Don't forget me this weekend!</body>
+        </note>
+
+Tags
+----
+
+:doc:`_tag_xmlhtml`

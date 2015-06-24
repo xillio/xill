@@ -1,0 +1,35 @@
+-------
+indexof
+-------
+
+**indexof (**\ *string* **text,** *string* **needle,** *number* **startpos*)**
+
+Description
+-----------
+
+Returns the first index of ``needle`` in ``text``. Returns -1 if not found. Optionally an alternative start position can be provided.
+
+Examples
+--------
+
+-
+    
+    Executing:
+    
+    ::
+    
+        log(indexof("abcdefgabcdefg", "a"));
+		log(indexof("abcdefgabcdefg", "a", 2));
+
+    will print:
+    
+    ::
+    
+		0
+		7
+        
+
+Tags
+----
+
+:doc:`_tag_text`

@@ -1,0 +1,53 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="ampersanddecode">
+<h1>ampersanddecode</h1>
+<p><strong>ampersanddecode (</strong><em>&lt;void,string&gt;</em> <strong>text,</strong> <em>number</em> <strong>passes*)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Decodes all ampersand-encoded characters in the provided string. Mainly used to decode XML characters to their original characters. Optionally you can provide the number of passes the decoder should run.</p>
+<p>See also <a class="reference internal" href="ampersandencode.html"><em>ampersandencode</em></a></p>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">Executing:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ampersanddecode</span><span class="p">(</span><span class="s">&quot;Jack &amp;amp; Jill&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="s">&quot;Jack &amp; Jill&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Executing:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ampersanddecode</span><span class="p">(</span><span class="s">&quot;Money &amp;lt;&amp;amp;gt; Health&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="s">&quot;Money &lt;&gt; Health&quot;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_encoding.html"><em>Encoding / Decoding</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

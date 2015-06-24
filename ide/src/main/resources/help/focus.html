@@ -1,0 +1,46 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="focus">
+<h1>focus</h1>
+<p><strong>focus (</strong><em>node</em> <strong>element)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>This browser function sets the focus to the node <code class="docutils literal"><span class="pre">element</span></code>. This is used as a replacement for mouseover and mouseout events in the absence of a mouse. Some pages require these events to be triggered to load data for combo-boxes, menus or other dynamic elements.</p>
+</div>
+<div class="section" id="example">
+<h2>Example</h2>
+<ul>
+<li><p class="first">The sets focus to the search box in the upper right corner of the homepage, triggering any events that are associated with it (such as loading a history of search terms):</p>
+<div class="highlight-python"><div class="highlight"><pre>page = loadpage (&quot;http://www.xillio.com/&quot;);
+
+if (page != null) {
+    node = xpath (page, &quot;//input[@name=&#39;q&#39;]&quot;); // select the search box at the top of the Xillio homepage
+    focus (node); // set focus to that box
+} else {
+    log (&quot;no page&quot;);
+}
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_browser.html"><em>Browser</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

@@ -1,0 +1,46 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="break">
+<h1>break</h1>
+<p><strong>break ()</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Breaks out of the current loop (<code class="docutils literal"><span class="pre">while</span></code>, <code class="docutils literal"><span class="pre">for</span></code>, <code class="docutils literal"><span class="pre">foreach</span></code>, <code class="docutils literal"><span class="pre">repeat</span></code>). Execution is resumed at the first statement after the loop.</p>
+<p>See also <a class="reference internal" href="continue.html"><em>continue</em></a></p>
+</div>
+<div class="section" id="example">
+<h2>Example</h2>
+<ul>
+<li><p class="first">This will output the numbers 1 to 5.</p>
+<div class="highlight-python"><div class="highlight"><pre>items = {1,2,3,4,5,6,7,8,9};
+foreach (_, item, items) {
+  if(item &gt; 5){
+    break();
+  }
+  log(item);
+}
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_language.html"><em>Language</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

@@ -1,0 +1,32 @@
+-----------
+Conversion
+-----------
+
+Functions in this category convert one data type to another. While the Xillio scripting language does not require you to explicitly transform between types, sometimes it is useful to do so.
+
+
+Functions
+------------------------
+
+..  toctree::
+    :maxdepth: 1
+    :titlesonly:
+    
+    datetostring <datetostring>
+    jsontolist <jsontolist>
+    listtocsv <listtocsv>
+    listtojson <listtojson>
+    listtostring <listtostring>
+    listtoxml <listtoxml>
+    tonumber <tonumber>
+    tostring <tostring>
+    stringtoxml <stringtoxml>
+    stringtopage <stringtopage>
+    xmltostring <xmltostring>
+    xmltolist <xmltolist>
+
+
+All tags
+------------------------
+
+:doc:`_tag_browser`, :doc:`_tag_conversion`, :doc:`_tag_database`, :doc:`_tag_date`, :doc:`_tag_elasticsearch`, :doc:`_tag_encoding`, :doc:`_tag_excel`, :doc:`_tag_file`, :doc:`_tag_language`, :doc:`_tag_list`, :doc:`_tag_mongodb`, :doc:`_tag_other`, :doc:`_tag_regex`, :doc:`_tag_text`, :doc:`_tag_xmlhtml`

@@ -1,0 +1,37 @@
+------------
+variabletype
+------------
+
+**variabletype (**\ *any* **value)**
+
+Description
+-----------
+
+Returns the type of the variable ``value``. This can be ``download``, ``list``, ``node``, ``number``, ``sheet``, ``string``, ``void`` or ``workbook``.
+
+Examples
+--------
+
+-
+    
+    Executing the following code:
+    
+    ::
+    
+        three = 3;
+        log (variabletype (three));
+        names = {"Jones", "Jack", "Kelby"};
+        log (variabletype (names));
+
+    will print:
+    
+    ::
+    
+        number
+        list
+
+
+Tags
+----
+
+:doc:`_tag_language`

@@ -1,0 +1,46 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="xmltostring">
+<h1>xmltostring</h1>
+<p><strong>xmltostring (</strong><em>&lt;void,xml,node&gt;</em> <strong>element)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Outputs the string representation of the XML or page node <code class="docutils literal"><span class="pre">xml</span></code>.</p>
+<p>See also <a class="reference internal" href="stringtoxml.html"><em>stringtoxml</em></a></p>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">Executing:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">log</span><span class="p">(</span><span class="n">xmltostring</span><span class="p">(</span><span class="n">loadpage</span><span class="p">(</span><span class="s">&quot;http://www.google.nl&quot;</span><span class="p">)));</span>
+</pre></div>
+</div>
+<p>will print:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;html itemscope=&quot;&quot; itemtype=&quot;http://schema.org/WebPage&quot;&gt;&lt;head&gt;&lt;meta content=&quot;/images/google_favicon_128.png&quot; itemprop=&quot;image&quot;&gt;
+        &lt;meta conte
+[...]
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_text.html"><em>Text</em></a>, <a class="reference internal" href="_tag_xmlhtml.html"><em>XML / HTML</em></a>, <a class="reference internal" href="_tag_conversion.html"><em>Conversion</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

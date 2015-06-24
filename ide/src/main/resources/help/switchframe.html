@@ -1,0 +1,44 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="switchframe">
+<h1>switchframe</h1>
+<p><strong>switchframe (</strong><em>node</em> <strong>parentpage,</strong> <em>&lt;string,number,node&gt;</em> <strong>frame)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>This browser function switches the context to a given <code class="docutils literal"><span class="pre">frame</span></code>. Useful for working with an iframe or normal content frame.</p>
+</div>
+<div class="section" id="example">
+<h2>Example</h2>
+<ul>
+<li><p class="first">Switch to another iframe and get the different node&#8217;s content:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">page</span> <span class="o">=</span> <span class="n">loadpage</span><span class="p">(</span><span class="s">&quot;http://dummyweb.com/iftest.php&quot;</span><span class="p">);</span>
+<span class="n">node</span> <span class="o">=</span> <span class="n">xpath</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s">&quot;//h1&quot;</span><span class="p">);</span>
+<span class="n">log</span><span class="p">(</span><span class="n">node</span><span class="p">);</span>
+<span class="n">switchframe</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s">&quot;testframe1&quot;</span><span class="p">);</span>
+<span class="n">node</span> <span class="o">=</span> <span class="n">xpath</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s">&quot;//h1&quot;</span><span class="p">);</span>
+<span class="n">log</span><span class="p">(</span><span class="n">node</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_browser.html"><em>Browser</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

@@ -1,0 +1,56 @@
+
+<html>
+<head>
+	<link href="_static/default.css" rel="stylesheet" type="text/css" />
+</head>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="listfiles">
+<h1>listfiles</h1>
+<p><strong>listfiles (</strong><em>string</em> <strong>uri,</strong> <em>boolean</em> <strong>recursive*)</strong></p>
+<div class="section" id="description">
+<h2>Description</h2>
+<p>Returns an iterable containing the absolute file names in the folder specified by <code class="docutils literal"><span class="pre">uri</span></code>. Returns <code class="docutils literal"><span class="pre">empty</span></code> if <code class="docutils literal"><span class="pre">uri</span></code> is empty or not a folder. If the optional parameter <code class="docutils literal"><span class="pre">recursive</span></code> is set to <code class="docutils literal"><span class="pre">true</span></code>, this function will also return the files in all subfolders of <code class="docutils literal"><span class="pre">uri</span></code>.</p>
+<p>See also <a class="reference internal" href="listfolders.html"><em>listfolders</em></a></p>
+</div>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<ul>
+<li><p class="first">Looping through all files in a directory (in this case stored webpages):</p>
+<div class="highlight-python"><div class="highlight"><pre>cmsdirectory =  &quot;C:/tmp/test/html-cms/&quot;;
+cmspages = listfiles (cmsdirectory);
+
+foreach(_, cmsfile, cmspages) {
+    cmspage = trim (loaddata(cmsfile), true);
+    if (cmspage != null) {
+        log (&quot;Successfully read page from: &quot; + cmsfile);
+    }
+}
+</pre></div>
+</div>
+</li>
+<li><p class="first">There is a nice trick for getting the number of files in a directory:</p>
+<div class="highlight-python"><div class="highlight"><pre>files = listfiles (&quot;C:/tmp/&quot;); // the files variable now contains the file list
+number = length(files);
+log (number);
+</pre></div>
+</div>
+<p>This will print the number of files in the given directory. Subdirectories do not count as files.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p><a class="reference internal" href="_tag_file.html"><em>File</em></a></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+</html>

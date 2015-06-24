@@ -1,0 +1,55 @@
+---------
+openexcel
+---------
+
+**openexcel (**\ *string* **filename,** *boolean* **readonly*)**
+
+Description
+-----------
+
+Loads the Excel file ``filename`` and returns a workbook object. After loading, you can use ``getsheet`` to open a certain sheet of the workbook. Optionally, XLSX files can be opened as read-only, reducing memory usage. By default ``readonly`` is set to false.
+
+Example
+-------
+
+-
+    
+    Loading column names from a spreadsheet:
+    
+    ::
+        
+        mappingfile = settings.mapping_file_uri;
+        mappingbook = null;
+        mappingsheet = null;
+
+        if (fileexists (mappingfile)) {
+            mappingbook = openexcel (mappingfile);
+        }
+
+        if (mappingbook != null) {
+            mappingsheet = getsheet (mappingbook, "Fieldmappings");
+        }
+        
+        // initialise row and colum numbers //
+        
+        //...//
+
+        //get included columns
+        column = include_columns_first_column;
+        row = include_columns_row - 1;
+        columns = {null, null};
+
+        // get column names
+        while (column < (migrate_column - 1)) {
+            if (lowercase (trim (getcell (mappingsheet, column, row + 1))) == "x") { // only include names that are marked with an x in the next row
+                columns[column - 1] = trim (getcell (mappingsheet, column, row), true);
+            } else {
+                columns[column - 1] = null;
+            }
+            column = column + 1;
+        }
+    
+Tags
+----
+
+:doc:`_tag_excel`

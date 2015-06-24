@@ -1,0 +1,13 @@
+--------
+contains
+--------
+
+**listduplicate (**\ *<list,void>* **list)**
+
+Description
+-----------
+
+Creates and returns an exact copy of ``list``.
+
+
+:doc:`_tag_list`

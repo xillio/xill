@@ -1,0 +1,38 @@
+----------
+mongo_drop
+----------
+
+**mongo_drop (**\ *string* **collection,** *string* **mongo*)**
+
+Description
+-----------
+
+Drops the ``collection`` from the database identified by ``mongo``. If ``mongo`` is not provided the last active connection will be used.
+
+See also :doc:`mongo_delete`
+
+Examples
+--------
+
+-
+
+    General usage:
+    
+    ::
+    
+        mongo_connect(settings.db);
+        mongo_drop(settings.collection);
+
+    Where the settings might be:
+    
+    ::
+    
+        settings = {
+            db = "movieDB",
+            collection = "ratings"
+        };
+
+Tags
+----
+
+:doc:`_tag_mongodb`
