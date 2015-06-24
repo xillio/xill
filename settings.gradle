@@ -1,0 +1,2 @@
+include 'api', 'ide', 'processor'
+rootProject.name = 'contenttools'

@@ -1,0 +1,17 @@
+bin/
+dist/
+xilliosettings.db
+test-output/
+/ESConsole/
+/target/
+/plugins/
+
+# Gradle
+build/
+.gradle/
+
+# Eclipse
+.settings/
+.metadata/
+.classpath
+.project

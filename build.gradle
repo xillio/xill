@@ -1,0 +1,131 @@
+allprojects {
+	apply plugin: 'java'
+	apply plugin: 'eclipse'
+	group = 'nl.xillio'
+	version = version
+	
+	repositories {
+		mavenLocal()
+		mavenCentral()
+		
+		maven {
+			url "http://192.168.0.200:8081/nexus/content/repositories/releases"
+			credentials {
+				username mavenUsername
+				password mavenPassword
+			}
+		}
+		maven {
+			url "http://192.168.0.200:8081/nexus/content/repositories/thirdparty"
+			credentials {
+				username mavenUsername
+				password mavenPassword
+			}
+		}
+	}
+	
+	task sourceJar(type: Jar) {
+		from sourceSets.main.allJava
+	}
+	
+	/*
+	 * MAVEN PUBLISH
+	 */
+	apply plugin: 'maven-publish'
+	publishing {
+		publications {
+			maven(MavenPublication) {
+				groupId group
+				artifactId 'xill-' + project.name
+				version project.version
+	
+				from components.java
+						
+				artifact sourceJar {
+					classifier "sources"
+				}
+			}
+				
+			 
+		}
+		
+		 repositories {
+					maven {
+							url 'http://192.168.0.200:8081/nexus/content/repositories/releases'
+							name 'release'
+							credentials {
+								username = mavenUsername
+								password = mavenPassword
+							}
+					}
+			}
+	}
+}
+
+
+
+description = 'this root project contains the overview of the contenttools application'
+
+/*
+ * APPLICATION
+ */
+def mainClassName = "nl.xillio.contenttools.Application"
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+/*
+ * JAVA
+ */
+
+configurations {
+	plugin
+}
+
+dependencies {
+	compile 'nl.xillio:commons-plugins:1.0-SNAPSHOT'
+	compile project(':api')
+	plugin project(':processor')
+	plugin project(':ide')
+}
+
+/*
+ * JavaFX
+ */
+apply from: 'http://dl.bintray.com/content/shemnon/javafx-gradle/8.1.1/javafx.plugin'
+
+jfxDeploy {
+	
+	//We need to do this so we can have the plugins folder in the package too
+	doFirst {
+			copy {
+					from configurations.plugin
+					into new File(libsDir,'plugins')
+			}
+	}
+	inputFiles = files(libsDir)
+}
+
+javafx {
+	appID 'contenttools'
+	appName 'Xillio Content Tools'
+	copyright = 'Copyright (c) 2010-2015 Xillio B.V.'
+	mainClass mainClassName
+	vendor = 'Xillio'
+	menu = true
+	shortcut = true
+				 
+	icons {
+			shortcut = ['src/main/resources/icons/xillio_icon.png']
+			volume = 'src/main/resources/icons/xillio_icon.png'
+			setup = 'src/main/resources/icons/xillio_icon.png'
+	}
+}
+
+task assembleContenttools(type: Copy){
+	description 'Copies output from the processor and the ide to a plugins directory so eclipse will be able to load the plugins.'
+	from project(':processor').configurations.runtime 
+	from project(':processor').jar
+	from project(':ide').configurations.runtime
+	from project(':ide').jar
+	into new File(buildDir, '../plugins');
+}
