@@ -1,2 +1,1 @@
-include 'api', 'ide', 'processor', 'plugin-example', 'plugin-text'
-rootProject.name = 'contenttools'
+include 'api', 'ide', 'processor', 'xill-plugins', 'xill-plugins:plugin-example', 'xill-plugins:plugin-text'

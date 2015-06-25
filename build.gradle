@@ -60,8 +60,6 @@ allprojects {
 	}
 }
 
-
-
 description = 'this root project contains the overview of the contenttools application'
 
 /*
@@ -87,8 +85,7 @@ dependencies {
 	compile project(':api')
 	plugin project(':processor')
 	plugin project(':ide')
-	plugin project(':plugin-example')
-	plugin project(':plugin-text')
+	plugin project(':xill-plugins')
 }
 
 /*

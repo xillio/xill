@@ -1,0 +1,38 @@
+/*
+ * This build file contains the default things you need to do to build a plugin
+ */
+subprojects{
+	
+	sourceCompatibility = 1.8
+	targetCompatibility = 1.8
+	
+	dependencies{
+		compile project(':api');
+	}
+	
+	/*
+	 * Copy all dependencies to the libs folder. An alternative to this would be to build as an application (InstallApp task)
+	 * We need all dependencies to be there so we can easily copy them over as a plugin
+	 */
+	task copyToLib(type:Copy) {
+		description 'Copy dependencies to libs folder'
+		into libsDir
+		from configurations.runtime
+	}
+	
+	/*
+	 * Before making a jar we should be sure that all runtime dependencies are in the libs folder.
+	 * These files will be added to the classpath during this step.
+	 */
+	jar{
+		dependsOn copyToLib
+		manifest {
+			attributes "Class-Path": configurations.runtime.files.collect {File file-> file.name }.join(" ")
+										 
+		}
+	}
+}
+
+dependencies {
+	runtime subprojects
+}
