@@ -1,1 +1,4 @@
-include 'api', 'ide', 'processor', 'xill-plugins', 'xill-plugins:plugin-example', 'xill-plugins:plugin-text'
+include  'api', 'ide', 'processor', 'xill-plugins',
+	 'xill-plugins:plugin-system', 
+	 'xill-plugins:plugin-example', 
+	 'xill-plugins:plugin-text'

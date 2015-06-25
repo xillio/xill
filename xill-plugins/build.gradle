@@ -7,6 +7,7 @@ subprojects{
 	targetCompatibility = 1.8
 	
 	dependencies{
+	evaluationDependsOnChildren()
 		compile project(':api');
 	}
 	
@@ -24,11 +25,14 @@ subprojects{
 	 * Before making a jar we should be sure that all runtime dependencies are in the libs folder.
 	 * These files will be added to the classpath during this step.
 	 */
-	jar{
+	tasks.withType(Jar) {
 		dependsOn copyToLib
-		manifest {
-			attributes "Class-Path": configurations.runtime.files.collect {File file-> file.name }.join(" ")
-										 
+		doFirst {
+			manifest {
+				attributes "Class-Path": project.configurations.runtime.files.collect {File file-> file.name }.join(" ")
+											 
+			}
+			println configurations.runtime.files.collect {File file-> "\t" + file.name }.join("\n")
 		}
 	}
 }

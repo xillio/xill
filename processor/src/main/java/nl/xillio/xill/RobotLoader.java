@@ -11,7 +11,6 @@ import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.errors.XillParsingException;
-import nl.xillio.xill.constructs.System.SystemPluginPackage;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
@@ -42,10 +41,6 @@ class RobotLoader {
 
 		File robotFile = new File(args[0]);
 		PluginLoader<PluginPackage> pluginLoader = PluginLoader.load(PluginPackage.class);
-
-		pluginLoader.addToQueue(new SystemPluginPackage());
-
-		pluginLoader.load();
 
 		XillProcessor processor = new XillProcessor(robotFile.getParentFile(), robotFile, pluginLoader, new NullDebugger());
 

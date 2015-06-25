@@ -3,8 +3,4 @@
  * The main requirements is that the jar that implements the PluginPackage (found in META-INF/services/PluginPackage)
  * contains the classpath to all it's dependencies.
  */
-description 'This plugin contains various constructs to operate on text'
-
-dependencies{
-	compile project(':xill-plugins:plugin-system');
-}
+description 'This plugin is to illustrate how to create plugins for the Xill 3.0 language using gradle'
