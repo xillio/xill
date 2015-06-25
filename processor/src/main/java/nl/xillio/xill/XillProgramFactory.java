@@ -127,6 +127,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	public Robot parse(final xill.lang.xill.Robot robot, final RobotID robotID, final List<Robot> libraries)
 			throws XillParsingException {
 
+		this.robotID.put(robot.eResource(), robotID);
 		DebugInfo info = new DebugInfo();
 
 		info.setVariables(variables);
@@ -153,7 +154,6 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 			useStatements.put(using, plugin.get());
 		}
 
-		this.robotID.put(robot.eResource(), robotID);
 
 		nl.xillio.xill.components.Robot instructionRobot = new nl.xillio.xill.components.Robot(robotID, libraries, debugger);
 

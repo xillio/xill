@@ -9,7 +9,9 @@ public class TextPluginPackage extends PluginPackage{
 
 	@Override
 	public void load(PluginPackage[] dependencies) {
-		add(new AbsoluteURLConstruct());
+		add(
+			new AbsoluteURLConstruct(),
+			new ContainsConstruct());
 	}
 
 	@Override
