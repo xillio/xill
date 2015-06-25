@@ -41,7 +41,7 @@ public class Application extends javafx.application.Application{
 		plugins = loader.getPluginManager().getPlugins();
 		
 		if(plugins.size() < 2) {
-			//throw new RuntimeException("Could not find the Xill and Contenttools plugins.");
+			throw new RuntimeException("Could not find the Xill and Contenttools plugins.");
 		}
 		
 		launch(args);

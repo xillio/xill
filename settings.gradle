@@ -1,2 +1,2 @@
-include 'api', 'ide', 'processor', 'plugin-example'
+include 'api', 'ide', 'processor', 'plugin-example', 'plugin-text'
 rootProject.name = 'contenttools'

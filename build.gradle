@@ -88,6 +88,7 @@ dependencies {
 	plugin project(':processor')
 	plugin project(':ide')
 	plugin project(':plugin-example')
+	plugin project(':plugin-text')
 }
 
 /*
@@ -99,12 +100,18 @@ jfxDeploy {
 	inputFiles = files(libsDir)
 }
 
+
+def pluginDependencies =project(':processor').configurations.runtime  + configurations.plugin;
+
 jar{
+	dependsOn project(':processor').jar
+	dependsOn project(':ide').jar
+	
 	//We need to do this so we can have the plugins folder in the package too
-	doFirst {
+	doLast {
 			copy {
-					from configurations.plugin
-					into libsDir
+					from pluginDependencies
+					into new File(libsDir, 'plugins')
 			}
 	}
 }
@@ -125,22 +132,11 @@ javafx {
 	}
 }
 
-task loadPluginExample(type: Copy) {
-	dependsOn project(':plugin-example').jar
-	from project(':plugin-example').libsDir
-	into libsDir
-}
-
 task assembleContenttools(type: Copy){
 	description 'Copies output from the processor and the ide to a plugins directory so eclipse will be able to load the plugins.'
-	//The processor jars
-	from project(':processor').configurations.runtime 
-	from project(':processor').jar
-	//The ide jars
-	from project(':ide').configurations.runtime
-	from project(':ide').jar
-	//The example plugin
-	from loadPluginExample
+	
+	//Plugins
+	from pluginDependencies
 	into pluginsDir
 }
 

@@ -14,4 +14,4 @@ build/
 .settings/
 .metadata/
 .classpath
-/*/.project
+.project
