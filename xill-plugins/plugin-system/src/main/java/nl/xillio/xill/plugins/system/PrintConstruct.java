@@ -1,4 +1,4 @@
-package nl.xillio.xill.constructs.System;
+package nl.xillio.xill.plugins.system;
 
 import nl.xillio.xill.api.components.Literal;
 import nl.xillio.xill.api.components.MetaExpression;
