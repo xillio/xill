@@ -37,4 +37,4 @@ dependencies {
 	runtime subprojects
 }
 
-description 'This project is the parent project to all xill plugins. It will provide the build file for all plugins''
+description 'This project is the parent project to all xill plugins. It will provide the build file for all plugins'
