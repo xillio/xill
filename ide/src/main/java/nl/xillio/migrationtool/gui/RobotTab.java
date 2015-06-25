@@ -366,7 +366,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 						error.setContentText(e.getMessage() + "\n" + ExceptionUtils.getStackTrace(e));
 						error.setHeaderText("Exception while processing");
 						error.setResizable(true);
-						error.setWidth(1080);
+						error.getDialogPane().setPrefWidth(1080);
 						error.show();
 					});
 				}
