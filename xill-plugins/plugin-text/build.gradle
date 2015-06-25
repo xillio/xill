@@ -4,7 +4,3 @@
  * contains the classpath to all it's dependencies.
  */
 description 'This plugin contains various constructs to operate on text'
-
-dependencies{
-	compile project(':xill-plugins:plugin-system');
-}

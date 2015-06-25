@@ -1,7 +1,14 @@
 package nl.xillio.xill.api.components;
 
+import nl.xillio.xill.api.behavior.BooleanBehavior;
+import nl.xillio.xill.api.behavior.NumberBehavior;
+import nl.xillio.xill.api.behavior.StringBehavior;
+
 /**
  * This interface represents a language component that can hold a value
+ * @see  BooleanBehavior
+ * @see NumberBehavior
+ * @see StringBehavior
  */
 public interface Expression extends AutoCloseable {
 

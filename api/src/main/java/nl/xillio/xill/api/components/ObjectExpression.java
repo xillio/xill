@@ -16,12 +16,12 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  */
 public class ObjectExpression implements Processable {
 
-	private final Map<Processable, Processable> value;
+	private final Map<? extends Processable, ? extends Processable> value;
 
 	/**
 	 * @param object
 	 */
-	public ObjectExpression(final Map<Processable, Processable> object) {
+	public ObjectExpression(final Map<? extends Processable, ? extends Processable> object) {
 		value = object;
 	}
 
@@ -29,7 +29,7 @@ public class ObjectExpression implements Processable {
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		Map<String, MetaExpression> result = new HashMap<String, MetaExpression>();
 
-		for (Entry<Processable, Processable> entry : value.entrySet()) {
+		for (Entry<? extends Processable, ? extends Processable> entry : value.entrySet()) {
 			try {
 
 				result.put(entry.getKey().process(debugger).get().getStringValue(),

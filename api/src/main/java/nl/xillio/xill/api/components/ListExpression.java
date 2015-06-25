@@ -13,12 +13,12 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  */
 public class ListExpression implements Processable {
 
-	private final List<Processable> value;
+	private final List<? extends Processable> value;
 
 	/**
 	 * @param value
 	 */
-	public ListExpression(final List<Processable> value) {
+	public ListExpression(final List<? extends Processable> value) {
 		this.value = value;
 	}
 
