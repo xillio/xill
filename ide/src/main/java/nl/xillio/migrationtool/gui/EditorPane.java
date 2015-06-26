@@ -16,6 +16,7 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebView;
+import nl.xillio.migrationtool.BreakpointPool;
 import nl.xillio.migrationtool.Loader;
 import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient;
 import nl.xillio.migrationtool.ElasticConsole.RobotLogMessage;
@@ -66,6 +67,8 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 
 	private RobotControls controls;
 
+	private RobotTab tab;
+
 	/**
 	 * Default constructor. Just sets up the UI and the listener.
 	 */
@@ -92,10 +95,11 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 	@Override
 	public void initialize(final RobotTab tab) {
 
+		this.tab = tab;
 		controls = new RobotControls(tab, btnRun, btnPause, btnStop, btnStepIn, btnStepOver);
 		editor.setTab(tab);
 		editor.addKeywords(tab.getProcessor());
-		
+
 		ESConsoleClient.getLogEvent(tab.getProcessor().getRobotID()).addListener(this::onLogMessage);
 	}
 
@@ -114,24 +118,28 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 			getDocumentState().setValue(DocumentState.CHANGED);
 		}
 	}
-	
-	private void onLogMessage(RobotLogMessage message) {
-		switch(message.getLevel()) {
+
+	private void onLogMessage(final RobotLogMessage message) {
+		switch (message.getLevel()) {
 			case "debug":
-				if(cmiDebug.isSelected())
+				if (cmiDebug.isSelected()) {
 					controls.pause();
+				}
 				break;
 			case "info":
-				if(cmiInfo.isSelected())
+				if (cmiInfo.isSelected()) {
 					controls.pause();
+				}
 				break;
 			case "warn":
-				if(cmiWarning.isSelected())
+				if (cmiWarning.isSelected()) {
 					controls.pause();
+				}
 				break;
 			case "error":
-				if(cmiError.isSelected())
+				if (cmiError.isSelected()) {
 					controls.pause();
+				}
 				break;
 			default:
 				log.debug("Unimplemented loglevel: " + message.getLevel());
@@ -178,7 +186,10 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 
 	@FXML
 	private void buttonRemoveAllBreakpoints() {
-		editor.clearBreakpoints();
+		BreakpointPool.INSTANCE.clear();
+		tab.getGlobalController().getTabs().forEach(editorTab -> {
+			editorTab.getEditorPane().getEditor().clearBreakpoints();
+		});
 	}
 
 	@Override

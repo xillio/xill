@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -27,8 +28,10 @@ import nl.xillio.migrationtool.gui.HelpPane;
 import nl.xillio.migrationtool.gui.RobotTab;
 import nl.xillio.sharedlibrary.settings.SettingsHandler;
 import nl.xillio.xill.api.XillProcessor;
+import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.preview.Replaceable;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -304,6 +307,16 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 					}
 				});
 		}
+	}
+	
+	/**
+	 * Load breakpoints from a breakpoint pool for a particular robot
+	 * @param robot
+	 */
+	public void refreshBreakpoints(RobotID robot) {
+		List<Integer> bps = BreakpointPool.INSTANCE.get(robot).stream().map(bp -> bp - 1).collect(Collectors.toList());
+		executeJS("editor.session.setBreakpointsAtRows([" +
+				StringUtils.join(bps, ",") + "]);");
 	}
 
 	/**

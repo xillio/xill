@@ -91,6 +91,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 		}
 
 		loadProcessor(documentPath, projectPath);
+		currentRobot = getProcessor().getRobotID();
 
 		// Load the FXML
 		try {
@@ -345,13 +346,13 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
 	/**
 	 * Runs the currentRobot
-	 * 
+	 *
 	 * @throws XillParsingException
 	 * @throws SyntaxError
 	 */
 	public void runRobot() throws XillParsingException {
 		save();
-		
+
 		try {
 			processor.compile();
 
@@ -398,7 +399,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
 	/**
 	 * <b>NOTE: </b> Do not save this processor over a long period as it will be swapped out often.
-	 * 
+	 *
 	 * @return the processor for this tab
 	 */
 	public XillProcessor getProcessor() {
@@ -407,7 +408,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
 	@Override
 	public void changed(final ObservableValue<? extends DocumentState> source, final DocumentState oldValue, final DocumentState newValue) {
-		//This needs to happen in JFX Thread
+		// This needs to happen in JFX Thread
 		Platform.runLater(() -> {
 			String name = getName();
 			if (newValue == DocumentState.CHANGED) {
@@ -423,37 +424,42 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	public EditorPane getEditorPane() {
 		return editorPane;
 	}
-	
+
 	/**
 	 * Show a different currentRobot in this tab and highlight the line
+	 *
 	 * @param robot
 	 * @param line
 	 */
-	public void display(RobotID robot, int line) {
-		this.currentRobot = robot;
-		String code;
-		try {
-			code = FileUtils.readFileToString(robot.getPath());
-		} catch (IOException e) {
-			e.printStackTrace();
-			return;
+	public void display(final RobotID robot, final int line) {
+
+		// Update the code
+		if (currentRobot != robot) {
+			currentRobot = robot;
+			String code;
+			try {
+				code = FileUtils.readFileToString(robot.getPath());
+			} catch (IOException e) {
+				e.printStackTrace();
+				return;
+			}
+			// Load the code
+			editorPane.getEditor().setCode(code);
+			editorPane.getEditor().refreshBreakpoints(robot);
 		}
-		//Load the code
-		editorPane.getEditor().setCode(code);
-		
-		
-		//Highlight the code
-		Platform.runLater(() -> {
-			//TODO Load the breakpoints
-			editorPane.getEditor().clearBreakpoints();
-			
-			editorPane.getEditor().highlightLine(line, "highlight");
-			//Remove the 'edited' state
-			editorPane.getDocumentState().setValue(DocumentState.SAVED);
-		});
-		
+
+		if (line > 0) {
+			// Highlight the line
+			Platform.runLater(() -> {
+				editorPane.getEditor().clearHighlight();
+				editorPane.getEditor().highlightLine(line, "highlight");
+				// Remove the 'edited' state
+				editorPane.getDocumentState().setValue(DocumentState.SAVED);
+			});
+		}
+
 	}
-	
+
 	/**
 	 * Display the code from this tab's main currentRobot
 	 */

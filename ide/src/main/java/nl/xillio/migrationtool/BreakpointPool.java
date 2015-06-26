@@ -23,7 +23,12 @@ public class BreakpointPool {
 	 * @return a List of line numbers
 	 */
 	public List<Integer> get(RobotID robot) {
-		return breakpoints.get(robot);
+		List<Integer> bps = breakpoints.get(robot);
+		
+		if(bps == null)
+			return new ArrayList<>();
+		
+		return bps;
 	}
 	
 	/**
@@ -32,7 +37,7 @@ public class BreakpointPool {
 	 * @param line
 	 */
 	public void add(RobotID robot, int line) {
-		log.info("Added " + robot.getPath() + ":" + line);
+		log.debug("Added breakpoint " + robot.getPath() + ":" + line);
 		List<Integer> bpList = breakpoints.get(robot);
 		
 		if(bpList == null) {
@@ -63,7 +68,8 @@ public class BreakpointPool {
 	 * @param robot
 	 */
 	public void clear(RobotID robot) {
-		
+		log.debug("Cleared breakpoints for " + robot.getPath());
+		breakpoints.remove(robot);
 	}
 	
 	/**
@@ -72,4 +78,11 @@ public class BreakpointPool {
 	public static final BreakpointPool INSTANCE = new BreakpointPool();
 	
 	private BreakpointPool() { }
+
+	/**
+	 * Remove all breakpoints
+	 */
+	public void clear() {
+		breakpoints.clear();
+	}
 }
