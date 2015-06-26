@@ -157,4 +157,9 @@ public interface Debugger extends ErrorHandlingPolicy {
 	 * @param handler
 	 */
 	public void setErrorHander(final ErrorHandlingPolicy handler);
+	
+	/**
+	 * @return the stack trace to the current instruction
+	 */
+	public List<Instruction> getStackTrace();
 }

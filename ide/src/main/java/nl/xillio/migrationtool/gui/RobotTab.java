@@ -30,6 +30,7 @@ import nl.xillio.sharedlibrary.settings.SettingsHandler;
 import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.api.XillProcessor;
 import nl.xillio.xill.api.components.Robot;
+import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.errors.XillParsingException;
 
 import org.apache.commons.io.FileUtils;
@@ -37,7 +38,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 
 /**
- * A tab containing the editor, console and debug panel attached to a specific robot.
+ * A tab containing the editor, console and debug panel attached to a specific currentRobot.
  */
 public class RobotTab extends Tab implements Initializable, ChangeListener<DocumentState> {
 	private static final Logger log = Logger.getLogger(RobotTab.class);
@@ -69,13 +70,14 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	private XillProcessor processor;
 
 	private final FXController globalController;
+	private RobotID currentRobot;
 
 	/**
-	 * Create a new robottab that holds a robot
+	 * Create a new robottab that holds a currentRobot
 	 *
 	 * @param projectPath
 	 * @param documentPath
-	 *        The full path to the robot (absolute)
+	 *        The full path to the currentRobot (absolute)
 	 * @param helppane
 	 * @param globalController
 	 * @param pluginLoader
@@ -89,6 +91,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 		}
 
 		loadProcessor(documentPath, projectPath);
+		currentRobot = getProcessor().getRobotID();
 
 		// Load the FXML
 		try {
@@ -102,12 +105,11 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
 		initializeSettings(documentPath);
 		initializeTab(documentPath);
-
 	}
 
 	private static void initializeSettings(final File documentPath) {
-		settings.registerSimpleSetting("Layout", "RightPanelWidth_" + documentPath.getAbsolutePath(), "0.7", "Width of the right panel for the specified robot");
-		settings.registerSimpleSetting("Layout", "RightPanelCollapsed_" + documentPath.getAbsolutePath(), "true", "The collapsed-state of the right panel for the specified robot");
+		settings.registerSimpleSetting("Layout", "RightPanelWidth_" + documentPath.getAbsolutePath(), "0.7", "Width of the right panel for the specified currentRobot");
+		settings.registerSimpleSetting("Layout", "RightPanelCollapsed_" + documentPath.getAbsolutePath(), "true", "The collapsed-state of the right panel for the specified currentRobot");
 		settings.registerSimpleSetting("Layout", "EditorHeight_" + documentPath.getAbsolutePath(), "0.6", "The height of the editor");
 	}
 
@@ -281,7 +283,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 		try {
 			FileUtils.write(document, editorPane.getEditor().getCodeProperty().get());
 			editorPane.getDocumentState().setValue(DocumentState.SAVED);
-			log.info("Saved robot to " + document.getAbsolutePath());
+			log.info("Saved currentRobot to " + document.getAbsolutePath());
 
 		} catch (IOException e) {
 			new Alert(AlertType.ERROR, e.getMessage());
@@ -343,8 +345,8 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	}
 
 	/**
-	 * Runs the robot
-	 * 
+	 * Runs the currentRobot
+	 *
 	 * @throws XillParsingException
 	 * @throws SyntaxError
 	 */
@@ -397,7 +399,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
 	/**
 	 * <b>NOTE: </b> Do not save this processor over a long period as it will be swapped out often.
-	 * 
+	 *
 	 * @return the processor for this tab
 	 */
 	public XillProcessor getProcessor() {
@@ -406,12 +408,14 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
 	@Override
 	public void changed(final ObservableValue<? extends DocumentState> source, final DocumentState oldValue, final DocumentState newValue) {
-		String name = getName();
-		if (newValue == DocumentState.CHANGED) {
-			name += "*";
-		}
-
-		setText(name);
+		// This needs to happen in JFX Thread
+		Platform.runLater(() -> {
+			String name = getName();
+			if (newValue == DocumentState.CHANGED) {
+				name += "*";
+			}
+			setText(name);
+		});
 	}
 
 	/**
@@ -419,5 +423,54 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	 */
 	public EditorPane getEditorPane() {
 		return editorPane;
+	}
+
+	/**
+	 * Show a different currentRobot in this tab and highlight the line
+	 *
+	 * @param robot
+	 * @param line
+	 */
+	public void display(final RobotID robot, final int line) {
+
+		// Update the code
+		if (currentRobot != robot) {
+			currentRobot = robot;
+			String code;
+			try {
+				code = FileUtils.readFileToString(robot.getPath());
+			} catch (IOException e) {
+				e.printStackTrace();
+				return;
+			}
+			// Load the code
+			editorPane.getEditor().setCode(code);
+			editorPane.getEditor().refreshBreakpoints(robot);
+		}
+
+		if (line > 0) {
+			// Highlight the line
+			Platform.runLater(() -> {
+				editorPane.getEditor().clearHighlight();
+				editorPane.getEditor().highlightLine(line, "highlight");
+				// Remove the 'edited' state
+				editorPane.getDocumentState().setValue(DocumentState.SAVED);
+			});
+		}
+
+	}
+
+	/**
+	 * Display the code from this tab's main currentRobot
+	 */
+	public void resetCode() {
+		display(getProcessor().getRobotID(), -1);
+	}
+
+	/**
+	 * @return The robot the is currently being displayed
+	 */
+	public RobotID getCurrentRobot() {
+		return currentRobot;
 	}
 }

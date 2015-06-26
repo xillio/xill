@@ -1,6 +1,6 @@
 package nl.xillio.xill.plugins.system;
 
-import nl.xillio.xill.api.components.Literal;
+import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
@@ -23,8 +23,8 @@ public class PrintConstruct implements Construct {
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor((text, level) ->
 		process(text, level, context.getRootLogger()),
-		new Argument("text", Literal.fromValue("")),
-		new Argument("loglevel", Literal.fromValue("info")));
+		new Argument("text", ExpressionBuilder.fromValue("")),
+		new Argument("loglevel", ExpressionBuilder.fromValue("info")));
 	}
 
 	private static MetaExpression process(final MetaExpression textVar, final MetaExpression logLevel, final Logger robotLog) {
@@ -42,6 +42,6 @@ public class PrintConstruct implements Construct {
 			robotLog.info(text);
 		}
 
-		return Literal.NULL;
+		return ExpressionBuilder.NULL;
 	}
 }

@@ -6,7 +6,7 @@ import java.util.Collection;
 import nl.xillio.xill.CodePosition;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.InstructionFlow;
-import nl.xillio.xill.api.components.Literal;
+import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
@@ -35,7 +35,7 @@ public class VariableDeclaration extends Instruction {
 		if(result.hasValue())
 			currentValue = result.get();
 		else
-			currentValue = Literal.NULL;
+			currentValue = ExpressionBuilder.NULL;
 		
 		return InstructionFlow.doResume();
 	}
@@ -58,10 +58,10 @@ public class VariableDeclaration extends Instruction {
 
 	/**
 	 * @param position 
-	 * @return A declaration with value {@link Literal#NULL}
+	 * @return A declaration with value {@link ExpressionBuilder#NULL}
 	 */
 	public static VariableDeclaration nullDeclaration(final CodePosition position) {
-		VariableDeclaration dec = new VariableDeclaration(Literal.NULL);
+		VariableDeclaration dec = new VariableDeclaration(ExpressionBuilder.NULL);
 		dec.setPosition(position);
 
 		return dec;

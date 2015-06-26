@@ -4,7 +4,7 @@ import java.util.List;
 
 import nl.xillio.xill.api.components.AtomicExpression;
 import nl.xillio.xill.api.components.ExpressionDataType;
-import nl.xillio.xill.api.components.Literal;
+import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
@@ -29,7 +29,7 @@ public class ContainsConstruct implements Construct {
 	@SuppressWarnings("unchecked")
 	private static MetaExpression process(final MetaExpression haystack, final MetaExpression needle) {
 		//If either is null then false
-		if (haystack == Literal.NULL|| needle == Literal.NULL) {
+		if (haystack == ExpressionBuilder.NULL|| needle == ExpressionBuilder.NULL) {
 			return new AtomicExpression(false);
 		}
 
