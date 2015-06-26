@@ -6,12 +6,9 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import javafx.application.Platform;
-import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -24,8 +21,10 @@ import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 import nl.xillio.events.Event;
 import nl.xillio.events.EventHost;
+import nl.xillio.migrationtool.BreakpointPool;
 import nl.xillio.migrationtool.gui.FXController;
 import nl.xillio.migrationtool.gui.HelpPane;
+import nl.xillio.migrationtool.gui.RobotTab;
 import nl.xillio.sharedlibrary.settings.SettingsHandler;
 import nl.xillio.xill.api.XillProcessor;
 import nl.xillio.xill.api.preview.Replaceable;
@@ -42,12 +41,12 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	private static final Clipboard clipboard = Clipboard.getSystemClipboard();
 	private static final Logger log = Logger.getLogger("XMT");
 	private final StringProperty code = new SimpleStringProperty();
-	private final SimpleListProperty<Integer> breakpoints = new SimpleListProperty<Integer>(FXCollections.observableArrayList());
 	private final WebView editor;
 	private final SimpleBooleanProperty documentLoaded = new SimpleBooleanProperty(false);
 	private final EventHost<Boolean> onDocumentLoaded = new EventHost<>();
 	private HelpPane helppane;
 	private XillProcessor processor;
+	private RobotTab tab;
 	
 	/**
 	 * Default constructor. Takes a {@link WebView} since we can't extend it.
@@ -71,6 +70,15 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 				}
 			}
 			);
+		
+	}
+	
+	/**
+	 * Set the {@link RobotTab}
+	 * @param tab
+	 */
+	public void setTab(RobotTab tab) {
+		this.tab = tab;
 		
 	}
 
@@ -151,15 +159,6 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 		final ClipboardContent content = new ClipboardContent();
 		content.putString(text);
 		clipboard.setContent(content);
-	}
-	
-	/**
-	 * Gets the breakpoints from the editor and parse them into a list of integers.
-	 *
-	 * @return ListProperty object
-	 */
-	public ListProperty<Integer> getBreakpointsProperty() {
-		return breakpoints;
 	}
 
 	/**
@@ -346,8 +345,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	 * 
 	 * @param jsObject
 	 */
-	public void breakpointsChanged(final JSObject jsObject) {
-
+	public void breakpointsChanged(final JSObject jsObject) {		
 		int length = ((Number) jsObject.getMember("length")).intValue();
 
 		List<Integer> breakpoints = new ArrayList<>(length);
@@ -356,8 +354,12 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 				breakpoints.add(i + 1);
 			}
 		}
+		
+		BreakpointPool.INSTANCE.clear(tab.getCurrentRobot());
 
-		this.breakpoints.setAll(breakpoints);
+		breakpoints.forEach(bp -> {
+			BreakpointPool.INSTANCE.add(tab.getCurrentRobot(), bp);
+		});
 	}
 
 	/**
