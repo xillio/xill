@@ -7,7 +7,7 @@ import java.util.Map;
 
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.InstructionFlow;
-import nl.xillio.xill.api.components.Literal;
+import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.errors.NotImplementedException;
@@ -41,12 +41,12 @@ public class FromList implements Processable {
 				try {
 					return InstructionFlow.doResume(((List<MetaExpression>) list.getValue()).get(index.getNumberValue().intValue()));
 				} catch (IndexOutOfBoundsException e) {
-					return InstructionFlow.doResume(Literal.NULL);
+					return InstructionFlow.doResume(ExpressionBuilder.NULL);
 				}
 			case OBJECT:
 				MetaExpression result = ((Map<String, MetaExpression>) list.getValue()).get(index.getStringValue());
 				if (result == null) {
-					return InstructionFlow.doResume(Literal.NULL);
+					return InstructionFlow.doResume(ExpressionBuilder.NULL);
 				}
 				return InstructionFlow.doResume(result);
 			default:

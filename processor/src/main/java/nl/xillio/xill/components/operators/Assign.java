@@ -7,7 +7,7 @@ import java.util.Map;
 
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.InstructionFlow;
-import nl.xillio.xill.api.components.Literal;
+import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
@@ -83,7 +83,7 @@ public class Assign implements Processable {
 			} else {
 				// The list is too small
 				while (target.size() < index) {
-					target.add(Literal.NULL);
+					target.add(ExpressionBuilder.NULL);
 				}
 
 				target.add(value);

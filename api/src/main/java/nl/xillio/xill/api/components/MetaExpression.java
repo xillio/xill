@@ -125,7 +125,7 @@ public abstract class MetaExpression implements Expression, Processable {
 	public String toString() {
 		List<MetaExpression> initialVisited = new ArrayList<>(1);
 		initialVisited.add(this);
-		MetaExpression cleaned = removeCircularReference(this, initialVisited, Literal.fromValue("<<CIRCULAR REFERENCE>>"));
+		MetaExpression cleaned = removeCircularReference(this, initialVisited, ExpressionBuilder.fromValue("<<CIRCULAR REFERENCE>>"));
 		return gson.toJson(extractValue(cleaned));
 	}
 
@@ -138,7 +138,7 @@ public abstract class MetaExpression implements Expression, Processable {
 	@SuppressWarnings("unchecked")
 	private static MetaExpression removeCircularReference(final MetaExpression metaExpression,
 			final List<MetaExpression> visited, final MetaExpression replacement) {
-		Processable result = Literal.NULL;
+		Processable result = ExpressionBuilder.NULL;
 
 		switch (metaExpression.getType()) {
 			case LIST:
@@ -161,7 +161,7 @@ public abstract class MetaExpression implements Expression, Processable {
 				Map<Processable, Processable> resultMapValue = new HashMap<>();
 
 				for (Map.Entry<String, MetaExpression> pair : ((Map<String, MetaExpression>) metaExpression.getValue()).entrySet()) {
-					Processable key = Literal.fromValue(pair.getKey());
+					Processable key = ExpressionBuilder.fromValue(pair.getKey());
 
 					if (visited.stream().anyMatch(metaExp -> metaExp == pair.getValue())) {
 						// Circular reference

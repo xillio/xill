@@ -7,7 +7,7 @@ import java.util.Map;
 
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.InstructionFlow;
-import nl.xillio.xill.api.components.Literal;
+import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.errors.NotImplementedException;
@@ -60,7 +60,7 @@ public class ForeachInstruction extends Instruction {
 			case ATOMIC: // Iterate over single value
 				valueVar.setVariable(result);
 				if (keyVar != null) {
-					keyVar.setVariable(Literal.fromValue(0));
+					keyVar.setVariable(ExpressionBuilder.fromValue(0));
 				}
 
 				return instructionSet.process(debugger);
@@ -69,7 +69,7 @@ public class ForeachInstruction extends Instruction {
 				for (MetaExpression value : (List<MetaExpression>) result.getValue()) {
 					valueVar.setVariable(value);
 					if (keyVar != null) {
-						keyVar.setVariable(Literal.fromValue(i++));
+						keyVar.setVariable(ExpressionBuilder.fromValue(i++));
 					}
 
 					InstructionFlow<MetaExpression> instructionResult = instructionSet.process(debugger);
@@ -91,7 +91,7 @@ public class ForeachInstruction extends Instruction {
 				for (Map.Entry<String, MetaExpression> value : ((Map<String, MetaExpression>) result.getValue()).entrySet()) {
 					valueVar.setVariable(value.getValue());
 					if (keyVar != null) {
-						keyVar.setVariable(Literal.fromValue(value.getKey()));
+						keyVar.setVariable(ExpressionBuilder.fromValue(value.getKey()));
 					}
 
 					InstructionFlow<MetaExpression> instructionResult = instructionSet.process(debugger);

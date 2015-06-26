@@ -12,7 +12,7 @@ import nl.xillio.xill.api.PluginPackage;
 import nl.xillio.xill.api.RobotLogger;
 import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.api.components.InstructionFlow;
-import nl.xillio.xill.api.components.Literal;
+import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.components.RobotID;
@@ -55,12 +55,12 @@ public class CallbotExpression implements Processable {
 
 		if (!otherRobot.exists()) {
 			logger.error("Called robot " + otherRobot.getAbsolutePath() + " does not exist.");
-			return InstructionFlow.doResume(Literal.NULL);
+			return InstructionFlow.doResume(ExpressionBuilder.NULL);
 		}
 
 		if (!otherRobot.getName().endsWith(Xill.FILE_EXTENSION)) {
 			logger.error("Can only call robots with the ." + Xill.FILE_EXTENSION + " extension.");
-			return InstructionFlow.doResume(Literal.NULL);
+			return InstructionFlow.doResume(ExpressionBuilder.NULL);
 		}
 
 		// Process the robot
@@ -83,7 +83,7 @@ public class CallbotExpression implements Processable {
 			debugger.handle(e);
 		}
 
-		return InstructionFlow.doResume(Literal.NULL);
+		return InstructionFlow.doResume(ExpressionBuilder.NULL);
 	}
 
 	@Override

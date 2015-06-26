@@ -6,7 +6,7 @@ import java.util.NoSuchElementException;
 
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.InstructionFlow;
-import nl.xillio.xill.api.components.Literal;
+import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
@@ -44,7 +44,7 @@ public class ReturnInstruction extends Instruction {
 			return InstructionFlow.doReturn(value.process(debugger).get());
 		}catch(NoSuchElementException e) {
 			//No value was provided
-			return InstructionFlow.doReturn(Literal.NULL);
+			return InstructionFlow.doReturn(ExpressionBuilder.NULL);
 		}
 	}
 

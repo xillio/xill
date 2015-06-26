@@ -8,7 +8,7 @@ import nl.xillio.events.Event;
 import nl.xillio.xill.api.components.Instruction;
 import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.InstructionSet;
-import nl.xillio.xill.api.components.Literal;
+import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Robot;
 import nl.xillio.xill.api.errors.ErrorHandlingPolicy;
@@ -94,7 +94,7 @@ public class NullDebugger implements Debugger {
 
 	@Override
 	public MetaExpression getVariableValue(final Object identifier) {
-		return Literal.fromValue(false);
+		return ExpressionBuilder.fromValue(false);
 	}
 
 	@Override
