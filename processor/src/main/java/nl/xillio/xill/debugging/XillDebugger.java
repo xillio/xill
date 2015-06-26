@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 import nl.xillio.events.Event;
@@ -51,6 +52,7 @@ public class XillDebugger implements Debugger {
 	private final EventHost<RobotContinuedAction> onRobotContinued = new EventHost<>();
 	private boolean shouldStop = false;
 	private ErrorHandlingPolicy handler = new NullDebugger();
+	private Stack<Instruction> currentStack;
 
 	@Override
 	public void pause() {
@@ -91,6 +93,7 @@ public class XillDebugger implements Debugger {
 	@Override
 	public void startInstruction(final Instruction instruction) {
 		currentInstruction = instruction;
+		currentStack.push(instruction);
 		Optional<Breakpoint> breakpoint = breakpoints.stream().filter(bp -> bp.matches(previousInstruction, instruction)).findAny();
 
 		if (stepIn || breakpoint.isPresent()) {
@@ -103,6 +106,8 @@ public class XillDebugger implements Debugger {
 	
 	@Override
 	public void endInstruction(final Instruction instruction, final InstructionFlow<MetaExpression> result) {
+		if(!currentStack.isEmpty())
+			currentStack.pop();
 		
 		//If the pause is supposed to be a step-over it should pause before processing the next instruction. So not yet
 		if(stepOver == null)
@@ -177,6 +182,7 @@ public class XillDebugger implements Debugger {
 		resume();
 		previousInstruction = null;
 		paused = false;
+		currentStack = new Stack<>();
 	}
 
 	@Override
@@ -277,6 +283,11 @@ public class XillDebugger implements Debugger {
 	@Override
 	public void setErrorHander(final ErrorHandlingPolicy handler) {
 		this.handler = handler;
+	}
+
+	@Override
+	public List<Instruction> getStackTrace() {
+		return currentStack;
 	}
 
 }
