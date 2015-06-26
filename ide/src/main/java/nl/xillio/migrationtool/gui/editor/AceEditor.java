@@ -502,4 +502,11 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	public Event<Boolean> getOnDocumentLoaded() {
 		return onDocumentLoaded.getEvent();
 	}
+
+	/**
+	 * @param editable
+	 */
+	public void setEditable(boolean editable) {
+		executeJS("editor.setReadOnly(" + Boolean.toString(!editable) + ");");
+	}
 }

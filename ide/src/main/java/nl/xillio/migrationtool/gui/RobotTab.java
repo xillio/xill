@@ -34,6 +34,7 @@ import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.errors.XillParsingException;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 
@@ -259,6 +260,8 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	 * @return whether the document was saved successfully.
 	 */
 	protected boolean save(final boolean showDialog) {
+		//Reset to root robot
+		resetCode();
 		// Clear editor highlights
 		getEditorPane().getEditor().clearHighlight();
 
@@ -414,6 +417,10 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 			if (newValue == DocumentState.CHANGED) {
 				name += "*";
 			}
+			if(currentRobot != getProcessor().getRobotID()) {
+				String filename = currentRobot.getPath().getName();
+				name += " > " + FilenameUtils.getBaseName(filename);
+			}
 			setText(name);
 		});
 	}
@@ -435,6 +442,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
 		// Update the code
 		if (currentRobot != robot) {
+			
 			currentRobot = robot;
 			String code;
 			try {
@@ -446,6 +454,9 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 			// Load the code
 			editorPane.getEditor().setCode(code);
 			editorPane.getEditor().refreshBreakpoints(robot);
+			
+			//Blocker
+			editorPane.getEditor().setEditable(currentRobot == getProcessor().getRobotID());
 		}
 
 		if (line > 0) {
