@@ -17,10 +17,11 @@ import org.apache.log4j.Logger;
 import org.eclipse.internal.xtend.xtend.parser.SyntaxError;
 
 /**
- * This class can be used to run a robot
+ * This class can be used to run a robot in eclipse without booting contenttools
  */
 class RobotLoader {
 	private static final Logger log = Logger.getLogger(RobotLoader.class);
+	private static final File pluginFolder = new File("../plugins");
 
 	/**
 	 * Run a robot.<br/>
@@ -40,7 +41,13 @@ class RobotLoader {
 		}
 
 		File robotFile = new File(args[0]);
+
 		PluginLoader<PluginPackage> pluginLoader = PluginLoader.load(PluginPackage.class);
+		if(!pluginFolder.exists()) {
+			throw new RuntimeException("Could not find the plugin folder " + pluginFolder.getAbsolutePath());
+		}
+		pluginLoader.addFolder(pluginFolder);
+		pluginLoader.load();
 
 		XillProcessor processor = new XillProcessor(robotFile.getParentFile(), robotFile, pluginLoader, new NullDebugger());
 
