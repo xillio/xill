@@ -1,11 +1,11 @@
-package nl.xillio.xill.plugins.text;
+package nl.xillio.xill.plugins.string;
 
 import nl.xillio.xill.api.PluginPackage;
 
 /**
  * This package includes all Text constructs
  */
-public class TextPluginPackage extends PluginPackage{
+public class StringPluginPackage extends PluginPackage{
 
 	@Override
 	public void load(PluginPackage[] dependencies) {
@@ -16,7 +16,7 @@ public class TextPluginPackage extends PluginPackage{
 
 	@Override
 	public String getName() {
-		return "Text";
+		return "String";
 	}
 
 }

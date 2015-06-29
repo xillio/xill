@@ -7,7 +7,6 @@ subprojects{
 	targetCompatibility = 1.8
 	
 	dependencies{
-	evaluationDependsOnChildren()
 		compile project(':api');
 	}
 	
@@ -26,19 +25,21 @@ subprojects{
 	 * These files will be added to the classpath during this step.
 	 */
 	tasks.withType(Jar) {
-		dependsOn copyToLib
 		doFirst {
 			manifest {
 				attributes "Class-Path": project.configurations.runtime.files.collect {File file-> file.name }.join(" ")
 											 
 			}
-			println configurations.runtime.files.collect {File file-> "\t" + file.name }.join("\n")
 		}
 	}
 }
 
-dependencies {
-	runtime subprojects
+def includeInBuild(childProject) {
+	dependencies.runtime childProject
 }
-
+	
 description 'This project is the parent project to all xill plugins. It will provide the build file for all plugins'
+
+jar {
+	enabled false
+}
