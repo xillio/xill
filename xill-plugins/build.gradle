@@ -24,17 +24,22 @@ subprojects{
 	 * Before making a jar we should be sure that all runtime dependencies are in the libs folder.
 	 * These files will be added to the classpath during this step.
 	 */
-	jar{
-		dependsOn copyToLib
-		manifest {
-			attributes "Class-Path": configurations.runtime.files.collect {File file-> file.name }.join(" ")
-										 
+	tasks.withType(Jar) {
+		doFirst {
+			manifest {
+				attributes "Class-Path": project.configurations.runtime.files.collect {File file-> file.name }.join(" ")
+											 
+			}
 		}
 	}
 }
 
-dependencies {
-	runtime subprojects
+def includeInBuild(childProject) {
+	dependencies.runtime childProject
 }
-
+	
 description 'This project is the parent project to all xill plugins. It will provide the build file for all plugins'
+
+jar {
+	enabled false
+}

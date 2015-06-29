@@ -1,6 +1,5 @@
 package nl.xillio.migrationtool.gui;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,6 +8,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import nl.xillio.migrationtool.BreakpointPool;
 import nl.xillio.xill.api.Breakpoint;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.RobotLogger;
@@ -81,6 +81,8 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 	private void onStop() {
 		resetAll();
 		running = false;
+		
+		tab.resetCode();
 	}
 
 	/**
@@ -148,7 +150,9 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 	private void onPause(final RobotPausedAction action) {
 		onPause();
 
-		highlight(action.getRobotID(), action.getLineNumber(), "highlight");
+		tab.display(action.getRobotID(), action.getLineNumber());
+		
+		//highlight(action.getRobotID(), action.getLineNumber(), "highlight");
 	}
 
 	private void stepIn() {
@@ -203,13 +207,7 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 
 	private void applyBreakpoints() {
 		// Get all breakpoints
-		List<Breakpoint> breakpoints = new ArrayList<>();
-
-		tab.getGlobalController().getTabs().forEach(tab -> {
-			tab.getEditorPane().getEditor().getBreakpointsProperty().get().forEach(bp -> {
-				breakpoints.add(new Breakpoint(tab.getProcessor().getRobotID(), bp));
-			});
-		});
+		List<Breakpoint> breakpoints = BreakpointPool.INSTANCE.get();
 
 		tab.getProcessor().getDebugger().setBreakpoints(breakpoints);
 	}

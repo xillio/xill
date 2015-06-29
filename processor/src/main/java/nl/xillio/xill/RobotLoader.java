@@ -11,17 +11,17 @@ import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.errors.XillParsingException;
-import nl.xillio.xill.constructs.System.SystemPluginPackage;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
 import org.eclipse.internal.xtend.xtend.parser.SyntaxError;
 
 /**
- * This class can be used to run a robot
+ * This class can be used to run a robot in eclipse without booting contenttools
  */
 class RobotLoader {
 	private static final Logger log = Logger.getLogger(RobotLoader.class);
+	private static final File pluginFolder = new File("../plugins");
 
 	/**
 	 * Run a robot.<br/>
@@ -41,10 +41,12 @@ class RobotLoader {
 		}
 
 		File robotFile = new File(args[0]);
+
 		PluginLoader<PluginPackage> pluginLoader = PluginLoader.load(PluginPackage.class);
-
-		pluginLoader.addToQueue(new SystemPluginPackage());
-
+		if(!pluginFolder.exists()) {
+			throw new RuntimeException("Could not find the plugin folder " + pluginFolder.getAbsolutePath());
+		}
+		pluginLoader.addFolder(pluginFolder);
 		pluginLoader.load();
 
 		XillProcessor processor = new XillProcessor(robotFile.getParentFile(), robotFile, pluginLoader, new NullDebugger());

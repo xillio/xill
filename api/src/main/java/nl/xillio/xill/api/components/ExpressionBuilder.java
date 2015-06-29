@@ -1,13 +1,20 @@
 package nl.xillio.xill.api.components;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import nl.xillio.xill.api.Debugger;
+import nl.xillio.xill.api.NullDebugger;
 import nl.xillio.xill.api.behavior.BooleanBehavior;
 import nl.xillio.xill.api.behavior.NumberBehavior;
 import nl.xillio.xill.api.behavior.StringBehavior;
 
 /**
- * This is the base class for all literals
+ * This is a utility class that will build expressions from values
  */
-public final class Literal {
+public final class ExpressionBuilder {
+	private static final Debugger expressionDebugger = new NullDebugger();
 	/**
 	 * The true literal
 	 */
@@ -26,7 +33,7 @@ public final class Literal {
 	 * Create a new {@link IntegerLiteral}
 	 *
 	 * @param value
-	 * @return The literal
+	 * @return expression
 	 */
 	public static MetaExpression fromValue(final int value) {
 		return new AtomicExpression(new NumberBehavior(value));
@@ -36,17 +43,17 @@ public final class Literal {
 	 * Create a new {@link DoubleLiteral}
 	 *
 	 * @param value
-	 * @return The literal
+	 * @return expression
 	 */
 	public static MetaExpression fromValue(final double value) {
-		return new AtomicExpression(new NumberBehavior(value));
+		return new AtomicExpression(value);
 	}
 
 	/**
 	 * Create a new {@link BooleanLiteral}
 	 *
 	 * @param value
-	 * @return The literal
+	 * @return expression
 	 */
 	public static MetaExpression fromValue(final boolean value) {
 		return value ? TRUE : FALSE;
@@ -56,10 +63,34 @@ public final class Literal {
 	 * Create a new {@link StringLiteral}
 	 *
 	 * @param value
-	 * @return The literal
+	 * @return expression
 	 */
 	public static MetaExpression fromValue(final String value) {
 		return new AtomicExpression(new StringBehavior(value));
+	}
+	
+	/**
+	 * Create a new {@link ListExpression}
+	 * @param value
+	 * @return the expression
+	 */
+	public static MetaExpression fromValue(final List<MetaExpression> value) {
+		return new ListExpression(value).process(expressionDebugger).get();
+	}
+	
+	/**
+	 * Create a new {@link ObjectExpression}
+	 * @param value
+	 * @return the expression
+	 */
+	public static MetaExpression fromValue(final Map<String, MetaExpression> value) {
+		Map<Processable, Processable> procValue = new HashMap<>(value.size());
+		
+		value.forEach((key, expression) -> {
+			procValue.put(fromValue(key), expression);
+		});
+		
+		return new ObjectExpression(procValue).process(expressionDebugger).get();
 	}
 
 	/**

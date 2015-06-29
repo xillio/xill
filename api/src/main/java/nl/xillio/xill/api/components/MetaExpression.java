@@ -100,6 +100,14 @@ public abstract class MetaExpression implements Expression, Processable {
 	}
 
 	/**
+	 * Get the contained value of this {@link MetaExpression}<br/>
+	 * The return type of this method will be different for each type of {@link ExpressionDataType}
+	 * which can be found by calling {@link #getType()}.<br/>
+	 * <ul>
+	 * <li>{@link ExpressionDataType#ATOMIC}: Returns an {@link Expression} </li>
+	 * <li>{@link ExpressionDataType#LIST}: Returns a {@link List List&lt;MetaExpression&gt;} </li>
+	 * <li>{@link ExpressionDataType#OBJECT}: Returns a {@link Map Map&lt;String, MetaExpression&gt;} </li>
+	 * </ul>
 	 * @return the value according to the {@link ExpressionDataType} specification
 	 */
 	public Object getValue() {
@@ -117,7 +125,7 @@ public abstract class MetaExpression implements Expression, Processable {
 	public String toString() {
 		List<MetaExpression> initialVisited = new ArrayList<>(1);
 		initialVisited.add(this);
-		MetaExpression cleaned = removeCircularReference(this, initialVisited, Literal.fromValue("<<CIRCULAR REFERENCE>>"));
+		MetaExpression cleaned = removeCircularReference(this, initialVisited, ExpressionBuilder.fromValue("<<CIRCULAR REFERENCE>>"));
 		return gson.toJson(extractValue(cleaned));
 	}
 
@@ -130,7 +138,7 @@ public abstract class MetaExpression implements Expression, Processable {
 	@SuppressWarnings("unchecked")
 	private static MetaExpression removeCircularReference(final MetaExpression metaExpression,
 			final List<MetaExpression> visited, final MetaExpression replacement) {
-		Processable result = Literal.NULL;
+		Processable result = ExpressionBuilder.NULL;
 
 		switch (metaExpression.getType()) {
 			case LIST:
@@ -153,7 +161,7 @@ public abstract class MetaExpression implements Expression, Processable {
 				Map<Processable, Processable> resultMapValue = new HashMap<>();
 
 				for (Map.Entry<String, MetaExpression> pair : ((Map<String, MetaExpression>) metaExpression.getValue()).entrySet()) {
-					Processable key = Literal.fromValue(pair.getKey());
+					Processable key = ExpressionBuilder.fromValue(pair.getKey());
 
 					if (visited.stream().anyMatch(metaExp -> metaExp == pair.getValue())) {
 						// Circular reference
@@ -215,13 +223,19 @@ public abstract class MetaExpression implements Expression, Processable {
 	}
 
 	/**
-	 * Extracts the actual Java Object value for this expression. <br/>
-	 * <b>ATOMIC:</b> returns an Object<br/>
-	 * <b>LIST:</b> returns a List<?><br/>
-	 * <b>OBJECT:</b> returns a Map<String,?>
-	 *
-	 * @param expression
-	 * @return the value
+	 * Extracts the actual Java Object value for this expression.
+	 * @param expression The {@link MetaExpression} to extract a value from.
+	 * @return <ul> 
+	 * <li>{@link ExpressionDataType#ATOMIC}: returns an {@link Object}<br/>
+	 * 					This represents a singular value that is parsed in the folowing way: 
+	 * 					<ol>
+	 * 						<li>If the value is null: return null</li>
+	 * 						<li>If the value can be a number (so also string constants like "5.7") it will return a {@link Double}</li>
+	 * 						<li>In all other cases return a {@link String} representation.
+	 * 					</ol> </li>
+	 * <li>{@link ExpressionDataType#LIST}: returns a {@link List List&lt;Object&gt;} where {@link Object} is the result of a recursive call of this method.</li>
+	 * <li>{@link ExpressionDataType#OBJECT}: returns a {@link Map Map&lt;String, Object&gt;}  where {@link Object} is the result of a recursive call of this method.</li>
+	 * </ul>
 	 */
 	@SuppressWarnings("unchecked")
 	public static Object extractValue(final MetaExpression expression) {

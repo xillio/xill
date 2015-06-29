@@ -97,17 +97,28 @@ jfxDeploy {
 	inputFiles = files(libsDir)
 }
 
-
-def pluginDependencies =project(':processor').configurations.runtime  + configurations.plugin;
+task assembleContenttools(type: Copy){
+	description 'Copies output from the processor and the ide to a plugins directory so eclipse will be able to load the plugins.'
+	//Processor
+	from project(':processor').jar
+	from project(':processor').configurations.runtime
+	//Contentttools
+	from project(':ide').jar
+	from project(':ide').configurations.runtime
+	//Plugins
+	from project(':xill-plugins').configurations.runtime
+	into pluginsDir
+}
 
 jar{
+	dependsOn assembleContenttools
 	dependsOn project(':processor').jar
 	dependsOn project(':ide').jar
 	
 	//We need to do this so we can have the plugins folder in the package too
 	doLast {
 			copy {
-					from pluginDependencies
+					from assembleContenttools
 					into new File(libsDir, 'plugins')
 			}
 	}
@@ -129,13 +140,7 @@ javafx {
 	}
 }
 
-task assembleContenttools(type: Copy){
-	description 'Copies output from the processor and the ide to a plugins directory so eclipse will be able to load the plugins.'
-	
-	//Plugins
-	from pluginDependencies
-	into pluginsDir
-}
+
 
 task cleanRuntime {
 	description 'Deletes all the folders generated and used by contenttools running in eclipse'

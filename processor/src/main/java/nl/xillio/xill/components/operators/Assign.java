@@ -7,10 +7,9 @@ import java.util.Map;
 
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.InstructionFlow;
-import nl.xillio.xill.api.components.Literal;
+import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
-import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.components.instructions.Instruction;
 import nl.xillio.xill.components.instructions.VariableDeclaration;
@@ -46,24 +45,26 @@ public class Assign implements Processable {
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		MetaExpression value = expression.process(debugger).get();
 
-		switch (variableDeclaration.getVariable().getType()) {
-			case ATOMIC:
-				if (path.size() != 0) {
-					throw new IllegalStateException("Cannot write to an ATOMIC value variable with a path.");
-				}
-				variableDeclaration.setVariable(value);
-				break;
-			case LIST:
-				List<MetaExpression> listValue = (List<MetaExpression>) variableDeclaration.getVariable().getValue();
-				assign(listValue, 0, value, debugger);
-				break;
-			case OBJECT:
-				Map<String, MetaExpression> mapValue = (Map<String, MetaExpression>) variableDeclaration.getVariable().getValue();
-				assign(mapValue, 0, value, debugger);
-				break;
-			default:
-				throw new NotImplementedException("This type has not been implemented.");
+		// First we check if there is a path
+		if (path.isEmpty()) {
+			// Assign atomically
+			variableDeclaration.setVariable(value);
+		} else {
 
+			// Seems like we have a path
+			switch (variableDeclaration.getVariable().getType()) {
+				case LIST:
+					List<MetaExpression> listValue = (List<MetaExpression>) variableDeclaration.getVariable().getValue();
+					assign(listValue, 0, value, debugger);
+					break;
+				case OBJECT:
+					Map<String, MetaExpression> mapValue = (Map<String, MetaExpression>) variableDeclaration.getVariable().getValue();
+					assign(mapValue, 0, value, debugger);
+					break;
+				default:
+					throw new RobotRuntimeException("Cannot assign to atomic variable using a path.");
+
+			}
 		}
 
 		return InstructionFlow.doResume(value);
@@ -82,7 +83,7 @@ public class Assign implements Processable {
 			} else {
 				// The list is too small
 				while (target.size() < index) {
-					target.add(Literal.NULL);
+					target.add(ExpressionBuilder.NULL);
 				}
 
 				target.add(value);

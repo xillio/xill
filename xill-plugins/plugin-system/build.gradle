@@ -3,14 +3,10 @@
  * The main requirements is that the jar that implements the PluginPackage (found in META-INF/services/PluginPackage)
  * contains the classpath to all it's dependencies.
  */
- 
- /*
-  * Plugin description
-  */
 description 'This plugin is to illustrate how to create plugins for the Xill 3.0 language using gradle'
 
 
 /*
  * Uncomment this to package the plugin with the ide by default
  */
-//includeInBuild project
+includeInBuild project

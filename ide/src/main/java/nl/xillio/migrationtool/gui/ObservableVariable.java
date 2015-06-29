@@ -1,6 +1,6 @@
 package nl.xillio.migrationtool.gui;
 
-import nl.xillio.xill.api.components.Literal;
+import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.NotImplementedException;
 
@@ -40,7 +40,7 @@ public class ObservableVariable {
 	 */
 	public String getValue() {
 		if(value == null) {
-			return Literal.NULL.toString();
+			return ExpressionBuilder.NULL.toString();
 		}
 		
 		switch(value.getType()){
