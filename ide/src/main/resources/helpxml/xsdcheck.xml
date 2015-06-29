@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="xsdcheck">
+  <name>xsdcheck</name>
+  <parameters>
+    <param name="xmlfile,">
+      <type>&lt;string&gt;</type>
+    </param>
+    <param name="xsdfile ">
+      <type>string</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Validates the XML file located at uri xmlfile against an XSD file located at uri xsdfile. Returns true if the XML file is valid, returns false and logs a warning when it is not.]]></description>
+  <examples>
+    <example description="Validating an XML file against an XSD."><![CDATA[if(xsdcheck("d:/temp/books.xml", "d:/temp/books.xsd")) {
+    log("File is valid!");
+}
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>XML / HTML</tag>
+  </tags>
+</function>

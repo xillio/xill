@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="evaluate">
+  <name>evaluate</name>
+  <parameters>
+    <param name="code,">
+      <type>string</type>
+    </param>
+    <param name="parameters ">
+      <type>list</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Runs the string code as a snippet of Xillio Content Tools code. The snippet can contain multiple lines of code just like a routine, and should end with a return() statement that returns the result of the snippet. Optionally parameters can be set to be used inside the snippet. evaluate can be used to construct code during runtime or to import snippets of code from an external source such as a spreadsheet.]]></description>
+  <examples>
+    <example description="Most basic usage of the evaluate function without a return:"><![CDATA[evaluate("log(\"Eval'd\");");
+]]></example>
+    <example description="Here the evaluate statement returns true:"><![CDATA[var = evaluate("return(contains(text, \"y\"));", {"text" = "xyz"});
+log(var);
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>Other</tag>
+  </tags>
+</function>

@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="mongo_update">
+  <name>mongo_update</name>
+  <parameters>
+    <param name="collection,">
+      <type>string</type>
+    </param>
+    <param name="query,">
+      <type>&lt;string,list,void&gt;</type>
+    </param>
+    <param name="update,">
+      <type>list</type>
+    </param>
+    <param name="upsert ,">
+      <type>boolean</type>
+    </param>
+    <param name="multi ,">
+      <type>boolean</type>
+    </param>
+    <param name="mongo ">
+      <type>database</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Update objects from collection based on the provided query, with the values contained in update. If query is a string it will only update the document with that id, otherwise it will update the documents that match the query. If upsert is true then the document will be created if it doesn’t exist. If multi is true then all documents matching the query will be updated, else only the first. By default upsert and multi are false. If mongo is not provided the last active connection will be used.Note: Use the “$set” notation to change individual fields in documents (see examples). Simply passing an array will replace the entire document.]]></description>
+  <examples>
+    <example description="Change the age of the employee with last name “Wilson” to 31."><![CDATA[mongo_connect("localDB");
+query = {
+    lastName = "Wilson"
+};
+]]></example>
+    <example description="//Note that because &quot;$set&quot; starts with a dollar sign it needs to be wrapped in quotes, while &quot;age&quot; does not."><![CDATA[update = {
+    "$set" = { age = 31 }
+};
+]]></example>
+    <example description="mongo_update(&quot;employees&quot;, query, update);"><![CDATA[]]></example>
+    <example description="Change the employee type to senior for all employees that have worked longer than 5 years."><![CDATA[mongo_connect("localDB");
+senior = {
+    workYears = { "$gt" = 5 }
+};
+]]></example>
+    <example description="update = {"><![CDATA[    "$set" = { type = "senior" }
+};
+]]></example>
+    <example description="//Here we set multi to true, so all employees will bet updated."><![CDATA[mongo_update("employees", senior, update, false, true);
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag> mongo_store</tag>
+    <tag>MongoDB</tag>
+  </tags>
+</function>

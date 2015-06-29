@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="repeat">
+  <name>repeat</name>
+  <parameters>
+    <param name="value,">
+      <type>string</type>
+    </param>
+    <param name="count">
+      <type>&lt;number,void&gt;</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Returns a string containing the string value exactly count times.]]></description>
+  <examples>
+    <example description="Executing:"><![CDATA[log(repeat("developers ", 5));
+]]></example>
+    <example description="will print:"><![CDATA[developers developers developers developers developers
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>Text</tag>
+  </tags>
+</function>

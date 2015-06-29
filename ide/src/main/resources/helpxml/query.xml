@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="query">
+  <name>query</name>
+  <parameters>
+    <param name="query,">
+      <type>string</type>
+    </param>
+    <param name="timeout ,">
+      <type>number</type>
+    </param>
+    <param name="connectionstring ,">
+      <type>&lt;string,void&gt;</type>
+    </param>
+    <param name="inputdata ">
+      <type>list</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Executes the string query as an SQL-statement on the active database. Returns an iterable result if the query yields results or null if it does not. Returns the number of updated rows in case of an INSERT or UPDATE. Queries will automatically time-out after 30 seconds, you can optionally specify a different timeout in seconds. A timeout of 0 indicates that you do not want the query to time out. The optional parameter connectionstring is a string identifiying the database connection as returned by the database function. If no connection is given then the last used database connection will be used.If inputdata is specified then the query string must contain question mark character(s) and the entire function does prepare statement batch execution (for INSERT or UPDATE or DELETE) or multiple select (for SELECT query).In first case the query function always returns total number of affected rows. In select case it returns the merged result of all resultsets for each input row data.If some row operation fails then it raises an error message.  The inputdata can be list of lists of values or list of values.]]></description>
+  <examples>
+    <example description="Loop through unvisited pages (assuming a certain database layout and a bot settings.sbot are present):"><![CDATA[settings = global(callbot("bots/settings.sbot"));
+database(settings.db_host, settings.db_port, settings.db_name, settings.db_user, settings.db_pass);
+result = query("SELECT COUNT(*) FROM pages WHERE visited = 'n'");
+foreach(_, r, result) {
+    pagecount = r;
+}
+]]></example>
+    <example description="Store a log entry (assuming a certain database layout is present):"><![CDATA[writeLog = routine(pageid, subject, entry){
+    if (!debug){
+        query("INSERT INTO transformation_log VALUES ('"+pageid+"','"+subject+"','"+entry+"',CURRENT_TIMESTAMP)");
+    }
+    if (subject != ""){
+        log("\t"+subject + " - " + entry);
+    }else{
+        log("\t"+entry);
+    }
+}
+]]></example>
+    <example description="Bulk SQL operations and multiple select example:"><![CDATA[database("localhost", 3306, "someserver", "user", "pass");
+rows = query("insert into dummy set id = ?, name = ?", 30, void, { {200, "John"} , {201, "Mary"} });
+rows = query("update dummy set id = ? where value = ?", 30, void, { {10, 150}, {11, 320}, {18, 500} });
+rows = query("delete from dummy where id = ?", 30, void, {200, 201});
+]]></example>
+    <example description="result = query(&quot;select * from dummy where id = ? and name = ?&quot;, 30, void, { {200, &quot;John&quot;}, {56, &quot;Mary&quot;} });"><![CDATA[log(result);
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>: database.</tag>
+    <tag>Database</tag>
+  </tags>
+</function>

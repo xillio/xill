@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="textfromdocument">
+  <name>textfromdocument</name>
+  <parameters>
+    <param name="path,">
+      <type>string</type>
+    </param>
+    <param name="timeout ">
+      <type>number</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Extracts plain textual content from file at path.By default the extraction times out at 5 seconds. To change this simply provide a timeout in milliseconds.]]></description>
+  <examples>
+    <example description="Suppose you have a document at path containing the following content:"><![CDATA[Document Title
++---+ I am a word document which
+|IMG| you need to do some operations
++---+ on.
+]]></example>
+    <example description="Then textfromdocument(path) will return:"><![CDATA[Document Title
+I am a word document which you need to do some operations on.
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag> metadatafromdocument, exiftool</tag>
+    <tag>File, Text</tag>
+  </tags>
+</function>

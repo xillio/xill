@@ -1,11 +1,16 @@
 package nl.xillio.migrationtool;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.PropertyConfigurator;
+import org.elasticsearch.ElasticsearchException;
+import org.xml.sax.SAXException;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +22,9 @@ import javafx.scene.image.Image;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient;
+import nl.xillio.migrationtool.documentation.DocumentSearcher;
+import nl.xillio.migrationtool.documentation.XMLparser;
 import nl.xillio.xill.api.Xill;
 
 /**
@@ -160,7 +168,7 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 	private static Xill xill;
 
 	@Override
-	public void start(final Stage primaryStage, final Xill xill) {
+	public void start(final Stage primaryStage, final Xill xill)  {
 		Loader.xill = xill;
 		Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
 		
@@ -175,6 +183,37 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 			System.err.println(e.getMessage());
 			e.printStackTrace();
 		}
+		
+		////////////IVOR HAS RUINED IT///////////////////////////////////////////////
+		//////////loading like 10 xml files as impractical as possible////////////
+		DocumentSearcher searcher = new DocumentSearcher(ESConsoleClient.getInstance().getClient());
+		XMLparser parser = new XMLparser();
+		
+		String[] funcs = new String[]{"abs", "absoluteurl", "addsubnode", "ampersanddecode", "ampersandencode", "base64decode",
+				"break", "callbot", "changedate", "click", "contains", "continue", "copyfile", "copynode", "createexcel", "createfolder",
+				"cURL", "database", "date", "datediff", "dateinfo", "datetostring", "deletefile", "deletefolder", "download", "endswith", "es_aggregate",
+				"es_connect", "es_delete", "es_filteragg", "es_get", "es_hasfeldfiler", "es_indexexists", "es_put", "es_rangefilter", "es_regexfilter",
+				"es_search", "es_sort", "es_statsagg", "evaluate", "exiftool", "extractlist", "fileexists", "fileinfo", "filesize", "focus", "foreach", "format",
+				"formatxml", "getcell", "geterror", "getframe", "getobject", "getsheet", "gettext", "global", "hungarianalgorithm", "if", "importcsv", "include", "indexof",
+				"input", "jsontolist", "length", "listfiles", "listfolders", "listreverse", "listsort", "listtocsv"};
+		
+		
+	
+		
+		for(String f : funcs)
+		{
+			try(InputStream url = Loader.class.getResourceAsStream("/helpxml/" + f + ".xml")) {
+				searcher.index(parser.parseXML(url));
+			} catch (ElasticsearchException | IOException | SAXException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		
+	
+		
+		
+		/////////////////COMPLETELY/////////////////////////////////////
 
 		Parent root;
 		try {

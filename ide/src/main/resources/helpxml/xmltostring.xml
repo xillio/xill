@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="xmltostring">
+  <name>xmltostring</name>
+  <parameters>
+    <param name="element">
+      <type>&lt;void,xml,node&gt;</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Outputs the string representation of the XML or page node xml.]]></description>
+  <examples>
+    <example description="Executing:"><![CDATA[log(xmltostring(loadpage("http://www.google.nl")));
+]]></example>
+    <example description="will print:"><![CDATA[<html itemscope="" itemtype="http://schema.org/WebPage"><head><meta content="/images/google_favicon_128.png" itemprop="image">
+        <meta conte
+[...]
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag> stringtoxml</tag>
+    <tag>Text, XML / HTML, Conversion</tag>
+  </tags>
+</function>

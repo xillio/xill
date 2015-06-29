@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="es_hasfieldfilter">
+  <name>es_hasfieldfilter</name>
+  <parameters>
+    <param name="field">
+      <type>string</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Creates a filter, which selects all documents that have specified field. This returns a string identifier that can be used to identify this filter.]]></description>
+  <examples>
+    <example description="Select all documents of type “presentation” from “testingindex” which have the field “content”:"><![CDATA[es_connect();
+contentfilter = es_hasfieldfilter("content");
+content = es_search("testingindex", "presentation", contentfilter);
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>Elasticsearch</tag>
+  </tags>
+</function>

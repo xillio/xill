@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="createfolder">
+  <name>createfolder</name>
+  <parameters>
+    <param name="uri">
+      <type>&lt;string&gt;</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Creates a new folder at location uri. This must be an absolute path and any folders in the path which do not exist will be created. Either backslashes (Windows convention) or forward slashes may be used in this path. Backslashes in literal strings must be escaped as usual.]]></description>
+  <examples>
+    <example description="The following statement creates a new folder at C:/tmp/test/:"><![CDATA[createfolder ("C:/tmp/test");
+]]></example>
+    <example description="This will work even if C:/tmp/ does not exist yet"><![CDATA[]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>File</tag>
+  </tags>
+</function>

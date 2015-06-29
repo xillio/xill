@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="setcookie">
+  <name>setcookie</name>
+  <parameters>
+    <param name="cookies">
+      <type>&lt;void,list&gt;</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Sets a single, or a list of cookies ({cookie1, cookie2, ...}). Cookies must be specified as a list in the format:{    name=<name>,        //eg. "Xillio_cookie"    path=<path>,        //eg. "/"    domain=<domain>,    //eg. ".xillio.com",    value=<value>,      //eg. "Delivery finished."    expires=<timestamp> //eg. "2012-10-18T09:42:15"}The name attribute is mandatory, the others are optional. Current cookie information can be obtained through pageinfo(). Cookies can be removed using removecookie(). Due to the nature of Xillio Content Tools, all cookies will be removed every time Xillio Content Tools is restarted.]]></description>
+  <examples>
+    <example description="Set a cookie for the current page:"><![CDATA[webclient({"enablecss"=false, "enablejs"=false});
+homeurl = "http://www.xillio.com/";
+page = loadpage (homeurl);
+cookie = {name="Xillio", path="/", domain="www.xillio.com", value="123", expires="2013-10-18T09:42:15"};
+setcookie(cookie);
+log (pageinfo (page));
+]]></example>
+    <example description="This will print:"><![CDATA[{
+        url = "http://www.xillio.com/",
+        title = "Xillio",
+        encoding = "UTF-8",
+        contenttype = "text/html",
+        loadtime = 393,
+        requesturl = "http://www.xillio.com/",
+        statuscode = 200,
+        statusmessage = "OK",
+        cookies = {}
+}
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag> removecookie</tag>
+    <tag>Browser</tag>
+  </tags>
+</function>

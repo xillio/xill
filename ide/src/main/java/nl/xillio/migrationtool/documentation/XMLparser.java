@@ -2,9 +2,12 @@ package nl.xillio.migrationtool.documentation;
 
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+
 import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
@@ -22,14 +25,14 @@ public class XMLparser {
 	{}
 	
 	/**
-	 * @param url
+	 * @param stream
 	 * The url from which we parse
 	 * @return
 	 * A FunctionDocument
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-	public FunctionDocument parseXML(URL url) throws SAXException, IOException
+	public FunctionDocument parseXML(final InputStream stream) throws SAXException, IOException
 	{
 		
 		//Initiate the reader and its handler
@@ -38,7 +41,7 @@ public class XMLparser {
 
 		xr.setContentHandler(handler);
 		xr.setErrorHandler(handler);
-		xr.parse(url.getPath());
+		xr.parse(new InputSource(stream));
 		
 		return ((XML_Format_Handler) xr.getContentHandler()).getFunction();
 	}

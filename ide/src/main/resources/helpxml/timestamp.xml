@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="timestamp">
+  <name>timestamp</name>
+  <parameters />
+  <description><![CDATA[Returns the UNIX timestamp of the system, in milliseconds since midnight 1970, current timezone.]]></description>
+  <examples>
+    <example description="log (timestamp());"><![CDATA[]]></example>
+    <example description="will print:"><![CDATA[INFO: 1381137135
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag> date</tag>
+    <tag>Date functions</tag>
+  </tags>
+</function>

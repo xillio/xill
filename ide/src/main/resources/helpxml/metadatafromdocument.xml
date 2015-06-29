@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="metadatafromdocument">
+  <name>metadatafromdocument</name>
+  <parameters>
+    <param name="path,">
+      <type>&lt;string&gt;</type>
+    </param>
+    <param name="timeout ">
+      <type>number</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Extracts available metadata fields from file at path.By default the extraction times out at 5 seconds. To change this simply provide a timeout in milliseconds.]]></description>
+  <examples>
+    <example description="Given a document at path, the following might be extracted."><![CDATA[metadata = metadatafromdocument(path);
+log("Author: " + metadata.Author);
+log("Characters: " + metadata["Character-Count"]);
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag> exiftool, textfromdocument</tag>
+    <tag>File, Text</tag>
+  </tags>
+</function>
