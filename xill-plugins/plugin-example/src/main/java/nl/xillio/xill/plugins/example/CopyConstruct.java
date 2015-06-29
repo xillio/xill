@@ -21,7 +21,7 @@ public class CopyConstruct implements Construct {
 
 	@Override
 	public String getName() {
-	return "life";
+	return "copy";
 	}
 
 	@Override
