@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.text;
+package nl.xillio.xill.plugins.string;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
