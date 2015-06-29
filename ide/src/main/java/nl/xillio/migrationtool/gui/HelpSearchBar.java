@@ -2,6 +2,8 @@ package nl.xillio.migrationtool.gui;
 
 import java.io.IOException;
 
+import org.elasticsearch.client.Client;
+
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -17,18 +19,23 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import nl.xillio.migrationtool.documentation.DocumentSearcher;
+import nl.xillio.migrationtool.documentation.FunctionDocument;
+import nl.xillio.migrationtool.documentation.XMLparser;
 import nl.xillio.xill.api.preview.Searchable;
+import static org.elasticsearch.node.NodeBuilder.*;
 
 /**
  * A search bar, with the defined options and behavior.
  */
-public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
+public class HelpSearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 
 	private Searchable searchable;
 	private String currentSearch = "";
-
+	private HelpPane helpPane;
 	/**
 	 * The current highlighted occurrence
 	 */
@@ -43,11 +50,14 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 	@FXML
 	private ToggleButton tbnEditorRegexSearch, tbnEditorCaseSensitive;
 	private ToggleButton toggleButton;
+	@FXML
+	private ComboBox box;
+	private DocumentSearcher searcher;
 
 	/**
 	 * Default constructor. The bar won't do anything until {@link #setSearchable(Searchable)} is called.
 	 */
-	public SearchBar() {
+	public HelpSearchBar() {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SearchBar.fxml"));
 			loader.setClassLoader(getClass().getClassLoader());
@@ -57,8 +67,25 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		
+		//TO BE REMOVED
+		org.elasticsearch.node.Node node = nodeBuilder().node();
+		Client client = node.client();
+		searcher = new DocumentSearcher(client);
+		
+		box = new ComboBox<String>();
+		box.setOnAction((event) -> {
+			String s = box.getSelectionModel().getSelectedItem().toString();
+			System.out.println(s);
+			this.helpPane.display(s);
+		});
+		
 		reset(true);
 		enableSearchAsYouType();
+		
+		
+		this.getChildren().add(box);
 		
 		
 		
@@ -75,8 +102,13 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 		currentOccurence = 0;
 		lblEditorSearchIndex.setText("0");
 		lblEditorSearchCount.setText("0");
+		box.getItems().clear();
 		if (clearQuery)
 			tfEditorSearchQuery.clear();
+	}
+	
+	public void setHelpPane(HelpPane help) {
+		this.helpPane = help;
 	}
 	
 	/**
@@ -103,71 +135,15 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 	private void runSearch(final String query) {
 		// A new search query. Clear old data
 		reset(false);
-
-		currentSearch = query;
-
-		// Check if the query is empty
-		if (query.isEmpty()) {
-			searchable.clearSearch();
-			return;
-		}
-
-		if (isRegexEnabled())
-			searchable.searchPattern(query, isCaseSensitive());
-		else
-			searchable.search(query, isCaseSensitive());
-
-		// Refresh the result counts
-		Platform.runLater(() -> lblEditorSearchCount.setText(String.valueOf(searchable.getOccurrences())));
-		
-		// Highlight 0 to make sure the first result is visible, then highlight all
-		if(searchable.getOccurrences() > 0)
-			highlight(0);
-		searchable.highlightAll();
-	}
-
-	/**
-	 * Returns whether regex are enabled.
-	 *
-	 * @return whether regex are enabled
-	 */
-	public boolean isRegexEnabled() {
-		return tbnEditorRegexSearch.selectedProperty().get();
-	}
-
-	/**
-	 * Returns whether the search should be case sensitive.
-	 *
-	 * @return whether the search should be case sensitive
-	 */
-	public boolean isCaseSensitive() {
-		return tbnEditorCaseSensitive.selectedProperty().get();
+		String[] results = searcher.search(query);
+		ObservableList<String> options = FXCollections.observableArrayList();
+		for(String result : results)
+			options.add(result);
+		box.getItems().addAll(results);
 	}
 	
 	private String getSearchQuery() {
 		return tfEditorSearchQuery.getText();
-	}
-
-	private void highlight(final int i) {
-		int index = i;
-		// No ocurrences is no highlight
-		if (searchable.getOccurrences() != 0) {
-			// Wrap the index
-			index %= searchable.getOccurrences();
-			if (index < 0)
-				index += searchable.getOccurrences();
-			
-			// Prevent negative index
-			index = Math.max(index, 0);
-
-			searchable.highlight(index);
-			
-			// push to label
-			lblEditorSearchIndex.setText(String.valueOf(index + 1));
-			
-			// Save actual highlight
-			currentOccurence = index;
-		}
 	}
 
 	/**
@@ -196,13 +172,13 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 	@FXML
 	private void nextButtonPressed(final ActionEvent actionEvent) {
 		if (!currentSearch.isEmpty())
-			highlight(++currentOccurence);
+			;//highlight(++currentOccurence);
 	}
 
 	@FXML
 	private void previousButtonPressed() {
 		if (!currentSearch.isEmpty())
-			highlight(--currentOccurence);
+			;//highlight(--currentOccurence);
 	}
 
 	@FXML

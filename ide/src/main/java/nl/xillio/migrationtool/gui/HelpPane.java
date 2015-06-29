@@ -32,6 +32,10 @@ public class HelpPane extends AnchorPane {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		HelpSearchBar helper = new HelpSearchBar();
+		helper.setHelpPane(this);
+		
+		this.getChildren().add(helper);
 
 		home();
 	}
