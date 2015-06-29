@@ -1,6 +1,7 @@
 package nl.xillio.xill;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,10 +21,12 @@ import nl.xillio.xill.api.errors.XillParsingException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.emf.common.util.DiagnosticException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.XtextResourceSet;
@@ -123,11 +126,18 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
 				File libPath = new File(projectFolder, subPath);
 				String fullPath = libPath.getAbsolutePath();
 
-				Resource dependency = resourceSet.getResource(URI.createFileURI(fullPath), true);
-				if (dependency == null) {
-					INode node = NodeModelUtils.getNode(include);
-					throw new XillParsingException("Required library at " + fullPath + " could not be found", node.getStartLine(), RobotID.getInstance(libPath, projectFolder));
+				Resource dependency = null;
+				try {
+					dependency = resourceSet.getResource(URI.createFileURI(fullPath), true);
+				}catch(Exception e) { 
+					//TODO Find out a way to catch the org.eclipse.emf.ecore.resource.impl.ResourceSetImpl$1DiagnosticWrappedException
 				}
+				
+				if (dependency == null) {
+					INode node = NodeModelUtils.getNode(robot);
+					throw new XillParsingException("Required library at " + fullPath + " could not be found", node.getStartLine(), robotID);
+				}
+				
 				issues.addAll(compile(dependency, factory, issues));
 				libraries.add(this.robot);
 			}
