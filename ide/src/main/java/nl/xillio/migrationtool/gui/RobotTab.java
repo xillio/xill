@@ -120,16 +120,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 		setText(getName());
 
 		// Set the tab dividers
-
-		// Remove the left hidden bar from dom
-		boolean showRightPanel = Boolean.parseBoolean(settings.getSimpleSetting("RightPanelCollapsed_" + documentPath.getAbsolutePath()));
 		double editorHeight = Double.parseDouble(settings.getSimpleSetting("EditorHeight_" + documentPath.getAbsolutePath()));
-
-		if (showRightPanel) {
-			hideButtonPressed();
-		} else {
-			showButtonPressed();
-		}
 
 		spnBotLeft.setDividerPosition(0, editorHeight);
 
@@ -158,7 +149,19 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	@Override
 	public void initialize(final URL arg0, final ResourceBundle arg1) {
 
-		Platform.runLater(() -> initializeChildren(getContent()));
+		Platform.runLater(() -> {
+			initializeChildren(getContent());
+			
+			// Remove the left hidden bar from dom
+			// This must be done after initialization otherwise the debugpane won't receive the tab
+			boolean showRightPanel = Boolean.parseBoolean(settings.getSimpleSetting("RightPanelCollapsed_" + getDocument().getAbsolutePath()));
+
+			if (showRightPanel) {
+				hideButtonPressed();
+			} else {
+				showButtonPressed();
+			}
+		});
 
 		setText(getName());
 
