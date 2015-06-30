@@ -11,7 +11,17 @@ public class StringPluginPackage extends PluginPackage{
 	public void load(PluginPackage[] dependencies) {
 		add(
 			new AbsoluteURLConstruct(),
-			new ContainsConstruct());
+			new ContainsConstruct(),
+			new LengthConstruct(),
+			new SplitConstruct(),
+			new UpperCaseConstruct(),
+			new LowerCaseConstruct(),
+			new StartsWithConstruct(),
+			new EndsWithConstruct(),
+			new RepeatConstruct(),
+			new IndexOfConstruct()
+			);
+			
 	}
 
 	@Override
