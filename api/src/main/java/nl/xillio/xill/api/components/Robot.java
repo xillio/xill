@@ -20,4 +20,15 @@ public interface Robot extends InstructionSet {
 	 * @throws RobotRuntimeException 
 	 */
 	public void initialize() throws RobotRuntimeException;
+	
+	/**
+	 * Set the argument for this robot. This is used by the callbot component of the language
+	 * @param expression
+	 */
+	public void setArgument(MetaExpression expression);
+	
+	/**
+	 * @return The argument set by {@link Robot#setArgument(MetaExpression)}
+	 */
+	public MetaExpression getArgument();
 }

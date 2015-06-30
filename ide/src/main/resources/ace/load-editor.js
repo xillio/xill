@@ -10,7 +10,7 @@ editor.getSession().setMode("ace/mode/xill");
 
 // Extend the editor
 editor.xillKeywords = "";
-editor.xillBuildin = "use|as|include|if|else|while|foreach|var|function|return|continue|break";
+editor.xillBuildin = "use|as|include|if|else|while|foreach|var|function|return|continue|break|callbot|args";
 editor.addKeyword = function(keyword) {
 	if (this.xillKeywords == "")
 		this.xillKeywords = keyword;

@@ -162,4 +162,10 @@ public interface Debugger extends ErrorHandlingPolicy {
 	 * @return the stack trace to the current instruction
 	 */
 	public List<Instruction> getStackTrace();
+	
+	/**
+	 * Instantiate a child debugger
+	 * @return the debugger
+	 */
+	public Debugger createChild();
 }

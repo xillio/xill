@@ -1,13 +1,17 @@
 package nl.xillio.xill;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 
+import org.apache.commons.collections.keyvalue.DefaultMapEntry;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -18,6 +22,7 @@ import nl.xillio.plugins.PluginLoader;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.LanguageFactory;
 import nl.xillio.xill.api.PluginPackage;
+import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.ListExpression;
 import nl.xillio.xill.api.components.ObjectExpression;
@@ -32,6 +37,7 @@ import nl.xillio.xill.api.errors.XillParsingException;
 import nl.xillio.xill.components.expressions.CallbotExpression;
 import nl.xillio.xill.components.expressions.ConstructCall;
 import nl.xillio.xill.components.expressions.FunctionCall;
+import nl.xillio.xill.components.expressions.GetArgumentExpression;
 import nl.xillio.xill.components.expressions.VariableAccessExpression;
 import nl.xillio.xill.components.instructions.BreakInstruction;
 import nl.xillio.xill.components.instructions.ContinueInstruction;
@@ -65,6 +71,7 @@ import nl.xillio.xill.components.operators.Subtract;
 import nl.xillio.xill.debugging.DebugInfo;
 import xill.lang.xill.BooleanLiteral;
 import xill.lang.xill.Expression;
+import xill.lang.xill.IncludeStatement;
 import xill.lang.xill.IntegerLiteral;
 import xill.lang.xill.ListExtraction;
 import xill.lang.xill.NullLiteral;
@@ -93,7 +100,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	private final PluginLoader<PluginPackage> pluginLoader;
 	private final Debugger debugger;
 	private final RobotID rootRobot;
-	private final Map<EObject, Robot> compiledRobots = new HashMap<>();
+	private final Map<EObject, Map.Entry<RobotID, Robot>> compiledRobots = new HashMap<>();
 
 	/**
 	 * Create a new {@link XillProgramFactory}
@@ -123,6 +130,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	pluginLoader = loader;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void parse(final xill.lang.xill.Robot robot, final RobotID robotID)
 		throws XillParsingException {
@@ -155,7 +163,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	}
 
 	nl.xillio.xill.components.Robot instructionRobot = new nl.xillio.xill.components.Robot(robotID, debugger);
-	compiledRobots.put(robot, instructionRobot);
+	compiledRobots.put(robot, new DefaultMapEntry(robotID, instructionRobot));
 
 	for (xill.lang.xill.Instruction instruction : robot.getInstructionSet().getInstructions()) {
 		instructionRobot.add(parse(instruction));
@@ -170,11 +178,38 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	for (Map.Entry<xill.lang.xill.FunctionCall, FunctionCall> entry : functionCalls.entrySet()) {
 		parseToken(entry.getKey(), entry.getValue());
 	}
+	
+	//Push all libraries
+	for(EObject token: compiledRobots.keySet()) {
+		xill.lang.xill.Robot robotToken = (xill.lang.xill.Robot) token;
+		Map.Entry<RobotID, Robot> pair = compiledRobots.get(robotToken);
+		Robot robot = pair.getValue();
+		RobotID robotID = pair.getKey();
+		
+		//Get includes
+		for(IncludeStatement include: robotToken.getIncludes()) {
+			//Build robotID
+			String path = StringUtils.join(include.getName(), File.separator) + "." + Xill.FILE_EXTENSION;
+			RobotID expectedID = RobotID.getInstance(new File(robotID.getProjectPath(), path), robotID.getProjectPath());
+			CodePosition pos = pos(include);
+			
+			//Find the matching robot
+			Optional<Entry<RobotID, Robot>> matchingRobot = compiledRobots.values().stream().filter(
+				entry -> entry.getKey() == expectedID).findAny();
+			
+			if(!matchingRobot.isPresent()) {
+				throw new XillParsingException("Could not resolve import", pos.getLineNumber(), pos.getRobotID());
+			}
+			
+			//Push the library
+			((nl.xillio.xill.components.Robot)robot).addLibrary((nl.xillio.xill.components.Robot) matchingRobot.get().getValue());
+		}
+	}
 	}
 
 	@Override
 	public Robot getRobot(final xill.lang.xill.Robot token) {
-	return compiledRobots.get(token);
+	return compiledRobots.get(token).getValue();
 	}
 
 	/**
@@ -908,8 +943,38 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 */
 	Processable parseToken(final xill.lang.xill.CallbotExpression token) throws XillParsingException {
 	Processable path = parse(token.getPath());
+	
+	CallbotExpression expression = new CallbotExpression(path, robotID.get(token.eResource()), pluginLoader);
 
-	return new CallbotExpression(path, robotID.get(token.eResource()), pluginLoader);
+	if(token.getArgument() != null) {
+		expression.setArgument(parse(token.getArgument()));
+	}
+	
+	return expression;
+	}
+
+	/**
+	 * Parse a {@link GetArgumentExpression}
+	 *
+	 * @param token
+	 * @return
+	 * @throws XillParsingException
+	 */
+	Processable parseToken(final xill.lang.xill.GetArgumentExpression token) throws XillParsingException {
+	// First we need to find the robot of this token. Do do this we need the token's root
+	EObject robot = token;
+	while (!(robot instanceof xill.lang.xill.Robot || robot == null)) {
+		robot = robot.eContainer();
+	}
+
+	if (robot == null) {
+		CodePosition pos = pos(token);
+		throw new XillParsingException("Could not find robot node of " + token, pos.getLineNumber(), pos.getRobotID());
+	}
+
+	Robot thisRobot = compiledRobots.get(robot).getValue();
+
+	return new GetArgumentExpression((nl.xillio.xill.components.Robot) thisRobot);
 	}
 
 	/**
