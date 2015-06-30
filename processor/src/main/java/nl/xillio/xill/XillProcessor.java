@@ -32,6 +32,7 @@ import nl.xillio.xill.api.components.Robot;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.errors.XillParsingException;
 import xill.lang.XillStandaloneSetup;
+import xill.lang.validation.XillValidator;
 import xill.lang.xill.IncludeStatement;
 
 /**
@@ -229,5 +230,10 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
 	@Override
 	public Collection<String> listPackages() {
 	return pluginLoader.getPluginManager().getPlugins().stream().map(PluginPackage::getName).collect(Collectors.toList());
+	}
+
+	@Override
+	public String[] getReservedKeywords() {
+	return XillValidator.RESERVED_KEYWORDS;
 	}
 }
