@@ -115,6 +115,12 @@ public abstract class MetaExpression implements Expression, Processable {
 	}
 
 	/**
+	 * Returns the type of data stored in this {@link MetaExpression}<br/>
+	 * <ul>
+	 * <li>{@link ExpressionDataType#ATOMIC}: A single value</li>
+	 * <li>{@link ExpressionDataType#LIST}: A list of {@link MetaExpression}</li>
+	 * <li>{@link ExpressionDataType#OBJECT}: An object with {@link String} indices</li>
+	 * </ul>
 	 * @return the type
 	 */
 	public ExpressionDataType getType() {
