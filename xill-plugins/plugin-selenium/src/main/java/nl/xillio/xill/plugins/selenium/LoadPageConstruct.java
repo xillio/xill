@@ -2,15 +2,9 @@ package nl.xillio.xill.plugins.selenium;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import nl.xillio.xill.api.components.AtomicExpression;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
@@ -29,12 +23,11 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 /**
  *
  */
-public class LoadPageConstruct implements Construct {
+public class LoadPageConstruct implements Construct, AutoCloseable {
 
 	private static final PhantomJSPool pool = new PhantomJSPool(10);
 
@@ -374,6 +367,11 @@ public class LoadPageConstruct implements Construct {
 			System.err.println(e.getMessage());
 			return;
 		}
+	}
+
+	@Override
+	public void close() throws Exception {
+		pool.dispose();
 	}
 
 }

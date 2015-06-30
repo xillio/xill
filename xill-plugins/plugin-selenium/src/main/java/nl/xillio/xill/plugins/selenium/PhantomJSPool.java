@@ -98,7 +98,7 @@ public class PhantomJSPool {
 
 		@Override
 		public void close() throws Exception {
-			this.dispose();
+			this.release();
 		}
 	}
 	
