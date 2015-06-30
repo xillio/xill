@@ -6,94 +6,103 @@ import java.util.LinkedList;
 import java.util.List;
 
 import nl.xillio.xill.api.Debugger;
-import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.ExpressionBuilder;
+import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
- * This class represents the InstructionSet language component: any number of lines of valid code
+ * This class represents the InstructionSet language component: any number of
+ * lines of valid code
  */
 public class InstructionSet implements nl.xillio.xill.api.components.InstructionSet {
-	private final List<Instruction> instructions = new LinkedList<>();
-	private final Debugger debugger;
+    private final List<Instruction> instructions = new LinkedList<>();
+    private final Debugger debugger;
 
-	/**
-	 * Create a new {@link InstructionSet} in debugging mode
-	 *
-	 * @param debugger
-	 */
-	public InstructionSet(final Debugger debugger) {
-		this.debugger = debugger;
+    /**
+     * Create a new {@link InstructionSet} in debugging mode
+     *
+     * @param debugger
+     */
+    public InstructionSet(final Debugger debugger) {
+	this.debugger = debugger;
+    }
+
+    /**
+     * Add an instruction to the instructionset
+     *
+     * @param instruction
+     */
+    public void add(final Instruction instruction) {
+	instructions.add(instruction);
+    }
+
+    @Override
+    public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
+	InstructionFlow<MetaExpression> processResult = null;
+	for (Instruction instruction : instructions) {
+
+	    debugger.startInstruction(instruction);
+	    InstructionFlow<MetaExpression> result = instruction.process(debugger);
+	    debugger.endInstruction(instruction, result);
+
+	    if (!result.resumes()) {
+		debugger.returning(this, result);
+		processResult = result;
+		break;
+	    }
+
+	    if (debugger.shouldStop()) {
+		processResult = InstructionFlow.doReturn(ExpressionBuilder.NULL);
+		break;
+	    }
 	}
 
-	/**
-	 * Add an instruction to the instructionset
-	 *
-	 * @param instruction
-	 */
-	public void add(final Instruction instruction) {
-		instructions.add(instruction);
+	// Done so dispose of this
+	try {
+	    close();
+	} catch (Exception e) {
 	}
 
-	@Override
-	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-		for (Instruction instruction : instructions) {
+	if (processResult != null) {
+	    return processResult;
+	}
+	
+	return InstructionFlow.doResume();
+    }
 
-			debugger.startInstruction(instruction);
-			InstructionFlow<MetaExpression> result = instruction.process(debugger);
-			debugger.endInstruction(instruction, result);
+    /**
+     * Run only declarations. <br/>
+     * This is required to run functions in this robot as a library
+     * 
+     * @throws RobotRuntimeException
+     */
+    public void initialize() throws RobotRuntimeException {
+	for (Instruction instruction : instructions) {
+	    if (instruction instanceof VariableDeclaration || instruction instanceof FunctionDeclaration) {
+		instruction.process(debugger);
+	    }
+	}
+    }
 
-			if (!result.resumes()) {
-				debugger.returning(this, result);
-				return result;
-			}
+    /**
+     * @return the debugger
+     */
+    public Debugger getDebugger() {
+	return debugger;
+    }
 
-			if (debugger.shouldStop()) {
-				return InstructionFlow.doReturn(ExpressionBuilder.NULL);
-			}
-		}
+    @Override
+    public Collection<Processable> getChildren() {
+	return new ArrayList<>(instructions);
+    }
 
-		// Done so dispose of this
-		try {
-			close();
-		} catch (Exception e) {}
-
-		return InstructionFlow.doResume();
+    @Override
+    public void close() throws Exception {
+	for (Instruction instruction : instructions) {
+	    instruction.close();
 	}
 
-	/**
-	 * Run only declarations. <br/>
-	 * This is required to run functions in this robot as a library
-	 * 
-	 * @throws RobotRuntimeException
-	 */
-	public void initialize() throws RobotRuntimeException {
-		for (Instruction instruction : instructions) {
-			if (instruction instanceof VariableDeclaration || instruction instanceof FunctionDeclaration) {
-				instruction.process(debugger);
-			}
-		}
-	}
-
-	/**
-	 * @return the debugger
-	 */
-	public Debugger getDebugger() {
-		return debugger;
-	}
-
-	@Override
-	public Collection<Processable> getChildren() {
-		return new ArrayList<>(instructions);
-	}
-
-	@Override
-	public void close() throws Exception {
-		for (Instruction instruction : instructions) {
-			instruction.close();
-		}
-
-	}
+    }
 }
