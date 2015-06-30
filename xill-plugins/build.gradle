@@ -33,10 +33,11 @@ subprojects{
 		}
 	}
 }
-dependencies {
-	runtime subprojects
-}
 
+def includeInBuild(childProject) {
+	dependencies.runtime childProject
+}
+	
 description 'This project is the parent project to all xill plugins. It will provide the build file for all plugins'
 
 jar {
