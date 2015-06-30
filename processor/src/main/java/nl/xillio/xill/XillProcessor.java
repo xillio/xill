@@ -32,6 +32,7 @@ import nl.xillio.xill.api.components.Robot;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.errors.XillParsingException;
 import xill.lang.XillStandaloneSetup;
+import xill.lang.scoping.XillScopeProvider;
 import xill.lang.xill.IncludeStatement;
 
 /**
@@ -90,44 +91,42 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
 	}
 
 	private List<Issue> compile(final File robotPath) throws XillParsingException {
+	XillScopeProvider.PROJECTFOLDER = projectFolder;
 	Resource resource = resourceSet.getResource(URI.createFileURI(robotPath.getAbsolutePath()), true);
 
 	gatherResources(resource);
-	
 
 	List<Issue> issues = new ArrayList<>();
-	LanguageFactory<xill.lang.xill.Robot> factory =  new XillProgramFactory(pluginLoader, getDebugger(), RobotID.getInstance(robotPath, projectFolder));
+	LanguageFactory<xill.lang.xill.Robot> factory = new XillProgramFactory(pluginLoader, getDebugger(), RobotID.getInstance(robotPath, projectFolder));
 
 	xill.lang.xill.Robot mainRobotToken = null;
-	
 
-	//Validate all resources
-	for(Resource currentResource: resourceSet.getResources()) {
-		//Build RobotID
+	// Validate all resources
+	for (Resource currentResource : resourceSet.getResources()) {
+		// Build RobotID
 		File currentFile = new File(currentResource.getURI().toFileString());
 		RobotID robotID = RobotID.getInstance(currentFile, projectFolder);
-		
+
 		issues.addAll(validate(currentResource, robotID));
 	}
-	
-	//Parse all resources
-	for(Resource currentResource: resourceSet.getResources()) {
-		for(EObject rootToken: currentResource.getContents()) {
-			//Build RobotID
-			File currentFile = new File(currentResource.getURI().toFileString());
-			RobotID robotID = RobotID.getInstance(currentFile, projectFolder);
-			
-			//Parse
-			factory.parse((xill.lang.xill.Robot)rootToken, robotID);
-			
-			//Check if is main robot token
-			if(rootToken.eResource() == resource) {
-				mainRobotToken = (xill.lang.xill.Robot) rootToken;
-			}
+
+	// Parse all resources
+	for (Resource currentResource : resourceSet.getResources()) {
+		for (EObject rootToken : currentResource.getContents()) {
+		// Build RobotID
+		File currentFile = new File(currentResource.getURI().toFileString());
+		RobotID robotID = RobotID.getInstance(currentFile, projectFolder);
+
+		// Parse
+		factory.parse((xill.lang.xill.Robot) rootToken, robotID);
+
+		// Check if is main robot token
+		if (rootToken.eResource() == resource) {
+			mainRobotToken = (xill.lang.xill.Robot) rootToken;
+		}
 		}
 	}
-	
-	
+
 	factory.compile();
 
 	robot = factory.getRobot(mainRobotToken);
