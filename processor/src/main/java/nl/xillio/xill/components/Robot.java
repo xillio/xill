@@ -26,17 +26,15 @@ import com.google.common.collect.Lists;
  */
 public class Robot extends InstructionSet implements nl.xillio.xill.api.components.Robot {
 	private final RobotID robotID;
-	private final List<nl.xillio.xill.api.components.Robot> libraries;
+	private final List<nl.xillio.xill.api.components.Robot> libraries = new ArrayList<>();
 
 	/**
 	 * @param robotID
-	 * @param libraries
 	 * @param debugger
 	 */
-	public Robot(final RobotID robotID, final List<nl.xillio.xill.api.components.Robot> libraries, final Debugger debugger) {
+	public Robot(final RobotID robotID, final Debugger debugger) {
 		super(debugger);
 		this.robotID = robotID;
-		this.libraries = libraries;
 	}
 
 	/**
@@ -137,5 +135,13 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
 					e.printStackTrace();
 				}
 			}
+	}
+	
+	/**
+	 * Add a library to this robot
+	 * @param lib
+	 */
+	public void addLibrary(Robot lib) {
+		libraries.add(lib);
 	}
 }

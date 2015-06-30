@@ -8,12 +8,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+
 import nl.xillio.plugins.PluginLoader;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.LanguageFactory;
 import nl.xillio.xill.api.PluginPackage;
-import nl.xillio.xill.api.components.ListExpression;
 import nl.xillio.xill.api.components.ExpressionBuilder;
+import nl.xillio.xill.api.components.ListExpression;
 import nl.xillio.xill.api.components.ObjectExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.components.Robot;
@@ -57,13 +63,6 @@ import nl.xillio.xill.components.operators.SmallerThan;
 import nl.xillio.xill.components.operators.SmallerThanOrEquals;
 import nl.xillio.xill.components.operators.Subtract;
 import nl.xillio.xill.debugging.DebugInfo;
-
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.nodemodel.INode;
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
-
 import xill.lang.xill.BooleanLiteral;
 import xill.lang.xill.Expression;
 import xill.lang.xill.IntegerLiteral;
@@ -94,6 +93,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	private final PluginLoader<PluginPackage> pluginLoader;
 	private final Debugger debugger;
 	private final RobotID rootRobot;
+	private final Map<EObject, Robot> compiledRobots = new HashMap<>();
 
 	/**
 	 * Create a new {@link XillProgramFactory}
@@ -103,7 +103,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @param robotID
 	 */
 	public XillProgramFactory(final PluginLoader<PluginPackage> loader, final Debugger debugger, final RobotID robotID) {
-		this(loader, debugger, robotID, false);
+	this(loader, debugger, robotID, false);
 	}
 
 	/**
@@ -117,58 +117,64 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 *        verbose logging for the compiler
 	 */
 	public XillProgramFactory(final PluginLoader<PluginPackage> loader, final Debugger debugger, final RobotID robotID, final boolean verbose) {
-		this.debugger = debugger;
-		rootRobot = robotID;
-		expressionParseInvoker.VERBOSE = verbose;
-		pluginLoader = loader;
+	this.debugger = debugger;
+	rootRobot = robotID;
+	expressionParseInvoker.VERBOSE = verbose;
+	pluginLoader = loader;
 	}
 
 	@Override
-	public Robot parse(final xill.lang.xill.Robot robot, final RobotID robotID, final List<Robot> libraries)
-			throws XillParsingException {
+	public void parse(final xill.lang.xill.Robot robot, final RobotID robotID)
+		throws XillParsingException {
 
-		this.robotID.put(robot.eResource(), robotID);
-		DebugInfo info = new DebugInfo();
+	this.robotID.put(robot.eResource(), robotID);
+	DebugInfo info = new DebugInfo();
 
-		info.setVariables(variables);
-		info.setUsing(useStatements);
+	info.setVariables(variables);
+	info.setUsing(useStatements);
 
-		for (UseStatement using : robot.getUses()) {
-			String pluginName = using.getPlugin();
+	for (UseStatement using : robot.getUses()) {
+		String pluginName = using.getPlugin();
 
-			// In case of non-qualified name: use MySQL;
-			if (pluginName == null) {
-				pluginName = using.getName();
-			}
-
-			// Really? Java...
-			String searchName = pluginName;
-
-			Optional<PluginPackage> plugin = pluginLoader.getPluginManager().getPlugins().stream().filter(pckage -> pckage.getName().equals(searchName)).findAny();
-
-			if (!plugin.isPresent()) {
-				CodePosition pos = pos(robot);
-				throw new XillParsingException("Could not find plugin " + pluginName, pos.getLineNumber(), pos.getRobotID());
-			}
-
-			useStatements.put(using, plugin.get());
+		// In case of non-qualified name: use MySQL;
+		if (pluginName == null) {
+		pluginName = using.getName();
 		}
 
+		// Really? Java...
+		String searchName = pluginName;
 
-		nl.xillio.xill.components.Robot instructionRobot = new nl.xillio.xill.components.Robot(robotID, libraries, debugger);
+		Optional<PluginPackage> plugin = pluginLoader.getPluginManager().getPlugins().stream().filter(pckage -> pckage.getName().equals(searchName)).findAny();
 
-		for (xill.lang.xill.Instruction instruction : robot.getInstructionSet().getInstructions()) {
-			instructionRobot.add(parse(instruction));
+		if (!plugin.isPresent()) {
+		CodePosition pos = pos(robot);
+		throw new XillParsingException("Could not find plugin " + pluginName, pos.getLineNumber(), pos.getRobotID());
 		}
 
-		// Push all FunctionDeclarations after parsing
-		for (Map.Entry<xill.lang.xill.FunctionCall, FunctionCall> entry : functionCalls.entrySet()) {
-			parseToken(entry.getKey(), entry.getValue());
-		}
+		useStatements.put(using, plugin.get());
+	}
 
-		debugger.addDebugInfo(info);
+	nl.xillio.xill.components.Robot instructionRobot = new nl.xillio.xill.components.Robot(robotID, debugger);
+	compiledRobots.put(robot, instructionRobot);
 
-		return instructionRobot;
+	for (xill.lang.xill.Instruction instruction : robot.getInstructionSet().getInstructions()) {
+		instructionRobot.add(parse(instruction));
+	}
+
+	debugger.addDebugInfo(info);
+	}
+
+	@Override
+	public void compile() throws XillParsingException {
+	// Push all FunctionDeclarations after parsing
+	for (Map.Entry<xill.lang.xill.FunctionCall, FunctionCall> entry : functionCalls.entrySet()) {
+		parseToken(entry.getKey(), entry.getValue());
+	}
+	}
+
+	@Override
+	public Robot getRobot(final xill.lang.xill.Robot token) {
+	return compiledRobots.get(token);
 	}
 
 	/**
@@ -184,51 +190,53 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 *         When something went wrong while parsing this component.
 	 */
 	private Processable parse(final Expression token) throws XillParsingException {
-		if (token == null) {
-			throw new NullPointerException("Cannot parse null token.");
+	if (token == null) {
+		throw new NullPointerException("Cannot parse null token.");
+	}
+
+	try {
+		return expressionParseInvoker.invoke(token, Processable.class);
+	} catch (InvocationTargetException | IllegalArgumentException e) {
+		Throwable root = ExceptionUtils.getRootCause(e);
+
+		if (root instanceof XillParsingException) {
+		throw (XillParsingException) root;
 		}
 
-		try {
-			return expressionParseInvoker.invoke(token, Processable.class);
-		} catch (InvocationTargetException | IllegalArgumentException e) {
-			Throwable root = ExceptionUtils.getRootCause(e);
-
-			if (root instanceof XillParsingException) {
-				throw (XillParsingException) root;
-			}
-
-			CodePosition pos = pos(token);
-			throw new XillParsingException(
-				"Something went wrong while parsing expression of type "
-						+ token.getClass().getSimpleName() + ": " + ExceptionUtils.getRootCauseMessage(e), pos.getLineNumber(), pos.getRobotID(), e);
-		}
+		CodePosition pos = pos(token);
+		throw new XillParsingException(
+		"Something went wrong while parsing expression of type "
+			+ token.getClass().getSimpleName() + ": " + ExceptionUtils.getRootCauseMessage(e),
+		pos.getLineNumber(), pos.getRobotID(), e);
+	}
 	}
 
 	/**
 	 * @see XillProgramFactory#parse(Expression)
 	 */
 	private Instruction parse(final xill.lang.xill.Instruction token)
-			throws XillParsingException {
-		if (token == null) {
-			throw new NullPointerException("Cannot parse null token.");
+		throws XillParsingException {
+	if (token == null) {
+		throw new NullPointerException("Cannot parse null token.");
+	}
+
+	try {
+		Instruction result = expressionParseInvoker.invoke(token, Instruction.class);
+		result.setPosition(pos(token));
+		return result;
+	} catch (InvocationTargetException | IllegalArgumentException e) {
+		Throwable root = ExceptionUtils.getRootCause(e);
+
+		if (root instanceof XillParsingException) {
+		throw (XillParsingException) root;
 		}
 
-		try {
-			Instruction result = expressionParseInvoker.invoke(token, Instruction.class);
-			result.setPosition(pos(token));
-			return result;
-		} catch (InvocationTargetException | IllegalArgumentException e) {
-			Throwable root = ExceptionUtils.getRootCause(e);
-
-			if (root instanceof XillParsingException) {
-				throw (XillParsingException) root;
-			}
-
-			CodePosition pos = pos(token);
-			throw new XillParsingException(
-				"Something went wrong while parsing instruction of type "
-						+ token.getClass().getSimpleName() + ": " + ExceptionUtils.getRootCauseMessage(e), pos.getLineNumber(), pos.getRobotID(), e);
-		}
+		CodePosition pos = pos(token);
+		throw new XillParsingException(
+		"Something went wrong while parsing instruction of type "
+			+ token.getClass().getSimpleName() + ": " + ExceptionUtils.getRootCauseMessage(e),
+		pos.getLineNumber(), pos.getRobotID(), e);
+	}
 	}
 
 	/**
@@ -240,14 +248,14 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 *         When parsing an instruction wasn't successful
 	 */
 	InstructionSet parseToken(final xill.lang.xill.InstructionSet token)
-			throws XillParsingException {
-		InstructionSet instructionSet = new InstructionSet(debugger);
+		throws XillParsingException {
+	InstructionSet instructionSet = new InstructionSet(debugger);
 
-		for (xill.lang.xill.Instruction instruction : token.getInstructions()) {
-			instructionSet.add(parse(instruction));
-		}
+	for (xill.lang.xill.Instruction instruction : token.getInstructions()) {
+		instructionSet.add(parse(instruction));
+	}
 
-		return instructionSet;
+	return instructionSet;
 	}
 
 	/**
@@ -258,15 +266,15 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @throws XillParsingException
 	 */
 	IfInstruction parseToken(final xill.lang.xill.IfInstruction token)
-			throws XillParsingException {
-		if (token.getElseBlock() == null) {
-			return new IfInstruction(parse(token.getCondition()),
-				parseToken(token.getIfBlock().getInstructionSet()));
-		}
+		throws XillParsingException {
+	if (token.getElseBlock() == null) {
+		return new IfInstruction(parse(token.getCondition()),
+		parseToken(token.getIfBlock().getInstructionSet()));
+	}
 
-		return new IfInstruction(parse(token.getCondition()), parseToken(token
-			.getIfBlock().getInstructionSet()), parseToken(token
-				.getElseBlock().getInstructionSet()));
+	return new IfInstruction(parse(token.getCondition()), parseToken(token
+		.getIfBlock().getInstructionSet()), parseToken(token
+			.getElseBlock().getInstructionSet()));
 	}
 
 	/**
@@ -277,7 +285,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @throws XillParsingException
 	 */
 	WhileInstruction parseToken(final xill.lang.xill.WhileInstruction token) throws XillParsingException {
-		return new WhileInstruction(parse(token.getCondition()), parseToken(token.getInstructionBlock().getInstructionSet()));
+	return new WhileInstruction(parse(token.getCondition()), parseToken(token.getInstructionBlock().getInstructionSet()));
 	}
 
 	/**
@@ -288,17 +296,17 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @throws XillParsingException
 	 */
 	ForeachInstruction parseToken(final xill.lang.xill.ForEachInstruction token) throws XillParsingException {
-		VariableDeclaration valueDec = VariableDeclaration.nullDeclaration(pos(token));
-		variables.put(token.getValueVar(), valueDec);
+	VariableDeclaration valueDec = VariableDeclaration.nullDeclaration(pos(token));
+	variables.put(token.getValueVar(), valueDec);
 
-		if (token.getKeyVar() != null) {
-			VariableDeclaration keyDec = VariableDeclaration.nullDeclaration(pos(token));
-			variables.put(token.getKeyVar(), keyDec);
+	if (token.getKeyVar() != null) {
+		VariableDeclaration keyDec = VariableDeclaration.nullDeclaration(pos(token));
+		variables.put(token.getKeyVar(), keyDec);
 
-			return new ForeachInstruction(parseToken(token.getInstructionBlock().getInstructionSet()), parse(token.getItterator()), valueDec, keyDec);
-		}
+		return new ForeachInstruction(parseToken(token.getInstructionBlock().getInstructionSet()), parse(token.getItterator()), valueDec, keyDec);
+	}
 
-		return new ForeachInstruction(parseToken(token.getInstructionBlock().getInstructionSet()), parse(token.getItterator()), valueDec);
+	return new ForeachInstruction(parseToken(token.getInstructionBlock().getInstructionSet()), parse(token.getItterator()), valueDec);
 	}
 
 	/**
@@ -308,7 +316,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @return
 	 */
 	BreakInstruction parseToken(final xill.lang.xill.BreakInstruction token) {
-		return new BreakInstruction();
+	return new BreakInstruction();
 	}
 
 	/**
@@ -319,11 +327,11 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @throws XillParsingException
 	 */
 	ReturnInstruction parseToken(final xill.lang.xill.ReturnInstruction token)
-			throws XillParsingException {
-		if (token.getValue() == null) {
-			return new ReturnInstruction();
-		}
-		return new ReturnInstruction(parse(token.getValue()));
+		throws XillParsingException {
+	if (token.getValue() == null) {
+		return new ReturnInstruction();
+	}
+	return new ReturnInstruction(parse(token.getValue()));
 	}
 
 	/**
@@ -333,7 +341,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @return
 	 */
 	ContinueInstruction parseToken(final xill.lang.xill.ContinueInstruction token) {
-		return new ContinueInstruction();
+	return new ContinueInstruction();
 	}
 
 	/**
@@ -345,23 +353,22 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 */
 	FunctionDeclaration parseToken(final xill.lang.xill.FunctionDeclaration token) throws XillParsingException {
 
-		// Push the arguments
-		List<VariableDeclaration> parameters = new ArrayList<>(token.getParameters().size()
-				);
-		for (Target parameter : token.getParameters()) {
-			// TODO Default values
-			VariableDeclaration declaration = VariableDeclaration.nullDeclaration(pos(token));
+	// Push the arguments
+	List<VariableDeclaration> parameters = new ArrayList<>(token.getParameters().size());
+	for (Target parameter : token.getParameters()) {
+		// TODO Default values
+		VariableDeclaration declaration = VariableDeclaration.nullDeclaration(pos(token));
 
-			parameters.add(declaration);
-			variables.put(parameter, declaration);
-		}
+		parameters.add(declaration);
+		variables.put(parameter, declaration);
+	}
 
-		InstructionSet instructions = parseToken(token.getInstructionBlock().getInstructionSet());
-		FunctionDeclaration declaration = new FunctionDeclaration(instructions, parameters);
+	InstructionSet instructions = parseToken(token.getInstructionBlock().getInstructionSet());
+	FunctionDeclaration declaration = new FunctionDeclaration(instructions, parameters);
 
-		functions.put(token, declaration);
+	functions.put(token, declaration);
 
-		return declaration;
+	return declaration;
 	}
 
 	/**
@@ -372,14 +379,14 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @throws XillParsingException
 	 */
 	VariableDeclaration parseToken(final xill.lang.xill.VariableDeclaration token)
-			throws XillParsingException {
-		Processable expression = token.getValue() == null ? ExpressionBuilder.NULL : parse(token.getValue());
+		throws XillParsingException {
+	Processable expression = token.getValue() == null ? ExpressionBuilder.NULL : parse(token.getValue());
 
-		VariableDeclaration declaration = new VariableDeclaration(expression);
+	VariableDeclaration declaration = new VariableDeclaration(expression);
 
-		variables.put(token.getName(), declaration);
+	variables.put(token.getName(), declaration);
 
-		return declaration;
+	return declaration;
 	}
 
 	/**
@@ -390,9 +397,9 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @throws XillParsingException
 	 */
 	ExpressionInstruction parseToken(final xill.lang.xill.ExpressionInstruction token) throws XillParsingException {
-		ExpressionInstruction instruction = new ExpressionInstruction(parse(token.getExpression()));
+	ExpressionInstruction instruction = new ExpressionInstruction(parse(token.getExpression()));
 
-		return instruction;
+	return instruction;
 	}
 
 	/**
@@ -403,57 +410,57 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @throws XillParsingException
 	 */
 	Processable parseToken(final xill.lang.xill.Expression token)
-			throws XillParsingException {
+		throws XillParsingException {
 
-		Processable value = parse(token.getExpression());
+	Processable value = parse(token.getExpression());
 
-		// Parse prefixes
-		if (token.getPrefix() != null) {
-			switch (token.getPrefix()) {
-				case "-":
-					value = new Subtract(ExpressionBuilder.fromValue(0), value);
-					break;
-				case "!":
-					value = new Negate(value);
-					break;
-				case "++":
-					Target pTarget = getTarget(token.getExpression());
-					List<Processable> pPath = getPath(token.getExpression());
-					VariableDeclaration pDeclaration = variables.get(pTarget);
-					value = new Assign(pDeclaration, pPath, new Add(value, ExpressionBuilder.fromValue(1)));
-					break;
-				case "--":
-					Target mTarget = getTarget(token.getExpression());
-					List<Processable> mPath = getPath(token.getExpression());
-					VariableDeclaration mDeclaration = variables.get(mTarget);
-					value = new Assign(mDeclaration, mPath, new Subtract(value, ExpressionBuilder.fromValue(1)));
-					break;
-				default:
-					throw new NotImplementedException("This prefix has not been implemented.");
-			}
+	// Parse prefixes
+	if (token.getPrefix() != null) {
+		switch (token.getPrefix()) {
+		case "-":
+			value = new Subtract(ExpressionBuilder.fromValue(0), value);
+			break;
+		case "!":
+			value = new Negate(value);
+			break;
+		case "++":
+			Target pTarget = getTarget(token.getExpression());
+			List<Processable> pPath = getPath(token.getExpression());
+			VariableDeclaration pDeclaration = variables.get(pTarget);
+			value = new Assign(pDeclaration, pPath, new Add(value, ExpressionBuilder.fromValue(1)));
+			break;
+		case "--":
+			Target mTarget = getTarget(token.getExpression());
+			List<Processable> mPath = getPath(token.getExpression());
+			VariableDeclaration mDeclaration = variables.get(mTarget);
+			value = new Assign(mDeclaration, mPath, new Subtract(value, ExpressionBuilder.fromValue(1)));
+			break;
+		default:
+			throw new NotImplementedException("This prefix has not been implemented.");
 		}
+	}
 
-		// Parse suffixes
-		if (token.getSuffix() != null) {
-			switch (token.getSuffix()) {
-				case "++":
-					Target pTarget = getTarget(token.getExpression());
-					List<Processable> pPath = getPath(token.getExpression());
-					VariableDeclaration pDeclaration = variables.get(pTarget);
-					value = new Subtract(new Assign(pDeclaration, pPath, new Add(value, ExpressionBuilder.fromValue(1))), ExpressionBuilder.fromValue(1));
-					break;
-				case "--":
-					Target mTarget = getTarget(token.getExpression());
-					List<Processable> mPath = getPath(token.getExpression());
-					VariableDeclaration mDeclaration = variables.get(mTarget);
-					value = new Add(new Assign(mDeclaration, mPath, new Subtract(value, ExpressionBuilder.fromValue(1))), ExpressionBuilder.fromValue(1));
-					break;
-				default:
-					throw new NotImplementedException("This suffix has not been implemented.");
-			}
+	// Parse suffixes
+	if (token.getSuffix() != null) {
+		switch (token.getSuffix()) {
+		case "++":
+			Target pTarget = getTarget(token.getExpression());
+			List<Processable> pPath = getPath(token.getExpression());
+			VariableDeclaration pDeclaration = variables.get(pTarget);
+			value = new Subtract(new Assign(pDeclaration, pPath, new Add(value, ExpressionBuilder.fromValue(1))), ExpressionBuilder.fromValue(1));
+			break;
+		case "--":
+			Target mTarget = getTarget(token.getExpression());
+			List<Processable> mPath = getPath(token.getExpression());
+			VariableDeclaration mDeclaration = variables.get(mTarget);
+			value = new Add(new Assign(mDeclaration, mPath, new Subtract(value, ExpressionBuilder.fromValue(1))), ExpressionBuilder.fromValue(1));
+			break;
+		default:
+			throw new NotImplementedException("This suffix has not been implemented.");
 		}
+	}
 
-		return value;
+	return value;
 	}
 
 	/**
@@ -464,10 +471,10 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @throws XillParsingException
 	 */
 	Or parseToken(final xill.lang.xill.impl.OrImpl token) throws XillParsingException {
-		Or orExpression = new Or(parse(token.getLeft()),
-			parse(token.getRight()));
+	Or orExpression = new Or(parse(token.getLeft()),
+		parse(token.getRight()));
 
-		return orExpression;
+	return orExpression;
 	}
 
 	/**
@@ -478,11 +485,11 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @throws XillParsingException
 	 */
 	And parseToken(final xill.lang.xill.impl.AndImpl token)
-			throws XillParsingException {
-		And andExpression = new And(parse(token.getLeft()),
-			parse(token.getRight()));
+		throws XillParsingException {
+	And andExpression = new And(parse(token.getLeft()),
+		parse(token.getRight()));
 
-		return andExpression;
+	return andExpression;
 	}
 
 	/**
@@ -493,15 +500,15 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @throws XillParsingException
 	 */
 	Processable parseToken(final xill.lang.xill.impl.EqualityImpl token) throws XillParsingException {
-		switch (token.getOp()) {
-			case "==":
-				return new Equals(parse(token.getLeft()), parse(token.getRight()));
-			case "!=":
-				return new NotEquals(parse(token.getLeft()), parse(token.getRight()));
-			default:
-				CodePosition pos = pos(token);
-				throw new XillParsingException("This token has not been implemented.", pos.getLineNumber(), pos.getRobotID());
-		}
+	switch (token.getOp()) {
+		case "==":
+		return new Equals(parse(token.getLeft()), parse(token.getRight()));
+		case "!=":
+		return new NotEquals(parse(token.getLeft()), parse(token.getRight()));
+		default:
+		CodePosition pos = pos(token);
+		throw new XillParsingException("This token has not been implemented.", pos.getLineNumber(), pos.getRobotID());
+	}
 	}
 
 	/**
@@ -512,26 +519,26 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @throws XillParsingException
 	 */
 	Processable parseToken(final xill.lang.xill.impl.AdditionImpl token)
-			throws XillParsingException {
-		Processable expression;
+		throws XillParsingException {
+	Processable expression;
 
-		switch (token.getOp()) {
-			case "+":
-				expression = new Add(parse(token.getLeft()), parse(token.getRight()));
-				break;
-			case "-":
-				expression = new Subtract(parse(token.getLeft()), parse(token.getRight()));
-				break;
-			case "::":
-				expression = new Concat(parse(token.getLeft()), parse(token.getRight()));
-				break;
-			default:
-				CodePosition pos = pos(token);
-				throw new XillParsingException(
-					"This operator has not been implemented.", pos.getLineNumber(), pos.getRobotID());
-		}
+	switch (token.getOp()) {
+		case "+":
+		expression = new Add(parse(token.getLeft()), parse(token.getRight()));
+		break;
+		case "-":
+		expression = new Subtract(parse(token.getLeft()), parse(token.getRight()));
+		break;
+		case "::":
+		expression = new Concat(parse(token.getLeft()), parse(token.getRight()));
+		break;
+		default:
+		CodePosition pos = pos(token);
+		throw new XillParsingException(
+			"This operator has not been implemented.", pos.getLineNumber(), pos.getRobotID());
+	}
 
-		return expression;
+	return expression;
 	}
 
 	/**
@@ -542,29 +549,29 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @throws XillParsingException
 	 */
 	Processable parseToken(final xill.lang.xill.impl.ComparisonImpl token)
-			throws XillParsingException {
-		Processable expression;
+		throws XillParsingException {
+	Processable expression;
 
-		switch (token.getOp()) {
-			case ">":
-				expression = new GreaterThan(parse(token.getLeft()), parse(token.getRight()));
-				break;
-			case "<":
-				expression = new SmallerThan(parse(token.getLeft()), parse(token.getRight()));
-				break;
-			case ">=":
-				expression = new GreaterThanOrEquals(parse(token.getLeft()), parse(token.getRight()));
-				break;
-			case "<=":
-				expression = new SmallerThanOrEquals(parse(token.getLeft()), parse(token.getRight()));
-				break;
-			default:
-				CodePosition pos = pos(token);
-				throw new XillParsingException(
-					"This operator has not been implemented.", pos.getLineNumber(), pos.getRobotID());
-		}
+	switch (token.getOp()) {
+		case ">":
+		expression = new GreaterThan(parse(token.getLeft()), parse(token.getRight()));
+		break;
+		case "<":
+		expression = new SmallerThan(parse(token.getLeft()), parse(token.getRight()));
+		break;
+		case ">=":
+		expression = new GreaterThanOrEquals(parse(token.getLeft()), parse(token.getRight()));
+		break;
+		case "<=":
+		expression = new SmallerThanOrEquals(parse(token.getLeft()), parse(token.getRight()));
+		break;
+		default:
+		CodePosition pos = pos(token);
+		throw new XillParsingException(
+			"This operator has not been implemented.", pos.getLineNumber(), pos.getRobotID());
+	}
 
-		return expression;
+	return expression;
 	}
 
 	/**
@@ -575,29 +582,29 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @throws XillParsingException
 	 */
 	Processable parseToken(final xill.lang.xill.impl.MultiplicationImpl token)
-			throws XillParsingException {
-		Processable expression;
+		throws XillParsingException {
+	Processable expression;
 
-		switch (token.getOp()) {
-			case "*":
-				expression = new Multiply(parse(token.getLeft()), parse(token.getRight()));
-				break;
-			case "/":
-				expression = new Divide(parse(token.getLeft()), parse(token.getRight()));
-				break;
-			case "%":
-				expression = new Modulo(parse(token.getLeft()), parse(token.getRight()));
-				break;
-			case "^":
-				expression = new Power(parse(token.getLeft()), parse(token.getRight()));
-				break;
-			default:
-				CodePosition pos = pos(token);
-				throw new XillParsingException(
-					"This operator has not been implemented.", pos.getLineNumber(), pos.getRobotID());
-		}
+	switch (token.getOp()) {
+		case "*":
+		expression = new Multiply(parse(token.getLeft()), parse(token.getRight()));
+		break;
+		case "/":
+		expression = new Divide(parse(token.getLeft()), parse(token.getRight()));
+		break;
+		case "%":
+		expression = new Modulo(parse(token.getLeft()), parse(token.getRight()));
+		break;
+		case "^":
+		expression = new Power(parse(token.getLeft()), parse(token.getRight()));
+		break;
+		default:
+		CodePosition pos = pos(token);
+		throw new XillParsingException(
+			"This operator has not been implemented.", pos.getLineNumber(), pos.getRobotID());
+	}
 
-		return expression;
+	return expression;
 	}
 
 	/**
@@ -608,38 +615,38 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @throws XillParsingException
 	 */
 	Assign parseToken(final xill.lang.xill.impl.AssignmentImpl token)
-			throws XillParsingException {
-		Assign expression;
-		Target target = getTarget(token.getLeft());
-		VariableDeclaration declaration = variables.get(target);
-		List<Processable> path = getPath(token.getLeft().getExpression());
+		throws XillParsingException {
+	Assign expression;
+	Target target = getTarget(token.getLeft());
+	VariableDeclaration declaration = variables.get(target);
+	List<Processable> path = getPath(token.getLeft().getExpression());
 
-		switch (token.getOp()) {
-			case "=":
-				expression = new Assign(declaration, path, parse(token.getRight()));
-				break;
-			case "+=":
-				expression = new Assign(declaration, path, new Add(new VariableAccessExpression(declaration), parse(token.getRight())));
-				break;
-			case "-=":
-				expression = new Assign(declaration, path, new Subtract(new VariableAccessExpression(declaration), parse(token.getRight())));
-				break;
-			case "*=":
-				expression = new Assign(declaration, path, new Multiply(new VariableAccessExpression(declaration), parse(token.getRight())));
-				break;
-			case "::=":
-				expression = new Assign(declaration, path, new Concat(new VariableAccessExpression(declaration), parse(token.getRight())));
-				break;
-			case "/=":
-				expression = new Assign(declaration, path, new Divide(new VariableAccessExpression(declaration), parse(token.getRight())));
-				break;
-			default:
-				CodePosition pos = pos(token);
-				throw new XillParsingException(
-					"This operator has not been implemented.", pos.getLineNumber(), pos.getRobotID());
-		}
+	switch (token.getOp()) {
+		case "=":
+		expression = new Assign(declaration, path, parse(token.getRight()));
+		break;
+		case "+=":
+		expression = new Assign(declaration, path, new Add(new VariableAccessExpression(declaration), parse(token.getRight())));
+		break;
+		case "-=":
+		expression = new Assign(declaration, path, new Subtract(new VariableAccessExpression(declaration), parse(token.getRight())));
+		break;
+		case "*=":
+		expression = new Assign(declaration, path, new Multiply(new VariableAccessExpression(declaration), parse(token.getRight())));
+		break;
+		case "::=":
+		expression = new Assign(declaration, path, new Concat(new VariableAccessExpression(declaration), parse(token.getRight())));
+		break;
+		case "/=":
+		expression = new Assign(declaration, path, new Divide(new VariableAccessExpression(declaration), parse(token.getRight())));
+		break;
+		default:
+		CodePosition pos = pos(token);
+		throw new XillParsingException(
+			"This operator has not been implemented.", pos.getLineNumber(), pos.getRobotID());
+	}
 
-		return expression;
+	return expression;
 	}
 
 	/**
@@ -649,21 +656,21 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @return
 	 */
 	private static Target getTarget(final EObject start) {
-		EObject currentObject = start;
+	EObject currentObject = start;
 
-		while (currentObject != null && !(currentObject instanceof Target)) {
-			if (currentObject instanceof Variable) {
-				currentObject = ((Variable) currentObject).getTarget();
-			} else if (currentObject instanceof ListExtraction) {
-				currentObject = ((ListExtraction) currentObject).getValue();
-			} else if (currentObject instanceof Expression) {
-				currentObject = ((Expression) currentObject).getExpression();
-			} else {
-				currentObject = null;
-			}
+	while (currentObject != null && !(currentObject instanceof Target)) {
+		if (currentObject instanceof Variable) {
+		currentObject = ((Variable) currentObject).getTarget();
+		} else if (currentObject instanceof ListExtraction) {
+		currentObject = ((ListExtraction) currentObject).getValue();
+		} else if (currentObject instanceof Expression) {
+		currentObject = ((Expression) currentObject).getExpression();
+		} else {
+		currentObject = null;
 		}
+	}
 
-		return (Target) currentObject;
+	return (Target) currentObject;
 	}
 
 	/**
@@ -674,30 +681,30 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @throws XillParsingException
 	 */
 	private List<Processable> getPath(final EObject start) throws XillParsingException {
-		List<Processable> result = new ArrayList<>();
-		if (!(start instanceof ListExtraction)) {
-			return result;
-		}
-
-		ListExtraction extraction = (ListExtraction) start;
-
-		while (extraction != null) {
-			if (extraction.getIndex() != null) {
-				result.add(parse(extraction.getIndex()));
-			} else if (extraction.getChild() != null) {
-				result.add(ExpressionBuilder.fromValue(extraction.getChild()));
-			} else {
-				result.add(new Add(parse(extraction.getValue()), ExpressionBuilder.fromValue(0)));
-			}
-
-			if (extraction.getValue() instanceof ListExtraction) {
-				extraction = (ListExtraction) extraction.getValue();
-			} else {
-				extraction = null;
-			}
-		}
-
+	List<Processable> result = new ArrayList<>();
+	if (!(start instanceof ListExtraction)) {
 		return result;
+	}
+
+	ListExtraction extraction = (ListExtraction) start;
+
+	while (extraction != null) {
+		if (extraction.getIndex() != null) {
+		result.add(parse(extraction.getIndex()));
+		} else if (extraction.getChild() != null) {
+		result.add(ExpressionBuilder.fromValue(extraction.getChild()));
+		} else {
+		result.add(new Add(parse(extraction.getValue()), ExpressionBuilder.fromValue(0)));
+		}
+
+		if (extraction.getValue() instanceof ListExtraction) {
+		extraction = (ListExtraction) extraction.getValue();
+		} else {
+		extraction = null;
+		}
+	}
+
+	return result;
 	}
 
 	/**
@@ -708,21 +715,21 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @throws XillParsingException
 	 */
 	Processable parseToken(final xill.lang.xill.impl.ListExtractionImpl token) throws XillParsingException {
-		Processable expression = parse(token.getValue());
-		if (token.getIndex() != null) {
-			// We used brackets
-			Processable index = parse(token.getIndex());
+	Processable expression = parse(token.getValue());
+	if (token.getIndex() != null) {
+		// We used brackets
+		Processable index = parse(token.getIndex());
 
-			return new FromList(expression, index);
-		}
+		return new FromList(expression, index);
+	}
 
-		if (token.getChild() != null) {
-			// We used dot-notation
-			return new FromList(expression, ExpressionBuilder.fromValue(token.getChild()));
-		}
+	if (token.getChild() != null) {
+		// We used dot-notation
+		return new FromList(expression, ExpressionBuilder.fromValue(token.getChild()));
+	}
 
-		// We used neither: listVariable[]. Interpret as listVariable[listVariable + 0]
-		return new FromList(expression, new Add(expression, ExpressionBuilder.fromValue(0)));
+	// We used neither: listVariable[]. Interpret as listVariable[listVariable + 0]
+	return new FromList(expression, new Add(expression, ExpressionBuilder.fromValue(0)));
 	}
 
 	/**
@@ -733,13 +740,13 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @throws XillParsingException
 	 */
 	Processable parseToken(final xill.lang.xill.impl.ListExpressionImpl token) throws XillParsingException {
-		List<Processable> expressions = new ArrayList<>(token.getValues().size());
+	List<Processable> expressions = new ArrayList<>(token.getValues().size());
 
-		for (Expression exp : token.getValues()) {
-			expressions.add(parse(exp));
-		}
+	for (Expression exp : token.getValues()) {
+		expressions.add(parse(exp));
+	}
 
-		return new ListExpression(expressions);
+	return new ListExpression(expressions);
 	}
 
 	/**
@@ -750,15 +757,15 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @throws XillParsingException
 	 */
 	Processable parseToken(final xill.lang.xill.impl.ObjectExpressionImpl token) throws XillParsingException {
-		Iterator<Expression> keys = token.getNames().iterator();
-		Iterator<Expression> values = token.getValues().iterator();
-		Map<Processable, Processable> object = new HashMap<>(token.getNames().size());
+	Iterator<Expression> keys = token.getNames().iterator();
+	Iterator<Expression> values = token.getValues().iterator();
+	Map<Processable, Processable> object = new HashMap<>(token.getNames().size());
 
-		while (keys.hasNext() && values.hasNext()) {
-			object.put(parse(keys.next()), parse(values.next()));
-		}
+	while (keys.hasNext() && values.hasNext()) {
+		object.put(parse(keys.next()), parse(values.next()));
+	}
 
-		return new ObjectExpression(object);
+	return new ObjectExpression(object);
 
 	}
 
@@ -770,16 +777,17 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @throws XillParsingException
 	 */
 	Processable parseToken(final xill.lang.xill.Variable token)
-			throws XillParsingException {
-		VariableDeclaration declaration = variables.get(token.getTarget());
+		throws XillParsingException {
+	VariableDeclaration declaration = variables.get(token.getTarget());
 
-		if (declaration == null) {
-			CodePosition pos = pos(token);
-			throw new XillParsingException("No such variable found: "
-					+ token.getTarget().getName(), pos.getLineNumber(), pos.getRobotID());
-		}
+	if (declaration == null) {
+		CodePosition pos = pos(token);
+		throw new XillParsingException("No such variable found: "
+			+ token.getTarget().getName(),
+		pos.getLineNumber(), pos.getRobotID());
+	}
 
-		return new VariableAccessExpression(declaration);
+	return new VariableAccessExpression(declaration);
 	}
 
 	/**
@@ -789,22 +797,22 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @throws XillParsingException
 	 */
 	Processable parseToken(final xill.lang.xill.FunctionCall token)
-			throws XillParsingException {
+		throws XillParsingException {
 
-		FunctionCall callExpression = new FunctionCall();
+	FunctionCall callExpression = new FunctionCall();
 
-		functionCalls.put(token, callExpression);
+	functionCalls.put(token, callExpression);
 
-		// Parse the arguments
-		List<Processable> arguments = new ArrayList<>(token.getArgumentBlock().getParameters().size());
+	// Parse the arguments
+	List<Processable> arguments = new ArrayList<>(token.getArgumentBlock().getParameters().size());
 
-		for (Expression expression : token.getArgumentBlock().getParameters()) {
-			arguments.add(parse(expression));
-		}
+	for (Expression expression : token.getArgumentBlock().getParameters()) {
+		arguments.add(parse(expression));
+	}
 
-		functionCallArguments.put(token, arguments);
+	functionCallArguments.put(token, arguments);
 
-		return callExpression;
+	return callExpression;
 	}
 
 	/**
@@ -814,46 +822,46 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @throws XillParsingException
 	 */
 	Processable parseToken(final xill.lang.xill.ConstructCall token)
-			throws XillParsingException {
+		throws XillParsingException {
 
-		PluginPackage pluginPackage = useStatements.get(token.getPackage());
+	PluginPackage pluginPackage = useStatements.get(token.getPackage());
 
-		CodePosition pos = pos(token);
+	CodePosition pos = pos(token);
 
-		if (pluginPackage == null) {
-			String pluginName = token.getPackage().getPlugin();
-			if (pluginName == null) {
-				pluginName = token.getPackage().getName();
-			}
-
-			throw new XillParsingException("Could not resolve package `" + pluginName + "`", pos.getLineNumber(), pos.getRobotID());
-
-		}
-		Construct construct = pluginPackage.getConstruct(token.getFunction());
-
-		if (construct == null) {
-			throw new XillParsingException("The construct " + token.getFunction() + " does not exist in package " + token.getPackage().getName(), pos.getLineNumber(), pos.getRobotID());
+	if (pluginPackage == null) {
+		String pluginName = token.getPackage().getPlugin();
+		if (pluginName == null) {
+		pluginName = token.getPackage().getName();
 		}
 
-		// Parse the arguments
-		List<Processable> arguments = new ArrayList<>(token.getArgumentBlock().getParameters().size());
+		throw new XillParsingException("Could not resolve package `" + pluginName + "`", pos.getLineNumber(), pos.getRobotID());
 
-		for (Expression argument : token.getArgumentBlock().getParameters()) {
-			arguments.add(parse(argument));
-		}
+	}
+	Construct construct = pluginPackage.getConstruct(token.getFunction());
 
-		// Check argument count by mocking the input
-		ConstructProcessor testProcessor = construct.prepareProcess(new ConstructContext(robotID.get(token.eResource()), rootRobot, construct));
-		for (int i = 0; i < arguments.size(); i++) {
-			testProcessor.setArgument(i, ExpressionBuilder.NULL);
-		}
+	if (construct == null) {
+		throw new XillParsingException("The construct " + token.getFunction() + " does not exist in package " + token.getPackage().getName(), pos.getLineNumber(), pos.getRobotID());
+	}
 
-		// Throw exception if count is incorrect (i.e. We're either missing an argument or provided too many)
-		if (testProcessor.getMissingArgument().isPresent() || testProcessor.getNumberOfArguments() < arguments.size()) {
-			throw new XillParsingException("Argument count mismatch in " + testProcessor.toString(construct.getName()), pos.getLineNumber(), pos.getRobotID());
-		}
+	// Parse the arguments
+	List<Processable> arguments = new ArrayList<>(token.getArgumentBlock().getParameters().size());
 
-		return new ConstructCall(construct, arguments, new ConstructContext(robotID.get(token.eResource()), rootRobot, construct));
+	for (Expression argument : token.getArgumentBlock().getParameters()) {
+		arguments.add(parse(argument));
+	}
+
+	// Check argument count by mocking the input
+	ConstructProcessor testProcessor = construct.prepareProcess(new ConstructContext(robotID.get(token.eResource()), rootRobot, construct));
+	for (int i = 0; i < arguments.size(); i++) {
+		testProcessor.setArgument(i, ExpressionBuilder.NULL);
+	}
+
+	// Throw exception if count is incorrect (i.e. We're either missing an argument or provided too many)
+	if (testProcessor.getMissingArgument().isPresent() || testProcessor.getNumberOfArguments() < arguments.size()) {
+		throw new XillParsingException("Argument count mismatch in " + testProcessor.toString(construct.getName()), pos.getLineNumber(), pos.getRobotID());
+	}
+
+	return new ConstructCall(construct, arguments, new ConstructContext(robotID.get(token.eResource()), rootRobot, construct));
 	}
 
 	/**
@@ -864,31 +872,31 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @throws XillParsingException
 	 */
 	private void parseToken(final xill.lang.xill.FunctionCall token,
-			final FunctionCall declaration) throws XillParsingException {
+		final FunctionCall declaration) throws XillParsingException {
 
-		// Parse the assignments
-		List<Assign> assignments = new ArrayList<>();
-		Iterator<Processable> argumentValue = functionCallArguments.get(token).iterator();
-		Iterator<Target> argumentTargets = token.getName().getParameters().iterator();
+	// Parse the assignments
+	List<Assign> assignments = new ArrayList<>();
+	Iterator<Processable> argumentValue = functionCallArguments.get(token).iterator();
+	Iterator<Target> argumentTargets = token.getName().getParameters().iterator();
 
-		while (argumentTargets.hasNext() && argumentValue.hasNext()) {
-			VariableDeclaration target = variables.get(argumentTargets.next());
-			assignments.add(new Assign(target, new ArrayList<>(), argumentValue.next()));
-		}
+	while (argumentTargets.hasNext() && argumentValue.hasNext()) {
+		VariableDeclaration target = variables.get(argumentTargets.next());
+		assignments.add(new Assign(target, new ArrayList<>(), argumentValue.next()));
+	}
 
-		// Push the arguments
-		declaration.setArguments(assignments);
+	// Push the arguments
+	declaration.setArguments(assignments);
 
-		FunctionDeclaration functionDeclaration = functions.get(token.getName());
+	FunctionDeclaration functionDeclaration = functions.get(token.getName());
 
-		if (functionDeclaration == null) {
-			CodePosition pos = pos(token);
-			throw new XillParsingException("Could not find function " + token.getName().getName() + " did you forget to include " + token.getName().eResource().getURI().toFileString() + "?",
-				pos.getLineNumber(), pos.getRobotID());
-		}
+	if (functionDeclaration == null) {
+		CodePosition pos = pos(token);
+		throw new XillParsingException("Could not find function " + token.getName().getName() + " did you forget to include " + token.getName().eResource().getURI().toFileString() + "?",
+		pos.getLineNumber(), pos.getRobotID());
+	}
 
-		// Push the function
-		declaration.setFunction(functions.get(token.getName()));
+	// Push the function
+	declaration.setFunction(functions.get(token.getName()));
 	}
 
 	/**
@@ -899,9 +907,9 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @throws XillParsingException
 	 */
 	Processable parseToken(final xill.lang.xill.CallbotExpression token) throws XillParsingException {
-		Processable path = parse(token.getPath());
+	Processable path = parse(token.getPath());
 
-		return new CallbotExpression(path, robotID.get(token.eResource()), pluginLoader);
+	return new CallbotExpression(path, robotID.get(token.eResource()), pluginLoader);
 	}
 
 	/**
@@ -911,7 +919,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @return
 	 */
 	Processable parseToken(final xill.lang.xill.BooleanLiteral token) {
-		return ExpressionBuilder.fromValue(Boolean.parseBoolean(token.getValue()));
+	return ExpressionBuilder.fromValue(Boolean.parseBoolean(token.getValue()));
 	}
 
 	/**
@@ -921,7 +929,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @return
 	 */
 	Processable parseToken(final xill.lang.xill.NullLiteral token) {
-		return ExpressionBuilder.NULL;
+	return ExpressionBuilder.NULL;
 	}
 
 	/**
@@ -931,7 +939,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @return
 	 */
 	Processable parseToken(final xill.lang.xill.IntegerLiteral token) {
-		return ExpressionBuilder.fromValue(token.getValue());
+	return ExpressionBuilder.fromValue(token.getValue());
 	}
 
 	/**
@@ -941,7 +949,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @return
 	 */
 	Processable parseToken(final xill.lang.xill.DecimalLiteral token) {
-		return ExpressionBuilder.fromValue(token.getValue() + token.getDecimal() / 10.0);
+	return ExpressionBuilder.fromValue(token.getValue() + token.getDecimal() / 10.0);
 	}
 
 	/**
@@ -951,19 +959,19 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @return
 	 */
 	Processable parseToken(final xill.lang.xill.StringLiteral token) {
-		return ExpressionBuilder.fromValue(token.getValue());
+	return ExpressionBuilder.fromValue(token.getValue());
 	}
 
 	private CodePosition pos(final EObject object) {
-		INode node = NodeModelUtils.getNode(object);
-		RobotID id = robotID.get(object.eResource());
-		return new CodePosition(id, node.getStartLine());
+	INode node = NodeModelUtils.getNode(object);
+	RobotID id = robotID.get(object.eResource());
+	return new CodePosition(id, node.getStartLine());
 	}
 
 	/**
 	 * @return the debugger
 	 */
 	public Debugger getDebugger() {
-		return debugger;
+	return debugger;
 	}
 }

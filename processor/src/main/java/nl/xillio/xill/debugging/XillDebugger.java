@@ -30,7 +30,7 @@ import org.apache.log4j.Logger;
 import xill.lang.xill.Target;
 
 /**
- * This class contains all information and controlls required for debugging
+ * This class contains all information and controls required for debugging
  */
 public class XillDebugger implements Debugger {
 	private static final Logger log = Logger.getLogger(XillDebugger.class);
