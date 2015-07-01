@@ -42,5 +42,10 @@ public class ExpressionInstruction extends Instruction {
 
 	@Override
 	public void close() throws Exception {}
+	
+	@Override
+	public String toString() {
+	return super.toString() + ": " + expression;
+	}
 
 }
