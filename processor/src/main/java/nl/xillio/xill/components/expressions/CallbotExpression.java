@@ -66,7 +66,8 @@ public class CallbotExpression implements Processable {
 
 	// Process the robot
 	try {
-		XillProcessor processor = new XillProcessor(robotID.getProjectPath(), otherRobot, pluginLoader, debugger);
+	    	Debugger childDebugger = debugger.createChild();
+		XillProcessor processor = new XillProcessor(robotID.getProjectPath(), otherRobot, pluginLoader, childDebugger);
 
 		processor.compileAsSubrobot(robotID);
 
@@ -79,7 +80,7 @@ public class CallbotExpression implements Processable {
 			robot.setArgument(argumentResult.get());
 		}
 
-		InstructionFlow<MetaExpression> result = processor.getRobot().process(debugger.createChild());
+		InstructionFlow<MetaExpression> result = processor.getRobot().process(childDebugger);
 
 		if (result.hasValue()) {
 			return InstructionFlow.doResume(result.get());
