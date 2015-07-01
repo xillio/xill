@@ -944,7 +944,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	Processable parseToken(final xill.lang.xill.CallbotExpression token) throws XillParsingException {
 	Processable path = parse(token.getPath());
 	
-	CallbotExpression expression = new CallbotExpression(path, robotID.get(token.eResource()), pluginLoader);
+	CallbotExpression expression = new CallbotExpression(path, rootRobot, pluginLoader);
 
 	if(token.getArgument() != null) {
 		expression.setArgument(parse(token.getArgument()));

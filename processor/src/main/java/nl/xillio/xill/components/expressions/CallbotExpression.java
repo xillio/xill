@@ -36,7 +36,7 @@ public class CallbotExpression implements Processable {
 	 * Create a new {@link CallbotExpression}
 	 *
 	 * @param path
-	 * @param robotID
+	 * @param robotID The root robot of this tree
 	 * @param pluginLoader
 	 * @param debugger
 	 */
@@ -68,7 +68,7 @@ public class CallbotExpression implements Processable {
 	try {
 		XillProcessor processor = new XillProcessor(robotID.getProjectPath(), otherRobot, pluginLoader, debugger);
 
-		processor.compile();
+		processor.compileAsSubrobot(robotID);
 
 		try {
 		nl.xillio.xill.api.components.Robot robot = processor.getRobot();
