@@ -313,15 +313,7 @@ public class XillDebugger implements Debugger {
 
 	@Override
 	public Debugger createChild() {
-	XillDebugger child = new XillDebugger(breakpoints);
-
-	// Events
-	child.getOnRobotContinue().addListener(action -> onRobotContinued.invoke(action));
-	child.getOnRobotPause().addListener(action -> onRobotPaused.invoke(action));
-	child.getOnRobotStart().addListener(action -> onRobotStarted.invoke(action));
-	child.getOnRobotStop().addListener(action -> onRobotStopped.invoke(action));
-
-	return child;
+	return new NullDebugger();
 	}
 
 }
