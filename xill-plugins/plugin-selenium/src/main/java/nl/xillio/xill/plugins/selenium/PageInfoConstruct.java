@@ -1,23 +1,8 @@
 package nl.xillio.xill.plugins.selenium;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
-import org.openqa.selenium.InvalidSelectorException;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
-
-import nl.xillio.xill.api.components.AtomicExpression;
 import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;

@@ -24,8 +24,6 @@ public class SeleniumPluginPackage extends PluginPackage {
 		add(new GetTextConstruct());
 		add(new ClickConstruct());
 		add(new RemoveCookieConstruct());
-		
-		//add(new ());
 	}
 
 	@Override

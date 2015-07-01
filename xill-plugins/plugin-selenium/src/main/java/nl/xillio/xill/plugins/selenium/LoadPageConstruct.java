@@ -5,7 +5,9 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Map;
+
 import nl.xillio.xill.api.components.AtomicExpression;
+import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
@@ -45,7 +47,7 @@ public class LoadPageConstruct implements Construct, AutoCloseable {
 		return new ConstructProcessor(
 			LoadPageConstruct::process,
 			new Argument("url"),
-			new Argument("options", new AtomicExpression("test")));
+			new Argument("options", ExpressionBuilder.NULL));
 	}
 
 	public static MetaExpression process(final MetaExpression urlVar, final MetaExpression optionsVar) {			
@@ -66,14 +68,7 @@ public class LoadPageConstruct implements Construct, AutoCloseable {
 			throw new RobotRuntimeException("Loadpage error - PhantomJS pool is fully used and cannot provide another instance!");
 		}
 		PhantomJSDriver driver = (PhantomJSDriver) item.getDriver();
-/*!!		
-		Consumer<RobotID> listener = new Consumer<RobotID>() {
-			@Override
-			public void accept(RobotID t) {
-				onRobotStop(item);
-			}}; 
-			this.robot.getOnRobotStopped().addDisposableListener(listener);
-*/
+
 		try {
 			//get the page
 			driver.get(url);
@@ -197,6 +192,11 @@ public class LoadPageConstruct implements Construct, AutoCloseable {
 		}
 
 		private void processOptions(final MetaExpression optionsVar) throws Exception {
+			if (optionsVar.isNull()) { //no option specified - so default is used
+				return;
+			}
+			//else
+
 			if (optionsVar.getType() != ExpressionDataType.OBJECT) {
 				throw new Exception("Invalid options variable!");
 			}

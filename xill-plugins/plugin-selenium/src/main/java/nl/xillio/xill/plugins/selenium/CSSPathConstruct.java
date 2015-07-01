@@ -28,7 +28,7 @@ public class CSSPathConstruct implements Construct {
 	@Override
 	public ConstructProcessor prepareProcess(ConstructContext context) {
 		return new ConstructProcessor(
-			ScreenshotConstruct::process,
+			CSSPathConstruct::process,
 			new Argument("element"),
 			new Argument("csspath"));
 	}

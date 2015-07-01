@@ -19,7 +19,7 @@ public class InputConstruct implements Construct {
 	@Override
 	public ConstructProcessor prepareProcess(ConstructContext context) {
 		return new ConstructProcessor(
-			ScreenshotConstruct::process,
+			InputConstruct::process,
 			new Argument("element"),
 			new Argument("text"));
 	}

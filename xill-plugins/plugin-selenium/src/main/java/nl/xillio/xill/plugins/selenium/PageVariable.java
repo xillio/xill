@@ -1,13 +1,10 @@
 package nl.xillio.xill.plugins.selenium;
 
 import java.util.HashMap;
-
 import nl.xillio.xill.api.components.AtomicExpression;
 import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
-
 import org.openqa.selenium.Cookie;
-import org.openqa.selenium.WebDriver;
 
 public class PageVariable
 {

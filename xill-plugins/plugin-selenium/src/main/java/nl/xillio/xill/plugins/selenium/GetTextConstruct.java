@@ -1,11 +1,7 @@
 package nl.xillio.xill.plugins.selenium;
 
 import java.util.List;
-
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.WebElement;
-
 import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;

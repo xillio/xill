@@ -1,13 +1,7 @@
 package nl.xillio.xill.plugins.selenium;
 
-import java.io.File;
-
-import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Cookie;
-import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
-
 import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;

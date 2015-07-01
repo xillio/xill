@@ -1,7 +1,6 @@
 package nl.xillio.xill.plugins.selenium;
 
 import org.openqa.selenium.WebElement;
-
 import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;

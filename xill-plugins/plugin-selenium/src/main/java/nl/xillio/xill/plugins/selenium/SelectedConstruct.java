@@ -1,9 +1,6 @@
 package nl.xillio.xill.plugins.selenium;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.WebElement;
-
 import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
@@ -22,7 +19,7 @@ public class SelectedConstruct implements Construct {
 	@Override
 	public ConstructProcessor prepareProcess(ConstructContext context) {
 		return new ConstructProcessor(
-			FocusConstruct::process,
+			SelectedConstruct::process,
 			new Argument("element"));
 	}
 
