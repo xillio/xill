@@ -1,5 +1,6 @@
 package nl.xillio.xill.api.components;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,6 +92,22 @@ public final class ExpressionBuilder {
 		});
 		
 		return new ObjectExpression(procValue).process(expressionDebugger).get();
+	}
+	
+	/**
+	 * Create a new {@link ListExpression} with no values
+	 * @return the expression
+	 */
+	public static MetaExpression emptyList() {
+	    return fromValue(new ArrayList<>());
+	}
+	
+	/**
+	 * Create a new {@link ObjectExpression} with no values
+	 * @return the expression
+	 */
+	public static MetaExpression emptyObject() {
+	    return fromValue(new HashMap<>());
 	}
 
 	/**
