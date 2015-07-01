@@ -235,6 +235,11 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 	File chosen = fileChooser.showSaveDialog(tpnBots.getScene().getWindow());
 
+	if(chosen == null) {
+	    //No file was chosen so we abort
+	    return;
+	}
+	
 	RobotTab tab;
 	try {
 		if (!chosen.exists()) {
