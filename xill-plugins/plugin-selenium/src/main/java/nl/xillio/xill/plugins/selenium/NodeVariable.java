@@ -6,7 +6,10 @@ import nl.xillio.xill.api.components.MetaExpression;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-
+/**
+ * @author Zbynek Hochmann
+ * This class represents NODE "pseudo" variable, it encapsulates basic operations.
+ */
 public class NodeVariable
 {
 	private WebDriver driver;
@@ -30,6 +33,10 @@ public class NodeVariable
 		return var.getMeta(NodeVariable.class).element;
 	}
 	
+	/**
+	 * @param var MetaExpression (any)
+	 * @return true if it's pseudovariable of NODE type
+	 */
 	public static boolean checkType(final MetaExpression var) {
 		String metaName = var.getMeta(String.class);
 		return ( (metaName != null) && (metaName.equals(NodeVariable.name)) && (var.getMeta(NodeVariable.class) != null) );

@@ -41,7 +41,7 @@ public class ScreenshotConstruct implements Construct {
 		//else
 		
 		try {
-			PhantomJSDriver driver = (PhantomJSDriver) PageVariable.get(pageVar).getDriver();
+			PhantomJSDriver driver = (PhantomJSDriver) PageVariable.getDriver(pageVar);
 			File srcFile = driver.getScreenshotAs(OutputType.FILE);
 			FileUtils.copyFile(srcFile, new File(filename));
 		} catch (Exception e) {

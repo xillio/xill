@@ -33,7 +33,7 @@ public class StringToPageConstruct implements Construct {
 			htmlFile.deleteOnExit();
 			FileUtils.writeStringToFile(htmlFile, content);
 			String uri = "file:///" + htmlFile.getAbsolutePath(); 
-			return LoadPageConstruct.process(ExpressionBuilder.fromValue(uri), ExpressionBuilder.fromValue(new ArrayList<>()));
+			return LoadPageConstruct.process(ExpressionBuilder.fromValue(uri), ExpressionBuilder.NULL);
 		} catch (Exception e) {
 			throw new RobotRuntimeException(e.getClass().getSimpleName(), e);
 		}

@@ -1,6 +1,8 @@
 package nl.xillio.xill.plugins.selenium;
 
+import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.WebDriver;
+
 import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
@@ -31,22 +33,23 @@ public class SwitchFrameConstruct implements Construct {
 		}
 		//else
 		
-		WebDriver driver = PageVariable.get(pageVar).getDriver();
+		WebDriver driver = PageVariable.getDriver(pageVar);
 		
 		try {
 			if (NodeVariable.checkType(frameVar)) {
 				driver.switchTo().frame(NodeVariable.get(frameVar));
 			} else {
 				Object frame = MetaExpression.extractValue(frameVar);
-				if (frame instanceof Double) {
-					Double number = (Double) frame;
-					driver.switchTo().frame(number.intValue());
+				if (frame instanceof Integer) {
+					driver.switchTo().frame((Integer)frame);
 				} else if (frame instanceof String) {
 					driver.switchTo().frame(frame.toString());
 				} else {
 					throw new RobotRuntimeException("Invalid variable type of frame parameter!");
 				}
 			}
+		} catch (NoSuchFrameException e) {
+			throw new RobotRuntimeException("Requested frame doesn't exist.", e);
 		} catch (Exception e) {
 			throw new RobotRuntimeException(e.getClass().getSimpleName(), e);
 		}

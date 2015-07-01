@@ -42,7 +42,7 @@ public class CSSPathConstruct implements Construct {
 		} else if (NodeVariable.checkType(elementVar)) {
 			return processSELNode(NodeVariable.getDriver(elementVar), NodeVariable.get(elementVar), query);
 		} else if (PageVariable.checkType(elementVar)) {
-			return processSELNode(PageVariable.get(elementVar).getDriver(), PageVariable.get(elementVar).getDriver(), query);
+			return processSELNode(PageVariable.getDriver(elementVar), PageVariable.getDriver(elementVar), query);
 		} else {
 			throw new RobotRuntimeException("Invalid variable type. PAGE or NODE type expected!");
 		}

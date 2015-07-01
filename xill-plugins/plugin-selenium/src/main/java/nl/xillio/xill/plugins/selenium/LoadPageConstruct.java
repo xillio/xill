@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Map;
 
-import nl.xillio.xill.api.components.AtomicExpression;
 import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
@@ -26,9 +25,6 @@ import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 
 import java.util.concurrent.TimeUnit;
 
-/**
- *
- */
 public class LoadPageConstruct implements Construct, AutoCloseable {
 
 	private static final PhantomJSPool pool = new PhantomJSPool(10);

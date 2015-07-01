@@ -1,11 +1,19 @@
 package nl.xillio.xill.plugins.selenium;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
+
 import nl.xillio.xill.api.components.AtomicExpression;
 import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
-import org.openqa.selenium.Cookie;
 
+import org.openqa.selenium.Cookie;
+import org.openqa.selenium.WebDriver;
+
+/**
+ * @author Zbynek Hochmann
+ * This class represents PAGE "pseudo" variable, it encapsulates basic operations.
+ */
 public class PageVariable
 {
 	private static String name = "Selenium:page";
@@ -21,6 +29,14 @@ public class PageVariable
 		return var.getMeta(PhantomJSPool.Entity.class);
 	}
 	
+	public static WebDriver getDriver(final MetaExpression var) {
+		return var.getMeta(PhantomJSPool.Entity.class).getDriver();
+	}
+	
+	/**
+	 * @param var MetaExpression (any)
+	 * @return true if it's pseudovariable of PAGE type
+	 */
 	public static boolean checkType(final MetaExpression var) {
 		String metaName = var.getMeta(String.class);
 		return ( (metaName != null) && (metaName.equals(PageVariable.name)) && (var.getMeta(PhantomJSPool.Entity.class) != null) );
@@ -29,19 +45,15 @@ public class PageVariable
 	public static MetaExpression makeCookie(final Cookie cookie) {
 		HashMap<String, MetaExpression> map = new HashMap<String, MetaExpression>(); 
 		map.put("name", ExpressionBuilder.fromValue(cookie.getName()));
-		
-		map.put("domain", ExpressionBuilder.fromValue(cookie.getName()));
-		map.put("name", ExpressionBuilder.fromValue(cookie.getDomain()));
+		map.put("domain", ExpressionBuilder.fromValue(cookie.getDomain()));
 		map.put("path", ExpressionBuilder.fromValue(cookie.getPath()));
 		map.put("value", ExpressionBuilder.fromValue(cookie.getValue()));
-/*!!	
+	
 		if(cookie.getExpiry() != null) {
-			map.put("expires", ExpressionBuilder.fromValue(new DateVariable(cookie.getExpiry())));
-			l.addVariable("expires", new DateVariable(cookie.getExpiry()));
+			map.put("expires", ExpressionBuilder.fromValue(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S").format(cookie.getExpiry())));
 		}
-*/		
+		
 		return ExpressionBuilder.fromValue(map);	
 	}
 
-	
 }

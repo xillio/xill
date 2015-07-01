@@ -50,7 +50,7 @@ public class GetTextConstruct implements Construct {
 		if (NodeVariable.checkType(var)) {
 			element = NodeVariable.get(var);
 		} else if (PageVariable.checkType(var)) {
-			element = (WebElement) PageVariable.get(var).getDriver();
+			element = (WebElement) PageVariable.getDriver(var);
 		} else {
 			throw new RobotRuntimeException("Invalid variable type.");
 		}

@@ -42,7 +42,7 @@ public class SetCookieConstruct implements Construct {
 		}
 		//else
 
-		WebDriver driver = PageVariable.get(pageVar).getDriver();
+		WebDriver driver = PageVariable.getDriver(pageVar);
 		
 		if (cookiesVar.getType() == ExpressionDataType.OBJECT) {
 			processCookie(driver, cookiesVar);

@@ -38,7 +38,7 @@ public class RemoveCookieConstruct implements Construct {
 		}
 		//else
 
-		WebDriver driver = PageVariable.get(pageVar).getDriver();
+		WebDriver driver = PageVariable.getDriver(pageVar);
 				
 		try {
 			
@@ -50,8 +50,10 @@ public class RemoveCookieConstruct implements Construct {
 				}
 			} else {
 				Object value = MetaExpression.extractValue(cookieVar);
-				if (value instanceof Boolean) {
-					driver.manage().deleteAllCookies();
+				if (value instanceof Integer) {//boolean type cannot be determined in Xill 3.0 (at least for now)
+					if (cookieVar.getBooleanValue()) {
+						driver.manage().deleteAllCookies();
+					}
 				} else if (value instanceof String) {
 					driver.manage().deleteCookieNamed(value.toString());
 				} else {

@@ -38,7 +38,7 @@ public class XPathConstruct implements Construct {
 		String query = xpathVar.getStringValue();
 
 		if (PageVariable.checkType(elementVar)) {
-			return processSELNode(PageVariable.get(elementVar).getDriver(), (SearchContext)PageVariable.get(elementVar).getDriver(), query);
+			return processSELNode(PageVariable.getDriver(elementVar), (SearchContext)PageVariable.getDriver(elementVar), query);
 		} else if (NodeVariable.checkType(elementVar)) {
 			return processSELNode(NodeVariable.getDriver(elementVar), NodeVariable.get(elementVar), query);
 		} else {

@@ -34,7 +34,7 @@ public class PageInfoConstruct implements Construct {
 		
 		try {
 
-			WebDriver page = PageVariable.get(pageVar).getDriver();
+			WebDriver page = PageVariable.getDriver(pageVar);
 			HashMap<String, MetaExpression> list = new HashMap<String, MetaExpression>();
 			
 			list.put("url", ExpressionBuilder.fromValue(page.getCurrentUrl()));
