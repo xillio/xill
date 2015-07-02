@@ -124,14 +124,14 @@ public class XillDebugger implements Debugger {
 
     @Override
     public void endInstruction(final Instruction instruction, final InstructionFlow<MetaExpression> result) {
-	if (!currentStack.isEmpty()) {
-	    currentStack.pop();
-	}
-
 	// If the pause is supposed to be a step-over it should pause before
 	// processing the next instruction. So not yet
 	if (stepOver == null) {
 	    checkPause(instruction);
+	}
+	
+	if (!currentStack.isEmpty()) {
+	    currentStack.pop();
 	}
 
 	previousInstruction = instruction;
