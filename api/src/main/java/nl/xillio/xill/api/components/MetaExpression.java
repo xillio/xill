@@ -13,6 +13,7 @@ import com.google.gson.GsonBuilder;
 
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.NullDebugger;
+import nl.xillio.xill.api.behavior.BooleanBehavior;
 import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
@@ -251,6 +252,7 @@ public abstract class MetaExpression implements Expression, Processable {
      *         way:
      *         <ol>
      *         <li>If the value is null: return null</li>
+     *         <li>If the expression is created using {@link ExpressionBuilder#fromValue(boolean)}: return {@link Boolean}</li>
      *         <li>If the value can be a number (so also string constants like
      *         "5.7") it will return a {@link Double}</li>
      *         <li>In all other cases return a {@link String} representation.
@@ -282,9 +284,14 @@ public abstract class MetaExpression implements Expression, Processable {
 	    if (expression.isNull()) {
 		return null;
 	    }
+	    
+	    //Boolean
+	    if(expression.getValue() instanceof BooleanBehavior) {
+		result = expression.getBooleanValue();
+	    }
 
 	    // String
-	    if (Double.isNaN(expression.getNumberValue().doubleValue())) {
+	    else  if (Double.isNaN(expression.getNumberValue().doubleValue())) {
 		result = expression.getStringValue();
 	    }
 
