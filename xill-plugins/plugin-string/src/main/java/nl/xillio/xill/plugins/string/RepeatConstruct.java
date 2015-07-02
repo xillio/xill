@@ -1,5 +1,7 @@
 package nl.xillio.xill.plugins.string;
 
+import org.apache.commons.lang3.StringUtils;
+
 import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
@@ -39,11 +41,8 @@ public class RepeatConstruct implements Construct {
 			throw new RobotRuntimeException("Input cannot be null.");
 		}
 		
-		String repeatedString = "";
-		int repeats = value.getNumberValue().intValue();
 		
-		for(int i = 0; i < repeats; i++)
-			repeatedString+=string.getStringValue();
+		String repeatedString =  StringUtils.repeat(string.getStringValue(), value.getNumberValue().intValue());
 		
 		return ExpressionBuilder.fromValue(repeatedString);
 	}

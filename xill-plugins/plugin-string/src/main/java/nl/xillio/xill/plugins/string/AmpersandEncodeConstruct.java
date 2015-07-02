@@ -1,5 +1,7 @@
 package nl.xillio.xill.plugins.string;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
@@ -10,32 +12,38 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
- * 
- * 
- * Makes the provided text lower case.
+ *
+ * Encodes all special XML characters (<,>,&,\",') to their respective xml entities.
  *
  * @author Sander
  *
  */
-public class LowerCaseConstruct implements Construct {
+public class AmpersandEncodeConstruct implements Construct {
 
 	@Override
 	public String getName() {
 
-		return "toLower";
+		return "ampersandEncode";
 	}
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(LowerCaseConstruct::process, new Argument("string"));
+		return new ConstructProcessor(AmpersandEncodeConstruct::process, new Argument("string"));
 	}
 
-	private static MetaExpression process(final MetaExpression string) {
+	private static MetaExpression process(final MetaExpression stringVar) {
 
-		if (string.getType() != ExpressionDataType.ATOMIC) {
+		if (stringVar.getType() != ExpressionDataType.ATOMIC){
 			throw new RobotRuntimeException("Expected atomic value.");
 		}
 
-		return ExpressionBuilder.fromValue(string.getStringValue().toLowerCase());
+		if (stringVar == ExpressionBuilder.NULL){
+			throw new RobotRuntimeException("Input cannot be null.");
+		}
+
+		String text = stringVar.getStringValue();
+
+		return ExpressionBuilder.fromValue(StringEscapeUtils.escapeXml11(text));
+
 	}
 }

@@ -10,7 +10,7 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
- * TODO:: Behaviour bij lists. <br/> <br/>
+ * 
  * 
  * Returns the number of characters in the provided string.
  *
@@ -34,6 +34,9 @@ public class LengthConstruct implements Construct {
 
 		if (value.getType() != ExpressionDataType.ATOMIC) {
 			throw new RobotRuntimeException("Expected atomic value.");
+		}
+		if (value == ExpressionBuilder.NULL){
+			throw new RobotRuntimeException("Input cannot be null.");
 		}
 
 		int length = value.getStringValue().length();

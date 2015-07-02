@@ -9,17 +9,32 @@ public class StringPluginPackage extends PluginPackage{
 
 	@Override
 	public void load(PluginPackage[] dependencies) {
+		RegexConstruct regex = new RegexConstruct();
+		
 		add(
 			new AbsoluteURLConstruct(),
+			new AllMatchesConstruct(regex),
+			new AmpersandDecodeConstruct(),
+			new AmpersandEncodeConstruct(),
+			new Base64DecodeConstruct(),
+			new Base64EncodeConstruct(),
 			new ContainsConstruct(),
-			new LengthConstruct(),
-			new SplitConstruct(),
-			new UpperCaseConstruct(),
-			new LowerCaseConstruct(),
-			new StartsWithConstruct(),
 			new EndsWithConstruct(),
+			new FormatConstruct(regex),
+			new IndexOfConstruct(),
+			new LengthConstruct(),
+			new LowerCaseConstruct(),
+			new MatchesConstruct(regex),
+			new MD5Construct(),
+			regex,
 			new RepeatConstruct(),
-			new IndexOfConstruct()
+			new ReplaceConstruct(regex),
+			new SplitConstruct(),
+			new StartsWithConstruct(),
+			new SubstringConstruct(),
+			new TrimConstruct(),
+			new UpperCaseConstruct(),
+			new WordDistanceConstruct()
 			);
 			
 	}

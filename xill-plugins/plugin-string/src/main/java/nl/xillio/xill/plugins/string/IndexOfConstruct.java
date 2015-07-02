@@ -12,8 +12,8 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 /**
  *
  * Returns the first index of the needle in the provided text. Optionally an alternative start position can be specified.
- * </br></br>
- * TODO:: not yet optional start position.
+ *
+ *
  * </br>
  * @author Sander
  *
@@ -29,7 +29,7 @@ public class IndexOfConstruct implements Construct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(IndexOfConstruct::process, new Argument("string1"), new Argument("string2"),
-				new Argument("value"));
+				new Argument("value", ExpressionBuilder.fromValue(0)));
 	}
 	
 
