@@ -2,6 +2,7 @@ package nl.xillio.xill.components.instructions;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Stack;
 
 import nl.xillio.xill.CodePosition;
 import nl.xillio.xill.api.Debugger;
@@ -17,27 +18,35 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 public class VariableDeclaration extends Instruction {
 
     private final Processable expression;
-    private MetaExpression currentValue;
+    private final Stack<MetaExpression> valueStack = new Stack<>();
+    /**
+     * This is here for debugging purposes
+     */
+    private final String name;
 
     /**
      * Create a new {@link VariableDeclaration}
      *
      * @param expression
+     * @param name 
      */
-    public VariableDeclaration(final Processable expression) {
+    public VariableDeclaration(final Processable expression, final String name) {
 	this.expression = expression;
+	this.name = name;
     }
 
     @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 	InstructionFlow<MetaExpression> result = expression.process(debugger);
-
+	
 	if (result.hasValue()) {
-	    currentValue = result.get();
+	    valueStack.push(result.get());
 	} else {
-	    currentValue = ExpressionBuilder.NULL;
+	    valueStack.push(ExpressionBuilder.NULL);
 	}
-
+	if(name.equals("output"))
+	System.out.println("Initialize " + name + ": " + valueStack.peek());
+	
 	return InstructionFlow.doResume();
     }
 
@@ -45,24 +54,29 @@ public class VariableDeclaration extends Instruction {
      * @return the expression of the variable
      */
     public MetaExpression getVariable() {
-	return currentValue;
+	return valueStack.peek();
     }
 
     /**
-     * Set the internal value of the variable
+     * Set the value of the variable
      *
      * @param value
      */
     public void setVariable(final MetaExpression value) {
-	currentValue = value;
+	if(name.equals("output"))
+	System.out.println("Set " + name + ": " + valueStack.peek());
+	valueStack.pop();
+
+	valueStack.push(value);
     }
 
     /**
      * @param position
+     * @param name 
      * @return A declaration with value {@link ExpressionBuilder#NULL}
      */
-    public static VariableDeclaration nullDeclaration(final CodePosition position) {
-	VariableDeclaration dec = new VariableDeclaration(ExpressionBuilder.NULL);
+    public static VariableDeclaration nullDeclaration(final CodePosition position, final String name) {
+	VariableDeclaration dec = new VariableDeclaration(ExpressionBuilder.NULL, name);
 	dec.setPosition(position);
 
 	return dec;
@@ -75,8 +89,10 @@ public class VariableDeclaration extends Instruction {
 
     @Override
     public void close() throws Exception {
-	currentValue.close();
-	currentValue = null;
+	if(name.equals("output"))
+	System.out.println("Close " + name + ": " + valueStack.peek());
+	valueStack.peek().close();
+	valueStack.pop();
     }
 
 }

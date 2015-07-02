@@ -85,55 +85,56 @@ import xill.lang.xill.Variable;
  *
  */
 public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot> {
-	private final DynamicInvoker<EObject> expressionParseInvoker = new DynamicInvoker<EObject>("parseToken", this);
-	private final Map<xill.lang.xill.Target, VariableDeclaration> variables = new HashMap<>();
-	private final Map<xill.lang.xill.FunctionDeclaration, FunctionDeclaration> functions = new HashMap<>();
-	/**
-	 * Because functions don't have to be declared before the calls the declaration might
-	 * not exist while parsing the call. To fix this we will not set the declaration on the call
-	 * until we are finished parsing.
-	 */
-	private final Map<xill.lang.xill.FunctionCall, FunctionCall> functionCalls = new HashMap<>();
-	private final Map<xill.lang.xill.FunctionCall, List<Processable>> functionCallArguments = new HashMap<>();
-	private final Map<xill.lang.xill.UseStatement, PluginPackage> useStatements = new HashMap<>();
-	private final Map<Resource, RobotID> robotID = new HashMap<>();
-	private final PluginLoader<PluginPackage> pluginLoader;
-	private final Debugger debugger;
-	private final RobotID rootRobot;
-	private final Map<EObject, Map.Entry<RobotID, Robot>> compiledRobots = new HashMap<>();
+    private final DynamicInvoker<EObject> expressionParseInvoker = new DynamicInvoker<EObject>("parseToken", this);
+    private final Map<xill.lang.xill.Target, VariableDeclaration> variables = new HashMap<>();
+    private final Map<xill.lang.xill.FunctionDeclaration, FunctionDeclaration> functions = new HashMap<>();
+    /**
+     * Because functions don't have to be declared before the calls the
+     * declaration might not exist while parsing the call. To fix this we will
+     * not set the declaration on the call until we are finished parsing.
+     */
+    private final Map<xill.lang.xill.FunctionCall, FunctionCall> functionCalls = new HashMap<>();
+    private final Map<xill.lang.xill.FunctionCall, List<Processable>> functionCallArguments = new HashMap<>();
+    private final Map<xill.lang.xill.UseStatement, PluginPackage> useStatements = new HashMap<>();
+    private final Map<Resource, RobotID> robotID = new HashMap<>();
+    private final PluginLoader<PluginPackage> pluginLoader;
+    private final Debugger debugger;
+    private final RobotID rootRobot;
+    private final Map<EObject, Map.Entry<RobotID, Robot>> compiledRobots = new HashMap<>();
 
-	/**
-	 * Create a new {@link XillProgramFactory}
-	 *
-	 * @param loader
-	 * @param debugger
-	 * @param robotID
-	 */
-	public XillProgramFactory(final PluginLoader<PluginPackage> loader, final Debugger debugger, final RobotID robotID) {
+    /**
+     * Create a new {@link XillProgramFactory}
+     *
+     * @param loader
+     * @param debugger
+     * @param robotID
+     */
+    public XillProgramFactory(final PluginLoader<PluginPackage> loader, final Debugger debugger,
+	    final RobotID robotID) {
 	this(loader, debugger, robotID, false);
-	}
+    }
 
-	/**
-	 * Create a new {@link XillProgramFactory}
-	 *
-	 * @param loader
-	 * @param debugger
-	 * @param robotID
-	 *
-	 * @param verbose
-	 *        verbose logging for the compiler
-	 */
-	public XillProgramFactory(final PluginLoader<PluginPackage> loader, final Debugger debugger, final RobotID robotID, final boolean verbose) {
+    /**
+     * Create a new {@link XillProgramFactory}
+     *
+     * @param loader
+     * @param debugger
+     * @param robotID
+     *
+     * @param verbose
+     *            verbose logging for the compiler
+     */
+    public XillProgramFactory(final PluginLoader<PluginPackage> loader, final Debugger debugger, final RobotID robotID,
+	    final boolean verbose) {
 	this.debugger = debugger;
 	rootRobot = robotID;
 	expressionParseInvoker.VERBOSE = verbose;
 	pluginLoader = loader;
-	}
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public void parse(final xill.lang.xill.Robot robot, final RobotID robotID)
-		throws XillParsingException {
+    @SuppressWarnings("unchecked")
+    @Override
+    public void parse(final xill.lang.xill.Robot robot, final RobotID robotID) throws XillParsingException {
 
 	this.robotID.put(robot.eResource(), robotID);
 	DebugInfo info = new DebugInfo();
@@ -142,260 +143,259 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	info.setUsing(useStatements);
 
 	for (UseStatement using : robot.getUses()) {
-		String pluginName = using.getPlugin();
+	    String pluginName = using.getPlugin();
 
-		// In case of non-qualified name: use MySQL;
-		if (pluginName == null) {
+	    // In case of non-qualified name: use MySQL;
+	    if (pluginName == null) {
 		pluginName = using.getName();
-		}
+	    }
 
-		// Really? Java...
-		String searchName = pluginName;
+	    // Really? Java...
+	    String searchName = pluginName;
 
-		Optional<PluginPackage> plugin = pluginLoader.getPluginManager().getPlugins().stream().filter(pckage -> pckage.getName().equals(searchName)).findAny();
+	    Optional<PluginPackage> plugin = pluginLoader.getPluginManager().getPlugins().stream()
+		    .filter(pckage -> pckage.getName().equals(searchName)).findAny();
 
-		if (!plugin.isPresent()) {
+	    if (!plugin.isPresent()) {
 		CodePosition pos = pos(robot);
-		throw new XillParsingException("Could not find plugin " + pluginName, pos.getLineNumber(), pos.getRobotID());
-		}
+		throw new XillParsingException("Could not find plugin " + pluginName, pos.getLineNumber(),
+			pos.getRobotID());
+	    }
 
-		useStatements.put(using, plugin.get());
+	    useStatements.put(using, plugin.get());
 	}
 
 	nl.xillio.xill.components.Robot instructionRobot = new nl.xillio.xill.components.Robot(robotID, debugger);
 	compiledRobots.put(robot, new DefaultMapEntry(robotID, instructionRobot));
 
 	for (xill.lang.xill.Instruction instruction : robot.getInstructionSet().getInstructions()) {
-		instructionRobot.add(parse(instruction));
+	    instructionRobot.add(parse(instruction));
 	}
 
 	debugger.addDebugInfo(info);
-	}
+    }
 
-	@Override
-	public void compile() throws XillParsingException {
+    @Override
+    public void compile() throws XillParsingException {
 	// Push all FunctionDeclarations after parsing
 	for (Map.Entry<xill.lang.xill.FunctionCall, FunctionCall> entry : functionCalls.entrySet()) {
-		parseToken(entry.getKey(), entry.getValue());
-	}
-	
-	//Push all libraries
-	for(EObject token: compiledRobots.keySet()) {
-		xill.lang.xill.Robot robotToken = (xill.lang.xill.Robot) token;
-		Map.Entry<RobotID, Robot> pair = compiledRobots.get(robotToken);
-		Robot robot = pair.getValue();
-		RobotID robotID = pair.getKey();
-		
-		//Get includes
-		for(IncludeStatement include: robotToken.getIncludes()) {
-			//Build robotID
-			String path = StringUtils.join(include.getName(), File.separator) + "." + Xill.FILE_EXTENSION;
-			RobotID expectedID = RobotID.getInstance(new File(robotID.getProjectPath(), path), robotID.getProjectPath());
-			CodePosition pos = pos(include);
-			
-			//Find the matching robot
-			Optional<Entry<RobotID, Robot>> matchingRobot = compiledRobots.values().stream().filter(
-				entry -> entry.getKey() == expectedID).findAny();
-			
-			if(!matchingRobot.isPresent()) {
-				throw new XillParsingException("Could not resolve import", pos.getLineNumber(), pos.getRobotID());
-			}
-			
-			//Push the library
-			((nl.xillio.xill.components.Robot)robot).addLibrary((nl.xillio.xill.components.Robot) matchingRobot.get().getValue());
-		}
-	}
+	    parseToken(entry.getKey(), entry.getValue());
 	}
 
-	@Override
-	public Robot getRobot(final xill.lang.xill.Robot token) {
+	// Push all libraries
+	for (EObject token : compiledRobots.keySet()) {
+	    xill.lang.xill.Robot robotToken = (xill.lang.xill.Robot) token;
+	    Map.Entry<RobotID, Robot> pair = compiledRobots.get(robotToken);
+	    Robot robot = pair.getValue();
+	    RobotID robotID = pair.getKey();
+
+	    // Get includes
+	    for (IncludeStatement include : robotToken.getIncludes()) {
+		// Build robotID
+		String path = StringUtils.join(include.getName(), File.separator) + "." + Xill.FILE_EXTENSION;
+		RobotID expectedID = RobotID.getInstance(new File(robotID.getProjectPath(), path),
+			robotID.getProjectPath());
+		CodePosition pos = pos(include);
+
+		// Find the matching robot
+		Optional<Entry<RobotID, Robot>> matchingRobot = compiledRobots.values().stream()
+			.filter(entry -> entry.getKey() == expectedID).findAny();
+
+		if (!matchingRobot.isPresent()) {
+		    throw new XillParsingException("Could not resolve import", pos.getLineNumber(), pos.getRobotID());
+		}
+
+		// Push the library
+		((nl.xillio.xill.components.Robot) robot)
+			.addLibrary((nl.xillio.xill.components.Robot) matchingRobot.get().getValue());
+	    }
+	}
+    }
+
+    @Override
+    public Robot getRobot(final xill.lang.xill.Robot token) {
 	return compiledRobots.get(token).getValue();
-	}
+    }
 
-	/**
-	 * This method will use a {@link DynamicInvoker} to route the current parse
-	 * assignment to the correct method. To do this it will search through all
-	 * declared methods called parse that have 1 argument and try to select the
-	 * best argument type.
-	 *
-	 * @param token
-	 *        The component that should be parsed.
-	 * @return The resulting expression from the selected parse method
-	 * @throws XillParsingException
-	 *         When something went wrong while parsing this component.
-	 */
-	private Processable parse(final Expression token) throws XillParsingException {
+    /**
+     * This method will use a {@link DynamicInvoker} to route the current parse
+     * assignment to the correct method. To do this it will search through all
+     * declared methods called parse that have 1 argument and try to select the
+     * best argument type.
+     *
+     * @param token
+     *            The component that should be parsed.
+     * @return The resulting expression from the selected parse method
+     * @throws XillParsingException
+     *             When something went wrong while parsing this component.
+     */
+    private Processable parse(final Expression token) throws XillParsingException {
 	if (token == null) {
-		throw new NullPointerException("Cannot parse null token.");
+	    throw new NullPointerException("Cannot parse null token.");
 	}
 
 	try {
-		return expressionParseInvoker.invoke(token, Processable.class);
+	    return expressionParseInvoker.invoke(token, Processable.class);
 	} catch (InvocationTargetException | IllegalArgumentException e) {
-		Throwable root = ExceptionUtils.getRootCause(e);
+	    Throwable root = ExceptionUtils.getRootCause(e);
 
-		if (root instanceof XillParsingException) {
+	    if (root instanceof XillParsingException) {
 		throw (XillParsingException) root;
-		}
+	    }
 
-		CodePosition pos = pos(token);
-		throw new XillParsingException(
-		"Something went wrong while parsing expression of type "
-			+ token.getClass().getSimpleName() + ": " + ExceptionUtils.getRootCauseMessage(e),
-		pos.getLineNumber(), pos.getRobotID(), e);
+	    CodePosition pos = pos(token);
+	    throw new XillParsingException("Something went wrong while parsing expression of type "
+		    + token.getClass().getSimpleName() + ": " + ExceptionUtils.getRootCauseMessage(e),
+		    pos.getLineNumber(), pos.getRobotID(), e);
 	}
-	}
+    }
 
-	/**
-	 * @see XillProgramFactory#parse(Expression)
-	 */
-	private Instruction parse(final xill.lang.xill.Instruction token)
-		throws XillParsingException {
+    /**
+     * @see XillProgramFactory#parse(Expression)
+     */
+    private Instruction parse(final xill.lang.xill.Instruction token) throws XillParsingException {
 	if (token == null) {
-		throw new NullPointerException("Cannot parse null token.");
+	    throw new NullPointerException("Cannot parse null token.");
 	}
 
 	try {
-		Instruction result = expressionParseInvoker.invoke(token, Instruction.class);
-		result.setPosition(pos(token));
-		return result;
+	    Instruction result = expressionParseInvoker.invoke(token, Instruction.class);
+	    result.setPosition(pos(token));
+	    return result;
 	} catch (InvocationTargetException | IllegalArgumentException e) {
-		Throwable root = ExceptionUtils.getRootCause(e);
+	    Throwable root = ExceptionUtils.getRootCause(e);
 
-		if (root instanceof XillParsingException) {
+	    if (root instanceof XillParsingException) {
 		throw (XillParsingException) root;
-		}
+	    }
 
-		CodePosition pos = pos(token);
-		throw new XillParsingException(
-		"Something went wrong while parsing instruction of type "
-			+ token.getClass().getSimpleName() + ": " + ExceptionUtils.getRootCauseMessage(e),
-		pos.getLineNumber(), pos.getRobotID(), e);
+	    CodePosition pos = pos(token);
+	    throw new XillParsingException("Something went wrong while parsing instruction of type "
+		    + token.getClass().getSimpleName() + ": " + ExceptionUtils.getRootCauseMessage(e),
+		    pos.getLineNumber(), pos.getRobotID(), e);
 	}
-	}
+    }
 
-	/**
-	 * Parse the instruction set
-	 *
-	 * @param token
-	 * @return
-	 * @throws XillParsingException
-	 *         When parsing an instruction wasn't successful
-	 */
-	InstructionSet parseToken(final xill.lang.xill.InstructionSet token)
-		throws XillParsingException {
+    /**
+     * Parse the instruction set
+     *
+     * @param token
+     * @return
+     * @throws XillParsingException
+     *             When parsing an instruction wasn't successful
+     */
+    InstructionSet parseToken(final xill.lang.xill.InstructionSet token) throws XillParsingException {
 	InstructionSet instructionSet = new InstructionSet(debugger);
 
 	for (xill.lang.xill.Instruction instruction : token.getInstructions()) {
-		instructionSet.add(parse(instruction));
+	    instructionSet.add(parse(instruction));
 	}
 
 	return instructionSet;
-	}
+    }
 
-	/**
-	 * Parse an If Instruction
-	 *
-	 * @param token
-	 * @return
-	 * @throws XillParsingException
-	 */
-	IfInstruction parseToken(final xill.lang.xill.IfInstruction token)
-		throws XillParsingException {
+    /**
+     * Parse an If Instruction
+     *
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    IfInstruction parseToken(final xill.lang.xill.IfInstruction token) throws XillParsingException {
 	if (token.getElseBlock() == null) {
-		return new IfInstruction(parse(token.getCondition()),
-		parseToken(token.getIfBlock().getInstructionSet()));
+	    return new IfInstruction(parse(token.getCondition()), parseToken(token.getIfBlock().getInstructionSet()));
 	}
 
-	return new IfInstruction(parse(token.getCondition()), parseToken(token
-		.getIfBlock().getInstructionSet()), parseToken(token
-			.getElseBlock().getInstructionSet()));
-	}
+	return new IfInstruction(parse(token.getCondition()), parseToken(token.getIfBlock().getInstructionSet()),
+		parseToken(token.getElseBlock().getInstructionSet()));
+    }
 
-	/**
-	 * Parse a While Instruction
-	 *
-	 * @param token
-	 * @return
-	 * @throws XillParsingException
-	 */
-	WhileInstruction parseToken(final xill.lang.xill.WhileInstruction token) throws XillParsingException {
-	return new WhileInstruction(parse(token.getCondition()), parseToken(token.getInstructionBlock().getInstructionSet()));
-	}
+    /**
+     * Parse a While Instruction
+     *
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    WhileInstruction parseToken(final xill.lang.xill.WhileInstruction token) throws XillParsingException {
+	return new WhileInstruction(parse(token.getCondition()),
+		parseToken(token.getInstructionBlock().getInstructionSet()));
+    }
 
-	/**
-	 * Parse a Foreach Instruction
-	 *
-	 * @param token
-	 * @return
-	 * @throws XillParsingException
-	 */
-	ForeachInstruction parseToken(final xill.lang.xill.ForEachInstruction token) throws XillParsingException {
-	VariableDeclaration valueDec = VariableDeclaration.nullDeclaration(pos(token));
+    /**
+     * Parse a Foreach Instruction
+     *
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    ForeachInstruction parseToken(final xill.lang.xill.ForEachInstruction token) throws XillParsingException {
+	VariableDeclaration valueDec = VariableDeclaration.nullDeclaration(pos(token), token.getValueVar().getName());
 	variables.put(token.getValueVar(), valueDec);
 
 	if (token.getKeyVar() != null) {
-		VariableDeclaration keyDec = VariableDeclaration.nullDeclaration(pos(token));
-		variables.put(token.getKeyVar(), keyDec);
+	    VariableDeclaration keyDec = VariableDeclaration.nullDeclaration(pos(token), token.getKeyVar().getName());
+	    variables.put(token.getKeyVar(), keyDec);
 
-		return new ForeachInstruction(parseToken(token.getInstructionBlock().getInstructionSet()), parse(token.getItterator()), valueDec, keyDec);
+	    return new ForeachInstruction(parseToken(token.getInstructionBlock().getInstructionSet()),
+		    parse(token.getItterator()), valueDec, keyDec);
 	}
 
-	return new ForeachInstruction(parseToken(token.getInstructionBlock().getInstructionSet()), parse(token.getItterator()), valueDec);
-	}
+	return new ForeachInstruction(parseToken(token.getInstructionBlock().getInstructionSet()),
+		parse(token.getItterator()), valueDec);
+    }
 
-	/**
-	 * Parse a Break Instruction
-	 *
-	 * @param token
-	 * @return
-	 */
-	BreakInstruction parseToken(final xill.lang.xill.BreakInstruction token) {
+    /**
+     * Parse a Break Instruction
+     *
+     * @param token
+     * @return
+     */
+    BreakInstruction parseToken(final xill.lang.xill.BreakInstruction token) {
 	return new BreakInstruction();
-	}
+    }
 
-	/**
-	 * Parse a InstructionFlow instruction
-	 *
-	 * @param token
-	 * @return
-	 * @throws XillParsingException
-	 */
-	ReturnInstruction parseToken(final xill.lang.xill.ReturnInstruction token)
-		throws XillParsingException {
+    /**
+     * Parse a InstructionFlow instruction
+     *
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    ReturnInstruction parseToken(final xill.lang.xill.ReturnInstruction token) throws XillParsingException {
 	if (token.getValue() == null) {
-		return new ReturnInstruction();
+	    return new ReturnInstruction();
 	}
 	return new ReturnInstruction(parse(token.getValue()));
-	}
+    }
 
-	/**
-	 * Parse a Continue instruction
-	 *
-	 * @param token
-	 * @return
-	 */
-	ContinueInstruction parseToken(final xill.lang.xill.ContinueInstruction token) {
+    /**
+     * Parse a Continue instruction
+     *
+     * @param token
+     * @return
+     */
+    ContinueInstruction parseToken(final xill.lang.xill.ContinueInstruction token) {
 	return new ContinueInstruction();
-	}
+    }
 
-	/**
-	 * Parse a Function Declaration
-	 *
-	 * @param token
-	 * @return
-	 * @throws XillParsingException
-	 */
-	FunctionDeclaration parseToken(final xill.lang.xill.FunctionDeclaration token) throws XillParsingException {
+    /**
+     * Parse a Function Declaration
+     *
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    FunctionDeclaration parseToken(final xill.lang.xill.FunctionDeclaration token) throws XillParsingException {
 
 	// Push the arguments
 	List<VariableDeclaration> parameters = new ArrayList<>(token.getParameters().size());
 	for (Target parameter : token.getParameters()) {
-		// TODO Default values
-		VariableDeclaration declaration = VariableDeclaration.nullDeclaration(pos(token));
+	    // TODO Default values
+	    VariableDeclaration declaration = VariableDeclaration.nullDeclaration(pos(token), parameter.getName());
 
-		parameters.add(declaration);
-		variables.put(parameter, declaration);
+	    parameters.add(declaration);
+	    variables.put(parameter, declaration);
 	}
 
 	InstructionSet instructions = parseToken(token.getInstructionBlock().getInstructionSet());
@@ -404,435 +404,432 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	functions.put(token, declaration);
 
 	return declaration;
-	}
+    }
 
-	/**
-	 * Parse a MetaExpression Declaration
-	 *
-	 * @param token
-	 * @return
-	 * @throws XillParsingException
-	 */
-	VariableDeclaration parseToken(final xill.lang.xill.VariableDeclaration token)
-		throws XillParsingException {
+    /**
+     * Parse a MetaExpression Declaration
+     *
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    VariableDeclaration parseToken(final xill.lang.xill.VariableDeclaration token) throws XillParsingException {
 	Processable expression = token.getValue() == null ? ExpressionBuilder.NULL : parse(token.getValue());
 
-	VariableDeclaration declaration = new VariableDeclaration(expression);
+	VariableDeclaration declaration = new VariableDeclaration(expression, token.getName().getName());
 
 	variables.put(token.getName(), declaration);
 
 	return declaration;
-	}
+    }
 
-	/**
-	 * Parse an Expression at root level
-	 *
-	 * @param token
-	 * @return
-	 * @throws XillParsingException
-	 */
-	ExpressionInstruction parseToken(final xill.lang.xill.ExpressionInstruction token) throws XillParsingException {
+    /**
+     * Parse an Expression at root level
+     *
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    ExpressionInstruction parseToken(final xill.lang.xill.ExpressionInstruction token) throws XillParsingException {
 	ExpressionInstruction instruction = new ExpressionInstruction(parse(token.getExpression()));
 
 	return instruction;
-	}
+    }
 
-	/**
-	 * Parse a general Expression
-	 *
-	 * @param token
-	 * @return
-	 * @throws XillParsingException
-	 */
-	Processable parseToken(final xill.lang.xill.Expression token)
-		throws XillParsingException {
+    /**
+     * Parse a general Expression
+     *
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    Processable parseToken(final xill.lang.xill.Expression token) throws XillParsingException {
 
 	Processable value = parse(token.getExpression());
 
 	// Parse prefixes
 	if (token.getPrefix() != null) {
-		switch (token.getPrefix()) {
-		case "-":
-			value = new Subtract(ExpressionBuilder.fromValue(0), value);
-			break;
-		case "!":
-			value = new Negate(value);
-			break;
-		case "++":
-			Target pTarget = getTarget(token.getExpression());
-			List<Processable> pPath = getPath(token.getExpression());
-			VariableDeclaration pDeclaration = variables.get(pTarget);
-			value = new Assign(pDeclaration, pPath, new Add(value, ExpressionBuilder.fromValue(1)));
-			break;
-		case "--":
-			Target mTarget = getTarget(token.getExpression());
-			List<Processable> mPath = getPath(token.getExpression());
-			VariableDeclaration mDeclaration = variables.get(mTarget);
-			value = new Assign(mDeclaration, mPath, new Subtract(value, ExpressionBuilder.fromValue(1)));
-			break;
-		default:
-			throw new NotImplementedException("This prefix has not been implemented.");
-		}
+	    switch (token.getPrefix()) {
+	    case "-":
+		value = new Subtract(ExpressionBuilder.fromValue(0), value);
+		break;
+	    case "!":
+		value = new Negate(value);
+		break;
+	    case "++":
+		Target pTarget = getTarget(token.getExpression());
+		List<Processable> pPath = getPath(token.getExpression());
+		VariableDeclaration pDeclaration = variables.get(pTarget);
+		value = new Assign(pDeclaration, pPath, new Add(value, ExpressionBuilder.fromValue(1)));
+		break;
+	    case "--":
+		Target mTarget = getTarget(token.getExpression());
+		List<Processable> mPath = getPath(token.getExpression());
+		VariableDeclaration mDeclaration = variables.get(mTarget);
+		value = new Assign(mDeclaration, mPath, new Subtract(value, ExpressionBuilder.fromValue(1)));
+		break;
+	    default:
+		throw new NotImplementedException("This prefix has not been implemented.");
+	    }
 	}
 
 	// Parse suffixes
 	if (token.getSuffix() != null) {
-		switch (token.getSuffix()) {
-		case "++":
-			Target pTarget = getTarget(token.getExpression());
-			List<Processable> pPath = getPath(token.getExpression());
-			VariableDeclaration pDeclaration = variables.get(pTarget);
-			value = new Subtract(new Assign(pDeclaration, pPath, new Add(value, ExpressionBuilder.fromValue(1))), ExpressionBuilder.fromValue(1));
-			break;
-		case "--":
-			Target mTarget = getTarget(token.getExpression());
-			List<Processable> mPath = getPath(token.getExpression());
-			VariableDeclaration mDeclaration = variables.get(mTarget);
-			value = new Add(new Assign(mDeclaration, mPath, new Subtract(value, ExpressionBuilder.fromValue(1))), ExpressionBuilder.fromValue(1));
-			break;
-		default:
-			throw new NotImplementedException("This suffix has not been implemented.");
-		}
+	    switch (token.getSuffix()) {
+	    case "++":
+		Target pTarget = getTarget(token.getExpression());
+		List<Processable> pPath = getPath(token.getExpression());
+		VariableDeclaration pDeclaration = variables.get(pTarget);
+		value = new Subtract(new Assign(pDeclaration, pPath, new Add(value, ExpressionBuilder.fromValue(1))),
+			ExpressionBuilder.fromValue(1));
+		break;
+	    case "--":
+		Target mTarget = getTarget(token.getExpression());
+		List<Processable> mPath = getPath(token.getExpression());
+		VariableDeclaration mDeclaration = variables.get(mTarget);
+		value = new Add(new Assign(mDeclaration, mPath, new Subtract(value, ExpressionBuilder.fromValue(1))),
+			ExpressionBuilder.fromValue(1));
+		break;
+	    default:
+		throw new NotImplementedException("This suffix has not been implemented.");
+	    }
 	}
 
 	return value;
-	}
+    }
 
-	/**
-	 * Parse an Or operation
-	 *
-	 * @param token
-	 * @return
-	 * @throws XillParsingException
-	 */
-	Or parseToken(final xill.lang.xill.impl.OrImpl token) throws XillParsingException {
-	Or orExpression = new Or(parse(token.getLeft()),
-		parse(token.getRight()));
+    /**
+     * Parse an Or operation
+     *
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    Or parseToken(final xill.lang.xill.impl.OrImpl token) throws XillParsingException {
+	Or orExpression = new Or(parse(token.getLeft()), parse(token.getRight()));
 
 	return orExpression;
-	}
+    }
 
-	/**
-	 * Parse an And operation
-	 *
-	 * @param token
-	 * @return
-	 * @throws XillParsingException
-	 */
-	And parseToken(final xill.lang.xill.impl.AndImpl token)
-		throws XillParsingException {
-	And andExpression = new And(parse(token.getLeft()),
-		parse(token.getRight()));
+    /**
+     * Parse an And operation
+     *
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    And parseToken(final xill.lang.xill.impl.AndImpl token) throws XillParsingException {
+	And andExpression = new And(parse(token.getLeft()), parse(token.getRight()));
 
 	return andExpression;
-	}
+    }
 
-	/**
-	 * Parse an Equals operation
-	 *
-	 * @param token
-	 * @return
-	 * @throws XillParsingException
-	 */
-	Processable parseToken(final xill.lang.xill.impl.EqualityImpl token) throws XillParsingException {
+    /**
+     * Parse an Equals operation
+     *
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    Processable parseToken(final xill.lang.xill.impl.EqualityImpl token) throws XillParsingException {
 	switch (token.getOp()) {
-		case "==":
-		return new Equals(parse(token.getLeft()), parse(token.getRight()));
-		case "!=":
-		return new NotEquals(parse(token.getLeft()), parse(token.getRight()));
-		default:
-		CodePosition pos = pos(token);
-		throw new XillParsingException("This token has not been implemented.", pos.getLineNumber(), pos.getRobotID());
+	case "==":
+	    return new Equals(parse(token.getLeft()), parse(token.getRight()));
+	case "!=":
+	    return new NotEquals(parse(token.getLeft()), parse(token.getRight()));
+	default:
+	    CodePosition pos = pos(token);
+	    throw new XillParsingException("This token has not been implemented.", pos.getLineNumber(),
+		    pos.getRobotID());
 	}
-	}
+    }
 
-	/**
-	 * Parse an Add-priority operation
-	 *
-	 * @param token
-	 * @return
-	 * @throws XillParsingException
-	 */
-	Processable parseToken(final xill.lang.xill.impl.AdditionImpl token)
-		throws XillParsingException {
+    /**
+     * Parse an Add-priority operation
+     *
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    Processable parseToken(final xill.lang.xill.impl.AdditionImpl token) throws XillParsingException {
 	Processable expression;
 
 	switch (token.getOp()) {
-		case "+":
-		expression = new Add(parse(token.getLeft()), parse(token.getRight()));
-		break;
-		case "-":
-		expression = new Subtract(parse(token.getLeft()), parse(token.getRight()));
-		break;
-		case "::":
-		expression = new Concat(parse(token.getLeft()), parse(token.getRight()));
-		break;
-		default:
-		CodePosition pos = pos(token);
-		throw new XillParsingException(
-			"This operator has not been implemented.", pos.getLineNumber(), pos.getRobotID());
+	case "+":
+	    expression = new Add(parse(token.getLeft()), parse(token.getRight()));
+	    break;
+	case "-":
+	    expression = new Subtract(parse(token.getLeft()), parse(token.getRight()));
+	    break;
+	case "::":
+	    expression = new Concat(parse(token.getLeft()), parse(token.getRight()));
+	    break;
+	default:
+	    CodePosition pos = pos(token);
+	    throw new XillParsingException("This operator has not been implemented.", pos.getLineNumber(),
+		    pos.getRobotID());
 	}
 
 	return expression;
-	}
+    }
 
-	/**
-	 * Parse an Compare-priority operation
-	 *
-	 * @param token
-	 * @return
-	 * @throws XillParsingException
-	 */
-	Processable parseToken(final xill.lang.xill.impl.ComparisonImpl token)
-		throws XillParsingException {
+    /**
+     * Parse an Compare-priority operation
+     *
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    Processable parseToken(final xill.lang.xill.impl.ComparisonImpl token) throws XillParsingException {
 	Processable expression;
 
 	switch (token.getOp()) {
-		case ">":
-		expression = new GreaterThan(parse(token.getLeft()), parse(token.getRight()));
-		break;
-		case "<":
-		expression = new SmallerThan(parse(token.getLeft()), parse(token.getRight()));
-		break;
-		case ">=":
-		expression = new GreaterThanOrEquals(parse(token.getLeft()), parse(token.getRight()));
-		break;
-		case "<=":
-		expression = new SmallerThanOrEquals(parse(token.getLeft()), parse(token.getRight()));
-		break;
-		default:
-		CodePosition pos = pos(token);
-		throw new XillParsingException(
-			"This operator has not been implemented.", pos.getLineNumber(), pos.getRobotID());
+	case ">":
+	    expression = new GreaterThan(parse(token.getLeft()), parse(token.getRight()));
+	    break;
+	case "<":
+	    expression = new SmallerThan(parse(token.getLeft()), parse(token.getRight()));
+	    break;
+	case ">=":
+	    expression = new GreaterThanOrEquals(parse(token.getLeft()), parse(token.getRight()));
+	    break;
+	case "<=":
+	    expression = new SmallerThanOrEquals(parse(token.getLeft()), parse(token.getRight()));
+	    break;
+	default:
+	    CodePosition pos = pos(token);
+	    throw new XillParsingException("This operator has not been implemented.", pos.getLineNumber(),
+		    pos.getRobotID());
 	}
 
 	return expression;
-	}
+    }
 
-	/**
-	 * Parse a Multiply-priority operation
-	 *
-	 * @param token
-	 * @return
-	 * @throws XillParsingException
-	 */
-	Processable parseToken(final xill.lang.xill.impl.MultiplicationImpl token)
-		throws XillParsingException {
+    /**
+     * Parse a Multiply-priority operation
+     *
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    Processable parseToken(final xill.lang.xill.impl.MultiplicationImpl token) throws XillParsingException {
 	Processable expression;
 
 	switch (token.getOp()) {
-		case "*":
-		expression = new Multiply(parse(token.getLeft()), parse(token.getRight()));
-		break;
-		case "/":
-		expression = new Divide(parse(token.getLeft()), parse(token.getRight()));
-		break;
-		case "%":
-		expression = new Modulo(parse(token.getLeft()), parse(token.getRight()));
-		break;
-		case "^":
-		expression = new Power(parse(token.getLeft()), parse(token.getRight()));
-		break;
-		default:
-		CodePosition pos = pos(token);
-		throw new XillParsingException(
-			"This operator has not been implemented.", pos.getLineNumber(), pos.getRobotID());
+	case "*":
+	    expression = new Multiply(parse(token.getLeft()), parse(token.getRight()));
+	    break;
+	case "/":
+	    expression = new Divide(parse(token.getLeft()), parse(token.getRight()));
+	    break;
+	case "%":
+	    expression = new Modulo(parse(token.getLeft()), parse(token.getRight()));
+	    break;
+	case "^":
+	    expression = new Power(parse(token.getLeft()), parse(token.getRight()));
+	    break;
+	default:
+	    CodePosition pos = pos(token);
+	    throw new XillParsingException("This operator has not been implemented.", pos.getLineNumber(),
+		    pos.getRobotID());
 	}
 
 	return expression;
-	}
+    }
 
-	/**
-	 * Parse a Assignment-priority operation
-	 *
-	 * @param token
-	 * @return
-	 * @throws XillParsingException
-	 */
-	Assign parseToken(final xill.lang.xill.impl.AssignmentImpl token)
-		throws XillParsingException {
+    /**
+     * Parse a Assignment-priority operation
+     *
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    Assign parseToken(final xill.lang.xill.impl.AssignmentImpl token) throws XillParsingException {
 	Assign expression;
 	Target target = getTarget(token.getLeft());
 	VariableDeclaration declaration = variables.get(target);
 	List<Processable> path = getPath(token.getLeft().getExpression());
 
 	switch (token.getOp()) {
-		case "=":
-		expression = new Assign(declaration, path, parse(token.getRight()));
-		break;
-		case "+=":
-		expression = new Assign(declaration, path, new Add(new VariableAccessExpression(declaration), parse(token.getRight())));
-		break;
-		case "-=":
-		expression = new Assign(declaration, path, new Subtract(new VariableAccessExpression(declaration), parse(token.getRight())));
-		break;
-		case "*=":
-		expression = new Assign(declaration, path, new Multiply(new VariableAccessExpression(declaration), parse(token.getRight())));
-		break;
-		case "::=":
-		expression = new Assign(declaration, path, new Concat(new VariableAccessExpression(declaration), parse(token.getRight())));
-		break;
-		case "/=":
-		expression = new Assign(declaration, path, new Divide(new VariableAccessExpression(declaration), parse(token.getRight())));
-		break;
-		default:
-		CodePosition pos = pos(token);
-		throw new XillParsingException(
-			"This operator has not been implemented.", pos.getLineNumber(), pos.getRobotID());
+	case "=":
+	    expression = new Assign(declaration, path, parse(token.getRight()));
+	    break;
+	case "+=":
+	    expression = new Assign(declaration, path,
+		    new Add(new VariableAccessExpression(declaration), parse(token.getRight())));
+	    break;
+	case "-=":
+	    expression = new Assign(declaration, path,
+		    new Subtract(new VariableAccessExpression(declaration), parse(token.getRight())));
+	    break;
+	case "*=":
+	    expression = new Assign(declaration, path,
+		    new Multiply(new VariableAccessExpression(declaration), parse(token.getRight())));
+	    break;
+	case "::=":
+	    expression = new Assign(declaration, path,
+		    new Concat(new VariableAccessExpression(declaration), parse(token.getRight())));
+	    break;
+	case "/=":
+	    expression = new Assign(declaration, path,
+		    new Divide(new VariableAccessExpression(declaration), parse(token.getRight())));
+	    break;
+	default:
+	    CodePosition pos = pos(token);
+	    throw new XillParsingException("This operator has not been implemented.", pos.getLineNumber(),
+		    pos.getRobotID());
 	}
 
 	return expression;
-	}
+    }
 
-	/**
-	 * Get the target of an assignment
-	 *
-	 * @param token
-	 * @return
-	 */
-	private static Target getTarget(final EObject start) {
+    /**
+     * Get the target of an assignment
+     *
+     * @param token
+     * @return
+     */
+    private static Target getTarget(final EObject start) {
 	EObject currentObject = start;
 
 	while (currentObject != null && !(currentObject instanceof Target)) {
-		if (currentObject instanceof Variable) {
+	    if (currentObject instanceof Variable) {
 		currentObject = ((Variable) currentObject).getTarget();
-		} else if (currentObject instanceof ListExtraction) {
+	    } else if (currentObject instanceof ListExtraction) {
 		currentObject = ((ListExtraction) currentObject).getValue();
-		} else if (currentObject instanceof Expression) {
+	    } else if (currentObject instanceof Expression) {
 		currentObject = ((Expression) currentObject).getExpression();
-		} else {
+	    } else {
 		currentObject = null;
-		}
+	    }
 	}
 
 	return (Target) currentObject;
-	}
+    }
 
-	/**
-	 * Construct a list that represents the path into a variable
-	 *
-	 * @param token
-	 * @return
-	 * @throws XillParsingException
-	 */
-	private List<Processable> getPath(final EObject start) throws XillParsingException {
+    /**
+     * Construct a list that represents the path into a variable
+     *
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    private List<Processable> getPath(final EObject start) throws XillParsingException {
 	List<Processable> result = new ArrayList<>();
 	if (!(start instanceof ListExtraction)) {
-		return result;
+	    return result;
 	}
 
 	ListExtraction extraction = (ListExtraction) start;
 
 	while (extraction != null) {
-		if (extraction.getIndex() != null) {
+	    if (extraction.getIndex() != null) {
 		result.add(parse(extraction.getIndex()));
-		} else if (extraction.getChild() != null) {
+	    } else if (extraction.getChild() != null) {
 		result.add(ExpressionBuilder.fromValue(extraction.getChild()));
-		} else {
+	    } else {
 		result.add(new Add(parse(extraction.getValue()), ExpressionBuilder.fromValue(0)));
-		}
+	    }
 
-		if (extraction.getValue() instanceof ListExtraction) {
+	    if (extraction.getValue() instanceof ListExtraction) {
 		extraction = (ListExtraction) extraction.getValue();
-		} else {
+	    } else {
 		extraction = null;
-		}
+	    }
 	}
 
 	return result;
-	}
+    }
 
-	/**
-	 * Parse a list extraction
-	 *
-	 * @param token
-	 * @return
-	 * @throws XillParsingException
-	 */
-	Processable parseToken(final xill.lang.xill.impl.ListExtractionImpl token) throws XillParsingException {
+    /**
+     * Parse a list extraction
+     *
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    Processable parseToken(final xill.lang.xill.impl.ListExtractionImpl token) throws XillParsingException {
 	Processable expression = parse(token.getValue());
 	if (token.getIndex() != null) {
-		// We used brackets
-		Processable index = parse(token.getIndex());
+	    // We used brackets
+	    Processable index = parse(token.getIndex());
 
-		return new FromList(expression, index);
+	    return new FromList(expression, index);
 	}
 
 	if (token.getChild() != null) {
-		// We used dot-notation
-		return new FromList(expression, ExpressionBuilder.fromValue(token.getChild()));
+	    // We used dot-notation
+	    return new FromList(expression, ExpressionBuilder.fromValue(token.getChild()));
 	}
 
-	// We used neither: listVariable[]. Interpret as listVariable[listVariable + 0]
+	// We used neither: listVariable[]. Interpret as
+	// listVariable[listVariable + 0]
 	return new FromList(expression, new Add(expression, ExpressionBuilder.fromValue(0)));
-	}
+    }
 
-	/**
-	 * Parse a written list
-	 *
-	 * @param token
-	 * @return
-	 * @throws XillParsingException
-	 */
-	Processable parseToken(final xill.lang.xill.impl.ListExpressionImpl token) throws XillParsingException {
+    /**
+     * Parse a written list
+     *
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    Processable parseToken(final xill.lang.xill.impl.ListExpressionImpl token) throws XillParsingException {
 	List<Processable> expressions = new ArrayList<>(token.getValues().size());
 
 	for (Expression exp : token.getValues()) {
-		expressions.add(parse(exp));
+	    expressions.add(parse(exp));
 	}
 
 	return new ListExpression(expressions);
-	}
+    }
 
-	/**
-	 * Parse a written object
-	 *
-	 * @param token
-	 * @return
-	 * @throws XillParsingException
-	 */
-	Processable parseToken(final xill.lang.xill.impl.ObjectExpressionImpl token) throws XillParsingException {
+    /**
+     * Parse a written object
+     *
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    Processable parseToken(final xill.lang.xill.impl.ObjectExpressionImpl token) throws XillParsingException {
 	Iterator<Expression> keys = token.getNames().iterator();
 	Iterator<Expression> values = token.getValues().iterator();
 	Map<Processable, Processable> object = new HashMap<>(token.getNames().size());
 
 	while (keys.hasNext() && values.hasNext()) {
-		object.put(parse(keys.next()), parse(values.next()));
+	    object.put(parse(keys.next()), parse(values.next()));
 	}
 
 	return new ObjectExpression(object);
 
-	}
+    }
 
-	/**
-	 * Parse a variable
-	 *
-	 * @param token
-	 * @return
-	 * @throws XillParsingException
-	 */
-	Processable parseToken(final xill.lang.xill.Variable token)
-		throws XillParsingException {
+    /**
+     * Parse a variable
+     *
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    Processable parseToken(final xill.lang.xill.Variable token) throws XillParsingException {
 	VariableDeclaration declaration = variables.get(token.getTarget());
 
 	if (declaration == null) {
-		CodePosition pos = pos(token);
-		throw new XillParsingException("No such variable found: "
-			+ token.getTarget().getName(),
-		pos.getLineNumber(), pos.getRobotID());
+	    CodePosition pos = pos(token);
+	    throw new XillParsingException("No such variable found: " + token.getTarget().getName(),
+		    pos.getLineNumber(), pos.getRobotID());
 	}
 
 	return new VariableAccessExpression(declaration);
-	}
+    }
 
-	/**
-	 *
-	 * @param token
-	 * @return
-	 * @throws XillParsingException
-	 */
-	Processable parseToken(final xill.lang.xill.FunctionCall token)
-		throws XillParsingException {
+    /**
+     *
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    Processable parseToken(final xill.lang.xill.FunctionCall token) throws XillParsingException {
 
 	FunctionCall callExpression = new FunctionCall();
 
@@ -842,201 +839,208 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	List<Processable> arguments = new ArrayList<>(token.getArgumentBlock().getParameters().size());
 
 	for (Expression expression : token.getArgumentBlock().getParameters()) {
-		arguments.add(parse(expression));
+	    arguments.add(parse(expression));
 	}
 
 	functionCallArguments.put(token, arguments);
 
 	return callExpression;
-	}
+    }
 
-	/**
-	 *
-	 * @param token
-	 * @return
-	 * @throws XillParsingException
-	 */
-	Processable parseToken(final xill.lang.xill.ConstructCall token)
-		throws XillParsingException {
+    /**
+     *
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    Processable parseToken(final xill.lang.xill.ConstructCall token) throws XillParsingException {
 
 	PluginPackage pluginPackage = useStatements.get(token.getPackage());
 
 	CodePosition pos = pos(token);
 
 	if (pluginPackage == null) {
-		String pluginName = token.getPackage().getPlugin();
-		if (pluginName == null) {
+	    String pluginName = token.getPackage().getPlugin();
+	    if (pluginName == null) {
 		pluginName = token.getPackage().getName();
-		}
+	    }
 
-		throw new XillParsingException("Could not resolve package `" + pluginName + "`", pos.getLineNumber(), pos.getRobotID());
+	    throw new XillParsingException("Could not resolve package `" + pluginName + "`", pos.getLineNumber(),
+		    pos.getRobotID());
 
 	}
 	Construct construct = pluginPackage.getConstruct(token.getFunction());
 
 	if (construct == null) {
-		throw new XillParsingException("The construct " + token.getFunction() + " does not exist in package " + token.getPackage().getName(), pos.getLineNumber(), pos.getRobotID());
+	    throw new XillParsingException("The construct " + token.getFunction() + " does not exist in package "
+		    + token.getPackage().getName(), pos.getLineNumber(), pos.getRobotID());
 	}
 
 	// Parse the arguments
 	List<Processable> arguments = new ArrayList<>(token.getArgumentBlock().getParameters().size());
 
 	for (Expression argument : token.getArgumentBlock().getParameters()) {
-		arguments.add(parse(argument));
+	    arguments.add(parse(argument));
 	}
 
 	// Check argument count by mocking the input
-	ConstructProcessor testProcessor = construct.prepareProcess(new ConstructContext(robotID.get(token.eResource()), rootRobot, construct));
+	ConstructProcessor testProcessor = construct
+		.prepareProcess(new ConstructContext(robotID.get(token.eResource()), rootRobot, construct));
 	for (int i = 0; i < arguments.size(); i++) {
-		testProcessor.setArgument(i, ExpressionBuilder.NULL);
+	    testProcessor.setArgument(i, ExpressionBuilder.NULL);
 	}
 
-	// Throw exception if count is incorrect (i.e. We're either missing an argument or provided too many)
+	// Throw exception if count is incorrect (i.e. We're either missing an
+	// argument or provided too many)
 	if (testProcessor.getMissingArgument().isPresent() || testProcessor.getNumberOfArguments() < arguments.size()) {
-		throw new XillParsingException("Argument count mismatch in " + testProcessor.toString(construct.getName()), pos.getLineNumber(), pos.getRobotID());
+	    throw new XillParsingException("Argument count mismatch in " + testProcessor.toString(construct.getName()),
+		    pos.getLineNumber(), pos.getRobotID());
 	}
 
-	return new ConstructCall(construct, arguments, new ConstructContext(robotID.get(token.eResource()), rootRobot, construct));
-	}
+	return new ConstructCall(construct, arguments,
+		new ConstructContext(robotID.get(token.eResource()), rootRobot, construct));
+    }
 
-	/**
-	 * To fix the call -> declaration order problem this method will be called for all function calls after parsing the whole robot
-	 *
-	 * @param token
-	 * @param declaration
-	 * @throws XillParsingException
-	 */
-	private void parseToken(final xill.lang.xill.FunctionCall token,
-		final FunctionCall declaration) throws XillParsingException {
+    /**
+     * To fix the call -> declaration order problem this method will be called
+     * for all function calls after parsing the whole robot
+     *
+     * @param token
+     * @param declaration
+     * @throws XillParsingException
+     */
+    private void parseToken(final xill.lang.xill.FunctionCall token, final FunctionCall declaration)
+	    throws XillParsingException {
 
 	// Parse the assignments
-	List<Assign> assignments = new ArrayList<>();
-	Iterator<Processable> argumentValue = functionCallArguments.get(token).iterator();
-	Iterator<Target> argumentTargets = token.getName().getParameters().iterator();
+	List<Processable> arguments = new ArrayList<>();
 
-	while (argumentTargets.hasNext() && argumentValue.hasNext()) {
-		VariableDeclaration target = variables.get(argumentTargets.next());
-		assignments.add(new Assign(target, new ArrayList<>(), argumentValue.next()));
+	for (Expression expr : token.getArgumentBlock().getParameters()) {
+	    arguments.add(parse(expr));
 	}
 
 	// Push the arguments
-	declaration.setArguments(assignments);
+	declaration.setArguments(arguments);
 
 	FunctionDeclaration functionDeclaration = functions.get(token.getName());
 
 	if (functionDeclaration == null) {
-		CodePosition pos = pos(token);
-		throw new XillParsingException("Could not find function " + token.getName().getName() + " did you forget to include " + token.getName().eResource().getURI().toFileString() + "?",
-		pos.getLineNumber(), pos.getRobotID());
+	    CodePosition pos = pos(token);
+	    throw new XillParsingException(
+		    "Could not find function " + token.getName().getName() + " did you forget to include "
+			    + token.getName().eResource().getURI().toFileString() + "?",
+		    pos.getLineNumber(), pos.getRobotID());
 	}
 
 	// Push the function
 	declaration.setFunction(functions.get(token.getName()));
-	}
+    }
 
-	/**
-	 * Parse a {@link CallbotExpression}
-	 *
-	 * @param token
-	 * @return
-	 * @throws XillParsingException
-	 */
-	Processable parseToken(final xill.lang.xill.CallbotExpression token) throws XillParsingException {
+    /**
+     * Parse a {@link CallbotExpression}
+     *
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    Processable parseToken(final xill.lang.xill.CallbotExpression token) throws XillParsingException {
 	Processable path = parse(token.getPath());
-	
+
 	CallbotExpression expression = new CallbotExpression(path, rootRobot, pluginLoader);
 
-	if(token.getArgument() != null) {
-		expression.setArgument(parse(token.getArgument()));
-	}
-	
-	return expression;
+	if (token.getArgument() != null) {
+	    expression.setArgument(parse(token.getArgument()));
 	}
 
-	/**
-	 * Parse a {@link GetArgumentExpression}
-	 *
-	 * @param token
-	 * @return
-	 * @throws XillParsingException
-	 */
-	Processable parseToken(final xill.lang.xill.GetArgumentExpression token) throws XillParsingException {
-	// First we need to find the robot of this token. Do do this we need the token's root
+	return expression;
+    }
+
+    /**
+     * Parse a {@link GetArgumentExpression}
+     *
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    Processable parseToken(final xill.lang.xill.GetArgumentExpression token) throws XillParsingException {
+	// First we need to find the robot of this token. Do do this we need the
+	// token's root
 	EObject robot = token;
 	while (!(robot instanceof xill.lang.xill.Robot || robot == null)) {
-		robot = robot.eContainer();
+	    robot = robot.eContainer();
 	}
 
 	if (robot == null) {
-		CodePosition pos = pos(token);
-		throw new XillParsingException("Could not find robot node of " + token, pos.getLineNumber(), pos.getRobotID());
+	    CodePosition pos = pos(token);
+	    throw new XillParsingException("Could not find robot node of " + token, pos.getLineNumber(),
+		    pos.getRobotID());
 	}
 
 	Robot thisRobot = compiledRobots.get(robot).getValue();
 
 	return new GetArgumentExpression((nl.xillio.xill.components.Robot) thisRobot);
-	}
+    }
 
-	/**
-	 * Parse a {@link BooleanLiteral}
-	 *
-	 * @param token
-	 * @return
-	 */
-	Processable parseToken(final xill.lang.xill.BooleanLiteral token) {
+    /**
+     * Parse a {@link BooleanLiteral}
+     *
+     * @param token
+     * @return
+     */
+    Processable parseToken(final xill.lang.xill.BooleanLiteral token) {
 	return ExpressionBuilder.fromValue(Boolean.parseBoolean(token.getValue()));
-	}
+    }
 
-	/**
-	 * Parse a {@link NullLiteral}
-	 *
-	 * @param token
-	 * @return
-	 */
-	Processable parseToken(final xill.lang.xill.NullLiteral token) {
+    /**
+     * Parse a {@link NullLiteral}
+     *
+     * @param token
+     * @return
+     */
+    Processable parseToken(final xill.lang.xill.NullLiteral token) {
 	return ExpressionBuilder.NULL;
-	}
+    }
 
-	/**
-	 * Parse an {@link IntegerLiteral}
-	 *
-	 * @param token
-	 * @return
-	 */
-	Processable parseToken(final xill.lang.xill.IntegerLiteral token) {
+    /**
+     * Parse an {@link IntegerLiteral}
+     *
+     * @param token
+     * @return
+     */
+    Processable parseToken(final xill.lang.xill.IntegerLiteral token) {
 	return ExpressionBuilder.fromValue(token.getValue());
-	}
+    }
 
-	/**
-	 * Parse an {@link IntegerLiteral}
-	 *
-	 * @param token
-	 * @return
-	 */
-	Processable parseToken(final xill.lang.xill.DecimalLiteral token) {
+    /**
+     * Parse an {@link IntegerLiteral}
+     *
+     * @param token
+     * @return
+     */
+    Processable parseToken(final xill.lang.xill.DecimalLiteral token) {
 	return ExpressionBuilder.fromValue(token.getValue() + token.getDecimal() / 10.0);
-	}
+    }
 
-	/**
-	 * Parse an {@link IntegerLiteral}
-	 *
-	 * @param token
-	 * @return
-	 */
-	Processable parseToken(final xill.lang.xill.StringLiteral token) {
+    /**
+     * Parse an {@link IntegerLiteral}
+     *
+     * @param token
+     * @return
+     */
+    Processable parseToken(final xill.lang.xill.StringLiteral token) {
 	return ExpressionBuilder.fromValue(token.getValue());
-	}
+    }
 
-	private CodePosition pos(final EObject object) {
+    private CodePosition pos(final EObject object) {
 	INode node = NodeModelUtils.getNode(object);
 	RobotID id = robotID.get(object.eResource());
 	return new CodePosition(id, node.getStartLine());
-	}
+    }
 
-	/**
-	 * @return the debugger
-	 */
-	public Debugger getDebugger() {
+    /**
+     * @return the debugger
+     */
+    public Debugger getDebugger() {
 	return debugger;
-	}
+    }
 }

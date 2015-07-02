@@ -55,6 +55,13 @@ public class ForeachInstruction extends Instruction {
 	@Override
 	public InstructionFlow<MetaExpression> process(Debugger debugger) throws RobotRuntimeException {
 		MetaExpression result = list.process(debugger).get();
+		valueVar.process(debugger);
+		
+		if(keyVar != null){
+		    keyVar.process(debugger);
+		}
+		
+		InstructionFlow<MetaExpression> foreachResult = InstructionFlow.doResume();
 
 		switch (result.getType()) {
 			case ATOMIC: // Iterate over single value
@@ -63,7 +70,8 @@ public class ForeachInstruction extends Instruction {
 					keyVar.setVariable(ExpressionBuilder.fromValue(0));
 				}
 
-				return instructionSet.process(debugger);
+				foreachResult = instructionSet.process(debugger);
+				break;
 			case LIST: // Iterate over list
 				int i = 0;
 				for (MetaExpression value : (List<MetaExpression>) result.getValue()) {
@@ -75,11 +83,13 @@ public class ForeachInstruction extends Instruction {
 					InstructionFlow<MetaExpression> instructionResult = instructionSet.process(debugger);
 
 					if (instructionResult.returns()) {
-						return instructionResult;
+					    foreachResult = instructionResult;
+					    break;
 					}
 
 					if (instructionResult.breaks()) {
-						return InstructionFlow.doResume();
+					    foreachResult = InstructionFlow.doResume();
+					    break;
 					}
 
 					if (instructionResult.skips()) {
@@ -97,11 +107,13 @@ public class ForeachInstruction extends Instruction {
 					InstructionFlow<MetaExpression> instructionResult = instructionSet.process(debugger);
 
 					if (instructionResult.returns()) {
-						return instructionResult;
+					    foreachResult = instructionResult;
+					    break;
 					}
 
 					if (instructionResult.breaks()) {
-						return InstructionFlow.doResume();
+					    foreachResult=  InstructionFlow.doResume();
+					    break;
 					}
 
 					if (instructionResult.skips()) {
@@ -113,8 +125,22 @@ public class ForeachInstruction extends Instruction {
 				throw new NotImplementedException("This type has not been implemented.");
 
 		}
+		
+		try {
+		    valueVar.close();
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
+		
+		if(keyVar != null){
+		    try {
+			keyVar.close();
+		    } catch (Exception e) {
+			e.printStackTrace();
+		    }
+		}
 
-		return InstructionFlow.doResume();
+		return foreachResult;
 	}
 
 	@Override

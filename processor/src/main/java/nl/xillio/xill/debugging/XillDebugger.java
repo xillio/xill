@@ -2,7 +2,9 @@ package nl.xillio.xill.debugging;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EmptyStackException;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Stack;
 import java.util.stream.Collectors;
@@ -253,14 +255,19 @@ public class XillDebugger implements Debugger {
 	if (!paused) {
 	    throw new IllegalStateException("Cannot get variables if not paused.");
 	}
-	List<Target> allTargets = debugInfo.getVariables().entrySet().stream()
-		.sorted((a, b) -> Integer.compare(a.getValue().getLineNumber(), b.getValue().getLineNumber()))
-		.filter(entry -> entry.getValue().getVariable() != null).map(entry -> entry.getKey())
-		.collect(Collectors.toList());
+	List<Object> filtered = new ArrayList<>();
+	
+	for(Entry<Target, VariableDeclaration> pair : debugInfo.getVariables().entrySet().stream()
+	.sorted((a, b) -> Integer.compare(a.getValue().getLineNumber(), b.getValue().getLineNumber())).collect(Collectors.toList())) {
+	    
+	    try{
+	    if(pair.getValue().getVariable() != null || isVisible(pair.getKey(), pausedOnInstruction)) {
+		filtered.add(pair.getKey());
+	    }
+	    }catch(EmptyStackException e){}
+	}
 
-	// Check if the targets are visible from current instruction
-	List<Object> filtered = allTargets.stream().filter(target -> isVisible(target, pausedOnInstruction))
-		.collect(Collectors.toList());
+	
 	return filtered;
     }
 
