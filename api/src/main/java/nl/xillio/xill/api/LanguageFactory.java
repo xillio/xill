@@ -1,7 +1,5 @@
 package nl.xillio.xill.api;
 
-import java.util.List;
-
 import nl.xillio.xill.api.components.Robot;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.errors.XillParsingException;
@@ -19,8 +17,20 @@ public interface LanguageFactory<T> {
 	 *        The token that should be processed
 	 * @param robotID
 	 * @param libraries
-	 * @return The processed {@link Robot}
+	 * @throws XillParsingException
+	 */	
+	public void parse(final T token, final RobotID robotID) throws XillParsingException;
+	
+	/**
+	 * Finish compiling
 	 * @throws XillParsingException
 	 */
-	public Robot parse(final T token, final RobotID robotID, final List<Robot> libraries) throws XillParsingException;
+	public void compile() throws XillParsingException;
+	
+	/**
+	 * Get a compiled robot
+	 * @param token
+	 * @return the compiled robot for that token or null if none was found
+	 */
+	public Robot getRobot(final T token);
 }

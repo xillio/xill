@@ -115,7 +115,7 @@
 
 /* code selection, end brace markers, etc */
 .ace-chrome .ace_marker-layer .ace_selection {
-	background: #B9E3EE;
+	background: rgba(185, 227, 238, 0.5);
 }
 .ace-chrome .ace_marker-layer .ace_selected-word {
     background: #ffffff;

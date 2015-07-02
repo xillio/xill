@@ -8,6 +8,20 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
+import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.validation.CheckMode;
+import org.eclipse.xtext.validation.IResourceValidator;
+import org.eclipse.xtext.validation.Issue.IssueImpl;
+
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+
 import nl.xillio.plugins.PluginLoader;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.Issue;
@@ -17,194 +31,224 @@ import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.api.components.Robot;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.errors.XillParsingException;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
-import org.eclipse.xtext.nodemodel.INode;
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
-import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.util.CancelIndicator;
-import org.eclipse.xtext.validation.CheckMode;
-import org.eclipse.xtext.validation.IResourceValidator;
-import org.eclipse.xtext.validation.Issue.IssueImpl;
-
 import xill.lang.XillStandaloneSetup;
+import xill.lang.scoping.XillScopeProvider;
+import xill.lang.validation.XillValidator;
 import xill.lang.xill.IncludeStatement;
-
-import com.google.inject.Inject;
-import com.google.inject.Injector;
 
 /**
  * This class is responsible for processing a single Xill file
  */
 public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
-	/**
-	 * The supported file extension
-	 */
-	private static final Injector injector;
-	private final XtextResourceSet resourceSet;
+    /**
+     * The supported file extension
+     */
+    private static final Injector injector;
+    private final XtextResourceSet resourceSet;
 
-	@Inject
-	private IResourceValidator validator;
+    @Inject
+    private IResourceValidator validator;
 
-	private Robot robot;
+    private Robot robot;
 
-	private final File robotFile;
-	private final File projectFolder;
-	private final PluginLoader<PluginPackage> pluginLoader;
-	private final Debugger debugger;
+    private final File robotFile;
+    private final File projectFolder;
+    private final PluginLoader<PluginPackage> pluginLoader;
+    private final Debugger debugger;
 
-	// Set up the envirionment
-	static {
-		// creating the injector
-		injector = new XillStandaloneSetup().createInjectorAndDoEMFRegistration();
+    private final List<Resource> compiledResources = new ArrayList<>();
+
+    // Set up the envirionment
+    static {
+	// creating the injector
+	injector = new XillStandaloneSetup().createInjectorAndDoEMFRegistration();
+    }
+
+    /**
+     * Create a new processor that can run a file
+     *
+     * @param projectFolder
+     * @param robotFile
+     * @param pluginLoader
+     * @param debugger
+     * @throws IOException
+     */
+    public XillProcessor(final File projectFolder, final File robotFile, final PluginLoader<PluginPackage> pluginLoader,
+	    final Debugger debugger) throws IOException {
+	this.projectFolder = projectFolder;
+	this.robotFile = robotFile;
+	this.pluginLoader = pluginLoader;
+	this.debugger = debugger;
+	injector.injectMembers(this);
+
+	// obtain a resource set
+	resourceSet = injector.getInstance(XtextResourceSet.class);
+    }
+
+    @Override
+    public List<Issue> compile() throws IOException, XillParsingException {
+	return compileAsSubrobot(null);
+    }
+
+    /**
+     * Compile as a subrobot
+     * @param rootRobot The Root robot
+     * @return a list of issues
+     * @throws XillParsingException
+     */
+    public List<Issue> compileAsSubrobot(final RobotID rootRobot) throws XillParsingException {
+	compiledResources.clear();
+	debugger.reset();
+	return compile(robotFile, rootRobot);
+    }
+
+    private List<Issue> compile(final File robotPath, RobotID rootRobot) throws XillParsingException {
+	XillScopeProvider.PROJECTFOLDER = projectFolder;
+	Resource resource = resourceSet.getResource(URI.createFileURI(robotPath.getAbsolutePath()), true);
+
+	gatherResources(resource);
+
+	List<Issue> issues = new ArrayList<>();
+	RobotID robotID = RobotID.getInstance(robotPath, projectFolder);
+	if (rootRobot == null) {
+	    rootRobot = robotID;
 	}
 
-	/**
-	 * Create a new processor that can run a file
-	 *
-	 * @param projectFolder
-	 * @param robotFile
-	 * @param pluginLoader
-	 * @param debugger
-	 * @throws IOException
-	 */
-	public XillProcessor(final File projectFolder, final File robotFile, final PluginLoader<PluginPackage> pluginLoader, final Debugger debugger) throws IOException {
-		this.projectFolder = projectFolder;
-		this.robotFile = robotFile;
-		this.pluginLoader = pluginLoader;
-		this.debugger = debugger;
-		injector.injectMembers(this);
+	LanguageFactory<xill.lang.xill.Robot> factory = new XillProgramFactory(pluginLoader, getDebugger(), rootRobot);
 
-		// obtain a resource set
-		resourceSet = injector.getInstance(XtextResourceSet.class);
+	xill.lang.xill.Robot mainRobotToken = null;
 
-		// Load all resources
-		Collection<File> scripts = FileUtils.listFiles(projectFolder, new String[] {Xill.FILE_EXTENSION}, true);
-		scripts.forEach(script -> resourceSet.createResource(URI.createFileURI(script.getAbsolutePath())));
+	// Validate all resources
+	for (Resource currentResource : resourceSet.getResources()) {
+	    // Build RobotID
+	    File currentFile = new File(currentResource.getURI().toFileString());
+
+	    issues.addAll(validate(currentResource, RobotID.getInstance(currentFile, projectFolder)));
 	}
 
-	@Override
-	public List<Issue> compile() throws IOException, XillParsingException {
-		debugger.reset();
-		return compile(robotFile);
-	}
+	// Parse all resources
+	for (Resource currentResource : resourceSet.getResources()) {
+	    for (EObject rootToken : currentResource.getContents()) {
+		// Build RobotID
+		File currentFile = new File(currentResource.getURI().toFileString());
 
-	private List<Issue> compile(final File robotPath) throws XillParsingException {
-		List<Issue> issues = new ArrayList<>();
-		Resource resource = resourceSet.getResource(URI.createFileURI(robotPath.getAbsolutePath()), true);
+		// Parse
+		factory.parse((xill.lang.xill.Robot) rootToken, RobotID.getInstance(currentFile, projectFolder));
 
-		return compile(resource, new XillProgramFactory(pluginLoader, getDebugger(), RobotID.getInstance(robotPath, projectFolder)), issues);
-
-	}
-
-	private List<Issue> compile(final Resource resource, final LanguageFactory<xill.lang.xill.Robot> factory, final List<Issue> issues) throws XillParsingException {
-
-		File currentFile = new File(resource.getURI().toFileString());
-		RobotID robotID = RobotID.getInstance(currentFile, projectFolder);
-		// Throw errors
-		if (!resource.getErrors().isEmpty()) {
-			Diagnostic error = resource.getErrors().get(0);
-			throw new XillParsingException(error.getMessage(), error.getLine(), robotID);
+		// Check if is main robot token
+		if (rootToken.eResource() == resource) {
+		    mainRobotToken = (xill.lang.xill.Robot) rootToken;
 		}
+	    }
+	}
 
-		// Perform validation
-		issues.addAll(validate(resource, robotID));
+	factory.compile();
 
-		// Compile includes
-		List<Robot> libraries = new ArrayList<>();
-		for (EObject robot : resource.getContents()) {
-			for (IncludeStatement include : ((xill.lang.xill.Robot) robot).getIncludes()) {
-				String subPath = StringUtils.join(include.getName(), File.separator) + "." + Xill.FILE_EXTENSION;
-				File libPath = new File(projectFolder, subPath);
-				String fullPath = libPath.getAbsolutePath();
+	robot = factory.getRobot(mainRobotToken);
+	return issues;
 
-				Resource dependency = resourceSet.getResource(URI.createFileURI(fullPath), true);
-				if (dependency == null) {
-					INode node = NodeModelUtils.getNode(include);
-					throw new XillParsingException("Required library at " + fullPath + " could not be found", node.getStartLine(), RobotID.getInstance(libPath, projectFolder));
-				}
-				issues.addAll(compile(dependency, factory, issues));
-				libraries.add(this.robot);
-			}
+    }
+
+    private void gatherResources(final Resource resource) {
+	for (EObject root : resource.getContents()) {
+	    xill.lang.xill.Robot robot = (xill.lang.xill.Robot) root;
+
+	    for (IncludeStatement include : robot.getIncludes()) {
+		URI uri = getURI(include);
+		if (!resourceSet.getURIResourceMap().containsKey(uri)) {
+		    // This is not in there yet
+		    Resource library = resourceSet.getResource(uri, true);
+		    gatherResources(library);
 		}
+	    }
+	}
+    }
 
-		// Create the language tree
-		robot = factory.parse((xill.lang.xill.Robot) resource.getContents().get(0), RobotID.getInstance(currentFile, projectFolder), libraries);
+    private URI getURI(final IncludeStatement include) {
+	String subPath = StringUtils.join(include.getName(), File.separator) + "." + Xill.FILE_EXTENSION;
+	File libPath = new File(projectFolder, subPath);
+	String fullPath = libPath.getAbsolutePath();
 
-		// all issues (No errors in here)
-		return issues;
+	return URI.createFileURI(fullPath);
+    }
+
+    private List<Issue> validate(final Resource resource, final RobotID robotID) throws XillParsingException {
+	// Throw errors
+	if (!resource.getErrors().isEmpty()) {
+	    Diagnostic error = resource.getErrors().get(0);
+	    throw new XillParsingException(error.getMessage(), error.getLine(), robotID);
 	}
 
-	private List<Issue> validate(final Resource resource, final RobotID robotID) throws XillParsingException {
-		// Validate
-		List<Issue> issues = validator.validate(resource, CheckMode.ALL, CancelIndicator.NullImpl).stream().map(
-			issue -> {
-				IssueImpl impl = (IssueImpl) issue;
+	// Validate
+	List<Issue> issues = validator.validate(resource, CheckMode.ALL, CancelIndicator.NullImpl).stream()
+		.map(issue -> {
+		    IssueImpl impl = (IssueImpl) issue;
 
-				Issue.Type type = null;
+		    Issue.Type type = null;
 
-				switch (impl.getSeverity()) {
-					case ERROR:
-						type = Issue.Type.ERROR;
-						break;
-					case IGNORE:
-						type = Issue.Type.INFO;
-						break;
-					case INFO:
-						type = Issue.Type.INFO;
-						break;
-					case WARNING:
-						type = Issue.Type.WARNING;
-						break;
-				}
+		    switch (impl.getSeverity()) {
+		    case ERROR:
+			type = Issue.Type.ERROR;
+			break;
+		    case IGNORE:
+			type = Issue.Type.INFO;
+			break;
+		    case INFO:
+			type = Issue.Type.INFO;
+			break;
+		    case WARNING:
+			type = Issue.Type.WARNING;
+			break;
+		    }
 
-				return new Issue(impl.getMessage(), impl.getLineNumber(), type);
-			}
-			).collect(Collectors.toList());
+		    return new Issue(impl.getMessage(), impl.getLineNumber(), type);
+		}).collect(Collectors.toList());
 
-		// Throw an exception when an error was found
-		Optional<Issue> error = issues.stream().filter(issue -> issue.getSeverity() == Issue.Type.ERROR).findFirst();
+	// Throw an exception when an error was found
+	Optional<Issue> error = issues.stream().filter(issue -> issue.getSeverity() == Issue.Type.ERROR).findFirst();
 
-		if (error.isPresent()) {
-			throw new XillParsingException(error.get().getMessage(), error.get().getLine(), robotID);
-		}
-
-		// Add warnings to issues
-		resource.getWarnings().forEach(warning -> {
-			issues.add(new Issue(warning.getMessage(), warning.getLine(), Issue.Type.WARNING));
-		});
-
-		return issues;
+	if (error.isPresent()) {
+	    throw new XillParsingException(error.get().getMessage(), error.get().getLine(), robotID);
 	}
 
-	/**
-	 * @return The last compiled robot or null if compilation hasn't taken place yet.
-	 */
-	@Override
-	public Robot getRobot() {
-		return robot;
-	}
+	// Add warnings to issues
+	resource.getWarnings().forEach(warning -> {
+	    issues.add(new Issue(warning.getMessage(), warning.getLine(), Issue.Type.WARNING));
+	});
 
-	/**
-	 * @return the debugger
-	 */
-	@Override
-	public Debugger getDebugger() {
-		return debugger;
-	}
+	return issues;
+    }
 
-	@Override
-	public RobotID getRobotID() {
-		return RobotID.getInstance(robotFile, projectFolder);
-	}
+    /**
+     * @return The last compiled robot or null if compilation hasn't taken place
+     *         yet.
+     */
+    @Override
+    public Robot getRobot() {
+	return robot;
+    }
 
-	@Override
-	public Collection<String> listPackages() {
-		return pluginLoader.getPluginManager().getPlugins().stream().map(PluginPackage::getName).collect(Collectors.toList());
-	}
+    /**
+     * @return the debugger
+     */
+    @Override
+    public Debugger getDebugger() {
+	return debugger;
+    }
+
+    @Override
+    public RobotID getRobotID() {
+	return RobotID.getInstance(robotFile, projectFolder);
+    }
+
+    @Override
+    public Collection<String> listPackages() {
+	return pluginLoader.getPluginManager().getPlugins().stream().map(PluginPackage::getName)
+		.collect(Collectors.toList());
+    }
+
+    @Override
+    public String[] getReservedKeywords() {
+	return XillValidator.RESERVED_KEYWORDS;
+    }
 }
