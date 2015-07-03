@@ -20,7 +20,7 @@ public class Application extends javafx.application.Application {
 
     /**
      * Main method
-     * 
+     *
      * @param args
      */
     public static void main(final String... args) {

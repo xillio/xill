@@ -27,14 +27,18 @@ public abstract class MetaExpression implements Expression, Processable {
     private final MetadataExpressionPool<Object> metadataPool = new MetadataExpressionPool<>();
     private Object value;
     private ExpressionDataType type = ExpressionDataType.ATOMIC;
+    private boolean isClosed;
 
     /**
      * Get a value from the {@link MetadataExpressionPool}
      *
      * @param clazz
      * @return The stored value or null if none was found
+     * @throws IllegalStateException if this expression has been closed
      */
     public <T> T getMeta(final Class<T> clazz) {
+	if(isClosed())
+	    throw new IllegalStateException("This expression has already been closed.");
 	return metadataPool.get(clazz);
     }
 
@@ -44,8 +48,11 @@ public abstract class MetaExpression implements Expression, Processable {
      * @param object
      * @return The previous stored value in the pool or null if no value was
      *         stored.
+     * @throws IllegalStateException if this expression has been closed
      */
     public <T> T storeMeta(final T object) {
+	if(isClosed())
+	    throw new IllegalStateException("This expression has already been closed.");
 	return metadataPool.put(object);
     }
 
@@ -55,8 +62,11 @@ public abstract class MetaExpression implements Expression, Processable {
      *
      * @param value
      * @return self
+     * @throws IllegalStateException if this expression has been closed
      */
     protected MetaExpression setValue(final Expression value) {
+	if(isClosed())
+	    throw new IllegalStateException("This expression has already been closed.");
 	this.value = value;
 	type = ExpressionDataType.ATOMIC;
 	return this;
@@ -67,8 +77,11 @@ public abstract class MetaExpression implements Expression, Processable {
      *
      * @param value
      * @return
+     * @throws IllegalStateException if this expression has been closed
      */
     protected MetaExpression setValue(final MetaExpression value) {
+	if(isClosed())
+	    throw new IllegalStateException("This expression has already been closed.");
 	this.value = value.getValue();
 	type = value.getType();
 	return this;
@@ -79,8 +92,11 @@ public abstract class MetaExpression implements Expression, Processable {
      *
      * @param value
      * @return self
+     * @throws IllegalStateException if this expression has been closed
      */
     protected MetaExpression setValue(final List<MetaExpression> value) {
+	if(isClosed())
+	    throw new IllegalStateException("This expression has already been closed.");
 	this.value = value;
 	type = ExpressionDataType.LIST;
 	return this;
@@ -92,8 +108,11 @@ public abstract class MetaExpression implements Expression, Processable {
      *
      * @param value
      * @return self
+     * @throws IllegalStateException if this expression has been closed
      */
     protected MetaExpression setValue(final Map<String, MetaExpression> value) {
+	if(isClosed())
+	    throw new IllegalStateException("This expression has already been closed.");
 	this.value = value;
 	type = ExpressionDataType.OBJECT;
 	return this;
@@ -114,8 +133,11 @@ public abstract class MetaExpression implements Expression, Processable {
      *
      * @return the value according to the {@link ExpressionDataType}
      *         specification
+     * @throws IllegalStateException if this expression has been closed
      */
     public Object getValue() {
+	if(isClosed())
+	    throw new IllegalStateException("This expression has already been closed.");
 	return value;
     }
 
@@ -130,8 +152,11 @@ public abstract class MetaExpression implements Expression, Processable {
      * </ul>
      *
      * @return the type
+     * @throws IllegalStateException if this expression has been closed
      */
     public ExpressionDataType getType() {
+	if(isClosed())
+	    throw new IllegalStateException("This expression has already been closed.");
 	return type;
     }
 
@@ -323,10 +348,22 @@ public abstract class MetaExpression implements Expression, Processable {
 	return result;
 
     }
+    
+    /**
+     * @return true if this expression has been closed using {@link MetaExpression#close()}
+     */
+    public boolean isClosed() {
+	return isClosed;
+    }
 
     @SuppressWarnings("unchecked")
     @Override
     public void close() throws Exception {
+	if(isClosed) {
+	    return;
+	}
+	
+	isClosed = true;
 	metadataPool.close();
 
 	// Close children
@@ -344,5 +381,6 @@ public abstract class MetaExpression implements Expression, Processable {
 	default:
 	    break;
 	}
+	value = null;
     }
 }
