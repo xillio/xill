@@ -261,7 +261,7 @@ public class XillDebugger implements Debugger {
 	.sorted((a, b) -> Integer.compare(a.getValue().getLineNumber(), b.getValue().getLineNumber())).collect(Collectors.toList())) {
 	    
 	    try{
-	    if(pair.getValue().getVariable() != null || isVisible(pair.getKey(), pausedOnInstruction)) {
+	    if(pair.getValue().getVariable() != null && isVisible(pair.getKey(), pausedOnInstruction)) {
 		filtered.add(pair.getKey());
 	    }
 	    }catch(EmptyStackException e){}
@@ -274,10 +274,12 @@ public class XillDebugger implements Debugger {
     private boolean isVisible(final Target target, final Instruction instruction) {
 	VariableDeclaration dec = debugInfo.getVariables().get(target);
 
+	//Has to be in the same robot
 	if (dec.getRobotID() != instruction.getRobotID()) {
 	    return false;
 	}
-
+	
+	
 	return true;
     }
 

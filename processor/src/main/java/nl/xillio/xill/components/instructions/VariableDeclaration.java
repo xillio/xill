@@ -28,7 +28,7 @@ public class VariableDeclaration extends Instruction {
      * Create a new {@link VariableDeclaration}
      *
      * @param expression
-     * @param name 
+     * @param name
      */
     public VariableDeclaration(final Processable expression, final String name) {
 	this.expression = expression;
@@ -38,15 +38,13 @@ public class VariableDeclaration extends Instruction {
     @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 	InstructionFlow<MetaExpression> result = expression.process(debugger);
-	
+
 	if (result.hasValue()) {
 	    valueStack.push(result.get());
 	} else {
 	    valueStack.push(ExpressionBuilder.NULL);
 	}
-	if(name.equals("output"))
-	System.out.println("Initialize " + name + ": " + valueStack.peek());
-	
+
 	return InstructionFlow.doResume();
     }
 
@@ -63,8 +61,6 @@ public class VariableDeclaration extends Instruction {
      * @param value
      */
     public void setVariable(final MetaExpression value) {
-	if(name.equals("output"))
-	System.out.println("Set " + name + ": " + valueStack.peek());
 	valueStack.pop();
 
 	valueStack.push(value);
@@ -72,7 +68,7 @@ public class VariableDeclaration extends Instruction {
 
     /**
      * @param position
-     * @param name 
+     * @param name
      * @return A declaration with value {@link ExpressionBuilder#NULL}
      */
     public static VariableDeclaration nullDeclaration(final CodePosition position, final String name) {
@@ -89,10 +85,17 @@ public class VariableDeclaration extends Instruction {
 
     @Override
     public void close() throws Exception {
-	if(name.equals("output"))
-	System.out.println("Close " + name + ": " + valueStack.peek());
 	valueStack.peek().close();
 	valueStack.pop();
+    }
+
+    /**
+     * This name is for debugging purposes and is <b>NOT UNIQUE</b><br/>
+     * Do not use as identifier
+     * @return the name
+     */
+    public String getName() {
+	return name;
     }
 
 }

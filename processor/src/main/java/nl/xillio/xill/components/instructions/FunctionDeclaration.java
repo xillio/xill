@@ -33,12 +33,8 @@ public class FunctionDeclaration extends Instruction {
 
     @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-
-	// Reset all parameters
-	for (Processable parameter : parameters) {
-	    parameter.process(debugger);
-	}
-
+	//Nothing to do on process
+	//Actual functionality is in run method
 	return InstructionFlow.doResume();
     }
 

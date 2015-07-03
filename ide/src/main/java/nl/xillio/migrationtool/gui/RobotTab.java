@@ -460,6 +460,11 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 			
 			//Blocker
 			editorPane.getEditor().setEditable(currentRobot == getProcessor().getRobotID());
+			
+			// Remove the 'edited' state
+			Platform.runLater(() -> {
+			    editorPane.getDocumentState().setValue(DocumentState.SAVED);
+			});
 		}
 
 		if (line > 0) {
@@ -467,8 +472,6 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 			Platform.runLater(() -> {
 				editorPane.getEditor().clearHighlight();
 				editorPane.getEditor().highlightLine(line, "highlight");
-				// Remove the 'edited' state
-				editorPane.getDocumentState().setValue(DocumentState.SAVED);
 			});
 		}
 
