@@ -242,7 +242,8 @@ public class FXController implements Initializable, EventHandler<Event> {
 		});
 
 		Platform.runLater(() -> {
-			verifyLicense();
+            //TODO Enable License Check
+			//verifyLicense();
 			showReleaseNotes();
 		});
 
