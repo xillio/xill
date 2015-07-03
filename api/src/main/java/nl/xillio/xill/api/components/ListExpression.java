@@ -59,13 +59,6 @@ public class ListExpression implements Processable {
 			}
 
 			@Override
-			public void close() throws Exception {
-				for (Expression expression : result) {
-					expression.close();
-				}
-			}
-
-			@Override
 			public Collection<Processable> getChildren() {
 				return Arrays.asList();
 			}

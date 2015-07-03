@@ -11,13 +11,14 @@ import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.components.operators.Assign;
 
 /**
  * This {@link Instruction} represents the start of a variable's lifespan
  */
 public class VariableDeclaration extends Instruction {
 
-    private final Processable expression;
+    private final Processable assignation;
     private final Stack<MetaExpression> valueStack = new Stack<>();
     /**
      * This is here for debugging purposes
@@ -31,19 +32,15 @@ public class VariableDeclaration extends Instruction {
      * @param name
      */
     public VariableDeclaration(final Processable expression, final String name) {
-	this.expression = expression;
+	assignation = new Assign(this, Arrays.asList(), expression);
 	this.name = name;
+
     }
 
     @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-	InstructionFlow<MetaExpression> result = expression.process(debugger);
-
-	if (result.hasValue()) {
-	    valueStack.push(result.get());
-	} else {
-	    valueStack.push(ExpressionBuilder.NULL);
-	}
+	pushVariable(ExpressionBuilder.NULL);
+	assignation.process(debugger);
 
 	return InstructionFlow.doResume();
     }
@@ -60,10 +57,28 @@ public class VariableDeclaration extends Instruction {
      *
      * @param value
      */
-    public void setVariable(final MetaExpression value) {
-	valueStack.pop();
+    public void replaceVariable(final MetaExpression value) {
+	releaseVariable();
+	pushVariable(value);
+    }
 
+    /**
+     * Set the value of the variable without popping the last one
+     *
+     * @param value
+     */
+    public void pushVariable(final MetaExpression value) {
+	value.registerReference();
 	valueStack.push(value);
+    }
+
+    /**
+     * Release the current variable
+     *
+     * @param value
+     */
+    public void releaseVariable() {
+	valueStack.pop().releaseReference();
     }
 
     /**
@@ -80,18 +95,18 @@ public class VariableDeclaration extends Instruction {
 
     @Override
     public Collection<Processable> getChildren() {
-	return Arrays.asList(expression);
+	return Arrays.asList(assignation);
     }
 
     @Override
     public void close() throws Exception {
-	valueStack.peek().close();
-	valueStack.pop();
+	releaseVariable();
     }
 
     /**
      * This name is for debugging purposes and is <b>NOT UNIQUE</b><br/>
      * Do not use as identifier
+     *
      * @return the name
      */
     public String getName() {

@@ -59,7 +59,8 @@ public class FunctionDeclaration extends Instruction {
 	Iterator<MetaExpression> argumentItt = arguments.iterator();
 	Iterator<VariableDeclaration> parametersItt = parameters.iterator();
 	while (argumentItt.hasNext() && parametersItt.hasNext()) {
-	    parametersItt.next().setVariable(argumentItt.next());
+	    MetaExpression expression = argumentItt.next();
+	    parametersItt.next().replaceVariable(expression);
 	}
 
 	// Run the actual code
@@ -67,10 +68,7 @@ public class FunctionDeclaration extends Instruction {
 
 	// Drop the parameters
 	for (VariableDeclaration parameter : parameters) {
-	    try {
-		parameter.close();
-	    } catch (Exception e) {
-	    }
+	   parameter.releaseVariable();
 	}
 
 	if (result.hasValue()) {

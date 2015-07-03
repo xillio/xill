@@ -7,38 +7,44 @@ import nl.xillio.xill.api.components.Expression;
  */
 public class BooleanBehavior implements Expression {
 
-	private final boolean value;
+    private final boolean value;
 
-	/**
-	 * Create a new {@link BooleanBehavior}
-	 *
-	 * @param value
-	 */
-	public BooleanBehavior(final boolean value) {
-		this.value = value;
-	}
+    /**
+     * Create a new {@link BooleanBehavior}
+     *
+     * @param value
+     */
+    public BooleanBehavior(final boolean value) {
+	this.value = value;
+    }
 
-	@Override
-	public void close() throws Exception {}
+    @Override
+    public void close() throws Exception {
+    }
 
-	@Override
-	public Number getNumberValue() {
-		return value ? 1 : 0;
-	}
+    @Override
+    public Number getNumberValue() {
+	return value ? 1 : 0;
+    }
 
-	@Override
-	public String getStringValue() {
-		return Boolean.toString(value);
-	}
+    @Override
+    public String getStringValue() {
+	return Boolean.toString(value);
+    }
 
-	@Override
-	public boolean getBooleanValue() {
-		return value;
-	}
+    @Override
+    public boolean getBooleanValue() {
+	return value;
+    }
 
-	@Override
-	public boolean isNull() {
-		return false;
-	}
+    @Override
+    public boolean isNull() {
+	return false;
+    }
+
+    @Override
+    public String toString() {
+	return getStringValue();
+    }
 
 }

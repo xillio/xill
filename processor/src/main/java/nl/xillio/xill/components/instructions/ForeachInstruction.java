@@ -65,9 +65,9 @@ public class ForeachInstruction extends Instruction {
 
 		switch (result.getType()) {
 			case ATOMIC: // Iterate over single value
-				valueVar.setVariable(result);
+				valueVar.pushVariable(result);
 				if (keyVar != null) {
-					keyVar.setVariable(ExpressionBuilder.fromValue(0));
+					keyVar.replaceVariable(ExpressionBuilder.fromValue(0));
 				}
 
 				foreachResult = instructionSet.process(debugger);
@@ -75,9 +75,9 @@ public class ForeachInstruction extends Instruction {
 			case LIST: // Iterate over list
 				int i = 0;
 				for (MetaExpression value : (List<MetaExpression>) result.getValue()) {
-					valueVar.setVariable(value);
+					valueVar.replaceVariable(value);
 					if (keyVar != null) {
-						keyVar.setVariable(ExpressionBuilder.fromValue(i++));
+						keyVar.replaceVariable(ExpressionBuilder.fromValue(i++));
 					}
 
 					InstructionFlow<MetaExpression> instructionResult = instructionSet.process(debugger);
@@ -99,9 +99,9 @@ public class ForeachInstruction extends Instruction {
 				break;
 			case OBJECT:
 				for (Map.Entry<String, MetaExpression> value : ((Map<String, MetaExpression>) result.getValue()).entrySet()) {
-					valueVar.setVariable(value.getValue());
+					valueVar.replaceVariable(value.getValue());
 					if (keyVar != null) {
-						keyVar.setVariable(ExpressionBuilder.fromValue(value.getKey()));
+						keyVar.replaceVariable(ExpressionBuilder.fromValue(value.getKey()));
 					}
 
 					InstructionFlow<MetaExpression> instructionResult = instructionSet.process(debugger);

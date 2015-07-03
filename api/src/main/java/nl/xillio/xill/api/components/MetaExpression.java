@@ -28,6 +28,7 @@ public abstract class MetaExpression implements Expression, Processable {
     private Object value;
     private ExpressionDataType type = ExpressionDataType.ATOMIC;
     private boolean isClosed;
+    private int referenceCount;// = 1; //Start on 1 (self)
 
     /**
      * Get a value from the {@link MetadataExpressionPool}
@@ -350,6 +351,30 @@ public abstract class MetaExpression implements Expression, Processable {
     }
     
     /**
+     * Register a reference to this variable.<br/>
+     * This generally only happens during assignment
+     */
+    public void registerReference() {
+	referenceCount++;
+    }
+    
+    /**
+     * Release a reference to this expression<br/>
+     * This generally only happens at the end of scope
+     */
+    public void releaseReference() {
+	referenceCount--;
+	
+	if(referenceCount <= 0) {
+	    try {
+		close();
+	    } catch (Exception e) {
+		e.printStackTrace();
+	    }
+	}
+    }
+    
+    /**
      * @return true if this expression has been closed using {@link MetaExpression#close()}
      */
     public boolean isClosed() {
@@ -359,23 +384,24 @@ public abstract class MetaExpression implements Expression, Processable {
     @SuppressWarnings("unchecked")
     @Override
     public void close() throws Exception {
-	if(isClosed) {
+	if(isClosed || this == ExpressionBuilder.NULL) {
 	    return;
 	}
 	
+	System.out.println("Disposing " + value);
 	isClosed = true;
 	metadataPool.close();
 
 	// Close children
-	switch (getType()) {
+	switch (type) {
 	case LIST:
-	    for (MetaExpression expr : (List<MetaExpression>) getValue()) {
-		expr.close();
+	    for (MetaExpression expr : (List<MetaExpression>) value) {
+		expr.releaseReference();
 	    }
 	    break;
 	case OBJECT:
-	    for (MetaExpression expr : ((Map<String, MetaExpression>) getValue()).values()) {
-		expr.close();
+	    for (MetaExpression expr : ((Map<String, MetaExpression>) value).values()) {
+		expr.releaseReference();
 	    }
 	    break;
 	default:

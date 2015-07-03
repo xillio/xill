@@ -63,13 +63,6 @@ public class ObjectExpression implements Processable {
 			}
 
 			@Override
-			public void close() throws Exception {
-				for (Expression expression : result.values()) {
-					expression.close();
-				}
-			}
-
-			@Override
 			public Collection<Processable> getChildren() {
 				return Arrays.asList();
 			}
