@@ -18,6 +18,7 @@ public class FunctionCall implements Processable {
 
     private FunctionDeclaration function;
     private List<Processable> arguments;
+    
 
     @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
@@ -30,20 +31,14 @@ public class FunctionCall implements Processable {
 
 	return function.run(debugger, expressions);
     }
-
+    
     /**
+     * Initialize this {@link FunctionCall}
      * @param function
-     *            the function to set
-     */
-    public void setFunction(final FunctionDeclaration function) {
-	this.function = function;
-    }
-
-    /**
      * @param arguments
-     *            the arguments to set
      */
-    public void setArguments(final List<Processable> arguments) {
+    public void initialize(final FunctionDeclaration function, final List<Processable> arguments) {
+	this.function = function;
 	this.arguments = arguments;
     }
 

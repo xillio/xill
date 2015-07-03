@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Stack;
 
 import org.apache.commons.collections.keyvalue.DefaultMapEntry;
 import org.apache.commons.lang3.StringUtils;
@@ -93,7 +94,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
      * declaration might not exist while parsing the call. To fix this we will
      * not set the declaration on the call until we are finished parsing.
      */
-    private final Map<xill.lang.xill.FunctionCall, FunctionCall> functionCalls = new HashMap<>();
+    private final Stack<Map.Entry<xill.lang.xill.FunctionCall, FunctionCall>> functionCalls = new Stack<>();
     private final Map<xill.lang.xill.FunctionCall, List<Processable>> functionCallArguments = new HashMap<>();
     private final Map<xill.lang.xill.UseStatement, PluginPackage> useStatements = new HashMap<>();
     private final Map<Resource, RobotID> robotID = new HashMap<>();
@@ -178,8 +179,9 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
     @Override
     public void compile() throws XillParsingException {
 	// Push all FunctionDeclarations after parsing
-	for (Map.Entry<xill.lang.xill.FunctionCall, FunctionCall> entry : functionCalls.entrySet()) {
-	    parseToken(entry.getKey(), entry.getValue());
+	while (!functionCalls.isEmpty()) {
+	    Entry<xill.lang.xill.FunctionCall, FunctionCall> pair = functionCalls.pop();
+	    parseToken(pair.getKey(), pair.getValue());
 	}
 
 	// Push all libraries
@@ -833,7 +835,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 
 	FunctionCall callExpression = new FunctionCall();
 
-	functionCalls.put(token, callExpression);
+	functionCalls.push(new SimpleEntry<>(token, callExpression));
 
 	// Parse the arguments
 	List<Processable> arguments = new ArrayList<>(token.getArgumentBlock().getParameters().size());
@@ -919,21 +921,16 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	    arguments.add(parse(expr));
 	}
 
-	// Push the arguments
-	declaration.setArguments(arguments);
-
 	FunctionDeclaration functionDeclaration = functions.get(token.getName());
 
 	if (functionDeclaration == null) {
 	    CodePosition pos = pos(token);
-	    throw new XillParsingException(
-		    "Could not find function " + token.getName().getName() + " did you forget to include "
-			    + token.getName().eResource().getURI().toFileString() + "?",
-		    pos.getLineNumber(), pos.getRobotID());
+	    throw new XillParsingException("Could not find function " + token.getName().getName(), pos.getLineNumber(),
+		    pos.getRobotID());
 	}
 
 	// Push the function
-	declaration.setFunction(functions.get(token.getName()));
+	declaration.initialize(functionDeclaration, arguments);
     }
 
     /**
@@ -1042,5 +1039,36 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
      */
     public Debugger getDebugger() {
 	return debugger;
+    }
+
+    private class SimpleEntry<K, V> implements Map.Entry<K, V> {
+
+	private final K key;
+	private final V value;
+
+	/**
+	 * @param key
+	 * @param value
+	 */
+	public SimpleEntry(final K key, final V value) {
+	    this.key = key;
+	    this.value = value;
+	}
+
+	@Override
+	public K getKey() {
+	    return key;
+	}
+
+	@Override
+	public V getValue() {
+	    return value;
+	}
+
+	@Override
+	public V setValue(final V value) {
+	    return value;
+	}
+
     }
 }
