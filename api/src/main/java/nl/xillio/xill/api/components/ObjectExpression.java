@@ -16,67 +16,67 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  */
 public class ObjectExpression implements Processable {
 
-	private final Map<? extends Processable, ? extends Processable> value;
+    private final Map<? extends Processable, ? extends Processable> value;
 
-	/**
-	 * @param object
-	 */
-	public ObjectExpression(final Map<? extends Processable, ? extends Processable> object) {
-		value = object;
+    /**
+     * @param object
+     */
+    public ObjectExpression(final Map<? extends Processable, ? extends Processable> object) {
+	value = object;
+    }
+
+    @Override
+    public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
+	Map<String, MetaExpression> result = new HashMap<String, MetaExpression>();
+
+	for (Entry<? extends Processable, ? extends Processable> entry : value.entrySet()) {
+	    try {
+		MetaExpression child = entry.getValue().process(debugger).get();
+		child.registerReference();
+		result.put(entry.getKey().process(debugger).get().getStringValue(), child);
+
+	    } catch (RobotRuntimeException e) {
+		debugger.handle(e);
+	    }
 	}
 
-	@Override
-	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-		Map<String, MetaExpression> result = new HashMap<String, MetaExpression>();
+	MetaExpression list = new MetaExpression() {
 
-		for (Entry<? extends Processable, ? extends Processable> entry : value.entrySet()) {
-			try {
+	    @Override
+	    public Number getNumberValue() {
+		return result.size();
+	    }
 
-				result.put(entry.getKey().process(debugger).get().getStringValue(),
-					entry.getValue().process(debugger).get());
+	    @Override
+	    public String getStringValue() {
+		return toString();
+	    }
 
-			} catch (RobotRuntimeException e) {
-				debugger.handle(e);
-			}
-		}
+	    @Override
+	    public boolean getBooleanValue() {
+		return isNull();
+	    }
 
-		MetaExpression list = new MetaExpression() {
+	    @Override
+	    public boolean isNull() {
+		return false;
+	    }
 
-			@Override
-			public Number getNumberValue() {
-				return result.size();
-			}
+	    @Override
+	    public Collection<Processable> getChildren() {
+		return Arrays.asList();
+	    }
+	};
+	list.setValue(result);
 
-			@Override
-			public String getStringValue() {
-				return toString();
-			}
+	return InstructionFlow.doResume(list);
+    }
 
-			@Override
-			public boolean getBooleanValue() {
-				return isNull();
-			}
+    @Override
+    public Collection<Processable> getChildren() {
+	List<Processable> children = new ArrayList<>(value.values());
+	children.addAll(value.keySet());
 
-			@Override
-			public boolean isNull() {
-				return false;
-			}
-
-			@Override
-			public Collection<Processable> getChildren() {
-				return Arrays.asList();
-			}
-		};
-		list.setValue(result);
-
-		return InstructionFlow.doResume(list);
-	}
-
-	@Override
-	public Collection<Processable> getChildren() {
-		List<Processable> children = new ArrayList<>(value.values());
-		children.addAll(value.keySet());
-
-		return children;
-	}
+	return children;
+    }
 }

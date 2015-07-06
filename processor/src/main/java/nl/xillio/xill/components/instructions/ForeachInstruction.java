@@ -67,20 +67,31 @@ public class ForeachInstruction extends Instruction {
 			case ATOMIC: // Iterate over single value
 				valueVar.pushVariable(result);
 				if (keyVar != null) {
-					keyVar.replaceVariable(ExpressionBuilder.fromValue(0));
+					keyVar.pushVariable(ExpressionBuilder.fromValue(0));
 				}
 
 				foreachResult = instructionSet.process(debugger);
+				
+				valueVar.releaseVariable();
+				if (keyVar != null) {
+					keyVar.releaseVariable();
+				}
 				break;
 			case LIST: // Iterate over list
 				int i = 0;
 				for (MetaExpression value : (List<MetaExpression>) result.getValue()) {
-					valueVar.replaceVariable(value);
+					valueVar.pushVariable(value);
 					if (keyVar != null) {
-						keyVar.replaceVariable(ExpressionBuilder.fromValue(i++));
+						keyVar.pushVariable(ExpressionBuilder.fromValue(i++));
 					}
 
 					InstructionFlow<MetaExpression> instructionResult = instructionSet.process(debugger);
+					
+					//Release
+					valueVar.releaseVariable();
+					if (keyVar != null) {
+						keyVar.releaseVariable();
+					}
 
 					if (instructionResult.returns()) {
 					    foreachResult = instructionResult;
@@ -99,13 +110,19 @@ public class ForeachInstruction extends Instruction {
 				break;
 			case OBJECT:
 				for (Map.Entry<String, MetaExpression> value : ((Map<String, MetaExpression>) result.getValue()).entrySet()) {
-					valueVar.replaceVariable(value.getValue());
+					valueVar.pushVariable(value.getValue());
 					if (keyVar != null) {
-						keyVar.replaceVariable(ExpressionBuilder.fromValue(value.getKey()));
+						keyVar.pushVariable(ExpressionBuilder.fromValue(value.getKey()));
 					}
 
 					InstructionFlow<MetaExpression> instructionResult = instructionSet.process(debugger);
 
+					//Release
+					valueVar.releaseVariable();
+					if (keyVar != null) {
+						keyVar.releaseVariable();
+					}
+					
 					if (instructionResult.returns()) {
 					    foreachResult = instructionResult;
 					    break;
@@ -124,20 +141,6 @@ public class ForeachInstruction extends Instruction {
 			default:
 				throw new NotImplementedException("This type has not been implemented.");
 
-		}
-		
-		try {
-		    valueVar.close();
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}
-		
-		if(keyVar != null){
-		    try {
-			keyVar.close();
-		    } catch (Exception e) {
-			e.printStackTrace();
-		    }
 		}
 
 		return foreachResult;

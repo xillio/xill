@@ -72,7 +72,7 @@ public class Assign implements Processable {
 	    }
 	}
 
-	return InstructionFlow.doResume(value);
+	return InstructionFlow.doResume(ExpressionBuilder.NULL);
     }
 
     @SuppressWarnings("unchecked")

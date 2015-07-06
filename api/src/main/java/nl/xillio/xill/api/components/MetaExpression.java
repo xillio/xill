@@ -417,8 +417,7 @@ public abstract class MetaExpression implements Expression, Processable {
 	if (isClosed || this == ExpressionBuilder.NULL) {
 	    return;
 	}
-
-	System.out.println("Disposing " + value);
+	
 	isClosed = true;
 	metadataPool.close();
 

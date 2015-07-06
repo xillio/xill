@@ -37,8 +37,11 @@ import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.XillParsingException;
 import nl.xillio.xill.components.expressions.CallbotExpression;
 import nl.xillio.xill.components.expressions.ConstructCall;
+import nl.xillio.xill.components.expressions.FilterExpression;
 import nl.xillio.xill.components.expressions.FunctionCall;
+import nl.xillio.xill.components.expressions.FunctionParameterExpression;
 import nl.xillio.xill.components.expressions.GetArgumentExpression;
+import nl.xillio.xill.components.expressions.MapExpression;
 import nl.xillio.xill.components.expressions.VariableAccessExpression;
 import nl.xillio.xill.components.instructions.BreakInstruction;
 import nl.xillio.xill.components.instructions.ContinueInstruction;
@@ -94,6 +97,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
      * declaration might not exist while parsing the call. To fix this we will
      * not set the declaration on the call until we are finished parsing.
      */
+    private final Stack<Map.Entry<xill.lang.xill.FunctionDeclaration, FunctionParameterExpression>> functionParameterExpressions = new Stack<>();
     private final Stack<Map.Entry<xill.lang.xill.FunctionCall, FunctionCall>> functionCalls = new Stack<>();
     private final Map<xill.lang.xill.FunctionCall, List<Processable>> functionCallArguments = new HashMap<>();
     private final Map<xill.lang.xill.UseStatement, PluginPackage> useStatements = new HashMap<>();
@@ -182,6 +186,12 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	while (!functionCalls.isEmpty()) {
 	    Entry<xill.lang.xill.FunctionCall, FunctionCall> pair = functionCalls.pop();
 	    parseToken(pair.getKey(), pair.getValue());
+	}
+
+	// Push all map expressions
+	while (!functionParameterExpressions.isEmpty()) {
+	    Entry<xill.lang.xill.FunctionDeclaration, FunctionParameterExpression> pair = functionParameterExpressions.pop();
+	    paseToken(pair.getKey(), pair.getValue());
 	}
 
 	// Push all libraries
@@ -931,6 +941,54 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 
 	// Push the function
 	declaration.initialize(functionDeclaration, arguments);
+    }
+
+    private void paseToken(final xill.lang.xill.FunctionDeclaration key, final FunctionParameterExpression expression) {
+
+	FunctionDeclaration functionDeclaration = functions.get(key);
+	expression.setFunction(functionDeclaration);
+    }
+
+    /**
+     * Parse a {@link MapExpression}
+     * 
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    Processable parseToken(final xill.lang.xill.MapExpression token) throws XillParsingException {
+	List<Processable> arguments = new ArrayList<>();
+
+	for (Expression expression : token.getArguments()) {
+	    arguments.add(parse(expression));
+	}
+
+	MapExpression map = new MapExpression(arguments);
+
+	functionParameterExpressions.push(new SimpleEntry<>(token.getFunction(), map));
+
+	return map;
+    }
+    
+    /**
+     * Parse a {@link FilterExpression}
+     * 
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    Processable parseToken(final xill.lang.xill.FilterExpression token) throws XillParsingException {
+	List<Processable> arguments = new ArrayList<>();
+
+	for (Expression expression : token.getArguments()) {
+	    arguments.add(parse(expression));
+	}
+
+	FilterExpression filter = new FilterExpression(arguments);
+
+	functionParameterExpressions.push(new SimpleEntry<>(token.getFunction(), filter));
+
+	return filter;
     }
 
     /**
