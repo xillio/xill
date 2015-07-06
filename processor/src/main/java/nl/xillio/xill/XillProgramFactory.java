@@ -158,7 +158,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 		    .filter(pckage -> pckage.getName().equals(searchName)).findAny();
 
 	    if (!plugin.isPresent()) {
-		CodePosition pos = pos(robot);
+		CodePosition pos = pos(using);
 		throw new XillParsingException("Could not find plugin " + pluginName, pos.getLineNumber(),
 			pos.getRobotID());
 	    }
