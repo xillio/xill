@@ -55,31 +55,52 @@ public class ForeachInstruction extends Instruction {
 	@Override
 	public InstructionFlow<MetaExpression> process(Debugger debugger) throws RobotRuntimeException {
 		MetaExpression result = list.process(debugger).get();
+		valueVar.process(debugger);
+		
+		if(keyVar != null){
+		    keyVar.process(debugger);
+		}
+		
+		InstructionFlow<MetaExpression> foreachResult = InstructionFlow.doResume();
 
 		switch (result.getType()) {
 			case ATOMIC: // Iterate over single value
-				valueVar.setVariable(result);
+				valueVar.pushVariable(result);
 				if (keyVar != null) {
-					keyVar.setVariable(ExpressionBuilder.fromValue(0));
+					keyVar.pushVariable(ExpressionBuilder.fromValue(0));
 				}
 
-				return instructionSet.process(debugger);
+				foreachResult = instructionSet.process(debugger);
+				
+				valueVar.releaseVariable();
+				if (keyVar != null) {
+					keyVar.releaseVariable();
+				}
+				break;
 			case LIST: // Iterate over list
 				int i = 0;
 				for (MetaExpression value : (List<MetaExpression>) result.getValue()) {
-					valueVar.setVariable(value);
+					valueVar.pushVariable(value);
 					if (keyVar != null) {
-						keyVar.setVariable(ExpressionBuilder.fromValue(i++));
+						keyVar.pushVariable(ExpressionBuilder.fromValue(i++));
 					}
 
 					InstructionFlow<MetaExpression> instructionResult = instructionSet.process(debugger);
+					
+					//Release
+					valueVar.releaseVariable();
+					if (keyVar != null) {
+						keyVar.releaseVariable();
+					}
 
 					if (instructionResult.returns()) {
-						return instructionResult;
+					    foreachResult = instructionResult;
+					    break;
 					}
 
 					if (instructionResult.breaks()) {
-						return InstructionFlow.doResume();
+					    foreachResult = InstructionFlow.doResume();
+					    break;
 					}
 
 					if (instructionResult.skips()) {
@@ -89,19 +110,27 @@ public class ForeachInstruction extends Instruction {
 				break;
 			case OBJECT:
 				for (Map.Entry<String, MetaExpression> value : ((Map<String, MetaExpression>) result.getValue()).entrySet()) {
-					valueVar.setVariable(value.getValue());
+					valueVar.pushVariable(value.getValue());
 					if (keyVar != null) {
-						keyVar.setVariable(ExpressionBuilder.fromValue(value.getKey()));
+						keyVar.pushVariable(ExpressionBuilder.fromValue(value.getKey()));
 					}
 
 					InstructionFlow<MetaExpression> instructionResult = instructionSet.process(debugger);
 
+					//Release
+					valueVar.releaseVariable();
+					if (keyVar != null) {
+						keyVar.releaseVariable();
+					}
+					
 					if (instructionResult.returns()) {
-						return instructionResult;
+					    foreachResult = instructionResult;
+					    break;
 					}
 
 					if (instructionResult.breaks()) {
-						return InstructionFlow.doResume();
+					    foreachResult=  InstructionFlow.doResume();
+					    break;
 					}
 
 					if (instructionResult.skips()) {
@@ -114,7 +143,7 @@ public class ForeachInstruction extends Instruction {
 
 		}
 
-		return InstructionFlow.doResume();
+		return foreachResult;
 	}
 
 	@Override

@@ -89,6 +89,7 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
 	public void initialize(RobotTab tab) { 
 		debugger = tab.getProcessor().getDebugger();
 		debugger.getOnRobotPause().addListener(e -> refresh());
+		debugger.getOnRobotStop().addListener(e -> clear());
 	}
 
 	/**

@@ -13,6 +13,7 @@ import com.google.gson.GsonBuilder;
 
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.NullDebugger;
+import nl.xillio.xill.api.behavior.BooleanBehavior;
 import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
@@ -26,14 +27,22 @@ public abstract class MetaExpression implements Expression, Processable {
     private final MetadataExpressionPool<Object> metadataPool = new MetadataExpressionPool<>();
     private Object value;
     private ExpressionDataType type = ExpressionDataType.ATOMIC;
+    private boolean isClosed;
+    private int referenceCount;
+    private boolean preventDispose;
 
     /**
      * Get a value from the {@link MetadataExpressionPool}
      *
      * @param clazz
      * @return The stored value or null if none was found
+     * @throws IllegalStateException
+     *             if this expression has been closed
      */
     public <T> T getMeta(final Class<T> clazz) {
+	if (isClosed()) {
+	    throw new IllegalStateException("This expression has already been closed.");
+	}
 	return metadataPool.get(clazz);
     }
 
@@ -43,8 +52,13 @@ public abstract class MetaExpression implements Expression, Processable {
      * @param object
      * @return The previous stored value in the pool or null if no value was
      *         stored.
+     * @throws IllegalStateException
+     *             if this expression has been closed
      */
     public <T> T storeMeta(final T object) {
+	if (isClosed()) {
+	    throw new IllegalStateException("This expression has already been closed.");
+	}
 	return metadataPool.put(object);
     }
 
@@ -54,8 +68,13 @@ public abstract class MetaExpression implements Expression, Processable {
      *
      * @param value
      * @return self
+     * @throws IllegalStateException
+     *             if this expression has been closed
      */
     protected MetaExpression setValue(final Expression value) {
+	if (isClosed()) {
+	    throw new IllegalStateException("This expression has already been closed.");
+	}
 	this.value = value;
 	type = ExpressionDataType.ATOMIC;
 	return this;
@@ -66,8 +85,13 @@ public abstract class MetaExpression implements Expression, Processable {
      *
      * @param value
      * @return
+     * @throws IllegalStateException
+     *             if this expression has been closed
      */
     protected MetaExpression setValue(final MetaExpression value) {
+	if (isClosed()) {
+	    throw new IllegalStateException("This expression has already been closed.");
+	}
 	this.value = value.getValue();
 	type = value.getType();
 	return this;
@@ -78,8 +102,13 @@ public abstract class MetaExpression implements Expression, Processable {
      *
      * @param value
      * @return self
+     * @throws IllegalStateException
+     *             if this expression has been closed
      */
     protected MetaExpression setValue(final List<MetaExpression> value) {
+	if (isClosed()) {
+	    throw new IllegalStateException("This expression has already been closed.");
+	}
 	this.value = value;
 	type = ExpressionDataType.LIST;
 	return this;
@@ -91,8 +120,13 @@ public abstract class MetaExpression implements Expression, Processable {
      *
      * @param value
      * @return self
+     * @throws IllegalStateException
+     *             if this expression has been closed
      */
     protected MetaExpression setValue(final Map<String, MetaExpression> value) {
+	if (isClosed()) {
+	    throw new IllegalStateException("This expression has already been closed.");
+	}
 	this.value = value;
 	type = ExpressionDataType.OBJECT;
 	return this;
@@ -113,8 +147,13 @@ public abstract class MetaExpression implements Expression, Processable {
      *
      * @return the value according to the {@link ExpressionDataType}
      *         specification
+     * @throws IllegalStateException
+     *             if this expression has been closed
      */
     public Object getValue() {
+	if (isClosed()) {
+	    throw new IllegalStateException("This expression has already been closed.");
+	}
 	return value;
     }
 
@@ -129,8 +168,13 @@ public abstract class MetaExpression implements Expression, Processable {
      * </ul>
      *
      * @return the type
+     * @throws IllegalStateException
+     *             if this expression has been closed
      */
     public ExpressionDataType getType() {
+	if (isClosed()) {
+	    throw new IllegalStateException("This expression has already been closed.");
+	}
 	return type;
     }
 
@@ -251,6 +295,9 @@ public abstract class MetaExpression implements Expression, Processable {
      *         way:
      *         <ol>
      *         <li>If the value is null: return null</li>
+     *         <li>If the expression is created using
+     *         {@link ExpressionBuilder#fromValue(boolean)}: return
+     *         {@link Boolean}</li>
      *         <li>If the value can be a number (so also string constants like
      *         "5.7") it will return a {@link Double}</li>
      *         <li>In all other cases return a {@link String} representation.
@@ -283,8 +330,13 @@ public abstract class MetaExpression implements Expression, Processable {
 		return null;
 	    }
 
+	    // Boolean
+	    if (expression.getValue() instanceof BooleanBehavior) {
+		result = expression.getBooleanValue();
+	    }
+
 	    // String
-	    if (Double.isNaN(expression.getNumberValue().doubleValue())) {
+	    else if (Double.isNaN(expression.getNumberValue().doubleValue())) {
 		result = expression.getStringValue();
 	    }
 
@@ -298,44 +350,92 @@ public abstract class MetaExpression implements Expression, Processable {
 	    }
 	    break;
 	case LIST:
-	    List<Object> resultList  = new ArrayList<>();
+	    List<Object> resultList = new ArrayList<>();
 	    results.put(expression, resultList);
-	    resultList.addAll(((List<MetaExpression>) expression.getValue()).stream().map(v -> extractValue(v,results)).collect(Collectors.toList()));
+	    resultList.addAll(((List<MetaExpression>) expression.getValue()).stream().map(v -> extractValue(v, results))
+		    .collect(Collectors.toList()));
 	    result = resultList;
 	    break;
 	case OBJECT:
-	    Map<String,Object> resultObject  = new HashMap<>();
+	    Map<String, Object> resultObject = new HashMap<>();
 	    results.put(expression, resultObject);
-	    resultObject.putAll( ((Map<String, MetaExpression>) expression.getValue()).entrySet().stream()
-		    .collect(Collectors.toMap(Map.Entry::getKey, entry -> extractValue(entry.getValue(),results))));
+	    resultObject.putAll(((Map<String, MetaExpression>) expression.getValue()).entrySet().stream()
+		    .collect(Collectors.toMap(Map.Entry::getKey, entry -> extractValue(entry.getValue(), results))));
 	    result = resultObject;
 	    break;
 	default:
-		throw new NotImplementedException("This type has not been implemented.");
+	    throw new NotImplementedException("This type has not been implemented.");
 	}
 	return result;
 
     }
 
+    /**
+     * Register a reference to this variable.<br/>
+     * This generally only happens during assignment
+     */
+    public void registerReference() {
+	referenceCount++;
+    }
+
+    /**
+     * Release a reference to this expression<br/>
+     * This generally only happens at the end of scope
+     */
+    public void releaseReference() {
+	referenceCount--;
+
+	if (!preventDispose && referenceCount <= 0) {
+	    try {
+		close();
+	    } catch (Exception e) {
+		e.printStackTrace();
+	    }
+	}
+
+	preventDispose = false;
+    }
+
+    /**
+     * Next time a reference is released, this expression won't be disposed.
+     */
+    public void preventDisposal() {
+	preventDispose = true;
+    }
+
+    /**
+     * @return true if this expression has been closed using
+     *         {@link MetaExpression#close()}
+     */
+    public boolean isClosed() {
+	return isClosed;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public void close() throws Exception {
+	if (isClosed || this == ExpressionBuilder.NULL) {
+	    return;
+	}
+	
+	isClosed = true;
 	metadataPool.close();
 
 	// Close children
-	switch (getType()) {
+	switch (type) {
 	case LIST:
-	    for (MetaExpression expr : (List<MetaExpression>) getValue()) {
-		expr.close();
+	    for (MetaExpression expr : (List<MetaExpression>) value) {
+		expr.releaseReference();
 	    }
 	    break;
 	case OBJECT:
-	    for (MetaExpression expr : ((Map<String, MetaExpression>) getValue()).values()) {
-		expr.close();
+	    for (MetaExpression expr : ((Map<String, MetaExpression>) value).values()) {
+		expr.releaseReference();
 	    }
 	    break;
 	default:
 	    break;
 	}
+	value = null;
     }
 }

@@ -150,8 +150,6 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 		onPause();
 
 		tab.display(action.getRobotID(), action.getLineNumber());
-		
-		//highlight(action.getRobotID(), action.getLineNumber(), "highlight");
 	}
 
 	private void stepIn() {

@@ -2,6 +2,7 @@ package nl.xillio.xill.components.instructions;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Stack;
 
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.InstructionFlow;
@@ -15,6 +16,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 public class ExpressionInstruction extends Instruction {
 
 	private final Processable expression;
+	private Stack<MetaExpression> results = new Stack<>();
 
 	/**
 	 * Create a new {@link ExpressionInstruction}
@@ -28,7 +30,7 @@ public class ExpressionInstruction extends Instruction {
 	@Override
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		try {
-			expression.process(debugger);
+			results.push(expression.process(debugger).get());
 		} catch (Exception e) {
 			debugger.handle(e);
 		}
@@ -41,7 +43,14 @@ public class ExpressionInstruction extends Instruction {
 	}
 
 	@Override
-	public void close() throws Exception {}
+	public void close() throws Exception {
+	    //Close all results
+	    while(!results.isEmpty()) {
+		try{
+		    results.pop().close();
+		}catch(Exception e){}
+	    }
+	}
 	
 	@Override
 	public String toString() {
