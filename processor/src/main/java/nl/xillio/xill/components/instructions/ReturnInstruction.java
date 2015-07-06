@@ -42,8 +42,8 @@ public class ReturnInstruction extends Instruction {
 
 	try {
 	    MetaExpression result = value.process(debugger).get();
-	    //Prevent return value from being 
-	    result.registerReference();
+	    //Prevent return value from being disposed in limbo. (Temporarily no reference)
+	    result.preventDisposal();
 	    
 	    return InstructionFlow.doReturn(result);
 	} catch (NoSuchElementException e) {
