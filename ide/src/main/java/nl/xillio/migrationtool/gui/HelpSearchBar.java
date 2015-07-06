@@ -67,14 +67,8 @@ public class HelpSearchBar extends AnchorPane implements EventHandler<KeyEvent> 
 		box.getEditor().addEventFilter(KeyEvent.KEY_PRESSED, event -> {
 			try
 			{
-				if(event.getCode() == KeyCode.ENTER)
-				{
 				runSearch(box.getValue().toString());
-				}
-				else
-					reset();
-					
-				}
+			}
 			catch (Exception e)
 			{
 				
@@ -85,7 +79,7 @@ public class HelpSearchBar extends AnchorPane implements EventHandler<KeyEvent> 
 		
 		this.getChildren().add(box);
 		reset();
-		this.addEventHandler(KeyEvent.KEY_PRESSED, this);
+//		this.addEventHandler(KeyEvent.KEY_PRESSED, this);
 	}
 
 	/**
@@ -96,8 +90,7 @@ public class HelpSearchBar extends AnchorPane implements EventHandler<KeyEvent> 
 	 */
 	public void reset() {
 		box.getItems().clear();
-		box.hide();
-	}
+		}
 	
 	/**
 	 * @param help The help pane in which the search bar is embedded
@@ -108,7 +101,9 @@ public class HelpSearchBar extends AnchorPane implements EventHandler<KeyEvent> 
 
 	private void runSearch(String query) {
 		// A new search query. Clear old data
-		reset();
+	    box.getItems().clear();
+		if(query != null)
+		{
 		String[] results = searcher.search(query);
 		ObservableList<String> options = FXCollections.observableArrayList();
 		for(String result : results)
@@ -117,6 +112,11 @@ public class HelpSearchBar extends AnchorPane implements EventHandler<KeyEvent> 
 		box.autosize();
 		if(!box.getItems().isEmpty())
 			box.show();
+		else
+			box.hide();
+		}
+		else
+			box.hide();
 	}
 
 	@Override
