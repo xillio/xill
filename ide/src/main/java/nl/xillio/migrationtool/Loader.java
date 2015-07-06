@@ -192,10 +192,10 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 		String[] funcs = new String[]{"abs", "absoluteurl", "addsubnode", "ampersanddecode", "ampersandencode", "base64decode",
 				"break", "callbot", "changedate", "click", "contains", "continue", "copyfile", "copynode", "createexcel", "createfolder",
 				"cURL", "database", "date", "datediff", "dateinfo", "datetostring", "deletefile", "deletefolder", "download", "endswith", "es_aggregate",
-				"es_connect", "es_delete", "es_filteragg", "es_get", "es_hasfeldfiler", "es_indexexists", "es_put", "es_rangefilter", "es_regexfilter",
+				"es_connect", "es_delete", "es_filteragg", "es_get", "es_hasfieldfilter", "es_indexexists", "es_put", "es_rangefilter", "es_regexfilter",
 				"es_search", "es_sort", "es_statsagg", "evaluate", "exiftool", "extractlist", "fileexists", "fileinfo", "filesize", "focus", "foreach", "format",
 				"formatxml", "getcell", "geterror", "getframe", "getobject", "getsheet", "gettext", "global", "hungarianalgorithm", "if", "importcsv", "include", "indexof",
-				"input", "jsontolist", "length", "listfiles", "listfolders", "listreverse", "listsort", "listtocsv"};
+				"input", "jsontolist", "length", "listfiles", "listfolders", "listreverse", "listsort", "listtocsv", "listtojson", "listtostring", "listtoxml"};
 		
 		
 	
@@ -205,7 +205,7 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 			try(InputStream url = Loader.class.getResourceAsStream("/helpxml/" + f + ".xml")) {
 				searcher.index(parser.parseXML(url));
 			} catch (ElasticsearchException | IOException | SAXException e1) {
-				// TODO Auto-generated catch block
+				System.out.println(f);
 				e1.printStackTrace();
 			}
 		}

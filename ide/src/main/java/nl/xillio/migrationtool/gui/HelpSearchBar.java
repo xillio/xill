@@ -53,9 +53,6 @@ public class HelpSearchBar extends AnchorPane{
 		
 		//The searcher
 		searcher = new DocumentSearcher(ESConsoleClient.getInstance().getClient());
-		
-		//The results combobox
-		box = new ComboBox<String>();
 		box.setEditable(true);
 		
 		//Handle click
@@ -77,21 +74,8 @@ public class HelpSearchBar extends AnchorPane{
 		    		runSearch(newValue);
 		    }
 		});	
-
 		this.getChildren().add(box);
-		reset();
-//		this.addEventHandler(KeyEvent.KEY_PRESSED, this);
 	}
-
-	/**
-	 * Resets the search bar: resets the counts and optionally the query.
-	 *
-	 * @param clearQuery
-	 *        whether the query should be erased
-	 */
-	public void reset() {
-		box.getItems().clear();
-		}
 	
 	/**
 	 * @param help The help pane in which the search bar is embedded
@@ -99,10 +83,9 @@ public class HelpSearchBar extends AnchorPane{
 	public void setHelpPane(HelpPane help) {
 		this.helpPane = help;
 	}
-
+	
+	//Runs the search
 	private void runSearch(String query) {
-		// A new search query. Clear old data
-
 		if(query != null)
 		{
 		String[] results = searcher.search(query);

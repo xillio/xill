@@ -1,0 +1,11 @@
+diff a/ide/src/main/java/nl/xillio/migrationtool/gui/HelpSearchBar.java b/ide/src/main/java/nl/xillio/migrationtool/gui/HelpSearchBar.java	(rejected hunks)
+@@ -2,7 +2,9 @@
+ 
+ import java.io.IOException;
+ 
++import javafx.application.Platform;
+ import javafx.beans.value.ChangeListener;
++import javafx.beans.value.ObservableValue;
+ import javafx.collections.FXCollections;
+ import javafx.collections.ObservableList;
+ import javafx.event.ActionEvent;
