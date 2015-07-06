@@ -11,9 +11,8 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
  *
- * Returns true when the first string ends with the second string.
- * </br>
- * 
+ * Returns true when the first string ends with the second string. </br>
+ *
  *
  * @author Sander
  *

@@ -10,8 +10,8 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
- * 
- * 
+ *
+ *
  * Makes the provided text lower case.
  *
  * @author Sander

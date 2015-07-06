@@ -14,7 +14,7 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
- * "Extracts all matching substrings of text into a list."
+ * Extracts all matching substrings of text into a list.
  *
  * @author Sander
  *
@@ -23,9 +23,6 @@ public class AllMatchesConstruct implements Construct {
 
 	private final RegexConstruct regexConstruct;
 
-	/**
-	 * @param regexConstruct
-	 */
 	public AllMatchesConstruct(final RegexConstruct regexConstruct) {
 		this.regexConstruct = regexConstruct;
 	}

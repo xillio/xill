@@ -29,7 +29,7 @@ public class AmpersandDecodeConstruct implements Construct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(AmpersandDecodeConstruct::process, new Argument("string"),
-				new Argument("passes",ExpressionBuilder.fromValue(1)));
+				new Argument("passes", ExpressionBuilder.fromValue(1)));
 	}
 
 	private static MetaExpression process(final MetaExpression stringVar, final MetaExpression passesVar) {

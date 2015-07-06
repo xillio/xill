@@ -11,7 +11,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
  *
- * 
+ *
  * Makes the provided text upper case.
  *
  * @author Sander
@@ -35,8 +35,9 @@ public class UpperCaseConstruct implements Construct {
 		if (string.getType() != ExpressionDataType.ATOMIC) {
 			throw new RobotRuntimeException("Expected atomic value.");
 		}
-		if(string == ExpressionBuilder.NULL)
+		if (string == ExpressionBuilder.NULL) {
 			throw new RobotRuntimeException("Input cannot be null");
+		}
 
 		return ExpressionBuilder.fromValue(string.getStringValue().toUpperCase());
 	}

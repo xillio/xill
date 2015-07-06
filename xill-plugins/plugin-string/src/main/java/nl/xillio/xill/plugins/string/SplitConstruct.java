@@ -40,14 +40,17 @@ public class SplitConstruct implements Construct {
 	private static MetaExpression process(final MetaExpression string, final MetaExpression delimiter,
 			final MetaExpression keepempty) {
 
-		//The input has to be atomic.
-		if (string.getType() != ExpressionDataType.ATOMIC || delimiter.getType() != ExpressionDataType.ATOMIC || keepempty.getType() != ExpressionDataType.ATOMIC) {
+		// The input has to be atomic.
+		if (string.getType() != ExpressionDataType.ATOMIC || delimiter.getType() != ExpressionDataType.ATOMIC
+				|| keepempty.getType() != ExpressionDataType.ATOMIC) {
 			throw new RobotRuntimeException("Expected atomic value.");
 		}
-		
-		if(string == ExpressionBuilder.NULL || delimiter == ExpressionBuilder.NULL || keepempty == ExpressionBuilder.NULL)
+
+		if (string == ExpressionBuilder.NULL || delimiter == ExpressionBuilder.NULL
+				|| keepempty == ExpressionBuilder.NULL) {
 			throw new RobotRuntimeException("Input cannot be null.");
-		
+		}
+
 		boolean keepEmpty = keepempty.getBooleanValue();
 
 		String[] stringArray = string.getStringValue().split(delimiter.getStringValue());

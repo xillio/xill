@@ -13,7 +13,8 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
  *
- * Encodes all special XML characters (<,>,&,\",') to their respective xml entities.
+ * Encodes all special XML characters (<,>,&,\",') to their respective xml
+ * entities.
  *
  * @author Sander
  *
@@ -33,11 +34,11 @@ public class AmpersandEncodeConstruct implements Construct {
 
 	private static MetaExpression process(final MetaExpression stringVar) {
 
-		if (stringVar.getType() != ExpressionDataType.ATOMIC){
+		if (stringVar.getType() != ExpressionDataType.ATOMIC) {
 			throw new RobotRuntimeException("Expected atomic value.");
 		}
 
-		if (stringVar == ExpressionBuilder.NULL){
+		if (stringVar == ExpressionBuilder.NULL) {
 			throw new RobotRuntimeException("Input cannot be null.");
 		}
 

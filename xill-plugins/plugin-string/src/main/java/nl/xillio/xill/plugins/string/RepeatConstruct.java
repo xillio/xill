@@ -40,10 +40,9 @@ public class RepeatConstruct implements Construct {
 		if (string == ExpressionBuilder.NULL || value == ExpressionBuilder.NULL) {
 			throw new RobotRuntimeException("Input cannot be null.");
 		}
-		
-		
-		String repeatedString =  StringUtils.repeat(string.getStringValue(), value.getNumberValue().intValue());
-		
+
+		String repeatedString = StringUtils.repeat(string.getStringValue(), value.getNumberValue().intValue());
+
 		return ExpressionBuilder.fromValue(repeatedString);
 	}
 }

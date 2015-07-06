@@ -16,10 +16,11 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
- * Returns a list of matches of the specified regex on the provided string.
- * </br></br>
+ * Returns a list of matches of the specified regex on the provided
+ * string. </br>
+ * </br>
  *
- * 
+ *
  * @author Sander
  */
 public class RegexConstruct implements Construct {
@@ -44,7 +45,7 @@ public class RegexConstruct implements Construct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(this::process, new Argument("string"), new Argument("regex"),
-				new Argument("timeout",ExpressionBuilder.fromValue(this.REGEX_TIMEOUT)));
+				new Argument("timeout", ExpressionBuilder.fromValue(REGEX_TIMEOUT)));
 	}
 
 	private MetaExpression process(final MetaExpression valueVar, final MetaExpression regexVar,
@@ -76,9 +77,8 @@ public class RegexConstruct implements Construct {
 		}
 	}
 
-	
 	/**
-	 * 
+	 *
 	 * @param regex
 	 * @param value
 	 * @param timeout

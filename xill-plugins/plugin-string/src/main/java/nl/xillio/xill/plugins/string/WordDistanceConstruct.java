@@ -11,8 +11,11 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
  *
- * Returns a number between 0 (no likeness) and 1 (identical), indicating how much the two strings are alike. </br>
- * If the option 'relative' is set to false, then the absolute editdistance will be returned rather than a relative distance.
+ * Returns a number between 0 (no likeness) and 1 (identical), indicating how
+ * much the two strings are alike. </br>
+ * If the option 'relative' is set to false, then the absolute editdistance will
+ * be returned rather than a relative distance.
+ * 
  * @author Sander
  *
  */
@@ -24,16 +27,13 @@ public class WordDistanceConstruct implements Construct {
 		return "wordDistance";
 	}
 
-	
-	
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		
-		return new ConstructProcessor(WordDistanceConstruct::process, new Argument("source" ), new Argument("target"),
-				new Argument("relative",ExpressionBuilder.TRUE));
+
+		return new ConstructProcessor(WordDistanceConstruct::process, new Argument("source"), new Argument("target"),
+				new Argument("relative", ExpressionBuilder.TRUE));
 	}
 
-	
 	private static MetaExpression process(final MetaExpression source, final MetaExpression target,
 			final MetaExpression relative) {
 

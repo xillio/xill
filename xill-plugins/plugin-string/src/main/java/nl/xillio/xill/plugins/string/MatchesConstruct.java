@@ -11,7 +11,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
  * Returns whether the provided value matches the specified regex.
- * 
+ *
  * @author Sander
  *
  */
@@ -33,7 +33,8 @@ public class MatchesConstruct implements Construct {
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
 				(valueVar, regexVar, timeoutVar) -> process(regexConstruct, valueVar, regexVar, timeoutVar),
-				new Argument("valueVar"), new Argument("regexVar"), new Argument("timeoutVar"));
+				new Argument("valueVar"), new Argument("regexVar"),
+				new Argument("timeoutVar", ExpressionBuilder.fromValue(RegexConstruct.REGEX_TIMEOUT)));
 	}
 
 	private static MetaExpression process(final RegexConstruct regexConstruct, final MetaExpression valueVar,

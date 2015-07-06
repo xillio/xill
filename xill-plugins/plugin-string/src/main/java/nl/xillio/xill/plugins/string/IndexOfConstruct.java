@@ -11,10 +11,12 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
  *
- * Returns the first index of the needle in the provided text. Optionally an alternative start position can be specified.
+ * Returns the first index of the needle in the provided text. Optionally an
+ * alternative start position can be specified.
  *
  *
  * </br>
+ * 
  * @author Sander
  *
  */
@@ -31,7 +33,6 @@ public class IndexOfConstruct implements Construct {
 		return new ConstructProcessor(IndexOfConstruct::process, new Argument("string1"), new Argument("string2"),
 				new Argument("value", ExpressionBuilder.fromValue(0)));
 	}
-	
 
 	private static MetaExpression process(final MetaExpression string1, final MetaExpression string2,
 			final MetaExpression value) {

@@ -11,9 +11,8 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
  *
- * Returns whether the first string starts with the second string.
- * </br>
- * 
+ * Returns whether the first string starts with the second string. </br>
+ *
  *
  * @author Sander
  *

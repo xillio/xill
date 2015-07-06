@@ -54,13 +54,12 @@ public class TrimConstruct implements Construct {
 			List<MetaExpression> stringList = new ArrayList<>();
 
 			@SuppressWarnings("unchecked")
-			List<MetaExpression> list = (List<MetaExpression>)string.getValue();
-			
-			
+			List<MetaExpression> list = (List<MetaExpression>) string.getValue();
+
 			list.forEach(str -> {
 				if (!str.isNull()) {
 					stringList.add(doTrimming(str, internal));
-					
+
 				}
 			});
 			return ExpressionBuilder.fromValue(stringList);
