@@ -55,11 +55,6 @@ public class ForeachInstruction extends Instruction {
 	@Override
 	public InstructionFlow<MetaExpression> process(Debugger debugger) throws RobotRuntimeException {
 		MetaExpression result = list.process(debugger).get();
-		valueVar.process(debugger);
-		
-		if(keyVar != null){
-		    keyVar.process(debugger);
-		}
 		
 		InstructionFlow<MetaExpression> foreachResult = InstructionFlow.doResume();
 
