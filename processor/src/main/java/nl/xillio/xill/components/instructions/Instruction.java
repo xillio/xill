@@ -40,5 +40,12 @@ public abstract class Instruction implements nl.xillio.xill.api.components.Instr
 		
 		return path + ":" + getLineNumber() + " > " + getClass().getSimpleName();
 	}
+	
+	/**
+	 * @return true if debugging should be prevented
+	 */
+	public boolean preventDebugging() {
+	    return false;
+	}
 
 }
