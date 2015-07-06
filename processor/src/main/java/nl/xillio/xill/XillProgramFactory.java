@@ -1073,7 +1073,12 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
      * @return
      */
     Processable parseToken(final xill.lang.xill.DecimalLiteral token) {
-	return ExpressionBuilder.fromValue(token.getValue() + token.getDecimal() / 10.0);
+	int intValue = token.getValue();
+	
+	//Calculate decimal
+	int digits = String.valueOf(token.getDecimal()).length();
+	double decimalValue = token.getDecimal() / Math.pow(10, digits);
+	return ExpressionBuilder.fromValue(decimalValue + intValue);
     }
 
     /**
