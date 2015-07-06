@@ -2,7 +2,9 @@ package nl.xillio.migrationtool.gui;
 
 import java.io.IOException;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,6 +16,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient;
@@ -23,7 +26,7 @@ import nl.xillio.xill.api.preview.Searchable;
 /**
  * A search bar, with the defined options and behavior.
  */
-public class HelpSearchBar extends AnchorPane implements EventHandler<KeyEvent> {
+public class HelpSearchBar extends AnchorPane{
 
 	private HelpPane helpPane;
 
@@ -54,6 +57,7 @@ public class HelpSearchBar extends AnchorPane implements EventHandler<KeyEvent> 
 		//The results combobox
 		box = new ComboBox<String>();
 		box.setEditable(true);
+		
 		//Handle click
 		box.setOnAction((event) -> {
 			try{
@@ -64,19 +68,16 @@ public class HelpSearchBar extends AnchorPane implements EventHandler<KeyEvent> 
 			{}
 		});
 		
-		box.getEditor().addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-			try
-			{
-				runSearch(box.getValue().toString());
-			}
-			catch (Exception e)
-			{
-				
-			}
-	    });
+		//Handle text getting edited.
+		box.getEditor().textProperty().addListener(new ChangeListener<String>() {
+		    @Override
+		    public void changed(ObservableValue<? extends String> observable,
+		            String oldValue, String newValue) {
+		    	if(oldValue != newValue)
+		    		runSearch(newValue);
+		    }
+		});	
 
-			
-		
 		this.getChildren().add(box);
 		reset();
 //		this.addEventHandler(KeyEvent.KEY_PRESSED, this);
@@ -101,27 +102,24 @@ public class HelpSearchBar extends AnchorPane implements EventHandler<KeyEvent> 
 
 	private void runSearch(String query) {
 		// A new search query. Clear old data
-	    box.getItems().clear();
+
 		if(query != null)
 		{
 		String[] results = searcher.search(query);
 		ObservableList<String> options = FXCollections.observableArrayList();
 		for(String result : results)
 			options.add(result);
+		
+		Platform.runLater(new Runnable() {
+		    @Override public void run() {	    
+		box.getItems().clear();
 		box.getItems().addAll(results);
 		box.autosize();
 		if(!box.getItems().isEmpty())
 			box.show();
 		else
 			box.hide();
+		}});
 		}
-		else
-			box.hide();
-	}
-
-	@Override
-	public void handle(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 }
