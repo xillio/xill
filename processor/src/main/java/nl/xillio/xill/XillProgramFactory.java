@@ -45,10 +45,12 @@ import nl.xillio.xill.components.expressions.MapExpression;
 import nl.xillio.xill.components.expressions.VariableAccessExpression;
 import nl.xillio.xill.components.instructions.BreakInstruction;
 import nl.xillio.xill.components.instructions.ContinueInstruction;
+import nl.xillio.xill.components.instructions.ElseInstruction;
 import nl.xillio.xill.components.instructions.ExpressionInstruction;
 import nl.xillio.xill.components.instructions.ForeachInstruction;
 import nl.xillio.xill.components.instructions.FunctionDeclaration;
 import nl.xillio.xill.components.instructions.IfInstruction;
+import nl.xillio.xill.components.instructions.IfInstructionBlock;
 import nl.xillio.xill.components.instructions.Instruction;
 import nl.xillio.xill.components.instructions.InstructionSet;
 import nl.xillio.xill.components.instructions.ReturnInstruction;
@@ -76,6 +78,7 @@ import nl.xillio.xill.debugging.DebugInfo;
 import xill.lang.xill.BooleanLiteral;
 import xill.lang.xill.Expression;
 import xill.lang.xill.IncludeStatement;
+import xill.lang.xill.InstructionBlock;
 import xill.lang.xill.IntegerLiteral;
 import xill.lang.xill.ListExtraction;
 import xill.lang.xill.NullLiteral;
@@ -190,7 +193,8 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 
 	// Push all map expressions
 	while (!functionParameterExpressions.isEmpty()) {
-	    Entry<xill.lang.xill.FunctionDeclaration, FunctionParameterExpression> pair = functionParameterExpressions.pop();
+	    Entry<xill.lang.xill.FunctionDeclaration, FunctionParameterExpression> pair = functionParameterExpressions
+		    .pop();
 	    paseToken(pair.getKey(), pair.getValue());
 	}
 
@@ -313,13 +317,29 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
      * @return
      * @throws XillParsingException
      */
-    IfInstruction parseToken(final xill.lang.xill.IfInstruction token) throws XillParsingException {
-	if (token.getElseBlock() == null) {
-	    return new IfInstruction(parse(token.getCondition()), parseToken(token.getIfBlock().getInstructionSet()));
+    IfInstructionBlock parseToken(final xill.lang.xill.IfInstruction token) throws XillParsingException {
+	List<IfInstruction> conditionals = new ArrayList<>();
+	ElseInstruction elseInstruction = null;
+
+	// Parse if instructions
+	Iterator<Expression> conditionItt = token.getConditions().iterator();
+	Iterator<InstructionBlock> instructionItt = token.getInstructionBlocks().iterator();
+	while (conditionItt.hasNext() && instructionItt.hasNext()) {
+	    Expression condition = conditionItt.next();
+	    IfInstruction instruction = new IfInstruction(parse(condition),
+		    parseToken(instructionItt.next().getInstructionSet()));
+	    instruction.setPosition(pos(condition));
+	    conditionals.add(instruction);
 	}
 
-	return new IfInstruction(parse(token.getCondition()), parseToken(token.getIfBlock().getInstructionSet()),
-		parseToken(token.getElseBlock().getInstructionSet()));
+	// Parse else
+	if (token.getElseBlock() != null) {
+	    elseInstruction = new ElseInstruction(parseToken(token.getElseBlock().getInstructionSet()));
+	    elseInstruction.setPosition(pos(token.getElseBlock()));
+	}
+
+	IfInstructionBlock instruction = new IfInstructionBlock(conditionals, elseInstruction);
+	return instruction;
     }
 
     /**
@@ -951,7 +971,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 
     /**
      * Parse a {@link MapExpression}
-     * 
+     *
      * @param token
      * @return
      * @throws XillParsingException
@@ -969,10 +989,10 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 
 	return map;
     }
-    
+
     /**
      * Parse a {@link FilterExpression}
-     * 
+     *
      * @param token
      * @return
      * @throws XillParsingException
@@ -1074,8 +1094,8 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
      */
     Processable parseToken(final xill.lang.xill.DecimalLiteral token) {
 	int intValue = token.getValue();
-	
-	//Calculate decimal
+
+	// Calculate decimal
 	int digits = String.valueOf(token.getDecimal()).length();
 	double decimalValue = token.getDecimal() / Math.pow(10, digits);
 	return ExpressionBuilder.fromValue(decimalValue + intValue);

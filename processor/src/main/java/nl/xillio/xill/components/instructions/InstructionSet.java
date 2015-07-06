@@ -42,13 +42,19 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
     public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 	InstructionFlow<MetaExpression> processResult = null;
 	List<Instruction> processedInstructions = new ArrayList<>();
-	
+
 	for (Instruction instruction : instructions) {
 
-	    debugger.startInstruction(instruction);
+	    if (!instruction.preventDebugging()) {
+		debugger.startInstruction(instruction);
+	    }
+
 	    InstructionFlow<MetaExpression> result = instruction.process(debugger);
 	    processedInstructions.add(instruction);
-	    debugger.endInstruction(instruction, result);
+
+	    if (!instruction.preventDebugging()) {
+		debugger.endInstruction(instruction, result);
+	    }
 
 	    if (!result.resumes()) {
 		debugger.returning(this, result);
@@ -61,12 +67,13 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
 		break;
 	    }
 	}
-	
-	//Dispose all processed instructions
-	for(Instruction instruction : processedInstructions) {
+
+	// Dispose all processed instructions
+	for (Instruction instruction : processedInstructions) {
 	    try {
 		instruction.close();
-	    } catch (Exception e) { }
+	    } catch (Exception e) {
+	    }
 	}
 	// Done so dispose of this
 	try {
@@ -77,14 +84,14 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
 	if (processResult != null) {
 	    return processResult;
 	}
-	
+
 	return InstructionFlow.doResume();
     }
 
     /**
      * Run only declarations. <br/>
      * This is required to run functions in this robot as a library
-     * 
+     *
      * @throws RobotRuntimeException
      */
     public void initialize() throws RobotRuntimeException {
