@@ -7,21 +7,13 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient;
 import nl.xillio.migrationtool.documentation.DocumentSearcher;
-import nl.xillio.xill.api.preview.Searchable;
 
 /**
  * A search bar, with the defined options and behavior.
@@ -37,7 +29,7 @@ public class HelpSearchBar extends AnchorPane{
 	private DocumentSearcher searcher;
 
 	/**
-	 * Default constructor. The bar won't do anything until {@link #setSearchable(Searchable)} is called.
+	 * Default constructor.
 	 */
 	public HelpSearchBar() {
 		try {
@@ -49,7 +41,6 @@ public class HelpSearchBar extends AnchorPane{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 		
 		//The searcher
 		searcher = new DocumentSearcher(ESConsoleClient.getInstance().getClient());
@@ -88,21 +79,23 @@ public class HelpSearchBar extends AnchorPane{
 	private void runSearch(String query) {
 		if(query != null)
 		{
+		//Search for a list of possible functions and store the result
 		String[] results = searcher.search(query);
 		ObservableList<String> options = FXCollections.observableArrayList();
 		for(String result : results)
 			options.add(result);
 		
+		//Adjust the combobox accordingly
 		Platform.runLater(new Runnable() {
 		    @Override public void run() {	    
-		box.getItems().clear();
-		box.getItems().addAll(results);
-		box.autosize();
-		if(!box.getItems().isEmpty())
-			box.show();
-		else
-			box.hide();
-		}});
+			box.getItems().clear();
+			box.getItems().addAll(results);
+			box.autosize();
+			if(!box.getItems().isEmpty())
+				box.show();
+			else
+				box.hide();
+			}});
 		}
 	}
 }

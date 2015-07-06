@@ -1,10 +1,11 @@
 package nl.xillio.migrationtool;
 
-import java.io.File;
+
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
+import java.io.OutputStreamWriter;
 import java.net.URL;
 
 import org.apache.log4j.LogManager;
@@ -184,36 +185,8 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 			e.printStackTrace();
 		}
 		
-		////////////IVOR HAS RUINED IT///////////////////////////////////////////////
-		//////////loading like 10 xml files as impractical as possible////////////
-		DocumentSearcher searcher = new DocumentSearcher(ESConsoleClient.getInstance().getClient());
-		XMLparser parser = new XMLparser();
-		
-		String[] funcs = new String[]{"abs", "absoluteurl", "addsubnode", "ampersanddecode", "ampersandencode", "base64decode",
-				"break", "callbot", "changedate", "click", "contains", "continue", "copyfile", "copynode", "createexcel", "createfolder",
-				"cURL", "database", "date", "datediff", "dateinfo", "datetostring", "deletefile", "deletefolder", "download", "endswith", "es_aggregate",
-				"es_connect", "es_delete", "es_filteragg", "es_get", "es_hasfieldfilter", "es_indexexists", "es_put", "es_rangefilter", "es_regexfilter",
-				"es_search", "es_sort", "es_statsagg", "evaluate", "exiftool", "extractlist", "fileexists", "fileinfo", "filesize", "focus", "foreach", "format",
-				"formatxml", "getcell", "geterror", "getframe", "getobject", "getsheet", "gettext", "global", "hungarianalgorithm", "if", "importcsv", "include", "indexof",
-				"input", "jsontolist", "length", "listfiles", "listfolders", "listreverse", "listsort", "listtocsv", "listtojson", "listtostring", "listtoxml"};
-		
-		
-	
-		
-		for(String f : funcs)
-		{
-			try(InputStream url = Loader.class.getResourceAsStream("/helpxml/" + f + ".xml")) {
-				searcher.index(parser.parseXML(url));
-			} catch (ElasticsearchException | IOException | SAXException e1) {
-				System.out.println(f);
-				e1.printStackTrace();
-			}
-		}
-		
-	
-		
-		
-		/////////////////COMPLETELY/////////////////////////////////////
+
+		this.loadcontent();
 
 		Parent root;
 		try {
@@ -278,5 +251,43 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 	 */
 	public static Xill getXill(){
 		return xill;
+	}
+	
+	private void loadcontent()
+	{
+		DocumentSearcher searcher = new DocumentSearcher(ESConsoleClient.getInstance().getClient());
+		XMLparser parser = new XMLparser();
+		
+		String[] funcs = new String[]{"abs", "absoluteurl", "addsubnode", "ampersanddecode", "ampersandencode", 
+				"base64decode", "base64encode", "break", "callbot", "changedate", "click", "contains",
+				 "continue", "copyfile", "copynode", "createexcel", "createfolder", "createsheet", 
+				 "cURL", "database", "date", "datediff", "dateinfo", "datetostring", "deletefile", 
+				 "deletefolder", "download", "endswith", "es_aggregate", "es_connect", "es_delete", 
+				 "es_filteragg", "es_get", "es_hasfieldfilter", "es_indexexists", "es_put",
+				 "es_rangefilter", "es_regexfilter", "es_search", "es_sort", "es_statsagg", "es_termfilter",
+				 "es_termsagg", "evaluate", "exiftool", "extractlist", "fileexists", "fileinfo", "filesize",
+				 "focus", "foreach", "format", "formatxml", "getcell", "geterror", "getframe", "getobject",
+				 "getsheet", "gettext", "global", "help", "hungarianalgorithm", "if", "importcsv", "include",
+				 "indexof", "input", "jsontolist", "length", "listfiles", "listfolders", "listreverse", "listsort",
+				 "listtocsv", "listtojson", "listtostring", "listtoxml", "loaddata", "loadpage", "loadxml",
+				 "log", "lowercase", "matches", "md5", "metadatafromdocument", "mongo_connect", "mongo_count",
+				 "mongo_delete", "mongo_drop", "mongo_find", "mongo_get", "mongo_store", "mongo_update", 
+				 "movenode", "openexcel", "pageinfo", "query", "random", "rawhttp", "regex", "removeattribute", 
+				 "removecookie", "removenode", "repeat", "replace", "replacenode", "return", "round", "routine",
+				 "runprogram", "savedata","select", "setattribute", "setcell", "setcookie", "setprogress", "split",
+				 "sqlescape", "startswith", "storeobject", "stringtopage", "stringtoxml", "substring", "systeminfo", 
+				 "textfromdocument", "tidy", "timestamp", "tonumber", "tostring", "trim", "unset", "uppercase", 
+				 "urldecode", "urlencode", "variabletype", "version", "wait", "webclient", "while", "worddistance",
+				 "xmltolist", "xmltostring", "xpath", "xsdcheck"};
+	
+		for(String f : funcs)
+		{
+			try(InputStream url = Loader.class.getResourceAsStream("/helpxml/" + f + ".xml")) {
+				searcher.index(parser.parseXML(url));
+			} catch (ElasticsearchException | IOException | SAXException e1) {
+				System.out.println(f);
+				e1.printStackTrace();
+			}
+		}
 	}
 }
