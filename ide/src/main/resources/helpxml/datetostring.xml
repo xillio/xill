@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="datetostring">
+  <name>datetostring</name>
+  <parameters>
+    <param name="date,">
+      <type>date</type>
+    </param>
+    <param name="format,">
+      <type>string</type>
+    </param>
+    <param name="timezone">
+      <type>&lt;string,void&gt;</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Returns the date as a string formatted as given in format, with respect to the timezone.Detailstimezone can be either an abbreviation such as “PST”, a full name such as “America/Los_Angeles”, or a custom zone such as “GMT-8:00”.If the timezone cannot be understood, “GMT” is used.SymbolMeaningType]]></description>
+  <examples>
+    <example description="G"><![CDATA[Era
+Text
+“GG” -> “AD”
+]]></example>
+    <example description="y"><![CDATA[Year
+Number
+]]></example>
+    <example description="“yy” -&gt; “03”"><![CDATA[“yyyy” -> “2003”
+]]></example>
+    <example description="M"><![CDATA[Month
+Text
+or
+Number
+]]></example>
+    <example description="“M” -&gt; “7”"><![CDATA[“M” -> “12”
+“MM” -> “07”
+“MMM” -> “Jul”
+“MMMM” -> “December”
+]]></example>
+    <example description="d"><![CDATA[Day
+in
+month
+Number
+]]></example>
+    <example description="“d” -&gt; “3”"><![CDATA[“dd” -> “03”
+]]></example>
+    <example description="h"><![CDATA[Hour
+(1-12,
+AM/PM)
+Number
+]]></example>
+    <example description="“h” -&gt; “3”"><![CDATA[“hh” -> “03”
+]]></example>
+    <example description="H"><![CDATA[Hour
+(0-23)
+Number
+]]></example>
+    <example description="“H” -&gt; “15”"><![CDATA[“HH” -> “15”
+]]></example>
+    <example description="k"><![CDATA[Hour
+(1-24)
+Number
+]]></example>
+    <example description="“k” -&gt; “3”"><![CDATA[“kk” -> “03”
+]]></example>
+    <example description="K"><![CDATA[Hour
+(0-11
+AM/PM)
+Number
+]]></example>
+    <example description="“K” -&gt; “15”"><![CDATA[]]></example>
+    <example description="“KK” -&gt; “15”"><![CDATA[]]></example>
+    <example description="m"><![CDATA[Minute
+Number
+]]></example>
+    <example description="“m” -&gt; “7”"><![CDATA[“m” -> “15”
+“mm” -> “15”
+]]></example>
+    <example description="s"><![CDATA[Second
+Number
+]]></example>
+    <example description="“s” -&gt; “15”"><![CDATA[“ss” -> “15”
+]]></example>
+    <example description="S"><![CDATA[Millisecond
+(0-999)
+Number
+“SSS” -> “007”
+]]></example>
+    <example description="E"><![CDATA[Day in week
+Text
+]]></example>
+    <example description="“EEE” -&gt; “Tue”"><![CDATA[“EEEE” -> “Tuesday”
+]]></example>
+    <example description="D"><![CDATA[Day in year
+(1-365
+or 1-366)
+Number
+]]></example>
+    <example description="“D” -&gt; “65”"><![CDATA[“DDD” -> “065”
+]]></example>
+    <example description="F"><![CDATA[Day of
+week in
+month (1-5)
+Number
+]]></example>
+    <example description="“F” -&gt; “1”"><![CDATA[]]></example>
+    <example description="w"><![CDATA[Week in
+year (1-53)
+Number
+]]></example>
+    <example description="“w” -&gt; “7”"><![CDATA[]]></example>
+    <example description="W"><![CDATA[Week in
+month (1-5)
+Number
+]]></example>
+    <example description="“W” -&gt; “3”"><![CDATA[]]></example>
+    <example description="a"><![CDATA[AM/PM
+Text
+]]></example>
+    <example description="“a” -&gt; “AM”"><![CDATA[“aa” -> “AM”
+]]></example>
+    <example description="z"><![CDATA[Time zone
+Text
+]]></example>
+    <example description="“z” -&gt; “EST”"><![CDATA[“zzz” -> “EST”
+“zzzz” -> “Eastern Standard Time”
+]]></example>
+    <example description="Z"><![CDATA[Time zone
+RFC822
+“Z” -> “-0800”
+]]></example>
+    <example description="'"><![CDATA[Escape for
+for text
+Delimiter
+ 
+]]></example>
+    <example description="“'hour'h” -&gt; “hour 9”"><![CDATA[]]></example>
+    <example description="''"><![CDATA[Single
+quote
+Literal
+ 
+]]></example>
+    <example description="“ss''SSS” -&gt; “45'876”"><![CDATA[]]></example>
+    <example description="Examples"><![CDATA[]]></example>
+    <example description="Executing:"><![CDATA[log(datetostring(date(), "EEEE dd MMMM Y, hh:mm"));
+]]></example>
+    <example description="prints:"><![CDATA[vrijdag 25 oktober 2013, 09:39
+]]></example>
+    <example description="Getting the time in Los Angeles:"><![CDATA[timeLA = datetostring(date(), "hh:mm", "America/Los_Angeles");
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag> date</tag>
+    <tag>Text, Date functions, Conversion</tag>
+  </tags>
+</function>

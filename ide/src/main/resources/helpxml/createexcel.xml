@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="createexcel">
+  <name>createexcel</name>
+  <parameters>
+    <param name="xlsx">
+      <type>boolean</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Creates an empty workbook to work with. By default this workbook will be in XLSX format. When xlsx is set to false a legacy XLS workbook will be created. After the workbook has been created, sheets can be created using createsheet.]]></description>
+  <examples>
+    <example description="Creating an empty workbook:"><![CDATA[workbook = createexcel();
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>Excel</tag>
+  </tags>
+</function>

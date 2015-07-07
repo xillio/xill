@@ -1,12 +1,14 @@
 package nl.xillio.migrationtool;
 
+
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-
 import org.apache.log4j.LogManager;
 import org.apache.log4j.PropertyConfigurator;
-
+import org.elasticsearch.ElasticsearchException;
+import org.xml.sax.SAXException;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -17,6 +19,9 @@ import javafx.scene.image.Image;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient;
+import nl.xillio.migrationtool.documentation.DocumentSearcher;
+import nl.xillio.migrationtool.documentation.XMLparser;
 import nl.xillio.xill.api.Xill;
 
 /**
@@ -160,7 +165,7 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 	private static Xill xill;
 
 	@Override
-	public void start(final Stage primaryStage, final Xill xill) {
+	public void start(final Stage primaryStage, final Xill xill)  {
 		Loader.xill = xill;
 		Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
 		
@@ -239,5 +244,47 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 	 */
 	public static Xill getXill(){
 		return xill;
+	}
+	
+	/**
+	 * Loads all the xml files into the database. 
+	 * This is to be moved elsewhere since every plugin will just load in its own XML files.
+	 */
+	private void loadcontent()
+	{
+		DocumentSearcher searcher = new DocumentSearcher(ESConsoleClient.getInstance().getClient());
+		XMLparser parser = new XMLparser();
+		
+		String[] funcs = new String[]{"abs", "absoluteurl", "addsubnode", "ampersanddecode", "ampersandencode", 
+				"base64decode", "base64encode", "break", "callbot", "changedate", "click", "contains",
+				 "continue", "copyfile", "copynode", "createexcel", "createfolder", "createsheet", 
+				 "cURL", "database", "date", "datediff", "dateinfo", "datetostring", "deletefile", 
+				 "deletefolder", "download", "endswith", "es_aggregate", "es_connect", "es_delete", 
+				 "es_filteragg", "es_get", "es_hasfieldfilter", "es_indexexists", "es_put",
+				 "es_rangefilter", "es_regexfilter", "es_search", "es_sort", "es_statsagg", "es_termfilter",
+				 "es_termsagg", "evaluate", "exiftool", "extractlist", "fileexists", "fileinfo", "filesize",
+				 "focus", "foreach", "format", "formatxml", "getcell", "geterror", "getframe", "getobject",
+				 "getsheet", "gettext", "global", "help", "hungarianalgorithm", "if", "importcsv", "include",
+				 "indexof", "input", "jsontolist", "length", "listfiles", "listfolders", "listreverse", "listsort",
+				 "listtocsv", "listtojson", "listtostring", "listtoxml", "loaddata", "loadpage", "loadxml",
+				 "log", "lowercase", "matches", "md5", "metadatafromdocument", "mongo_connect", "mongo_count",
+				 "mongo_delete", "mongo_drop", "mongo_find", "mongo_get", "mongo_store", "mongo_update", 
+				 "movenode", "openexcel", "pageinfo", "query", "random", "rawhttp", "regex", "removeattribute", 
+				 "removecookie", "removenode", "repeat", "replace", "replacenode", "return", "round", "routine",
+				 "runprogram", "savedata","select", "setattribute", "setcell", "setcookie", "setprogress", "split",
+				 "sqlescape", "startswith", "storeobject", "stringtopage", "stringtoxml", "substring", "systeminfo", 
+				 "textfromdocument", "tidy", "timestamp", "tonumber", "tostring", "trim", "unset", "uppercase", 
+				 "urldecode", "urlencode", "variabletype", "version", "wait", "webclient", "while", "worddistance",
+				 "xmltolist", "xmltostring", "xpath", "xsdcheck"};
+	
+		for(String f : funcs)
+		{
+			try(InputStream url = Loader.class.getResourceAsStream("/helpxml/" + f + ".xml")) {
+				searcher.index(parser.parseXML(url));
+			} catch (ElasticsearchException | IOException | SAXException e1) {
+				System.out.println(f);
+				e1.printStackTrace();
+			}
+		}
 	}
 }

@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="geterror">
+  <name>geterror</name>
+  <parameters>
+    <param name="variable">
+      <type>any</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Returns a variable with the error message and type held by the parameter variable. Returns null if variable contains no error condition (i.e. either variable is `null or no error occured).]]></description>
+  <examples>
+    <example description="Get the error message after saving a file fails:"><![CDATA[error = geterror(savedata(filename, "", false, true, true));
+if (error != null) {
+    log(error.type + ": " + error.message);
+    return();
+}
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>Language</tag>
+  </tags>
+</function>

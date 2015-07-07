@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="storeobject">
+  <name>storeobject</name>
+  <parameters>
+    <param name="table,">
+      <type>string</type>
+    </param>
+    <param name="object,">
+      <type>list</type>
+    </param>
+    <param name="keys,">
+      <type>&lt;string,list&gt;</type>
+    </param>
+    <param name="overwrite ,">
+      <type>boolean</type>
+    </param>
+    <param name="connectionstring ">
+      <type>&lt;string,void&gt;</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Stores the list variable object into an existing table named table. This will update existing rows if found, or insert a new row otherwise. keys is either a string containing the name of a single column in object or a list of multiple strings with the same key and value as a column name. The column or columns named by keys will be used as a primary key. The optional parameter overwrite is a boolean. If set to true then object will update an existing row in the database if found. If overwrite is set to false then an existing row will not be updated. The optional parameter connectionstring is a string identifying the database connection as returned by the database function. If no connection is given then the last used database connection will be used.]]></description>
+  <examples>
+    <example description="Query a metadata table based on pageid (primary key), change the value of a field and store it again:"><![CDATA[metadata = getobject ("metadata", {"pageid" = pageobject.pageid});
+metadata.organisation = "xillio";
+storeobject("metadata", metadata, "pageid");
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag> getobject</tag>
+    <tag>Database</tag>
+  </tags>
+</function>

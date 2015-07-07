@@ -183,6 +183,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 		showReleaseNotes();
 	});
 
+	
 	// Subscribe to plugin events
 	pluginLoader.getPluginManager().onPluginAccepted().addListener(p -> {
 		log.info("Loaded Xill Package: " + p.getName());

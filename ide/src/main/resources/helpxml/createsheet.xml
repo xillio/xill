@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="createsheet">
+  <name>createsheet</name>
+  <parameters>
+    <param name="workbook,">
+      <type>workbook</type>
+    </param>
+    <param name="name">
+      <type>&lt;string&gt;</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Creates a sheet with given name in provided workbook. After the sheet has been created, cell values can be set by using setcell.]]></description>
+  <examples>
+    <example description="Creates an empty sheet with name sheet:"><![CDATA[workbook = createexcel();
+sheet = createsheet(workbook, "Mapping");
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>Excel</tag>
+  </tags>
+</function>

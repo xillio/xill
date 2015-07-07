@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="getframe">
+  <name>getframe</name>
+  <parameters>
+    <param name="parentpage,">
+      <type>node</type>
+    </param>
+    <param name="frame">
+      <type>string</type>
+    </param>
+  </parameters>
+  <description><![CDATA[This browser function returns the contents of a named HTML frame frame as a page. Useful for loading an iframe or normal content frame.]]></description>
+  <examples>
+    <example description="Load the contents of an iframe into the variable frame:"><![CDATA[webclient({"enablecss"=false, "enablejs"=false});
+]]></example>
+    <example description="page = loadpage (&quot;http://www.w3schools.com/html/html_iframe.asp&quot;);"><![CDATA[frame = null;
+]]></example>
+    <example description="if (page != null) {"><![CDATA[    frame = xpath (page, "//iframe[not(@id) and not(contains(@src, 'facebook')) and not(contains(@class, 'goog'))]/@src");
+    frame = loadpage (absoluteurl ("http://www.w3schools.com/html/", frame));
+} else {
+    log ("no page");
+}
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>Browser</tag>
+  </tags>
+</function>

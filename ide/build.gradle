@@ -9,6 +9,7 @@ dependencies {
 	compile 'org.apache.httpcomponents:httpmime:4.5'
 	compile 'org.jasypt:jasypt:1.9.1'
 	compile 'org.xerial:sqlite-jdbc:3.8.7'
+	compile 'org.rendersnake:rendersnake:1.8'
 	
 	compile project(':api')
 }

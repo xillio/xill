@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="importcsv">
+  <name>importcsv</name>
+  <parameters>
+    <param name="table,">
+      <type>string</type>
+    </param>
+    <param name="uri,">
+      <type>string</type>
+    </param>
+    <param name="enclosingchar,">
+      <type>string</type>
+    </param>
+    <param name="seperatorchar,">
+      <type>string</type>
+    </param>
+    <param name="lineendchar,">
+      <type>string</type>
+    </param>
+    <param name="connectionstring ">
+      <type>&lt;string,void&gt;</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Drops / creates the database table table and then imports the CSV data from the csv file uri; enclosingchar indicates a character that is used to enclose fields, e.g. '"'; seperatorchar indicates the character used to separate fields, e.g. ','; lineendchar indicates the character used to end lines, e.g '\n'. The optional parameter connectionstring is a string identifying the database connection as returned by the database function.]]></description>
+  <examples>
+    <example description="Assuming we have a text file C:\tmp\test.csv which contains:"><![CDATA['key','value'
+'10','34'
+'11','56'
+'12','34'
+'14','100'
+]]></example>
+    <example description="Then to create the database table test we would execute:"><![CDATA[settings = global(callbot("testbots/settings.sbot"));
+database(settings.db_host, settings.db_port, settings.db_name, settings.db_user, settings.db_pass);
+]]></example>
+    <example description="importcsv (&quot;test&quot;, &quot;C:/tmp/test.csv&quot;, &quot;\\'&quot;, &quot;,&quot;, &quot;\\r\\n&quot;);"><![CDATA[]]></example>
+    <example description="Note the needed number of escaping slashes to forward the correct commands to MySQL. Since we want MySQL to see &quot;\n&quot; we need to escape the backslash \ by using \\."><![CDATA[]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>Database, File</tag>
+  </tags>
+</function>

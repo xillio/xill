@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="if">
+  <name>if</name>
+  <parameters>
+    <param name="__condition">
+      <type>boolean</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Executes the code following the statement if condition evaluates to true. Executes the code in the (optional) else-statement otherwise. The code following the if statement has to be enclosed in curly brackets, even if it consists of only one line.]]></description>
+  <examples>
+    <example description="Executing the following code:"><![CDATA[testvalue = 3;
+]]></example>
+    <example description="if (testvalue &gt; 2) {"><![CDATA[    log ("Testvalue is larger than 2.");
+} else {
+    log ("Testvalue is not larger than 2.");
+}
+]]></example>
+    <example description="will print:"><![CDATA[Testvalue is larger than 2.
+]]></example>
+    <example description="Using multiple if clauses in succession:"><![CDATA[if ( ... ) {
+    ...
+} else if ( ... ) {
+        ...
+}
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>Language</tag>
+  </tags>
+</function>

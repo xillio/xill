@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="setprogress">
+  <name>setprogress</name>
+  <parameters>
+    <param name="progress,">
+      <type>number</type>
+    </param>
+    <param name="total ,">
+      <type>number</type>
+    </param>
+    <param name="message ">
+      <type>string</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Passes a progress indication to the system so that it can be displayed to the enduser through the user interface.The option progress should be a number between 0 and total. Total defaults to 1. If progress is larger than total, or if either option is negative, a progress of 100% will be set.Optionally, a message can be provided that will be displayed in front of the progress bar.]]></description>
+  <examples>
+    <example description="Set progress to 50%."><![CDATA[setprogress(0.5);
+]]></example>
+    <example description="Set progress to 5 out of 13."><![CDATA[setprogress(5, 13);
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>Language</tag>
+  </tags>
+</function>

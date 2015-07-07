@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="tonumber">
+  <name>tonumber</name>
+  <parameters>
+    <param name="value ">
+      <type>any</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Attempts to convert a variable into a number. Returns null in event of failure.]]></description>
+  <examples>
+    <example description="Check if a string is a number:"><![CDATA[log(tonumber("t332") == null);
+]]></example>
+    <example description="This will print:"><![CDATA[true
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>Conversion</tag>
+  </tags>
+</function>

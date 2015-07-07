@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="loadxml">
+  <name>loadxml</name>
+  <parameters>
+    <param name="uri">
+      <type>string</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Loads the local XML file uri and returns an XML object.]]></description>
+  <examples>
+    <example description="Assuming we have an XML file note.xml which contains the following:"><![CDATA[<note id="1">
+    <to>Tove</to>
+    <from>Jani</from>
+    <heading>Reminder</heading>
+    <comment>This was sent to James as well</comment>
+    <comment>John has not responded to the invitation</comment>
+    <body>Don't forget me this weekend!</body>
+</note>
+]]></example>
+    <example description="Then executing the following code:"><![CDATA[note = loadxml ("C:/tmp/note.xml");
+]]></example>
+    <example description="comments = xpath(note, &quot;//comment/text()&quot;);"><![CDATA[]]></example>
+    <example description="foreach (_, comment, comments) {"><![CDATA[    log (comment);
+}
+]]></example>
+    <example description="will print:"><![CDATA[This was sent to James as well
+John has not responded to the invitation
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag> stringtoxml</tag>
+    <tag>XML / HTML</tag>
+  </tags>
+</function>

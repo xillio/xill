@@ -57,6 +57,8 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 		reset(true);
 		enableSearchAsYouType();
 		
+		
+		
 		this.addEventHandler(KeyEvent.KEY_PRESSED, this);
 	}
 
