@@ -99,7 +99,6 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 		try{
 			tab.runRobot();
 		} catch (XillParsingException e) {
-			e.printStackTrace();
 			onStop();
 			highlight(e.getRobot(), e.getLine(), "error");
 		}
@@ -151,8 +150,6 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 		onPause();
 
 		tab.display(action.getRobotID(), action.getLineNumber());
-		
-		//highlight(action.getRobotID(), action.getLineNumber(), "highlight");
 	}
 
 	private void stepIn() {

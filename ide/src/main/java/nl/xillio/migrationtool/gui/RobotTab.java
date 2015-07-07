@@ -34,6 +34,7 @@ import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.errors.XillParsingException;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 
@@ -119,16 +120,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 		setText(getName());
 
 		// Set the tab dividers
-
-		// Remove the left hidden bar from dom
-		boolean showRightPanel = Boolean.parseBoolean(settings.getSimpleSetting("RightPanelCollapsed_" + documentPath.getAbsolutePath()));
 		double editorHeight = Double.parseDouble(settings.getSimpleSetting("EditorHeight_" + documentPath.getAbsolutePath()));
-
-		if (showRightPanel) {
-			hideButtonPressed();
-		} else {
-			showButtonPressed();
-		}
 
 		spnBotLeft.setDividerPosition(0, editorHeight);
 
@@ -157,7 +149,19 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	@Override
 	public void initialize(final URL arg0, final ResourceBundle arg1) {
 
-		Platform.runLater(() -> initializeChildren(getContent()));
+		Platform.runLater(() -> {
+			initializeChildren(getContent());
+			
+			// Remove the left hidden bar from dom
+			// This must be done after initialization otherwise the debugpane won't receive the tab
+			boolean showRightPanel = Boolean.parseBoolean(settings.getSimpleSetting("RightPanelCollapsed_" + getDocument().getAbsolutePath()));
+
+			if (showRightPanel) {
+				hideButtonPressed();
+			} else {
+				showButtonPressed();
+			}
+		});
 
 		setText(getName());
 
@@ -259,6 +263,8 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	 * @return whether the document was saved successfully.
 	 */
 	protected boolean save(final boolean showDialog) {
+		//Reset to root robot
+		resetCode();
 		// Clear editor highlights
 		getEditorPane().getEditor().clearHighlight();
 
@@ -414,6 +420,10 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 			if (newValue == DocumentState.CHANGED) {
 				name += "*";
 			}
+			if(currentRobot != getProcessor().getRobotID()) {
+				String filename = currentRobot.getPath().getName();
+				name += " > " + FilenameUtils.getBaseName(filename);
+			}
 			setText(name);
 		});
 	}
@@ -435,6 +445,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
 		// Update the code
 		if (currentRobot != robot) {
+			
 			currentRobot = robot;
 			String code;
 			try {
@@ -446,6 +457,14 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 			// Load the code
 			editorPane.getEditor().setCode(code);
 			editorPane.getEditor().refreshBreakpoints(robot);
+			
+			//Blocker
+			editorPane.getEditor().setEditable(currentRobot == getProcessor().getRobotID());
+			
+			// Remove the 'edited' state
+			Platform.runLater(() -> {
+			    editorPane.getDocumentState().setValue(DocumentState.SAVED);
+			});
 		}
 
 		if (line > 0) {
@@ -453,8 +472,6 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 			Platform.runLater(() -> {
 				editorPane.getEditor().clearHighlight();
 				editorPane.getEditor().highlightLine(line, "highlight");
-				// Remove the 'edited' state
-				editorPane.getDocumentState().setValue(DocumentState.SAVED);
 			});
 		}
 

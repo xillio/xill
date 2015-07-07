@@ -46,4 +46,9 @@ public interface XillProcessor {
 	 * @return the names of all available packages
 	 */
 	public Collection<String> listPackages();
+	
+	/**
+	 * @return all reserved keywords
+	 */
+	public String[] getReservedKeywords();
 }

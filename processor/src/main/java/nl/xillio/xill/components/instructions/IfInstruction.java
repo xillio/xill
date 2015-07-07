@@ -1,73 +1,52 @@
 package nl.xillio.xill.components.instructions;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
- * This {@link Instruction} represents the condition based branching mechanism.
+ * This {@link Instruction} represents a stop in an instruction set.
  */
 public class IfInstruction extends Instruction {
 
-	private final Processable condition;
-	private final InstructionSet ifBlock;
-	private final InstructionSet elseBlock;
+    private final Processable condition;
+    private final InstructionSet instructionSet;
 
-	/**
-	 * Create a new IfInstruction
-	 *
-	 * @param processable
-	 *        The condition to check
-	 * @param ifBlock
-	 *        The block to run when the condition is true
-	 * @param elseBlock
-	 *        The block to run when the condition is false
-	 */
-	public IfInstruction(final Processable processable, final InstructionSet ifBlock, final InstructionSet elseBlock) {
-		condition = processable;
-		this.ifBlock = ifBlock;
-		this.elseBlock = elseBlock;
-	}
+    /**
+     * Create a new {@link IfInstruction}
+     * 
+     * @param condition
+     * @param instructionSet
+     */
+    public IfInstruction(final Processable condition, final InstructionSet instructionSet) {
+	this.condition = condition;
+	this.instructionSet = instructionSet;
+    }
 
-	/**
-	 * Create a new IfInstruction
-	 *
-	 * @param processable
-	 *        The condition to check
-	 * @param ifBlock
-	 *        The block to run when the condition is true
-	 */
-	public IfInstruction(final Processable processable, final InstructionSet ifBlock) {
-		this(processable, ifBlock, null);
-	}
+    /**
+     * @param debugger
+     * @return true if the condition of this statement is true
+     */
+    public boolean isTrue(final Debugger debugger) {
+	return condition.process(debugger).get().getBooleanValue();
+    }
 
-	@Override
-	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
+    @Override
+    public InstructionFlow<MetaExpression> process(final Debugger debugger) {
+	return instructionSet.process(debugger);
+    }
 
-		@SuppressWarnings("resource")
-		InstructionSet result = condition.process(debugger).get().getBooleanValue() ? ifBlock : elseBlock;
+    @Override
+    public Collection<Processable> getChildren() {
+	return new ArrayList<>();
+    }
 
-		if (result != null) {
-			return result.process(debugger);
-		}
+    @Override
+    public void close() throws Exception {
+    }
 
-		return InstructionFlow.doResume();
-	}
-
-	@Override
-	public Collection<Processable> getChildren() {
-		if (elseBlock == null) {
-			return Arrays.asList(condition, ifBlock);
-		}
-
-		return Arrays.asList(condition, ifBlock, elseBlock);
-	}
-
-	@Override
-	public void close() throws Exception {}
 }

@@ -27,6 +27,10 @@ snippet ife\n\
 	} else {\n\
 		${0}\n\
 	}\n\
+# region\n\
+snippet //{\n\
+	// ${0:region} {\n\
+	//} \n\
 # return\n\
 snippet ret\n\
 	return ${1:result}\n\
