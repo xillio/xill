@@ -24,7 +24,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 public abstract class MetaExpression implements Expression, Processable {
     private static final Gson gson = new GsonBuilder().enableComplexMapKeySerialization().serializeNulls()
 	    // .setPrettyPrinting()
-	    .disableHtmlEscaping().disableInnerClassSerialization().create();
+	    .disableHtmlEscaping().disableInnerClassSerialization().serializeSpecialFloatingPointValues().create();
     private final MetadataExpressionPool<Object> metadataPool = new MetadataExpressionPool<>();
     private Object value;
     private ExpressionDataType type = ExpressionDataType.ATOMIC;
