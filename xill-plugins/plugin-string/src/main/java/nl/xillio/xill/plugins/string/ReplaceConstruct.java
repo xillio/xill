@@ -26,6 +26,10 @@ public class ReplaceConstruct implements Construct {
 
 	private final RegexConstruct regexConstruct;
 
+	/**
+	 * Create a new {@link ReplaceConstruct}
+	 * @param regexConstruct the construct used to find matches
+	 */
 	public ReplaceConstruct(final RegexConstruct regexConstruct) {
 		this.regexConstruct = regexConstruct;
 	}

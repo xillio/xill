@@ -30,6 +30,7 @@ public class ContainsConstruct implements Construct {
 		return new ConstructProcessor(ContainsConstruct::process, new Argument("haystack"), new Argument("needle"));
 	}
 
+	@SuppressWarnings("unchecked")
 	private static MetaExpression process(final MetaExpression haystack, final MetaExpression needle) {
 		// If either is null then false.
 		if (haystack == ExpressionBuilder.NULL || needle == ExpressionBuilder.NULL) {
