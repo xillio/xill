@@ -32,7 +32,7 @@ import javafx.util.Pair;
  * @author Ivor
  */
 public class FunctionDocument {
-    private String functionName, description, version, packet;
+    private String functionName = "", description, version, packet = "testRealm";
     private final List<Pair<String, String>> parameters = new ArrayList<>();
     private final List<Pair<String, String>> examples = new ArrayList<>();
     private final List<String> links = new ArrayList<>();

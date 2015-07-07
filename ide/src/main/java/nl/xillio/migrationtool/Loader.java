@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.PropertyConfigurator;
 import org.elasticsearch.ElasticsearchException;
@@ -176,6 +177,8 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 		
 		//Sets up the database so we don;t crash and burn
 		this.setupDatabase();
+		//For testing
+		//this.loadcontent();
 		
 		PropertyConfigurator.configure(this.getClass().getResourceAsStream("/log4j.properties"));
 		LogManager.getLogger(getClass()).info("Reloaded Log4J Configuration.");
@@ -260,8 +263,6 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 	private void setupDatabase()
 	{
 		FunctionDocument docu = new FunctionDocument();
-		docu.setName("");
-		docu.setPackage("testRealm");
 		DocumentSearcher searcher = new DocumentSearcher(ESConsoleClient.getInstance().getClient());
 		try {
 			searcher.index(docu);
@@ -310,10 +311,8 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 			try(InputStream url = Loader.class.getResourceAsStream("/helpxml/" + f + ".xml")) {
 				FunctionDocument docu = parser.parseXML(url, "testRealm", "1");
 				searcher.index(docu);
-				System.out.println(searcher.getDocumentVersion(docu.getPackage(), docu.getName()));
-				FileWriter writer = new FileWriter(new File("").getAbsolutePath()+"/helpfiles/" + f + ".html",false);
-				writer.write(docu.toHTML());
-				writer.close();
+				FileUtils.write(new File("./helpfiles/" + docu.getPackage() + "/" + docu.getName() + ".html"), docu.toHTML());
+
 			} catch (ElasticsearchException | IOException | SAXException e1) {
 				System.out.println(f);
 				e1.printStackTrace();
