@@ -28,7 +28,7 @@ import javafx.util.Pair;
  * @author Ivor
  */
 public class DocumentSearcher {
-
+    private static final String DOCUMENTATION_INDEX = "functiondocumentation";
     private final Client client;
 
     /**
@@ -60,7 +60,7 @@ public class DocumentSearcher {
 	}
 
 	// Retrieve a response
-	SearchResponse response = client.prepareSearch("functiondocumentation").setTypes("function").setQuery(question)
+	SearchResponse response = client.prepareSearch(DOCUMENTATION_INDEX).setQuery(question)
 		.execute().actionGet();
 
 	// Return the ID of each response (functionname)
@@ -82,7 +82,7 @@ public class DocumentSearcher {
      */
     public String getDocumentVersionById(String id)
     {
-    	GetResponse Response = client.prepareGet("functiondocumentation", "function", id).setFields("version").execute().actionGet();
+    	GetResponse Response = client.prepareGet(DOCUMENTATION_INDEX, "function", id).setFields("version").execute().actionGet();
     	return (String) Response.getField("version").getValue();
     }
 
@@ -110,7 +110,7 @@ public class DocumentSearcher {
 	}
 
 	// Return an indexed client with three fields
-	return client.prepareIndex("functiondocumentation", "function", document.getName())
+	return client.prepareIndex(DOCUMENTATION_INDEX, "function", document.getName())
 		.setSource(jsonBuilder()
 			.startObject()
 				.field("name", document.getName())
