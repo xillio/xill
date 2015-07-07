@@ -40,6 +40,7 @@ public class PluginListener {
 			{
 				try {
 					FunctionDocument docu = parser.parseXML(documentedConstruct.openDocumentationStream(), plugin.getName(), plugin.getVersion());
+					
 					if(plugin.getName() != null && docu.getName() != null)
 						FileUtils.write(new File("./helpfiles/" + plugin.getName() + "/" + docu.getName() + ".html"), docu.toHTML());
 					else
