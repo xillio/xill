@@ -1090,7 +1090,11 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	try {
 	    return new ExpressionBuilder(Integer.parseInt(token.getValue()));
 	}catch(NumberFormatException e) {
-	    return new ExpressionBuilder(Integer.parseInt(token.getValue()));
+	    try {
+		return new ExpressionBuilder(Long.parseLong(token.getValue()));
+	    }catch(NumberFormatException e2) {
+		return new ExpressionBuilder(Double.parseDouble(token.getValue()));
+	    }
 	}
     }
 
