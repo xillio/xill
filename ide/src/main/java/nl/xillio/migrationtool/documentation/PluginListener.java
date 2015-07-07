@@ -11,9 +11,9 @@ import nl.xillio.plugins.PluginLoader;
 import nl.xillio.xill.api.PluginPackage;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.HelpComponent;
-import nl.xillio.xill.api.errors.NotImplementedException;
 
 /**
+ * A class which listens to plugins and tries to extract helpfiles.
  * @author Ivor
  *
  */
@@ -52,6 +52,10 @@ public class PluginListener {
 	}
     }
 
+    /**
+     * A method which listens to all the loaded plugins.
+     * @param pluginLoader The loader that tries to load the plugins from jars
+     */
     public static void Attach(final PluginLoader<PluginPackage> pluginLoader) {
 	PluginListener listener = new PluginListener();
 
