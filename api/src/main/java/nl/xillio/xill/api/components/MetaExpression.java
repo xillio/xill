@@ -179,6 +179,13 @@ public abstract class MetaExpression implements Expression, Processable {
 	return type;
     }
 
+    
+    /**
+     * Generate the JSON representation of this expression using a {@link Gson} parser <br/>
+     * <b>NOTE: </b> This is not the string value of this expression. It is JSON. For the string value
+     * use {@link MetaExpression#getStringValue()}
+     * @return JSON representation
+     */
     @Override
     public String toString() {
 	List<MetaExpression> initialVisited = new ArrayList<>(1);
