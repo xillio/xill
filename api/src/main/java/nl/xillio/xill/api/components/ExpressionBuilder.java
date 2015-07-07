@@ -23,16 +23,16 @@ public final class ExpressionBuilder implements Processable {
     /**
      * The true literal
      */
-    public static final MetaExpression TRUE = new AtomicExpression(new BooleanBehavior(true));
+    public static final MetaExpression TRUE = new ImmutableLiteral(new BooleanBehavior(true));
     /**
      * The false literal
      */
-    public static final MetaExpression FALSE = new AtomicExpression(new BooleanBehavior(false));
+    public static final MetaExpression FALSE = new ImmutableLiteral(new BooleanBehavior(false));
 
     /**
      * The null literal
      */
-    public static final MetaExpression NULL = new AtomicExpression(NullLiteral.Instance);
+    public static final MetaExpression NULL = new ImmutableLiteral(NullLiteral.Instance);
 
     /**
      * Create a new {@link IntegerLiteral}
@@ -76,7 +76,7 @@ public final class ExpressionBuilder implements Processable {
 
     /**
      * Create a new {@link ListExpression}
-     * 
+     *
      * @param value
      * @return the expression
      */
@@ -86,7 +86,7 @@ public final class ExpressionBuilder implements Processable {
 
     /**
      * Create a new {@link ObjectExpression}
-     * 
+     *
      * @param value
      * @return the expression
      */
@@ -102,7 +102,7 @@ public final class ExpressionBuilder implements Processable {
 
     /**
      * Create a new {@link ListExpression} with no values
-     * 
+     *
      * @return the expression
      */
     public static MetaExpression emptyList() {
@@ -111,7 +111,7 @@ public final class ExpressionBuilder implements Processable {
 
     /**
      * Create a new {@link ObjectExpression} with no values
-     * 
+     *
      * @return the expression
      */
     public static MetaExpression emptyObject() {
@@ -156,59 +156,65 @@ public final class ExpressionBuilder implements Processable {
 	}
 
     }
-    
+
     private final Supplier<MetaExpression> expressionSupplier;
-    
+
     /**
      * Create a new {@link ExpressionBuilder} that will produce a double
+     * 
      * @param value
      */
-    public ExpressionBuilder(double value) {
+    public ExpressionBuilder(final double value) {
 	expressionSupplier = () -> fromValue(value);
     }
-    
+
     /**
      * Create a new {@link ExpressionBuilder} that will produce an integer
+     * 
      * @param value
      */
-    public ExpressionBuilder(int value) {
+    public ExpressionBuilder(final int value) {
 	expressionSupplier = () -> fromValue(value);
     }
-    
+
     /**
      * Create a new {@link ExpressionBuilder} that will produce a string
+     * 
      * @param value
      */
-    public ExpressionBuilder(String value) {
+    public ExpressionBuilder(final String value) {
 	expressionSupplier = () -> fromValue(value);
     }
-    
+
     /**
      * Create a new {@link ExpressionBuilder} that will produce a List
+     * 
      * @param value
      */
-    public ExpressionBuilder(List<MetaExpression> value) {
+    public ExpressionBuilder(final List<MetaExpression> value) {
 	expressionSupplier = () -> fromValue(value);
     }
-    
+
     /**
      * Create a new {@link ExpressionBuilder} that will produce an object
+     * 
      * @param value
      */
-    public ExpressionBuilder(Map<String, MetaExpression> value) {
+    public ExpressionBuilder(final Map<String, MetaExpression> value) {
 	expressionSupplier = () -> fromValue(value);
     }
-    
+
     /**
      * Create a new {@link ExpressionBuilder} that will produce a double
+     * 
      * @param value
      */
-    public ExpressionBuilder(boolean value) {
+    public ExpressionBuilder(final boolean value) {
 	expressionSupplier = () -> fromValue(value);
     }
 
     @Override
-    public InstructionFlow<MetaExpression> process(Debugger debugger) throws RobotRuntimeException {
+    public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 	return InstructionFlow.doResume(expressionSupplier.get());
     }
 
