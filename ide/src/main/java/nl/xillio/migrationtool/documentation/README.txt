@@ -20,6 +20,3 @@ is a class which can query a given client with the following method:
 
 XML_Format_Handler:
 is a class contained in XML parser.
-
-main:
-Gives an example of how the classes can be used. Is to be deleted.

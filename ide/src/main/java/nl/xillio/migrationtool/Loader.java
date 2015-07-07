@@ -1,18 +1,14 @@
 package nl.xillio.migrationtool;
 
 
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.net.URL;
-
 import org.apache.log4j.LogManager;
 import org.apache.log4j.PropertyConfigurator;
 import org.elasticsearch.ElasticsearchException;
 import org.xml.sax.SAXException;
-
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -253,6 +249,10 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 		return xill;
 	}
 	
+	/**
+	 * Loads all the xml files into the database. 
+	 * This is to be moved elsewhere since every plugin will just load in its own XML files.
+	 */
 	private void loadcontent()
 	{
 		DocumentSearcher searcher = new DocumentSearcher(ESConsoleClient.getInstance().getClient());
