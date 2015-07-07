@@ -1,0 +1,15 @@
+<head><title>formatxml</title><link type="text/css" href="_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>formatxml</h1></div><div class="Section"><p><strong>formatxml</strong>(&lt;void,xml,string&gt;  xml)</p></div><div class="Section"><h2>Description</h2><p>Prettifies the formatting and indentation of the xml variable or string.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Suppose you have a string xml containing the following badly formatted XML:</p><div class="highlight"><pre>&lt;note&gt;&lt;to&gt;Tove&lt;/to&gt;&lt;from&gt;Jani&lt;/from&gt;&lt;heading&gt;Reminder&lt;/heading&gt;&lt;body&gt;Don't forget me this weekend!&lt;/body&gt;&lt;/note&gt;
+</pre></div></li><li><p class="First">or</p><div class="highlight"><pre>&lt;note&gt;
+&lt;to&gt;Tove&lt;/to&gt;
+    &lt;from&gt;Jani&lt;/from&gt;
+            &lt;heading&gt;Reminder&lt;/heading&gt;
+    &lt;comment&gt;Comments are welcome.&lt;/comment&gt;
+               &lt;body&gt;Don't forget me this weekend!&lt;/body&gt;
+&lt;/note&gt;
+</pre></div></li><li><p class="First">Then in either case formatxml(xml) would return:</p><div class="highlight"><pre>&lt;note&gt;
+    &lt;to&gt;Tove&lt;/to&gt;
+    &lt;from&gt;Jani&lt;/from&gt;
+    &lt;heading&gt;Reminder&lt;/heading&gt;
+    &lt;body&gt;Don't forget me this weekend!&lt;/body&gt;
+&lt;/note&gt;
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="XML / HTML, Text.html">XML / HTML, Text</a></p></li></ul></div></body>

@@ -1,0 +1,5 @@
+<head><title>es_delete</title><link type="text/css" href="_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>es_delete</h1></div><div class="Section"><p><strong>es_delete</strong>(string  index,, &lt;string,void&gt;  type ,, &lt;string,void&gt;  id ,, string  client )</p></div><div class="Section"><h2>Description</h2><p>Deletes documents from a specified index. The type and id parameters are optional. If id is not specified, the type will be deleted. Likewise, if type is not specified, the index will be deleted.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Removing the type &ldquo;paintings&rdquo; from the &ldquo;art&rdquo; index:</p><div class="highlight"><pre>es_connect();
+es_delete(&quot;art&quot;, &quot;paintings&quot;);
+</pre></div></li><li><p class="First">Removing the painting with id &ldquo;monalisa&rdquo;</p><div class="highlight"><pre>es_connect();
+es_delete(&quot;art&quot;, &quot;paintings&quot;, &quot;monalisa&quot;);
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="Elasticsearch.html">Elasticsearch</a></p></li></ul></div></body>

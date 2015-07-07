@@ -1,0 +1,24 @@
+<head><title>setattribute</title><link type="text/css" href="_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>setattribute</h1></div><div class="Section"><p><strong>setattribute</strong>(&lt;node,xml,void&gt;  node,, &lt;string,void&gt;  property,, &lt;string,void&gt;  value)</p></div><div class="Section"><h2>Description</h2><p>Adds the attribute property to the XML-node node and assigns it the value value.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Given an XML-file note.xml, which contains:</p><div class="highlight"><pre>&lt;note id=&quot;1&quot;&gt;
+    &lt;to&gt;Tove&lt;/to&gt;
+    &lt;from&gt;Jani&lt;/from&gt;
+    &lt;heading&gt;Reminder&lt;/heading&gt;
+    &lt;comment&gt;This was sent to James as well&lt;/comment&gt;
+    &lt;comment&gt;John has not responded to the invitation&lt;/comment&gt;
+    &lt;body&gt;Don't forget me this weekend!&lt;/body&gt;
+&lt;/note&gt;
+</pre></div></li><li><p class="First">then after executing the following code:</p><div class="highlight"><pre>xml = loadxml (&quot;C:/tmp/note.xml&quot;);
+parent = xpath(xml, &quot;//note&quot;); //get main node
+comments = xpath(xml, &quot;//comment&quot;);
+foreach (current, comment, comments) {
+    setattribute (comment, &quot;id&quot;, current);
+}
+log (parent);
+</pre></div></li><li><p class="First">parent contains:</p><div class="highlight"><pre>&lt;note id=&quot;1&quot;&gt;
+    &lt;to&gt;Tove&lt;/to&gt;
+    &lt;from&gt;Jani&lt;/from&gt;
+    &lt;heading&gt;Reminder&lt;/heading&gt;
+    &lt;comment id=&quot;0&quot;&gt;This was sent to James as well&lt;/comment&gt;
+    &lt;comment id=&quot;1&quot;&gt;John has not responded to the invitation&lt;/comment&gt;
+    &lt;body&gt;Don't forget me this weekend!&lt;/body&gt;
+&lt;/note&gt;
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href=" removeattribute.html"> removeattribute</a></p></li><li><p><a href="XML / HTML.html">XML / HTML</a></p></li></ul></div></body>

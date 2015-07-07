@@ -1,0 +1,16 @@
+<head><title>regex</title><link type="text/css" href="_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>regex</h1></div><div class="Section"><p><strong>regex</strong>(&lt;void,string&gt;  value,, string  regex,, number  timeout )</p></div><div class="Section"><h2>Description</h2><p>Returns a list of regular expression matches of string regex on the string value. Note that the result will be a list which contains the entire string value as the first entry and after that one or more matching groups. regex must always match the entire string value.Optionally a timeout can be provided in seconds, the default value is 5 seconds. Set timeout to zero to let the function run without timeout. This should only be altered when dealing with large source documents. The timeout is there to protect the system from hanging on invalid expressions.See the Regular Expressions page for more about Regular Expression support in Content Tools.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Determining the file extension contained in a URL:</p><div class="highlight"><pre>url = &quot;http://www.xillio.com/wp-content/uploads/screenshot-ns-website.png&quot;;
+log (getextension (url));
+getextension = routine(url) {
+    file = regex(url, &quot;http.*/(.*?)\.(.*?)&quot;);
+</pre></div></li><li><p class="First">    if ( file != null) {</p><div class="highlight"><pre>        return(file[2]); //get the second matching group
+    } else {
+        log(&quot;ERROR: binary url is not valid.&quot; + url);
+    }
+}
+</pre></div></li><li><p class="First">will print:</p><div class="highlight"><pre>png
+</pre></div></li><li><p class="First">Detect md5 hashes in &lt;a&gt; tags (to get page id&rsquo;s in certain CMS&rsquo;s):</p><div class="highlight"><pre>linkid = &quot;&quot;;
+id_regex = regex(contentstring, &quot;(?is).*&lt;a\s[^&gt;]*href=\&quot;([a-f0-9]{32})\&quot;.*?&gt;.*&quot;);
+if (variabletype(id_regex) == &quot;list&quot;) {
+    linkid = id_regex[1];
+}
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="Text, Regular Expressions.html">Text, Regular Expressions</a></p></li></ul></div></body>

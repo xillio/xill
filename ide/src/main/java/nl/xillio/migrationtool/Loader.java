@@ -2,13 +2,20 @@ package nl.xillio.migrationtool;
 
 
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.URISyntaxException;
 import java.net.URL;
+
 import org.apache.log4j.LogManager;
 import org.apache.log4j.PropertyConfigurator;
 import org.elasticsearch.ElasticsearchException;
 import org.xml.sax.SAXException;
+
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -21,6 +28,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient;
 import nl.xillio.migrationtool.documentation.DocumentSearcher;
+import nl.xillio.migrationtool.documentation.FunctionDocument;
 import nl.xillio.migrationtool.documentation.XMLparser;
 import nl.xillio.xill.api.Xill;
 
@@ -179,8 +187,7 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
 			e.printStackTrace();
-		}
-
+		}		
 		Parent root;
 		try {
 			Font.loadFont(this.getClass().getResourceAsStream("/fonts/Glober SemiBold.ttf"), 10);
@@ -280,7 +287,12 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 		for(String f : funcs)
 		{
 			try(InputStream url = Loader.class.getResourceAsStream("/helpxml/" + f + ".xml")) {
-				searcher.index(parser.parseXML(url));
+				FunctionDocument docu = parser.parseXML(url, "1");
+				searcher.index(docu);
+				System.out.println(searcher.getDocumentVersionById(docu.getName()));
+				FileWriter writer = new FileWriter(new File("").getAbsolutePath()+"/helpfiles/" + f + ".html",false);
+				writer.write(docu.toHTML());
+				writer.close();
 			} catch (ElasticsearchException | IOException | SAXException e1) {
 				System.out.println(f);
 				e1.printStackTrace();

@@ -1,0 +1,14 @@
+<head><title>es_aggregate</title><link type="text/css" href="_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>es_aggregate</h1></div><div class="Section"><p><strong>es_aggregate</strong>(&lt;string,void&gt;  index ,, &lt;string,void&gt;  type ,, &lt;list,string&gt;  aggregations,, string  client )</p></div><div class="Section"><h2>Description</h2><p>Searches a cluster client, with optionally an index or type for documents and applies the aggregations on the documents. You may specify either a list of aggregations or a single aggregation as a string.index and type are optional, but if you pass a type, you also have to pass an index. Make sure to pass the top-level aggregation as parameter (and not a child).</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Getting statistics for the &ldquo;price&rdquo; field of all documents in the &ldquo;literature&rdquo; index:</p><div class="highlight"><pre>es_connect();
+stats = es_statsagg(&quot;stats&quot;, &quot;price&quot;);
+results = es_aggregate(&quot;literature&quot;, null, stats);
+log(results);
+</pre></div></li><li><p class="First">might print:</p><div class="highlight"><pre>{
+        stats = {
+                min = 10,
+                avg = 36.25,
+                max = 70,
+                count = 4,
+                sum = 145
+        }
+}
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href=" es_filteragg, es_statsagg.html"> es_filteragg, es_statsagg</a></p></li><li><p><a href="Elasticsearch.html">Elasticsearch</a></p></li></ul></div></body>

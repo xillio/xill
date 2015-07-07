@@ -1,0 +1,49 @@
+<head><title>rawhttp</title><link type="text/css" href="_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>rawhttp</h1></div><div class="Section"><p><strong>rawhttp</strong>(string  method,, string  url,, string  contenttype,, string  body ,, list  parameters ,, list  headers )</p></div><div class="Section"><h2>Description</h2><p>Performs a custom http action, enabling you to make a call to a SOAP or REST web service. url is the URL of the web service. method is typically 'GET' or 'POST'. contenttype must be set to 'text/xml' for SOAP calls.body, parameters and headers are optional string/list parameters which will be passed on with the request where needed. In case of a SOAP request using the POST method the string body is mandatory and would contain the request XML.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Calling a RESTful webservice (the Google distance API):</p><div class="highlight"><pre>result = rawhttp (&quot;GET&quot;,
+  &quot;http://maps.googleapis.com/maps/api/distancematrix/xml?origins=Vancouver+BC|Seattle&amp;destinations=San+Francisco|Vancouver+BC&amp;mode=bicycling&amp;language=en-EN&amp;units=metric&amp;sensor=false&quot;,
+  &quot;text/xml&quot;);
+</pre></div></li><li><p class="First">log (result);</p><div class="highlight"><pre></pre></div></li><li><p class="First">will print something like:</p><div class="highlight"><pre>&lt;DistanceMatrixResponse&gt;
+  &lt;status&gt;
+    OK
+  &lt;/status&gt;
+  &lt;origin_address&gt;
+    Vancouver, BC, Canada
+  &lt;/origin_address&gt;
+  &lt;origin_address&gt;
+    Seattle, WA, USA
+  &lt;/origin_address&gt;
+</pre></div></li><li><p class="First">  //...//</p><div class="highlight"><pre></pre></div></li><li><p class="First">  &lt;row&gt;</p><div class="highlight"><pre>    &lt;element&gt;
+      &lt;status&gt;
+        OK
+      &lt;/status&gt;
+      &lt;duration&gt;
+        &lt;value&gt;
+          335741
+        &lt;/value&gt;
+        &lt;text&gt;
+          3 days 21 hours
+        &lt;/text&gt;
+      &lt;/duration&gt;
+      &lt;distance&gt;
+        &lt;value&gt;
+          1683260
+        &lt;/value&gt;
+        &lt;text&gt;
+          1,683 km
+        &lt;/text&gt;
+      &lt;/distance&gt;
+    &lt;/element&gt;
+</pre></div></li><li><p class="First">    //...//</p><div class="highlight"><pre></pre></div></li><li><p class="First">  &lt;/row&gt;</p><div class="highlight"><pre>&lt;/DistanceMatrixResponse&gt;
+</pre></div></li><li><p class="First">Getting the id for a GX page (a type of CMS) using SOAP:</p><div class="highlight"><pre>get_gxid = routine (path, url) {
+</pre></div></li><li><p class="First">    xml_getid = &quot;&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;UTF-8\&quot; ?&gt;</p><div class="highlight"><pre>                &lt;Request action=\&quot;getid\&quot;&gt;
+                &lt;Path&gt;&quot;+ path +&quot;&lt;/Path&gt;
+                &lt;/Request&gt;&quot;;
+    result = rawhttp(&quot;POST&quot;, url, &quot;text/xml&quot;, xml_getid);
+    log(result);
+    gxid = regex(result, &quot;(?s).*&lt;GxId&gt;(.*?)&lt;/GxId&gt;.*&quot;);
+    gxid_1 = gxid[1];
+</pre></div></li><li><p class="First">    if (gxid_1 == null) {</p><div class="highlight"><pre>        log(&quot;---- ERROR: get null gxid. The given path is [&quot;+ path +&quot;]&quot;);
+        return (null);
+    }
+    return (gxid_1);
+}
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href=" cURL.html"> cURL</a></p></li><li><p><a href="Browser.html">Browser</a></p></li></ul></div></body>

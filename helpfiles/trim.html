@@ -1,0 +1,6 @@
+<head><title>trim</title><link type="text/css" href="_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>trim</h1></div><div class="Section"><p><strong>trim</strong>(&lt;string,void&gt;  text,, boolean  internal )</p></div><div class="Section"><h2>Description</h2><p>Returns the trimmed version of string text. If the optional boolean parameter internal is set to true, the routine will also replace slack white space inside the string with a single space.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Executing:</p><div class="highlight"><pre>log(trim(&quot;   Xillio Xillio    Xillio Xillio Xillio    &quot;));
+log(trim(&quot;   Xillio Xillio    Xillio Xillio Xillio    &quot;, true));
+</pre></div></li><li><p class="First">will print:</p><div class="highlight"><pre>Xillio Xillio    Xillio Xillio Xillio
+Xillio Xillio Xillio Xillio Xillio
+</pre></div></li><li><p class="First">Trim the data read from a file:</p><div class="highlight"><pre>includepage = trim (loaddata(includefile), true);
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="Text.html">Text</a></p></li></ul></div></body>

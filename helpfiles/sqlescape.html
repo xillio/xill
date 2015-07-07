@@ -1,0 +1,13 @@
+<head><title>sqlescape</title><link type="text/css" href="_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>sqlescape</h1></div><div class="Section"><p><strong>sqlescape</strong>(string  value)</p></div><div class="Section"><h2>Description</h2><p>Returns an SQL-escaped version of string value. This is essential for sending a webpage or unchecked input to an XML database.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">To prepare the XML-file note.xml:</p><div class="highlight"><pre>&lt;note id=&quot;1&quot;&gt;
+    &lt;to&gt;Tove&lt;/to&gt;
+    &lt;from&gt;Jani&lt;/from&gt;
+    &lt;heading&gt;Reminder&lt;/heading&gt;
+    &lt;comment&gt;This was sent to James as well&lt;/comment&gt;
+    &lt;comment&gt;John has not responded to the invitation&lt;/comment&gt;
+    &lt;body&gt;Don't forget me this weekend!&lt;/body&gt;
+&lt;/note&gt;
+</pre></div></li><li><p class="First">for sending it to a database one might use:</p><div class="highlight"><pre>xml = loaddata (&quot;c:/tmp/note.xml&quot;);
+sqlstring = sqlescape (xml);
+query (&quot;INSERT INTO `xmltable` VALUES(&quot; + sqlstring + &quot;)&quot;);
+</pre></div></li><li><p class="First">Now sqlstring will contain:</p><div class="highlight"><pre>&lt;note id=\&quot;1\&quot;&gt;\r\n    &lt;to&gt;Tove&lt;/to&gt;\r\n    &lt;from&gt;Jani&lt;/from&gt;\r\n    &lt;heading&gt;Reminder&lt;/heading&gt;\r\n    &lt;comment&gt;This was sent to James as well&lt;/comment&gt;\r\n    &lt;comment&gt;John has not responded to the invitation&lt;/comment&gt;\r\n    &lt;body&gt;Don\'t forget me this weekend!&lt;/body&gt;\r\n&lt;/note&gt;
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="Database.html">Database</a></p></li></ul></div></body>

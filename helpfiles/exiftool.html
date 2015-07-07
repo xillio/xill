@@ -1,0 +1,23 @@
+<head><title>exiftool</title><link type="text/css" href="_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>exiftool</h1></div><div class="Section"><p><strong>exiftool</strong>(string  uri,, string  encoding ,, number  timeout )</p></div><div class="Section"><h2>Description</h2><p>Executes exiftool on file located at uri. Returns a list of extracted metadata tags and their values. Optionally, the encoding of the filename and metadata can be set through encoding. By default it is set to &lsquo;ISO-8859-1&rsquo; for Windows users and &lsquo;UTF-8&rsquo; for every other OS. Exiftool will automatically time-out after 30 seconds, you can optionally specify a different timeout in seconds. A timeout of 0 indicates that you do not want exiftool to time out.NOTE: Windows only supports filenames with &lsquo;ISO-8859-1&rsquo; encoded characters. Use external exiftool executable with the runprogram() function if you run into encoding issues.On Mac and Linux systems you must download and install exiftool from http://www.sno.phy.queensu.ca/~phil/exiftool/ or using your preferred package manager, then make sure exiftool is available in your path. See the INSTALLATION notes for more information. An alternative is to use metadatafromdocument</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Running exiftool on a file and logging its metadata:</p><div class="highlight"><pre>metadata = exiftool(&quot;c:/product development/migrationtool/contenttools.jar&quot;;
+log(metadata);
+</pre></div></li><li><p class="First">Returns:</p><div class="highlight"><pre>{
+    &quot;ExifTool Version Number&quot; = &quot;9.54&quot;,
+    &quot;File Name&quot; = &quot;contenttools.jar&quot;,
+    Directory = &quot;c:/product development/migrationtool&quot;,
+    &quot;File Size&quot; = &quot;36 MB&quot;,
+    &quot;File Modification Date/Time&quot; = &quot;2014:06:16 14:24:20+02:00&quot;,
+    &quot;File Access Date/Time&quot; = &quot;2014:06:16 14:24:12+02:00&quot;,
+    &quot;File Creation Date/Time&quot; = &quot;2014:06:15 09:52:05+02:00&quot;,
+    &quot;File Permissions&quot; = &quot;rw-rw-rw-&quot;,
+    &quot;File Type&quot; = &quot;ZIP&quot;,
+    &quot;MIME Type&quot; = &quot;application/zip&quot;,
+    &quot;Zip Required Version&quot; = &quot;20&quot;,
+    &quot;Zip Bit Flag&quot; = &quot;0x0808&quot;,
+    &quot;Zip Compression&quot; = &quot;Deflated&quot;,
+    &quot;Zip Modify Date&quot; = &quot;2014:06:16 14:24:06&quot;,
+    &quot;Zip CRC&quot; = &quot;0x00000000&quot;,
+    &quot;Zip Compressed Size&quot; = &quot;2&quot;,
+    &quot;Zip Uncompressed Size&quot; = &quot;0&quot;,
+    &quot;Zip File Name&quot; = &quot;META-INF/&quot;
+}
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href=" metadatafromdocument, textfromdocument.html"> metadatafromdocument, textfromdocument</a></p></li><li><p><a href="File.html">File</a></p></li></ul></div></body>

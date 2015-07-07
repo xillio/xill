@@ -1,0 +1,101 @@
+<head><title>listsort</title><link type="text/css" href="_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>listsort</h1></div><div class="Section"><p><strong>listsort</strong>(&lt;list,void&gt;  list,, boolean  sortbykeys ,, boolean  sortsublists )</p></div><div class="Section"><h2>Description</h2><p>Sorts a list in ascending order. The optional parameter sortbykeys is a boolean. When set to true the list is sorted based on keys, when set to false (or omitted) the list is sorted by values. The optional parameter sortsublists is a boolean. When set to true (or omitted) the list is sorted recursively, when set to false only the outer-most level of the list is sorted.A list may contain any combination of data: numbers, strings, dates, lists etc. Anything that is not a list or number is treated as a string.Sort by valueSorting applies to comparable data-types, ie. numbers are compared with numbers, strings are compared with strings. If a list contains eg. numbers, strings and lists, the following sort-sequence applies:listsnumbersstringsSort by keyA list-entry may have its key explicitly specified. A list may contain any combination of entries with or without keys specified. The following sort-sequence applies:entries with explicit keysentries without explicit keys</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Using the following list for all examples:</p><div class="highlight"><pre>mylist = {
+    &quot;0b&quot;,
+    &quot;b&quot;=1,
+    &quot;c&quot;={&quot;3&quot;=&quot;b&quot;,
+         &quot;2&quot;=&quot;c&quot;},
+    &quot;d&quot;={&quot;2&quot; =&quot;a&quot;,
+         &quot;1&quot;=&quot;b&quot;},
+    &quot;e&quot;=2,
+    &quot;00&quot;
+};
+</pre></div></li><li><p class="First">Sorted by values</p><div class="highlight"><pre>log(listsort(mylist));
+</pre></div></li><li><p class="First">will output:</p><div class="highlight"><pre>{
+    c = {
+        3 = &quot;b&quot;,
+        2 = &quot;c&quot;
+    },
+    d = {
+        2 = &quot;a&quot;,
+        1 = &quot;b&quot;
+    },
+    b = 1,
+    e = 2,
+    &quot;00&quot;,
+    &quot;0b&quot;
+}
+</pre></div></li><li><p class="First">Sorted by keys</p><div class="highlight"><pre>log(listsort(mylist, true));
+</pre></div></li><li><p class="First">will output:</p><div class="highlight"><pre>{
+    b = 1,
+    c = {
+        2 = &quot;c&quot;,
+        3 = &quot;b&quot;
+    },
+    d = {
+        1 = &quot;b&quot;,
+        2 = &quot;a&quot;
+    },
+    e = 2,
+    &quot;00&quot;,
+    &quot;0b&quot;
+}
+</pre></div></li><li><p class="First">Sorted by keys recursively</p><div class="highlight"><pre>log(listsort(mylist, true, true));
+</pre></div></li><li><p class="First">will output:</p><div class="highlight"><pre>{
+    b = 1,
+    c = {
+        2 = &quot;c&quot;,
+        3 = &quot;b&quot;
+    },
+    d = {
+        1 = &quot;b&quot;,
+        2 = &quot;a&quot;
+    },
+    e = 2,
+    &quot;0b&quot;,
+    &quot;00&quot;
+}
+</pre></div></li><li><p class="First">Sorted by keys outermost list only</p><div class="highlight"><pre>log(listsort(mylist, true, false));
+</pre></div></li><li><p class="First">will output:</p><div class="highlight"><pre>{
+    b = 1,
+    c = {
+        3 = &quot;b&quot;,
+        2 = &quot;c&quot;
+    },
+    d = {
+        2 = &quot;a&quot;,
+        1 = &quot;b&quot;
+    },
+    e = 2,
+    &quot;0b&quot;,
+    &quot;00&quot;
+}
+</pre></div></li><li><p class="First">Sorted by values recursively</p><div class="highlight"><pre>log(listsort(mylist, false));
+</pre></div></li><li><p class="First">will output:</p><div class="highlight"><pre>{
+    c = {
+        3 = &quot;b&quot;,
+        2 = &quot;c&quot;
+    },
+    d = {
+        2 = &quot;a&quot;,
+        1 = &quot;b&quot;
+    },
+    b = 1,
+    e = 2,
+    &quot;00&quot;,
+    &quot;0b&quot;
+}
+</pre></div></li><li><p class="First">Sorted by values outermost list only</p><div class="highlight"><pre>log(listsort(mylist, false, false));
+</pre></div></li><li><p class="First">will output:</p><div class="highlight"><pre>{
+    c = {
+        3 = &quot;b&quot;,
+        2 = &quot;c&quot;
+    },
+    d = {
+        2 = &quot;a&quot;,
+        1 = &quot;b&quot;
+    },
+    b = 1,
+    e = 2,
+    &quot;00&quot;,
+    &quot;0b&quot;
+}
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="List.html">List</a></p></li></ul></div></body>

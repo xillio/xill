@@ -1,0 +1,10 @@
+<head><title>mongo_count</title><link type="text/css" href="_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>mongo_count</h1></div><div class="Section"><p><strong>mongo_count</strong>(string  collection,, &lt;list,void&gt;  query ,, string  mongo )</p></div><div class="Section"><h2>Description</h2><p>Counts the number of objects in collection that match query. If query is null or not specified it will count all objects in collection. If mongo is not provided the last active connection will be used.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Counting the amount of objects in the &ldquo;furniture&rdquo; collection:</p><div class="highlight"><pre>mongo_connect(&quot;localDB&quot;);
+fCount = mongo_count(&quot;furniture&quot;);
+log(&quot;Furniture count: &quot; + fCount);
+</pre></div></li><li><p class="First">Will print:</p><div class="highlight"><pre>Furniture count: 1049
+</pre></div></li><li><p class="First">Counting the amount of objects in the &ldquo;furniture&rdquo; collection with &ldquo;height&rdquo; &gt;= 100.</p><div class="highlight"><pre>mongo_connect(&quot;localDB&quot;);
+</pre></div></li><li><p class="First">//Note that because &quot;$gte&quot; starts with a dollar sign it needs to be wrapped in quotes, while &quot;height&quot; does not.</p><div class="highlight"><pre>high = { height = { &quot;$gte&quot; = 100 } };
+highFurniture = mongo_count(&quot;furniture&quot;, high);
+log(&quot;High furniture count: &quot; + highFurniture);
+</pre></div></li><li><p class="First">Will print:</p><div class="highlight"><pre>High furniture count: 759
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="MongoDB.html">MongoDB</a></p></li></ul></div></body>

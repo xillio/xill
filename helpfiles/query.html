@@ -1,0 +1,22 @@
+<head><title>query</title><link type="text/css" href="_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>query</h1></div><div class="Section"><p><strong>query</strong>(string  query,, number  timeout ,, &lt;string,void&gt;  connectionstring ,, list  inputdata )</p></div><div class="Section"><h2>Description</h2><p>Executes the string query as an SQL-statement on the active database. Returns an iterable result if the query yields results or null if it does not. Returns the number of updated rows in case of an INSERT or UPDATE. Queries will automatically time-out after 30 seconds, you can optionally specify a different timeout in seconds. A timeout of 0 indicates that you do not want the query to time out. The optional parameter connectionstring is a string identifiying the database connection as returned by the database function. If no connection is given then the last used database connection will be used.If inputdata is specified then the query string must contain question mark character(s) and the entire function does prepare statement batch execution (for INSERT or UPDATE or DELETE) or multiple select (for SELECT query).In first case the query function always returns total number of affected rows. In select case it returns the merged result of all resultsets for each input row data.If some row operation fails then it raises an error message.  The inputdata can be list of lists of values or list of values.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Loop through unvisited pages (assuming a certain database layout and a bot settings.sbot are present):</p><div class="highlight"><pre>settings = global(callbot(&quot;bots/settings.sbot&quot;));
+database(settings.db_host, settings.db_port, settings.db_name, settings.db_user, settings.db_pass);
+result = query(&quot;SELECT COUNT(*) FROM pages WHERE visited = 'n'&quot;);
+foreach(_, r, result) {
+    pagecount = r;
+}
+</pre></div></li><li><p class="First">Store a log entry (assuming a certain database layout is present):</p><div class="highlight"><pre>writeLog = routine(pageid, subject, entry){
+    if (!debug){
+        query(&quot;INSERT INTO transformation_log VALUES ('&quot;+pageid+&quot;','&quot;+subject+&quot;','&quot;+entry+&quot;',CURRENT_TIMESTAMP)&quot;);
+    }
+    if (subject != &quot;&quot;){
+        log(&quot;\t&quot;+subject + &quot; - &quot; + entry);
+    }else{
+        log(&quot;\t&quot;+entry);
+    }
+}
+</pre></div></li><li><p class="First">Bulk SQL operations and multiple select example:</p><div class="highlight"><pre>database(&quot;localhost&quot;, 3306, &quot;someserver&quot;, &quot;user&quot;, &quot;pass&quot;);
+rows = query(&quot;insert into dummy set id = ?, name = ?&quot;, 30, void, { {200, &quot;John&quot;} , {201, &quot;Mary&quot;} });
+rows = query(&quot;update dummy set id = ? where value = ?&quot;, 30, void, { {10, 150}, {11, 320}, {18, 500} });
+rows = query(&quot;delete from dummy where id = ?&quot;, 30, void, {200, 201});
+</pre></div></li><li><p class="First">result = query(&quot;select * from dummy where id = ? and name = ?&quot;, 30, void, { {200, &quot;John&quot;}, {56, &quot;Mary&quot;} });</p><div class="highlight"><pre>log(result);
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href=": database..html">: database.</a></p></li><li><p><a href="Database.html">Database</a></p></li></ul></div></body>

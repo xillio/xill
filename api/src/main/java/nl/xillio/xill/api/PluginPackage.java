@@ -13,6 +13,8 @@ import nl.xillio.xill.api.construct.Construct;
  */
 public abstract class PluginPackage implements Loadable<PluginPackage>, AutoCloseable {
 	private final List<Construct> constructs = new ArrayList<>();
+	
+	protected String version;
 
 	/**
 	 * Get a construct from this package
@@ -93,6 +95,25 @@ public abstract class PluginPackage implements Loadable<PluginPackage>, AutoClos
 		}
 	}
 	getConstructs().clear();
+	}
+	
+	/**
+	 * @param v The current version
+	 */
+	public void setVersion(String v)
+	{
+		this.version = v;
+	}
+	
+	/**
+	 * @return Returns the version of the package
+	 */
+	public String getVersion()
+	{
+		if(this.version != null)
+			return this.version;
+		else
+			return getClass().getPackage().getSpecificationVersion();
 	}
 	
 	@Override

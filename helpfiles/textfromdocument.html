@@ -1,0 +1,7 @@
+<head><title>textfromdocument</title><link type="text/css" href="_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>textfromdocument</h1></div><div class="Section"><p><strong>textfromdocument</strong>(string  path,, number  timeout )</p></div><div class="Section"><h2>Description</h2><p>Extracts plain textual content from file at path.By default the extraction times out at 5 seconds. To change this simply provide a timeout in milliseconds.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Suppose you have a document at path containing the following content:</p><div class="highlight"><pre>Document Title
++---+ I am a word document which
+|IMG| you need to do some operations
++---+ on.
+</pre></div></li><li><p class="First">Then textfromdocument(path) will return:</p><div class="highlight"><pre>Document Title
+I am a word document which you need to do some operations on.
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href=" metadatafromdocument, exiftool.html"> metadatafromdocument, exiftool</a></p></li><li><p><a href="File, Text.html">File, Text</a></p></li></ul></div></body>

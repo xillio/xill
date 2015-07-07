@@ -1,0 +1,21 @@
+<head><title>split</title><link type="text/css" href="_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>split</h1></div><div class="Section"><p><strong>split</strong>(&lt;void,string&gt;  value,, string  delimiter,, boolean  keepempty)</p></div><div class="Section"><h2>Description</h2><p>Splits the string value into a list of strings, based on the provided string delimiter and returns that list. delimiter is interpreted as a Java Regular expression, but since all backslash &quot;\&quot; characters will be interpreted as an escape character for the next one by the XMT all forward slashes you want to be evaluated by the regex have to be doubled. This means that &quot;\\\\&quot; would denote a single literal backslash &quot;\&quot; and &quot;\\*&quot; would denote a literal asterisk &quot;*&quot;. However, since Java is very smart in escaping, you will get away with using some single backslashes, for example for newline characters you can simply write &quot;\n&quot;.By default empty entries are skipped. You can optionally set keepempty to true to also add empty entries to the resulting list.Read more about Java regular expressions here: http://www.regular-expressions.info/reference.html</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Executing:</p><div class="highlight"><pre>log(split(&quot;Xillio Xillio Sausage Xillio    Xillio&quot;, &quot; &quot;));
+</pre></div></li><li><p class="First">will print:</p><div class="highlight"><pre>[
+    &quot;Xillio&quot;,
+    &quot;Xillio&quot;,
+    &quot;Sausage&quot;,
+    &quot;Xillio&quot;,
+    &quot;Xillio&quot;
+]
+</pre></div></li><li><p class="First">Executing:</p><div class="highlight"><pre>log(split(&quot;xillio/about/contact////index.html&quot;, &quot;/&quot;, true));
+</pre></div></li><li><p class="First">will print:</p><div class="highlight"><pre>[
+    &quot;xillio&quot;,
+    &quot;about&quot;,
+    &quot;contact&quot;,
+    &quot;&quot;,
+    &quot;&quot;,
+    &quot;&quot;,
+    &quot;index.html&quot;
+]
+</pre></div></li><li><p class="First">Split a URL into its parts:</p><div class="highlight"><pre>parts = split(url, &quot;/&quot;);
+</pre></div></li><li><p class="First">Read a (Windows) text file line by line:</p><div class="highlight"><pre>lines = split (loaddata (file_uri), &quot;\r\n&quot;);
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href=" listtocsv.html"> listtocsv</a></p></li><li><p><a href="Text, List.html">Text, List</a></p></li></ul></div></body>

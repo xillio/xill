@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.elasticsearch.ElasticsearchException;
+import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
@@ -17,6 +18,13 @@ import org.elasticsearch.search.SearchHit;
 import javafx.util.Pair;
 
 /**
+ * This class handles indexing a FunctionDocument and querying the database of FunctionDocuments. <BR> <BR>
+ * 
+ * The public search function receives a string as query, splits that string and does a fuzzy search on each of the components.
+ * It returns an array with the unique ID's of functions that match that query. <BR> <BR>
+ * 
+ * The public index function recieves a FunctionDocument and adds it to the database.
+ * It returns an IndexResponse which is an object from elasticsearch, usually this is cast into the void.
  * @author Ivor
  */
 public class DocumentSearcher {
@@ -64,6 +72,19 @@ public class DocumentSearcher {
 	}
 	return results;
     }
+    
+    /**
+     * Returns a string which is the documentversion given an ID
+     * @param id
+     * The unique id of the functiondocument
+     * @return
+     * The version or null when the function is non existant
+     */
+    public String getDocumentVersionById(String id)
+    {
+    	GetResponse Response = client.prepareGet("functiondocumentation", "function", id).setFields("version").execute().actionGet();
+    	return (String) Response.getField("version").getValue();
+    }
 
     /**
      * @param document
@@ -90,9 +111,15 @@ public class DocumentSearcher {
 
 	// Return an indexed client with three fields
 	return client.prepareIndex("functiondocumentation", "function", document.getName())
-		.setSource(jsonBuilder().startObject().field("name", document.getName())
-			.field("description", document.getDescription()).field("parameters", parameterstrings)
-			.field("searchtags", document.getSearchTags()).endObject())
+		.setSource(jsonBuilder()
+			.startObject()
+				.field("name", document.getName())
+				.field("description", document.getDescription())
+				.field("parameters", parameterstrings)
+				.field("searchtags", document.getSearchTags())
+				.field("version", document.getVersion())
+			.endObject())
+		
 		.execute().actionGet();
     }
 

@@ -1,0 +1,7 @@
+<head><title>mongo_drop</title><link type="text/css" href="_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>mongo_drop</h1></div><div class="Section"><p><strong>mongo_drop</strong>(string  collection,, string  mongo )</p></div><div class="Section"><h2>Description</h2><p>Drops the collection from the database identified by mongo. If mongo is not provided the last active connection will be used.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">General usage:</p><div class="highlight"><pre>mongo_connect(settings.db);
+mongo_drop(settings.collection);
+</pre></div></li><li><p class="First">Where the settings might be:</p><div class="highlight"><pre>settings = {
+    db = &quot;movieDB&quot;,
+    collection = &quot;ratings&quot;
+};
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href=" mongo_delete.html"> mongo_delete</a></p></li><li><p><a href="MongoDB.html">MongoDB</a></p></li></ul></div></body>

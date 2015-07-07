@@ -1,0 +1,16 @@
+<head><title>stringtoxml</title><link type="text/css" href="_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>stringtoxml</h1></div><div class="Section"><p><strong>stringtoxml</strong>(string  value)</p></div><div class="Section"><h2>Description</h2><p>Loads the specified text as XML. Useful to generate (parts of) XML or HTML documents inline.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Executing the following code</p><div class="highlight"><pre>content = &quot;&lt;note id=\&quot;1\&quot;&gt;
+            &lt;to&gt;Tove&lt;/to&gt;
+            &lt;from&gt;Jani&lt;/from&gt;
+            &lt;heading&gt;Reminder&lt;/heading&gt;
+            &lt;comment&gt;This was sent to James as well&lt;/comment&gt;
+            &lt;comment&gt;John has not responded to the invitation&lt;/comment&gt;
+            &lt;body&gt;Don't forget me this weekend!&lt;/body&gt;
+        &lt;/note&gt;&quot;;
+</pre></div></li><li><p class="First">xmlcontent = stringtoxml (content);</p><div class="highlight"><pre></pre></div></li><li><p class="First">comments = xpath (xmlcontent, &quot;//comment&quot;);</p><div class="highlight"><pre></pre></div></li><li><p class="First">log (comments);</p><div class="highlight"><pre></pre></div></li><li><p class="First">will print:</p><div class="highlight"><pre>{
+        0 = &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt;
+                &lt;comment&gt;This was sent to James as well&lt;/comment&gt;,
+        1 = &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt;
+                &lt;comment&gt;John has not responded to the invitation&lt;/comment&gt;
+}
+</pre></div></li><li><p class="First">However, trying to execute this line:</p><div class="highlight"><pre>comments = xpath (content, &quot;//comment&quot;);
+</pre></div></li><li><p class="First">will throw an error.</p><div class="highlight"><pre></pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href=" xmltostring, loadxml.html"> xmltostring, loadxml</a></p></li><li><p><a href="XML / HTML, Text, Conversion.html">XML / HTML, Text, Conversion</a></p></li></ul></div></body>

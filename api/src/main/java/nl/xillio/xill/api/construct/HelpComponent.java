@@ -12,4 +12,6 @@ public interface HelpComponent {
      * @return The stream
      */
     public InputStream openDocumentationStream();
+
+	public String getName();
 }

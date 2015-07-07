@@ -12,10 +12,27 @@ import org.rendersnake.HtmlCanvas;
 import javafx.util.Pair;
 
 /**
+ * The FunctionDocument is the java implementation of our documentation. <BR><BR>
+ * 
+ * It contains a name which has to be unique.
+ * It contains a list of parameters which are pairs of strings (the type and the name)
+ * Note that in 3.0 we will probably not have types anymore. <BR><BR>
+ * 
+ * It contains a string with the description.<BR>
+ * 
+ * It contains a list with examples which are represented as a pair of strings.<BR>
+ * 
+ * It contains a list with the ID's of all the FunctionDocuments it links to called links.<BR>
+ * 
+ * It contains a list of SearchTags which help indexing it.<BR>
+ * 
+ * It contains a List of applications in case the creator of the function has some specific applications he or she wants to mention. <BR>
+ * 
+ * The FunctionDocument is capable of generating its own HTML page with the function toHTML().
  * @author Ivor
  */
 public class FunctionDocument {
-    private String functionName, description;
+    private String functionName, description, version = "wrong";
     private final List<Pair<String, String>> parameters = new ArrayList<>();
     private final List<Pair<String, String>> examples = new ArrayList<>();
     private final List<String> links = new ArrayList<>();
@@ -50,6 +67,23 @@ public class FunctionDocument {
      */
     public String getDescription() {
 	return description;
+    }
+    
+    /**
+     * @param v
+     * 			The version of the function
+     */
+    public void setVersion(String v)
+    {
+    	this.version = v;
+    }
+    
+    /**
+     * @return Returns the version of the functiondocument
+     */
+    public String getVersion()
+    {
+    	return this.version;
     }
 
     /**

@@ -1,0 +1,19 @@
+<head><title>datediff</title><link type="text/css" href="_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>datediff</h1></div><div class="Section"><p><strong>datediff</strong>(date  date1,, date  date2,, boolean  absolute )</p></div><div class="Section"><h2>Description</h2><p>Returns the absolute difference between date 1 and date 2. Optionally absolute can be set to false to return the relative difference.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Executing:</p><div class="highlight"><pre>log(datediff(date(1382599121764), date()));
+</pre></div></li><li><p class="First">prints:</p><div class="highlight"><pre>{
+  &quot;day&quot;: 1,
+  &quot;hour&quot;: 0,
+  &quot;millisecond&quot;: 453,
+  &quot;minute&quot;: 10,
+  &quot;second&quot;: 49,
+  &quot;timestamp&quot;: 87049453
+}
+</pre></div></li><li><p class="First">Executing:</p><div class="highlight"><pre>log(datediff(date(1382599121764), date(), false));
+</pre></div></li><li><p class="First">prints:</p><div class="highlight"><pre>{
+  &quot;day&quot;: -1,
+  &quot;hour&quot;: 0,
+  &quot;millisecond&quot;: -456,
+  &quot;minute&quot;: -10,
+  &quot;second&quot;: -49,
+  &quot;timestamp&quot;: -87049456
+}
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="Date functions.html">Date functions</a></p></li></ul></div></body>

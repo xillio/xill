@@ -1,0 +1,31 @@
+<head><title>select</title><link type="text/css" href="_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>select</h1></div><div class="Section"><p><strong>select</strong>(node  element,, boolean  select)</p></div><div class="Section"><h2>Description</h2><p>In an HTML-select box, executing select marks the option node as selected . If the boolean parameter select equals true, it selects the option, if false then it&rsquo;s deselected.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Assuming we have an HTML-file select.html containing the following:</p><div class="highlight"><pre>&lt;html&gt;
+    &lt;body&gt;
+        &lt;select&gt;
+            &lt;option value=&quot;volvo&quot;&gt;Volvo&lt;/option&gt;
+            &lt;option value=&quot;saab&quot;&gt;Saab&lt;/option&gt;
+            &lt;option value=&quot;mercedes&quot;&gt;Mercedes&lt;/option&gt;
+            &lt;option value=&quot;audi&quot;&gt;Audi&lt;/option&gt;
+        &lt;/select&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre></div></li><li><p class="First">then executing:</p><div class="highlight"><pre>webclient({&quot;enablecss&quot;=false, &quot;enablejs&quot;=false});
+page = loadpage(&quot;file://C:/tmp/select.html&quot;);
+selectbox = xpath(page, &quot;//select&quot;);
+choice = xpath(page, &quot;//option[@value='saab']&quot;);
+select (choice, true);
+log (xmltostring(selectbox));
+</pre></div></li><li><p class="First">will print:</p><div class="highlight"><pre>&lt;select&gt;
+  &lt;option value=&quot;volvo&quot;&gt;
+    Volvo
+  &lt;/option&gt;
+  &lt;option value=&quot;saab&quot; selected=&quot;selected&quot;&gt;
+    Saab
+  &lt;/option&gt;
+  &lt;option value=&quot;mercedes&quot;&gt;
+    Mercedes
+  &lt;/option&gt;
+  &lt;option value=&quot;audi&quot;&gt;
+    Audi
+  &lt;/option&gt;
+&lt;/select&gt;
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href=" input.html"> input</a></p></li><li><p><a href="Browser.html">Browser</a></p></li></ul></div></body>

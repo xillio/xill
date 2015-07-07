@@ -12,20 +12,22 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
- * A class which parses xml to create a functiondocument
+ * This class is an implementation of the adaptor pattern.
+ * It wraps around the SAX implementation of parsing XML and uses that implementation to extract a FunctionDocument from an XML file.
  * 
  * @author Ivor
  */
 public class XMLparser {
 
     /**
+     * Reads a stream and parses it to return a FunctionDocument.
      * @param stream
      *            The url from which we parse
      * @return A FunctionDocument
      * @throws SAXException
      * @throws IOException
      */
-    public FunctionDocument parseXML(final InputStream stream) throws SAXException, IOException {
+    public FunctionDocument parseXML(final InputStream stream, final String version) throws SAXException, IOException {
 
 	// Initiate the reader and its handler
 	XMLReader xr = XMLReaderFactory.createXMLReader();
@@ -34,8 +36,9 @@ public class XMLparser {
 	xr.setContentHandler(handler);
 	xr.setErrorHandler(handler);
 	xr.parse(new InputSource(stream));
-
-	return ((XML_Format_Handler) xr.getContentHandler()).getFunction();
+	FunctionDocument docu = ((XML_Format_Handler) xr.getContentHandler()).getFunction();
+	docu.setVersion(version);
+	return docu;
     }
 
     private static class XML_Format_Handler extends DefaultHandler implements AutoCloseable {
@@ -84,7 +87,7 @@ public class XMLparser {
 	    if (qName.equals("param")) {
 		String types = "";
 		for (String type : parameterTypes) {
-		    types += type + ',';
+		    types += type + " ";
 		}
 		types.substring(0, types.length() - 1);
 		function.addParameter(types, attribute);

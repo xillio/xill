@@ -1,0 +1,19 @@
+<head><title>openexcel</title><link type="text/css" href="_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>openexcel</h1></div><div class="Section"><p><strong>openexcel</strong>(string  filename,, boolean  readonly )</p></div><div class="Section"><h2>Description</h2><p>Loads the Excel file filename and returns a workbook object. After loading, you can use getsheet to open a certain sheet of the workbook. Optionally, XLSX files can be opened as read-only, reducing memory usage. By default readonly is set to false.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Loading column names from a spreadsheet:</p><div class="highlight"><pre>mappingfile = settings.mapping_file_uri;
+mappingbook = null;
+mappingsheet = null;
+</pre></div></li><li><p class="First">if (fileexists (mappingfile)) {</p><div class="highlight"><pre>    mappingbook = openexcel (mappingfile);
+}
+</pre></div></li><li><p class="First">if (mappingbook != null) {</p><div class="highlight"><pre>    mappingsheet = getsheet (mappingbook, &quot;Fieldmappings&quot;);
+}
+</pre></div></li><li><p class="First">// initialise row and colum numbers //</p><div class="highlight"><pre></pre></div></li><li><p class="First">//...//</p><div class="highlight"><pre></pre></div></li><li><p class="First">//get included columns</p><div class="highlight"><pre>column = include_columns_first_column;
+row = include_columns_row - 1;
+columns = {null, null};
+</pre></div></li><li><p class="First">// get column names</p><div class="highlight"><pre>while (column &lt; (migrate_column - 1)) {
+    if (lowercase (trim (getcell (mappingsheet, column, row + 1))) == &quot;x&quot;) { // only include names that are marked with an x in the next row
+        columns[column - 1] = trim (getcell (mappingsheet, column, row), true);
+    } else {
+        columns[column - 1] = null;
+    }
+    column = column + 1;
+}
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="Excel.html">Excel</a></p></li></ul></div></body>
