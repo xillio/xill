@@ -419,8 +419,8 @@ public abstract class MetaExpression implements Expression, Processable {
 	}
 	
 	isClosed = true;
-	metadataPool.close();
-
+	closeMetaPool();
+	
 	// Close children
 	switch (type) {
 	case LIST:
@@ -437,5 +437,23 @@ public abstract class MetaExpression implements Expression, Processable {
 	    break;
 	}
 	value = null;
+    }
+    
+    /**
+     * Dispose all items in the {@link MetadataExpressionPool}
+     */
+    protected void closeMetaPool() {
+	try {
+	    metadataPool.close();
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+    }
+    
+    /**
+     * Reset the reference count to 0
+     */
+    protected void resetReferences() {
+	referenceCount = 0;
     }
 }
