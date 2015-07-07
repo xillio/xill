@@ -19,6 +19,10 @@ public class MatchesConstruct implements Construct {
 
 	private final RegexConstruct regexConstruct;
 
+	/**
+	 * Create a new {@link MatchesConstruct}
+	 * @param regexConstruct the construct used to find the matches
+	 */
 	public MatchesConstruct(final RegexConstruct regexConstruct) {
 		this.regexConstruct = regexConstruct;
 	}

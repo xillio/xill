@@ -32,6 +32,9 @@ public class RegexConstruct implements Construct {
 	 */
 	public final static int REGEX_TIMEOUT = 5;
 
+	/**
+	 * Create a new {@link RegexConstruct} and start the regexTimer {@link Thread}
+	 */
 	public RegexConstruct() {
 		regexTimer = new RegexTimer();
 		new Thread(regexTimer).start();
@@ -82,7 +85,7 @@ public class RegexConstruct implements Construct {
 	 * @param regex
 	 * @param value
 	 * @param timeout
-	 * @return
+	 * @return the matcher
 	 */
 	public Matcher getMatcher(final String regex, final String value, int timeout) {
 		if (timeout < 0) {

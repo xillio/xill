@@ -25,6 +25,10 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 public class FormatConstruct implements Construct {
 	private final RegexConstruct regexConstruct;
 
+	/**
+	 * Create a new {@link FormatConstruct}
+	 * @param regexConstruct the contruct used to find the format parameters
+	 */
 	public FormatConstruct(final RegexConstruct regexConstruct) {
 		this.regexConstruct = regexConstruct;
 	}
@@ -58,6 +62,7 @@ public class FormatConstruct implements Construct {
 
 		List<MetaExpression> formatList = new ArrayList<>();
 		List<Object> list = new ArrayList<>();
+		@SuppressWarnings("unchecked")
 		List<MetaExpression> numberList = (List<MetaExpression>) valueVar.getValue();
 
 		// Find the format syntax in the input string.
