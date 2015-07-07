@@ -4,3 +4,9 @@
  * contains the classpath to all it's dependencies.
  */
 description 'This plugin contains various constructs to operate on text'
+
+
+/*
+ * Uncomment this to package the plugin with the ide by default
+ */
+includeInBuild project

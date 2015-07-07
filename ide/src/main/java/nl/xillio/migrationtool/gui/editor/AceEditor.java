@@ -2,6 +2,7 @@ package nl.xillio.migrationtool.gui.editor;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -137,7 +138,8 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 			return;
 		}
 
-		processor.listPackages().forEach(packageName -> addKeyword(packageName));
+		processor.listPackages().forEach(this::addKeyword);
+		Arrays.stream(processor.getReservedKeywords()).forEach(this::addBuiltIn);
 	}
 
 	/**
@@ -501,5 +503,12 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	 */
 	public Event<Boolean> getOnDocumentLoaded() {
 		return onDocumentLoaded.getEvent();
+	}
+
+	/**
+	 * @param editable
+	 */
+	public void setEditable(boolean editable) {
+		executeJS("editor.setReadOnly(" + Boolean.toString(!editable) + ");");
 	}
 }

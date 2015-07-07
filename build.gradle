@@ -1,5 +1,3 @@
-import javax.security.auth.login.ConfigurationSpi;
-
 allprojects {
 	apply plugin: 'java'
 	apply plugin: 'eclipse'
@@ -9,21 +7,6 @@ allprojects {
 	repositories {
 		mavenLocal()
 		mavenCentral()
-		
-		maven {
-			url "http://192.168.0.200:8081/nexus/content/repositories/releases"
-			credentials {
-				username mavenUsername
-				password mavenPassword
-			}
-		}
-		maven {
-			url "http://192.168.0.200:8081/nexus/content/repositories/thirdparty"
-			credentials {
-				username mavenUsername
-				password mavenPassword
-			}
-		}
 	}
 	
 	task sourceJar(type: Jar) {
@@ -157,4 +140,36 @@ clean {
 
 eclipseClasspath {
 	dependsOn assembleContenttools
+}
+
+//Test the vpn network
+
+//Test vpn connection
+try {
+	Socket socket = new Socket();
+	socket.connect(new InetSocketAddress("192.168.0.200", 8081), 500);
+	
+	//We are connected
+	println "We have a connection to BENDER"
+	
+	allprojects{
+		repositories {
+			maven {
+				url "http://192.168.0.200:8081/nexus/content/repositories/releases"
+				credentials {
+					username mavenUsername
+					password mavenPassword
+				}
+			}
+			maven {
+				url "http://192.168.0.200:8081/nexus/content/repositories/thirdparty"
+				credentials {
+					username mavenUsername
+					password mavenPassword
+				}
+			}
+		}
+	}
+} catch (IOException ex) {
+	println "You are not connected to the VPN Network"
 }
