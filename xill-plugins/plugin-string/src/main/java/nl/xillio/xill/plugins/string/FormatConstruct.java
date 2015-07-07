@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.string;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.MissingFormatArgumentException;
 import java.util.regex.Matcher;
 
 import nl.xillio.xill.api.components.ExpressionBuilder;
@@ -70,8 +71,13 @@ public class FormatConstruct implements Construct {
 
 		// Cast the MetaExpressions to the right type.
 		int count = 0;
+		String typeString;
 		for (int j = 0; j < numberList.size() - count; j++) {
-			String typeString = formatList.get(j).getStringValue();
+			try {
+				typeString = formatList.get(j).getStringValue();
+			} catch (IndexOutOfBoundsException e) {
+				break;
+			}
 			switch (typeString.charAt(typeString.length() - 1)) {
 			case 'd':
 			case 'o':
@@ -112,6 +118,10 @@ public class FormatConstruct implements Construct {
 				throw new RobotRuntimeException("Unexpected conversion type: " + typeString);
 			}
 		}
-		return ExpressionBuilder.fromValue(String.format(textVar.getStringValue(), list.toArray()));
+		try {
+			return ExpressionBuilder.fromValue(String.format(textVar.getStringValue(), list.toArray()));
+		} catch (MissingFormatArgumentException e) {
+			throw new RobotRuntimeException("Not enough arguments.");
+		}
 	}
 }

@@ -61,7 +61,7 @@ public class AllMatchesConstruct implements Construct {
 				list.add(i, ExpressionBuilder.fromValue(matcher.group()));
 			}
 		} catch (Exception e) {
-			throw new RobotRuntimeException("Invalid pattern  in extractlist()");
+			throw new RobotRuntimeException("Invalid pattern.");
 		}
 		return ExpressionBuilder.fromValue(list);
 

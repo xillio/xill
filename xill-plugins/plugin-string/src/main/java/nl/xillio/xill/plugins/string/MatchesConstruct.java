@@ -52,7 +52,7 @@ public class MatchesConstruct implements Construct {
 		try {
 			return ExpressionBuilder.fromValue(regexConstruct.getMatcher(regex, value, timeout).matches());
 		} catch (Exception e) {
-			throw new RobotRuntimeException("Invalid pattern in matches()");
+			throw new RobotRuntimeException("Invalid pattern in matches.");
 		}
 
 	}

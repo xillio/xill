@@ -45,7 +45,7 @@ public class TrimConstruct implements Construct {
 			throw new RobotRuntimeException("Expected atomic value.");
 		}
 
-		if (string == ExpressionBuilder.NULL || internal == ExpressionBuilder.NULL) {
+		if (string == ExpressionBuilder.NULL) {
 			throw new RobotRuntimeException("Input cannot be null.");
 		}
 
@@ -68,7 +68,7 @@ public class TrimConstruct implements Construct {
 		if (string.getType() == ExpressionDataType.ATOMIC) {
 			return ExpressionBuilder.fromValue(doTrimming(string, internal).getStringValue());
 		}
-		return null;
+		throw new RobotRuntimeException("Expected atomic value or list.");
 
 	}
 
