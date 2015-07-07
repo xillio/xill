@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -82,6 +83,7 @@ import xill.lang.xill.InstructionBlock;
 import xill.lang.xill.IntegerLiteral;
 import xill.lang.xill.ListExtraction;
 import xill.lang.xill.NullLiteral;
+import xill.lang.xill.StringLiteral;
 import xill.lang.xill.Target;
 import xill.lang.xill.UseStatement;
 import xill.lang.xill.Variable;
@@ -826,7 +828,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
     Processable parseToken(final xill.lang.xill.impl.ObjectExpressionImpl token) throws XillParsingException {
 	Iterator<Expression> keys = token.getNames().iterator();
 	Iterator<Expression> values = token.getValues().iterator();
-	Map<Processable, Processable> object = new HashMap<>(token.getNames().size());
+	Map<Processable, Processable> object = new LinkedHashMap<>(token.getNames().size());
 
 	while (keys.hasNext() && values.hasNext()) {
 	    object.put(parse(keys.next()), parse(values.next()));
@@ -1063,7 +1065,10 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
      * @return
      */
     Processable parseToken(final xill.lang.xill.BooleanLiteral token) {
-	return ExpressionBuilder.fromValue(Boolean.parseBoolean(token.getValue()));
+	if(Boolean.parseBoolean(token.getValue())) {
+	    return ExpressionBuilder.TRUE;
+	}
+	return ExpressionBuilder.FALSE;
     }
 
     /**
@@ -1083,7 +1088,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
      * @return
      */
     Processable parseToken(final xill.lang.xill.IntegerLiteral token) {
-	return ExpressionBuilder.fromValue(token.getValue());
+	return new ExpressionBuilder(token.getValue());
     }
 
     /**
@@ -1098,17 +1103,17 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	// Calculate decimal
 	int digits = String.valueOf(token.getDecimal()).length();
 	double decimalValue = token.getDecimal() / Math.pow(10, digits);
-	return ExpressionBuilder.fromValue(decimalValue + intValue);
+	return new ExpressionBuilder(decimalValue + intValue);
     }
 
     /**
-     * Parse an {@link IntegerLiteral}
+     * Parse a {@link StringLiteral}
      *
      * @param token
      * @return
      */
     Processable parseToken(final xill.lang.xill.StringLiteral token) {
-	return ExpressionBuilder.fromValue(token.getValue());
+	return new ExpressionBuilder(token.getValue());
     }
 
     private CodePosition pos(final EObject object) {

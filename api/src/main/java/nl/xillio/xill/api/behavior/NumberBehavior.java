@@ -3,7 +3,13 @@ package nl.xillio.xill.api.behavior;
 import nl.xillio.xill.api.components.Expression;
 
 /**
- * This class represents the behavior of a number
+ * This class represents the behavior of a number.<br/>
+ * Values:
+ * <ul>
+ * 	<li><b>{@link String}: </b> the actual value as a string</li>
+ * 	<li><b>{@link Boolean}: </b> if value == 0 then false else true</li>
+ * 	<li><b>{@link Number}: </b> the acual value</li>
+ * </ul>
  */
 public class NumberBehavior implements Expression {
 

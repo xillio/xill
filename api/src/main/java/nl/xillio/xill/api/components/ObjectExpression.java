@@ -3,7 +3,7 @@ package nl.xillio.xill.api.components;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -12,7 +12,14 @@ import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
- * This class represents a written object in a script e.g. { "keyValue": 6 }
+ * This class represents a written object in a script e.g. { "keyValue": 6 }.
+ * <br/>
+ * Values:
+ * <ul>
+ * <li><b>{@link String}: </b> a JSON representation</li>
+ * <li><b>{@link Boolean}: </b> false if the object is null else true</li>
+ * <li><b>{@link Number}: </b> the number of members in this object</li>
+ * </ul>
  */
 public class ObjectExpression implements Processable {
 
@@ -27,7 +34,7 @@ public class ObjectExpression implements Processable {
 
     @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-	Map<String, MetaExpression> result = new HashMap<String, MetaExpression>();
+	Map<String, MetaExpression> result = new LinkedHashMap<String, MetaExpression>();
 
 	for (Entry<? extends Processable, ? extends Processable> entry : value.entrySet()) {
 	    try {

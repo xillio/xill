@@ -2,6 +2,7 @@ package nl.xillio.xill.api.components;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -178,6 +179,13 @@ public abstract class MetaExpression implements Expression, Processable {
 	return type;
     }
 
+    
+    /**
+     * Generate the JSON representation of this expression using a {@link Gson} parser <br/>
+     * <b>NOTE: </b> This is not the string value of this expression. It is JSON. For the string value
+     * use {@link MetaExpression#getStringValue()}
+     * @return JSON representation
+     */
     @Override
     public String toString() {
 	List<MetaExpression> initialVisited = new ArrayList<>(1);
@@ -216,7 +224,7 @@ public abstract class MetaExpression implements Expression, Processable {
 
 	    break;
 	case OBJECT:
-	    Map<Processable, Processable> resultMapValue = new HashMap<>();
+	    Map<Processable, Processable> resultMapValue = new LinkedHashMap<>();
 
 	    for (Map.Entry<String, MetaExpression> pair : ((Map<String, MetaExpression>) metaExpression.getValue())
 		    .entrySet()) {
@@ -374,7 +382,7 @@ public abstract class MetaExpression implements Expression, Processable {
      * Register a reference to this variable.<br/>
      * This generally only happens during assignment
      */
-    public void registerReference() {
+    public final void registerReference() {
 	referenceCount++;
     }
 
@@ -382,7 +390,7 @@ public abstract class MetaExpression implements Expression, Processable {
      * Release a reference to this expression<br/>
      * This generally only happens at the end of scope
      */
-    public void releaseReference() {
+    public final void releaseReference() {
 	referenceCount--;
 
 	if (!preventDispose && referenceCount <= 0) {
@@ -399,7 +407,7 @@ public abstract class MetaExpression implements Expression, Processable {
     /**
      * Next time a reference is released, this expression won't be disposed.
      */
-    public void preventDisposal() {
+    public final void preventDisposal() {
 	preventDispose = true;
     }
 
@@ -407,7 +415,7 @@ public abstract class MetaExpression implements Expression, Processable {
      * @return true if this expression has been closed using
      *         {@link MetaExpression#close()}
      */
-    public boolean isClosed() {
+    public final boolean isClosed() {
 	return isClosed;
     }
 
@@ -417,7 +425,7 @@ public abstract class MetaExpression implements Expression, Processable {
 	if (isClosed || this == ExpressionBuilder.NULL) {
 	    return;
 	}
-	
+
 	isClosed = true;
 	metadataPool.close();
 

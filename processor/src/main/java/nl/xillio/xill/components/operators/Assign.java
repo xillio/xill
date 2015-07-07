@@ -121,7 +121,9 @@ public class Assign implements Processable {
 
 	if (path.size() - 1 == pathID) {
 	    MetaExpression previous = target.put(index, value);
-	    previous.releaseReference();
+	    if(previous != null) {
+		previous.releaseReference();
+	    }
 	    return;
 	}
 
