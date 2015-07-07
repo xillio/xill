@@ -32,7 +32,7 @@ import javafx.util.Pair;
  * @author Ivor
  */
 public class FunctionDocument {
-    private String functionName, description, version = "wrong";
+    private String functionName, description, version, packet;
     private final List<Pair<String, String>> parameters = new ArrayList<>();
     private final List<Pair<String, String>> examples = new ArrayList<>();
     private final List<String> links = new ArrayList<>();
@@ -84,6 +84,26 @@ public class FunctionDocument {
     public String getVersion()
     {
     	return this.version;
+    }
+    
+    /**
+     * Setter for the package of the functiondocument
+     * @param p
+     * 		The package the FunctionDocument is in
+     */
+    public void setPackage(String p)
+    {
+    	this.packet = p;
+    }
+    
+    /**
+     * @return 
+     * Returns the package of the functionDocument
+     * 
+     */
+    public String getPackage()
+    {
+    	return this.packet;
     }
 
     /**

@@ -36,12 +36,14 @@ public class PluginListener {
 			
 			//If the version of the allready indexed function different from the version of the package
 			//or the function is non-existant in the database, we 
-			if(needsUpdate(construct, plugin.getVersion()))
+			if(needsUpdate(plugin, construct))
 			{
 				try {
-					FunctionDocument docu = parser.parseXML(documentedConstruct.openDocumentationStream(), plugin.getVersion());
-					FileUtils.write(new File("./helpfiles/" + plugin.getName() + "/" + docu.getName() + ".html"), docu.toHTML());
-					log.error("I had an error");
+					FunctionDocument docu = parser.parseXML(documentedConstruct.openDocumentationStream(), plugin.getName(), plugin.getVersion());
+					if(plugin.getName() != null && docu.getName() != null)
+						FileUtils.write(new File("./helpfiles/" + plugin.getName() + "/" + docu.getName() + ".html"), docu.toHTML());
+					else
+						log.error("Please enter valid names for your package and functions");
 				} catch (SAXException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
@@ -52,13 +54,13 @@ public class PluginListener {
 	}
     }
     
-    private boolean needsUpdate(Construct construct, String pluginVersion) {
-	String version = searcher.getDocumentVersionById(construct.getName());
+    private boolean needsUpdate(PluginPackage plugin, Construct construct) {
+	String version = searcher.getDocumentVersion(plugin.getName(), construct.getName());
 	if(version == null) {
 	    return false;
 	}
 	
-	return pluginVersion.equals(version);
+	return plugin.getVersion().equals(version);
     }
 
     /**

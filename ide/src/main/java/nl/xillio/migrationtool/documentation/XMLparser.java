@@ -23,11 +23,15 @@ public class XMLparser {
      * Reads a stream and parses it to return a FunctionDocument.
      * @param stream
      *            The url from which we parse
+     * @param packet 
+     * 			  The package the FunctionDocument is in
+     * @param version
+     * 			  The version of the package 
      * @return A FunctionDocument
      * @throws SAXException
      * @throws IOException
      */
-    public FunctionDocument parseXML(final InputStream stream, final String version) throws SAXException, IOException {
+    public FunctionDocument parseXML(final InputStream stream, final String packet,  final String version) throws SAXException, IOException {
 
 	// Initiate the reader and its handler
 	XMLReader xr = XMLReaderFactory.createXMLReader();
@@ -37,7 +41,8 @@ public class XMLparser {
 	xr.setErrorHandler(handler);
 	xr.parse(new InputSource(stream));
 	FunctionDocument docu = ((XML_Format_Handler) xr.getContentHandler()).getFunction();
-	docu.setVersion(version);
+	docu.setPackage(packet);
+	docu.setVersion(version);	
 	return docu;
     }
 

@@ -6,9 +6,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.apache.log4j.LogManager;
@@ -177,6 +174,9 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 		Loader.xill = xill;
 		Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
 		
+		//Sets up the database so we don;t crash and burn
+		this.setupDatabase();
+		
 		PropertyConfigurator.configure(this.getClass().getResourceAsStream("/log4j.properties"));
 		LogManager.getLogger(getClass()).info("Reloaded Log4J Configuration.");
 		
@@ -241,7 +241,6 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 		return  loader.load();
 	}
 
-
 	@Override
 	public void load(nl.xillio.contenttools.PluginPackage[] dependencies) {
 	}
@@ -251,6 +250,28 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 	 */
 	public static Xill getXill(){
 		return xill;
+	}
+	
+	/**
+	 * Sets up the database so that no errors can arise.
+	 * @throws ElasticsearchException
+	 * @throws IOException
+	 */
+	private void setupDatabase()
+	{
+		FunctionDocument docu = new FunctionDocument();
+		docu.setName("");
+		docu.setPackage("testRealm");
+		DocumentSearcher searcher = new DocumentSearcher(ESConsoleClient.getInstance().getClient());
+		try {
+			searcher.index(docu);
+		} catch (ElasticsearchException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -287,9 +308,9 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 		for(String f : funcs)
 		{
 			try(InputStream url = Loader.class.getResourceAsStream("/helpxml/" + f + ".xml")) {
-				FunctionDocument docu = parser.parseXML(url, "1");
+				FunctionDocument docu = parser.parseXML(url, "testRealm", "1");
 				searcher.index(docu);
-				System.out.println(searcher.getDocumentVersionById(docu.getName()));
+				System.out.println(searcher.getDocumentVersion(docu.getPackage(), docu.getName()));
 				FileWriter writer = new FileWriter(new File("").getAbsolutePath()+"/helpfiles/" + f + ".html",false);
 				writer.write(docu.toHTML());
 				writer.close();

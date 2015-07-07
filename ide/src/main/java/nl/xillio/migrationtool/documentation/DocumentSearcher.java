@@ -74,15 +74,17 @@ public class DocumentSearcher {
     }
     
     /**
-     * Returns a string which is the documentversion given an ID
+     * Returns a string which is the documentversion given a package and ID.
+     * @param packet 
+     * The package the function is in
      * @param id
      * The unique id of the functiondocument
      * @return
      * The version or null when the function is non existant
      */
-    public String getDocumentVersionById(String id)
+    public String getDocumentVersion(String packet, String id)
     {
-    	GetResponse Response = client.prepareGet(DOCUMENTATION_INDEX, "function", id).setFields("version").execute().actionGet();
+    	GetResponse Response = client.prepareGet(DOCUMENTATION_INDEX, packet, id).setFields("version").execute().actionGet();
     	return (String) Response.getField("version").getValue();
     }
 
@@ -110,7 +112,7 @@ public class DocumentSearcher {
 	}
 
 	// Return an indexed client with three fields
-	return client.prepareIndex(DOCUMENTATION_INDEX, "function", document.getName())
+	return client.prepareIndex(DOCUMENTATION_INDEX, document.getPackage(), document.getName())
 		.setSource(jsonBuilder()
 			.startObject()
 				.field("name", document.getName())
