@@ -180,9 +180,6 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 			System.err.println(e.getMessage());
 			e.printStackTrace();
 		}
-		
-
-		this.loadcontent();
 
 		Parent root;
 		try {
