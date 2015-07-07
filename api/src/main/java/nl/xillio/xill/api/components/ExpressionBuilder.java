@@ -1,21 +1,24 @@
 package nl.xillio.xill.api.components;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.NullDebugger;
 import nl.xillio.xill.api.behavior.BooleanBehavior;
 import nl.xillio.xill.api.behavior.NumberBehavior;
 import nl.xillio.xill.api.behavior.StringBehavior;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
  * This is a utility class that will build expressions from values
  */
-public final class ExpressionBuilder {
+public final class ExpressionBuilder implements Processable {
     private static final Debugger expressionDebugger = new NullDebugger();
     /**
      * The true literal
@@ -152,5 +155,65 @@ public final class ExpressionBuilder {
 	public void close() throws Exception {
 	}
 
+    }
+    
+    private final Supplier<MetaExpression> expressionSupplier;
+    
+    /**
+     * Create a new {@link ExpressionBuilder} that will produce a double
+     * @param value
+     */
+    public ExpressionBuilder(double value) {
+	expressionSupplier = () -> fromValue(value);
+    }
+    
+    /**
+     * Create a new {@link ExpressionBuilder} that will produce an integer
+     * @param value
+     */
+    public ExpressionBuilder(int value) {
+	expressionSupplier = () -> fromValue(value);
+    }
+    
+    /**
+     * Create a new {@link ExpressionBuilder} that will produce a string
+     * @param value
+     */
+    public ExpressionBuilder(String value) {
+	expressionSupplier = () -> fromValue(value);
+    }
+    
+    /**
+     * Create a new {@link ExpressionBuilder} that will produce a List
+     * @param value
+     */
+    public ExpressionBuilder(List<MetaExpression> value) {
+	expressionSupplier = () -> fromValue(value);
+    }
+    
+    /**
+     * Create a new {@link ExpressionBuilder} that will produce an object
+     * @param value
+     */
+    public ExpressionBuilder(Map<String, MetaExpression> value) {
+	expressionSupplier = () -> fromValue(value);
+    }
+    
+    /**
+     * Create a new {@link ExpressionBuilder} that will produce a double
+     * @param value
+     */
+    public ExpressionBuilder(boolean value) {
+	expressionSupplier = () -> fromValue(value);
+    }
+
+    @Override
+    public InstructionFlow<MetaExpression> process(Debugger debugger) throws RobotRuntimeException {
+	return InstructionFlow.doResume(expressionSupplier.get());
+    }
+
+    @Override
+    public Collection<Processable> getChildren() {
+	return new ArrayList<>();
     }
 }

@@ -83,6 +83,7 @@ import xill.lang.xill.InstructionBlock;
 import xill.lang.xill.IntegerLiteral;
 import xill.lang.xill.ListExtraction;
 import xill.lang.xill.NullLiteral;
+import xill.lang.xill.StringLiteral;
 import xill.lang.xill.Target;
 import xill.lang.xill.UseStatement;
 import xill.lang.xill.Variable;
@@ -1064,7 +1065,10 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
      * @return
      */
     Processable parseToken(final xill.lang.xill.BooleanLiteral token) {
-	return ExpressionBuilder.fromValue(Boolean.parseBoolean(token.getValue()));
+	if(Boolean.parseBoolean(token.getValue())) {
+	    return ExpressionBuilder.TRUE;
+	}
+	return ExpressionBuilder.FALSE;
     }
 
     /**
@@ -1084,7 +1088,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
      * @return
      */
     Processable parseToken(final xill.lang.xill.IntegerLiteral token) {
-	return ExpressionBuilder.fromValue(token.getValue());
+	return new ExpressionBuilder(token.getValue());
     }
 
     /**
@@ -1099,17 +1103,17 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	// Calculate decimal
 	int digits = String.valueOf(token.getDecimal()).length();
 	double decimalValue = token.getDecimal() / Math.pow(10, digits);
-	return ExpressionBuilder.fromValue(decimalValue + intValue);
+	return new ExpressionBuilder(decimalValue + intValue);
     }
 
     /**
-     * Parse an {@link IntegerLiteral}
+     * Parse a {@link StringLiteral}
      *
      * @param token
      * @return
      */
     Processable parseToken(final xill.lang.xill.StringLiteral token) {
-	return ExpressionBuilder.fromValue(token.getValue());
+	return new ExpressionBuilder(token.getValue());
     }
 
     private CodePosition pos(final EObject object) {
