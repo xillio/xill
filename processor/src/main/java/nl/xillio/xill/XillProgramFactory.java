@@ -66,6 +66,7 @@ import nl.xillio.xill.components.operators.Equals;
 import nl.xillio.xill.components.operators.FromList;
 import nl.xillio.xill.components.operators.GreaterThan;
 import nl.xillio.xill.components.operators.GreaterThanOrEquals;
+import nl.xillio.xill.components.operators.IntegerShortcut;
 import nl.xillio.xill.components.operators.Modulo;
 import nl.xillio.xill.components.operators.Multiply;
 import nl.xillio.xill.components.operators.Negate;
@@ -494,13 +495,13 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 		Target pTarget = getTarget(token.getExpression());
 		List<Processable> pPath = getPath(token.getExpression());
 		VariableDeclaration pDeclaration = variables.get(pTarget);
-		value = new Assign(pDeclaration, pPath, new Add(value, ExpressionBuilder.fromValue(1)));
+		value = new IntegerShortcut(pDeclaration, pPath, value, 1, false);
 		break;
 	    case "--":
 		Target mTarget = getTarget(token.getExpression());
 		List<Processable> mPath = getPath(token.getExpression());
 		VariableDeclaration mDeclaration = variables.get(mTarget);
-		value = new Assign(mDeclaration, mPath, new Subtract(value, ExpressionBuilder.fromValue(1)));
+		value = new IntegerShortcut(mDeclaration, mPath, value, -1, false);
 		break;
 	    default:
 		throw new NotImplementedException("This prefix has not been implemented.");
@@ -514,15 +515,13 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 		Target pTarget = getTarget(token.getExpression());
 		List<Processable> pPath = getPath(token.getExpression());
 		VariableDeclaration pDeclaration = variables.get(pTarget);
-		value = new Subtract(new Assign(pDeclaration, pPath, new Add(value, ExpressionBuilder.fromValue(1))),
-			ExpressionBuilder.fromValue(1));
+		value = new IntegerShortcut(pDeclaration, pPath, value, 1, true);
 		break;
 	    case "--":
 		Target mTarget = getTarget(token.getExpression());
 		List<Processable> mPath = getPath(token.getExpression());
 		VariableDeclaration mDeclaration = variables.get(mTarget);
-		value = new Add(new Assign(mDeclaration, mPath, new Subtract(value, ExpressionBuilder.fromValue(1))),
-			ExpressionBuilder.fromValue(1));
+		value = new IntegerShortcut(mDeclaration, mPath, value, -1, true);
 		break;
 	    default:
 		throw new NotImplementedException("This suffix has not been implemented.");
