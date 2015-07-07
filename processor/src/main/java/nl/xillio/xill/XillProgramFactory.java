@@ -1087,7 +1087,11 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
      * @return
      */
     Processable parseToken(final xill.lang.xill.IntegerLiteral token) {
-	return new ExpressionBuilder(token.getValue());
+	try {
+	    return new ExpressionBuilder(Integer.parseInt(token.getValue()));
+	}catch(NumberFormatException e) {
+	    return new ExpressionBuilder(Integer.parseInt(token.getValue()));
+	}
     }
 
     /**
@@ -1097,12 +1101,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
      * @return
      */
     Processable parseToken(final xill.lang.xill.DecimalLiteral token) {
-	int intValue = token.getValue();
-
-	// Calculate decimal
-	int digits = String.valueOf(token.getDecimal()).length();
-	double decimalValue = token.getDecimal() / Math.pow(10, digits);
-	return new ExpressionBuilder(decimalValue + intValue);
+	return new ExpressionBuilder(Double.parseDouble(token.getValue()));
     }
 
     /**
