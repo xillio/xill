@@ -1,5 +1,6 @@
 package nl.xillio.migrationtool.gui;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -48,16 +49,26 @@ public class HelpPane extends AnchorPane {
 
 	/**
 	 * Display the page corresponding to a keyword
-	 *
+	 * @param pluginPackage 
+	 * 			The package the function we want to display comes from
 	 * @param keyword
+	 * 			The name of the function in the package
 	 */
-	public void display(final String keyword) {
+	public void display(final String pluginPackage, final String keyword) {
+		File file = new File("helpfiles/" + pluginPackage + "/" + keyword + ".html");
 		URL url = getClass().getResource("/help/" + keyword + ".html");
+		System.out.println(url.toString());
+		System.out.println(file.getAbsolutePath());
 		if (url != null) {
 			Platform.runLater(() -> {
-				webFunctionDoc.getEngine().load(url.toString());
+				webFunctionDoc.getEngine().load(file.toURI().toString());
 			});
 		}
+	}
+	
+	public void display(final String s)
+	{
+		
 	}
 
 	private void back() {

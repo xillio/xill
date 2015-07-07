@@ -1,4 +1,4 @@
-<head><title>while</title><link type="text/css" href="_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>while</h1></div><div class="Section"><p><strong>while</strong>(boolean  condition)</p></div><div class="Section"><h2>Description</h2><p>Keeps executing the instruction(block) following while as long as the expression condition evaluates to true. The evaluation is done at each iteration, before execution.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Loop through all pages:</p><div class="highlight"><pre>pagecount = 1;
+<head><title>while</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>while</h1></div><div class="Section"><p><strong>while</strong>(boolean  condition)</p></div><div class="Section"><h2>Description</h2><p>Keeps executing the instruction(block) following while as long as the expression condition evaluates to true. The evaluation is done at each iteration, before execution.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Loop through all pages:</p><div class="highlight"><pre>pagecount = 1;
 while(pagecount &gt; 0) {
     pages = query(&quot;SELECT * FROM pages WHERE visited = 'n'&quot;);
     foreach(_, page, pages) {
@@ -9,4 +9,4 @@ while(pagecount &gt; 0) {
         pagecount = r;
     }
 }
-</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href=" foreach.html"> foreach</a></p></li><li><p><a href="Language.html">Language</a></p></li></ul></div></body>
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../testRealm/ foreach.html"> foreach</a></p></li><li><p><a href="../testRealm/Language.html">Language</a></p></li></ul></div></body>

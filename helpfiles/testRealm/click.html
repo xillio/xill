@@ -1,4 +1,4 @@
-<head><title>click</title><link type="text/css" href="_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>click</h1></div><div class="Section"><p><strong>click</strong>(node  element)</p></div><div class="Section"><h2>Description</h2><p>Performs a browser click action on the provided element, which must be a node from an (X)HTML document. Javascript handlers bound to the provided element will also be triggered.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">The following script will click all links on the given page:</p><div class="highlight"><pre>webclient({&quot;enablecss&quot;=false, &quot;enablejs&quot;=false});
+<head><title>click</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>click</h1></div><div class="Section"><p><strong>click</strong>(node  element)</p></div><div class="Section"><h2>Description</h2><p>Performs a browser click action on the provided element, which must be a node from an (X)HTML document. Javascript handlers bound to the provided element will also be triggered.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">The following script will click all links on the given page:</p><div class="highlight"><pre>webclient({&quot;enablecss&quot;=false, &quot;enablejs&quot;=false});
 </pre></div></li><li><p class="First">page = loadpage (&quot;http://www.xillio.com/&quot;);</p><div class="highlight"><pre></pre></div></li><li><p class="First">if (page != null) {</p><div class="highlight"><pre>    nodes = xpath (page, &quot;//a&quot;);
     foreach (_, node, nodes) {
         click (node);
@@ -6,4 +6,4 @@
 } else {
     log (&quot;page could not be loaded&quot;);
 }
-</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="Browser.html">Browser</a></p></li></ul></div></body>
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../testRealm/Browser.html">Browser</a></p></li></ul></div></body>

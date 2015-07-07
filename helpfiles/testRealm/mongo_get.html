@@ -1,4 +1,4 @@
-<head><title>mongo_get</title><link type="text/css" href="_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>mongo_get</h1></div><div class="Section"><p><strong>mongo_get</strong>(string  collection,, string  id,, string  mongo )</p></div><div class="Section"><h2>Description</h2><p>Gets the object with the specified id from the given collection and returns it as a list. If mongo is not provided the last active connection will be used.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Get an object from the &ldquo;art&rdquo; collection with id &ldquo;MonaLisa&rdquo;, using the (local) default database:</p><div class="highlight"><pre>mongo_connect(&quot;localDB&quot;);
+<head><title>mongo_get</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>mongo_get</h1></div><div class="Section"><p><strong>mongo_get</strong>(string  collection,, string  id,, string  mongo )</p></div><div class="Section"><h2>Description</h2><p>Gets the object with the specified id from the given collection and returns it as a list. If mongo is not provided the last active connection will be used.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Get an object from the &ldquo;art&rdquo; collection with id &ldquo;MonaLisa&rdquo;, using the (local) default database:</p><div class="highlight"><pre>mongo_connect(&quot;localDB&quot;);
 monaLisa = mongo_get(&quot;art&quot;, &quot;MonaLisa&quot;);
 log(monaLisa);
 </pre></div></li><li><p class="First">This will print:</p><div class="highlight"><pre>{
@@ -6,4 +6,4 @@ log(monaLisa);
     &quot;title&quot;: &quot;Mona Lisa&quot;,
     &quot;artist&quot;: &quot;Leonardo da Vinci&quot;
 }
-</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href=" mongo_find.html"> mongo_find</a></p></li><li><p><a href="MongoDB.html">MongoDB</a></p></li></ul></div></body>
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../testRealm/ mongo_find.html"> mongo_find</a></p></li><li><p><a href="../testRealm/MongoDB.html">MongoDB</a></p></li></ul></div></body>

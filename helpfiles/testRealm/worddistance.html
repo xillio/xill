@@ -1,4 +1,4 @@
-<head><title>worddistance</title><link type="text/css" href="_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>worddistance</h1></div><div class="Section"><p><strong>worddistance</strong>(string  source,, string  target,, boolean  relative )</p></div><div class="Section"><h2>Description</h2><p>Returns a floating point number between 0 (no likeness) and 1 (identical), indicating how similar the source and target strings are. This routine uses the Damereau Levenshtein distance to calculate the similarity. If the optional boolean argument relative is set to false, then the absolute distance will be returned rather than a relative distance.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Executing the following code:</p><div class="highlight"><pre>log (worddistance(&quot;boy&quot;, &quot;boy&quot;));
+<head><title>worddistance</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>worddistance</h1></div><div class="Section"><p><strong>worddistance</strong>(string  source,, string  target,, boolean  relative )</p></div><div class="Section"><h2>Description</h2><p>Returns a floating point number between 0 (no likeness) and 1 (identical), indicating how similar the source and target strings are. This routine uses the Damereau Levenshtein distance to calculate the similarity. If the optional boolean argument relative is set to false, then the absolute distance will be returned rather than a relative distance.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Executing the following code:</p><div class="highlight"><pre>log (worddistance(&quot;boy&quot;, &quot;boy&quot;));
 log (worddistance(&quot;boy&quot;, &quot;boys&quot;));
 log (worddistance(&quot;boys&quot;, &quot;girl&quot;));
 log (worddistance(&quot;girls&quot;, &quot;girlfriends&quot;));
@@ -8,4 +8,4 @@ log (worddistance(&quot;girls&quot;, &quot;girlfriends&quot;, false));
 0
 0.4545454545454546
 6
-</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="Other.html">Other</a></p></li></ul></div></body>
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../testRealm/Other.html">Other</a></p></li></ul></div></body>

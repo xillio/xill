@@ -1,8 +1,8 @@
-<head><title>getframe</title><link type="text/css" href="_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>getframe</h1></div><div class="Section"><p><strong>getframe</strong>(node  parentpage,, string  frame)</p></div><div class="Section"><h2>Description</h2><p>This browser function returns the contents of a named HTML frame frame as a page. Useful for loading an iframe or normal content frame.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Load the contents of an iframe into the variable frame:</p><div class="highlight"><pre>webclient({&quot;enablecss&quot;=false, &quot;enablejs&quot;=false});
+<head><title>getframe</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>getframe</h1></div><div class="Section"><p><strong>getframe</strong>(node  parentpage,, string  frame)</p></div><div class="Section"><h2>Description</h2><p>This browser function returns the contents of a named HTML frame frame as a page. Useful for loading an iframe or normal content frame.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Load the contents of an iframe into the variable frame:</p><div class="highlight"><pre>webclient({&quot;enablecss&quot;=false, &quot;enablejs&quot;=false});
 </pre></div></li><li><p class="First">page = loadpage (&quot;http://www.w3schools.com/html/html_iframe.asp&quot;);</p><div class="highlight"><pre>frame = null;
 </pre></div></li><li><p class="First">if (page != null) {</p><div class="highlight"><pre>    frame = xpath (page, &quot;//iframe[not(@id) and not(contains(@src, 'facebook')) and not(contains(@class, 'goog'))]/@src&quot;);
     frame = loadpage (absoluteurl (&quot;http://www.w3schools.com/html/&quot;, frame));
 } else {
     log (&quot;no page&quot;);
 }
-</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="Browser.html">Browser</a></p></li></ul></div></body>
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../testRealm/Browser.html">Browser</a></p></li></ul></div></body>

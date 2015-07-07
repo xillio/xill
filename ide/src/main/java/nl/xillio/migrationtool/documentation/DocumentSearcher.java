@@ -68,7 +68,7 @@ public class DocumentSearcher {
 	String[] results = new String[hits.length];
 
 	for (int t = 0; t < hits.length; ++t) {
-	    results[t] = hits[t].id();
+	    results[t] = hits[t].getType() + "." + hits[t].id();
 	}
 	return results;
     }

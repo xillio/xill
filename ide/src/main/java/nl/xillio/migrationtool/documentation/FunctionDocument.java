@@ -244,7 +244,7 @@ public class FunctionDocument {
      * @throws IOException
      */
     private HtmlCanvas addHeader(final HtmlCanvas canvas) throws IOException {
-	return canvas.head().title().content(functionName).macros().stylesheet("_static/default.css")._head();
+	return canvas.head().title().content(functionName).macros().stylesheet("../_static/default.css")._head();
     }
 
     /**
@@ -336,6 +336,6 @@ public class FunctionDocument {
      * @throws IOException
      */
     private static HtmlCanvas addLinkToList(final HtmlCanvas canvas, final String link) throws IOException {
-	return canvas.li().p().a(href(link + ".html")).write(link)._a()._p()._li();
+	return canvas.li().p().a(href("../testRealm/" + link + ".html")).write(link)._a()._p()._li();
     }
 }

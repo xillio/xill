@@ -49,8 +49,8 @@ public class HelpSearchBar extends AnchorPane{
 		//Handle click
 		box.setOnAction((event) -> {
 			try{
-			String s = box.getSelectionModel().getSelectedItem().toString();			
-			this.helpPane.display(s);
+			String[] s = box.getSelectionModel().getSelectedItem().toString().split("\\.");
+			this.helpPane.display(s[0], s[1]);
 			}
 			catch(Exception e)
 			{}
