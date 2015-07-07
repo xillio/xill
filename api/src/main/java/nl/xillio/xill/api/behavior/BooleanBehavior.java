@@ -3,7 +3,13 @@ package nl.xillio.xill.api.behavior;
 import nl.xillio.xill.api.components.Expression;
 
 /**
- * This class represents the behavior of a boolean
+ * This class represents the behavior of a boolean.<br/>
+ * Values:
+ * <ul>
+ * 	<li><b>{@link String}: </b> true or false</li>
+ * 	<li><b>{@link Boolean}: </b> original value</li>
+ * 	<li><b>{@link Number}: </b> if value equals true then 1 else 0</li>
+ * </ul>
  */
 public class BooleanBehavior implements Expression {
 

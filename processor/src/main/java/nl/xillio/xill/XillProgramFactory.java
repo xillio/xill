@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -826,7 +827,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
     Processable parseToken(final xill.lang.xill.impl.ObjectExpressionImpl token) throws XillParsingException {
 	Iterator<Expression> keys = token.getNames().iterator();
 	Iterator<Expression> values = token.getValues().iterator();
-	Map<Processable, Processable> object = new HashMap<>(token.getNames().size());
+	Map<Processable, Processable> object = new LinkedHashMap<>(token.getNames().size());
 
 	while (keys.hasNext() && values.hasNext()) {
 	    object.put(parse(keys.next()), parse(values.next()));
