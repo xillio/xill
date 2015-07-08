@@ -21,7 +21,7 @@
   </examples>
   <Applications />
   <tags>
-    <tag> base64decode</tag>
-    <tag>Encoding / Decoding, File</tag>
+    <tag package = "String">base64decode</tag>
+    <tag package = "packages">String</tag>
   </tags>
 </function>

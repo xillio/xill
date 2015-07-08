@@ -47,6 +47,7 @@ public abstract class PluginPackage implements Loadable<PluginPackage>, AutoClos
 	 */
 	protected final void add(final Construct construct) throws IllegalArgumentException {
 	if (getConstructs().stream().anyMatch(c -> c.getName().equals(construct.getName()))) {
+		System.out.println(construct.getName());
 		throw new IllegalArgumentException("A construct with the same name exsits.");
 	}
 

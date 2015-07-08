@@ -22,7 +22,7 @@
   </examples>
   <Applications />
   <tags>
-    <tag> ampersandencode</tag>
-    <tag>Encoding / Decoding</tag>
+    <tag package = "String">ampersandencode</tag>
+    <tag package = "packages">String</tag>
   </tags>
 </function>

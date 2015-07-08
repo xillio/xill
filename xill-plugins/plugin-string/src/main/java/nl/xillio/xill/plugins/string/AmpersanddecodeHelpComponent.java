@@ -2,17 +2,15 @@ package nl.xillio.xill.plugins.string;
 
 import java.io.InputStream;
 
-import nl.xillio.xill.api.components.ExpressionBuilder;
-import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.construct.HelpComponent;
 
-public class extractlistHelpFile implements HelpComponent {
+public class AmpersanddecodeHelpComponent implements HelpComponent {
 
 	@Override
 	public String getName() {
-		return "extractlist";
+		return "ampersanddecodehelpfile";
 	}
 
 
@@ -24,7 +22,7 @@ public class extractlistHelpFile implements HelpComponent {
 	@Override
 	public InputStream openDocumentationStream() {
 		// TODO Auto-generated method stub
-		return getClass().getResourceAsStream("/helpfiles/extractlist.xml");
+		return getClass().getResourceAsStream("/helpfiles/ampersanddecode.xml");
 	}
 
 }

@@ -15,7 +15,7 @@
   </examples>
   <Applications />
   <tags>
-    <tag> ampersanddecode</tag>
-    <tag>Encoding / Decoding</tag>
+    <tag package = "String"> ampersanddecode</tag>
+    <tag package = "packages">String</tag>
   </tags>
 </function>

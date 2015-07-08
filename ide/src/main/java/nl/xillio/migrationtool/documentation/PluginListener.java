@@ -55,6 +55,7 @@ public class PluginListener {
 				} catch (SAXException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
+					System.out.println(construct.getName());
 					e.printStackTrace();
 				}
 			}
