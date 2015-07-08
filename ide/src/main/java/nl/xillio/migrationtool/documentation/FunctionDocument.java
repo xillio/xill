@@ -149,8 +149,12 @@ public class FunctionDocument {
     }
 
     /**
-     * @param link
-     *            The link we want to add.
+     * Adds a link to a function in a certain package.
+     * 
+     * @param packet 
+     * 			The package in which the function is contained
+     * @param function 
+     * 			The function which we want to link to.
      */
     public void addLink(final String packet, final String function) {
 	links.add("../" + packet + "/" + function + ".html");

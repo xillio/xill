@@ -6,13 +6,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders.*;
+
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders;
 import org.elasticsearch.search.SearchHit;
 
 import javafx.util.Pair;
@@ -54,9 +58,11 @@ public class DocumentSearcher {
 	// Setup the query
 	String[] queries = query.split(" ");
 	for (String q : queries) {
-	    question = question.should(QueryBuilders.fuzzyQuery("name", q))
-		    .should(QueryBuilders.fuzzyQuery("description", q)).should(QueryBuilders.fuzzyQuery("examples", q))
-		    .should(QueryBuilders.fuzzyQuery("searchtags", q));
+	    question = question
+			    		.should(QueryBuilders.functionScoreQuery(QueryBuilders.fuzzyQuery("name", q).fuzziness(Fuzziness.TWO) , ScoreFunctionBuilders.weightFactorFunction(5.0f)))
+			    		.should(QueryBuilders.functionScoreQuery(QueryBuilders.fuzzyQuery("description", q).fuzziness(Fuzziness.TWO), ScoreFunctionBuilders.weightFactorFunction(2.0f)))
+			    		.should(QueryBuilders.functionScoreQuery(QueryBuilders.fuzzyQuery("examples", q).fuzziness(Fuzziness.TWO), ScoreFunctionBuilders.weightFactorFunction(1.0f)))
+			    		.should(QueryBuilders.functionScoreQuery(QueryBuilders.fuzzyQuery("searchTags", q).fuzziness(Fuzziness.TWO), ScoreFunctionBuilders.weightFactorFunction(5.0f)));
 	}
 
 	// Retrieve a response
