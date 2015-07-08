@@ -31,6 +31,7 @@ public class PluginListener {
 	plugin.getName();
 	List<String> functions = new ArrayList<>();
 	XMLparser parser = new XMLparser();
+	DocumentSearcher searcher = new DocumentSearcher(ESConsoleClient.getInstance().getClient());
 	
 	
 	for (Construct construct : plugin.getConstructs()) {
@@ -47,6 +48,7 @@ public class PluginListener {
 					if(plugin.getName() != null && docu.getName() != null){
 						FileUtils.write(new File("./helpfiles/" + plugin.getName() + "/" + docu.getName() + ".html"), docu.toHTML());
 						functions.add(docu.getName());
+						searcher.index(docu);
 					}
 					else
 						log.error("Please enter valid names for your package and functions");
