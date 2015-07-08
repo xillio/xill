@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.selenium;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Map;
@@ -30,6 +31,7 @@ public class LoadPageConstruct implements Construct, AutoCloseable {
 	private static final PhantomJSPool pool = new PhantomJSPool(10);
 
 	static {
+		cleanUnusedPJSExe();
 		extractNativeBinary();
 	}
 	
@@ -323,6 +325,36 @@ public class LoadPageConstruct implements Construct, AutoCloseable {
 			return driver;
 		}
 	}// end of class Options
+	
+	/*
+	 * Method deletes all existing phantomjs..exe files from temp folder (on Windows only)
+	 * There are cases when the file is not removed after CT is closed (e.g. when CT crashes or is manually terminated, etc.)
+	 * This prevents from cumulating useless files in the system.
+	 */
+	private static void cleanUnusedPJSExe() {
+		try {
+			File phantomJStoolBinary;
+			
+			String os = System.getProperty("os.name").toLowerCase();
+			// Windows
+			if (os.indexOf("win") >= 0) {
+				phantomJStoolBinary = File.createTempFile("phantomjs", ".exe");
+				String path = phantomJStoolBinary.toPath().getParent().toString();
+				phantomJStoolBinary.delete();
+
+				//delete all phantomjs...exe files
+				File dir = new File(path);
+				File[] files = dir.listFiles((File file, String name) -> name.startsWith("phantomjs") && name.endsWith(".exe"));
+				for (File file : files) {
+					try {
+						file.delete();
+					} catch (Exception e) {}
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	private static void extractNativeBinary() {
 

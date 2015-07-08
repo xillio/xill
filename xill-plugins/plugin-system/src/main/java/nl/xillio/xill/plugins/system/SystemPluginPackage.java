@@ -9,7 +9,7 @@ public class SystemPluginPackage extends PluginPackage{
 
 	@Override
 	public void load(PluginPackage[] dependencies) {
-		add(new PrintConstruct(), new TypeOfConstruct());
+		add(new PrintConstruct(), new TypeOfConstruct(), new WaitConstruct());
 	}
 
 	@Override
