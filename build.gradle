@@ -174,4 +174,33 @@ try {
 	}
 } catch (IOException ex) {
 	println "You are not connected to the VPN Network"
+	try {
+		Socket socket = new Socket();
+		socket.connect(new InetSocketAddress("localhost", 8081), 500);
+		
+		//We are connected
+		println "We have a connection to BENDER through a tunnel"
+		
+		allprojects{
+			repositories {
+				maven {
+					url "http://localhost:8081/nexus/content/repositories/releases"
+					credentials {
+						username mavenUsername
+						password mavenPassword
+					}
+				}
+				maven {
+					url "http://localhost:8081/nexus/content/repositories/thirdparty"
+					credentials {
+						username mavenUsername
+						password mavenPassword
+					}
+				}
+			}
+		}
+	} catch (IOException ex2) {
+		println "No connection to BENDER was found"
+		
+	}
 }
