@@ -827,7 +827,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
     Processable parseToken(final xill.lang.xill.impl.ObjectExpressionImpl token) throws XillParsingException {
 	Iterator<Expression> keys = token.getNames().iterator();
 	Iterator<Expression> values = token.getValues().iterator();
-	Map<Processable, Processable> object = new LinkedHashMap<>(token.getNames().size());
+	LinkedHashMap<Processable, Processable> object = new LinkedHashMap<>(token.getNames().size());
 
 	while (keys.hasNext() && values.hasNext()) {
 	    object.put(parse(keys.next()), parse(values.next()));

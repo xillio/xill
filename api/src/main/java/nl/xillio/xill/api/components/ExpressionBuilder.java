@@ -2,10 +2,8 @@ package nl.xillio.xill.api.components;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
 import nl.xillio.xill.api.Debugger;
@@ -90,8 +88,8 @@ public final class ExpressionBuilder implements Processable {
      * @param value
      * @return the expression
      */
-    public static MetaExpression fromValue(final Map<String, MetaExpression> value) {
-	Map<Processable, Processable> procValue = new LinkedHashMap<>(value.size());
+    public static MetaExpression fromValue(final LinkedHashMap<String, MetaExpression> value) {
+	LinkedHashMap<Processable, Processable> procValue = new LinkedHashMap<>(value.size());
 
 	value.forEach((key, expression) -> {
 	    procValue.put(fromValue(key), expression);
@@ -115,7 +113,7 @@ public final class ExpressionBuilder implements Processable {
      * @return the expression
      */
     public static MetaExpression emptyObject() {
-	return fromValue(new HashMap<>());
+	return fromValue(new LinkedHashMap<>());
     }
 
     /**
@@ -161,7 +159,7 @@ public final class ExpressionBuilder implements Processable {
 
     /**
      * Create a new {@link ExpressionBuilder} that will produce a double
-     * 
+     *
      * @param value
      */
     public ExpressionBuilder(final double value) {
@@ -170,7 +168,7 @@ public final class ExpressionBuilder implements Processable {
 
     /**
      * Create a new {@link ExpressionBuilder} that will produce an integer
-     * 
+     *
      * @param value
      */
     public ExpressionBuilder(final int value) {
@@ -179,7 +177,7 @@ public final class ExpressionBuilder implements Processable {
 
     /**
      * Create a new {@link ExpressionBuilder} that will produce a string
-     * 
+     *
      * @param value
      */
     public ExpressionBuilder(final String value) {
@@ -188,7 +186,7 @@ public final class ExpressionBuilder implements Processable {
 
     /**
      * Create a new {@link ExpressionBuilder} that will produce a List
-     * 
+     *
      * @param value
      */
     public ExpressionBuilder(final List<MetaExpression> value) {
@@ -197,16 +195,16 @@ public final class ExpressionBuilder implements Processable {
 
     /**
      * Create a new {@link ExpressionBuilder} that will produce an object
-     * 
+     *
      * @param value
      */
-    public ExpressionBuilder(final Map<String, MetaExpression> value) {
+    public ExpressionBuilder(final LinkedHashMap<String, MetaExpression> value) {
 	expressionSupplier = () -> fromValue(value);
     }
 
     /**
      * Create a new {@link ExpressionBuilder} that will produce a double
-     * 
+     *
      * @param value
      */
     public ExpressionBuilder(final boolean value) {
