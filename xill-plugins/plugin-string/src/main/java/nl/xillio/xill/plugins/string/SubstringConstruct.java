@@ -11,7 +11,9 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
  *
- * Returns the substring of text between position start and position end.
+ * Returns the substring of text between position start and position end. </br>
+ * If the end position equals 0 it will take the full length of the string. </br>
+ * The start position is set to 0 if the end position is smaller than the start position.
  *
  * @author Sander
  *
@@ -34,7 +36,8 @@ public class SubstringConstruct implements Construct {
 			final MetaExpression endVar) {
 
 		// The start and end value have to be atomic.
-		if (startVar.getType() != ExpressionDataType.ATOMIC || endVar.getType() != ExpressionDataType.ATOMIC) {
+		if (string.getType() != ExpressionDataType.ATOMIC || startVar.getType() != ExpressionDataType.ATOMIC
+				|| endVar.getType() != ExpressionDataType.ATOMIC) {
 			throw new RobotRuntimeException("Expected atomic value.");
 		}
 

@@ -45,13 +45,13 @@ public class WordDistanceConstruct implements Construct {
 			throw new RobotRuntimeException("Input cannot be null.");
 		}
 
-		int edits = damlev(source.toString(), target.toString());
+		int edits = damlev(source.getStringValue(), target.getStringValue());
 
 		if (!relative.getBooleanValue()) {
 			return ExpressionBuilder.fromValue(edits);
 		}
 
-		int maxlength = Math.max(source.toString().length(), target.toString().length());
+		int maxlength = Math.max(source.getStringValue().length(), target.getStringValue().length());
 		double similarity = (1 - ((double) edits / maxlength));
 		return ExpressionBuilder.fromValue(similarity);
 	}

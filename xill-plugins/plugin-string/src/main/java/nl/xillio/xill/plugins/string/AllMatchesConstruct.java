@@ -23,6 +23,10 @@ public class AllMatchesConstruct implements Construct {
 
 	private final RegexConstruct regexConstruct;
 
+	/**
+	 * Create a new {@link AllMatchesConstruct}
+	 * @param regexConstruct the construct used to perform the matching
+	 */
 	public AllMatchesConstruct(final RegexConstruct regexConstruct) {
 		this.regexConstruct = regexConstruct;
 	}
@@ -61,7 +65,7 @@ public class AllMatchesConstruct implements Construct {
 				list.add(i, ExpressionBuilder.fromValue(matcher.group()));
 			}
 		} catch (Exception e) {
-			throw new RobotRuntimeException("Invalid pattern  in extractlist()");
+			throw new RobotRuntimeException("Invalid pattern.");
 		}
 		return ExpressionBuilder.fromValue(list);
 

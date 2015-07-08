@@ -46,8 +46,7 @@ public class SplitConstruct implements Construct {
 			throw new RobotRuntimeException("Expected atomic value.");
 		}
 
-		if (string == ExpressionBuilder.NULL || delimiter == ExpressionBuilder.NULL
-				|| keepempty == ExpressionBuilder.NULL) {
+		if (string == ExpressionBuilder.NULL || delimiter == ExpressionBuilder.NULL) {
 			throw new RobotRuntimeException("Input cannot be null.");
 		}
 

@@ -19,6 +19,10 @@ public class MatchesConstruct implements Construct {
 
 	private final RegexConstruct regexConstruct;
 
+	/**
+	 * Create a new {@link MatchesConstruct}
+	 * @param regexConstruct the construct used to find the matches
+	 */
 	public MatchesConstruct(final RegexConstruct regexConstruct) {
 		this.regexConstruct = regexConstruct;
 	}
@@ -52,7 +56,7 @@ public class MatchesConstruct implements Construct {
 		try {
 			return ExpressionBuilder.fromValue(regexConstruct.getMatcher(regex, value, timeout).matches());
 		} catch (Exception e) {
-			throw new RobotRuntimeException("Invalid pattern in matches()");
+			throw new RobotRuntimeException("Invalid pattern in matches.");
 		}
 
 	}
