@@ -178,7 +178,7 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 		//Sets up the database so we don;t crash and burn
 		this.setupDatabase();
 		//For testing
-		this.loadcontent();
+		//this.loadcontent();
 		
 		PropertyConfigurator.configure(this.getClass().getResourceAsStream("/log4j.properties"));
 		LogManager.getLogger(getClass()).info("Reloaded Log4J Configuration.");

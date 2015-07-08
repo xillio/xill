@@ -84,8 +84,15 @@ public class DocumentSearcher {
      */
     public String getDocumentVersion(String packet, String id)
     {
+    	try{
     	GetResponse Response = client.prepareGet(DOCUMENTATION_INDEX, packet, id).setFields("version").execute().actionGet();
     	return (String) Response.getField("version").getValue();
+    	}
+    	catch(Exception e)
+    	{
+    		return null;
+    	}
+    
     }
 
     /**

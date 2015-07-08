@@ -152,8 +152,8 @@ public class FunctionDocument {
      * @param link
      *            The link we want to add.
      */
-    public void addLink(final String link) {
-	links.add(link);
+    public void addLink(final String packet, final String function) {
+	links.add("../" + packet + "/" + function + ".html");
     }
 
     /**
@@ -172,6 +172,7 @@ public class FunctionDocument {
     }
 
     /**
+     * The function that returns correct HTML to display the functiondocument.
      * @return returns the correct HTML to display the FunctionDocument
      * @throws IOException
      */
@@ -225,6 +226,32 @@ public class FunctionDocument {
 	}
 	html._body();
 	return html.toHtml();
+    }
+    
+    /**
+     * The function that creates correct HTML to display the package.
+     * @return
+     * 		Returns a string in HTML format.
+     * @throws IOException
+     */
+    public String toPackageHTML() throws IOException {
+    	HtmlCanvas html = new HtmlCanvas();
+    	
+    	html = addHeader(html);
+    	
+    	html.body();
+    	
+    	html = addTitle(html);
+    	
+    	if (!links.isEmpty()) {
+    	    html = openList(html, "Tags");
+    	    for (String link : links) {
+    		html = addLinkToList(html, link);
+    	    }
+    	    html = closeList(html);
+    	}
+    	html._body();
+    	return html.toHtml();
     }
 
     /**
@@ -336,6 +363,6 @@ public class FunctionDocument {
      * @throws IOException
      */
     private static HtmlCanvas addLinkToList(final HtmlCanvas canvas, final String link) throws IOException {
-	return canvas.li().p().a(href("../testRealm/" + link.replace(" ", "") + ".html")).write(link)._a()._p()._li();
+	return canvas.li().p().a(href(link)).write(link)._a()._p()._li();
     }
 }

@@ -73,6 +73,11 @@ public class XMLparser {
 	    if (qName.equals("example")) {
 		attribute = attributes.getValue("description");
 	    }
+	    
+	    if (qName.equals("tag"))
+	    {
+	    	attribute = attributes.getValue("package");
+	    }
 
 	    // Check whether we're running into a tag we accept, else keep
 	    // going.
@@ -112,7 +117,8 @@ public class XMLparser {
 		function.addApplication(xmlText.toString());
 	    }
 	    if (qName.equals("tag")) {
-		function.addLink(xmlText.toString());
+		function.addLink(attribute, xmlText.toString());
+		attribute = "";
 	    }
 	    if (qName.equals("searchTag")) {
 		function.addSearchTag(xmlText.toString());

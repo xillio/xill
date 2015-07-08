@@ -11,7 +11,8 @@ public class StringPluginPackage extends PluginPackage{
 	public void load(PluginPackage[] dependencies) {
 		add(
 			new AbsoluteURLConstruct(),
-			new ContainsConstruct());
+			new ContainsConstruct(),
+			new extractlistHelpFile());
 	}
 
 	@Override
