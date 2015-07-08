@@ -7,21 +7,6 @@ allprojects {
 	repositories {
 		mavenLocal()
 		mavenCentral()
-		
-		maven {
-			url "http://192.168.0.200:8081/nexus/content/repositories/releases"
-			credentials {
-				username mavenUsername
-				password mavenPassword
-			}
-		}
-		maven {
-			url "http://192.168.0.200:8081/nexus/content/repositories/thirdparty"
-			credentials {
-				username mavenUsername
-				password mavenPassword
-			}
-		}
 	}
 	
 	task sourceJar(type: Jar) {
@@ -31,32 +16,34 @@ allprojects {
 	/*
 	 * MAVEN PUBLISH
 	 */
-	apply plugin: 'maven-publish'
-	publishing {
-		publications {
-			maven(MavenPublication) {
-				groupId group
-				artifactId 'xill-' + project.name
-				version project.version
-	
-				from components.java
-						
-				artifact sourceJar {
-					classifier "sources"
+	 if(project.name != 'xill-plugins') {
+		apply plugin: 'maven-publish'
+		publishing {
+			publications {
+				maven(MavenPublication) {
+					groupId group
+					artifactId 'xill-' + project.name
+					version project.version
+		
+					from components.java
+							
+					artifact sourceJar {
+						classifier "sources"
+					}
 				}
 			}
+			
+			 repositories {
+						maven {
+								url 'http://192.168.0.200:8081/nexus/content/repositories/releases'
+								name 'release'
+								credentials {
+									username = mavenUsername
+									password = mavenPassword
+								}
+						}
+				}
 		}
-		
-		 repositories {
-					maven {
-							url 'http://192.168.0.200:8081/nexus/content/repositories/releases'
-							name 'release'
-							credentials {
-								username = mavenUsername
-								password = mavenPassword
-							}
-					}
-			}
 	}
 }
 
@@ -155,4 +142,36 @@ clean {
 
 eclipseClasspath {
 	dependsOn assembleContenttools
+}
+
+//Test the vpn network
+
+//Test vpn connection
+try {
+	Socket socket = new Socket();
+	socket.connect(new InetSocketAddress("192.168.0.200", 8081), 500);
+	
+	//We are connected
+	println "We have a connection to BENDER"
+	
+	allprojects{
+		repositories {
+			maven {
+				url "http://192.168.0.200:8081/nexus/content/repositories/releases"
+				credentials {
+					username mavenUsername
+					password mavenPassword
+				}
+			}
+			maven {
+				url "http://192.168.0.200:8081/nexus/content/repositories/thirdparty"
+				credentials {
+					username mavenUsername
+					password mavenPassword
+				}
+			}
+		}
+	}
+} catch (IOException ex) {
+	println "You are not connected to the VPN Network"
 }

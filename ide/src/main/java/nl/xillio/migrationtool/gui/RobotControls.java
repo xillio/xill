@@ -150,8 +150,6 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 		onPause();
 
 		tab.display(action.getRobotID(), action.getLineNumber());
-		
-		//highlight(action.getRobotID(), action.getLineNumber(), "highlight");
 	}
 
 	private void stepIn() {
@@ -249,7 +247,18 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 	@Override
 	public void handle(Throwable e) throws RobotRuntimeException {
 		Logger log = RobotLogger.getLogger(tab.getProcessor().getRobotID());
-		log.error(ExceptionUtils.getStackTrace(e));
+		
+		Throwable root = ExceptionUtils.getRootCause(e);
+		
+		if(root instanceof RobotRuntimeException) {
+		    log.error(root.getMessage());
+		}else if(e instanceof RobotRuntimeException) {
+		    log.error(e.getMessage());
+		}else if(root == null) {
+		    log.error(e);
+		}else{
+		    log.error(root);
+		}
 		
 		pause();
 	}

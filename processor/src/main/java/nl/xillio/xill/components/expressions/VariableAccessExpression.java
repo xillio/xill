@@ -14,24 +14,25 @@ import nl.xillio.xill.components.instructions.VariableDeclaration;
  */
 public class VariableAccessExpression implements Processable {
 
-	private final VariableDeclaration declaration;
+    private final VariableDeclaration declaration;
 
-	/**
-	 * Create a new {@link VariableAccessExpression} what will access provided declaration
-	 *
-	 * @param declaration
-	 */
-	public VariableAccessExpression(final VariableDeclaration declaration) {
-		this.declaration = declaration;
-	}
+    /**
+     * Create a new {@link VariableAccessExpression} what will access provided
+     * declaration
+     *
+     * @param declaration
+     */
+    public VariableAccessExpression(final VariableDeclaration declaration) {
+	this.declaration = declaration;
+    }
 
-	@Override
-	public InstructionFlow<MetaExpression> process(final Debugger debugger) {
-		return InstructionFlow.doResume(declaration.getVariable());
-	}
+    @Override
+    public InstructionFlow<MetaExpression> process(final Debugger debugger) {
+	return InstructionFlow.doResume(declaration.getVariable());
+    }
 
-	@Override
-	public Collection<Processable> getChildren() {
-		return Arrays.asList(declaration);
-	}
+    @Override
+    public Collection<Processable> getChildren() {
+	return Arrays.asList(declaration);
+    }
 }

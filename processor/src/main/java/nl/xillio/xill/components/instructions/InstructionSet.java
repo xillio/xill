@@ -41,11 +41,20 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
     @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 	InstructionFlow<MetaExpression> processResult = null;
+	List<Instruction> processedInstructions = new ArrayList<>();
+
 	for (Instruction instruction : instructions) {
 
-	    debugger.startInstruction(instruction);
+	    if (!instruction.preventDebugging()) {
+		debugger.startInstruction(instruction);
+	    }
+
 	    InstructionFlow<MetaExpression> result = instruction.process(debugger);
-	    debugger.endInstruction(instruction, result);
+	    processedInstructions.add(instruction);
+
+	    if (!instruction.preventDebugging()) {
+		debugger.endInstruction(instruction, result);
+	    }
 
 	    if (!result.resumes()) {
 		debugger.returning(this, result);
@@ -59,6 +68,13 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
 	    }
 	}
 
+	// Dispose all processed instructions
+	for (Instruction instruction : processedInstructions) {
+	    try {
+		instruction.close();
+	    } catch (Exception e) {
+	    }
+	}
 	// Done so dispose of this
 	try {
 	    close();
@@ -68,14 +84,14 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
 	if (processResult != null) {
 	    return processResult;
 	}
-	
+
 	return InstructionFlow.doResume();
     }
 
     /**
      * Run only declarations. <br/>
      * This is required to run functions in this robot as a library
-     * 
+     *
      * @throws RobotRuntimeException
      */
     public void initialize() throws RobotRuntimeException {
@@ -100,9 +116,5 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
 
     @Override
     public void close() throws Exception {
-	for (Instruction instruction : instructions) {
-	    instruction.close();
-	}
-
     }
 }

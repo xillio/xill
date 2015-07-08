@@ -122,4 +122,9 @@ public class NullDebugger implements Debugger {
 		return new ArrayList<>();
 	}
 
+	@Override
+	public Debugger createChild() {
+	return this;
+	}
+
 }

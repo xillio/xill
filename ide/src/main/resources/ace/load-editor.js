@@ -10,7 +10,7 @@ editor.getSession().setMode("ace/mode/xill");
 
 // Extend the editor
 editor.xillKeywords = "";
-editor.xillBuildin = "use|as|include|if|else|while|foreach|var|function|return|continue|break";
+editor.xillBuildin = "";
 editor.addKeyword = function(keyword) {
 	if (this.xillKeywords == "")
 		this.xillKeywords = keyword;
@@ -22,8 +22,6 @@ editor.addBuildin = function(keyword) {
 		this.xillBuildin = keyword;
 	else
 		this.xillBuildin += "|" + keyword;
-}
-editor.addACKeyword = function(keyword) {
 }
 
 editor.$highlights = [];

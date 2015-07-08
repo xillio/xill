@@ -5,7 +5,7 @@ import nl.xillio.plugins.interfaces.Loadable;
 import nl.xillio.xill.api.Xill;
 
 /**
- * This interface represents the interface to the top-level contenttools plugins
+ * This interface represents the interface to the top-level contenttools plugins.
  */
 public interface PluginPackage extends Loadable<PluginPackage> {
 	/**
