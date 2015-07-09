@@ -44,9 +44,9 @@ public final class IntegerShortcut implements Processable {
 	    //Now we need to determine the return type
 	    int value = assignedValue.getNumberValue().intValue();
 	    
-	    if(!returnFirst) {
-		//This is a prefix expression so we add before returning
-		value += additiveValue;
+	    if(returnFirst) {
+		//This is suffix mode so revert the addition
+		value -= additiveValue;
 	    }
 	    
 	    return InstructionFlow.doResume(ExpressionBuilder.fromValue(value));
