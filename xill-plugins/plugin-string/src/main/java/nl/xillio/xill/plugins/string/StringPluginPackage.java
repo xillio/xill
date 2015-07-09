@@ -22,6 +22,7 @@ public class StringPluginPackage extends PluginPackage{
 			new EndsWithConstruct(),
 			new FormatConstruct(regex),
 			new IndexOfConstruct(),
+			new JoinConstruct(),
 			new LengthConstruct(),
 			new LowerCaseConstruct(),
 			new MatchesConstruct(regex),
@@ -34,7 +35,8 @@ public class StringPluginPackage extends PluginPackage{
 			new SubstringConstruct(),
 			new TrimConstruct(),
 			new UpperCaseConstruct(),
-			new WordDistanceConstruct()
+			new WordDistanceConstruct(),
+			new WrapConstruct()
 			);
 			
 	}

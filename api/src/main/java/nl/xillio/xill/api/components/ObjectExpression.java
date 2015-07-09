@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import nl.xillio.xill.api.Debugger;
@@ -23,18 +22,18 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  */
 public class ObjectExpression implements Processable {
 
-    private final Map<? extends Processable, ? extends Processable> value;
+    private final LinkedHashMap<? extends Processable, ? extends Processable> value;
 
     /**
      * @param object
      */
-    public ObjectExpression(final Map<? extends Processable, ? extends Processable> object) {
+    public ObjectExpression(final LinkedHashMap<? extends Processable, ? extends Processable> object) {
 	value = object;
     }
 
     @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-	Map<String, MetaExpression> result = new LinkedHashMap<String, MetaExpression>();
+	LinkedHashMap<String, MetaExpression> result = new LinkedHashMap<String, MetaExpression>();
 
 	for (Entry<? extends Processable, ? extends Processable> entry : value.entrySet()) {
 	    try {
