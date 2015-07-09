@@ -1,19 +1,22 @@
 package nl.xillio.xill.plugins.math;
 
 
+import java.io.InputStream;
+
 import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.construct.HelpComponent;
 
 /**
  * The construct of the Round function which rounds a numbervalue.
  * @author Ivor
  *
  */
-public class RoundConstruct  implements Construct {
+public class RoundConstruct  implements HelpComponent {
 
 	@Override
 	public String getName() {
@@ -37,6 +40,11 @@ public class RoundConstruct  implements Construct {
 		} else {
 			return ExpressionBuilder.fromValue(Math.round(number.doubleValue()));
 		}
+	}
+
+	@Override
+	public InputStream openDocumentationStream() {
+		return getClass().getResourceAsStream("/helpfiles/round.xml");
 	}
 
 }

@@ -11,13 +11,9 @@ public class MathPluginPackage extends PluginPackage{
 	public void load(PluginPackage[] dependencies) {
 		add(new LifeConstuct(),
 			new AbsConstruct(),
-			new AbsHelpComponent(),
 		    new HungarianAlgorithmConstruct(),
-		    new HungarianAlgorithmHelpComponent(),
 		    new RandomConstruct(),
-		    new RandomHelpComponent(),
-		    new RoundConstruct(),
-		    new RoundHelpComponent());
+		    new RoundConstruct());
 	}
 
 	@Override

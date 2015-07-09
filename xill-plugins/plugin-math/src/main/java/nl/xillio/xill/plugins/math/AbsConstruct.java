@@ -1,18 +1,21 @@
 package nl.xillio.xill.plugins.math;
 
+import java.io.InputStream;
+
 import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.construct.HelpComponent;
 
 /**
  * The construct for the Abs function which can give the absolute value of a number.
  * @author Ivor
  *
  */
-public class AbsConstruct implements Construct {
+public class AbsConstruct implements HelpComponent {
 
 	@Override
 	public String getName() {
@@ -38,6 +41,11 @@ public class AbsConstruct implements Construct {
 		} else {
 			return ExpressionBuilder.fromValue(Math.abs(number.doubleValue()));
 		}
+	}
+
+	@Override
+	public InputStream openDocumentationStream() {
+		return getClass().getResourceAsStream("/helpfiles/abs.xml");
 	}
 
 }
