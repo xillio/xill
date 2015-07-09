@@ -42,6 +42,7 @@ public class XMLparser {
 	xr.parse(new InputSource(stream));
 	FunctionDocument docu = ((XML_Format_Handler) xr.getContentHandler()).getFunction();
 	docu.setPackage(packet);
+	docu.addSearchTag(packet);
 	docu.setVersion(version);	
 	return docu;
     }

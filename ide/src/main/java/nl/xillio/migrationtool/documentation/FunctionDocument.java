@@ -35,7 +35,8 @@ public class FunctionDocument {
     private String functionName = "", description, version, packet = "testRealm";
     private final List<Pair<String, String>> parameters = new ArrayList<>();
     private final List<Pair<String, String>> examples = new ArrayList<>();
-    private final List<String> links = new ArrayList<>();
+    private final List<Pair<String, String>>  links = new ArrayList<>();
+    private final List<FunctionDocument> descriptiveLinks = new ArrayList<>();
     private final List<String> searchTags = new ArrayList<>();
     private final List<String> applications = new ArrayList<>();
 
@@ -157,7 +158,30 @@ public class FunctionDocument {
      * 			The function which we want to link to.
      */
     public void addLink(final String packet, final String function) {
-	links.add("../" + packet + "/" + function + ".html");
+    	if(packet != null)
+    		links.add(new Pair<String, String>(packet.replace(" ", ""), function.replace(" ", "")));
+    	else
+    		links.add(new Pair<String, String>("NoPackageGiven", function.replace(" ", "")));
+    }
+    
+
+    /**
+     * Adds a function to the functionDocument to which it refers
+     * @param docu
+     */
+    public void addDescriptiveLink(final FunctionDocument docu) {
+    descriptiveLinks.add(docu);
+    }
+    
+    
+    /**
+     * Generates a string which represents a link
+     * @param link
+     * 			The package and the function we're referring to.
+     * @return
+     */
+    private String generateLink(Pair<String, String> link){
+    	return "../" + link.getKey() + "/" + link.getValue() + ".html";
     }
 
     /**
@@ -223,7 +247,7 @@ public class FunctionDocument {
 	// The links
 	if (!links.isEmpty()) {
 	    html = openList(html, "Tags");
-	    for (String link : links) {
+	    for (Pair<String, String> link : links) {
 		html = addLinkToList(html, link);
 	    }
 	    html = closeList(html);
@@ -247,13 +271,10 @@ public class FunctionDocument {
     	
     	html = addTitle(html);
     	
-    	if (!links.isEmpty()) {
-    	    html = openList(html, "Tags");
-    	    for (String link : links) {
-    		html = addLinkToList(html, link);
-    	    }
-    	    html = closeList(html);
-    	}
+    	html = openTable(html);
+    	html = addLinksToTable(html);
+    	html = closeTable(html);
+    	
     	html._body();
     	return html.toHtml();
     }
@@ -284,7 +305,7 @@ public class FunctionDocument {
      * @return Returns the canvas with a function and its parameters added.
      * @throws IOException
      */
-    private HtmlCanvas addFunction(final HtmlCanvas canvas) throws IOException {
+    public HtmlCanvas addFunction(final HtmlCanvas canvas) throws IOException {
 	// We build the string
 	String str = "(";
 	for (Pair<String, String> parameter : parameters) {
@@ -297,7 +318,7 @@ public class FunctionDocument {
 	str += ")";
 
 	// Write the function name and the parameters behind it
-	return canvas.div(class_("Section")).p().strong().write(functionName)._strong().write(str)._p()._div();
+	return canvas.p().strong().write(functionName)._strong().write(str)._p();
     }
 
     /**
@@ -318,6 +339,14 @@ public class FunctionDocument {
      */
     private static HtmlCanvas openList(final HtmlCanvas canvas, final String listName) throws IOException {
 	return canvas.div(class_(listName)).h2().write(listName)._h2().ul();
+    }
+    
+    private static HtmlCanvas openTable(final HtmlCanvas canvas) throws IOException {
+    	return canvas.table();
+    }
+    
+    private static HtmlCanvas closeTable(final HtmlCanvas canvas) throws IOException {
+    	return canvas._table();
     }
 
     /**
@@ -353,11 +382,19 @@ public class FunctionDocument {
      * @return Returns a canvas with the item added as a listItem.
      * @throws IOException
      */
-    private static HtmlCanvas addItemToList(final HtmlCanvas canvas, final String item) throws IOException {
-	return canvas.li().p(class_("First")).write(item)._p()._li();
+    private static HtmlCanvas addItemToList(final HtmlCanvas canvas, final String item) {
+	try {
+		return canvas.li().p(class_("First")).write(item)._p()._li();
+	} catch (IOException e) {
+		System.out.println(item);
+		e.printStackTrace();
+	}
+	return null;
 
     }
-
+    
+    
+    
     /**
      * @param canvas
      *            The canvas we're adding the link to.
@@ -366,7 +403,23 @@ public class FunctionDocument {
      * @return A canvas with the link added.
      * @throws IOException
      */
-    private static HtmlCanvas addLinkToList(final HtmlCanvas canvas, final String link) throws IOException {
-	return canvas.li().p().a(href(link)).write(link)._a()._p()._li();
+    private HtmlCanvas addLinkToList(final HtmlCanvas canvas, final Pair<String, String> link) throws IOException {
+	return canvas.li().p().a(href(generateLink(link))).write(link.getKey() + "." + link.getValue())._a()._p()._li();
+    }
+    
+    private HtmlCanvas addLinksToTable(HtmlCanvas canvas) throws IOException{
+    	for(FunctionDocument desLink : descriptiveLinks)
+    	{
+    		canvas = canvas.tr()
+    						 .td().p().a(href(generateLink(new Pair<String, String>(desLink.getPackage(), desLink.getName())))).write(desLink.getName())._a()._p()._td()
+    						 .td();
+    		canvas = desLink.addFunction(canvas);
+    		canvas = canvas
+    						 ._td()
+    						 .td().p().write(desLink.description)._p()._td()
+    						 ._tr();
+    	}
+    	
+    	return canvas;
     }
 }

@@ -22,6 +22,5 @@
   <Applications />
   <tags>
     <tag package = "String">base64decode</tag>
-    <tag package = "packages">String</tag>
   </tags>
 </function>

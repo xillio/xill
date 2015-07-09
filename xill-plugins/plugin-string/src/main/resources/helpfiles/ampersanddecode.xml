@@ -23,6 +23,5 @@
   <Applications />
   <tags>
     <tag package = "String">ampersandencode</tag>
-    <tag package = "packages">String</tag>
   </tags>
 </function>

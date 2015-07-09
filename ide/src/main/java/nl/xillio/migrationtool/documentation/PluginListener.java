@@ -4,11 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
-
 import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient;
 import nl.xillio.plugins.PluginLoader;
 import nl.xillio.xill.api.PluginPackage;
@@ -29,7 +27,7 @@ public class PluginListener {
      */
     public void pluginLoaded(final PluginPackage plugin) {
 	plugin.getName();
-	List<String> functions = new ArrayList<>();
+	List<FunctionDocument> functions = new ArrayList<>();
 	XMLparser parser = new XMLparser();
 	DocumentSearcher searcher = new DocumentSearcher(ESConsoleClient.getInstance().getClient());
 	
@@ -43,11 +41,15 @@ public class PluginListener {
 			if(needsUpdate(plugin, construct))
 			{
 				try {
+					//Parse the XML
 					FunctionDocument docu = parser.parseXML(documentedConstruct.openDocumentationStream(), plugin.getName(), plugin.getVersion());
+					//Add a link to the package
+					docu.addLink("packages", plugin.getName());
 					
+					//Write an html file
 					if(plugin.getName() != null && docu.getName() != null){
 						FileUtils.write(new File("./helpfiles/" + plugin.getName() + "/" + docu.getName() + ".html"), docu.toHTML());
-						functions.add(docu.getName());
+						functions.add(docu);
 						searcher.index(docu);
 					}
 					else
@@ -60,6 +62,7 @@ public class PluginListener {
 			}
 	    }
 		 try {
+			//Generate the html file for the package
 			FileUtils.write(new File("./helpfiles/packages/" + plugin.getName() + ".html"), this.packageDocumentation(plugin.getName(), functions).toPackageHTML());
 		} catch (IOException e) {			
 			e.printStackTrace();
@@ -76,13 +79,21 @@ public class PluginListener {
 	return !plugin.getVersion().equals(version);
     }
     
-    private FunctionDocument packageDocumentation(String packageName, List<String> functions)
+    /**
+     * @param packageName
+     * 			The name of the packages
+     * @param functions
+     * 			The functions the package contains
+     * @return
+     * 			A functiondocument that represents the package
+     */
+    private FunctionDocument packageDocumentation(String packageName, List<FunctionDocument> functions)
     {
     	FunctionDocument docu = new FunctionDocument();
     	docu.setName(packageName);
-    	for(String func : functions)
+    	for(FunctionDocument func : functions)
     	{
-    		docu.addLink(packageName, func);
+    		docu.addDescriptiveLink(func);
     	}
     	
     	return docu;

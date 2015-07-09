@@ -110,17 +110,16 @@ public class HungarianAlgorithmConstruct implements Construct {
 
 				// Prepare results
 				List<MetaExpression> result = new ArrayList<>();
-				
 				result.add(ExpressionBuilder.fromValue(sum));
 
 				List<MetaExpression> cells = new ArrayList<>();
 				for (int i = 0; i < assignment.length; i++) {
 					List<MetaExpression> pair = new ArrayList<>();
-					pair.add(ExpressionBuilder.fromValue(assignment[i][0]));
-					pair.add(ExpressionBuilder.fromValue(assignment[i][1]));
+					pair.add(ExpressionBuilder.fromValue("row: " + assignment[i][0]));
+					pair.add(ExpressionBuilder.fromValue("col: " + assignment[i][1]));
 					cells.add(ExpressionBuilder.fromValue(pair));
 				}
-				result.add(ExpressionBuilder.fromValue(cells));
+				result.add(ExpressionBuilder.fromValue("cells: " + cells));
 
 				return ExpressionBuilder.fromValue(result);
 				
