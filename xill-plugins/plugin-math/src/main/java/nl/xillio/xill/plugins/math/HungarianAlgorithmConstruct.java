@@ -1,8 +1,11 @@
 package nl.xillio.xill.plugins.math;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javafx.util.Pair;
 import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
@@ -10,6 +13,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
  * The construct for some hungarian magic
@@ -47,8 +51,7 @@ public class HungarianAlgorithmConstruct implements Construct {
 		//Prepare array
 		int rows = matrix.size();
 		if(rows < 1)
-			//Throw an error through the window
-			return ExpressionBuilder.NULL;
+			throw new RobotRuntimeException("Not enough data, Expected at least 1 row with data");
 		
 		MetaExpression var = matrix.get(0);
 		
@@ -62,8 +65,7 @@ public class HungarianAlgorithmConstruct implements Construct {
 		int columns = varList.size();
 		
 		if(columns < 1){
-			//throw an error through the wall
-			return ExpressionBuilder.NULL;
+			throw new RobotRuntimeException("Not enough data, Expected at least 1 column with data");
 		}
 		
 		if(rows == 0 || columns == 0)
@@ -110,16 +112,20 @@ public class HungarianAlgorithmConstruct implements Construct {
 
 				// Prepare results
 				List<MetaExpression> result = new ArrayList<>();
-				result.add(ExpressionBuilder.fromValue(sum));
+				Map<String, MetaExpression> sumMap = new HashMap<String, MetaExpression>();
+				sumMap.put("sum", ExpressionBuilder.fromValue(sum));
+				result.add(ExpressionBuilder.fromValue(sumMap));
 
 				List<MetaExpression> cells = new ArrayList<>();
 				for (int i = 0; i < assignment.length; i++) {
-					List<MetaExpression> pair = new ArrayList<>();
-					pair.add(ExpressionBuilder.fromValue("row: " + assignment[i][0]));
-					pair.add(ExpressionBuilder.fromValue("col: " + assignment[i][1]));
-					cells.add(ExpressionBuilder.fromValue(pair));
+					Map<String, MetaExpression> item = new HashMap<String, MetaExpression>();
+					item.put("row", ExpressionBuilder.fromValue(assignment[i][0]));
+					item.put("col", ExpressionBuilder.fromValue(assignment[i][1]));
+					cells.add(ExpressionBuilder.fromValue(item));
 				}
-				result.add(ExpressionBuilder.fromValue("cells: " + cells));
+				Map<String, MetaExpression> cellsmap = new HashMap<String, MetaExpression>();
+				cellsmap.put("cells", ExpressionBuilder.fromValue(cells));
+				result.add(ExpressionBuilder.fromValue(cellsmap));
 
 				return ExpressionBuilder.fromValue(result);
 				
