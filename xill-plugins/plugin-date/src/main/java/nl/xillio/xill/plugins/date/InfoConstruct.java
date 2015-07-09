@@ -2,13 +2,13 @@ package nl.xillio.xill.plugins.date;
 
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
 import nl.xillio.xill.api.components.ExpressionBuilder;
+import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
@@ -34,21 +34,24 @@ public class InfoConstruct implements Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(InfoConstruct::process, new Argument("date"));
+		return new ConstructProcessor((dateVar) -> process(context, dateVar), new Argument("date"));
 
 	}
 
-	private static MetaExpression process(final MetaExpression dateVar) {
+	private static MetaExpression process(final ConstructContext context, final MetaExpression dateVar) {
 
 		if (dateVar == ExpressionBuilder.NULL) {
 			return ExpressionBuilder.NULL;
 		}
 
-		DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		if (dateVar.getType() != ExpressionDataType.ATOMIC) {
+			context.getRootLogger().warn("Expected an atomic value.");
+		}
+		DateFormat df = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.getDefault());
 		try {
 			df.parse(dateVar.getStringValue());
 		} catch (ParseException e) {
-			throw new RobotRuntimeException("Parse error.");
+			throw new RobotRuntimeException("Invalid date.");
 		}
 		Locale locale = new Locale("enUS");
 		Calendar cal = df.getCalendar();

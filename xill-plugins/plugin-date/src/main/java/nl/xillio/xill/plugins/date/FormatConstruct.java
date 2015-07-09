@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import nl.xillio.xill.api.components.ExpressionBuilder;
@@ -33,20 +34,23 @@ public class FormatConstruct implements Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(FormatConstruct::process, new Argument("date"), new Argument("format"),
+
+		return new ConstructProcessor(
+				(dateVar, formatVar, timezoneVar) -> process(context, dateVar, formatVar, timezoneVar),
+				new Argument("date"), new Argument("format", ExpressionBuilder.NULL),
 				new Argument("timezone", ExpressionBuilder.NULL));
 	}
 
-	private static MetaExpression process(final MetaExpression dateVar, final MetaExpression formatVar,
-			final MetaExpression timezoneVar) {
-
-		if (dateVar == ExpressionBuilder.NULL || formatVar == ExpressionBuilder.NULL) {
-			throw new RobotRuntimeException("Input cannot be null.");
-		}
+	private static MetaExpression process(final ConstructContext context, final MetaExpression dateVar,
+			final MetaExpression formatVar, final MetaExpression timezoneVar) {
 
 		if (dateVar.getType() != ExpressionDataType.ATOMIC || formatVar.getType() != ExpressionDataType.ATOMIC
 				|| timezoneVar.getType() != ExpressionDataType.ATOMIC) {
-			throw new RobotRuntimeException("Expected atomic value");
+			context.getRootLogger().warn("Expected atomic value.");
+		}
+
+		if (dateVar == ExpressionBuilder.NULL) {
+			return ExpressionBuilder.NULL;
 		}
 
 		String date = dateVar.getStringValue();
@@ -54,12 +58,17 @@ public class FormatConstruct implements Construct {
 		String timezone = timezoneVar.getStringValue();
 
 		Date oldDate;
-		DateFormat dfOld = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		DateFormat dfOld = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.getDefault());
 		DateFormat dfNew;
 		try {
-			dfNew = new SimpleDateFormat(format);
+			if (formatVar == ExpressionBuilder.NULL) {
+				dfNew = dfOld;
+			} else {
+				dfNew = new SimpleDateFormat(format);
+			}
 		} catch (IllegalArgumentException e) {
-			throw new RobotRuntimeException("Illegal character in format.");
+			context.getLogger().warn("Illegal character in format");
+			return ExpressionBuilder.NULL;
 		}
 		if (timezoneVar != ExpressionBuilder.NULL) {
 			dfNew.setTimeZone(TimeZone.getTimeZone(timezone));
@@ -68,7 +77,7 @@ public class FormatConstruct implements Construct {
 		try {
 			oldDate = dfOld.parse(date);
 		} catch (ParseException e) {
-			throw new RobotRuntimeException("Parse error.");
+			throw new RobotRuntimeException("Invalid date.");
 		}
 
 		return ExpressionBuilder.fromValue(dfNew.format(oldDate));

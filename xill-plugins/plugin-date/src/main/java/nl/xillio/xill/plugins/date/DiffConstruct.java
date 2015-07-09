@@ -2,10 +2,10 @@ package nl.xillio.xill.plugins.date;
 
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -38,28 +38,38 @@ public class DiffConstruct implements Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(DiffConstruct::process, new Argument("date1"), new Argument("date2"),
-				new Argument("absolute", ExpressionBuilder.TRUE));
+		return new ConstructProcessor((dateVar1, dateVar2, absolute) -> process(context, dateVar1, dateVar2, absolute),
+				new Argument("date1"), new Argument("date2"), new Argument("absolute", ExpressionBuilder.TRUE));
 	}
 
-	private static MetaExpression process(final MetaExpression dateVar1, final MetaExpression dateVar2,
-			final MetaExpression absolute) {
+	private static MetaExpression process(final ConstructContext context, final MetaExpression dateVar1,
+			final MetaExpression dateVar2, final MetaExpression absolute) {
+
+		if (dateVar1 == ExpressionBuilder.NULL || dateVar2 == ExpressionBuilder.NULL) {
+			return ExpressionBuilder.NULL;
+		}
 
 		if (dateVar1.getType() != ExpressionDataType.ATOMIC) {
-			throw new RobotRuntimeException("Expected atomic value for first date.");
+			context.getRootLogger().warn(("Expected atomic value for first date."));
 		}
 		if (dateVar2.getType() != ExpressionDataType.ATOMIC) {
-			throw new RobotRuntimeException("Expected atomic value for second date.");
+			context.getRootLogger().warn(("Expected atomic value for second date."));
 		}
 
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT,
+				Locale.getDefault());
 		Date date1;
 		Date date2;
 		try {
 			date1 = dateFormat.parse(dateVar1.getStringValue());
+
+		} catch (ParseException e) {
+			throw new RobotRuntimeException("Invalid first date.");
+		}
+		try {
 			date2 = dateFormat.parse(dateVar2.getStringValue());
 		} catch (ParseException e) {
-			throw new RobotRuntimeException("Parse error.");
+			throw new RobotRuntimeException("Invalid second date.");
 		}
 
 		Calendar cal = Calendar.getInstance();
@@ -103,7 +113,6 @@ public class DiffConstruct implements Construct {
 		mapping.put("millisecond", ExpressionBuilder.fromValue(ms));
 		mapping.put("timestamp", ExpressionBuilder.fromValue(fulldiff));
 
-		
 		return ExpressionBuilder.fromValue(mapping);
 
 	}
