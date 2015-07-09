@@ -76,8 +76,7 @@ public class HungarianAlgorithmConstruct implements Construct {
 			for (int j = 0; j < columns; j++) {
 				array[i][j] = getMatrixValue(matrix, i, j);
 				if (Double.isNaN(array[i][j])) {
-					//Throw an error through the table
-					return ExpressionBuilder.NULL;
+					throw new RobotRuntimeException("MatrixformatException");
 				}
 			}
 		}
