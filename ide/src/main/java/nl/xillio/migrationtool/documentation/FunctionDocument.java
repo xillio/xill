@@ -5,7 +5,9 @@ import static org.rendersnake.HtmlAttributesFactory.href;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.rendersnake.HtmlCanvas;
 
@@ -35,9 +37,9 @@ public class FunctionDocument {
     private String functionName = "", description, version, packet = "testRealm";
     private final List<Pair<String, String>> parameters = new ArrayList<>();
     private final List<Pair<String, String>> examples = new ArrayList<>();
-    private final List<Pair<String, String>>  links = new ArrayList<>();
-    private final List<FunctionDocument> descriptiveLinks = new ArrayList<>();
-    private final List<String> searchTags = new ArrayList<>();
+    private final Set<Pair<String, String>>  links = new HashSet<>();
+    private final Set<FunctionDocument> descriptiveLinks = new HashSet<>();
+    private final Set<String> searchTags = new HashSet<>();
     private final List<String> applications = new ArrayList<>();
 
     /**
@@ -392,8 +394,6 @@ public class FunctionDocument {
 	return null;
 
     }
-    
-    
     
     /**
      * @param canvas
