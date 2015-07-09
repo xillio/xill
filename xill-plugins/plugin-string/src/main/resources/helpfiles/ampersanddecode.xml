@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="ampersanddecode">
+  <name>ampersanddecode</name>
+  <parameters>
+    <param name="text,">
+      <type>&lt;void,string&gt;</type>
+    </param>
+    <param name="passes ">
+      <type>number</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Decodes all ampersand-encoded characters in the provided string. Mainly used to decode XML characters to their original characters. Optionally you can provide the number of passes the decoder should run.]]></description>
+  <examples>
+    <example description="Executing:"><![CDATA[ampersanddecode("Jack &amp; Jill");
+]]></example>
+    <example description="Returns:"><![CDATA["Jack & Jill"
+]]></example>
+    <example description="Executing:"><![CDATA[ampersanddecode("Money &lt;&amp;gt; Health", 2);
+]]></example>
+    <example description="Returns:"><![CDATA["Money <> Health"
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag package = "String">ampersandencode</tag>
+    <tag package = "packages">String</tag>
+  </tags>
+</function>

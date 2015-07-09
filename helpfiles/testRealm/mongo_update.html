@@ -1,0 +1,15 @@
+<head><title>mongo_update</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>mongo_update</h1></div><div class="Section"><p><strong>mongo_update</strong>(string  collection,, &lt;string,list,void&gt;  query,, list  update,, boolean  upsert ,, boolean  multi ,, database  mongo )</p></div><div class="Section"><h2>Description</h2><p>Update objects from collection based on the provided query, with the values contained in update. If query is a string it will only update the document with that id, otherwise it will update the documents that match the query. If upsert is true then the document will be created if it doesn&rsquo;t exist. If multi is true then all documents matching the query will be updated, else only the first. By default upsert and multi are false. If mongo is not provided the last active connection will be used.Note: Use the &ldquo;$set&rdquo; notation to change individual fields in documents (see examples). Simply passing an array will replace the entire document.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Change the age of the employee with last name &ldquo;Wilson&rdquo; to 31.</p><div class="highlight"><pre>mongo_connect(&quot;localDB&quot;);
+query = {
+    lastName = &quot;Wilson&quot;
+};
+</pre></div></li><li><p class="First">//Note that because &quot;$set&quot; starts with a dollar sign it needs to be wrapped in quotes, while &quot;age&quot; does not.</p><div class="highlight"><pre>update = {
+    &quot;$set&quot; = { age = 31 }
+};
+</pre></div></li><li><p class="First">mongo_update(&quot;employees&quot;, query, update);</p><div class="highlight"><pre></pre></div></li><li><p class="First">Change the employee type to senior for all employees that have worked longer than 5 years.</p><div class="highlight"><pre>mongo_connect(&quot;localDB&quot;);
+senior = {
+    workYears = { &quot;$gt&quot; = 5 }
+};
+</pre></div></li><li><p class="First">update = {</p><div class="highlight"><pre>    &quot;$set&quot; = { type = &quot;senior&quot; }
+};
+</pre></div></li><li><p class="First">//Here we set multi to true, so all employees will bet updated.</p><div class="highlight"><pre>mongo_update(&quot;employees&quot;, senior, update, false, true);
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../null/ mongo_store.html">../null/ mongo_store.html</a></p></li><li><p><a href="../null/MongoDB.html">../null/MongoDB.html</a></p></li></ul></div></body>

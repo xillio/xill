@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function Tag="FunctionDocumentationFormat">
+  <name>FunctionDocumentationFormat</name>
+  
+  <parameters>
+    <param name="thisIsAName">
+		<type>xml</type>
+		<type>void</type>
+	</param>
+    <param name ="thisIsAnotherName">
+		<type>string</type>
+	</param>
+  </parameters>
+  
+  <description>
+  Copies the provided subnode to node parentnode, optionally at position beforenode. Returns the newly created node. This is very different from the function
+  </description>
+  
+  <examples>
+    <example description="One might notice this:"><![CDATA[     
+        <note> 
+		That this is an example of the exaples, exampleCeption!
+        <note>
+	]]>
+	</example>
+	<example description = "This is the description of the example">
+	And the example follows here
+	</example>
+  </examples>
+  
+  <applications>
+  One application of applications is having applicationscommentary
+  </applications>
+  
+  <seealso>
+	<item name="movenode"/>
+  </seealso>
+  
+  <tags>
+	<tag>_tag_xmlhtml</tag>
+  </tags>
+  
+  <searchTags>
+	<searchTag>
+	How_wonderful_it_would_be_to_have_this
+	</searchTag>
+  </searchTags>
+</function>

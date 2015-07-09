@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="startswith">
+  <name>startswith</name>
+  <parameters>
+    <param name="value1,">
+      <type>&lt;string,void&gt;</type>
+    </param>
+    <param name="value2">
+      <type>&lt;string,void&gt;</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Returns true if the string value1 starts with the (sub)string value2.]]></description>
+  <examples>
+    <example description="The following calls to startswith all return true:"><![CDATA[testvalue = startswith("testing", "test");
+testvalue = startswith("Welcome to our site!", "Welcome to");
+]]></example>
+    <example description="While the following would return false:"><![CDATA[testvalue = startswith("testing", "ing");
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag> endswith, contains</tag>
+    <tag>Text</tag>
+  </tags>
+</function>

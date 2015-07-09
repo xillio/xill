@@ -1,0 +1,14 @@
+<head><title>mongo_delete</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>mongo_delete</h1></div><div class="Section"><p><strong>mongo_delete</strong>(string  collection,, &lt;string,list,void&gt;  query ,, string  mongo )</p></div><div class="Section"><h2>Description</h2><p>Delete objects from collection using query. If query is a string, it will delete the document with that id, otherwise it will delete all objects that match the query. See below for required syntax of a mongo query. If mongo is not provided the last active connection will be used.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Deleting the document with id &ldquo;John_Doe_1&rdquo; from the &ldquo;employees&rdquo; collection:</p><div class="highlight"><pre>mongo_connect(&quot;localDB&quot;);
+result = mongo_delete(&quot;employees&quot;, &quot;John_Doe_1&quot;);
+log(result);
+</pre></div></li><li><p class="First">Will print:</p><div class="highlight"><pre>{
+    &quot;rows&quot;: 1
+}
+</pre></div></li><li><p class="First">Deleting all objects from the &ldquo;employees&rdquo; collection where &ldquo;age&rdquo; &lt; 18.</p><div class="highlight"><pre>mongo_connect(&quot;localDB&quot;);
+//Note that because &quot;$lt&quot; starts with a dollar sign it needs to be wrapped in quotes, while &quot;age&quot; does not.
+underage = { age = { &quot;$lt&quot; = 18 } };
+result = mongo_delete(&quot;employees&quot;, underage);
+</pre></div></li><li><p class="First">Will print:</p><div class="highlight"><pre>{
+    &quot;rows&quot;: 27
+}
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../null/ mongo_drop.html">../null/ mongo_drop.html</a></p></li><li><p><a href="../null/MongoDB.html">../null/MongoDB.html</a></p></li></ul></div></body>

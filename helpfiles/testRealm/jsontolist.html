@@ -1,0 +1,37 @@
+<head><title>jsontolist</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>jsontolist</h1></div><div class="Section"><p><strong>jsontolist</strong>(&lt;void,string&gt;  content)</p></div><div class="Section"><h2>Description</h2><p>Parses the JSON string content and returns a list variable.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Assuming we have a file C:/tmp/menu.json which contains the following:</p><div class="highlight"><pre>{&quot;menu&quot;: {
+  &quot;id&quot;: &quot;file&quot;,
+  &quot;value&quot;: &quot;File&quot;,
+  &quot;popup&quot;: {
+    &quot;menuitem&quot;: [
+      {&quot;value&quot;: &quot;New&quot;, &quot;onclick&quot;: &quot;CreateNewDoc()&quot;},
+      {&quot;value&quot;: &quot;Open&quot;, &quot;onclick&quot;: &quot;OpenDoc()&quot;},
+      {&quot;value&quot;: &quot;Close&quot;, &quot;onclick&quot;: &quot;CloseDoc()&quot;}
+    ]
+  }
+}}
+</pre></div></li><li><p class="First">then executing this code:</p><div class="highlight"><pre>jsonstring = loaddata (&quot;C:/tmp/menu.json&quot;);
+</pre></div></li><li><p class="First">menulist = jsontolist (jsonstring);</p><div class="highlight"><pre></pre></div></li><li><p class="First">log (menulist);</p><div class="highlight"><pre></pre></div></li><li><p class="First">will print:</p><div class="highlight"><pre>{
+  &quot;menu&quot;: {
+    &quot;id&quot;: &quot;file&quot;,
+    &quot;popup&quot;: {
+      &quot;menuitem&quot;: [
+        {
+          &quot;onclick&quot;: &quot;CreateNewDoc()&quot;,
+          &quot;value&quot;: &quot;New&quot;
+        },
+        {
+          &quot;onclick&quot;: &quot;OpenDoc()&quot;,
+          &quot;value&quot;: &quot;Open&quot;
+        },
+        {
+          &quot;onclick&quot;: &quot;CloseDoc()&quot;,
+          &quot;value&quot;: &quot;Close&quot;
+        }
+      ]
+    },
+    &quot;value&quot;: &quot;File&quot;
+  }
+}
+</pre></div></li><li><p class="First">Note that you can access subfields like in any other list:</p><div class="highlight"><pre>log (menulist.menu.id);
+</pre></div></li><li><p class="First">will print:</p><div class="highlight"><pre>file
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../null/ listtojson.html">../null/ listtojson.html</a></p></li><li><p><a href="../null/Text, List, Conversion.html">../null/Text, List, Conversion.html</a></p></li></ul></div></body>

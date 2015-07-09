@@ -1,0 +1,15 @@
+<head><title>matches</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>matches</h1></div><div class="Section"><p><strong>matches</strong>(&lt;string,void&gt;  value,, string  regex,, number  timeout )</p></div><div class="Section"><h2>Description</h2><p>Returns true if the string value matches pattern specified by regex.Optionally a timeout can be provided in seconds, the default value is 5 seconds. This should only be altered when dealing with large source documents. The timeout is there to protect the system from hanging on invalid expressions.See the Regular Expressions page for more about Regular Expression support in Xillio Content Tools.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">The following all return true:</p><div class="highlight"><pre>matches (&quot;I need help!&quot;, &quot;.*help.*&quot;);
+matches (&quot;&lt;p&gt;paragraph text&lt;/p&gt;&quot;, &quot;&lt;p\b[^&gt;]*&gt;(.*?)&lt;/p&gt;&quot;);
+matches (&quot;No&quot;, &quot;(?i)no|n&quot;);
+</pre></div></li><li><p class="First">The following all return false:</p><div class="highlight"><pre>matches (&quot;I need help!&quot;, &quot;help.*&quot;);
+matches (&quot;&lt;p&gt;paragraph text&lt;/p&gt; more text&quot;, &quot;&lt;p\b[^&gt;]*&gt;(.*?)&lt;/p&gt;&quot;);
+matches (&quot;No&quot;, &quot;no|n&quot;);
+</pre></div></li><li><p class="First">Roughly determining the type of url based on file extension:</p><div class="highlight"><pre>testUrl = &quot;http://www.xillio.com/test.png&quot;;
+if (!matches(testUrl, &quot;.*\\.(pdf|doc|docx|ppt|pptx|xls|xlsx|mp3|mp4|wmv|flv|flash|ogg|zip|png|bmp|jpg|jpeg|gif|tif|tiff|txt)&quot;)) {
+    // Page
+    log(&quot;Found page with url: &quot; + testUrl);
+} else {
+    // Binary
+    log(&quot;Found binary file with url: &quot; + testUrl);
+}
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../null/Text, Regular Expressions.html">../null/Text, Regular Expressions.html</a></p></li></ul></div></body>

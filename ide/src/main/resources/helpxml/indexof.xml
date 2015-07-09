@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="indexof">
+  <name>indexof</name>
+  <parameters>
+    <param name="text,">
+      <type>string</type>
+    </param>
+    <param name="needle,">
+      <type>string</type>
+    </param>
+    <param name="startpos ">
+      <type>number</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Returns the first index of needle in text. Returns -1 if not found. Optionally an alternative start position can be provided.]]></description>
+  <examples>
+    <example description="Executing:"><![CDATA[log(indexof("abcdefgabcdefg", "a"));
+        log(indexof("abcdefgabcdefg", "a", 2));
+]]></example>
+    <example description="will print:"><![CDATA[0
+7
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>Text</tag>
+  </tags>
+</function>

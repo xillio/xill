@@ -1,0 +1,16 @@
+<head><title>pageinfo</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>pageinfo</h1></div><div class="Section"><p><strong>pageinfo</strong>(&lt;node,download,xml&gt;  page)</p></div><div class="Section"><h2>Description</h2><p>Returns a list variable with specific info on the page object page such as: cookies, encoding, load time, title, status code, etc.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Executing the following code:</p><div class="highlight"><pre>webclient({&quot;enablecss&quot;=false, &quot;enablejs&quot;=false});
+homeurl = &quot;http://www.xillio.com/&quot;;
+page = loadpage (homeurl);
+log (pageinfo(page));
+</pre></div></li><li><p class="First">will print:</p><div class="highlight"><pre>{
+    url = &quot;http://www.xillio.com/&quot;,
+    title = &quot;Xillio&quot;,
+    encoding = &quot;UTF-8&quot;,
+    contenttype = &quot;text/html&quot;,
+    loadtime = 275,
+    requesturl = &quot;http://www.xillio.com/&quot;,
+    statuscode = 200,
+    statusmessage = &quot;OK&quot;,
+    cookies = {}
+}
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../null/Browser.html">../null/Browser.html</a></p></li></ul></div></body>

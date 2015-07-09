@@ -1,0 +1,59 @@
+<head><title>xmltolist</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>xmltolist</h1></div><div class="Section"><p><strong>xmltolist</strong>(&lt;void,xml,node&gt;  xml)</p></div><div class="Section"><h2>Description</h2><p>Converts the XML or page node xml to a list.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Executing the following:</p><div class="highlight"><pre>xml = stringtoxml(&quot;&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;UTF-8\&quot; standalone=\&quot;yes\&quot;?&gt;
+        &lt;root response=\&quot;True\&quot;&gt;
+                &lt;!-- first comment --&gt;
+                &lt;Movie Title=\&quot;The Hobbit\&quot; Year=\&quot;2012\&quot;/&gt;
+                &lt;Movie Title=\&quot;The Hobbit 2\&quot; Year=\&quot;2013\&quot;/&gt;
+                &lt;!-- second comment --&gt;
+                &lt;a&gt;
+                        &lt;b&gt;value b1&lt;c&gt;value c1&lt;d&gt;value&lt;/d&gt;value c2&lt;/c&gt;value b2&lt;/b&gt;
+                &lt;/a&gt;
+                &lt;blah attri=\&quot;hihi\&quot;&gt;value ? text&lt;/blah&gt;
+                &lt;cdatatag attri=\&quot;hihi\&quot;&gt;&lt;![CDATA[this is cdata,  &lt; and &gt; and &amp; .]]&gt;&lt;/cdatatag&gt;
+                &lt;!-- third comment --&gt;
+                &lt;tag&gt; hehehe &lt;/tag&gt;
+                &lt;cdatatags attri=\&quot;hihi\&quot;&gt;&lt;![CDATA[this is cdata,  &lt; and &gt; and &amp; .]]]]&gt;bn&lt;![CDATA[&gt;]]&gt;&lt;/cdatatags&gt;
+        &lt;/root&gt;&quot;);
+log(xmltolist(xml));
+</pre></div></li><li><p class="First">will print:</p><div class="highlight"><pre>{
+    root = {
+        &quot;@response&quot; = &quot;True&quot;,
+        &quot;#001!&quot; = &quot; first comment &quot;,
+        &quot;#001Movie&quot; = {
+            &quot;@Title&quot; = &quot;The Hobbit&quot;,
+            &quot;@Year&quot; = &quot;2012&quot;
+        },
+        &quot;#002Movie&quot; = {
+            &quot;@Title&quot; = &quot;The Hobbit 2&quot;,
+            &quot;@Year&quot; = &quot;2013&quot;
+        },
+        &quot;#002!&quot; = &quot; second comment &quot;,
+        a = {
+            b = {
+                &quot;value b1&quot;,
+                c = {
+                    &quot;value c1&quot;,
+                    d = &quot;value&quot;,
+                    &quot;value c2&quot;
+                },
+                &quot;value b2&quot;
+            }
+        },
+        blah = {
+            &quot;@attri&quot; = &quot;hihi&quot;,
+            &quot;value ? text&quot;
+        },
+        cdatatag = {
+            &quot;@attri&quot; = &quot;hihi&quot;,
+            &quot;#001!CDATA&quot; = &quot;this is cdata,  &lt; and &gt; and &amp; .&quot;
+        },
+        &quot;#003!&quot; = &quot; third comment &quot;,
+        tag = &quot; hehehe &quot;,
+        cdatatags = {
+            &quot;@attri&quot; = &quot;hihi&quot;,
+            &quot;#001!CDATA&quot; = &quot;this is cdata,  &lt; and &gt; and &amp; .]]&quot;,
+            &quot;bn&quot;,
+            &quot;#002!CDATA&quot; = &quot;&gt;&quot;
+        }
+    }
+}
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../null/ listtoxml.html">../null/ listtoxml.html</a></p></li><li><p><a href="../null/XML / HTML, List, Conversion.html">../null/XML / HTML, List, Conversion.html</a></p></li></ul></div></body>

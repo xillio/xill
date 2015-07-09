@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="formatxml">
+  <name>formatxml</name>
+  <parameters>
+    <param name="xml">
+      <type>&lt;void,xml,string&gt;</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Prettifies the formatting and indentation of the xml variable or string.]]></description>
+  <examples>
+    <example description="Suppose you have a string xml containing the following badly formatted XML:"><![CDATA[<note><to>Tove</to><from>Jani</from><heading>Reminder</heading><body>Don't forget me this weekend!</body></note>
+]]></example>
+    <example description="or"><![CDATA[<note>
+<to>Tove</to>
+    <from>Jani</from>
+            <heading>Reminder</heading>
+    <comment>Comments are welcome.</comment>
+               <body>Don't forget me this weekend!</body>
+</note>
+]]></example>
+    <example description="Then in either case formatxml(xml) would return:"><![CDATA[<note>
+    <to>Tove</to>
+    <from>Jani</from>
+    <heading>Reminder</heading>
+    <body>Don't forget me this weekend!</body>
+</note>
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>XML / HTML, Text</tag>
+  </tags>
+</function>

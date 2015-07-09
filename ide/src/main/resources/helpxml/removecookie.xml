@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="removecookie">
+  <name>removecookie</name>
+  <parameters>
+    <param name="cookie">
+      <type>&lt;void,string,list,boolean&gt;</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Removes the browser cookie with the name cookie. cookie can be a string or a list. If cookie is a boolean with value true, then all cookies will be cleared. Current cookie information can be obtained through pageinfo(). Cookies can be set using setcookie().Due to the nature of Content Tools, all cookies will be removed with every restart.]]></description>
+  <examples>
+    <example description="Remove all cookies, set a cookie for the current page and remove it again:"><![CDATA[webclient({"enablecss"=false, "enablejs"=false});
+homeurl = "http://www.xillio.com/";
+page = loadpage (homeurl);
+removecookie(true);
+cookie = {name="Xillio", path="/", domain="www.xillio.com", value="123", expires="2013-10-18T09:42:15"};
+setcookie(cookie);
+log (pageinfo (page));
+removecookie("Xillio");
+log (pageinfo (page));
+]]></example>
+    <example description="This will print something like:"><![CDATA[09:45:23 INFO : {
+  "contenttype": "text/html",
+  "cookies": {
+    "Xillio": {
+      "domain": "www.xillio.com",
+      "expires": "2013-10-18T09:42:15",
+      "name": "Xillio",
+      "path": "/",
+      "value": "123"
+    }
+  },
+  "encoding": "UTF-8",
+  "loadtime": 975,
+  "requesturl": "http://www.xillio.com/",
+  "statuscode": 200,
+  "statusmessage": "OK",
+  "title": "Home",
+  "url": "http://www.xillio.com/"
+}
+09:45:23 INFO : {
+  "contenttype": "text/html",
+  "cookies": [],
+  "encoding": "UTF-8",
+  "loadtime": 975,
+  "requesturl": "http://www.xillio.com/",
+  "statuscode": 200,
+  "statusmessage": "OK",
+  "title": "Home",
+  "url": "http://www.xillio.com/"
+}
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag> setcookie</tag>
+    <tag>Browser</tag>
+  </tags>
+</function>

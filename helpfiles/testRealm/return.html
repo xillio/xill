@@ -1,0 +1,20 @@
+<head><title>return</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>return</h1></div><div class="Section"><p><strong>return</strong>(any  value )</p></div><div class="Section"><h2>Description</h2><p>Returns the value and breaks out of the current routine. value is optional, executing return() just exits the routine. Also used to return a value at the end of a bot if the bot is called via callbot().</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Returning values from routines:</p><div class="highlight"><pre>getlanguagemeta = routine (page) {
+    return (xpath(page, &quot;/html/@lang&quot;));
+}
+</pre></div></li><li><p class="First">geturl = routine (url) {</p><div class="highlight"><pre>    // gets the url from a loadpage errormessage (assumes it is at the end of the message)
+    result = regex (url, &quot;.*(https?://.*$)|.*(www\\..*$)&quot;);
+    if (variabletype (result) == &quot;list&quot;) {
+        return (result [1]);
+    }
+    return (null);
+}
+</pre></div></li><li><p class="First">Returning value from a bot:</p><div class="highlight"><pre>settings = {
+    &quot;baseurl&quot; = &quot;http://www.xillio.com&quot;,
+    &quot;gxtest_url&quot; = &quot;https://www.xillio.com/xilliogximporter&quot;,
+};
+</pre></div></li><li><p class="First">return(settings);</p><div class="highlight"><pre></pre></div></li><li><p class="First">Returning without parameter (to stop execution of the routine early):</p><div class="highlight"><pre>storebinary = routine(url, title, storeaspage) {
+    if((url == &quot;#&quot;) || (url == &quot;&quot;) || (url == null) || startswith (url, &quot;file:&quot;)) {
+        return();
+    }
+</pre></div></li><li><p class="First">    //... do other things ... //</p><div class="highlight"><pre></pre></div></li><li><p class="First">    return (url);</p><div class="highlight"><pre>}
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../null/Language.html">../null/Language.html</a></p></li></ul></div></body>
