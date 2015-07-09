@@ -3,7 +3,6 @@ package nl.xillio.migrationtool;
 
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -275,8 +274,9 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 	
 	/**
 	 * Loads all the xml files into the database. 
-	 * This is to be moved elsewhere since every plugin will just load in its own XML files.
+	 * This is used for testing purposes
 	 */
+	@SuppressWarnings("unused")
 	private void loadcontent()
 	{
 		DocumentSearcher searcher = new DocumentSearcher(ESConsoleClient.getInstance().getClient());
