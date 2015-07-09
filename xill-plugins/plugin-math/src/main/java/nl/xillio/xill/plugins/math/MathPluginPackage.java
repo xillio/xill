@@ -10,8 +10,7 @@ public class MathPluginPackage extends PluginPackage{
 	@Override
 	public void load(PluginPackage[] dependencies) {
 		add(new LifeConstuct(),
-		    new CopyConstruct(),
-		    new AbsConstruct(),
+			new AbsConstruct(),
 		    new HungarianAlgorithmConstruct(),
 		    new RandomConstruct(),
 		    new RoundConstruct());

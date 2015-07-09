@@ -2,7 +2,6 @@ package nl.xillio.xill.plugins.math;
 
 import java.util.List;
 
-import nl.xillio.xill.api.components.AtomicExpression;
 import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
@@ -25,7 +24,7 @@ public class RandomConstruct implements Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(ConstructContext context) {
-		return new ConstructProcessor(RandomConstruct::process, new Argument("value"));
+		return new ConstructProcessor(RandomConstruct::process, new Argument("value", ExpressionBuilder.fromValue(0)));
 	}
 	
 	private static MetaExpression process(final MetaExpression value)
@@ -45,14 +44,16 @@ public class RandomConstruct implements Construct {
 		}
 		else if (value.getType() == ExpressionDataType.ATOMIC)
 		{
-			int intValue = (int) ((AtomicExpression) value.getValue()).getNumberValue();
+			int intValue = value.getNumberValue().intValue();
 			
-			if(intValue < 0)
+			if(intValue <= 0)
 				return ExpressionBuilder.fromValue(Math.random());
+			
 			else
-				return ExpressionBuilder.fromValue((int) Math.random() * intValue);
+				return ExpressionBuilder.fromValue((int) (Math.random() * intValue));
 		}
-		return ExpressionBuilder.fromValue(Math.random());
+		else
+			return ExpressionBuilder.fromValue("You suck");
 	}
 
 }
