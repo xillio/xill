@@ -45,6 +45,17 @@ allprojects {
 				}
 		}
 	}
+	
+	test{
+		useTestNG{
+				useDefaultListeners = true
+		};
+	}
+	
+	dependencies {
+			testCompile 'org.testng:testng:6.9.4'
+			testCompile "org.mockito:mockito-core:1.+"
+	}
 }
 
 description = 'this root project contains the overview of the contenttools application'
