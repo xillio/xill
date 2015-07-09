@@ -90,7 +90,7 @@ public class XMLparser {
 	}
 
 	@Override
-	public void endElement(final String uri, final String localName, final String qName) throws SAXException {
+	public void endElement(final String uri, final String localName, final String qName) {
 	    if (qName.equals("name")) {
 		function.setName(xmlText.toString().trim());
 	    }
