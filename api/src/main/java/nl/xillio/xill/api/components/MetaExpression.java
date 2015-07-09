@@ -24,7 +24,8 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 public abstract class MetaExpression implements Expression, Processable {
     private static final Gson gson = new GsonBuilder().enableComplexMapKeySerialization().serializeNulls()
 	    // .setPrettyPrinting()
-	    .disableHtmlEscaping().disableInnerClassSerialization().serializeSpecialFloatingPointValues().serializeNulls().create();
+	    .disableHtmlEscaping().disableInnerClassSerialization().serializeSpecialFloatingPointValues()
+	    .serializeNulls().create();
     private final MetadataExpressionPool<Object> metadataPool = new MetadataExpressionPool<>();
     private Object value;
     private ExpressionDataType type = ExpressionDataType.ATOMIC;
@@ -56,11 +57,26 @@ public abstract class MetaExpression implements Expression, Processable {
      * @throws IllegalStateException
      *             if this expression has been closed
      */
+    @SuppressWarnings("unchecked")
     public <T> T storeMeta(final T object) {
+	return storeMeta((Class<T>) object.getClass(), object);
+    }
+
+    /**
+     * Store a value in the {@link MetadataExpressionPool}
+     *
+     * @param clazz
+     * @param object
+     * @return The previous stored value in the pool or null if no value was
+     *         stored.
+     * @throws IllegalStateException
+     *             if this expression has been closed
+     */
+    public <T> T storeMeta(final Class<T> clazz, final T object) {
 	if (isClosed()) {
 	    throw new IllegalStateException("This expression has already been closed.");
 	}
-	return metadataPool.put(object);
+	return metadataPool.put(clazz, object);
     }
 
     /**
@@ -185,7 +201,7 @@ public abstract class MetaExpression implements Expression, Processable {
      * parser <br/>
      * <b>NOTE: </b> This is not the string value of this expression. It is
      * JSON. For the string value use {@link MetaExpression#getStringValue()}
-     * 
+     *
      * @return JSON representation
      */
     @Override
@@ -369,7 +385,8 @@ public abstract class MetaExpression implements Expression, Processable {
 	case OBJECT:
 	    Map<String, Object> resultObject = new LinkedHashMap<>();
 	    results.put(expression, resultObject);
-	    for(Entry<String, MetaExpression> pair : ((Map<String, MetaExpression>)expression.getValue()).entrySet()) {
+	    for (Entry<String, MetaExpression> pair : ((Map<String, MetaExpression>) expression.getValue())
+		    .entrySet()) {
 		resultObject.put(pair.getKey(), extractValue(pair.getValue(), results));
 	    }
 	    result = resultObject;
