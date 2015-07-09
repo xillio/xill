@@ -48,8 +48,13 @@ public class PluginListener {
 					
 					//Write an html file
 					if(plugin.getName() != null && docu.getName() != null){
+						//We write the HTML file
 						FileUtils.write(new File("./helpfiles/" + plugin.getName() + "/" + docu.getName() + ".html"), docu.toHTML());
+						//We add the plugin name (packagename) to the searchtags
+						docu.addSearchTag(plugin.getName());
+						//We add the document to the plugin (package)
 						functions.add(docu);
+						//We index the document
 						searcher.index(docu);
 					}
 					else

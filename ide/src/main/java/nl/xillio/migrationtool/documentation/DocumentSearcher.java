@@ -41,6 +41,12 @@ public class DocumentSearcher {
     }
 
     /**
+     * We search the database given a query. <BR>
+     * The query (a string) is split on whitespace and each word is queried in the following fasion:<BR><BR>
+     * foreach( word in query): <BR>
+     * We fuzzyQuery the name, description, examples and searchTags <BR>
+     * We wildcardQuery (substring match) name and searchtags <BR>
+     * We boost the name and the searchtag category <BR>
      * @param query
      *            The search query
      * @param client
@@ -58,7 +64,8 @@ public class DocumentSearcher {
 			    		.should(QueryBuilders.wildcardQuery("name", "*" + q + "*").boost(3.0f))
 			    		.should(QueryBuilders.fuzzyQuery("description", q))
 			    		.should(QueryBuilders.fuzzyQuery("examples", q))
-			    		.should(QueryBuilders.fuzzyQuery("searchTags", q));
+			    		.should(QueryBuilders.fuzzyQuery("searchTags", q).boost(3.0f))
+			    		.should(QueryBuilders.wildcardQuery("searchTags", "*" + q + "*").boost(3.0f));
 	}
 
 	// Retrieve a response
@@ -127,7 +134,7 @@ public class DocumentSearcher {
 				.field("name", document.getName())
 				.field("description", document.getDescription())
 				.field("parameters", parameterstrings)
-				.field("searchtags", document.getSearchTags())
+				.field("searchTags", document.getSearchTags())
 				.field("version", document.getVersion())
 			.endObject())
 		
