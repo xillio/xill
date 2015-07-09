@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javafx.util.Pair;
 import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
@@ -76,8 +74,7 @@ public class HungarianAlgorithmConstruct implements Construct {
 			for (int j = 0; j < columns; j++) {
 				array[i][j] = getMatrixValue(matrix, i, j);
 				if (Double.isNaN(array[i][j])) {
-					//Throw an error through the table
-					return ExpressionBuilder.NULL;
+					throw new RobotRuntimeException("MatrixformatException");
 				}
 			}
 		}

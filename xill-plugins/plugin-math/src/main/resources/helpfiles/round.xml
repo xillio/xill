@@ -8,13 +8,18 @@
   </parameters>
   <description><![CDATA[Rounds the provided value to the neares whole number.]]></description>
   <examples>
-    <example description="Perform round on three different inputs:"><![CDATA[log(round(6));
-log(round(3.14));
-log(round(-3.78));
-]]></example>
-    <example description="This will print 6, 3 and -4."><![CDATA[]]></example>
+    <example description="Perform round on three different inputs:"><![CDATA[
+    System.print(Math.round(6))
+    System.print(Math.round(3.14))
+    System.print(Math.round(-3.78))
+	]]>
+	</example>
+    <example description="This will print:">
+    6
+    3
+    -4
+    </example>
   </examples>
   <Applications />
-  <tags>
-  </tags>
+  <tags />
 </function>

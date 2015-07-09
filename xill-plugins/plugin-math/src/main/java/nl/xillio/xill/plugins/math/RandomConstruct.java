@@ -9,6 +9,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
  * The construct of the Random function which is capable of generating random numbervalues or getting a random index.
@@ -53,7 +54,7 @@ public class RandomConstruct implements Construct {
 				return ExpressionBuilder.fromValue((int) (Math.random() * intValue));
 		}
 		else
-			return ExpressionBuilder.fromValue("You suck");
+			throw new RobotRuntimeException("Incorrect type entered");
 	}
 
 }
