@@ -59,10 +59,11 @@ public class DocumentSearcher {
 	String[] queries = query.split(" ");
 	for (String q : queries) {
 	    question = question
-			    		.should(QueryBuilders.functionScoreQuery(QueryBuilders.fuzzyQuery("name", q).fuzziness(Fuzziness.TWO) , ScoreFunctionBuilders.weightFactorFunction(5.0f)))
-			    		.should(QueryBuilders.functionScoreQuery(QueryBuilders.fuzzyQuery("description", q).fuzziness(Fuzziness.TWO), ScoreFunctionBuilders.weightFactorFunction(2.0f)))
-			    		.should(QueryBuilders.functionScoreQuery(QueryBuilders.fuzzyQuery("examples", q).fuzziness(Fuzziness.TWO), ScoreFunctionBuilders.weightFactorFunction(1.0f)))
-			    		.should(QueryBuilders.functionScoreQuery(QueryBuilders.fuzzyQuery("searchTags", q).fuzziness(Fuzziness.TWO), ScoreFunctionBuilders.weightFactorFunction(5.0f)));
+			    		.should(QueryBuilders.fuzzyQuery("name", q).fuzziness(Fuzziness.TWO).boost(3.0f))
+			    		.should(QueryBuilders.wildcardQuery("name", "*" + q + "*").boost(3.0f))
+			    		.should(QueryBuilders.fuzzyQuery("description", q))
+			    		.should(QueryBuilders.fuzzyQuery("examples", q))
+			    		.should(QueryBuilders.fuzzyQuery("searchTags", q));
 	}
 
 	// Retrieve a response
