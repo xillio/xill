@@ -311,9 +311,12 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 				searcher.index(docu);
 				FileUtils.write(new File("./helpfiles/" + docu.getPackage() + "/" + docu.getName() + ".html"), docu.toHTML());
 
-			} catch (ElasticsearchException | IOException | SAXException e1) {
+			} catch (ElasticsearchException  e1) {
 				System.out.println(f);
 				e1.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}

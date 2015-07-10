@@ -3,9 +3,7 @@
   <name>abs</name>
   <parameters>
     <param name="value ">
-    <type>
-    number
-    </type>
+	0
     </param>
   </parameters>
   <description><![CDATA[Returns the absolute value of the provided value.]]></description>

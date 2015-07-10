@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.xml.sax.SAXException;
 import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient;
 import nl.xillio.plugins.PluginLoader;
 import nl.xillio.xill.api.PluginPackage;
@@ -43,15 +42,11 @@ public class PluginListener {
 				try {
 					//Parse the XML
 					FunctionDocument docu = parser.parseXML(documentedConstruct.openDocumentationStream(), plugin.getName(), plugin.getVersion());
-					//Add a link to the package
-					docu.addLink("packages", plugin.getName());
 					
 					//Write an html file
 					if(plugin.getName() != null && docu.getName() != null){
 						//We write the HTML file
 						FileUtils.write(new File("./helpfiles/" + plugin.getName() + "/" + docu.getName() + ".html"), docu.toHTML());
-						//We add the plugin name (packagename) to the searchtags
-						docu.addSearchTag(plugin.getName());
 						//We add the document to the plugin (package)
 						functions.add(docu);
 						//We index the document
@@ -59,8 +54,6 @@ public class PluginListener {
 					}
 					else
 						log.error("Please enter valid names for your package and functions");
-				} catch (SAXException e) {
-					e.printStackTrace();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -68,7 +61,7 @@ public class PluginListener {
 	    }
 		 try {
 			//Generate the html file for the package
-			FileUtils.write(new File("./helpfiles/packages/" + plugin.getName() + ".html"), this.packageDocumentation(plugin.getName(), functions).toPackageHTML());
+			FileUtils.write(new File("./helpfiles/packages/" + plugin.getName() + ".html"), this.packageDocumentation(plugin.getName(), functions).toHTML());
 		} catch (IOException e) {			
 			e.printStackTrace();
 		}
@@ -92,9 +85,9 @@ public class PluginListener {
      * @return
      * 			A functiondocument that represents the package
      */
-    private FunctionDocument packageDocumentation(String packageName, List<FunctionDocument> functions)
+    private HtmlGenerator packageDocumentation(String packageName, List<FunctionDocument> functions)
     {
-    	FunctionDocument docu = new FunctionDocument();
+    	PackageDocument docu = new PackageDocument();
     	docu.setName(packageName);
     	for(FunctionDocument func : functions)
     	{
