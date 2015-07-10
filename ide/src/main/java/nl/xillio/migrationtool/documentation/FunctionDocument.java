@@ -1,6 +1,7 @@
 package nl.xillio.migrationtool.documentation;
 
 import static org.rendersnake.HtmlAttributesFactory.href;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.rendersnake.HtmlCanvas;
+import org.rendersnake.tools.PrettyWriter;
 
 import javafx.util.Pair;
 
@@ -160,7 +162,7 @@ public class FunctionDocument extends HtmlGenerator {
      * @throws IOException
      */
     public String toHTML() throws IOException {
-	HtmlCanvas html = new HtmlCanvas();
+	HtmlCanvas html = new HtmlCanvas(new PrettyWriter());
 
 	// Add the header
 	html = addHeader(html);

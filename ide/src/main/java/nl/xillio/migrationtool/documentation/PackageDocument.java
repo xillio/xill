@@ -9,6 +9,7 @@ import java.util.Set;
 import javafx.util.Pair;
 
 import org.rendersnake.HtmlCanvas;
+import org.rendersnake.tools.PrettyWriter;
 
 /**
  * The class which represents the documentation of a package. <BR><BR>
@@ -23,7 +24,7 @@ public class PackageDocument extends HtmlGenerator {
 
 	@Override
 	public String toHTML() throws IOException {
-    	HtmlCanvas html = new HtmlCanvas();
+    	HtmlCanvas html = new HtmlCanvas(new PrettyWriter());
     	
     	html = addHeader(html);
     	html.body();
