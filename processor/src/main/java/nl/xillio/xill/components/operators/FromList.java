@@ -49,6 +49,8 @@ public class FromList implements Processable {
 					return InstructionFlow.doResume(ExpressionBuilder.NULL);
 				}
 				return InstructionFlow.doResume(result);
+			case ATOMIC:
+			    throw new RobotRuntimeException("Cannot get member of ATOMIC value.");
 			default:
 				throw new NotImplementedException("This type has not been implemented.");
 		}

@@ -79,6 +79,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 
 		trvProjects.setRoot(root);
 		trvProjects.getSelectionModel().selectedItemProperty().addListener(this);
+		trvProjects.setShowRoot(false);
 		root.setExpanded(true);
 
 		try {
@@ -383,7 +384,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 	protected class BotFileFilter extends FileFilter implements FilenameFilter {
 		@Override
 		public boolean accept(final File file) {
-			return file.isDirectory() || file.getName().endsWith("." + Xill.FILE_EXTENSION);
+			return (file.isDirectory() && !file.getName().startsWith(".")) || file.getName().endsWith("." + Xill.FILE_EXTENSION);
 		}
 
 		@Override
