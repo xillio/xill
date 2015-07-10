@@ -44,8 +44,10 @@ public class XMLparser {
 	 * @param version
 	 *        A {@link String} with the version name.
 	 * @return
+	 * @throws SAXException 
+	 * 					When no valid xml is provided.
 	 */
-	public FunctionDocument parseXML(final InputStream xml, final String packet, final String version)
+	public FunctionDocument parseXML(final InputStream xml, final String packet, final String version) throws SAXException
 	{
 		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder;
@@ -110,12 +112,12 @@ public class XMLparser {
 			func.setPackage(packet);
 			func.addSearchTag(packet);
 			return func;
-		} catch (ParserConfigurationException | SAXException | IOException e) {
+		} catch (ParserConfigurationException | IOException e) {
 			e.printStackTrace();
 		} catch (XPathExpressionException e) {
 			e.printStackTrace();
 		}
 
 		return null;
-	}
+		}
 }

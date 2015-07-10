@@ -1,5 +1,6 @@
 package nl.xillio.migrationtool;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -19,6 +20,7 @@ import nl.xillio.migrationtool.documentation.DocumentSearcher;
 import nl.xillio.migrationtool.documentation.FunctionDocument;
 import nl.xillio.xill.api.Xill;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.PropertyConfigurator;
 import org.elasticsearch.ElasticsearchException;
@@ -325,6 +327,14 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 	 */
 	private void setupDatabase()
 	{
+		try {
+			FileUtils.copyURLToFile(getClass().getResource("/help/basic.css"), new File("./helpfiles/_static/basic.css"));
+				FileUtils.copyURLToFile(getClass().getResource("/help/default.css"), new File("./helpfiles/_static/default.css"));
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		getClass().getResourceAsStream("/_static/default.css");
+		
 		FunctionDocument docu = new FunctionDocument();
 		DocumentSearcher searcher = new DocumentSearcher(ESConsoleClient.getInstance().getClient());
 		try {

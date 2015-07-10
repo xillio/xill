@@ -13,6 +13,7 @@ import nl.xillio.xill.api.construct.HelpComponent;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.xml.sax.SAXException;
 
 /**
  * A class which listens to plugins and tries to extract helpfiles.
@@ -56,10 +57,12 @@ public class PluginListener {
 							// We index the document
 							searcher.index(docu);
 						} else {
-							log.error("Please enter valid names for your package and functions");
+							log.error("Invalid name found for the package or a function in the package.");
 						}
 					} catch (IOException e) {
 						e.printStackTrace();
+					} catch (SAXException e) {
+						log.error("Invalid XML file found in the package", e);
 					}
 				}
 			}

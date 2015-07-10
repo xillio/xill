@@ -141,7 +141,7 @@ public abstract class HtmlGenerator {
 		String[] content = item.getValue().split("\n");
 		canvas = canvas.write(content[0]);
 		for (int t = 1; t < content.length; ++t) {
-			canvas = canvas.br().write(content[t]);
+			canvas = canvas.br().write(content[t].trim());
 		}
 		return canvas._pre()._div()._li();
 	}
