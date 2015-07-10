@@ -1,8 +1,6 @@
 package nl.xillio.migrationtool.documentation;
 
-import static org.rendersnake.HtmlAttributesFactory.class_;
 import static org.rendersnake.HtmlAttributesFactory.href;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -224,7 +222,13 @@ public class FunctionDocument extends HtmlGenerator {
 	return canvas.strong().write(functionName)._strong().write(str);
 	}
 	
-	public HtmlCanvas addPackageHeader(final HtmlCanvas canvas) throws IOException{
+	/**
+	 * @param canvas
+	 * 			The canvas we're adding the packageHeader to.
+	 * @return
+	 * @throws IOException
+	 */
+	private HtmlCanvas addPackageHeader(final HtmlCanvas canvas) throws IOException{
 		return canvas.a(href(generateLink(new Pair<String, String>("packages", this.packet)))).write(this.packet + ".")._a();
 	}
 	
@@ -235,6 +239,6 @@ public class FunctionDocument extends HtmlGenerator {
      * @throws IOException
      */
     protected HtmlCanvas addDescription(final HtmlCanvas canvas) throws IOException {
-	return canvas.div(class_("Section")).h2().write("Description")._h2().p().write(description)._p()._div();
+	return canvas.section().h2().write("Description")._h2().p().write(description)._p()._section();
     }
 }

@@ -26,9 +26,7 @@ public class PackageDocument extends HtmlGenerator {
     	HtmlCanvas html = new HtmlCanvas();
     	
     	html = addHeader(html);
-    	
     	html.body();
-    	
     	html = addTitle(html);
     	
     	html = openTable(html);

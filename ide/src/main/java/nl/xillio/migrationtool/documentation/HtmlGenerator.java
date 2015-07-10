@@ -52,7 +52,7 @@ public abstract class HtmlGenerator {
 	     * @throws IOException
 	     */
 	    protected HtmlCanvas addTitle(final HtmlCanvas canvas) throws IOException {
-		return canvas.div(class_("Section")).h1().write(functionName)._h1()._div();
+		return canvas.section().h1().write(functionName)._h1()._section();
 	    }
 
 	    /**
@@ -74,7 +74,17 @@ public abstract class HtmlGenerator {
 	     * @throws IOException
 	     */
 	    protected static HtmlCanvas openList(final HtmlCanvas canvas, final String listName) throws IOException {
-		return canvas.div(class_(listName)).h2().write(listName)._h2().ul();
+		return canvas.section().h2().write(listName)._h2().ul();
+	    }  
+	    
+	    /**
+	     * @param canvas
+	     *            The canvas we want to close the list for.
+	     * @return Returns the canvas with the list closed.
+	     * @throws IOException
+	     */
+	    protected static HtmlCanvas closeList(final HtmlCanvas canvas) throws IOException {
+		return canvas._ul()._section();
 	    }
 	    
 	    protected static HtmlCanvas openTable(final HtmlCanvas canvas) throws IOException {
@@ -84,16 +94,7 @@ public abstract class HtmlGenerator {
 	    protected static HtmlCanvas closeTable(final HtmlCanvas canvas) throws IOException {
 	    	return canvas._table();
 	    }
-
-	    /**
-	     * @param canvas
-	     *            The canvas we want to close the list for.
-	     * @return Returns the canvas with the list closed.
-	     * @throws IOException
-	     */
-	    protected static HtmlCanvas closeList(final HtmlCanvas canvas) throws IOException {
-		return canvas._ul()._div();
-	    }
+	  
 
 	    /**
 	     * @param canvas
@@ -107,7 +108,6 @@ public abstract class HtmlGenerator {
 		    throws IOException {
 		return canvas.li().p(class_("First")).write(item.getKey())._p().div(class_("highlight")).pre()
 			.write(item.getValue())._pre()._div()._li();
-
 	    }
 
 	    /**
