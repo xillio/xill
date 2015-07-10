@@ -42,35 +42,9 @@ public class Assign implements Processable {
 	this.expression = expression;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-	MetaExpression value = expression.process(debugger).get();
-
-	// First we check if there is a path
-	if (path.isEmpty()) {
-	    // Assign atomically
-	    variableDeclaration.replaceVariable(value);
-	} else {
-	    // No root level assignment so we register the reference manually
-	    value.registerReference();
-
-	    // Seems like we have a path
-	    switch (variableDeclaration.getVariable().getType()) {
-	    case LIST:
-		List<MetaExpression> listValue = (List<MetaExpression>) variableDeclaration.getVariable().getValue();
-		assign(listValue, 0, value, debugger);
-		break;
-	    case OBJECT:
-		Map<String, MetaExpression> mapValue = (Map<String, MetaExpression>) variableDeclaration.getVariable()
-			.getValue();
-		assign(mapValue, 0, value, debugger);
-		break;
-	    default:
-		throw new RobotRuntimeException("Cannot assign to atomic variable using a path.");
-
-	    }
-	}
+	processWithValue(debugger);
 
 	return InstructionFlow.doResume(ExpressionBuilder.NULL);
     }
@@ -121,7 +95,9 @@ public class Assign implements Processable {
 
 	if (path.size() - 1 == pathID) {
 	    MetaExpression previous = target.put(index, value);
-	    previous.releaseReference();
+	    if(previous != null) {
+		previous.releaseReference();
+	    }
 	    return;
 	}
 
@@ -148,6 +124,44 @@ public class Assign implements Processable {
 	children.add(expression);
 
 	return children;
+    }
+
+
+    /**
+     * Process this {@link Assign} and return the assigned value
+     * @param debugger
+     * @return The assigned value
+     */
+    @SuppressWarnings("unchecked")
+    public MetaExpression processWithValue(Debugger debugger) {
+	MetaExpression value = expression.process(debugger).get();
+
+	// First we check if there is a path
+	if (path.isEmpty()) {
+	    // Assign atomically
+	    variableDeclaration.replaceVariable(value);
+	} else {
+	    // No root level assignment so we register the reference manually
+	    value.registerReference();
+
+	    // Seems like we have a path
+	    switch (variableDeclaration.getVariable().getType()) {
+	    case LIST:
+		List<MetaExpression> listValue = (List<MetaExpression>) variableDeclaration.getVariable().getValue();
+		assign(listValue, 0, value, debugger);
+		break;
+	    case OBJECT:
+		Map<String, MetaExpression> mapValue = (Map<String, MetaExpression>) variableDeclaration.getVariable()
+			.getValue();
+		assign(mapValue, 0, value, debugger);
+		break;
+	    default:
+		throw new RobotRuntimeException("Cannot assign to atomic variable using a path.");
+
+	    }
+	}
+	
+	return value;
     }
 
 }
