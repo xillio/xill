@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="database">
+  <name>database</name>
+  <parameters>
+    <param name="host,">
+      <type>&lt;string,void&gt;</type>
+    </param>
+    <param name="port,">
+      <type>&lt;number,void&gt;</type>
+    </param>
+    <param name="database,">
+      <type>string</type>
+    </param>
+    <param name="user,">
+      <type>&lt;string,void&gt;</type>
+    </param>
+    <param name="pass,">
+      <type>&lt;string,void&gt;</type>
+    </param>
+    <param name="type ">
+      <type>&lt;string,void&gt;</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Sets up a database connection to the provided host and database at port port with the given username user and password pass. Returns a connectionstring which can be used to identify this connection for use in queries. type is an optional parameter declaring the type of database. This defaults to "mysql". Supported types are: mysql (and Maria DB), sqlite, mssql (and SQL Express), oraclesid or oracleservicename. MongoDB and Elastic Search are supported by separate commands.MySQL and Maria DBsettings = {    "db_host" = "localhost",    "db_port" = 3306,    "db_name" = "xilliodb",    "db_user" = "john",    "db_pass" = "youwouldlovetoknow"}database(settings.db_host, settings.db_port, settings.db_name, settings.db_user, settings.db_pass, "mysql");Returned MySQL connection string format is: jdbc:mysql://$HOST:$PORT/$DBNAME?user=$USER&password=$PASS&characterEncoding=utf8&allowMultiQueries=trueSQLiteTo work with SQLite a local path must be specified in the database parameter. If the file doesn’t exist then it will be created as a new database, otherwise a connection will be made.settings = {    "db_host" = "",    "db_port" = 0,    "db_name" = "C:/projects/sampleDB.sqlite",    "db_user" = "",    "db_pass" = ""}database(settings.db_host, settings.db_port, settings.db_name, settings.db_user, settings.db_pass, "sqlite");Returned SQLite connection string format is: jdbc:sqlite:$DBNAMEMS SQL Server and SQL ExpressWhen working with SQL Server/Express verify the port used for the TCP connection as this can be dynamic. This can be checked in the Server Configuration Manager > SQL Server Network Configuration > Protocols for SQLEXPRESS > TCP/IP.settings = {    db_host = "localhost",    db_port = 1433,    db_name = "xilliodb",    db_user = "sa",    db_pass = "sa_password"};database(settings.db_host, settings.db_port, settings.db_name, settings.db_user, settings.db_pass,"mssql");Returned SQL Server connection string format is: jdbc:sqlserver://$HOST:$PORT;databaseName=$DBNAME;user=$USER;password=$PASSOracle service nameBelow is a snippet for connecting to an Oracle instance, using the newer service name method, as used by Alfresco for example.settings = {    "db_host" = "rac-136-scan.corp.com",    "db_port" = 1521,    "db_name" = "ODIT101.world",    "db_user" = "alfres_r",    "db_pass" = "mhhkvwefghgiulipu"};database(settings.db_host, settings.db_port, settings.db_name, settings.db_user, settings.db_pass, "oracleservicename");Returned Oracle connection string format is: jdbc:oracle:thin:$USER/$PASS@//$HOST:$PORT/$DBNAMEOracle service idThe older Oracle service id (SID) based connection strings are supported.settings = {    "db_host" = "rac-136-scan.corp.com",    "db_port" = 1521,    "db_name" = "xilliodb",    "db_user" = "john",    "db_pass" = "youwouldlovetoknow"};database(settings.db_host, settings.db_port, settings.db_name, settings.db_user, settings.db_pass, "oraclesid");Returned Oracle connection string format is: jdbc:oracle:thin:$USER/$PASS@$HOST:$PORT:$DBNAMETagsDatabase]]></description>
+  <examples />
+  <Applications />
+  <tags>
+    <tag> mongo_connect, es_connect.</tag>
+  </tags>
+</function>

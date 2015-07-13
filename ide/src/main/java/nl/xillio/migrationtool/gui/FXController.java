@@ -35,6 +35,7 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import nl.xillio.migrationtool.Loader;
 import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient;
+import nl.xillio.migrationtool.documentation.PluginListener;
 import nl.xillio.plugins.CircularReferenceException;
 import nl.xillio.plugins.PluginLoader;
 import nl.xillio.sharedlibrary.license.License;
@@ -183,6 +184,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 		showReleaseNotes();
 	});
 
+	
 	// Subscribe to plugin events
 	pluginLoader.getPluginManager().onPluginAccepted().addListener(p -> {
 		log.info("Loaded Xill Package: " + p.getName());
@@ -190,6 +192,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 	pluginLoader.getPluginManager().onPluginDenied().addListener(p -> {
 		log.error("Failed to load Xill Package: " + p.getName());
 	});
+	PluginListener.Attach(pluginLoader);
 
 	// Initialize plugin loader
 	PLUGIN_FOLDER.mkdirs();

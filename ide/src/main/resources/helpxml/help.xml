@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="help">
+  <name>help</name>
+  <parameters>
+    <param name="topic">
+      <type>string</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Prints the helptext for the Xillio Content Tools language element (function or keyword) topic. If topic is null, help will print a complete list of available elements.]]></description>
+  <examples>
+    <example description="Returns a string of all language elements:"><![CDATA[help();
+]]></example>
+    <example description="Returns the help text for the xpath function:"><![CDATA[help("xpath");
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>Language</tag>
+  </tags>
+</function>

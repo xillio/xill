@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="pageinfo">
+  <name>pageinfo</name>
+  <parameters>
+    <param name="page">
+      <type>&lt;node,download,xml&gt;</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Returns a list variable with specific info on the page object page such as: cookies, encoding, load time, title, status code, etc.]]></description>
+  <examples>
+    <example description="Executing the following code:"><![CDATA[webclient({"enablecss"=false, "enablejs"=false});
+homeurl = "http://www.xillio.com/";
+page = loadpage (homeurl);
+log (pageinfo(page));
+]]></example>
+    <example description="will print:"><![CDATA[{
+    url = "http://www.xillio.com/",
+    title = "Xillio",
+    encoding = "UTF-8",
+    contenttype = "text/html",
+    loadtime = 275,
+    requesturl = "http://www.xillio.com/",
+    statuscode = 200,
+    statusmessage = "OK",
+    cookies = {}
+}
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>Browser</tag>
+  </tags>
+</function>

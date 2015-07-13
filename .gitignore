@@ -5,6 +5,7 @@ test-output/
 /ESConsole/
 /target/
 /plugins/
+/helpfiles
 
 # Gradle
 build/

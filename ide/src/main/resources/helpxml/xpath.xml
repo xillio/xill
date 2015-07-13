@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="xpath">
+  <name>xpath</name>
+  <parameters>
+    <param name="element,">
+      <type>&lt;void,node,xml&gt;</type>
+    </param>
+    <param name="xpath,">
+      <type>string</type>
+    </param>
+    <param name="namespaces ">
+      <type>list</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Returns a string, element or a list of XML/HTML-elements from the specified XML/HTML-element as indicated by the string xpath. This function has full XPath 2.0 support.For more information about the XPath syntax and available xpath functions look here: http://www.w3schools.com/xpath/AttentionWhen working on subnodes, you typically need to start your xpath with a dot, which tells the system to use the current node rather than the root.If you refer to elements with a namespace, then you must pass those namespaces in the namespaces parameter. This also counts for the default namespace if the default namespace in your document is explicitly defined. In this last case you must pass this namespace to the xpath function and use the namespace abbreviation in your xpath expression (see the last example below.).Detailsmeaning/div/aall a-tags in all /div tags//aevery a-tag./@hrefthe href attribute of the current tag./text()the text held by the current tag//div[contains(@class, 'label')]all div elements with a class containing ‘label’//div[starts-with(@id, 'ref')]all divs where the id attribute starts with ‘ref’//hr[@class='edge' and position()=1]every first hr of ‘edge’ class//table[count(tr)=1 and count(tr/td)=2]all tables with 1 row and 2 cols//div/form/parent::*all parents of a form under any div//table[parent::div[@class='pad'] and not(@id)]//aany anchor in a table without id, contained in a div of ‘pad’ class/html/body/div/*[preceding-sibling::h4]any tag after h4//tr/td[font[@class='head' and text()='TRACK']]all td’s that have font class set to ‘head’ class and text ‘TRACK’./table/tr[last()]the last row of a table//rdf:Seq/rdf:li/em:idusing namespaces//a/@hrefhrefs of all anchors//*[count(*)=3]all nodes with 3 children//var|//acronymall vars and acronyms]]></description>
+  <examples>
+    <example description="Getting keywords as a string from the meta tags:"><![CDATA[keywords = xpath(page, "//meta[@name='keywords']/@content");
+]]></example>
+    <example description="Getting the URL’s of all images in a page:"><![CDATA[webclient({"enablecss"=false, "enablejs"=false});
+page = loadpage ("http://www.xillio.com");
+links = xpath(page, "//div[@id='" + settings.content_div_id + "']//img");
+foreach(_, link, links) {
+    url = xpath(link, "./@src");
+    if (variabletype (title) == "list") {
+        url = url[0];
+    }
+    // ... //
+}
+]]></example>
+    <example description="Getting nodes with namespaces:"><![CDATA[Suppose the following code:
+]]></example>
+    <example description="xml1 = &quot;&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;utf-8\&quot; standalone=\&quot;no\&quot;?&gt;"><![CDATA[<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">
+  <soap:Body>
+        <GetColumnsResponse xmlns=\"http://schemas.microsoft.com/sharepoint/soap/\">
+          <GetColumnsResult>
+                <Fields>
+                  <Field name=\"Field1\"/>
+                  <Field name=\"Field2\"/>
+                  <Field name=\"Field3\"/>
+                </Fields>
+          </GetColumnsResult>
+        </GetColumnsResponse>
+  </soap:Body>
+</soap:Envelope>";
+]]></example>
+    <example description="xml1 = stringtoxml(xml1);"><![CDATA[fields1 = xpath(xml1, "//myns:Fields/myns:Field", {myns="http://schemas.microsoft.com/sharepoint/soap/"});
+log(fields1);
+]]></example>
+    <example description="In this case, on GetColumnsResponse there is a default namespace defined. If this is the case, we must explicitly pass a namespace to the xpath function, and use that namespace in the xpath parameter, as shown in the above code sample."><![CDATA[All other namespaces that are used in an xpath expression must be passed in the namespaces parameter as well. E.g. if you also want to have /soap:Envelope/soap:Body in the selector, the xpath call would be like this:
+]]></example>
+    <example description="fields1 = xpath(xml1, &quot;/zeep:Envelope/zeep:Body/myns:Fields/myns:Field&quot;, {zeep=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;, myns=&quot;http://schemas.microsoft.com/sharepoint/soap/&quot;});"><![CDATA[]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>XML / HTML</tag>
+  </tags>
+</function>

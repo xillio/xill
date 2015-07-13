@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="include">
+  <name>include</name>
+  <parameters>
+    <param name="libraries">
+      <type>&lt;string,list&gt;</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Includes the listed library or libraries without executing any code. libraries is a string containing one file uri or a list containing several strings with file uri’s. After including a library the routines inside that library become part of the current robot.]]></description>
+  <examples>
+    <example description="Executing the following code:"><![CDATA[include ("testbots/routines.sbot");
+]]></example>
+    <example description="log (cleanurlsimple(&quot;www.xillio.com/#main?parameter=test&quot;, true, true));"><![CDATA[]]></example>
+    <example description="will print:"><![CDATA[www.xillio.com
+]]></example>
+    <example description="Assuming we have a text file routines.sbot, which contains the following:"><![CDATA[cleanurlsimple = routine(url, stripanchors, stripvars) {
+    if (stripanchors == true) {
+        url = replace(url, "#.*", ""); // strip anchors
+    }
+    if (stripvars == true) {
+        url = replace(url, "\?.*|\&.*|target=.*", ""); // strip appended variables
+    }
+    url = replace(url, "/$", ""); // strip trailing slash
+    url = urldecode(url);
+]]></example>
+    <example description="    return(url);"><![CDATA[}
+]]></example>
+    <example description="geturl = routine (url) {"><![CDATA[    // gets the url from a loadpage errormessage (assumes it is at the end of the message)
+    result = regex (url, ".*(https?://.*$)|.*(www\\..*$)");
+    if (variabletype (result) == "list") {
+        return (result [1]);
+    }
+    return (null);
+}
+]]></example>
+    <example description="We could also include the above code as two separate libraries, by splitting them into two separate files cleanurl.sbot and geturl.sbot:"><![CDATA[include ({"testbots/cleanurl.sbot", "testbots/geturl.sbot"});
+]]></example>
+    <example description="Note that the latter is probably the most modular and maintainable way of including routines, while the former seems more convenient."><![CDATA[]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag> callbot</tag>
+    <tag>Language</tag>
+  </tags>
+</function>

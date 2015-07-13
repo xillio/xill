@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="es_sort">
+  <name>es_sort</name>
+  <parameters>
+    <param name="field,">
+      <type>string</type>
+    </param>
+    <param name="ascending ">
+      <type>&lt;boolean,void&gt;</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Sort the documents by field. ascending will default to true, set false for descending order sort.]]></description>
+  <examples>
+    <example description="To sort all documents in “literature/poetry/” by the field “year”, descending."><![CDATA[es_connect();
+yearSort = es_sort("year", false);
+results = es_search("literature", "poetry", null, yearSort);
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag> es_search</tag>
+    <tag>Elasticsearch</tag>
+  </tags>
+</function>
