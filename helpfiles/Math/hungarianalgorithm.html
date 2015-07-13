@@ -1,1 +1,27 @@
-<head><title>hungarianalgorithm</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><section><h1>hungarianalgorithm</h1></section><a href="../packages/Math.html">Math.</a><strong>hungarianalgorithm</strong>( matrix,) max)<section><h2>Description</h2><p>Solves the optimal assignment problem using the Hungarian Algorithm on matrix, which is a two-dimensional list containing numbers. Returns the optimal combination of rows / columns and the optimal sum as an object. The optional argument max (defaults to true) defines wether maximum sum or minimum sum should be returned. Useful for calculating optimal costs or income based on a matrix.</p></section><section><h2>Examples</h2><ul><li><p class="First">Executing the following:</p><div class="highlight"><pre>matrix = {{0,1,3}, {2,2,3}, {5,4,1}};<br/>System.print(Math.hungarianalgorithm(matrix))</pre></div></li><li><p class="First">will print:</p><div class="highlight"><pre>{<br/>&quot;cells&quot;: [<br/>{<br/>&quot;col&quot;: 2,<br/>&quot;row&quot;: 0<br/>},<br/>{<br/>&quot;col&quot;: 1,<br/>&quot;row&quot;: 1<br/>},<br/>{<br/>&quot;col&quot;: 0,<br/>&quot;row&quot;: 2<br/>}<br/>],<br/>&quot;sum&quot;: 10.0<br/>}</pre></div></li><li><p class="First">Explanation:</p><div class="highlight"><pre>the algorithm treats the list as a matrix checks each column and calculates in which row the maximum value is found. <br/>Then it marks this row down and adds that number to the sum.<br/>However each row and each column may only be used once, so it will try all interesting combinations and return only the optimum.<br/>Thus in this case the maximum sum in this matrix is 10, using the number 3 in the first row, the number 2 in the second row and the number 5 in the last row.</pre></div></li></ul></section></body>
+<head><title>hungarianalgorithm</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>hungarianalgorithm</h1></div><p><strong>hungarianalgorithm</strong>(list  matrix,, boolean  max )</p><div class="Section"><h2>Description</h2><p>Solves the optimal assignment problem using the Hungarian Algorithm on matrix, which is a two-dimensional list containing numbers. Returns the optimal combination of rows / columns and the optimal sum as an object. The optional argument max (defaults to true) defines wether maximum sum or minimum sum should be returned. Useful for calculating optimal costs or income based on a matrix.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Executing the following:</p><div class="highlight"><pre>
+    matrix = {{0,1,3}, {2,2,3}, {5,4,1}};
+    System.print(Math.hungarianalgorithm(matrix))
+</pre></div></li><li><p class="First">will print:</p><div class="highlight"><pre>{
+  &quot;cells&quot;: [
+    {
+      &quot;col&quot;: 2,
+      &quot;row&quot;: 0
+    },
+    {
+      &quot;col&quot;: 1,
+      &quot;row&quot;: 1
+    },
+    {
+      &quot;col&quot;: 0,
+      &quot;row&quot;: 2
+    }
+  ],
+  &quot;sum&quot;: 10.0
+}
+</pre></div></li><li><p class="First">Explanation:</p><div class="highlight"><pre>
+     the algorithm treats the list as a matrix checks each column and calculates in which row the maximum value is found. 
+     Then it marks this row down and adds that number to the sum. 
+     However each row and each column may only be used once, so it will try all interesting combinations and return only the optimum. 
+     Thus in this case the maximum sum in this matrix is 10, using the number 3 in the first row, the number 2 in the second row and the number 5 in the last row.
+     
+     </pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../packages/Math.html">packages.Math</a></p></li></ul></div></body>

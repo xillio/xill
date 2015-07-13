@@ -10,7 +10,6 @@ import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
-import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.construct.HelpComponent;
@@ -39,97 +38,98 @@ public class HungarianAlgorithmConstruct implements HelpComponent {
 	
 	private static MetaExpression process(final MetaExpression matrixVar, final MetaExpression maxVar)
 	{
-		if(matrixVar == ExpressionBuilder.NULL)
-			return ExpressionBuilder.NULL;
-		
 		if(matrixVar.getType() == ExpressionDataType.LIST)
-			{
-			@SuppressWarnings("unchecked")
-			List<MetaExpression> matrix = (List<MetaExpression>) matrixVar.getValue();
-			
-			String method = "max";
-			if (maxVar.getBooleanValue() == false)
-				method = "min";
-			
-			//Prepare array
-			int rows = matrix.size();
-			if(rows < 1)
-				throw new RobotRuntimeException("Not enough data, Expected at least 1 row with data");
-			
-			MetaExpression var = matrix.get(0);
-			
-			if(var.getType() != ExpressionDataType.LIST){
-				return ExpressionBuilder.NULL;
-			}
-			
-			@SuppressWarnings("unchecked")
-			List<MetaExpression> varList = (List<MetaExpression>) var.getValue();
-			
-			int columns = varList.size();
-			
-			if(columns < 1){
-				throw new RobotRuntimeException("Not enough data, Expected at least 1 column with data");
-			}
-			
-			if(rows == 0 || columns == 0)
+		{
+			if(matrixVar == ExpressionBuilder.NULL)
 				return ExpressionBuilder.NULL;
 			
-			double[][] array = new double[rows][columns];
-			for (int i = 0; i < rows; i++) {
-				for (int j = 0; j < columns; j++) {
-					array[i][j] = getMatrixValue(matrix, i, j);
-					if (Double.isNaN(array[i][j])) {
-						throw new RobotRuntimeException("MatrixformatException");
-					}
+			
+				@SuppressWarnings("unchecked")
+				List<MetaExpression> matrix = (List<MetaExpression>) matrixVar.getValue();
+				
+				String method = "max";
+				if (maxVar.getBooleanValue() == false)
+					method = "min";
+				
+				//Prepare array
+				int rows = matrix.size();
+				if(rows < 1)
+					throw new RobotRuntimeException("Not enough data, Expected at least 1 row with data");
+				
+				MetaExpression var = matrix.get(0);
+				
+				if(var.getType() != ExpressionDataType.LIST){
+					return ExpressionBuilder.NULL;
 				}
-			}
-			
-			// Transpose if required
-			boolean transposed = false;
-			if (array.length > array[0].length) {
-				array = transpose(array);
-				transposed = true;
-			}
-			
-			// Perform the actual calculation
-					int[][] assignment = new int[array.length][2];
-	
-					assignment = hgAlgorithm(array, method);
-	
-					// Calculate the final score
-					double sum = 0;
-					for (int[] element : assignment) {
-						sum = sum + array[element[0]][element[1]];
-					}
-	
-					// Transpose results back if required
-					if (transposed) {
-						for (int i = 0; i < assignment.length; i++) {
-							int row = assignment[i][0];
-							int col = assignment[i][1];
-							assignment[i][0] = col;
-							assignment[i][1] = row;
+				
+				@SuppressWarnings("unchecked")
+				List<MetaExpression> varList = (List<MetaExpression>) var.getValue();
+				
+				int columns = varList.size();
+				
+				if(columns < 1){
+					throw new RobotRuntimeException("Not enough data, Expected at least 1 column with data");
+				}
+				
+				if(rows == 0 || columns == 0)
+					return ExpressionBuilder.NULL;
+				
+				double[][] array = new double[rows][columns];
+				for (int i = 0; i < rows; i++) {
+					for (int j = 0; j < columns; j++) {
+						array[i][j] = getMatrixValue(matrix, i, j);
+						if (Double.isNaN(array[i][j])) {
+							throw new RobotRuntimeException("MatrixformatException");
 						}
 					}
-	
-					// Prepare results
-					List<MetaExpression> result = new ArrayList<>();
-					Map<String, MetaExpression> sumMap = new HashMap<String, MetaExpression>();
-					sumMap.put("sum", ExpressionBuilder.fromValue(sum));
-					result.add(ExpressionBuilder.fromValue(sumMap));
-	
-					List<MetaExpression> cells = new ArrayList<>();
-					for (int i = 0; i < assignment.length; i++) {
-						Map<String, MetaExpression> item = new HashMap<String, MetaExpression>();
-						item.put("row", ExpressionBuilder.fromValue(assignment[i][0]));
-						item.put("col", ExpressionBuilder.fromValue(assignment[i][1]));
-						cells.add(ExpressionBuilder.fromValue(item));
-					}
-					Map<String, MetaExpression> cellsmap = new HashMap<String, MetaExpression>();
-					cellsmap.put("cells", ExpressionBuilder.fromValue(cells));
-					result.add(ExpressionBuilder.fromValue(cellsmap));
-	
-					return ExpressionBuilder.fromValue(result);
+				}
+				
+				// Transpose if required
+				boolean transposed = false;
+				if (array.length > array[0].length) {
+					array = transpose(array);
+					transposed = true;
+				}
+				
+				// Perform the actual calculation
+						int[][] assignment = new int[array.length][2];
+		
+						assignment = hgAlgorithm(array, method);
+		
+						// Calculate the final score
+						double sum = 0;
+						for (int[] element : assignment) {
+							sum = sum + array[element[0]][element[1]];
+						}
+		
+						// Transpose results back if required
+						if (transposed) {
+							for (int i = 0; i < assignment.length; i++) {
+								int row = assignment[i][0];
+								int col = assignment[i][1];
+								assignment[i][0] = col;
+								assignment[i][1] = row;
+							}
+						}
+		
+						// Prepare results
+						List<MetaExpression> result = new ArrayList<>();
+						Map<String, MetaExpression> sumMap = new HashMap<String, MetaExpression>();
+						sumMap.put("sum", ExpressionBuilder.fromValue(sum));
+						result.add(ExpressionBuilder.fromValue(sumMap));
+		
+						List<MetaExpression> cells = new ArrayList<>();
+						for (int i = 0; i < assignment.length; i++) {
+							Map<String, MetaExpression> item = new HashMap<String, MetaExpression>();
+							item.put("row", ExpressionBuilder.fromValue(assignment[i][0]));
+							item.put("col", ExpressionBuilder.fromValue(assignment[i][1]));
+							cells.add(ExpressionBuilder.fromValue(item));
+						}
+						Map<String, MetaExpression> cellsmap = new HashMap<String, MetaExpression>();
+						cellsmap.put("cells", ExpressionBuilder.fromValue(cells));
+						result.add(ExpressionBuilder.fromValue(cellsmap));
+		
+						return ExpressionBuilder.fromValue(result);
 			}
 		else
 			throw new RobotRuntimeException("No matrix given");
