@@ -1,5 +1,6 @@
 package nl.xillio.migrationtool.documentation;
 
+
 import static org.rendersnake.HtmlAttributesFactory.href;
 
 import java.io.IOException;
@@ -8,14 +9,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javafx.util.Pair;
-
 import org.rendersnake.HtmlCanvas;
+
+import javafx.util.Pair;
 
 /**
  * The FunctionDocument is the java implementation of our documentation. <BR>
  * <BR>
  *
+<<<<<<< HEAD
  * It contains a name which has to be unique.
  * It contains a list of parameters which are pairs of strings (the type and the name)
  * Note that in 3.0 we will probably not have types anymore. <BR>
@@ -53,6 +55,7 @@ public class FunctionDocument extends HtmlGenerator {
 	}
 
 	/**
+	 *The getter for the description.
 	 * @return Returns the description of the {@link FunctionDocument}
 	 */
 	public String getDescription() {
@@ -129,6 +132,17 @@ public class FunctionDocument extends HtmlGenerator {
 		examples.add(new Pair<>(description, content));
 	}
 
+    /**
+     * Generates a string which represents a link
+     * 
+     * @param link
+     *            The package and the function we're referring to.
+     * @return
+     */
+    protected String generateLink(final Pair<String, String> link) {
+	return "../" + link.getKey() + "/" + link.getValue() + ".html";
+    }
+
 	/**
 	 * @return Returns the examples of the {@link FunctionDocument}
 	 */
@@ -151,7 +165,6 @@ public class FunctionDocument extends HtmlGenerator {
 			links.add(new Pair<String, String>("NoPackageGiven", function.replace(" ", "")));
 		}
 	}
-
 	/**
 	 * Adds a searchTag to the list of searchTags in the {@link FunctionDocument}
 	 *

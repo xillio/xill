@@ -1,5 +1,6 @@
 package nl.xillio.migrationtool;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -239,10 +240,6 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 	public void start(final Stage primaryStage, final Xill xill) {
 		Loader.xill = xill;
 		Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-
-		// Sets up the database so we don't crash and burn
-		setupDatabase();
-
 		PropertyConfigurator.configure(this.getClass().getResourceAsStream("/log4j.properties"));
 		LogManager.getLogger(getClass()).info("Reloaded Log4J Configuration.");
 
