@@ -16,15 +16,9 @@ import javafx.scene.image.Image;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient;
-import nl.xillio.migrationtool.documentation.DocumentSearcher;
-import nl.xillio.migrationtool.documentation.FunctionDocument;
 import nl.xillio.xill.api.Xill;
-
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.PropertyConfigurator;
-import org.elasticsearch.ElasticsearchException;
 
 /**
  * Launcher class, is used to launch processors in their own threads, facilitates a simple Log, and provides commandline running.
@@ -314,34 +308,5 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 	 */
 	public static Xill getXill() {
 		return xill;
-	}
-
-	/**
-	 * Sets up the database so that no errors can arise.
-	 * 
-	 * @throws ElasticsearchException
-	 * @throws IOException
-	 */
-	private void setupDatabase()
-	{
-		try {
-			FileUtils.copyURLToFile(getClass().getResource("/help/basic.css"), new File("./helpfiles/_static/basic.css"));
-				FileUtils.copyURLToFile(getClass().getResource("/help/default.css"), new File("./helpfiles/_static/default.css"));
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		getClass().getResourceAsStream("/_static/default.css");
-		
-		FunctionDocument docu = new FunctionDocument();
-		DocumentSearcher searcher = new DocumentSearcher(ESConsoleClient.getInstance().getClient());
-		try {
-			searcher.index(docu);
-		} catch (ElasticsearchException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 }
