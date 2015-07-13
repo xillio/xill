@@ -1,0 +1,24 @@
+<head><title>replace</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>replace</h1></div><div class="Section"><p><strong>replace</strong>(&lt;string,void&gt;  text,, string  needle,, string  replacement,, boolean  useregex ,, **   boolean , **replaceall*,  number)</p></div><div class="Section"><h2>Description</h2><p>Returns a new string based on the string text in which occurrences of the string needle have been replaced by the string replacement. If the optional parameter replaceall is set to false, the routine will only replace the first occurrence of needle (defaults to true).Note that needle is by default interpreted as a regex pattern, so all special regex characters have to be escaped when used as a literal. Also in replacement you can use the capture groups from needle as &quot;$1&quot;, &quot;$2&quot;, etc. To use a literal &quot;$&quot; in replacement, you need to escape it like this: &quot;\$&quot;.Set useregex to false to have the function treat the needle and replacement as regular text.Optionally a timeout can be provided in seconds, the default value is 5 seconds and applies when omitted. Set timeout to zero to let the function run without timeout. This should only be altered when dealing with large source documents. The timeout is there to protect the system from hanging on invalid expressions.See the Regular Expressions page for more about Regular Expression support in Content Tools.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Executing:</p><div class="highlight"><pre>log(replace(&quot;The quick brown fox.&quot;, &quot;fox&quot;, &quot;dog&quot;));
+</pre></div></li><li><p class="First">will print:</p><div class="highlight"><pre>The quick brown dog.
+</pre></div></li><li><p class="First">Executing:</p><div class="highlight"><pre>log(replace(&quot;The quick brown fox. The quick brown fox.&quot;, &quot;fox&quot;, &quot;dog&quot;));
+</pre></div></li><li><p class="First">will print:</p><div class="highlight"><pre>The quick brown dog. The quick brown dog.
+</pre></div></li><li><p class="First">Executing:</p><div class="highlight"><pre>log(replace(&quot;The quick brown fox. The quick brown fox.&quot;, &quot;fox&quot;, &quot;dog&quot;, false));
+</pre></div></li><li><p class="First">will print:</p><div class="highlight"><pre>The quick brown dog. The quick brown fox.
+</pre></div></li><li><p class="First">Repair misspelled URL&rsquo;s (with one slash):</p><div class="highlight"><pre>url = &quot;http:/www.xillio.com/&quot;;
+url = replace(url, &quot;(^http:/)([^/].*)&quot;, &quot;http://$2&quot;);
+log (url);
+</pre></div></li><li><p class="First">will print:</p><div class="highlight"><pre>http://www.xillio.com/
+</pre></div></li><li><p class="First">Executing:</p><div class="highlight"><pre>log(cleanurlsimple(&quot;http://www.xillio.com/somepage#main?live=true&amp;format=1&quot;, true, true));
+cleanurlsimple = routine(url, stripanchors, stripvars) {
+    if (stripanchors == true) {
+        url = replace(url, &quot;#.*&quot;, &quot;&quot;); // strip anchors
+    }
+    if (stripvars == true) {
+        url = replace(url, &quot;\?.*|\&amp;.*|target=.*&quot;, &quot;&quot;); // strip appended variables
+    }
+    url = replace(url, &quot;/$&quot;, &quot;&quot;); // strip trailing slash
+    url = urldecode(url);
+    return(url);
+}
+</pre></div></li><li><p class="First">will print:</p><div class="highlight"><pre>http://www.xillio.com/somepage
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../null/Text, Regular Expressions.html">../null/Text, Regular Expressions.html</a></p></li></ul></div></body>

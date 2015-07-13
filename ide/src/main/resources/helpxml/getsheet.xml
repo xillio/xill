@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="getsheet">
+  <name>getsheet</name>
+  <parameters>
+    <param name="workbook,">
+      <type>workbook</type>
+    </param>
+    <param name="worksheet">
+      <type>&lt;string,number&gt;</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Retrieves the indicated worksheet from the workbook. The result also provides shorthand information about the worksheet in the form of row count and column count.]]></description>
+  <examples>
+    <example description="Fetch row and column count in a spreadsheet:"><![CDATA[workbook = openexcel("C:/projects/someproject/mapping/mapping.xls");
+sheet = getsheet(workbook, "Mapping");
+numberRows = sheet["rows"];
+numberColumns = sheet["columns"];
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>Excel</tag>
+  </tags>
+</function>

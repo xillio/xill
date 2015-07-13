@@ -1,0 +1,8 @@
+<head><title>es_termsagg</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>es_termsagg</h1></div><div class="Section"><p><strong>es_termsagg</strong>(string  name,, string  field,, &lt;string,void&gt;  parent )</p></div><div class="Section"><h2>Description</h2><p>Creates an aggregation name grouped by field as a child of aggregation parent. Returns a string identifier that can be used to identify this filter.Two sibling or same-level aggregations cannot have the same name. Children of this aggregation should be created with es_statsagg ().</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Create an aggregation &ldquo;sort_color&rdquo; and group by the color field:</p><div class="highlight"><pre>colors = es_termsagg(&quot;sort_color&quot;, &quot;color&quot;);
+</pre></div></li><li><p class="First">Create an aggregation &ldquo;authors&rdquo; that includes a field &ldquo;stats&rdquo; containing statistics for the &ldquo;price&rdquo; field grouped by &ldquo;author&rdquo;:</p><div class="highlight"><pre>es_connect();
+//create a new aggregation &quot;authors&quot; which groups by field &quot;author&quot;
+authors = es_termsagg(&quot;authors&quot;, &quot;author&quot;);
+//add the field &quot;stats&quot;, which shows the aggregated statistics for the field &quot;price&quot;
+es_statsagg(&quot;stats&quot;, &quot;price&quot;, authors);
+results = es_aggregate(&quot;art&quot;, null, authors);
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../null/ es_statsagg.html">../null/ es_statsagg.html</a></p></li><li><p><a href="../null/Elasticsearch.html">../null/Elasticsearch.html</a></p></li></ul></div></body>

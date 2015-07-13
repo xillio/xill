@@ -13,11 +13,16 @@ public class StringPluginPackage extends PluginPackage{
 		
 		add(
 			new AbsoluteURLConstruct(),
+			new AbsoluteURLHelpComponent(),
 			new AllMatchesConstruct(regex),
 			new AmpersandDecodeConstruct(),
+			new AmpersanddecodeHelpComponent(),
 			new AmpersandEncodeConstruct(),
+			new AmpersandEncodeHelpComponent(),
 			new Base64DecodeConstruct(),
+			new Base64DecodeHelpComponent(),
 			new Base64EncodeConstruct(),
+			new Base64EncodeHelpComponent(),
 			new ContainsConstruct(),
 			new EndsWithConstruct(),
 			new FormatConstruct(regex),
@@ -38,7 +43,6 @@ public class StringPluginPackage extends PluginPackage{
 			new WordDistanceConstruct(),
 			new WrapConstruct()
 			);
-			
 	}
 
 	@Override

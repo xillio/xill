@@ -1,0 +1,10 @@
+<head><title>es_search</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>es_search</h1></div><div class="Section"><p><strong>es_search</strong>(&lt;string,void&gt;  index ,, &lt;string,void&gt;  type ,, &lt;list,string&gt;  filter ,, &lt;list,string&gt;  sorting ,, string  client )</p></div><div class="Section"><h2>Description</h2><p>Searches cluster client, with optionally an index or type for documents that conform to all filters in filter. They will be sorted by the sortings in sorting.filter can be one or more elasticsearch filter(s) created using a filter function.sorting can be one or more elasticsearch sorting(s) created using a sort function.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">To get all documents in the index literature that contain the word &ldquo;gates&rdquo; in the &ldquo;content&rdquo; field, sorted by author:</p><div class="highlight"><pre>es_connect();
+gatesfilter = es_termfilter(&quot;content&quot;, &quot;gates&quot;);
+authorSort = es_sort(&quot;author&quot;);
+results = es_search(&quot;literature&quot;, null, gatesfilter, authorSort);
+</pre></div></li><li><p class="First">To get all documents in the index literature that contain the word &ldquo;gates&rdquo; and have a title field:</p><div class="highlight"><pre>es_connect();
+filters = {};
+filters.gatesfilter = es_termfilter(&quot;content&quot;, &quot;gates&quot;);
+filters.titlefilter = es_hasfieldfilter(&quot;title&quot;);
+results = es_search(&quot;literature&quot;, null, filters);
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../null/ es_hasfieldfilter, es_rangefilter, es_regexfilter, es_termfilter.html">../null/ es_hasfieldfilter, es_rangefilter, es_regexfilter, es_termfilter.html</a></p></li><li><p><a href="../null/Elasticsearch.html">../null/Elasticsearch.html</a></p></li></ul></div></body>

@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="runprogram">
+  <name>runprogram</name>
+  <parameters>
+    <param name="program,">
+      <type>string</type>
+    </param>
+    <param name="list&gt;">
+      <type>&lt;void,</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Executes the executable file at path program and passes arguments as command line arguments. Returns a list variable containing the standard output and error messages.]]></description>
+  <examples>
+    <example description="Returning your Java version across Mac, Linux and Windows:"><![CDATA[sysInfo = systeminfo();
+path = null;
+params = null;
+os = sysInfo["os.name"];
+]]></example>
+    <example description="if(contains(os, &quot;Linux&quot;) || contains(os, &quot;Mac&quot;)) {"><![CDATA[        path = sysInfo["java.home"] + "/bin/java";
+} else if(contains(os, "Windows")) {
+        path = sysInfo["java.home"] + "/bin/java.exe";
+} else {
+        log("Uknown operating system: " + os);
+        return();
+}
+]]></example>
+    <example description="params = {&quot;-version&quot;};"><![CDATA[]]></example>
+    <example description="// Run application"><![CDATA[if(fileexists(path)){
+        log("Running application with path: \"" + path + "\"");
+        if(params != null) {
+                log(listtocsv(runprogram(path,params)," "));
+        } else {
+                log(listtocsv(runprogram(path)," "));
+        }
+} else {
+        log("Unable to find application to run at path: " + path);
+}
+]]></example>
+    <example description="Using ImageMagick to read EXIF data from images:"><![CDATA[imagemagick_result = runprogram(settings.bin_path + "\ImageMagick\identify", {"-verbose", "\"" + img + "\""});
+]]></example>
+    <example description="dimensions = regex(imagemagick_result.standard, &quot;(?s).*?Geometry: (.*?)x(.*?)\+.*&quot;);"><![CDATA[filesize = regex(imagemagick_result.standard, "(?s).*?Filesize: (.*?)\n.*");
+authors = regex(imagemagick_result.standard, "(?s).*?exif:Artist: (.*?)\n.*");
+copyright = regex(imagemagick_result.standard, "(?s).*?exif:Copyright: (.*?)\n.*");
+]]></example>
+    <example description="Note that ImageMagick is external software, which you have to install separately."><![CDATA[]]></example>
+    <example description="Using tidy.exe to clean HTML (if the internal function tidy() is not enough):"><![CDATA[tidyhtml = routine(html)
+{
+    html = ampersanddecode(html);
+    file_in = settings.bin_path + "/temp_in.html";
+    file_out = settings.bin_path + "/temp_out.html";
+    savedata(file_in, html, false);
+]]></example>
+    <example description="    command = settings.bin_path + &quot;/tidy.exe&quot;;"><![CDATA[    args = {
+                        " --input-encoding utf8",
+                        " --output-encoding utf8",
+                        " --output-file " + file_out,
+                        " --bare yes",
+                        " --clean yes",
+                        " --drop-font-tags yes",
+                        " --drop-proprietary-attributes yes",
+                        " --enclose-block-text yes",
+                        " --logical-emphasis yes",
+                        " --word-2000 yes",
+                        " --wrap 0",
+                        " --output-xml yes",
+                        file_in
+                };
+    out = runprogram(command, args);
+    html = loaddata(file_out);
+]]></example>
+    <example description="    html_body = regex(html, &quot;[\s\S]*?&lt;body&gt;([\s\S]*)&lt;/body&gt;[\s\S]*&quot;);"><![CDATA[    return(html_body[1]);
+}
+]]></example>
+    <example description="Quotes used on the commandline are a windows-commandline-only functionality to ensure arguments with spaces are still treated as a single argument. Quotes as such must typically be omitted when using runprogram as shown in the example below:"><![CDATA[exiftool.exe -xmp:description="Opa en oma met kleinkind op bankje op Binnenhof" -xmp-dc:subject="bankje,binnenhof" -overwrite_original "d:/temp/image.jpg"
+]]></example>
+    <example description="Translates to:"><![CDATA[options = {
+        "-xmp:description=Opa en oma met kleinkind op bankje op Binnenhof",
+        "-xmp-dc:subject=bankje,binnenhof",
+        "-overwrite_original",
+        "d:/temp/image.jpg"
+};
+runprogram("exiftool.exe", options);
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>Other</tag>
+  </tags>
+</function>

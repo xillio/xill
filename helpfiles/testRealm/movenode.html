@@ -1,0 +1,21 @@
+<head><title>movenode</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>movenode</h1></div><div class="Section"><p><strong>movenode</strong>(&lt;xml,void&gt;  parentnode,, &lt;xml,void&gt;  subnode,, &lt;xml,void&gt;  beforenode )</p></div><div class="Section"><h2>Description</h2><p>Moves the XML-node subnode to the XML-node parent, optionally before beforenode.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Given an XML-file note.xml, which contains:</p><div class="highlight"><pre>&lt;note id=&quot;1&quot;&gt;
+    &lt;to&gt;Tove&lt;/to&gt;
+    &lt;from&gt;Jani&lt;/from&gt;
+    &lt;heading&gt;Reminder&lt;/heading&gt;
+    &lt;comment&gt;This was sent to James as well&lt;/comment&gt;
+    &lt;comment&gt;John has not responded to the invitation&lt;/comment&gt;
+    &lt;body&gt;Don't forget me this weekend!&lt;/body&gt;
+&lt;/note&gt;
+</pre></div></li><li><p class="First">then after executing the following code:</p><div class="highlight"><pre>xml = loadxml (&quot;C:/tmp/note.xml&quot;);
+parent = xpath(xml, &quot;//note&quot;); //get main node
+body = xpath(xml, &quot;//body&quot;); //get body
+heading = xpath(xml, &quot;//heading&quot;); //get heading
+movenode (body, heading);
+</pre></div></li><li><p class="First">parent contains:</p><div class="highlight"><pre>&lt;note id=&quot;1&quot;&gt;
+    &lt;to&gt;Tove&lt;/to&gt;
+    &lt;from&gt;Jani&lt;/from&gt;
+</pre></div></li><li><p class="First">    &lt;comment&gt;This was sent to James as well&lt;/comment&gt;</p><div class="highlight"><pre>    &lt;comment&gt;John has not responded to the invitation&lt;/comment&gt;
+    &lt;body&gt;Don't forget me this weekend!&lt;heading&gt;Reminder&lt;/heading&gt;
+   &lt;/body&gt;
+&lt;/note&gt;
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../null/ copynode, addsubnode.html">../null/ copynode, addsubnode.html</a></p></li><li><p><a href="../null/XML / HTML.html">../null/XML / HTML.html</a></p></li></ul></div></body>

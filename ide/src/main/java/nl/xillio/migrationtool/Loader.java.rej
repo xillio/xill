@@ -1,0 +1,11 @@
+diff a/ide/src/main/java/nl/xillio/migrationtool/Loader.java b/ide/src/main/java/nl/xillio/migrationtool/Loader.java	(rejected hunks)
+@@ -19,6 +19,9 @@
+ import javafx.scene.text.Font;
+ import javafx.stage.Screen;
+ import javafx.stage.Stage;
++import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient;
++import nl.xillio.migrationtool.documentation.DocumentSearcher;
++import nl.xillio.migrationtool.documentation.XMLparser;
+ import nl.xillio.xill.api.Xill;
+ 
+ /**

@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="wait">
+  <name>wait</name>
+  <parameters>
+    <param name="delay">
+      <type>number</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Pauses the execution of instructions for number of milliseconds specified by delay.]]></description>
+  <examples>
+    <example description="Simple demonstration of the wait function"><![CDATA[items = {1,2,3,4,5,6,7,8,9};
+foreach(i,item,items){
+        wait(1000);
+        log(i + "\t" + timestamp());
+}
+]]></example>
+    <example description="Wait half a second between downloading pages (to mitigate server load issues):"><![CDATA[foreach (_, page, pages) {
+   if (geterror (download (page.url, page.filename)) != null){
+       log ("Could not download include:" + includeurl + " - Check whether the path exists!");
+   }
+   wait (500);
+ }
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>Language</tag>
+  </tags>
+</function>

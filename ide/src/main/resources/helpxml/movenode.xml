@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="movenode">
+  <name>movenode</name>
+  <parameters>
+    <param name="parentnode,">
+      <type>&lt;xml,void&gt;</type>
+    </param>
+    <param name="subnode,">
+      <type>&lt;xml,void&gt;</type>
+    </param>
+    <param name="beforenode ">
+      <type>&lt;xml,void&gt;</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Moves the XML-node subnode to the XML-node parent, optionally before beforenode.]]></description>
+  <examples>
+    <example description="Given an XML-file note.xml, which contains:"><![CDATA[<note id="1">
+    <to>Tove</to>
+    <from>Jani</from>
+    <heading>Reminder</heading>
+    <comment>This was sent to James as well</comment>
+    <comment>John has not responded to the invitation</comment>
+    <body>Don't forget me this weekend!</body>
+</note>
+]]></example>
+    <example description="then after executing the following code:"><![CDATA[xml = loadxml ("C:/tmp/note.xml");
+parent = xpath(xml, "//note"); //get main node
+body = xpath(xml, "//body"); //get body
+heading = xpath(xml, "//heading"); //get heading
+movenode (body, heading);
+]]></example>
+    <example description="parent contains:"><![CDATA[<note id="1">
+    <to>Tove</to>
+    <from>Jani</from>
+]]></example>
+    <example description="    &lt;comment&gt;This was sent to James as well&lt;/comment&gt;"><![CDATA[    <comment>John has not responded to the invitation</comment>
+    <body>Don't forget me this weekend!<heading>Reminder</heading>
+   </body>
+</note>
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag> copynode, addsubnode</tag>
+    <tag>XML / HTML</tag>
+  </tags>
+</function>

@@ -1,0 +1,7 @@
+<head><title>base64decode</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>base64decode</h1></div><div class="Section"><p><strong>base64decode</strong>(&lt;void,string&gt;  content,, string  filename)</p></div><div class="Section"><h2>Description</h2><p>Base-64 decode the string content, and store it in the file filename. Commonly used to decode binary data transferred over a text channel (such as attachments in e-mails).</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">base64decode(&quot;PG5vdGU+DQo8dG8+VG92ZTwvdG8+DQo8ZnJvbT5KYW5pPC9mcm9tPg0KPGhlYWRpbmc+UmVtaW5kZXI8L2hlYWRpbmc+DQo8Ym9keT5Eb24ndCBmb3JnZXQgbWUgdGhpcyB3ZWVrZW5kITwvYm9keT4NCjwvbm90ZT4=&quot;, &quot;C:/tmp/test.txt&quot;));</p><div class="highlight"><pre></pre></div></li><li><p class="First">returns null and decodes the encoded string to the textfile test.txt, which will contain the following text:</p><div class="highlight"><pre>&lt;note&gt;
+&lt;to&gt;Tove&lt;/to&gt;
+&lt;from&gt;Jani&lt;/from&gt;
+&lt;heading&gt;Reminder&lt;/heading&gt;
+&lt;body&gt;Don't forget me this weekend!&lt;/body&gt;
+&lt;/note&gt;
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../null/ base64encode.html">../null/ base64encode.html</a></p></li><li><p><a href="../null/Encoding / Decoding, File.html">../null/Encoding / Decoding, File.html</a></p></li></ul></div></body>

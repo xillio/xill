@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="fileexists">
+  <name>fileexists</name>
+  <parameters>
+    <param name="uri">
+      <type>string</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Returns true if the file uri exists on the local computer.]]></description>
+  <examples>
+    <example description="Loads the file C:/tmp/download.png if it exists:"><![CDATA[downloadlocation = "C:/tmp/download.png";
+]]></example>
+    <example description="if (!fileexists (downloadlocation)) {"><![CDATA[    loaddata (downloadlocation);
+} else {
+    log ("file not found: " + downloadlocation);
+}
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>File</tag>
+  </tags>
+</function>

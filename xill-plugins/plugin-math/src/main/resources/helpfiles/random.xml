@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="random">
+  <name>random</name>
+  <parameters>
+    <param name="value ">
+      <type>&lt;void,number,list&gt;</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Returns a randomized value based on the optional parameter value. If an integer argument N is provided the return value is a random integer between 0 and N. If a list argument L is provided it is a random entry from the list. If no parameter is provided, a random floating point number between 0 and 1 will be generated.]]></description>
+  <examples>
+    <example description="Roll a 6-sided die three times and print the results:"><![CDATA[
+    System.print(Math.random (6)+1)
+    
+	Note: the + 1 is needed, because the result of random is 0 to 6, but not including 6.
+	]]>
+	</example>
+    <example description="Determine a random work day and print it:"><![CDATA[
+    list = {"monday", "tuesday", "wednesday", "thursday", "friday"};
+	System.print(Math.random((list))
+	]]>
+	</example>
+    <example description="Usage without parameter:"><![CDATA[
+    log (random ());
+	]]>
+	</example>
+    <example description="prints a number like:"><![CDATA[
+    0.11632623660157837
+	]]>
+	</example>
+  </examples>
+  <Applications />
+  <tags />
+  
+  <searchTags>
+	<searchTag>
+	seed
+	</searchTag>
+  </searchTags>
+</function>

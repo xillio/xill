@@ -1,0 +1,27 @@
+<head><title>stringtopage</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>stringtopage</h1></div><div class="Section"><p><strong>stringtopage</strong>(string  content,, string  charset )</p></div><div class="Section"><h2>Description</h2><p>Returns a new page object based on the string content. The optional parameter charset defines the character set used in content, this defaults to UTF-8.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Assuming we have an html file choose_day.html which contains the following:</p><div class="highlight"><pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE html
+PUBLIC &quot;-//W3C//DTD XHTML 1.0 Strict//EN&quot;
+&quot;DTD/xhtml1-strict.dtd&quot;&gt;
+&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xml:lang=&quot;en&quot; lang=&quot;en&quot;&gt;
+    &lt;head&gt;
+        &lt;title&gt; Strict DTD XHTML Example &lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;p&gt;Please Choose a Day:
+            &lt;br /&gt;
+            &lt;br /&gt;
+            &lt;select name=&quot;day&quot;&gt;
+                &lt;option selected=&quot;selected&quot;&gt;Monday&lt;/option&gt;
+                &lt;option&gt;Tuesday&lt;/option&gt;
+                &lt;option&gt;Wednesday&lt;/option&gt;
+            &lt;/select&gt;
+        &lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre></div></li><li><p class="First">Then executing the following code:</p><div class="highlight"><pre>htmlstring = loaddata (&quot;C:/tmp/choose_day.html&quot;);
+</pre></div></li><li><p class="First">page = stringtopage (htmlstring);</p><div class="highlight"><pre></pre></div></li><li><p class="First">options = xpath(page, &quot;//option/text()&quot;);</p><div class="highlight"><pre></pre></div></li><li><p class="First">foreach (_, option, options) {</p><div class="highlight"><pre>    log (option);
+}
+</pre></div></li><li><p class="First">will print:</p><div class="highlight"><pre>Monday
+Tuesday
+Wednesday
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../null/Browser, XML / HTML, Conversion.html">../null/Browser, XML / HTML, Conversion.html</a></p></li></ul></div></body>

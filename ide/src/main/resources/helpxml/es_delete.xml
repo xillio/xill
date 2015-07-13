@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="es_delete">
+  <name>es_delete</name>
+  <parameters>
+    <param name="index,">
+      <type>string</type>
+    </param>
+    <param name="type ,">
+      <type>&lt;string,void&gt;</type>
+    </param>
+    <param name="id ,">
+      <type>&lt;string,void&gt;</type>
+    </param>
+    <param name="client ">
+      <type>string</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Deletes documents from a specified index. The type and id parameters are optional. If id is not specified, the type will be deleted. Likewise, if type is not specified, the index will be deleted.]]></description>
+  <examples>
+    <example description="Removing the type “paintings” from the “art” index:"><![CDATA[es_connect();
+es_delete("art", "paintings");
+]]></example>
+    <example description="Removing the painting with id “monalisa”"><![CDATA[es_connect();
+es_delete("art", "paintings", "monalisa");
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>Elasticsearch</tag>
+  </tags>
+</function>

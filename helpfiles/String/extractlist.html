@@ -1,0 +1,11 @@
+<head><title>extractlist</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>extractlist</h1></div><div class="Section"><p><strong>extractlist</strong>(&lt;list,string,void&gt;  text,, &lt;string,void&gt;  regex)</p></div><div class="Section"><h2>Description</h2><p>Returns a list with all substrings matching regex.See the Regular Expressions page for more about Regular Expression support in Xillio Content Tools.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">The following code:</p><div class="highlight"><pre>s = &quot;abc def ghi jkl. Mno&quot;;
+l = extractlist(s, &quot;\\w+&quot;);
+log(l);
+</pre></div></li><li><p class="First">Prints:</p><div class="highlight"><pre>{
+    &quot;abc&quot;,
+    &quot;def&quot;,
+    &quot;ghi&quot;,
+    &quot;jkl&quot;,
+    &quot;Mno&quot;
+}
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../null/Text.html">../null/Text.html</a></p></li><li><p><a href="../null/List.html">../null/List.html</a></p></li><li><p><a href="../null/Regular_Expressions.html">../null/Regular_Expressions.html</a></p></li></ul></div></body>

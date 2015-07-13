@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="length">
+  <name>length</name>
+  <parameters>
+    <param name="value">
+      <type>&lt;any&gt;</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Returns the length of value, which can be of any type. Supported: string, list and file list iterator, anything else will return 0.]]></description>
+  <examples>
+    <example description="Executing the following:"><![CDATA[shortstring = "Welcome";
+emptystring = "";
+]]></example>
+    <example description="log (length (shortstring));"><![CDATA[log (length (emptystring));
+]]></example>
+    <example description="shortlist = {column = 4, row = 5};"><![CDATA[emptylist = {};
+]]></example>
+    <example description="log (length (shortlist));"><![CDATA[log (length (emptylist));
+]]></example>
+    <example description="will print:"><![CDATA[7
+0
+2
+0
+]]></example>
+    <example description="Possible uses with file list iterator variables:"><![CDATA[log("Number of files: " + length(listfiles("c:/xillio")));
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>String, List</tag>
+  </tags>
+</function>

@@ -1,0 +1,31 @@
+<head><title>tidy</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>tidy</h1></div><div class="Section"><p><strong>tidy</strong>(&lt;string,node&gt;  content,, list  options )</p></div><div class="Section"><h2>Description</h2><p>Cleans the HTML code in string content. Returns output and an error log. The optional parameter options is a list with one or more options stored as strings.DetailsThe following options are available:optiondefault valuecleantruecleanbackslashurlstruecleanfixcommentstruecleanmicrosofttruecleanword2000falseinputencodingUTF-8inputxmlfalseoutputencodingUTF-8outputindenttrueoutputrawtrueoutputxhtmltrueoutputxmlfalsewraplength0</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Given the HTML-file untidy.html:</p><div class="highlight"><pre>&lt;html&gt;
+    &lt;body&gt;
+        &lt;p&gt;here is a para &lt;b&gt;bold &lt;i&gt;bold italic&lt;/b&gt; bold?&lt;/i&gt; normal?
+        &lt;li&gt;1st list item
+        &lt;li&gt;2nd list item
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre></div></li><li><p class="First">Executing the following code for getting the cleaned body content:</p><div class="highlight"><pre>page = loadpage(&quot;file://c:/tmp/untidy.html&quot;);
+content = regex(tidy(page), &quot;[\s\S]*?&lt;body&gt;([\s\S]*)&lt;/body&gt;[\s\S]*&quot;);
+log(content[1]);
+</pre></div></li><li><p class="First">will print:</p><div class="highlight"><pre>&lt;p&gt;here is a para &lt;b&gt;bold &lt;i&gt;bold italic&lt;/i&gt;&lt;/b&gt; &lt;i&gt;bold?&lt;/i&gt; normal?&lt;/p&gt;
+</pre></div></li><li><p class="First">&lt;ul class=&quot;noindent&quot;&gt;</p><div class="highlight"><pre>  &lt;li&gt;1st list item&lt;/li&gt;
+</pre></div></li><li><p class="First">  &lt;li&gt;2nd list item&lt;/li&gt;</p><div class="highlight"><pre>&lt;/ul&gt;
+</pre></div></li><li><p class="First">Using options:</p><div class="highlight"><pre>page = loadpage(&quot;file://c:/tmp/untidy.html&quot;);
+content = tidy(page, {outputindent = false, outputraw = false});
+log(content);
+</pre></div></li><li><p class="First">will print:</p><div class="highlight"><pre>&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Strict//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd&quot;&gt;
+&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+&lt;head&gt;
+&lt;meta name=&quot;generator&quot; content=&quot;HTML Tidy for Java (vers. 2009-12-01), see jtidy.sourceforge.net&quot; /&gt;
+&lt;title&gt;&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;p&gt;here is a para &lt;b&gt;bold &lt;i&gt;bold italic&lt;/i&gt;&lt;/b&gt; &lt;i&gt;bold?&lt;/i&gt; normal?&lt;/p&gt;
+&lt;ul class=&quot;noindent&quot;&gt;
+&lt;li&gt;1st list item&lt;/li&gt;
+&lt;li&gt;2nd list item&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../null/Text, XML / HTML.html">../null/Text, XML / HTML.html</a></p></li></ul></div></body>

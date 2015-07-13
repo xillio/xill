@@ -1,0 +1,17 @@
+<head><title>setcell</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>setcell</h1></div><div class="Section"><p><strong>setcell</strong>(sheet  sheet,, &lt;void,string,number,boolean,date&gt;  value,, &lt;string,number&gt;  column,, &lt;string,number&gt;  row )</p></div><div class="Section"><h2>Description</h2><p>Sets value at cell column, row in Excel spreadsheet sheet. column and row can either be an index number (1,5) , or a readable indicator (A, 5). row can be omitted by putting the full cell indicator in the second parameter (A5). Note that column and row in numeric form are 1-based (counting starts at 1) to make them compatible with string-based lookups.When value is of type date the following format will be applied: yyyy-MM-dd HH:mm:ss. Please note that the provided sheet will not have its row and column counts updated for performance reasons. Use getsheet afterwards instead.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Setting cell values in a spreadsheet:</p><div class="highlight"><pre>workbook = createexcel();
+sheet = createsheet(workbook, &quot;Mapping&quot;);
+rowsToCreate = 20;
+columnsToCreate = 8;
+rowCounter = 1;
+totalCounter = 1;
+while (rowCounter &lt;= rowsToCreate){
+    colCounter = 1;
+    while (colCounter &lt;= columnsToCreate){
+        setcell(sheet, totalCounter, colCounter, rowCounter);
+        totalCounter = totalCounter+1;
+        colCounter = colCounter+1;
+    }
+    rowCounter = rowCounter+1;
+}
+</pre></div></li><li><p class="First">Excel files can be saved by using savedata:</p><div class="highlight"><pre>savedata(&quot;C:/projects/someproject/mapping/mapping.xls&quot;, workbook);
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../null/Excel.html">../null/Excel.html</a></p></li></ul></div></body>

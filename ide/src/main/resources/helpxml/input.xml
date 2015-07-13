@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="input">
+  <name>input</name>
+  <parameters>
+    <param name="element,">
+      <type>node</type>
+    </param>
+    <param name="text">
+      <type>string</type>
+    </param>
+  </parameters>
+  <description><![CDATA[This browser function enters the string text into the form input-element element. This is useful for entering text into web forms before submitting them.]]></description>
+  <examples>
+    <example description="Insert text into a searchbox:"><![CDATA[webclient({"enablecss"=false, "enablejs"=false});
+page = loadpage ("http://www.xillio.com/");
+text = "migration";
+]]></example>
+    <example description="if (page != null) {"><![CDATA[    searchbox = xpath (page, "//input[@name='q']");
+    input (searchbox, text);  // actually writes text into the searchbox as if a user were typing
+    log (searchbox);
+} else {
+    log ("no page");
+}
+]]></example>
+    <example description="This will print:"><![CDATA[HtmlTextInput[<input type="text" name="q" value="migration">]
+]]></example>
+    <example description="As you can see value contains the text &quot;migration&quot; as expected."><![CDATA[]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag> select</tag>
+    <tag>Browser</tag>
+  </tags>
+</function>

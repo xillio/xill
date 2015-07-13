@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="abs">
+  <name>abs</name>
+  <parameters>
+    <param name="value ">
+      <type>number</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Returns the absolute value of the provided value.]]></description>
+  <examples>
+    <example description="Perform abs on three different inputs:"><![CDATA[log(abs(6));
+log(abs(-5));
+log(abs(-3.14));
+]]></example>
+    <example description="This will print 6, 5 and 3.14."><![CDATA[]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>Other</tag>
+  </tags>
+</function>

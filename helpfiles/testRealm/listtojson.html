@@ -1,0 +1,22 @@
+<head><title>listtojson</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>listtojson</h1></div><div class="Section"><p><strong>listtojson</strong>(&lt;void,list&gt;  value)</p></div><div class="Section"><h2>Description</h2><p>A shorthand function for outputting a list formatted as a string of JSON.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Executing:</p><div class="highlight"><pre>list = {
+    &quot;a&quot;,
+    &quot;b&quot;,
+    cd = &quot;ef&quot;,
+    g = {
+        h = &quot;i&quot;,
+        j = &quot;k&quot;
+    },
+    &quot;l, m&quot; = &quot;no&quot;
+};
+log(listtojson(list));
+</pre></div></li><li><p class="First">will print:</p><div class="highlight"><pre>{
+    &quot;0&quot;: &quot;a&quot;,
+    &quot;1&quot;: &quot;b&quot;,
+    &quot;cd&quot;: &quot;ef&quot;,
+    &quot;g&quot;: {
+      &quot;h&quot;: &quot;i&quot;,
+      &quot;j&quot;: &quot;k&quot;
+    },
+    &quot;l, m&quot;: &quot;no&quot;
+}
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../null/ listtostring, jsontolist.html">../null/ listtostring, jsontolist.html</a></p></li><li><p><a href="../null/Text, List, Conversion.html">../null/Text, List, Conversion.html</a></p></li></ul></div></body>

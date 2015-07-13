@@ -1,0 +1,7 @@
+<head><title>loaddata</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>loaddata</h1></div><div class="Section"><p><strong>loaddata</strong>(string  uri,, string  encoding )</p></div><div class="Section"><h2>Description</h2><p>Returns a string variable containing the text of the local file uri. The optional parameter encoding sets the text encoding to use. It defaults to &lsquo;UTF-8&rsquo;. When encoding is set to to &lsquo;BINARY&rsquo;, the file is loaded into a binary variable, which can be then be used to e.g. calculate the md5.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Read a list of strings from a file, using loaddata and split:</p><div class="highlight"><pre>if (fileexists (file_uri)) {
+    skiplist = global (split (loaddata (file_uri), &quot;\r\n&quot;));
+    log (&quot;Skipping: \n&quot; + skiplist);
+}
+</pre></div></li><li><p class="First">Read a webpage from a file and converting to node data type:</p><div class="highlight"><pre>cmspage = loaddata(cmsfile);
+cmspage = stringtopage (cmspage);
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../null/File.html">../null/File.html</a></p></li></ul></div></body>

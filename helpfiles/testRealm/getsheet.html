@@ -1,0 +1,5 @@
+<head><title>getsheet</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>getsheet</h1></div><div class="Section"><p><strong>getsheet</strong>(workbook  workbook,, &lt;string,number&gt;  worksheet)</p></div><div class="Section"><h2>Description</h2><p>Retrieves the indicated worksheet from the workbook. The result also provides shorthand information about the worksheet in the form of row count and column count.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Fetch row and column count in a spreadsheet:</p><div class="highlight"><pre>workbook = openexcel(&quot;C:/projects/someproject/mapping/mapping.xls&quot;);
+sheet = getsheet(workbook, &quot;Mapping&quot;);
+numberRows = sheet[&quot;rows&quot;];
+numberColumns = sheet[&quot;columns&quot;];
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../null/Excel.html">../null/Excel.html</a></p></li></ul></div></body>

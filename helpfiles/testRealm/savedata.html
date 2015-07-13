@@ -1,0 +1,20 @@
+<head><title>savedata</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>savedata</h1></div><div class="Section"><p><strong>savedata</strong>(string  uri,, &lt;void,string,download,node,xml,binary&gt;  value,, boolean  append ,, boolean  overwrite ,, boolean  createdirs ,, string  encoding )</p></div><div class="Section"><h2>Description</h2><p>Saves the variable value to the local file uri. The optional parameters append, overwrite and createdirs are booleans. By default, required dirs will be created, existing files will be overwritten and not appended.The optional parameter encoding defaults to &ldquo;UTF-8&rdquo;. Acceptable values are &ldquo;US-ASCII&rdquo;, &ldquo;ISO-8859-1&rdquo;, &ldquo;UTF-8&rdquo;, &ldquo;UTF-16BE&rdquo;, &ldquo;UTF-16LE&rdquo;, and &ldquo;UTF-16&rdquo;. Any other values depend on your used java implementation.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Store a sentence in a text file:</p><div class="highlight"><pre>uri = &quot;C:/tmp/xillio.txt&quot;;
+savedata (uri, &quot;Xillio - migration and search&quot;);
+</pre></div></li><li><p class="First">Store a sentence in a text file using ISO-8859-1 (a.k.a. ISO-LATIN-1) encoding:</p><div class="highlight"><pre>uri = &quot;C:/tmp/xillio.txt&quot;;
+        savedata (uri, &quot;Xillio - migration and search - Sw&Atilde;&laquo;dish ch&Atilde;&sup2;f st&Atilde;&frac12;l&Atilde;&cent;&quot;, false, true, true, &quot;ISO-8859-1&quot;);
+</pre></div></li><li><p class="First">Create an XML-file by appending (with some error checking):</p><div class="highlight"><pre>filename = global(settings.transformation_path + &quot;/xml/structure/media_structure.xml&quot;);
+header = &quot;&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;UTF-8\&quot;?&gt;\n&lt;Structure startnode=\&quot;Root\&quot; xmlns:xsi=\&quot;http://www.w3.org/2001/XMLSchema-instance\&quot;&gt;\n&quot;;
+footer = &quot;\n&lt;/Structure&gt;&quot;;
+error = geterror(savedata(filename, &quot;&quot;, false, true, true));
+if (error != null) {
+    log(error.type + &quot;: &quot; + error.message);
+    return();
+}
+// Header
+savedata(filename, header, true);
+// Body
+// the id of root is &quot;0&quot;
+savedata(filename, build_nav_tree(&quot;0&quot;, &quot;0&quot;, 1), true);
+// Footer
+savedata(filename, footer, true);
+</pre></div></li><li><p class="First">Note: build_nav_tree is a project specific function not listed here</p><div class="highlight"><pre></pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../null/File.html">../null/File.html</a></p></li></ul></div></body>

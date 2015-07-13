@@ -1,0 +1,41 @@
+<head><title>listreverse</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>listreverse</h1></div><div class="Section"><p><strong>listreverse</strong>(&lt;list,void&gt;  list,, boolean  recursive )</p></div><div class="Section"><h2>Description</h2><p>Returns the reversed list. The optional parameter recursive is a boolean. When set to true (or omitted) the list is recursively reversed, when set to false only the outer-most level of the the list is reversed.</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Using the following list for all examples:</p><div class="highlight"><pre>mylist = {
+    &quot;0b&quot;,
+    &quot;b&quot;=1,
+    &quot;c&quot;={&quot;3&quot;=&quot;b&quot;,
+        &quot;2&quot;=&quot;c&quot;},
+    &quot;d&quot;={&quot;2&quot; =&quot;a&quot;,
+        &quot;1&quot;=&quot;b&quot;},
+    &quot;e&quot;=2,
+    &quot;00&quot;
+};
+</pre></div></li><li><p class="First">Reverse list and all sub lists</p><div class="highlight"><pre>log(listreverse(mylist));
+</pre></div></li><li><p class="First">will output:</p><div class="highlight"><pre>{
+    &quot;00&quot;,
+    e = 2,
+    d = {
+        1 = &quot;b&quot;,
+        2 = &quot;a&quot;
+    },
+    c = {
+        2 = &quot;c&quot;,
+        3 = &quot;b&quot;
+    },
+    b = 1,
+    &quot;0b&quot;
+}
+</pre></div></li><li><p class="First">Reverse outer list only</p><div class="highlight"><pre>log(listreverse(mylist, false));
+</pre></div></li><li><p class="First">will output:</p><div class="highlight"><pre>{
+    &quot;00&quot;,
+    e = 2,
+    d = {
+        2 = &quot;a&quot;,
+        1 = &quot;b&quot;
+    },
+    c = {
+        3 = &quot;b&quot;,
+        2 = &quot;c&quot;
+    },
+    b = 1,
+    &quot;0b&quot;
+}
+</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../null/List.html">../null/List.html</a></p></li></ul></div></body>
