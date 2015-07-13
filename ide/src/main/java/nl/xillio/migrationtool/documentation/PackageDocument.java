@@ -11,12 +11,10 @@ import javafx.util.Pair;
 import org.rendersnake.HtmlCanvas;
 
 /**
- * The class which represents the documentation of a package. <BR>
- * <BR>
+ * <p>The class which represents the documentation of a package. </p>
+ *<p> Packages have a {@link Set} of {@link FunctionDocument} which are contained in the package. </p>
+ * <p>The PackageDocument can generate HTML to display itself.</p>
  *
- * Packages have a {@link Set} of {@link FunctionDocument} which are contained in the package. <BR>
- * The PackageDocument can generate HTML to display itself.
- * 
  * @author Ivor
  *
  */
@@ -41,7 +39,7 @@ public class PackageDocument extends HtmlGenerator {
 
 	/**
 	 * Adds a function to the Set of FunctionDocuments in the package.
-	 * 
+	 *
 	 * @param docu
 	 *        The function we're adding.
 	 */
@@ -51,26 +49,27 @@ public class PackageDocument extends HtmlGenerator {
 
 	/**
 	 * Adds a table with all the functions in the Package and a link to them.
-	 * 
+	 *
 	 * @param canvas
 	 *        The canvas we're adding the link to.
 	 * @return
 	 *         Returns a {@link HtmlCanvas} with a section containing a table.
 	 * @throws IOException
+	 * 					Throws an IOException when an error is encountered when generating the HTML
 	 */
 	private HtmlCanvas addTableWithFunctions(HtmlCanvas canvas) throws IOException {
 		canvas = canvas.section();
 		for (FunctionDocument desLink : descriptiveLinks)
 		{
 			canvas = canvas.tr()
-				.td().p().a(href(generateLink(new Pair<String, String>(desLink.getPackage(), desLink.getName())))).write(desLink.getName())._a()._p()._td()
-				._tr()
-				.tr().td();
+					.td().p().a(href(generateLink(new Pair<String, String>(desLink.getPackage(), desLink.getName())))).write(desLink.getName())._a()._p()._td()
+					._tr()
+					.tr().td();
 			canvas = desLink.addFunction(canvas);
 			canvas = canvas
-				._td()
-				.td().p().write(desLink.getDescription())._p()._td()
-				._tr();
+					._td()
+					.td().p().write(desLink.getDescription())._p()._td()
+					._tr();
 		}
 		canvas = canvas._section();
 		return canvas;

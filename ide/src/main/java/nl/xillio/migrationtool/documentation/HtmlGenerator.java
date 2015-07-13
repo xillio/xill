@@ -13,7 +13,7 @@ import org.rendersnake.HtmlCanvas;
  * An abstract class which defines what it means to be a HTML generator. <BR>
  * Has a public {@link String} toHTML which generates HTML based on the info of the object itself <BR>
  * All the other methods defined are used by child classes.
- * 
+ *
  * @author Ivor
  *
  */
@@ -27,16 +27,17 @@ public abstract class HtmlGenerator {
 
 	/**
 	 * This function generates an HTML file based on the content of the object.
-	 * 
+	 *
 	 * @return
 	 *         Returns a HTML file as a {@link String}
 	 * @throws IOException
+	 * 					Throws an IOException when failing to parse the {@link HtmlCanvas}
 	 */
 	public abstract String toHTML() throws IOException;
 
 	/**
 	 * Set the name of the {@link HtmlGenerator}
-	 * 
+	 *
 	 * @param name
 	 *        The name of the generator.
 	 */
@@ -46,7 +47,7 @@ public abstract class HtmlGenerator {
 
 	/**
 	 * Returns the name of the {@link HtmlGenerator}
-	 * 
+	 *
 	 * @return
 	 *         The name of the generator
 	 */
@@ -60,6 +61,7 @@ public abstract class HtmlGenerator {
 	 * @return Returns
 	 *         A {@link HtmlCanvas} with a title added.
 	 * @throws IOException
+	 * 				Throws an IOException when failing to generate correct HTML.
 	 */
 	protected HtmlCanvas addTitle(final HtmlCanvas canvas) throws IOException {
 		return canvas.section().h1().write(functionName)._h1()._section();
@@ -71,6 +73,7 @@ public abstract class HtmlGenerator {
 	 * @return Returns
 	 *         A {@link HtmlCanvas} with a header added.
 	 * @throws IOException
+	 * 					Throws an IOException when failing to generate correct HTML.
 	 */
 	protected HtmlCanvas addHeader(final HtmlCanvas canvas) throws IOException {
 		return canvas.head().title().content(functionName).macros().stylesheet("../_static/default.css")._head();
@@ -84,6 +87,7 @@ public abstract class HtmlGenerator {
 	 * @return Returns
 	 *         A {@link HtmlCanvas} with the exampleSection opened.
 	 * @throws IOException
+	 * 				Throws an IOException when failing to generate correct HTML.
 	 */
 	protected static HtmlCanvas openList(final HtmlCanvas canvas, final String listName) throws IOException {
 		return canvas.section().h2().write(listName)._h2().ul();
@@ -95,6 +99,7 @@ public abstract class HtmlGenerator {
 	 * @return Returns
 	 *         A {@link HtmlCanvas} canvas with the list closed.
 	 * @throws IOException
+	 * 					Throws an IOException when failing to generate correct HTML.
 	 */
 	protected static HtmlCanvas closeList(final HtmlCanvas canvas) throws IOException {
 		return canvas._ul()._section();
@@ -102,12 +107,13 @@ public abstract class HtmlGenerator {
 
 	/**
 	 * Opens a table on the {@link HtmlCanvas}
-	 * 
+	 *
 	 * @param canvas
 	 *        The canvas we're opening the table on.
 	 * @return
 	 *         A {@link HtmlCanvas} with table opened.
 	 * @throws IOException
+	 * 					Throws an IOException when failing to generate correct HTML.
 	 */
 	protected static HtmlCanvas openTable(final HtmlCanvas canvas) throws IOException {
 		return canvas.table();
@@ -115,12 +121,13 @@ public abstract class HtmlGenerator {
 
 	/**
 	 * Closes a table on the {@link HtmlCanvas}
-	 * 
+	 *
 	 * @param canvas
 	 *        The canvas we're closing the table on.
 	 * @return
 	 *         A {@link HtmlCanvas} with table closed.
 	 * @throws IOException
+	 * 				Throws an IOException when failing to generate correct HTML.
 	 */
 	protected static HtmlCanvas closeTable(final HtmlCanvas canvas) throws IOException {
 		return canvas._table();
@@ -134,6 +141,7 @@ public abstract class HtmlGenerator {
 	 * @return Returns
 	 *         A {@link HtmlCanvas} canvas with the item added as a listItem.
 	 * @throws IOException
+	 * 				Throws an IOException when failing to generate correct HTML.
 	 */
 	protected static HtmlCanvas addItemToList(HtmlCanvas canvas, final Pair<String, String> item)
 			throws IOException {
@@ -174,6 +182,7 @@ public abstract class HtmlGenerator {
 	 * @return
 	 *         A {@link HtmlCanvas} with the link added.
 	 * @throws IOException
+	 * 				Throws an IOException when failing to generate correct HTML.
 	 */
 	protected HtmlCanvas addLinkToList(final HtmlCanvas canvas, final Pair<String, String> link) throws IOException {
 		String name = "";
@@ -187,7 +196,7 @@ public abstract class HtmlGenerator {
 
 	/**
 	 * Generates a string which represents a path of a link.
-	 * 
+	 *
 	 * @param link
 	 *        The package and the function we're referring to.
 	 * @return

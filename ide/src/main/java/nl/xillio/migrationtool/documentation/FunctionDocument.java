@@ -1,6 +1,5 @@
 package nl.xillio.migrationtool.documentation;
 
-
 import static org.rendersnake.HtmlAttributesFactory.href;
 
 import java.io.IOException;
@@ -9,31 +8,44 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.rendersnake.HtmlCanvas;
-
 import javafx.util.Pair;
 
+import org.rendersnake.HtmlCanvas;
+
 /**
- * The FunctionDocument is the java implementation of our documentation. <BR>
- * <BR>
- *
-<<<<<<< HEAD
+ * <p>
+ * The FunctionDocument is the java implementation of our documentation
+ * </p>
+ * <p>
  * It contains a name which has to be unique.
- * It contains a list of parameters which are pairs of strings (the type and the name)
- * Note that in 3.0 we will probably not have types anymore. <BR>
- * <BR>
+ * </p>
+ * <p>
+ * It contains a list of parameters which are pairs of strings (their name and defaultvalue)
+ * <p>
  *
- * It contains a {@link String} with the description.<BR>
+ * <p>
+ * It contains a {@link String} with the description.
+ * </p>
  *
- * It contains a {@link List} with examples which are represented as a pair of strings.<BR>
+ * <p>
+ * It contains a {@link List} with examples which are represented as a pair of strings.
+ * </p>
  *
- * It contains a {@link Set} with the ID's of all the FunctionDocuments it links to called links.<BR>
+ * <p>
+ * It contains a {@link Set} with the ID's of all the FunctionDocuments it links to called links.
+ * </p>
  *
- * It contains a {@link Set} of SearchTags which help indexing it.<BR>
+ * <p>
+ * It contains a {@link Set} of SearchTags which help indexing it.
+ * </p>
  *
- * It contains a {@link List} of applications in case the creator of the function has some specific applications he or she wants to mention. <BR>
+ * <p>
+ * It contains a {@link List} of applications in case the creator of the function has some specific applications he or she wants to mention.
+ * </p>
  *
+ * <p>
  * The FunctionDocument is capable of generating its own HTML page with the function toHTML().
+ * </p>
  *
  * @author Ivor
  */
@@ -46,7 +58,7 @@ public class FunctionDocument extends HtmlGenerator {
 
 	/**
 	 * Sets the description of the {@link FunctionDocument}
-	 *
+	 * 
 	 * @param Description
 	 *        The description of the function.
 	 */
@@ -55,7 +67,8 @@ public class FunctionDocument extends HtmlGenerator {
 	}
 
 	/**
-	 *The getter for the description.
+	 * The getter for the description.
+	 * 
 	 * @return Returns the description of the {@link FunctionDocument}
 	 */
 	public String getDescription() {
@@ -132,16 +145,17 @@ public class FunctionDocument extends HtmlGenerator {
 		examples.add(new Pair<>(description, content));
 	}
 
-    /**
-     * Generates a string which represents a link
-     * 
-     * @param link
-     *            The package and the function we're referring to.
-     * @return
-     */
-    protected String generateLink(final Pair<String, String> link) {
-	return "../" + link.getKey() + "/" + link.getValue() + ".html";
-    }
+	/**
+	 * Generates a string which represents a link
+	 * 
+	 * @param link
+	 *        The package and the function we're referring to.
+	 * @return
+	 */
+	@Override
+	protected String generateLink(final Pair<String, String> link) {
+		return "../" + link.getKey() + "/" + link.getValue() + ".html";
+	}
 
 	/**
 	 * @return Returns the examples of the {@link FunctionDocument}
@@ -165,6 +179,7 @@ public class FunctionDocument extends HtmlGenerator {
 			links.add(new Pair<String, String>("NoPackageGiven", function.replace(" ", "")));
 		}
 	}
+
 	/**
 	 * Adds a searchTag to the list of searchTags in the {@link FunctionDocument}
 	 *
@@ -230,6 +245,7 @@ public class FunctionDocument extends HtmlGenerator {
 	 *        The canvas we're adding the function to.
 	 * @return Returns a {@link HtmlCanvas} with a function and its parameters added.
 	 * @throws IOException
+	 * 				Throws an IOException when failing to generate correct HTML
 	 */
 	public HtmlCanvas addFunction(final HtmlCanvas canvas) throws IOException {
 		// We build the string
@@ -252,6 +268,7 @@ public class FunctionDocument extends HtmlGenerator {
 	 * @return
 	 *         A {@link HtmlCanvas} with the packageHeader added.
 	 * @throws IOException
+	 * 					Throws an IOException when failing to generate correct HTML.
 	 */
 	private HtmlCanvas addPackageHeader(final HtmlCanvas canvas) throws IOException {
 		return canvas.a(href(generateLink(new Pair<String, String>("packages", packet)))).write(packet + ".")._a();
@@ -263,6 +280,7 @@ public class FunctionDocument extends HtmlGenerator {
 	 * @return Returns
 	 *         A {@link HtmlCanvas} with a description added.
 	 * @throws IOException
+	 * 					Throws an IOException when failing to generate correct HTML.
 	 */
 	protected HtmlCanvas addDescription(final HtmlCanvas canvas) throws IOException {
 		return canvas.section().h2().write("Description")._h2().p().write(description)._p()._section();
