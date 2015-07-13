@@ -9,7 +9,7 @@ public class DatePluginPackage extends PluginPackage {
 
 	@Override
 	public void load(final PluginPackage[] dependencies) {
-		add(new TimestampConstruct(), new FromTimestampConstruct(), new FormatConstruct(), new InfoConstruct(),
+		add(new TimestampConstruct(), new NewConstruct(), new FormatConstruct(), new InfoConstruct(),
 				new DiffConstruct(), new ChangeConstruct());
 
 	}

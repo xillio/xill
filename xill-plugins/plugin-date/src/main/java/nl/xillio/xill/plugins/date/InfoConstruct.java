@@ -1,11 +1,10 @@
 package nl.xillio.xill.plugins.date;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Locale;
-import java.util.Map;
 
 import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.ExpressionDataType;
@@ -47,16 +46,22 @@ public class InfoConstruct implements Construct {
 		if (dateVar.getType() != ExpressionDataType.ATOMIC) {
 			context.getRootLogger().warn("Expected an atomic value.");
 		}
-		DateFormat df = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.getDefault());
+
+		DateInfo info = new DateInfo();
+		DateFormat df;
+		Date date;
 		try {
-			df.parse(dateVar.getStringValue());
-		} catch (ParseException e) {
+			info = dateVar.getMeta(info.getClass());
+			df = info.GetFormat();
+			date = info.GetDate();
+		} catch (NullPointerException e) {
 			throw new RobotRuntimeException("Invalid date.");
 		}
 		Locale locale = new Locale("enUS");
 		Calendar cal = df.getCalendar();
+		cal.setTime(date);
 
-		Map<String, MetaExpression> mapping = new LinkedHashMap<String, MetaExpression>();
+		LinkedHashMap<String, MetaExpression> mapping = new LinkedHashMap<String, MetaExpression>();
 		mapping.put("year", ExpressionBuilder.fromValue(cal.get(Calendar.YEAR)));
 		mapping.put("month", ExpressionBuilder.fromValue(cal.get(Calendar.MONTH) + 1));
 		mapping.put("day", ExpressionBuilder.fromValue(cal.get(Calendar.DAY_OF_MONTH)));

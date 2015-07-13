@@ -1,11 +1,9 @@
 package nl.xillio.xill.plugins.date;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.ExpressionDataType;
@@ -51,13 +49,14 @@ public class ChangeConstruct implements Construct {
 			context.getRootLogger().warn("Expected atomic value.");
 		}
 
-		// Change the input string to a date
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT,
-				Locale.getDefault());
+		DateInfo info = new DateInfo();
+		DateFormat df;
 		Date date;
 		try {
-			date = dateFormat.parse(dateVar.getStringValue());
-		} catch (ParseException e) {
+			info = dateVar.getMeta(info.getClass());
+			df = info.GetFormat();
+			date = info.GetDate();
+		} catch (NullPointerException e) {
 			throw new RobotRuntimeException("Invalid date.");
 		}
 
@@ -80,7 +79,10 @@ public class ChangeConstruct implements Construct {
 			cal.add(Calendar.MINUTE, numberList.get(4).getNumberValue().intValue());
 			cal.add(Calendar.SECOND, numberList.get(5).getNumberValue().intValue());
 			cal.add(Calendar.MILLISECOND, numberList.get(6).getNumberValue().intValue());
-			return ExpressionBuilder.fromValue(dateFormat.format(cal.getTime()));
+			MetaExpression result = ExpressionBuilder.fromValue(df.format(cal.getTime()));
+			DateInfo newInfo = new DateInfo(cal.getTime(), df);
+			result.storeMeta(newInfo);
+			return result;
 		}
 		context.getRootLogger().warn("Incorrect number of elements in list, returning unchanged date.");
 		return dateVar;

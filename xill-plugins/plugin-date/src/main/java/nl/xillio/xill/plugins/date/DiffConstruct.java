@@ -1,12 +1,8 @@
 package nl.xillio.xill.plugins.date;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.Locale;
-import java.util.Map;
 import java.util.TimeZone;
 
 import nl.xillio.xill.api.components.ExpressionBuilder;
@@ -21,9 +17,9 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 /**
  *
  *
- * Returns the difference between two date variables. By default the function
- * will return the absolute difference. Optionally you can set 'absolute' to
- * false to get the relative difference.
+ * Returns the difference between two dates. By default the function will return
+ * the absolute difference. Optionally you can set 'absolute' to false to get
+ * the relative difference.
  *
  * @author Sander
  *
@@ -56,22 +52,20 @@ public class DiffConstruct implements Construct {
 			context.getRootLogger().warn(("Expected atomic value for second date."));
 		}
 
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT,
-				Locale.getDefault());
 		Date date1;
 		Date date2;
-		try {
-			date1 = dateFormat.parse(dateVar1.getStringValue());
 
-		} catch (ParseException e) {
-			throw new RobotRuntimeException("Invalid first date.");
-		}
 		try {
-			date2 = dateFormat.parse(dateVar2.getStringValue());
-		} catch (ParseException e) {
-			throw new RobotRuntimeException("Invalid second date.");
-		}
+			DateInfo info1 = new DateInfo();
+			info1 = dateVar1.getMeta(info1.getClass());
+			date1 = info1.GetDate();
 
+			DateInfo info2 = new DateInfo();
+			info2 = dateVar2.getMeta(info2.getClass());
+			date2 = info2.GetDate();
+		} catch (NullPointerException e) {
+			throw new RobotRuntimeException("Invalid date.");
+		}
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeZone(TimeZone.getTimeZone("UTC"));
 
@@ -105,7 +99,7 @@ public class DiffConstruct implements Construct {
 		long s = diff / ONE_SECOND;
 		long ms = diff % ONE_SECOND;
 
-		Map<String, MetaExpression> mapping = new LinkedHashMap<String, MetaExpression>();
+		LinkedHashMap<String, MetaExpression> mapping = new LinkedHashMap<String, MetaExpression>();
 		mapping.put("day", ExpressionBuilder.fromValue(d));
 		mapping.put("hour", ExpressionBuilder.fromValue(h));
 		mapping.put("minute", ExpressionBuilder.fromValue(m));

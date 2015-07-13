@@ -1,10 +1,8 @@
 package nl.xillio.xill.plugins.date;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 import java.util.TimeZone;
 
 import nl.xillio.xill.api.components.ExpressionBuilder;
@@ -19,7 +17,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 /**
  *
  *
- * Converts the date to a string formatted according to the provided format.
+ * Converts the format of the date with the provided format.
  *
  * @author Sander
  *
@@ -52,13 +50,20 @@ public class FormatConstruct implements Construct {
 		if (dateVar == ExpressionBuilder.NULL) {
 			return ExpressionBuilder.NULL;
 		}
+		DateInfo info = new DateInfo();
+		Date date;
+		DateFormat dfOld;
+		try {
+			info = dateVar.getMeta(info.getClass());
+			date = info.GetDate();
+			dfOld = info.GetFormat();
+		} catch (NullPointerException e) {
+			throw new RobotRuntimeException("Invalid date.");
+		}
 
-		String date = dateVar.getStringValue();
 		String format = formatVar.getStringValue();
 		String timezone = timezoneVar.getStringValue();
 
-		Date oldDate;
-		DateFormat dfOld = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.getDefault());
 		DateFormat dfNew;
 		try {
 			if (formatVar == ExpressionBuilder.NULL) {
@@ -73,14 +78,12 @@ public class FormatConstruct implements Construct {
 		if (timezoneVar != ExpressionBuilder.NULL) {
 			dfNew.setTimeZone(TimeZone.getTimeZone(timezone));
 		}
-		// Get date from string.
-		try {
-			oldDate = dfOld.parse(date);
-		} catch (ParseException e) {
-			throw new RobotRuntimeException("Invalid date.");
-		}
 
-		return ExpressionBuilder.fromValue(dfNew.format(oldDate));
+		MetaExpression result = ExpressionBuilder.fromValue(dfNew.format(date));
+
+		DateInfo newInfo = new DateInfo(date, dfNew);
+		result.storeMeta(newInfo);
+		return result;
 
 	}
 }
