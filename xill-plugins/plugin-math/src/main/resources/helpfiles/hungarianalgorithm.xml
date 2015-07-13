@@ -2,7 +2,7 @@
 <function Tag="hungarianalgorithm">
   <name>hungarianalgorithm</name>
   <parameters>
-    <param name="matrix,">
+    <param name="matrix">
       <type>list</type>
     </param>
     <param name="max ">
