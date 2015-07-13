@@ -26,6 +26,7 @@ public class PluginListener {
 	private static final Logger log = Logger.getLogger(PluginListener.class);
 
 	/**
+	 * Listens to a pluginPackage and extracts its xml-files.
 	 * @param plugin
 	 *        The plugin that we load
 	 * 

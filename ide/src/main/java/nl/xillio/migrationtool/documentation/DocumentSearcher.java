@@ -19,15 +19,12 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 
 /**
- * This class handles indexing a FunctionDocument and querying the database of FunctionDocuments. <BR>
- * <BR>
+ * <p> This class handles indexing a FunctionDocument and querying the database of FunctionDocuments. </p>
+ * <p>The public search function receives a string as query, splits that string and does a fuzzy search on each of the components.
+ * It returns an array with the unique ID's of functions that match that query. </p>
  *
- * The public search function receives a string as query, splits that string and does a fuzzy search on each of the components.
- * It returns an array with the unique ID's of functions that match that query. <BR>
- * <BR>
- *
- * The public index function recieves a FunctionDocument and adds it to the database.
- * It returns an IndexResponse which is an object from elasticsearch, usually this is cast into the void.
+ * <p>The public index function recieves a FunctionDocument and adds it to the database.</p>
+ * <p>It returns an IndexResponse which is an object from elasticsearch, usually this is cast into the void.</p>
  * 
  * @author Ivor
  */
@@ -46,13 +43,12 @@ public class DocumentSearcher {
 	}
 
 	/**
-	 * We search the database given a query. <BR>
-	 * The query (a string) is split on whitespace and each word is queried in the following fasion:<BR>
-	 * <BR>
-	 * foreach( word in query): <BR>
-	 * We fuzzyQuery the name, description, examples and searchTags <BR>
-	 * We wildcardQuery (substring match) name and searchtags <BR>
-	 * We boost the name and the searchtag category <BR>
+	 * <p>We search the database given a query. </p>
+	 * <p>The query (a string) is split on whitespace and each word is queried in the following fasion:</p>
+	 * <p>foreach( word in query): <p>
+	 * <p>We fuzzyQuery the name, description, examples and searchTags .</p>
+	 * <p>We wildcardQuery (substring match) name and searchtags. </p>
+	 * <p>We boost the name and the searchtag category. </p>
 	 * 
 	 * @param query
 	 *        The search query
@@ -112,9 +108,11 @@ public class DocumentSearcher {
 	}
 
 	/**
+	 * Indexes a {@link FunctionDocument} into the database.
 	 * @param document
 	 *        The document we want to index
-	 * @return An index response of the function.
+	 * @return 
+	 * 				An index response of the function.
 	 * @throws ElasticsearchException
 	 * @throws IOException
 	 */
