@@ -1,7 +1,7 @@
 description = 'this project contains all UI logic for the contenttools application'
 
 dependencies {
-	compile 'net.sf.saxon:Saxon-HE:9.6.0-5'
+    compile 'net.sf.saxon:Saxon-HE:9.6.0-5'
 	compile 'commons-io:commons-io:2.4'
 	compile 'org.elasticsearch:elasticsearch:1.6.0'
 	compile 'org.apache.httpcomponents:httpclient:4.3.3'
@@ -9,15 +9,13 @@ dependencies {
 	compile 'org.apache.httpcomponents:httpmime:4.5'
 	compile 'org.jasypt:jasypt:1.9.1'
 	compile 'org.xerial:sqlite-jdbc:3.8.7'
+	compile 'org.mariadb.jdbc:mariadb-java-client:1.1.8'
 	
 	compile project(':api')
 }
 
 jar{
 	manifest {
-		attributes("Implementation-Title": 			"Xill IDE",
-										"Implementation-Version": 		version,
-										"Class-Path": configurations.runtime.files.collect {File file-> file.name }.join(" ")
-									 )
+		attributes "Class-Path": configurations.runtime.files.collect {File file-> file.name }.join(" ")
 	}
 }
