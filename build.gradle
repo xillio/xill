@@ -1,3 +1,7 @@
+/*
+* Please do not change this file unless explicitely instructed to. The values you can change are found in gradle.properties
+*/
+
 allprojects {
 	apply plugin: 'java'
 	apply plugin: 'eclipse'
@@ -24,7 +28,7 @@ allprojects {
 		apply plugin: 'maven-publish'
 		publishing {
 			publications {
-				maven(MavenPublication) {
+				main(MavenPublication) {
 					groupId group
 					artifactId 'xill-' + project.name
 					version project.version
@@ -168,11 +172,11 @@ if(testConnection(mavenRepositoryHost)) {
 	
 	addRepositories(mavenRepositoryHost)
 }else if(testConnection(mavenRepositoryHostFallback)) {
-	logger.info "We have a connection to $mavenFriendlyServerName through a tunnel"
+	logger.info "We have a connection to $mavenFriendlyServerName through an ssh tunnel"
 	addRepositories(mavenRepositoryHostFallback)
 }else {
 	logger.error 	"Unable to connect to $mavenFriendlyServerName\n" +
-							"Read the wiki to see how to connect to $mavenFriendlyServerName\n"+
+							"Connect to office VPN or read the wiki to see how to connect to $mavenFriendlyServerName\n"+
 							"link: $mavenRepositoryConnectionGuide"
 }
 
