@@ -3,6 +3,7 @@ package nl.xillio.xill.plugins.math;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -112,18 +113,18 @@ public class HungarianAlgorithmConstruct implements HelpComponent {
 
 				// Prepare results
 				List<MetaExpression> result = new ArrayList<>();
-				Map<String, MetaExpression> sumMap = new HashMap<String, MetaExpression>();
+				LinkedHashMap<String, MetaExpression> sumMap = new LinkedHashMap<String, MetaExpression>();
 				sumMap.put("sum", ExpressionBuilder.fromValue(sum));
 				result.add(ExpressionBuilder.fromValue(sumMap));
 
 				List<MetaExpression> cells = new ArrayList<>();
 				for (int i = 0; i < assignment.length; i++) {
-					Map<String, MetaExpression> item = new HashMap<String, MetaExpression>();
+					LinkedHashMap<String, MetaExpression> item = new LinkedHashMap<String, MetaExpression>();
 					item.put("row", ExpressionBuilder.fromValue(assignment[i][0]));
 					item.put("col", ExpressionBuilder.fromValue(assignment[i][1]));
 					cells.add(ExpressionBuilder.fromValue(item));
 				}
-				Map<String, MetaExpression> cellsmap = new HashMap<String, MetaExpression>();
+				LinkedHashMap<String, MetaExpression> cellsmap = new LinkedHashMap<String, MetaExpression>();
 				cellsmap.put("cells", ExpressionBuilder.fromValue(cells));
 				result.add(ExpressionBuilder.fromValue(cellsmap));
 

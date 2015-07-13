@@ -53,7 +53,9 @@ public class PluginListener {
 							// We write the HTML file
 							FileUtils.write(new File("./helpfiles/" + plugin.getName() + "/" + docu.getName() + ".html"), docu.toHTML());
 							// We add the document to the plugin (package)
+							docu.setVersion(plugin.getVersion());
 							functions.add(docu);
+							
 							// We index the document
 							searcher.index(docu);
 						} else {
