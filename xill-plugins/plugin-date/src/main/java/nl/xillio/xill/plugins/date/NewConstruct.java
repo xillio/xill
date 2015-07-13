@@ -32,7 +32,7 @@ public class NewConstruct implements Construct {
 	@Override
 	public String getName() {
 
-		return "fromTimestamp";
+		return "new";
 	}
 
 	@Override
