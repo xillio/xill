@@ -1,31 +1,17 @@
 description = 'this project contains the core implementation of the xill language'
 
 dependencies{
-	compile 'org.apache.tika:tika-parsers:1.7'
-	compile 'org.mariadb.jdbc:mariadb-java-client:1.1.8'
-	compile 'net.sf.jtidy:jtidy:r938'
-	compile 'org.testng:testng:6.1.1'
-	compile 'org.apache.httpcomponents:httpclient:4.3.3'
-	compile 'net.sf.saxon:Saxon-HE:9.6.0-5'
-	compile 'net.sourceforge.htmlunit:htmlunit:2.11'
-	compile 'org.mongodb:mongo-java-driver:2.13.0'
-	compile 'jcifs:jcifs:1.3.17'
-	compile 'org.xerial:sqlite-jdbc:3.8.7'
-	compile 'com.oracle:ojdbc7:12.1.0.1.0'
 	compile 'com.google.code.gson:gson:2.3.1'
 	compile 'org.apache.commons:commons-lang3:3.4'
-	compile 'net.sourceforge.jtds:jtds:1.3.1'
 	compile 'commons-io:commons-io:2.4'
-	compile 'nl.xillio:xill-lang:3.0.2'
-	compile 'org.jasypt:jasypt:1.9.1'
+	compile 'nl.xillio:xill-lang:3.0.5'
 	compile project(':api')
 }
 
 jar{
 	manifest {
-		attributes("Implementation-Title": 			"Xill Processor",
-										"Implementation-Version": 		version,
-										"Class-Path": configurations.runtime.files.collect {File file-> file.name }.join(" ")
-									 )
+		attributes "Implementation-Title": 			"Xill Processor"
+		attributes  "Class-Path": configurations.runtime.files.collect {File file-> file.name }.join(" ")
+		attributes "Implementation-Version": 		version
 	}
 }

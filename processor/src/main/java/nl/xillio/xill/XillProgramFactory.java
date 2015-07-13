@@ -5,13 +5,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Stack;
 
-import org.apache.commons.collections.keyvalue.DefaultMapEntry;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.eclipse.emf.ecore.EObject;
@@ -65,6 +65,7 @@ import nl.xillio.xill.components.operators.Equals;
 import nl.xillio.xill.components.operators.FromList;
 import nl.xillio.xill.components.operators.GreaterThan;
 import nl.xillio.xill.components.operators.GreaterThanOrEquals;
+import nl.xillio.xill.components.operators.IntegerShortcut;
 import nl.xillio.xill.components.operators.Modulo;
 import nl.xillio.xill.components.operators.Multiply;
 import nl.xillio.xill.components.operators.Negate;
@@ -82,6 +83,7 @@ import xill.lang.xill.InstructionBlock;
 import xill.lang.xill.IntegerLiteral;
 import xill.lang.xill.ListExtraction;
 import xill.lang.xill.NullLiteral;
+import xill.lang.xill.StringLiteral;
 import xill.lang.xill.Target;
 import xill.lang.xill.UseStatement;
 import xill.lang.xill.Variable;
@@ -140,7 +142,6 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	pluginLoader = loader;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void parse(final xill.lang.xill.Robot robot, final RobotID robotID) throws XillParsingException {
 
@@ -174,7 +175,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	}
 
 	nl.xillio.xill.components.Robot instructionRobot = new nl.xillio.xill.components.Robot(robotID, debugger);
-	compiledRobots.put(robot, new DefaultMapEntry(robotID, instructionRobot));
+	compiledRobots.put(robot, new SimpleEntry<>(robotID, instructionRobot));
 
 	for (xill.lang.xill.Instruction instruction : robot.getInstructionSet().getInstructions()) {
 	    instructionRobot.add(parse(instruction));
@@ -492,13 +493,13 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 		Target pTarget = getTarget(token.getExpression());
 		List<Processable> pPath = getPath(token.getExpression());
 		VariableDeclaration pDeclaration = variables.get(pTarget);
-		value = new Assign(pDeclaration, pPath, new Add(value, ExpressionBuilder.fromValue(1)));
+		value = new IntegerShortcut(pDeclaration, pPath, value, 1, false);
 		break;
 	    case "--":
 		Target mTarget = getTarget(token.getExpression());
 		List<Processable> mPath = getPath(token.getExpression());
 		VariableDeclaration mDeclaration = variables.get(mTarget);
-		value = new Assign(mDeclaration, mPath, new Subtract(value, ExpressionBuilder.fromValue(1)));
+		value = new IntegerShortcut(mDeclaration, mPath, value, -1, false);
 		break;
 	    default:
 		throw new NotImplementedException("This prefix has not been implemented.");
@@ -512,15 +513,13 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 		Target pTarget = getTarget(token.getExpression());
 		List<Processable> pPath = getPath(token.getExpression());
 		VariableDeclaration pDeclaration = variables.get(pTarget);
-		value = new Subtract(new Assign(pDeclaration, pPath, new Add(value, ExpressionBuilder.fromValue(1))),
-			ExpressionBuilder.fromValue(1));
+		value = new IntegerShortcut(pDeclaration, pPath, value, 1, true);
 		break;
 	    case "--":
 		Target mTarget = getTarget(token.getExpression());
 		List<Processable> mPath = getPath(token.getExpression());
 		VariableDeclaration mDeclaration = variables.get(mTarget);
-		value = new Add(new Assign(mDeclaration, mPath, new Subtract(value, ExpressionBuilder.fromValue(1))),
-			ExpressionBuilder.fromValue(1));
+		value = new IntegerShortcut(mDeclaration, mPath, value, -1, true);
 		break;
 	    default:
 		throw new NotImplementedException("This suffix has not been implemented.");
@@ -826,7 +825,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
     Processable parseToken(final xill.lang.xill.impl.ObjectExpressionImpl token) throws XillParsingException {
 	Iterator<Expression> keys = token.getNames().iterator();
 	Iterator<Expression> values = token.getValues().iterator();
-	Map<Processable, Processable> object = new HashMap<>(token.getNames().size());
+	LinkedHashMap<Processable, Processable> object = new LinkedHashMap<>(token.getNames().size());
 
 	while (keys.hasNext() && values.hasNext()) {
 	    object.put(parse(keys.next()), parse(values.next()));
@@ -1063,7 +1062,10 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
      * @return
      */
     Processable parseToken(final xill.lang.xill.BooleanLiteral token) {
-	return ExpressionBuilder.fromValue(Boolean.parseBoolean(token.getValue()));
+	if (Boolean.parseBoolean(token.getValue())) {
+	    return ExpressionBuilder.TRUE;
+	}
+	return ExpressionBuilder.FALSE;
     }
 
     /**
@@ -1083,7 +1085,15 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
      * @return
      */
     Processable parseToken(final xill.lang.xill.IntegerLiteral token) {
-	return ExpressionBuilder.fromValue(token.getValue());
+	try {
+	    return new ExpressionBuilder(Integer.parseInt(token.getValue()));
+	} catch (NumberFormatException e) {
+	    try {
+		return new ExpressionBuilder(Long.parseLong(token.getValue()));
+	    } catch (NumberFormatException e2) {
+		return new ExpressionBuilder(Double.parseDouble(token.getValue()));
+	    }
+	}
     }
 
     /**
@@ -1093,22 +1103,17 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
      * @return
      */
     Processable parseToken(final xill.lang.xill.DecimalLiteral token) {
-	int intValue = token.getValue();
-
-	// Calculate decimal
-	int digits = String.valueOf(token.getDecimal()).length();
-	double decimalValue = token.getDecimal() / Math.pow(10, digits);
-	return ExpressionBuilder.fromValue(decimalValue + intValue);
+	return new ExpressionBuilder(Double.parseDouble(token.getValue()));
     }
 
     /**
-     * Parse an {@link IntegerLiteral}
+     * Parse a {@link StringLiteral}
      *
      * @param token
      * @return
      */
     Processable parseToken(final xill.lang.xill.StringLiteral token) {
-	return ExpressionBuilder.fromValue(token.getValue());
+	return new ExpressionBuilder(token.getValue());
     }
 
     private CodePosition pos(final EObject object) {

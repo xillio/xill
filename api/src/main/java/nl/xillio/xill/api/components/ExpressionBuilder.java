@@ -1,20 +1,22 @@
 package nl.xillio.xill.api.components;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.function.Supplier;
 
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.NullDebugger;
 import nl.xillio.xill.api.behavior.BooleanBehavior;
 import nl.xillio.xill.api.behavior.NumberBehavior;
 import nl.xillio.xill.api.behavior.StringBehavior;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
  * This is a utility class that will build expressions from values
  */
-public final class ExpressionBuilder {
+public final class ExpressionBuilder implements Processable {
     private static final Debugger expressionDebugger = new NullDebugger();
     /**
      * The true literal
@@ -72,7 +74,7 @@ public final class ExpressionBuilder {
 
     /**
      * Create a new {@link ListExpression}
-     * 
+     *
      * @param value
      * @return the expression
      */
@@ -82,12 +84,12 @@ public final class ExpressionBuilder {
 
     /**
      * Create a new {@link ObjectExpression}
-     * 
+     *
      * @param value
      * @return the expression
      */
-    public static MetaExpression fromValue(final Map<String, MetaExpression> value) {
-	Map<Processable, Processable> procValue = new HashMap<>(value.size());
+    public static MetaExpression fromValue(final LinkedHashMap<String, MetaExpression> value) {
+	LinkedHashMap<Processable, Processable> procValue = new LinkedHashMap<>(value.size());
 
 	value.forEach((key, expression) -> {
 	    procValue.put(fromValue(key), expression);
@@ -98,7 +100,7 @@ public final class ExpressionBuilder {
 
     /**
      * Create a new {@link ListExpression} with no values
-     * 
+     *
      * @return the expression
      */
     public static MetaExpression emptyList() {
@@ -107,11 +109,11 @@ public final class ExpressionBuilder {
 
     /**
      * Create a new {@link ObjectExpression} with no values
-     * 
+     *
      * @return the expression
      */
     public static MetaExpression emptyObject() {
-	return fromValue(new HashMap<>());
+	return fromValue(new LinkedHashMap<>());
     }
 
     /**
@@ -151,5 +153,71 @@ public final class ExpressionBuilder {
 	public void close() throws Exception {
 	}
 
+    }
+
+    private final Supplier<MetaExpression> expressionSupplier;
+
+    /**
+     * Create a new {@link ExpressionBuilder} that will produce a double
+     *
+     * @param value
+     */
+    public ExpressionBuilder(final double value) {
+	expressionSupplier = () -> fromValue(value);
+    }
+
+    /**
+     * Create a new {@link ExpressionBuilder} that will produce an integer
+     *
+     * @param value
+     */
+    public ExpressionBuilder(final int value) {
+	expressionSupplier = () -> fromValue(value);
+    }
+
+    /**
+     * Create a new {@link ExpressionBuilder} that will produce a string
+     *
+     * @param value
+     */
+    public ExpressionBuilder(final String value) {
+	expressionSupplier = () -> fromValue(value);
+    }
+
+    /**
+     * Create a new {@link ExpressionBuilder} that will produce a List
+     *
+     * @param value
+     */
+    public ExpressionBuilder(final List<MetaExpression> value) {
+	expressionSupplier = () -> fromValue(value);
+    }
+
+    /**
+     * Create a new {@link ExpressionBuilder} that will produce an object
+     *
+     * @param value
+     */
+    public ExpressionBuilder(final LinkedHashMap<String, MetaExpression> value) {
+	expressionSupplier = () -> fromValue(value);
+    }
+
+    /**
+     * Create a new {@link ExpressionBuilder} that will produce a double
+     *
+     * @param value
+     */
+    public ExpressionBuilder(final boolean value) {
+	expressionSupplier = () -> fromValue(value);
+    }
+
+    @Override
+    public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
+	return InstructionFlow.doResume(expressionSupplier.get());
+    }
+
+    @Override
+    public Collection<Processable> getChildren() {
+	return new ArrayList<>();
     }
 }

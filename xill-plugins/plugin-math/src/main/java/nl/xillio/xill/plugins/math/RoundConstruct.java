@@ -1,6 +1,5 @@
 package nl.xillio.xill.plugins.math;
 
-
 import java.io.InputStream;
 
 import nl.xillio.xill.api.components.ExpressionBuilder;
@@ -12,38 +11,38 @@ import nl.xillio.xill.api.construct.HelpComponent;
 
 /**
  * The construct of the Round function which rounds a numbervalue.
+ * 
  * @author Ivor
  *
  */
-public class RoundConstruct  implements HelpComponent {
+public class RoundConstruct implements HelpComponent {
 
-	@Override
-	public String getName() {
-		return "round";
-	}
+    @Override
+    public String getName() {
+	return "round";
+    }
 
-	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
-		return new ConstructProcessor(RoundConstruct::process, new Argument("value"));
-	}
-	
-	private static MetaExpression process(final MetaExpression value)
-	{
-		Number number = value.getNumberValue();
-		if (number instanceof Integer) {
-			return ExpressionBuilder.fromValue(number.intValue());
-		} else if (number instanceof Long) {
-			return ExpressionBuilder.fromValue(number.longValue());
-		} else if (number instanceof Float) {
-			return ExpressionBuilder.fromValue(Math.round(number.floatValue()));
-		} else {
-			return ExpressionBuilder.fromValue(Math.round(number.doubleValue()));
-		}
-	}
+    @Override
+    public ConstructProcessor prepareProcess(final ConstructContext context) {
+	return new ConstructProcessor(RoundConstruct::process, new Argument("value"));
+    }
 
-	@Override
-	public InputStream openDocumentationStream() {
-		return getClass().getResourceAsStream("/helpfiles/round.xml");
+    private static MetaExpression process(final MetaExpression value) {
+	Number number = value.getNumberValue();
+	if (number instanceof Integer) {
+	    return ExpressionBuilder.fromValue(number.intValue());
+	} else if (number instanceof Long) {
+	    return ExpressionBuilder.fromValue(number.longValue());
+	} else if (number instanceof Float) {
+	    return ExpressionBuilder.fromValue(Math.round(number.floatValue()));
+	} else {
+	    return ExpressionBuilder.fromValue(Math.round(number.doubleValue()));
 	}
+    }
+
+    @Override
+    public InputStream openDocumentationStream() {
+	return getClass().getResourceAsStream("/helpfiles/round.xml");
+    }
 
 }

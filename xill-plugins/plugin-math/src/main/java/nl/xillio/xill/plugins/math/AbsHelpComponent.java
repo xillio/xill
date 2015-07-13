@@ -8,25 +8,25 @@ import nl.xillio.xill.api.construct.HelpComponent;
 
 /**
  * The help component which contains the XML helpfile for abs
+ * 
  * @author Ivor
  *
  */
 public class AbsHelpComponent implements HelpComponent {
 
-	@Override
-	public String getName() {
-		return "abshelpfile";
-	}
+    @Override
+    public String getName() {
+	return "abshelpfile";
+    }
 
+    @Override
+    public ConstructProcessor prepareProcess(final ConstructContext context) {
+	return null;
+    }
 
-	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
-		return null;
-	}
-
-	@Override
-	public InputStream openDocumentationStream() {
-		return getClass().getResourceAsStream("/helpfiles/abs.xml");
-	}
+    @Override
+    public InputStream openDocumentationStream() {
+	return getClass().getResourceAsStream("/helpfiles/abs.xml");
+    }
 
 }

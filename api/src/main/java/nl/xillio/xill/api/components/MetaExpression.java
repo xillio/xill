@@ -1,9 +1,10 @@
 package nl.xillio.xill.api.components;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -23,7 +24,8 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 public abstract class MetaExpression implements Expression, Processable {
     private static final Gson gson = new GsonBuilder().enableComplexMapKeySerialization().serializeNulls()
 	    // .setPrettyPrinting()
-	    .disableHtmlEscaping().disableInnerClassSerialization().create();
+	    .disableHtmlEscaping().disableInnerClassSerialization().serializeSpecialFloatingPointValues()
+	    .serializeNulls().create();
     private final MetadataExpressionPool<Object> metadataPool = new MetadataExpressionPool<>();
     private Object value;
     private ExpressionDataType type = ExpressionDataType.ATOMIC;
@@ -55,11 +57,26 @@ public abstract class MetaExpression implements Expression, Processable {
      * @throws IllegalStateException
      *             if this expression has been closed
      */
+    @SuppressWarnings("unchecked")
     public <T> T storeMeta(final T object) {
+	return storeMeta((Class<T>) object.getClass(), object);
+    }
+
+    /**
+     * Store a value in the {@link MetadataExpressionPool}
+     *
+     * @param clazz
+     * @param object
+     * @return The previous stored value in the pool or null if no value was
+     *         stored.
+     * @throws IllegalStateException
+     *             if this expression has been closed
+     */
+    public <T> T storeMeta(final Class<T> clazz, final T object) {
 	if (isClosed()) {
 	    throw new IllegalStateException("This expression has already been closed.");
 	}
-	return metadataPool.put(object);
+	return metadataPool.put(clazz, object);
     }
 
     /**
@@ -119,11 +136,12 @@ public abstract class MetaExpression implements Expression, Processable {
      * value
      *
      * @param value
+     *            in a linked hash map to enforce order
      * @return self
      * @throws IllegalStateException
      *             if this expression has been closed
      */
-    protected MetaExpression setValue(final Map<String, MetaExpression> value) {
+    protected MetaExpression setValue(final LinkedHashMap<String, MetaExpression> value) {
 	if (isClosed()) {
 	    throw new IllegalStateException("This expression has already been closed.");
 	}
@@ -178,6 +196,14 @@ public abstract class MetaExpression implements Expression, Processable {
 	return type;
     }
 
+    /**
+     * Generate the JSON representation of this expression using a {@link Gson}
+     * parser <br/>
+     * <b>NOTE: </b> This is not the string value of this expression. It is
+     * JSON. For the string value use {@link MetaExpression#getStringValue()}
+     *
+     * @return JSON representation
+     */
     @Override
     public String toString() {
 	List<MetaExpression> initialVisited = new ArrayList<>(1);
@@ -216,7 +242,7 @@ public abstract class MetaExpression implements Expression, Processable {
 
 	    break;
 	case OBJECT:
-	    Map<Processable, Processable> resultMapValue = new HashMap<>();
+	    LinkedHashMap<Processable, Processable> resultMapValue = new LinkedHashMap<>();
 
 	    for (Map.Entry<String, MetaExpression> pair : ((Map<String, MetaExpression>) metaExpression.getValue())
 		    .entrySet()) {
@@ -312,7 +338,7 @@ public abstract class MetaExpression implements Expression, Processable {
      *         </ul>
      */
     public static Object extractValue(final MetaExpression expression) {
-	return extractValue(expression, new HashMap<>());
+	return extractValue(expression, new LinkedHashMap<>());
 
     }
 
@@ -357,10 +383,12 @@ public abstract class MetaExpression implements Expression, Processable {
 	    result = resultList;
 	    break;
 	case OBJECT:
-	    Map<String, Object> resultObject = new HashMap<>();
+	    Map<String, Object> resultObject = new LinkedHashMap<>();
 	    results.put(expression, resultObject);
-	    resultObject.putAll(((Map<String, MetaExpression>) expression.getValue()).entrySet().stream()
-		    .collect(Collectors.toMap(Map.Entry::getKey, entry -> extractValue(entry.getValue(), results))));
+	    for (Entry<String, MetaExpression> pair : ((Map<String, MetaExpression>) expression.getValue())
+		    .entrySet()) {
+		resultObject.put(pair.getKey(), extractValue(pair.getValue(), results));
+	    }
 	    result = resultObject;
 	    break;
 	default:
@@ -374,7 +402,7 @@ public abstract class MetaExpression implements Expression, Processable {
      * Register a reference to this variable.<br/>
      * This generally only happens during assignment
      */
-    public void registerReference() {
+    public final void registerReference() {
 	referenceCount++;
     }
 
@@ -382,7 +410,7 @@ public abstract class MetaExpression implements Expression, Processable {
      * Release a reference to this expression<br/>
      * This generally only happens at the end of scope
      */
-    public void releaseReference() {
+    public final void releaseReference() {
 	referenceCount--;
 
 	if (!preventDispose && referenceCount <= 0) {
@@ -399,7 +427,7 @@ public abstract class MetaExpression implements Expression, Processable {
     /**
      * Next time a reference is released, this expression won't be disposed.
      */
-    public void preventDisposal() {
+    public final void preventDisposal() {
 	preventDispose = true;
     }
 
@@ -407,7 +435,7 @@ public abstract class MetaExpression implements Expression, Processable {
      * @return true if this expression has been closed using
      *         {@link MetaExpression#close()}
      */
-    public boolean isClosed() {
+    public final boolean isClosed() {
 	return isClosed;
     }
 
@@ -417,10 +445,10 @@ public abstract class MetaExpression implements Expression, Processable {
 	if (isClosed || this == ExpressionBuilder.NULL) {
 	    return;
 	}
-	
+
 	isClosed = true;
 	closeMetaPool();
-	
+
 	// Close children
 	switch (type) {
 	case LIST:
@@ -438,7 +466,7 @@ public abstract class MetaExpression implements Expression, Processable {
 	}
 	value = null;
     }
-    
+
     /**
      * Dispose all items in the {@link MetadataExpressionPool}
      */
@@ -449,7 +477,7 @@ public abstract class MetaExpression implements Expression, Processable {
 	    e.printStackTrace();
 	}
     }
-    
+
     /**
      * Reset the reference count to 0
      */
