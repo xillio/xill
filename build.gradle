@@ -10,7 +10,7 @@ allprojects {
 	}
 	
 	javadoc{
-		failOnError = false
+		failOnError = !Boolean.parseBoolean(javadocIgnoreErrors)
 	}
 	
 	task sourceJar(type: Jar) {
@@ -202,10 +202,3 @@ def addRepositories(host) {
 }
 
 run.dependsOn(assembleContenttools)
-
-task generateJavadoc(type: Javadoc) {
-	source project.sourceSets.main.allJava
-	source subprojects.collect {project -> project.sourceSets.main.allJava } 
-    classpath = files(subprojects.collect {project -> project.sourceSets.main.compileClasspath}) 
-    destinationDir = file("${buildDir}/docs/javadoc")
-}
