@@ -5,7 +5,7 @@ import javafx.scene.Node;
 /**
  * This interface represents an object that can provide a JavaFX preview
  */
-public interface PreviewComponent extends Searchable {
+public interface PreviewComponent  {
 	/**
 	 * @return the preview
 	 */

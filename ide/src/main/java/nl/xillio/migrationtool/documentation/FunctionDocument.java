@@ -1,7 +1,6 @@
 package nl.xillio.migrationtool.documentation;
 
-import static org.rendersnake.HtmlAttributesFactory.class_;
-import static org.rendersnake.HtmlAttributesFactory.href;
+import static org.rendersnake.HtmlAttributesFactory.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,30 +11,37 @@ import org.rendersnake.HtmlCanvas;
 import javafx.util.Pair;
 
 /**
- * The FunctionDocument is the java implementation of our documentation. <BR><BR>
- * 
- * It contains a name which has to be unique.
- * It contains a list of parameters which are pairs of strings (the type and the name)
- * Note that in 3.0 we will probably not have types anymore. <BR><BR>
- * 
+ * The FunctionDocument is the java implementation of our documentation. <BR>
+ * <BR>
+ *
+ * It contains a name which has to be unique. It contains a list of parameters
+ * which are pairs of strings (the type and the name) Note that in 3.0 we will
+ * probably not have types anymore. <BR>
+ * <BR>
+ *
  * It contains a string with the description.<BR>
- * 
- * It contains a list with examples which are represented as a pair of strings.<BR>
- * 
- * It contains a list with the ID's of all the FunctionDocuments it links to called links.<BR>
- * 
+ *
+ * It contains a list with examples which are represented as a pair of strings.
+ * <BR>
+ *
+ * It contains a list with the ID's of all the FunctionDocuments it links to
+ * called links.<BR>
+ *
  * It contains a list of SearchTags which help indexing it.<BR>
+ *
+ * It contains a List of applications in case the creator of the function has
+ * some specific applications he or she wants to mention. <BR>
+ *
+ * The FunctionDocument is capable of generating its own HTML page with the
+ * function toHTML().
  * 
- * It contains a List of applications in case the creator of the function has some specific applications he or she wants to mention. <BR>
- * 
- * The FunctionDocument is capable of generating its own HTML page with the function toHTML().
  * @author Ivor
  */
 public class FunctionDocument {
     private String functionName = "", description, version, packet = "testRealm";
     private final List<Pair<String, String>> parameters = new ArrayList<>();
     private final List<Pair<String, String>> examples = new ArrayList<>();
-    private final List<Pair<String, String>>  links = new ArrayList<>();
+    private final List<Pair<String, String>> links = new ArrayList<>();
     private final List<FunctionDocument> descriptiveLinks = new ArrayList<>();
     private final List<String> searchTags = new ArrayList<>();
     private final List<String> applications = new ArrayList<>();
@@ -69,42 +75,38 @@ public class FunctionDocument {
     public String getDescription() {
 	return description;
     }
-    
+
     /**
      * @param v
-     * 			The version of the function
+     *            The version of the function
      */
-    public void setVersion(String v)
-    {
-    	this.version = v;
+    public void setVersion(final String v) {
+	version = v;
     }
-    
+
     /**
      * @return Returns the version of the functiondocument
      */
-    public String getVersion()
-    {
-    	return this.version;
+    public String getVersion() {
+	return version;
     }
-    
+
     /**
      * Setter for the package of the functiondocument
-     * @param p
-     * 		The package the FunctionDocument is in
-     */
-    public void setPackage(String p)
-    {
-    	this.packet = p;
-    }
-    
-    /**
-     * @return 
-     * Returns the package of the functionDocument
      * 
+     * @param p
+     *            The package the FunctionDocument is in
      */
-    public String getPackage()
-    {
-    	return this.packet;
+    public void setPackage(final String p) {
+	packet = p;
+    }
+
+    /**
+     * @return Returns the package of the functionDocument
+     *
+     */
+    public String getPackage() {
+	return packet;
     }
 
     /**
@@ -151,37 +153,38 @@ public class FunctionDocument {
 
     /**
      * Adds a link to a function in a certain package.
-     * 
-     * @param packet 
-     * 			The package in which the function is contained
-     * @param function 
-     * 			The function which we want to link to.
+     *
+     * @param packet
+     *            The package in which the function is contained
+     * @param function
+     *            The function which we want to link to.
      */
     public void addLink(final String packet, final String function) {
-    	if(packet != null)
-    		links.add(new Pair<String, String>(packet.replace(" ", ""), function.replace(" ", "")));
-    	else
-    		links.add(new Pair<String, String>("NoPackageGiven", function.replace(" ", "")));
+	if (packet != null) {
+	    links.add(new Pair<String, String>(packet.replace(" ", ""), function.replace(" ", "")));
+	} else {
+	    links.add(new Pair<String, String>("NoPackageGiven", function.replace(" ", "")));
+	}
     }
-    
 
     /**
      * Adds a function to the functionDocument to which it refers
+     * 
      * @param docu
      */
     public void addDescriptiveLink(final FunctionDocument docu) {
-    descriptiveLinks.add(docu);
+	descriptiveLinks.add(docu);
     }
-    
-    
+
     /**
      * Generates a string which represents a link
+     * 
      * @param link
-     * 			The package and the function we're referring to.
+     *            The package and the function we're referring to.
      * @return
      */
-    private String generateLink(Pair<String, String> link){
-    	return "../" + link.getKey() + "/" + link.getValue() + ".html";
+    private static String generateLink(final Pair<String, String> link) {
+	return "../" + link.getKey() + "/" + link.getValue() + ".html";
     }
 
     /**
@@ -201,6 +204,7 @@ public class FunctionDocument {
 
     /**
      * The function that returns correct HTML to display the functiondocument.
+     * 
      * @return returns the correct HTML to display the FunctionDocument
      * @throws IOException
      */
@@ -255,28 +259,28 @@ public class FunctionDocument {
 	html._body();
 	return html.toHtml();
     }
-    
+
     /**
      * The function that creates correct HTML to display the package.
-     * @return
-     * 		Returns a string in HTML format.
+     * 
+     * @return Returns a string in HTML format.
      * @throws IOException
      */
     public String toPackageHTML() throws IOException {
-    	HtmlCanvas html = new HtmlCanvas();
-    	
-    	html = addHeader(html);
-    	
-    	html.body();
-    	
-    	html = addTitle(html);
-    	
-    	html = openTable(html);
-    	html = addLinksToTable(html);
-    	html = closeTable(html);
-    	
-    	html._body();
-    	return html.toHtml();
+	HtmlCanvas html = new HtmlCanvas();
+
+	html = addHeader(html);
+
+	html.body();
+
+	html = addTitle(html);
+
+	html = openTable(html);
+	html = addLinksToTable(html);
+	html = closeTable(html);
+
+	html._body();
+	return html.toHtml();
     }
 
     /**
@@ -340,13 +344,13 @@ public class FunctionDocument {
     private static HtmlCanvas openList(final HtmlCanvas canvas, final String listName) throws IOException {
 	return canvas.div(class_(listName)).h2().write(listName)._h2().ul();
     }
-    
+
     private static HtmlCanvas openTable(final HtmlCanvas canvas) throws IOException {
-    	return canvas.table();
+	return canvas.table();
     }
-    
+
     private static HtmlCanvas closeTable(final HtmlCanvas canvas) throws IOException {
-    	return canvas._table();
+	return canvas._table();
     }
 
     /**
@@ -384,17 +388,14 @@ public class FunctionDocument {
      */
     private static HtmlCanvas addItemToList(final HtmlCanvas canvas, final String item) {
 	try {
-		return canvas.li().p(class_("First")).write(item)._p()._li();
+	    return canvas.li().p(class_("First")).write(item)._p()._li();
 	} catch (IOException e) {
-		System.out.println(item);
-		e.printStackTrace();
+	    e.printStackTrace();
 	}
 	return null;
 
     }
-    
-    
-    
+
     /**
      * @param canvas
      *            The canvas we're adding the link to.
@@ -403,23 +404,20 @@ public class FunctionDocument {
      * @return A canvas with the link added.
      * @throws IOException
      */
-    private HtmlCanvas addLinkToList(final HtmlCanvas canvas, final Pair<String, String> link) throws IOException {
+    private static HtmlCanvas addLinkToList(final HtmlCanvas canvas, final Pair<String, String> link)
+	    throws IOException {
 	return canvas.li().p().a(href(generateLink(link))).write(link.getKey() + "." + link.getValue())._a()._p()._li();
     }
-    
-    private HtmlCanvas addLinksToTable(HtmlCanvas canvas) throws IOException{
-    	for(FunctionDocument desLink : descriptiveLinks)
-    	{
-    		canvas = canvas.tr()
-    						 .td().p().a(href(generateLink(new Pair<String, String>(desLink.getPackage(), desLink.getName())))).write(desLink.getName())._a()._p()._td()
-    						 .td();
-    		canvas = desLink.addFunction(canvas);
-    		canvas = canvas
-    						 ._td()
-    						 .td().p().write(desLink.description)._p()._td()
-    						 ._tr();
-    	}
-    	
-    	return canvas;
+
+    private HtmlCanvas addLinksToTable(HtmlCanvas canvas) throws IOException {
+	for (FunctionDocument desLink : descriptiveLinks) {
+	    canvas = canvas.tr().td().p()
+		    .a(href(generateLink(new Pair<String, String>(desLink.getPackage(), desLink.getName()))))
+		    .write(desLink.getName())._a()._p()._td().td();
+	    canvas = desLink.addFunction(canvas);
+	    canvas = canvas._td().td().p().write(desLink.description)._p()._td()._tr();
+	}
+
+	return canvas;
     }
 }

@@ -15,7 +15,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 /**
  * The construct of the Random function which is capable of generating random
  * numbervalues or getting a random index.
- * 
+ *
  * @author Ivor
  *
  */

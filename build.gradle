@@ -1,3 +1,7 @@
+/*
+* Please do not change this file unless explicitely instructed to. The values you can change are found in gradle.properties
+*/
+
 allprojects {
 	apply plugin: 'java'
 	apply plugin: 'eclipse'
@@ -7,6 +11,10 @@ allprojects {
 	repositories {
 		mavenLocal()
 		mavenCentral()
+	}
+	
+	javadoc{
+		failOnError = !Boolean.parseBoolean(javadocIgnoreErrors)
 	}
 	
 	task sourceJar(type: Jar) {
@@ -20,7 +28,7 @@ allprojects {
 		apply plugin: 'maven-publish'
 		publishing {
 			publications {
-				maven(MavenPublication) {
+				main(MavenPublication) {
 					groupId group
 					artifactId 'xill-' + project.name
 					version project.version
@@ -35,7 +43,7 @@ allprojects {
 			
 			 repositories {
 						maven {
-								url 'http://192.168.0.200:8081/nexus/content/repositories/releases'
+								url 'http://$mavenRepositoryHost:$mavenRespoitoryPort/nexus/content/repositories/releases'
 								name 'release'
 								credentials {
 									username = mavenUsername
@@ -55,6 +63,14 @@ allprojects {
 	dependencies {
 			testCompile 'org.testng:testng:6.9.4'
 			testCompile "org.mockito:mockito-core:1.+"
+	}
+	
+	build{
+		dependsOn javadoc
+	}
+	
+	jar.manifest {
+		attributes "Implementation-Version": version
 	}
 }
 
@@ -91,6 +107,8 @@ dependencies {
  */
 apply from: 'http://dl.bintray.com/content/shemnon/javafx-gradle/8.1.1/javafx.plugin'
 
+assemble.dependsOn.remove(jfxDeploy)
+
 jfxDeploy {
 	inputFiles = files(libsDir)
 }
@@ -123,19 +141,14 @@ jar{
 }
 
 javafx {
-	appID 'contenttools'
-	appName 'Xillio Content Tools'
-	copyright = 'Copyright (c) 2010-2015 Xillio B.V.'
+	appID = appID
+	appName = friendlyName
+	copyright = copyrightInformation
 	mainClass mainClassName
-	vendor = 'Xillio'
+	vendor = company
 	menu = true
 	shortcut = true
-				 
-	icons {
-			shortcut = ['src/main/resources/icons/xillio_icon.png']
-			volume = 'src/main/resources/icons/xillio_icon.png'
-			setup = 'src/main/resources/icons/xillio_icon.png'
-	}
+    embedJNLP = false
 }
 
 
@@ -155,27 +168,44 @@ eclipseClasspath {
 	dependsOn assembleContenttools
 }
 
-//Test the vpn network
-
 //Test vpn connection
-try {
-	Socket socket = new Socket();
-	socket.connect(new InetSocketAddress("192.168.0.200", 8081), 500);
+if(testConnection(mavenRepositoryHost)) {
+	logger.info "We have a connection to $mavenFriendlyServerName"
 	
-	//We are connected
-	println "We have a connection to BENDER"
-	
+	addRepositories(mavenRepositoryHost)
+}else if(testConnection(mavenRepositoryHostFallback)) {
+	logger.info "We have a connection to $mavenFriendlyServerName through an ssh tunnel"
+	addRepositories(mavenRepositoryHostFallback)
+}else {
+	logger.error 	"Unable to connect to $mavenFriendlyServerName\n" +
+							"Connect to office VPN or read the wiki to see how to connect to $mavenFriendlyServerName\n"+
+							"link: $mavenRepositoryConnectionGuide"
+}
+
+def testConnection(host) {
+	try {
+		def socket = new Socket();
+		socket.connect(new InetSocketAddress(host, Integer.parseInt(mavenRespoitoryPort)), Integer.parseInt(mavenTimeout))
+		socket.close()
+		
+		return true;
+	} catch (IOException ex) {
+		return false;
+	}
+}
+
+def addRepositories(host) {
 	allprojects{
 		repositories {
 			maven {
-				url "http://192.168.0.200:8081/nexus/content/repositories/releases"
+				url "http://$host:$mavenRespoitoryPort/nexus/content/repositories/releases"
 				credentials {
 					username mavenUsername
 					password mavenPassword
 				}
 			}
 			maven {
-				url "http://192.168.0.200:8081/nexus/content/repositories/thirdparty"
+				url "http://$host:$mavenRespoitoryPort/nexus/content/repositories/thirdparty"
 				credentials {
 					username mavenUsername
 					password mavenPassword
@@ -183,35 +213,6 @@ try {
 			}
 		}
 	}
-} catch (IOException ex) {
-	println "You are not connected to the VPN Network"
-	try {
-		Socket socket = new Socket();
-		socket.connect(new InetSocketAddress("localhost", 8081), 500);
-		
-		//We are connected
-		println "We have a connection to BENDER through a tunnel"
-		
-		allprojects{
-			repositories {
-				maven {
-					url "http://localhost:8081/nexus/content/repositories/releases"
-					credentials {
-						username mavenUsername
-						password mavenPassword
-					}
-				}
-				maven {
-					url "http://localhost:8081/nexus/content/repositories/thirdparty"
-					credentials {
-						username mavenUsername
-						password mavenPassword
-					}
-				}
-			}
-		}
-	} catch (IOException ex2) {
-		println "No connection to BENDER was found"
-		
-	}
 }
+
+run.dependsOn(assembleContenttools)
