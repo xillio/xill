@@ -16,9 +16,6 @@ dependencies {
 
 jar{
 	manifest {
-		attributes("Implementation-Title": 			"Xill IDE",
-										"Implementation-Version": 		version,
-										"Class-Path": configurations.runtime.files.collect {File file-> file.name }.join(" ")
-									 )
+		attributes "Class-Path": configurations.runtime.files.collect {File file-> file.name }.join(" ")
 	}
 }
