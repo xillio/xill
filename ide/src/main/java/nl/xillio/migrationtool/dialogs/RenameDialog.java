@@ -58,6 +58,7 @@ public class RenameDialog extends FXMLDialog {
 				} else {
 					FileUtils.moveFile(oldFile, newFile);
 				}
+				treeItem.setValue(new Pair<File,String>(newFile, tfname.getText()));
 				close();
 			} catch (IOException e) {
 				e.printStackTrace();
