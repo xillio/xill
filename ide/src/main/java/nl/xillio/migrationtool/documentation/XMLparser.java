@@ -62,10 +62,6 @@ public class XMLparser {
 			// Create XPath object
 			XPath xpath = xpathFactory.newXPath();
 
-			// Parse the name and name the function
-			XPathExpression nameExpr = xpath.compile("/function/name/text()");
-			func.setName(((String) nameExpr.evaluate(doc, XPathConstants.STRING)).trim());
-
 			// Parse the description
 			XPathExpression descriptionExpr = xpath.compile("/function/description/text()");
 			func.setDescription(((String) descriptionExpr.evaluate(doc, XPathConstants.STRING)).trim());

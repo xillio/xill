@@ -56,6 +56,7 @@ public class PluginListener {
 				try {
 					docu = parser.parseXML(documentedConstruct.openDocumentationStream(), plugin.getName(), plugin.getVersion());
 					thisPackage.addDescriptiveLink(docu);
+					docu.setName(construct.getName());
 
 					// If the version of the allready indexed function different
 					// from the version of the package
