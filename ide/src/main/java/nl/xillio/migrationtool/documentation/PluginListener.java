@@ -3,10 +3,6 @@ package nl.xillio.migrationtool.documentation;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import nl.xillio.events.Event;
 import nl.xillio.events.EventHost;
@@ -31,7 +27,6 @@ public class PluginListener {
 	private static final Logger log = Logger.getLogger(PluginListener.class);
 	private final EventHost<URL> onDeployedFiles = new EventHost<>();
 	private static final File HELP_FOLDER = new File("helpfiles");
-	private Set<FunctionDocument> functions = new HashSet<>();
 
 	/**
 	 * Listens to a pluginPackage and extracts its xml-files.
@@ -66,9 +61,8 @@ public class PluginListener {
 							FileUtils.write(
 								new File(HELP_FOLDER, plugin.getName() + "/" + docu.getName() + ".html"),
 								docu.toHTML());
-							// We add the document to the plugin (package)
+							// We set the version of the document
 							docu.setVersion(plugin.getVersion());
-							functions.add(docu);
 
 							// We index the document
 							searcher.index(docu);
@@ -83,15 +77,9 @@ public class PluginListener {
 					}
 				}
 			}
-			try {
-				// Generate the html file for the package
-				FileUtils.write(new File(HELP_FOLDER, "packages/" + plugin.getName() + ".html"),
-					packageDocumentation(plugin.getName(), functions).toHTML());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
-		//searcher.generatePackageDocument(plugin.getName());
+		
+		searcher.setIndex(HELP_FOLDER);
 	}
 
 	/**
@@ -106,24 +94,6 @@ public class PluginListener {
 		}
 	}
 
-	/**
-	 * @param packageName
-	 *        The name of the packages
-	 * @param functions
-	 *        The functions the package contains
-	 * @return A functiondocument that represents the package
-	 */
-	private static HtmlGenerator packageDocumentation(final String packageName,
-			final Set<FunctionDocument> functions) {
-		PackageDocument docu = new PackageDocument();
-		docu.setName(packageName);
-		for (FunctionDocument func : functions) {
-			docu.addDescriptiveLink(func);
-		}
-
-		return docu;
-	}
-
 	private boolean needsUpdate(final PluginPackage plugin, final Construct construct) {
 		// Check if version is changed
 		String name = construct.getName();
@@ -131,12 +101,6 @@ public class PluginListener {
 		if (version == null) {
 			return true;
 		}
-		
-		//If the functiondocument does exist, add the name and the description to the set of functions.
-		FunctionDocument docu = new FunctionDocument();
-		docu.setName(name);
-		docu.setDescription(searcher.getDocumentDescription(plugin.getName(),name));
-		functions.add(docu);
 		return !plugin.getVersion().equals(version);
 	}
 

@@ -1,9 +1,8 @@
 package nl.xillio.migrationtool.documentation;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
-
+import java.util.ArrayList;
+import java.util.List;
 import org.rendersnake.HtmlCanvas;
 
 /**
@@ -11,7 +10,7 @@ import org.rendersnake.HtmlCanvas;
  *
  */
 public class FunctionIndex extends HtmlGenerator {
-	Set<PackageDocument> packages = new HashSet<>();
+	List<PackageDocument> packages = new ArrayList<>();
 
 	/**
 	 * The constructor for the {@link FunctionIndex}
@@ -39,17 +38,14 @@ public class FunctionIndex extends HtmlGenerator {
 	}
 	
 	/**
-	 * <p>Adds a package to the list of preset packages through trying to remove it and then adding it again. </p>
-	 * <p> This ensures that versions are kept up to date </p>
+	 * Add a {@link PackageDocument} to the {@link FunctionIndex}
 	 * @param packet
-	 * 						The package we're adding.
+	 * 				The {@link PackageDocument} we want to add.
 	 */
-	public void addPackage(PackageDocument packet){
-		//Tries to remove the old package and adds this one.
-		packages.remove(packet);
-		packages.add((packet));
+	public void addPackageDocument(PackageDocument packet){
+		packages.add(packet);
 	}
-	
+
   /**
    * Adds a table with all the functions in the Package and a link to them.
    *
@@ -61,7 +57,11 @@ public class FunctionIndex extends HtmlGenerator {
    *             generating the HTML
    */
   private HtmlCanvas addTableWithPackages(HtmlCanvas canvas) throws IOException {
-  	return null;
+  	for(PackageDocument packet : packages)
+  	{
+  		canvas = packet.addTableWithFunctions(canvas);
+  	}
+  	return canvas;
 	  }
 
 }

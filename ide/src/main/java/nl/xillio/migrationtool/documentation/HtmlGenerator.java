@@ -111,7 +111,7 @@ public abstract class HtmlGenerator {
      *             Throws an IOException when failing to generate correct HTML.
      */
     protected static HtmlCanvas openTable(final HtmlCanvas canvas) throws IOException {
-	return canvas.table();
+	return canvas.section().table();
     }
 
     /**
@@ -124,7 +124,7 @@ public abstract class HtmlGenerator {
      *             Throws an IOException when failing to generate correct HTML.
      */
     protected static HtmlCanvas closeTable(final HtmlCanvas canvas) throws IOException {
-	return canvas._table();
+	return canvas._table()._section();
     }
 
     /**

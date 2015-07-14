@@ -64,8 +64,7 @@ public class PackageDocument extends HtmlGenerator {
      *             Throws an IOException when an error is encountered when
      *             generating the HTML
      */
-    private HtmlCanvas addTableWithFunctions(HtmlCanvas canvas) throws IOException {
-	canvas = canvas.section();
+   public HtmlCanvas addTableWithFunctions(HtmlCanvas canvas) throws IOException {
 	for (FunctionDocument desLink : descriptiveLinks) {
 	    canvas = canvas.tr().td().p()
 		    .a(href(generateLink(new Pair<String, String>(desLink.getPackage(), desLink.getName()))))
@@ -73,7 +72,6 @@ public class PackageDocument extends HtmlGenerator {
 	    canvas = desLink.addFunction(canvas);
 	    canvas = canvas._td().td().p().write(desLink.getDescription())._p()._td()._tr();
 	}
-	canvas = canvas._section();
 	return canvas;
     }
 

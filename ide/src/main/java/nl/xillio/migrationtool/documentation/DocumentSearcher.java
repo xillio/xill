@@ -2,6 +2,7 @@ package nl.xillio.migrationtool.documentation;
 
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.concurrent.ExecutionException;
 
 import javafx.util.Pair;
 
+import org.apache.commons.io.FileUtils;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
@@ -37,22 +39,6 @@ import org.elasticsearch.search.SearchHit;
  * <p>
  * It returns an IndexResponse which is an object from elasticsearch, usually this is cast into the void.
  * </p>
- * =======
- *
- * import javafx.util.Pair;
- *
- * /** This class handles indexing a FunctionDocument and querying the database
- * of FunctionDocuments. <BR>
- * <BR>
- *
- * The public search function receives a string as query, splits that string and
- * does a fuzzy search on each of the components. It returns an array with the
- * unique ID's of functions that match that query. <BR>
- * <BR>
- *
- * The public index function recieves a FunctionDocument and adds it to the
- * database. It returns an IndexResponse which is an object from elasticsearch,
- * usually this is cast into the void. >>>>>>> origin/develop
  *
  * @author Ivor
  */
@@ -153,11 +139,86 @@ public class DocumentSearcher {
 		try {
 			GetResponse Response = client.prepareGet(DOCUMENTATION_INDEX, packet, id).setFields("description").execute()
 				.actionGet();
-			return (String) Response.getField("version").getValue();
+			return (String) Response.getField("description").getValue();
 		} catch (Exception e) {
 			return null;
 		}
-
+	}
+	
+	/**
+	 *Queries the database for a {@link FunctionDocument} its parameters.
+	 * @param packet
+	 * 					The name of the {@link PackageDocument} package of the function we're searching.
+	 * @param id	 
+	 * 					The name of the {@link FunctionDocument} we're searching.
+	 * @return
+	 * 					Returns the parameters in a list of strings.
+	 */
+	public List<String> getDocumentParameters(final String packet, final String id)	{
+		checkIndex();
+		try {
+			GetResponse Response = client.prepareGet(DOCUMENTATION_INDEX, packet, id).setFields("parameters").execute()
+				.actionGet();
+			String params = (String) Response.getField("parameters").getValue();
+			List<String> result = new ArrayList<>();
+			result.add(params);
+			return result;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	
+	/**
+	 * Set the index helpfiles and the package helpfiles
+	 * @param HELP_FOLDER
+	 * 				The folder where the files end up.
+	 */
+	public void setIndex(File HELP_FOLDER)
+	{
+		checkIndex();
+		FunctionIndex index = new FunctionIndex("index");
+	  SearchResponse response = client.prepareSearch(DOCUMENTATION_INDEX)
+	      .setQuery(QueryBuilders.matchAllQuery())
+	      .execute()
+	      .actionGet();
+	  
+		// Return the ID of each response (functionname)
+		SearchHit[] hits = response.getHits().getHits();
+		String packageName = "";
+		PackageDocument packet = new PackageDocument();
+		for (SearchHit hit : hits) {
+			System.out.println(hit.getId());
+		if (packageName != hit.getType())
+		{
+			if(packageName != ""){
+				try {
+					FileUtils.write(new File(HELP_FOLDER, "packages/" + packageName + ".html"),	packet.toHTML());
+					index.addPackageDocument(packet);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			packageName = hit.getType();
+			packet = new PackageDocument();
+			packet.setName(packageName);
+		}
+		FunctionDocument docu = new FunctionDocument();
+		docu.setName(hit.getId());
+		docu.setDescription(this.getDocumentDescription(packageName, docu.getName()));
+		docu.setParameters(this.getDocumentParameters(packageName, docu.getName()));
+		packet.addDescriptiveLink(docu);
+		}
+		
+		if(packageName != ""){
+			try {
+				FileUtils.write(new File(HELP_FOLDER, "packages/" + packageName + ".html"),	packet.toHTML());
+				index.addPackageDocument(packet);
+				FileUtils.write(new File(HELP_FOLDER, "packages/" + "index" + ".html"),	index.toHTML());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -179,23 +240,15 @@ public class DocumentSearcher {
 		for (int t = 0; t < items.size(); t++) {
 			examples[t] = items.get(t).getValue();
 		}
-
-		// Create an array with all the parameters
-		// To be adjusted in 3.0
-		List<Pair<String, String>> parameters = new ArrayList<>(document.getParameters());
-		String[] parameterstrings = new String[parameters.size()];
-		for (int t = 0; t < parameters.size(); t++) {
-			parameterstrings[t] = parameters.get(t).getKey() + " " + parameters.get(t).getValue();
-		}
-
 		// Return an indexed client with three fields
 		return client.prepareIndex(DOCUMENTATION_INDEX, document.getPackage(), document.getName())
 			.setSource(jsonBuilder().startObject().field("name", document.getName())
-				.field("description", document.getDescription()).field("parameters", parameterstrings)
+				.field("description", document.getDescription()).field("parameters", document.getParameters())
 				.field("searchTags", document.getSearchTags()).field("version", document.getVersion())
 				.endObject())
 
 			.execute().actionGet();
+		
 	}
 
 	/**
