@@ -58,7 +58,7 @@ public class FunctionDocument extends HtmlGenerator {
 
 	/**
 	 * Sets the description of the {@link FunctionDocument}
-	 * 
+	 *
 	 * @param Description
 	 *        The description of the function.
 	 */
@@ -68,7 +68,7 @@ public class FunctionDocument extends HtmlGenerator {
 
 	/**
 	 * The getter for the description.
-	 * 
+	 *
 	 * @return Returns the description of the {@link FunctionDocument}
 	 */
 	public String getDescription() {
@@ -123,6 +123,7 @@ public class FunctionDocument extends HtmlGenerator {
 
 	/**
 	 * Returns the parameters as a string, split on comma's
+	 *
 	 * @return Returns the parameters of the {@link FunctionDocument}
 	 */
 	public String getParameters() {
@@ -130,10 +131,10 @@ public class FunctionDocument extends HtmlGenerator {
 		for (String parameter : parameters) {
 			str += parameter + ", ";
 		}
-			// Remove the last comma
-			if (str.length() > 1) {
-				str = str.substring(0, str.length() - 2);
-			}
+		// Remove the last comma
+		if (str.length() > 1) {
+			str = str.substring(0, str.length() - 2);
+		}
 		return str;
 	}
 
@@ -151,7 +152,7 @@ public class FunctionDocument extends HtmlGenerator {
 
 	/**
 	 * Generates a string which represents a link
-	 * 
+	 *
 	 * @param link
 	 *        The package and the function we're referring to.
 	 * @return
@@ -258,7 +259,7 @@ public class FunctionDocument extends HtmlGenerator {
 			return canvas.strong().write(getName())._strong();
 		}
 		// We build the string
-		String str = "(" + this.getParameters() + ")";
+		String str = "(" + getParameters() + ")";
 		// Write the function name and the parameters behind it
 		return canvas.strong().write(getName())._strong().write(str);
 	}
@@ -287,7 +288,7 @@ public class FunctionDocument extends HtmlGenerator {
 
 	/**
 	 * Sets the parameters of a {@link FunctionDocument}
-	 * 
+	 *
 	 * @param params
 	 *        the parameters.
 	 */

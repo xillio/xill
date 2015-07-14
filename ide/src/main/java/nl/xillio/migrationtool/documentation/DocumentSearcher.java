@@ -15,6 +15,7 @@ import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
+import org.elasticsearch.action.admin.indices.refresh.RefreshRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
@@ -87,10 +88,10 @@ public class DocumentSearcher {
 		String[] queries = query.split(" ");
 		for (String q : queries) {
 			question = question.should(QueryBuilders.fuzzyQuery("name", q).fuzziness(Fuzziness.TWO).boost(3.0f))
-				.should(QueryBuilders.wildcardQuery("name", "*" + q + "*").boost(3.0f))
-				.should(QueryBuilders.fuzzyQuery("description", q)).should(QueryBuilders.fuzzyQuery("examples", q))
-				.should(QueryBuilders.fuzzyQuery("searchTags", q).boost(3.0f))
-				.should(QueryBuilders.wildcardQuery("searchTags", "*" + q + "*").boost(3.0f));
+					.should(QueryBuilders.wildcardQuery("name", "*" + q + "*").boost(3.0f))
+					.should(QueryBuilders.fuzzyQuery("description", q)).should(QueryBuilders.fuzzyQuery("examples", q))
+					.should(QueryBuilders.fuzzyQuery("searchTags", q).boost(3.0f))
+					.should(QueryBuilders.wildcardQuery("searchTags", "*" + q + "*").boost(3.0f));
 		}
 		// Retrieve a response
 		SearchResponse response = client.prepareSearch(DOCUMENTATION_INDEX).setQuery(question).execute().actionGet();
@@ -117,14 +118,14 @@ public class DocumentSearcher {
 		checkIndex();
 		try {
 			GetResponse Response = client.prepareGet(DOCUMENTATION_INDEX, packet, id).setFields("version").execute()
-				.actionGet();
+					.actionGet();
 			return (String) Response.getField("version").getValue();
 		} catch (Exception e) {
 			return null;
 		}
 
 	}
-	
+
 	/**
 	 * Returns a string which is the documentDescription given a package and ID.
 	 *
@@ -138,86 +139,34 @@ public class DocumentSearcher {
 		checkIndex();
 		try {
 			GetResponse Response = client.prepareGet(DOCUMENTATION_INDEX, packet, id).setFields("description").execute()
-				.actionGet();
+					.actionGet();
 			return (String) Response.getField("description").getValue();
 		} catch (Exception e) {
 			return null;
 		}
 	}
-	
+
 	/**
-	 *Queries the database for a {@link FunctionDocument} its parameters.
+	 * Queries the database for a {@link FunctionDocument} its parameters.
+	 * 
 	 * @param packet
-	 * 					The name of the {@link PackageDocument} package of the function we're searching.
-	 * @param id	 
-	 * 					The name of the {@link FunctionDocument} we're searching.
+	 *        The name of the {@link PackageDocument} package of the function we're searching.
+	 * @param id
+	 *        The name of the {@link FunctionDocument} we're searching.
 	 * @return
-	 * 					Returns the parameters in a list of strings.
+	 *         Returns the parameters in a list of strings.
 	 */
-	public List<String> getDocumentParameters(final String packet, final String id)	{
+	public List<String> getDocumentParameters(final String packet, final String id) {
 		checkIndex();
 		try {
 			GetResponse Response = client.prepareGet(DOCUMENTATION_INDEX, packet, id).setFields("parameters").execute()
-				.actionGet();
+					.actionGet();
 			String params = (String) Response.getField("parameters").getValue();
 			List<String> result = new ArrayList<>();
 			result.add(params);
 			return result;
 		} catch (Exception e) {
 			return null;
-		}
-	}
-	
-	
-	/**
-	 * Set the index helpfiles and the package helpfiles
-	 * @param HELP_FOLDER
-	 * 				The folder where the files end up.
-	 */
-	public void setIndex(File HELP_FOLDER)
-	{
-		checkIndex();
-		FunctionIndex index = new FunctionIndex("index");
-	  SearchResponse response = client.prepareSearch(DOCUMENTATION_INDEX)
-	      .setQuery(QueryBuilders.matchAllQuery())
-	      .execute()
-	      .actionGet();
-	  
-		// Return the ID of each response (functionname)
-		SearchHit[] hits = response.getHits().getHits();
-		String packageName = "";
-		PackageDocument packet = new PackageDocument();
-		for (SearchHit hit : hits) {
-			System.out.println(hit.getId());
-		if (packageName != hit.getType())
-		{
-			if(packageName != ""){
-				try {
-					FileUtils.write(new File(HELP_FOLDER, "packages/" + packageName + ".html"),	packet.toHTML());
-					index.addPackageDocument(packet);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			packageName = hit.getType();
-			packet = new PackageDocument();
-			packet.setName(packageName);
-		}
-		FunctionDocument docu = new FunctionDocument();
-		docu.setName(hit.getId());
-		docu.setDescription(this.getDocumentDescription(packageName, docu.getName()));
-		docu.setParameters(this.getDocumentParameters(packageName, docu.getName()));
-		packet.addDescriptiveLink(docu);
-		}
-		
-		if(packageName != ""){
-			try {
-				FileUtils.write(new File(HELP_FOLDER, "packages/" + packageName + ".html"),	packet.toHTML());
-				index.addPackageDocument(packet);
-				FileUtils.write(new File(HELP_FOLDER, "packages/" + "index" + ".html"),	index.toHTML());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 
@@ -242,13 +191,13 @@ public class DocumentSearcher {
 		}
 		// Return an indexed client with three fields
 		return client.prepareIndex(DOCUMENTATION_INDEX, document.getPackage(), document.getName())
-			.setSource(jsonBuilder().startObject().field("name", document.getName())
-				.field("description", document.getDescription()).field("parameters", document.getParameters())
-				.field("searchTags", document.getSearchTags()).field("version", document.getVersion())
-				.endObject())
+				.setSource(jsonBuilder().startObject().field("name", document.getName())
+					.field("description", document.getDescription()).field("parameters", document.getParameters())
+					.field("searchTags", document.getSearchTags()).field("version", document.getVersion())
+					.endObject())
 
-			.execute().actionGet();
-		
+					.execute().actionGet();
+
 	}
 
 	/**
@@ -259,7 +208,7 @@ public class DocumentSearcher {
 
 		try {
 			IndicesExistsResponse result = client.admin().indices()
-				.exists(new IndicesExistsRequest(DOCUMENTATION_INDEX)).get();
+					.exists(new IndicesExistsRequest(DOCUMENTATION_INDEX)).get();
 			indexFound = result.isExists();
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();

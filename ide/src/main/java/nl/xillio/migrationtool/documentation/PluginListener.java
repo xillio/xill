@@ -3,6 +3,8 @@ package nl.xillio.migrationtool.documentation;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import nl.xillio.events.Event;
 import nl.xillio.events.EventHost;
@@ -27,12 +29,14 @@ public class PluginListener {
 	private static final Logger log = Logger.getLogger(PluginListener.class);
 	private final EventHost<URL> onDeployedFiles = new EventHost<>();
 	private static final File HELP_FOLDER = new File("helpfiles");
+	private final FunctionIndex packages = new FunctionIndex("index");
 
 	/**
 	 * Listens to a pluginPackage and extracts its xml-files.
 	 *
 	 * @param plugin
 	 *        The plugin that we load
+	 * @throws SAXException
 	 *
 	 */
 	public void pluginLoaded(final PluginPackage plugin) {
@@ -40,46 +44,58 @@ public class PluginListener {
 
 		XMLparser parser = new XMLparser();
 		DocumentSearcher searcher = new DocumentSearcher(ESConsoleClient.getInstance().getClient());
+		PackageDocument thisPackage = new PackageDocument();
+		thisPackage.setName(plugin.getName());
 
 		for (Construct construct : plugin.getConstructs()) {
 			if (construct instanceof HelpComponent) {
 				HelpComponent documentedConstruct = (HelpComponent) construct;
 
-				// If the version of the allready indexed function different
-				// from the version of the package
-				// or the function is non-existant in the database, we parse the
-				// new xml and generate html.
-				if (needsUpdate(plugin, construct)) {
-					try {
-						// Parse the XML
-						FunctionDocument docu = parser.parseXML(documentedConstruct.openDocumentationStream(),
-							plugin.getName(), plugin.getVersion());
+				// Parse the XML
+				FunctionDocument docu;
+				try {
+					docu = parser.parseXML(documentedConstruct.openDocumentationStream(), plugin.getName(), plugin.getVersion());
+					thisPackage.addDescriptiveLink(docu);
 
-						// Write an html file
-						if (plugin.getName() != null && docu.getName() != null) {
-							// We write the HTML file
-							FileUtils.write(
-								new File(HELP_FOLDER, plugin.getName() + "/" + docu.getName() + ".html"),
-								docu.toHTML());
-							// We set the version of the document
-							docu.setVersion(plugin.getVersion());
+					// If the version of the allready indexed function different
+					// from the version of the package
+					// or the function is non-existant in the database, we parse the
+					// new xml and generate html.
+					if (needsUpdate(plugin, construct)) {
+						try {
+							// Write an html file
+							if (plugin.getName() != null && docu.getName() != null) {
+								// We write the HTML file
+								FileUtils.write(
+									new File(HELP_FOLDER, plugin.getName() + "/" + docu.getName() + ".html"),
+									docu.toHTML());
+								// We set the version of the document
+								docu.setVersion(plugin.getVersion());
 
-							// We index the document
-							searcher.index(docu);
-							log.info("Generated html documentation for " + plugin.getName() + "." + construct.getName());
-						} else {
-							log.error("Invalid name found for the package or a function in the package.");
+								// We index the document
+								searcher.index(docu);
+								log.info("Generated html documentation for " + plugin.getName() + "." + construct.getName());
+							} else {
+								log.error("Invalid name found for the package or a function in the package.");
+							}
+						} catch (IOException e) {
+							e.printStackTrace();
 						}
-					} catch (IOException e) {
-						e.printStackTrace();
-					} catch (SAXException e) {
-						log.error("Invalid XML file found in the package", e);
 					}
+				} catch (SAXException e) {
+					log.error("Invalid XML file found in the package.");
 				}
 			}
 		}
-		
-		searcher.setIndex(HELP_FOLDER);
+		try {
+			FileUtils.write(
+				new File(HELP_FOLDER, "packages/" + thisPackage.getName() + ".html"),
+				thisPackage.toHTML());
+			packages.addPackageDocument(thisPackage);
+			FileUtils.write(new File(HELP_FOLDER, "packages/index.html"),  packages.toHTML());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -122,7 +138,7 @@ public class PluginListener {
 
 	/**
 	 * An event that is called when the loader is done deploying files. The argument is the resource that indicates the home page.
-	 * 
+	 *
 	 * @return the onDeployedFiles
 	 */
 	public Event<URL> getOnDeployedFiles() {
