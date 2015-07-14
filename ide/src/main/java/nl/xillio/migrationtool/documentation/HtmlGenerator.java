@@ -159,7 +159,6 @@ public abstract class HtmlGenerator {
 		try {
 			return canvas.li().p(class_("First")).write(item)._p()._li();
 		} catch (IOException e) {
-			System.out.println(item);
 			e.printStackTrace();
 		}
 		return null;

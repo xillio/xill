@@ -202,6 +202,8 @@ public class FXController implements Initializable, EventHandler<Event> {
 		} catch (CircularReferenceException e) {
 		    throw new RuntimeException(e);
 		}
+		
+		documentationListener.forceGenerateIndex();
 	});
 	
 	pluginLoadingThread.start();

@@ -3,9 +3,11 @@ package nl.xillio.migrationtool.documentation;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
+import javafx.animation.Animation.Status;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 import nl.xillio.events.Event;
 import nl.xillio.events.EventHost;
 import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient;
@@ -30,6 +32,7 @@ public class PluginListener {
 	private final EventHost<URL> onDeployedFiles = new EventHost<>();
 	private static final File HELP_FOLDER = new File("helpfiles");
 	private final FunctionIndex packages = new FunctionIndex("index");
+	private final Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), ae -> log.debug("tok")));
 
 	/**
 	 * Listens to a pluginPackage and extracts its xml-files.
@@ -40,6 +43,8 @@ public class PluginListener {
 	 *
 	 */
 	public void pluginLoaded(final PluginPackage plugin) {
+			timeline.play();
+
 		plugin.getName();
 
 		XMLparser parser = new XMLparser();
@@ -51,9 +56,9 @@ public class PluginListener {
 			if (construct instanceof HelpComponent) {
 				HelpComponent documentedConstruct = (HelpComponent) construct;
 
-				// Parse the XML
 				FunctionDocument docu;
 				try {
+					// parse the xml and default the name of the functiondocument to the name of the construct
 					docu = parser.parseXML(documentedConstruct.openDocumentationStream(), plugin.getName(), plugin.getVersion());
 					thisPackage.addDescriptiveLink(docu);
 					docu.setName(construct.getName());
@@ -93,7 +98,6 @@ public class PluginListener {
 				new File(HELP_FOLDER, "packages/" + thisPackage.getName() + ".html"),
 				thisPackage.toHTML());
 			packages.addPackageDocument(thisPackage);
-			FileUtils.write(new File(HELP_FOLDER, "packages/index.html"),  packages.toHTML());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -119,8 +123,9 @@ public class PluginListener {
 			return true;
 		}
 		File f = FileUtils.getFile("/helpfiles/" + plugin.getName() + "/" + construct.getName() + ".html");
-		if(f.exists() && !f.isDirectory())
+		if (f.exists() && !f.isDirectory()) {
 			return true;
+		}
 		return !plugin.getVersion().equals(version);
 	}
 
@@ -147,5 +152,13 @@ public class PluginListener {
 	 */
 	public Event<URL> getOnDeployedFiles() {
 		return onDeployedFiles.getEvent();
+	}
+	
+	/**
+	 * Forcefully generate the index
+	 */
+	public void forceGenerateIndex() {
+		timeline.stop();
+		timeline.getKeyFrames().get(0).getOnFinished().handle(null);
 	}
 }

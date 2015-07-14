@@ -2,7 +2,6 @@ package nl.xillio.migrationtool.documentation;
 
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,12 +9,10 @@ import java.util.concurrent.ExecutionException;
 
 import javafx.util.Pair;
 
-import org.apache.commons.io.FileUtils;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
-import org.elasticsearch.action.admin.indices.refresh.RefreshRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
@@ -148,7 +145,7 @@ public class DocumentSearcher {
 
 	/**
 	 * Queries the database for a {@link FunctionDocument} its parameters.
-	 * 
+	 *
 	 * @param packet
 	 *        The name of the {@link PackageDocument} package of the function we're searching.
 	 * @param id

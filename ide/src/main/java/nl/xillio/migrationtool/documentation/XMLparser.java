@@ -36,7 +36,7 @@ public class XMLparser {
 	/**
 	 * This function parses XML given by a package and can return a
 	 * FunctionDocument containing the information.
-	 * 
+	 *
 	 * @param xml
 	 *        An {@link InputStream} containing the xml.
 	 * @param packet

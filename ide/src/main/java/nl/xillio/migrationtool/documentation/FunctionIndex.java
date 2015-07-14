@@ -7,6 +7,13 @@ import java.util.List;
 import org.rendersnake.HtmlCanvas;
 
 /**
+ * <p>
+ * This is a representation of the index file. It contains packages.
+ * </p>
+ * <p>
+ * The {@link FunctionIndex} can generate HTML through generating the html of each {@link PackageDocument}
+ * </p>
+ * 
  * @author Ivor
  *
  */
@@ -15,7 +22,7 @@ public class FunctionIndex extends HtmlGenerator {
 
 	/**
 	 * The constructor for the {@link FunctionIndex}
-	 * 
+	 *
 	 * @param name
 	 *        The name of the {@link FunctionIndex}
 	 */
@@ -41,7 +48,7 @@ public class FunctionIndex extends HtmlGenerator {
 
 	/**
 	 * Add a {@link PackageDocument} to the {@link FunctionIndex}
-	 * 
+	 *
 	 * @param packet
 	 *        The {@link PackageDocument} we want to add.
 	 */
@@ -60,6 +67,7 @@ public class FunctionIndex extends HtmlGenerator {
 	 *         generating the HTML
 	 */
 	private HtmlCanvas addTableWithPackages(HtmlCanvas canvas) throws IOException {
+		// For each PackageDocument we add the package name and the table with its functions
 		for (PackageDocument packet : packages)
 		{
 			canvas = canvas.tr().td().strong().write(packet.getName())._strong()._td()._tr();
