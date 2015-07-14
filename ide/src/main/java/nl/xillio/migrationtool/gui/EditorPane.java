@@ -96,7 +96,7 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 	public void initialize(final RobotTab tab) {
 
 		this.tab = tab;
-		controls = new RobotControls(tab, btnRun, btnPause, btnStop, btnStepIn, btnStepOver);
+		controls = new RobotControls(tab, btnRun, btnPause, btnStop, btnStepIn, btnStepOver, cmiError);
 		editor.setTab(tab);
 		editor.addKeywords(tab.getProcessor());
 
