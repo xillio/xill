@@ -1,6 +1,0 @@
-<head><title>geterror</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>geterror</h1></div><div class="Section"><p><strong>geterror</strong>(any  variable)</p></div><div class="Section"><h2>Description</h2><p>Returns a variable with the error message and type held by the parameter variable. Returns null if variable contains no error condition (i.e. either variable is `null or no error occured).</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Get the error message after saving a file fails:</p><div class="highlight"><pre>error = geterror(savedata(filename, &quot;&quot;, false, true, true));
-if (error != null) {
-    log(error.type + &quot;: &quot; + error.message);
-    return();
-}
-</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../null/Language.html">../null/Language.html</a></p></li></ul></div></body>

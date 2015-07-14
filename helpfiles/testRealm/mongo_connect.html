@@ -1,8 +1,0 @@
-<head><title>mongo_connect</title><link type="text/css" href="../_static/default.css" rel="stylesheet"/></head><body><div class="Section"><h1>mongo_connect</h1></div><div class="Section"><p><strong>mongo_connect</strong>(string  database,, string  host ,, number  port )</p></div><div class="Section"><h2>Description</h2><p>Connects to a mongoDB database with name database on a server at the provided host and port. Returns a string which can be used to identify this connection for use with other mongo functions. All other mongo functions take the connection string as an optional argument, when none is given they will use the first one that was connected to.Default valueshost:localhostport:27017</p></div><div class="Examples"><h2>Examples</h2><ul><li><p class="First">Common usage:</p><div class="highlight"><pre>mongo = mongo_connect(settings.dbname, settings.host, settings.port);
-</pre></div></li><li><p class="First">Where settings might be:</p><div class="highlight"><pre>settings = {
-        dbname = &quot;remotedb&quot;,
-        host = &quot;37.0.85.17&quot;,
-        port = 27017
-};
-</pre></div></li><li><p class="First">To connect using all defaults use:</p><div class="highlight"><pre>mongo = mongo_connect(&quot;localdb&quot;);
-</pre></div></li></ul></div><div class="Tags"><h2>Tags</h2><ul><li><p><a href="../null/MongoDB.html">../null/MongoDB.html</a></p></li></ul></div></body>
