@@ -43,17 +43,29 @@ public class ReverseConstruct implements Construct {
 		}
 
 		List<MetaExpression> list = (List<MetaExpression>)listVar.getValue();
-		List<MetaExpression> reversedList = new ArrayList<>(list.size());
+		List<MetaExpression> reversedList = new ArrayList<>(list);
 
 		if (reverseRecursive) {
-			//reversedList = processList(list);
+			reversedList = processList(list);
 		} else {
-			Collections.copy(list, reversedList);
 			Collections.reverse(reversedList);
 		}
 
 		return ExpressionBuilder.fromValue(reversedList);
 	}
 		
+	public static List<MetaExpression> processList(List<MetaExpression> listVar){
+		List<MetaExpression> reversedList = new ArrayList<>();
+		for(MetaExpression e : listVar){
+			if(e.getType() == ExpressionDataType.LIST){
+				
+				List<MetaExpression> subList = (List<MetaExpression>)e.getValue();
+				
+				reversedList.add(ExpressionBuilder.fromValue(inList));
+				
+			}
+		}
+		return listVar;
+	}
 	}
 
