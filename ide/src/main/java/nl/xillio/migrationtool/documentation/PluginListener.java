@@ -117,6 +117,9 @@ public class PluginListener {
 		if (version == null) {
 			return true;
 		}
+		File f = FileUtils.getFile("/helpfiles/" + plugin.getName() + "/" + construct.getName() + ".html");
+		if(f.exists() && !f.isDirectory())
+			return true;
 		return !plugin.getVersion().equals(version);
 	}
 

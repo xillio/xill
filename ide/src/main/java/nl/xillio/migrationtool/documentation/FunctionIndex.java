@@ -62,6 +62,7 @@ public class FunctionIndex extends HtmlGenerator {
 	private HtmlCanvas addTableWithPackages(HtmlCanvas canvas) throws IOException {
 		for (PackageDocument packet : packages)
 		{
+			canvas = canvas.tr().td().strong().write(packet.getName())._strong()._td()._tr();
 			canvas = packet.addTableWithFunctions(canvas);
 		}
 		return canvas;
