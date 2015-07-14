@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="stringtoxml">
+  <name>stringtoxml</name>
+  <parameters>
+    <param name="value">
+      <type>string</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Loads the specified text as XML. Useful to generate (parts of) XML or HTML documents inline.]]></description>
+  <examples>
+    <example description="Executing the following code"><![CDATA[content = "<note id=\"1\">
+            <to>Tove</to>
+            <from>Jani</from>
+            <heading>Reminder</heading>
+            <comment>This was sent to James as well</comment>
+            <comment>John has not responded to the invitation</comment>
+            <body>Don't forget me this weekend!</body>
+        </note>";
+]]></example>
+    <example description="xmlcontent = stringtoxml (content);"><![CDATA[]]></example>
+    <example description="comments = xpath (xmlcontent, &quot;//comment&quot;);"><![CDATA[]]></example>
+    <example description="log (comments);"><![CDATA[]]></example>
+    <example description="will print:"><![CDATA[{
+        0 = <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+                <comment>This was sent to James as well</comment>,
+        1 = <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+                <comment>John has not responded to the invitation</comment>
+}
+]]></example>
+    <example description="However, trying to execute this line:"><![CDATA[comments = xpath (content, "//comment");
+]]></example>
+    <example description="will throw an error."><![CDATA[]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag> xmltostring, loadxml</tag>
+    <tag>XML / HTML, Text, Conversion</tag>
+  </tags>
+</function>

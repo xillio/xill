@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="ampersandencode">
+  <name>ampersandencode</name>
+  <parameters>
+    <param name="text">
+      <type>&lt;string,void&gt;</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Encodes all special XML characters (,>,&,”,’) to their respective xml entities.]]></description>
+  <examples>
+    <example description="Executing:"><![CDATA[ampersandencode("<p><a href=\"default.asp\">HTML Tutorial</a> This is a link to a page on this website.</p>");
+]]></example>
+    <example description="Returns"><![CDATA[&lt;p&gt;&lt;a href=&quot;default.asp&quot;&gt;HTML Tutorial&lt;/a&gt; This is a link to a page on this website.&lt;/p&gt;
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag package = "String"> ampersanddecode</tag>
+  </tags>
+</function>

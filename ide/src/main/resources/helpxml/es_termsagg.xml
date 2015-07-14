@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="es_termsagg">
+  <name>es_termsagg</name>
+  <parameters>
+    <param name="name,">
+      <type>string</type>
+    </param>
+    <param name="field,">
+      <type>string</type>
+    </param>
+    <param name="parent ">
+      <type>&lt;string,void&gt;</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Creates an aggregation name grouped by field as a child of aggregation parent. Returns a string identifier that can be used to identify this filter.Two sibling or same-level aggregations cannot have the same name. Children of this aggregation should be created with es_statsagg ().]]></description>
+  <examples>
+    <example description="Create an aggregation “sort_color” and group by the color field:"><![CDATA[colors = es_termsagg("sort_color", "color");
+]]></example>
+    <example description="Create an aggregation “authors” that includes a field “stats” containing statistics for the “price” field grouped by “author”:"><![CDATA[es_connect();
+//create a new aggregation "authors" which groups by field "author"
+authors = es_termsagg("authors", "author");
+//add the field "stats", which shows the aggregated statistics for the field "price"
+es_statsagg("stats", "price", authors);
+results = es_aggregate("art", null, authors);
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag> es_statsagg</tag>
+    <tag>Elasticsearch</tag>
+  </tags>
+</function>

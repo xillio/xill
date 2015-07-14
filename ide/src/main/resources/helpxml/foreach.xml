@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="foreach">
+  <name>foreach</name>
+  <parameters>
+    <param name="__key,">
+      <type>string</type>
+    </param>
+    <param name="__value,">
+      <type>string</type>
+    </param>
+    <param name="__list">
+      <type>any</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Iterates over all items in the provided list, putting key and value into the provided variables. If a non-list variable is provided, the foreach will run once, while putting the value of the variable into the value. If list is null, the foreach construct will not loop at all. By convention an underscore _ is used as first parameter if we do not need to use the key.]]></description>
+  <examples>
+    <example description="Looping through a basic list:"><![CDATA[items = {1,2,3,4,5,6,7,8,9};
+foreach(_,item,items){
+    log(item);
+}
+]]></example>
+    <example description="Looping through an Excel sheet:"><![CDATA[listFromSheet = routine (startrow, columnlist, currentsheet) {
+//returns a list of clean URL's from an Excel spreadsheet identified by index currentsheet, starting at row startrow and looping over columns in columnlist
+    result = {null, null};
+    index = 0;
+]]></example>
+    <example description="    foreach (_, column, columnlist) {"><![CDATA[        row = startrow;
+        while (row < currentsheet.rows) {
+            currentcell = trim (getcell (currentsheet, column, row));
+            if ((currentcell != null) && (startswith (currentcell, "http://")))  {
+                result[index] = replace (currentcell, "/$", ""); //strip trailinig slash;
+                index = index + 1;
+            }
+            row = row + 1;
+        }
+    }
+    return (result);
+}
+]]></example>
+    <example description="Loop through links on a page:"><![CDATA[// Process links on the page
+page = loadpage("http://www.xillio.com");
+links = xpath(page, "//a");
+foreach(numberinlevel, link, links) {
+    // numberinlevel contains a counter counting the links
+    url = xpath(link, "./@href");
+    if (variabletype (url) == "list") {
+        url = url[0];
+    }
+}
+]]></example>
+    <example description="Compare URL’s to a list:"><![CDATA[if (fileexists (settings.subset_file_uri)) { // make a list of URL's that form the subset for this test
+    sublist = global (split (loaddata (settings.subset_file_uri), "\r\n"));
+    //log ("Subset for test: \n" + sublist);
+}
+]]></example>
+    <example description="insubset = routine (pageid) {"><![CDATA[// returns true if pageid is on the list of URL's to be included in the test or if it is a sub URL of those on the list.
+    url = geturl (pageid);
+    if (url != null) {
+        if (contains (sublist, url)) {
+            return (true); // URL on the list
+        } else {
+            foreach (index, suburl, sublist) {
+                if (contains (url, suburl)) {
+                    return (true); // sub URL on the list
+                }
+            }
+        }
+        return (false); //url not on the list
+    } else { // page does not exist
+        return (null);
+    }
+}
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag> while</tag>
+    <tag>Language</tag>
+  </tags>
+</function>

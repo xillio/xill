@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="jsontolist">
+  <name>jsontolist</name>
+  <parameters>
+    <param name="content">
+      <type>&lt;void,string&gt;</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Parses the JSON string content and returns a list variable.]]></description>
+  <examples>
+    <example description="Assuming we have a file C:/tmp/menu.json which contains the following:"><![CDATA[{"menu": {
+  "id": "file",
+  "value": "File",
+  "popup": {
+    "menuitem": [
+      {"value": "New", "onclick": "CreateNewDoc()"},
+      {"value": "Open", "onclick": "OpenDoc()"},
+      {"value": "Close", "onclick": "CloseDoc()"}
+    ]
+  }
+}}
+]]></example>
+    <example description="then executing this code:"><![CDATA[jsonstring = loaddata ("C:/tmp/menu.json");
+]]></example>
+    <example description="menulist = jsontolist (jsonstring);"><![CDATA[]]></example>
+    <example description="log (menulist);"><![CDATA[]]></example>
+    <example description="will print:"><![CDATA[{
+  "menu": {
+    "id": "file",
+    "popup": {
+      "menuitem": [
+        {
+          "onclick": "CreateNewDoc()",
+          "value": "New"
+        },
+        {
+          "onclick": "OpenDoc()",
+          "value": "Open"
+        },
+        {
+          "onclick": "CloseDoc()",
+          "value": "Close"
+        }
+      ]
+    },
+    "value": "File"
+  }
+}
+]]></example>
+    <example description="Note that you can access subfields like in any other list:"><![CDATA[log (menulist.menu.id);
+]]></example>
+    <example description="will print:"><![CDATA[file
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag> listtojson</tag>
+    <tag>Text, List, Conversion</tag>
+  </tags>
+</function>

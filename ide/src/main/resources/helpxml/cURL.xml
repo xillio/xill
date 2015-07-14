@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="curl">
+  <name>curl</name>
+  <parameters>
+    <param name="url,">
+      <type>&lt;string&gt;</type>
+    </param>
+    <param name="options ">
+      <type>list</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Runs cURL to peform the specified actions on the provided url. It’s typically used to perform REST PUT/POST/GET actions and authenticate against more complex proxies (e.g. NTLMv4). This function returns the response as a string.NOTE: On Mac and Linux systems you must download and install curl from http://curl.haxx.se/ or using your preferred package manager, then make sure curl is available in your path. See the INSTALLATION notes for more information.DetailsThe following options are available (H) means HTTP/HTTPS only  (F) means FTP only. Full documentation can be found at: http://curl.haxx.se/docs/manpage.htmlOptionValueanyauth Pick “any” authentication method (H)append Append to target file when uploading (F/SFTP)basic Use HTTP Basic Authentication (H)cacertFILECA certificate to verify peer against (SSL)capathDIRCA directory to verify peer against (SSL)certCERT[:PASSWD]Client certificate file and password (SSL)ciphersLISTSSL ciphers to use (SSL)cert-typeTYPECertificate file type (DER/PEM/ENG) (SSL)compressed Request compressed response (using deflate or gzip)config FILE Specify which config file to readconnect-timeoutSECONDSMaximum time allowed for connectioncontinue-atOFFSETResumed transfer offsetcookieSTRING/FILEString or file to read cookies from (H)cookie-jarFILEWrite cookies to this file after operation (H)create-dirs Create necessary local directory hierarchycrlf Convert LF to CRLF in uploadcrlfileFILEGet a CRL list in PEM format from the given filedataDATAHTTP POST data (H)data-asciiDATAHTTP POST ASCII data (H)data-binaryDATAHTTP POST binary data (H)data-urlencodeDATAHTTP POST data url encoded (H)delegationSTRINGGSS-API delegation permissiondigest Use HTTP Digest Authentication (H)disable-eprt Inhibit using EPRT or LPRT (F)disable-epsv Inhibit using EPSV (F)dns-servers DNS server addrs to use: 1.1.1.1;2.2.2.2dns-interface Interface to use for DNS requestsdns-ipv4-addr IPv4 address to use for DNS requests  dot notationdns-ipv6-addr IPv6 address to use for DNS requests  dot notationdump-headerFILEWrite the headers to this fileegd-fileFILEEGD socket path for random data (SSL)engineENGINECrypto engine (SSL). “–engine list” for listfail Fail silently (no output at all) on HTTP errors (H)formCONTENTSpecify HTTP multipart POST data (H)form-stringSTRINGSpecify HTTP multipart POST data (H)ftp-accountDATAAccount data string (F)ftp-alternative-to-userCOMMANDString to replace “USER [name]” (F)ftp-create-dirs Create the remote dirs if not present (F)ftp-methodMETHOD[MULTICWD/NOCWD/SINGLECWD] Control CWD usage (F)ftp-pasv Use PASV/EPSV instead of PORT (F)ftp-portADRUse PORT with given address instead of PASV (F)ftp-skip-pasv-ip Skip the IP address for PASV (F)ftp-pret Send PRET before PASV (for drftpd) (F)ftp-ssl-ccc Send CCC after authenticating (F)ftp-ssl-ccc-modeMODE[ACTIVE/PASSIVE] Set CCC mode (F)ftp-ssl-control Require SSL/TLS for ftp login  clear for transfer (F)get Send the -d data with a HTTP GET (H)globoff Disable URL sequences and ranges using {} and []headerLINECustom header to pass to server (H)head Show document info onlyhelp This help texthostpubmd5MD5Hex encoded MD5 string of the host public key. (SSH)http1.0 Use HTTP 1.0 (H)http1.1 Use HTTP 1.1 (H)http2.0 Use HTTP 2.0 (H)ignore-content-length Ignore the HTTP Content-Length headerinclude Include protocol headers in the output (H/F)insecure Allow connections to SSL sites without certs (H)interfaceINTERFACESpecify network interface/address to useipv4 Resolve name to IPv4 addressipv6 Resolve name to IPv6 addressjunk-session-cookies Ignore session cookies read from file (H)keepalive-timeSECONDSInterval between keepalive probeskeyKEYPrivate key file name (SSL/SSH)key-typeTYPEPrivate key file type (DER/PEM/ENG) (SSL)krbLEVELEnable Kerberos with specified security level (F)libcurlFILEDump libcurl equivalent code of this command linelimit-rateRATELimit transfer speed to this ratelist-only List only names of an FTP directory (F)local-portRANGEForce use of these local port numberslocation Follow redirects (H)location-trusted like –location and send auth to other hosts (H)manual Display the full manualmail-fromFROMMail from this address (SMTP)mail-rcptTOMail to this/these addresses (SMTP)mail-authAUTHOriginator address of the original email (SMTP)max-filesizeBYTESMaximum file size to download (H/F)max-redirsNUMMaximum number of redirects allowed (H)max-timeSECONDSMaximum time allowed for the transfermetalink Process given URLs as metalink XML filenegotiate Use HTTP Negotiate Authentication (H)netrc Must read .netrc for user name and passwordnetrc-optional Use either .netrc or URL; overrides -nnetrc-fileFILESet up the netrc filename to useno-buffer Disable buffering of the output streamno-keepalive Disable keepalive use on the connectionno-sessionid Disable SSL session-ID reusing (SSL)noproxy List of hosts which do not use proxyntlm Use HTTP NTLM authentication (H)oauth2-bearerBEARERXOAUTH2 Bearer Token (IMAP  POP3  SMTP)output FILE Write output to <file> instead of stdoutpass PASS Pass phrase for the private key (SSL/SSH)post301 Do not switch to GET after following a 301 redirect (H)post302 Do not switch to GET after following a 302 redirect (H)post303 Do not switch to GET after following a 303 redirect (H)progress-bar Display transfer progress as a progress barprotoPROTOCOLSEnable/disable specified protocolsproto-redirPROTOCOLSEnable/disable specified protocols on redirectproxyPROXY[PROTOCOL://]HOST[:PORT] Use proxy on given portproxy-anyauth Pick “any” proxy authentication method (H)proxy-basic Use Basic authentication on the proxy (H)proxy-digest Use Digest authentication on the proxy (H)proxy-negotiate Use Negotiate authentication on the proxy (H)proxy-ntlm Use NTLM authentication on the proxy (H)proxy-userUSR[:PWD]Proxy user and passwordproxy1.0HOST[:PORT]Use HTTP/1.0 proxy on given portproxytunnel Operate through a HTTP proxy tunnel (using CONNECT)pubkeyKEYPublic key file name (SSH)quoteCMDSend command(s) to server before transfer (F/SFTP)random-fileFILEFile for reading random data from (SSL)rangeRANGERetrieve only the bytes within a rangeraw Do HTTP “raw”  without any transfer decoding (H)referer Referer URL (H)remote-header-name Use the header-provided filename (H)remote-name Write output to a file named as the remote fileremote-name-all Use the remote file name for all URLsremote-time Set the remote file’s time on the local outputrequestCOMMANDSpecify request command to use [GET|POST|PUT|HEAD|DELETE|...]. Often requires extra options (e.g. HEAD also requires –head).resolveHOST:PORT:ADDForce resolve of HOST:PORT to ADDRESSretryNUMRetry request NUM times if transient problems occurretry-delaySECONDSWhen retrying  wait this many seconds between eachretry-max-timeSECONDSRetry only within this periodsasl-ir Enable initial response in SASL authenticationshow-error Show error. With -s  make curl show errors when they occursilent Silent mode. Don’t output anythingsocks4HOST[:PORT]SOCKS4 proxy on given host + portsocks4aHOST[:PORT]SOCKS4a proxy on given host + portsocks5HOST[:PORT]SOCKS5 proxy on given host + portsocks5-hostnameHOST[:PORT]SOCKS5 proxy  pass host name to proxysocks5-gssapi-serviceNAMESOCKS5 proxy service name for gssapisocks5-gssapi-nec Compatibility with NEC SOCKS5 serverspeed-limitRATEStop transfers below speed-limit for ‘speed-time’ secsspeed-timeSECONDSTime for trig speed-limit abort. Defaults to 30ssl Try SSL/TLS (FTP  IMAP  POP3  SMTP)ssl-reqd Require SSL/TLS (FTP  IMAP  POP3  SMTP)sslv2 Use SSLv2 (SSL)sslv3 Use SSLv3 (SSL)ssl-allow-beast Allow security flaw to improve interop (SSL)stderrFILEWhere to redirect stderr. - means stdouttcp-nodelay Use the TCP_NODELAY optiontelnet-optionOPT=VALSet telnet optiontftp-blksizeVALUESet TFTP BLKSIZE option (must be >512)time-condTIMETransfer based on a time conditiontlsv1 Use TLSv1 (SSL)traceFILEWrite a debug trace to the given filetrace-asciiFILELike –trace but without the hex outputtrace-time Add time stamps to trace/verbose outputtr-encoding Request compressed transfer encoding (H)upload-fileFILETransfer FILE to destinationurlURLURL to work withuse-ascii Use ASCII/text transferuserUSR[:PWD]Server user and passwordtlsuserUSERTLS usernametlspasswordSTRINGTLS passwordtlsauthtypeSTRINGTLS authentication type (default SRP)user-agentSTRINGUser-Agent to send to server (H)verbose Make the operation more talkativeversion Show version number and quitwrite-outFORMATWhat to output after completionxattr Store metadata in extended file attributes]]></description>
+  <examples>
+    <example description="Perform a basic get-operation on a webpage"><![CDATA[page = curl("http://www.xillio.nl");
+]]></example>
+    <example description="Perform a basic get-operation on a webpage and follow redirect to main page"><![CDATA[page = curl("http://www.xillio.nl", {
+    "location"
+});
+]]></example>
+    <example description="Fetch information about a file without actually downloading it"><![CDATA[response = curl("https://www.google.nl/images/srpr/logo11w.png", {
+    "head",
+    "insecure"
+});
+]]></example>
+    <example description="Passing multiple options for the same parameter is possible. If the curl command line call is"><![CDATA[curl include -F name=myname -F filedata=@c:/temp/test.txt http://malsup.com/jquery/form/file-echo2.php
+]]></example>
+    <example description="then the following code can be used in Content Tools. Note the form list."><![CDATA[filetoupload = "/Users/ernst/Documents/Temp/test.txt";
+]]></example>
+    <example description="uploadresult = curl(&quot;http://malsup.com/jquery/form/file-echo2.php&quot;, {"><![CDATA[    "include",
+    "form" = {
+        "filedata=@"+filetoupload,
+        "name=myname"
+    }
+});
+log(uploadresult);
+]]></example>
+    <example description="Perform a basic post-operation on a rest-service (requires running Sharepoint instance)"><![CDATA[xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
+    <soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">
+      <soap:Body>
+        <GetContentType xmlns=\"http://schemas.microsoft.com/sharepoint/soap/\">
+          <contentTypeId>" + contenttype.id + "</contentTypeId>
+        </GetContentType>
+      </soap:Body>
+    </soap:Envelope>";
+]]></example>
+    <example description="response = curl(&quot;http://sp2013&quot;, {"><![CDATA[    "header" = "Content-Type: text/xml; charset=utf-8",
+    "data" = xml,
+});
+]]></example>
+    <example description="Perform a post request and authenticate using NTLMv4 authentication"><![CDATA[response = curl("http://sp2013", {
+    "header" = "Content-Type: text/xml; charset=utf-8",
+    "insecure",
+    "ntlm",
+    "user", settings.sp_user+":"+settings.sp_pass,
+    "data", "@" + settings.path_inventory + "soap.xml",
+});
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag> rawhttp</tag>
+    <tag>Browser</tag>
+  </tags>
+</function>

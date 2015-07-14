@@ -540,7 +540,7 @@ ace.define('ace/mode/xill_highlight_rules', function(require, exports, module) {
 		var keywordMapper = this.createKeywordMapper({
 			"keyword" : editor.xillKeywords,
 			"buildin" : editor.xillBuildin,
-			"language.constant": "true|false|null"
+			"language.constant": "true|false|null|ATOMIC|LIST|OBJECT"
 		}, "identifier");
 
 		this.$rules = {

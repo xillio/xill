@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="download">
+  <name>download</name>
+  <parameters>
+    <param name="url,">
+      <type>string</type>
+    </param>
+    <param name="filename">
+      <type>string</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Saves the file at url to the local file system at location given by filename. This is commonly used to scrape HTML or binary files from a webserver. You can use geterror() to check for any error conditions in the server-response.]]></description>
+  <examples>
+    <example description="The following downloads the homepage of www.xillio.com to C:\tmp\download.html:"><![CDATA[url = "http://www.xillio.com/wp-content/uploads/generic-xillio-migration-framework-middle.png";
+downloadlocation = "C:/tmp/download.png";
+]]></example>
+    <example description="if (!fileexists (downloadlocation)) {"><![CDATA[    if (geterror (download (url, downloadlocation)) != null){
+        log ("Could not download " + url + " to " + downloadlocation + " - Check whether the path exists.");
+    }
+}
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>Browser, File</tag>
+  </tags>
+</function>

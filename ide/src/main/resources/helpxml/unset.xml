@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="unset">
+  <name>unset</name>
+  <parameters>
+    <param name="list,">
+      <type>list</type>
+    </param>
+    <param name="index">
+      <type>&lt;number,string&gt;</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Removes the entry indicated by index from list and returns true on success or false if the entry could not be found. This function can also be used to remove variables from the local (__local) or global state (__global).]]></description>
+  <examples>
+    <example description="Remove item from normal list"><![CDATA[list = {a = 1, b = 2, c = 3};
+unset(list, "a");
+log(list);
+]]></example>
+    <example description="Will print:"><![CDATA[{
+    b = 2,
+    c = 3
+}
+]]></example>
+    <example description="Remove one existing and one non-existing variable from local state."><![CDATA[l = "local variable";
+log(__local);
+success1 = unset(__local, "l");
+success2 = unset(__local, "ll");
+log(__local);
+]]></example>
+    <example description="Will print:"><![CDATA[{
+    l = "local variable"
+}
+{
+    __void = null,
+    success1 = true,
+    success2 = false
+}
+]]></example>
+    <example description="Remove item from global state"><![CDATA[g = global("global variable");
+log(__global);
+unset(__global, "g");
+log(__global);
+]]></example>
+    <example description="Will print:"><![CDATA[{
+    true = true,
+    false = false,
+    null = null,
+    g = "global variable"
+}
+{
+    true = true,
+    false = false,
+    null = null
+}
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag> global</tag>
+    <tag>Language</tag>
+  </tags>
+</function>

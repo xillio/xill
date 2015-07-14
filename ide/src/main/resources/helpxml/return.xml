@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="return">
+  <name>return</name>
+  <parameters>
+    <param name="value ">
+      <type>any</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Returns the value and breaks out of the current routine. value is optional, executing return() just exits the routine. Also used to return a value at the end of a bot if the bot is called via callbot().]]></description>
+  <examples>
+    <example description="Returning values from routines:"><![CDATA[getlanguagemeta = routine (page) {
+    return (xpath(page, "/html/@lang"));
+}
+]]></example>
+    <example description="geturl = routine (url) {"><![CDATA[    // gets the url from a loadpage errormessage (assumes it is at the end of the message)
+    result = regex (url, ".*(https?://.*$)|.*(www\\..*$)");
+    if (variabletype (result) == "list") {
+        return (result [1]);
+    }
+    return (null);
+}
+]]></example>
+    <example description="Returning value from a bot:"><![CDATA[settings = {
+    "baseurl" = "http://www.xillio.com",
+    "gxtest_url" = "https://www.xillio.com/xilliogximporter",
+};
+]]></example>
+    <example description="return(settings);"><![CDATA[]]></example>
+    <example description="Returning without parameter (to stop execution of the routine early):"><![CDATA[storebinary = routine(url, title, storeaspage) {
+    if((url == "#") || (url == "") || (url == null) || startswith (url, "file:")) {
+        return();
+    }
+]]></example>
+    <example description="    //... do other things ... //"><![CDATA[]]></example>
+    <example description="    return (url);"><![CDATA[}
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>Language</tag>
+  </tags>
+</function>

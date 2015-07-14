@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="es_search">
+  <name>es_search</name>
+  <parameters>
+    <param name="index ,">
+      <type>&lt;string,void&gt;</type>
+    </param>
+    <param name="type ,">
+      <type>&lt;string,void&gt;</type>
+    </param>
+    <param name="filter ,">
+      <type>&lt;list,string&gt;</type>
+    </param>
+    <param name="sorting ,">
+      <type>&lt;list,string&gt;</type>
+    </param>
+    <param name="client ">
+      <type>string</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Searches cluster client, with optionally an index or type for documents that conform to all filters in filter. They will be sorted by the sortings in sorting.filter can be one or more elasticsearch filter(s) created using a filter function.sorting can be one or more elasticsearch sorting(s) created using a sort function.]]></description>
+  <examples>
+    <example description="To get all documents in the index literature that contain the word “gates” in the “content” field, sorted by author:"><![CDATA[es_connect();
+gatesfilter = es_termfilter("content", "gates");
+authorSort = es_sort("author");
+results = es_search("literature", null, gatesfilter, authorSort);
+]]></example>
+    <example description="To get all documents in the index literature that contain the word “gates” and have a title field:"><![CDATA[es_connect();
+filters = {};
+filters.gatesfilter = es_termfilter("content", "gates");
+filters.titlefilter = es_hasfieldfilter("title");
+results = es_search("literature", null, filters);
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag> es_hasfieldfilter, es_rangefilter, es_regexfilter, es_termfilter</tag>
+    <tag>Elasticsearch</tag>
+  </tags>
+</function>
