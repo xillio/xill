@@ -1,10 +1,12 @@
 package nl.xillio.migrationtool;
 
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.PropertyConfigurator;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -17,8 +19,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import nl.xillio.xill.api.Xill;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.PropertyConfigurator;
 
 /**
  * Launcher class, is used to launch processors in their own threads, facilitates a simple Log, and provides commandline running.
@@ -146,7 +146,7 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 	/**
 	 * The GUI's current official version.
 	 */
-	public static final String SHORTVERSION = HISTORY[0][0];
+	public static final String SHORTVERSION = Loader.class.getPackage().getImplementationVersion() == null ? "dev" : Loader.class.getPackage().getImplementationVersion();
 
 	/**
 	 * The release date of the official version.
