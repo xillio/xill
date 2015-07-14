@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.selenium;
+package nl.xillio.xill.plugins.selenium.constructs;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class StringToPageConstruct implements Construct {
 
 	@Override
 	public String getName() {
-		return "stringtopage";
+		return "stringToPage";
 	}
 
 	@Override

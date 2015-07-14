@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.selenium;
+package nl.xillio.xill.plugins.selenium.constructs;
 
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
@@ -10,6 +10,7 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.selenium.PageVariable;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,7 +21,7 @@ public class SetCookieConstruct implements Construct {
 
 	@Override
 	public String getName() {
-		return "setcookie";
+		return "setCookie";
 	}
 
 	@Override

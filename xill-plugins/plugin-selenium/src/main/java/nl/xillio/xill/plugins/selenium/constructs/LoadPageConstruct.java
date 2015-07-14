@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.selenium;
+package nl.xillio.xill.plugins.selenium.constructs;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -24,6 +24,10 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.selenium.PageVariable;
+import nl.xillio.xill.plugins.selenium.PhantomJSPool;
+import nl.xillio.xill.plugins.selenium.SeleniumPluginPackage;
+import nl.xillio.xill.plugins.selenium.PhantomJSPool.Entity;
 
 public class LoadPageConstruct implements Construct, AutoCloseable {
 
@@ -36,7 +40,7 @@ public class LoadPageConstruct implements Construct, AutoCloseable {
 
     @Override
     public String getName() {
-	return "loadpage";
+	return "loadPage";
     }
 
     @Override

@@ -1,9 +1,6 @@
-package nl.xillio.xill.plugins.selenium;
+package nl.xillio.xill.plugins.selenium.constructs;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.WebElement;
-
 import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
@@ -11,18 +8,19 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.selenium.NodeVariable;
 
-public class FocusConstruct implements Construct {
+public class SelectedConstruct implements Construct {
 
 	@Override
 	public String getName() {
-		return "focus";
+		return "selected";
 	}
 
 	@Override
 	public ConstructProcessor prepareProcess(ConstructContext context) {
 		return new ConstructProcessor(
-			FocusConstruct::process,
+			SelectedConstruct::process,
 			new Argument("element"));
 	}
 
@@ -34,14 +32,11 @@ public class FocusConstruct implements Construct {
 		//else
 		
 		WebElement element = NodeVariable.get(elementVar);
-		WebDriver page = NodeVariable.getDriver(elementVar);
 				
 		try {
-			new Actions(page).moveToElement(element).perform();
+			return ExpressionBuilder.fromValue(element.isSelected());
 		} catch (Exception e) {
 			throw new RobotRuntimeException(e.getClass().getSimpleName(), e);
 		}
-
-		return ExpressionBuilder.NULL;
 	}
 }

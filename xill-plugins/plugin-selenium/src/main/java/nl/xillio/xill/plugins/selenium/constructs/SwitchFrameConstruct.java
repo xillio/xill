@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.selenium;
+package nl.xillio.xill.plugins.selenium.constructs;
 
 import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.WebDriver;
@@ -10,12 +10,14 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.selenium.NodeVariable;
+import nl.xillio.xill.plugins.selenium.PageVariable;
 
 public class SwitchFrameConstruct implements Construct {
 
 	@Override
 	public String getName() {
-		return "switchframe";
+		return "switchFrame";
 	}
 
 	@Override

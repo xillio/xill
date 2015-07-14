@@ -1,6 +1,7 @@
-package nl.xillio.xill.plugins.selenium;
+package nl.xillio.xill.plugins.selenium.constructs;
 
 import org.openqa.selenium.WebElement;
+
 import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
@@ -8,18 +9,19 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.selenium.NodeVariable;
 
-public class SelectedConstruct implements Construct {
+public class ClickConstruct implements Construct {
 
 	@Override
 	public String getName() {
-		return "selected";
+		return "click";
 	}
 
 	@Override
 	public ConstructProcessor prepareProcess(ConstructContext context) {
 		return new ConstructProcessor(
-			SelectedConstruct::process,
+			ClickConstruct::process,
 			new Argument("element"));
 	}
 
@@ -33,9 +35,11 @@ public class SelectedConstruct implements Construct {
 		WebElement element = NodeVariable.get(elementVar);
 				
 		try {
-			return ExpressionBuilder.fromValue(element.isSelected());
+			element.click();
 		} catch (Exception e) {
 			throw new RobotRuntimeException(e.getClass().getSimpleName(), e);
 		}
+
+		return ExpressionBuilder.NULL;
 	}
 }
