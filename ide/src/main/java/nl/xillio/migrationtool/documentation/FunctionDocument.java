@@ -166,6 +166,7 @@ public class FunctionDocument extends HtmlGenerator {
 	 * @param link
 	 *        The package and the function we're referring to.
 	 * @return
+	 * 				Returns a string which represents a link path
 	 */
 	@Override
 	protected String generateLink(final Pair<String, String> link) {

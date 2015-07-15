@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -18,15 +17,15 @@ import nl.xillio.migrationtool.documentation.DocumentSearcher;
 /**
  * A search bar, with the defined options and behavior.
  */
-public class HelpSearchBar extends AnchorPane{
+public class HelpSearchBar extends AnchorPane {
 
 	private HelpPane helpPane;
 
-
-	//Implement the FXML for this
+	// Implement the FXML for this
 	@FXML
 	private ComboBox<String> box;
-	private DocumentSearcher searcher;
+	private final DocumentSearcher searcher;
+	private int comboBoxLength = 0;
 
 	/**
 	 * Default constructor.
@@ -41,62 +40,64 @@ public class HelpSearchBar extends AnchorPane{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		//The searcher
+
+		// The searcher
 		searcher = new DocumentSearcher(ESConsoleClient.getInstance().getClient());
 		box.setEditable(true);
-		
-		//Handle click
+
+		// Handle click
 		box.setOnAction((event) -> {
-			try{
-			String[] s = box.getSelectionModel().getSelectedItem().toString().split("\\.");
-			box.hide();
-			this.helpPane.display(s[0], s[1]);
+			try {
+				String[] s = box.getSelectionModel().getSelectedItem().toString().split("\\.");
+				box.hide();
+				helpPane.display(s[0], s[1]);
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{}
 		});
-		
-		//Handle text getting edited.
-		box.getEditor().textProperty().addListener(new ChangeListener<String>() {
-		    @Override
-		    public void changed(ObservableValue<? extends String> observable,
-		            String oldValue, String newValue) {
-		    	if(oldValue != newValue)
-		    		runSearch(newValue);
-		    }
-		});	
-		this.getChildren().add(box);
+
+		// Handle text getting edited.
+		box.getEditor().textProperty().addListener((ChangeListener<String>) (observable, oldValue, newValue) -> {
+			if (oldValue != newValue) {
+				runSearch(newValue);
+			}
+		});
+		getChildren().add(box);
 	}
-	
+
 	/**
-	 * @param help The help pane in which the search bar is embedded
+	 * @param help
+	 *        The help pane in which the search bar is embedded
 	 */
-	public void setHelpPane(HelpPane help) {
-		this.helpPane = help;
+	public void setHelpPane(final HelpPane help) {
+		helpPane = help;
 	}
-	
-	//Runs the search
-	private void runSearch(String query) {
-		if(query != null)
+
+	// Runs the search
+	private void runSearch(final String query) {
+		if (query != null && !query.isEmpty())
 		{
-		//Search for a list of possible functions and store the result
-		String[] results = searcher.search(query);
-		ObservableList<String> options = FXCollections.observableArrayList();
-		for(String result : results)
-			options.add(result);
-		
-		//Adjust the combobox accordingly
-		Platform.runLater(new Runnable() {
-		    @Override public void run() {	    
-			box.getItems().clear();
-			box.getItems().addAll(results);
-			box.autosize();
-			if(!box.getItems().isEmpty())
-				box.show();
-			else
-				box.hide();
-			}});
+			// Search for a list of possible functions and store the result
+			String[] results = searcher.search(query);
+			ObservableList<String> options = FXCollections.observableArrayList();
+			for (String result : results) {
+				options.add(result);
+			}
+
+			// Adjust the combobox accordingly
+			Platform.runLater(() -> {
+				box.getItems().clear();
+				box.getItems().addAll(results);
+				if (!box.getItems().isEmpty() && box.getItems().size() != comboBoxLength) {
+					box.hide();
+					box.show();
+					comboBoxLength = box.getItems().size();
+				} else {
+					box.hide();
+				}
+			});
+		} else {
+			box.hide();
 		}
 	}
 }
