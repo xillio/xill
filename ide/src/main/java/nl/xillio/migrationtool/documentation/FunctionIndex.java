@@ -32,12 +32,6 @@ public class FunctionIndex extends HtmlGenerator {
 	public FunctionIndex(final String name) {
 		setName(name);
 	}
-	
-
-	@Override
-	protected HtmlCanvas addHeader(final HtmlCanvas canvas) throws IOException {
-		return canvas.head().title().content(this.getName()).macros().stylesheet("style/style.css")._head();
-	}
 
 	@Override
 	public String toHTML() throws IOException {

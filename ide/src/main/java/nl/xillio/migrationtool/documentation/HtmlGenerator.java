@@ -77,7 +77,7 @@ public abstract class HtmlGenerator {
 	 *         Throws an IOException when failing to generate correct HTML.
 	 */
 	protected HtmlCanvas addHeader(final HtmlCanvas canvas) throws IOException {
-		return canvas.head().title().content(functionName).macros().stylesheet("../style/style.css")._head();
+		return canvas.head().title().content(functionName).macros().stylesheet(new File(PluginListener.HELP_FOLDER, "/style/style.css").toURI().toURL().toExternalForm())._head();
 	}
 
 	/**

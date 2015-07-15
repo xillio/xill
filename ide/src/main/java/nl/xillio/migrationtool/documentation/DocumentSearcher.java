@@ -119,21 +119,17 @@ public class DocumentSearcher {
 		try {
 
 			GetResponse Response = client.get(new GetRequest(DOCUMENTATION_INDEX, packet, id).fields("packageversion")).get(); // client.prepareGet(DOCUMENTATION_INDEX, packet,
-																																																													// id).setFields("packageversion").execute().get();
+			// id).setFields("packageversion").execute().get();
 			GetField field = Response.getField("packageversion");
 			if (field != null) {
 				return (String) field.getValue();
 			}
-
 		} catch (InterruptedException e) {
-
 			e.printStackTrace();
 		} catch (ExecutionException e) {
 			// Wasn't able to execute the query
 		}
-
 		return null;
-
 	}
 
 	/**
