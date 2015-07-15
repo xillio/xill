@@ -2,10 +2,7 @@
 <function Tag="abs">
   <name>abs</name>
   <parameters>
-    <param name="value ">
-    <type>
-    number
-    </type>
+    <param name="value" default = "0">
     </param>
   </parameters>
   <description><![CDATA[Returns the absolute value of the provided value.]]></description>
@@ -20,9 +17,11 @@
     -3.14]]>
     </example>
   </examples>
-  <Applications />
-  <tags>
-  </tags>
+  <references>
+  	<reference package = "Math">round</reference>
+  	<reference package = "Math">round</reference>
+  	<reference package = "Math">round</reference>
+  </references>
    <searchTags>
 	<searchTag>
 	absolute

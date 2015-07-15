@@ -2,8 +2,7 @@
 <function Tag="absoluteurl">
   <name>absoluteurl</name>
   <parameters>
-    <param name="pageurl,">
-      <type>string</type>
+    <param name="pageurl">
     </param>
     <param name="relativeurl">
       <type>string</type>
@@ -20,7 +19,6 @@
     <example description="Returns:"><![CDATA["http://www.xillio.nl/"
 ]]></example>
   </examples>
-  <Applications />
-  <tags>
-  </tags>
+  <references>
+  </references>
 </function>

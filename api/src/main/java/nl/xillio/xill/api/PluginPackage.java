@@ -111,10 +111,16 @@ public abstract class PluginPackage implements Loadable<PluginPackage>, AutoClos
 	 */
 	public String getVersion()
 	{
-		if(this.version != null)
+		if(this.version != null){
 			return this.version;
-		else
-			return getClass().getPackage().getSpecificationVersion();
+		}
+		else{
+			String result = getClass().getPackage().getImplementationVersion();
+			if(result == null)
+				return "versie";
+			else
+				return result;
+		}
 	}
 	
 	@Override

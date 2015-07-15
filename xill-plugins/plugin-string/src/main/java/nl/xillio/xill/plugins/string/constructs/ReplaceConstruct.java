@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.string.constructs;
 
+import java.io.InputStream;
 import java.util.regex.Matcher;
 
 import org.apache.commons.lang3.StringUtils;
@@ -9,6 +10,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.construct.HelpComponent;
 
 /**
  * Returns a new string in which occurrences of regex needle found in the text
@@ -19,7 +21,7 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
  * @author Sander
  *
  */
-public class ReplaceConstruct extends Construct {
+public class ReplaceConstruct extends Construct implements HelpComponent {
 
     private final RegexConstruct regexConstruct;
 
@@ -75,4 +77,10 @@ public class ReplaceConstruct extends Construct {
 	return fromValue(StringUtils.replaceOnce(text, needle, replacement));
 
     }
+
+
+  	@Override
+  	public InputStream openDocumentationStream() {
+  		return getClass().getResourceAsStream("/helpfiles/replace.xml");
+  	}
 }
