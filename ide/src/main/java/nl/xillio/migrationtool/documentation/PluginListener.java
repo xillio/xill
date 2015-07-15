@@ -32,6 +32,7 @@ public class PluginListener {
 	 * The folder in which the generated documentation files reside
 	 */
 	public static final File HELP_FOLDER = new File("helpfiles");
+
 	/**
 	 * A method which listens to all the loaded plugins.
 	 *
@@ -47,6 +48,7 @@ public class PluginListener {
 
 		return listener;
 	}
+
 	private final DocumentSearcher searcher = new DocumentSearcher(ESConsoleClient.getInstance().getClient());
 	private final EventHost<URL> onDeployedFiles = new EventHost<>();
 	private final FunctionIndex packages = new FunctionIndex("index");
@@ -116,45 +118,43 @@ public class PluginListener {
 					// or the function is non-existant in the database, we parse the
 					// new xml and generate html.
 					if (needsUpdate(plugin, construct)) {
-						try {
-							// Write an html file
-							if (plugin.getName() != null && docu.getName() != null) {
-								// We write the HTML file
-								FileUtils.write(
-									new File(HELP_FOLDER, plugin.getName() + "/" + docu.getName() + ".html"),
-									docu.toHTML());
-								// We set the version of the document
-								docu.setVersion(plugin.getVersion());
+						// Write an html file
+						if (plugin.getName() != null && docu.getName() != null) {
+							// We write the HTML file
+							FileUtils.write(
+								new File(HELP_FOLDER, plugin.getName() + "/" + docu.getName() + ".html"),
+								docu.toHTML());
+							// We set the version of the document
+							docu.setVersion(plugin.getVersion());
 
-								// We index the document
-								searcher.index(docu);
-								log.info("Generated html documentation for " + plugin.getName() + "." + construct.getName());
-							} else {
-								log.error("Invalid name found for the package or a function in the package.");
-							}
-						} catch (IOException e) {
-							e.printStackTrace();
+							// We index the document
+							searcher.index(docu);
+							log.info("Generated html documentation for " + plugin.getName() + "." + construct.getName());
+						} else {
+							log.error("Invalid name found for the package or a function in the package.");
 						}
 					}
-				} catch (SAXException e) {
-					log.error("Invalid XML file found in the package.");
+				} catch (IOException e) {
+					log.error("Failed to load:" + construct.getName());
+					e.printStackTrace();
 				}
 			}
 		}
 		packages.addPackageDocument(thisPackage);
 	}
-	
 
 	/**
-	 * <p> We check wheter we need to update a helpfile of  a construct in a plugin 
-	 * through comparing the version of the construct in the database and comparing it to the version of the plugin
-	 * and through checking wheter a helpfile exists. <p> 
+	 * <p>
+	 * We check wheter we need to update a helpfile of a construct in a plugin through comparing the version of the construct in the database and comparing it to the version of the plugin and through
+	 * checking wheter a helpfile exists.
+	 * <p>
+	 * 
 	 * @param plugin
-	 * 					The {@link PluginPackage} of the plugin.
+	 *        The {@link PluginPackage} of the plugin.
 	 * @param construct
-	 * 					The {@link Construct} which version we're checking.
+	 *        The {@link Construct} which version we're checking.
 	 * @return
-	 * 				  A boolean value wheter we need to update the helpfile of the construct.
+	 *         A boolean value wheter we need to update the helpfile of the construct.
 	 */
 	private boolean needsUpdate(final PluginPackage plugin, final Construct construct) {
 		// Check if version is changed
@@ -183,6 +183,5 @@ public class PluginListener {
 			log.error(e);
 		}
 	}
-	
-	
+
 }

@@ -2,11 +2,9 @@
 <function Tag="ampersanddecode">
   <name>ampersanddecode</name>
   <parameters>
-    <param name="text,">
-      <type>&lt;void,string&gt;</type>
+    <param name="text">
     </param>
-    <param name="passes ">
-      <type>number</type>
+    <param name="passes">
     </param>
   </parameters>
   <description><![CDATA[Decodes all ampersand-encoded characters in the provided string. Mainly used to decode XML characters to their original characters. Optionally you can provide the number of passes the decoder should run.]]></description>
@@ -20,7 +18,6 @@
     <example description="Returns:"><![CDATA["Money <> Health"
 ]]></example>
   </examples>
-  <Applications />
   <tags>
     <tag package = "String">ampersandencode</tag>
   </tags>

@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="contains">
+  <name>contains</name>
+  <parameters>
+    <param name="value1">
+    </param>
+    <param name="value2">
+    </param>
+  </parameters>
+  <description><![CDATA[Returns true if the string value1 contains the string value2. Returns true if the list value1 contains the exact value value2 or the index value2.]]></description>
+  <examples>
+    <example description="The following calls to contains all return true:"><![CDATA[testvalue = contains("testing", "ing");
+]]></example>
+    <example description="testvalue = contains({brand = &quot;Ferrari&quot;, colour = &quot;light silver grey&quot;}, &quot;Ferrari&quot;);"><![CDATA[]]></example>
+    <example description="While the following return false:"><![CDATA[testvalue = contains("testing", "ts");
+]]></example>
+    <example description="testvalue = contains({brand = &quot;BMW&quot;, colour = &quot;light silver grey&quot;}, &quot;branding&quot;);"><![CDATA[]]></example>
+    <example description="testvalue = contains({brand = &quot;BMW&quot;, colour = &quot;light silver grey&quot;}, &quot;silver&quot;);"><![CDATA[]]></example>
+  </examples>
+  <tags>
+  	<tag package = "String">endswith</tag>
+  	<tag package = "String">startsWith</tag>
+  	<tag package = "packages">List</tag>
+  </tags>
+</function>
