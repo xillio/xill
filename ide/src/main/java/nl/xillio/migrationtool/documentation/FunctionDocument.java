@@ -51,7 +51,7 @@ import org.rendersnake.HtmlCanvas;
  */
 public class FunctionDocument extends HtmlGenerator {
 	private String description, version, packet = "testRealm";
-	private List<String> parameters = new ArrayList<>();
+	private List<Pair<String, String>> parameters = new ArrayList<>();
 	private final List<Pair<String, String>> examples = new ArrayList<>();
 	private final Set<Pair<String, String>> links = new HashSet<>();
 	private final Set<String> searchTags = new HashSet<>();
@@ -110,15 +110,22 @@ public class FunctionDocument extends HtmlGenerator {
 	}
 
 	/**
-	 * Adds a parameter to the {@link FunctionDocument}
-	 *
-	 * @param type
-	 *        The parameterType.
+	 * Adds a parameter without defaultvalue to the {@link FunctionDocument}
+	 * 
 	 * @param name
 	 *        The name of the parameter.
 	 */
 	public void addParameter(final String name) {
-		parameters.add(name);
+		parameters.add(new Pair<String, String>(name, null));
+	}
+	
+	/**
+	 * Adds a parameter with defaultvalue to the {@link FunctionDocument}
+	 * @param name
+	 * @param defaultValue
+	 */
+	public void addParameter(final String name, final String defaultValue){
+		parameters.add(new Pair<String, String>(name, defaultValue));
 	}
 
 	/**
@@ -128,8 +135,11 @@ public class FunctionDocument extends HtmlGenerator {
 	 */
 	public String getParameters() {
 		String str = "";
-		for (String parameter : parameters) {
-			str += parameter + ", ";
+		for (Pair<String, String> parameter : parameters) {
+			if(parameter.getValue() == null)
+					str += parameter.getKey() + ", ";
+			else
+				str += parameter.getKey() + " = " + parameter.getValue() + ", ";
 		}
 		// Remove the last comma
 		if (str.length() > 1) {
@@ -292,7 +302,7 @@ public class FunctionDocument extends HtmlGenerator {
 	 * @param params
 	 *        the parameters.
 	 */
-	public void setParameters(final List<String> params) {
+	public void setParameters(final List<Pair<String, String>> params) {
 		parameters = params;
 	}
 }

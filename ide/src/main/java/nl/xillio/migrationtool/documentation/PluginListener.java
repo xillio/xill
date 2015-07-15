@@ -18,7 +18,6 @@ import nl.xillio.xill.api.construct.HelpComponent;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.xml.sax.SAXException;
 
 /**
  * A class which listens to plugins and tries to extract helpfiles.
@@ -89,8 +88,6 @@ public class PluginListener {
 	 *
 	 * @param plugin
 	 *        The plugin that we load
-	 * @throws SAXException
-	 *
 	 */
 	public void pluginLoaded(final PluginPackage plugin) {
 		timeline.play();
@@ -148,7 +145,7 @@ public class PluginListener {
 	 * We check wheter we need to update a helpfile of a construct in a plugin through comparing the version of the construct in the database and comparing it to the version of the plugin and through
 	 * checking wheter a helpfile exists.
 	 * <p>
-	 * 
+	 *
 	 * @param plugin
 	 *        The {@link PluginPackage} of the plugin.
 	 * @param construct

@@ -42,8 +42,6 @@ public class XMLparser {
 	 * @param version
 	 *        A {@link String} with the version name.
 	 * @return The parsed {@link FunctionDocument} contained in the stream
-	 * @throws SAXException
-	 *         When no valid xml is provided.
 	 */
 	public FunctionDocument parseXML(final InputStream xml, final String packet, final String version)
 	{
@@ -69,9 +67,15 @@ public class XMLparser {
 
 				// Parse the parameters
 				XPathExpression paramsNameExpr = xpath.compile("/function/parameters/param/@name");
+				XPathExpression paramsDefExpr  = xpath.compile("/function/parameters/param/@default");
 				NodeList parameterNames = (NodeList) paramsNameExpr.evaluate(doc, XPathConstants.NODESET);
+				NodeList defaultValues  = (NodeList)	paramsDefExpr.evaluate(doc, XPathConstants.NODESET);
 				for (int t = 0; t < parameterNames.getLength(); ++t) {
 					String parameterName = parameterNames.item(t).getTextContent().trim();
+					if(defaultValues.item(t) != null){
+							String defaultValue  = defaultValues.item(t).getTextContent().trim();
+							func.addParameter(parameterName, defaultValue);
+					}
 					func.addParameter(parameterName);
 				}
 
