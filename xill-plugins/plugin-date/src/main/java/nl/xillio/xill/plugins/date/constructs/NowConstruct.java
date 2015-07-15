@@ -26,9 +26,9 @@ public class NowConstruct extends BaseDateConstruct {
     public ConstructProcessor prepareProcess(final ConstructContext context) {
 	return new ConstructProcessor(NowConstruct::process);
     }
-
+    
     private static MetaExpression process() {
-	return expression(ZonedDateTime.now());
+	return fromValue(ZonedDateTime.now());
 
     }
 }

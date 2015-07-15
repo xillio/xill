@@ -19,9 +19,7 @@ import nl.xillio.xill.plugins.date.BaseDateConstruct;
 /**
  *
  *
- * Modifies the provided date with the specified changes from a list. The list
- * must have seven elements: [year, month, day, hour, minute, second,
- * millisecond]
+ * Modifies the provided date with the specified changes from a list.
  *
  * @author Sander
  *
@@ -71,6 +69,6 @@ public class ChangeConstruct extends BaseDateConstruct {
 	    }
 	}
 
-	return expression(newDate);
+	return fromValue(newDate);
     }
 }

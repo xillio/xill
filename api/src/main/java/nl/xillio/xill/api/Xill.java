@@ -9,7 +9,7 @@ import nl.xillio.plugins.PluginLoader;
  */
 public interface Xill {
 	/**
-	 * The file extension used by scripts
+	 * The file extension used by scripts. This extension does not include the `.`
 	 */
 	public static String FILE_EXTENSION = "xill";
 

@@ -8,6 +8,7 @@ import org.testng.annotations.Test;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.plugins.example.constructs.LifeConstuct;
 
 /**
  * Test the {@link LifeConstuct}

@@ -583,4 +583,27 @@ public class FXController implements Initializable, EventHandler<Event> {
 	public PluginLoader<PluginPackage> getPluginLoader() {
 	return pluginLoader;
 	}
+	
+	/**
+	 * @return currently selected RobotTab
+	 */
+	public Tab getSelectedTab() { 
+		return (tpnBots.getSelectionModel().getSelectedItem());
+	}
+	
+	/**
+	 * Finds the tab according to filePath (~RobotID.path)
+	 * @param filePath filepath to robot (.xill) file
+	 * @return RobotTab if found, otherwise null
+	 */
+	public Tab findTab(final File filePath) {
+		final RobotTab[] robotTabs = {null};
+		tpnBots.getTabs().forEach(tab -> {
+			RobotTab robotTab = (RobotTab) tab;
+			if (robotTab.getCurrentRobot().getPath().equals(filePath)) {
+				robotTabs[0] = robotTab;
+			}
+		});
+		return robotTabs[0];
+	}
 }
