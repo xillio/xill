@@ -3,10 +3,13 @@ package nl.xillio.migrationtool.documentation;
 import static org.rendersnake.HtmlAttributesFactory.class_;
 import static org.rendersnake.HtmlAttributesFactory.href;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 import javafx.util.Pair;
 
+import org.apache.log4j.Logger;
 import org.rendersnake.HtmlCanvas;
 
 /**
@@ -20,6 +23,7 @@ import org.rendersnake.HtmlCanvas;
  */
 public abstract class HtmlGenerator {
 	private String functionName = "";
+	protected static final Logger log = Logger.getLogger(PluginListener.class);
 
 	/**
 	 * The constructor of the {@link HtmlGenerator}
@@ -192,6 +196,11 @@ public abstract class HtmlGenerator {
 	 * @return Returns a string which represents a path to where we link to.
 	 */
 	protected String generateLink(final Pair<String, String> link) {
-		return "../" + link.getKey() + "/" + link.getValue() + ".html";
+		try {
+			return new File(PluginListener.HELP_FOLDER, link.getKey() + "/" + link.getValue() + ".html").toURI().toURL().toExternalForm();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return "";
 	}
 }

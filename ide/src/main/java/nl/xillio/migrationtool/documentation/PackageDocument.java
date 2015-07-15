@@ -3,9 +3,14 @@ package nl.xillio.migrationtool.documentation;
 import static org.rendersnake.HtmlAttributesFactory.href;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import javafx.collections.FXCollections;
+import javafx.collections.transformation.SortedList;
 import javafx.util.Pair;
 
 import org.rendersnake.HtmlCanvas;
@@ -25,8 +30,8 @@ import org.rendersnake.HtmlCanvas;
  *
  */
 public class PackageDocument extends HtmlGenerator {
-	private final Set<FunctionDocument> descriptiveLinks = new HashSet<>();
-
+	private final Set<FunctionDocument> functions = new HashSet<>();
+	
 	@Override
 	public String toHTML() throws IOException {
 		HtmlCanvas html = new HtmlCanvas();
@@ -50,7 +55,7 @@ public class PackageDocument extends HtmlGenerator {
 	 *        The function we're adding.
 	 */
 	public void addDescriptiveLink(final FunctionDocument docu) {
-		descriptiveLinks.add(docu);
+		functions.add(docu);
 	}
 
 	/**
@@ -59,20 +64,19 @@ public class PackageDocument extends HtmlGenerator {
 	 * @param canvas
 	 *        The canvas we're adding the link to.
 	 * @return Returns a {@link HtmlCanvas} with a section containing a table.
-	 * @throws IOException
-	 *         Throws an IOException when an error is encountered when
-	 *         generating the HTML
 	 */
-	public HtmlCanvas addTableWithFunctions(HtmlCanvas canvas) throws IOException {
-		for (FunctionDocument desLink : descriptiveLinks) {
+	public HtmlCanvas addTableWithFunctions(HtmlCanvas canvas)  {
+		List<FunctionDocument> sortedFunctions = functions.stream().sorted((a,b) -> a.getName().compareTo(b.getName())).collect(Collectors.toList());
+		for (FunctionDocument desLink : sortedFunctions) {
+			try {
+				canvas = canvas.tr().td().p()
+					.a(href(generateLink(new Pair<String, String>(desLink.getPackage(), desLink.getName()))));			
+				canvas = desLink.addFunction(canvas);
+				canvas = canvas._a()._p()._td()._tr();
+			} catch (IOException e) {
+					log.error("The HTML for the table with functions was not correctly generated.");
+			}
 
-			canvas = canvas.tr().td();
-			canvas = desLink.addFunction(canvas);
-			canvas = canvas._td()._tr();
-			canvas = canvas.tr().td().p()
-				.a(href(generateLink(new Pair<String, String>(desLink.getPackage(), desLink.getName()))))
-				.write(desLink.getName())._a()._p()._td()._tr().tr();
-			canvas = canvas.td().p().write(desLink.getDescription())._p()._td()._tr();
 		}
 		return canvas;
 	}

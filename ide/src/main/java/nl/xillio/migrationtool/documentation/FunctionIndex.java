@@ -1,9 +1,12 @@
 package nl.xillio.migrationtool.documentation;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.apache.commons.io.FileUtils;
 import org.rendersnake.HtmlCanvas;
 
 /**
@@ -13,7 +16,7 @@ import org.rendersnake.HtmlCanvas;
  * <p>
  * The {@link FunctionIndex} can generate HTML through generating the html of each {@link PackageDocument}
  * </p>
- * 
+ *
  * @author Ivor
  *
  */
@@ -28,6 +31,12 @@ public class FunctionIndex extends HtmlGenerator {
 	 */
 	public FunctionIndex(final String name) {
 		setName(name);
+	}
+	
+
+	@Override
+	protected HtmlCanvas addHeader(final HtmlCanvas canvas) throws IOException {
+		return canvas.head().title().content(this.getName()).macros().stylesheet("style/style.css")._head();
 	}
 
 	@Override
@@ -68,7 +77,8 @@ public class FunctionIndex extends HtmlGenerator {
 	 */
 	private HtmlCanvas addTableWithPackages(HtmlCanvas canvas) throws IOException {
 		// For each PackageDocument we add the package name and the table with its functions
-		for (PackageDocument packet : packages)
+		List<PackageDocument> sortedPackages = packages.stream().sorted((a,b) -> a.getName().compareTo(b.getName())).collect(Collectors.toList());
+		for (PackageDocument packet : sortedPackages)
 		{
 			canvas = canvas.tr().td().strong().write(packet.getName())._strong()._td()._tr();
 			canvas = packet.addTableWithFunctions(canvas);
@@ -76,4 +86,29 @@ public class FunctionIndex extends HtmlGenerator {
 		return canvas;
 	}
 
+	/**
+	 * Builds the HTML for each package and places them at the HELP_FOLDER destination /packages/packageNAME.html
+	 * 
+	 * @param HELP_FOLDER
+	 *        The folder where we store the helpfiles.
+	 */
+	public void buildPackageHTML(final File HELP_FOLDER)
+	{
+	
+		for (PackageDocument p : packages)
+		{
+			try {
+				FileUtils.write(
+					new File(HELP_FOLDER, "packages/" + p.getName() + ".html"), p.toHTML());
+			} catch (IOException e) {
+				log.error("The FunctionIndex could not generate the HTML file of the " + p.getName() + " plugin.");
+			}
+		}
+		try {
+			FileUtils.write(
+				new File(HELP_FOLDER, "index.html"), this.toHTML());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

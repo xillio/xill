@@ -2,8 +2,10 @@ package nl.xillio.migrationtool.gui;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
+import nl.xillio.migrationtool.documentation.PluginListener;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -40,9 +42,11 @@ public class HelpPane extends AnchorPane {
     }
 
     private void home() {
-	Platform.runLater(() -> {
-	    webFunctionDoc.getEngine().load(getClass().getResource("helpfiles/index.html").toString());
-	});
+    	try {
+				this.display(new File(PluginListener.HELP_FOLDER, "index.html").toURI().toURL());
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
     }
 
     /**

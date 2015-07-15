@@ -10,14 +10,20 @@ import java.util.concurrent.ExecutionException;
 import javafx.util.Pair;
 
 import org.elasticsearch.ElasticsearchException;
+import org.elasticsearch.action.NoShardAvailableActionException;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
+import org.elasticsearch.action.admin.indices.refresh.RefreshRequest;
+import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.unit.Fuzziness;
+import org.elasticsearch.index.get.GetField;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
@@ -114,12 +120,21 @@ public class DocumentSearcher {
 	public String getDocumentVersion(final String packet, final String id) {
 		checkIndex();
 		try {
-			GetResponse Response = client.prepareGet(DOCUMENTATION_INDEX, packet, id).setFields("version").execute()
-					.actionGet();
-			return (String) Response.getField("version").getValue();
-		} catch (Exception e) {
-			return null;
+
+			GetResponse Response = client.get(new GetRequest(DOCUMENTATION_INDEX, packet, id).fields("packageversion")).get(); //client.prepareGet(DOCUMENTATION_INDEX, packet, id).setFields("packageversion").execute().get();
+			GetField field = Response.getField("packageversion");
+			if (field != null) {
+				return (String) field.getValue();
+			}
+
+		} catch (InterruptedException e) {
+			
+			e.printStackTrace();
+		} catch(ExecutionException e) {
+			//Wasn't able to execute the query
 		}
+
+		return null;
 
 	}
 
@@ -190,7 +205,7 @@ public class DocumentSearcher {
 		return client.prepareIndex(DOCUMENTATION_INDEX, document.getPackage(), document.getName())
 				.setSource(jsonBuilder().startObject().field("name", document.getName())
 					.field("description", document.getDescription()).field("parameters", document.getParameters())
-					.field("searchTags", document.getSearchTags()).field("version", document.getVersion())
+					.field("searchTags", document.getSearchTags()).field("packageversion", document.getVersion())
 					.endObject())
 
 					.execute().actionGet();
@@ -214,6 +229,7 @@ public class DocumentSearcher {
 		if (!indexFound) {
 			try {
 				client.admin().indices().create(new CreateIndexRequest(DOCUMENTATION_INDEX)).get();
+				client.admin().indices().refresh(new RefreshRequest(DOCUMENTATION_INDEX)).get();
 			} catch (InterruptedException | ExecutionException e) {
 				e.printStackTrace();
 			}
