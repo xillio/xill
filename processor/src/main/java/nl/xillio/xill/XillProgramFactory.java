@@ -12,7 +12,6 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Stack;
 
-import org.apache.commons.collections.keyvalue.DefaultMapEntry;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.eclipse.emf.ecore.EObject;
@@ -143,7 +142,6 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	pluginLoader = loader;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void parse(final xill.lang.xill.Robot robot, final RobotID robotID) throws XillParsingException {
 
@@ -177,7 +175,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	}
 
 	nl.xillio.xill.components.Robot instructionRobot = new nl.xillio.xill.components.Robot(robotID, debugger);
-	compiledRobots.put(robot, new DefaultMapEntry(robotID, instructionRobot));
+	compiledRobots.put(robot, new SimpleEntry<>(robotID, instructionRobot));
 
 	for (xill.lang.xill.Instruction instruction : robot.getInstructionSet().getInstructions()) {
 	    instructionRobot.add(parse(instruction));
@@ -1064,7 +1062,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
      * @return
      */
     Processable parseToken(final xill.lang.xill.BooleanLiteral token) {
-	if(Boolean.parseBoolean(token.getValue())) {
+	if (Boolean.parseBoolean(token.getValue())) {
 	    return ExpressionBuilder.TRUE;
 	}
 	return ExpressionBuilder.FALSE;
@@ -1089,10 +1087,10 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
     Processable parseToken(final xill.lang.xill.IntegerLiteral token) {
 	try {
 	    return new ExpressionBuilder(Integer.parseInt(token.getValue()));
-	}catch(NumberFormatException e) {
+	} catch (NumberFormatException e) {
 	    try {
 		return new ExpressionBuilder(Long.parseLong(token.getValue()));
-	    }catch(NumberFormatException e2) {
+	    } catch (NumberFormatException e2) {
 		return new ExpressionBuilder(Double.parseDouble(token.getValue()));
 	    }
 	}

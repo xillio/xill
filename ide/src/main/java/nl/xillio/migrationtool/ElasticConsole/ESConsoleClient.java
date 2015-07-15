@@ -99,7 +99,7 @@ public class ESConsoleClient {
 		data.put("message", message);
 
 		// Index the log message in robotId/type/
-		IndexRequestBuilder request = client().prepareIndex(index, type).setSource(data);
+		IndexRequestBuilder request = getClient().prepareIndex(index, type).setSource(data);
 		request.execute().actionGet();
 
 		// Fire event if there is one
@@ -116,7 +116,7 @@ public class ESConsoleClient {
 	 */
 	private void createIndex(final String index) {
 		// Check if the index exists
-		if (client().admin().indices().prepareExists(index).execute().actionGet().isExists()) {
+		if (getClient().admin().indices().prepareExists(index).execute().actionGet().isExists()) {
 			return;
 		}
 
@@ -127,7 +127,7 @@ public class ESConsoleClient {
 		}
 
 		// Create the index
-		client().admin().indices().create(request).actionGet();
+		getClient().admin().indices().create(request).actionGet();
 	}
 
 	/**
@@ -174,13 +174,13 @@ public class ESConsoleClient {
 
 		// Create the search request
 		int from = Math.max(0, countEntries(normalizedId) - amount);
-		SearchRequestBuilder request = client().prepareSearch(normalizedId).setQuery(QueryBuilders.matchAllQuery());
+		SearchRequestBuilder request = getClient().prepareSearch(normalizedId).setQuery(QueryBuilders.matchAllQuery());
 		request.addSort("timestamp", SortOrder.ASC).addSort("order", SortOrder.ASC).setFrom(from).setSize(amount);
 
 		SearchResponse response = null;
 		try {
 			// Refresh the index to make sure everything is properly indexed etc
-			client().admin().indices().prepareRefresh(normalizedId).execute().actionGet();
+			getClient().admin().indices().prepareRefresh(normalizedId).execute().actionGet();
 			// Get the response
 			response = request.execute().actionGet();
 		} catch (SearchPhaseExecutionException | IndexMissingException e) {
@@ -204,12 +204,12 @@ public class ESConsoleClient {
 		String normalizedId = normalizeId(robotId);
 
 		// Create the count request
-		CountRequestBuilder request = client().prepareCount(normalizedId).setQuery(QueryBuilders.matchAllQuery());
+		CountRequestBuilder request = getClient().prepareCount(normalizedId).setQuery(QueryBuilders.matchAllQuery());
 
 		CountResponse response = null;
 		try {
 			// Refresh the index to make sure everything is properly indexed etc
-			client().admin().indices().prepareRefresh(normalizedId).execute().actionGet();
+			getClient().admin().indices().prepareRefresh(normalizedId).execute().actionGet();
 			// Get the response
 			response = request.execute().actionGet();
 		} catch (SearchPhaseExecutionException | IndexMissingException e) {
@@ -246,7 +246,7 @@ public class ESConsoleClient {
 
 		// Delete all documents in the robotId index
 		try {
-			client().admin().indices().delete(new DeleteIndexRequest(normalizedId));
+			getClient().admin().indices().delete(new DeleteIndexRequest(normalizedId));
 		} catch (IndexMissingException e) {
 			// If the index does not exist yet, do nothing
 		}
@@ -266,7 +266,11 @@ public class ESConsoleClient {
 		return lower;
 	}
 
-	private Client client() {
+
+	/**
+	 * @return the {@link Client}
+	 */
+	public Client getClient() {
 		return node.client();
 	}
 

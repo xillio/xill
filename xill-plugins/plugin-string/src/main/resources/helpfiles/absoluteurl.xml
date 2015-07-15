@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="absoluteurl">
+  <name>absoluteurl</name>
+  <parameters>
+    <param name="pageurl,">
+      <type>string</type>
+    </param>
+    <param name="relativeurl">
+      <type>string</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Converts the relative URL string relativeurl to an absolute url using the string pageurl as base URL. Returns the resulting URL as a string.]]></description>
+  <examples>
+    <example description="Executing:"><![CDATA[absoluteurl("http://www.xillio.nl/calendar/", "movies");
+]]></example>
+    <example description="Returns:"><![CDATA["http://www.xillio.nl/calendar/movies"
+]]></example>
+    <example description="Executing:"><![CDATA[absoluteurl("http://www.xillio.nl/calendar/", "../");
+]]></example>
+    <example description="Returns:"><![CDATA["http://www.xillio.nl/"
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+  </tags>
+</function>

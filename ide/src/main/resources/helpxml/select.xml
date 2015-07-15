@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="select">
+  <name>select</name>
+  <parameters>
+    <param name="element,">
+      <type>node</type>
+    </param>
+    <param name="select">
+      <type>boolean</type>
+    </param>
+  </parameters>
+  <description><![CDATA[In an HTML-select box, executing select marks the option node as selected . If the boolean parameter select equals true, it selects the option, if false then it’s deselected.]]></description>
+  <examples>
+    <example description="Assuming we have an HTML-file select.html containing the following:"><![CDATA[<html>
+    <body>
+        <select>
+            <option value="volvo">Volvo</option>
+            <option value="saab">Saab</option>
+            <option value="mercedes">Mercedes</option>
+            <option value="audi">Audi</option>
+        </select>
+    </body>
+</html>
+]]></example>
+    <example description="then executing:"><![CDATA[webclient({"enablecss"=false, "enablejs"=false});
+page = loadpage("file://C:/tmp/select.html");
+selectbox = xpath(page, "//select");
+choice = xpath(page, "//option[@value='saab']");
+select (choice, true);
+log (xmltostring(selectbox));
+]]></example>
+    <example description="will print:"><![CDATA[<select>
+  <option value="volvo">
+    Volvo
+  </option>
+  <option value="saab" selected="selected">
+    Saab
+  </option>
+  <option value="mercedes">
+    Mercedes
+  </option>
+  <option value="audi">
+    Audi
+  </option>
+</select>
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag> input</tag>
+    <tag>Browser</tag>
+  </tags>
+</function>

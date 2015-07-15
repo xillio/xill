@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="break">
+  <name>break</name>
+  <parameters />
+  <description><![CDATA[Breaks out of the current loop (while, for, foreach, repeat). Execution is resumed at the first statement after the loop.]]></description>
+  <examples>
+    <example description="This will output the numbers 1 to 5."><![CDATA[items = {1,2,3,4,5,6,7,8,9};
+foreach (_, item, items) {
+  if(item > 5){
+    break();
+  }
+  log(item);
+}
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag> continue</tag>
+    <tag>Language</tag>
+  </tags>
+</function>

@@ -1,5 +1,7 @@
 package nl.xillio.migrationtool;
 
+
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -160,7 +162,7 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 	private static Xill xill;
 
 	@Override
-	public void start(final Stage primaryStage, final Xill xill) {
+	public void start(final Stage primaryStage, final Xill xill)  {
 		Loader.xill = xill;
 		Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
 		
@@ -174,8 +176,7 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
 			e.printStackTrace();
-		}
-
+		}		
 		Parent root;
 		try {
 			Font.loadFont(this.getClass().getResourceAsStream("/fonts/Glober SemiBold.ttf"), 10);
@@ -228,7 +229,6 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 		loader.setController(controller);
 		return  loader.load();
 	}
-
 
 	@Override
 	public void load(nl.xillio.contenttools.PluginPackage[] dependencies) {

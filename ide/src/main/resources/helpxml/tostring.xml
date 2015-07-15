@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="tostring">
+  <name>tostring</name>
+  <parameters>
+    <param name="value ">
+      <type>any</type>
+    </param>
+  </parameters>
+  <description><![CDATA[Attempts to convert a variable into a string.]]></description>
+  <examples>
+    <example description="Append two numbers:"><![CDATA[log(tostring(5) + tostring(30));
+]]></example>
+    <example description="This will print:"><![CDATA[530
+]]></example>
+  </examples>
+  <Applications />
+  <tags>
+    <tag>Conversion</tag>
+  </tags>
+</function>
