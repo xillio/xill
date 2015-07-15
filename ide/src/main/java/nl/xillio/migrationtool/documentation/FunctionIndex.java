@@ -21,7 +21,11 @@ import org.rendersnake.HtmlCanvas;
  *
  */
 public class FunctionIndex extends HtmlGenerator {
-	List<PackageDocument> packages = new ArrayList<>();
+	//All the packages that are in the Index
+	private final List<PackageDocument> packages = new ArrayList<>();
+	//Wheter we want the HTML to display empty packages in the index or not.
+	private final boolean displayEmptyPackages = false;
+
 
 	/**
 	 * The constructor for the {@link FunctionIndex}
@@ -74,21 +78,24 @@ public class FunctionIndex extends HtmlGenerator {
 		List<PackageDocument> sortedPackages = packages.stream().sorted((a,b) -> a.getName().compareTo(b.getName())).collect(Collectors.toList());
 		for (PackageDocument packet : sortedPackages)
 		{
-			canvas = canvas.tr().td().strong().write(packet.getName())._strong()._td()._tr();
-			canvas = packet.addTableWithFunctions(canvas);
+			if(displayEmptyPackages || packet.getPackageSize() > 0)
+			{
+				canvas = canvas.tr().td().strong().write(packet.getName())._strong()._td()._tr();
+				canvas = packet.addTableWithFunctions(canvas);
+			}
 		}
 		return canvas;
 	}
 
 	/**
 	 * Builds the HTML for each package and places them at the HELP_FOLDER destination /packages/packageNAME.html
-	 * 
+	 *
 	 * @param HELP_FOLDER
 	 *        The folder where we store the helpfiles.
 	 */
 	public void buildPackageHTML(final File HELP_FOLDER)
 	{
-	
+
 		for (PackageDocument p : packages)
 		{
 			try {
@@ -97,12 +104,12 @@ public class FunctionIndex extends HtmlGenerator {
 			} catch (IOException e) {
 				log.error("The FunctionIndex could not generate the HTML file of the " + p.getName() + " plugin.");
 			}
-		}
-		try {
-			FileUtils.write(
-				new File(HELP_FOLDER, "index.html"), this.toHTML());
-		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				FileUtils.write(
+					new File(HELP_FOLDER, "index.html"), toHTML());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

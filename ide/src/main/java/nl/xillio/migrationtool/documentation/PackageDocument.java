@@ -77,5 +77,15 @@ public class PackageDocument extends HtmlGenerator {
 		}
 		return canvas;
 	}
+	
+	/**
+	 * Returns the amount of {@link FunctionDocument} present in the {@link PackageDocument}
+	 * @return
+	 * 				Returns the amount of functions in the package.
+	 */
+	public int getPackageSize()
+	{
+		return functions.size();
+	}
 
 }

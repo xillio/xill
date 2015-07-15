@@ -155,9 +155,10 @@ public abstract class HtmlGenerator {
 	 *        The canvas we're adding the example item to.
 	 * @param item
 	 *        The item we're adding.
-	 * @return Returns A {@link HtmlCanvas} canvas with the item added as a
-	 *         listItem.
+	 * @return 
+	 * 				Returns A {@link HtmlCanvas} canvas with the item added as a listItem.
 	 * @throws IOException
+	 * 						Throws an IOException when failing to generate correct HTML.
 	 */
 	protected static HtmlCanvas addItemToList(final HtmlCanvas canvas, final String item) {
 		try {

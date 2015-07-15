@@ -52,7 +52,7 @@ public class DocumentSearcher {
 	 * Initialises the {@link DocumentSearcher}
 	 *
 	 * @param c
-	 *        The client the {@link DocumentSearcher} works with
+	 *        The client the {@link DocumentSearcher} works with.
 	 */
 	public DocumentSearcher(final Client c) {
 		client = c;

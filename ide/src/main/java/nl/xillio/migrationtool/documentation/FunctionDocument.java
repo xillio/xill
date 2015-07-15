@@ -21,7 +21,7 @@ import org.rendersnake.HtmlCanvas;
  * </p>
  * <p>
  * It contains a list of parameters which are strings
- * <p>
+ * </p>
  *
  * <p>
  * It contains a {@link String} with the description.
