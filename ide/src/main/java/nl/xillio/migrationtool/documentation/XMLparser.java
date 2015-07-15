@@ -67,16 +67,18 @@ public class XMLparser {
 
 				// Parse the parameters
 				XPathExpression paramsNameExpr = xpath.compile("/function/parameters/param/@name");
-				XPathExpression paramsDefExpr  = xpath.compile("/function/parameters/param/@default");
+				XPathExpression paramsDefExpr = xpath.compile("/function/parameters/param/@default");
 				NodeList parameterNames = (NodeList) paramsNameExpr.evaluate(doc, XPathConstants.NODESET);
-				NodeList defaultValues  = (NodeList)	paramsDefExpr.evaluate(doc, XPathConstants.NODESET);
+				NodeList defaultValues = (NodeList) paramsDefExpr.evaluate(doc, XPathConstants.NODESET);
 				for (int t = 0; t < parameterNames.getLength(); ++t) {
 					String parameterName = parameterNames.item(t).getTextContent().trim();
-					if(defaultValues.item(t) != null){
-							String defaultValue  = defaultValues.item(t).getTextContent().trim();
-							func.addParameter(parameterName, defaultValue);
+					if (defaultValues.item(t) != null) {
+						String defaultValue = defaultValues.item(t).getTextContent().trim();
+						func.addParameter(parameterName, defaultValue);
 					}
-					func.addParameter(parameterName);
+					else {
+						func.addParameter(parameterName);
+					}
 				}
 
 				// Parse the examples
@@ -90,8 +92,8 @@ public class XMLparser {
 				}
 
 				// Parse the tags
-				XPathExpression tagsExpr = xpath.compile("/function/tags/tag/text()");
-				XPathExpression tagsPackageExpr = xpath.compile("/function/tags/tag/@package");
+				XPathExpression tagsExpr = xpath.compile("/function/references/reference/text()");
+				XPathExpression tagsPackageExpr = xpath.compile("/function/references/reference/@package");
 				NodeList tags = (NodeList) tagsExpr.evaluate(doc, XPathConstants.NODESET);
 				NodeList tagsPackage = (NodeList) tagsPackageExpr.evaluate(doc, XPathConstants.NODESET);
 				for (int t = 0; t < tags.getLength(); ++t) {

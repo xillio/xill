@@ -24,6 +24,6 @@ emptystring = "";
     <example description="Possible uses with file list iterator variables:"><![CDATA[log("Number of files: " + length(listfiles("c:/xillio")));
 ]]></example>
   </examples>
-  <tags>
-  </tags>
+  <references>
+  </references>
 </function>

@@ -19,9 +19,9 @@
     testvalue = contains({brand = "BMW", colour = "light silver grey"}, "silver");
 ]]></example>
   </examples>
-  <tags>
-  	<tag package = "String">endswith</tag>
-  	<tag package = "String">startsWith</tag>
-  	<tag package = "packages">List</tag>
-  </tags>
+  <references>
+  	<reference package = "String">endswith</reference>
+  	<reference package = "String">startsWith</reference>
+  	<reference package = "packages">List</reference>
+  </references>
 </function>

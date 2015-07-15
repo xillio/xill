@@ -29,6 +29,6 @@ if (!matches(testUrl, ".*\\.(pdf|doc|docx|ppt|pptx|xls|xlsx|mp3|mp4|wmv|flv|flas
 }
 ]]></example>
   </examples>
-  <tags>
-  </tags>
+  <references>
+  </references>
 </function>

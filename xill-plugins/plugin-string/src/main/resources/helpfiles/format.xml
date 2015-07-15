@@ -31,6 +31,6 @@ log (format("%10.3f%n", pi));   // -->  "     3,142"
 log (format("%-10.3f%n", pi));  // -->  "3,142"
 ]]></example>
   </examples>
-  <tags>
-  </tags>
+  <references>
+  </references>
 </function>

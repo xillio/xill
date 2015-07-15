@@ -22,7 +22,7 @@ log(l);
 }
 ]]></example>
   </examples>
-  <tags>
-	<tag package= "packages">List</tag>
-  </tags>
+  <references>
+	<reference package= "packages">List</reference>
+  </references>
 </function>

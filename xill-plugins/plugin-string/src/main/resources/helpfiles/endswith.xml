@@ -17,8 +17,8 @@
     <example description="While the following would return false:"><![CDATA[testvalue = endswith("testing", "test");
 ]]></example>
   </examples>
-  <tags>
-    <tag package = "String">startswith</tag>
-    <tag package = "String">contains</tag>
-  </tags>
+  <references>
+    <reference package = "String">startswith</reference>
+    <reference package = "String">contains</reference>
+  </references>
 </function>

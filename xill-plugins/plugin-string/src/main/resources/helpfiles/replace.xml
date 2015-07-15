@@ -51,6 +51,6 @@ cleanurlsimple = routine(url, stripanchors, stripvars) {
     <example description="will print:"><![CDATA[http://www.xillio.com/somepage
 ]]></example>
   </examples>
-  <tags>
-  </tags>
+  <references>
+  </references>
 </function>

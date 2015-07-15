@@ -17,11 +17,11 @@
     -3.14]]>
     </example>
   </examples>
-  <tags>
-  	<tag package = "Math">round</tag>
-  	<tag package = "Math">round</tag>
-  	<tag package = "Math">round</tag>
-  </tags>
+  <references>
+  	<reference package = "Math">round</reference>
+  	<reference package = "Math">round</reference>
+  	<reference package = "Math">round</reference>
+  </references>
    <searchTags>
 	<searchTag>
 	absolute

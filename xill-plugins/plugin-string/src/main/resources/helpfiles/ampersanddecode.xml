@@ -18,7 +18,7 @@
     <example description="Returns:"><![CDATA["Money <> Health"
 ]]></example>
   </examples>
-  <tags>
-    <tag package = "String">ampersandencode</tag>
-  </tags>
+  <references>
+    <reference package = "String">ampersandencode</reference>
+  </references>
 </function>

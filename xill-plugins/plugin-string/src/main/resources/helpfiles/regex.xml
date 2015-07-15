@@ -31,6 +31,6 @@ if (variabletype(id_regex) == "list") {
 }
 ]]></example>
   </examples>
-  <tags>
-  </tags>
+  <references>
+  </references>
 </function>

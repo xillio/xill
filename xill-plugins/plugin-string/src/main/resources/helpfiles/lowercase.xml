@@ -11,7 +11,7 @@
     <example description="will print:"><![CDATA[3... 2... 1... start... genius!
 ]]></example>
   </examples>
-  <tags>
-    <tag package = "String">uppercase</tag>
-  </tags>
+  <references>
+    <reference package = "String">uppercase</reference>
+  </references>
 </function>

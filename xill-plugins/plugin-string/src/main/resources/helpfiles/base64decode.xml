@@ -19,7 +19,7 @@
 </note>
 ]]></example>
   </examples>
-  <tags>
-    <tag package = "String">base64encode</tag>
-  </tags>
+  <references>
+    <reference package = "String">base64encode</reference>
+  </references>
 </function>
