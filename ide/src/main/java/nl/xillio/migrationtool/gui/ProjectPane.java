@@ -21,6 +21,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.MultipleSelectionModel;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -131,7 +132,24 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 
 	@FXML
 	private void renameButtonPressed() {
-		new RenameDialog(getCurrentItem()).show();
+		Tab orgTab = this.controller.findTab(getCurrentItem().getValue().getKey()); //org file
+		String oldName = getCurrentItem().getValue().getValue();
+		RenameDialog dlg = new RenameDialog(getCurrentItem());
+		dlg.showAndWait();
+		String newName = getCurrentItem().getValue().getValue();
+		if (oldName != newName) {//name has changed
+			if (orgTab != null) {//if tab with the org file is opened then close it and open new one
+				Tab selectedTab = this.controller.getSelectedTab();
+				if (orgTab == selectedTab) {
+					selectedTab = null;
+				}
+				this.controller.closeTab(orgTab);
+				this.controller.openFile(getCurrentItem().getValue().getKey());
+				if (selectedTab != null) {
+					this.controller.showTab((RobotTab)selectedTab);
+				}
+			}
+		}
 	}
 
 	@FXML

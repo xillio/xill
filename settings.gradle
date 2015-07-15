@@ -4,5 +4,5 @@ include  'api', 'ide', 'processor', 'xill-plugins'
 include 'xill-plugins:plugin-system'
 include  'xill-plugins:plugin-example'
 include  'xill-plugins:plugin-string'
+include  'xill-plugins:plugin-selenium'
 include 'xill-plugins:plugin-math' 
-
