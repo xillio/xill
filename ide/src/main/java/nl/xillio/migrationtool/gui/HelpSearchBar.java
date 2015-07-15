@@ -88,10 +88,12 @@ public class HelpSearchBar extends AnchorPane {
 			Platform.runLater(() -> {
 				box.getItems().clear();
 				box.getItems().addAll(results);
-				if (!box.getItems().isEmpty() && box.getItems().size() != comboBoxLength) {
-					box.hide();
-					box.show();
-					comboBoxLength = box.getItems().size();
+				if (!box.getItems().isEmpty()) {
+					if (box.getItems().size() != comboBoxLength) {
+						box.hide();
+						box.show();
+						comboBoxLength = box.getItems().size();
+					}
 				} else {
 					box.hide();
 				}
