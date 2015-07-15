@@ -5,10 +5,10 @@ import java.util.Collection;
 import java.util.List;
 
 import nl.xillio.events.Event;
+import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.Instruction;
 import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.InstructionSet;
-import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Robot;
 import nl.xillio.xill.api.errors.ErrorHandlingPolicy;

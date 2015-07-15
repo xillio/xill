@@ -1,6 +1,9 @@
 package nl.xillio.xill.plugins.example;
 
 import nl.xillio.xill.api.PluginPackage;
+import nl.xillio.xill.plugins.example.constructs.CopyConstruct;
+import nl.xillio.xill.plugins.example.constructs.LifeConstuct;
+import nl.xillio.xill.plugins.example.constructs.WebPreviewConstruct;
 
 /**
  * This package includes all example constructs

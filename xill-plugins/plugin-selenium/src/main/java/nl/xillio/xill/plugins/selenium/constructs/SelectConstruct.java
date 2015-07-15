@@ -1,7 +1,7 @@
 package nl.xillio.xill.plugins.selenium.constructs;
 
 import org.openqa.selenium.WebElement;
-import nl.xillio.xill.api.components.ExpressionBuilder;
+
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
@@ -10,7 +10,7 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.selenium.NodeVariable;
 
-public class SelectConstruct implements Construct {
+public class SelectConstruct extends Construct {
 
 	@Override
 	public String getName() {
@@ -40,7 +40,7 @@ public class SelectConstruct implements Construct {
 			if ( (select && (!element.isSelected())) || (!select && (element.isSelected()))) { //if it's <option> tag then "deselect" doesn't work
 				element.click();
 			}
-			return ExpressionBuilder.NULL;
+			return NULL;
 		} catch (Exception e) {
 			throw new RobotRuntimeException(e.getClass().getSimpleName(), e);
 		}

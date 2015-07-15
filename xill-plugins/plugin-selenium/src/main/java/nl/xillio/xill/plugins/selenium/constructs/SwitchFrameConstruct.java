@@ -3,7 +3,6 @@ package nl.xillio.xill.plugins.selenium.constructs;
 import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.WebDriver;
 
-import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
@@ -13,7 +12,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.selenium.NodeVariable;
 import nl.xillio.xill.plugins.selenium.PageVariable;
 
-public class SwitchFrameConstruct implements Construct {
+public class SwitchFrameConstruct extends Construct {
 
 	@Override
 	public String getName() {
@@ -56,7 +55,7 @@ public class SwitchFrameConstruct implements Construct {
 			throw new RobotRuntimeException(e.getClass().getSimpleName(), e);
 		}
 	
-		return ExpressionBuilder.NULL;
+		return NULL;
 	}
 
 }

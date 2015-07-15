@@ -1,9 +1,13 @@
 package nl.xillio.xill.plugins.selenium.constructs;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
-import nl.xillio.xill.api.components.ExpressionBuilder;
-import nl.xillio.xill.api.components.ExpressionDataType;
+
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
@@ -12,12 +16,7 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.selenium.PageVariable;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-public class SetCookieConstruct implements Construct {
+public class SetCookieConstruct extends Construct {
 
 	@Override
 	public String getName() {
@@ -35,8 +34,10 @@ public class SetCookieConstruct implements Construct {
 	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression cookiesVar) {
 
 		if (cookiesVar.isNull()) {
-			return ExpressionBuilder.NULL;
+			return NULL;
 		}
+		
+		assertNotType(cookiesVar, "cookies", ATOMIC);
 
 		if (!PageVariable.checkType(pageVar)) {
 			throw new RobotRuntimeException("Invalid variable type. Page NODE type expected!");
@@ -45,19 +46,17 @@ public class SetCookieConstruct implements Construct {
 
 		WebDriver driver = PageVariable.getDriver(pageVar);
 		
-		if (cookiesVar.getType() == ExpressionDataType.OBJECT) {
+		if (cookiesVar.getType() == OBJECT) {
 			processCookie(driver, cookiesVar);
-		} else if (cookiesVar.getType() == ExpressionDataType.LIST) {
+		} else if (cookiesVar.getType() == LIST) {
 			@SuppressWarnings("unchecked")
 			List<MetaExpression> list = (List<MetaExpression>) cookiesVar.getValue();
 			for (MetaExpression cookie : list) {
 				processCookie(driver, cookie);
 			}
-		} else {
-			throw new RobotRuntimeException("Invalid cookies variable!");
 		}
 
-		return ExpressionBuilder.NULL;
+		return NULL;
 	}
 
 	private static void processCookie(final WebDriver driver, final MetaExpression cookie) {

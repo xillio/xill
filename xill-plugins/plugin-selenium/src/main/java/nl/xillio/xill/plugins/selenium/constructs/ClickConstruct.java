@@ -2,7 +2,7 @@ package nl.xillio.xill.plugins.selenium.constructs;
 
 import org.openqa.selenium.WebElement;
 
-import nl.xillio.xill.api.components.ExpressionBuilder;
+
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
@@ -11,7 +11,7 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.selenium.NodeVariable;
 
-public class ClickConstruct implements Construct {
+public class ClickConstruct extends Construct {
 
 	@Override
 	public String getName() {
@@ -40,6 +40,6 @@ public class ClickConstruct implements Construct {
 			throw new RobotRuntimeException(e.getClass().getSimpleName(), e);
 		}
 
-		return ExpressionBuilder.NULL;
+		return NULL;
 	}
 }

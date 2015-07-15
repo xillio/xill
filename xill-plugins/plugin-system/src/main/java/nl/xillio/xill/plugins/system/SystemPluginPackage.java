@@ -1,6 +1,9 @@
 package nl.xillio.xill.plugins.system;
 
 import nl.xillio.xill.api.PluginPackage;
+import nl.xillio.xill.plugins.system.constructs.PrintConstruct;
+import nl.xillio.xill.plugins.system.constructs.TypeOfConstruct;
+import nl.xillio.xill.plugins.system.constructs.WaitConstruct;
 
 /**
  * This package includes all system constructs

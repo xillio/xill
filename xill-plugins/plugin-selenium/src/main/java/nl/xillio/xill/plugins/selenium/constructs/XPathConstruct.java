@@ -9,7 +9,6 @@ import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
@@ -19,7 +18,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.selenium.NodeVariable;
 import nl.xillio.xill.plugins.selenium.PageVariable;
 
-public class XPathConstruct implements Construct {
+public class XPathConstruct extends Construct {
 
 	@Override
 	public String getName() {
@@ -32,7 +31,7 @@ public class XPathConstruct implements Construct {
 			XPathConstruct::process,
 			new Argument("element"),
 			new Argument("xpath"),
-			new Argument("namespace", ExpressionBuilder.NULL));
+			new Argument("namespace", NULL));
 	}
 
 	public static MetaExpression process(final MetaExpression elementVar, final MetaExpression xpathVar, final MetaExpression namespaceVar) {
@@ -69,7 +68,7 @@ public class XPathConstruct implements Construct {
 			
 			if(results.size() == 0) {
 				//log.debug("No results");
-				return ExpressionBuilder.NULL;
+				return NULL;
 			} else if (results.size() == 1) {
 				return parseSELVariable(driver, results.get(0), textquery, attribute);
 			} else {
@@ -79,7 +78,7 @@ public class XPathConstruct implements Construct {
 					list.add(parseSELVariable(driver, he, textquery, attribute));
 				}
 				
-				return ExpressionBuilder.fromValue(list);
+				return fromValue(list);
 			}
 		} catch (InvalidSelectorException e) {
 			throw new RobotRuntimeException("Invalid XPath", e);
@@ -88,14 +87,14 @@ public class XPathConstruct implements Construct {
 	
 	private static MetaExpression parseSELVariable(final WebDriver driver, final WebElement e, final boolean textquery, final String attribute) {
 		if(textquery) {
-			return ExpressionBuilder.fromValue(e.getAttribute("innerHTML"));
+			return fromValue(e.getAttribute("innerHTML"));
 		}
 		
 		if(attribute != null) {
 			String val = e.getAttribute(attribute);
 			if( val == null)
-				return ExpressionBuilder.NULL;
-			return ExpressionBuilder.fromValue(val);
+				return NULL;
+			return fromValue(val);
 		}
 
 		return NodeVariable.create(driver, e);
