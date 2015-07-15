@@ -10,7 +10,6 @@ import java.util.concurrent.ExecutionException;
 import javafx.util.Pair;
 
 import org.elasticsearch.ElasticsearchException;
-import org.elasticsearch.action.NoShardAvailableActionException;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
@@ -18,10 +17,8 @@ import org.elasticsearch.action.admin.indices.refresh.RefreshRequest;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
-import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.get.GetField;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -91,10 +88,10 @@ public class DocumentSearcher {
 		String[] queries = query.split(" ");
 		for (String q : queries) {
 			question = question.should(QueryBuilders.fuzzyQuery("name", q).fuzziness(Fuzziness.TWO).boost(3.0f))
-					.should(QueryBuilders.wildcardQuery("name", "*" + q + "*").boost(3.0f))
-					.should(QueryBuilders.fuzzyQuery("description", q)).should(QueryBuilders.fuzzyQuery("examples", q))
-					.should(QueryBuilders.fuzzyQuery("searchTags", q).boost(3.0f))
-					.should(QueryBuilders.wildcardQuery("searchTags", "*" + q + "*").boost(3.0f));
+				.should(QueryBuilders.wildcardQuery("name", "*" + q + "*").boost(3.0f))
+				.should(QueryBuilders.fuzzyQuery("description", q)).should(QueryBuilders.fuzzyQuery("examples", q))
+				.should(QueryBuilders.fuzzyQuery("searchTags", q).boost(3.0f))
+				.should(QueryBuilders.wildcardQuery("searchTags", "*" + q + "*").boost(3.0f));
 		}
 		// Retrieve a response
 		SearchResponse response = client.prepareSearch(DOCUMENTATION_INDEX).setQuery(question).execute().actionGet();
@@ -121,65 +118,22 @@ public class DocumentSearcher {
 		checkIndex();
 		try {
 
-			GetResponse Response = client.get(new GetRequest(DOCUMENTATION_INDEX, packet, id).fields("packageversion")).get(); //client.prepareGet(DOCUMENTATION_INDEX, packet, id).setFields("packageversion").execute().get();
+			GetResponse Response = client.get(new GetRequest(DOCUMENTATION_INDEX, packet, id).fields("packageversion")).get(); // client.prepareGet(DOCUMENTATION_INDEX, packet,
+																																																													// id).setFields("packageversion").execute().get();
 			GetField field = Response.getField("packageversion");
 			if (field != null) {
 				return (String) field.getValue();
 			}
 
 		} catch (InterruptedException e) {
-			
+
 			e.printStackTrace();
-		} catch(ExecutionException e) {
-			//Wasn't able to execute the query
+		} catch (ExecutionException e) {
+			// Wasn't able to execute the query
 		}
 
 		return null;
 
-	}
-
-	/**
-	 * Returns a string which is the documentDescription given a package and ID.
-	 *
-	 * @param packet
-	 *        The package the function is in
-	 * @param id
-	 *        The unique id of the functiondocument
-	 * @return The description of the functiondocument or null when it does not exist.
-	 */
-	public String getDocumentDescription(final String packet, final String id) {
-		checkIndex();
-		try {
-			GetResponse Response = client.prepareGet(DOCUMENTATION_INDEX, packet, id).setFields("description").execute()
-					.actionGet();
-			return (String) Response.getField("description").getValue();
-		} catch (Exception e) {
-			return null;
-		}
-	}
-
-	/**
-	 * Queries the database for a {@link FunctionDocument} its parameters.
-	 *
-	 * @param packet
-	 *        The name of the {@link PackageDocument} package of the function we're searching.
-	 * @param id
-	 *        The name of the {@link FunctionDocument} we're searching.
-	 * @return
-	 *         Returns the parameters in a list of strings.
-	 */
-	public List<String> getDocumentParameters(final String packet, final String id) {
-		checkIndex();
-		try {
-			GetResponse Response = client.prepareGet(DOCUMENTATION_INDEX, packet, id).setFields("parameters").execute()
-					.actionGet();
-			String params = (String) Response.getField("parameters").getValue();
-			List<String> result = new ArrayList<>();
-			result.add(params);
-			return result;
-		} catch (Exception e) {
-			return null;
-		}
 	}
 
 	/**
@@ -203,12 +157,12 @@ public class DocumentSearcher {
 		}
 		// Return an indexed client with three fields
 		return client.prepareIndex(DOCUMENTATION_INDEX, document.getPackage(), document.getName())
-				.setSource(jsonBuilder().startObject().field("name", document.getName())
-					.field("description", document.getDescription()).field("parameters", document.getParameters())
-					.field("searchTags", document.getSearchTags()).field("packageversion", document.getVersion())
-					.endObject())
+			.setSource(jsonBuilder().startObject().field("name", document.getName())
+				.field("description", document.getDescription()).field("parameters", document.getParameters())
+				.field("searchTags", document.getSearchTags()).field("packageversion", document.getVersion())
+				.endObject())
 
-					.execute().actionGet();
+			.execute().actionGet();
 
 	}
 
@@ -220,7 +174,7 @@ public class DocumentSearcher {
 
 		try {
 			IndicesExistsResponse result = client.admin().indices()
-					.exists(new IndicesExistsRequest(DOCUMENTATION_INDEX)).get();
+				.exists(new IndicesExistsRequest(DOCUMENTATION_INDEX)).get();
 			indexFound = result.isExists();
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
