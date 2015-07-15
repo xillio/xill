@@ -16,7 +16,6 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
@@ -27,9 +26,8 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.selenium.PageVariable;
 import nl.xillio.xill.plugins.selenium.PhantomJSPool;
 import nl.xillio.xill.plugins.selenium.SeleniumPluginPackage;
-import nl.xillio.xill.plugins.selenium.PhantomJSPool.Entity;
 
-public class LoadPageConstruct implements Construct, AutoCloseable {
+public class LoadPageConstruct extends Construct implements AutoCloseable {
 
     private static final PhantomJSPool pool = new PhantomJSPool(10);
 
@@ -45,7 +43,7 @@ public class LoadPageConstruct implements Construct, AutoCloseable {
 
     @Override
     public ConstructProcessor prepareProcess(final ConstructContext context) {
-	return new ConstructProcessor(LoadPageConstruct::process, new Argument("url"), new Argument("options", ExpressionBuilder.NULL));
+	return new ConstructProcessor(LoadPageConstruct::process, new Argument("url"), new Argument("options", NULL));
     }
 
     public static MetaExpression process(final MetaExpression urlVar, final MetaExpression optionsVar) {
@@ -238,7 +236,7 @@ public class LoadPageConstruct implements Construct, AutoCloseable {
 
 	/**
 	 * It sets the options that are to be set after the driver is created
-	 * 
+	 *
 	 * @param driver
 	 *            Existing WebDriver
 	 */
@@ -266,7 +264,7 @@ public class LoadPageConstruct implements Construct, AutoCloseable {
 
 	/**
 	 * Creates CLI options
-	 * 
+	 *
 	 * @return The object encapsulating all CLI parameters for PhantomJS.exe
 	 *         process
 	 */
@@ -317,14 +315,14 @@ public class LoadPageConstruct implements Construct, AutoCloseable {
 		return s2 == null;
 	    }
 	    if (s2 == null) {
-	        return false;
+		return false;
 	    }
 	    return s1.equals(s2);
 	}
 
 	/**
 	 * It compares provided options with this options
-	 * 
+	 *
 	 * @param options
 	 *            contains actual LoadPage settings
 	 * @return true if both options exactly matches otherwise false

@@ -1,9 +1,9 @@
 package nl.xillio.xill.plugins.selenium.constructs;
 
 import java.io.File;
-import java.util.ArrayList;
+
 import org.apache.commons.io.FileUtils;
-import nl.xillio.xill.api.components.ExpressionBuilder;
+
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
@@ -11,7 +11,7 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
-public class StringToPageConstruct implements Construct {
+public class StringToPageConstruct extends Construct {
 
 	@Override
 	public String getName() {
@@ -33,7 +33,7 @@ public class StringToPageConstruct implements Construct {
 			htmlFile.deleteOnExit();
 			FileUtils.writeStringToFile(htmlFile, content);
 			String uri = "file:///" + htmlFile.getAbsolutePath(); 
-			return LoadPageConstruct.process(ExpressionBuilder.fromValue(uri), ExpressionBuilder.NULL);
+			return LoadPageConstruct.process(fromValue(uri), NULL);
 		} catch (Exception e) {
 			throw new RobotRuntimeException(e.getClass().getSimpleName(), e);
 		}
