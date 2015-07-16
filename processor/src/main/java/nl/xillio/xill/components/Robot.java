@@ -171,5 +171,6 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
 				initializingRobots.remove(robot);
 			}
 		}
+		super.initialize();
 	}
 }

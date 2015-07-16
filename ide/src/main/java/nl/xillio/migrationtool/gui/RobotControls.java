@@ -265,9 +265,9 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 		} else if (e instanceof RobotRuntimeException) {
 			log.error(e.getMessage());
 		} else if (root == null) {
-			log.error(e);
+			log.error("An error occurred in a robot: " + ExceptionUtils.getStackTrace(e), e);
 		} else {
-			log.error(root);
+			log.error("An error occurred in a robot: " + ExceptionUtils.getStackTrace(root), root);
 		}
 
 		if (shouldStopOnError.isSelected()) {

@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Stack;
 
+import org.apache.commons.lang3.StringUtils;
+
 import nl.xillio.xill.CodePosition;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.ExpressionBuilder;
@@ -18,7 +20,6 @@ import nl.xillio.xill.components.operators.Assign;
  * This {@link Instruction} represents the start of a variable's lifespan
  */
 public class VariableDeclaration extends Instruction {
-
 	private final Processable assignation;
 	private final Stack<MetaExpression> valueStack = new Stack<>();
 	/**
