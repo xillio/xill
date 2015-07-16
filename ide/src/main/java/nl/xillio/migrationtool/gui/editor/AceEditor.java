@@ -212,7 +212,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 			}else if (helppane != null && KeyCombination.valueOf(FXController.HOTKEY_HELP).match(ke)) {
 				executeJS("editor.getCurrentWord();",
 					result -> {
-						helppane.display((String)result);
+						//helppane.display((String)result);
 					});
 			}
 		}
