@@ -14,16 +14,16 @@ import xill.lang.xill.UseStatement;
  * This class represents a wrapper for various kinds of information that can be used for debugging
  */
 public class DebugInfo implements nl.xillio.xill.api.DebugInfo {
-	
-	
+
 	private Map<Target, VariableDeclaration> variables = new HashMap<>();
 	private Map<UseStatement, PluginPackage> using = new HashMap<>();
 
 	/**
 	 * Add all information from into to this
+	 * 
 	 * @param info
 	 */
-	public void add(DebugInfo info) {
+	public void add(final DebugInfo info) {
 		variables.putAll(info.getVariables());
 		using.putAll(info.getUsing());
 	}
@@ -36,9 +36,10 @@ public class DebugInfo implements nl.xillio.xill.api.DebugInfo {
 	}
 
 	/**
-	 * @param variables the variables to set
+	 * @param variables
+	 *        the variables to set
 	 */
-	public void setVariables(Map<Target, VariableDeclaration> variables) {
+	public void setVariables(final Map<Target, VariableDeclaration> variables) {
 		this.variables = variables;
 	}
 
@@ -50,18 +51,18 @@ public class DebugInfo implements nl.xillio.xill.api.DebugInfo {
 	}
 
 	/**
-	 * @param using the using to set
+	 * @param using
+	 *        the using to set
 	 */
-	public void setUsing(Map<UseStatement, PluginPackage> using) {
+	public void setUsing(final Map<UseStatement, PluginPackage> using) {
 		this.using = using;
 	}
-	
+
 	/**
 	 * @return a set of used plugins
 	 */
 	public Set<PluginPackage> getUsedPlugins() {
 		return new HashSet<>(using.values());
 	}
-
 
 }

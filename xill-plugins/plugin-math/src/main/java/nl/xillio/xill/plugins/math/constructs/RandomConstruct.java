@@ -19,43 +19,43 @@ import nl.xillio.xill.api.construct.HelpComponent;
  */
 public class RandomConstruct extends Construct implements HelpComponent {
 
-    @Override
-    public String getName() {
-	return "random";
-    }
-
-    @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
-	return new ConstructProcessor(RandomConstruct::process, new Argument("value", fromValue(0)));
-    }
-
-    private static MetaExpression process(final MetaExpression value) {
-	assertNotType(value, "value", OBJECT);
-
-	if (value.getType() == LIST) {
-	    @SuppressWarnings("unchecked")
-	    List<MetaExpression> list = (List<MetaExpression>) value.getValue();
-	    int size = list.size();
-
-	    if (size == 0) {
-		return NULL;
-	    }
-
-	    int index = (int) (Math.random() * size);
-	    return list.get(index);
+	@Override
+	public String getName() {
+		return "random";
 	}
-	int intValue = value.getNumberValue().intValue();
 
-	if (intValue <= 0) {
-	    return fromValue(Math.random());
+	@Override
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
+		return new ConstructProcessor(RandomConstruct::process, new Argument("value", fromValue(0)));
 	}
-	return fromValue((int) (Math.random() * intValue));
 
-    }
+	private static MetaExpression process(final MetaExpression value) {
+		assertNotType(value, "value", OBJECT);
 
-    @Override
-    public InputStream openDocumentationStream() {
-	return getClass().getResourceAsStream("/helpfiles/random.xml");
-    }
+		if (value.getType() == LIST) {
+			@SuppressWarnings("unchecked")
+			List<MetaExpression> list = (List<MetaExpression>) value.getValue();
+			int size = list.size();
+
+			if (size == 0) {
+				return NULL;
+			}
+
+			int index = (int) (Math.random() * size);
+			return list.get(index);
+		}
+		int intValue = value.getNumberValue().intValue();
+
+		if (intValue <= 0) {
+			return fromValue(Math.random());
+		}
+		return fromValue((int) (Math.random() * intValue));
+
+	}
+
+	@Override
+	public InputStream openDocumentationStream() {
+		return getClass().getResourceAsStream("/helpfiles/random.xml");
+	}
 
 }

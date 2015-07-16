@@ -5,6 +5,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.log4j.Logger;
+
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -33,11 +38,6 @@ import nl.xillio.xill.api.components.Robot;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.errors.XillParsingException;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.log4j.Logger;
-
 /**
  * A tab containing the editor, console and debug panel attached to a specific currentRobot.
  */
@@ -45,12 +45,10 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	private static final Logger log = Logger.getLogger(RobotTab.class);
 	private static final SettingsHandler settings = SettingsHandler.getSettingsHandler();
 
-	private static final String
-	PATH_STATUSICON_RUNNING = "M256,92.481c44.433,0,86.18,17.068,117.553,48.064C404.794,171.411,422,212.413,422,255.999 s-17.206,84.588-48.448,115.455c-31.372,30.994-73.12,48.064-117.552,48.064s-86.179-17.07-117.552-48.064 C107.206,340.587,90,299.585,90,255.999s17.206-84.588,48.448-115.453C169.821,109.55,211.568,92.481,256,92.481 M256,52.481 c-113.771,0-206,91.117-206,203.518c0,112.398,92.229,203.52,206,203.52c113.772,0,206-91.121,206-203.52 C462,143.599,369.772,52.481,256,52.481L256,52.481z M206.544,357.161V159.833l160.919,98.666L206.544,357.161z",
-	PATH_STATUSICON_PAUSED = "M256,92.481c44.433,0,86.18,17.068,117.553,48.064C404.794,171.411,422,212.413,422,255.999 s-17.206,84.588-48.448,115.455c-31.372,30.994-73.12,48.064-117.552,48.064s-86.179-17.07-117.552-48.064 C107.206,340.587,90,299.585,90,255.999s17.206-84.588,48.448-115.453C169.821,109.55,211.568,92.481,256,92.481 M256,52.481 c-113.771,0-206,91.117-206,203.518c0,112.398,92.229,203.52,206,203.52c113.772,0,206-91.121,206-203.52 C462,143.599,369.772,52.481,256,52.481L256,52.481z M240.258,346h-52.428V166h52.428V346z M326.17,346h-52.428V166h52.428V346z";
-	private static final Group
-	STATUSICON_RUNNING = createIcon(PATH_STATUSICON_RUNNING),
-	STATUSICON_PAUSED = createIcon(PATH_STATUSICON_PAUSED);
+	private static final String PATH_STATUSICON_RUNNING = "M256,92.481c44.433,0,86.18,17.068,117.553,48.064C404.794,171.411,422,212.413,422,255.999 s-17.206,84.588-48.448,115.455c-31.372,30.994-73.12,48.064-117.552,48.064s-86.179-17.07-117.552-48.064 C107.206,340.587,90,299.585,90,255.999s17.206-84.588,48.448-115.453C169.821,109.55,211.568,92.481,256,92.481 M256,52.481 c-113.771,0-206,91.117-206,203.518c0,112.398,92.229,203.52,206,203.52c113.772,0,206-91.121,206-203.52 C462,143.599,369.772,52.481,256,52.481L256,52.481z M206.544,357.161V159.833l160.919,98.666L206.544,357.161z",
+					PATH_STATUSICON_PAUSED = "M256,92.481c44.433,0,86.18,17.068,117.553,48.064C404.794,171.411,422,212.413,422,255.999 s-17.206,84.588-48.448,115.455c-31.372,30.994-73.12,48.064-117.552,48.064s-86.179-17.07-117.552-48.064 C107.206,340.587,90,299.585,90,255.999s17.206-84.588,48.448-115.453C169.821,109.55,211.568,92.481,256,92.481 M256,52.481 c-113.771,0-206,91.117-206,203.518c0,112.398,92.229,203.52,206,203.52c113.772,0,206-91.121,206-203.52 C462,143.599,369.772,52.481,256,52.481L256,52.481z M240.258,346h-52.428V166h52.428V346z M326.17,346h-52.428V166h52.428V346z";
+	private static final Group STATUSICON_RUNNING = createIcon(PATH_STATUSICON_RUNNING),
+					STATUSICON_PAUSED = createIcon(PATH_STATUSICON_PAUSED);
 
 	static {
 		STATUSICON_RUNNING.setAutoSizeChildren(true);
@@ -151,7 +149,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
 		Platform.runLater(() -> {
 			initializeChildren(getContent());
-			
+
 			// Remove the left hidden bar from dom
 			// This must be done after initialization otherwise the debugpane won't receive the tab
 			boolean showRightPanel = Boolean.parseBoolean(settings.getSimpleSetting("RightPanelCollapsed_" + getDocument().getAbsolutePath()));
@@ -263,7 +261,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	 * @return whether the document was saved successfully.
 	 */
 	protected boolean save(final boolean showDialog) {
-		//Reset to root robot
+		// Reset to root robot
 		resetCode();
 		// Clear editor highlights
 		getEditorPane().getEditor().clearHighlight();
@@ -420,7 +418,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 			if (newValue == DocumentState.CHANGED) {
 				name += "*";
 			}
-			if(currentRobot != getProcessor().getRobotID()) {
+			if (currentRobot != getProcessor().getRobotID()) {
 				String filename = currentRobot.getPath().getName();
 				name += " > " + FilenameUtils.getBaseName(filename);
 			}
@@ -445,7 +443,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
 		// Update the code
 		if (currentRobot != robot) {
-			
+
 			currentRobot = robot;
 			String code;
 			try {
@@ -457,13 +455,13 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 			// Load the code
 			editorPane.getEditor().setCode(code);
 			editorPane.getEditor().refreshBreakpoints(robot);
-			
-			//Blocker
+
+			// Blocker
 			editorPane.getEditor().setEditable(currentRobot == getProcessor().getRobotID());
-			
+
 			// Remove the 'edited' state
 			Platform.runLater(() -> {
-			    editorPane.getDocumentState().setValue(DocumentState.SAVED);
+				editorPane.getDocumentState().setValue(DocumentState.SAVED);
 			});
 		}
 

@@ -6,11 +6,11 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import nl.xillio.xill.util.db.Connection;
 import nl.xillio.xill.util.db.Connector;
 import nl.xillio.xill.util.db.DataBaseHandler;
-
-import org.apache.log4j.Logger;
 
 public class SettingsHandler {
 	private Logger log = Logger.getLogger(SettingsHandler.class);

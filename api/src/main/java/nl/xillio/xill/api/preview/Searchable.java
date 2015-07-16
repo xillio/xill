@@ -44,7 +44,7 @@ public interface Searchable {
 	 * Highlight all occurrences of the searched pattern or needle.
 	 */
 	void highlightAll();
-	
+
 	/**
 	 * Clear the search and any highlights.
 	 */

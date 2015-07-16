@@ -7,9 +7,9 @@ import java.util.Map;
 
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.InstructionFlow;
-import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
+import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
@@ -46,27 +46,27 @@ public class ForeachInstruction extends Instruction {
 	 * @param valueVar
 	 */
 	public ForeachInstruction(final InstructionSet instructionSet, final Processable list,
-			final VariableDeclaration valueVar) {
+					final VariableDeclaration valueVar) {
 		this(instructionSet, list, valueVar, null);
 
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public InstructionFlow<MetaExpression> process(Debugger debugger) throws RobotRuntimeException {
+	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		MetaExpression result = list.process(debugger).get();
-		
+
 		InstructionFlow<MetaExpression> foreachResult = InstructionFlow.doResume();
 
 		switch (result.getType()) {
 			case ATOMIC: // Iterate over single value
 				valueVar.pushVariable(result);
 				if (keyVar != null) {
-					keyVar.pushVariable(ExpressionBuilder.fromValue(0));
+					keyVar.pushVariable(ExpressionBuilderHelper.fromValue(0));
 				}
 
 				foreachResult = instructionSet.process(debugger);
-				
+
 				valueVar.releaseVariable();
 				if (keyVar != null) {
 					keyVar.releaseVariable();
@@ -77,25 +77,25 @@ public class ForeachInstruction extends Instruction {
 				for (MetaExpression value : (List<MetaExpression>) result.getValue()) {
 					valueVar.pushVariable(value);
 					if (keyVar != null) {
-						keyVar.pushVariable(ExpressionBuilder.fromValue(i++));
+						keyVar.pushVariable(ExpressionBuilderHelper.fromValue(i++));
 					}
 
 					InstructionFlow<MetaExpression> instructionResult = instructionSet.process(debugger);
-					
-					//Release
+
+					// Release
 					valueVar.releaseVariable();
 					if (keyVar != null) {
 						keyVar.releaseVariable();
 					}
 
 					if (instructionResult.returns()) {
-					    foreachResult = instructionResult;
-					    break;
+						foreachResult = instructionResult;
+						break;
 					}
 
 					if (instructionResult.breaks()) {
-					    foreachResult = InstructionFlow.doResume();
-					    break;
+						foreachResult = InstructionFlow.doResume();
+						break;
 					}
 
 					if (instructionResult.skips()) {
@@ -107,25 +107,25 @@ public class ForeachInstruction extends Instruction {
 				for (Map.Entry<String, MetaExpression> value : ((Map<String, MetaExpression>) result.getValue()).entrySet()) {
 					valueVar.pushVariable(value.getValue());
 					if (keyVar != null) {
-						keyVar.pushVariable(ExpressionBuilder.fromValue(value.getKey()));
+						keyVar.pushVariable(ExpressionBuilderHelper.fromValue(value.getKey()));
 					}
 
 					InstructionFlow<MetaExpression> instructionResult = instructionSet.process(debugger);
 
-					//Release
+					// Release
 					valueVar.releaseVariable();
 					if (keyVar != null) {
 						keyVar.releaseVariable();
 					}
-					
+
 					if (instructionResult.returns()) {
-					    foreachResult = instructionResult;
-					    break;
+						foreachResult = instructionResult;
+						break;
 					}
 
 					if (instructionResult.breaks()) {
-					    foreachResult=  InstructionFlow.doResume();
-					    break;
+						foreachResult = InstructionFlow.doResume();
+						break;
 					}
 
 					if (instructionResult.skips()) {
@@ -150,6 +150,6 @@ public class ForeachInstruction extends Instruction {
 	}
 
 	@Override
-	public void close() throws Exception { }
+	public void close() throws Exception {}
 
 }

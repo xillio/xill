@@ -13,11 +13,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import nl.xillio.sharedlibrary.lrucache.LRUCache;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
+import nl.xillio.sharedlibrary.lrucache.LRUCache;
 
 public abstract class StandardSQLConnection extends DBConnection {
 
@@ -45,7 +44,7 @@ public abstract class StandardSQLConnection extends DBConnection {
 
 		// Prepare statement
 		PreparedStatement statement = null;
-		if ((statement = statementCache2.get(hash)) != null && (!getDriverName().equals("org.sqlite.JDBC") && !statement.isClosed()) && !statement.getConnection().isClosed()) {
+		if ((statement = statementCache2.get(hash)) != null && !getDriverName().equals("org.sqlite.JDBC") && !statement.isClosed() && !statement.getConnection().isClosed()) {
 			statement.clearBatch();
 		} else {
 			StringBuilder qb = new StringBuilder("SELECT * FROM ");
@@ -75,7 +74,7 @@ public abstract class StandardSQLConnection extends DBConnection {
 
 		// Perform query
 		try {
-			return (statement.executeQuery());
+			return statement.executeQuery();
 		} catch (SQLNonTransientConnectionException e) {
 			// Statement was faulty/closed. Remove existing statement from cache and retry.
 			statementCache2.remove(hash);
@@ -101,7 +100,7 @@ public abstract class StandardSQLConnection extends DBConnection {
 		PreparedStatement statement = null;
 
 		// Check if the statement is cached and wether the cached version and it's connection are not closed
-		if ((statement = statementCache2.get(inserthash)) != null && (!getDriverName().equals("org.sqlite.JDBC") && !statement.isClosed()) && !statement.getConnection().isClosed()) {
+		if ((statement = statementCache2.get(inserthash)) != null && !getDriverName().equals("org.sqlite.JDBC") && !statement.isClosed() && !statement.getConnection().isClosed()) {
 			statement.clearParameters();
 		} else {
 			StringBuilder qb = new StringBuilder("INSERT INTO ");
@@ -136,7 +135,7 @@ public abstract class StandardSQLConnection extends DBConnection {
 		try {
 			statement.execute();
 			try {
-				return (statement.getGeneratedKeys());
+				return statement.getGeneratedKeys();
 			} catch (NullPointerException e) {
 				return null;
 			}
@@ -156,7 +155,7 @@ public abstract class StandardSQLConnection extends DBConnection {
 		PreparedStatement selectstatement = null;
 
 		// Check if the statement is cached and whether the cached version and it's connection are not closed
-		if ((selectstatement = statementCache2.get(selecthash)) != null && (!getDriverName().equals("org.sqlite.JDBC") && !selectstatement.isClosed()) && !selectstatement.getConnection().isClosed()) {
+		if ((selectstatement = statementCache2.get(selecthash)) != null && !getDriverName().equals("org.sqlite.JDBC") && !selectstatement.isClosed() && !selectstatement.getConnection().isClosed()) {
 			try {
 				selectstatement.clearParameters();
 			} catch (SQLException e) {}
@@ -217,7 +216,7 @@ public abstract class StandardSQLConnection extends DBConnection {
 		PreparedStatement updatestatement = null;
 
 		// Check if the statement is cached and wether the cached version and it's connection are not closed
-		if ((updatestatement = statementCache2.get(updatehash)) != null && (!getDriverName().equals("org.sqlite.JDBC") && !updatestatement.isClosed()) && !updatestatement.getConnection().isClosed()) {
+		if ((updatestatement = statementCache2.get(updatehash)) != null && !getDriverName().equals("org.sqlite.JDBC") && !updatestatement.isClosed() && !updatestatement.getConnection().isClosed()) {
 			updatestatement.clearParameters();
 		} else {
 			StringBuilder qb = new StringBuilder("UPDATE ");
@@ -256,7 +255,7 @@ public abstract class StandardSQLConnection extends DBConnection {
 		// System.out.println(updatestatement.toString());
 		try {
 			updatestatement.execute();
-			return (updatestatement.getGeneratedKeys());
+			return updatestatement.getGeneratedKeys();
 		} catch (NullPointerException e) {
 			if (e.getStackTrace().length > 0 && e.getStackTrace()[0].getMethodName().equals("setConnection")) {
 				// Some weird random bug in JDBC: retry
@@ -265,7 +264,7 @@ public abstract class StandardSQLConnection extends DBConnection {
 			}
 
 			System.err.println("StandardSQLConnection.updateObject(): A nullpointer error occurred: \n" + "table: " + table + "\n" + "keyValuePairs: " + Arrays.toString(keyValuePairs.entrySet().toArray())
-					+ "\n" + "keys: " + Arrays.toString(keys.toArray()));
+							+ "\n" + "keys: " + Arrays.toString(keys.toArray()));
 			e.printStackTrace();
 			return null;
 

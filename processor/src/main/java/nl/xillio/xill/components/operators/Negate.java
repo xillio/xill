@@ -27,7 +27,7 @@ public class Negate implements Processable {
 	}
 
 	@Override
-	public InstructionFlow<MetaExpression> process(Debugger debugger) throws RobotRuntimeException {
+	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		boolean result = !value.process(debugger).get().getBooleanValue();
 
 		return InstructionFlow.doResume(new AtomicExpression(result));

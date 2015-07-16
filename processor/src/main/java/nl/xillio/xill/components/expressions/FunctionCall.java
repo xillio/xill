@@ -16,36 +16,36 @@ import nl.xillio.xill.components.instructions.FunctionDeclaration;
  */
 public class FunctionCall implements Processable {
 
-    private FunctionDeclaration function;
-    private List<Processable> arguments;
-    
+	private FunctionDeclaration function;
+	private List<Processable> arguments;
 
-    @Override
-    public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-	// Process arguments
-	List<MetaExpression> expressions = new ArrayList<>();
-	
-	for(Processable argument : arguments) {
-	    expressions.add(argument.process(debugger).get());
+	@Override
+	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
+		// Process arguments
+		List<MetaExpression> expressions = new ArrayList<>();
+
+		for (Processable argument : arguments) {
+			expressions.add(argument.process(debugger).get());
+		}
+
+		return function.run(debugger, expressions);
 	}
 
-	return function.run(debugger, expressions);
-    }
-    
-    /**
-     * Initialize this {@link FunctionCall}
-     * @param function
-     * @param arguments
-     */
-    public void initialize(final FunctionDeclaration function, final List<Processable> arguments) {
-	this.function = function;
-	this.arguments = arguments;
-    }
+	/**
+	 * Initialize this {@link FunctionCall}
+	 * 
+	 * @param function
+	 * @param arguments
+	 */
+	public void initialize(final FunctionDeclaration function, final List<Processable> arguments) {
+		this.function = function;
+		this.arguments = arguments;
+	}
 
-    @Override
-    public Collection<Processable> getChildren() {
-	List<Processable> children = new ArrayList<>(arguments);
-	children.add(function);
-	return children;
-    }
+	@Override
+	public Collection<Processable> getChildren() {
+		List<Processable> children = new ArrayList<>(arguments);
+		children.add(function);
+		return children;
+	}
 }

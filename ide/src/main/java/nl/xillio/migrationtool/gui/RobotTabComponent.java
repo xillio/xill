@@ -6,6 +6,7 @@ package nl.xillio.migrationtool.gui;
 public interface RobotTabComponent {
 	/**
 	 * Initialize the component. After loading and building the dom
+	 * 
 	 * @param tab
 	 */
 	public void initialize(RobotTab tab);

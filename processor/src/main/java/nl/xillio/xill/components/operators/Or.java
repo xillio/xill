@@ -29,7 +29,7 @@ public class Or implements Processable {
 	}
 
 	@Override
-	public InstructionFlow<MetaExpression> process(Debugger debugger) throws RobotRuntimeException {
+	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		boolean result = left.process(debugger).get().getBooleanValue() || right.process(debugger).get().getBooleanValue();
 
 		return InstructionFlow.doResume(new AtomicExpression(result));

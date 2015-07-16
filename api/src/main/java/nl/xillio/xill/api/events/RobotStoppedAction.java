@@ -8,12 +8,12 @@ import nl.xillio.xill.api.components.Robot;
  */
 public class RobotStoppedAction {
 
-    /**
-     * Create a new {@link RobotStoppedAction}
-     * 
-     * @param robot
-     */
-    public RobotStoppedAction(final Robot robot) {
-    }
+	/**
+	 * Create a new {@link RobotStoppedAction}
+	 * 
+	 * @param robot
+	 *        the robot that stopped
+	 */
+	public RobotStoppedAction(final Robot robot) {}
 
 }

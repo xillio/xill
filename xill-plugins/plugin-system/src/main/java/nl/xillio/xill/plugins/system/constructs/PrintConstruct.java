@@ -14,31 +14,31 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
  */
 public class PrintConstruct extends Construct {
 
-    @Override
-    public String getName() {
-	return "print";
-    }
-
-    @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
-	return new ConstructProcessor((text, level) -> process(text, level, context.getRootLogger()), new Argument("text", fromValue("")), new Argument("loglevel", fromValue("info")));
-    }
-
-    private static MetaExpression process(final MetaExpression textVar, final MetaExpression logLevel, final Logger robotLog) {
-	String level = logLevel.getStringValue();
-
-	String text = textVar.getStringValue();
-
-	if (level.toLowerCase().equals("debug")) {
-	    robotLog.debug(text);
-	} else if (level.toLowerCase().startsWith("warn")) {
-	    robotLog.warn(text);
-	} else if (level.toLowerCase().equals("error")) {
-	    robotLog.error(text);
-	} else {
-	    robotLog.info(text);
+	@Override
+	public String getName() {
+		return "print";
 	}
 
-	return NULL;
-    }
+	@Override
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
+		return new ConstructProcessor((text, level) -> process(text, level, context.getRootLogger()), new Argument("text", fromValue("")), new Argument("loglevel", fromValue("info")));
+	}
+
+	private static MetaExpression process(final MetaExpression textVar, final MetaExpression logLevel, final Logger robotLog) {
+		String level = logLevel.getStringValue();
+
+		String text = textVar.getStringValue();
+
+		if (level.toLowerCase().equals("debug")) {
+			robotLog.debug(text);
+		} else if (level.toLowerCase().startsWith("warn")) {
+			robotLog.warn(text);
+		} else if (level.toLowerCase().equals("error")) {
+			robotLog.error(text);
+		} else {
+			robotLog.info(text);
+		}
+
+		return NULL;
+	}
 }

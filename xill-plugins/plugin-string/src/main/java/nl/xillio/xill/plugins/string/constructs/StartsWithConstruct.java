@@ -16,23 +16,23 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
  */
 public class StartsWithConstruct extends Construct {
 
-    @Override
-    public String getName() {
+	@Override
+	public String getName() {
 
-	return "startsWith";
-    }
+		return "startsWith";
+	}
 
-    @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
-	return new ConstructProcessor(StartsWithConstruct::process, new Argument("string1"), new Argument("string2"));
-    }
+	@Override
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
+		return new ConstructProcessor(StartsWithConstruct::process, new Argument("string1"), new Argument("string2"));
+	}
 
-    private static MetaExpression process(final MetaExpression string1, final MetaExpression string2) {
-	assertType(string1, "string1", ATOMIC);
-	assertType(string2, "string2", ATOMIC);
-	assertNotNull(string1, "string1");
-	assertNotNull(string2, "string2");
+	private static MetaExpression process(final MetaExpression string1, final MetaExpression string2) {
+		assertType(string1, "string1", ATOMIC);
+		assertType(string2, "string2", ATOMIC);
+		assertNotNull(string1, "string1");
+		assertNotNull(string2, "string2");
 
-	return fromValue(string1.getStringValue().startsWith(string2.getStringValue()));
-    }
+		return fromValue(string1.getStringValue().startsWith(string2.getStringValue()));
+	}
 }

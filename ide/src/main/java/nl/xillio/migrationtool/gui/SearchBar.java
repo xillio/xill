@@ -56,9 +56,7 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 		}
 		reset(true);
 		enableSearchAsYouType();
-		
-		
-		
+
 		this.addEventHandler(KeyEvent.KEY_PRESSED, this);
 	}
 
@@ -72,24 +70,28 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 		currentOccurence = 0;
 		lblEditorSearchIndex.setText("0");
 		lblEditorSearchCount.setText("0");
-		if (clearQuery)
+		if (clearQuery) {
 			tfEditorSearchQuery.clear();
+		}
 	}
-	
+
 	/**
 	 * Set the toggle button for this searchbar
+	 * 
 	 * @param toggleButton
-	 * @param id The index to pass to {@link SearchBar#open(int)}
+	 * @param id
+	 *        The index to pass to {@link SearchBar#open(int)}
 	 */
-	public void setButton(ToggleButton toggleButton, int id){
+	public void setButton(final ToggleButton toggleButton, final int id) {
 		this.toggleButton = toggleButton;
-		
+
 		toggleButton.selectedProperty().addListener(
 			(obs, oldVal, newVal) -> {
-				if(newVal)
+				if (newVal) {
 					open(id);
-				else
+				} else {
 					close(true);
+				}
 			});
 	}
 
@@ -109,17 +111,19 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 			return;
 		}
 
-		if (isRegexEnabled())
+		if (isRegexEnabled()) {
 			searchable.searchPattern(query, isCaseSensitive());
-		else
+		} else {
 			searchable.search(query, isCaseSensitive());
+		}
 
 		// Refresh the result counts
 		Platform.runLater(() -> lblEditorSearchCount.setText(String.valueOf(searchable.getOccurrences())));
-		
+
 		// Highlight 0 to make sure the first result is visible, then highlight all
-		if(searchable.getOccurrences() > 0)
+		if (searchable.getOccurrences() > 0) {
 			highlight(0);
+		}
 		searchable.highlightAll();
 	}
 
@@ -140,7 +144,7 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 	public boolean isCaseSensitive() {
 		return tbnEditorCaseSensitive.selectedProperty().get();
 	}
-	
+
 	private String getSearchQuery() {
 		return tfEditorSearchQuery.getText();
 	}
@@ -151,17 +155,18 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 		if (searchable.getOccurrences() != 0) {
 			// Wrap the index
 			index %= searchable.getOccurrences();
-			if (index < 0)
+			if (index < 0) {
 				index += searchable.getOccurrences();
-			
+			}
+
 			// Prevent negative index
 			index = Math.max(index, 0);
 
 			searchable.highlight(index);
-			
+
 			// push to label
 			lblEditorSearchIndex.setText(String.valueOf(index + 1));
-			
+
 			// Save actual highlight
 			currentOccurence = index;
 		}
@@ -189,17 +194,19 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 	}
 
 	///////////////////// Controls /////////////////////
-	
+
 	@FXML
 	private void nextButtonPressed(final ActionEvent actionEvent) {
-		if (!currentSearch.isEmpty())
+		if (!currentSearch.isEmpty()) {
 			highlight(++currentOccurence);
+		}
 	}
 
 	@FXML
 	private void previousButtonPressed() {
-		if (!currentSearch.isEmpty())
+		if (!currentSearch.isEmpty()) {
 			highlight(--currentOccurence);
+		}
 	}
 
 	@FXML
@@ -216,27 +223,30 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 	private void closeButtonPressed() {
 		close(true);
 	}
-	
+
 	///////////////////// Open and close /////////////////////
-	
+
 	/**
 	 * Hide the searchbar and remove it from the flow.
 	 */
-	private void close(boolean clear) {
+	private void close(final boolean clear) {
 		// Clear the search
-		if (clear)
+		if (clear) {
 			searchable.clearSearch();
-		
+		}
+
 		// Remove this from its parent
 		if (getParent() != null) {
 			storedParent = getParent();
-			if (storedParent instanceof Pane)
-				((Pane)storedParent).getChildren().remove(this);
+			if (storedParent instanceof Pane) {
+				((Pane) storedParent).getChildren().remove(this);
+			}
 		}
-		
+
 		// Unselect the toggle button
-		if(toggleButton != null)
+		if (toggleButton != null) {
 			toggleButton.setSelected(false);
+		}
 	}
 
 	/**
@@ -245,6 +255,7 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 	public void open() {
 		open(0);
 	}
+
 	/**
 	 * Open up the search bar as a child of it's previous parent
 	 *
@@ -255,17 +266,19 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 		// Check if we have a parent
 		if (storedParent != null && getParent() == null) {
 			close(false);
-			
+
 			// Add this as a child
-			if (storedParent instanceof Pane)
-				((Pane)storedParent).getChildren().add(index, this);
-			
+			if (storedParent instanceof Pane) {
+				((Pane) storedParent).getChildren().add(index, this);
+			}
+
 			requestFocus();
 		}
-		
+
 		// Select the toggle button
-		if(toggleButton != null)
+		if (toggleButton != null) {
 			toggleButton.setSelected(true);
+		}
 	}
 
 	@Override
@@ -275,8 +288,8 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 	}
 
 	@Override
-	public void handle(KeyEvent k) {
-		//If enter is pressed, search
+	public void handle(final KeyEvent k) {
+		// If enter is pressed, search
 		if (tfEditorSearchQuery.isFocused() && !k.isConsumed() && k.getCode() == KeyCode.ENTER && currentSearch != null) {
 			runSearch(currentSearch);
 			k.consume();

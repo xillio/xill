@@ -26,8 +26,6 @@ public class Argument {
 	 *
 	 * @param name
 	 *        the name of the argument
-	 * @param type
-	 *        the type of the argument
 	 * @param defaultvalue
 	 *        the default value
 	 */

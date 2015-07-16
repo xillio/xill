@@ -1,8 +1,8 @@
 package nl.xillio.xill.api;
 
-import nl.xillio.xill.api.components.RobotID;
-
 import org.apache.log4j.Logger;
+
+import nl.xillio.xill.api.components.RobotID;
 
 /**
  * This class is a wrapper which is used to get loggers for robots.

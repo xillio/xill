@@ -1,9 +1,7 @@
 package nl.xillio.migrationtool.gui;
 
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
-import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
+import static java.nio.file.StandardWatchEventKinds.*;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -98,8 +96,7 @@ public class WatchDir implements Runnable {
 		Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
 			@Override
 			public FileVisitResult preVisitDirectory(final Path dir, final BasicFileAttributes attrs)
-					throws IOException
-			{
+							throws IOException {
 				registerDir(dir);
 				return FileVisitResult.CONTINUE;
 			}
@@ -141,7 +138,7 @@ public class WatchDir implements Runnable {
 
 				// if directory is created, and watching recursively, then
 				// register it and its sub-directories
-				if ((kind == ENTRY_CREATE)) { // recursive &&
+				if (kind == ENTRY_CREATE) { // recursive &&
 					try {
 						if (Files.isDirectory(child, NOFOLLOW_LINKS)) {
 							registerAll(child);
