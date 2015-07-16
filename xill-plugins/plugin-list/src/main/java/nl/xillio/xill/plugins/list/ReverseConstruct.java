@@ -61,7 +61,7 @@ public class ReverseConstruct implements Construct {
 				
 				List<MetaExpression> subList = (List<MetaExpression>)e.getValue();
 				
-				reversedList.add(ExpressionBuilder.fromValue(inList));
+				reversedList.add(ExpressionBuilder.fromValue(subList));
 				
 			}
 		}
