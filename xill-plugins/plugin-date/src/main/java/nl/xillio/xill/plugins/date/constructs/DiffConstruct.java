@@ -36,42 +36,69 @@ public class DiffConstruct extends BaseDateConstruct {
 	private static MetaExpression process(final MetaExpression dateVar, final MetaExpression otherVar, final MetaExpression absolute) {
 	ZonedDateTime date = getDate(dateVar, "date");
 	ZonedDateTime other = getDate(otherVar, "other");
-	double nanos = date.until(other, ChronoUnit.NANOS);
+	double nanosT = date.until(other, ChronoUnit.NANOS);
 	if (absolute.getBooleanValue()) {
-		nanos = Math.abs(nanos);
+		nanosT = Math.abs(nanosT);
 	}
 
-	double micros = nanos / 1000;
-	double millis = micros / 1000;
-	double seconds = millis / 1000;
-	double minutes = seconds / 60;
-	double hours = minutes / 60;
-	double days = hours / 24;
-	double weeks = days / 7;
-	double years = days / 365.2425;
-	double months = years * 12;
-	double decades = years / 10;
-	double centuries = decades / 10;
-	double millennia = centuries / 10;
-	double eras = millennia / 1000000;
+	double microsT = nanosT / 1000;
+	double millisT = microsT / 1000;
+	double secondsT = millisT / 1000;
+	double minutesT = secondsT / 60;
+	double hoursT = minutesT / 60;
+	double daysT = hoursT / 24;
+	double weeksT = daysT / 7;
+	double yearsT = daysT / 365.2425;
+	double monthsT = yearsT * 12;
+	double decadesT = yearsT / 10;
+	double centuriesT = decadesT / 10;
+	double millenniaT = centuriesT / 10;
+	double erasT = millenniaT / 1000000;
+
+	int eras = (int) erasT;
+	int millennia = (int) (millenniaT - (erasT * 1000000));
+	int centuries = (int) (centuriesT - ((int) millenniaT * 10));
+	int decades = (int) (decadesT - ((int) centuriesT * 10));
+	int years = (int) (yearsT - ((int) decadesT * 10));
+	int months = (int) (monthsT - ((int) (yearsT * 12)));
+	int days = (int) (daysT - ((int) monthsT * (365.2425 / 12)));
+	int hours = (int) (hoursT - ((int) daysT * 24));
+	int minutes = (int) (minutesT - ((int) hoursT * 60));
+	int seconds = (int) (secondsT - ((int) minutesT * 60));
+	int millis = (int) (millisT - ((long) secondsT * 1000));
+	int micros = (int) (microsT - ((long) millisT * 1000));
+	int nanos = (int) (nanosT - ((long) microsT * 1000));
 
 	LinkedHashMap<String, MetaExpression> result = new LinkedHashMap<>();
-	result.put("Nanos", fromValue(nanos));
-	result.put("Micros", fromValue(micros));
-	result.put("Millis", fromValue(millis));
-	result.put("Seconds", fromValue(seconds));
-	result.put("Minutes", fromValue(minutes));
-	result.put("Hours", fromValue(hours));
-	result.put("HalfDays", fromValue(days / 2));
-	result.put("Days", fromValue(days));
-	result.put("Weeks", fromValue(weeks));
-	result.put("Months", fromValue(months));
-	result.put("Years", fromValue(years));
-	result.put("Decades", fromValue(decades));
-	result.put("Centuries", fromValue(centuries));
-	result.put("Millennia", fromValue(millennia));
-	result.put("Eras", fromValue(eras));
+	result.put("Total Nanos", fromValue(nanosT));
+	result.put("Total Micros", fromValue(microsT));
+	result.put("Total Millis", fromValue(millisT));
+	result.put("Total Seconds", fromValue(secondsT));
+	result.put("Total Minutes", fromValue(minutesT));
+	result.put("Total Hours", fromValue(hoursT));
+	result.put("Total HalfDays", fromValue(daysT / 2));
+	result.put("Total Days", fromValue(daysT));
+	result.put("Total Weeks", fromValue(weeksT));
+	result.put("Total Months", fromValue(monthsT));
+	result.put("Total Years", fromValue(yearsT));
+	result.put("Total Decades", fromValue(decadesT));
+	result.put("Total Centuries", fromValue(centuriesT));
+	result.put("Total Millennia", fromValue(millenniaT));
+	result.put("Total Eras", fromValue(erasT));
 
+	result.put("Eras", fromValue(eras));
+	result.put("Millennia", fromValue(millennia));
+	result.put("Centuries", fromValue(centuries));
+	result.put("Decades", fromValue(decades));
+	result.put("Years", fromValue(years));
+	result.put("Months", fromValue(months));
+	result.put("Days", fromValue(days));
+	result.put("Hours", fromValue(hours));
+	result.put("Minutes", fromValue(minutes));
+	result.put("Seconds", fromValue(seconds));
+	result.put("Millis", fromValue(millis));
+	result.put("Micros", fromValue(micros));
+	result.put("Nanos", fromValue(nanos));
 	return fromValue(result);
 
 	}

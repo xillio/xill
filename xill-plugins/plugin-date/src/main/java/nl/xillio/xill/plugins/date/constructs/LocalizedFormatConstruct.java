@@ -14,25 +14,29 @@ import nl.xillio.xill.plugins.date.BaseDateConstruct;
 
 /**
  *
+ * converts the date to a string using the provided Language tag if no tag is given the pattern "yyyy-MM-dd HH:mm:ss" is used.
+ * If the parameters 'timestyle' and 'datestyle' are both null, it will use the FormatStyle MEDIUM.
+ * If only 'timestyle' is null, it will return the date. if only 'datestyle' is null. it will return the time.
+ * if both are not null it will return the date and time;
  *
- * converts the date to a string using the provided locale if no locale is given the pattern "yyyy-MM-dd HH:mm:ss" is used.
+ * timestyle and datestyle have to be 'full','long','medium' or 'short'.
  *
  * @author Sander
  *
  */
-public class FormatLocaleConstruct extends BaseDateConstruct {
+public class LocalizedFormatConstruct extends BaseDateConstruct {
 	private static final DateTimeFormatter DEFAULT_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 	@Override
 	public String getName() {
 
-	return "formatLocale";
+	return "localizedFormat";
 	}
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 
-	return new ConstructProcessor(FormatLocaleConstruct::process,
+	return new ConstructProcessor(LocalizedFormatConstruct::process,
 		new Argument("date"), new Argument("format", NULL), new Argument("datestyle", NULL),
 		new Argument("timestyle", NULL));
 	}
