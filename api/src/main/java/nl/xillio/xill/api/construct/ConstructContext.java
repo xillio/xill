@@ -17,9 +17,9 @@ public class ConstructContext {
 	/**
 	 * Create a new {@link ConstructContext} for a specific robot
 	 *
-	 * @param robot
-	 * @param rootRobot 
-	 * @param contstruct
+	 * @param robot the robotID of the current robot
+	 * @param rootRobot the robotID of the root robot
+	 * @param contstruct the construct that will be using this context
 	 */
 	public ConstructContext(final RobotID robot, final RobotID rootRobot, final Construct contstruct) {
 		robotID = robot;

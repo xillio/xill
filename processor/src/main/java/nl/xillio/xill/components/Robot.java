@@ -52,7 +52,7 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
 
 	initializingRobots.add(this);
 	for (nl.xillio.xill.api.components.Robot robot : libraries) {
-	    robot.initialize();
+	    robot.initializeAsLibrary();
 	}
 	initializingRobots.remove(this);
 
@@ -77,19 +77,6 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
 	children.addAll(libraries);
 
 	return children;
-    }
-
-    @Override
-    public void initialize() throws RobotRuntimeException {
-	for (nl.xillio.xill.api.components.Robot robot : libraries) {
-	    if (!initializingRobots.contains(robot)) {
-		initializingRobots.add(robot);
-		robot.initialize();
-		initializingRobots.remove(robot);
-	    }
-	}
-
-	super.initialize();
     }
 
     /**
@@ -174,4 +161,15 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
     public MetaExpression getArgument() {
 	return callArgument;
     }
+
+		@Override
+		public void initializeAsLibrary() throws RobotRuntimeException {
+			for (nl.xillio.xill.api.components.Robot robot : libraries) {
+		    if (!initializingRobots.contains(robot)) {
+			initializingRobots.add(robot);
+			robot.initializeAsLibrary();
+			initializingRobots.remove(robot);
+		    }
+		}
+		}
 }

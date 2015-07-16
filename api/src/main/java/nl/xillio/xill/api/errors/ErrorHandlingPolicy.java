@@ -8,9 +8,8 @@ public interface ErrorHandlingPolicy {
 	/**
 	 * Be presented the an exception caused inside a robot
 	 *
-	 * @param e
-	 * @throws RuntimeException
-	 * @throws RobotRuntimeException 
+	 * @param e the throwable that should be handled
+	 * @throws RobotRuntimeException when the policy decides to stop processing
 	 */
 	public void handle(final Throwable e) throws RobotRuntimeException;
 }

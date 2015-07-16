@@ -9,7 +9,10 @@ public class Issue {
 	private final Type severity;
 
 	/**
-	 * The severity of this issue
+	 * The severity of this issue.
+	 * @see Type#ERROR
+	 * @see Type#WARNING
+	 * @see Type#INFO
 	 */
 	public enum Type {
 		/**
@@ -21,7 +24,7 @@ public class Issue {
 		 */
 		WARNING,
 		/**
-		 * Little notice
+		 * Friendly notice
 		 */
 		INFO
 	}
@@ -29,9 +32,10 @@ public class Issue {
 	/**
 	 * Create a new Issue
 	 *
-	 * @param message
-	 * @param line
-	 * @param severity
+	 * @param message the message to display
+	 * @param line the line where the issue occurred
+	 * @param severity the severity of the issue
+	 * @see Type
 	 */
 	public Issue(final String message, final int line, final Type severity) {
 		this.message = message;

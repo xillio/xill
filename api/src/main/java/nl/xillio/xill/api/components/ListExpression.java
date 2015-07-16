@@ -22,7 +22,7 @@ public class ListExpression implements Processable {
     private final List<? extends Processable> value;
 
     /**
-     * @param value
+     * @param value the value to set
      */
     public ListExpression(final List<? extends Processable> value) {
 	this.value = value;

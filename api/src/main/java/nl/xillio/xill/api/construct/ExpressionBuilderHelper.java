@@ -11,6 +11,7 @@ import nl.xillio.xill.api.behavior.NumberBehavior;
 import nl.xillio.xill.api.behavior.StringBehavior;
 import nl.xillio.xill.api.components.AtomicExpression;
 import nl.xillio.xill.api.components.Expression;
+import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.ImmutableLiteral;
 import nl.xillio.xill.api.components.ListExpression;
 import nl.xillio.xill.api.components.MetaExpression;
@@ -37,9 +38,9 @@ public class ExpressionBuilderHelper {
     public static final MetaExpression NULL = new ImmutableLiteral(NullLiteral.Instance);
 
     /**
-     * Create a new {@link IntegerLiteral}
+     * Create a new expression containing an int
      *
-     * @param value
+     * @param value the value of the expression
      * @return expression
      */
     public static MetaExpression fromValue(final int value) {
@@ -47,9 +48,9 @@ public class ExpressionBuilderHelper {
     }
 
     /**
-     * Create a new {@link DoubleLiteral}
+     * Create a new expression containing a double
      *
-     * @param value
+     * @param value the value of the expression
      * @return expression
      */
     public static MetaExpression fromValue(final double value) {
@@ -57,9 +58,9 @@ public class ExpressionBuilderHelper {
     }
 
     /**
-     * Create a new {@link BooleanLiteral}
+     * Create a new expression containing a boolean
      *
-     * @param value
+     * @param value the value of the expression
      * @return expression
      */
     public static MetaExpression fromValue(final boolean value) {
@@ -67,9 +68,9 @@ public class ExpressionBuilderHelper {
     }
 
     /**
-     * Create a new {@link StringLiteral}
+     * Create a new expression containing a string
      *
-     * @param value
+     * @param value the value of the expression
      * @return expression
      */
     public static MetaExpression fromValue(final String value) {
@@ -77,9 +78,9 @@ public class ExpressionBuilderHelper {
     }
 
     /**
-     * Create a new {@link ListExpression}
+     * Create a new {@link ExpressionDataType#LIST} containing a value. For empty lists you can use {@link ExpressionBuilderHelper#emptyList()}
      *
-     * @param value
+     * @param value the value of the expression
      * @return the expression
      */
     public static MetaExpression fromValue(final List<MetaExpression> value) {
@@ -87,9 +88,9 @@ public class ExpressionBuilderHelper {
     }
 
     /**
-     * Create a new {@link ObjectExpression}
+     * Create a new  {@link ExpressionDataType#OBJECT} containing a value. For empty lists you can use {@link ExpressionBuilderHelper#emptyObject()}
      *
-     * @param value
+     * @param value the value of the expression
      * @return the expression
      */
     public static MetaExpression fromValue(final LinkedHashMap<String, MetaExpression> value) {

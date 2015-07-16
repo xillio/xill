@@ -18,7 +18,7 @@ public class StringBehavior implements Expression {
     /**
      * Create a new {@link StringBehavior}
      *
-     * @param value
+     * @param value the value to set
      */
     public StringBehavior(final String value) {
 	this.value = value;

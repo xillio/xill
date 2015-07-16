@@ -18,7 +18,7 @@ public class NumberBehavior implements Expression {
     /**
      * Create a new {@link NumberBehavior}
      *
-     * @param value
+     * @param value the value to set
      */
     public NumberBehavior(final double value) {
 	this.value = value;

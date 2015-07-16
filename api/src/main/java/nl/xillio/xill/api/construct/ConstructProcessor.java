@@ -115,8 +115,8 @@ public class ConstructProcessor {
 	/**
 	 * Sets the value of a named argument.
 	 *
-	 * @param name
-	 * @param value
+	 * @param name the name of the argument
+	 * @param value the value to set the argument to
 	 * @return True if the argument was set
 	 */
 	public boolean setArgument(final String name, final MetaExpression value) {
@@ -132,8 +132,8 @@ public class ConstructProcessor {
 	/**
 	 * Sets the value of the argument in slot index.
 	 *
-	 * @param index
-	 * @param value
+	 * @param index the index of the argument from 0 to {@link ConstructProcessor#getNumberOfArguments()} - 1
+	 * @param value the value to set the argument to
 	 * @return True if the argument was set, false if it was rejected
 	 */
 	public boolean setArgument(final int index, final MetaExpression value) {
@@ -204,7 +204,7 @@ public class ConstructProcessor {
 	/**
 	 * Gets the name of an argument.
 	 *
-	 * @param i
+	 * @param i the index of the argument to get the name of
 	 * @return the name of the argument
 	 */
 	public String getArgumentName(final int i) {
@@ -216,7 +216,7 @@ public class ConstructProcessor {
 	 * By default this is a method that checks if all arguments are set.
 	 * This validator can be used to enforce lazy evaluation.
 	 *
-	 * @param validator
+	 * @param validator the validator that should be used
 	 */
 	public void setRequirementValidation(final Predicate<Argument[]> validator) {
 		requirementsValidator = validator;
@@ -232,10 +232,10 @@ public class ConstructProcessor {
 	}
 
 	/**
-	 * Shortcut for processing a processor
+	 * Shortcut for processing a processor. It pushes the provided arguments and calls {@link ConstructProcessor#process()}
 	 *
-	 * @param processor
-	 * @param arguments
+	 * @param processor the processor to process
+	 * @param arguments the arguments to pass to the processor
 	 * @return the result
 	 */
 	public static MetaExpression Process(final ConstructProcessor processor, final MetaExpression... arguments) {

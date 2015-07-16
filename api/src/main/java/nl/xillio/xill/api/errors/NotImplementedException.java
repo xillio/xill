@@ -8,7 +8,7 @@ public class NotImplementedException extends RuntimeException{
 
 	/**
 	 * Create a new {@link NotImplementedException}
-	 * @param message
+	 * @param message the message to display to the user
 	 */
 	public NotImplementedException(String message) {
 		super(message);

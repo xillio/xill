@@ -11,7 +11,7 @@ public class RobotStartedAction {
     /**
      * Create a new {@link RobotStartedAction}
      * 
-     * @param robot
+     * @param robot the robot that started
      */
     public RobotStartedAction(final Robot robot) {
     }

@@ -8,16 +8,16 @@ public class RobotRuntimeException extends RuntimeException {
 	
 	/**
 	 * Create a new {@link RobotRuntimeException}
-	 * @param message
-	 * @param cause
+	 * @param message the message to display
+	 * @param cause the exception that caused this
 	 */
 	public RobotRuntimeException(String message, Throwable cause) {
 		super(message, cause);
 	}
 	
 	/**
-	 * Create a new {@link RobotRuntimeException}
-	 * @param message
+	 * Create a new {@link RobotRuntimeException} without a Throwable cause
+	 * @param message the message to display
 	 */
 	public RobotRuntimeException(String message) {
 		this(message, null);

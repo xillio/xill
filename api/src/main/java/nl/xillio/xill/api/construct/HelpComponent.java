@@ -7,7 +7,7 @@ import java.io.InputStream;
  */
 public interface HelpComponent {
     /**
-     * Open a stream to the documentation file.<br/>
+     *	<p>Open a stream to the documentation file.</p>
      * <b>NOTE: </b> this stream should be closed by an external class
      * @return The stream
      */

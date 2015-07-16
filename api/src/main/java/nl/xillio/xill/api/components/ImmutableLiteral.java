@@ -11,7 +11,7 @@ public class ImmutableLiteral extends MetaExpression {
     private Expression value;
 
     /**
-     * @param value
+     * @param value the value to set
      */
     public ImmutableLiteral(Expression value) {
 	this.value = value;

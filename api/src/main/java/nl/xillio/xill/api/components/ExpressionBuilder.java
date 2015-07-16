@@ -20,7 +20,7 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
     /**
      * Create a new {@link ExpressionBuilder} that will produce a double
      *
-     * @param value
+     * @param value the value to set
      */
     public ExpressionBuilder(final double value) {
 	expressionSupplier = () -> fromValue(value);
@@ -29,7 +29,7 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
     /**
      * Create a new {@link ExpressionBuilder} that will produce an integer
      *
-     * @param value
+     * @param value the value to set
      */
     public ExpressionBuilder(final int value) {
 	expressionSupplier = () -> fromValue(value);
@@ -38,7 +38,7 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
     /**
      * Create a new {@link ExpressionBuilder} that will produce a string
      *
-     * @param value
+     * @param value the value to set
      */
     public ExpressionBuilder(final String value) {
 	expressionSupplier = () -> fromValue(value);
@@ -47,7 +47,7 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
     /**
      * Create a new {@link ExpressionBuilder} that will produce a List
      *
-     * @param value
+     * @param value the value to set
      */
     public ExpressionBuilder(final List<MetaExpression> value) {
 	expressionSupplier = () -> fromValue(value);
@@ -56,7 +56,7 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
     /**
      * Create a new {@link ExpressionBuilder} that will produce an object
      *
-     * @param value
+     * @param value the value to set
      */
     public ExpressionBuilder(final LinkedHashMap<String, MetaExpression> value) {
 	expressionSupplier = () -> fromValue(value);
@@ -65,7 +65,7 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
     /**
      * Create a new {@link ExpressionBuilder} that will produce a double
      *
-     * @param value
+     * @param value the value to set
      */
     public ExpressionBuilder(final boolean value) {
 	expressionSupplier = () -> fromValue(value);

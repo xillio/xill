@@ -1,9 +1,10 @@
 package nl.xillio.xill.api.errors;
 
+import nl.xillio.xill.api.LanguageFactory;
 import nl.xillio.xill.api.components.RobotID;
 
 /**
- * This {@link Exception} is generally thrown when the {@link XillProgramFactory} was unable to generate a program tree from the provide token tree.
+ * This {@link Exception} is generally thrown when the {@link LanguageFactory} was unable to generate a program tree from the provide token tree.
  */
 public class XillParsingException extends Exception {
 	private static final long serialVersionUID = 62988736232220717L;
@@ -13,9 +14,9 @@ public class XillParsingException extends Exception {
 	/**
 	 * Create a {@link XillParsingException} with a message
 	 *
-	 * @param message
-	 * @param line
-	 * @param robot
+	 * @param message the message to display
+	 * @param line the line where the error occurred 
+	 * @param robot the robot that couldn't be parsed
 	 */
 	public XillParsingException(final String message, final int line, final RobotID robot) {
 		super(message);
@@ -26,10 +27,10 @@ public class XillParsingException extends Exception {
 	/**
 	 * Create a {@link XillParsingException} with a cause
 	 *
-	 * @param message
-	 * @param line
-	 * @param robot
-	 * @param e
+	 * @param message the message to display
+	 * @param line the line where the error occurred
+	 * @param robot the robot that couldn't be parsed
+	 * @param e the exception that caused this
 	 */
 	public XillParsingException(final String message, final int line, final RobotID robot, final Exception e) {
 		super(message, e);

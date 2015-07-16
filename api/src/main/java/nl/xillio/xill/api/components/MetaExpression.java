@@ -35,8 +35,9 @@ public abstract class MetaExpression implements Expression, Processable {
 
     /**
      * Get a value from the {@link MetadataExpressionPool}
+     * @param <T> the type of object to fetch
      *
-     * @param clazz
+     * @param clazz The type of class to fetch. <b>Note</b> that this doesn't take inheritance into account.
      * @return The stored value or null if none was found
      * @throws IllegalStateException
      *             if this expression has been closed
@@ -49,9 +50,10 @@ public abstract class MetaExpression implements Expression, Processable {
     }
 
     /**
-     * Store a value in the {@link MetadataExpressionPool}
+     * Store a value in the {@link MetadataExpressionPool} and default the key to the class of the object as returned by {@link Object#getClass()}
+     * @param <T> the type key to store the object as
      *
-     * @param object
+     * @param object The object to store
      * @return The previous stored value in the pool or null if no value was
      *         stored.
      * @throws IllegalStateException
@@ -64,9 +66,10 @@ public abstract class MetaExpression implements Expression, Processable {
 
     /**
      * Store a value in the {@link MetadataExpressionPool}
+     * @param <T> the type key to store the object as
      *
-     * @param clazz
-     * @param object
+     * @param clazz The object type to store
+     * @param object the object to store
      * @return The previous stored value in the pool or null if no value was
      *         stored.
      * @throws IllegalStateException
@@ -83,7 +86,7 @@ public abstract class MetaExpression implements Expression, Processable {
      * Set the value of this variable to an {@link ExpressionDataType#ATOMIC}
      * value
      *
-     * @param value
+     * @param value The {@link ExpressionDataType#ATOMIC} value to store
      * @return self
      * @throws IllegalStateException
      *             if this expression has been closed
@@ -100,8 +103,8 @@ public abstract class MetaExpression implements Expression, Processable {
     /**
      * Set the value of this expression to that of another one
      *
-     * @param value
-     * @return
+     * @param value The other {@link MetaExpression} to copy the value from
+     * @return this
      * @throws IllegalStateException
      *             if this expression has been closed
      */
@@ -117,7 +120,7 @@ public abstract class MetaExpression implements Expression, Processable {
     /**
      * Set the value of this variable to a {@link ExpressionDataType#LIST} value
      *
-     * @param value
+     * @param value the  {@link ExpressionDataType#LIST} to set the value to
      * @return self
      * @throws IllegalStateException
      *             if this expression has been closed
@@ -218,6 +221,8 @@ public abstract class MetaExpression implements Expression, Processable {
      *
      * @param metaExpression
      * @param visited
+     * @param replacement The replacement for circular references
+     * @return 
      */
     @SuppressWarnings("unchecked")
     private static MetaExpression removeCircularReference(final MetaExpression metaExpression,

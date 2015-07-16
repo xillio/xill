@@ -86,8 +86,8 @@ public abstract class Construct extends ExpressionBuilderHelper {
      * Check if a {@link MetaExpression} is <b>NOT</b> null. This is checked by
      * calling {@link MetaExpression#isNull()}.
      *
-     * @param expression
-     * @param argumentName
+     * @param expression The expression to check
+     * @param argumentName The name of the expression. This is used to generate understandable debug messages.
      * @throws RobotRuntimeException
      *             when the assertion fails
      */
@@ -101,8 +101,8 @@ public abstract class Construct extends ExpressionBuilderHelper {
      * Check if a {@link MetaExpression} is null. This is checked by calling
      * {@link MetaExpression#isNull()}.
      *
-     * @param expression
-     * @param argumentName
+     * @param expression The expression to check
+     * @param argumentName The name of the expression. This is used to generate understandable debug messages.
      * @throws RobotRuntimeException
      *             when the assertion fails
      */
@@ -115,6 +115,7 @@ public abstract class Construct extends ExpressionBuilderHelper {
     /**
      * Check if the {@link MetaExpression} contains an instance of meta
      * information and fetch it
+     * @param <T> The type of meta information to assert
      * 
      * @param expression
      *            The expression to check
@@ -144,7 +145,7 @@ public abstract class Construct extends ExpressionBuilderHelper {
     /**
      * A shortcut to {@link MetaExpression#extractValue(MetaExpression)}
      *
-     * @param expression
+     * @param expression The expression to extract Java objects from
      * @return The value specified in
      *         {@link MetaExpression#extractValue(MetaExpression)}
      * @see MetaExpression#extractValue(MetaExpression)

@@ -16,12 +16,9 @@ public interface XillProcessor {
 	 * Compiles the code in the file used to instantiate this {@link XillProcessor}
 	 *
 	 * @return A list of {@link Issue} with the code. (Does not contain errors)
-	 * @throws XS_ScriptException
-	 *         When the code was not compiled correctly
-	 * @throws IOException
-	 * @throws SyntaxError
-	 *         When there is an error in the code
+	 * @throws IOException When the file could not be read
 	 * @throws XillParsingException
+	 *         When the code was not compiled correctly
 	 */
 	public List<Issue> compile() throws IOException, XillParsingException;
 

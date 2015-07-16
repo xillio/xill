@@ -17,7 +17,7 @@ public class AtomicExpression extends MetaExpression {
 	/**
 	 * Create a new {@link AtomicExpression} that hosts an {@link Expression}
 	 *
-	 * @param value
+	 * @param value the value to set
 	 */
 	public AtomicExpression(final Expression value) {
 		setValue(value);
@@ -29,7 +29,7 @@ public class AtomicExpression extends MetaExpression {
 	/**
 	 * Create a new {@link AtomicExpression} with {@link BooleanBehavior}
 	 *
-	 * @param value
+	 * @param value the value to set
 	 */
 	public AtomicExpression(final boolean value) {
 		this(new BooleanBehavior(value));
@@ -38,7 +38,7 @@ public class AtomicExpression extends MetaExpression {
 	/**
 	 * Create a new {@link AtomicExpression} with {@link NumberBehavior}
 	 *
-	 * @param value
+	 * @param value the value to set
 	 */
 	public AtomicExpression(final double value) {
 		this(new NumberBehavior(value));
@@ -47,7 +47,7 @@ public class AtomicExpression extends MetaExpression {
 	/**
 	 * Create a new {@link AtomicExpression} with {@link StringBehavior}
 	 *
-	 * @param value
+	 * @param value the value to set
 	 */
 	public AtomicExpression(final String value) {
 		this(new StringBehavior(value));

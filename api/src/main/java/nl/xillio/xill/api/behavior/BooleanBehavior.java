@@ -18,7 +18,7 @@ public class BooleanBehavior implements Expression {
     /**
      * Create a new {@link BooleanBehavior}
      *
-     * @param value
+     * @param value the value to set the boolean to
      */
     public BooleanBehavior(final boolean value) {
 	this.value = value;

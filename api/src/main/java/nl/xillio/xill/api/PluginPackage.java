@@ -13,8 +13,6 @@ import nl.xillio.xill.api.construct.Construct;
  */
 public abstract class PluginPackage implements Loadable<PluginPackage>, AutoCloseable {
 	private final List<Construct> constructs = new ArrayList<>();
-	
-	protected String version;
 
 	/**
 	 * Get a construct from this package
@@ -58,7 +56,7 @@ public abstract class PluginPackage implements Loadable<PluginPackage>, AutoClos
 	 * Add constructs to the package. <br/>
 	 * This is a shortcut to calling {@link #add(Construct)} multiple times.
 	 *
-	 * @param constructs
+	 * @param constructs the constructs to add the the list
 	 * @throws IllegalArgumentException
 	 *         when a construct with the same name already exists
 	 */
@@ -72,7 +70,7 @@ public abstract class PluginPackage implements Loadable<PluginPackage>, AutoClos
 	 * Add constructs to the package. <br/>
 	 * This is a shortcut to calling {@link #add(Construct)} multiple times.
 	 *
-	 * @param constructs
+	 * @param constructs the constructs to add to the list
 	 * @throws IllegalArgumentException
 	 *         when a construct with the same name already exists
 	 */
@@ -99,22 +97,11 @@ public abstract class PluginPackage implements Loadable<PluginPackage>, AutoClos
 	}
 	
 	/**
-	 * @param v The current version
-	 */
-	public void setVersion(String v)
-	{
-		this.version = v;
-	}
-	
-	/**
 	 * @return Returns the version of the package
 	 */
 	public String getVersion()
 	{
-		if(this.version != null)
-			return this.version;
-		else
-			return getClass().getPackage().getSpecificationVersion();
+		return getClass().getPackage().getImplementationVersion();
 	}
 	
 	@Override

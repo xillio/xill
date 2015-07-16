@@ -25,7 +25,7 @@ public class ObjectExpression implements Processable {
     private final LinkedHashMap<? extends Processable, ? extends Processable> value;
 
     /**
-     * @param object
+     * @param object the value to set
      */
     public ObjectExpression(final LinkedHashMap<? extends Processable, ? extends Processable> object) {
 	value = object;
