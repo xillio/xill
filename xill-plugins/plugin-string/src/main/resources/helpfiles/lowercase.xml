@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function Tag="lowercase">
+  <name>lowercase</name>
+  <parameters>
+    <param name="text">
+    </param>
+  </parameters>
+  <description><![CDATA[Returns the lowercase string of text, which must also be a string.]]></description>
+  <examples>
+    <example description="log (lowercase(&quot;3... 2... 1... START... Genius!&quot;));"><![CDATA[]]></example>
+    <example description="will print:"><![CDATA[3... 2... 1... start... genius!
+]]></example>
+  </examples>
+  <references>
+    <reference package = "String">uppercase</reference>
+  </references>
+</function>

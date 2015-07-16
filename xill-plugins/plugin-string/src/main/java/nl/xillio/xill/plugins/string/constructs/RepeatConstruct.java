@@ -1,12 +1,15 @@
 package nl.xillio.xill.plugins.string.constructs;
 
-import org.apache.commons.lang3.StringUtils;
+import java.io.InputStream;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.construct.HelpComponent;
+
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -15,27 +18,32 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
  * @author Sander
  *
  */
-public class RepeatConstruct extends Construct {
+public class RepeatConstruct extends Construct implements HelpComponent {
 
-    @Override
-    public String getName() {
+	@Override
+	public String getName() {
 
-	return "repeat";
-    }
+		return "repeat";
+	}
 
-    @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
-	return new ConstructProcessor(RepeatConstruct::process, new Argument("string"), new Argument("value"));
-    }
+	@Override
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
+		return new ConstructProcessor(RepeatConstruct::process, new Argument("string"), new Argument("value"));
+	}
 
-    private static MetaExpression process(final MetaExpression string, final MetaExpression value) {
-	assertType(string, "string", ATOMIC);
-	assertType(value, "value", ATOMIC);
-	assertNotNull(string, "string");
-	assertNotNull(value, "value");
+	private static MetaExpression process(final MetaExpression string, final MetaExpression value) {
+		assertType(string, "string", ATOMIC);
+		assertType(value, "value", ATOMIC);
+		assertNotNull(string, "string");
+		assertNotNull(value, "value");
 
-	String repeatedString = StringUtils.repeat(string.getStringValue(), value.getNumberValue().intValue());
+		String repeatedString = StringUtils.repeat(string.getStringValue(), value.getNumberValue().intValue());
 
-	return fromValue(repeatedString);
-    }
+		return fromValue(repeatedString);
+	}
+
+	@Override
+	public InputStream openDocumentationStream() {
+		return getClass().getResourceAsStream("/helpfiles/repeat.xml");
+	}
 }

@@ -3,7 +3,6 @@
   <name>base64encode</name>
   <parameters>
     <param name="file">
-      <type>&lt;string,binary&gt;</type>
     </param>
   </parameters>
   <description><![CDATA[Returns the base-64 encoded string of file file. Commonly used to encode binary data for transfer over a text channel (such as attachments in e-mails). The parameter file is expected to be either a valid file name, or a binary variable.]]></description>
@@ -19,8 +18,7 @@
 </note>
 ]]></example>
   </examples>
-  <Applications />
-  <tags>
-    <tag package = "String">base64decode</tag>
-  </tags>
+  <references>
+    <reference package = "String">base64decode</reference>
+  </references>
 </function>
