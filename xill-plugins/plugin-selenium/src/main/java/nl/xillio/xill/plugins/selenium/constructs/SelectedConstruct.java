@@ -18,21 +18,21 @@ public class SelectedConstruct extends Construct {
 	}
 
 	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
 			SelectedConstruct::process,
 			new Argument("element"));
 	}
 
 	public static MetaExpression process(final MetaExpression elementVar) {
-		
+
 		if (!NodeVariable.checkType(elementVar)) {
 			throw new RobotRuntimeException("Invalid variable type. NODE type expected!");
 		}
-		//else
-		
+		// else
+
 		WebElement element = NodeVariable.get(elementVar);
-				
+
 		try {
 			return fromValue(element.isSelected());
 		} catch (Exception e) {

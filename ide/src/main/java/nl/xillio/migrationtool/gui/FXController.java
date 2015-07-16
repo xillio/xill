@@ -8,6 +8,9 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.log4j.Logger;
+
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -42,9 +45,6 @@ import nl.xillio.sharedlibrary.settings.SettingsHandler;
 import nl.xillio.xill.api.PluginPackage;
 import nl.xillio.xill.api.Xill;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.log4j.Logger;
-
 /**
  * This class is the global controller for the application
  */
@@ -58,11 +58,11 @@ public class FXController implements Initializable, EventHandler<Event> {
 	// Shortcut is Ctrl on Windows and Meta on Mac.
 	@SuppressWarnings("javadoc")
 	public static final String HOTKEY_SAVE = "Shortcut+S", HOTKEY_SAVEAS = "Shortcut+Alt+S",
-	HOTKEY_SAVEALL = "Shortcut+Shift+S", HOTKEY_NEW = "Shortcut+N", HOTKEY_OPEN = "Shortcut+O",
-	HOTKEY_CLOSE = "Shortcut+W", HOTKEY_HELP = "F1", HOTKEY_RUN = "F6", HOTKEY_PAUSE = "F7", HOTKEY_STOP = "F8",
-	HOTKEY_STEPIN = "F9", HOTKEY_STEPOVER = "F10", HOTKEY_CLEARCONSOLE = "Shortcut+L",
-	HOTKEY_COPY = "Shortcut+C", HOTKEY_CUT = "Shortcut+X", HOTKEY_PASTE = "Shortcut+V",
-	HOTKEY_RESET_ZOOM = "Shortcut+0", HOTKEY_FIND = "Shortcut+F";
+					HOTKEY_SAVEALL = "Shortcut+Shift+S", HOTKEY_NEW = "Shortcut+N", HOTKEY_OPEN = "Shortcut+O",
+					HOTKEY_CLOSE = "Shortcut+W", HOTKEY_HELP = "F1", HOTKEY_RUN = "F6", HOTKEY_PAUSE = "F7", HOTKEY_STOP = "F8",
+					HOTKEY_STEPIN = "F9", HOTKEY_STEPOVER = "F10", HOTKEY_CLEARCONSOLE = "Shortcut+L",
+					HOTKEY_COPY = "Shortcut+C", HOTKEY_CUT = "Shortcut+X", HOTKEY_PASTE = "Shortcut+V",
+					HOTKEY_RESET_ZOOM = "Shortcut+0", HOTKEY_FIND = "Shortcut+F";
 
 	/*
 	 * ******************************************************* Buttons, fields,
@@ -71,8 +71,8 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 	@FXML
 	private Button btnOpenFile, btnSave, btnSaveAs, btnSaveAll, btnRemoveAllBreakpoints, btnEvaluate, btnRun,
-	btnStepOver, btnStepIn, btnPause, btnStop, btnSearch, btnBrowser, btnRegexTester, btnClearConsole,
-	btnPreviewOpenBrowser, btnPreviewOpenRegex, btnHideLeftPane, btnShowLeftPane;
+					btnStepOver, btnStepIn, btnPause, btnStop, btnSearch, btnBrowser, btnRegexTester, btnClearConsole,
+					btnPreviewOpenBrowser, btnPreviewOpenRegex, btnHideLeftPane, btnShowLeftPane;
 	@FXML
 	private TabPane tpnBots;
 	@FXML
@@ -101,20 +101,20 @@ public class FXController implements Initializable, EventHandler<Event> {
 	@Override
 	public void initialize(final URL url, final ResourceBundle bundle) {
 		settings.registerSimpleSetting("File", "LastFolder", System.getProperty("user.dir"),
-				"The last folder a file was opened from or saved to.");
+			"The last folder a file was opened from or saved to.");
 		settings.registerSimpleSetting("Warning", "DialogDebug", "false", "Show warning dialogs for debug messages.");
 		settings.registerSimpleSetting("Warning", "DialogInfo", "false", "Show warning dialogs for info messages.");
 		settings.registerSimpleSetting("Warning", "DialogWarning", "false",
-				"Show warning dialogs for warning messages.");
+			"Show warning dialogs for warning messages.");
 		settings.registerSimpleSetting("Warning", "DialogError", "true", "Show warning dialogs for error messages.");
 		settings.registerSimpleSetting("Server", "ServerHost", "http://localhost:10000",
-				"Location XMTS is running on.");
+			"Location XMTS is running on.");
 		settings.registerSimpleSetting("Server", "ServerUsername", "", "Optional username to access XMTS.");
 		settings.registerSimpleSetting("Server", "ServerPassword", "", "Optional password to access XMTS.");
 		settings.registerSimpleSetting("Info", "LastVersion", "0.0.0", "Last version that was run.");
 		settings.registerSimpleSetting("Layout", "LeftPanelWidth", "0.2", "Width of the left panel");
 		settings.registerSimpleSetting("Layout", "LeftPanelCollapsed", "false",
-				"The collapsed-state of the left panel");
+			"The collapsed-state of the left panel");
 		settings.registerSimpleSetting("Layout", "ProjectHeight", "0.5", "The height of the project panel");
 
 		// Initialize layout and layout listeners
@@ -170,7 +170,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 					openFile(new File(filename));
 				}
 			}
-	});
+		});
 
 		Platform.runLater(() -> {
 			verifyLicense();
@@ -296,7 +296,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 			RobotTab editor = (RobotTab) tab;
 			try {
 				if (editor.getDocument() != null
-						&& editor.getDocument().getCanonicalPath().equals(newfile.getCanonicalPath())) {
+								&& editor.getDocument().getCanonicalPath().equals(newfile.getCanonicalPath())) {
 					tpnBots.getSelectionModel().select(editor);
 					showTab(editor);
 					return editor;
@@ -448,7 +448,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 			Alert validLicense = new Alert(AlertType.INFORMATION);
 			if (license.getLicenseType() == LicenseType.INTERNAL) {
 				validLicense.setContentText(
-						"Do not distribute this license or your settingsfile to other machines than your personal laptop.");
+					"Do not distribute this license or your settingsfile to other machines than your personal laptop.");
 				validLicense.setHeaderText("This is a Xillio internal license");
 				validLicense.setTitle("Info");
 			} else if (license.getLicenseType() == LicenseType.DEVELOPER) {
@@ -597,12 +597,12 @@ public class FXController implements Initializable, EventHandler<Event> {
 	 * @return currently selected RobotTab
 	 */
 	public Tab getSelectedTab() {
-		return (tpnBots.getSelectionModel().getSelectedItem());
+		return tpnBots.getSelectionModel().getSelectedItem();
 	}
 
 	/**
 	 * Finds the tab according to filePath (~RobotID.path)
-	 * 
+	 *
 	 * @param filePath
 	 *        filepath to robot (.xill) file
 	 * @return RobotTab if found, otherwise null

@@ -17,17 +17,16 @@ import nl.xillio.xill.debugging.XillDebugger;
 public class XillLoader implements Xill, nl.xillio.contenttools.PluginPackage {
 
 	@Override
-	public XillProcessor createProcessor(File robotFile, File projectFolder, PluginLoader<PluginPackage> pluginLoader) {
-		
+	public XillProcessor createProcessor(final File robotFile, final File projectFolder, final PluginLoader<PluginPackage> pluginLoader) {
+
 		return createProcessor(robotFile, projectFolder, pluginLoader, new XillDebugger());
 	}
 
 	@Override
-	public void load(nl.xillio.contenttools.PluginPackage[] dependencies) {
-	}
+	public void load(final nl.xillio.contenttools.PluginPackage[] dependencies) {}
 
 	@Override
-	public void start(Stage stage, Xill xill) {
+	public void start(final Stage stage, final Xill xill) {
 
 	}
 
@@ -37,20 +36,12 @@ public class XillLoader implements Xill, nl.xillio.contenttools.PluginPackage {
 	}
 
 	@Override
-	public XillProcessor createProcessor(File robotFile, File projectFolder, PluginLoader<PluginPackage> pluginLoader, Debugger debugger) {			
-			try {
-				return new nl.xillio.xill.XillProcessor(projectFolder, robotFile, pluginLoader, debugger);
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
+	public XillProcessor createProcessor(final File robotFile, final File projectFolder, final PluginLoader<PluginPackage> pluginLoader, final Debugger debugger) {
+		try {
+			return new nl.xillio.xill.XillProcessor(projectFolder, robotFile, pluginLoader, debugger);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
-
-
-
-
-
-
-
-
 
 }

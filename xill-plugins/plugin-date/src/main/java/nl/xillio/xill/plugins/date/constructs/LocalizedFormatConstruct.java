@@ -30,70 +30,70 @@ public class LocalizedFormatConstruct extends BaseDateConstruct {
 	@Override
 	public String getName() {
 
-	return "localizedFormat";
+		return "localizedFormat";
 	}
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 
-	return new ConstructProcessor(LocalizedFormatConstruct::process,
-		new Argument("date"), new Argument("format", NULL), new Argument("datestyle", NULL),
-		new Argument("timestyle", NULL));
+		return new ConstructProcessor(LocalizedFormatConstruct::process,
+			new Argument("date"), new Argument("format", NULL), new Argument("datestyle", NULL),
+			new Argument("timestyle", NULL));
 	}
 
 	private static MetaExpression process(final MetaExpression dateVar,
-		final MetaExpression localeVar, final MetaExpression dateStyleVar, final MetaExpression timeStyleVar) {
+					final MetaExpression localeVar, final MetaExpression dateStyleVar, final MetaExpression timeStyleVar) {
 
-	ZonedDateTime date = getDate(dateVar, "date");
-	DateTimeFormatter formatter;
-	FormatStyle dateStyle;
-	FormatStyle timeStyle;
+		ZonedDateTime date = getDate(dateVar, "date");
+		DateTimeFormatter formatter;
+		FormatStyle dateStyle;
+		FormatStyle timeStyle;
 
-	if (localeVar != NULL) {
-		// no styles are given so we use medium
-		if (dateStyleVar == NULL) {
-		dateStyle = FormatStyle.MEDIUM;
+		if (localeVar != NULL) {
+			// no styles are given so we use medium
+			if (dateStyleVar == NULL) {
+				dateStyle = FormatStyle.MEDIUM;
+			} else {
+				try {
+					dateStyle = FormatStyle.valueOf(dateStyleVar.getStringValue().toUpperCase());
+				} catch (IllegalArgumentException e) {
+					throw new RobotRuntimeException("Datestyle has to be 'full','long','medium' or 'short'.");
+				}
+			}
+
+			if (timeStyleVar == NULL) {
+				timeStyle = FormatStyle.MEDIUM;
+			} else {
+				try {
+					timeStyle = FormatStyle.valueOf(timeStyleVar.getStringValue().toUpperCase());
+				} catch (IllegalArgumentException e) {
+					throw new RobotRuntimeException("Timestyle has to be 'full','long','medium' or 'short'.");
+				}
+			}
+
+			if (dateStyleVar == NULL && timeStyleVar != NULL) {
+				// only timestyle given so use localizedTime
+				formatter = DateTimeFormatter.ofLocalizedTime(timeStyle)
+					.withLocale(Locale.forLanguageTag(localeVar.getStringValue()));
+
+			} else if (timeStyleVar == NULL && dateStyleVar != NULL) {
+				// only datestyle given so use localizedDate
+				formatter = DateTimeFormatter.ofLocalizedDate(dateStyle)
+					.withLocale(Locale.forLanguageTag(localeVar.getStringValue()));
+			} else {
+				// datestyle and timestyle are either set to medium or given
+				formatter = DateTimeFormatter.ofLocalizedDateTime(dateStyle, timeStyle)
+					.withLocale(Locale.forLanguageTag(localeVar.getStringValue()));
+			}
 		} else {
-		try {
-			dateStyle = FormatStyle.valueOf(dateStyleVar.getStringValue().toUpperCase());
-		} catch (IllegalArgumentException e) {
-			throw new RobotRuntimeException("Datestyle has to be 'full','long','medium' or 'short'.");
-		}
+			formatter = DEFAULT_FORMATTER;
 		}
 
-		if (timeStyleVar == NULL) {
-		timeStyle = FormatStyle.MEDIUM;
-		} else {
-		try {
-			timeStyle = FormatStyle.valueOf(timeStyleVar.getStringValue().toUpperCase());
-		} catch (IllegalArgumentException e) {
-			throw new RobotRuntimeException("Timestyle has to be 'full','long','medium' or 'short'.");
-		}
-		}
+		String s = "";
+		s = date.format(formatter);
 
-		if (dateStyleVar == NULL && timeStyleVar != NULL) {
-		// only timestyle given so use localizedTime
-		formatter = DateTimeFormatter.ofLocalizedTime(timeStyle)
-			.withLocale(Locale.forLanguageTag(localeVar.getStringValue()));
-
-		} else if (timeStyleVar == NULL && dateStyleVar != NULL) {
-		// only datestyle given so use localizedDate
-		formatter = DateTimeFormatter.ofLocalizedDate(dateStyle)
-			.withLocale(Locale.forLanguageTag(localeVar.getStringValue()));
-		} else {
-		// datestyle and timestyle are either set to medium or given
-		formatter = DateTimeFormatter.ofLocalizedDateTime(dateStyle, timeStyle)
-			.withLocale(Locale.forLanguageTag(localeVar.getStringValue()));
-		}
-	} else {
-		formatter = DEFAULT_FORMATTER;
-	}
-
-	String s = "";
-	s = date.format(formatter);
-
-	MetaExpression result = fromValue(s);
-	return result;
+		MetaExpression result = fromValue(s);
+		return result;
 
 	}
 }

@@ -10,6 +10,7 @@ public class Issue {
 
 	/**
 	 * The severity of this issue.
+	 * 
 	 * @see Type#ERROR
 	 * @see Type#WARNING
 	 * @see Type#INFO
@@ -18,23 +19,24 @@ public class Issue {
 		/**
 		 * Can't compile
 		 */
-		ERROR,
-		/**
-		 * Needs attention
-		 */
-		WARNING,
-		/**
-		 * Friendly notice
-		 */
+		ERROR, /**
+						 * Needs attention
+						 */
+		WARNING, /**
+							 * Friendly notice
+							 */
 		INFO
 	}
 
 	/**
 	 * Create a new Issue
 	 *
-	 * @param message the message to display
-	 * @param line the line where the issue occurred
-	 * @param severity the severity of the issue
+	 * @param message
+	 *        the message to display
+	 * @param line
+	 *        the line where the issue occurred
+	 * @param severity
+	 *        the severity of the issue
 	 * @see Type
 	 */
 	public Issue(final String message, final int line, final Type severity) {

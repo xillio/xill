@@ -7,11 +7,11 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import org.apache.commons.lang3.StringUtils;
+
 import nl.xillio.xill.api.QuadFunction;
 import nl.xillio.xill.api.TriFunction;
 import nl.xillio.xill.api.components.MetaExpression;
-
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * This class represents a one-time running process created by a construct with a process method and input.
@@ -79,10 +79,10 @@ public class ConstructProcessor {
 	 *        The third parameter
 	 */
 	public ConstructProcessor(final TriFunction<MetaExpression, MetaExpression, MetaExpression, MetaExpression> processor, final Argument firstArgument, final Argument secondArgument,
-			final Argument thirdArgument) {
+					final Argument thirdArgument) {
 		this(args -> processor.apply(args[0], args[1], args[2]), new Argument[] {firstArgument, secondArgument, thirdArgument});
 	}
-	
+
 	/**
 	 * Create a four-argument processor from input and operation
 	 *
@@ -98,7 +98,7 @@ public class ConstructProcessor {
 	 *        The forth parameter
 	 */
 	public ConstructProcessor(final QuadFunction<MetaExpression, MetaExpression, MetaExpression, MetaExpression, MetaExpression> processor, final Argument firstArgument, final Argument secondArgument,
-			final Argument thirdArgument, final Argument forthArgument) {
+					final Argument thirdArgument, final Argument forthArgument) {
 		this(args -> processor.apply(args[0], args[1], args[2], args[3]), new Argument[] {firstArgument, secondArgument, thirdArgument, forthArgument});
 	}
 
@@ -115,8 +115,10 @@ public class ConstructProcessor {
 	/**
 	 * Sets the value of a named argument.
 	 *
-	 * @param name the name of the argument
-	 * @param value the value to set the argument to
+	 * @param name
+	 *        the name of the argument
+	 * @param value
+	 *        the value to set the argument to
 	 * @return True if the argument was set
 	 */
 	public boolean setArgument(final String name, final MetaExpression value) {
@@ -132,8 +134,10 @@ public class ConstructProcessor {
 	/**
 	 * Sets the value of the argument in slot index.
 	 *
-	 * @param index the index of the argument from 0 to {@link ConstructProcessor#getNumberOfArguments()} - 1
-	 * @param value the value to set the argument to
+	 * @param index
+	 *        the index of the argument from 0 to {@link ConstructProcessor#getNumberOfArguments()} - 1
+	 * @param value
+	 *        the value to set the argument to
 	 * @return True if the argument was set, false if it was rejected
 	 */
 	public boolean setArgument(final int index, final MetaExpression value) {
@@ -204,7 +208,8 @@ public class ConstructProcessor {
 	/**
 	 * Gets the name of an argument.
 	 *
-	 * @param i the index of the argument to get the name of
+	 * @param i
+	 *        the index of the argument to get the name of
 	 * @return the name of the argument
 	 */
 	public String getArgumentName(final int i) {
@@ -216,7 +221,8 @@ public class ConstructProcessor {
 	 * By default this is a method that checks if all arguments are set.
 	 * This validator can be used to enforce lazy evaluation.
 	 *
-	 * @param validator the validator that should be used
+	 * @param validator
+	 *        the validator that should be used
 	 */
 	public void setRequirementValidation(final Predicate<Argument[]> validator) {
 		requirementsValidator = validator;
@@ -234,8 +240,10 @@ public class ConstructProcessor {
 	/**
 	 * Shortcut for processing a processor. It pushes the provided arguments and calls {@link ConstructProcessor#process()}
 	 *
-	 * @param processor the processor to process
-	 * @param arguments the arguments to pass to the processor
+	 * @param processor
+	 *        the processor to process
+	 * @param arguments
+	 *        the arguments to pass to the processor
 	 * @return the result
 	 */
 	public static MetaExpression Process(final ConstructProcessor processor, final MetaExpression... arguments) {

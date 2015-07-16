@@ -1,9 +1,9 @@
 package nl.xillio.xill.api.construct;
 
+import org.apache.log4j.Logger;
+
 import nl.xillio.xill.api.RobotLogger;
 import nl.xillio.xill.api.components.RobotID;
-
-import org.apache.log4j.Logger;
 
 /**
  * This class represents a context in which a construct can be processed.
@@ -11,15 +11,18 @@ import org.apache.log4j.Logger;
 public class ConstructContext {
 	private final RobotID robotID;
 	private Logger robotLogger;
-	private RobotID rootRobot;
+	private final RobotID rootRobot;
 	private Logger rootLogger;
 
 	/**
 	 * Create a new {@link ConstructContext} for a specific robot
 	 *
-	 * @param robot the robotID of the current robot
-	 * @param rootRobot the robotID of the root robot
-	 * @param contstruct the construct that will be using this context
+	 * @param robot
+	 *        the robotID of the current robot
+	 * @param rootRobot
+	 *        the robotID of the root robot
+	 * @param contstruct
+	 *        the construct that will be using this context
 	 */
 	public ConstructContext(final RobotID robot, final RobotID rootRobot, final Construct contstruct) {
 		robotID = robot;
@@ -32,7 +35,7 @@ public class ConstructContext {
 	public RobotID getRobotID() {
 		return robotID;
 	}
-	
+
 	/**
 	 * @return the robotID for the Root Robot
 	 */
@@ -52,7 +55,7 @@ public class ConstructContext {
 
 		return robotLogger;
 	}
-	
+
 	/**
 	 * @return the root RobotLogger
 	 */

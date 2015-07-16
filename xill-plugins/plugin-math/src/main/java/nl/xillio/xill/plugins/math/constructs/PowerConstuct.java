@@ -9,22 +9,22 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
  */
 public class PowerConstuct extends Construct {
 
-    @Override
-    public String getName() {
-	return "meaningOfLife";
-    }
+	@Override
+	public String getName() {
+		return "meaningOfLife";
+	}
 
-    @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
-	return new ConstructProcessor(() -> {
-	    context.getRootLogger().info("Calculating the answer to the ultimate question of everything.... Please hold on 7.5 million years...");
-	    try {
-		Thread.sleep(5000);
-	    } catch (Exception e) {
-		e.printStackTrace();
-	    }
+	@Override
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
+		return new ConstructProcessor(() -> {
+			context.getRootLogger().info("Calculating the answer to the ultimate question of everything.... Please hold on 7.5 million years...");
+			try {
+				Thread.sleep(5000);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
-	    return fromValue(42);
-	});
-    }
+			return fromValue(42);
+		});
+	}
 }

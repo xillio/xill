@@ -16,21 +16,21 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
  */
 public class UpperCaseConstruct extends Construct {
 
-    @Override
-    public String getName() {
+	@Override
+	public String getName() {
 
-	return "toUpper";
-    }
+		return "toUpper";
+	}
 
-    @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
-	return new ConstructProcessor(UpperCaseConstruct::process, new Argument("string"));
-    }
+	@Override
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
+		return new ConstructProcessor(UpperCaseConstruct::process, new Argument("string"));
+	}
 
-    private static MetaExpression process(final MetaExpression string) {
+	private static MetaExpression process(final MetaExpression string) {
 
-	assertType(string, "string", ATOMIC);
+		assertType(string, "string", ATOMIC);
 
-	return fromValue(string.getStringValue().toUpperCase());
-    }
+		return fromValue(string.getStringValue().toUpperCase());
+	}
 }

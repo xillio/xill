@@ -12,71 +12,72 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  * This class represents a written list in a script e.g. [1,2,3,4].<br/>
  * Values:
  * <ul>
- * 	<li><b>{@link String}: </b> the JSON representation</li>
- * 	<li><b>{@link Boolean}: </b> false if the list is null else true (even if empty)</li>
- * 	<li><b>{@link Number}: </b> the length of the list</li>
+ * <li><b>{@link String}: </b> the JSON representation</li>
+ * <li><b>{@link Boolean}: </b> false if the list is null else true (even if empty)</li>
+ * <li><b>{@link Number}: </b> the length of the list</li>
  * </ul>
  */
 public class ListExpression implements Processable {
 
-    private final List<? extends Processable> value;
+	private final List<? extends Processable> value;
 
-    /**
-     * @param value the value to set
-     */
-    public ListExpression(final List<? extends Processable> value) {
-	this.value = value;
-    }
-
-    @Override
-    public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-	List<MetaExpression> result = new ArrayList<>();
-
-	for (Processable process : value) {
-	    try {
-		MetaExpression child = process.process(debugger).get();
-		child.registerReference();
-		result.add(child);
-
-	    } catch (RobotRuntimeException e) {
-		debugger.handle(e);
-	    }
+	/**
+	 * @param value
+	 *        the value to set
+	 */
+	public ListExpression(final List<? extends Processable> value) {
+		this.value = value;
 	}
 
-	MetaExpression list = new MetaExpression() {
+	@Override
+	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
+		List<MetaExpression> result = new ArrayList<>();
 
-	    @Override
-	    public Number getNumberValue() {
-		return result.size();
-	    }
+		for (Processable process : value) {
+			try {
+				MetaExpression child = process.process(debugger).get();
+				child.registerReference();
+				result.add(child);
 
-	    @Override
-	    public String getStringValue() {
-		return toString();
-	    }
+			} catch (RobotRuntimeException e) {
+				debugger.handle(e);
+			}
+		}
 
-	    @Override
-	    public boolean getBooleanValue() {
-		return isNull();
-	    }
+		MetaExpression list = new MetaExpression() {
 
-	    @Override
-	    public boolean isNull() {
-		return false;
-	    }
+			@Override
+			public Number getNumberValue() {
+				return result.size();
+			}
 
-	    @Override
-	    public Collection<Processable> getChildren() {
-		return Arrays.asList();
-	    }
-	};
-	list.setValue(result);
+			@Override
+			public String getStringValue() {
+				return toString();
+			}
 
-	return InstructionFlow.doResume(list);
-    }
+			@Override
+			public boolean getBooleanValue() {
+				return isNull();
+			}
 
-    @Override
-    public Collection<Processable> getChildren() {
-	return new ArrayList<>(value);
-    }
+			@Override
+			public boolean isNull() {
+				return false;
+			}
+
+			@Override
+			public Collection<Processable> getChildren() {
+				return Arrays.asList();
+			}
+		};
+		list.setValue(result);
+
+		return InstructionFlow.doResume(list);
+	}
+
+	@Override
+	public Collection<Processable> getChildren() {
+		return new ArrayList<>(value);
+	}
 }

@@ -15,50 +15,50 @@ import nl.xillio.xill.plugins.selenium.PageVariable;
 
 public class GetTextConstruct extends Construct {
 
-    @Override
-    public String getName() {
-	return "getText";
-    }
-
-    @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
-	return new ConstructProcessor(GetTextConstruct::process, new Argument("element"));
-    }
-
-    public static MetaExpression process(final MetaExpression elementVar) {
-
-	assertNotNull(elementVar, "element");
-
-	String output = "";
-	if (elementVar.getType() == LIST) {
-	    @SuppressWarnings("unchecked")
-	    List<MetaExpression> list = (List<MetaExpression>) elementVar.getValue();
-	    for (MetaExpression item : list) {
-		output += processItem(item);
-	    }
-	} else {
-	    output = processItem(elementVar);
+	@Override
+	public String getName() {
+		return "getText";
 	}
 
-	return fromValue(output);
-    }
-
-    private static String processItem(final MetaExpression var) {
-	WebElement element = null;
-	if (NodeVariable.checkType(var)) {
-	    element = NodeVariable.get(var);
-	} else if (PageVariable.checkType(var)) {
-	    element = (WebElement) PageVariable.getDriver(var);
-	} else {
-	    throw new RobotRuntimeException("Invalid variable type.");
+	@Override
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
+		return new ConstructProcessor(GetTextConstruct::process, new Argument("element"));
 	}
 
-	String text = "";
-	if (element.getTagName().equals("input") || element.getTagName().equals("textarea")) {
-	    text = element.getAttribute("value");
-	} else {
-	    text = element.getText();
+	public static MetaExpression process(final MetaExpression elementVar) {
+
+		assertNotNull(elementVar, "element");
+
+		String output = "";
+		if (elementVar.getType() == LIST) {
+			@SuppressWarnings("unchecked")
+			List<MetaExpression> list = (List<MetaExpression>) elementVar.getValue();
+			for (MetaExpression item : list) {
+				output += processItem(item);
+			}
+		} else {
+			output = processItem(elementVar);
+		}
+
+		return fromValue(output);
 	}
-	return text;
-    }
+
+	private static String processItem(final MetaExpression var) {
+		WebElement element = null;
+		if (NodeVariable.checkType(var)) {
+			element = NodeVariable.get(var);
+		} else if (PageVariable.checkType(var)) {
+			element = (WebElement) PageVariable.getDriver(var);
+		} else {
+			throw new RobotRuntimeException("Invalid variable type.");
+		}
+
+		String text = "";
+		if (element.getTagName().equals("input") || element.getTagName().equals("textarea")) {
+			text = element.getAttribute("value");
+		} else {
+			text = element.getText();
+		}
+		return text;
+	}
 }

@@ -41,7 +41,7 @@ public class ParseConstruct extends BaseDateConstruct {
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 
 		return new ConstructProcessor(ParseConstruct::process, new Argument("date", NULL),
-				new Argument("format", NULL));
+			new Argument("format", NULL));
 	}
 
 	private static MetaExpression process(final MetaExpression dateVar, final MetaExpression formatVar) {
@@ -66,7 +66,7 @@ public class ParseConstruct extends BaseDateConstruct {
 	}
 
 	private static ZonedDateTime parseAsDate(final MetaExpression dateVar, final MetaExpression formatVar)
-			throws DateTimeParseException {
+					throws DateTimeParseException {
 
 		if (formatVar != NULL) {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatVar.getStringValue());
@@ -106,29 +106,29 @@ public class ParseConstruct extends BaseDateConstruct {
 		for (ChronoField field : ChronoField.values()) {
 			if (time.isSupported(field)) {
 				switch (field) {
-				case DAY_OF_MONTH:
-					day = time.get(field);
-					break;
-				case HOUR_OF_DAY:
-					hour = time.get(field);
-					break;
-				case MINUTE_OF_HOUR:
-					minute = time.get(field);
-					break;
-				case MONTH_OF_YEAR:
-					month = time.get(field);
-					break;
-				case NANO_OF_SECOND:
-					nano = time.get(field);
-					break;
-				case SECOND_OF_MINUTE:
-					second = time.get(field);
-					break;
-				case YEAR:
-					year = time.get(field);
-					break;
-				default:
-					break;
+					case DAY_OF_MONTH:
+						day = time.get(field);
+						break;
+					case HOUR_OF_DAY:
+						hour = time.get(field);
+						break;
+					case MINUTE_OF_HOUR:
+						minute = time.get(field);
+						break;
+					case MONTH_OF_YEAR:
+						month = time.get(field);
+						break;
+					case NANO_OF_SECOND:
+						nano = time.get(field);
+						break;
+					case SECOND_OF_MINUTE:
+						second = time.get(field);
+						break;
+					case YEAR:
+						year = time.get(field);
+						break;
+					default:
+						break;
 				}
 			}
 		}

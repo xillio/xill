@@ -16,37 +16,37 @@ import nl.xillio.xill.plugins.selenium.PageVariable;
 
 public class ScreenshotConstruct extends Construct {
 
-    @Override
-    public String getName() {
-	return "screenshot";
-    }
-
-    @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
-	return new ConstructProcessor(ScreenshotConstruct::process, new Argument("page"), new Argument("filename"));
-    }
-
-    public static MetaExpression process(final MetaExpression pageVar, final MetaExpression filenameVar) {
-
-	String filename = filenameVar.getStringValue();
-	if (filename.isEmpty()) {
-	    throw new RobotRuntimeException("Invalid variable value. Filename is empty!");
+	@Override
+	public String getName() {
+		return "screenshot";
 	}
 
-	if (!PageVariable.checkType(pageVar)) {
-	    throw new RobotRuntimeException("Invalid variable type. Page NODE type expected!");
-	}
-	// else
-
-	try {
-	    PhantomJSDriver driver = (PhantomJSDriver) PageVariable.getDriver(pageVar);
-	    File srcFile = driver.getScreenshotAs(OutputType.FILE);
-	    FileUtils.copyFile(srcFile, new File(filename));
-	} catch (Exception e) {
-	    throw new RobotRuntimeException(e.getClass().getSimpleName(), e);
+	@Override
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
+		return new ConstructProcessor(ScreenshotConstruct::process, new Argument("page"), new Argument("filename"));
 	}
 
-	return NULL;
-    }
+	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression filenameVar) {
+
+		String filename = filenameVar.getStringValue();
+		if (filename.isEmpty()) {
+			throw new RobotRuntimeException("Invalid variable value. Filename is empty!");
+		}
+
+		if (!PageVariable.checkType(pageVar)) {
+			throw new RobotRuntimeException("Invalid variable type. Page NODE type expected!");
+		}
+		// else
+
+		try {
+			PhantomJSDriver driver = (PhantomJSDriver) PageVariable.getDriver(pageVar);
+			File srcFile = driver.getScreenshotAs(OutputType.FILE);
+			FileUtils.copyFile(srcFile, new File(filename));
+		} catch (Exception e) {
+			throw new RobotRuntimeException(e.getClass().getSimpleName(), e);
+		}
+
+		return NULL;
+	}
 
 }

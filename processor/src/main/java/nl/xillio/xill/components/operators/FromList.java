@@ -7,9 +7,9 @@ import java.util.Map;
 
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.InstructionFlow;
-import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
+import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
@@ -41,16 +41,16 @@ public class FromList implements Processable {
 				try {
 					return InstructionFlow.doResume(((List<MetaExpression>) list.getValue()).get(index.getNumberValue().intValue()));
 				} catch (IndexOutOfBoundsException e) {
-					return InstructionFlow.doResume(ExpressionBuilder.NULL);
+					return InstructionFlow.doResume(ExpressionBuilderHelper.NULL);
 				}
 			case OBJECT:
 				MetaExpression result = ((Map<String, MetaExpression>) list.getValue()).get(index.getStringValue());
 				if (result == null) {
-					return InstructionFlow.doResume(ExpressionBuilder.NULL);
+					return InstructionFlow.doResume(ExpressionBuilderHelper.NULL);
 				}
 				return InstructionFlow.doResume(result);
 			case ATOMIC:
-			    throw new RobotRuntimeException("Cannot get member of ATOMIC value.");
+				throw new RobotRuntimeException("Cannot get member of ATOMIC value.");
 			default:
 				throw new NotImplementedException("This type has not been implemented.");
 		}

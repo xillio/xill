@@ -6,51 +6,51 @@ import nl.xillio.xill.api.components.Expression;
  * This class represents the behavior of a boolean.<br/>
  * Values:
  * <ul>
- * 	<li><b>{@link String}: </b> true or false</li>
- * 	<li><b>{@link Boolean}: </b> original value</li>
- * 	<li><b>{@link Number}: </b> if value equals true then 1 else 0</li>
+ * <li><b>{@link String}: </b> true or false</li>
+ * <li><b>{@link Boolean}: </b> original value</li>
+ * <li><b>{@link Number}: </b> if value equals true then 1 else 0</li>
  * </ul>
  */
 public class BooleanBehavior implements Expression {
 
-    private final boolean value;
+	private final boolean value;
 
-    /**
-     * Create a new {@link BooleanBehavior}
-     *
-     * @param value the value to set the boolean to
-     */
-    public BooleanBehavior(final boolean value) {
-	this.value = value;
-    }
+	/**
+	 * Create a new {@link BooleanBehavior}
+	 *
+	 * @param value
+	 *        the value to set the boolean to
+	 */
+	public BooleanBehavior(final boolean value) {
+		this.value = value;
+	}
 
-    @Override
-    public void close() throws Exception {
-    }
+	@Override
+	public void close() throws Exception {}
 
-    @Override
-    public Number getNumberValue() {
-	return value ? 1 : 0;
-    }
+	@Override
+	public Number getNumberValue() {
+		return value ? 1 : 0;
+	}
 
-    @Override
-    public String getStringValue() {
-	return Boolean.toString(value);
-    }
+	@Override
+	public String getStringValue() {
+		return Boolean.toString(value);
+	}
 
-    @Override
-    public boolean getBooleanValue() {
-	return value;
-    }
+	@Override
+	public boolean getBooleanValue() {
+		return value;
+	}
 
-    @Override
-    public boolean isNull() {
-	return false;
-    }
+	@Override
+	public boolean isNull() {
+		return false;
+	}
 
-    @Override
-    public String toString() {
-	return getStringValue();
-    }
+	@Override
+	public String toString() {
+		return getStringValue();
+	}
 
 }

@@ -45,16 +45,16 @@ public class IOUtil {
 		if (urls == null || urls.isEmpty()) {
 			try {
 				urls = Arrays.stream(new File(classLoader.getResource(folder).toURI()).listFiles()).parallel()
-						.filter(file -> !file.isDirectory())
-						.map(file -> "file://" + file.getAbsolutePath() + "/" + file.getName())
-						.map(stringUrl -> {
-							Optional<URL> result = Optional.empty();
-							try {
-								result = Optional.of(new URL(stringUrl));
-							} catch (Exception e) {/* skip it */}
-							return result;
-						})
-						.filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
+					.filter(file -> !file.isDirectory())
+					.map(file -> "file://" + file.getAbsolutePath() + "/" + file.getName())
+					.map(stringUrl -> {
+						Optional<URL> result = Optional.empty();
+						try {
+							result = Optional.of(new URL(stringUrl));
+						} catch (Exception e) {/* skip it */}
+						return result;
+					})
+					.filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
 			} catch (Exception e) {}
 		}
 		urlCache.put(folder, urls);
@@ -104,9 +104,9 @@ public class IOUtil {
 		List<String> constructNames = new LinkedList<>();
 		try {
 			constructNames = readFolder(clazz, constructPackage.replace('.', '/')).stream()
-					.map(URL::getPath)
-					.filter(path -> path.endsWith("Construct.class"))
-					.collect(Collectors.toList());
+				.map(URL::getPath)
+				.filter(path -> path.endsWith("Construct.class"))
+				.collect(Collectors.toList());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

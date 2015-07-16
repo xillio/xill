@@ -55,7 +55,7 @@ public interface Debugger extends ErrorHandlingPolicy {
 
 	/**
 	 * Replace all the breakpoints in this debugger
-	 * 
+	 *
 	 * @param breakpoints
 	 *        the breakpoints that should be set
 	 */
@@ -180,7 +180,7 @@ public interface Debugger extends ErrorHandlingPolicy {
 
 	/**
 	 * Instantiate a child debugger
-	 * 
+	 *
 	 * @return the debugger
 	 */
 	public Debugger createChild();

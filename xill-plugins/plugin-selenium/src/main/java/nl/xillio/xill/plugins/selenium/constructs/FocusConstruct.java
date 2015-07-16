@@ -14,32 +14,32 @@ import nl.xillio.xill.plugins.selenium.NodeVariable;
 
 public class FocusConstruct extends Construct {
 
-    @Override
-    public String getName() {
-	return "focus";
-    }
-
-    @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
-	return new ConstructProcessor(FocusConstruct::process, new Argument("element"));
-    }
-
-    private static MetaExpression process(final MetaExpression elementVar) {
-
-	if (!NodeVariable.checkType(elementVar)) {
-	    throw new RobotRuntimeException("Invalid variable type. NODE type expected!");
-	}
-	// else
-
-	WebElement element = NodeVariable.get(elementVar);
-	WebDriver page = NodeVariable.getDriver(elementVar);
-
-	try {
-	    new Actions(page).moveToElement(element).perform();
-	} catch (Exception e) {
-	    throw new RobotRuntimeException(e.getClass().getSimpleName(), e);
+	@Override
+	public String getName() {
+		return "focus";
 	}
 
-	return NULL;
-    }
+	@Override
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
+		return new ConstructProcessor(FocusConstruct::process, new Argument("element"));
+	}
+
+	private static MetaExpression process(final MetaExpression elementVar) {
+
+		if (!NodeVariable.checkType(elementVar)) {
+			throw new RobotRuntimeException("Invalid variable type. NODE type expected!");
+		}
+		// else
+
+		WebElement element = NodeVariable.get(elementVar);
+		WebDriver page = NodeVariable.getDriver(elementVar);
+
+		try {
+			new Actions(page).moveToElement(element).perform();
+		} catch (Exception e) {
+			throw new RobotRuntimeException(e.getClass().getSimpleName(), e);
+		}
+
+		return NULL;
+	}
 }

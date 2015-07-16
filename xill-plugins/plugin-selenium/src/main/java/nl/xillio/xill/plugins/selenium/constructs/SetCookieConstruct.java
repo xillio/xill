@@ -24,7 +24,7 @@ public class SetCookieConstruct extends Construct {
 	}
 
 	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
 			SetCookieConstruct::process,
 			new Argument("page"),
@@ -36,16 +36,16 @@ public class SetCookieConstruct extends Construct {
 		if (cookiesVar.isNull()) {
 			return NULL;
 		}
-		
+
 		assertNotType(cookiesVar, "cookies", ATOMIC);
 
 		if (!PageVariable.checkType(pageVar)) {
 			throw new RobotRuntimeException("Invalid variable type. Page NODE type expected!");
 		}
-		//else
+		// else
 
 		WebDriver driver = PageVariable.getDriver(pageVar);
-		
+
 		if (cookiesVar.getType() == OBJECT) {
 			processCookie(driver, cookiesVar);
 		} else if (cookiesVar.getType() == LIST) {
@@ -64,7 +64,7 @@ public class SetCookieConstruct extends Construct {
 		Map<String, MetaExpression> cookieMap = (Map<String, MetaExpression>) cookie.getValue();
 		setCookie(driver, cookieMap);
 	}
-	
+
 	private static void setCookie(final WebDriver driver, final Map<String, MetaExpression> cookie) {
 		String cookieName = cookie.get("name").getStringValue();
 		String cookieDomain = cookie.get("domain").getStringValue();
@@ -85,7 +85,7 @@ public class SetCookieConstruct extends Construct {
 		if (cookiePath.equals("null")) {
 			cookiePath = null;
 		}
-	
+
 		Date cookieExpiresDate = null;
 		if (cookieExpires.equals("null")) {
 			cookieExpires = null;

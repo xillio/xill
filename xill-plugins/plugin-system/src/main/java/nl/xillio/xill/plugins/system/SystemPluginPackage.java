@@ -8,10 +8,10 @@ import nl.xillio.xill.plugins.system.constructs.WaitConstruct;
 /**
  * This package includes all system constructs
  */
-public class SystemPluginPackage extends PluginPackage{
+public class SystemPluginPackage extends PluginPackage {
 
 	@Override
-	public void load(PluginPackage[] dependencies) {
+	public void load(final PluginPackage[] dependencies) {
 		add(new PrintConstruct(), new TypeOfConstruct(), new WaitConstruct());
 	}
 

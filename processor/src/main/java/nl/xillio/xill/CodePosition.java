@@ -32,7 +32,7 @@ public class CodePosition {
 	public RobotID getRobotID() {
 		return robot;
 	}
-	
+
 	@Override
 	public String toString() {
 		return robot.getPath().getAbsolutePath() + ":" + lineNumber;

@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -32,9 +35,6 @@ import nl.xillio.xill.api.XillProcessor;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.preview.Replaceable;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-
 /**
  * This class wraps around a webview object containing an ace editor in Xill mode.
  * It *should* extend {@link WebView}, but this class is final...
@@ -51,7 +51,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	private HelpPane helppane;
 	private XillProcessor processor;
 	private RobotTab tab;
-	
+
 	/**
 	 * Default constructor. Takes a {@link WebView} since we can't extend it.
 	 *
@@ -72,18 +72,18 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 					onDocumentLoad();
 					onDocumentLoaded.invoke(newDoc);
 				}
-			}
-			);
-		
+			});
+
 	}
-	
+
 	/**
 	 * Set the {@link RobotTab}
+	 * 
 	 * @param tab
 	 */
-	public void setTab(RobotTab tab) {
+	public void setTab(final RobotTab tab) {
 		this.tab = tab;
-		
+
 	}
 
 	private void onDocumentLoad() {
@@ -113,19 +113,20 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 
 	/**
 	 * Pulls all built-ins and keywords from a processor
-	 * @param processor 
+	 * 
+	 * @param processor
 	 */
 	public void addKeywords(final XillProcessor processor) {
 		this.processor = processor;
-		
-		//Read the zoom
+
+		// Read the zoom
 		settings.registerSimpleSetting("Layout", "AceZoom_" + processor.getRobotID().getPath().getAbsolutePath(), "1.0", "The zoom factor of the code editor.");
-		String zoomString = settings.getSimpleSetting( "AceZoom_" + processor.getRobotID().getPath().getAbsolutePath());
-		if(zoomString != null) {
+		String zoomString = settings.getSimpleSetting("AceZoom_" + processor.getRobotID().getPath().getAbsolutePath());
+		if (zoomString != null) {
 			double zoom = Double.parseDouble(zoomString);
 			editor.setZoom(zoom);
 		}
-		
+
 		// If the document has not been loaded yet load the robot later
 		if (!documentLoaded.get()) {
 			documentLoaded.addListener(
@@ -155,10 +156,12 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	public void clearHistory() {
 		executeJS("editor.getSession().setUndoManager(new UndoManager());");
 	}
-	
+
 	/**
 	 * This method is called from javascript whenever cut or copy is performed, to copy the selected text to the clipboard.
-	 * @param text The text to copy to the clipboard.
+	 * 
+	 * @param text
+	 *        The text to copy to the clipboard.
 	 */
 	public void copyToClipboard(final String text) {
 		final ClipboardContent content = new ClipboardContent();
@@ -174,9 +177,10 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	}
 
 	/**
-	 * @param helppane the helppane to set
+	 * @param helppane
+	 *        the helppane to set
 	 */
-	public void setHelppane(HelpPane helppane) {
+	public void setHelppane(final HelpPane helppane) {
 		this.helppane = helppane;
 	}
 
@@ -201,36 +205,36 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	 */
 	@Override
 	public void handle(final javafx.event.Event event) {
-		//Hotkeys
-		if(event instanceof KeyEvent) {
+		// Hotkeys
+		if (event instanceof KeyEvent) {
 			KeyEvent ke = (KeyEvent) event;
-			
+
 			if (KeyCombination.valueOf(FXController.HOTKEY_PASTE).match(ke)) {
 				paste();
 			} else if (KeyCombination.valueOf(FXController.HOTKEY_RESET_ZOOM).match(ke)) {
 				zoomTo(1);
-			}else if (helppane != null && KeyCombination.valueOf(FXController.HOTKEY_HELP).match(ke)) {
+			} else if (helppane != null && KeyCombination.valueOf(FXController.HOTKEY_HELP).match(ke)) {
 				executeJS("editor.getCurrentWord();",
 					result -> {
-						//helppane.display((String)result);
+						// helppane.display((String)result);
 					});
 			}
 		}
-		
-		//Scrolling
-		if(event instanceof ScrollEvent) {
+
+		// Scrolling
+		if (event instanceof ScrollEvent) {
 			ScrollEvent se = (ScrollEvent) event;
-			if(se.isMetaDown() || se.isControlDown()) {
+			if (se.isMetaDown() || se.isControlDown()) {
 				zoomTo(editor.getZoom() * (1 + Math.signum(se.getDeltaY()) * ZOOM_SENSITIVITY / 1000.f));
 			}
 		}
 	}
-	
-	private void zoomTo(double value) {
+
+	private void zoomTo(final double value) {
 		editor.setZoom(value);
-		
-		if(processor != null) {
-			settings.saveSimpleSetting( "AceZoom_" + processor.getRobotID().getPath().getAbsolutePath(), Double.toString(value));
+
+		if (processor != null) {
+			settings.saveSimpleSetting("AceZoom_" + processor.getRobotID().getPath().getAbsolutePath(), Double.toString(value));
 		}
 	}
 
@@ -251,13 +255,15 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	 */
 	public void paste() {
 		String code = (String) clipboard.getContent(DataFormat.PLAIN_TEXT);
-		if(code != null)
+		if (code != null) {
 			executeJS("var r = editor.session.replace(editor.selection.getRange(), \"" + escape(code) + "\");"
-					+ " editor.selection.setSelectionRange(new Range(r.row, r.column, r.row, r.column));");
-		
-		/* The editor.setSelectionRange makes sure the caret gets move to the end of the pasted text.
+							+ " editor.selection.setSelectionRange(new Range(r.row, r.column, r.row, r.column));");
+		}
+
+		/*
+		 * The editor.setSelectionRange makes sure the caret gets move to the end of the pasted text.
 		 * Otherwise when pasting text over equal text (e.g.: copy-paste-paste) it would stay selected
-		 * and thus keep pasting over it. 
+		 * and thus keep pasting over it.
 		 */
 	}
 
@@ -310,15 +316,16 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 				});
 		}
 	}
-	
+
 	/**
 	 * Load breakpoints from a breakpoint pool for a particular robot
+	 * 
 	 * @param robot
 	 */
-	public void refreshBreakpoints(RobotID robot) {
+	public void refreshBreakpoints(final RobotID robot) {
 		List<Integer> bps = BreakpointPool.INSTANCE.get(robot).stream().map(bp -> bp - 1).collect(Collectors.toList());
 		executeJS("editor.session.setBreakpointsAtRows([" +
-				StringUtils.join(bps, ",") + "]);");
+						StringUtils.join(bps, ",") + "]);");
 	}
 
 	/**
@@ -348,7 +355,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 
 	/**
 	 * This method is called by the javascript editor whenever the code has been changed
-	 * 
+	 *
 	 * @param newCode
 	 */
 	public void codeChanged(final String newCode) {
@@ -357,10 +364,10 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 
 	/**
 	 * This method is called by the javascript editor whenever the list of breakpoints has changed
-	 * 
+	 *
 	 * @param jsObject
 	 */
-	public void breakpointsChanged(final JSObject jsObject) {		
+	public void breakpointsChanged(final JSObject jsObject) {
 		int length = ((Number) jsObject.getMember("length")).intValue();
 
 		List<Integer> breakpoints = new ArrayList<>(length);
@@ -369,7 +376,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 				breakpoints.add(i + 1);
 			}
 		}
-		
+
 		BreakpointPool.INSTANCE.clear(tab.getCurrentRobot());
 
 		breakpoints.forEach(bp -> {
@@ -405,8 +412,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 		editor.getEngine().documentProperty().addListener(
 			(obs, oldDoc, newDoc) -> {
 				documentLoaded.setValue(true);
-			}
-			);
+			});
 	}
 
 	private static String escape(final String raw) {
@@ -437,10 +443,11 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	@Override
 	public void highlight(final int occurrence) {
 		while (currenthighlight != occurrence) {
-			if (currenthighlight < occurrence)
+			if (currenthighlight < occurrence) {
 				highlightNext();
-			else
+			} else {
 				highlightPrevious();
+			}
 		}
 	}
 
@@ -463,23 +470,24 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 
 	private void searchJS(final String needle, final boolean regex, final boolean caseSensitive) {
 		String arguments = "'" + escape(needle) + "',"
-				+ "{ "
-					+ "backwards: true,"
-					+ "wrap: true,"
-					+ "caseSensitive: " + caseSensitive + ","
-					+ "regExp: " + regex + ","
-					+ "start: 1"
-				+ "},"
-				+ "false";
+						+ "{ "
+						+ "backwards: true,"
+						+ "wrap: true,"
+						+ "caseSensitive: " + caseSensitive + ","
+						+ "regExp: " + regex + ","
+						+ "start: 1"
+						+ "},"
+						+ "false";
 
 		// Count
 		executeJS("editor.findAll(" + arguments + ");",
 			result -> {
 				occurrences = (Integer) result;
-				
+
 				// If there are no results, clear the search
-				if (occurrences == 0)
+				if (occurrences == 0) {
 					executeJS("editor.clearSearch();");
+				}
 			});
 	}
 
@@ -508,7 +516,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	/**
 	 * @param editable
 	 */
-	public void setEditable(boolean editable) {
+	public void setEditable(final boolean editable) {
 		executeJS("editor.setReadOnly(" + Boolean.toString(!editable) + ");");
 	}
 }

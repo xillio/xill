@@ -12,16 +12,19 @@ public interface Processable {
 
 	/**
 	 * Process this object
-	 * @param debugger The debugger that should be used when processing this
+	 * 
+	 * @param debugger
+	 *        The debugger that should be used when processing this
 	 *
 	 * @return The return value is there is one
-	 * @throws RobotRuntimeException When processing went wrong
+	 * @throws RobotRuntimeException
+	 *         When processing went wrong
 	 */
 	public InstructionFlow<MetaExpression> process(Debugger debugger) throws RobotRuntimeException;
 
 	/**
 	 * Collect all {@link Processable} used by this one. This is used to search through program trees
-	 * 
+	 *
 	 * @return all Children
 	 */
 	public Collection<Processable> getChildren();

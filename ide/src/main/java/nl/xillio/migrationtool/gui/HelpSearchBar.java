@@ -51,9 +51,7 @@ public class HelpSearchBar extends AnchorPane {
 				String[] s = box.getSelectionModel().getSelectedItem().toString().split("\\.");
 				box.hide();
 				helpPane.display(s[0], s[1]);
-			}
-			catch (Exception e)
-			{}
+			} catch (Exception e) {}
 		});
 
 		// Handle text getting edited.
@@ -75,8 +73,7 @@ public class HelpSearchBar extends AnchorPane {
 
 	// Runs the search
 	private void runSearch(final String query) {
-		if (query != null && !query.isEmpty())
-		{
+		if (query != null && !query.isEmpty()) {
 			// Search for a list of possible functions and store the result
 			String[] results = searcher.search(query);
 			ObservableList<String> options = FXCollections.observableArrayList();

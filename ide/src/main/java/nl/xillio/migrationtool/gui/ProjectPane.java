@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.swing.filechooser.FileFilter;
+
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -28,9 +30,6 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Pair;
-
-import javax.swing.filechooser.FileFilter;
-
 import nl.xillio.migrationtool.dialogs.DeleteFileDialog;
 import nl.xillio.migrationtool.dialogs.DeleteProjectDialog;
 import nl.xillio.migrationtool.dialogs.NewFolderDialog;
@@ -132,21 +131,21 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 
 	@FXML
 	private void renameButtonPressed() {
-		Tab orgTab = this.controller.findTab(getCurrentItem().getValue().getKey()); //org file
+		Tab orgTab = controller.findTab(getCurrentItem().getValue().getKey()); // org file
 		String oldName = getCurrentItem().getValue().getValue();
 		RenameDialog dlg = new RenameDialog(getCurrentItem());
 		dlg.showAndWait();
 		String newName = getCurrentItem().getValue().getValue();
-		if (oldName != newName) {//name has changed
-			if (orgTab != null) {//if tab with the org file is opened then close it and open new one
-				Tab selectedTab = this.controller.getSelectedTab();
+		if (oldName != newName) {// name has changed
+			if (orgTab != null) {// if tab with the org file is opened then close it and open new one
+				Tab selectedTab = controller.getSelectedTab();
 				if (orgTab == selectedTab) {
 					selectedTab = null;
 				}
-				this.controller.closeTab(orgTab);
-				this.controller.openFile(getCurrentItem().getValue().getKey());
+				controller.closeTab(orgTab);
+				controller.openFile(getCurrentItem().getValue().getKey());
 				if (selectedTab != null) {
-					this.controller.showTab((RobotTab)selectedTab);
+					controller.showTab((RobotTab) selectedTab);
 				}
 			}
 		}
@@ -212,7 +211,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 	 */
 	public boolean newProject(final String name, final String folder, final String description) {
 		boolean projectDoesntExist = root.getChildren().parallelStream().map(TreeItem::getValue).map(Pair::getValue).noneMatch(n -> n.equalsIgnoreCase(name))
-				&& findItemByPath(root, folder) == null;
+						&& findItemByPath(root, folder) == null;
 		if (projectDoesntExist) {
 			ProjectSetting project = new ProjectSetting(name, folder, description);
 			settings.saveSetting(project, false, true);
@@ -374,23 +373,23 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		}
 	}
 
-//	public Optional<File> getRobot(final TreeItem<Pair<File, String>> parent, final RobotID robotID) {
-//		for (int i = 0; i < parent.getChildren().size(); i++) {
-//			TreeItem<Pair<File, String>> c = parent.getChildren().get(i);
-//			if (c.isLeaf()) {
-//				RobotID rId = RobotID.getInstance(c.getValue().getKey());
-//				if (rId == robotID) {
-//					return Optional.of(c.getValue().getKey());
-//				}
-//			} else {
-//				Optional<File> file = getRobot(c, robotID);
-//				if (file.isPresent()) {
-//					return file;
-//				}
-//			}
-//		}
-//		return Optional.empty();
-//	}
+	// public Optional<File> getRobot(final TreeItem<Pair<File, String>> parent, final RobotID robotID) {
+	// for (int i = 0; i < parent.getChildren().size(); i++) {
+	// TreeItem<Pair<File, String>> c = parent.getChildren().get(i);
+	// if (c.isLeaf()) {
+	// RobotID rId = RobotID.getInstance(c.getValue().getKey());
+	// if (rId == robotID) {
+	// return Optional.of(c.getValue().getKey());
+	// }
+	// } else {
+	// Optional<File> file = getRobot(c, robotID);
+	// if (file.isPresent()) {
+	// return file;
+	// }
+	// }
+	// }
+	// return Optional.empty();
+	// }
 
 	protected void setGlobalController(final FXController controller) {
 		this.controller = controller;
@@ -402,7 +401,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 	protected class BotFileFilter extends FileFilter implements FilenameFilter {
 		@Override
 		public boolean accept(final File file) {
-			return (file.isDirectory() && !file.getName().startsWith(".")) || file.getName().endsWith("." + Xill.FILE_EXTENSION);
+			return file.isDirectory() && !file.getName().startsWith(".") || file.getName().endsWith("." + Xill.FILE_EXTENSION);
 		}
 
 		@Override
@@ -474,10 +473,10 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 					} else if (o1.isFile() && o2.isDirectory()) {
 						return 1;
 						// Both are the same type, compare them normally
-				} else {
-					return o1.compareTo(o2);
-				}
-			}	);
+					} else {
+						return o1.compareTo(o2);
+					}
+				});
 
 				// Create tree items from all files, add them to the list
 				for (File file : files) {
@@ -492,7 +491,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 
 	/*
 	 * This method is called when the selection in the tree view is changed
-	 * 
+	 *
 	 * @see javafx.beans.value.ChangeListener#changed(javafx.beans.value.ObservableValue, java.lang.Object, java.lang.Object)
 	 */
 	@Override

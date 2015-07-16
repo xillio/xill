@@ -8,10 +8,10 @@ import nl.xillio.xill.plugins.example.constructs.WebPreviewConstruct;
 /**
  * This package includes all example constructs
  */
-public class ExamplePluginPackage extends PluginPackage{
+public class ExamplePluginPackage extends PluginPackage {
 
 	@Override
-	public void load(PluginPackage[] dependencies) {
+	public void load(final PluginPackage[] dependencies) {
 		add(new LifeConstuct(), new CopyConstruct(), new WebPreviewConstruct());
 	}
 

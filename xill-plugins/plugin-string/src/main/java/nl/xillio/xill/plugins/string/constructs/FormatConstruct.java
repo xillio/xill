@@ -27,7 +27,7 @@ public class FormatConstruct extends Construct implements HelpComponent {
 
 	/**
 	 * Create a new {@link FormatConstruct}
-	 * 
+	 *
 	 * @param regexConstruct
 	 *        the contruct used to find the format parameters
 	 */

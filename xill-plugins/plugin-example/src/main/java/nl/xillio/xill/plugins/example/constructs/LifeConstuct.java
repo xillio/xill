@@ -11,13 +11,13 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
  */
 public class LifeConstuct extends Construct {
 
-    @Override
-    public String getName() {
-	return "life";
-    }
+	@Override
+	public String getName() {
+		return "life";
+	}
 
-    @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
-	return new ConstructProcessor(() -> fromValue(42));
-    }
+	@Override
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
+		return new ConstructProcessor(() -> fromValue(42));
+	}
 }

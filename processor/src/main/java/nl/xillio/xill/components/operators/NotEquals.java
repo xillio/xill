@@ -29,7 +29,7 @@ public class NotEquals implements Processable {
 	}
 
 	@Override
-	public InstructionFlow<MetaExpression> process(Debugger debugger) throws RobotRuntimeException {
+	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		boolean result = !left.process(debugger).get().equals(right.process(debugger).get());
 
 		return InstructionFlow.doResume(new AtomicExpression(result));

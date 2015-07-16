@@ -19,29 +19,28 @@ import nl.xillio.xill.api.construct.HelpComponent;
  */
 public class EndsWithConstruct extends Construct implements HelpComponent {
 
-    @Override
-    public String getName() {
+	@Override
+	public String getName() {
 
-	return "endsWith";
-    }
+		return "endsWith";
+	}
 
-    @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
-	return new ConstructProcessor(EndsWithConstruct::process, new Argument("string1"), new Argument("string2"));
-    }
+	@Override
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
+		return new ConstructProcessor(EndsWithConstruct::process, new Argument("string1"), new Argument("string2"));
+	}
 
-    private static MetaExpression process(final MetaExpression string1, final MetaExpression string2) {
-	assertType(string1, "string1", ATOMIC);
-	assertType(string2, "string2", ATOMIC);
-	assertNotNull(string1, "string1");
-	assertNotNull(string2, "string2");
+	private static MetaExpression process(final MetaExpression string1, final MetaExpression string2) {
+		assertType(string1, "string1", ATOMIC);
+		assertType(string2, "string2", ATOMIC);
+		assertNotNull(string1, "string1");
+		assertNotNull(string2, "string2");
 
-	return fromValue(string1.getStringValue().endsWith(string2.getStringValue()));
-    }
+		return fromValue(string1.getStringValue().endsWith(string2.getStringValue()));
+	}
 
-
-  	@Override
-  	public InputStream openDocumentationStream() {
-  		return getClass().getResourceAsStream("/helpfiles/endswith.xml");
-  	}
+	@Override
+	public InputStream openDocumentationStream() {
+		return getClass().getResourceAsStream("/helpfiles/endswith.xml");
+	}
 }

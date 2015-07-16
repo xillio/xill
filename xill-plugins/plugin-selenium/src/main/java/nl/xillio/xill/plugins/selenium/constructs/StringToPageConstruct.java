@@ -19,7 +19,7 @@ public class StringToPageConstruct extends Construct {
 	}
 
 	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
 			StringToPageConstruct::process,
 			new Argument("content"));
@@ -32,7 +32,7 @@ public class StringToPageConstruct extends Construct {
 			File htmlFile = File.createTempFile("ct_sel", ".html");
 			htmlFile.deleteOnExit();
 			FileUtils.writeStringToFile(htmlFile, content);
-			String uri = "file:///" + htmlFile.getAbsolutePath(); 
+			String uri = "file:///" + htmlFile.getAbsolutePath();
 			return LoadPageConstruct.process(fromValue(uri), NULL);
 		} catch (Exception e) {
 			throw new RobotRuntimeException(e.getClass().getSimpleName(), e);

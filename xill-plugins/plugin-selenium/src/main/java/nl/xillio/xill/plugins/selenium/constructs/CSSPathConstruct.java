@@ -22,54 +22,54 @@ import nl.xillio.xill.plugins.selenium.PageVariable;
 
 public class CSSPathConstruct extends Construct {
 
-    @Override
-    public String getName() {
-	return "cssPath";
-    }
-
-    @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
-	return new ConstructProcessor(CSSPathConstruct::process, new Argument("element"), new Argument("csspath"));
-    }
-
-    private static MetaExpression process(final MetaExpression elementVar, final MetaExpression cssPathVar) {
-
-	String query = cssPathVar.getStringValue();
-
-	if (elementVar.isNull()) {
-	    return NULL;
-	} else if (NodeVariable.checkType(elementVar)) {
-	    return processSELNode(NodeVariable.getDriver(elementVar), NodeVariable.get(elementVar), query);
-	} else if (PageVariable.checkType(elementVar)) {
-	    return processSELNode(PageVariable.getDriver(elementVar), PageVariable.getDriver(elementVar), query);
-	} else {
-	    throw new RobotRuntimeException("Invalid variable type. PAGE or NODE type expected!");
+	@Override
+	public String getName() {
+		return "cssPath";
 	}
-    }
 
-    private static MetaExpression processSELNode(final WebDriver driver, final SearchContext node, final String selector) {
+	@Override
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
+		return new ConstructProcessor(CSSPathConstruct::process, new Argument("element"), new Argument("csspath"));
+	}
 
-	try {
-	    List<WebElement> results = node.findElements(By.cssSelector(selector));
+	private static MetaExpression process(final MetaExpression elementVar, final MetaExpression cssPathVar) {
 
-	    if (results.isEmpty()) {
-		return NULL;
-	    } else if (results.size() == 1) {
-		return NodeVariable.create(driver, results.get(0));
-	    } else {
-		ArrayList<MetaExpression> list = new ArrayList<MetaExpression>();
+		String query = cssPathVar.getStringValue();
 
-		for (WebElement he : results) {
-		    list.add(NodeVariable.create(driver, he));
+		if (elementVar.isNull()) {
+			return NULL;
+		} else if (NodeVariable.checkType(elementVar)) {
+			return processSELNode(NodeVariable.getDriver(elementVar), NodeVariable.get(elementVar), query);
+		} else if (PageVariable.checkType(elementVar)) {
+			return processSELNode(PageVariable.getDriver(elementVar), PageVariable.getDriver(elementVar), query);
+		} else {
+			throw new RobotRuntimeException("Invalid variable type. PAGE or NODE type expected!");
 		}
-
-		return ExpressionBuilderHelper.fromValue(list);
-	    }
-	} catch (InvalidElementStateException e) {
-	    throw new RobotRuntimeException("Invalid CSSPath", e);
-	} catch (InvalidSelectorException e) {
-	    throw new RobotRuntimeException("Invalid CSSPath", e);
 	}
-    }
+
+	private static MetaExpression processSELNode(final WebDriver driver, final SearchContext node, final String selector) {
+
+		try {
+			List<WebElement> results = node.findElements(By.cssSelector(selector));
+
+			if (results.isEmpty()) {
+				return NULL;
+			} else if (results.size() == 1) {
+				return NodeVariable.create(driver, results.get(0));
+			} else {
+				ArrayList<MetaExpression> list = new ArrayList<MetaExpression>();
+
+				for (WebElement he : results) {
+					list.add(NodeVariable.create(driver, he));
+				}
+
+				return ExpressionBuilderHelper.fromValue(list);
+			}
+		} catch (InvalidElementStateException e) {
+			throw new RobotRuntimeException("Invalid CSSPath", e);
+		} catch (InvalidSelectorException e) {
+			throw new RobotRuntimeException("Invalid CSSPath", e);
+		}
+	}
 
 }

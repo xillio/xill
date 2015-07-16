@@ -18,7 +18,7 @@ public class SelectConstruct extends Construct {
 	}
 
 	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
 			SelectConstruct::process,
 			new Argument("element"),
@@ -26,18 +26,18 @@ public class SelectConstruct extends Construct {
 	}
 
 	public static MetaExpression process(final MetaExpression elementVar, final MetaExpression selectVar) {
-		
+
 		if (!NodeVariable.checkType(elementVar)) {
 			throw new RobotRuntimeException("Invalid variable type. NODE type expected!");
 		}
-		//else
-		
+		// else
+
 		boolean select = selectVar.getBooleanValue();
-		
+
 		WebElement element = NodeVariable.get(elementVar);
-				
+
 		try {
-			if ( (select && (!element.isSelected())) || (!select && (element.isSelected()))) { //if it's <option> tag then "deselect" doesn't work
+			if (select && !element.isSelected() || !select && element.isSelected()) { // if it's <option> tag then "deselect" doesn't work
 				element.click();
 			}
 			return NULL;

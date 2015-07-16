@@ -18,9 +18,9 @@ public class SimpleSetting extends Setting {
 
 	/*
 	 * Constructor for storing a setting
-	 * 
+	 *
 	 * @param name
-	 * 
+	 *
 	 * @param value
 	 */
 	public SimpleSetting(final String name, final String value, final boolean isencrypted) {
@@ -36,7 +36,7 @@ public class SimpleSetting extends Setting {
 
 	/**
 	 * Constructor for registering a setting.
-	 * 
+	 *
 	 * @param category
 	 * @param key
 	 * @param defaultvalue

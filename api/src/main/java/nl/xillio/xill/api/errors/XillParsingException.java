@@ -14,9 +14,12 @@ public class XillParsingException extends Exception {
 	/**
 	 * Create a {@link XillParsingException} with a message
 	 *
-	 * @param message the message to display
-	 * @param line the line where the error occurred 
-	 * @param robot the robot that couldn't be parsed
+	 * @param message
+	 *        the message to display
+	 * @param line
+	 *        the line where the error occurred
+	 * @param robot
+	 *        the robot that couldn't be parsed
 	 */
 	public XillParsingException(final String message, final int line, final RobotID robot) {
 		super(message);
@@ -27,10 +30,14 @@ public class XillParsingException extends Exception {
 	/**
 	 * Create a {@link XillParsingException} with a cause
 	 *
-	 * @param message the message to display
-	 * @param line the line where the error occurred
-	 * @param robot the robot that couldn't be parsed
-	 * @param e the exception that caused this
+	 * @param message
+	 *        the message to display
+	 * @param line
+	 *        the line where the error occurred
+	 * @param robot
+	 *        the robot that couldn't be parsed
+	 * @param e
+	 *        the exception that caused this
 	 */
 	public XillParsingException(final String message, final int line, final RobotID robot, final Exception e) {
 		super(message, e);

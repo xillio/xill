@@ -25,52 +25,52 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
  */
 public class TrimConstruct extends Construct {
 
-    @Override
-    public String getName() {
+	@Override
+	public String getName() {
 
-	return "trim";
-    }
+		return "trim";
+	}
 
-    @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
-	return new ConstructProcessor(TrimConstruct::process, new Argument("string"), new Argument("internal", FALSE));
-    }
+	@Override
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
+		return new ConstructProcessor(TrimConstruct::process, new Argument("string"), new Argument("internal", FALSE));
+	}
 
-    private static MetaExpression process(final MetaExpression string, final MetaExpression internal) {
+	private static MetaExpression process(final MetaExpression string, final MetaExpression internal) {
 
-	assertType(internal, "internal", ATOMIC);
-	assertNotNull(string, "string");
-	assertNotType(string, "string", OBJECT);
+		assertType(internal, "internal", ATOMIC);
+		assertNotNull(string, "string");
+		assertNotType(string, "string", OBJECT);
 
-	if (string.getType() == ExpressionDataType.LIST) {
+		if (string.getType() == ExpressionDataType.LIST) {
 
-	    List<MetaExpression> stringList = new ArrayList<>();
+			List<MetaExpression> stringList = new ArrayList<>();
 
-	    @SuppressWarnings("unchecked")
-	    List<MetaExpression> list = (List<MetaExpression>) string.getValue();
+			@SuppressWarnings("unchecked")
+			List<MetaExpression> list = (List<MetaExpression>) string.getValue();
 
-	    list.forEach(str -> {
-		if (!str.isNull()) {
-		    stringList.add(doTrimming(str, internal));
+			list.forEach(str -> {
+				if (!str.isNull()) {
+					stringList.add(doTrimming(str, internal));
+
+				}
+			});
+			return fromValue(stringList);
 
 		}
-	    });
-	    return fromValue(stringList);
+		return fromValue(doTrimming(string, internal).getStringValue());
 
 	}
-	return fromValue(doTrimming(string, internal).getStringValue());
 
-    }
+	private static MetaExpression doTrimming(final MetaExpression string, final MetaExpression internal) {
+		String text = string.getStringValue();
 
-    private static MetaExpression doTrimming(final MetaExpression string, final MetaExpression internal) {
-	String text = string.getStringValue();
+		text = text.replaceAll("\u00A0", " ");
+		text = text.trim();
 
-	text = text.replaceAll("\u00A0", " ");
-	text = text.trim();
-
-	if (internal.getBooleanValue()) {
-	    text = text.replaceAll("[\\s]+", " ");
+		if (internal.getBooleanValue()) {
+			text = text.replaceAll("[\\s]+", " ");
+		}
+		return fromValue(text);
 	}
-	return fromValue(text);
-    }
 }

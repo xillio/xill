@@ -16,7 +16,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 public class ExpressionInstruction extends Instruction {
 
 	private final Processable expression;
-	private Stack<MetaExpression> results = new Stack<>();
+	private final Stack<MetaExpression> results = new Stack<>();
 
 	/**
 	 * Create a new {@link ExpressionInstruction}
@@ -44,17 +44,17 @@ public class ExpressionInstruction extends Instruction {
 
 	@Override
 	public void close() throws Exception {
-	    //Close all results
-	    while(!results.isEmpty()) {
-		try{
-		    results.pop().close();
-		}catch(Exception e){}
-	    }
+		// Close all results
+		while (!results.isEmpty()) {
+			try {
+				results.pop().close();
+			} catch (Exception e) {}
+		}
 	}
-	
+
 	@Override
 	public String toString() {
-	return super.toString() + ": " + expression.getClass().getSimpleName();
+		return super.toString() + ": " + expression.getClass().getSimpleName();
 	}
 
 }

@@ -13,24 +13,24 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  */
 public class WaitConstruct extends Construct {
 
-    @Override
-    public String getName() {
-	return "wait";
-    }
-
-    @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
-	return new ConstructProcessor(WaitConstruct::process, new Argument("delay"));
-    }
-
-    private static MetaExpression process(final MetaExpression delayVar) {
-	int delay = delayVar.getNumberValue().intValue();
-	try {
-	    Thread.sleep(delay);
-	} catch (Exception e) {
-	    throw new RobotRuntimeException("Error during the pause", e);
+	@Override
+	public String getName() {
+		return "wait";
 	}
 
-	return NULL;
-    }
+	@Override
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
+		return new ConstructProcessor(WaitConstruct::process, new Argument("delay"));
+	}
+
+	private static MetaExpression process(final MetaExpression delayVar) {
+		int delay = delayVar.getNumberValue().intValue();
+		try {
+			Thread.sleep(delay);
+		} catch (Exception e) {
+			throw new RobotRuntimeException("Error during the pause", e);
+		}
+
+		return NULL;
+	}
 }

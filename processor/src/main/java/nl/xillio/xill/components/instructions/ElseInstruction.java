@@ -13,30 +13,29 @@ import nl.xillio.xill.api.components.Processable;
  */
 public class ElseInstruction extends Instruction {
 
-    private final InstructionSet elseInstructions;
+	private final InstructionSet elseInstructions;
 
-    /**
-     * Create a new {@link ElseInstruction}
-     * 
-     * @param elseInstructions
-     */
-    public ElseInstruction(final InstructionSet elseInstructions) {
-	this.elseInstructions = elseInstructions;
+	/**
+	 * Create a new {@link ElseInstruction}
+	 * 
+	 * @param elseInstructions
+	 */
+	public ElseInstruction(final InstructionSet elseInstructions) {
+		this.elseInstructions = elseInstructions;
 
-    }
+	}
 
-    @Override
-    public InstructionFlow<MetaExpression> process(final Debugger debugger) {
-	return elseInstructions.process(debugger);
-    }
+	@Override
+	public InstructionFlow<MetaExpression> process(final Debugger debugger) {
+		return elseInstructions.process(debugger);
+	}
 
-    @Override
-    public Collection<Processable> getChildren() {
-	return Arrays.asList(elseInstructions);
-    }
+	@Override
+	public Collection<Processable> getChildren() {
+		return Arrays.asList(elseInstructions);
+	}
 
-    @Override
-    public void close() throws Exception {
-    }
+	@Override
+	public void close() throws Exception {}
 
 }

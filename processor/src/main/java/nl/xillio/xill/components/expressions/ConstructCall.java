@@ -6,12 +6,12 @@ import java.util.List;
 
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.InstructionFlow;
-import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
@@ -42,7 +42,7 @@ public class ConstructCall implements Processable {
 
 		// Process arguments
 		for (int i = 0; i < arguments.length; i++) {
-			MetaExpression result = ExpressionBuilder.NULL;
+			MetaExpression result = ExpressionBuilderHelper.NULL;
 			try {
 				result = arguments[i].process(debugger).get();
 			} catch (RobotRuntimeException e) {
@@ -63,7 +63,7 @@ public class ConstructCall implements Processable {
 		}
 
 		// If something goes wrong and the debugger thinks it's okay, then we return null
-		return InstructionFlow.doResume(ExpressionBuilder.NULL);
+		return InstructionFlow.doResume(ExpressionBuilderHelper.NULL);
 
 	}
 

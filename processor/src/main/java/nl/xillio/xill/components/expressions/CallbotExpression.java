@@ -13,11 +13,11 @@ import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.PluginPackage;
 import nl.xillio.xill.api.RobotLogger;
 import nl.xillio.xill.api.Xill;
-import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.components.RobotID;
+import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.errors.XillParsingException;
 
@@ -36,91 +36,93 @@ public class CallbotExpression implements Processable {
 	 * Create a new {@link CallbotExpression}
 	 *
 	 * @param path
-	 * @param robotID The root robot of this tree
+	 * @param robotID
+	 *        The root robot of this tree
 	 * @param pluginLoader
 	 * @param debugger
 	 */
 	public CallbotExpression(final Processable path, final RobotID robotID, final PluginLoader<PluginPackage> pluginLoader) {
-	this.path = path;
-	this.robotID = robotID;
-	this.pluginLoader = pluginLoader;
-	robotLogger = RobotLogger.getLogger(robotID);
+		this.path = path;
+		this.robotID = robotID;
+		this.pluginLoader = pluginLoader;
+		robotLogger = RobotLogger.getLogger(robotID);
 	}
 
 	@Override
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-	MetaExpression pathExpression = path.process(debugger).get();
+		MetaExpression pathExpression = path.process(debugger).get();
 
-	File currentRobotDir = robotID.getPath().getParentFile();
-	File otherRobot = new File(currentRobotDir, pathExpression.getStringValue());
+		File currentRobotDir = robotID.getPath().getParentFile();
+		File otherRobot = new File(currentRobotDir, pathExpression.getStringValue());
 
-	log.debug("Evaluating callbot for " + otherRobot.getAbsolutePath());
+		log.debug("Evaluating callbot for " + otherRobot.getAbsolutePath());
 
-	if (!otherRobot.exists()) {
-		throw new RobotRuntimeException("Called robot " + otherRobot.getAbsolutePath() + " does not exist.");
-	}
+		if (!otherRobot.exists()) {
+			throw new RobotRuntimeException("Called robot " + otherRobot.getAbsolutePath() + " does not exist.");
+		}
 
-	if (!otherRobot.getName().endsWith(Xill.FILE_EXTENSION)) {
-		throw new RobotRuntimeException("Can only call robots with the ." + Xill.FILE_EXTENSION + " extension.");
-	}
+		if (!otherRobot.getName().endsWith(Xill.FILE_EXTENSION)) {
+			throw new RobotRuntimeException("Can only call robots with the ." + Xill.FILE_EXTENSION + " extension.");
+		}
 
-	// Process the robot
-	try {
-	    	Debugger childDebugger = debugger.createChild();
-		XillProcessor processor = new XillProcessor(robotID.getProjectPath(), otherRobot, pluginLoader, childDebugger);
-
-		processor.compileAsSubrobot(robotID);
-
+		// Process the robot
 		try {
-		nl.xillio.xill.api.components.Robot robot = processor.getRobot();
+			Debugger childDebugger = debugger.createChild();
+			XillProcessor processor = new XillProcessor(robotID.getProjectPath(), otherRobot, pluginLoader, childDebugger);
 
-		if (argument != null) {
-			InstructionFlow<MetaExpression> argumentResult = argument.process(debugger);
-			
-			robot.setArgument(argumentResult.get());
-		}
+			processor.compileAsSubrobot(robotID);
 
-		InstructionFlow<MetaExpression> result = processor.getRobot().process(childDebugger);
+			try {
+				nl.xillio.xill.api.components.Robot robot = processor.getRobot();
 
-		if (result.hasValue()) {
-			return InstructionFlow.doResume(result.get());
-		}
+				if (argument != null) {
+					InstructionFlow<MetaExpression> argumentResult = argument.process(debugger);
+
+					robot.setArgument(argumentResult.get());
+				}
+
+				InstructionFlow<MetaExpression> result = processor.getRobot().process(childDebugger);
+
+				if (result.hasValue()) {
+					return InstructionFlow.doResume(result.get());
+				}
+			} catch (Exception e) {
+				if (e instanceof RobotRuntimeException) {
+					throw (RobotRuntimeException) e;
+				}
+				throw new RobotRuntimeException("An exception occured while evaluating " + otherRobot.getAbsolutePath(), e);
+			}
+
+		} catch (IOException e) {
+			throw new RobotRuntimeException("Error while calling robot: " + e.getMessage());
+		} catch (XillParsingException e) {
+			throw new RobotRuntimeException("Error while parsing robot: " + e.getMessage(), e);
 		} catch (Exception e) {
-		if (e instanceof RobotRuntimeException) {
-			throw (RobotRuntimeException) e;
-		}
-		throw new RobotRuntimeException("An exception occured while evaluating " + otherRobot.getAbsolutePath(), e);
+			debugger.handle(e);
 		}
 
-	} catch (IOException e) {
-		throw new RobotRuntimeException("Error while calling robot: " + e.getMessage());
-	} catch (XillParsingException e) {
-		throw new RobotRuntimeException("Error while parsing robot: " + e.getMessage(), e);
-	} catch (Exception e) {
-		debugger.handle(e);
-	}
-
-	return InstructionFlow.doResume(ExpressionBuilder.NULL);
+		return InstructionFlow.doResume(ExpressionBuilderHelper.NULL);
 	}
 
 	@Override
 	public Collection<Processable> getChildren() {
-	return Arrays.asList(path);
+		return Arrays.asList(path);
 	}
 
 	/**
 	 * @return the robotLogger
 	 */
 	public Logger getRobotLogger() {
-	return robotLogger;
+		return robotLogger;
 	}
 
 	/**
 	 * Set the argument that will be passed to the called robot
+	 * 
 	 * @param argument
 	 */
 	public void setArgument(final Processable argument) {
-	this.argument = argument;
+		this.argument = argument;
 	}
 
 }

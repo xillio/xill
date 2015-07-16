@@ -20,7 +20,7 @@ public class SwitchFrameConstruct extends Construct {
 	}
 
 	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
 			SwitchFrameConstruct::process,
 			new Argument("page"),
@@ -28,21 +28,21 @@ public class SwitchFrameConstruct extends Construct {
 	}
 
 	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression frameVar) {
-		
+
 		if (!PageVariable.checkType(pageVar)) {
 			throw new RobotRuntimeException("Invalid variable type. Page NODE type expected!");
 		}
-		//else
-		
+		// else
+
 		WebDriver driver = PageVariable.getDriver(pageVar);
-		
+
 		try {
 			if (NodeVariable.checkType(frameVar)) {
 				driver.switchTo().frame(NodeVariable.get(frameVar));
 			} else {
 				Object frame = MetaExpression.extractValue(frameVar);
 				if (frame instanceof Integer) {
-					driver.switchTo().frame((Integer)frame);
+					driver.switchTo().frame((Integer) frame);
 				} else if (frame instanceof String) {
 					driver.switchTo().frame(frame.toString());
 				} else {
@@ -54,7 +54,7 @@ public class SwitchFrameConstruct extends Construct {
 		} catch (Exception e) {
 			throw new RobotRuntimeException(e.getClass().getSimpleName(), e);
 		}
-	
+
 		return NULL;
 	}
 

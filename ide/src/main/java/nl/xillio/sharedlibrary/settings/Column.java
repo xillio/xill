@@ -10,7 +10,7 @@ public class Column {
 
 	/**
 	 * Define a new column for the settings table
-	 * 
+	 *
 	 * @param name
 	 *        Name of the column
 	 * @param sqlType

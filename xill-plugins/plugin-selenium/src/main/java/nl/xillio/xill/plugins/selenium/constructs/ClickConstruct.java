@@ -2,7 +2,6 @@ package nl.xillio.xill.plugins.selenium.constructs;
 
 import org.openqa.selenium.WebElement;
 
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
@@ -19,21 +18,21 @@ public class ClickConstruct extends Construct {
 	}
 
 	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
 			ClickConstruct::process,
 			new Argument("element"));
 	}
 
 	public static MetaExpression process(final MetaExpression elementVar) {
-		
+
 		if (!NodeVariable.checkType(elementVar)) {
 			throw new RobotRuntimeException("Invalid variable type. NODE type expected!");
 		}
-		//else
-		
+		// else
+
 		WebElement element = NodeVariable.get(elementVar);
-				
+
 		try {
 			element.click();
 		} catch (Exception e) {

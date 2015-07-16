@@ -22,37 +22,37 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
  */
 public class SplitConstruct extends Construct {
 
-    @Override
-    public String getName() {
+	@Override
+	public String getName() {
 
-	return "split";
-    }
+		return "split";
+	}
 
-    @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
-	return new ConstructProcessor(SplitConstruct::process, new Argument("string"), new Argument("delimiter"), new Argument("keepempty", FALSE));
-    }
+	@Override
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
+		return new ConstructProcessor(SplitConstruct::process, new Argument("string"), new Argument("delimiter"), new Argument("keepempty", FALSE));
+	}
 
-    private static MetaExpression process(final MetaExpression string, final MetaExpression delimiter, final MetaExpression keepempty) {
+	private static MetaExpression process(final MetaExpression string, final MetaExpression delimiter, final MetaExpression keepempty) {
 
-	assertType(string, "string", ATOMIC);
-	assertType(delimiter, "delimiter", ATOMIC);
-	assertType(keepempty, "keepempty", ATOMIC);
-	assertNotNull(string, "string");
-	assertNotNull(delimiter, "delimiter");
+		assertType(string, "string", ATOMIC);
+		assertType(delimiter, "delimiter", ATOMIC);
+		assertType(keepempty, "keepempty", ATOMIC);
+		assertNotNull(string, "string");
+		assertNotNull(delimiter, "delimiter");
 
-	boolean keepEmpty = keepempty.getBooleanValue();
+		boolean keepEmpty = keepempty.getBooleanValue();
 
-	String[] stringArray = string.getStringValue().split(delimiter.getStringValue());
+		String[] stringArray = string.getStringValue().split(delimiter.getStringValue());
 
-	List<MetaExpression> list = new ArrayList<>();
+		List<MetaExpression> list = new ArrayList<>();
 
-	Arrays.stream(stringArray).forEach(str -> {
-	    if (keepEmpty || !str.equals("")) {
-		list.add(fromValue(str));
-	    }
-	});
+		Arrays.stream(stringArray).forEach(str -> {
+			if (keepEmpty || !str.equals("")) {
+				list.add(fromValue(str));
+			}
+		});
 
-	return fromValue(list);
-    }
+		return fromValue(list);
+	}
 }

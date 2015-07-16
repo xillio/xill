@@ -19,26 +19,25 @@ import nl.xillio.xill.api.construct.HelpComponent;
  */
 public class LowerCaseConstruct extends Construct implements HelpComponent {
 
-    @Override
-    public String getName() {
+	@Override
+	public String getName() {
 
-	return "toLower";
-    }
+		return "toLower";
+	}
 
-    @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
-	return new ConstructProcessor(LowerCaseConstruct::process, new Argument("string"));
-    }
+	@Override
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
+		return new ConstructProcessor(LowerCaseConstruct::process, new Argument("string"));
+	}
 
-    private static MetaExpression process(final MetaExpression string) {
-	assertType(string, "string", ATOMIC);
+	private static MetaExpression process(final MetaExpression string) {
+		assertType(string, "string", ATOMIC);
 
-	return fromValue(string.getStringValue().toLowerCase());
-    }
+		return fromValue(string.getStringValue().toLowerCase());
+	}
 
-
-  	@Override
-  	public InputStream openDocumentationStream() {
-  		return getClass().getResourceAsStream("/helpfiles/lowercase.xml");
-  	}
+	@Override
+	public InputStream openDocumentationStream() {
+		return getClass().getResourceAsStream("/helpfiles/lowercase.xml");
+	}
 }

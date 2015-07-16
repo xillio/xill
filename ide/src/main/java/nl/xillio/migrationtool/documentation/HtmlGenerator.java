@@ -1,16 +1,15 @@
 package nl.xillio.migrationtool.documentation;
 
-import static org.rendersnake.HtmlAttributesFactory.class_;
-import static org.rendersnake.HtmlAttributesFactory.href;
+import static org.rendersnake.HtmlAttributesFactory.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
-import javafx.util.Pair;
-
 import org.apache.log4j.Logger;
 import org.rendersnake.HtmlCanvas;
+
+import javafx.util.Pair;
 
 /**
  * An abstract class which defines what it means to be a HTML generator. <BR>
@@ -155,10 +154,10 @@ public abstract class HtmlGenerator {
 	 *        The canvas we're adding the example item to.
 	 * @param item
 	 *        The item we're adding.
-	 * @return 
+	 * @return
 	 * 				Returns A {@link HtmlCanvas} canvas with the item added as a listItem.
 	 * @throws IOException
-	 * 						Throws an IOException when failing to generate correct HTML.
+	 *         Throws an IOException when failing to generate correct HTML.
 	 */
 	protected static HtmlCanvas addItemToList(final HtmlCanvas canvas, final String item) {
 		try {

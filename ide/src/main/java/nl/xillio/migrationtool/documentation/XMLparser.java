@@ -43,8 +43,7 @@ public class XMLparser {
 	 *        A {@link String} with the version name.
 	 * @return The parsed {@link FunctionDocument} contained in the stream
 	 */
-	public FunctionDocument parseXML(final InputStream xml, final String packet, final String version)
-	{
+	public FunctionDocument parseXML(final InputStream xml, final String packet, final String version) {
 		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder;
 		try {
@@ -75,8 +74,7 @@ public class XMLparser {
 					if (defaultValues.item(t) != null) {
 						String defaultValue = defaultValues.item(t).getTextContent().trim();
 						func.addParameter(parameterName, defaultValue);
-					}
-					else {
+					} else {
 						func.addParameter(parameterName);
 					}
 				}

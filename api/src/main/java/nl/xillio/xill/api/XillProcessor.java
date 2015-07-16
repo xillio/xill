@@ -16,7 +16,8 @@ public interface XillProcessor {
 	 * Compiles the code in the file used to instantiate this {@link XillProcessor}
 	 *
 	 * @return A list of {@link Issue} with the code. (Does not contain errors)
-	 * @throws IOException When the file could not be read
+	 * @throws IOException
+	 *         When the file could not be read
 	 * @throws XillParsingException
 	 *         When the code was not compiled correctly
 	 */
@@ -24,7 +25,7 @@ public interface XillProcessor {
 
 	/**
 	 * Run {@link XillProcessor#compile()} first
-	 * 
+	 *
 	 * @return the compiled robot.
 	 */
 	public Robot getRobot();
@@ -38,12 +39,12 @@ public interface XillProcessor {
 	 * @return The debugger for this processor
 	 */
 	public Debugger getDebugger();
-	
+
 	/**
 	 * @return the names of all available packages
 	 */
 	public Collection<String> listPackages();
-	
+
 	/**
 	 * @return all reserved keywords
 	 */

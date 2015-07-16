@@ -30,12 +30,12 @@ import nl.xillio.xill.plugins.string.constructs.WrapConstruct;
 /**
  * This package includes all Text constructs
  */
-public class StringPluginPackage extends PluginPackage{
+public class StringPluginPackage extends PluginPackage {
 
 	@Override
-	public void load(PluginPackage[] dependencies) {
+	public void load(final PluginPackage[] dependencies) {
 		RegexConstruct regex = new RegexConstruct();
-		
+
 		add(
 			new AbsoluteURLConstruct(),
 			new AllMatchesConstruct(regex),
@@ -61,8 +61,7 @@ public class StringPluginPackage extends PluginPackage{
 			new TrimConstruct(),
 			new UpperCaseConstruct(),
 			new WordDistanceConstruct(),
-			new WrapConstruct()
-			);
+			new WrapConstruct());
 	}
 
 	@Override

@@ -12,35 +12,35 @@ import nl.xillio.xill.plugins.selenium.NodeVariable;
 
 public class InputConstruct extends Construct {
 
-    @Override
-    public String getName() {
-	return "input";
-    }
-
-    @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
-	return new ConstructProcessor(InputConstruct::process, new Argument("element"), new Argument("text"));
-    }
-
-    public static MetaExpression process(final MetaExpression elementVar, final MetaExpression textVar) {
-
-	if (!NodeVariable.checkType(elementVar)) {
-	    throw new RobotRuntimeException("Invalid variable type. NODE type expected!");
-	}
-	// else
-
-	String text = textVar.getStringValue();
-
-	WebElement element = NodeVariable.get(elementVar);
-
-	try {
-	    element.clear();
-	    element.sendKeys(text);
-	} catch (Exception e) {
-	    throw new RobotRuntimeException(e.getClass().getSimpleName(), e);
+	@Override
+	public String getName() {
+		return "input";
 	}
 
-	return NULL;
-    }
+	@Override
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
+		return new ConstructProcessor(InputConstruct::process, new Argument("element"), new Argument("text"));
+	}
+
+	public static MetaExpression process(final MetaExpression elementVar, final MetaExpression textVar) {
+
+		if (!NodeVariable.checkType(elementVar)) {
+			throw new RobotRuntimeException("Invalid variable type. NODE type expected!");
+		}
+		// else
+
+		String text = textVar.getStringValue();
+
+		WebElement element = NodeVariable.get(elementVar);
+
+		try {
+			element.clear();
+			element.sendKeys(text);
+		} catch (Exception e) {
+			throw new RobotRuntimeException(e.getClass().getSimpleName(), e);
+		}
+
+		return NULL;
+	}
 
 }

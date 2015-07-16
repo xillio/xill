@@ -7,7 +7,7 @@ import javafx.scene.control.TableView;
 
 /**
  * Utility class to make table columns autosize to a certain percentage instead of a fixed width.
- * 
+ *
  * @author Xillio
  */
 public class PTableColumn<S, T> extends javafx.scene.control.TableColumn<S, T> {

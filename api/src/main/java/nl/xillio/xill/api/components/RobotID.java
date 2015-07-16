@@ -36,7 +36,8 @@ public class RobotID {
 	 *
 	 * @param file
 	 *        the robot file
-	 * @param projectPath the path to the root folder of the workspace
+	 * @param projectPath
+	 *        the path to the root folder of the workspace
 	 * @return a unique robot id for this path
 	 */
 	public static RobotID getInstance(final File file, final File projectPath) {
