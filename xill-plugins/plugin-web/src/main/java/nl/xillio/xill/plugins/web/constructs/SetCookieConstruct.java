@@ -19,11 +19,6 @@ import nl.xillio.xill.plugins.web.PageVariable;
 public class SetCookieConstruct extends Construct {
 
 	@Override
-	public String getName() {
-		return "setCookie";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
 			SetCookieConstruct::process,

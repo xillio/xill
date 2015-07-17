@@ -16,11 +16,6 @@ import nl.xillio.xill.plugins.web.PageVariable;
 public class GetTextConstruct extends Construct {
 
 	@Override
-	public String getName() {
-		return "getText";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(GetTextConstruct::process, new Argument("element"));
 	}

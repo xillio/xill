@@ -20,12 +20,6 @@ import nl.xillio.xill.api.construct.HelpComponent;
 public class LengthConstruct extends Construct implements HelpComponent {
 
 	@Override
-	public String getName() {
-
-		return "length";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(LengthConstruct::process, new Argument("value"));
 	}

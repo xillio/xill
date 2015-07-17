@@ -27,11 +27,6 @@ import nl.xillio.xill.plugins.date.BaseDateConstruct;
 public class ChangeConstruct extends BaseDateConstruct {
 
 	@Override
-	public String getName() {
-		return "change";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor((date, change) -> process(context.getRootLogger(), date, change), new Argument("date"), new Argument("change"));
 	}

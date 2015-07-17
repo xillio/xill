@@ -23,12 +23,6 @@ public class FormatConstruct extends BaseDateConstruct {
 	private static final DateTimeFormatter DEFAULT_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 	@Override
-	public String getName() {
-
-		return "format";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 
 		return new ConstructProcessor(FormatConstruct::process, new Argument("date"), new Argument("format", NULL));

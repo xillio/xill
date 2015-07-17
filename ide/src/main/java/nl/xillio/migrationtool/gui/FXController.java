@@ -184,7 +184,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 		getPluginLoader().getPluginManager().onPluginDenied().addListener(p -> {
 			log.error("Failed to load Xill Package: " + p.getName());
 		});
-		PluginListener documentationListener = PluginListener.Attach(getPluginLoader());
+		PluginListener documentationListener = PluginListener.attach(getPluginLoader());
 		documentationListener.getOnDeployedFiles().addListener(homePage -> helppane.display(homePage));
 
 		// Now we're done loading queue up the generation of documentation and loading of plugins

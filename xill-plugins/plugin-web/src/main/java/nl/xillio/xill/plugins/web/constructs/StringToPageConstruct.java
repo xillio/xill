@@ -14,11 +14,6 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 public class StringToPageConstruct extends Construct {
 
 	@Override
-	public String getName() {
-		return "stringToPage";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
 			StringToPageConstruct::process,

@@ -22,11 +22,6 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 public class HungarianAlgorithmConstruct extends Construct implements HelpComponent {
 
 	@Override
-	public String getName() {
-		return "hungarianalgorithm";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(HungarianAlgorithmConstruct::process, new Argument("matrix"), new Argument("max"));
 

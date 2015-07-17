@@ -28,12 +28,6 @@ public class LocalizedFormatConstruct extends BaseDateConstruct {
 	private static final DateTimeFormatter DEFAULT_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 	@Override
-	public String getName() {
-
-		return "localizedFormat";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 
 		return new ConstructProcessor(LocalizedFormatConstruct::process,

@@ -21,11 +21,6 @@ import nl.xillio.xill.plugins.web.PageVariable;
 public class XPathConstruct extends Construct {
 
 	@Override
-	public String getName() {
-		return "xPath";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
 			XPathConstruct::process,

@@ -18,11 +18,6 @@ import nl.xillio.xill.plugins.date.BaseDateConstruct;
 public class NowConstruct extends BaseDateConstruct {
 
 	@Override
-	public String getName() {
-		return "now";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(NowConstruct::process);
 	}

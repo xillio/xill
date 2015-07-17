@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 import nl.xillio.plugins.interfaces.Loadable;
 import nl.xillio.xill.api.construct.Construct;
 
@@ -13,6 +15,20 @@ import nl.xillio.xill.api.construct.Construct;
  */
 public abstract class PluginPackage implements Loadable<PluginPackage>, AutoCloseable {
 	private final List<Construct> constructs = new ArrayList<>();
+	private final String defaultName;
+
+	/**
+	 * Create a new {@link PluginPackage} and set the default name
+	 */
+	public PluginPackage() {
+		// Set the default name
+		String name = getClass().getSimpleName();
+		String superName = PluginPackage.class.getSimpleName();
+		if (name.endsWith(superName)) {
+			name = name.substring(0, name.length() - superName.length());
+		}
+		defaultName = WordUtils.capitalize(name);
+	}
 
 	/**
 	 * Get a construct from this package
@@ -31,9 +47,12 @@ public abstract class PluginPackage implements Loadable<PluginPackage>, AutoClos
 	}
 
 	/**
+	 * By default the name of a {@link PluginPackage} is the concrete implementation name acquired using {@link Class#getSimpleName()} without the {@link PluginPackage} suffix
 	 * @return the name of the package
 	 */
-	public abstract String getName();
+	public String getName() {
+		return defaultName;
+	}
 
 	/**
 	 * Add a construct to the package

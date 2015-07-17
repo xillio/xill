@@ -20,11 +20,6 @@ import nl.xillio.xill.api.construct.HelpComponent;
 public class RandomConstruct extends Construct implements HelpComponent {
 
 	@Override
-	public String getName() {
-		return "random";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(RandomConstruct::process, new Argument("value", fromValue(0)));
 	}

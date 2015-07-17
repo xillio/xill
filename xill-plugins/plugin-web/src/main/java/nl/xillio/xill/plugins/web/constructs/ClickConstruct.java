@@ -13,11 +13,6 @@ import nl.xillio.xill.plugins.web.NodeVariable;
 public class ClickConstruct extends Construct {
 
 	@Override
-	public String getName() {
-		return "click";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
 			ClickConstruct::process,

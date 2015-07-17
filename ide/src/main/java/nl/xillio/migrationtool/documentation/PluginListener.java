@@ -39,7 +39,7 @@ public class PluginListener {
 	 *        The loader that tries to load the plugins from jars
 	 * @return the created {@link PluginListener}
 	 */
-	public static PluginListener Attach(final PluginLoader<PluginPackage> pluginLoader) {
+	public static PluginListener attach(final PluginLoader<PluginPackage> pluginLoader) {
 		PluginListener listener = new PluginListener();
 
 		// Listen to all loaded plugins

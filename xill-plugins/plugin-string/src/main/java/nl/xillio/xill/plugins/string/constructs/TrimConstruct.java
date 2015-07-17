@@ -26,12 +26,6 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 public class TrimConstruct extends Construct {
 
 	@Override
-	public String getName() {
-
-		return "trim";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(TrimConstruct::process, new Argument("string"), new Argument("internal", FALSE));
 	}

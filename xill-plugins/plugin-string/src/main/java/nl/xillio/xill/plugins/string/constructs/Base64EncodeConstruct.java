@@ -26,12 +26,6 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 public class Base64EncodeConstruct extends Construct implements HelpComponent {
 
 	@Override
-	public String getName() {
-
-		return "base64Encode";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(Base64EncodeConstruct::process, new Argument("file"));
 	}

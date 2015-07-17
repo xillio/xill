@@ -37,7 +37,7 @@ public class CopyConstructTest extends ExpressionBuilderHelper {
 		MetaExpression list = fromValue(listValues);
 
 		// Process the construct from the argument
-		MetaExpression result = ConstructProcessor.Process(processor, list);
+		MetaExpression result = ConstructProcessor.process(processor, list);
 
 		// Make assertions
 		assertNotSame(list, result);
@@ -66,7 +66,7 @@ public class CopyConstructTest extends ExpressionBuilderHelper {
 		MetaExpression object = fromValue(objectValues);
 
 		// Process the construct from the argument
-		MetaExpression result = ConstructProcessor.Process(processor, object);
+		MetaExpression result = ConstructProcessor.process(processor, object);
 
 		// Make assertions
 		assertNotSame(object, result);

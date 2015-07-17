@@ -15,11 +15,6 @@ import nl.xillio.xill.plugins.web.PageVariable;
 public class SwitchFrameConstruct extends Construct {
 
 	@Override
-	public String getName() {
-		return "switchFrame";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
 			SwitchFrameConstruct::process,

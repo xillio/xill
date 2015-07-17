@@ -19,12 +19,6 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 public class WordDistanceConstruct extends Construct {
 
 	@Override
-	public String getName() {
-
-		return "wordDistance";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 
 		return new ConstructProcessor(WordDistanceConstruct::process, new Argument("source"), new Argument("target"), new Argument("relative", TRUE));

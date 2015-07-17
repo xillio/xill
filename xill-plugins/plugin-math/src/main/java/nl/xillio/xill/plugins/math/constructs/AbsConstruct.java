@@ -19,11 +19,6 @@ import nl.xillio.xill.api.construct.HelpComponent;
 public class AbsConstruct extends Construct implements HelpComponent {
 
 	@Override
-	public String getName() {
-		return "abs";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(AbsConstruct::process, new Argument("value"));
 	}

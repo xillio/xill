@@ -19,11 +19,6 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 public class AbsoluteURLConstruct extends Construct implements HelpComponent {
 
 	@Override
-	public String getName() {
-		return "absoluteurl";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(AbsoluteURLConstruct::process, new Argument("pageurl"), new Argument("relativeurl"));
 	}

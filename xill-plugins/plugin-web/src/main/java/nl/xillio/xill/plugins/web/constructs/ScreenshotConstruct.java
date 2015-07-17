@@ -17,11 +17,6 @@ import nl.xillio.xill.plugins.web.PageVariable;
 public class ScreenshotConstruct extends Construct {
 
 	@Override
-	public String getName() {
-		return "screenshot";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(ScreenshotConstruct::process, new Argument("page"), new Argument("filename"));
 	}

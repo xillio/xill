@@ -19,11 +19,5 @@ public class DatePluginPackage extends PluginPackage {
 	public void load(final PluginPackage[] dependencies) {
 		add(new NowConstruct(), new ParseConstruct(), new FormatConstruct(), new InfoConstruct(),
 			new DiffConstruct(), new ChangeConstruct(), new OfConstruct(), new LocalizedFormatConstruct());
-
-	}
-
-	@Override
-	public String getName() {
-		return "Date";
 	}
 }

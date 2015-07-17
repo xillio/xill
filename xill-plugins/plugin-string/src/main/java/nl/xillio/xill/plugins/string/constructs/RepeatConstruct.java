@@ -21,12 +21,6 @@ import nl.xillio.xill.api.construct.HelpComponent;
 public class RepeatConstruct extends Construct implements HelpComponent {
 
 	@Override
-	public String getName() {
-
-		return "repeat";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(RepeatConstruct::process, new Argument("string"), new Argument("value"));
 	}

@@ -15,11 +15,6 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 public class PrintConstruct extends Construct {
 
 	@Override
-	public String getName() {
-		return "print";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor((text, level) -> process(text, level, context.getRootLogger()), new Argument("text", fromValue("")), new Argument("loglevel", fromValue("info")));
 	}

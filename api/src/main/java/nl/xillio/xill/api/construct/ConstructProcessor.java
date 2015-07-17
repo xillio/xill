@@ -246,7 +246,7 @@ public class ConstructProcessor {
 	 *        the arguments to pass to the processor
 	 * @return the result
 	 */
-	public static MetaExpression Process(final ConstructProcessor processor, final MetaExpression... arguments) {
+	public static MetaExpression process(final ConstructProcessor processor, final MetaExpression... arguments) {
 
 		int i = 0;
 		for (MetaExpression arg : arguments) {

@@ -21,17 +21,11 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  *
  */
 
-public class MD5Construct extends Construct implements HelpComponent {
-
-	@Override
-	public String getName() {
-
-		return "createMD5";
-	}
+public class CreateMD5Construct extends Construct implements HelpComponent {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(MD5Construct::process, new Argument("valueVar"));
+		return new ConstructProcessor(CreateMD5Construct::process, new Argument("valueVar"));
 	}
 
 	private static MetaExpression process(final MetaExpression valueVar) {

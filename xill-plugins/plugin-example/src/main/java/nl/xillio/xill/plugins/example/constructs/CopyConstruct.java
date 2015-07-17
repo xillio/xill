@@ -19,11 +19,6 @@ import nl.xillio.xill.api.errors.NotImplementedException;
 public class CopyConstruct extends Construct {
 
 	@Override
-	public String getName() {
-		return "copy";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		/*
 		 * This construct takes 1 argument so we need to define this. Also we

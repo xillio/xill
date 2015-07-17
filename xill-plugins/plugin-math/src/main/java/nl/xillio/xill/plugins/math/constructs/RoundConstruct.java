@@ -18,11 +18,6 @@ import nl.xillio.xill.api.construct.HelpComponent;
 public class RoundConstruct extends Construct implements HelpComponent {
 
 	@Override
-	public String getName() {
-		return "round";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(RoundConstruct::process, new Argument("value"));
 	}

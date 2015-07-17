@@ -16,9 +16,4 @@ public class MathPluginPackage extends PluginPackage {
 		add(new AbsConstruct(), new HungarianAlgorithmConstruct(), new RandomConstruct(),
 			new RoundConstruct());
 	}
-
-	@Override
-	public String getName() {
-		return "Math";
-	}
 }
