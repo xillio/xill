@@ -16,11 +16,6 @@ import nl.xillio.xill.plugins.web.PageVariable;
 public class PageInfoConstruct extends Construct {
 
 	@Override
-	public String getName() {
-		return "pageInfo";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(PageInfoConstruct::process, new Argument("page"));
 	}

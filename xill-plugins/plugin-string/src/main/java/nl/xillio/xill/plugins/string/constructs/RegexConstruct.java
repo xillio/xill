@@ -40,12 +40,7 @@ public class RegexConstruct extends Construct implements HelpComponent {
 		regexTimer = new RegexTimer();
 		new Thread(regexTimer).start();
 	}
-
-	@Override
-	public String getName() {
-		return "regex";
-	}
-
+	
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(this::process, new Argument("string"), new Argument("regex"), new Argument("timeout", fromValue(REGEX_TIMEOUT)));

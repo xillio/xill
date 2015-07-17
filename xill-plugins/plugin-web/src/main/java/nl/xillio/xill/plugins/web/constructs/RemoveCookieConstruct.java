@@ -15,11 +15,6 @@ import nl.xillio.xill.plugins.web.PageVariable;
 public class RemoveCookieConstruct extends Construct {
 
 	@Override
-	public String getName() {
-		return "removeCookie";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(RemoveCookieConstruct::process, new Argument("page"), new Argument("cookie"));
 	}

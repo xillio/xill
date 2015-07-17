@@ -17,17 +17,11 @@ import nl.xillio.xill.api.construct.HelpComponent;
  * @author Sander
  *
  */
-public class LowerCaseConstruct extends Construct implements HelpComponent {
-
-	@Override
-	public String getName() {
-
-		return "toLower";
-	}
+public class ToLowerConstruct extends Construct implements HelpComponent {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(LowerCaseConstruct::process, new Argument("string"));
+		return new ConstructProcessor(ToLowerConstruct::process, new Argument("string"));
 	}
 
 	private static MetaExpression process(final MetaExpression string) {

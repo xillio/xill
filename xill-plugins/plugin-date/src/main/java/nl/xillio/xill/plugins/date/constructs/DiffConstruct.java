@@ -23,12 +23,6 @@ import nl.xillio.xill.plugins.date.BaseDateConstruct;
 public class DiffConstruct extends BaseDateConstruct {
 
 	@Override
-	public String getName() {
-
-		return "diff";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(DiffConstruct::process, new Argument("date"), new Argument("other"), new Argument("absolute", TRUE));
 	}

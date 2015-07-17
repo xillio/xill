@@ -36,12 +36,6 @@ public class ReplaceConstruct extends Construct implements HelpComponent {
 	}
 
 	@Override
-	public String getName() {
-
-		return "replace";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		Argument args[] = {new Argument("text"), new Argument("needle"), new Argument("replacement"), new Argument("useregex", TRUE), new Argument("replaceall", TRUE),
 						new Argument("timeout", fromValue(RegexConstruct.REGEX_TIMEOUT))};

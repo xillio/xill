@@ -14,11 +14,6 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 public class WaitConstruct extends Construct {
 
 	@Override
-	public String getName() {
-		return "wait";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(WaitConstruct::process, new Argument("delay"));
 	}

@@ -36,12 +36,6 @@ public class FormatConstruct extends Construct implements HelpComponent {
 	}
 
 	@Override
-	public String getName() {
-
-		return "format";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor((textVar, valueVar) -> process(regexConstruct, textVar, valueVar), new Argument("text"), new Argument("value"));
 	}

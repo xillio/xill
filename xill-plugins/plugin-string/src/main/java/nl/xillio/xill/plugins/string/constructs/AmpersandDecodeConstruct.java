@@ -21,12 +21,6 @@ import nl.xillio.xill.api.construct.HelpComponent;
 public class AmpersandDecodeConstruct extends Construct implements HelpComponent {
 
 	@Override
-	public String getName() {
-
-		return "ampersandDecode";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(AmpersandDecodeConstruct::process, new Argument("string"), new Argument("passes", fromValue(1)));
 	}

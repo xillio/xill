@@ -23,12 +23,6 @@ import nl.xillio.xill.api.construct.HelpComponent;
 public class IndexOfConstruct extends Construct implements HelpComponent {
 
 	@Override
-	public String getName() {
-
-		return "indexOf";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(IndexOfConstruct::process, new Argument("string1"), new Argument("string2"), new Argument("value", fromValue(0)));
 	}

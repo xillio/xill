@@ -22,11 +22,6 @@ import nl.xillio.xill.plugins.date.BaseDateConstruct;
 public class InfoConstruct extends BaseDateConstruct {
 
 	@Override
-	public String getName() {
-		return "info";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(InfoConstruct::process, new Argument("date"));
 

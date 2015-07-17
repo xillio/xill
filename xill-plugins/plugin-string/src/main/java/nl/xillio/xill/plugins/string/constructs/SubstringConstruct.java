@@ -21,12 +21,6 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 public class SubstringConstruct extends Construct {
 
 	@Override
-	public String getName() {
-
-		return "substring";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(SubstringConstruct::process, new Argument("string"), new Argument("start"), new Argument("end"));
 	}

@@ -12,11 +12,6 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 public class TypeOfConstruct extends Construct {
 
 	@Override
-	public String getName() {
-		return "typeOf";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(TypeOfConstruct::process, new Argument("value"));
 	}

@@ -40,10 +40,4 @@ public class WebPluginPackage extends PluginPackage {
 		add(new ClickConstruct());
 		add(new RemoveCookieConstruct());
 	}
-
-	@Override
-	public String getName() {
-		return "Web";
-	}
-
 }

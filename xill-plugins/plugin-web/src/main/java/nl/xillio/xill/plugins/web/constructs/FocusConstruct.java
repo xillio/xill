@@ -15,11 +15,6 @@ import nl.xillio.xill.plugins.web.NodeVariable;
 public class FocusConstruct extends Construct {
 
 	@Override
-	public String getName() {
-		return "focus";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(FocusConstruct::process, new Argument("element"));
 	}

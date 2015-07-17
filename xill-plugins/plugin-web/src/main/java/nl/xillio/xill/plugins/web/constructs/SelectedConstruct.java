@@ -13,11 +13,6 @@ import nl.xillio.xill.plugins.web.NodeVariable;
 public class SelectedConstruct extends Construct {
 
 	@Override
-	public String getName() {
-		return "selected";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
 			SelectedConstruct::process,

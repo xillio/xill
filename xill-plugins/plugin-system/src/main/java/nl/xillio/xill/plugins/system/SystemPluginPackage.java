@@ -14,10 +14,4 @@ public class SystemPluginPackage extends PluginPackage {
 	public void load(final PluginPackage[] dependencies) {
 		add(new PrintConstruct(), new TypeOfConstruct(), new WaitConstruct());
 	}
-
-	@Override
-	public String getName() {
-		return "System";
-	}
-
 }

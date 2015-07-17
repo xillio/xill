@@ -14,9 +14,4 @@ public class ExamplePluginPackage extends PluginPackage {
 	public void load(final PluginPackage[] dependencies) {
 		add(new LifeConstuct(), new CopyConstruct(), new WebPreviewConstruct());
 	}
-
-	@Override
-	public String getName() {
-		return "Example";
-	}
 }

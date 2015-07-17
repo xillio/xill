@@ -14,17 +14,11 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
  * @author Sander
  *
  */
-public class UpperCaseConstruct extends Construct {
-
-	@Override
-	public String getName() {
-
-		return "toUpper";
-	}
+public class ToUpperConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(UpperCaseConstruct::process, new Argument("string"));
+		return new ConstructProcessor(ToUpperConstruct::process, new Argument("string"));
 	}
 
 	private static MetaExpression process(final MetaExpression string) {

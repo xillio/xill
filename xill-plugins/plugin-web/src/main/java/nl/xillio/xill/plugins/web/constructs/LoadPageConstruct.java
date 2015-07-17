@@ -37,11 +37,6 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 	}
 
 	@Override
-	public String getName() {
-		return "loadPage";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(LoadPageConstruct::process, new Argument("url"), new Argument("options", NULL));
 	}

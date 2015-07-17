@@ -18,11 +18,6 @@ import nl.xillio.xill.api.preview.PreviewComponent;
 public class WebPreviewConstruct extends Construct {
 
 	@Override
-	public String getName() {
-		return "webPreview";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		// To show a custom preview of the variable you need to implement the
 		// PreviewComponent interface

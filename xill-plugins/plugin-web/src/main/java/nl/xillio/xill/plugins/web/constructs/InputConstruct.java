@@ -13,11 +13,6 @@ import nl.xillio.xill.plugins.web.NodeVariable;
 public class InputConstruct extends Construct {
 
 	@Override
-	public String getName() {
-		return "input";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(InputConstruct::process, new Argument("element"), new Argument("text"));
 	}

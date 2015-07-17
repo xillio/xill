@@ -17,12 +17,6 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 public class StartsWithConstruct extends Construct {
 
 	@Override
-	public String getName() {
-
-		return "startsWith";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(StartsWithConstruct::process, new Argument("string1"), new Argument("string2"));
 	}

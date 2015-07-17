@@ -1,5 +1,8 @@
 package nl.xillio.xill.api.construct;
 
+import org.apache.commons.lang3.text.WordUtils;
+
+import nl.xillio.xill.api.PluginPackage;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
@@ -8,6 +11,21 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  * This interface contains the core functionality for all constructs
  */
 public abstract class Construct extends ExpressionBuilderHelper {
+	private final String defaultName;
+
+	/**
+	 * Instantiate a new {@link Construct} and pick a default name
+	 */
+	public Construct() {
+		// Set the default name
+		String name = getClass().getSimpleName();
+		String superName = Construct.class.getSimpleName();
+		if (name.endsWith(superName)) {
+			name = name.substring(0, name.length() - superName.length());
+		}
+		defaultName = WordUtils.uncapitalize(name);
+	}
+
 	/**
 	 * @see ExpressionDataType#LIST
 	 */
@@ -22,13 +40,19 @@ public abstract class Construct extends ExpressionBuilderHelper {
 	protected static final ExpressionDataType OBJECT = ExpressionDataType.OBJECT;
 
 	/**
-	 * Returns the name of the construct. This name is also the command by which
-	 * this construct can be called inside scripts.
+	 * <p>Returns the name of the construct. This name is also the command by which
+	 * this construct can be called inside scripts.</p>
+	 * 
+	 * <p>By default the name of a {@link PluginPackage} is the concrete implementation name 
+	 * acquired using {@link Class#getSimpleName()} without the {@link PluginPackage} suffix. 
+	 * It is also uncapitalized using {@link WordUtils#uncapitalize(String)}</p>
 	 *
 	 * @return the name of the construct. This name is also the command by which
 	 *         this construct can be called inside scripts
 	 */
-	public abstract String getName();
+	public String getName() {
+		return defaultName;
+	}
 
 	/**
 	 * Build a new process and return it ready for input
@@ -119,10 +143,10 @@ public abstract class Construct extends ExpressionBuilderHelper {
 	/**
 	 * Check if the {@link MetaExpression} contains an instance of meta
 	 * information and fetch it
-	 * 
+	 *
 	 * @param <T>
 	 *        The type of meta information to assert
-	 * 
+	 *
 	 * @param expression
 	 *        The expression to check
 	 * @param expressionName

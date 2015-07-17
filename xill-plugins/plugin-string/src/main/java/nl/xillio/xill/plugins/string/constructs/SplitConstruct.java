@@ -23,12 +23,6 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 public class SplitConstruct extends Construct {
 
 	@Override
-	public String getName() {
-
-		return "split";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(SplitConstruct::process, new Argument("string"), new Argument("delimiter"), new Argument("keepempty", FALSE));
 	}

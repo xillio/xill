@@ -22,11 +22,6 @@ import nl.xillio.xill.plugins.date.BaseDateConstruct;
 public class OfConstruct extends BaseDateConstruct {
 
 	@Override
-	public String getName() {
-		return "of";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		Argument args[] = {new Argument("year"), new Argument("month"),
 						new Argument("day"), new Argument("hour"),

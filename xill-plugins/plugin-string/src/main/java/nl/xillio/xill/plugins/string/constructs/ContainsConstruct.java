@@ -19,11 +19,6 @@ import nl.xillio.xill.api.construct.HelpComponent;
 public class ContainsConstruct extends Construct implements HelpComponent {
 
 	@Override
-	public String getName() {
-		return "contains";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(ContainsConstruct::process, new Argument("haystack"), new Argument("needle"));
 	}

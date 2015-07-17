@@ -17,11 +17,6 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 public class JoinConstruct extends Construct {
 
 	@Override
-	public String getName() {
-		return "join";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(JoinConstruct::process, new Argument("list"), new Argument("delimiter", fromValue("")));
 	}

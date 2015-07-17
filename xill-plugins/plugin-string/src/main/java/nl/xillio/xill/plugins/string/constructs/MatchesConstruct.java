@@ -31,12 +31,6 @@ public class MatchesConstruct extends Construct implements HelpComponent {
 	}
 
 	@Override
-	public String getName() {
-
-		return "matches";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor((valueVar, regexVar, timeoutVar) -> process(regexConstruct, valueVar, regexVar, timeoutVar), new Argument("valueVar"), new Argument("regexVar"),
 			new Argument("timeoutVar", fromValue(RegexConstruct.REGEX_TIMEOUT)));

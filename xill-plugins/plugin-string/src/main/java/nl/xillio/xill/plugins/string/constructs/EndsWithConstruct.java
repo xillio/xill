@@ -20,12 +20,6 @@ import nl.xillio.xill.api.construct.HelpComponent;
 public class EndsWithConstruct extends Construct implements HelpComponent {
 
 	@Override
-	public String getName() {
-
-		return "endsWith";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(EndsWithConstruct::process, new Argument("string1"), new Argument("string2"));
 	}
