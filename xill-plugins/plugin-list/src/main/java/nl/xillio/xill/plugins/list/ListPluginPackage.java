@@ -9,7 +9,7 @@ public class ListPluginPackage extends PluginPackage {
 
 	@Override
 	public void load(final PluginPackage[] dependencies) {
-		add(new ToStringConstruct(), new ToCSVConstruct(), new ReverseConstruct());
+		add(new ToStringConstruct(), new ReverseConstruct(),new ContainsValueConstruct(),new RemoveConstruct(),new SortConstruct());
 	}
 
 	@Override

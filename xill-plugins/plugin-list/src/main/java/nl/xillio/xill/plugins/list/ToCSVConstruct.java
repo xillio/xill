@@ -20,7 +20,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  * @author Sander
  *
  */
-public class ToCSVConstruct implements Construct {
+public class ToCSVConstruct extends Construct {
 
 	@Override
 	public String getName() {

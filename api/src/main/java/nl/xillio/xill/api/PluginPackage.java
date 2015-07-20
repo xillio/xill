@@ -13,6 +13,8 @@ import nl.xillio.xill.api.construct.Construct;
  */
 public abstract class PluginPackage implements Loadable<PluginPackage>, AutoCloseable {
 	private final List<Construct> constructs = new ArrayList<>();
+	
+	protected String version;
 
 	/**
 	 * Get a construct from this package
@@ -22,7 +24,7 @@ public abstract class PluginPackage implements Loadable<PluginPackage>, AutoClos
 	 * @return the construct or null if none was found for the provided name
 	 */
 	public final Construct getConstruct(final String name) {
-	Optional<Construct> result = constructs.stream().filter(c -> c.getName().equals(name)).findAny();
+	Optional<Construct> result = getConstructs().stream().filter(c -> c.getName().equals(name)).findAny();
 
 	if (result.isPresent()) {
 		return result.get();
@@ -44,11 +46,12 @@ public abstract class PluginPackage implements Loadable<PluginPackage>, AutoClos
 	 *         when a construct with the same name already exists
 	 */
 	protected final void add(final Construct construct) throws IllegalArgumentException {
-	if (constructs.stream().anyMatch(c -> c.getName().equals(construct.getName()))) {
+	if (getConstructs().stream().anyMatch(c -> c.getName().equals(construct.getName()))) {
+		System.out.println(construct.getName());
 		throw new IllegalArgumentException("A construct with the same name exsits.");
 	}
 
-	constructs.add(construct);
+	getConstructs().add(construct);
 	}
 
 	/**
@@ -83,7 +86,7 @@ public abstract class PluginPackage implements Loadable<PluginPackage>, AutoClos
 	 * Remove all constructs from this package and call the {@link AutoCloseable#close()} on all constructs that implement it.
 	 */
 	protected final void purge() {
-	for (Construct construct : constructs) {
+	for (Construct construct : getConstructs()) {
 		if (construct instanceof AutoCloseable) {
 			try {
 				((AutoCloseable) construct).close();
@@ -92,11 +95,43 @@ public abstract class PluginPackage implements Loadable<PluginPackage>, AutoClos
 			}
 		}
 	}
-	constructs.clear();
+	getConstructs().clear();
+	}
+	
+	/**
+	 * @param v The current version
+	 */
+	public void setVersion(String v)
+	{
+		this.version = v;
+	}
+	
+	/**
+	 * @return Returns the version of the package
+	 */
+	public String getVersion()
+	{
+		if(this.version != null){
+			return this.version;
+		}
+		else{
+			String result = getClass().getPackage().getImplementationVersion();
+			if(result == null)
+				return "versie";
+			else
+				return result;
+		}
 	}
 	
 	@Override
 	public void close() throws Exception {
 		purge();
+	}
+
+	/**
+	 * @return the constructs
+	 */
+	public List<Construct> getConstructs() {
+	    return constructs;
 	}
 }

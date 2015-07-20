@@ -85,6 +85,7 @@ targetCompatibility = 1.8
 def pluginsDir = new File(buildDir, '../plugins')
 def esConsoleDir = new File(buildDir, '../ESConsole')
 def xilliosettingsFile = new File(buildDir, '../xilliosettings.db')
+def helpfilesDir = new File(buildDir, '../helpfiles')
 
 /*
  * JAVA
@@ -153,11 +154,10 @@ javafx {
 
 
 
-task cleanRuntime {
+task cleanRuntime(type: Delete) {
 	description 'Deletes all the folders generated and used by contenttools running in eclipse'
-	
-	delete pluginsDir
-	delete esConsoleDir
+
+	delete pluginsDir, esConsoleDir, helpfilesDir
 }
 
 clean {

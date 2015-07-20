@@ -9,15 +9,17 @@ import java.util.List;
 
 import org.testng.annotations.Test;
 
-import nl.xillio.xill.api.components.ExpressionBuilder;
+
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
+import nl.xillio.xill.plugins.example.constructs.CopyConstruct;
 
 /**
  * Test the behavior of the {@link CopyConstruct}
  */
-public class CopyConstructTest {
+public class CopyConstructTest extends ExpressionBuilderHelper {
 
     /**
      * Test the behavior under normal usage on list
@@ -31,9 +33,9 @@ public class CopyConstructTest {
 	ConstructProcessor processor = new CopyConstruct().prepareProcess(context);
 
 	//Build the arguments
-	List<MetaExpression> listValues = Arrays.asList(ExpressionBuilder.NULL, ExpressionBuilder.TRUE,
-		ExpressionBuilder.emptyObject(), ExpressionBuilder.emptyList());
-	MetaExpression list = ExpressionBuilder.fromValue(listValues);
+	List<MetaExpression> listValues = Arrays.asList(NULL, TRUE,
+		emptyObject(), emptyList());
+	MetaExpression list = fromValue(listValues);
 	
 	//Process the construct from the argument
 	MetaExpression result = ConstructProcessor.Process(processor, list);
@@ -58,11 +60,11 @@ public class CopyConstructTest {
 
 	//Build the arguments
 	LinkedHashMap<String, MetaExpression> objectValues = new LinkedHashMap<>();
-	objectValues.put("string", ExpressionBuilder.fromValue("stringvalue"));
-	objectValues.put("otherObject", ExpressionBuilder.emptyList());
-	objectValues.put("otherList", ExpressionBuilder.emptyList());
-	objectValues.put("null", ExpressionBuilder.NULL);
-	MetaExpression object = ExpressionBuilder.fromValue(objectValues);
+	objectValues.put("string", fromValue("stringvalue"));
+	objectValues.put("otherObject", emptyList());
+	objectValues.put("otherList", emptyList());
+	objectValues.put("null", NULL);
+	MetaExpression object = fromValue(objectValues);
 	
 	//Process the construct from the argument
 	MetaExpression result = ConstructProcessor.Process(processor, object);

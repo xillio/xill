@@ -17,7 +17,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  * @author Sander
  *
  */
-public class ToStringConstruct implements Construct {
+public class ToStringConstruct extends Construct {
 
 	@Override
 	public String getName() {
