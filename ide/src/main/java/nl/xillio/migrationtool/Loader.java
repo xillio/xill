@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.PropertyConfigurator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -23,7 +23,11 @@ import nl.xillio.xill.api.Xill;
  * Launcher class, is used to launch processors in their own threads, facilitates a simple Log, and provides commandline running.
  */
 public class Loader implements nl.xillio.contenttools.PluginPackage {
+	static {
+		
+	}
 
+	private static final Logger log = LogManager.getLogger();
 	/**
 	 * A manually maintained history of the program...
 	 */
@@ -161,12 +165,11 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 
 	@Override
 	public void start(final Stage primaryStage, final Xill xill) {
+		log.info("Starting Contentools IDE");
 		Loader.xill = xill;
 		Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-		PropertyConfigurator.configure(this.getClass().getResourceAsStream("/log4j.properties"));
-		LogManager.getLogger(getClass()).info("Reloaded Log4J Configuration.");
 
-		try (InputStream image = this.getClass().getResourceAsStream("/icons/xillio_icon.png")) {
+		try (InputStream image = this.getClass().getResourceAsStream("/icon.png")) {
 			if (image != null) {
 				primaryStage.getIcons().add(new Image(image));
 			}

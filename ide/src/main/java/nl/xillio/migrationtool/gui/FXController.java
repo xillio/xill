@@ -9,7 +9,8 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -49,7 +50,7 @@ import nl.xillio.xill.api.Xill;
  * This class is the global controller for the application
  */
 public class FXController implements Initializable, EventHandler<Event> {
-	private static final Logger log = Logger.getLogger("XMT");
+	private static final Logger log = LogManager.getLogger(FXController.class);
 	private static final SettingsHandler settings = SettingsHandler.getSettingsHandler();
 
 	private static final File DEFAULT_OPEN_BOT = new File("scripts/Hello-Xillio." + Xill.FILE_EXTENSION);

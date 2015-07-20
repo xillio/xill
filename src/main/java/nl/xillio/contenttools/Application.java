@@ -3,8 +3,8 @@ package nl.xillio.contenttools;
 import java.io.File;
 import java.util.List;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javafx.stage.Stage;
 import nl.xillio.plugins.CircularReferenceException;
@@ -16,7 +16,7 @@ import nl.xillio.xill.api.Xill;
  */
 public class Application extends javafx.application.Application {
 	private static List<PluginPackage> plugins;
-	private static final Logger logger = LogManager.getLogger(Application.class);
+	private static final Logger logger = LogManager.getLogger();
 
 	/**
 	 * Main method
@@ -24,6 +24,7 @@ public class Application extends javafx.application.Application {
 	 * @param args
 	 */
 	public static void main(final String... args) {
+		logger.info("Starting host application");
 		PluginLoader<PluginPackage> loader = PluginLoader.load(PluginPackage.class);
 
 		File pluginFolder = new File("plugins");

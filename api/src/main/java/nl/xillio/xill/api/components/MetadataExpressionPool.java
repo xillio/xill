@@ -3,7 +3,8 @@ package nl.xillio.xill.api.components;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This class represents an object that is able to
@@ -12,7 +13,7 @@ import org.apache.log4j.Logger;
  *        The base type of the stored objects
  */
 public class MetadataExpressionPool<T> implements AutoCloseable {
-	private static final Logger log = Logger.getLogger(MetadataExpressionPool.class);
+	private static final Logger log = LogManager.getLogger(MetadataExpressionPool.class);
 	private final Map<Class<? extends T>, T> metadataMap = new HashMap<>();
 
 	/**

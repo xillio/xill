@@ -5,13 +5,14 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import nl.xillio.plugins.PluginLoader;
 import nl.xillio.xill.XillProcessor;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.PluginPackage;
-import nl.xillio.xill.api.RobotLogger;
+import nl.xillio.xill.api.RobotAppender;
 import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
@@ -25,7 +26,7 @@ import nl.xillio.xill.api.errors.XillParsingException;
  * This class represents calling another robot
  */
 public class CallbotExpression implements Processable {
-	private static final Logger log = Logger.getLogger(CallbotExpression.class);
+	private static final Logger log = LogManager.getLogger();
 	private final Logger robotLogger;
 	private final Processable path;
 	private final RobotID robotID;
@@ -45,7 +46,7 @@ public class CallbotExpression implements Processable {
 		this.path = path;
 		this.robotID = robotID;
 		this.pluginLoader = pluginLoader;
-		robotLogger = RobotLogger.getLogger(robotID);
+		robotLogger = RobotAppender.getLogger(robotID);
 	}
 
 	@Override

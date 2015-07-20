@@ -6,7 +6,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -26,7 +27,7 @@ import nl.xillio.xill.api.construct.HelpComponent;
  *
  */
 public class PluginListener {
-	private static final Logger log = Logger.getLogger(PluginListener.class);
+	private static final Logger log = LogManager.getLogger();
 	/**
 	 * The folder in which the generated documentation files reside
 	 */
