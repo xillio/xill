@@ -23,9 +23,6 @@ import nl.xillio.xill.api.Xill;
  * Launcher class, is used to launch processors in their own threads, facilitates a simple Log, and provides commandline running.
  */
 public class Loader implements nl.xillio.contenttools.PluginPackage {
-	static {
-		
-	}
 
 	private static final Logger log = LogManager.getLogger();
 	/**
