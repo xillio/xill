@@ -64,19 +64,18 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 		PhantomJSDriver driver = (PhantomJSDriver) item.getDriver();
 
 		try {
-			/*URL newUrl;
+			URL newUrl;
 			try {
 				newUrl = new URL(url);
 				
 				if(newUrl.getRef() != null) {
-					driver.get("about:blank");
+					driver.get("about:blank"); // this is because of (something like) clearing the PJS cache (CTC-667) 
 				}
 				
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
-			}*/
-			
-			
+			}
+
 			driver.get(url);
 		} catch (TimeoutException e) {
 			throw new RobotRuntimeException("Loadpage timeout", e);
