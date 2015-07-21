@@ -1,6 +1,7 @@
 package nl.xillio.xill.api.components;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,7 @@ public abstract class MetaExpression implements Expression, Processable {
 
 	/**
 	 * Get a value from the {@link MetadataExpressionPool}
-	 * 
+	 *
 	 * @param <T>
 	 *        the type of object to fetch
 	 *
@@ -55,7 +56,7 @@ public abstract class MetaExpression implements Expression, Processable {
 
 	/**
 	 * Store a value in the {@link MetadataExpressionPool} and default the key to the class of the object as returned by {@link Object#getClass()}
-	 * 
+	 *
 	 * @param <T>
 	 *        the type key to store the object as
 	 *
@@ -73,7 +74,7 @@ public abstract class MetaExpression implements Expression, Processable {
 
 	/**
 	 * Store a value in the {@link MetadataExpressionPool}
-	 * 
+	 *
 	 * @param <T>
 	 *        the type key to store the object as
 	 *
@@ -223,11 +224,26 @@ public abstract class MetaExpression implements Expression, Processable {
 	 */
 	@Override
 	public String toString() {
+		return toString(gson);
+	}
+
+	/**
+	 * Generate the JSON representation of this expression using a {@link Gson}
+	 * parser <br/>
+	 * <b>NOTE: </b> This is not the string value of this expression. It is
+	 * JSON. For the string value use {@link MetaExpression#getStringValue()}
+	 *
+	 * @param gsonParser
+	 *        The gson parser that should be used
+	 *
+	 * @return JSON representation
+	 */
+	public String toString(final Gson gsonParser) {
 		List<MetaExpression> initialVisited = new ArrayList<>(1);
 		initialVisited.add(this);
 		MetaExpression cleaned = removeCircularReference(this, initialVisited,
 			ExpressionBuilderHelper.fromValue("<<CIRCULAR REFERENCE>>"));
-		return gson.toJson(extractValue(cleaned));
+		return gsonParser.toJson(extractValue(cleaned));
 	}
 
 	/**
@@ -503,5 +519,89 @@ public abstract class MetaExpression implements Expression, Processable {
 	 */
 	protected void resetReferences() {
 		referenceCount = 0;
+	}
+
+	/**
+	 * Attempt to parse an object into a MetaExpression
+	 *
+	 * @param value
+	 *        the object to parse
+	 * @return a {@link MetaExpression}, not null
+	 * @throws IllegalArgumentException
+	 *         when the value cannot be parsed
+	 *
+	 */
+	public static MetaExpression parseObject(final Object value) throws IllegalArgumentException {
+		return parseObject(value, new HashMap<>());
+	}
+
+	@SuppressWarnings("unchecked")
+	private static MetaExpression parseObject(final Object root, final Map<Object, MetaExpression> cache) throws IllegalArgumentException {
+		// Check the cache (Don't use key because we need REFERENCE equality not CONTENT)
+		for (Map.Entry<Object, MetaExpression> entry : cache.entrySet()) {
+			if (entry.getKey() == root) {
+				// It seems like we found our match
+				return entry.getValue();
+			}
+		}
+
+		if (root instanceof List) {
+			// Push stub
+			MetaExpression result = ExpressionBuilderHelper.emptyList();
+			cache.put(root, result);
+			List<MetaExpression> values = (List<MetaExpression>) result.getValue();
+
+			// Parse children
+			for (Object child : (List<?>) root) {
+				values.add(parseObject(child, cache));
+			}
+
+			// Push list
+			result.setValue(values);
+
+			return result;
+		}
+
+		if (root instanceof Map) {
+			// Push stub
+			MetaExpression result = ExpressionBuilderHelper.emptyObject();
+			cache.put(root, result);
+			LinkedHashMap<String, MetaExpression> values = (LinkedHashMap<String, MetaExpression>) result.getValue();
+
+			// Parse children
+			for (Entry<?, ?> child : ((Map<?, ?>) root).entrySet()) {
+				values.put(child.getKey().toString(), parseObject(child.getValue(), cache));
+			}
+
+			// Push map
+			result.setValue(values);
+
+			return result;
+		}
+
+		// No list, no map. This must be an atomic value. No need to cache those since they cannot be circular
+		// Boolean
+		if (root instanceof Boolean) {
+			return ExpressionBuilderHelper.fromValue((Boolean) root);
+		}
+
+		// Numbers
+		if (root instanceof Integer) {
+			return ExpressionBuilderHelper.fromValue((Integer) root);
+		}
+
+		if (root instanceof Long) {
+			return ExpressionBuilderHelper.fromValue((Long) root);
+		}
+
+		if (root instanceof Double) {
+			return ExpressionBuilderHelper.fromValue((Double) root);
+		}
+
+		if (root instanceof String) {
+			return ExpressionBuilderHelper.fromValue((String) root);
+		}
+
+		throw new IllegalArgumentException("The class type " + root.getClass().getName() + " has not been implemented by parseObject");
 	}
 }
