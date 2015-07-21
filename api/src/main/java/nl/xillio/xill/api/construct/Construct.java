@@ -1,5 +1,7 @@
 package nl.xillio.xill.api.construct;
 
+import java.io.InputStream;
+
 import org.apache.commons.lang3.text.WordUtils;
 
 import nl.xillio.xill.api.PluginPackage;
@@ -10,7 +12,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 /**
  * This interface contains the core functionality for all constructs
  */
-public abstract class Construct extends ExpressionBuilderHelper {
+public abstract class Construct extends ExpressionBuilderHelper implements HelpComponent {
 	private final String defaultName;
 
 	/**
@@ -203,4 +205,8 @@ public abstract class Construct extends ExpressionBuilderHelper {
 		return MetaExpression.parseObject(value);
 	}
 
+	@Override
+	public InputStream openDocumentationStream() {
+		return getClass().getResourceAsStream("/documentation/" + getName() + ".xml");
+	}
 }

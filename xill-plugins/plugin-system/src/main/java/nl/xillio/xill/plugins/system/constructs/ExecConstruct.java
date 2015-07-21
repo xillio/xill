@@ -28,12 +28,12 @@ public class ExecConstruct extends Construct {
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
 			(program, directory) -> process(program, directory, context.getRootLogger()),
-			new Argument("program"),
+			new Argument("arguments"),
 			new Argument("directory", NULL));
 	}
 
 	@SuppressWarnings("unchecked")
-	private static MetaExpression process(final MetaExpression program, final MetaExpression directory, final Logger log) {
+	private static MetaExpression process(final MetaExpression arguments, final MetaExpression directory, final Logger log) {
 
 		// Initialize builder
 		ProcessBuilder processBuilder;
@@ -41,14 +41,14 @@ public class ExecConstruct extends Construct {
 		// Get a friendly name
 		String friendlyName = DEFAULT_LABEL;
 
-		if (program.getType() == LIST) {
+		if (arguments.getType() == LIST) {
 			// Multiple arguments
-			List<MetaExpression> args = (List<MetaExpression>) program.getValue();
+			List<MetaExpression> args = (List<MetaExpression>) arguments.getValue();
 			processBuilder = new ProcessBuilder(args.stream().map(exp -> exp.getStringValue()).toArray(i -> new String[i]));
 			friendlyName = FilenameUtils.getName(args.get(0).getStringValue());
 		} else {
-			processBuilder = new ProcessBuilder(program.getStringValue());
-			friendlyName = FilenameUtils.getName(program.getStringValue());
+			processBuilder = new ProcessBuilder(arguments.getStringValue());
+			friendlyName = FilenameUtils.getName(arguments.getStringValue());
 		}
 
 		// Set working directory
@@ -63,13 +63,13 @@ public class ExecConstruct extends Construct {
 		try {
 			process = processBuilder.start();
 		} catch (IOException e) {
-			throw new RobotRuntimeException("Failed to run " + program.getStringValue() + ": " + e.getMessage(), e);
+			throw new RobotRuntimeException("Failed to run " + arguments.getStringValue() + ": " + e.getMessage(), e);
 		}
 
 		List<MetaExpression> errors = new ArrayList<>();
 
 		// Listen to errors
-		InputStreamListener err = new InputStreamListener(process.getInputStream());
+		InputStreamListener err = new InputStreamListener(process.getErrorStream());
 		String label = friendlyName;
 		err.getOnLineComplete().addListener(line -> {
 			log.error(label + ": " + line);
@@ -78,11 +78,11 @@ public class ExecConstruct extends Construct {
 		err.start();
 
 		List<MetaExpression> output = new ArrayList<>();
-		new InputStreamListener(process.getErrorStream());
-		err.getOnLineComplete().addListener(line -> {
+		InputStreamListener out = new InputStreamListener(process.getInputStream());
+		out.getOnLineComplete().addListener(line -> {
 			output.add(fromValue(line));
 		});
-		err.start();
+		out.start();
 
 		try {
 			process.waitFor();

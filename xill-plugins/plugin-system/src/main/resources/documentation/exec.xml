@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function>
+	<parameters>
+		<param name="arguments" />
+		<param name="directory" default="null" />
+	</parameters>
+	<description><![CDATA[
+  Runs an application and returns the output. 
+  The result will contain a list of errors, a list of output and the runtime in milliseconds]]></description>
+	<examples>
+		<example description="Running on windows:"><![CDATA[
+    use System;
+	var result = System.exec(["cmd.exe", "/C", "echo test"]);
+	System.print(result);]]></example>
+		<example description="This will print:"><![CDATA[{"errors":[],"output":["test"],"runtime":14}]]>
+		</example>
+	</examples>
+	<references>
+	</references>
+	<searchTags>
+		<searchTag>run</searchTag>
+		<searchTag>program</searchTag>
+		<searchTag>cmd</searchTag>
+		<searchTag>terminal</searchTag>
+		<searchTag>execute</searchTag>
+	</searchTags>
+</function>
