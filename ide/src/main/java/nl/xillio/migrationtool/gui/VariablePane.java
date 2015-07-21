@@ -36,7 +36,7 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
 	private PreviewPane previewpane;
 
 	/**
-	 *  Create a new {@link VariablePane}
+	 * Create a new {@link VariablePane}
 	 */
 	public VariablePane() {
 		try {
@@ -56,7 +56,7 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
 
 		colVariableName.setCellValueFactory(new PropertyValueFactory<ObservableVariable, String>("name"));
 		colVariableValue.setCellValueFactory(new PropertyValueFactory<ObservableVariable, String>("value"));
-		
+
 		tblVariables.getSelectionModel().getSelectedItems().addListener(this);
 	}
 
@@ -72,21 +72,21 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
 	 */
 	public synchronized void refresh() {
 		clear();
-		
+
 		debugger.getVariables().forEach(var -> {
 			String name = debugger.getVariableName(var);
 			MetaExpression value = debugger.getVariableValue(var);
-			
+
 			observableStateList.add(new ObservableVariable(name, value, var));
 		});
 	}
-	
+
 	private void clear() {
 		observableStateList.clear();
 	}
 
 	@Override
-	public void initialize(RobotTab tab) { 
+	public void initialize(final RobotTab tab) {
 		debugger = tab.getProcessor().getDebugger();
 		debugger.getOnRobotPause().addListener(e -> refresh());
 		debugger.getOnRobotStop().addListener(e -> clear());
@@ -94,18 +94,19 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
 
 	/**
 	 * Set the preview pane
+	 * 
 	 * @param previewpane
 	 */
-	public void setPreviewPane(PreviewPane previewpane) {
+	public void setPreviewPane(final PreviewPane previewpane) {
 		this.previewpane = previewpane;
-		
+
 	}
 
 	@Override
-	public void onChanged(javafx.collections.ListChangeListener.Change<? extends ObservableVariable> change) {
+	public void onChanged(final javafx.collections.ListChangeListener.Change<? extends ObservableVariable> change) {
 		List<? extends ObservableVariable> selected = change.getList();
-		
-		if(!selected.isEmpty()) {
+
+		if (!selected.isEmpty()) {
 			previewpane.preview(selected.get(0));
 		}
 	}

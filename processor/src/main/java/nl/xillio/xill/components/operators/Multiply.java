@@ -28,7 +28,7 @@ public class Multiply implements Processable {
 	}
 
 	@Override
-	public InstructionFlow<MetaExpression> process(Debugger debugger) throws RobotRuntimeException {
+	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 
 		double result = left.process(debugger).get().getNumberValue().doubleValue() * right.process(debugger).get().getNumberValue().doubleValue();
 

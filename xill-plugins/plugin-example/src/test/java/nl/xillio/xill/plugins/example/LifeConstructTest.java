@@ -15,22 +15,22 @@ import nl.xillio.xill.plugins.example.constructs.LifeConstuct;
  */
 public class LifeConstructTest {
 
-    /**
-     * Test the construct under normal usage
-     */
-    @Test
-    public void testPrepareProcess() {
-	//We do not want to test the ConstructContext so we mock this
-	ConstructContext context = mock(ConstructContext.class);
-	
-	//To test a construct we need to prepare a process from it.
-	ConstructProcessor processor = new LifeConstuct().prepareProcess(context);
-	
-	//Get the result from the processor
-	MetaExpression result = processor.process();
-	
-	//Make assertions
-	Assert.assertEquals(result.getNumberValue().intValue(), 42);
-	Assert.assertEquals(processor.getNumberOfArguments(), 0);
-    }
+	/**
+	 * Test the construct under normal usage
+	 */
+	@Test
+	public void testPrepareProcess() {
+		// We do not want to test the ConstructContext so we mock this
+		ConstructContext context = mock(ConstructContext.class);
+
+		// To test a construct we need to prepare a process from it.
+		ConstructProcessor processor = new LifeConstuct().prepareProcess(context);
+
+		// Get the result from the processor
+		MetaExpression result = processor.process();
+
+		// Make assertions
+		Assert.assertEquals(result.getNumberValue().intValue(), 42);
+		Assert.assertEquals(processor.getNumberOfArguments(), 0);
+	}
 }

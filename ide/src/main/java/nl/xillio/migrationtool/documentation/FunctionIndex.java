@@ -21,11 +21,10 @@ import org.rendersnake.HtmlCanvas;
  *
  */
 public class FunctionIndex extends HtmlGenerator {
-	//All the packages that are in the Index
+	// All the packages that are in the Index
 	private final List<PackageDocument> packages = new ArrayList<>();
-	//Wheter we want the HTML to display empty packages in the index or not.
+	// Wheter we want the HTML to display empty packages in the index or not.
 	private final boolean displayEmptyPackages = false;
-
 
 	/**
 	 * The constructor for the {@link FunctionIndex}
@@ -75,11 +74,9 @@ public class FunctionIndex extends HtmlGenerator {
 	 */
 	private HtmlCanvas addTableWithPackages(HtmlCanvas canvas) throws IOException {
 		// For each PackageDocument we add the package name and the table with its functions
-		List<PackageDocument> sortedPackages = packages.stream().sorted((a,b) -> a.getName().compareTo(b.getName())).collect(Collectors.toList());
-		for (PackageDocument packet : sortedPackages)
-		{
-			if(displayEmptyPackages || packet.getPackageSize() > 0)
-			{
+		List<PackageDocument> sortedPackages = packages.stream().sorted((a, b) -> a.getName().compareTo(b.getName())).collect(Collectors.toList());
+		for (PackageDocument packet : sortedPackages) {
+			if (displayEmptyPackages || packet.getPackageSize() > 0) {
 				canvas = canvas.tr().td().strong().write(packet.getName())._strong()._td()._tr();
 				canvas = packet.addTableWithFunctions(canvas);
 			}
@@ -93,11 +90,9 @@ public class FunctionIndex extends HtmlGenerator {
 	 * @param HELP_FOLDER
 	 *        The folder where we store the helpfiles.
 	 */
-	public void buildPackageHTML(final File HELP_FOLDER)
-	{
+	public void buildPackageHTML(final File HELP_FOLDER) {
 
-		for (PackageDocument p : packages)
-		{
+		for (PackageDocument p : packages) {
 			try {
 				FileUtils.write(
 					new File(HELP_FOLDER, "packages/" + p.getName() + ".html"), p.toHTML());

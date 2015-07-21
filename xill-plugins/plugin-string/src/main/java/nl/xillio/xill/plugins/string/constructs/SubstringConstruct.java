@@ -20,47 +20,41 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  */
 public class SubstringConstruct extends Construct {
 
-    @Override
-    public String getName() {
-
-	return "substring";
-    }
-
-    @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
-	return new ConstructProcessor(SubstringConstruct::process, new Argument("string"), new Argument("start"), new Argument("end"));
-    }
-
-    private static MetaExpression process(final MetaExpression string, final MetaExpression startVar, final MetaExpression endVar) {
-
-	assertType(string, "string", ATOMIC);
-	assertType(startVar, "start", ATOMIC);
-	assertType(endVar, "end", ATOMIC);
-	assertNotNull(string, "string");
-	assertNotNull(startVar, "start");
-	assertNotNull(endVar, "end");
-
-	String text = string.getStringValue();
-	int start = startVar.getNumberValue().intValue();
-	int end = endVar.getNumberValue().intValue();
-
-	// Special case; If end equals 0, then take the full length of the
-	// string.
-	if (end == 0) {
-	    end = text.length();
+	@Override
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
+		return new ConstructProcessor(SubstringConstruct::process, new Argument("string"), new Argument("start"), new Argument("end"));
 	}
 
-	// If end is smaller than start, then start is basically invalid. Assume
-	// start = 0
-	if (end < start) {
-	    start = 0;
-	}
+	private static MetaExpression process(final MetaExpression string, final MetaExpression startVar, final MetaExpression endVar) {
 
-	try {
-	    return fromValue(text.substring(start, end));
-	} catch (StringIndexOutOfBoundsException e) {
-	    throw new RobotRuntimeException("Index out of bounds.");
-	}
+		assertType(string, "string", ATOMIC);
+		assertType(startVar, "start", ATOMIC);
+		assertType(endVar, "end", ATOMIC);
+		assertNotNull(string, "string");
+		assertNotNull(startVar, "start");
+		assertNotNull(endVar, "end");
 
-    }
+		String text = string.getStringValue();
+		int start = startVar.getNumberValue().intValue();
+		int end = endVar.getNumberValue().intValue();
+
+		// Special case; If end equals 0, then take the full length of the
+		// string.
+		if (end == 0) {
+			end = text.length();
+		}
+
+		// If end is smaller than start, then start is basically invalid. Assume
+		// start = 0
+		if (end < start) {
+			start = 0;
+		}
+
+		try {
+			return fromValue(text.substring(start, end));
+		} catch (StringIndexOutOfBoundsException e) {
+			throw new RobotRuntimeException("Index out of bounds.");
+		}
+
+	}
 }

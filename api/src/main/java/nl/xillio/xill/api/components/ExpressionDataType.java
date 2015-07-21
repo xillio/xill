@@ -7,13 +7,11 @@ public enum ExpressionDataType {
 	/**
 	 * Single value. (Int, String, Boolean)
 	 */
-	ATOMIC,
-	/**
-	 * A list of values
-	 */
-	LIST,
-	/**
-	 * An object with named fields
-	 */
+	ATOMIC, /**
+					 * A list of values
+					 */
+	LIST, /**
+				 * An object with named fields
+				 */
 	OBJECT
 }

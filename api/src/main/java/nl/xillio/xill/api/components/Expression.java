@@ -6,7 +6,8 @@ import nl.xillio.xill.api.behavior.StringBehavior;
 
 /**
  * This interface represents a language component that can hold a value
- * @see  BooleanBehavior
+ * 
+ * @see BooleanBehavior
  * @see NumberBehavior
  * @see StringBehavior
  */

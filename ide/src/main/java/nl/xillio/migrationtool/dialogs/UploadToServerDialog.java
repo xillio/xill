@@ -5,17 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TreeItem;
-import javafx.util.Pair;
-
 import javax.xml.bind.DatatypeConverter;
-
-import nl.xillio.migrationtool.gui.ProjectPane;
-import nl.xillio.sharedlibrary.settings.SettingsHandler;
-import nl.xillio.xill.api.Xill;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -29,6 +19,15 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TreeItem;
+import javafx.util.Pair;
+import nl.xillio.migrationtool.gui.ProjectPane;
+import nl.xillio.sharedlibrary.settings.SettingsHandler;
+import nl.xillio.xill.api.Xill;
 
 /**
  * A dialog to upload an item to the server.
@@ -147,7 +146,7 @@ public class UploadToServerDialog extends FXMLDialog {
 				} catch (Exception ex) {}
 			} else {
 				uploadChildrenToServer(item, server);
-			}	
+			}
 		} catch (Exception ex) {}
 	}
 

@@ -3,23 +3,18 @@ package nl.xillio.xill.plugins.string.constructs;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 
-import org.apache.commons.lang3.StringUtils;
-
 /**
  * Concatenates a list of elements using a delimiter
  */
 public class JoinConstruct extends Construct {
-
-	@Override
-	public String getName() {
-		return "join";
-	}
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {

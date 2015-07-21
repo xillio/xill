@@ -23,64 +23,57 @@ import nl.xillio.xill.api.construct.HelpComponent;
  */
 public class ReplaceConstruct extends Construct implements HelpComponent {
 
-    private final RegexConstruct regexConstruct;
+	private final RegexConstruct regexConstruct;
 
-    /**
-     * Create a new {@link ReplaceConstruct}
-     * 
-     * @param regexConstruct
-     *            the construct used to find matches
-     */
-    public ReplaceConstruct(final RegexConstruct regexConstruct) {
-	this.regexConstruct = regexConstruct;
-    }
-
-    @Override
-    public String getName() {
-
-	return "replace";
-    }
-
-    @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
-	Argument args[] = { new Argument("text"), new Argument("needle"), new Argument("replacement"), new Argument("useregex", TRUE), new Argument("replaceall", TRUE),
-		new Argument("timeout", fromValue(RegexConstruct.REGEX_TIMEOUT)) };
-
-	return new ConstructProcessor((a) -> process(regexConstruct, a), args);
-
-    }
-
-    private static MetaExpression process(final RegexConstruct regexConstruct, final MetaExpression[] input) {
-
-	for (int i = 0; i < 5; i++) {
-	    assertType(input[i], "input", ATOMIC);
-	    assertNotNull(input[i], "input");
+	/**
+	 * Create a new {@link ReplaceConstruct}
+	 * 
+	 * @param regexConstruct
+	 *        the construct used to find matches
+	 */
+	public ReplaceConstruct(final RegexConstruct regexConstruct) {
+		this.regexConstruct = regexConstruct;
 	}
 
-	String text = input[0].getStringValue();
-	String needle = input[1].getStringValue();
-	String replacement = input[2].getStringValue();
-	boolean useregex = input[3].getBooleanValue();
-	boolean replaceall = input[4].getBooleanValue();
-	int timeout = (int) input[5].getNumberValue().doubleValue() * 1000;
+	@Override
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
+		Argument args[] = {new Argument("text"), new Argument("needle"), new Argument("replacement"), new Argument("useregex", TRUE), new Argument("replaceall", TRUE),
+						new Argument("timeout", fromValue(RegexConstruct.REGEX_TIMEOUT))};
 
-	if (useregex) {
-	    Matcher m = regexConstruct.getMatcher(needle, text, timeout);
-	    if (replaceall) {
-		return fromValue(m.replaceAll(replacement));
-	    }
-	    return fromValue(m.replaceFirst(replacement));
+		return new ConstructProcessor((a) -> process(regexConstruct, a), args);
+
 	}
-	if (replaceall) {
-	    return fromValue(text.replace(needle, replacement));
+
+	private static MetaExpression process(final RegexConstruct regexConstruct, final MetaExpression[] input) {
+
+		for (int i = 0; i < 5; i++) {
+			assertType(input[i], "input", ATOMIC);
+			assertNotNull(input[i], "input");
+		}
+
+		String text = input[0].getStringValue();
+		String needle = input[1].getStringValue();
+		String replacement = input[2].getStringValue();
+		boolean useregex = input[3].getBooleanValue();
+		boolean replaceall = input[4].getBooleanValue();
+		int timeout = (int) input[5].getNumberValue().doubleValue() * 1000;
+
+		if (useregex) {
+			Matcher m = regexConstruct.getMatcher(needle, text, timeout);
+			if (replaceall) {
+				return fromValue(m.replaceAll(replacement));
+			}
+			return fromValue(m.replaceFirst(replacement));
+		}
+		if (replaceall) {
+			return fromValue(text.replace(needle, replacement));
+		}
+		return fromValue(StringUtils.replaceOnce(text, needle, replacement));
+
 	}
-	return fromValue(StringUtils.replaceOnce(text, needle, replacement));
 
-    }
-
-
-  	@Override
-  	public InputStream openDocumentationStream() {
-  		return getClass().getResourceAsStream("/helpfiles/replace.xml");
-  	}
+	@Override
+	public InputStream openDocumentationStream() {
+		return getClass().getResourceAsStream("/helpfiles/replace.xml");
+	}
 }

@@ -28,7 +28,7 @@ public final class SmallerThanOrEquals implements Processable {
 	}
 
 	@Override
-	public InstructionFlow<MetaExpression> process(Debugger debugger) throws RobotRuntimeException {
+	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		MetaExpression leftValue = left.process(debugger).get();
 		MetaExpression rightValue = right.process(debugger).get();
 

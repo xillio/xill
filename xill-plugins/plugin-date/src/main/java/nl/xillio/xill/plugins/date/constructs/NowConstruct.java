@@ -17,18 +17,13 @@ import nl.xillio.xill.plugins.date.BaseDateConstruct;
  */
 public class NowConstruct extends BaseDateConstruct {
 
-    @Override
-    public String getName() {
-	return "now";
-    }
+	@Override
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
+		return new ConstructProcessor(NowConstruct::process);
+	}
 
-    @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
-	return new ConstructProcessor(NowConstruct::process);
-    }
-    
-    private static MetaExpression process() {
-	return fromValue(ZonedDateTime.now());
+	private static MetaExpression process() {
+		return fromValue(ZonedDateTime.now());
 
-    }
+	}
 }

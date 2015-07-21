@@ -8,7 +8,7 @@ public class ProjectSetting extends Setting {
 
 	/**
 	 * Constructor for registering a setting.
-	 * 
+	 *
 	 * @param category
 	 * @param name
 	 * @param folder

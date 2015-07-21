@@ -22,48 +22,43 @@ import nl.xillio.xill.plugins.date.BaseDateConstruct;
 public class OfConstruct extends BaseDateConstruct {
 
 	@Override
-	public String getName() {
-	return "of";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-	Argument args[] = {new Argument("year"), new Argument("month"),
-		new Argument("day"), new Argument("hour"),
-		new Argument("minute"), new Argument("second"),
-		new Argument("nano", fromValue(0)), new Argument("zone", fromValue(ZoneId.systemDefault().getId()))};
+		Argument args[] = {new Argument("year"), new Argument("month"),
+						new Argument("day"), new Argument("hour"),
+						new Argument("minute"), new Argument("second"),
+						new Argument("nano", fromValue(0)), new Argument("zone", fromValue(ZoneId.systemDefault().getId()))};
 
-	return new ConstructProcessor((a) -> process(a), args);
+		return new ConstructProcessor((a) -> process(a), args);
 	}
 
 	private static MetaExpression process(final MetaExpression[] input) {
-	ZonedDateTime date;
-	ZoneId zone;
+		ZonedDateTime date;
+		ZoneId zone;
 
-	for (MetaExpression m : input) {
-		assertIsNull(m, "input");
-	}
+		for (MetaExpression m : input) {
+			assertIsNull(m, "input");
+		}
 
-	int year = input[0].getNumberValue().intValue();
-	int month = input[1].getNumberValue().intValue();
-	int day = input[2].getNumberValue().intValue();
-	int hour = input[3].getNumberValue().intValue();
-	int minute = input[4].getNumberValue().intValue();
-	int second = input[5].getNumberValue().intValue();
-	int nano = input[6].getNumberValue().intValue();
+		int year = input[0].getNumberValue().intValue();
+		int month = input[1].getNumberValue().intValue();
+		int day = input[2].getNumberValue().intValue();
+		int hour = input[3].getNumberValue().intValue();
+		int minute = input[4].getNumberValue().intValue();
+		int second = input[5].getNumberValue().intValue();
+		int nano = input[6].getNumberValue().intValue();
 
-	try {
-		zone = ZoneId.of(input[7].getStringValue());
-	} catch (DateTimeException e) {
-		throw new RobotRuntimeException("Invalid zone ID");
-	}
-	try {
-		date = ZonedDateTime.of(year, month, day, hour, minute, second, nano, zone);
-	} catch (DateTimeException e) {
-		throw new RobotRuntimeException(e.getLocalizedMessage());
-	}
+		try {
+			zone = ZoneId.of(input[7].getStringValue());
+		} catch (DateTimeException e) {
+			throw new RobotRuntimeException("Invalid zone ID");
+		}
+		try {
+			date = ZonedDateTime.of(year, month, day, hour, minute, second, nano, zone);
+		} catch (DateTimeException e) {
+			throw new RobotRuntimeException(e.getLocalizedMessage());
+		}
 
-	return fromValue(date);
+		return fromValue(date);
 
 	}
 }

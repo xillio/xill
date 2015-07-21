@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
@@ -15,9 +18,6 @@ import nl.xillio.plugins.PluginLoader;
 import nl.xillio.xill.api.PluginPackage;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.HelpComponent;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
 
 /**
  * A class which listens to plugins and tries to extract helpfiles.
@@ -39,7 +39,7 @@ public class PluginListener {
 	 *        The loader that tries to load the plugins from jars
 	 * @return the created {@link PluginListener}
 	 */
-	public static PluginListener Attach(final PluginLoader<PluginPackage> pluginLoader) {
+	public static PluginListener attach(final PluginLoader<PluginPackage> pluginLoader) {
 		PluginListener listener = new PluginListener();
 
 		// Listen to all loaded plugins
@@ -151,7 +151,7 @@ public class PluginListener {
 	 * @param construct
 	 *        The {@link Construct} which version we're checking.
 	 * @return
-	 *         A boolean value wheter we need to update the helpfile of the construct.
+	 * 				A boolean value wheter we need to update the helpfile of the construct.
 	 */
 	private boolean needsUpdate(final PluginPackage plugin, final Construct construct) {
 		// Check if version is changed
@@ -170,8 +170,7 @@ public class PluginListener {
 	/**
 	 * This function asks the {@link FunctionIndex} to build the html for all the packages and build its own html.
 	 */
-	private void setupIndex()
-	{
+	private void setupIndex() {
 		packages.buildPackageHTML(HELP_FOLDER);
 		getClass().getClassLoader();
 		try {

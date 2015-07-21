@@ -2,6 +2,8 @@ package nl.xillio.migrationtool.gui;
 
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
+
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -22,8 +24,6 @@ import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient;
 import nl.xillio.migrationtool.ElasticConsole.RobotLogMessage;
 import nl.xillio.migrationtool.gui.editor.AceEditor;
 
-import org.apache.log4j.Logger;
-
 /**
  * The editor pane. Contains most of the UI, apart from the left panel.
  */
@@ -36,14 +36,12 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 		/**
 		 * State of a robot that is created but not saved yet.
 		 */
-		NEW,
-		/**
-		 * State of a saved robot that has been modified and not saved yet.
-		 */
-		CHANGED,
-		/**
-		 * State of a robot that is saved and not modified.
-		 */
+		NEW, /**
+					 * State of a saved robot that has been modified and not saved yet.
+					 */
+		CHANGED, /**
+							 * State of a robot that is saved and not modified.
+							 */
 		SAVED
 	}
 

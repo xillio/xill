@@ -3,6 +3,10 @@ package nl.xillio.xill;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.lang3.time.StopWatch;
+import org.apache.log4j.Logger;
+import org.eclipse.internal.xtend.xtend.parser.SyntaxError;
+
 import nl.xillio.plugins.CircularReferenceException;
 import nl.xillio.plugins.PluginLoader;
 import nl.xillio.xill.api.NullDebugger;
@@ -11,10 +15,6 @@ import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.errors.XillParsingException;
-
-import org.apache.commons.lang3.time.StopWatch;
-import org.apache.log4j.Logger;
-import org.eclipse.internal.xtend.xtend.parser.SyntaxError;
 
 /**
  * This class can be used to run a robot in eclipse without booting contenttools
@@ -43,7 +43,7 @@ class RobotLoader {
 		File robotFile = new File(args[0]);
 
 		PluginLoader<PluginPackage> pluginLoader = PluginLoader.load(PluginPackage.class);
-		if(!pluginFolder.exists()) {
+		if (!pluginFolder.exists()) {
 			throw new RuntimeException("Could not find the plugin folder " + pluginFolder.getAbsolutePath());
 		}
 		pluginLoader.addFolder(pluginFolder);

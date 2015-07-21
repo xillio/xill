@@ -10,12 +10,17 @@ import nl.xillio.xill.api.Xill;
 public interface PluginPackage extends Loadable<PluginPackage> {
 	/**
 	 * Start the plugin
-	 * @param stage The main stage of the UI
-	 * @param xill The Xill entrypoint
+	 * 
+	 * @param stage
+	 *        The main stage of the UI
+	 * @param xill
+	 *        The Xill entrypoint
 	 */
 	public void start(Stage stage, Xill xill);
+
 	/**
 	 * Every plugin has a chance to server an object to the host
+	 * 
 	 * @return The object to serve
 	 */
 	public Object serve();

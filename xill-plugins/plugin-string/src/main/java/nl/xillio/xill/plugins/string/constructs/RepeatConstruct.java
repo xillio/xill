@@ -2,14 +2,14 @@ package nl.xillio.xill.plugins.string.constructs;
 
 import java.io.InputStream;
 
+import org.apache.commons.lang3.StringUtils;
+
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.construct.HelpComponent;
-
-import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -19,12 +19,6 @@ import org.apache.commons.lang3.StringUtils;
  *
  */
 public class RepeatConstruct extends Construct implements HelpComponent {
-
-	@Override
-	public String getName() {
-
-		return "repeat";
-	}
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {

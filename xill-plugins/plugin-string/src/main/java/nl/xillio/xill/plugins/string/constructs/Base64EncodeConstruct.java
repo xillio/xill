@@ -6,6 +6,8 @@ import java.io.InputStream;
 
 import javax.xml.bind.DatatypeConverter;
 
+import org.apache.commons.io.FileUtils;
+
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
@@ -13,8 +15,6 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.construct.HelpComponent;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-
-import org.apache.commons.io.FileUtils;
 
 /**
  *
@@ -24,12 +24,6 @@ import org.apache.commons.io.FileUtils;
  *
  */
 public class Base64EncodeConstruct extends Construct implements HelpComponent {
-
-	@Override
-	public String getName() {
-
-		return "base64Encode";
-	}
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {

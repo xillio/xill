@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
  * This object identifies a break in the instruction flow
  *
  * @param <T>
+ *        the type contained in this {@link InstructionFlow}
  */
 public class InstructionFlow<T> {
 	private enum Type {
@@ -71,8 +72,12 @@ public class InstructionFlow<T> {
 
 	/**
 	 * Create a new {@link InstructionFlow} that represents a return value
+	 * 
+	 * @param <T>
+	 *        the type parameter for {@link InstructionFlow}
 	 *
 	 * @param value
+	 *        the value to set
 	 * @return the instructionflow
 	 */
 	public static <T> InstructionFlow<T> doReturn(final T value) {
@@ -81,6 +86,9 @@ public class InstructionFlow<T> {
 
 	/**
 	 * Create a new {@link InstructionFlow} that represents an empty return
+	 * 
+	 * @param <T>
+	 *        the type parameter for {@link InstructionFlow}
 	 *
 	 * @return the instructionflow
 	 */
@@ -89,6 +97,8 @@ public class InstructionFlow<T> {
 	}
 
 	/**
+	 * @param <T>
+	 *        the type parameter for {@link InstructionFlow}
 	 * @return a continue token
 	 */
 	public static <T> InstructionFlow<T> doContinue() {
@@ -96,6 +106,8 @@ public class InstructionFlow<T> {
 	}
 
 	/**
+	 * @param <T>
+	 *        the type parameter for {@link InstructionFlow}
 	 * @return a break token
 	 */
 	public static <T> InstructionFlow<T> doBreak() {
@@ -103,6 +115,8 @@ public class InstructionFlow<T> {
 	}
 
 	/**
+	 * @param <T>
+	 *        the type parameter for {@link InstructionFlow}
 	 * @return a resume token
 	 */
 	public static <T> InstructionFlow<T> doResume() {
@@ -110,7 +124,10 @@ public class InstructionFlow<T> {
 	}
 
 	/**
+	 * @param <T>
+	 *        the type parameter for {@link InstructionFlow}
 	 * @param value
+	 *        the value to set
 	 * @return a resume token with a value
 	 */
 	public static <T> InstructionFlow<T> doResume(final T value) {

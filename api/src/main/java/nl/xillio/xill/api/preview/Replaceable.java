@@ -7,7 +7,7 @@ public interface Replaceable extends Searchable {
 
 	/**
 	 * Replaces all occurrences of the search expression with the given replacement.
-	 * 
+	 *
 	 * @param replacement
 	 *        the replacement string
 	 */
@@ -15,7 +15,7 @@ public interface Replaceable extends Searchable {
 
 	/**
 	 * Replace a given occurrence of a search expression with the given replacement.
-	 * 
+	 *
 	 * @param occurrence
 	 *        the occurrence to be replaced
 	 * @param replacement

@@ -8,9 +8,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javafx.util.Pair;
-
 import org.rendersnake.HtmlCanvas;
+
+import javafx.util.Pair;
 
 /**
  * <p>
@@ -111,20 +111,21 @@ public class FunctionDocument extends HtmlGenerator {
 
 	/**
 	 * Adds a parameter without defaultvalue to the {@link FunctionDocument}
-	 * 
+	 *
 	 * @param name
 	 *        The name of the parameter.
 	 */
 	public void addParameter(final String name) {
 		parameters.add(new Pair<String, String>(name, null));
 	}
-	
+
 	/**
 	 * Adds a parameter with defaultvalue to the {@link FunctionDocument}
+	 * 
 	 * @param name
 	 * @param defaultValue
 	 */
-	public void addParameter(final String name, final String defaultValue){
+	public void addParameter(final String name, final String defaultValue) {
 		parameters.add(new Pair<String, String>(name, defaultValue));
 	}
 
@@ -136,10 +137,11 @@ public class FunctionDocument extends HtmlGenerator {
 	public String getParameters() {
 		String str = "";
 		for (Pair<String, String> parameter : parameters) {
-			if(parameter.getValue() == null)
-					str += parameter.getKey() + ", ";
-			else
+			if (parameter.getValue() == null) {
+				str += parameter.getKey() + ", ";
+			} else {
 				str += parameter.getKey() + " = " + parameter.getValue() + ", ";
+			}
 		}
 		// Remove the last comma
 		if (str.length() > 1) {

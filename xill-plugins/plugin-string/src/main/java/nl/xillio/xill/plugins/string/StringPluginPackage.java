@@ -13,8 +13,8 @@ import nl.xillio.xill.plugins.string.constructs.FormatConstruct;
 import nl.xillio.xill.plugins.string.constructs.IndexOfConstruct;
 import nl.xillio.xill.plugins.string.constructs.JoinConstruct;
 import nl.xillio.xill.plugins.string.constructs.LengthConstruct;
-import nl.xillio.xill.plugins.string.constructs.LowerCaseConstruct;
-import nl.xillio.xill.plugins.string.constructs.MD5Construct;
+import nl.xillio.xill.plugins.string.constructs.ToLowerConstruct;
+import nl.xillio.xill.plugins.string.constructs.CreateMD5Construct;
 import nl.xillio.xill.plugins.string.constructs.MatchesConstruct;
 import nl.xillio.xill.plugins.string.constructs.RegexConstruct;
 import nl.xillio.xill.plugins.string.constructs.RepeatConstruct;
@@ -23,19 +23,19 @@ import nl.xillio.xill.plugins.string.constructs.SplitConstruct;
 import nl.xillio.xill.plugins.string.constructs.StartsWithConstruct;
 import nl.xillio.xill.plugins.string.constructs.SubstringConstruct;
 import nl.xillio.xill.plugins.string.constructs.TrimConstruct;
-import nl.xillio.xill.plugins.string.constructs.UpperCaseConstruct;
+import nl.xillio.xill.plugins.string.constructs.ToUpperConstruct;
 import nl.xillio.xill.plugins.string.constructs.WordDistanceConstruct;
 import nl.xillio.xill.plugins.string.constructs.WrapConstruct;
 
 /**
  * This package includes all Text constructs
  */
-public class StringPluginPackage extends PluginPackage{
+public class StringPluginPackage extends PluginPackage {
 
 	@Override
-	public void load(PluginPackage[] dependencies) {
+	public void load(final PluginPackage[] dependencies) {
 		RegexConstruct regex = new RegexConstruct();
-		
+
 		add(
 			new AbsoluteURLConstruct(),
 			new AllMatchesConstruct(regex),
@@ -49,9 +49,9 @@ public class StringPluginPackage extends PluginPackage{
 			new IndexOfConstruct(),
 			new JoinConstruct(),
 			new LengthConstruct(),
-			new LowerCaseConstruct(),
+			new ToLowerConstruct(),
 			new MatchesConstruct(regex),
-			new MD5Construct(),
+			new CreateMD5Construct(),
 			regex,
 			new RepeatConstruct(),
 			new ReplaceConstruct(regex),
@@ -59,15 +59,8 @@ public class StringPluginPackage extends PluginPackage{
 			new StartsWithConstruct(),
 			new SubstringConstruct(),
 			new TrimConstruct(),
-			new UpperCaseConstruct(),
+			new ToUpperConstruct(),
 			new WordDistanceConstruct(),
-			new WrapConstruct()
-			);
+			new WrapConstruct());
 	}
-
-	@Override
-	public String getName() {
-		return "String";
-	}
-
 }

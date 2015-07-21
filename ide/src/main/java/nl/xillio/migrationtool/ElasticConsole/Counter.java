@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 /**
  * This class maps a value to an {@link Integer}. This can be used to count things.
+ * 
  * @param <T>
  */
 public class Counter<T> extends HashMap<T, Integer> {
@@ -13,12 +14,13 @@ public class Counter<T> extends HashMap<T, Integer> {
 	 * @return the value to which the specified key is mapped, or 0 if this map contains no mapping for the key.
 	 */
 	@Override
-	public Integer get(Object key) {
+	public Integer get(final Object key) {
 		Integer value = super.get(key);
-		
-		if(value == null)
+
+		if (value == null) {
 			value = 0;
-		
+		}
+
 		return value;
 	}
 }

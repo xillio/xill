@@ -22,37 +22,32 @@ import nl.xillio.xill.plugins.date.BaseDateConstruct;
 public class InfoConstruct extends BaseDateConstruct {
 
 	@Override
-	public String getName() {
-	return "info";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-	return new ConstructProcessor(InfoConstruct::process, new Argument("date"));
+		return new ConstructProcessor(InfoConstruct::process, new Argument("date"));
 
 	}
 
 	private static MetaExpression process(final MetaExpression dateVar) {
-	ZonedDateTime date = getDate(dateVar, "date");
-	ZonedDateTime now = now();
+		ZonedDateTime date = getDate(dateVar, "date");
+		ZonedDateTime now = now();
 
-	LinkedHashMap<String, MetaExpression> info = new LinkedHashMap<>();
+		LinkedHashMap<String, MetaExpression> info = new LinkedHashMap<>();
 
-	for (ChronoField field : ChronoField.values()) {
-		if (date.isSupported(field)) {
-		try {
-			info.put(field.toString(), fromValue(date.get(field)));
-		} catch (UnsupportedTemporalTypeException e) {
-			info.put(field.toString(), fromValue(date.getLong(field)));
+		for (ChronoField field : ChronoField.values()) {
+			if (date.isSupported(field)) {
+				try {
+					info.put(field.toString(), fromValue(date.get(field)));
+				} catch (UnsupportedTemporalTypeException e) {
+					info.put(field.toString(), fromValue(date.getLong(field)));
+				}
+			}
 		}
-		}
-	}
 
-	info.put("TimeZone", fromValue(date.getZone().toString()));
-	info.put("IsInFuture", fromValue(date.isAfter(now)));
-	info.put("IsInPast", fromValue(date.isBefore(now)));
+		info.put("TimeZone", fromValue(date.getZone().toString()));
+		info.put("IsInFuture", fromValue(date.isAfter(now)));
+		info.put("IsInPast", fromValue(date.isBefore(now)));
 
-	return fromValue(info);
+		return fromValue(info);
 
 	}
 }

@@ -23,38 +23,32 @@ public class FormatConstruct extends BaseDateConstruct {
 	private static final DateTimeFormatter DEFAULT_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 	@Override
-	public String getName() {
-
-	return "format";
-	}
-
-	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 
-	return new ConstructProcessor(FormatConstruct::process, new Argument("date"), new Argument("format", NULL));
+		return new ConstructProcessor(FormatConstruct::process, new Argument("date"), new Argument("format", NULL));
 	}
 
 	private static MetaExpression process(final MetaExpression dateVar,
-		final MetaExpression formatVar) {
+					final MetaExpression formatVar) {
 
-	ZonedDateTime date = getDate(dateVar, "date");
-	DateTimeFormatter formatter;
+		ZonedDateTime date = getDate(dateVar, "date");
+		DateTimeFormatter formatter;
 
-	if (formatVar != NULL) {
-		try {
-		formatter = DateTimeFormatter.ofPattern(formatVar.getStringValue());
-		} catch (IllegalArgumentException e) {
-		throw new RobotRuntimeException(e.getMessage());
+		if (formatVar != NULL) {
+			try {
+				formatter = DateTimeFormatter.ofPattern(formatVar.getStringValue());
+			} catch (IllegalArgumentException e) {
+				throw new RobotRuntimeException(e.getMessage());
+			}
+		} else {
+			formatter = DEFAULT_FORMATTER;
 		}
-	} else {
-		formatter = DEFAULT_FORMATTER;
-	}
 
-	String s = "";
-	s = date.format(formatter);
+		String s = "";
+		s = date.format(formatter);
 
-	MetaExpression result = fromValue(s);
-	return result;
+		MetaExpression result = fromValue(s);
+		return result;
 
 	}
 }

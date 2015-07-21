@@ -19,21 +19,21 @@ public class GetArgumentExpression implements Processable {
 
 	/**
 	 * Create a new {@link GetArgumentExpression}
-	 * 
+	 *
 	 * @param robot
 	 *
 	 */
 	public GetArgumentExpression(final Robot robot) {
-	this.robot = robot;
+		this.robot = robot;
 	}
 
 	@Override
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-	return InstructionFlow.doResume(robot.getArgument());
+		return InstructionFlow.doResume(robot.getArgument());
 	}
 
 	@Override
 	public Collection<Processable> getChildren() {
-	return Arrays.asList();
+		return Arrays.asList();
 	}
 }

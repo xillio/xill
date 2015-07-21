@@ -18,51 +18,44 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  */
 public class MatchesConstruct extends Construct implements HelpComponent {
 
-    private final RegexConstruct regexConstruct;
+	private final RegexConstruct regexConstruct;
 
-    /**
-     * Create a new {@link MatchesConstruct}
-     * 
-     * @param regexConstruct
-     *            the construct used to find the matches
-     */
-    public MatchesConstruct(final RegexConstruct regexConstruct) {
-	this.regexConstruct = regexConstruct;
-    }
-
-    @Override
-    public String getName() {
-
-	return "matches";
-    }
-
-    @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
-	return new ConstructProcessor((valueVar, regexVar, timeoutVar) -> process(regexConstruct, valueVar, regexVar, timeoutVar), new Argument("valueVar"), new Argument("regexVar"),
-		new Argument("timeoutVar", fromValue(RegexConstruct.REGEX_TIMEOUT)));
-    }
-
-    private static MetaExpression process(final RegexConstruct regexConstruct, final MetaExpression valueVar, final MetaExpression regexVar, final MetaExpression timeoutVar) {
-
-	assertType(valueVar, "value", ATOMIC);
-	assertType(regexVar, "regex", ATOMIC);
-
-	String value = valueVar.getStringValue();
-	String regex = regexVar.getStringValue();
-
-	int timeout = (int) timeoutVar.getNumberValue().doubleValue() * 1000;
-
-	try {
-	    return fromValue(regexConstruct.getMatcher(regex, value, timeout).matches());
-	} catch (Exception e) {
-	    throw new RobotRuntimeException("Invalid pattern in matches.");
+	/**
+	 * Create a new {@link MatchesConstruct}
+	 * 
+	 * @param regexConstruct
+	 *        the construct used to find the matches
+	 */
+	public MatchesConstruct(final RegexConstruct regexConstruct) {
+		this.regexConstruct = regexConstruct;
 	}
 
-    }
+	@Override
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
+		return new ConstructProcessor((valueVar, regexVar, timeoutVar) -> process(regexConstruct, valueVar, regexVar, timeoutVar), new Argument("valueVar"), new Argument("regexVar"),
+			new Argument("timeoutVar", fromValue(RegexConstruct.REGEX_TIMEOUT)));
+	}
 
+	private static MetaExpression process(final RegexConstruct regexConstruct, final MetaExpression valueVar, final MetaExpression regexVar, final MetaExpression timeoutVar) {
 
-  	@Override
-  	public InputStream openDocumentationStream() {
-  		return getClass().getResourceAsStream("/helpfiles/matches.xml");
-  	}
+		assertType(valueVar, "value", ATOMIC);
+		assertType(regexVar, "regex", ATOMIC);
+
+		String value = valueVar.getStringValue();
+		String regex = regexVar.getStringValue();
+
+		int timeout = (int) timeoutVar.getNumberValue().doubleValue() * 1000;
+
+		try {
+			return fromValue(regexConstruct.getMatcher(regex, value, timeout).matches());
+		} catch (Exception e) {
+			throw new RobotRuntimeException("Invalid pattern in matches.");
+		}
+
+	}
+
+	@Override
+	public InputStream openDocumentationStream() {
+		return getClass().getResourceAsStream("/helpfiles/matches.xml");
+	}
 }

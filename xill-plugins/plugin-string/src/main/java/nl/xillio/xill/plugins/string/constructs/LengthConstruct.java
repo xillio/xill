@@ -19,28 +19,21 @@ import nl.xillio.xill.api.construct.HelpComponent;
  */
 public class LengthConstruct extends Construct implements HelpComponent {
 
-    @Override
-    public String getName() {
+	@Override
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
+		return new ConstructProcessor(LengthConstruct::process, new Argument("value"));
+	}
 
-	return "length";
-    }
+	private static MetaExpression process(final MetaExpression value) {
 
-    @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
-	return new ConstructProcessor(LengthConstruct::process, new Argument("value"));
-    }
+		assertType(value, "value", ATOMIC);
 
-    private static MetaExpression process(final MetaExpression value) {
+		int length = value.getStringValue().length();
+		return fromValue(length);
+	}
 
-	assertType(value, "value", ATOMIC);
-
-	int length = value.getStringValue().length();
-	return fromValue(length);
-    }
-
-
-  	@Override
-  	public InputStream openDocumentationStream() {
-  		return getClass().getResourceAsStream("/helpfiles/length.xml");
-  	}
+	@Override
+	public InputStream openDocumentationStream() {
+		return getClass().getResourceAsStream("/helpfiles/length.xml");
+	}
 }

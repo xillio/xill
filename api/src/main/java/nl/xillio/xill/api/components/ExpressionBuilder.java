@@ -15,69 +15,75 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  */
 public class ExpressionBuilder extends ExpressionBuilderHelper implements Processable {
 
-    private final Supplier<MetaExpression> expressionSupplier;
+	private final Supplier<MetaExpression> expressionSupplier;
 
-    /**
-     * Create a new {@link ExpressionBuilder} that will produce a double
-     *
-     * @param value
-     */
-    public ExpressionBuilder(final double value) {
-	expressionSupplier = () -> fromValue(value);
-    }
+	/**
+	 * Create a new {@link ExpressionBuilder} that will produce a double
+	 *
+	 * @param value
+	 *        the value to set
+	 */
+	public ExpressionBuilder(final double value) {
+		expressionSupplier = () -> fromValue(value);
+	}
 
-    /**
-     * Create a new {@link ExpressionBuilder} that will produce an integer
-     *
-     * @param value
-     */
-    public ExpressionBuilder(final int value) {
-	expressionSupplier = () -> fromValue(value);
-    }
+	/**
+	 * Create a new {@link ExpressionBuilder} that will produce an integer
+	 *
+	 * @param value
+	 *        the value to set
+	 */
+	public ExpressionBuilder(final int value) {
+		expressionSupplier = () -> fromValue(value);
+	}
 
-    /**
-     * Create a new {@link ExpressionBuilder} that will produce a string
-     *
-     * @param value
-     */
-    public ExpressionBuilder(final String value) {
-	expressionSupplier = () -> fromValue(value);
-    }
+	/**
+	 * Create a new {@link ExpressionBuilder} that will produce a string
+	 *
+	 * @param value
+	 *        the value to set
+	 */
+	public ExpressionBuilder(final String value) {
+		expressionSupplier = () -> fromValue(value);
+	}
 
-    /**
-     * Create a new {@link ExpressionBuilder} that will produce a List
-     *
-     * @param value
-     */
-    public ExpressionBuilder(final List<MetaExpression> value) {
-	expressionSupplier = () -> fromValue(value);
-    }
+	/**
+	 * Create a new {@link ExpressionBuilder} that will produce a List
+	 *
+	 * @param value
+	 *        the value to set
+	 */
+	public ExpressionBuilder(final List<MetaExpression> value) {
+		expressionSupplier = () -> fromValue(value);
+	}
 
-    /**
-     * Create a new {@link ExpressionBuilder} that will produce an object
-     *
-     * @param value
-     */
-    public ExpressionBuilder(final LinkedHashMap<String, MetaExpression> value) {
-	expressionSupplier = () -> fromValue(value);
-    }
+	/**
+	 * Create a new {@link ExpressionBuilder} that will produce an object
+	 *
+	 * @param value
+	 *        the value to set
+	 */
+	public ExpressionBuilder(final LinkedHashMap<String, MetaExpression> value) {
+		expressionSupplier = () -> fromValue(value);
+	}
 
-    /**
-     * Create a new {@link ExpressionBuilder} that will produce a double
-     *
-     * @param value
-     */
-    public ExpressionBuilder(final boolean value) {
-	expressionSupplier = () -> fromValue(value);
-    }
+	/**
+	 * Create a new {@link ExpressionBuilder} that will produce a double
+	 *
+	 * @param value
+	 *        the value to set
+	 */
+	public ExpressionBuilder(final boolean value) {
+		expressionSupplier = () -> fromValue(value);
+	}
 
-    @Override
-    public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-	return InstructionFlow.doResume(expressionSupplier.get());
-    }
+	@Override
+	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
+		return InstructionFlow.doResume(expressionSupplier.get());
+	}
 
-    @Override
-    public Collection<Processable> getChildren() {
-	return new ArrayList<>();
-    }
+	@Override
+	public Collection<Processable> getChildren() {
+		return new ArrayList<>();
+	}
 }

@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import javafx.util.Pair;
-
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
@@ -24,6 +22,8 @@ import org.elasticsearch.index.get.GetField;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
+
+import javafx.util.Pair;
 
 /**
  * <p>
@@ -158,7 +158,7 @@ public class DocumentSearcher {
 				.field("searchTags", document.getSearchTags()).field("packageversion", document.getVersion())
 				.endObject())
 
-			.execute().actionGet();
+		.execute().actionGet();
 
 	}
 

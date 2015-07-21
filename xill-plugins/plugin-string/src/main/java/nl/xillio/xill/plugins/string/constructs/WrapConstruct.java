@@ -13,19 +13,14 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
  */
 public class WrapConstruct extends Construct {
 
-    @Override
-    public String getName() {
-	return "wrap";
-    }
+	@Override
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
+		return new ConstructProcessor(WrapConstruct::process, new Argument("text"), new Argument("width"), new Argument("wrapLongWords", fromValue(false)));
+	}
 
-    @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
-	return new ConstructProcessor(WrapConstruct::process, new Argument("text"), new Argument("width"), new Argument("wrapLongWords", fromValue(false)));
-    }
+	private static MetaExpression process(final MetaExpression text, final MetaExpression width, final MetaExpression wrapLong) {
 
-    private static MetaExpression process(final MetaExpression text, final MetaExpression width, final MetaExpression wrapLong) {
-
-	String result = WordUtils.wrap(text.getStringValue(), width.getNumberValue().intValue(), "\n", wrapLong.getBooleanValue());
-	return fromValue(result);
-    }
+		String result = WordUtils.wrap(text.getStringValue(), width.getNumberValue().intValue(), "\n", wrapLong.getBooleanValue());
+		return fromValue(result);
+	}
 }

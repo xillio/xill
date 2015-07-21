@@ -17,44 +17,39 @@ import nl.xillio.xill.api.preview.PreviewComponent;
  */
 public class WebPreviewConstruct extends Construct {
 
-    @Override
-    public String getName() {
-	return "webPreview";
-    }
-
-    @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
-	// To show a custom preview of the variable you need to implement the
-	// PreviewComponent interface
-
-	return new ConstructProcessor((url) -> new WebExpression(url.getStringValue()), new Argument("url"));
-    }
-
-    /**
-     * This class is an implementation of the PreviewComponent
-     */
-    private class WebExpression extends AtomicExpression implements PreviewComponent {
-
-	public WebExpression(final String url) {
-	    super(url);
-	}
-
 	@Override
-	public Node getPreview() {
-	    // Because we can't display a whole webpage in the tree structure we
-	    // can make a button that shows it when it is clicked
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
+		// To show a custom preview of the variable you need to implement the
+		// PreviewComponent interface
 
-	    Button button = new Button("View Page");
-	    button.setOnAction(action -> {
-		WebView webview = new WebView();
-		webview.getEngine().load(getStringValue());
-		Stage stage = new Stage();
-		stage.setScene(new Scene(webview));
-		stage.showAndWait();
-		stage.close();
-	    });
-
-	    return button;
+		return new ConstructProcessor((url) -> new WebExpression(url.getStringValue()), new Argument("url"));
 	}
-    }
+
+	/**
+	 * This class is an implementation of the PreviewComponent
+	 */
+	private class WebExpression extends AtomicExpression implements PreviewComponent {
+
+		public WebExpression(final String url) {
+			super(url);
+		}
+
+		@Override
+		public Node getPreview() {
+			// Because we can't display a whole webpage in the tree structure we
+			// can make a button that shows it when it is clicked
+
+			Button button = new Button("View Page");
+			button.setOnAction(action -> {
+				WebView webview = new WebView();
+				webview.getEngine().load(getStringValue());
+				Stage stage = new Stage();
+				stage.setScene(new Scene(webview));
+				stage.showAndWait();
+				stage.close();
+			});
+
+			return button;
+		}
+	}
 }

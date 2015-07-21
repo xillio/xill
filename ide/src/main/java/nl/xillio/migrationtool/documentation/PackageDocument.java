@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javafx.util.Pair;
-
 import org.rendersnake.HtmlCanvas;
+
+import javafx.util.Pair;
 
 /**
  * <p>
@@ -67,7 +67,7 @@ public class PackageDocument extends HtmlGenerator {
 		for (FunctionDocument desLink : sortedFunctions) {
 			try {
 				canvas = canvas.tr().td().p()
-						.a(href(generateLink(new Pair<String, String>(desLink.getPackage(), desLink.getName()))));
+					.a(href(generateLink(new Pair<String, String>(desLink.getPackage(), desLink.getName()))));
 				canvas = desLink.addFunction(canvas);
 				canvas = canvas._a()._p()._td()._tr();
 			} catch (IOException e) {
@@ -77,14 +77,14 @@ public class PackageDocument extends HtmlGenerator {
 		}
 		return canvas;
 	}
-	
+
 	/**
 	 * Returns the amount of {@link FunctionDocument} present in the {@link PackageDocument}
+	 * 
 	 * @return
 	 * 				Returns the amount of functions in the package.
 	 */
-	public int getPackageSize()
-	{
+	public int getPackageSize() {
 		return functions.size();
 	}
 

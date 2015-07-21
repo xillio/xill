@@ -6,10 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import nl.xillio.events.Event;
-import nl.xillio.events.EventHost;
-import nl.xillio.xill.api.components.RobotID;
-
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.count.CountRequestBuilder;
@@ -31,6 +27,10 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.sort.SortOrder;
 
+import nl.xillio.events.Event;
+import nl.xillio.events.EventHost;
+import nl.xillio.xill.api.components.RobotID;
+
 public class ESConsoleClient {
 
 	/**
@@ -51,18 +51,18 @@ public class ESConsoleClient {
 	private ESConsoleClient() {
 		// Create the settings and node
 		Settings settings = ImmutableSettings.settingsBuilder()
-				.put("cluster.name", "console")
-				// Paths
-				.put("path.data", "ESConsole/data")
-				.put("path.logs", "ESConsole/logs")
-				.put("path.work", "ESConsole/work")
-				.put("path.plugins", "ESConsole/plugins")
-				.put("path.conf", "ESConsole/config")
-				// Make the node unreachable from the outside
-				.put("discovery.zen.ping.multicast.enabled", false)
-				.put("node.local", true)
-				.put("http.enabled", false)
-				.build();
+			.put("cluster.name", "console")
+			// Paths
+			.put("path.data", "ESConsole/data")
+			.put("path.logs", "ESConsole/logs")
+			.put("path.work", "ESConsole/work")
+			.put("path.plugins", "ESConsole/plugins")
+			.put("path.conf", "ESConsole/config")
+			// Make the node unreachable from the outside
+			.put("discovery.zen.ping.multicast.enabled", false)
+			.put("node.local", true)
+			.put("http.enabled", false)
+			.build();
 		node = NodeBuilder.nodeBuilder().settings(settings).node();
 
 		// Add a shutdown hook
@@ -78,11 +78,11 @@ public class ESConsoleClient {
 	 *        The log type.
 	 * @param timestamp
 	 *        The timestamp of the log message.
-	 * @param order 
+	 * @param order
 	 * @param message
 	 *        The message to log.
 	 */
-	public void log(String robotId, String type, final long timestamp, final int order, final String message) {
+	public void log(final String robotId, String type, final long timestamp, final int order, final String message) {
 
 		// Normalize index and type
 		EventHost<RobotLogMessage> eventHost = eventInstances.get(robotId);
@@ -265,7 +265,6 @@ public class ESConsoleClient {
 		String lower = replaced.toLowerCase();
 		return lower;
 	}
-
 
 	/**
 	 * @return the {@link Client}

@@ -33,7 +33,7 @@ public final class Add implements Processable {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public InstructionFlow<MetaExpression> process(Debugger debugger) throws RobotRuntimeException {
+	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		MetaExpression leftValue = left.process(debugger).get();
 		MetaExpression rightValue = right.process(debugger).get();
 
@@ -52,7 +52,7 @@ public final class Add implements Processable {
 		return new AtomicExpression(result);
 	}
 
-	private static MetaExpression processList(final List<MetaExpression> leftValue, final List<MetaExpression> rightValue, Debugger debugger) throws RobotRuntimeException {
+	private static MetaExpression processList(final List<MetaExpression> leftValue, final List<MetaExpression> rightValue, final Debugger debugger) throws RobotRuntimeException {
 		List<Processable> result = new ArrayList<>(leftValue);
 		result.addAll(rightValue);
 

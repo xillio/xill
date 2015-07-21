@@ -14,27 +14,27 @@ public class SearchTextArea extends TextArea implements Searchable {
 	 * This field contains all occurrences of the search.
 	 * They are represented by a Integer location (start) and a String match
 	 */
-	private List<SearchOccurrence> occurrences = new ArrayList<>();
+	private final List<SearchOccurrence> occurrences = new ArrayList<>();
 
 	@Override
 	public void searchPattern(final String pattern, final boolean caseSensitive) {
 		// Clear selection
 		clearSearch();
-		
+
 		// Try to compile the pattern, get the matcher
 		Pattern regex = null;
 		try {
 			regex = caseSensitive ? Pattern.compile(pattern) : Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
-		}
-		catch (PatternSyntaxException e) {
+		} catch (PatternSyntaxException e) {
 			return;
 		}
 		Matcher matcher = regex.matcher(getText());
-		
+
 		// Find all occurrences
 		occurrences.clear();
-		while (matcher.find())
+		while (matcher.find()) {
 			occurrences.add(new SearchOccurrence(matcher.start(), matcher.group()));
+		}
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class SearchTextArea extends TextArea implements Searchable {
 	@Override
 	public void highlightAll() {
 		// This is not possible on a textarea
-		selectRange(0,0);
+		selectRange(0, 0);
 	}
 
 	@Override

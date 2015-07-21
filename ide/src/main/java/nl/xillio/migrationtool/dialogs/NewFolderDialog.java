@@ -3,6 +3,9 @@ package nl.xillio.migrationtool.dialogs;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -11,9 +14,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.util.Pair;
 import nl.xillio.migrationtool.gui.ProjectPane;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
 
 /**
  * A dialog for creating a new folder in the project view.

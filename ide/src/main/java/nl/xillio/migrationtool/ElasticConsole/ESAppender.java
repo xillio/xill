@@ -10,10 +10,9 @@ import org.apache.log4j.spi.LoggingEvent;
 public class ESAppender extends AppenderSkeleton {
 	private static final String ROBOT_PACKAGE_PREFIX = "robot.";
 	private static int order = Integer.MIN_VALUE;
-	
+
 	@Override
-	public void close() {
-	}
+	public void close() {}
 
 	@Override
 	public boolean requiresLayout() {
@@ -21,21 +20,20 @@ public class ESAppender extends AppenderSkeleton {
 	}
 
 	@Override
-	protected void append(LoggingEvent event) {
-		
-		//Only log this to the ES client if the package name is correct
+	protected void append(final LoggingEvent event) {
+
+		// Only log this to the ES client if the package name is correct
 		String name = event.getLoggerName();
-		
-		if(name.startsWith(ROBOT_PACKAGE_PREFIX)) {
+
+		if (name.startsWith(ROBOT_PACKAGE_PREFIX)) {
 			String robotId = name.substring(ROBOT_PACKAGE_PREFIX.length());
 			ESConsoleClient.getInstance().log(
-					robotId, 
-					event.getLevel().toString(), 
-					event.getTimeStamp(), 
-					order++,
-					event.getMessage().toString());
-			
-			
+				robotId,
+				event.getLevel().toString(),
+				event.getTimeStamp(),
+				order++,
+				event.getMessage().toString());
+
 		}
 	}
 

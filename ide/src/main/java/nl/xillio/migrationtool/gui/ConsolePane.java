@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import com.sun.javafx.scene.control.behavior.CellBehaviorBase;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -46,12 +48,10 @@ import nl.xillio.migrationtool.ElasticConsole.LogEntry;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.preview.Searchable;
 
-import com.sun.javafx.scene.control.behavior.CellBehaviorBase;
-
 /**
  * This pane displays the console log stored in elasticsearch
  */
-public class ConsolePane extends AnchorPane implements Searchable, EventHandler<KeyEvent>,RobotTabComponent {
+public class ConsolePane extends AnchorPane implements Searchable, EventHandler<KeyEvent>, RobotTabComponent {
 	@FXML
 	private SearchBar apnConsoleSearchBar;
 	@FXML
@@ -61,7 +61,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 	@FXML
 	private ToggleButton tbnToggleLogsInfo, tbnToggleLogsDebug, tbnToggleLogsWarn, tbnToggleLogsError, tbnConsoleSearch;
 
-	//private Robot robot;
+	// private Robot robot;
 
 	// Log entry lists. Master contains everything, filtered contains only selected entries.
 	private final ObservableList<LogEntry> masterLog = FXCollections.observableArrayList();
@@ -130,9 +130,9 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 		// Update the filter labels
 		resetLabels();
 		updateLabels();
-		
+
 		addEventHandler(KeyEvent.KEY_PRESSED, this);
-		
+
 	}
 
 	@Override
@@ -171,6 +171,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 	public void clear() {
 		buttonClearConsole();
 	}
+
 	@FXML
 	private void buttonClearConsole() {
 		// Clear the log in elasticsearch
@@ -441,13 +442,13 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 	}
 
 	@Override
-	public void initialize(RobotTab tab) {
+	public void initialize(final RobotTab tab) {
 		this.tab = tab;
-		
+
 		this.tab.getProcessor().getDebugger().getOnRobotStart().addListener(start -> updateLog());
 		ESConsoleClient.getLogEvent(tab.getProcessor().getRobotID()).addListener(msg -> updateTimeline.play());
 	}
-	
+
 	private RobotID getRobotID() {
 		return tab.getProcessor().getRobotID();
 	}

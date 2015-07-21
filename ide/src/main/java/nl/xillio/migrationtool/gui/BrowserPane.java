@@ -6,13 +6,6 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.concurrent.Worker;
-import javafx.concurrent.Worker.State;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.web.WebView;
-
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
@@ -27,9 +20,16 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.concurrent.Worker;
+import javafx.concurrent.Worker.State;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.web.WebView;
+
 /**
  * Basic html viewport with core functions for highlighting nodes
- * 
+ *
  * @author Xillio
  *
  */
@@ -71,7 +71,7 @@ public class BrowserPane extends AnchorPane {
 
 	/**
 	 * Create a new BrowserPane in HTML mode, based on the provided url.
-	 * 
+	 *
 	 * @param uri
 	 * @param documentNode
 	 */
@@ -85,7 +85,7 @@ public class BrowserPane extends AnchorPane {
 
 	/**
 	 * Create a new BrowserPane in HTML mode, based on the provided url, and additional HTTP-Auth credentials
-	 * 
+	 *
 	 * @param uri
 	 * @param documentNode
 	 */
@@ -107,7 +107,7 @@ public class BrowserPane extends AnchorPane {
 
 	/**
 	 * Create a new BrowserPane in XML mode, based on the provided xml node.
-	 * 
+	 *
 	 * @param content
 	 * @param documentNode
 	 */
@@ -118,7 +118,7 @@ public class BrowserPane extends AnchorPane {
 
 		webView.getEngine().loadContent(xmlToHtml(documentNode));
 	}
-	
+
 	public Node getDocumentNode() {
 		return documentNode;
 	}
@@ -127,9 +127,9 @@ public class BrowserPane extends AnchorPane {
 		return presentationNode;
 	}
 
-//	public String getSource() {
-//		return new SAX_XMLVariable(webView.getEngine().getDocument()).toString();
-//	}
+	// public String getSource() {
+	// return new SAX_XMLVariable(webView.getEngine().getDocument()).toString();
+	// }
 
 	public String getUrl() {
 		return webView.getEngine().getLocation();
@@ -172,8 +172,7 @@ public class BrowserPane extends AnchorPane {
 						});
 					}
 
-				}
-				);
+				});
 		}
 
 	}
@@ -232,7 +231,7 @@ public class BrowserPane extends AnchorPane {
 	/**
 	 * This puts an element in a div with an attribute allowing to highlight it in the WebView. It's useful for nodes that doesn't allow attributes (such
 	 * as text) or ones that are hard to highlight (such as br).
-	 * 
+	 *
 	 * @param node
 	 *        The node to encapsulate.
 	 */
@@ -246,7 +245,7 @@ public class BrowserPane extends AnchorPane {
 
 	/**
 	 * Opposite method to encapsulate. Given a custom-made div, removes it from the parent, and connect its child instead.
-	 * 
+	 *
 	 * @param node
 	 *        The capsule to remove.
 	 * @throws IllegalArgumentException
@@ -279,7 +278,7 @@ public class BrowserPane extends AnchorPane {
 			Object result = xpath.evaluate(query, source, type);
 			return result;
 		} catch (Exception e) {
-			//System.err.println(new SAX_XMLVariable(source).toString());
+			// System.err.println(new SAX_XMLVariable(source).toString());
 			System.err.println("XPath query: " + query);
 			// e.printStackTrace();
 		}
@@ -288,7 +287,7 @@ public class BrowserPane extends AnchorPane {
 
 	/**
 	 * Gets the unmodified XPath for the provided node
-	 * 
+	 *
 	 * @param node
 	 * @return
 	 */
@@ -317,7 +316,7 @@ public class BrowserPane extends AnchorPane {
 
 	/**
 	 * Gets the document XPath for the provided presentation node
-	 * 
+	 *
 	 * @param node
 	 * @return
 	 */
@@ -386,7 +385,7 @@ public class BrowserPane extends AnchorPane {
 
 	/**
 	 * Gets the presentation XPath for the provided document node
-	 * 
+	 *
 	 * @param node
 	 * @return
 	 */
@@ -440,7 +439,7 @@ public class BrowserPane extends AnchorPane {
 
 	/**
 	 * Used by getXpath, to get the position of a node amongst it's siblings.
-	 * 
+	 *
 	 * @param node
 	 *        The node to get the position of.
 	 * @return 0 if the position is irrelevant, and the position of the node otherwise.
@@ -490,19 +489,19 @@ public class BrowserPane extends AnchorPane {
 				}
 			}
 		}
-		return count > 1 ? (index + 1) : 0;
+		return count > 1 ? index + 1 : 0;
 	}
 
 	/**
 	 * Convert XML to HTML that can be displayed
-	 * 
+	 *
 	 * @param xmlnode
 	 * @return
 	 */
 	public static String xmlToHtml(final Node xmlNode) {
 		String html = "<html>";
 		html +=
-				"<style>body{font-family:monospace;} span{display:inline;} pre{display:inline;} .indent{display:inline} .node{color:#666;} .nodename{color:#00d;} .attribute{color:#f00;} .attributevalue{color:#d0d;} .text{color:#000;} .comment{color:#0d0;} .cdata{color:#f80;}</style>";
+						"<style>body{font-family:monospace;} span{display:inline;} pre{display:inline;} .indent{display:inline} .node{color:#666;} .nodename{color:#00d;} .attribute{color:#f00;} .attributevalue{color:#d0d;} .text{color:#000;} .comment{color:#0d0;} .cdata{color:#f80;}</style>";
 		html += "<body>\n";
 
 		html += nodeToHTML(xmlNode);
@@ -533,7 +532,7 @@ public class BrowserPane extends AnchorPane {
 						childhtml.append(nodeToHTML(child));
 					}
 					String chtml = childhtml.toString();
-					text.append(childhtml).append((chtml.contains("class=\"node\"") ? indent : ""));
+					text.append(childhtml).append(chtml.contains("class=\"node\"") ? indent : "");
 				}
 				break;
 			case Node.ELEMENT_NODE:
@@ -551,7 +550,7 @@ public class BrowserPane extends AnchorPane {
 				}
 
 				text.append("\n<div class=\"node\" id=\"").append(node.getNodeName()).append("\">");
-				text.append(indent).append("&lt;<span class=\"nodename\">").append(node.getNodeName()).append("</span>").append((attributes.length() > 0 ? " " + attributes : "")).append("&gt;");
+				text.append(indent).append("&lt;<span class=\"nodename\">").append(node.getNodeName()).append("</span>").append(attributes.length() > 0 ? " " + attributes : "").append("&gt;");
 				if (node.hasChildNodes()) {
 					htmlindent++;
 					StringBuilder childhtml = new StringBuilder();
@@ -561,7 +560,7 @@ public class BrowserPane extends AnchorPane {
 					}
 					htmlindent--;
 					String chtml = childhtml.toString();
-					text.append(childhtml).append((chtml.contains("class=\"node\"") ? indent : ""));
+					text.append(childhtml).append(chtml.contains("class=\"node\"") ? indent : "");
 				}
 				text.append("&lt;/<span class=\"nodename\">").append(node.getNodeName()).append("</span>&gt;</div>");
 				break;

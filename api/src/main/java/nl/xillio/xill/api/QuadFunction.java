@@ -9,13 +9,13 @@ package nl.xillio.xill.api;
  *        the second argument type
  * @param <U>
  *        the third argument type
- * @param <V> 
+ * @param <V>
  *        the forth argument type
  * @param <R>
  *        the result type
  */
 @FunctionalInterface
-public interface QuadFunction<S, T, U,V, R> {
+public interface QuadFunction<S, T, U, V, R> {
 
 	/**
 	 * Applies this function to the given arguments.
