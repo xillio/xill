@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -61,7 +64,19 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 		PhantomJSDriver driver = (PhantomJSDriver) item.getDriver();
 
 		try {
-			// get the page
+			/*URL newUrl;
+			try {
+				newUrl = new URL(url);
+				
+				if(newUrl.getRef() != null) {
+					driver.get("about:blank");
+				}
+				
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}*/
+			
+			
 			driver.get(url);
 		} catch (TimeoutException e) {
 			throw new RobotRuntimeException("Loadpage timeout", e);
@@ -253,6 +268,7 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 				// set infinite timeout
 				driver.manage().timeouts().pageLoadTimeout(-1, TimeUnit.MILLISECONDS);
 			}
+			
 
 			// driver.manage().deleteAllCookies();
 		}
@@ -271,6 +287,7 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 			dcap.setJavascriptEnabled(enableJS);
 
 			ArrayList<String> phantomArgs = new ArrayList<String>();
+			phantomArgs.add("--disk-cache=false");
 			// phantomArgs.add("--webdriver-logfile=NONE"); //! this option
 			// doesn't work (why not?) - it will create an empty file anyway
 			phantomArgs.add("--webdriver-loglevel=NONE");// values can be NONE |
