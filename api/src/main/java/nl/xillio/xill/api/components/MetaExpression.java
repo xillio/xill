@@ -36,7 +36,7 @@ public abstract class MetaExpression implements Expression, Processable {
 
 	/**
 	 * Get a value from the {@link MetadataExpressionPool}
-	 * 
+	 *
 	 * @param <T>
 	 *        the type of object to fetch
 	 *
@@ -55,7 +55,7 @@ public abstract class MetaExpression implements Expression, Processable {
 
 	/**
 	 * Store a value in the {@link MetadataExpressionPool} and default the key to the class of the object as returned by {@link Object#getClass()}
-	 * 
+	 *
 	 * @param <T>
 	 *        the type key to store the object as
 	 *
@@ -73,7 +73,7 @@ public abstract class MetaExpression implements Expression, Processable {
 
 	/**
 	 * Store a value in the {@link MetadataExpressionPool}
-	 * 
+	 *
 	 * @param <T>
 	 *        the type key to store the object as
 	 *
@@ -168,10 +168,12 @@ public abstract class MetaExpression implements Expression, Processable {
 	}
 
 	/**
-	 * Get the contained value of this {@link MetaExpression}<br/>
+	 * <p>
+	 * Get the contained value of this {@link MetaExpression}.
 	 * The return type of this method will be different for each type of
 	 * {@link ExpressionDataType} which can be found by calling
-	 * {@link #getType()}.<br/>
+	 * {@link #getType()}.
+	 * </p>
 	 * <ul>
 	 * <li>{@link ExpressionDataType#ATOMIC}: Returns an {@link Expression}</li>
 	 * <li>{@link ExpressionDataType#LIST}: Returns a {@link List
@@ -193,7 +195,9 @@ public abstract class MetaExpression implements Expression, Processable {
 	}
 
 	/**
-	 * Returns the type of data stored in this {@link MetaExpression}<br/>
+	 * <p>
+	 * Returns the type of data stored in this {@link MetaExpression}
+	 * </p>
 	 * <ul>
 	 * <li>{@link ExpressionDataType#ATOMIC}: A single value</li>
 	 * <li>{@link ExpressionDataType#LIST}: A list of {@link MetaExpression}
@@ -214,8 +218,10 @@ public abstract class MetaExpression implements Expression, Processable {
 	}
 
 	/**
+	 * <p>
 	 * Generate the JSON representation of this expression using a {@link Gson}
-	 * parser <br/>
+	 * parser
+	 * </p>
 	 * <b>NOTE: </b> This is not the string value of this expression. It is
 	 * JSON. For the string value use {@link MetaExpression#getStringValue()}
 	 *
@@ -336,7 +342,6 @@ public abstract class MetaExpression implements Expression, Processable {
 	 * @return
 	 * 				<ul>
 	 *         <li>{@link ExpressionDataType#ATOMIC}: returns an {@link Object}
-	 *         <br/>
 	 *         This represents a singular value that is parsed in the folowing
 	 *         way:
 	 *         <ol>
@@ -419,7 +424,7 @@ public abstract class MetaExpression implements Expression, Processable {
 	}
 
 	/**
-	 * Register a reference to this variable.<br/>
+	 * Register a reference to this variable.
 	 * This generally only happens during assignment
 	 */
 	public final void registerReference() {
@@ -427,7 +432,7 @@ public abstract class MetaExpression implements Expression, Processable {
 	}
 
 	/**
-	 * Release a reference to this expression<br/>
+	 * Release a reference to this expression
 	 * This generally only happens at the end of scope
 	 */
 	public final void releaseReference() {

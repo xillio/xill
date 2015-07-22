@@ -72,7 +72,7 @@ public abstract class PluginPackage implements Loadable<PluginPackage>, AutoClos
 	}
 
 	/**
-	 * Add constructs to the package. <br/>
+	 * Add constructs to the package.
 	 * This is a shortcut to calling {@link #add(Construct)} multiple times.
 	 *
 	 * @param constructs
@@ -87,7 +87,7 @@ public abstract class PluginPackage implements Loadable<PluginPackage>, AutoClos
 	}
 
 	/**
-	 * Add constructs to the package. <br/>
+	 * Add constructs to the package.
 	 * This is a shortcut to calling {@link #add(Construct)} multiple times.
 	 *
 	 * @param constructs
