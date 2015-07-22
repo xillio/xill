@@ -2,8 +2,11 @@ package nl.xillio.migrationtool.documentation;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -17,7 +20,6 @@ import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient;
 import nl.xillio.plugins.PluginLoader;
 import nl.xillio.xill.api.PluginPackage;
 import nl.xillio.xill.api.construct.Construct;
-import nl.xillio.xill.api.construct.HelpComponent;
 
 /**
  * A class which listens to plugins and tries to extract helpfiles.
@@ -99,44 +101,61 @@ public class PluginListener {
 		PackageDocument thisPackage = new PackageDocument();
 		thisPackage.setName(plugin.getName());
 
+		List<String> generatedDocuments = new ArrayList<>();
 		for (Construct construct : plugin.getConstructs()) {
-			if (construct instanceof HelpComponent) {
-				HelpComponent documentedConstruct = (HelpComponent) construct;
-
-				FunctionDocument docu;
-				try {
-					// parse the xml and default the name of the functiondocument to the name of the construct
-					docu = parser.parseXML(documentedConstruct.openDocumentationStream(), plugin.getName(), plugin.getVersion());
-					thisPackage.addDescriptiveLink(docu);
-					docu.setName(construct.getName());
-
-					// If the version of the allready indexed function different
-					// from the version of the package
-					// or the function is non-existant in the database, we parse the
-					// new xml and generate html.
-					if (needsUpdate(plugin, construct)) {
-						// Write an html file
-						if (plugin.getName() != null && docu.getName() != null) {
-							// We write the HTML file
-							FileUtils.write(
-								new File(HELP_FOLDER, plugin.getName() + "/" + docu.getName() + ".html"),
-								docu.toHTML());
-							// We set the version of the document
-							docu.setVersion(plugin.getVersion());
-
-							// We index the document
-							searcher.index(docu);
-							log.info("Generated html documentation for " + plugin.getName() + "." + construct.getName());
-						} else {
-							log.error("Invalid name found for the package or a function in the package.");
-						}
-					}
-				} catch (IOException e) {
-					log.error("Failed to load:" + construct.getName());
-					e.printStackTrace();
-				}
+			// If the version of the allready indexed function different
+			// from the version of the package
+			// or the function is non-existant in the database, we parse the
+			// new xml and generate html.
+			if (construct.hideDocumentation() || !needsUpdate(plugin, construct)) {
+				continue;
 			}
+			
+			InputStream stream = null;
+
+			// Get the help component
+			stream = construct.openDocumentationStream();
+
+			if (stream == null) {
+				log.warn("No documentation file found for " + plugin.getName() + "." + construct.getName());
+				continue;
+			}
+
+			FunctionDocument docu;
+			try {
+				// parse the xml and default the name of the functiondocument to the name of the construct
+				docu = parser.parseXML(stream, plugin.getName(), plugin.getVersion());
+				thisPackage.addDescriptiveLink(docu);
+				docu.setName(construct.getName());
+				
+				// Write an html file
+				if (plugin.getName() != null && docu.getName() != null) {
+					// We write the HTML file
+					FileUtils.write(
+						new File(HELP_FOLDER, plugin.getName() + "/" + docu.getName() + ".html"),
+						docu.toHTML());
+					// We set the version of the document
+					docu.setVersion(plugin.getVersion());
+
+					// We index the document
+					searcher.index(docu);
+					generatedDocuments.add(plugin.getName() + "." + construct.getName());
+				} else {
+					log.error("Invalid name found for the package or a function in the package.");
+				}
+
+				stream.close();
+			} catch (IOException e) {
+				log.error("Failed to load:" + construct.getName());
+				e.printStackTrace();
+			}
+
 		}
+		
+		if(!generatedDocuments.isEmpty()) {
+			log.debug("Generated html for " + generatedDocuments);
+		}
+		
 		packages.addPackageDocument(thisPackage);
 	}
 

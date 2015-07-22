@@ -1,6 +1,5 @@
 package nl.xillio.xill.plugins.string.constructs;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -13,7 +12,6 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.construct.HelpComponent;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
@@ -24,7 +22,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  *
  * @author Sander
  */
-public class RegexConstruct extends Construct implements HelpComponent {
+public class RegexConstruct extends Construct {
 
 	private RegexTimer regexTimer = null;
 
@@ -40,7 +38,7 @@ public class RegexConstruct extends Construct implements HelpComponent {
 		regexTimer = new RegexTimer();
 		new Thread(regexTimer).start();
 	}
-	
+
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(this::process, new Argument("string"), new Argument("regex"), new Argument("timeout", fromValue(REGEX_TIMEOUT)));
@@ -77,8 +75,11 @@ public class RegexConstruct extends Construct implements HelpComponent {
 	/**
 	 *
 	 * @param regex
+	 *        the pattern
 	 * @param value
+	 *        the haystack
 	 * @param timeout
+	 *        in seconds
 	 * @return the matcher
 	 */
 	public Matcher getMatcher(final String regex, final String value, int timeout) {
@@ -167,11 +168,6 @@ public class RegexConstruct extends Construct implements HelpComponent {
 		public void stop() {
 			stop = true;
 		}
-	}
-
-	@Override
-	public InputStream openDocumentationStream() {
-		return getClass().getResourceAsStream("/helpfiles/regex.xml");
 	}
 
 }

@@ -1,13 +1,10 @@
 package nl.xillio.xill.plugins.string.constructs;
 
-import java.io.InputStream;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.construct.HelpComponent;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
@@ -16,13 +13,13 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  * @author Sander
  *
  */
-public class MatchesConstruct extends Construct implements HelpComponent {
+public class MatchesConstruct extends Construct {
 
 	private final RegexConstruct regexConstruct;
 
 	/**
 	 * Create a new {@link MatchesConstruct}
-	 * 
+	 *
 	 * @param regexConstruct
 	 *        the construct used to find the matches
 	 */
@@ -52,10 +49,5 @@ public class MatchesConstruct extends Construct implements HelpComponent {
 			throw new RobotRuntimeException("Invalid pattern in matches.");
 		}
 
-	}
-
-	@Override
-	public InputStream openDocumentationStream() {
-		return getClass().getResourceAsStream("/helpfiles/matches.xml");
 	}
 }

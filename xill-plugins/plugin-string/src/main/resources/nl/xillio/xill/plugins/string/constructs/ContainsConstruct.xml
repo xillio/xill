@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xilldoc>
+<function>
+	<parameters>
+		<param name="value1"/>
+		<param name="value2"/>
+	</parameters>
+	<description><![CDATA[Returns true if the string value1 contains the string value2. Returns true if the list value1 contains the exact value value2 or the index value2.]]></description>
+	<examples>
+		<example description="The following calls to contains all return true:"><![CDATA[
+    testvalue = contains("testing", "ing");
+    testvalue = contains({brand = "Ferrari", colour = "light silver grey"}, "Ferrari");
+]]></example>
+		<example description="While the following return false:"><![CDATA[
+    testvalue = contains("testing", "ts");
+    testvalue = contains({brand = "BMW", colour = "light silver grey"} "branding");
+    testvalue = contains({brand = "BMW", colour = "light silver grey"}, "silver");
+]]></example>
+	</examples>
+	<references>
+		<reference package="String">endsWith</reference>
+		<reference package="String">startsWith</reference>
+		<reference package="packages">List</reference>
+	</references>
+</function>

@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xilldoc>
+<function>
+	<parameters>
+		<param name="requiredVersion" default="null" />
+	</parameters>
+	<description><![CDATA[
+ 	Returns the current version of the language. If a required version is provided it will throw an error when an older version is used.]]></description>
+	<examples>
+		<example description="Running:"><![CDATA[
+	    use System;
+		var version = System.version();
+		System.print(version);]]></example>
+		<example description="This will print:">
+		<![CDATA[Info: 3.0.0]]>
+		</example>
+		<example description="Running:"><![CDATA[
+	    use System;
+		var version = System.version("3.1.0");
+		System.print(version);]]></example>
+		<example description="This will print:">
+		<![CDATA[Error: Version 3.1.0 is not supported in 3.0.0]]>
+		</example>
+	</examples>
+	<references>
+	</references>
+	<searchTags>
+		<searchTag>version</searchTag>
+		<searchTag>check</searchTag>
+		<searchTag>error</searchTag>
+	</searchTags>
+</function>

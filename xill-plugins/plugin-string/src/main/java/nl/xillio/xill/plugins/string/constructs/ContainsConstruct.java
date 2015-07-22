@@ -1,6 +1,5 @@
 package nl.xillio.xill.plugins.string.constructs;
 
-import java.io.InputStream;
 import java.util.List;
 
 import nl.xillio.xill.api.components.MetaExpression;
@@ -8,7 +7,6 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.construct.HelpComponent;
 
 /**
  * Returns true when the first value contains the second value.
@@ -16,7 +14,7 @@ import nl.xillio.xill.api.construct.HelpComponent;
  *
  * @author Sander
  */
-public class ContainsConstruct extends Construct implements HelpComponent {
+public class ContainsConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
@@ -42,11 +40,6 @@ public class ContainsConstruct extends Construct implements HelpComponent {
 		String value1 = haystack.getStringValue();
 		String value2 = needle.getStringValue();
 		return fromValue(value1.contains(value2));
-	}
-
-	@Override
-	public InputStream openDocumentationStream() {
-		return getClass().getResourceAsStream("/helpfiles/contains.xml");
 	}
 
 }

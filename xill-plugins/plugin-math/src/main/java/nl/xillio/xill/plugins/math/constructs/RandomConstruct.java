@@ -1,6 +1,5 @@
 package nl.xillio.xill.plugins.math.constructs;
 
-import java.io.InputStream;
 import java.util.List;
 
 import nl.xillio.xill.api.components.MetaExpression;
@@ -8,7 +7,6 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.construct.HelpComponent;
 
 /**
  * The construct of the Random function which is capable of generating random
@@ -17,7 +15,7 @@ import nl.xillio.xill.api.construct.HelpComponent;
  * @author Ivor
  *
  */
-public class RandomConstruct extends Construct implements HelpComponent {
+public class RandomConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
@@ -46,11 +44,6 @@ public class RandomConstruct extends Construct implements HelpComponent {
 		}
 		return fromValue((int) (Math.random() * intValue));
 
-	}
-
-	@Override
-	public InputStream openDocumentationStream() {
-		return getClass().getResourceAsStream("/helpfiles/random.xml");
 	}
 
 }
