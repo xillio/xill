@@ -1,13 +1,10 @@
 package nl.xillio.xill.plugins.string.constructs;
 
-import java.io.InputStream;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.construct.HelpComponent;
 
 /**
  *
@@ -20,7 +17,7 @@ import nl.xillio.xill.api.construct.HelpComponent;
  * @author Sander
  *
  */
-public class IndexOfConstruct extends Construct implements HelpComponent {
+public class IndexOfConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
@@ -35,10 +32,5 @@ public class IndexOfConstruct extends Construct implements HelpComponent {
 		assertNotNull(string2, "string2");
 
 		return fromValue(string1.getStringValue().indexOf(string2.getStringValue(), value.getNumberValue().intValue()));
-	}
-
-	@Override
-	public InputStream openDocumentationStream() {
-		return getClass().getResourceAsStream("/helpfiles/indexof.xml");
 	}
 }

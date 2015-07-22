@@ -1,6 +1,5 @@
 package nl.xillio.xill.plugins.string.constructs;
 
-import java.io.InputStream;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -11,7 +10,6 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.construct.HelpComponent;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
@@ -21,7 +19,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  *
  */
 
-public class CreateMD5Construct extends Construct implements HelpComponent {
+public class CreateMD5Construct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
@@ -38,11 +36,6 @@ public class CreateMD5Construct extends Construct implements HelpComponent {
 		} catch (NoSuchAlgorithmException e) {
 			throw new RobotRuntimeException("No such algorithm");
 		}
-	}
-
-	@Override
-	public InputStream openDocumentationStream() {
-		return getClass().getResourceAsStream("/helpfiles/md5.xml");
 	}
 
 }

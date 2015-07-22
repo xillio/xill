@@ -47,10 +47,12 @@
 	<references>
 	</references>
 	<searchTags>
-		<searchTag>run</searchTag>
-		<searchTag>program</searchTag>
-		<searchTag>cmd</searchTag>
-		<searchTag>terminal</searchTag>
-		<searchTag>execute</searchTag>
+		<searchTag>info</searchTag>
+		<searchTag>ram</searchTag>
+		<searchTag>memory</searchTag>
+		<searchTag>space</searchTag>
+		<searchTag>drive</searchTag>
+		<searchTag>project</searchTag>
+		<searchTag>path</searchTag>
 	</searchTags>
 </function>

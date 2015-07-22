@@ -18,7 +18,6 @@ import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient;
 import nl.xillio.plugins.PluginLoader;
 import nl.xillio.xill.api.PluginPackage;
 import nl.xillio.xill.api.construct.Construct;
-import nl.xillio.xill.api.construct.HelpComponent;
 
 /**
  * A class which listens to plugins and tries to extract helpfiles.
@@ -101,12 +100,20 @@ public class PluginListener {
 		thisPackage.setName(plugin.getName());
 
 		for (Construct construct : plugin.getConstructs()) {
+			// If the version of the allready indexed function different
+			// from the version of the package
+			// or the function is non-existant in the database, we parse the
+			// new xml and generate html.
+			if (construct.hideDocumentation() || !needsUpdate(plugin, construct)) {
+				continue;
+			}
 			InputStream stream = null;
 
 			// Get the help component
-		stream = construct.openDocumentationStream();
+			stream = construct.openDocumentationStream();
 
 			if (stream == null) {
+				log.warn("No documentation file found for " + plugin.getName() + "." + construct.getName());
 				continue;
 			}
 
@@ -116,27 +123,21 @@ public class PluginListener {
 				docu = parser.parseXML(stream, plugin.getName(), plugin.getVersion());
 				thisPackage.addDescriptiveLink(docu);
 				docu.setName(construct.getName());
+				
+				// Write an html file
+				if (plugin.getName() != null && docu.getName() != null) {
+					// We write the HTML file
+					FileUtils.write(
+						new File(HELP_FOLDER, plugin.getName() + "/" + docu.getName() + ".html"),
+						docu.toHTML());
+					// We set the version of the document
+					docu.setVersion(plugin.getVersion());
 
-				// If the version of the allready indexed function different
-				// from the version of the package
-				// or the function is non-existant in the database, we parse the
-				// new xml and generate html.
-				if (needsUpdate(plugin, construct)) {
-					// Write an html file
-					if (plugin.getName() != null && docu.getName() != null) {
-						// We write the HTML file
-						FileUtils.write(
-							new File(HELP_FOLDER, plugin.getName() + "/" + docu.getName() + ".html"),
-							docu.toHTML());
-						// We set the version of the document
-						docu.setVersion(plugin.getVersion());
-
-						// We index the document
-						searcher.index(docu);
-						log.info("Generated html documentation for " + plugin.getName() + "." + construct.getName());
-					} else {
-						log.error("Invalid name found for the package or a function in the package.");
-					}
+					// We index the document
+					searcher.index(docu);
+					log.debug("Generated html documentation for " + plugin.getName() + "." + construct.getName());
+				} else {
+					log.error("Invalid name found for the package or a function in the package.");
 				}
 
 				stream.close();

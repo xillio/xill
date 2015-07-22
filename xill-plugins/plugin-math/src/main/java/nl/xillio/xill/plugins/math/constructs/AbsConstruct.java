@@ -1,13 +1,10 @@
 package nl.xillio.xill.plugins.math.constructs;
 
-import java.io.InputStream;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.construct.HelpComponent;
 
 /**
  * The construct for the Abs function which can give the absolute value of a
@@ -16,7 +13,7 @@ import nl.xillio.xill.api.construct.HelpComponent;
  * @author Ivor
  *
  */
-public class AbsConstruct extends Construct implements HelpComponent {
+public class AbsConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
@@ -38,11 +35,6 @@ public class AbsConstruct extends Construct implements HelpComponent {
 		} else {
 			return fromValue(Math.abs(number.doubleValue()));
 		}
-	}
-
-	@Override
-	public InputStream openDocumentationStream() {
-		return getClass().getResourceAsStream("/helpfiles/abs.xml");
 	}
 
 }
