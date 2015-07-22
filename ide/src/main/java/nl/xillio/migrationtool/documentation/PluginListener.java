@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -99,6 +101,7 @@ public class PluginListener {
 		PackageDocument thisPackage = new PackageDocument();
 		thisPackage.setName(plugin.getName());
 
+		List<String> generatedDocuments = new ArrayList<>();
 		for (Construct construct : plugin.getConstructs()) {
 			// If the version of the allready indexed function different
 			// from the version of the package
@@ -107,6 +110,7 @@ public class PluginListener {
 			if (construct.hideDocumentation() || !needsUpdate(plugin, construct)) {
 				continue;
 			}
+			
 			InputStream stream = null;
 
 			// Get the help component
@@ -135,7 +139,7 @@ public class PluginListener {
 
 					// We index the document
 					searcher.index(docu);
-					log.debug("Generated html documentation for " + plugin.getName() + "." + construct.getName());
+					generatedDocuments.add(plugin.getName() + "." + construct.getName());
 				} else {
 					log.error("Invalid name found for the package or a function in the package.");
 				}
@@ -147,6 +151,11 @@ public class PluginListener {
 			}
 
 		}
+		
+		if(!generatedDocuments.isEmpty()) {
+			log.debug("Generated html for " + generatedDocuments);
+		}
+		
 		packages.addPackageDocument(thisPackage);
 	}
 

@@ -207,7 +207,8 @@ public abstract class Construct extends ExpressionBuilderHelper implements HelpC
 
 	@Override
 	public InputStream openDocumentationStream() {
-		return getClass().getResourceAsStream("/" + getClass().getName().replace('.', '/') + ".xml");
+		String url = "/" + getClass().getName().replace('.', '/') + ".xml";
+		return getClass().getResourceAsStream(url);
 	}
 	
 	/**
