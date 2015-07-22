@@ -1,5 +1,7 @@
 package nl.xillio.xill.api.construct;
 
+import java.io.InputStream;
+
 import org.apache.commons.lang3.text.WordUtils;
 
 import nl.xillio.xill.api.PluginPackage;
@@ -10,7 +12,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 /**
  * This interface contains the core functionality for all constructs
  */
-public abstract class Construct extends ExpressionBuilderHelper {
+public abstract class Construct extends ExpressionBuilderHelper implements HelpComponent {
 	private final String defaultName;
 
 	/**
@@ -40,12 +42,16 @@ public abstract class Construct extends ExpressionBuilderHelper {
 	protected static final ExpressionDataType OBJECT = ExpressionDataType.OBJECT;
 
 	/**
-	 * <p>Returns the name of the construct. This name is also the command by which
-	 * this construct can be called inside scripts.</p>
-	 * 
-	 * <p>By default the name of a {@link PluginPackage} is the concrete implementation name 
-	 * acquired using {@link Class#getSimpleName()} without the {@link PluginPackage} suffix. 
-	 * It is also uncapitalized using {@link WordUtils#uncapitalize(String)}</p>
+	 * <p>
+	 * Returns the name of the construct. This name is also the command by which
+	 * this construct can be called inside scripts.
+	 * </p>
+	 *
+	 * <p>
+	 * By default the name of a {@link PluginPackage} is the concrete implementation name
+	 * acquired using {@link Class#getSimpleName()} without the {@link PluginPackage} suffix.
+	 * It is also uncapitalized using {@link WordUtils#uncapitalize(String)}
+	 * </p>
 	 *
 	 * @return the name of the construct. This name is also the command by which
 	 *         this construct can be called inside scripts
@@ -185,4 +191,31 @@ public abstract class Construct extends ExpressionBuilderHelper {
 		return MetaExpression.extractValue(expression);
 	}
 
+	/**
+	 * A shortcut to {@link MetaExpression#parseObject(Object)}
+	 * 
+	 * @param value
+	 *        the object to parse into a {@link MetaExpression}
+	 * @return the {@link MetaExpression} not null
+	 * @throws IllegalArgumentException
+	 *         if parsing the value failed
+	 * @see MetaExpression#parseObject(Object)
+	 */
+	protected static MetaExpression parseObject(final Object value) throws IllegalArgumentException {
+		return MetaExpression.parseObject(value);
+	}
+
+	@Override
+	public InputStream openDocumentationStream() {
+		String url = "/" + getClass().getName().replace('.', '/') + ".xml";
+		return getClass().getResourceAsStream(url);
+	}
+	
+	/**
+	 * Hide this construct from documentation
+	 * @return true if it should be hidden
+	 */
+	public boolean hideDocumentation() {
+		return false;
+	}
 }

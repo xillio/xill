@@ -27,4 +27,9 @@ public class PowerConstuct extends Construct {
 			return fromValue(42);
 		});
 	}
+	
+	@Override
+	public boolean hideDocumentation() {
+		return true;
+	}
 }

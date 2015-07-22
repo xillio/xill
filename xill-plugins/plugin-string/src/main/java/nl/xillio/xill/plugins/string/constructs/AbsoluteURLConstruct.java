@@ -1,6 +1,5 @@
 package nl.xillio.xill.plugins.string.constructs;
 
-import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,13 +9,12 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.construct.HelpComponent;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
  *
  */
-public class AbsoluteURLConstruct extends Construct implements HelpComponent {
+public class AbsoluteURLConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
@@ -103,11 +101,6 @@ public class AbsoluteURLConstruct extends Construct implements HelpComponent {
 		String cleaned = url.replace("/./", "/");
 		cleaned = cleaned.replaceAll("/[^/]*/\\.\\./", "/");
 		return cleaned;
-	}
-
-	@Override
-	public InputStream openDocumentationStream() {
-		return getClass().getResourceAsStream("/helpfiles/absoluteurl.xml");
 	}
 
 }

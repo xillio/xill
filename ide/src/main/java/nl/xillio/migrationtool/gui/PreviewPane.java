@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -107,7 +109,7 @@ public class PreviewPane extends AnchorPane implements RobotTabComponent {
 
 		if (expression.getType() == ExpressionDataType.ATOMIC) {
 			Text preview = new Text(expression.getStringValue());
-			Tooltip tooltip = new Tooltip(expression.getStringValue());
+			Tooltip tooltip = new Tooltip(WordUtils.wrap(expression.getStringValue(), 200, "\n", true));
 			tooltip.setWrapText(true);
 
 			Tooltip.install(preview, tooltip);
