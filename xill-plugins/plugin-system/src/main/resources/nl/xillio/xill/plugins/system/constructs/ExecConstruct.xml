@@ -1,4 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xilldoc>
 <function>
 	<parameters>
 		<param name="arguments" />
@@ -6,7 +7,8 @@
 	</parameters>
 	<description><![CDATA[
   Runs an application and returns the output. 
-  The result will contain a list of errors, a list of output and the runtime in milliseconds]]></description>
+  The result will contain a list of errors, a list of output and the runtime in milliseconds.
+  All errors will also be logged in the console while running.]]></description>
 	<examples>
 		<example description="Running on windows:"><![CDATA[
     use System;
