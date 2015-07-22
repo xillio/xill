@@ -1,36 +1,37 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <function Tag="regex">
-  <name>regex</name>
-  <parameters>
-    <param name="value">
-    </param>
-    <param name="regex">
-    </param>
-    <param name="timeout ">
-    </param>
-  </parameters>
-  <description><![CDATA[Returns a list of regular expression matches of string regex on the string value. Note that the result will be a list which contains the entire string value as the first entry and after that one or more matching groups. regex must always match the entire string value.Optionally a timeout can be provided in seconds, the default value is 5 seconds. Set timeout to zero to let the function run without timeout. This should only be altered when dealing with large source documents. The timeout is there to protect the system from hanging on invalid expressions.See the Regular Expressions page for more about Regular Expression support in Content Tools.]]></description>
-  <examples>
-    <example description="Determining the file extension contained in a URL:"><![CDATA[url = "http://www.xillio.com/wp-content/uploads/screenshot-ns-website.png";
+	<name>regex</name>
+	<parameters>
+		<param name="value">
+		</param>
+		<param name="regex">
+		</param>
+		<param name="timeout ">
+		</param>
+	</parameters>
+	<description><![CDATA[Returns a list of regular expression matches of string regex on the string value. Note that the result will be a list which contains the entire string value as the first entry and after that one or more matching groups. regex must always match the entire string value.Optionally a timeout can be provided in seconds, the default value is 5 seconds. Set timeout to zero to let the function run without timeout. This should only be altered when dealing with large source documents. The timeout is there to protect the system from hanging on invalid expressions.See the Regular Expressions page for more about Regular Expression support in Content Tools.]]></description>
+	<examples>
+		<example description="Determining the file extension contained in a URL:"><![CDATA[url = "http://www.xillio.com/wp-content/uploads/screenshot-ns-website.png";
 log (getextension (url));
 getextension = routine(url) {
     file = regex(url, "http.*/(.*?)\.(.*?)");
 ]]></example>
-    <example description="    if ( file != null) {"><![CDATA[        return(file[2]); //get the second matching group
+		<example description="    if ( file != null) {"><![CDATA[        return(file[2]); //get the second matching group
     } else {
         log("ERROR: binary url is not valid." + url);
     }
 }
 ]]></example>
-    <example description="will print:"><![CDATA[png
+		<example description="will print:"><![CDATA[png
 ]]></example>
-    <example description="Detect md5 hashes in &lt;a&gt; tags (to get page id’s in certain CMS’s):"><![CDATA[linkid = "";
+		<example
+			description="Detect md5 hashes in &lt;a&gt; tags (to get page id’s in certain CMS’s):"><![CDATA[linkid = "";
 id_regex = regex(contentstring, "(?is).*<a\s[^>]*href=\"([a-f0-9]{32})\".*?>.*");
 if (variabletype(id_regex) == "list") {
     linkid = id_regex[1];
 }
 ]]></example>
-  </examples>
-  <references>
-  </references>
+	</examples>
+	<references>
+	</references>
 </function>

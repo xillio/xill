@@ -1,41 +1,41 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <function Tag="replace">
-  <name>replace</name>
-  <parameters>
-    <param name="text">
-    </param>
-    <param name="needle">
-    </param>
-    <param name="replacement">
-    </param>
-    <param name="useregex">
-    </param>
-    <param name="replaceall">
-    </param>
-    <param name= "timeout">
-    </param>
-  </parameters>
-  <description><![CDATA[Returns a new string based on the string text in which occurrences of the string needle have been replaced by the string replacement. If the optional parameter replaceall is set to false, the routine will only replace the first occurrence of needle (defaults to true).Note that needle is by default interpreted as a regex pattern, so all special regex characters have to be escaped when used as a literal. Also in replacement you can use the capture groups from needle as "$1", "$2", etc. To use a literal "$" in replacement, you need to escape it like this: "\$".Set useregex to false to have the function treat the needle and replacement as regular text.Optionally a timeout can be provided in seconds, the default value is 5 seconds and applies when omitted. Set timeout to zero to let the function run without timeout. This should only be altered when dealing with large source documents. The timeout is there to protect the system from hanging on invalid expressions.See the Regular Expressions page for more about Regular Expression support in Content Tools.]]></description>
-  <examples>
-    <example description="Executing:"><![CDATA[log(replace("The quick brown fox.", "fox", "dog"));
+	<name>replace</name>
+	<parameters>
+		<param name="text">
+		</param>
+		<param name="needle">
+		</param>
+		<param name="replacement">
+		</param>
+		<param name="useregex">
+		</param>
+		<param name="replaceall">
+		</param>
+		<param name="timeout">
+		</param>
+	</parameters>
+	<description><![CDATA[Returns a new string based on the string text in which occurrences of the string needle have been replaced by the string replacement. If the optional parameter replaceall is set to false, the routine will only replace the first occurrence of needle (defaults to true).Note that needle is by default interpreted as a regex pattern, so all special regex characters have to be escaped when used as a literal. Also in replacement you can use the capture groups from needle as "$1", "$2", etc. To use a literal "$" in replacement, you need to escape it like this: "\$".Set useregex to false to have the function treat the needle and replacement as regular text.Optionally a timeout can be provided in seconds, the default value is 5 seconds and applies when omitted. Set timeout to zero to let the function run without timeout. This should only be altered when dealing with large source documents. The timeout is there to protect the system from hanging on invalid expressions.See the Regular Expressions page for more about Regular Expression support in Content Tools.]]></description>
+	<examples>
+		<example description="Executing:"><![CDATA[log(replace("The quick brown fox.", "fox", "dog"));
 ]]></example>
-    <example description="will print:"><![CDATA[The quick brown dog.
+		<example description="will print:"><![CDATA[The quick brown dog.
 ]]></example>
-    <example description="Executing:"><![CDATA[log(replace("The quick brown fox. The quick brown fox.", "fox", "dog"));
+		<example description="Executing:"><![CDATA[log(replace("The quick brown fox. The quick brown fox.", "fox", "dog"));
 ]]></example>
-    <example description="will print:"><![CDATA[The quick brown dog. The quick brown dog.
+		<example description="will print:"><![CDATA[The quick brown dog. The quick brown dog.
 ]]></example>
-    <example description="Executing:"><![CDATA[log(replace("The quick brown fox. The quick brown fox.", "fox", "dog", false));
+		<example description="Executing:"><![CDATA[log(replace("The quick brown fox. The quick brown fox.", "fox", "dog", false));
 ]]></example>
-    <example description="will print:"><![CDATA[The quick brown dog. The quick brown fox.
+		<example description="will print:"><![CDATA[The quick brown dog. The quick brown fox.
 ]]></example>
-    <example description="Repair misspelled URL’s (with one slash):"><![CDATA[url = "http:/www.xillio.com/";
+		<example description="Repair misspelled URL’s (with one slash):"><![CDATA[url = "http:/www.xillio.com/";
 url = replace(url, "(^http:/)([^/].*)", "http://$2");
 log (url);
 ]]></example>
-    <example description="will print:"><![CDATA[http://www.xillio.com/
+		<example description="will print:"><![CDATA[http://www.xillio.com/
 ]]></example>
-    <example description="Executing:"><![CDATA[log(cleanurlsimple("http://www.xillio.com/somepage#main?live=true&format=1", true, true));
+		<example description="Executing:"><![CDATA[log(cleanurlsimple("http://www.xillio.com/somepage#main?live=true&format=1", true, true));
 cleanurlsimple = routine(url, stripanchors, stripvars) {
     if (stripanchors == true) {
         url = replace(url, "#.*", ""); // strip anchors
@@ -48,9 +48,9 @@ cleanurlsimple = routine(url, stripanchors, stripvars) {
     return(url);
 }
 ]]></example>
-    <example description="will print:"><![CDATA[http://www.xillio.com/somepage
+		<example description="will print:"><![CDATA[http://www.xillio.com/somepage
 ]]></example>
-  </examples>
-  <references>
-  </references>
+	</examples>
+	<references>
+	</references>
 </function>

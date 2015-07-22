@@ -1,24 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<function Tag="absoluteurl">
-  <name>absoluteurl</name>
-  <parameters>
-    <param name="pageurl">
-    </param>
-    <param name="relativeurl">
-      <type>string</type>
-    </param>
-  </parameters>
-  <description><![CDATA[Converts the relative URL string relativeurl to an absolute url using the string pageurl as base URL. Returns the resulting URL as a string.]]></description>
-  <examples>
-    <example description="Executing:"><![CDATA[absoluteurl("http://www.xillio.nl/calendar/", "movies");
+<!DOCTYPE xilldoc>
+<function>
+	<parameters>
+		<param name="pageurl">
+		</param>
+		<param name="relativeurl">
+		</param>
+	</parameters>
+	<description><![CDATA[Converts the relative URL string relativeurl to an absolute url using the string pageurl as base URL. Returns the resulting URL as a string.]]></description>
+	<examples>
+		<example description="Executing:"><![CDATA[absoluteurl("http://www.xillio.nl/calendar/", "movies");
 ]]></example>
-    <example description="Returns:"><![CDATA["http://www.xillio.nl/calendar/movies"
+		<example description="Returns:"><![CDATA["http://www.xillio.nl/calendar/movies"
 ]]></example>
-    <example description="Executing:"><![CDATA[absoluteurl("http://www.xillio.nl/calendar/", "../");
+		<example description="Executing:"><![CDATA[absoluteurl("http://www.xillio.nl/calendar/", "../");
 ]]></example>
-    <example description="Returns:"><![CDATA["http://www.xillio.nl/"
+		<example description="Returns:"><![CDATA["http://www.xillio.nl/"
 ]]></example>
-  </examples>
-  <references>
-  </references>
+	</examples>
+	<references>
+	</references>
 </function>
