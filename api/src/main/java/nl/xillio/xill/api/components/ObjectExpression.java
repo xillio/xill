@@ -22,6 +22,9 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  */
 public class ObjectExpression implements Processable {
 
+	private static int hashCounter = 0;
+
+	private final int id;
 	private final LinkedHashMap<? extends Processable, ? extends Processable> value;
 
 	/**
@@ -30,6 +33,7 @@ public class ObjectExpression implements Processable {
 	 */
 	public ObjectExpression(final LinkedHashMap<? extends Processable, ? extends Processable> object) {
 		value = object;
+		id = hashCounter++;
 	}
 
 	@Override
@@ -72,6 +76,11 @@ public class ObjectExpression implements Processable {
 			@Override
 			public Collection<Processable> getChildren() {
 				return Arrays.asList();
+			}
+			
+			@Override
+			public int hashCode() {
+				return id;
 			}
 		};
 		list.setValue(result);

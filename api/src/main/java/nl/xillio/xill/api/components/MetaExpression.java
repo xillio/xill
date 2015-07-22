@@ -310,14 +310,8 @@ public abstract class MetaExpression implements Expression, Processable {
 
 	}
 
-	@Override
-	public boolean equals(final Object obj) {
-		// Only compare to MetaExpression
-		if (!(obj instanceof MetaExpression)) {
-			return false;
-		}
-
-		MetaExpression other = (MetaExpression) obj;
+	
+	public boolean equals(final MetaExpression other) {
 
 		// Compare the type
 		if (getType() != other.getType()) {
@@ -539,19 +533,18 @@ public abstract class MetaExpression implements Expression, Processable {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static MetaExpression parseObject(final Object root, final Map<Object, MetaExpression> cache) throws IllegalArgumentException {
+	private static MetaExpression parseObject(final Object root, final Map<String, MetaExpression> cache) throws IllegalArgumentException {
 		// Check the cache (Don't use key because we need REFERENCE equality not CONTENT)
-		for (Map.Entry<Object, MetaExpression> entry : cache.entrySet()) {
-			if (entry.getKey() == root) {
+		for (Entry<String, MetaExpression> entry : cache.entrySet()) {
+			if (entry.getKey().equals(System.identityHashCode(root) + root.toString())) {
 				// It seems like we found our match
 				return entry.getValue();
 			}
 		}
-
 		if (root instanceof List) {
 			// Push stub
 			MetaExpression result = ExpressionBuilderHelper.emptyList();
-			cache.put(root, result);
+			cache.put(System.identityHashCode(root) + root.toString(), result);
 			List<MetaExpression> values = (List<MetaExpression>) result.getValue();
 
 			// Parse children
@@ -568,7 +561,7 @@ public abstract class MetaExpression implements Expression, Processable {
 		if (root instanceof Map) {
 			// Push stub
 			MetaExpression result = ExpressionBuilderHelper.emptyObject();
-			cache.put(root, result);
+			cache.put(System.identityHashCode(root) + root.toString(), result);
 			LinkedHashMap<String, MetaExpression> values = (LinkedHashMap<String, MetaExpression>) result.getValue();
 
 			// Parse children

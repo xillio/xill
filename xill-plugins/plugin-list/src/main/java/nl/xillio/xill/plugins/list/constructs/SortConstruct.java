@@ -14,6 +14,7 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.plugins.list.util.Reverse;
+import nl.xillio.xill.plugins.list.util.Sort;
 
 /**
  *
@@ -40,7 +41,15 @@ public class SortConstruct extends Construct {
 
 	boolean sortKeys = keys.getBooleanValue();
 	boolean sortRecursive = recursive.getBooleanValue();
-
+	Sort sort = new Sort();
+	assertNotType(inputList, "input", ATOMIC);
+	Object obj = extractValue(inputList);
+	sort.doSorting(obj, sortRecursive);
+	MetaExpression m = MetaExpression.parseObject(obj);
+	return m;
+	
+	}
+/*
 	if (inputList == NULL || inputList == emptyList()) {
 		return emptyList();
 	}
@@ -52,7 +61,7 @@ public class SortConstruct extends Construct {
 	}
 	return NULL;
 	}
-
+*/
 	/**
 	 * sorting by key
 	 * stack is: LIST -> explicit keys -> generated keys

@@ -18,8 +18,11 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  * </ul>
  */
 public class ListExpression implements Processable {
+	private static int hashCounter = 0;
 
 	private final List<? extends Processable> value;
+
+	private final int id;
 
 	/**
 	 * @param value
@@ -27,6 +30,7 @@ public class ListExpression implements Processable {
 	 */
 	public ListExpression(final List<? extends Processable> value) {
 		this.value = value;
+		this.id = hashCounter++;
 	}
 
 	@Override
@@ -70,6 +74,11 @@ public class ListExpression implements Processable {
 			public Collection<Processable> getChildren() {
 				return Arrays.asList();
 			}
+			
+			@Override
+			public int hashCode() {
+				return id;
+			}
 		};
 		list.setValue(result);
 
@@ -81,3 +90,4 @@ public class ListExpression implements Processable {
 		return new ArrayList<>(value);
 	}
 }
+ 
