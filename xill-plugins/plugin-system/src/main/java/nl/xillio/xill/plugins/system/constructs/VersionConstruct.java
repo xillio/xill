@@ -38,6 +38,7 @@ public class VersionConstruct extends Construct {
 				if(versionParts[i] < requiredVersionParts[i]) {
 					//This is an older version
 					log.error("Version " + requiredVersion.getStringValue() + " is not supported in " + version);
+					break;
 				}
 			}
 			

@@ -25,10 +25,11 @@ public class ToJSONConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(ToJSONConstruct::process, new Argument("expression"), new Argument("pretty"));
+		return new ConstructProcessor(ToJSONConstruct::process, new Argument("expression"), new Argument("pretty",FALSE));
 	}
 
 	private static MetaExpression process(final MetaExpression expression, final MetaExpression pretty) {
+		assertNotNull(expression, "input");
 		if (pretty.getBooleanValue()) {
 			return fromValue(expression.toString(gson));
 		}

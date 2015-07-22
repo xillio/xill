@@ -26,6 +26,7 @@ public class ParseJSONConstruct extends Construct {
 	}
 
 	private static MetaExpression process(final MetaExpression json) {
+		assertNotNull(json, "input");
 		String jsonValue = json.getStringValue();
 
 		try {

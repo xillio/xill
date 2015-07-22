@@ -2,7 +2,6 @@ package nl.xillio.xill.plugins.system.constructs;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -45,6 +44,9 @@ public class ExecConstruct extends Construct {
 		if (arguments.getType() == LIST) {
 			// Multiple arguments
 			List<MetaExpression> args = (List<MetaExpression>) arguments.getValue();
+			if (args.isEmpty()) {
+				throw new RobotRuntimeException("input cannot be empty");
+			}
 			processBuilder = new ProcessBuilder(args.stream().map(exp -> exp.getStringValue()).toArray(i -> new String[i]));
 			friendlyName = FilenameUtils.getName(args.get(0).getStringValue());
 		} else {

@@ -10,7 +10,7 @@
 		<example description="Running:"><![CDATA[
     use System;
 	var result = System.parseJSON("[1,2,3, { \"Title\": \"Hello Xillio\" }]");
-	System.print(result.Title);]]></example>
+	System.print(result[3].Title);]]></example>
 		<example description="This will print:"><![CDATA[
 		 Info: Hello Xillio
 		]]>
