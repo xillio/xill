@@ -6,4 +6,5 @@ dependencies {
 	compile 'commons-io:commons-io:2.4'
 	compile 'org.apache.commons:commons-lang3:3.4'
 	compile 'nl.xillio:commons-plugins:1.0'
+	compile 'com.google.inject:guice:4.0'
 }
