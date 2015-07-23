@@ -1,8 +1,8 @@
 package nl.xillio.xill.api.construct;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 
-import nl.xillio.xill.api.RobotLogger;
+import nl.xillio.xill.api.RobotAppender;
 import nl.xillio.xill.api.components.RobotID;
 
 /**
@@ -50,20 +50,20 @@ public class ConstructContext {
 
 		// Make sure the logger is set
 		if (robotLogger == null) {
-			robotLogger = RobotLogger.getLogger(robotID);
+			robotLogger = RobotAppender.getLogger(robotID);
 		}
 
 		return robotLogger;
 	}
 
 	/**
-	 * @return the root RobotLogger
+	 * @return the root RobotAppender
 	 */
 	public Logger getRootLogger() {
 
 		// Make sure the logger is set
 		if (rootLogger == null) {
-			rootLogger = RobotLogger.getLogger(rootRobot);
+			rootLogger = RobotAppender.getLogger(rootRobot);
 		}
 
 		return rootLogger;

@@ -2,7 +2,8 @@ package nl.xillio.xill.plugins.system.constructs;
 
 import java.util.Arrays;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+
 
 import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.api.components.MetaExpression;

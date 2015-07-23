@@ -2,7 +2,8 @@ package nl.xillio.migrationtool.gui;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +17,7 @@ import javafx.scene.layout.AnchorPane;
  */
 public class StatusBar extends AnchorPane {
 
-	private static final Logger log = Logger.getLogger("XMT");
+	private static final Logger log = LogManager.getLogger();
 	// private Robot robot;
 
 	@FXML

@@ -1,6 +1,6 @@
 package nl.xillio.xill.plugins.system.constructs;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
@@ -33,7 +33,7 @@ public class PrintConstruct extends Construct {
 		} else {
 			robotLog.info(text);
 		}
-
+		
 		return NULL;
 	}
 }

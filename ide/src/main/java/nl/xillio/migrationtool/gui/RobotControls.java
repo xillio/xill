@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -15,7 +15,7 @@ import javafx.scene.input.KeyEvent;
 import nl.xillio.migrationtool.BreakpointPool;
 import nl.xillio.xill.api.Breakpoint;
 import nl.xillio.xill.api.Debugger;
-import nl.xillio.xill.api.RobotLogger;
+import nl.xillio.xill.api.RobotAppender;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.errors.ErrorHandlingPolicy;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
@@ -256,7 +256,7 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 
 	@Override
 	public void handle(final Throwable e) throws RobotRuntimeException {
-		Logger log = RobotLogger.getLogger(tab.getProcessor().getRobotID());
+		Logger log = RobotAppender.getLogger(tab.getProcessor().getRobotID());
 
 		Throwable root = ExceptionUtils.getRootCause(e);
 
