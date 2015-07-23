@@ -13,6 +13,8 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
+import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CheckMode;
@@ -92,7 +94,7 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
 
 	/**
 	 * Compile as a subrobot
-	 * 
+	 *
 	 * @param rootRobot
 	 *        The Root robot
 	 * @return a list of issues
@@ -151,7 +153,7 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
 
 	}
 
-	private void gatherResources(final Resource resource) {
+	private void gatherResources(final Resource resource) throws XillParsingException {
 		for (EObject root : resource.getContents()) {
 			xill.lang.xill.Robot robot = (xill.lang.xill.Robot) root;
 
@@ -159,6 +161,10 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
 				URI uri = getURI(include);
 				if (!resourceSet.getURIResourceMap().containsKey(uri)) {
 					// This is not in there yet
+					if (!new File(uri.toFileString()).exists()) {
+						INode node = NodeModelUtils.getNode(include);
+						throw new XillParsingException("The library " + uri.toFileString() + " does not exist.", node.getStartLine(), RobotID.getInstance(new File(resource.getURI().toFileString()), projectFolder));
+					}
 					Resource library = resourceSet.getResource(uri, true);
 					gatherResources(library);
 				}

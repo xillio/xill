@@ -21,7 +21,7 @@ public class Application extends javafx.application.Application {
 	/**
 	 * Main method
 	 *
-	 * @param args
+	 * @param args the main arguments to run the program
 	 */
 	public static void main(final String... args) {
 		logger.info("Starting host application");

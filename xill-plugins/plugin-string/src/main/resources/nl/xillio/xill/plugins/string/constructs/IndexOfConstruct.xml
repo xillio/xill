@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xilldoc>
+<function>
+	<parameters>
+		<param name="text" />
+		<param name="needle" />
+		<param name="startpos" />
+	</parameters>
+	<description><![CDATA[Returns the first index of needle in text. Returns -1 if not found. Optionally an alternative start position can be provided.]]></description>
+	<examples>
+		<example description="Executing:"><![CDATA[log(indexof("abcdefgabcdefg", "a"));
+        log(indexof("abcdefgabcdefg", "a", 2));
+]]></example>
+		<example description="will print:"><![CDATA[0
+7
+]]></example>
+	</examples>
+	<tags>
+	</tags>
+</function>

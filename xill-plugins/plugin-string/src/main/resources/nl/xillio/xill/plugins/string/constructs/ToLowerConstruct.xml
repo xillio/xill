@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xilldoc>
+<function>
+	<parameters>
+		<param name="text">
+		</param>
+	</parameters>
+	<description><![CDATA[Returns the lowercase string of text, which must also be a string.]]></description>
+	<examples>
+		<example description="Running: "><![CDATA[log (lowercase("3... 2... 1... START... Genius!"));]]></example>
+		<example description="Will print:"><![CDATA[3... 2... 1... start... genius!]]></example>
+	</examples>
+	<references>
+		<reference package="String">toUpper</reference>
+	</references>
+</function>

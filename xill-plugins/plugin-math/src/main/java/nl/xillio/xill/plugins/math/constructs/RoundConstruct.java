@@ -1,13 +1,10 @@
 package nl.xillio.xill.plugins.math.constructs;
 
-import java.io.InputStream;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.construct.HelpComponent;
 
 /**
  * The construct of the Round function which rounds a numbervalue.
@@ -15,7 +12,7 @@ import nl.xillio.xill.api.construct.HelpComponent;
  * @author Ivor
  *
  */
-public class RoundConstruct extends Construct implements HelpComponent {
+public class RoundConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
@@ -33,11 +30,6 @@ public class RoundConstruct extends Construct implements HelpComponent {
 		} else {
 			return fromValue(Math.round(number.doubleValue()));
 		}
-	}
-
-	@Override
-	public InputStream openDocumentationStream() {
-		return getClass().getResourceAsStream("/helpfiles/round.xml");
 	}
 
 }

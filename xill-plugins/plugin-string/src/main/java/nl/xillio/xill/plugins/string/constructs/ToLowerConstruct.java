@@ -1,13 +1,10 @@
 package nl.xillio.xill.plugins.string.constructs;
 
-import java.io.InputStream;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.construct.HelpComponent;
 
 /**
  *
@@ -17,7 +14,7 @@ import nl.xillio.xill.api.construct.HelpComponent;
  * @author Sander
  *
  */
-public class ToLowerConstruct extends Construct implements HelpComponent {
+public class ToLowerConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
@@ -28,10 +25,5 @@ public class ToLowerConstruct extends Construct implements HelpComponent {
 		assertType(string, "string", ATOMIC);
 
 		return fromValue(string.getStringValue().toLowerCase());
-	}
-
-	@Override
-	public InputStream openDocumentationStream() {
-		return getClass().getResourceAsStream("/helpfiles/lowercase.xml");
 	}
 }

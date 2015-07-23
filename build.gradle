@@ -161,10 +161,6 @@ clean {
 	dependsOn cleanRuntime
 }
 
-eclipseClasspath {
-	dependsOn assembleContenttools
-}
-
 //Test vpn connection
 if(testConnection(mavenRepositoryHost)) {
 	logger.info "We have a connection to $mavenFriendlyServerName"
