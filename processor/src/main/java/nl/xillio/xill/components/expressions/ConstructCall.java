@@ -53,7 +53,7 @@ public class ConstructCall implements Processable {
 			}
 
 			if (!processor.setArgument(i, result)) {
-				throw new RobotRuntimeException("Wrong type for argument `` in " + processor.toString(construct.getName()) + " expected [" + processor.getArgumentType(i) + "] but received [" + result.getType() + "]");
+				throw new RobotRuntimeException("Wrong type for argument `" + processor.getArgumentName(i) + "` in " + processor.toString(construct.getName()) + " expected [" + processor.getArgumentType(i) + "] but received [" + result.getType() + "]");
 			}
 		}
 

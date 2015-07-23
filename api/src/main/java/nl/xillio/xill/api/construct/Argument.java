@@ -45,18 +45,22 @@ public class Argument {
 		defaultValue = defaultvalue;
 
 		if (acceptedTypes.length == 0) {
-			//No types provided so accept everything
+			// No types provided so accept everything
 			for (int i = 0; i < this.acceptedTypes.length; i++) {
 				this.acceptedTypes[i] = true;
 			}
 			typeDescription = "ANY";
 		} else {
-			//Only accept provided types
+			// Only accept provided types
 			for (ExpressionDataType type : acceptedTypes) {
 				this.acceptedTypes[type.toInt()] = true;
 			}
-			
-			typeDescription = StringUtils.join(acceptedTypes, ", ");
+
+			typeDescription = StringUtils.join(
+				Arrays.stream(ExpressionDataType.values())
+					.filter(type -> this.acceptedTypes[type.toInt()])
+					.toArray(),
+				", ");
 		}
 	}
 
@@ -116,14 +120,14 @@ public class Argument {
 		if (defaultValue != null) {
 			name += " = " + defaultValue;
 		}
-		return name;
+		return "<" + getType() + "> " + name;
 	}
 
 	/**
 	 * @return a string description of the types
 	 */
 	public String getType() {
-		
+
 		return typeDescription;
 	}
 
