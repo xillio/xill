@@ -113,25 +113,6 @@ public class ConstructProcessor {
 	}
 
 	/**
-	 * Sets the value of a named argument.
-	 *
-	 * @param name
-	 *        the name of the argument
-	 * @param value
-	 *        the value to set the argument to
-	 * @return True if the argument was set
-	 */
-	public boolean setArgument(final String name, final MetaExpression value) {
-		for (Argument arg : parameters) {
-			if (arg.getName().equals(name)) {
-				arg.setValue(value);
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
 	 * Sets the value of the argument in slot index.
 	 *
 	 * @param index
@@ -145,8 +126,7 @@ public class ConstructProcessor {
 			return false;
 		}
 
-		parameters[index].setValue(value);
-		return true;
+		return parameters[index].setValue(value);
 	}
 
 	/**
@@ -206,6 +186,15 @@ public class ConstructProcessor {
 	public String getArgumentName(final int i) {
 		return parameters[i].getName();
 	}
+	
+	/**
+	 * Get a string description of the expected types for an argument
+	 * @param index the index of the argument
+	 * @return the string description
+	 */
+	public String getArgumentType(int index) {
+		return parameters[index].getType();
+	}
 
 	/**
 	 * Set the requirements validator for the processor to use.
@@ -241,7 +230,9 @@ public class ConstructProcessor {
 
 		int i = 0;
 		for (MetaExpression arg : arguments) {
-			processor.setArgument(i++, arg);
+			if(!processor.setArgument(i++, arg)) {
+				throw new IllegalArgumentException("Argument " + processor.getArgumentName(i) + " is of wrong type");
+			}
 		}
 
 		return processor.process();

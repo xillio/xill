@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration packages="nl.xillio.xill.api">
+  <Appenders>
+    <Console name="stdout" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d{HH:mm:ss} %p\t- (%F:%L) %m%n"/>
+    </Console>
+    <RobotAppender name="ctConsole">
+      <PatternLayout pattern="%d{HH:mm:ss}  %p\t- (%F:%L) %m%n"/>
+    </RobotAppender>
+  </Appenders>
+  <Loggers>
+  	<Logger name="nl.xillio" level="all" additivity="false">
+		<AppenderRef ref="stdout"/>
+    </Logger>
+    <Logger name="xill" level="info" additivity="false">
+		<AppenderRef ref="stdout"/>
+    </Logger>
+    <Logger name="robot" level="all" additivity="false">
+		<AppenderRef ref="stdout"/>
+		<AppenderRef ref="ctConsole"/>
+    </Logger>
+    <Root level="error">
+      <AppenderRef ref="stdout"/>
+    </Root>
+  </Loggers>
+</Configuration>

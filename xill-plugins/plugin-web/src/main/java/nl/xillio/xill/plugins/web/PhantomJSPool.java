@@ -2,7 +2,8 @@ package nl.xillio.xill.plugins.web;
 
 import java.util.Vector;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 
 import nl.xillio.xill.plugins.web.constructs.LoadPageConstruct.Options;
@@ -14,8 +15,8 @@ import nl.xillio.xill.plugins.web.constructs.LoadPageConstruct.Options;
  */
 public class PhantomJSPool {
 
-	private final Logger log = Logger.getLogger("XMT");
-
+	private final Logger log = LogManager.getLogger();
+	
 	Vector<Entity> poolEntities = new Vector<Entity>();
 	int maxPoolSize = 10; // maximum of entities in pool (entity means running
 	// PhantomJS..exe process)

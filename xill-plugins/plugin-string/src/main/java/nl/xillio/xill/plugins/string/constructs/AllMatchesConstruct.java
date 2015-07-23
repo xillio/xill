@@ -33,14 +33,14 @@ public class AllMatchesConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor((valueVar, regexVar, timeout) -> process(regexConstruct, valueVar, regexVar, timeout), new Argument("valueVar"), new Argument("regexVar"),
-			new Argument("timeoutVar", fromValue(RegexConstruct.REGEX_TIMEOUT)));
+		return new ConstructProcessor(
+			(valueVar, regexVar, timeout) -> process(regexConstruct, valueVar, regexVar, timeout),
+			new Argument("value", ATOMIC),
+			new Argument("regex", ATOMIC),
+			new Argument("timeout", fromValue(RegexConstruct.REGEX_TIMEOUT), ATOMIC));
 	}
 
 	private static MetaExpression process(final RegexConstruct regexConstruct, final MetaExpression textVar, final MetaExpression regexVar, final MetaExpression timeoutVar) {
-
-		assertType(textVar, "text", ATOMIC);
-		assertType(regexVar, "regex", ATOMIC);
 
 		List<MetaExpression> list = new ArrayList<>();
 

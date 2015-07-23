@@ -151,9 +151,6 @@ javafx {
 	shortcut = true
     embedJNLP = false
 }
-
-
-
 task cleanRuntime(type: Delete) {
 	description 'Deletes all the folders generated and used by contenttools running in eclipse'
 

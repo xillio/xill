@@ -19,11 +19,10 @@ public class RandomConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(RandomConstruct::process, new Argument("value", fromValue(0)));
+		return new ConstructProcessor(RandomConstruct::process, new Argument("value", fromValue(0), ATOMIC, LIST));
 	}
 
 	private static MetaExpression process(final MetaExpression value) {
-		assertNotType(value, "value", OBJECT);
 
 		if (value.getType() == LIST) {
 			@SuppressWarnings("unchecked")

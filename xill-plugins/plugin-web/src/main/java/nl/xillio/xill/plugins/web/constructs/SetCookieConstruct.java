@@ -23,7 +23,7 @@ public class SetCookieConstruct extends Construct {
 		return new ConstructProcessor(
 			SetCookieConstruct::process,
 			new Argument("page"),
-			new Argument("cookies"));
+			new Argument("cookies", LIST, OBJECT));
 	}
 
 	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression cookiesVar) {
@@ -31,8 +31,6 @@ public class SetCookieConstruct extends Construct {
 		if (cookiesVar.isNull()) {
 			return NULL;
 		}
-
-		assertNotType(cookiesVar, "cookies", ATOMIC);
 
 		if (!PageVariable.checkType(pageVar)) {
 			throw new RobotRuntimeException("Invalid variable type. Page NODE type expected!");

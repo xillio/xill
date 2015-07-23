@@ -2,9 +2,12 @@ description = 'this project contains the classes required by both users and impl
 
 dependencies {
 	compile 'com.google.code.gson:gson:2.3.1'
-	compile 'log4j:log4j:1.2.17'
 	compile 'commons-io:commons-io:2.4'
 	compile 'org.apache.commons:commons-lang3:3.4'
 	compile 'nl.xillio:commons-plugins:1.0'
 	compile 'com.google.inject:guice:4.0'
+	
+	compile 'org.apache.logging.log4j:log4j-core:2.3'
+	compile 'org.apache.logging.log4j:log4j-api:2.3'
+	compile 'org.apache.logging.log4j:log4j-1.2-api:2.3'
 }

@@ -35,8 +35,13 @@ public class ReplaceConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		Argument args[] = {new Argument("text"), new Argument("needle"), new Argument("replacement"), new Argument("useregex", TRUE), new Argument("replaceall", TRUE),
-						new Argument("timeout", fromValue(RegexConstruct.REGEX_TIMEOUT))};
+		Argument args[] = {
+						new Argument("text", ATOMIC),
+						new Argument("needle", ATOMIC),
+						new Argument("replacement", ATOMIC),
+						new Argument("useregex", TRUE, ATOMIC),
+						new Argument("replaceall", TRUE, ATOMIC),
+						new Argument("timeout", fromValue(RegexConstruct.REGEX_TIMEOUT), ATOMIC)};
 
 		return new ConstructProcessor((a) -> process(regexConstruct, a), args);
 
@@ -45,7 +50,6 @@ public class ReplaceConstruct extends Construct {
 	private static MetaExpression process(final RegexConstruct regexConstruct, final MetaExpression[] input) {
 
 		for (int i = 0; i < 5; i++) {
-			assertType(input[i], "input", ATOMIC);
 			assertNotNull(input[i], "input");
 		}
 

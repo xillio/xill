@@ -16,7 +16,7 @@ public class RoundConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(RoundConstruct::process, new Argument("value"));
+		return new ConstructProcessor(RoundConstruct::process, new Argument("value", ATOMIC));
 	}
 
 	private static MetaExpression process(final MetaExpression value) {

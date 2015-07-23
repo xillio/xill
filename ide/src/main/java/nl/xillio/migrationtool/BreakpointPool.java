@@ -5,7 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import nl.xillio.xill.api.Breakpoint;
 import nl.xillio.xill.api.components.RobotID;
@@ -15,7 +16,7 @@ import nl.xillio.xill.api.components.RobotID;
  */
 public class BreakpointPool {
 	private final Map<RobotID, List<Integer>> breakpoints = new HashMap<>();
-	private static final Logger log = Logger.getLogger(BreakpointPool.class);
+	private static final Logger log = LogManager.getLogger(BreakpointPool.class);
 
 	/**
 	 * Get all breakpoints in a certain robot
@@ -40,7 +41,6 @@ public class BreakpointPool {
 	 * @param line
 	 */
 	public void add(final RobotID robot, final int line) {
-		log.debug("Added breakpoint " + robot.getPath() + ":" + line);
 		List<Integer> bpList = breakpoints.get(robot);
 
 		if (bpList == null) {
@@ -72,7 +72,6 @@ public class BreakpointPool {
 	 * @param robot
 	 */
 	public void clear(final RobotID robot) {
-		log.debug("Cleared breakpoints for " + robot.getPath());
 		breakpoints.remove(robot);
 	}
 

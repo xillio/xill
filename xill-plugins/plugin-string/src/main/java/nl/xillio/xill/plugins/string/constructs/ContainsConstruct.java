@@ -18,7 +18,10 @@ public class ContainsConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(ContainsConstruct::process, new Argument("haystack"), new Argument("needle"));
+		return new ConstructProcessor(
+			ContainsConstruct::process,
+			new Argument("haystack"),
+			new Argument("needle", ATOMIC));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -27,8 +30,6 @@ public class ContainsConstruct extends Construct {
 		if (haystack == NULL || needle == NULL) {
 			return fromValue(false);
 		}
-
-		assertType(needle, "needle", ATOMIC);
 
 		// Compare lists
 		if (haystack.getType() == LIST) {

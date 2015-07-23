@@ -29,15 +29,14 @@ public class MatchesConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor((valueVar, regexVar, timeoutVar) -> process(regexConstruct, valueVar, regexVar, timeoutVar), new Argument("valueVar"), new Argument("regexVar"),
-			new Argument("timeoutVar", fromValue(RegexConstruct.REGEX_TIMEOUT)));
+		return new ConstructProcessor(
+			(valueVar, regexVar, timeoutVar) -> process(regexConstruct, valueVar, regexVar, timeoutVar),
+			new Argument("value", ATOMIC),
+			new Argument("regex", ATOMIC),
+			new Argument("timeout", fromValue(RegexConstruct.REGEX_TIMEOUT)));
 	}
 
 	private static MetaExpression process(final RegexConstruct regexConstruct, final MetaExpression valueVar, final MetaExpression regexVar, final MetaExpression timeoutVar) {
-
-		assertType(valueVar, "value", ATOMIC);
-		assertType(regexVar, "regex", ATOMIC);
-
 		String value = valueVar.getStringValue();
 		String regex = regexVar.getStringValue();
 

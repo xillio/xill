@@ -15,7 +15,7 @@ public class PropertiesConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(PropertiesConstruct::process, new Argument("property", NULL));
+		return new ConstructProcessor(PropertiesConstruct::process, new Argument("property", NULL, ATOMIC));
 	}
 
 	private static MetaExpression process(final MetaExpression property) {

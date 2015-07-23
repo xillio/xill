@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.time.StopWatch;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
@@ -35,42 +35,42 @@ public class ExecConstruct extends Construct {
 
 		return new ConstructProcessor(
 			(program, directory) -> process(program, directory, context.getRootLogger(), processFactory),
-			new Argument("arguments"),
-			new Argument("directory", NULL));
+			new Argument("arguments", ATOMIC, LIST),
+			new Argument("directory", NULL, ATOMIC));
 	}
 
 	static MetaExpression process(final MetaExpression arguments, final MetaExpression directory, final Logger log, final ProcessFactory processFactory) {
 
-		//Get description
+		// Get description
 		ProcessDescription processDescription = parseInput(arguments, directory);
 
-		//Start stopwatch
+		// Start stopwatch
 		StopWatch sw = new StopWatch();
 		sw.start();
 
-		//Start process
+		// Start process
 		Process process = startProcess(processFactory, processDescription);
 
-		//Subscribe to output
+		// Subscribe to output
 		ProcessOutput output = listenToStreams(process.getInputStream(), process.getErrorStream(), processDescription, log);
 
-		//Wait for the process to stop
+		// Wait for the process to stop
 		try {
 			process.waitFor();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
-		//Stop stopwatch
+
+		// Stop stopwatch
 		sw.stop();
 
-		//Return results
+		// Return results
 		return parseResult(output, sw.getTime());
 	}
 
 	/**
 	 * Parse the {@link MetaExpression} input to a {@link ProcessDescription} so that the {@link ProcessFactory} can use it
-	 * 
+	 *
 	 * @param command
 	 *        the command input
 	 * @param directory
@@ -78,8 +78,6 @@ public class ExecConstruct extends Construct {
 	 * @return the created {@link ProcessDescription}
 	 */
 	static ProcessDescription parseInput(final MetaExpression command, final MetaExpression directory) {
-		assertNotType(command, "arguments", OBJECT);
-		assertType(directory, "directory", ATOMIC);
 
 		ProcessDescription description;
 		File workingDir = null;
@@ -110,7 +108,7 @@ public class ExecConstruct extends Construct {
 
 	/**
 	 * Create and start a {@link Process} using a {@link ProcessFactory} that builds the {@link Process} from a {@link ProcessDescription}
-	 * 
+	 *
 	 * @param factory
 	 *        the factory to use
 	 * @param description
@@ -131,7 +129,7 @@ public class ExecConstruct extends Construct {
 
 	/**
 	 * Start listening to the stderr and stdout streams of a {@link Process}
-	 * 
+	 *
 	 * @param out
 	 *        the stdout stream
 	 * @param err
@@ -165,7 +163,7 @@ public class ExecConstruct extends Construct {
 
 	/**
 	 * Parse the result of running a {@link Process} to a {@link MetaExpression}
-	 * 
+	 *
 	 * @param output
 	 *        the {@link ProcessOutput} from the streams
 	 * @param timeMS
