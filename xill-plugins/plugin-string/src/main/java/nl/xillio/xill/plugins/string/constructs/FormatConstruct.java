@@ -35,12 +35,13 @@ public class FormatConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor((textVar, valueVar) -> process(regexConstruct, textVar, valueVar), new Argument("text"), new Argument("value"));
+		return new ConstructProcessor(
+			(textVar, valueVar) -> process(regexConstruct, textVar, valueVar),
+			new Argument("text", ATOMIC),
+			new Argument("value", LIST));
 	}
 
 	private static MetaExpression process(final RegexConstruct regexConstruct, final MetaExpression textVar, final MetaExpression valueVar) {
-		assertType(textVar, "text", ATOMIC);
-		assertType(valueVar, "value", LIST);
 		assertNotNull(textVar, "text");
 
 		List<MetaExpression> formatList = new ArrayList<>();

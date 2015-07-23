@@ -19,7 +19,9 @@ public class VersionConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(v -> process(v, context.getRootLogger()), new Argument("requiredVersion", NULL));
+		return new ConstructProcessor(
+			v -> process(v, context.getRootLogger()), 
+			new Argument("requiredVersion", NULL, ATOMIC));
 	}
 
 	private static MetaExpression process(final MetaExpression requiredVersion, Logger log) {

@@ -70,49 +70,6 @@ public abstract class Construct extends ExpressionBuilderHelper implements HelpC
 	public abstract ConstructProcessor prepareProcess(final ConstructContext context);
 
 	/**
-	 * Check if a {@link MetaExpression} is a {@link ExpressionDataType}. If not
-	 * then a {@link RobotRuntimeException} exception will be thrown informing
-	 * the developer about the incorrect type.
-	 *
-	 * @param expression
-	 *        The expression to evaluate
-	 * @param argumentName
-	 *        The name of the passed argument. This value is used to provide
-	 *        the developer with a clear error message.
-	 * @param expectedType
-	 *        The expected type for the expression
-	 * @throws RobotRuntimeException
-	 *         when the assertion fails
-	 */
-	protected static void assertType(final MetaExpression expression, final String argumentName, final ExpressionDataType expectedType) {
-		if (expression.getType() != expectedType) {
-			throw new RobotRuntimeException("Expected type " + expectedType.toString() + " for " + argumentName);
-		}
-	}
-
-	/**
-	 * Check if a {@link MetaExpression} is <b>NOT</b> a
-	 * {@link ExpressionDataType}. If so then a {@link RobotRuntimeException}
-	 * exception will be thrown informing the developer about the incorrect
-	 * type.
-	 *
-	 * @param expression
-	 *        The expression to evaluate
-	 * @param argumentName
-	 *        The name of the passed argument. This value is used to provide
-	 *        the developer with a clear error message.
-	 * @param expectedType
-	 *        The illegal type for the expression
-	 * @throws RobotRuntimeException
-	 *         when the assertion fails
-	 */
-	protected static void assertNotType(final MetaExpression expression, final String argumentName, final ExpressionDataType expectedType) {
-		if (expression.getType() == expectedType) {
-			throw new RobotRuntimeException("Expected type " + expectedType.toString() + " for " + argumentName);
-		}
-	}
-
-	/**
 	 * Check if a {@link MetaExpression} is <b>NOT</b> null. This is checked by
 	 * calling {@link MetaExpression#isNull()}.
 	 *

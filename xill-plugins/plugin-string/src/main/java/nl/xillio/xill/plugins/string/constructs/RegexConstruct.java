@@ -41,7 +41,11 @@ public class RegexConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(this::process, new Argument("string"), new Argument("regex"), new Argument("timeout", fromValue(REGEX_TIMEOUT)));
+		return new ConstructProcessor(
+			this::process, 
+			new Argument("string", ATOMIC), 
+			new Argument("regex", ATOMIC), 
+			new Argument("timeout", fromValue(REGEX_TIMEOUT), ATOMIC));
 	}
 
 	private MetaExpression process(final MetaExpression valueVar, final MetaExpression regexVar, final MetaExpression timeoutVar) {

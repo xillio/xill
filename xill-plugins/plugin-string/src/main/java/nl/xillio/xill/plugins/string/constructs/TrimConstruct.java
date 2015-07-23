@@ -27,14 +27,14 @@ public class TrimConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(TrimConstruct::process, new Argument("string"), new Argument("internal", FALSE));
+		return new ConstructProcessor(
+			TrimConstruct::process,
+			new Argument("string", ATOMIC, LIST),
+			new Argument("internal", FALSE, OBJECT));
 	}
 
 	private static MetaExpression process(final MetaExpression string, final MetaExpression internal) {
-
-		assertType(internal, "internal", ATOMIC);
 		assertNotNull(string, "string");
-		assertNotType(string, "string", OBJECT);
 
 		if (string.getType() == ExpressionDataType.LIST) {
 

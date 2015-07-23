@@ -15,7 +15,9 @@ public class WaitConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(WaitConstruct::process, new Argument("delay", fromValue(100)));
+		return new ConstructProcessor(
+			WaitConstruct::process, 
+			new Argument("delay", fromValue(100), ATOMIC));
 	}
 
 	private static MetaExpression process(final MetaExpression delayVar) {

@@ -27,8 +27,11 @@ public class ConstructCall implements Processable {
 	 * Create a new {@link ConstructCall}
 	 *
 	 * @param construct
+	 *        the construct to call
 	 * @param arguments
+	 *        the arguments to insert into the construct
 	 * @param context
+	 *        the context to pass to the constructs
 	 */
 	public ConstructCall(final Construct construct, final List<Processable> arguments, final ConstructContext context) {
 		this.construct = construct;
@@ -49,7 +52,9 @@ public class ConstructCall implements Processable {
 				debugger.handle(e);
 			}
 
-			processor.setArgument(i, result);
+			if (!processor.setArgument(i, result)) {
+				throw new RobotRuntimeException("Wrong type for argument `` in " + processor.toString(construct.getName()) + " expected [" + processor.getArgumentType(i) + "] but received [" + result.getType() + "]");
+			}
 		}
 
 		try {
