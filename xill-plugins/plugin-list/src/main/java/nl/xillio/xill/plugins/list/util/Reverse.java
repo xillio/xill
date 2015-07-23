@@ -10,14 +10,21 @@ import java.util.Map.Entry;
 import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
 
+/**
+ * @author Sander
+ *
+ */
 public class Reverse {
 
-	/**
-	 *
-	 */
+
 	List<Object> disc = new ArrayList<>();
 	Map<String,Object> disc2 = new LinkedHashMap<String, Object>();
 
+	/**
+	 * @param input the list
+	 * @param recursive whether lists inside the list should be reversed too.
+	 * @return the reversed list.
+	 */
 	@SuppressWarnings("unchecked")
 	public Object reverted(final Object input,final boolean recursive) {
 		if (input instanceof List<?>) {

@@ -9,7 +9,8 @@ import nl.xillio.xill.plugins.list.util.Reverse;
 
 /**
  *
- *
+ * returns the reversed list.
+ * if recursive is true it will also reverse lists inside the given list.
  *
  *
  * @author Sander
@@ -19,7 +20,7 @@ public class ReverseConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(ReverseConstruct::process, new Argument("list"), new Argument("recursive"));
+		return new ConstructProcessor(ReverseConstruct::process, new Argument("list"), new Argument("recursive", FALSE));
 	}
 
 	private static MetaExpression process(final MetaExpression input, final MetaExpression recursiveVar) {
