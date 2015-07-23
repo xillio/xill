@@ -8,17 +8,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import nl.xillio.xill.api.Debugger;
-import nl.xillio.xill.api.NullDebugger;
 import nl.xillio.xill.api.behavior.BooleanBehavior;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.NotImplementedException;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
  *
@@ -239,9 +235,7 @@ public abstract class MetaExpression implements Expression, Processable {
 	 * @return JSON representation
 	 */
 	public String toString(final Gson gsonParser) {
-		List<MetaExpression> initialVisited = new ArrayList<>(1);
-		initialVisited.add(this);
-		MetaExpression cleaned = removeCircularReference(this, initialVisited,
+		MetaExpression cleaned = removeCircularReference(this, new ArrayList<>(),
 			ExpressionBuilderHelper.fromValue("<<CIRCULAR REFERENCE>>"));
 		return gsonParser.toJson(extractValue(cleaned));
 	}
@@ -250,61 +244,58 @@ public abstract class MetaExpression implements Expression, Processable {
 	 * Remove all circular references to prepare for serialisation
 	 *
 	 * @param metaExpression
-	 * @param visited
+	 * @param currentlyProcessing
 	 * @param replacement
 	 *        The replacement for circular references
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
 	private static MetaExpression removeCircularReference(final MetaExpression metaExpression,
-					final List<MetaExpression> visited, final MetaExpression replacement) {
-		Processable result = ExpressionBuilderHelper.NULL;
+					final List<MetaExpression> currentlyProcessing, final MetaExpression replacement) {
+		MetaExpression result = ExpressionBuilderHelper.NULL;
+		currentlyProcessing.add(metaExpression);
 
 		switch (metaExpression.getType()) {
 			case LIST:
-				List<Processable> resultListValue = new ArrayList<>();
+				List<MetaExpression> resultListValue = new ArrayList<>();
 
 				for (MetaExpression child : (List<MetaExpression>) metaExpression.getValue()) {
-					if (visited.stream().anyMatch(metaExp -> metaExp == child)) {
+					if (currentlyProcessing.stream().anyMatch(metaExp -> metaExp == child)) {
 						// Circular reference
 						resultListValue.add(replacement);
 					} else {
 						// No Circular reference
-						resultListValue.add(removeCircularReference(child, visited, replacement));
+						resultListValue.add(removeCircularReference(child, currentlyProcessing, replacement));
 					}
 				}
 
-				result = new ListExpression(resultListValue);
+				result = ExpressionBuilderHelper.fromValue(resultListValue);
 
 				break;
 			case OBJECT:
-				LinkedHashMap<Processable, Processable> resultMapValue = new LinkedHashMap<>();
+				LinkedHashMap<String, MetaExpression> resultMapValue = new LinkedHashMap<>();
 
 				for (Map.Entry<String, MetaExpression> pair : ((Map<String, MetaExpression>) metaExpression.getValue())
 					.entrySet()) {
-					Processable key = ExpressionBuilderHelper.fromValue(pair.getKey());
 
-					if (visited.stream().anyMatch(metaExp -> metaExp == pair.getValue())) {
+					if (currentlyProcessing.stream().anyMatch(metaExp -> metaExp == pair.getValue())) {
 						// Circular reference
-						resultMapValue.put(key, replacement);
+						resultMapValue.put(pair.getKey(), replacement);
 					} else {
 						// No circular reference
-						visited.add(pair.getValue());
-						resultMapValue.put(key, removeCircularReference(pair.getValue(), visited, replacement));
+						currentlyProcessing.add(pair.getValue());
+						resultMapValue.put(pair.getKey(), removeCircularReference(pair.getValue(), currentlyProcessing, replacement));
 					}
 				}
-				result = new ObjectExpression(resultMapValue);
+				result = ExpressionBuilderHelper.fromValue(resultMapValue);
 				break;
 			case ATOMIC:
 				result = metaExpression;
 				break;
 		}
 
-		try {
-			return result.process(new NullDebugger()).get();
-		} catch (RobotRuntimeException e) {
-			return new AtomicExpression(ExceptionUtils.getRootCause(e).getMessage());
-		}
+		currentlyProcessing.remove(metaExpression);
+		return result;
 	}
 
 	@Override
@@ -412,7 +403,7 @@ public abstract class MetaExpression implements Expression, Processable {
 				}
 				break;
 			case LIST:
-				List<Object> resultList = new ArrayList<>();
+				List<Object> resultList = new CircularArrayList<>();
 				results.put(expression, resultList);
 				resultList.addAll(((List<MetaExpression>) expression.getValue()).stream().map(v -> extractValue(v, results))
 					.collect(Collectors.toList()));

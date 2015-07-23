@@ -22,7 +22,9 @@ public class PrintConstruct extends Construct {
 	private static MetaExpression process(final MetaExpression textVar, final MetaExpression logLevel, final Logger robotLog) {
 		String level = logLevel.getStringValue();
 
-		String text = textVar.getStringValue();
+		Object obj = extractValue(textVar);
+		
+		String text = parseObject(obj).getStringValue();
 
 		if (level.toLowerCase().equals("debug")) {
 			robotLog.debug(text);
