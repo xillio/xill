@@ -24,14 +24,14 @@ public class SplitConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(SplitConstruct::process, new Argument("string"), new Argument("delimiter"), new Argument("keepempty", FALSE));
+		return new ConstructProcessor(
+			SplitConstruct::process, 
+			new Argument("string", ATOMIC), 
+			new Argument("delimiter", ATOMIC), 
+			new Argument("keepempty", FALSE, ATOMIC));
 	}
 
 	private static MetaExpression process(final MetaExpression string, final MetaExpression delimiter, final MetaExpression keepempty) {
-
-		assertType(string, "string", ATOMIC);
-		assertType(delimiter, "delimiter", ATOMIC);
-		assertType(keepempty, "keepempty", ATOMIC);
 		assertNotNull(string, "string");
 		assertNotNull(delimiter, "delimiter");
 

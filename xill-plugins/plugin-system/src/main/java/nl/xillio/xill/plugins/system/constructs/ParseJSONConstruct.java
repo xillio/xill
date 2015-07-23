@@ -22,7 +22,9 @@ public class ParseJSONConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(ParseJSONConstruct::process, new Argument("json"));
+		return new ConstructProcessor(
+			ParseJSONConstruct::process, 
+			new Argument("json", ATOMIC));
 	}
 
 	private static MetaExpression process(final MetaExpression json) {

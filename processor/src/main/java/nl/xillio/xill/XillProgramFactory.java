@@ -920,7 +920,13 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 		ConstructProcessor testProcessor = construct
 			.prepareProcess(new ConstructContext(robotID.get(token.eResource()), rootRobot, construct));
 		for (int i = 0; i < arguments.size(); i++) {
-			testProcessor.setArgument(i, ExpressionBuilderHelper.NULL);
+			if (!testProcessor.setArgument(i, ExpressionBuilderHelper.NULL) &&
+							!testProcessor.setArgument(i, ExpressionBuilderHelper.emptyList()) &&
+							!testProcessor.setArgument(i, ExpressionBuilderHelper.emptyObject())) {
+
+				throw new XillParsingException("Failed to find a matching type for " + testProcessor.toString(construct.getName()), pos.getLineNumber(), pos.getRobotID());
+
+			}
 		}
 
 		// Throw exception if count is incorrect (i.e. We're either missing an

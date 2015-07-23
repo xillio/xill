@@ -35,14 +35,11 @@ public class ParseConstruct extends BaseDateConstruct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 
-		return new ConstructProcessor(ParseConstruct::process, new Argument("date", NULL),
-			new Argument("format", NULL));
+		return new ConstructProcessor(ParseConstruct::process, new Argument("date", NULL, ATOMIC),
+			new Argument("format", NULL, ATOMIC));
 	}
 
 	private static MetaExpression process(final MetaExpression dateVar, final MetaExpression formatVar) {
-		// Verify input
-		assertType(dateVar, "date", ATOMIC);
-		assertType(formatVar, "format", ATOMIC);
 		// Process
 		ZonedDateTime result = null;
 

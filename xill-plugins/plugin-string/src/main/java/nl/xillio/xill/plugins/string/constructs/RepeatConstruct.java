@@ -19,12 +19,13 @@ public class RepeatConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(RepeatConstruct::process, new Argument("string"), new Argument("value"));
+		return new ConstructProcessor(
+			RepeatConstruct::process,
+			new Argument("string", ATOMIC),
+			new Argument("value", ATOMIC));
 	}
 
 	private static MetaExpression process(final MetaExpression string, final MetaExpression value) {
-		assertType(string, "string", ATOMIC);
-		assertType(value, "value", ATOMIC);
 		assertNotNull(string, "string");
 		assertNotNull(value, "value");
 
