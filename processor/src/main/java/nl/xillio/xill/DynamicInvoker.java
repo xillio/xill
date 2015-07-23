@@ -4,7 +4,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 /**
  * This class represents a wrapper that can search for and invoke a named method dynamically
@@ -13,7 +15,7 @@ import org.apache.log4j.Logger;
  *        The argument base type for the method.
  */
 public class DynamicInvoker<I> {
-	private static final Logger logger = Logger.getLogger(DynamicInvoker.class);
+	private static final Logger logger = LogManager.getLogger();
 	/**
 	 * If set to true the invocation process will be logged more verbose.
 	 */
