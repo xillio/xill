@@ -28,7 +28,7 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.PageVariable;
 import nl.xillio.xill.plugins.web.PhantomJSPool;
-import nl.xillio.xill.plugins.web.WebPluginPackage;
+import nl.xillio.xill.plugins.web.WebXillPlugin;
 
 public class LoadPageConstruct extends Construct implements AutoCloseable {
 
@@ -407,7 +407,7 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 				System.setProperty("phantomjs.binary.path", phantomJStoolPath);
 
 				// extract file into the current directory
-				InputStream reader = WebPluginPackage.class.getResourceAsStream(nativeBinarySource);
+				InputStream reader = WebXillPlugin.class.getResourceAsStream(nativeBinarySource);
 				if (reader == null) {
 					throw new Exception("Cannot find phantomjs.exe resource file!");
 				}

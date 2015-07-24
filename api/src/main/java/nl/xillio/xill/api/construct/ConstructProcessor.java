@@ -130,15 +130,6 @@ public class ConstructProcessor {
 	}
 
 	/**
-	 * Checks if the processor can start processing. Without adding all arguments.
-	 *
-	 * @return true if processing can be started.
-	 */
-	public boolean assertEvaluationSuccess() {
-		return requirementsValidator.test(parameters);
-	}
-
-	/**
 	 * Finds the first missing argument.
 	 *
 	 * @return The first missing argument or null when there are no missing arguments

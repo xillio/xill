@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.system.utils;
+package nl.xillio.xill.plugins.system.exec;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -13,6 +13,7 @@ import nl.xillio.events.EventHost;
 public class InputStreamListener implements Runnable {
 	private final BufferedReader input;
 	private final EventHost<String> onLineComplete = new EventHost<>();
+	private Thread thread;
 
 	/**
 	 * Create a new {@link InputStreamListener}
@@ -28,8 +29,11 @@ public class InputStreamListener implements Runnable {
 	 * Start the thread
 	 */
 	public void start() {
-		Thread thread = new Thread(this);
+		if (thread != null && thread.isAlive()) {
+			throw new IllegalStateException("This listener is already running.");
+		}
 
+		thread = new Thread(this);
 		thread.start();
 	}
 
@@ -52,9 +56,17 @@ public class InputStreamListener implements Runnable {
 			}
 		}
 	}
-	
+
+	/**
+	 * @return true if and only if the thread is running
+	 */
+	public boolean isAlive() {
+		return thread != null && thread.isAlive();
+	}
+
 	/**
 	 * This event is called whenever the reader reads a full line
+	 * 
 	 * @return the event
 	 */
 	public Event<String> getOnLineComplete() {

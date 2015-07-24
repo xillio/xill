@@ -1,4 +1,4 @@
-package nl.xillio.xill.api;
+package nl.xillio.plugins;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,27 +7,40 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.text.WordUtils;
 
+import com.google.inject.Binder;
+
 import nl.xillio.plugins.interfaces.Loadable;
 import nl.xillio.xill.api.construct.Construct;
 
 /**
  * This class represents the base for all Xill plugins
  */
-public abstract class PluginPackage implements Loadable<PluginPackage>, AutoCloseable {
+public abstract class XillPlugin implements Loadable<XillPlugin>, AutoCloseable {
 	private final List<Construct> constructs = new ArrayList<>();
 	private final String defaultName;
+	private boolean loadingConstructs = false;
 
 	/**
-	 * Create a new {@link PluginPackage} and set the default name
+	 * Create a new {@link XillPlugin} and set the default name
 	 */
-	public PluginPackage() {
+	public XillPlugin() {
 		// Set the default name
 		String name = getClass().getSimpleName();
-		String superName = PluginPackage.class.getSimpleName();
+		String superName = XillPlugin.class.getSimpleName();
 		if (name.endsWith(superName)) {
 			name = name.substring(0, name.length() - superName.length());
 		}
 		defaultName = WordUtils.capitalize(name);
+	}
+
+	/**
+	 * Configure bindings for Injection
+	 *
+	 * @param binder
+	 *        the binder
+	 */
+	public void configure(final Binder binder) {
+
 	}
 
 	/**
@@ -47,7 +60,8 @@ public abstract class PluginPackage implements Loadable<PluginPackage>, AutoClos
 	}
 
 	/**
-	 * By default the name of a {@link PluginPackage} is the concrete implementation name acquired using {@link Class#getSimpleName()} without the {@link PluginPackage} suffix
+	 * By default the name of a {@link XillPlugin} is the concrete implementation name acquired using {@link Class#getSimpleName()} without the {@link XillPlugin} suffix
+	 *
 	 * @return the name of the package
 	 */
 	public String getName() {
@@ -63,6 +77,9 @@ public abstract class PluginPackage implements Loadable<PluginPackage>, AutoClos
 	 *         when a construct with the same name already exists
 	 */
 	protected final void add(final Construct construct) throws IllegalArgumentException {
+		if (!loadingConstructs) {
+			throw new IllegalStateException("Can only load constructs in the loadConstructs() method.");
+		}
 		if (getConstructs().stream().anyMatch(c -> c.getName().equals(construct.getName()))) {
 			System.out.println(construct.getName());
 			throw new IllegalArgumentException("A construct with the same name exsits.");
@@ -81,6 +98,9 @@ public abstract class PluginPackage implements Loadable<PluginPackage>, AutoClos
 	 *         when a construct with the same name already exists
 	 */
 	protected final void add(final Construct... constructs) throws IllegalArgumentException {
+		if (!loadingConstructs) {
+			throw new IllegalStateException("Can only load constructs in the loadConstructs() method.");
+		}
 		for (Construct c : constructs) {
 			add(c);
 		}
@@ -96,6 +116,9 @@ public abstract class PluginPackage implements Loadable<PluginPackage>, AutoClos
 	 *         when a construct with the same name already exists
 	 */
 	protected final void add(final Collection<Construct> constructs) throws IllegalArgumentException {
+		if (!loadingConstructs) {
+			throw new IllegalStateException("Can only load constructs in the loadConstructs() method.");
+		}
 		for (Construct c : constructs) {
 			add(c);
 		}
@@ -128,6 +151,23 @@ public abstract class PluginPackage implements Loadable<PluginPackage>, AutoClos
 	public void close() throws Exception {
 		purge();
 	}
+
+	@Override
+	public void load(final XillPlugin[] dependencies) {}
+
+	/**
+	 * Load all the constructs in the package
+	 */
+	public final void initialize() {
+		loadingConstructs = true;
+		loadConstructs();
+		loadingConstructs = false;
+	}
+
+	/**
+	 * This is where the package can add all the constructs
+	 */
+	public abstract void loadConstructs();
 
 	/**
 	 * @return the constructs

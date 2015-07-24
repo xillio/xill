@@ -1,6 +1,6 @@
 package nl.xillio.xill.plugins.date;
 
-import nl.xillio.xill.api.PluginPackage;
+import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.plugins.date.constructs.ChangeConstruct;
 import nl.xillio.xill.plugins.date.constructs.DiffConstruct;
 import nl.xillio.xill.plugins.date.constructs.FormatConstruct;
@@ -13,10 +13,10 @@ import nl.xillio.xill.plugins.date.constructs.ParseConstruct;
 /**
  * This package includes all date constructs
  */
-public class DatePluginPackage extends PluginPackage {
+public class DateXillPlugin extends XillPlugin {
 
 	@Override
-	public void load(final PluginPackage[] dependencies) {
+	public void loadConstructs() {
 		add(new NowConstruct(), new ParseConstruct(), new FormatConstruct(), new InfoConstruct(),
 			new DiffConstruct(), new ChangeConstruct(), new OfConstruct(), new LocalizedFormatConstruct());
 	}

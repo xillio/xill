@@ -139,9 +139,9 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
 	private void loadProcessor(final File document, final File projectPath) {
 		if (processor == null) {
-			processor = Loader.getXill().createProcessor(document, projectPath, globalController.getPluginLoader());
+			processor = Loader.getXill().createProcessor(document, projectPath, Loader.getInitializer().getLoader());
 		} else {
-			processor = Loader.getXill().createProcessor(document, projectPath, globalController.getPluginLoader(), processor.getDebugger());
+			processor = Loader.getXill().createProcessor(document, projectPath, Loader.getInitializer().getLoader(), processor.getDebugger());
 		}
 	}
 

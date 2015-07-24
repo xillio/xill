@@ -22,7 +22,7 @@ import nl.xillio.xill.api.Xill;
 /**
  * Launcher class, is used to launch processors in their own threads, facilitates a simple Log, and provides commandline running.
  */
-public class Loader implements nl.xillio.contenttools.PluginPackage {
+public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 
 	private static final Logger log = LogManager.getLogger();
 	/**
@@ -159,12 +159,16 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 	public static final String LONGVERSION = SHORTVERSION + ", " + VERSIONDATE;
 
 	private static Xill xill;
+	private static XillInitializer initializer;
 
 	@Override
 	public void start(final Stage primaryStage, final Xill xill) {
-		log.info("Starting Contentools IDE");
 		Loader.xill = xill;
 		Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+
+		// Start loading plugins
+		initializer = new XillInitializer();
+		initializer.start();
 
 		try (InputStream image = this.getClass().getResourceAsStream("/icon.png")) {
 			if (image != null) {
@@ -208,6 +212,13 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 		Platform.runLater(() -> primaryStage.getScene().lookup("#apnRoot").setVisible(true));
 	}
 
+	/**
+	 * @return the currently used initializer
+	 */
+	public static XillInitializer getInitializer() {
+		return initializer;
+	}
+
 	@Override
 	public Object serve() {
 		// Nothing to serve
@@ -230,7 +241,7 @@ public class Loader implements nl.xillio.contenttools.PluginPackage {
 	}
 
 	@Override
-	public void load(final nl.xillio.contenttools.PluginPackage[] dependencies) {}
+	public void load(final nl.xillio.plugins.ContenttoolsPlugin[] dependencies) {}
 
 	/**
 	 * @return The xill implementation this was initialized with

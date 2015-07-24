@@ -71,6 +71,9 @@ allprojects {
 	
 	jar.manifest {
 		attributes "Implementation-Version": version
+		if(project.hasProperty(project.name + "ProjectName")) {
+			attributes "Implementation-Title": project.getProperties().get(project.name + "ProjectName")
+		}
 	}
 }
 

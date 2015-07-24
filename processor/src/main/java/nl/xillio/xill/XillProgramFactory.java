@@ -20,9 +20,9 @@ import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
 import nl.xillio.plugins.PluginLoader;
+import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.LanguageFactory;
-import nl.xillio.xill.api.PluginPackage;
 import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.ListExpression;
@@ -106,9 +106,9 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	private final Stack<Map.Entry<xill.lang.xill.FunctionDeclaration, FunctionParameterExpression>> functionParameterExpressions = new Stack<>();
 	private final Stack<Map.Entry<xill.lang.xill.FunctionCall, FunctionCall>> functionCalls = new Stack<>();
 	private final Map<xill.lang.xill.FunctionCall, List<Processable>> functionCallArguments = new HashMap<>();
-	private final Map<xill.lang.xill.UseStatement, PluginPackage> useStatements = new HashMap<>();
+	private final Map<xill.lang.xill.UseStatement, XillPlugin> useStatements = new HashMap<>();
 	private final Map<Resource, RobotID> robotID = new HashMap<>();
-	private final PluginLoader<PluginPackage> pluginLoader;
+	private final PluginLoader<XillPlugin> pluginLoader;
 	private final Debugger debugger;
 	private final RobotID rootRobot;
 	private final Map<EObject, Map.Entry<RobotID, Robot>> compiledRobots = new HashMap<>();
@@ -120,7 +120,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @param debugger
 	 * @param robotID
 	 */
-	public XillProgramFactory(final PluginLoader<PluginPackage> loader, final Debugger debugger,
+	public XillProgramFactory(final PluginLoader<XillPlugin> loader, final Debugger debugger,
 					final RobotID robotID) {
 		this(loader, debugger, robotID, false);
 	}
@@ -135,7 +135,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @param verbose
 	 *        verbose logging for the compiler
 	 */
-	public XillProgramFactory(final PluginLoader<PluginPackage> loader, final Debugger debugger, final RobotID robotID,
+	public XillProgramFactory(final PluginLoader<XillPlugin> loader, final Debugger debugger, final RobotID robotID,
 					final boolean verbose) {
 		this.debugger = debugger;
 		rootRobot = robotID;
@@ -163,7 +163,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 			// Really? Java...
 			String searchName = pluginName;
 
-			Optional<PluginPackage> plugin = pluginLoader.getPluginManager().getPlugins().stream()
+			Optional<XillPlugin> plugin = pluginLoader.getPluginManager().getPlugins().stream()
 				.filter(pckage -> pckage.getName().equals(searchName)).findAny();
 
 			if (!plugin.isPresent()) {
@@ -887,7 +887,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 */
 	Processable parseToken(final xill.lang.xill.ConstructCall token) throws XillParsingException {
 
-		PluginPackage pluginPackage = useStatements.get(token.getPackage());
+		XillPlugin pluginPackage = useStatements.get(token.getPackage());
 
 		CodePosition pos = pos(token);
 
