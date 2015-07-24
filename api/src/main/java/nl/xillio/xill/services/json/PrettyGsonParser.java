@@ -8,9 +8,13 @@ import com.google.gson.GsonBuilder;
  */
 public class PrettyGsonParser extends GsonParser implements PrettyJsonParser {
 	private static final Gson gson = new GsonBuilder()
-		.setPrettyPrinting()
-		.create();
-
+					.enableComplexMapKeySerialization()
+					.serializeNulls()
+					.setPrettyPrinting()
+					.disableHtmlEscaping()
+					.disableInnerClassSerialization()
+					.serializeSpecialFloatingPointValues()
+					.serializeNulls().create();
 	/**
 	 * @return the {@link Gson} parser
 	 */
