@@ -11,7 +11,7 @@ import nl.xillio.xill.plugins.example.constructs.WebPreviewConstruct;
 public class ExampleXillPlugin extends XillPlugin {
 
 	@Override
-	public void load(final XillPlugin[] dependencies) {
+	public void loadConstructs() {
 		add(new LifeConstuct(), new CopyConstruct(), new WebPreviewConstruct());
 	}
 }

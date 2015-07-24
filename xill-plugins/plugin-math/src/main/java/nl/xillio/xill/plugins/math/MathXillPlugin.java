@@ -12,7 +12,7 @@ import nl.xillio.xill.plugins.math.constructs.RoundConstruct;
 public class MathXillPlugin extends XillPlugin {
 
 	@Override
-	public void load(final XillPlugin[] dependencies) {
+	public void loadConstructs() {
 		add(new AbsConstruct(), new HungarianAlgorithmConstruct(), new RandomConstruct(),
 			new RoundConstruct());
 	}

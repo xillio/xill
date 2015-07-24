@@ -159,11 +159,16 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 	public static final String LONGVERSION = SHORTVERSION + ", " + VERSIONDATE;
 
 	private static Xill xill;
+	private static XillInitializer initializer;
 
 	@Override
 	public void start(final Stage primaryStage, final Xill xill) {
 		Loader.xill = xill;
 		Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+
+		// Start loading plugins
+		initializer = new XillInitializer();
+		initializer.start();
 
 		try (InputStream image = this.getClass().getResourceAsStream("/icon.png")) {
 			if (image != null) {
@@ -205,6 +210,13 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 		primaryStage.show();
 
 		Platform.runLater(() -> primaryStage.getScene().lookup("#apnRoot").setVisible(true));
+	}
+
+	/**
+	 * @return the currently used initializer
+	 */
+	public static XillInitializer getInitializer() {
+		return initializer;
 	}
 
 	@Override

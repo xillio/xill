@@ -23,7 +23,7 @@ import nl.xillio.xill.plugins.web.constructs.XPathConstruct;
 public class WebXillPlugin extends XillPlugin {
 
 	@Override
-	public void load(final XillPlugin[] dependencies) {
+	public void loadConstructs() {
 		add(new ScreenshotConstruct());
 		add(new LoadPageConstruct());
 		add(new XPathConstruct());

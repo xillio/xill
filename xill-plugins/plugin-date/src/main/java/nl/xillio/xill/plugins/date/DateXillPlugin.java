@@ -16,7 +16,7 @@ import nl.xillio.xill.plugins.date.constructs.ParseConstruct;
 public class DateXillPlugin extends XillPlugin {
 
 	@Override
-	public void load(final XillPlugin[] dependencies) {
+	public void loadConstructs() {
 		add(new NowConstruct(), new ParseConstruct(), new FormatConstruct(), new InfoConstruct(),
 			new DiffConstruct(), new ChangeConstruct(), new OfConstruct(), new LocalizedFormatConstruct());
 	}
