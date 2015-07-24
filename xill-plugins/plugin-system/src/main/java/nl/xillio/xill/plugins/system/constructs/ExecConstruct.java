@@ -61,6 +61,10 @@ public class ExecConstruct extends Construct {
 			e.printStackTrace();
 		}
 
+		while (output.isAlive()) {
+
+		}
+
 		// Stop stopwatch
 		sw.stop();
 
@@ -77,7 +81,7 @@ public class ExecConstruct extends Construct {
 	 *        the directory input
 	 * @return the created {@link ProcessDescription}
 	 */
-	static ProcessDescription parseInput(final MetaExpression command, final MetaExpression directory) {
+	private static ProcessDescription parseInput(final MetaExpression command, final MetaExpression directory) {
 
 		ProcessDescription description;
 		File workingDir = null;
@@ -158,7 +162,7 @@ public class ExecConstruct extends Construct {
 		});
 		outListener.start();
 
-		return new ProcessOutput(output, errors);
+		return new ProcessOutput(output, errors, outListener, errListener);
 	}
 
 	/**
