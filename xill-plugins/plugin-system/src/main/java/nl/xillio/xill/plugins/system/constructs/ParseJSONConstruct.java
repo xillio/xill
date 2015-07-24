@@ -11,7 +11,7 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.system.services.json.JsonParser;
+import nl.xillio.xill.services.json.JsonParser;
 
 /**
  * Forwards a JSON string to GSON

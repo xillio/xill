@@ -3,7 +3,7 @@ package nl.xillio.xill.plugins.system.exec;
 import java.io.IOException;
 import java.util.function.Function;
 
-import nl.xillio.xill.api.inject.FactoryBuilderException;
+import nl.xillio.xill.services.inject.FactoryBuilderException;
 
 /**
  * This class builds {@link Process} it is in here to improve testability

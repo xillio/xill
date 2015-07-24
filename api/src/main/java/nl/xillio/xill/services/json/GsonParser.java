@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.system.services.json;
+package nl.xillio.xill.services.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

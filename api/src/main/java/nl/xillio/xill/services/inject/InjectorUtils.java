@@ -1,4 +1,4 @@
-package nl.xillio.xill.api.inject;
+package nl.xillio.xill.services.inject;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
