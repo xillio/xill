@@ -1,6 +1,6 @@
 package nl.xillio.xill.plugins.string;
 
-import nl.xillio.xill.api.PluginPackage;
+import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.plugins.string.constructs.AbsoluteURLConstruct;
 import nl.xillio.xill.plugins.string.constructs.AllMatchesConstruct;
 import nl.xillio.xill.plugins.string.constructs.AmpersandDecodeConstruct;
@@ -30,10 +30,10 @@ import nl.xillio.xill.plugins.string.constructs.WrapConstruct;
 /**
  * This package includes all Text constructs
  */
-public class StringPluginPackage extends PluginPackage {
+public class StringXillPlugin extends XillPlugin {
 
 	@Override
-	public void load(final PluginPackage[] dependencies) {
+	public void load(final XillPlugin[] dependencies) {
 		RegexConstruct regex = new RegexConstruct();
 
 		add(

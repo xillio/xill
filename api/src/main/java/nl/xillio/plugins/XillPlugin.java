@@ -1,4 +1,4 @@
-package nl.xillio.xill.api;
+package nl.xillio.plugins;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,17 +13,17 @@ import nl.xillio.xill.api.construct.Construct;
 /**
  * This class represents the base for all Xill plugins
  */
-public abstract class PluginPackage implements Loadable<PluginPackage>, AutoCloseable {
+public abstract class XillPlugin implements Loadable<XillPlugin>, AutoCloseable {
 	private final List<Construct> constructs = new ArrayList<>();
 	private final String defaultName;
 
 	/**
-	 * Create a new {@link PluginPackage} and set the default name
+	 * Create a new {@link XillPlugin} and set the default name
 	 */
-	public PluginPackage() {
+	public XillPlugin() {
 		// Set the default name
 		String name = getClass().getSimpleName();
-		String superName = PluginPackage.class.getSimpleName();
+		String superName = XillPlugin.class.getSimpleName();
 		if (name.endsWith(superName)) {
 			name = name.substring(0, name.length() - superName.length());
 		}
@@ -47,7 +47,7 @@ public abstract class PluginPackage implements Loadable<PluginPackage>, AutoClos
 	}
 
 	/**
-	 * By default the name of a {@link PluginPackage} is the concrete implementation name acquired using {@link Class#getSimpleName()} without the {@link PluginPackage} suffix
+	 * By default the name of a {@link XillPlugin} is the concrete implementation name acquired using {@link Class#getSimpleName()} without the {@link XillPlugin} suffix
 	 * @return the name of the package
 	 */
 	public String getName() {

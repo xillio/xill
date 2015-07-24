@@ -5,8 +5,8 @@ import java.io.IOException;
 
 import nl.xillio.plugins.CircularReferenceException;
 import nl.xillio.plugins.PluginLoader;
+import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.api.NullDebugger;
-import nl.xillio.xill.api.PluginPackage;
 import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
@@ -43,7 +43,7 @@ class RobotLoader {
 
 		File robotFile = new File(args[0]);
 
-		PluginLoader<PluginPackage> pluginLoader = PluginLoader.load(PluginPackage.class);
+		PluginLoader<XillPlugin> pluginLoader = PluginLoader.load(XillPlugin.class);
 		if (!pluginFolder.exists()) {
 			throw new RuntimeException("Could not find the plugin folder " + pluginFolder.getAbsolutePath());
 		}

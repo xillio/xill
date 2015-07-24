@@ -1,4 +1,4 @@
-package nl.xillio.contenttools;
+package nl.xillio.plugins;
 
 import javafx.stage.Stage;
 import nl.xillio.plugins.interfaces.Loadable;
@@ -7,7 +7,7 @@ import nl.xillio.xill.api.Xill;
 /**
  * This interface represents the interface to the top-level contenttools plugins.
  */
-public interface PluginPackage extends Loadable<PluginPackage> {
+public interface ContenttoolsPlugin extends Loadable<ContenttoolsPlugin> {
 	/**
 	 * Start the plugin
 	 * 

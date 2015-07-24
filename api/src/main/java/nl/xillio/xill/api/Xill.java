@@ -3,6 +3,7 @@ package nl.xillio.xill.api;
 import java.io.File;
 
 import nl.xillio.plugins.PluginLoader;
+import nl.xillio.plugins.XillPlugin;
 
 /**
  * This interface represents the main entrypoint to the Xill Language
@@ -24,9 +25,9 @@ public interface Xill {
 	 *        the pluginloader
 	 * @return A processor
 	 * @see PluginLoader
-	 * @see PluginPackage
+	 * @see XillPlugin
 	 */
-	public XillProcessor createProcessor(final File robotFile, final File projectFolder, final PluginLoader<PluginPackage> pluginLoader);
+	public XillProcessor createProcessor(final File robotFile, final File projectFolder, final PluginLoader<XillPlugin> pluginLoader);
 
 	/**
 	 * Create a new processor from this API entry point.
@@ -41,7 +42,7 @@ public interface Xill {
 	 *        the debugger to put the debugging info into
 	 * @return A processor
 	 * @see PluginLoader
-	 * @see PluginPackage
+	 * @see XillPlugin
 	 */
-	public XillProcessor createProcessor(final File robotFile, final File projectFolder, final PluginLoader<PluginPackage> pluginLoader, final Debugger debugger);
+	public XillProcessor createProcessor(final File robotFile, final File projectFolder, final PluginLoader<XillPlugin> pluginLoader, final Debugger debugger);
 }

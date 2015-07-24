@@ -39,11 +39,11 @@ import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient;
 import nl.xillio.migrationtool.documentation.PluginListener;
 import nl.xillio.plugins.CircularReferenceException;
 import nl.xillio.plugins.PluginLoader;
+import nl.xillio.plugins.XillPlugin;
 import nl.xillio.sharedlibrary.license.License;
 import nl.xillio.sharedlibrary.license.License.LicenseType;
 import nl.xillio.sharedlibrary.license.License.SoftwareModule;
 import nl.xillio.sharedlibrary.settings.SettingsHandler;
-import nl.xillio.xill.api.PluginPackage;
 import nl.xillio.xill.api.Xill;
 
 /**
@@ -94,7 +94,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 	@FXML
 	private ProjectPane projectpane;
 
-	private final PluginLoader<PluginPackage> pluginLoader = PluginLoader.load(PluginPackage.class);
+	private final PluginLoader<XillPlugin> pluginLoader = PluginLoader.load(XillPlugin.class);
 
 	/**
 	 * Initialize custom components
@@ -416,7 +416,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 		tpnBots.getTabs().forEach(tab -> closeTab(tab, false));
 
 		// Purge plugins
-		for (PluginPackage plugin : getPluginLoader().getPluginManager().getPlugins()) {
+		for (XillPlugin plugin : getPluginLoader().getPluginManager().getPlugins()) {
 			try {
 				plugin.close();
 			} catch (Exception e) {
@@ -590,7 +590,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 		}
 	}
 
-	public PluginLoader<PluginPackage> getPluginLoader() {
+	public PluginLoader<XillPlugin> getPluginLoader() {
 		return pluginLoader;
 	}
 

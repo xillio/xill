@@ -9,9 +9,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import nl.xillio.plugins.PluginLoader;
+import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.XillProcessor;
 import nl.xillio.xill.api.Debugger;
-import nl.xillio.xill.api.PluginPackage;
 import nl.xillio.xill.api.RobotAppender;
 import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.api.components.InstructionFlow;
@@ -30,7 +30,7 @@ public class CallbotExpression implements Processable {
 	private final Logger robotLogger;
 	private final Processable path;
 	private final RobotID robotID;
-	private final PluginLoader<PluginPackage> pluginLoader;
+	private final PluginLoader<XillPlugin> pluginLoader;
 	private Processable argument;
 
 	/**
@@ -42,7 +42,7 @@ public class CallbotExpression implements Processable {
 	 * @param pluginLoader
 	 * @param debugger
 	 */
-	public CallbotExpression(final Processable path, final RobotID robotID, final PluginLoader<PluginPackage> pluginLoader) {
+	public CallbotExpression(final Processable path, final RobotID robotID, final PluginLoader<XillPlugin> pluginLoader) {
 		this.path = path;
 		this.robotID = robotID;
 		this.pluginLoader = pluginLoader;

@@ -19,7 +19,7 @@ import nl.xillio.events.Event;
 import nl.xillio.events.EventHost;
 import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient;
 import nl.xillio.plugins.PluginLoader;
-import nl.xillio.xill.api.PluginPackage;
+import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.api.construct.Construct;
 
 /**
@@ -42,7 +42,7 @@ public class PluginListener {
 	 *        The loader that tries to load the plugins from jars
 	 * @return the created {@link PluginListener}
 	 */
-	public static PluginListener attach(final PluginLoader<PluginPackage> pluginLoader) {
+	public static PluginListener attach(final PluginLoader<XillPlugin> pluginLoader) {
 		PluginListener listener = new PluginListener();
 
 		// Listen to all loaded plugins
@@ -92,7 +92,7 @@ public class PluginListener {
 	 * @param plugin
 	 *        The plugin that we load
 	 */
-	public void pluginLoaded(final PluginPackage plugin) {
+	public void pluginLoaded(final XillPlugin plugin) {
 		timeline.play();
 
 		plugin.getName();
@@ -167,13 +167,13 @@ public class PluginListener {
 	 * <p>
 	 *
 	 * @param plugin
-	 *        The {@link PluginPackage} of the plugin.
+	 *        The {@link XillPlugin} of the plugin.
 	 * @param construct
 	 *        The {@link Construct} which version we're checking.
 	 * @return
 	 * 				A boolean value wheter we need to update the helpfile of the construct.
 	 */
-	private boolean needsUpdate(final PluginPackage plugin, final Construct construct) {
+	private boolean needsUpdate(final XillPlugin plugin, final Construct construct) {
 		// Check if version is changed
 		String name = construct.getName();
 		String version = searcher.getDocumentVersion(plugin.getName(), name);
