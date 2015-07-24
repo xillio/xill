@@ -20,7 +20,7 @@ public class WaitConstruct extends Construct {
 			new Argument("delay", fromValue(100), ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression delayVar) {
+	static MetaExpression process(final MetaExpression delayVar) {
 		int delay = delayVar.getNumberValue().intValue();
 		try {
 			Thread.sleep(delay);
