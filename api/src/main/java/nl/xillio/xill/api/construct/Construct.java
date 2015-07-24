@@ -8,6 +8,7 @@ import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.api.inject.InjectorUtils;
 
 /**
  * This interface contains the core functionality for all constructs
@@ -26,20 +27,9 @@ public abstract class Construct extends ExpressionBuilderHelper implements HelpC
 			name = name.substring(0, name.length() - superName.length());
 		}
 		defaultName = WordUtils.uncapitalize(name);
-	}
 
-	/**
-	 * @see ExpressionDataType#LIST
-	 */
-	protected static final ExpressionDataType LIST = ExpressionDataType.LIST;
-	/**
-	 * @see ExpressionDataType#ATOMIC
-	 */
-	protected static final ExpressionDataType ATOMIC = ExpressionDataType.ATOMIC;
-	/**
-	 * @see ExpressionDataType#OBJECT
-	 */
-	protected static final ExpressionDataType OBJECT = ExpressionDataType.OBJECT;
+		InjectorUtils.getGlobalInjector().injectMembers(this);
+	}
 
 	/**
 	 * <p>
@@ -135,41 +125,15 @@ public abstract class Construct extends ExpressionBuilderHelper implements HelpC
 		return value;
 	}
 
-	/**
-	 * A shortcut to {@link MetaExpression#extractValue(MetaExpression)}
-	 *
-	 * @param expression
-	 *        The expression to extract Java objects from
-	 * @return The value specified in
-	 *         {@link MetaExpression#extractValue(MetaExpression)}
-	 * @see MetaExpression#extractValue(MetaExpression)
-	 */
-	protected static Object extractValue(final MetaExpression expression) {
-		return MetaExpression.extractValue(expression);
-	}
-
-	/**
-	 * A shortcut to {@link MetaExpression#parseObject(Object)}
-	 * 
-	 * @param value
-	 *        the object to parse into a {@link MetaExpression}
-	 * @return the {@link MetaExpression} not null
-	 * @throws IllegalArgumentException
-	 *         if parsing the value failed
-	 * @see MetaExpression#parseObject(Object)
-	 */
-	protected static MetaExpression parseObject(final Object value) throws IllegalArgumentException {
-		return MetaExpression.parseObject(value);
-	}
-
 	@Override
 	public InputStream openDocumentationStream() {
 		String url = "/" + getClass().getName().replace('.', '/') + ".xml";
 		return getClass().getResourceAsStream(url);
 	}
-	
+
 	/**
 	 * Hide this construct from documentation
+	 * 
 	 * @return true if it should be hidden
 	 */
 	public boolean hideDocumentation() {
