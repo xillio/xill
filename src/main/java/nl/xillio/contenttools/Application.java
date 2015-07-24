@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import javafx.stage.Stage;
 import nl.xillio.plugins.CircularReferenceException;
+import nl.xillio.plugins.ContenttoolsPlugin;
 import nl.xillio.plugins.PluginLoader;
 import nl.xillio.xill.api.Xill;
 
@@ -15,29 +16,29 @@ import nl.xillio.xill.api.Xill;
  * This is the main class of the contenttools application
  */
 public class Application extends javafx.application.Application {
-	private static List<PluginPackage> plugins;
+	private static List<ContenttoolsPlugin> plugins;
 	private static final Logger logger = LogManager.getLogger();
 
 	/**
 	 * Main method
 	 *
-	 * @param args the main arguments to run the program
+	 * @param args
+	 *        the main arguments to run the program
 	 */
 	public static void main(final String... args) {
 		logger.info("Starting host application");
-		PluginLoader<PluginPackage> loader = PluginLoader.load(PluginPackage.class);
+		PluginLoader<ContenttoolsPlugin> loader = PluginLoader.load(ContenttoolsPlugin.class);
 
 		File pluginFolder = new File("plugins");
 		pluginFolder.mkdirs();
 		loader.addFolder(pluginFolder);
 
+		logger.info("Loading ide and xill");
 		try {
 			loader.load();
 		} catch (CircularReferenceException e) {
 			throw new RuntimeException("Error while loading plugins.", e);
 		}
-
-		logger.info("Loaded " + loader.getPluginManager().getPlugins().size() + " plugins");
 
 		plugins = loader.getPluginManager().getPlugins();
 
@@ -65,6 +66,7 @@ public class Application extends javafx.application.Application {
 
 		// Boot plugins
 		plugins.forEach(plugin -> {
+			logger.info("Starting " + plugin.getClass().getPackage().getImplementationTitle());
 			plugin.start(stage, xill);
 		});
 

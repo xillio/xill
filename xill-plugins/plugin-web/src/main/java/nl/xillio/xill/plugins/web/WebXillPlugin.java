@@ -1,6 +1,6 @@
 package nl.xillio.xill.plugins.web;
 
-import nl.xillio.xill.api.PluginPackage;
+import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.plugins.web.constructs.CSSPathConstruct;
 import nl.xillio.xill.plugins.web.constructs.ClickConstruct;
 import nl.xillio.xill.plugins.web.constructs.FocusConstruct;
@@ -20,10 +20,10 @@ import nl.xillio.xill.plugins.web.constructs.XPathConstruct;
 /**
  * This package includes all Selenium constructs
  */
-public class WebPluginPackage extends PluginPackage {
+public class WebXillPlugin extends XillPlugin {
 
 	@Override
-	public void load(final PluginPackage[] dependencies) {
+	public void loadConstructs() {
 		add(new ScreenshotConstruct());
 		add(new LoadPageConstruct());
 		add(new XPathConstruct());

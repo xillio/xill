@@ -4,7 +4,7 @@ import java.io.InputStream;
 
 import org.apache.commons.lang3.text.WordUtils;
 
-import nl.xillio.xill.api.PluginPackage;
+import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
@@ -38,8 +38,8 @@ public abstract class Construct extends ExpressionBuilderHelper implements HelpC
 	 * </p>
 	 *
 	 * <p>
-	 * By default the name of a {@link PluginPackage} is the concrete implementation name
-	 * acquired using {@link Class#getSimpleName()} without the {@link PluginPackage} suffix.
+	 * By default the name of a {@link XillPlugin} is the concrete implementation name
+	 * acquired using {@link Class#getSimpleName()} without the {@link XillPlugin} suffix.
 	 * It is also uncapitalized using {@link WordUtils#uncapitalize(String)}
 	 * </p>
 	 *
