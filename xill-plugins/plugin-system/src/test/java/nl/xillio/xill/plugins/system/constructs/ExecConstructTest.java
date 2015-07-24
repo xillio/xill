@@ -13,10 +13,10 @@ import org.apache.logging.log4j.Logger;
 import org.mockito.ArgumentCaptor;
 import org.testng.annotations.Test;
 
-import nl.xillio.xill.api.ConstructTest;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.plugins.system.exec.ProcessDescription;
 import nl.xillio.xill.plugins.system.exec.ProcessFactory;
+import nl.xillio.xill.plugins.system.util.ConstructTest;
 
 /**
  * Test the {@link ExecConstruct}
@@ -25,12 +25,12 @@ public class ExecConstructTest extends ConstructTest {
 
 	/**
 	 * Test invoke the construct with a string as command and default working directory
-	 * 
+	 *
 	 *
 	 */
 	@Test
 	public void testProcessString() {
-		//Mock the context
+		// Mock the context
 		MetaExpression arguments = mockExpression(ATOMIC);
 		when(arguments.getStringValue()).thenReturn("TestCommand");
 
@@ -46,11 +46,10 @@ public class ExecConstructTest extends ConstructTest {
 
 		ArgumentCaptor<ProcessDescription> descriptionCaptor = ArgumentCaptor.forClass(ProcessDescription.class);
 
-		//Run the method
+		// Run the method
 		MetaExpression result = ExecConstruct.process(arguments, directory, log, processFactory);
 
-		
-		//Make assertions
+		// Make assertions
 		verify(processFactory).apply(descriptionCaptor.capture());
 
 		assertEquals(descriptionCaptor.getValue().getCommands(), new String[] {"TestCommand"});
@@ -73,7 +72,7 @@ public class ExecConstructTest extends ConstructTest {
 	 */
 	@Test
 	public void testProcessList() {
-		//Mock the context
+		// Mock the context
 		MetaExpression arguments = mockExpression(ATOMIC);
 		when(arguments.getType()).thenReturn(LIST);
 		when(arguments.getValue()).thenReturn(Arrays.asList(
@@ -93,10 +92,10 @@ public class ExecConstructTest extends ConstructTest {
 
 		ArgumentCaptor<ProcessDescription> descriptionCaptor = ArgumentCaptor.forClass(ProcessDescription.class);
 
-		//Run the method
+		// Run the method
 		MetaExpression result = ExecConstruct.process(arguments, directory, log, processFactory);
 
-		//Make assertions
+		// Make assertions
 		verify(processFactory).apply(descriptionCaptor.capture());
 
 		assertEquals(descriptionCaptor.getValue().getCommands(), new String[] {"Test", "command", "-t"});
@@ -116,6 +115,7 @@ public class ExecConstructTest extends ConstructTest {
 
 	/**
 	 * Make an input stream that will return a certain amount of null characters
+	 * 
 	 * @param length
 	 * @return
 	 */

@@ -10,9 +10,9 @@ import org.testng.annotations.Test;
 
 import com.google.gson.JsonParseException;
 
-import nl.xillio.xill.api.ConstructTest;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.system.util.ConstructTest;
 import nl.xillio.xill.services.json.JsonParser;
 
 /**
@@ -55,7 +55,7 @@ public class ParseJSONConstructTest extends ConstructTest {
 
 	/**
 	 * Test the process method with invalid json
-	 * 
+	 *
 	 * @throws Throwable
 	 *         while testing
 	 */
