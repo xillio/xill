@@ -65,10 +65,11 @@ public class InjectorUtils {
 
 	/**
 	 * Get an instance from the injector
+	 * @param <T> the requested type
 	 * @param clazz the type of instance that should be made
 	 * @return the requested object
 	 */
-	public static ProcessBuilder get(Class<ProcessBuilder> clazz) {
+	public static <T> T get(Class<T> clazz) {
 		if(injector == null) {
 			defaultConfig();
 		}

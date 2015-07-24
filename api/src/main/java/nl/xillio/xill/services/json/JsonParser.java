@@ -1,9 +1,11 @@
 package nl.xillio.xill.services.json;
 
+import nl.xillio.xill.services.XillService;
+
 /**
  * This service is capable of parsing objects to and from json
  */
-public interface JsonParser {
+public interface JsonParser extends XillService {
 	/**
 	 * Parse an object to json
 	 * 
