@@ -6,7 +6,6 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
@@ -43,27 +42,27 @@ public class HungarianAlgorithmConstructTest extends ExpressionBuilderHelper {
 		MetaExpression max = mock(MetaExpression.class);
 		when(max.getBooleanValue()).thenReturn(true);
 
-		// Run
+		//Run
 		MetaExpression result = HungarianAlgorithmConstruct.process(matrix, max);
 
 		// Verify
 		// nothing to verify
 
-		/** Assert**/
-		//Check wheter the result is correct as String value.
-		Assert.assertEquals(result.toString(), hungarianReturnValue);		
-		
-		//Check if the result is a list, if so, check if its children are objects
+		//Assert
+		// Check wheter the result is correct as String value.
+		Assert.assertEquals(result.toString(), hungarianReturnValue);
+
+		// Check if the result is a list, if so, check if its children are objects
 		Assert.assertEquals(result.getType(), LIST);
 		@SuppressWarnings("unchecked")
 		List<MetaExpression> resultAsList = (List<MetaExpression>) result.getValue();
 		Assert.assertEquals(resultAsList.size(), 2);
 		Assert.assertEquals(resultAsList.get(0).getType(), OBJECT);
 		Assert.assertEquals(resultAsList.get(1).getType(), OBJECT);
-		
-		//Check wheter the second object contains a list, if so, check if its children are objects
+
+		// Check wheter the second object contains a list, if so, check if its children are objects
 		@SuppressWarnings("unchecked")
-		LinkedHashMap<String, MetaExpression> secondItem = (LinkedHashMap<String,MetaExpression>) resultAsList.get(1).getValue();
+		LinkedHashMap<String, MetaExpression> secondItem = (LinkedHashMap<String, MetaExpression>) resultAsList.get(1).getValue();
 		Assert.assertEquals(secondItem.get("cells").getType(), LIST);
 		@SuppressWarnings("unchecked")
 		List<MetaExpression> secondItemAsList = (List<MetaExpression>) secondItem.get("cells").getValue();
