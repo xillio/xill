@@ -1,4 +1,4 @@
-package nl.xillio.xill.api.inject;
+package nl.xillio.xill.services.inject;
 
 /**
  * This exception is generally thrown when a {@link Factory} failed to create an instance using {@link Factory#get()}

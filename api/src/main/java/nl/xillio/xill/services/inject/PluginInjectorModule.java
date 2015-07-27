@@ -1,6 +1,9 @@
-package nl.xillio.xill.api.inject;
+package nl.xillio.xill.services.inject;
 
 import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.inject.Module;
 
@@ -11,11 +14,12 @@ import nl.xillio.plugins.XillPlugin;
  *
  */
 public class PluginInjectorModule extends DefaultInjectorModule {
+	private static final Logger log = LogManager.getLogger();
 	private final List<XillPlugin> plugins;
 
 	/**
 	 * Create a new {@link PluginInjectorModule}
-	 * 
+	 *
 	 * @param plugins
 	 *        the plugins
 	 */
@@ -28,7 +32,11 @@ public class PluginInjectorModule extends DefaultInjectorModule {
 		super.configure();
 
 		for (XillPlugin plugin : plugins) {
-			plugin.configure(binder());
+			try {
+				plugin.configure(binder());
+			} catch (Exception e) {
+				log.error("Exception while configuring binders for " + plugins, e);
+			}
 		}
 	}
 }

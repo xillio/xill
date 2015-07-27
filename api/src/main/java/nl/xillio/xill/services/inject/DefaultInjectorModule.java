@@ -1,6 +1,11 @@
-package nl.xillio.xill.api.inject;
+package nl.xillio.xill.services.inject;
 
 import com.google.inject.AbstractModule;
+
+import nl.xillio.xill.services.json.GsonParser;
+import nl.xillio.xill.services.json.JsonParser;
+import nl.xillio.xill.services.json.PrettyGsonParser;
+import nl.xillio.xill.services.json.PrettyJsonParser;
 
 /**
  * This module is the main module that will run for the injector at runtime
@@ -17,6 +22,8 @@ public class DefaultInjectorModule extends AbstractModule {
 			
 			//Some generic dependencies for plugins
 			bind(ProcessBuilder.class).toConstructor(ProcessBuilder.class.getConstructor(String[].class));
+			bind(JsonParser.class).toInstance(new GsonParser());
+			bind(PrettyJsonParser.class).toInstance(new PrettyGsonParser());
 
 		} catch (NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();

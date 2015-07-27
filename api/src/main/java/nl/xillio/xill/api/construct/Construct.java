@@ -5,10 +5,9 @@ import java.io.InputStream;
 import org.apache.commons.lang3.text.WordUtils;
 
 import nl.xillio.plugins.XillPlugin;
-import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.api.inject.InjectorUtils;
+import nl.xillio.xill.services.inject.InjectorUtils;
 
 /**
  * This interface contains the core functionality for all constructs
