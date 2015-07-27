@@ -30,13 +30,14 @@ import nl.xillio.xill.plugins.date.BaseDateConstruct;
  *
  */
 public class ParseConstruct extends BaseDateConstruct {
+
 	private static final DateTimeFormatter DEFAULT_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 
 		return new ConstructProcessor(ParseConstruct::process, new Argument("date", NULL, ATOMIC),
-			new Argument("format", NULL, ATOMIC));
+		  new Argument("format", NULL, ATOMIC));
 	}
 
 	private static MetaExpression process(final MetaExpression dateVar, final MetaExpression formatVar) {
@@ -58,7 +59,7 @@ public class ParseConstruct extends BaseDateConstruct {
 	}
 
 	private static ZonedDateTime parseAsDate(final MetaExpression dateVar, final MetaExpression formatVar)
-					throws DateTimeParseException {
+	    throws DateTimeParseException {
 
 		if (formatVar != NULL) {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatVar.getStringValue());
@@ -67,17 +68,12 @@ public class ParseConstruct extends BaseDateConstruct {
 			if (time instanceof ZonedDateTime) {
 				return (ZonedDateTime) time;
 			}
-
-			if (time instanceof LocalDateTime) {
+			else if (time instanceof LocalDateTime) {
 				return ZonedDateTime.of((LocalDateTime) time, ZoneId.systemDefault());
 			}
-
-			if (time instanceof LocalDate) {
-				return ((LocalDate) time).atStartOfDay(ZoneId.systemDefault());
+			else {
+				return LocalDate.from(time).atStartOfDay(ZoneId.systemDefault());
 			}
-
-			// We had something weird so try to parse outselves
-			return parseFromScratch(time);
 		}
 
 		LocalDateTime local = LocalDateTime.parse(dateVar.getStringValue(), DEFAULT_FORMATTER);

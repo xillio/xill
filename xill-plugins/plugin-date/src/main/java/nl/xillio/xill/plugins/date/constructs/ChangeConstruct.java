@@ -3,16 +3,17 @@ package nl.xillio.xill.plugins.date.constructs;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import org.apache.logging.log4j.Logger;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.plugins.date.BaseDateConstruct;
+
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -42,15 +43,17 @@ public class ChangeConstruct extends BaseDateConstruct {
 			zone = ZoneId.of(map.get("timezone").getStringValue());
 		}
 
-		// Copy the date
-		ZonedDateTime newDate = ZonedDateTime.ofInstant(date.toInstant(), zone);
+		// Change the timezone to the new one
+		ZonedDateTime newDate = dateService.changeTimeZone(date, zone);
 
-		// Add changes
+		Map<ChronoUnit, Long> changes = new HashMap<>();
+
+		// Convert changes
 		for (Entry<String, MetaExpression> entry : map.entrySet()) {
 			try {
 				ChronoUnit unit = ChronoUnit.valueOf(entry.getKey().toUpperCase());
 				long value = entry.getValue().getNumberValue().longValue();
-				newDate = newDate.plus(value, unit);
+				changes.put(unit, value);
 			} catch (IllegalArgumentException e) {
 				String lower = entry.getKey().toLowerCase();
 				if (!(lower.equals("zone") || lower.equals("timezone"))) {
@@ -58,6 +61,9 @@ public class ChangeConstruct extends BaseDateConstruct {
 				}
 			}
 		}
+
+		// Add changes
+		dateService.add(newDate, changes);
 
 		return fromValue(newDate);
 	}

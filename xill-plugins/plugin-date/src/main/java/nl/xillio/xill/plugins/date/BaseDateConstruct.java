@@ -5,11 +5,21 @@ import java.time.ZonedDateTime;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.date.services.DateService;
+
+import com.google.inject.Inject;
 
 /**
  * This class contains some utility for the constructs to use
  */
 public abstract class BaseDateConstruct extends Construct {
+
+	/**
+	 * Service used by all extending classes
+	 */
+	@Inject
+	protected static DateService dateService;
+
 	/**
 	 * Get the date from a variable
 	 *
@@ -47,5 +57,4 @@ public abstract class BaseDateConstruct extends Construct {
 		value.storeMeta(ZonedDateTime.class, date);
 		return value;
 	}
-
 }

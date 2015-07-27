@@ -9,6 +9,10 @@ import nl.xillio.xill.plugins.date.constructs.LocalizedFormatConstruct;
 import nl.xillio.xill.plugins.date.constructs.NowConstruct;
 import nl.xillio.xill.plugins.date.constructs.OfConstruct;
 import nl.xillio.xill.plugins.date.constructs.ParseConstruct;
+import nl.xillio.xill.plugins.date.services.DateService;
+import nl.xillio.xill.plugins.date.services.DateServiceImpl;
+
+import com.google.inject.Binder;
 
 /**
  * This package includes all date constructs
@@ -18,6 +22,11 @@ public class DateXillPlugin extends XillPlugin {
 	@Override
 	public void loadConstructs() {
 		add(new NowConstruct(), new ParseConstruct(), new FormatConstruct(), new InfoConstruct(),
-			new DiffConstruct(), new ChangeConstruct(), new OfConstruct(), new LocalizedFormatConstruct());
+		  new DiffConstruct(), new ChangeConstruct(), new OfConstruct(), new LocalizedFormatConstruct());
+	}
+
+	@Override
+	public void configure(Binder binder) {
+		binder.bind(DateService.class).to(DateServiceImpl.class);
 	}
 }
