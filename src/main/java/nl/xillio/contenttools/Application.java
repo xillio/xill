@@ -21,7 +21,7 @@ public class Application extends javafx.application.Application {
 	/**
 	 * Main method
 	 *
-	 * @param args
+	 * @param args the command line arguments
 	 */
 	public static void main(final String... args) {
 		PluginLoader<PluginPackage> loader = PluginLoader.load(PluginPackage.class);
