@@ -1,19 +1,19 @@
 package nl.xillio.xill.plugins.math;
 
+import com.google.inject.Binder;
+
 import nl.xillio.plugins.XillPlugin;
-import nl.xillio.xill.plugins.math.constructs.AbsConstruct;
-import nl.xillio.xill.plugins.math.constructs.HungarianAlgorithmConstruct;
-import nl.xillio.xill.plugins.math.constructs.RandomConstruct;
-import nl.xillio.xill.plugins.math.constructs.RoundConstruct;
+import nl.xillio.xill.plugins.math.services.math.MathOperationImpl;
+import nl.xillio.xill.plugins.math.services.math.MathOperations;
 
 /**
  * This package includes all example constructs
  */
 public class MathXillPlugin extends XillPlugin {
-
+	
 	@Override
-	public void loadConstructs() {
-		add(new AbsConstruct(), new HungarianAlgorithmConstruct(), new RandomConstruct(),
-			new RoundConstruct());
+	public void configure(final Binder binder) {
+		binder.bind(MathOperations.class).to(MathOperationImpl.class);
 	}
+
 }
