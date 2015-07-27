@@ -35,4 +35,14 @@ public class MathOperationImpl implements MathOperations {
 		}
 	}
 
+	@Override
+	public double random() {
+		return Math.random();
+
+	}
+
+	@Override
+	public long random(final long value) {
+		return (long) (Math.random() * value);
+	}
 }

@@ -23,7 +23,7 @@ public class AbsConstruct extends Construct {
 	
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(value -> process(value, mathService), new Argument("value"));
+		return new ConstructProcessor(value -> process(value, mathService), new Argument("value", ATOMIC));
 	}
 
 	static MetaExpression process(final MetaExpression value, final MathOperations math) {
