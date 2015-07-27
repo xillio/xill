@@ -1,21 +1,27 @@
 package nl.xillio.plugins;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.text.WordUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import com.google.common.reflect.ClassPath;
 import com.google.inject.Binder;
 
 import nl.xillio.plugins.interfaces.Loadable;
 import nl.xillio.xill.api.construct.Construct;
+import nl.xillio.xill.services.inject.InjectorUtils;
 
 /**
  * This class represents the base for all Xill plugins
  */
 public abstract class XillPlugin implements Loadable<XillPlugin>, AutoCloseable {
+	private static final Logger log = LogManager.getLogger();
 	private final List<Construct> constructs = new ArrayList<>();
 	private final String defaultName;
 	private boolean loadingConstructs = false;
@@ -165,9 +171,23 @@ public abstract class XillPlugin implements Loadable<XillPlugin>, AutoCloseable 
 	}
 
 	/**
-	 * This is where the package can add all the constructs
+	 * This is where the package can add all the constructs. If this method is not overridden it will load all constructs in the subpackage 'construct'
 	 */
-	public abstract void loadConstructs();
+	public void loadConstructs() {
+		//Load all constructs
+		try {
+			ClassPath classPath = ClassPath.from(getClass().getClassLoader());
+			for(ClassPath.ClassInfo classInfo : classPath.getTopLevelClasses(getClass().getPackage().getName() + ".constructs")) {
+				Class<?> constructClass = classInfo.load();
+				if(Construct.class.isAssignableFrom(constructClass)) {
+					//This is a construct
+					add((Construct) InjectorUtils.get(constructClass));
+				}
+			}
+		} catch (IOException e) {
+			log.error("Error while autoloading constructs", e);
+		}
+	}
 
 	/**
 	 * @return the constructs

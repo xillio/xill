@@ -28,7 +28,7 @@ public class RobotAppender extends AbstractAppender {
 
 	/**
 	 * Create a {@link RobotAppender}
-	 * 
+	 *
 	 * @param name
 	 *        the name
 	 * @param filter
@@ -69,15 +69,18 @@ public class RobotAppender extends AbstractAppender {
 	}
 
 	/**
+	 * Create a new {@link RobotAppender}
+	 * 
 	 * @param name
-	 * @param ignoreExceptions
+	 *        the name
 	 * @param layout
+	 *        the layout
 	 * @param filter
-	 * @return
+	 *        the filters
+	 * @return the {@link RobotAppender}
 	 */
 	@PluginFactory
 	public static RobotAppender createAppender(@PluginAttribute("name") final String name,
-					@PluginAttribute("ignoreExceptions") final boolean ignoreExceptions,
 					@PluginElement("Layout") Layout<? extends Serializable> layout,
 					@PluginElement("Filters") final Filter filter) {
 

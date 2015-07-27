@@ -1,7 +1,9 @@
-package nl.xillio.xill.plugins.system.services.json;
+package nl.xillio.xill.services.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import nl.xillio.xill.api.components.MetaExpression;
 
 /**
  * This {@link JsonParser} uses the {@link Gson} library to parse json strings
@@ -25,6 +27,11 @@ public class GsonParser implements JsonParser {
 	 */
 	protected Gson getGson() {
 		return gson;
+	}
+
+	@Override
+	public String toJson(MetaExpression metaExpression) {
+		return metaExpression.toString(getGson());
 	}
 
 }

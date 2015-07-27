@@ -1,4 +1,4 @@
-package nl.xillio.xill.api;
+package nl.xillio.xill.plugins.system.util;
 
 import static org.mockito.Mockito.*;
 

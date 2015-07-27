@@ -16,8 +16,8 @@ import nl.xillio.migrationtool.documentation.DocumentationGenerator;
 import nl.xillio.plugins.CircularReferenceException;
 import nl.xillio.plugins.PluginLoader;
 import nl.xillio.plugins.XillPlugin;
-import nl.xillio.xill.api.inject.InjectorUtils;
-import nl.xillio.xill.api.inject.PluginInjectorModule;
+import nl.xillio.xill.services.inject.InjectorUtils;
+import nl.xillio.xill.services.inject.PluginInjectorModule;
 
 /**
  * This {@link Thread} is responsible for loading the plugins an and initializing the language
@@ -44,11 +44,11 @@ public class XillInitializer extends Thread {
 
 		// We are done loading now set up the injector
 		initializeInjector();
-		
+
 		// Load the constructs
 		initializePlugins();
 
-		//Now we generate documentation
+		// Now we generate documentation
 		generateDocumentation();
 		generator.forceGenerateIndex();
 
@@ -67,13 +67,17 @@ public class XillInitializer extends Thread {
 	}
 
 	private void initializePlugins() {
-		for(XillPlugin plugin : getPlugins()) {
-			plugin.initialize();
+		for (XillPlugin plugin : getPlugins()) {
+			try {
+				plugin.initialize();	
+			} catch (Exception e) {
+				log.error("Exception while initializing " + plugin, e);
+			}
 		}
 	}
 
 	private void generateDocumentation() {
-		for(XillPlugin plugin : getPlugins()) {
+		for (XillPlugin plugin : getPlugins()) {
 			generator.generate(plugin);
 		}
 	}
@@ -82,7 +86,7 @@ public class XillInitializer extends Thread {
 		pluginLoader = PluginLoader.load(XillPlugin.class);
 		PLUGIN_FOLDER.mkdirs();
 		pluginLoader.addFolder(PLUGIN_FOLDER);
-		
+
 		pluginLoader.getPluginManager().onPluginAccepted().addListener(plugin -> {
 			log.info("Loaded " + plugin.getClass().getSimpleName());
 		});
