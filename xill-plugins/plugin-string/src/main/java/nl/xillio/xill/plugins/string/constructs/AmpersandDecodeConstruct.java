@@ -1,7 +1,5 @@
 package nl.xillio.xill.plugins.string.constructs;
 
-import java.io.InputStream;
-
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import nl.xillio.xill.api.components.MetaExpression;
@@ -9,7 +7,6 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.construct.HelpComponent;
 
 /**
  *
@@ -18,16 +15,17 @@ import nl.xillio.xill.api.construct.HelpComponent;
  * @author Sander
  *
  */
-public class AmpersandDecodeConstruct extends Construct implements HelpComponent {
+public class AmpersandDecodeConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(AmpersandDecodeConstruct::process, new Argument("string"), new Argument("passes", fromValue(1)));
+		return new ConstructProcessor(
+			AmpersandDecodeConstruct::process,
+			new Argument("string", ATOMIC),
+			new Argument("passes", fromValue(1), ATOMIC));
 	}
 
 	private static MetaExpression process(final MetaExpression stringVar, final MetaExpression passesVar) {
-		assertType(stringVar, "string", ATOMIC);
-		assertType(passesVar, "passes", ATOMIC);
 
 		assertNotNull(stringVar, "string");
 		assertNotNull(passesVar, "passes");
@@ -43,10 +41,4 @@ public class AmpersandDecodeConstruct extends Construct implements HelpComponent
 		return fromValue(text);
 
 	}
-
-	@Override
-	public InputStream openDocumentationStream() {
-		return getClass().getResourceAsStream("/helpfiles/ampersanddecode.xml");
-	}
-
 }

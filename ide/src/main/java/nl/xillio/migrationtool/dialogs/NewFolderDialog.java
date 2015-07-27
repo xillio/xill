@@ -4,7 +4,8 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,7 +27,7 @@ public class NewFolderDialog extends FXMLDialog {
 	private final TreeItem<Pair<File, String>> treeItem;
 	private final ProjectPane projectPane;
 
-	private static final Logger log = Logger.getLogger("XMT");
+	private static final Logger log = LogManager.getLogger(NewFolderDialog.class);
 
 	/**
 	 * Default constructor.

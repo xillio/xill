@@ -16,7 +16,7 @@ public class TypeOfConstruct extends Construct {
 		return new ConstructProcessor(TypeOfConstruct::process, new Argument("value"));
 	}
 
-	private static MetaExpression process(final MetaExpression value) {
+	static MetaExpression process(final MetaExpression value) {
 		return fromValue(value.getType().toString());
 	}
 }

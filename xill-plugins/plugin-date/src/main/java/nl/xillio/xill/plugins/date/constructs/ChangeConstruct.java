@@ -6,14 +6,12 @@ import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 
-import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.date.BaseDateConstruct;
 
 /**
@@ -28,15 +26,12 @@ public class ChangeConstruct extends BaseDateConstruct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor((date, change) -> process(context.getRootLogger(), date, change), new Argument("date"), new Argument("change"));
+		return new ConstructProcessor((date, change) -> process(context.getRootLogger(), date, change), new Argument("date"), new Argument("change", OBJECT));
 	}
 
 	@SuppressWarnings("unchecked")
 	private static MetaExpression process(final Logger logger, final MetaExpression dateVar, final MetaExpression changeVar) {
 		ZonedDateTime date = getDate(dateVar, "date");
-		if (changeVar.getType() != ExpressionDataType.OBJECT) {
-			throw new RobotRuntimeException("Expected OBJECT value for change");
-		}
 
 		// First we need the zone
 		ZoneId zone = date.getZone();

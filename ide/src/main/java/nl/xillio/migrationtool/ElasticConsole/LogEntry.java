@@ -9,6 +9,7 @@ public class LogEntry {
 
 	private final boolean newLine;
 	private final LogType type;
+	private boolean selected = false; 
 
 	/**
 	 * Create a new log entry.
@@ -68,4 +69,19 @@ public class LogEntry {
 	public boolean isNewLine() {
 		return newLine;
 	}
+
+	/**
+	 * @param selected if this line contains the expression that is being searched for (search purposes)
+	 */
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
+
+	/**
+	 * @return true if this line is selected (for a search purposes)
+	 */
+	public boolean getSelected() {
+		return selected;
+	}
+
 }

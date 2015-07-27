@@ -71,6 +71,9 @@ allprojects {
 	
 	jar.manifest {
 		attributes "Implementation-Version": version
+		if(project.hasProperty(project.name + "ProjectName")) {
+			attributes "Implementation-Title": project.getProperties().get(project.name + "ProjectName")
+		}
 	}
 }
 
@@ -151,9 +154,6 @@ javafx {
 	shortcut = true
     embedJNLP = false
 }
-
-
-
 task cleanRuntime(type: Delete) {
 	description 'Deletes all the folders generated and used by contenttools running in eclipse'
 
@@ -162,10 +162,6 @@ task cleanRuntime(type: Delete) {
 
 clean {
 	dependsOn cleanRuntime
-}
-
-eclipseClasspath {
-	dependsOn assembleContenttools
 }
 
 //Test vpn connection

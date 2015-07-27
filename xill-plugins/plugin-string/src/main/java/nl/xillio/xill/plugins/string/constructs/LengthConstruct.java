@@ -1,13 +1,10 @@
 package nl.xillio.xill.plugins.string.constructs;
 
-import java.io.InputStream;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.construct.HelpComponent;
 
 /**
  *
@@ -17,23 +14,17 @@ import nl.xillio.xill.api.construct.HelpComponent;
  * @author Sander
  *
  */
-public class LengthConstruct extends Construct implements HelpComponent {
+public class LengthConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(LengthConstruct::process, new Argument("value"));
+		return new ConstructProcessor(
+			LengthConstruct::process,
+			new Argument("value", ATOMIC));
 	}
 
 	private static MetaExpression process(final MetaExpression value) {
-
-		assertType(value, "value", ATOMIC);
-
 		int length = value.getStringValue().length();
 		return fromValue(length);
-	}
-
-	@Override
-	public InputStream openDocumentationStream() {
-		return getClass().getResourceAsStream("/helpfiles/length.xml");
 	}
 }

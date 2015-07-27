@@ -1,11 +1,14 @@
 package nl.xillio.migrationtool.ElasticConsole;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.count.CountRequestBuilder;
@@ -29,6 +32,7 @@ import org.elasticsearch.search.sort.SortOrder;
 
 import nl.xillio.events.Event;
 import nl.xillio.events.EventHost;
+import nl.xillio.xill.api.RobotAppender;
 import nl.xillio.xill.api.components.RobotID;
 
 public class ESConsoleClient {
@@ -47,6 +51,7 @@ public class ESConsoleClient {
 	private static final Pattern illegalChars = Pattern.compile("[\\\\/*?\"<>| ,:]");
 
 	private final Node node;
+	private int order = 0;
 
 	private ESConsoleClient() {
 		// Create the settings and node
@@ -67,6 +72,22 @@ public class ESConsoleClient {
 
 		// Add a shutdown hook
 		Runtime.getRuntime().addShutdownHook(new Thread(node::close));
+
+		// Add the appender
+		RobotAppender.getMessagelogged().addListener(event -> {
+			String name = event.getLoggerName();
+
+			if (name.startsWith(RobotAppender.ROBOT_LOGGER_PREFIX)) {
+				String robotId = name.substring(RobotAppender.ROBOT_LOGGER_PREFIX.length());
+				ESConsoleClient.getInstance().log(
+					robotId,
+					event.getLevel().toString(),
+					event.getTimeMillis(),
+					order++,
+					event.getMessage().getFormattedMessage());
+			}
+		});
+
 	}
 
 	/**

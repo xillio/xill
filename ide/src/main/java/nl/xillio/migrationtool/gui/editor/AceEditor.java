@@ -8,7 +8,8 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -43,7 +44,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	private static final SettingsHandler settings = SettingsHandler.getSettingsHandler();
 	private static final double ZOOM_SENSITIVITY = 100;
 	private static final Clipboard clipboard = Clipboard.getSystemClipboard();
-	private static final Logger log = Logger.getLogger("XMT");
+	private static final Logger log = LogManager.getLogger();
 	private final StringProperty code = new SimpleStringProperty();
 	private final WebView editor;
 	private final SimpleBooleanProperty documentLoaded = new SimpleBooleanProperty(false);

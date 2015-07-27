@@ -1,11 +1,13 @@
 package nl.xillio.xill.plugins.system.constructs;
 
+import com.google.inject.Inject;
+
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.system.services.wait.WaitService;
 
 /**
  * Pauses the execution of instructions for the specified amount of
@@ -13,18 +15,20 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  */
 public class WaitConstruct extends Construct {
 
+	@Inject
+	WaitService wait;
+
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(WaitConstruct::process, new Argument("delay"));
+		return new ConstructProcessor(
+			delay -> process(delay, wait),
+			new Argument("delay", fromValue(100), ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression delayVar) {
+	static MetaExpression process(final MetaExpression delayVar, final WaitService service) {
 		int delay = delayVar.getNumberValue().intValue();
-		try {
-			Thread.sleep(delay);
-		} catch (Exception e) {
-			throw new RobotRuntimeException("Error during the pause", e);
-		}
+
+		service.wait(delay);
 
 		return NULL;
 	}

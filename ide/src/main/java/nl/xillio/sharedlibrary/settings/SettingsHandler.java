@@ -6,14 +6,15 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import nl.xillio.xill.util.db.Connection;
 import nl.xillio.xill.util.db.Connector;
 import nl.xillio.xill.util.db.DataBaseHandler;
 
 public class SettingsHandler {
-	private Logger log = Logger.getLogger(SettingsHandler.class);
+	private Logger log = LogManager.getLogger();
 	private Connection database;
 
 	private static String DBNAME = "xilliosettings.db";

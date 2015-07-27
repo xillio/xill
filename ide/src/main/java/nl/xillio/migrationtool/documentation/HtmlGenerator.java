@@ -6,7 +6,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.rendersnake.HtmlCanvas;
 
 import javafx.util.Pair;
@@ -22,7 +23,6 @@ import javafx.util.Pair;
  */
 public abstract class HtmlGenerator {
 	private String functionName = "";
-	protected static final Logger log = Logger.getLogger(PluginListener.class);
 
 	/**
 	 * The constructor of the {@link HtmlGenerator}
@@ -76,7 +76,7 @@ public abstract class HtmlGenerator {
 	 *         Throws an IOException when failing to generate correct HTML.
 	 */
 	protected HtmlCanvas addHeader(final HtmlCanvas canvas) throws IOException {
-		return canvas.head().title().content(functionName).macros().stylesheet(new File(PluginListener.HELP_FOLDER, "/style/style.css").toURI().toURL().toExternalForm())._head();
+		return canvas.head().title().content(functionName).macros().stylesheet(new File(DocumentationGenerator.HELP_FOLDER, "/style/style.css").toURI().toURL().toExternalForm())._head();
 	}
 
 	/**
@@ -197,7 +197,7 @@ public abstract class HtmlGenerator {
 	 */
 	protected String generateLink(final Pair<String, String> link) {
 		try {
-			return new File(PluginListener.HELP_FOLDER, link.getKey() + "/" + link.getValue() + ".html").toURI().toURL().toExternalForm();
+			return new File(DocumentationGenerator.HELP_FOLDER, link.getKey() + "/" + link.getValue() + ".html").toURI().toURL().toExternalForm();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

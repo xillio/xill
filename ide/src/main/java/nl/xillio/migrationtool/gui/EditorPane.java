@@ -2,7 +2,8 @@ package nl.xillio.migrationtool.gui;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
@@ -45,7 +46,7 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 		SAVED
 	}
 
-	private static final Logger log = Logger.getLogger("XMT");
+	private static final Logger log = LogManager.getLogger();
 
 	@FXML
 	private Button btnUndo, btnRedo, btnBrowser, btnRegexTester, btnPreviewOpenBrowser, btnPreviewOpenRegex;

@@ -22,14 +22,14 @@ public class SubstringConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(SubstringConstruct::process, new Argument("string"), new Argument("start"), new Argument("end"));
+		return new ConstructProcessor(
+			SubstringConstruct::process,
+			new Argument("string", ATOMIC),
+			new Argument("start", ATOMIC),
+			new Argument("end", ATOMIC));
 	}
 
 	private static MetaExpression process(final MetaExpression string, final MetaExpression startVar, final MetaExpression endVar) {
-
-		assertType(string, "string", ATOMIC);
-		assertType(startVar, "start", ATOMIC);
-		assertType(endVar, "end", ATOMIC);
 		assertNotNull(string, "string");
 		assertNotNull(startVar, "start");
 		assertNotNull(endVar, "end");

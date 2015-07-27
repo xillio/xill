@@ -21,13 +21,14 @@ public class WordDistanceConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 
-		return new ConstructProcessor(WordDistanceConstruct::process, new Argument("source"), new Argument("target"), new Argument("relative", TRUE));
+		return new ConstructProcessor(
+			WordDistanceConstruct::process,
+			new Argument("source", ATOMIC),
+			new Argument("target", ATOMIC),
+			new Argument("relative", TRUE));
 	}
 
 	private static MetaExpression process(final MetaExpression source, final MetaExpression target, final MetaExpression relative) {
-
-		assertType(source, "source", ATOMIC);
-		assertType(target, "target", ATOMIC);
 		assertNotNull(source, "source");
 		assertNotNull(target, "target");
 

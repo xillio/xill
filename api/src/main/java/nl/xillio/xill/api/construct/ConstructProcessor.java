@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +19,6 @@ import nl.xillio.xill.api.components.MetaExpression;
  */
 public class ConstructProcessor {
 	private final Function<MetaExpression[], MetaExpression> processor;
-	private Predicate<Argument[]> requirementsValidator;
 	private final Argument[] parameters;
 
 	/**
@@ -34,10 +32,6 @@ public class ConstructProcessor {
 	public ConstructProcessor(final Function<MetaExpression[], MetaExpression> processor, final Argument[] parameters) {
 		this.processor = processor;
 		this.parameters = parameters;
-
-		// By default there will be no validation.
-		// The processor will always require all parameters to be evaluated.
-		requirementsValidator = a -> false;
 	}
 
 	/**
@@ -113,25 +107,6 @@ public class ConstructProcessor {
 	}
 
 	/**
-	 * Sets the value of a named argument.
-	 *
-	 * @param name
-	 *        the name of the argument
-	 * @param value
-	 *        the value to set the argument to
-	 * @return True if the argument was set
-	 */
-	public boolean setArgument(final String name, final MetaExpression value) {
-		for (Argument arg : parameters) {
-			if (arg.getName().equals(name)) {
-				arg.setValue(value);
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
 	 * Sets the value of the argument in slot index.
 	 *
 	 * @param index
@@ -145,17 +120,7 @@ public class ConstructProcessor {
 			return false;
 		}
 
-		parameters[index].setValue(value);
-		return true;
-	}
-
-	/**
-	 * Checks if the processor can start processing. Without adding all arguments.
-	 *
-	 * @return true if processing can be started.
-	 */
-	public boolean assertEvaluationSuccess() {
-		return requirementsValidator.test(parameters);
+		return parameters[index].setValue(value);
 	}
 
 	/**
@@ -217,15 +182,14 @@ public class ConstructProcessor {
 	}
 
 	/**
-	 * Set the requirements validator for the processor to use.
-	 * By default this is a method that checks if all arguments are set.
-	 * This validator can be used to enforce lazy evaluation.
-	 *
-	 * @param validator
-	 *        the validator that should be used
+	 * Get a string description of the expected types for an argument
+	 * 
+	 * @param index
+	 *        the index of the argument
+	 * @return the string description
 	 */
-	public void setRequirementValidation(final Predicate<Argument[]> validator) {
-		requirementsValidator = validator;
+	public String getArgumentType(final int index) {
+		return parameters[index].getType();
 	}
 
 	/**
@@ -250,7 +214,9 @@ public class ConstructProcessor {
 
 		int i = 0;
 		for (MetaExpression arg : arguments) {
-			processor.setArgument(i++, arg);
+			if (!processor.setArgument(i++, arg)) {
+				throw new IllegalArgumentException("Argument " + processor.getArgumentName(i) + " is of wrong type");
+			}
 		}
 
 		return processor.process();
