@@ -7,6 +7,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.plugins.math.services.math.MathOperationImpl;
 import nl.xillio.xill.plugins.math.services.math.MathOperations;
 
 /**
@@ -18,7 +19,7 @@ import nl.xillio.xill.plugins.math.services.math.MathOperations;
 public class RoundConstruct extends Construct {
 
 	@Inject
-	private MathOperations mathService;
+	private MathOperationImpl mathService;
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
@@ -27,7 +28,7 @@ public class RoundConstruct extends Construct {
 		  new Argument("value", ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression value, final MathOperations math) {
+	static MetaExpression process(final MetaExpression value, final MathOperations math) {
 		return fromValue(math.round(value.getNumberValue()));
 	}
 

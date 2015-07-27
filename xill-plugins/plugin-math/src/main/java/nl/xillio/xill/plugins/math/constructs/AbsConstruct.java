@@ -26,7 +26,7 @@ public class AbsConstruct extends Construct {
 		return new ConstructProcessor(value -> process(value, mathService), new Argument("value"));
 	}
 
-	private static MetaExpression process(final MetaExpression value, final MathOperations math) {
+	static MetaExpression process(final MetaExpression value, final MathOperations math) {
 		if (value == NULL) {
 			return NULL;
 		}

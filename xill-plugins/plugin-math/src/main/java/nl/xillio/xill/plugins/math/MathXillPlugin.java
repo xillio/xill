@@ -10,10 +10,10 @@ import nl.xillio.xill.plugins.math.services.math.MathOperations;
  * This package includes all example constructs
  */
 public class MathXillPlugin extends XillPlugin {
-	
+
 	@Override
 	public void configure(final Binder binder) {
-		binder.bind(MathOperations.class).to(MathOperationImpl.class);
+		//binder.bind(MathOperations.class).to(MathOperationImpl.class);
 	}
 
 }
