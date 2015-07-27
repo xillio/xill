@@ -11,8 +11,10 @@ import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
+ * <p>
  * This class represents a written object in a script e.g. { "keyValue": 6 }.
- * <br/>
+ * </p>
+ *
  * Values:
  * <ul>
  * <li><b>{@link String}: </b> a JSON representation</li>

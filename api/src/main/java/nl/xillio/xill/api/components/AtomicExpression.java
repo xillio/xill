@@ -8,7 +8,7 @@ import nl.xillio.xill.api.behavior.NumberBehavior;
 import nl.xillio.xill.api.behavior.StringBehavior;
 
 /**
- * This {@link MetaExpression} represents an expression that holds a single value
+ * This {@link MetaExpression} represents an expression that holds an {@link ExpressionDataType#ATOMIC} value.
  */
 public class AtomicExpression extends MetaExpression {
 
