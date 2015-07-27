@@ -26,7 +26,7 @@ public class HungarianAlgorithmConstruct extends Construct {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static MetaExpression process(final MetaExpression matrixVar, final MetaExpression maxVar) {
+	static MetaExpression process(final MetaExpression matrixVar, final MetaExpression maxVar) {
 		if (matrixVar.getType() == LIST) {
 			if (matrixVar == NULL) {
 				return NULL;
@@ -99,6 +99,7 @@ public class HungarianAlgorithmConstruct extends Construct {
 					assignment[i][0] = col;
 					assignment[i][1] = row;
 				}
+			}
 
 				// Prepare results
 				List<MetaExpression> result = new ArrayList<>();
@@ -118,7 +119,7 @@ public class HungarianAlgorithmConstruct extends Construct {
 				result.add(fromValue(cellsmap));
 
 				return fromValue(result);
-			}
+			
 		}
 		throw new RobotRuntimeException("No matrix given");
 	}
