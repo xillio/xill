@@ -21,7 +21,11 @@ import nl.xillio.sharedlibrary.lrucache.LRUCache;
 
 public abstract class StandardSQLConnection extends DBConnection {
 
-	public final static String USERPREFIX = "USER", SELECTPREFIX = "SELECT", UPDATEPREFIX = "UPDATE", INSERTPREFIX = "INSERT", REPLACEPREFIX = "REPLACE";
+	public final static String USERPREFIX = "USER";
+	public final static String SELECTPREFIX = "SELECT";
+	public final static String UPDATEPREFIX = "UPDATE";
+	public final static String INSERTPREFIX = "INSERT";
+	public final static String REPLACEPREFIX = "REPLACE";
 	private static final Logger log = LogManager.getLogger();
 	private final LinkedHashMap<String, PreparedStatement> statementCache2 = new LinkedHashMap<>(50);
 	private final LRUCache<String, LinkedList<String>> primaryKeyCache = new LRUCache<>(20);

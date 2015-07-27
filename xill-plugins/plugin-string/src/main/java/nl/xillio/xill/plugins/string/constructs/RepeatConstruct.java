@@ -1,12 +1,13 @@
 package nl.xillio.xill.plugins.string.constructs;
 
-import org.apache.commons.lang3.StringUtils;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
+
+import com.google.inject.Inject;
 
 /**
  *
@@ -16,20 +17,22 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
  *
  */
 public class RepeatConstruct extends Construct {
+	@Inject
+	private StringUtilityService stringService;
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			RepeatConstruct::process,
+			(string, value) -> process(string, value, stringService),
 			new Argument("string", ATOMIC),
 			new Argument("value", ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression string, final MetaExpression value) {
+	static MetaExpression process(final MetaExpression string, final MetaExpression value, final StringUtilityService stringService) {
 		assertNotNull(string, "string");
 		assertNotNull(value, "value");
 
-		String repeatedString = StringUtils.repeat(string.getStringValue(), value.getNumberValue().intValue());
+		String repeatedString = stringService.repeat(string.getStringValue(), value.getNumberValue().intValue());
 
 		return fromValue(repeatedString);
 	}

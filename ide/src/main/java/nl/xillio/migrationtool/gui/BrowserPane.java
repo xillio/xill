@@ -47,7 +47,8 @@ public class BrowserPane extends AnchorPane {
 	protected static XPath xpath = XPathFactory.newInstance().newXPath();
 	private final MyNamespaceContext namespaceContext = new MyNamespaceContext();
 
-	protected Node presentationNode, documentNode;
+	protected Node presentationNode;
+	protected Node documentNode;
 	protected ContentType contentType;
 
 	private BrowserPane() {
@@ -594,7 +595,6 @@ public class BrowserPane extends AnchorPane {
 
 		return text.toString().trim();
 	}
-
 	// ////////////////////////////////////////////////////////////////////
 	// Innerclass for handling namespaces
 

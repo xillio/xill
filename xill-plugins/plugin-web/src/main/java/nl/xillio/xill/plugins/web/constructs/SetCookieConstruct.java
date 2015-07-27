@@ -16,6 +16,9 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.PageVariable;
 
+/**
+ * Set cookie in a currently loaded page context  
+ */
 public class SetCookieConstruct extends Construct {
 
 	@Override
@@ -26,6 +29,13 @@ public class SetCookieConstruct extends Construct {
 			new Argument("cookies", LIST, OBJECT));
 	}
 
+	/**
+	 * @param pageVar
+	 * 				input variable (should be of a PAGE type)
+	 * @param cookiesVar
+	 * 				input string variable - associated array or list of associated arrays (see CT help for details)  
+	 * @return null variable
+	 */
 	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression cookiesVar) {
 
 		if (cookiesVar.isNull()) {

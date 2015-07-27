@@ -1,11 +1,12 @@
 package nl.xillio.xill.api.construct;
 
-import java.io.InputStream;
-
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.services.inject.InjectorUtils;
+import org.apache.commons.lang3.text.WordUtils;
+
+import java.io.InputStream;
 
 import org.apache.commons.lang3.text.WordUtils;
 
@@ -129,7 +130,7 @@ public abstract class Construct extends ExpressionBuilderHelper implements HelpC
 
 	/**
 	 * Hide this construct from documentation
-	 * 
+	 *
 	 * @return true if it should be hidden
 	 */
 	public boolean hideDocumentation() {

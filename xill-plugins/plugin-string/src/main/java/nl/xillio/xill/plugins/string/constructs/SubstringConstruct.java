@@ -6,30 +6,39 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
+
+import com.google.inject.Inject;
 
 /**
  *
- * Returns the substring of text between position start and position end. </br>
- * If the end position equals 0 it will take the full length of the
- * string. </br>
- * The start position is set to 0 if the end position is smaller than the start
- * position.
+ * <p>
+ * Returns the substring of text between position start and position end.
+ * <p>
+ * <p>
+ * If the end position equals 0 it will take the full length of the string.
+ * </p>
+ * <p>
+ * The start position is set to 0 if the end position is smaller than the start position.
+ * </p>
  *
  * @author Sander
  *
  */
 public class SubstringConstruct extends Construct {
+	@Inject
+	private StringUtilityService stringService;
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			SubstringConstruct::process,
+			(string, start, end) -> process(string, start, end, stringService),
 			new Argument("string", ATOMIC),
 			new Argument("start", ATOMIC),
 			new Argument("end", ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression string, final MetaExpression startVar, final MetaExpression endVar) {
+	static MetaExpression process(final MetaExpression string, final MetaExpression startVar, final MetaExpression endVar, final StringUtilityService stringService) {
 		assertNotNull(string, "string");
 		assertNotNull(startVar, "start");
 		assertNotNull(endVar, "end");
@@ -51,7 +60,7 @@ public class SubstringConstruct extends Construct {
 		}
 
 		try {
-			return fromValue(text.substring(start, end));
+			return fromValue(stringService.subString(text, start, end));
 		} catch (StringIndexOutOfBoundsException e) {
 			throw new RobotRuntimeException("Index out of bounds.");
 		}

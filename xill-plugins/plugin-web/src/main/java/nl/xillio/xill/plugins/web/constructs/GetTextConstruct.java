@@ -13,6 +13,9 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.NodeVariable;
 import nl.xillio.xill.plugins.web.PageVariable;
 
+/**
+ * Gets the text content from provided web element 
+ */
 public class GetTextConstruct extends Construct {
 
 	@Override
@@ -20,6 +23,11 @@ public class GetTextConstruct extends Construct {
 		return new ConstructProcessor(GetTextConstruct::process, new Argument("element"));
 	}
 
+	/**
+	 * @param elementVar
+	 * 				input variable (should be of a NODE type or list of NODE type variables)
+	 * @return string variable that contains the text(s) of the provided web element(s)
+	 */
 	public static MetaExpression process(final MetaExpression elementVar) {
 
 		assertNotNull(elementVar, "element");

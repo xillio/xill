@@ -1,81 +1,106 @@
 /*
 * Please do not change this file unless explicitely instructed to. The values you can change are found in gradle.properties
 */
+plugins {
+    id "org.sonarqube" version "1.0"
+}
+
+apply plugin: 'jacoco'
+
+//Test vpn connection
+if (testConnection(mavenRepositoryHost)) {
+    logger.info "We have a connection to $mavenFriendlyServerName"
+
+    addRepositories(mavenRepositoryHost)
+} else if (testConnection(mavenRepositoryHostFallback)) {
+    logger.info "We have a connection to $mavenFriendlyServerName through an ssh tunnel"
+    addRepositories(mavenRepositoryHostFallback)
+} else {
+    logger.error "Unable to connect to $mavenFriendlyServerName\n" +
+            "Connect to office VPN or read the wiki to see how to connect to $mavenFriendlyServerName\n" +
+            "link: $mavenRepositoryConnectionGuide"
+}
 
 allprojects {
-	apply plugin: 'java'
-	apply plugin: 'eclipse'
-	group = 'nl.xillio'
-	version = version
-	
-	repositories {
-		mavenLocal()
-		mavenCentral()
-	}
-	
-	javadoc{
-		failOnError = !Boolean.parseBoolean(javadocIgnoreErrors)
-	}
-	
-	task sourceJar(type: Jar) {
-		from sourceSets.main.allJava
-	}
-	
-	/*
-	 * MAVEN PUBLISH
-	 */
-	 if(project.name != 'xill-plugins') {
-		apply plugin: 'maven-publish'
-		publishing {
-			publications {
-				main(MavenPublication) {
-					groupId group
-					artifactId 'xill-' + project.name
-					version project.version
-		
-					from components.java
-							
-					artifact sourceJar {
-						classifier "sources"
-					}
-				}
-			}
-			
-			 repositories {
-						maven {
-								url 'http://$mavenRepositoryHost:$mavenRespoitoryPort/nexus/content/repositories/releases'
-								name 'release'
-								credentials {
-									username = mavenUsername
-									password = mavenPassword
-								}
-						}
-				}
-		}
-	}
-	
-	test{
-		useTestNG{
-				useDefaultListeners = true
-		};
-	}
-	
-	dependencies {
-			testCompile 'org.testng:testng:6.9.4'
-			testCompile "org.mockito:mockito-core:1.+"
-	}
-	
-	build{
-		dependsOn javadoc
-	}
-	
-	jar.manifest {
-		attributes "Implementation-Version": version
-		if(project.hasProperty(project.name + "ProjectName")) {
-			attributes "Implementation-Title": project.getProperties().get(project.name + "ProjectName")
-		}
-	}
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
+    apply plugin: 'jacoco'
+
+    group = 'nl.xillio'
+    version = version
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    javadoc {
+        failOnError = !Boolean.parseBoolean(javadocIgnoreErrors)
+    }
+
+    task sourceJar(type: Jar) {
+        from sourceSets.main.allJava
+    }
+
+    /*
+     * MAVEN PUBLISH
+     */
+    if (project.name != 'xill-plugins') {
+        apply plugin: 'maven-publish'
+
+        publishing {
+            publications {
+                main(MavenPublication) {
+                    artifactId 'xill-' + project.name
+
+                    from components.java
+
+                    artifact sourceJar {
+                        classifier "sources"
+                    }
+                }
+            }
+
+            repositories {
+                maven {
+                    url 'http://$mavenRepositoryHost:$mavenRespoitoryPort/nexus/content/repositories/releases'
+                    name 'release'
+                    credentials {
+                        username = mavenUsername
+                        password = mavenPassword
+                    }
+                }
+            }
+        }
+
+    }
+
+    test {
+        useTestNG {
+            useDefaultListeners = true
+        };
+    }
+
+    dependencies {
+        testCompile 'org.testng:testng:6.9.4'
+        testCompile "org.mockito:mockito-core:1.+"
+    }
+
+    build {
+        dependsOn javadoc
+    }
+
+    jar.manifest {
+        attributes "Implementation-Version": version
+        if (project.hasProperty(project.name + "ProjectName")) {
+            attributes "Implementation-Title": project.getProperties().get(project.name + "ProjectName")
+        }
+    }
+
 }
+
+
+evaluationDependsOnChildren()
 
 description = 'this root project contains the overview of the contenttools application'
 
@@ -95,15 +120,15 @@ def helpfilesDir = new File(buildDir, '../helpfiles')
  */
 
 configurations {
-	plugin
+    plugin
 }
 
 dependencies {
-	compile 'nl.xillio:commons-plugins:1.0'
-	compile project(':api')
-	plugin project(':processor')
-	plugin project(':ide')
-	plugin project(':xill-plugins')
+    compile 'nl.xillio:commons-plugins:1.0'
+    compile project(':api')
+    plugin project(':processor')
+    plugin project(':ide')
+    plugin project(':xill-plugins')
 }
 
 /*
@@ -114,101 +139,112 @@ apply from: 'http://dl.bintray.com/content/shemnon/javafx-gradle/8.1.1/javafx.pl
 assemble.dependsOn.remove(jfxDeploy)
 
 jfxDeploy {
-	inputFiles = files(libsDir)
+    inputFiles = files(libsDir)
 }
 
-task assembleContenttools(type: Copy){
-	description 'Copies output from the processor and the ide to a plugins directory so eclipse will be able to load the plugins.'
-	//Processor
-	from project(':processor').jar
-	from project(':processor').configurations.runtime
-	//Contentttools
-	from project(':ide').jar
-	from project(':ide').configurations.runtime
-	//Plugins
-	from project(':xill-plugins').configurations.runtime
-	into pluginsDir
+//Plugin collect tasks
+project(':xill-plugins').subprojects {
+    def plugin = it
+    rootProject.tasks.create(name: 'collect' + project.name.capitalize(), type: Copy, group: 'plugins') {
+        dependsOn plugin.jar
+        from plugin.configurations.runtime.files
+        from plugin.jar
+        into new File(pluginsDir, plugin.name)
+    }
 }
 
-jar{
-	dependsOn assembleContenttools
-	dependsOn project(':processor').jar
-	dependsOn project(':ide').jar
-	
-	//We need to do this so we can have the plugins folder in the package too
-	doLast {
-			copy {
-					from assembleContenttools
-					into new File(libsDir, 'plugins')
-			}
-	}
+task collectIde(type: Copy) {
+    dependsOn project(':ide').jar
+    from project(':ide').configurations.runtime
+    from project(':ide').jar
+    into new File(pluginsDir, 'ide')
+}
+
+task collectProcessor(type: Copy) {
+    dependsOn project(':processor').jar
+    from project(':processor').configurations.runtime
+    from project(':processor').jar
+    into new File(pluginsDir, 'processor')
+}
+
+task assembleContenttools {
+    description 'Copies output from the processor and the ide to a plugins directory so eclipse will be able to load the plugins.'
+    dependsOn collectProcessor
+    dependsOn collectIde
+
+    //Add all plugins
+    tasks.each {
+        if (it.group == 'plugins') {
+            assembleContenttools.dependsOn it
+        }
+    }
+}
+
+jar {
+    dependsOn assembleContenttools
+    dependsOn project(':processor').jar
+    dependsOn project(':ide').jar
+
+    //We need to do this so we can have the plugins folder in the package too
+    doLast {
+        copy {
+            from assembleContenttools
+            into new File(libsDir, 'plugins')
+        }
+    }
 }
 
 javafx {
-	appID = appID
-	appName = friendlyName
-	copyright = copyrightInformation
-	mainClass mainClassName
-	vendor = company
-	menu = true
-	shortcut = true
+    appID = appID
+    appName = friendlyName
+    copyright = copyrightInformation
+    mainClass mainClassName
+    vendor = company
+    menu = true
+    shortcut = true
     embedJNLP = false
 }
 task cleanRuntime(type: Delete) {
-	description 'Deletes all the folders generated and used by contenttools running in eclipse'
+    description 'Deletes all the folders generated and used by contenttools running in eclipse'
 
-	delete pluginsDir, esConsoleDir, helpfilesDir
+    delete pluginsDir, esConsoleDir, helpfilesDir
 }
 
 clean {
-	dependsOn cleanRuntime
-}
-
-//Test vpn connection
-if(testConnection(mavenRepositoryHost)) {
-	logger.info "We have a connection to $mavenFriendlyServerName"
-	
-	addRepositories(mavenRepositoryHost)
-}else if(testConnection(mavenRepositoryHostFallback)) {
-	logger.info "We have a connection to $mavenFriendlyServerName through an ssh tunnel"
-	addRepositories(mavenRepositoryHostFallback)
-}else {
-	logger.error 	"Unable to connect to $mavenFriendlyServerName\n" +
-							"Connect to office VPN or read the wiki to see how to connect to $mavenFriendlyServerName\n"+
-							"link: $mavenRepositoryConnectionGuide"
+    dependsOn cleanRuntime
 }
 
 def testConnection(host) {
-	try {
-		def socket = new Socket();
-		socket.connect(new InetSocketAddress(host, Integer.parseInt(mavenRespoitoryPort)), Integer.parseInt(mavenTimeout))
-		socket.close()
-		
-		return true;
-	} catch (IOException ex) {
-		return false;
-	}
+    try {
+        def socket = new Socket();
+        socket.connect(new InetSocketAddress(host, Integer.parseInt(mavenRespoitoryPort)), Integer.parseInt(mavenTimeout))
+        socket.close()
+
+        return true;
+    } catch (IOException ex) {
+        return false;
+    }
 }
 
 def addRepositories(host) {
-	allprojects{
-		repositories {
-			maven {
-				url "http://$host:$mavenRespoitoryPort/nexus/content/repositories/releases"
-				credentials {
-					username mavenUsername
-					password mavenPassword
-				}
-			}
-			maven {
-				url "http://$host:$mavenRespoitoryPort/nexus/content/repositories/thirdparty"
-				credentials {
-					username mavenUsername
-					password mavenPassword
-				}
-			}
-		}
-	}
+    allprojects {
+        repositories {
+            maven {
+                url "http://$host:$mavenRespoitoryPort/nexus/content/repositories/releases"
+                credentials {
+                    username mavenUsername
+                    password mavenPassword
+                }
+            }
+            maven {
+                url "http://$host:$mavenRespoitoryPort/nexus/content/repositories/thirdparty"
+                credentials {
+                    username mavenUsername
+                    password mavenPassword
+                }
+            }
+        }
+    }
 }
 
 run.dependsOn(assembleContenttools)

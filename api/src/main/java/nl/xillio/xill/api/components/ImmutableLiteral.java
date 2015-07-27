@@ -16,6 +16,7 @@ public class ImmutableLiteral extends MetaExpression {
 	 */
 	public ImmutableLiteral(final Expression value) {
 		this.value = value;
+		setValue(value);
 	}
 
 	@Override

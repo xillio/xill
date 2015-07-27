@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <parameters>
+        <param name="source"/>
+        <param name="target"/>
+    </parameters>
+    <description>
+        <![CDATA[Copy a file or folder to a target destination, overwriting it if it exists
+        Returns an object containing the source destination [from], the target destination [into] and weather the operation was successful [success]]]></description>
+    <examples>
+        <example description="Copy a file:"><![CDATA[
+        use System;
+        use File;
+        var result = File.copy("file.txt", "file_copy.txt");
+        if(!result.success) {
+            System.print("Copy Failed", "error");
+        }
+    ]]></example>
+    </examples>
+</function>

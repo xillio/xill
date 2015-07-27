@@ -11,6 +11,9 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
+/**
+ * It loads web page from a provided string (the string represents HTML code of a web page)
+ */
 public class StringToPageConstruct extends Construct {
 
 	@Override
@@ -20,6 +23,11 @@ public class StringToPageConstruct extends Construct {
 			new Argument("content"));
 	}
 
+	/**
+	 * @param contentVar
+	 * 				input string variable (HTML code of a web page)
+	 * @return PAGE variable
+	 */
 	public static MetaExpression process(final MetaExpression contentVar) {
 		String content = contentVar.getStringValue();
 

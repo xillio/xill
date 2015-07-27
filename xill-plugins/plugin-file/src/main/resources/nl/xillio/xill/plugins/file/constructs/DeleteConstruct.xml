@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <parameters>
+        <param name="uri"/>
+    </parameters>
+    <description>
+        <![CDATA[Delete a file or folder.
+        Returns the absolute path to the file or folder]]></description>
+    <examples>
+        <example description="Create and delete a folder:"><![CDATA[
+        use File;
+        var folder = File.createFolder("toBeDeleted");
+        File.delete(folder);
+    ]]></example>
+    </examples>
+    <references>
+        <reference package="File">createFolder</reference>
+    </references>
+    <searchTags>
+        write, text, new, create, append, add
+    </searchTags>
+</function>

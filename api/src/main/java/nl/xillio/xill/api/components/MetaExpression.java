@@ -1,30 +1,26 @@
 package nl.xillio.xill.api.components;
 
-import java.util.ArrayList;
-import java.util.IdentityHashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import nl.xillio.util.IdentityArrayList;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.behavior.BooleanBehavior;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.NotImplementedException;
 
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
+
 /**
  *
  */
 public abstract class MetaExpression implements Expression, Processable {
 	private static final Gson gson = new GsonBuilder().enableComplexMapKeySerialization().serializeNulls()
-	  // .setPrettyPrinting()
-	  .disableHtmlEscaping().disableInnerClassSerialization().serializeSpecialFloatingPointValues()
-	  .serializeNulls().create();
+		// .setPrettyPrinting()
+		.disableHtmlEscaping().disableInnerClassSerialization().serializeSpecialFloatingPointValues()
+		.serializeNulls().create();
 	private final MetadataExpressionPool<Object> metadataPool = new MetadataExpressionPool<>();
 	private Object value;
 	private ExpressionDataType type = ExpressionDataType.ATOMIC;
@@ -219,6 +215,7 @@ public abstract class MetaExpression implements Expression, Processable {
 	 */
 	@Override
 	public String toString() {
+
 		return toString(gson);
 	}
 
@@ -238,7 +235,7 @@ public abstract class MetaExpression implements Expression, Processable {
 	 */
 	public String toString(final Gson gsonParser) {
 		MetaExpression cleaned = removeCircularReference(this, new IdentityArrayList<>(),
-		  ExpressionBuilderHelper.fromValue("<<CIRCULAR REFERENCE>>"));
+			ExpressionBuilderHelper.fromValue("<<CIRCULAR REFERENCE>>"));
 		return gsonParser.toJson(extractValue(cleaned));
 	}
 
@@ -246,14 +243,18 @@ public abstract class MetaExpression implements Expression, Processable {
 	 * Remove all circular references to prepare for serialisation
 	 *
 	 * @param metaExpression
+	 *        <<<<<<< HEAD
+	 * @param currentParsing
+	 *        =======
 	 * @param currentlyProcessing
+	 *        >>>>>>> origin/develop
 	 * @param replacement
 	 *        The replacement for circular references
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
 	private static MetaExpression removeCircularReference(final MetaExpression metaExpression,
-	    final List<MetaExpression> currentlyProcessing, final MetaExpression replacement) {
+			final List<MetaExpression> currentlyProcessing, final MetaExpression replacement) {
 		MetaExpression result = ExpressionBuilderHelper.NULL;
 		currentlyProcessing.add(metaExpression);
 
@@ -278,7 +279,7 @@ public abstract class MetaExpression implements Expression, Processable {
 				LinkedHashMap<String, MetaExpression> resultMapValue = new LinkedHashMap<>();
 
 				for (Map.Entry<String, MetaExpression> pair : ((Map<String, MetaExpression>) metaExpression.getValue())
-				  .entrySet()) {
+					.entrySet()) {
 
 					if (currentlyProcessing.stream().anyMatch(metaExp -> metaExp == pair.getValue())) {
 						// Circular reference
@@ -289,6 +290,7 @@ public abstract class MetaExpression implements Expression, Processable {
 				}
 				result = ExpressionBuilderHelper.fromValue(resultMapValue);
 				break;
+
 			case ATOMIC:
 				result = metaExpression;
 				break;
@@ -300,12 +302,20 @@ public abstract class MetaExpression implements Expression, Processable {
 
 	@Override
 	public boolean equals(final Object obj) {
-		// Only compare to MetaExpression
-		if (!(obj instanceof MetaExpression)) {
-			return false;
+		if (obj instanceof MetaExpression) {
+			return equals((MetaExpression) obj);
 		}
+		return super.equals(obj);
+	}
 
-		MetaExpression other = (MetaExpression) obj;
+	/**
+	 * Check equality to other {@link MetaExpression}
+	 *
+	 * @param other
+	 *        the other
+	 * @return true if and only if the expressions have equal value
+	 */
+	public boolean equals(final MetaExpression other) {
 
 		// Compare the type
 		if (getType() != other.getType()) {
@@ -315,9 +325,9 @@ public abstract class MetaExpression implements Expression, Processable {
 		switch (getType()) {
 			case ATOMIC:
 				return getBooleanValue() == other.getBooleanValue() &&
-				    getStringValue().equals(other.getStringValue()) &&
-				    (getNumberValue().doubleValue() == other.getNumberValue().doubleValue()
-				        || Double.isNaN(getNumberValue().doubleValue()) && Double.isNaN(getNumberValue().doubleValue()));
+						getStringValue().equals(other.getStringValue()) &&
+						(getNumberValue().doubleValue() == other.getNumberValue().doubleValue()
+								|| Double.isNaN(getNumberValue().doubleValue()) && Double.isNaN(getNumberValue().doubleValue()));
 			case LIST:
 				return getValue().equals(other.getValue());
 			case OBJECT:
@@ -338,15 +348,8 @@ public abstract class MetaExpression implements Expression, Processable {
 	 * @param expression
 	 *        The {@link MetaExpression} to extract a value from.
 	 * @return
-	 *         <ul>
-	 *         <<<<<<< HEAD
-	 *         <li>{@link ExpressionDataType#ATOMIC}: returns an {@link Object}
-	 *         <br/>
-	 *         This represents a singular value that is parsed in the folowing
-	 *         way:
-	 *         =======
+	 * 				<ul>
 	 *         <li>{@link ExpressionDataType#ATOMIC}: returns an {@link Object} This represents a singular value that is parsed in the folowing way:
-	 *         >>>>>>> origin/develop
 	 *         <ol>
 	 *         <li>If the value is null: return null</li>
 	 *         <li>If the expression is created using {@link ExpressionBuilder#fromValue(boolean)}: return {@link Boolean}</li>
@@ -402,7 +405,7 @@ public abstract class MetaExpression implements Expression, Processable {
 				List<Object> resultList = new ArrayList<>();
 				results.put(expression, resultList);
 				resultList.addAll(((List<MetaExpression>) expression.getValue()).stream().map(v -> extractValue(v, results))
-				  .collect(Collectors.toList()));
+					.collect(Collectors.toList()));
 				result = resultList;
 				break;
 			case OBJECT:
@@ -528,6 +531,10 @@ public abstract class MetaExpression implements Expression, Processable {
 				// It seems like we found our match
 				return entry.getValue();
 			}
+		}
+		
+		if(root == null) {
+			return ExpressionBuilder.NULL;
 		}
 
 		if (root instanceof List) {

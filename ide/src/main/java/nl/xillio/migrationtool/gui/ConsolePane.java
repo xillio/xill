@@ -57,9 +57,21 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 	@FXML
 	private TableView<LogEntry> tblConsoleOut;
 	@FXML
-	private TableColumn<LogEntry, String> colLogTime, colLogType, colLogMessage;
+	private TableColumn<LogEntry, String> colLogTime;
 	@FXML
-	private ToggleButton tbnToggleLogsInfo, tbnToggleLogsDebug, tbnToggleLogsWarn, tbnToggleLogsError, tbnConsoleSearch;
+	private TableColumn<LogEntry, String> colLogType;
+	@FXML
+	private TableColumn<LogEntry, String> colLogMessage;
+	@FXML
+	private ToggleButton tbnToggleLogsInfo;
+	@FXML
+	private ToggleButton tbnToggleLogsDebug;
+	@FXML
+	private ToggleButton tbnToggleLogsWarn;
+	@FXML
+	private ToggleButton tbnToggleLogsError;
+	@FXML
+	private ToggleButton tbnConsoleSearch;
 
 	// private Robot robot;
 

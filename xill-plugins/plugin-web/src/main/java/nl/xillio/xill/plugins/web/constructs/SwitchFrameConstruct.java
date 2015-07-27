@@ -12,6 +12,9 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.NodeVariable;
 import nl.xillio.xill.plugins.web.PageVariable;
 
+/**
+ * Switch current page context to a provided frame
+ */
 public class SwitchFrameConstruct extends Construct {
 
 	@Override
@@ -22,6 +25,13 @@ public class SwitchFrameConstruct extends Construct {
 			new Argument("frame"));
 	}
 
+	/**
+	 * @param pageVar
+	 * 				input variable (should be of a PAGE type)
+	 * @param frameVar
+	 * 				input variable - frame specification - string or number or web element (NODE variable)
+	 * @return null variable
+	 */
 	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression frameVar) {
 
 		if (!PageVariable.checkType(pageVar)) {

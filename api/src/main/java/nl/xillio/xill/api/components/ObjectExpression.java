@@ -30,6 +30,7 @@ public class ObjectExpression extends MetaExpression {
 	 */
 	public ObjectExpression(final LinkedHashMap<String, MetaExpression> object) {
 		value = object;
+
 		setValue(value);
 	}
 

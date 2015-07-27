@@ -15,6 +15,7 @@ import java.util.List;
  * <li><b>{@link Number}: </b> the length of the list</li>
  * </ul>
  */
+
 public class ListExpression extends MetaExpression {
 
 	private final List<? extends MetaExpression> value;
@@ -25,7 +26,9 @@ public class ListExpression extends MetaExpression {
 	 */
 	public ListExpression(final List<MetaExpression> value) {
 		this.value = value;
+
 		setValue(value);
+
 	}
 
 	@Override
