@@ -101,25 +101,25 @@ public class HungarianAlgorithmConstruct extends Construct {
 				}
 			}
 
-				// Prepare results
-				List<MetaExpression> result = new ArrayList<>();
-				LinkedHashMap<String, MetaExpression> sumMap = new LinkedHashMap<>();
-				sumMap.put("sum", fromValue(sum));
-				result.add(fromValue(sumMap));
+			// Prepare results
+			List<MetaExpression> result = new ArrayList<>();
+			LinkedHashMap<String, MetaExpression> sumMap = new LinkedHashMap<>();
+			sumMap.put("sum", fromValue(sum));
+			result.add(fromValue(sumMap));
 
-				List<MetaExpression> cells = new ArrayList<>();
-				for (int[] element : assignment) {
-					LinkedHashMap<String, MetaExpression> item = new LinkedHashMap<>();
-					item.put("row", fromValue(element[0]));
-					item.put("col", fromValue(element[1]));
-					cells.add(fromValue(item));
-				}
-				LinkedHashMap<String, MetaExpression> cellsmap = new LinkedHashMap<String, MetaExpression>();
-				cellsmap.put("cells", fromValue(cells));
-				result.add(fromValue(cellsmap));
+			List<MetaExpression> cells = new ArrayList<>();
+			for (int[] element : assignment) {
+				LinkedHashMap<String, MetaExpression> item = new LinkedHashMap<>();
+				item.put("row", fromValue(element[0]));
+				item.put("col", fromValue(element[1]));
+				cells.add(fromValue(item));
+			}
+			LinkedHashMap<String, MetaExpression> cellsmap = new LinkedHashMap<String, MetaExpression>();
+			cellsmap.put("cells", fromValue(cells));
+			result.add(fromValue(cellsmap));
 
-				return fromValue(result);
-			
+			return fromValue(result);
+
 		}
 		throw new RobotRuntimeException("No matrix given");
 	}
@@ -146,29 +146,29 @@ public class HungarianAlgorithmConstruct extends Construct {
 
 	/*
 	 * Created on Apr 25, 2005
-	 *
+	 * 
 	 * Munkres-Kuhn (Hungarian) Algorithm Clean Version: 0.11
-	 *
+	 * 
 	 * Konstantinos A. Nedas Department of Spatial Information Science &
 	 * Engineering University of Maine, Orono, ME 04469-5711, USA
 	 * kostas@spatial.maine.edu http://www.spatial.maine.edu/~kostas
-	 *
+	 * 
 	 * This Java class implements the Hungarian algorithm
-	 *
+	 * 
 	 * It takes 2 arguments: a. A 2-D array (could be rectangular or square). b.
 	 * A string ("min" or "max") specifying whether you want the min or max
 	 * assignment. [It returns an assignment matrix[array.length][2] that
 	 * contains the row and col of the elements (in the original inputted array)
 	 * that make up the optimum assignment.]
-	 *
+	 * 
 	 * Any comments, corrections, or additions would be much appreciated. Credit
 	 * due to professor Bob Pilgrim for providing an online copy of the
 	 * pseudocode for this algorithm
 	 * (http://216.249.163.93/bob.pilgrim/445/munkres.html)
-	 *
+	 * 
 	 * Feel free to redistribute this source code, as long as this header--with
 	 * the exception of sections in brackets--remains as part of the file.
-	 *
+	 * 
 	 * Requirements: JDK 1.5.0_01 or better.
 	 */
 
