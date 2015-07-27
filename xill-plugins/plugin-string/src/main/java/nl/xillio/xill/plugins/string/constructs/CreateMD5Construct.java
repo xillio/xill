@@ -23,11 +23,12 @@ public class CreateMD5Construct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(CreateMD5Construct::process, new Argument("valueVar"));
+		return new ConstructProcessor(
+			CreateMD5Construct::process,
+			new Argument("valueVar", ATOMIC));
 	}
 
 	private static MetaExpression process(final MetaExpression valueVar) {
-		assertType(valueVar, "value", ATOMIC);
 		assertNotNull(valueVar, "value");
 		try {
 			MessageDigest md5 = MessageDigest.getInstance("MD5");

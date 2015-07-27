@@ -18,11 +18,12 @@ public class ToLowerConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(ToLowerConstruct::process, new Argument("string"));
+		return new ConstructProcessor(
+			ToLowerConstruct::process, 
+			new Argument("string", ATOMIC));
 	}
 
 	private static MetaExpression process(final MetaExpression string) {
-		assertType(string, "string", ATOMIC);
 
 		return fromValue(string.getStringValue().toLowerCase());
 	}

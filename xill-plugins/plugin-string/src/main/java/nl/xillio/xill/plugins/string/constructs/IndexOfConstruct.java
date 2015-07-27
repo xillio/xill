@@ -21,13 +21,14 @@ public class IndexOfConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(IndexOfConstruct::process, new Argument("string1"), new Argument("string2"), new Argument("value", fromValue(0)));
+		return new ConstructProcessor(
+			IndexOfConstruct::process, 
+			new Argument("string1", ATOMIC), 
+			new Argument("string2", ATOMIC), 
+			new Argument("value", fromValue(0), ATOMIC));
 	}
 
 	private static MetaExpression process(final MetaExpression string1, final MetaExpression string2, final MetaExpression value) {
-		assertType(string1, "string1", ATOMIC);
-		assertType(string2, "string2", ATOMIC);
-		assertType(value, "value", ATOMIC);
 		assertNotNull(string1, "string1");
 		assertNotNull(string2, "string2");
 

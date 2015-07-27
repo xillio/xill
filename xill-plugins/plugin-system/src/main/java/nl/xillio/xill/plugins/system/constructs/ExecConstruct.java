@@ -28,8 +28,8 @@ public class ExecConstruct extends Construct {
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
 			(program, directory) -> process(program, directory, context.getRootLogger()),
-			new Argument("arguments"),
-			new Argument("directory", NULL));
+			new Argument("arguments", ATOMIC, LIST),
+			new Argument("directory", NULL, ATOMIC));
 	}
 
 	@SuppressWarnings("unchecked")

@@ -1,5 +1,10 @@
 package nl.xillio.xill.api.construct;
 
+import java.util.Arrays;
+
+import org.apache.commons.lang3.StringUtils;
+
+import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 
 /**
@@ -8,17 +13,21 @@ import nl.xillio.xill.api.components.MetaExpression;
 public class Argument {
 
 	private final String name;
-	private MetaExpression defaultValue;
+	private final MetaExpression defaultValue;
 	private MetaExpression value;
+	private final boolean[] acceptedTypes = new boolean[ExpressionDataType.values().length];
+	private final String typeDescription;
 
 	/**
 	 * Creates a complex argument, which accepts various variable types.
 	 *
 	 * @param name
 	 *        the name of the argument
+	 * @param acceptedTypes
+	 *        All accepted types
 	 */
-	public Argument(final String name) {
-		this.name = name;
+	public Argument(final String name, final ExpressionDataType... acceptedTypes) {
+		this(name, null, acceptedTypes);
 	}
 
 	/**
@@ -28,10 +37,31 @@ public class Argument {
 	 *        the name of the argument
 	 * @param defaultvalue
 	 *        the default value
+	 * @param acceptedTypes
+	 *        the accepted structures for this argument
 	 */
-	public Argument(final String name, final MetaExpression defaultvalue) {
-		this(name);
+	public Argument(final String name, final MetaExpression defaultvalue, final ExpressionDataType... acceptedTypes) {
+		this.name = name;
 		defaultValue = defaultvalue;
+
+		if (acceptedTypes.length == 0) {
+			// No types provided so accept everything
+			for (int i = 0; i < this.acceptedTypes.length; i++) {
+				this.acceptedTypes[i] = true;
+			}
+			typeDescription = "ANY";
+		} else {
+			// Only accept provided types
+			for (ExpressionDataType type : acceptedTypes) {
+				this.acceptedTypes[type.toInt()] = true;
+			}
+
+			typeDescription = StringUtils.join(
+				Arrays.stream(ExpressionDataType.values())
+					.filter(type -> this.acceptedTypes[type.toInt()])
+					.toArray(),
+				", ");
+		}
 	}
 
 	/**
@@ -57,9 +87,15 @@ public class Argument {
 	 *
 	 * @param value
 	 *        the value to set
+	 * @return true only and only if the value was accepted
 	 */
-	void setValue(final MetaExpression value) {
+	boolean setValue(final MetaExpression value) {
+		if (!acceptedTypes[value.getType().toInt()]) {
+			return false;
+		}
+
 		this.value = value;
+		return true;
 	}
 
 	/**
@@ -84,7 +120,15 @@ public class Argument {
 		if (defaultValue != null) {
 			name += " = " + defaultValue;
 		}
-		return name;
+		return "<" + getType() + "> " + name;
+	}
+
+	/**
+	 * @return a string description of the types
+	 */
+	public String getType() {
+
+		return typeDescription;
 	}
 
 }

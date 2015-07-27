@@ -20,12 +20,13 @@ public class AmpersandEncodeConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(AmpersandEncodeConstruct::process, new Argument("string"));
+		return new ConstructProcessor(
+			AmpersandEncodeConstruct::process,
+			new Argument("string", ATOMIC));
 	}
 
 	private static MetaExpression process(final MetaExpression stringVar) {
 
-		assertType(stringVar, "string", ATOMIC);
 		assertNotNull(stringVar, "string");
 
 		String text = stringVar.getStringValue();

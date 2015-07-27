@@ -18,12 +18,13 @@ public class EndsWithConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(EndsWithConstruct::process, new Argument("string1"), new Argument("string2"));
+		return new ConstructProcessor(
+			EndsWithConstruct::process,
+			new Argument("string", ATOMIC),
+			new Argument("suffix", ATOMIC));
 	}
 
 	private static MetaExpression process(final MetaExpression string1, final MetaExpression string2) {
-		assertType(string1, "string1", ATOMIC);
-		assertType(string2, "string2", ATOMIC);
 		assertNotNull(string1, "string1");
 		assertNotNull(string2, "string2");
 

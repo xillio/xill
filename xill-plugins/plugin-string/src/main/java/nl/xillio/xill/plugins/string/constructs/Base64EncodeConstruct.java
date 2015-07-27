@@ -25,11 +25,12 @@ public class Base64EncodeConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(Base64EncodeConstruct::process, new Argument("file"));
+		return new ConstructProcessor(
+			Base64EncodeConstruct::process,
+			new Argument("file", ATOMIC));
 	}
 
 	private static MetaExpression process(final MetaExpression file) {
-		assertType(file, "file", ATOMIC);
 		assertNotNull(file, "file");
 
 		byte[] data = null;
