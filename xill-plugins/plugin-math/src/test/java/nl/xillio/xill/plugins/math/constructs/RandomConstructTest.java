@@ -20,7 +20,7 @@ import org.testng.annotations.Test;
 public class RandomConstructTest extends ExpressionBuilderHelper {
 
 	/**
-	 * Test the process method with a positive value given
+	 * Test the process method with a positive value given.
 	 */
 	@Test
 	public void processPositiveLong() {
@@ -69,7 +69,7 @@ public class RandomConstructTest extends ExpressionBuilderHelper {
 	}
 
 	/**
-	 * Test the process method with a list value given
+	 * Test the process method with a LIST value given.
 	 */
 	@Test
 	public void processList() {

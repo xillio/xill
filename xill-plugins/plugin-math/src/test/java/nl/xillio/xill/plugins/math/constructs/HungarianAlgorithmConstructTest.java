@@ -24,7 +24,7 @@ public class HungarianAlgorithmConstructTest extends ExpressionBuilderHelper {
 	 * Test the process method under normal circumstances.
 	 * </p>
 	 * <p>
-	 * Currently it tests wheter the project returns an answer at all. Not if the answer is correct or not.
+	 * We not only test if the output has the correct type but also the correct value.
 	 * </p>
 	 * <b>Nothing to verify</b>
 	 */
@@ -42,13 +42,13 @@ public class HungarianAlgorithmConstructTest extends ExpressionBuilderHelper {
 		MetaExpression max = mock(MetaExpression.class);
 		when(max.getBooleanValue()).thenReturn(true);
 
-		//Run
+		// Run
 		MetaExpression result = HungarianAlgorithmConstruct.process(matrix, max);
 
 		// Verify
 		// nothing to verify
 
-		//Assert
+		// Assert
 		// Check wheter the result is correct as String value.
 		Assert.assertEquals(result.toString(), hungarianReturnValue);
 
@@ -120,10 +120,10 @@ public class HungarianAlgorithmConstructTest extends ExpressionBuilderHelper {
 
 		MetaExpression max = mock(MetaExpression.class);
 		when(max.getBooleanValue()).thenReturn(true);
-		//Run
+		// Run
 		HungarianAlgorithmConstruct.process(matrix, max);
 	}
-	
+
 	/**
 	 * Tests wheter the xill NULL value is handled.
 	 */
@@ -132,8 +132,8 @@ public class HungarianAlgorithmConstructTest extends ExpressionBuilderHelper {
 		// Mock
 		MetaExpression max = mock(MetaExpression.class);
 		when(max.getBooleanValue()).thenReturn(true);
-		//Run
+		// Run
 		HungarianAlgorithmConstruct.process(NULL, max);
 	}
-	
+
 }

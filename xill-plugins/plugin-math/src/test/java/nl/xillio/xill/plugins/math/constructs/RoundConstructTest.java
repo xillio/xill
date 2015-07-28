@@ -16,7 +16,7 @@ import org.testng.annotations.Test;
 public class RoundConstructTest {
 
 	/**
-	 * Test the process method under normal circumstances
+	 * Test the process method under normal circumstances.
 	 */
 	@Test
 	public void processNormalUsage() {
