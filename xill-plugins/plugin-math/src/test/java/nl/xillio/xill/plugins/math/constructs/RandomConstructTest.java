@@ -15,7 +15,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * Test the {@link RandomConstruct}
+ * Test the {@link RandomConstruct}.
  */
 public class RandomConstructTest extends ExpressionBuilderHelper {
 

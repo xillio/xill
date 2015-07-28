@@ -11,7 +11,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * Test the {@link RoundConstruct}
+ * Test the {@link RoundConstruct}.
  */
 public class RoundConstructTest {
 

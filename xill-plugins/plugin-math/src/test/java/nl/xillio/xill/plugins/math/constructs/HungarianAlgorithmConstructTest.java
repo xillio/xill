@@ -15,7 +15,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * Test the {@link HungarianAlgorithmConstruct}
+ * Test the {@link HungarianAlgorithmConstruct}.
  */
 public class HungarianAlgorithmConstructTest extends ExpressionBuilderHelper {
 
@@ -123,17 +123,4 @@ public class HungarianAlgorithmConstructTest extends ExpressionBuilderHelper {
 		// Run
 		HungarianAlgorithmConstruct.process(matrix, max);
 	}
-
-	/**
-	 * Tests wheter the xill NULL value is handled.
-	 */
-	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "No matrix given")
-	public void processNullInput() {
-		// Mock
-		MetaExpression max = mock(MetaExpression.class);
-		when(max.getBooleanValue()).thenReturn(true);
-		// Run
-		HungarianAlgorithmConstruct.process(NULL, max);
-	}
-
 }
