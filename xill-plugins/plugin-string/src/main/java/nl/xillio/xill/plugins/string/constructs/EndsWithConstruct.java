@@ -30,7 +30,8 @@ public class EndsWithConstruct extends Construct {
 			process(string, suffix, stringService), new Argument("string", ATOMIC), new Argument("suffix", ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression string1, final MetaExpression string2, final StringService stringService) {
+	@SuppressWarnings("javadoc")
+	public static MetaExpression process(final MetaExpression string1, final MetaExpression string2, final StringService stringService) {
 		assertNotNull(string1, "string1");
 		assertNotNull(string2, "string2");
 

@@ -16,7 +16,7 @@ import com.google.inject.Inject;
 
 /**
  *
- * Formats the string with the provided values. </br>
+ * <p>Formats the string with the provided values. </p>
  * Does not support Time/Date.
  *
  * @author Sander

@@ -27,7 +27,8 @@ public class CreateMD5Construct extends Construct {
 		return new ConstructProcessor(value -> process(value, regexService), new Argument("value", ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression value, final RegexService regexService) {
+	@SuppressWarnings("javadoc")
+	public static MetaExpression process(final MetaExpression value, final RegexService regexService) {
 		assertNotNull(value, "value");
 		try {
 			return fromValue(regexService.createMD5Construct(value.getStringValue()));

@@ -3,12 +3,14 @@ package nl.xillio.xill.plugins.string.services.string;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+import com.google.inject.ImplementedBy;
+
 import nl.xillio.xill.plugins.string.constructs.RegexConstruct;
 
 /**
- * @author Ivor
- *
+ * 
  */
+@ImplementedBy(RegexServiceImpl.class)
 public interface RegexService {
 	
 	/**

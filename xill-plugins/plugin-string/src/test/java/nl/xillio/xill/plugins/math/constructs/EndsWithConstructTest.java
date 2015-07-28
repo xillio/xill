@@ -6,16 +6,16 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
-import nl.xillio.xill.plugins.string.constructs.ContainsConstruct;
+import nl.xillio.xill.plugins.string.constructs.EndsWithConstruct;
 import nl.xillio.xill.plugins.string.services.string.StringService;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * Test the {@link ContainsConstruct}.
+ * Test the {@link EndsWithConstruct}.
  */
-public class ContainsConstructTest extends ExpressionBuilderHelper {
+public class EndsWithConstructTest extends ExpressionBuilderHelper {
 
 	/**
 	 * Test the process method under normal circumstances.
@@ -33,12 +33,12 @@ public class ContainsConstructTest extends ExpressionBuilderHelper {
 
 		boolean returnValue = true;
 		StringService stringService = mock(StringService.class);
-		when(stringService.contains(parentValue, childValue)).thenReturn(returnValue);
+		when(stringService.endsWith(parentValue, childValue)).thenReturn(returnValue);
 		// Run
-		MetaExpression result = ContainsConstruct.process(parent, child, stringService);
+		MetaExpression result = EndsWithConstruct.process(parent, child, stringService);
 
 		// Verify
-		verify(stringService, times(1)).contains(parentValue, childValue);
+		verify(stringService, times(1)).endsWith(parentValue, childValue);
 
 		// Assert
 		Assert.assertEquals(result.getBooleanValue(), returnValue);
