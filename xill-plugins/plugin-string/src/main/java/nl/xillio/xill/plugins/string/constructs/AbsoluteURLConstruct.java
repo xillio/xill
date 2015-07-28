@@ -7,7 +7,7 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.system.services.regex.UrlService;
+import nl.xillio.xill.plugins.string.services.string.UrlService;
 
 import com.google.inject.Inject;
 
@@ -29,20 +29,21 @@ public class AbsoluteURLConstruct extends Construct {
 			new Argument("relativeUrl", ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression pageurlVar, final MetaExpression relativeurlVar, final UrlService urlService) {
+	@SuppressWarnings("javadoc")
+	public static MetaExpression process(final MetaExpression pageurlVar, final MetaExpression relativeurlVar, final UrlService urlService) {
 		String pageurl = pageurlVar.getStringValue().trim();
 		String relativeurl = relativeurlVar.getStringValue().trim();
 
 		if (!pageurl.startsWith("http://") && !pageurl.startsWith("https://")) {
 			pageurl = "http://" + pageurl;
 		}
+		
+		if (pageurl.endsWith("/") && relativeurl.isEmpty()) {
+			pageurl = pageurl.substring(0, pageurl.length() - 1);
+		}
 
 		if (relativeurl.isEmpty()) {
 			return new AtomicExpression(urlService.cleanupUrl(pageurl));
-		}
-
-		if (pageurl.endsWith("/") && relativeurl.isEmpty()) {
-			pageurl = pageurl.substring(0, pageurl.length() - 2);
 		}
 
 		String processed = urlService.tryConvert(pageurl, relativeurl);

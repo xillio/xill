@@ -1,18 +1,18 @@
 package nl.xillio.xill.plugins.string.constructs;
 
-import java.util.List;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.plugins.system.services.regex.MatchService;
+import nl.xillio.xill.plugins.string.services.string.StringService;
 
 import com.google.inject.Inject;
 
 /**
- * <p>Returns true when the first value contains the second value. </p>
+ * <p>
+ * Returns true when the first value contains the second value.
+ * </p>
  *
  *
  * @author Sander
@@ -20,33 +20,27 @@ import com.google.inject.Inject;
 public class ContainsConstruct extends Construct {
 
 	@Inject
-	private MatchService matchService;
+	private StringService stringService;
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(haystack, needle) ->	process(haystack, needle, matchService),
+			(haystack, needle) -> process(haystack, needle, stringService),
 			new Argument("haystack", ATOMIC, LIST),
 			new Argument("needle", ATOMIC));
 	}
 
-	@SuppressWarnings("unchecked")
-	private static MetaExpression process(final MetaExpression haystack, final MetaExpression needle, final MatchService matchService) {
+	@SuppressWarnings("javadoc")
+	public static MetaExpression process(final MetaExpression haystack, final MetaExpression needle, final StringService stringService) {
 		// If either is null then false.
 		if (haystack == NULL || needle == NULL) {
 			return fromValue(false);
 		}
 
-		// Compare lists
-		if (haystack.getType() == LIST) {
-			List<Object> list = (List<Object>) haystack.getValue();
-			return fromValue(matchService.contains(list, needle));
-		}
-
 		// Compare strings
 		String value1 = haystack.getStringValue();
 		String value2 = needle.getStringValue();
-		return fromValue(matchService.contains(value1, value2));
+		return fromValue(stringService.contains(value1, value2));
 	}
 
 }

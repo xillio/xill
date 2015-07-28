@@ -5,7 +5,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.plugins.system.services.regex.RegexService;
+import nl.xillio.xill.plugins.string.services.string.RegexService;
 
 import com.google.inject.Inject;
 
@@ -31,7 +31,8 @@ public class AmpersandDecodeConstruct extends Construct {
 			new Argument("passes", fromValue(1), ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression stringVar, final MetaExpression passesVar, final RegexService regexService) {
+	@SuppressWarnings("javadoc")
+	public static MetaExpression process(final MetaExpression stringVar, final MetaExpression passesVar, final RegexService regexService) {
 
 		assertNotNull(stringVar, "string");
 		assertNotNull(passesVar, "passes");

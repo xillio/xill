@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.system.services.regex;
+package nl.xillio.xill.plugins.string.services.string;
 
 import nl.xillio.xill.plugins.string.StringXillPlugin;
 

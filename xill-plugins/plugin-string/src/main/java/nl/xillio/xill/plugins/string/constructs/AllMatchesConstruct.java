@@ -9,7 +9,7 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.system.services.regex.RegexService;
+import nl.xillio.xill.plugins.string.services.string.RegexService;
 
 import com.google.inject.Inject;
 
@@ -47,7 +47,8 @@ public class AllMatchesConstruct extends Construct {
 			new Argument("timeout", fromValue(RegexConstruct.REGEX_TIMEOUT), ATOMIC));
 	}
 
-	private static MetaExpression process(final RegexConstruct regexConstruct, final MetaExpression textVar, final MetaExpression regexVar, final MetaExpression timeoutVar,
+	@SuppressWarnings("javadoc")
+	public static MetaExpression process(final RegexConstruct regexConstruct, final MetaExpression textVar, final MetaExpression regexVar, final MetaExpression timeoutVar,
 			final RegexService regexService) {
 
 		List<MetaExpression> list = new ArrayList<>();
@@ -59,13 +60,11 @@ public class AllMatchesConstruct extends Construct {
 		try {
 			List<String> results = regexService.tryMatch(regex, text, timeout, regexConstruct);
 			for (String s : results) {
-				list.add(0, fromValue(s));
+				list.add(fromValue(s));
 			}
 		} catch (Exception e) {
 			throw new RobotRuntimeException("Invalid pattern.");
 		}
 		return fromValue(list);
-
 	}
-
 }
