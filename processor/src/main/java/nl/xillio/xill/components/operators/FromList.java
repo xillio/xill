@@ -39,7 +39,8 @@ public class FromList implements Processable {
 		switch (list.getType()) {
 			case LIST:
 				try {
-					return InstructionFlow.doResume(((List<MetaExpression>) list.getValue()).get(index.getNumberValue().intValue()));
+					MetaExpression result = ((List<MetaExpression>) list.getValue()).get(index.getNumberValue().intValue());
+					return InstructionFlow.doResume(result);
 				} catch (IndexOutOfBoundsException e) {
 					return InstructionFlow.doResume(ExpressionBuilderHelper.NULL);
 				}

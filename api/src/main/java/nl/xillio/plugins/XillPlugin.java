@@ -95,7 +95,7 @@ public abstract class XillPlugin implements Loadable<XillPlugin>, AutoCloseable 
 	}
 
 	/**
-	 * Add constructs to the package. <br/>
+	 * Add constructs to the package.
 	 * This is a shortcut to calling {@link #add(Construct)} multiple times.
 	 *
 	 * @param constructs
@@ -113,7 +113,7 @@ public abstract class XillPlugin implements Loadable<XillPlugin>, AutoCloseable 
 	}
 
 	/**
-	 * Add constructs to the package. <br/>
+	 * Add constructs to the package.
 	 * This is a shortcut to calling {@link #add(Construct)} multiple times.
 	 *
 	 * @param constructs

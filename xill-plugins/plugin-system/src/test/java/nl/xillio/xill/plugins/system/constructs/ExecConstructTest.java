@@ -50,6 +50,7 @@ public class ExecConstructTest extends ConstructTest {
 		MetaExpression result = ExecConstruct.process(arguments, directory, log, processFactory);
 
 		// Make assertions
+		verify(log).error("TestCommand: \u0000\u0000");
 		verify(processFactory).apply(descriptionCaptor.capture());
 
 		assertEquals(descriptionCaptor.getValue().getCommands(), new String[] {"TestCommand"});
@@ -73,8 +74,7 @@ public class ExecConstructTest extends ConstructTest {
 	@Test
 	public void testProcessList() {
 		// Mock the context
-		MetaExpression arguments = mockExpression(ATOMIC);
-		when(arguments.getType()).thenReturn(LIST);
+		MetaExpression arguments = mockExpression(LIST);
 		when(arguments.getValue()).thenReturn(Arrays.asList(
 			fromValue("Test"),
 			fromValue("command"),
@@ -96,6 +96,7 @@ public class ExecConstructTest extends ConstructTest {
 		MetaExpression result = ExecConstruct.process(arguments, directory, log, processFactory);
 
 		// Make assertions
+		verify(log).error("Test: \u0000\u0000\u0000");
 		verify(processFactory).apply(descriptionCaptor.capture());
 
 		assertEquals(descriptionCaptor.getValue().getCommands(), new String[] {"Test", "command", "-t"});
