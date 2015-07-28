@@ -32,11 +32,11 @@ public class ChangeConstruct extends BaseDateConstruct {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static MetaExpression process(final Logger logger, final MetaExpression dateVar, final MetaExpression changeVar, DateService dateService) {
+	static MetaExpression process(final Logger logger, final MetaExpression dateVar, final MetaExpression changeVar, DateService dateService) {
 		ZonedDateTime date = getDate(dateVar, "date");
 
 		// First we need the zone
-		ZoneId zone = date.getZone();
+		ZoneId zone = null;
 		Map<String, MetaExpression> map = (Map<String, MetaExpression>) changeVar.getValue();
 		if (map.containsKey("zone")) {
 			zone = ZoneId.of(map.get("zone").getStringValue());
@@ -44,8 +44,11 @@ public class ChangeConstruct extends BaseDateConstruct {
 			zone = ZoneId.of(map.get("timezone").getStringValue());
 		}
 
-		// Change the timezone to the new one
-		ZonedDateTime newDate = dateService.changeTimeZone(date, zone);
+		ZonedDateTime newDate = date;
+		if (zone != null) {
+			// Change the timezone to the new one
+			newDate = dateService.changeTimeZone(date, zone);
+		}
 
 		Map<ChronoUnit, Long> changes = new HashMap<>();
 

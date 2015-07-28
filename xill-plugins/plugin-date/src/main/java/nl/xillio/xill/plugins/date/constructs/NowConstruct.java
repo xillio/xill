@@ -21,7 +21,7 @@ public class NowConstruct extends BaseDateConstruct {
 		return new ConstructProcessor(() -> process(getDateService()));
 	}
 
-	private static MetaExpression process(DateService dateService) {
+	static MetaExpression process(DateService dateService) {
 		return fromValue(dateService.now());
 	}
 }
