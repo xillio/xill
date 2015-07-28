@@ -7,7 +7,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.plugins.math.services.math.MathOperationImpl;
+import nl.xillio.xill.plugins.math.services.math.MathOperationsImpl;
 import nl.xillio.xill.plugins.math.services.math.MathOperations;
 
 /**
@@ -19,7 +19,7 @@ import nl.xillio.xill.plugins.math.services.math.MathOperations;
 public class RoundConstruct extends Construct {
 
 	@Inject
-	private MathOperationImpl mathService;
+	private MathOperationsImpl mathService;
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {

@@ -6,7 +6,7 @@ import com.google.inject.Singleton;
  * This is the main implementation of {@link MathOperations}
  */
 @Singleton
-public class MathOperationImpl implements MathOperations {
+public class MathOperationsImpl implements MathOperations {
 
 	@Override
 	public double abs(final Number value) {

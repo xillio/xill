@@ -1,11 +1,14 @@
 package nl.xillio.xill.plugins.math.services.math;
 
+import com.google.inject.ImplementedBy;
+
 import nl.xillio.xill.plugins.math.MathXillPlugin;
 
 /**
  * This interface represents some of the operations for the {@link MathXillPlugin}
  *
  */
+@ImplementedBy(MathOperationsImpl.class)
 public interface MathOperations {
 
 	/**
