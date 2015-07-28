@@ -27,8 +27,9 @@ public class JoinConstruct extends Construct {
 			new Argument("delimiter", fromValue(""), ATOMIC));
 	}
 
-	@SuppressWarnings("unchecked")
-	private static MetaExpression process(final MetaExpression list, final MetaExpression delimiter, final StringService stringService) {
+	@SuppressWarnings({"unchecked", "javadoc"})
+	public
+	static MetaExpression process(final MetaExpression list, final MetaExpression delimiter, final StringService stringService) {
 		String output = "";
 
 		switch (list.getType()) {

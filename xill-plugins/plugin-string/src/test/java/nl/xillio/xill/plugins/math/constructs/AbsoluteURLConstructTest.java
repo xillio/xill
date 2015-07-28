@@ -1,9 +1,7 @@
 package nl.xillio.xill.plugins.math.constructs;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+
+import static org.mockito.Mockito.*;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.string.constructs.AbsoluteURLConstruct;
@@ -69,7 +67,7 @@ public class AbsoluteURLConstructTest {
 		MetaExpression result = AbsoluteURLConstruct.process(pageUrl, relativeUrl, url);
 
 		// Verify
-		verify(url, times(0)).tryConvert(pageUrlValue, relativeUrlValue);
+		verify(url, times(0)).tryConvert(any(), any());
 		verify(url, times(1)).cleanupUrl(UrlReturnValue);
 
 		// Assert

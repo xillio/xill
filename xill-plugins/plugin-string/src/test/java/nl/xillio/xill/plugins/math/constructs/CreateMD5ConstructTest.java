@@ -22,7 +22,7 @@ public class CreateMD5ConstructTest {
 
 	/**
 	 * Test the process method under normal circumstances.
-	 * 
+	 *
 	 * @throws NoSuchAlgorithmException
 	 */
 	@Test
@@ -49,7 +49,7 @@ public class CreateMD5ConstructTest {
 
 	/**
 	 * Test the process when it throws an error.
-	 * 
+	 *
 	 * @throws NoSuchAlgorithmException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "No such algorithm")
@@ -68,11 +68,6 @@ public class CreateMD5ConstructTest {
 		CreateMD5Construct.process(value, regexService);
 
 		// Verify
-		try {
-			verify(regexService, times(1)).createMD5Construct(text);
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		verify(regexService, times(1)).createMD5Construct(text);
 	}
 }

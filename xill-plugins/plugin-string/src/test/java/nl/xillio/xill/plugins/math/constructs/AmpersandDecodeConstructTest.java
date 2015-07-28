@@ -5,7 +5,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.plugins.string.constructs.AmpersandDecodeConstruct;
 import nl.xillio.xill.plugins.string.services.string.RegexService;
 
@@ -15,7 +14,7 @@ import org.testng.annotations.Test;
 /**
  * Test the {@link AmpersandDecodeConstruct}.
  */
-public class AmpersandDecodeConstructTest extends ExpressionBuilderHelper {
+public class AmpersandDecodeConstructTest {
 
 	/**
 	 * Test the process method under normal circumstances.

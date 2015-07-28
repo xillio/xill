@@ -5,7 +5,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.plugins.string.constructs.ContainsConstruct;
 import nl.xillio.xill.plugins.string.services.string.StringService;
 
@@ -15,13 +14,13 @@ import org.testng.annotations.Test;
 /**
  * Test the {@link ContainsConstruct}.
  */
-public class ContainsConstructTest extends ExpressionBuilderHelper {
+public class ContainsConstructTest {
 
 	/**
 	 * Test the process method under normal circumstances.
 	 */
 	@Test
-	public void processListUsage() {
+	public void processNormalUsage() {
 		// Mock
 		String parentValue = "testing";
 		MetaExpression parent = mock(MetaExpression.class);
