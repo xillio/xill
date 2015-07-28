@@ -11,7 +11,7 @@ public interface Instruction extends Processable, AutoCloseable {
 	public int getLineNumber();
 
 	/**
-	 * @return The robotID of this instruction
+	 * @return The robotID of the robot that holds this instruction
 	 */
 	public RobotID getRobotID();
 

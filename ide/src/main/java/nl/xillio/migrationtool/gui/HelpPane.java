@@ -11,7 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebView;
-import nl.xillio.migrationtool.documentation.PluginListener;
+import nl.xillio.migrationtool.documentation.DocumentationGenerator;
 
 /**
  * This pane contains the documentation information
@@ -43,7 +43,7 @@ public class HelpPane extends AnchorPane {
 
 	private void home() {
 		try {
-			this.display(new File(PluginListener.HELP_FOLDER, "index.html").toURI().toURL());
+			this.display(new File(DocumentationGenerator.HELP_FOLDER, "index.html").toURI().toURL());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

@@ -22,7 +22,7 @@ public class PrintConstruct extends Construct {
 		  new Argument("loglevel", fromValue("info"), ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression textVar, final MetaExpression logLevel, final Logger robotLog) {
+	static MetaExpression process(final MetaExpression textVar, final MetaExpression logLevel, final Logger robotLog) {
 		String level = logLevel.getStringValue();
 
 		// TODO::Remove testing lines

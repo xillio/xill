@@ -1,39 +1,36 @@
 package nl.xillio.xill.plugins.system.constructs;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.inject.Inject;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.services.json.JsonParser;
+import nl.xillio.xill.services.json.PrettyJsonParser;
 
 /**
  * Returns a json string representation of the input
  */
 public class ToJSONConstruct extends Construct {
 
-	private static final Gson gson = new GsonBuilder()
-		.enableComplexMapKeySerialization()
-		.serializeNulls()
-		.setPrettyPrinting()
-		.disableHtmlEscaping()
-		.disableInnerClassSerialization()
-		.serializeSpecialFloatingPointValues()
-		.serializeNulls().create();
+	@Inject
+	private JsonParser jsonParser;
+	@Inject
+	private PrettyJsonParser prettyJsonParser;
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(ToJSONConstruct::process, new Argument("expression"), new Argument("pretty",FALSE));
+		return new ConstructProcessor((expression, pretty) -> process(expression, pretty, jsonParser, prettyJsonParser), new Argument("expression"), new Argument("pretty", FALSE, ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression expression, final MetaExpression pretty) {
+	static MetaExpression process(final MetaExpression expression, final MetaExpression pretty, final JsonParser parser, final JsonParser prettyParser) {
 		assertNotNull(expression, "input");
 		if (pretty.getBooleanValue()) {
-			return fromValue(expression.toString(gson));
+			return fromValue(prettyParser.toJson(expression));
 		}
 
-		return fromValue(expression.toString());
+		return fromValue(parser.toJson(expression));
 	}
 }

@@ -25,10 +25,10 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 
 import nl.xillio.plugins.PluginLoader;
+import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.Issue;
 import nl.xillio.xill.api.LanguageFactory;
-import nl.xillio.xill.api.PluginPackage;
 import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.api.components.Robot;
 import nl.xillio.xill.api.components.RobotID;
@@ -55,7 +55,7 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
 
 	private final File robotFile;
 	private final File projectFolder;
-	private final PluginLoader<PluginPackage> pluginLoader;
+	private final PluginLoader<XillPlugin> pluginLoader;
 	private final Debugger debugger;
 
 	private final List<Resource> compiledResources = new ArrayList<>();
@@ -75,7 +75,7 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
 	 * @param debugger
 	 * @throws IOException
 	 */
-	public XillProcessor(final File projectFolder, final File robotFile, final PluginLoader<PluginPackage> pluginLoader,
+	public XillProcessor(final File projectFolder, final File robotFile, final PluginLoader<XillPlugin> pluginLoader,
 					final Debugger debugger) throws IOException {
 		this.projectFolder = projectFolder;
 		this.robotFile = robotFile;
@@ -251,7 +251,7 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
 
 	@Override
 	public Collection<String> listPackages() {
-		return pluginLoader.getPluginManager().getPlugins().stream().map(PluginPackage::getName)
+		return pluginLoader.getPluginManager().getPlugins().stream().map(XillPlugin::getName)
 			.collect(Collectors.toList());
 	}
 

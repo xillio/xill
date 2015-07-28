@@ -5,7 +5,9 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * This class represents a written list in a script e.g. [1,2,3,4].<br/>
+ * <p>
+ * This class represents a written list in a script e.g. [1,2,3,4].
+ * </p>
  * Values:
  * <ul>
  * <li><b>{@link String}: </b> the JSON representation</li>

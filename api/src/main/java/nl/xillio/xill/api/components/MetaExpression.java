@@ -11,11 +11,11 @@ import java.util.stream.Collectors;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import nl.xillio.util.IdentityArrayList;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.behavior.BooleanBehavior;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.NotImplementedException;
-import sun.awt.util.IdentityArrayList;
 
 /**
  *
@@ -92,8 +92,7 @@ public abstract class MetaExpression implements Expression, Processable {
 	}
 
 	/**
-	 * Set the value of this variable to an {@link ExpressionDataType#ATOMIC}
-	 * value
+	 * Set the value of this variable to an {@link ExpressionDataType#ATOMIC} value
 	 *
 	 * @param value
 	 *        The {@link ExpressionDataType#ATOMIC} value to store
@@ -147,8 +146,7 @@ public abstract class MetaExpression implements Expression, Processable {
 	}
 
 	/**
-	 * Set the value of this variable to an {@link ExpressionDataType#OBJECT}
-	 * value
+	 * Set the value of this variable to an {@link ExpressionDataType#OBJECT} value
 	 *
 	 * @param value
 	 *        in a linked hash map to enforce order
@@ -166,10 +164,10 @@ public abstract class MetaExpression implements Expression, Processable {
 	}
 
 	/**
-	 * Get the contained value of this {@link MetaExpression}<br/>
-	 * The return type of this method will be different for each type of
-	 * {@link ExpressionDataType} which can be found by calling
-	 * {@link #getType()}.<br/>
+	 * <p>
+	 * Get the contained value of this {@link MetaExpression}. The return type of this method will be different for each type of {@link ExpressionDataType} which can be found by calling
+	 * {@link #getType()}.
+	 * </p>
 	 * <ul>
 	 * <li>{@link ExpressionDataType#ATOMIC}: Returns an {@link Expression}</li>
 	 * <li>{@link ExpressionDataType#LIST}: Returns a {@link List
@@ -178,8 +176,7 @@ public abstract class MetaExpression implements Expression, Processable {
 	 * Map&lt;String, MetaExpression&gt;}</li>
 	 * </ul>
 	 *
-	 * @return the value according to the {@link ExpressionDataType}
-	 *         specification
+	 * @return the value according to the {@link ExpressionDataType} specification
 	 * @throws IllegalStateException
 	 *         if this expression has been closed
 	 */
@@ -191,13 +188,13 @@ public abstract class MetaExpression implements Expression, Processable {
 	}
 
 	/**
-	 * Returns the type of data stored in this {@link MetaExpression}<br/>
+	 * <p>
+	 * Returns the type of data stored in this {@link MetaExpression}
+	 * </p>
 	 * <ul>
 	 * <li>{@link ExpressionDataType#ATOMIC}: A single value</li>
-	 * <li>{@link ExpressionDataType#LIST}: A list of {@link MetaExpression}
-	 * </li>
-	 * <li>{@link ExpressionDataType#OBJECT}: An object with {@link String}
-	 * indices</li>
+	 * <li>{@link ExpressionDataType#LIST}: A list of {@link MetaExpression}</li>
+	 * <li>{@link ExpressionDataType#OBJECT}: An object with {@link String} indices</li>
 	 * </ul>
 	 *
 	 * @return the type
@@ -212,8 +209,9 @@ public abstract class MetaExpression implements Expression, Processable {
 	}
 
 	/**
-	 * Generate the JSON representation of this expression using a {@link Gson}
-	 * parser <br/>
+	 * <p>
+	 * Generate the JSON representation of this expression using a {@link Gson} parser
+	 * </p>
 	 * <b>NOTE: </b> This is not the string value of this expression. It is
 	 * JSON. For the string value use {@link MetaExpression#getStringValue()}
 	 *
@@ -225,10 +223,13 @@ public abstract class MetaExpression implements Expression, Processable {
 	}
 
 	/**
-	 * Generate the JSON representation of this expression using a {@link Gson}
-	 * parser <br/>
-	 * <b>NOTE: </b> This is not the string value of this expression. It is
-	 * JSON. For the string value use {@link MetaExpression#getStringValue()}
+	 * <p>
+	 * Generate the JSON representation of this expression using a {@link Gson} parser
+	 * </p>
+	 *
+	 * <p>
+	 * <b>NOTE: </b> This is not the string value of this expression. It is JSON. For the string value use {@link MetaExpression#getStringValue()}
+	 * </p>
 	 *
 	 * @param gsonParser
 	 *        The gson parser that should be used
@@ -315,12 +316,9 @@ public abstract class MetaExpression implements Expression, Processable {
 
 		switch (getType()) {
 			case ATOMIC:
-				return getBooleanValue() == other.getBooleanValue() && // Boolean
-				// equality
-				    getStringValue().equals(other.getStringValue()) && // String
-				// equality
-				    ( // Double equality (or both NaN)
-				    getNumberValue().doubleValue() == other.getNumberValue().doubleValue()
+				return getBooleanValue() == other.getBooleanValue() &&
+				    getStringValue().equals(other.getStringValue()) &&
+				    (getNumberValue().doubleValue() == other.getNumberValue().doubleValue()
 				        || Double.isNaN(getNumberValue().doubleValue()) && Double.isNaN(getNumberValue().doubleValue()));
 			case LIST:
 				return getValue().equals(other.getValue());
@@ -343,26 +341,25 @@ public abstract class MetaExpression implements Expression, Processable {
 	 *        The {@link MetaExpression} to extract a value from.
 	 * @return
 	 *         <ul>
+	 *         <<<<<<< HEAD
 	 *         <li>{@link ExpressionDataType#ATOMIC}: returns an {@link Object}
 	 *         <br/>
 	 *         This represents a singular value that is parsed in the folowing
 	 *         way:
+	 *         =======
+	 *         <li>{@link ExpressionDataType#ATOMIC}: returns an {@link Object} This represents a singular value that is parsed in the folowing way:
+	 *         >>>>>>> origin/develop
 	 *         <ol>
 	 *         <li>If the value is null: return null</li>
-	 *         <li>If the expression is created using
-	 *         {@link ExpressionBuilder#fromValue(boolean)}: return
-	 *         {@link Boolean}</li>
-	 *         <li>If the value can be a number (so also string constants like
-	 *         "5.7") it will return a {@link Double}</li>
+	 *         <li>If the expression is created using {@link ExpressionBuilder#fromValue(boolean)}: return {@link Boolean}</li>
+	 *         <li>If the value can be a number (so also string constants like "5.7") it will return a {@link Double}</li>
 	 *         <li>In all other cases return a {@link String} representation.
 	 *         </ol>
 	 *         </li>
 	 *         <li>{@link ExpressionDataType#LIST}: returns a {@link List
-	 *         List&lt;Object&gt;} where {@link Object} is the result of a
-	 *         recursive call of this method.</li>
+	 *         List&lt;Object&gt;} where {@link Object} is the result of a recursive call of this method.</li>
 	 *         <li>{@link ExpressionDataType#OBJECT}: returns a {@link Map
-	 *         Map&lt;String, Object&gt;} where {@link Object} is the result of
-	 *         a recursive call of this method.</li>
+	 *         Map&lt;String, Object&gt;} where {@link Object} is the result of a recursive call of this method.</li>
 	 *         </ul>
 	 */
 	public static Object extractValue(final MetaExpression expression) {
@@ -413,8 +410,7 @@ public abstract class MetaExpression implements Expression, Processable {
 			case OBJECT:
 				Map<String, Object> resultObject = new LinkedHashMap<>();
 				results.put(expression, resultObject);
-				for (Entry<String, MetaExpression> pair : ((Map<String, MetaExpression>) expression.getValue())
-				  .entrySet()) {
+				for (Entry<String, MetaExpression> pair : ((Map<String, MetaExpression>) expression.getValue()).entrySet()) {
 					resultObject.put(pair.getKey(), extractValue(pair.getValue(), results));
 				}
 				result = resultObject;
@@ -427,7 +423,7 @@ public abstract class MetaExpression implements Expression, Processable {
 	}
 
 	/**
-	 * Register a reference to this variable.<br/>
+	 * Register a reference to this variable.
 	 * This generally only happens during assignment
 	 */
 	public final void registerReference() {
@@ -435,7 +431,7 @@ public abstract class MetaExpression implements Expression, Processable {
 	}
 
 	/**
-	 * Release a reference to this expression<br/>
+	 * Release a reference to this expression
 	 * This generally only happens at the end of scope
 	 */
 	public final void releaseReference() {
@@ -460,8 +456,7 @@ public abstract class MetaExpression implements Expression, Processable {
 	}
 
 	/**
-	 * @return true if this expression has been closed using
-	 *         {@link MetaExpression#close()}
+	 * @return true if this expression has been closed using {@link MetaExpression#close()}
 	 */
 	public final boolean isClosed() {
 		return isClosed;

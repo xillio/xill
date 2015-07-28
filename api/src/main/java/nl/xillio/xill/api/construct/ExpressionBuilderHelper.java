@@ -23,6 +23,20 @@ import nl.xillio.xill.api.components.Processable;
  */
 public class ExpressionBuilderHelper {
 	private static final Debugger expressionDebugger = new NullDebugger();
+
+	/**
+	 * @see ExpressionDataType#LIST
+	 */
+	protected static final ExpressionDataType LIST = ExpressionDataType.LIST;
+	/**
+	 * @see ExpressionDataType#ATOMIC
+	 */
+	protected static final ExpressionDataType ATOMIC = ExpressionDataType.ATOMIC;
+	/**
+	 * @see ExpressionDataType#OBJECT
+	 */
+	protected static final ExpressionDataType OBJECT = ExpressionDataType.OBJECT;
+
 	/**
 	 * The true literal
 	 */
@@ -125,6 +139,33 @@ public class ExpressionBuilderHelper {
 	 */
 	public static MetaExpression emptyObject() {
 		return fromValue(new LinkedHashMap<>());
+	}
+
+	/**
+	 * A shortcut to {@link MetaExpression#extractValue(MetaExpression)}
+	 *
+	 * @param expression
+	 *        The expression to extract Java objects from
+	 * @return The value specified in
+	 *         {@link MetaExpression#extractValue(MetaExpression)}
+	 * @see MetaExpression#extractValue(MetaExpression)
+	 */
+	protected static Object extractValue(final MetaExpression expression) {
+		return MetaExpression.extractValue(expression);
+	}
+
+	/**
+	 * A shortcut to {@link MetaExpression#parseObject(Object)}
+	 *
+	 * @param value
+	 *        the object to parse into a {@link MetaExpression}
+	 * @return the {@link MetaExpression} not null
+	 * @throws IllegalArgumentException
+	 *         if parsing the value failed
+	 * @see MetaExpression#parseObject(Object)
+	 */
+	protected static MetaExpression parseObject(final Object value) throws IllegalArgumentException {
+		return MetaExpression.parseObject(value);
 	}
 
 	/**

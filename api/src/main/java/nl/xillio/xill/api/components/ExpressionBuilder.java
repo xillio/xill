@@ -11,7 +11,7 @@ import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
- * This is a utility class that will build expressions from values
+ * This is a utility class that will build expressions from values when processed. This is generally used to create representations of the literal values at runtime.
  */
 public class ExpressionBuilder extends ExpressionBuilderHelper implements Processable {
 
