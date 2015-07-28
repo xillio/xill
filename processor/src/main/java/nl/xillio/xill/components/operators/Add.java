@@ -53,10 +53,10 @@ public final class Add implements Processable {
 	}
 
 	private static MetaExpression processList(final List<MetaExpression> leftValue, final List<MetaExpression> rightValue, final Debugger debugger) throws RobotRuntimeException {
-		List<Processable> result = new ArrayList<>(leftValue);
+		List<MetaExpression> result = new ArrayList<>(leftValue);
 		result.addAll(rightValue);
 
-		return new ListExpression(result).process(debugger).get();
+		return new ListExpression(result);
 	}
 
 	@Override
