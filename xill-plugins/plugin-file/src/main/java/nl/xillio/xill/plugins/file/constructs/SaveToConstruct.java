@@ -15,24 +15,26 @@ import nl.xillio.xill.plugins.file.services.fileUtils.FileUtilities;
 /**
  *
  */
-public class DeleteConstruct extends Construct {
+public class SaveToConstruct extends Construct {
 
 	@Inject
 	private FileUtilities fileUtils;
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor((uri) -> process(context, fileUtils, uri), new Argument("uri", ATOMIC));
+		return new ConstructProcessor(
+		  (content, uri) -> process(context, fileUtils, uri, content),
+		  new Argument("content", ATOMIC),
+		  new Argument("uri", ATOMIC));
 	}
 
-	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri) {
-
+	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri, final MetaExpression content) {
 		File file = new File(uri.getStringValue());
 		try {
-			fileUtils.delete(file);
+			fileUtils.saveStringToFile(content.getStringValue(), file);
 		} catch (IOException e) {
-			context.getRootLogger().error("Failed to delete " + file.getAbsolutePath(), e);
+			context.getRootLogger().error("Failed to write to file: " + e.getMessage(), e);
 		}
-		return NULL;
+		return fromValue(file.getAbsolutePath());
 	}
 }

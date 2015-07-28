@@ -70,11 +70,7 @@ public class InjectorUtils {
 	 * @return the requested object
 	 */
 	public static <T> T get(Class<T> clazz) {
-		if(injector == null) {
-			defaultConfig();
-		}
-		
-		return injector.getInstance(clazz);
+		return getGlobalInjector().getInstance(clazz);
 	}
 
 }

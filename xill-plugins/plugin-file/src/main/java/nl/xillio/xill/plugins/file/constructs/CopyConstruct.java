@@ -1,7 +1,7 @@
 package nl.xillio.xill.plugins.file.constructs;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
+import java.io.IOException;
 
 import com.google.inject.Inject;
 
@@ -22,12 +22,18 @@ public class CopyConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor((source,target) -> process(context, fileUtils,source,target),new Argument("source",ATOMIC), new Argument("target",ATOMIC));
+		return new ConstructProcessor((source, target) -> process(context, fileUtils, source, target), new Argument("source", ATOMIC), new Argument("target", ATOMIC));
 	}
 
-	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils,final MetaExpression source,final MetaExpression target) {
-		
-		fileUtils.copy(source.getStringValue(), target.getStringValue());
+	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression source, final MetaExpression target) {
+
+		File sourceFile = new File(source.getStringValue());
+		File targetFile = new File(target.getStringValue());
+		try {
+			fileUtils.copy(sourceFile, targetFile);
+		} catch (IOException e) {
+			context.getRootLogger().error("Failed to copy " + sourceFile.getName() + " to " + targetFile.getName());
+		}
 		return NULL;
 	}
 }

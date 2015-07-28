@@ -1,7 +1,7 @@
 package nl.xillio.xill.plugins.file.constructs;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
+import java.io.IOException;
 
 import com.google.inject.Inject;
 
@@ -13,7 +13,7 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.plugins.file.services.fileUtils.FileUtilities;
 
 /**
- * 
+ *
  */
 public class CreateFolderConstruct extends Construct {
 
@@ -22,12 +22,18 @@ public class CreateFolderConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor((uri) -> process(context, fileUtils,uri),new Argument("uri",ATOMIC));
+		return new ConstructProcessor((uri) -> process(context, fileUtils, uri), new Argument("uri", ATOMIC));
 	}
 
-	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils,final MetaExpression uri) {
+	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri) {
+
+		File folder = new File(uri.getStringValue());
 		
-		fileUtils.createFolder(uri.getStringValue());
-		return NULL;
+		try {
+			fileUtils.createFolder(folder);
+		} catch (IOException e) {
+			context.getRootLogger().error("Failed to create " + folder.getAbsolutePath(), e);
+		}
+		return fromValue(folder.getAbsolutePath());
 	}
 }
