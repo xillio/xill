@@ -1,11 +1,10 @@
 package nl.xillio.xill.plugins.date.constructs;
 
-import java.time.ZonedDateTime;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.plugins.date.BaseDateConstruct;
+import nl.xillio.xill.plugins.date.services.DateService;
 
 /**
  *
@@ -19,11 +18,10 @@ public class NowConstruct extends BaseDateConstruct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(NowConstruct::process);
+		return new ConstructProcessor(() -> process(getDateService()));
 	}
 
-	private static MetaExpression process() {
-		return fromValue(ZonedDateTime.now());
-
+	private static MetaExpression process(DateService dateService) {
+		return fromValue(dateService.now());
 	}
 }

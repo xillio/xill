@@ -10,6 +10,7 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.date.BaseDateConstruct;
+import nl.xillio.xill.plugins.date.services.DateService;
 
 /**
  *
@@ -24,14 +25,14 @@ public class OfConstruct extends BaseDateConstruct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		Argument args[] = {new Argument("year"), new Argument("month"),
-						new Argument("day"), new Argument("hour"),
-						new Argument("minute"), new Argument("second"),
-						new Argument("nano", fromValue(0)), new Argument("zone", fromValue(ZoneId.systemDefault().getId()))};
+		    new Argument("day"), new Argument("hour"),
+		    new Argument("minute"), new Argument("second"),
+		    new Argument("nano", fromValue(0)), new Argument("zone", fromValue(ZoneId.systemDefault().getId()))};
 
-		return new ConstructProcessor((a) -> process(a), args);
+		return new ConstructProcessor((a) -> process(a, getDateService()), args);
 	}
 
-	private static MetaExpression process(final MetaExpression[] input) {
+	private static MetaExpression process(final MetaExpression[] input, DateService dateService) {
 		ZonedDateTime date;
 		ZoneId zone;
 
@@ -53,7 +54,7 @@ public class OfConstruct extends BaseDateConstruct {
 			throw new RobotRuntimeException("Invalid zone ID");
 		}
 		try {
-			date = ZonedDateTime.of(year, month, day, hour, minute, second, nano, zone);
+			date = dateService.constructDate(year, month, day, hour, minute, second, nano, zone);
 		} catch (DateTimeException e) {
 			throw new RobotRuntimeException(e.getLocalizedMessage());
 		}

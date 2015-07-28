@@ -1,5 +1,7 @@
 package nl.xillio.xill.plugins.date.services;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -7,8 +9,10 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -93,6 +97,17 @@ public class DateServiceImpl implements DateService {
 	}
 
 	@Override
+	public Map<String, Long> getFieldValues(ZonedDateTime date) {
+		Map<String, Long> fields = new HashMap<>();
+		for (ChronoField field : ChronoField.values()) {
+			if (date.isSupported(field)) {
+				fields.put(field.toString(), date.getLong(field));
+			}
+		}
+		return fields;
+	}
+
+	@Override
 	public ZoneId getTimezone(ZonedDateTime date) {
 		return date.getZone();
 	}
@@ -107,36 +122,69 @@ public class DateServiceImpl implements DateService {
 		return date.isBefore(now());
 	}
 
-	public Map<String, Long> difference(ZonedDateTime date1, ZonedDateTime date2) {
-
+	public Map<String, Double> difference(ZonedDateTime date1, ZonedDateTime date2, boolean absolute) {
+		// Calculate difference and convert to seconds
+		long nanoDifference = date1.until(date2, ChronoUnit.NANOS);
+		if (absolute)
+		  nanoDifference = Math.abs(nanoDifference);
+		BigDecimal difference = new BigDecimal(nanoDifference).multiply(TimeUnits.Nanos.getNumSeconds());
+		// Calculate the totals
+		Map<String, Double> diff = new HashMap<>();
+		for (TimeUnits t : TimeUnits.values()) {
+			diff.put(String.format("Total %s", t.name()), difference.divide(t.getNumSeconds(), RoundingMode.HALF_UP).doubleValue());
+		}
+		// Calculate the additive differences by going through the TimeUnits in reverse order and
+		for (int i = TimeUnits.values().length - 1; i >= 0; i--) {
+			TimeUnits unit = TimeUnits.values()[i];
+			BigDecimal[] division = difference.divideAndRemainder(unit.getNumSeconds());
+			diff.put(unit.name(), Math.floor(division[0].doubleValue()));
+			difference = division[1];
+		}
+		return diff;
 	}
 
 	/**
 	 * Represents different kinds of time units, containing their name and the amount of nanoseconds they contain.
+	 * 
+	 * The units should be listed in growing order of length.
 	 * 
 	 * @author Geert Konijnendijk
 	 *
 	 */
 	private static enum TimeUnits {
 
-		Nanos(10e-9), Micros(10e-6), Millis(10e-3), Seconds(1), Minutes(60), Hours(3600), HalfDays(43200), Days(86400), Weeks(604800), Months(2629746), Years(31556952), Decades(315569520), Centuries(
-		    3155695200), Millenia(31556952000), Eras(31556952000000000);
+		// @formatter:off
+		Nanos("1E-9"),
+		Micros("1E-6"),
+		Millis("1E-3"),
+		Seconds("1"),
+		Minutes("60"),
+		Hours("3600"),
+		HalfDays("43200"),
+		Days("86400"),
+		Weeks("604800"),
+		Months("2629746"),
+		Years("31556952"),
+		Decades("31556952E1"),
+		Centuries("31556952E2"),
+		Millenia("31556952E3"),
+		Eras("31556952E9");
+		// @formatter:on
 
-		private double numSeconds;
+		private BigDecimal numSeconds;
 
 		/**
 		 * 
 		 * @param numSecond
-		 *        Number of nanoseconds that fit into one unit of this kind
+		 *        Number of seconds that fit into one unit of this kind in {@link BigDecimal} String representation
 		 */
-		private TimeUnits(double numSeconds) {
-			this.numSeconds = numSeconds;
+		private TimeUnits(String numSeconds) {
+			this.numSeconds = new BigDecimal(numSeconds);
 		}
 
-		public double getNumSeconds() {
+		public BigDecimal getNumSeconds() {
 			return numSeconds;
 		}
 
 	}
-
 }

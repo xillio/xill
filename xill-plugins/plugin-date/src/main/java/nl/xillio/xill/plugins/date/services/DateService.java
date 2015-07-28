@@ -4,6 +4,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 import java.util.Map;
@@ -94,6 +95,13 @@ public interface DateService extends XillService {
 	String formatDateLocalized(ZonedDateTime date, FormatStyle dateStyle, FormatStyle timeStyle, Locale locale);
 
 	/**
+	 * @param date
+	 *        The date to process
+	 * @return A map with the names of all supported {@link ChronoField ChronoFields} as keys and their value as values.
+	 */
+	Map<String, Long> getFieldValues(ZonedDateTime date);
+
+	/**
 	 * Get the timezone of the date
 	 * 
 	 * @param date
@@ -119,5 +127,17 @@ public interface DateService extends XillService {
 	 * @return True if the date is in the past
 	 */
 	boolean isInPast(ZonedDateTime date);
+
+	/**
+	 * Calculates the difference between two dates
+	 * 
+	 * @param date1
+	 *        First comparison date
+	 * @param date2
+	 *        Second comparison date
+	 * @return A map containing names of time units as keys (first letter capitlized and in plural) and the amount of this time unit as value. The amount is always positive. When the key has "Total "
+	 *         prepended, the value is not additive.
+	 */
+	public Map<String, Double> difference(ZonedDateTime date1, ZonedDateTime date2, boolean absolute);
 
 }

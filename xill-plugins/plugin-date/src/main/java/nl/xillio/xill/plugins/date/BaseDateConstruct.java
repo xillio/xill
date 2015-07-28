@@ -18,7 +18,7 @@ public abstract class BaseDateConstruct extends Construct {
 	 * Service used by all extending classes
 	 */
 	@Inject
-	protected static DateService dateService;
+	private DateService dateService;
 
 	/**
 	 * Get the date from a variable
@@ -56,5 +56,9 @@ public abstract class BaseDateConstruct extends Construct {
 		MetaExpression value = fromValue(date.toString());
 		value.storeMeta(ZonedDateTime.class, date);
 		return value;
+	}
+
+	public DateService getDateService() {
+		return dateService;
 	}
 }

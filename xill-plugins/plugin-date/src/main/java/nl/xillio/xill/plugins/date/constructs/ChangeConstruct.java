@@ -12,6 +12,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.plugins.date.BaseDateConstruct;
+import nl.xillio.xill.plugins.date.services.DateService;
 
 import org.apache.logging.log4j.Logger;
 
@@ -27,11 +28,11 @@ public class ChangeConstruct extends BaseDateConstruct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor((date, change) -> process(context.getRootLogger(), date, change), new Argument("date"), new Argument("change", OBJECT));
+		return new ConstructProcessor((date, change) -> process(context.getRootLogger(), date, change, getDateService()), new Argument("date"), new Argument("change", OBJECT));
 	}
 
 	@SuppressWarnings("unchecked")
-	private static MetaExpression process(final Logger logger, final MetaExpression dateVar, final MetaExpression changeVar) {
+	private static MetaExpression process(final Logger logger, final MetaExpression dateVar, final MetaExpression changeVar, DateService dateService) {
 		ZonedDateTime date = getDate(dateVar, "date");
 
 		// First we need the zone
