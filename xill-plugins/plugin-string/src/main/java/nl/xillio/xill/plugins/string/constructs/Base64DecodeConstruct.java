@@ -16,7 +16,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
  *
- * Base-64 decode the provided string, and store it in the provided file.
+ * <p> Base-64 decode the provided string, and store it in the provided file. </p>
  *
  * @author Sander
  *

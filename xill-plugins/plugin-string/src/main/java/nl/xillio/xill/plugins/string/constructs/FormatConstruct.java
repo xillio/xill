@@ -3,7 +3,6 @@ package nl.xillio.xill.plugins.string.constructs;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.MissingFormatArgumentException;
-import java.util.regex.Matcher;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
@@ -11,6 +10,9 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.system.services.regex.RegexService;
+
+import com.google.inject.Inject;
 
 /**
  *
@@ -22,6 +24,8 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  */
 public class FormatConstruct extends Construct {
 	private final RegexConstruct regexConstruct;
+	@Inject
+	private RegexService regexService;
 
 	/**
 	 * Create a new {@link FormatConstruct}
@@ -36,12 +40,12 @@ public class FormatConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(textVar, valueVar) -> process(regexConstruct, textVar, valueVar),
+			(textVar, valueVar) -> process(regexConstruct, textVar, valueVar, regexService),
 			new Argument("text", ATOMIC),
 			new Argument("value", LIST));
 	}
 
-	private static MetaExpression process(final RegexConstruct regexConstruct, final MetaExpression textVar, final MetaExpression valueVar) {
+	private static MetaExpression process(final RegexConstruct regexConstruct, final MetaExpression textVar, final MetaExpression valueVar, final RegexService regexService) {
 		assertNotNull(textVar, "text");
 
 		List<MetaExpression> formatList = new ArrayList<>();
@@ -49,12 +53,9 @@ public class FormatConstruct extends Construct {
 		@SuppressWarnings("unchecked")
 		List<MetaExpression> numberList = (List<MetaExpression>) valueVar.getValue();
 
-		// Find the format syntax in the input string.
-		Matcher matcher = regexConstruct.getMatcher("%[[^a-zA-Z%]]*([a-zA-Z]|[%])", textVar.getStringValue(), RegexConstruct.REGEX_TIMEOUT);
-		int i = 0;
-		while (matcher.find()) {
-			formatList.add(i, fromValue(matcher.group()));
-			i++;
+		List<String> tryFormat = regexService.tryMatch("%[[^a-zA-Z%]]*([a-zA-Z]|[%])", textVar.getStringValue(), RegexConstruct.REGEX_TIMEOUT, regexConstruct);
+		for (String s : tryFormat) {
+			formatList.add(fromValue(s));
 		}
 
 		// Cast the MetaExpressions to the right type.

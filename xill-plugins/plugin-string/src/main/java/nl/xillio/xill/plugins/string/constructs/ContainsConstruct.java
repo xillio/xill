@@ -7,25 +7,31 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.plugins.system.services.regex.MatchService;
+
+import com.google.inject.Inject;
 
 /**
- * Returns true when the first value contains the second value.
+ * <p>Returns true when the first value contains the second value. </p>
  *
  *
  * @author Sander
  */
 public class ContainsConstruct extends Construct {
 
+	@Inject
+	private MatchService matchService;
+
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			ContainsConstruct::process,
-			new Argument("haystack"),
+			(haystack, needle) ->	process(haystack, needle, matchService),
+			new Argument("haystack", ATOMIC, LIST),
 			new Argument("needle", ATOMIC));
 	}
 
 	@SuppressWarnings("unchecked")
-	private static MetaExpression process(final MetaExpression haystack, final MetaExpression needle) {
+	private static MetaExpression process(final MetaExpression haystack, final MetaExpression needle, final MatchService matchService) {
 		// If either is null then false.
 		if (haystack == NULL || needle == NULL) {
 			return fromValue(false);
@@ -33,14 +39,14 @@ public class ContainsConstruct extends Construct {
 
 		// Compare lists
 		if (haystack.getType() == LIST) {
-			List<MetaExpression> list = (List<MetaExpression>) haystack.getValue();
-			return fromValue(list.contains(needle));
+			List<Object> list = (List<Object>) haystack.getValue();
+			return fromValue(matchService.contains(list, needle));
 		}
 
 		// Compare strings
 		String value1 = haystack.getStringValue();
 		String value2 = needle.getStringValue();
-		return fromValue(value1.contains(value2));
+		return fromValue(matchService.contains(value1, value2));
 	}
 
 }

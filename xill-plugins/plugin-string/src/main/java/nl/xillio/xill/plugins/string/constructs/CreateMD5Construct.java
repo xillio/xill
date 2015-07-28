@@ -1,8 +1,5 @@
 package nl.xillio.xill.plugins.string.constructs;
 
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import nl.xillio.xill.api.components.MetaExpression;
@@ -11,32 +8,31 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.system.services.regex.RegexService;
+
+import com.google.inject.Inject;
 
 /**
- * Returns a MD5 hash of the given variable.
+ *<p> Returns a MD5 hash of the given variable.</p>
  *
  * @author Sander
  *
  */
-
 public class CreateMD5Construct extends Construct {
+	@Inject
+	private RegexService regexService;
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(
-			CreateMD5Construct::process,
-			new Argument("valueVar", ATOMIC));
+		return new ConstructProcessor(value -> process(value, regexService), new Argument("value", ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression valueVar) {
-		assertNotNull(valueVar, "value");
+	private static MetaExpression process(final MetaExpression value, final RegexService regexService) {
+		assertNotNull(value, "value");
 		try {
-			MessageDigest md5 = MessageDigest.getInstance("MD5");
-			md5.update(StandardCharsets.UTF_8.encode(valueVar.getStringValue()));
-			return fromValue(String.format("%032x", new BigInteger(1, md5.digest())));
+			return fromValue(regexService.createMD5Construct(value.getStringValue()));
 		} catch (NoSuchAlgorithmException e) {
 			throw new RobotRuntimeException("No such algorithm");
 		}
 	}
-
 }
