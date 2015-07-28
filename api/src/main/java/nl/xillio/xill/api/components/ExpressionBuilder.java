@@ -56,6 +56,25 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
 	public ExpressionBuilder(final List<MetaExpression> value) {
 		expressionSupplier = () -> fromValue(value);
 	}
+	
+	/**
+	 * Create a new {@link ExpressionBuilder} that will produce a List
+	 *
+	 * @param value
+	 *        the value to set
+	 * @param debugger The debugger to use
+	 */
+	public ExpressionBuilder(final List<Processable> value, final Debugger debugger) {
+		expressionSupplier = () -> {
+			List<MetaExpression> result = new ArrayList<>();
+			
+			for(Processable proc : value) {
+				result.add(proc.process(debugger).get());
+			}
+			
+			return fromValue(result);
+		};
+	}
 
 	/**
 	 * Create a new {@link ExpressionBuilder} that will produce an object

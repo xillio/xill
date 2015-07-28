@@ -17,17 +17,19 @@ public class PrintConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(text, level) -> process(text, level, context.getRootLogger()), 
-			new Argument("text", fromValue("")), 
-			new Argument("loglevel", fromValue("info"), ATOMIC));
+		  (text, level) -> process(text, level, context.getRootLogger()),
+		  new Argument("text", fromValue("")),
+		  new Argument("loglevel", fromValue("info"), ATOMIC));
 	}
 
 	private static MetaExpression process(final MetaExpression textVar, final MetaExpression logLevel, final Logger robotLog) {
 		String level = logLevel.getStringValue();
 
+		// TODO::Remove testing lines
 		Object obj = extractValue(textVar);
-		
-		String text = parseObject(obj).getStringValue();
+
+		MetaExpression parsed = parseObject(obj);
+		String text = parsed.getStringValue();
 
 		if (level.toLowerCase().equals("debug")) {
 			robotLog.debug(text);
@@ -38,7 +40,7 @@ public class PrintConstruct extends Construct {
 		} else {
 			robotLog.info(text);
 		}
-		
+
 		return NULL;
 	}
 }

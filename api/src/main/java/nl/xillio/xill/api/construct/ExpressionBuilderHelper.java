@@ -89,7 +89,7 @@ public class ExpressionBuilderHelper {
 	 * @return the expression
 	 */
 	public static MetaExpression fromValue(final List<MetaExpression> value) {
-		return new ListExpression(value).process(expressionDebugger).get();
+		return new ListExpression(value);
 	}
 
 	/**

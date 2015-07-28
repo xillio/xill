@@ -813,7 +813,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 			expressions.add(parse(exp));
 		}
 
-		return new ListExpression(expressions);
+		return new ExpressionBuilder(expressions, debugger);
 	}
 
 	/**
