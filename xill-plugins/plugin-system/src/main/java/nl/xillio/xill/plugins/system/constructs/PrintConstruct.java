@@ -25,11 +25,7 @@ public class PrintConstruct extends Construct {
 	static MetaExpression process(final MetaExpression textVar, final MetaExpression logLevel, final Logger robotLog) {
 		String level = logLevel.getStringValue();
 
-		// TODO::Remove testing lines
-		Object obj = extractValue(textVar);
-
-		MetaExpression parsed = parseObject(obj);
-		String text = parsed.getStringValue();
+		String text = textVar.getStringValue();
 
 		if (level.toLowerCase().equals("debug")) {
 			robotLog.debug(text);
