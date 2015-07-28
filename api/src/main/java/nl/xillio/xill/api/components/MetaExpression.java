@@ -284,8 +284,6 @@ public abstract class MetaExpression implements Expression, Processable {
 						// Circular reference
 						resultMapValue.put(pair.getKey(), replacement);
 					} else {
-						// No circular reference
-						currentlyProcessing.add(pair.getValue());
 						resultMapValue.put(pair.getKey(), removeCircularReference(pair.getValue(), currentlyProcessing, replacement));
 					}
 				}
