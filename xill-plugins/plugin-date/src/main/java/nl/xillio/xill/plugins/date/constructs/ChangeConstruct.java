@@ -64,7 +64,7 @@ public class ChangeConstruct extends BaseDateConstruct {
 		}
 
 		// Add changes
-		dateService.add(newDate, changes);
+		newDate = dateService.add(newDate, changes);
 
 		return fromValue(newDate);
 	}

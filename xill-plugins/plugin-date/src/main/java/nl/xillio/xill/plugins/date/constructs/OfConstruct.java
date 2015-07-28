@@ -37,7 +37,7 @@ public class OfConstruct extends BaseDateConstruct {
 		ZoneId zone;
 
 		for (MetaExpression m : input) {
-			assertIsNull(m, "input");
+			assertNotNull(m, "input");
 		}
 
 		int year = input[0].getNumberValue().intValue();

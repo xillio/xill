@@ -2,7 +2,6 @@ package nl.xillio.xill.plugins.date.services;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -13,6 +12,7 @@ import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -58,14 +58,14 @@ public class DateServiceImpl implements DateService {
 	}
 
 	private DateTimeFormatter createDateTimeFormatter(String format) {
-		DateTimeFormatter formatter = format == null ? DateTimeFormatter.ofPattern(format) : DEFAULT_FORMATTER;
+		DateTimeFormatter formatter = format != null ? DateTimeFormatter.ofPattern(format) : DEFAULT_FORMATTER;
 		return formatter;
 	}
 
 	@Override
 	public ZonedDateTime add(ZonedDateTime original, Map<ChronoUnit, Long> toAdd) {
 		for (Entry<ChronoUnit, Long> entry : toAdd.entrySet()) {
-			original = original.plus(Duration.of(entry.getValue(), entry.getKey()));
+			original = original.plus(entry.getValue(), entry.getKey());
 		}
 		return original;
 	}
@@ -129,7 +129,7 @@ public class DateServiceImpl implements DateService {
 		  nanoDifference = Math.abs(nanoDifference);
 		BigDecimal difference = new BigDecimal(nanoDifference).multiply(TimeUnits.Nanos.getNumSeconds());
 		// Calculate the totals
-		Map<String, Double> diff = new HashMap<>();
+		Map<String, Double> diff = new LinkedHashMap<>();
 		for (TimeUnits t : TimeUnits.values()) {
 			diff.put(String.format("Total %s", t.name()), difference.divide(t.getNumSeconds(), RoundingMode.HALF_UP).doubleValue());
 		}
