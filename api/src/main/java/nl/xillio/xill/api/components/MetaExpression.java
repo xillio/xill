@@ -1,33 +1,30 @@
 package nl.xillio.xill.api.components;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import nl.xillio.util.IdentityArrayList;
 import nl.xillio.xill.api.Debugger;
-import nl.xillio.xill.api.NullDebugger;
 import nl.xillio.xill.api.behavior.BooleanBehavior;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.NotImplementedException;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
-
-import org.apache.commons.lang3.exception.ExceptionUtils;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  *
  */
 public abstract class MetaExpression implements Expression, Processable {
 	private static final Gson gson = new GsonBuilder().enableComplexMapKeySerialization().serializeNulls()
-			// .setPrettyPrinting()
-			.disableHtmlEscaping().disableInnerClassSerialization().serializeSpecialFloatingPointValues()
-			.serializeNulls().create();
+	  // .setPrettyPrinting()
+	  .disableHtmlEscaping().disableInnerClassSerialization().serializeSpecialFloatingPointValues()
+	  .serializeNulls().create();
 	private final MetadataExpressionPool<Object> metadataPool = new MetadataExpressionPool<>();
 	private Object value;
 	private ExpressionDataType type = ExpressionDataType.ATOMIC;
@@ -240,10 +237,8 @@ public abstract class MetaExpression implements Expression, Processable {
 	 * @return JSON representation
 	 */
 	public String toString(final Gson gsonParser) {
-		List<MetaExpression> initialVisited = new ArrayList<>(1);
-		initialVisited.add(this);
-		MetaExpression cleaned = removeCircularReference(this, initialVisited,
-			ExpressionBuilderHelper.fromValue("<<CIRCULAR REFERENCE>>"));
+		MetaExpression cleaned = removeCircularReference(this, new IdentityArrayList<>(),
+		  ExpressionBuilderHelper.fromValue("<<CIRCULAR REFERENCE>>"));
 		return gsonParser.toJson(extractValue(cleaned));
 	}
 
@@ -251,61 +246,56 @@ public abstract class MetaExpression implements Expression, Processable {
 	 * Remove all circular references to prepare for serialisation
 	 *
 	 * @param metaExpression
-	 * @param visited
+	 * @param currentlyProcessing
 	 * @param replacement
 	 *        The replacement for circular references
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
 	private static MetaExpression removeCircularReference(final MetaExpression metaExpression,
-			final List<MetaExpression> visited, final MetaExpression replacement) {
-		Processable result = ExpressionBuilderHelper.NULL;
+	    final List<MetaExpression> currentlyProcessing, final MetaExpression replacement) {
+		MetaExpression result = ExpressionBuilderHelper.NULL;
+		currentlyProcessing.add(metaExpression);
 
 		switch (metaExpression.getType()) {
 			case LIST:
-				List<Processable> resultListValue = new ArrayList<>();
+				List<MetaExpression> resultListValue = new ArrayList<>();
 
 				for (MetaExpression child : (List<MetaExpression>) metaExpression.getValue()) {
-					if (visited.stream().anyMatch(metaExp -> metaExp == child)) {
+					if (currentlyProcessing.stream().anyMatch(metaExp -> metaExp == child)) {
 						// Circular reference
 						resultListValue.add(replacement);
 					} else {
 						// No Circular reference
-						resultListValue.add(removeCircularReference(child, visited, replacement));
+						resultListValue.add(removeCircularReference(child, currentlyProcessing, replacement));
 					}
 				}
 
-				result = new ListExpression(resultListValue);
+				result = ExpressionBuilderHelper.fromValue(resultListValue);
 
 				break;
 			case OBJECT:
-				LinkedHashMap<Processable, Processable> resultMapValue = new LinkedHashMap<>();
+				LinkedHashMap<String, MetaExpression> resultMapValue = new LinkedHashMap<>();
 
 				for (Map.Entry<String, MetaExpression> pair : ((Map<String, MetaExpression>) metaExpression.getValue())
-						.entrySet()) {
-					Processable key = ExpressionBuilderHelper.fromValue(pair.getKey());
+				  .entrySet()) {
 
-					if (visited.stream().anyMatch(metaExp -> metaExp == pair.getValue())) {
+					if (currentlyProcessing.stream().anyMatch(metaExp -> metaExp == pair.getValue())) {
 						// Circular reference
-						resultMapValue.put(key, replacement);
+						resultMapValue.put(pair.getKey(), replacement);
 					} else {
-						// No circular reference
-						visited.add(pair.getValue());
-						resultMapValue.put(key, removeCircularReference(pair.getValue(), visited, replacement));
+						resultMapValue.put(pair.getKey(), removeCircularReference(pair.getValue(), currentlyProcessing, replacement));
 					}
 				}
-				result = new ObjectExpression(resultMapValue);
+				result = ExpressionBuilderHelper.fromValue(resultMapValue);
 				break;
 			case ATOMIC:
 				result = metaExpression;
 				break;
 		}
 
-		try {
-			return result.process(new NullDebugger()).get();
-		} catch (RobotRuntimeException e) {
-			return new AtomicExpression(ExceptionUtils.getRootCause(e).getMessage());
-		}
+		currentlyProcessing.remove(metaExpression);
+		return result;
 	}
 
 	@Override
@@ -324,13 +314,10 @@ public abstract class MetaExpression implements Expression, Processable {
 
 		switch (getType()) {
 			case ATOMIC:
-				return getBooleanValue() == other.getBooleanValue() && // Boolean
-						// equality
-						getStringValue().equals(other.getStringValue()) && // String
-						// equality
-						( // Double equality (or both NaN)
-						getNumberValue().doubleValue() == other.getNumberValue().doubleValue()
-						|| Double.isNaN(getNumberValue().doubleValue()) && Double.isNaN(getNumberValue().doubleValue()));
+				return getBooleanValue() == other.getBooleanValue() &&
+				    getStringValue().equals(other.getStringValue()) &&
+				    (getNumberValue().doubleValue() == other.getNumberValue().doubleValue()
+				        || Double.isNaN(getNumberValue().doubleValue()) && Double.isNaN(getNumberValue().doubleValue()));
 			case LIST:
 				return getValue().equals(other.getValue());
 			case OBJECT:
@@ -352,7 +339,14 @@ public abstract class MetaExpression implements Expression, Processable {
 	 *        The {@link MetaExpression} to extract a value from.
 	 * @return
 	 *         <ul>
+	 *         <<<<<<< HEAD
+	 *         <li>{@link ExpressionDataType#ATOMIC}: returns an {@link Object}
+	 *         <br/>
+	 *         This represents a singular value that is parsed in the folowing
+	 *         way:
+	 *         =======
 	 *         <li>{@link ExpressionDataType#ATOMIC}: returns an {@link Object} This represents a singular value that is parsed in the folowing way:
+	 *         >>>>>>> origin/develop
 	 *         <ol>
 	 *         <li>If the value is null: return null</li>
 	 *         <li>If the expression is created using {@link ExpressionBuilder#fromValue(boolean)}: return {@link Boolean}</li>
@@ -408,14 +402,13 @@ public abstract class MetaExpression implements Expression, Processable {
 				List<Object> resultList = new ArrayList<>();
 				results.put(expression, resultList);
 				resultList.addAll(((List<MetaExpression>) expression.getValue()).stream().map(v -> extractValue(v, results))
-					.collect(Collectors.toList()));
+				  .collect(Collectors.toList()));
 				result = resultList;
 				break;
 			case OBJECT:
 				Map<String, Object> resultObject = new LinkedHashMap<>();
 				results.put(expression, resultObject);
-				for (Entry<String, MetaExpression> pair : ((Map<String, MetaExpression>) expression.getValue())
-						.entrySet()) {
+				for (Entry<String, MetaExpression> pair : ((Map<String, MetaExpression>) expression.getValue()).entrySet()) {
 					resultObject.put(pair.getKey(), extractValue(pair.getValue(), results));
 				}
 				result = resultObject;
@@ -524,7 +517,7 @@ public abstract class MetaExpression implements Expression, Processable {
 	 *
 	 */
 	public static MetaExpression parseObject(final Object value) throws IllegalArgumentException {
-		return parseObject(value, new HashMap<>());
+		return parseObject(value, new IdentityHashMap<>());
 	}
 
 	@SuppressWarnings("unchecked")

@@ -8,8 +8,8 @@ import java.util.function.Supplier;
 
 import org.apache.commons.lang3.StringUtils;
 
-import nl.xillio.xill.api.QuadFunction;
-import nl.xillio.xill.api.TriFunction;
+import nl.xillio.util.QuadFunction;
+import nl.xillio.util.TriFunction;
 import nl.xillio.xill.api.components.MetaExpression;
 
 /**
