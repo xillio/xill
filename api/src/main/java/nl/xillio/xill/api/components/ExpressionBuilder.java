@@ -56,22 +56,23 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
 	public ExpressionBuilder(final List<MetaExpression> value) {
 		expressionSupplier = () -> fromValue(value);
 	}
-	
+
 	/**
 	 * Create a new {@link ExpressionBuilder} that will produce a List
 	 *
 	 * @param value
 	 *        the value to set
-	 * @param debugger The debugger to use
+	 * @param debugger
+	 *        The debugger to use
 	 */
 	public ExpressionBuilder(final List<Processable> value, final Debugger debugger) {
 		expressionSupplier = () -> {
 			List<MetaExpression> result = new ArrayList<>();
-			
-			for(Processable proc : value) {
+
+			for (Processable proc : value) {
 				result.add(proc.process(debugger).get());
 			}
-			
+
 			return fromValue(result);
 		};
 	}
@@ -81,9 +82,19 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
 	 *
 	 * @param value
 	 *        the value to set
+	 * @param debugger
+	 *        the debugger
 	 */
-	public ExpressionBuilder(final LinkedHashMap<String, MetaExpression> value) {
-		expressionSupplier = () -> fromValue(value);
+	public ExpressionBuilder(final LinkedHashMap<Processable, Processable> value, final Debugger debugger) {
+		expressionSupplier = () -> {
+			LinkedHashMap<String, MetaExpression> entries = new LinkedHashMap<>();
+
+			value.forEach((key, expression) -> {
+				entries.put(key.process(debugger).get().getStringValue(), expression.process(debugger).get());
+			});
+
+			return fromValue(entries);
+		};
 	}
 
 	/**

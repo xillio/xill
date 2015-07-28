@@ -16,7 +16,6 @@ import nl.xillio.xill.api.components.ImmutableLiteral;
 import nl.xillio.xill.api.components.ListExpression;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.ObjectExpression;
-import nl.xillio.xill.api.components.Processable;
 
 /**
  * This class contains various useful utility functions to create Expressions
@@ -114,13 +113,7 @@ public class ExpressionBuilderHelper {
 	 * @return the expression
 	 */
 	public static MetaExpression fromValue(final LinkedHashMap<String, MetaExpression> value) {
-		LinkedHashMap<Processable, Processable> procValue = new LinkedHashMap<>(value.size());
-
-		value.forEach((key, expression) -> {
-			procValue.put(fromValue(key), expression);
-		});
-
-		return new ObjectExpression(procValue).process(expressionDebugger).get();
+		return new ObjectExpression(value);
 	}
 
 	/**
