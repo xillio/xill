@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import nl.xillio.xill.api.Debugger;
-import nl.xillio.xill.api.NullDebugger;
 import nl.xillio.xill.api.behavior.BooleanBehavior;
 import nl.xillio.xill.api.behavior.NumberBehavior;
 import nl.xillio.xill.api.behavior.StringBehavior;
@@ -21,7 +19,6 @@ import nl.xillio.xill.api.components.ObjectExpression;
  * This class contains various useful utility functions to create Expressions
  */
 public class ExpressionBuilderHelper {
-	private static final Debugger expressionDebugger = new NullDebugger();
 
 	/**
 	 * @see ExpressionDataType#LIST
