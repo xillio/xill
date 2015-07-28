@@ -106,7 +106,7 @@ public class HungarianAlgorithmConstructTest extends ExpressionBuilderHelper {
 	}
 
 	/**
-	 * Tests wheter an exception is thrown when invalid
+	 * Tests wheter an exception is thrown when invalid input is provided.
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid value `error` in matrix at \\[1,1\\]")
 	public void processInvalidInputInMatrix() {
@@ -120,6 +120,20 @@ public class HungarianAlgorithmConstructTest extends ExpressionBuilderHelper {
 
 		MetaExpression max = mock(MetaExpression.class);
 		when(max.getBooleanValue()).thenReturn(true);
+		//Run
 		HungarianAlgorithmConstruct.process(matrix, max);
 	}
+	
+	/**
+	 * Tests wheter the xill NULL value is handled.
+	 */
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "No matrix given")
+	public void processNullInput() {
+		// Mock
+		MetaExpression max = mock(MetaExpression.class);
+		when(max.getBooleanValue()).thenReturn(true);
+		//Run
+		HungarianAlgorithmConstruct.process(NULL, max);
+	}
+	
 }

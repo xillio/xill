@@ -4,7 +4,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.plugins.math.services.math.MathOperations;
 
@@ -38,6 +37,5 @@ public class RoundConstructTest {
 
 		// Assert
 		Assert.assertEquals(result.getNumberValue().longValue(), mathReturnValue);
-
 	}
 }
