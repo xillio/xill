@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.file.services.files;
 
 import com.google.inject.Singleton;
 import nl.xillio.xill.api.components.RobotID;
+import nl.xillio.xill.plugins.file.utils.FileIterator;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Iterator;
 
 /**
  * This is the main implementation of the {@link FileUtilities} service
@@ -82,6 +84,11 @@ public class FileUtilitiesImpl implements FileUtilities {
 			file = new File(robot.getPath().getParentFile(), file.getPath());
 		}
 		return file;
+	}
+
+	@Override
+	public Iterator<File> iterateFiles(File folder, boolean recursive) throws IOException {
+		return new FileIterator(folder, recursive);
 	}
 
 }
