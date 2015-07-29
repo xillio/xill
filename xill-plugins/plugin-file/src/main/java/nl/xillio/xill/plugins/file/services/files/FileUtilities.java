@@ -1,12 +1,11 @@
 package nl.xillio.xill.plugins.file.services.files;
 
-import java.io.File;
-import java.io.IOException;
-
 import com.google.inject.ImplementedBy;
-
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.services.XillService;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * This {@link XillService} is responsible for various file operations
@@ -25,7 +24,7 @@ public interface FileUtilities extends XillService {
 	 * @throws IOException
 	 *         when the operation failed
 	 */
-	public void copy(File source, File target) throws IOException;
+	void copy(File source, File target) throws IOException;
 
 	/**
 	 * Create a folder at the specific location if it does not exist
@@ -35,7 +34,7 @@ public interface FileUtilities extends XillService {
 	 * @throws IOException
 	 *         when the operation failed
 	 */
-	public void createFolder(File folder) throws IOException;
+	boolean createFolder(File folder) throws IOException;
 
 	/**
 	 * Returns true if the file exists
@@ -44,7 +43,7 @@ public interface FileUtilities extends XillService {
 	 *        the file to check
 	 * @return true if and only if the file exists
 	 */
-	public boolean exists(File file);
+	boolean exists(File file);
 
 	/**
 	 * Check the size of a file
@@ -53,7 +52,7 @@ public interface FileUtilities extends XillService {
 	 *        the file to check
 	 * @return the size in bytes
 	 */
-	public long getByteSize(File file);
+	long getByteSize(File file) throws IOException;
 
 	/**
 	 * Delete a file or folder
@@ -63,7 +62,7 @@ public interface FileUtilities extends XillService {
 	 * @throws IOException
 	 *         when the operation failed
 	 */
-	public void delete(File file) throws IOException;
+	void delete(File file) throws IOException;
 	
 	/**
 	 * Create the required folders and save content to a file
@@ -71,7 +70,7 @@ public interface FileUtilities extends XillService {
 	 * @param file the target file
 	 * @throws IOException when the operation failed
 	 */
-	public void saveStringToFile(String content, File file) throws IOException;
+	void saveStringToFile(String content, File file) throws IOException;
 	
 	/**
 	 * Create the required folders and append content to a file
@@ -79,7 +78,7 @@ public interface FileUtilities extends XillService {
 	 * @param file the target file
 	 * @throws IOException when the operation failed
 	 */
-	public void appendStringToFile(String content, File file) throws IOException;
+	void appendStringToFile(String content, File file) throws IOException;
 	
 	/**
 	 * Builds a {@link File} for a running robot
@@ -87,5 +86,5 @@ public interface FileUtilities extends XillService {
 	 * @param path the path provided by the robot
 	 * @return the file
 	 */
-	public File buildFile(RobotID robot, String path);
+	File buildFile(RobotID robot, String path);
 }

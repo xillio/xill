@@ -1,19 +1,22 @@
 package nl.xillio.xill.plugins.file.constructs;
 
-import java.io.File;
-
 import com.google.inject.Inject;
-
+import com.google.inject.Singleton;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
- *
+ * This construct returns the size of a file or throws an error when the file was not found
  */
+@Singleton
 public class SizeConstruct extends Construct {
 
 	@Inject
@@ -26,6 +29,10 @@ public class SizeConstruct extends Construct {
 
 	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri) {
 		File file = fileUtils.buildFile(context.getRobotID(), uri.getStringValue());
-		return fromValue(fileUtils.getByteSize(file));
+		try {
+			return fromValue(fileUtils.getByteSize(file));
+		} catch (IOException e) {
+			throw new RobotRuntimeException("Failed to get size of file: " + e.getMessage(), e);
+		}
 	}
 }

@@ -59,7 +59,7 @@ public class CreateFolderConstructTest {
 
 		//Context
 		ConstructContext context = mock(ConstructContext.class);
-		when(context.getLogger()).thenReturn(logger);
+		when(context.getRootLogger()).thenReturn(logger);
 
 		//FileUtilities
 		String fileString = "This is the absolute path";

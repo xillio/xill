@@ -1,16 +1,14 @@
 package nl.xillio.xill.plugins.file.services.files;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
+import com.google.inject.Singleton;
+import nl.xillio.xill.api.components.RobotID;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.inject.Singleton;
-
-import nl.xillio.xill.api.components.RobotID;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * This is the main implementation of the {@link FileUtilities} service
@@ -29,15 +27,17 @@ public class FileUtilitiesImpl implements FileUtilities {
 	}
 
 	@Override
-	public void createFolder(final File folder) throws IOException {
+	public boolean createFolder(final File folder) throws IOException {
 		if (folder.isFile()) {
 			throw new IOException(folder.getAbsolutePath() + " is not a folder.");
 		}
 
-		folder.mkdirs();
+		boolean madeFolders = folder.mkdirs();
 		if (!folder.exists()) {
 			throw new IOException("Could not create folder " + folder.getAbsolutePath());
 		}
+
+		return madeFolders;
 	}
 
 	@Override
@@ -46,8 +46,12 @@ public class FileUtilitiesImpl implements FileUtilities {
 	}
 
 	@Override
-	public long getByteSize(final File file) {
-		return FileUtils.sizeOf(file);
+	public long getByteSize(final File file) throws IOException {
+		try {
+			return FileUtils.sizeOf(file);
+		} catch (IllegalArgumentException e) {
+			throw new IOException(e.getMessage(), e);
+		}
 	}
 
 	@Override
