@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.string.constructs;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
@@ -23,10 +24,10 @@ import com.google.inject.Inject;
  */
 public class AllMatchesConstruct extends Construct {
 
-	private final RegexConstruct regexConstruct;
-
 	@Inject
 	private RegexService regexService;
+	@Inject
+	private RegexConstruct regexConstruct;
 
 	/**
 	 * Create a new {@link AllMatchesConstruct}
@@ -34,8 +35,7 @@ public class AllMatchesConstruct extends Construct {
 	 * @param regexConstruct
 	 *        the construct used to perform the matching
 	 */
-	public AllMatchesConstruct(final RegexConstruct regexConstruct) {
-		this.regexConstruct = regexConstruct;
+	public AllMatchesConstruct() {
 	}
 
 	@Override
@@ -58,7 +58,8 @@ public class AllMatchesConstruct extends Construct {
 		int timeout = (int) timeoutVar.getNumberValue().doubleValue() * 1000;
 
 		try {
-			List<String> results = regexService.tryMatch(regex, text, timeout, regexConstruct);
+			Matcher matcher = regexConstruct.getMatcher(regex, text, timeout);
+			List<String> results = regexService.tryMatch(matcher);
 			for (String s : results) {
 				list.add(fromValue(s));
 			}

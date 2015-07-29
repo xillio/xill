@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
-import nl.xillio.xill.plugins.string.constructs.RegexConstruct;
-
 import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
@@ -19,9 +17,8 @@ import org.apache.commons.lang3.StringEscapeUtils;
 public class RegexServiceImpl implements RegexService {
 
 	@Override
-	public List<String> tryMatch(final String regex, final String input, final int timeout, final RegexConstruct regexConstruct) {
+	public List<String> tryMatch(final Matcher matcher) {
 		List<String> list = new ArrayList<>();
-		Matcher matcher = regexConstruct.getMatcher(regex, input, timeout);
 		while (matcher.find()) {
 			list.add(matcher.group());
 		}
@@ -46,5 +43,29 @@ public class RegexServiceImpl implements RegexService {
 		MessageDigest md5 = MessageDigest.getInstance("MD5");
 		md5.update(StandardCharsets.UTF_8.encode(input));
 		return String.format("%032x", new BigInteger(1, md5.digest()));
+	}
+
+	@Override
+	public boolean matches(final Matcher matcher) {
+		return matcher.matches();
+	}
+
+	@Override
+	public List<String> tryMatchElseNull(final Matcher matcher) {
+		List<String> list = new ArrayList<>();
+		for (int i = 0; i <= matcher.groupCount(); i++) {
+			list.add(matcher.group(i));
+		}
+		return list;
+	}
+
+	@Override
+	public String replaceAll(final Matcher matcher, final String replacement) {
+		return matcher.replaceAll(replacement);
+	}
+
+	@Override
+	public String replaceFirst(final Matcher matcher, final String replacement) {
+		return matcher.replaceFirst(replacement);
 	}
 }

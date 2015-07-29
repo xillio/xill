@@ -8,10 +8,10 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 
 /**
  *
- * Returns a number between 0 (no likeness) and 1 (identical), indicating how
- * much the two strings are alike. </br>
- * If the option 'relative' is set to false, then the absolute editdistance will
- * be returned rather than a relative distance.
+ * <p> Returns a number between 0 (no likeness) and 1 (identical), indicating how
+ * much the two strings are alike. </p>
+ * <p> If the option 'relative' is set to false, then the absolute editdistance will
+ * be returned rather than a relative distance. </p>
  *
  * @author Sander
  *

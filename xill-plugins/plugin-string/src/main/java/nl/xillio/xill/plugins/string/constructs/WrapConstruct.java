@@ -1,26 +1,33 @@
 package nl.xillio.xill.plugins.string.constructs;
 
-import org.apache.commons.lang3.text.WordUtils;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.plugins.string.services.string.StringService;
+
+import com.google.inject.Inject;
 
 /**
  * Wraps a piece of text to a certain width
  */
 public class WrapConstruct extends Construct {
+	@Inject
+	StringService stringService;
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(WrapConstruct::process, new Argument("text"), new Argument("width"), new Argument("wrapLongWords", fromValue(false)));
+		return new ConstructProcessor(
+			(text, width, wrapLongWords) -> process(text, width, wrapLongWords, stringService),
+			new Argument("Text", ATOMIC),
+			new Argument("Width", ATOMIC),
+			new Argument("wrapLongWords", ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression text, final MetaExpression width, final MetaExpression wrapLong) {
+	private static MetaExpression process(final MetaExpression text, final MetaExpression width, final MetaExpression wrapLong, final StringService stringService) {
 
-		String result = WordUtils.wrap(text.getStringValue(), width.getNumberValue().intValue(), "\n", wrapLong.getBooleanValue());
+		String result = stringService.wrap(text.getStringValue(), width.getNumberValue().intValue(), wrapLong.getBooleanValue());
 		return fromValue(result);
 	}
 }

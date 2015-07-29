@@ -1,10 +1,13 @@
 package nl.xillio.xill.plugins.string.constructs;
 
+import com.google.inject.Inject;
+
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.plugins.string.services.string.StringService;
 
 /**
  *
@@ -15,16 +18,19 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
  *
  */
 public class ToUpperConstruct extends Construct {
+	@Inject
+	StringService stringService;
+
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			ToUpperConstruct::process, 
+			(string) -> process(string, stringService), 
 			new Argument("string", ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression string) {
+	private static MetaExpression process(final MetaExpression string, StringService stringService) {
 
-		return fromValue(string.getStringValue().toUpperCase());
+		return fromValue(stringService.toUpperCase(string.getStringValue()));
 	}
 }

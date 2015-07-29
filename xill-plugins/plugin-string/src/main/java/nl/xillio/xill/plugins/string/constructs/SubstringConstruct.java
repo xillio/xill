@@ -9,11 +9,15 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
  *
- * Returns the substring of text between position start and position end. </br>
- * If the end position equals 0 it will take the full length of the
- * string. </br>
- * The start position is set to 0 if the end position is smaller than the start
- * position.
+ * <p>
+ * Returns the substring of text between position start and position end.
+ * <p>
+ * <p>
+ * If the end position equals 0 it will take the full length of the string.
+ * </p>
+ * <p>
+ * The start position is set to 0 if the end position is smaller than the start position.
+ * </p>
  *
  * @author Sander
  *

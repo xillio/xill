@@ -2,60 +2,96 @@ package nl.xillio.xill.plugins.string.services.string;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.regex.Matcher;
 
 import com.google.inject.ImplementedBy;
 
-import nl.xillio.xill.plugins.string.constructs.RegexConstruct;
-
 /**
- * 
+ *
  */
 @ImplementedBy(RegexServiceImpl.class)
 public interface RegexService {
+
+	/**
+	 * Returns a list of matches form a matcher.
+	 * @param matcher
+	 *        The Matcher we're using.
+	 * @return
+	 *         Returns a list of strings with matches.
+	 */
+	public List<String> tryMatch(Matcher matcher);
 	
 	/**
-	 * Tries to find subsequences in an input.
-	 * @param regex 
-	 * 					The regex with which we're matching.
-	 * @param input
-	 * 					The input. 
-	 * @param timeout 
-	 * 					The timeout in msec.
-	 * @param regexConstruct 
-	 * 					The regexConstruct we're using.
+	 * Returns a list of matches from a matcher
+	 * @param matcher
+	 * 					The  Matcher we're using.
 	 * @return
-	 * 					Returns a list of strings with matches.
+	 * 				Returns a list of strings with matches or null.
 	 */
-	public List<String> tryMatch(String regex, String input, int timeout, RegexConstruct regexConstruct);
-	
+	public List<String> tryMatchElseNull(Matcher matcher);
+
 	/**
 	 * Escapes the XML.
+	 * 
 	 * @param text
-	 * 					The text that requires escaping.
+	 *        The text that requires escaping.
 	 * @return
-	 * 				An escaped text.
+	 *         An escaped text.
 	 */
 	public String escapeXML(String text);
-	
+
 	/**
 	 * Unescapes a text containing an XML entity.
+	 * 
 	 * @param text
-	 * 					The text that requires unescaping.
-	 * @param passes 
-	 * 					The number of passes the decoder runs.
+	 *        The text that requires unescaping.
+	 * @param passes
+	 *        The number of passes the decoder runs.
 	 * @return
-	 * 				An unescaped text.
+	 *         An unescaped text.
 	 */
 	public String unescapeXML(String text, int passes);
-	
+
 	/**
 	 * Hashes the input with the MD5 hash.
+	 * 
 	 * @param input
-	 * 					The string to be hashed.
+	 *        The string to be hashed.
 	 * @return
-	 * 				A hashed string.
-	 * @throws NoSuchAlgorithmException 
+	 *         A hashed string.
+	 * @throws NoSuchAlgorithmException
 	 */
 	public String createMD5Construct(String input) throws NoSuchAlgorithmException;
+	
+	/**
+	 * Attempts to match an entire region to a pattern.
+	 * @param matcher
+	 * 					The Matcher we're matching with.
+	 * @return
+	 * 			Returns wheter the matching succeeded.
+	 */
+	public boolean matches(Matcher matcher);
+	
+	/**
+	 * Lets the matcher replace all subsequences of a given input with the replacement.
+	 * @param matcher
+	 * 					The matcher we're using.
+	 * @param replacement
+	 * 					The replacement string.
+	 * @return
+	 * 			Returns a modified string.
+	 */
+	public String replaceAll(Matcher matcher, String replacement);
+	
+	/**
+	 * Lets the matcher replace the first subsequence of a given input with the replacement.
+	 * @param matcher
+	 * 					The matcher we're using.
+	 * @param replacement
+	 * 					The replacement string.
+	 * @return
+	 * 			Returns a modified string.
+	 */
+	public String replaceFirst(Matcher matcher, String replacement);
 
 }

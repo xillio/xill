@@ -3,7 +3,7 @@ package nl.xillio.xill.plugins.math.constructs;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -45,13 +45,13 @@ public class AllMatchesConstructTest extends ExpressionBuilderHelper {
 		String ReturnValue = "[\"abc\",\"def\",\"ghi\",\"jkl\",\"Mno\"]";
 		RegexService regexService = mock(RegexService.class);
 		List<String> returnStatement = Arrays.asList("abc", "def", "ghi", "jkl", "Mno");
-		when(regexService.tryMatch(regexValue, text, timeoutValue * 1000, construct)).thenReturn(returnStatement);
+		when(regexService.tryMatch(any())).thenReturn(returnStatement);
 
 		// Run
 		MetaExpression result = AllMatchesConstruct.process(construct, value, regex, timeout, regexService);
 
 		// Verify
-		verify(regexService, times(1)).tryMatch(regexValue, text, timeoutValue * 1000, construct);
+		verify(regexService, times(1)).tryMatch(any());
 
 		// Assert
 		Assert.assertEquals(result.getType(), LIST);

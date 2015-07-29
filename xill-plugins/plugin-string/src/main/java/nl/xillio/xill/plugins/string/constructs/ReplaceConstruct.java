@@ -2,13 +2,15 @@ package nl.xillio.xill.plugins.string.constructs;
 
 import java.util.regex.Matcher;
 
-import org.apache.commons.lang3.StringUtils;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.plugins.string.services.string.RegexService;
+import nl.xillio.xill.plugins.string.services.string.StringService;
+
+import com.google.inject.Inject;
 
 /**
  * Returns a new string in which occurrences of regex needle found in the text
@@ -21,7 +23,12 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
  */
 public class ReplaceConstruct extends Construct {
 
-	private final RegexConstruct regexConstruct;
+	@Inject
+	private RegexConstruct regexConstruct;
+	@Inject
+	private RegexService regexService;
+	@Inject
+	private StringService stringService;
 
 	/**
 	 * Create a new {@link ReplaceConstruct}
@@ -29,25 +36,23 @@ public class ReplaceConstruct extends Construct {
 	 * @param regexConstruct
 	 *        the construct used to find matches
 	 */
-	public ReplaceConstruct(final RegexConstruct regexConstruct) {
-		this.regexConstruct = regexConstruct;
-	}
+	public ReplaceConstruct() {}
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		Argument args[] = {
-						new Argument("text", ATOMIC),
-						new Argument("needle", ATOMIC),
-						new Argument("replacement", ATOMIC),
-						new Argument("useregex", TRUE, ATOMIC),
-						new Argument("replaceall", TRUE, ATOMIC),
-						new Argument("timeout", fromValue(RegexConstruct.REGEX_TIMEOUT), ATOMIC)};
+				new Argument("text", ATOMIC),
+				new Argument("needle", ATOMIC),
+				new Argument("replacement", ATOMIC),
+				new Argument("useregex", TRUE, ATOMIC),
+				new Argument("replaceall", TRUE, ATOMIC),
+				new Argument("timeout", fromValue(RegexConstruct.REGEX_TIMEOUT), ATOMIC)};
 
-		return new ConstructProcessor((a) -> process(regexConstruct, a), args);
+		return new ConstructProcessor((a) -> process(regexConstruct, a, regexService, stringService), args);
 
 	}
 
-	private static MetaExpression process(final RegexConstruct regexConstruct, final MetaExpression[] input) {
+	private static MetaExpression process(final RegexConstruct regexConstruct, final MetaExpression[] input, final RegexService regexService, final StringService stringService) {
 
 		for (int i = 0; i < 5; i++) {
 			assertNotNull(input[i], "input");
@@ -63,14 +68,14 @@ public class ReplaceConstruct extends Construct {
 		if (useregex) {
 			Matcher m = regexConstruct.getMatcher(needle, text, timeout);
 			if (replaceall) {
-				return fromValue(m.replaceAll(replacement));
+				return fromValue(regexService.replaceAll(m, replacement));
 			}
-			return fromValue(m.replaceFirst(replacement));
+			return fromValue(regexService.replaceFirst(m, replacement));
 		}
 		if (replaceall) {
-			return fromValue(text.replace(needle, replacement));
+			return fromValue(stringService.replaceAll(text, needle, replacement));
 		}
-		return fromValue(StringUtils.replaceOnce(text, needle, replacement));
+		return fromValue(stringService.replaceFirst(text, needle, replacement));
 
 	}
 }

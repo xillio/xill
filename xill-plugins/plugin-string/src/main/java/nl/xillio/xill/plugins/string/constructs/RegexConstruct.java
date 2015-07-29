@@ -7,24 +7,27 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.IntStream;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.string.services.string.RegexService;
 
 /**
- * Returns a list of matches of the specified regex on the provided
- * string. </br>
- * </br>
- *
- *
+ *<p> Returns a list of matches of the specified regex on the provide string. </p>
  * @author Sander
  */
+@Singleton
 public class RegexConstruct extends Construct {
 
 	private RegexTimer regexTimer = null;
+	@Inject
+	private RegexService regexService;
 
 	/**
 	 * The default timeout for regular expressions.
@@ -42,13 +45,13 @@ public class RegexConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			this::process, 
+			(string, regex, timeout) -> process(string, regex, timeout, regexService),
 			new Argument("string", ATOMIC), 
 			new Argument("regex", ATOMIC), 
 			new Argument("timeout", fromValue(REGEX_TIMEOUT), ATOMIC));
 	}
 
-	private MetaExpression process(final MetaExpression valueVar, final MetaExpression regexVar, final MetaExpression timeoutVar) {
+	private MetaExpression process(final MetaExpression valueVar, final MetaExpression regexVar, final MetaExpression timeoutVar, RegexService regexService) {
 
 		String regex = regexVar.getStringValue();
 		int timeout = (int) timeoutVar.getNumberValue().doubleValue() * 1000;
@@ -56,15 +59,15 @@ public class RegexConstruct extends Construct {
 		try {
 			Matcher matcher = getMatcher(regex, valueVar.getStringValue(), timeout);
 
-			if (matcher.matches()) {
+			if (regexService.matches(matcher)) {
 				List<MetaExpression> list = new ArrayList<>();
-				for (int i = 0; i <= matcher.groupCount(); i++) {
-					String capture = matcher.group(i);
-					if (capture != null) {
-						list.add(i, fromValue(capture));
-					} else {
-						list.add(i, NULL);
+				List<String> listAsStrings = regexService.tryMatchElseNull(matcher);
+				for(String s : listAsStrings){
+					if(s != null){
+							list.add(fromValue(s));
 					}
+					else
+						list.add(NULL);
 				}
 				return fromValue(list);
 			}

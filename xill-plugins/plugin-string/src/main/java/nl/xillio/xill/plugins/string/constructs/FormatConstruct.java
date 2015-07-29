@@ -3,6 +3,7 @@ package nl.xillio.xill.plugins.string.constructs;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.MissingFormatArgumentException;
+import java.util.regex.Matcher;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
@@ -23,18 +24,15 @@ import com.google.inject.Inject;
  *
  */
 public class FormatConstruct extends Construct {
-	private final RegexConstruct regexConstruct;
+	@Inject
+	private RegexConstruct regexConstruct;
 	@Inject
 	private RegexService regexService;
 
 	/**
 	 * Create a new {@link FormatConstruct}
-	 *
-	 * @param regexConstruct
-	 *        the contruct used to find the format parameters
 	 */
-	public FormatConstruct(final RegexConstruct regexConstruct) {
-		this.regexConstruct = regexConstruct;
+	public FormatConstruct() {
 	}
 
 	@Override
@@ -52,8 +50,9 @@ public class FormatConstruct extends Construct {
 		List<Object> list = new ArrayList<>();
 		@SuppressWarnings("unchecked")
 		List<MetaExpression> numberList = (List<MetaExpression>) valueVar.getValue();
-
-		List<String> tryFormat = regexService.tryMatch("%[[^a-zA-Z%]]*([a-zA-Z]|[%])", textVar.getStringValue(), RegexConstruct.REGEX_TIMEOUT, regexConstruct);
+		
+		Matcher matcher = regexConstruct.getMatcher("%[[^a-zA-Z%]]*([a-zA-Z]|[%])", textVar.getStringValue(), RegexConstruct.REGEX_TIMEOUT);
+		List<String> tryFormat = regexService.tryMatch(matcher);
 		for (String s : tryFormat) {
 			formatList.add(fromValue(s));
 		}
