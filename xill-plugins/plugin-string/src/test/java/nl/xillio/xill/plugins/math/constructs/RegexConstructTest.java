@@ -13,7 +13,6 @@ import java.util.regex.PatternSyntaxException;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.string.constructs.MatchesConstruct;
 import nl.xillio.xill.plugins.string.constructs.RegexConstruct;
 import nl.xillio.xill.plugins.string.services.string.RegexService;
 
@@ -67,7 +66,7 @@ public class RegexConstructTest extends ExpressionBuilderHelper {
 	/**
 	 * Test the process method for when it throws an error.
 	 */
-	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid pattern in matches.")
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid pattern in regex()")
 	public void processInvalidPattern() {
 		// Mock
 		String valueValue = "I need a doctor";
@@ -85,7 +84,7 @@ public class RegexConstructTest extends ExpressionBuilderHelper {
 		Exception returnValue = new PatternSyntaxException(regexValue, regexValue, timeoutValue);
 		RegexService regexService = mock(RegexService.class);
 		when(regexService.getMatcher(regexValue, valueValue, timeoutValue * 1000)).thenThrow(returnValue);
-		MatchesConstruct.process(value, regex, timeout, regexService);
+		RegexConstruct.process(value, regex, timeout, regexService);
 
 		// Verify
 		verify(regexService, times(1)).matches(any());
@@ -95,7 +94,7 @@ public class RegexConstructTest extends ExpressionBuilderHelper {
 	/**
 	 * Test the process method for when it throws an error.
 	 */
-	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Illegal argument given.")
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Error while executing the regex")
 	public void processIllegalArgument() {
 		// Mock
 		String valueValue = "I need a doctor";
@@ -113,7 +112,7 @@ public class RegexConstructTest extends ExpressionBuilderHelper {
 		Exception returnValue = new IllegalArgumentException();
 		RegexService regexService = mock(RegexService.class);
 		when(regexService.getMatcher(regexValue, valueValue, timeoutValue * 1000)).thenThrow(returnValue);
-		MatchesConstruct.process(value, regex, timeout, regexService);
+		RegexConstruct.process(value, regex, timeout, regexService);
 
 		// Verify
 		verify(regexService, times(1)).matches(any());

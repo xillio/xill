@@ -1,12 +1,14 @@
 package nl.xillio.xill.plugins.string.constructs;
 
 import java.util.regex.Matcher;
+import java.util.regex.PatternSyntaxException;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.string.services.string.RegexService;
 import nl.xillio.xill.plugins.string.services.string.StringService;
 
@@ -49,7 +51,8 @@ public class ReplaceConstruct extends Construct {
 
 	}
 
-	private static MetaExpression process(final MetaExpression[] input, final RegexService regexService, final StringService stringService) {
+	@SuppressWarnings("javadoc")
+	public static MetaExpression process(final MetaExpression[] input, final RegexService regexService, final StringService stringService) {
 
 		for (int i = 0; i < 5; i++) {
 			assertNotNull(input[i], "input");
@@ -63,11 +66,17 @@ public class ReplaceConstruct extends Construct {
 		int timeout = (int) input[5].getNumberValue().doubleValue() * 1000;
 
 		if (useregex) {
-			Matcher m = regexService.getMatcher(needle, text, timeout);
-			if (replaceall) {
-				return fromValue(regexService.replaceAll(m, replacement));
+			try {
+				Matcher m = regexService.getMatcher(needle, text, timeout);
+				if (replaceall) {
+					return fromValue(regexService.replaceAll(m, replacement));
+				}
+				return fromValue(regexService.replaceFirst(m, replacement));
+			} catch (PatternSyntaxException e) {
+				throw new RobotRuntimeException("Invalid pattern in regex()");
+			} catch (Exception e) {
+				throw new RobotRuntimeException("Error while executing the regex");
 			}
-			return fromValue(regexService.replaceFirst(m, replacement));
 		}
 		if (replaceall) {
 			return fromValue(stringService.replaceAll(text, needle, replacement));

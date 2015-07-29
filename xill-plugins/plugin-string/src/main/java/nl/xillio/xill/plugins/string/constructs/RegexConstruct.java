@@ -73,7 +73,7 @@ public class RegexConstruct extends Construct {
 			}
 			return NULL;
 		} catch (PatternSyntaxException e) {
-			throw new RobotRuntimeException("Invalid pattern in regex()" + regex + " - ");
+			throw new RobotRuntimeException("Invalid pattern in regex()");
 		} catch (Exception e) {
 			throw new RobotRuntimeException("Error while executing the regex");
 		}

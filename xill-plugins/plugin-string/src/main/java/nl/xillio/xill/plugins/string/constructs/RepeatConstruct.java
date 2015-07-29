@@ -28,7 +28,8 @@ public class RepeatConstruct extends Construct {
 			new Argument("value", ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression string, final MetaExpression value, final StringService stringService) {
+	@SuppressWarnings("javadoc")
+	public static MetaExpression process(final MetaExpression string, final MetaExpression value, final StringService stringService) {
 		assertNotNull(string, "string");
 		assertNotNull(value, "value");
 
