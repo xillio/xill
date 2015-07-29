@@ -71,7 +71,12 @@ public class FileUtilitiesImpl implements FileUtilities {
 
 	@Override
 	public File buildFile(final RobotID robot, final String path) {
-		File file = new File(robot.getPath().getParentFile(), path);
+		//First check if the provided path is absolute
+		File file = new File(path);
+		if (!file.isAbsolute()) {
+			//It's not absolute so we make it relative to the robot
+			file = new File(robot.getPath().getParentFile(), file.getPath());
+		}
 		return file;
 	}
 

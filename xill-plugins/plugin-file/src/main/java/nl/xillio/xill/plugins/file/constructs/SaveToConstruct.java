@@ -23,9 +23,9 @@ public class SaveToConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-		  (content, uri) -> process(context, fileUtils, uri, content),
-		  new Argument("content", ATOMIC),
-		  new Argument("uri", ATOMIC));
+		  (uri, content) -> process(context, fileUtils, uri, content),
+		  new Argument("uri", ATOMIC),
+		  new Argument("content", NULL, ATOMIC));
 	}
 
 	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri, final MetaExpression content) {
