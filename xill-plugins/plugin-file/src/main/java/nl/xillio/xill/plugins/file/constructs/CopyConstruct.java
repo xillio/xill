@@ -10,7 +10,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.plugins.file.services.fileUtils.FileUtilities;
+import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 
 /**
  *
@@ -27,8 +27,8 @@ public class CopyConstruct extends Construct {
 
 	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression source, final MetaExpression target) {
 
-		File sourceFile = new File(source.getStringValue());
-		File targetFile = new File(target.getStringValue());
+		File sourceFile = fileUtils.buildFile(context.getRobotID(), source.getStringValue());
+		File targetFile = fileUtils.buildFile(context.getRobotID(), target.getStringValue());
 		try {
 			fileUtils.copy(sourceFile, targetFile);
 		} catch (IOException e) {

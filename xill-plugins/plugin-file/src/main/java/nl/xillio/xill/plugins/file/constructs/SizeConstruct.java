@@ -9,7 +9,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.plugins.file.services.fileUtils.FileUtilities;
+import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 
 /**
  *
@@ -25,6 +25,7 @@ public class SizeConstruct extends Construct {
 	}
 
 	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri) {
-		return fromValue(fileUtils.getByteSize(new File(uri.getStringValue())));
+		File file = fileUtils.buildFile(context.getRobotID(), uri.getStringValue());
+		return fromValue(fileUtils.getByteSize(file));
 	}
 }

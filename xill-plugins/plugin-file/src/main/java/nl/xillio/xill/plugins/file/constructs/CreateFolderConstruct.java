@@ -10,7 +10,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.plugins.file.services.fileUtils.FileUtilities;
+import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 
 /**
  *
@@ -27,7 +27,7 @@ public class CreateFolderConstruct extends Construct {
 
 	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri) {
 
-		File folder = new File(uri.getStringValue());
+		File folder = fileUtils.buildFile(context.getRobotID(), uri.getStringValue());
 		
 		try {
 			fileUtils.createFolder(folder);

@@ -1,10 +1,11 @@
-package nl.xillio.xill.plugins.file.services.fileUtils;
+package nl.xillio.xill.plugins.file.services.files;
 
 import java.io.File;
 import java.io.IOException;
 
 import com.google.inject.ImplementedBy;
 
+import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.services.XillService;
 
 /**
@@ -79,4 +80,12 @@ public interface FileUtilities extends XillService {
 	 * @throws IOException when the operation failed
 	 */
 	public void appendStringToFile(String content, File file) throws IOException;
+	
+	/**
+	 * Builds a {@link File} for a running robot
+	 * @param robot the robot to build the {@link File} reference for
+	 * @param path the path provided by the robot
+	 * @return the file
+	 */
+	public File buildFile(RobotID robot, String path);
 }

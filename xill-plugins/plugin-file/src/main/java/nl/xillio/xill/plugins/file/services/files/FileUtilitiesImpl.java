@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.file.services.fileUtils;
+package nl.xillio.xill.plugins.file.services.files;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,6 +9,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.inject.Singleton;
+
+import nl.xillio.xill.api.components.RobotID;
 
 /**
  * This is the main implementation of the {@link FileUtilities} service
@@ -65,6 +67,12 @@ public class FileUtilitiesImpl implements FileUtilities {
 	@Override
 	public void appendStringToFile(final String content, final File file) throws IOException {
 		FileUtils.writeStringToFile(file, content, true);
+	}
+
+	@Override
+	public File buildFile(final RobotID robot, final String path) {
+		File file = new File(robot.getPath().getParentFile(), path);
+		return file;
 	}
 
 }
