@@ -17,12 +17,10 @@ import org.apache.commons.lang3.StringEscapeUtils;
 public class RegexServiceImpl implements RegexService {
 
 	@Override
-	public List<String> tryMatch(final Matcher matcher) {
-		List<String> list = new ArrayList<>();
-		while (matcher.find()) {
-			list.add(matcher.group());
-		}
-		return list;
+	public String createMD5Construct(final String input) throws NoSuchAlgorithmException {
+		MessageDigest md5 = MessageDigest.getInstance("MD5");
+		md5.update(StandardCharsets.UTF_8.encode(input));
+		return String.format("%032x", new BigInteger(1, md5.digest()));
 	}
 
 	@Override
@@ -31,23 +29,27 @@ public class RegexServiceImpl implements RegexService {
 	}
 
 	@Override
-	public String unescapeXML(String text, final int passes) {
-		for (int i = 0; i < passes; i++) {
-			text = StringEscapeUtils.unescapeXml(text);
-		}
-		return text;
-	}
-
-	@Override
-	public String createMD5Construct(final String input) throws NoSuchAlgorithmException {
-		MessageDigest md5 = MessageDigest.getInstance("MD5");
-		md5.update(StandardCharsets.UTF_8.encode(input));
-		return String.format("%032x", new BigInteger(1, md5.digest()));
-	}
-
-	@Override
 	public boolean matches(final Matcher matcher) {
 		return matcher.matches();
+	}
+
+	@Override
+	public String replaceAll(final Matcher matcher, final String replacement) {
+		return matcher.replaceAll(replacement);
+	}
+
+	@Override
+	public String replaceFirst(final Matcher matcher, final String replacement) {
+		return matcher.replaceFirst(replacement);
+	}
+
+	@Override
+	public List<String> tryMatch(final Matcher matcher) {
+		List<String> list = new ArrayList<>();
+		while (matcher.find()) {
+			list.add(matcher.group());
+		}
+		return list;
 	}
 
 	@Override
@@ -60,12 +62,10 @@ public class RegexServiceImpl implements RegexService {
 	}
 
 	@Override
-	public String replaceAll(final Matcher matcher, final String replacement) {
-		return matcher.replaceAll(replacement);
-	}
-
-	@Override
-	public String replaceFirst(final Matcher matcher, final String replacement) {
-		return matcher.replaceFirst(replacement);
+	public String unescapeXML(String text, final int passes) {
+		for (int i = 0; i < passes; i++) {
+			text = StringEscapeUtils.unescapeXml(text);
+		}
+		return text;
 	}
 }

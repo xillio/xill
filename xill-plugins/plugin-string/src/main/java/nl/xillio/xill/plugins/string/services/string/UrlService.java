@@ -9,24 +9,26 @@ import com.google.inject.ImplementedBy;
  */
 @ImplementedBy(UrlServiceImpl.class)
 public interface UrlService {
-	
+
 	/**
 	 * Recieves an URL and returns a cleaned version.
+	 * 
 	 * @param url
-	 * 					The URL to clean.
+	 *        The URL to clean.
 	 * @return
-	 * 					The cleaned version of the URL.
+	 *         The cleaned version of the URL.
 	 */
 	public String cleanupUrl(final String url);
-	
+
 	/**
 	 * Tries to convert the relativeUrl using the pageUrl
+	 * 
 	 * @param pageUrl
-	 * 					The pageUrl.
+	 *        The pageUrl.
 	 * @param relativeUrl
-	 * 					The relativeUrl.
+	 *        The relativeUrl.
 	 * @return
-	 * 					A converted relativeUrl as a string.
+	 *         A converted relativeUrl as a string.
 	 */
 	public String tryConvert(final String pageUrl, final String relativeUrl);
 

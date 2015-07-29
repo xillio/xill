@@ -29,48 +29,47 @@ public class StringServiceImpl implements StringService {
 	}
 
 	@Override
-	public String repeat(String value, int repeat) {
+	public String repeat(final String value, final int repeat) {
 		return StringUtils.repeat(value, repeat);
 	}
-	
 
 	@Override
-	public String replaceAll(String haystack, String needle, String replacement) {
+	public String replaceAll(final String haystack, final String needle, final String replacement) {
 		return haystack.replace(needle, replacement);
 	}
 
 	@Override
-	public String replaceFirst(String haystack, String needle, String replacement) {
+	public String replaceFirst(final String haystack, final String needle, final String replacement) {
 		return StringUtils.replaceOnce(haystack, needle, replacement);
 	}
 
 	@Override
-	public String[] split(String haystack, String needle) {
+	public String[] split(final String haystack, final String needle) {
 		return haystack.split(needle);
 	}
 
 	@Override
-	public boolean startsWith(String haystack, String needle) {
+	public boolean startsWith(final String haystack, final String needle) {
 		return haystack.startsWith(needle);
 	}
 
 	@Override
-	public String toLowerCase(String toLower) {
+	public String toLowerCase(final String toLower) {
 		return toLower.toLowerCase();
 	}
 
 	@Override
-	public String toUpperCase(String toUpper) {
+	public String toUpperCase(final String toUpper) {
 		return toUpper.toUpperCase();
 	}
 
 	@Override
-	public String trim(String toTrim) {
+	public String trim(final String toTrim) {
 		return toTrim.trim();
 	}
 
 	@Override
-	public String wrap(String text, int width, boolean wrapLongWords) {
+	public String wrap(final String text, final int width, final boolean wrapLongWords) {
 		return WordUtils.wrap(text, width, "\n", wrapLongWords);
 	}
 }
