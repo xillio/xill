@@ -3,9 +3,12 @@ package nl.xillio.xill.plugins.string.services.string;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 
+import com.google.inject.Singleton;
+
 /**
  * This is the main implementation of the {@link StringService}
  */
+@Singleton
 public class StringServiceImpl implements StringService {
 
 	@Override
@@ -71,5 +74,10 @@ public class StringServiceImpl implements StringService {
 	@Override
 	public String wrap(final String text, final int width, final boolean wrapLongWords) {
 		return WordUtils.wrap(text, width, "\n", wrapLongWords);
+	}
+
+	@Override
+	public String subString(String text, int start, int end) {
+		return text.substring(start, end);
 	}
 }

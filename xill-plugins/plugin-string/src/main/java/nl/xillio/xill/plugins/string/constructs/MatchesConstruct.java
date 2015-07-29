@@ -1,6 +1,7 @@
 package nl.xillio.xill.plugins.string.constructs;
 
 import java.util.regex.Matcher;
+import java.util.regex.PatternSyntaxException;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
@@ -19,9 +20,6 @@ import com.google.inject.Inject;
  *
  */
 public class MatchesConstruct extends Construct {
-
-	@Inject
-	private RegexConstruct regexConstruct;
 	@Inject
 	private RegexService regexService;
 
@@ -33,23 +31,26 @@ public class MatchesConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(valueVar, regexVar, timeoutVar) -> process(regexConstruct, valueVar, regexVar, timeoutVar, regexService),
+			(valueVar, regexVar, timeoutVar) -> process(valueVar, regexVar, timeoutVar, regexService),
 			new Argument("value", ATOMIC),
 			new Argument("regex", ATOMIC),
-			new Argument("timeout", fromValue(RegexConstruct.REGEX_TIMEOUT)));
+			new Argument("timeout", fromValue(RegexConstruct.REGEX_TIMEOUT), ATOMIC));
 	}
 
-	private static MetaExpression process(final RegexConstruct regexConstruct, final MetaExpression valueVar, final MetaExpression regexVar, final MetaExpression timeoutVar, RegexService regexService) {
+	@SuppressWarnings("javadoc")
+	public static MetaExpression process(final MetaExpression valueVar, final MetaExpression regexVar, final MetaExpression timeoutVar, final RegexService regexService) {
 		String value = valueVar.getStringValue();
 		String regex = regexVar.getStringValue();
 
 		int timeout = (int) timeoutVar.getNumberValue().doubleValue() * 1000;
 
 		try {
-			Matcher matcher = regexConstruct.getMatcher(regex, value, timeout);
+			Matcher matcher = regexService.getMatcher(regex, value, timeout);
 			return fromValue(regexService.matches(matcher));
-		} catch (Exception e) {
+		} catch (PatternSyntaxException p) {
 			throw new RobotRuntimeException("Invalid pattern in matches.");
+		} catch (IllegalArgumentException e) {
+			throw new RobotRuntimeException("Illegal argument given.");
 		}
 
 	}

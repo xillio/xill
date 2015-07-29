@@ -25,8 +25,6 @@ import com.google.inject.Inject;
  */
 public class FormatConstruct extends Construct {
 	@Inject
-	private RegexConstruct regexConstruct;
-	@Inject
 	private RegexService regexService;
 
 	/**
@@ -38,12 +36,12 @@ public class FormatConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(textVar, valueVar) -> process(regexConstruct, textVar, valueVar, regexService),
+			(textVar, valueVar) -> process(textVar, valueVar, regexService),
 			new Argument("text", ATOMIC),
 			new Argument("value", LIST));
 	}
 
-	private static MetaExpression process(final RegexConstruct regexConstruct, final MetaExpression textVar, final MetaExpression valueVar, final RegexService regexService) {
+	private static MetaExpression process(final MetaExpression textVar, final MetaExpression valueVar, final RegexService regexService) {
 		assertNotNull(textVar, "text");
 
 		List<MetaExpression> formatList = new ArrayList<>();
@@ -51,7 +49,7 @@ public class FormatConstruct extends Construct {
 		@SuppressWarnings("unchecked")
 		List<MetaExpression> numberList = (List<MetaExpression>) valueVar.getValue();
 		
-		Matcher matcher = regexConstruct.getMatcher("%[[^a-zA-Z%]]*([a-zA-Z]|[%])", textVar.getStringValue(), RegexConstruct.REGEX_TIMEOUT);
+		Matcher matcher = regexService.getMatcher("%[[^a-zA-Z%]]*([a-zA-Z]|[%])", textVar.getStringValue(), RegexConstruct.REGEX_TIMEOUT);
 		List<String> tryFormat = regexService.tryMatch(matcher);
 		for (String s : tryFormat) {
 			formatList.add(fromValue(s));

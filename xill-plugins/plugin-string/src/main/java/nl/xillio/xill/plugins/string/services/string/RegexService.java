@@ -98,5 +98,17 @@ public interface RegexService {
 	 *         An unescaped text.
 	 */
 	public String unescapeXML(String text, int passes);
+	
+	/**
+	 *
+	 * @param regex
+	 *        the pattern
+	 * @param value
+	 *        the haystack
+	 * @param timeout
+	 *        in seconds
+	 * @return the matcher
+	 */
+	public Matcher getMatcher(String regex, String value, int timeout);
 
 }

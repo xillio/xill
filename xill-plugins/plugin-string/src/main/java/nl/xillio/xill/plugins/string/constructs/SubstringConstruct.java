@@ -1,11 +1,14 @@
 package nl.xillio.xill.plugins.string.constructs;
 
+import com.google.inject.Inject;
+
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.string.services.string.StringService;
 
 /**
  *
@@ -23,17 +26,19 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  *
  */
 public class SubstringConstruct extends Construct {
+	@Inject
+	private StringService stringService;
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			SubstringConstruct::process,
+			(string, start, end) -> process(string, start, end, stringService),
 			new Argument("string", ATOMIC),
 			new Argument("start", ATOMIC),
 			new Argument("end", ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression string, final MetaExpression startVar, final MetaExpression endVar) {
+	private static MetaExpression process(final MetaExpression string, final MetaExpression startVar, final MetaExpression endVar, StringService stringService) {
 		assertNotNull(string, "string");
 		assertNotNull(startVar, "start");
 		assertNotNull(endVar, "end");
@@ -55,7 +60,7 @@ public class SubstringConstruct extends Construct {
 		}
 
 		try {
-			return fromValue(text.substring(start, end));
+			return fromValue(stringService.subString(text,start, end));
 		} catch (StringIndexOutOfBoundsException e) {
 			throw new RobotRuntimeException("Index out of bounds.");
 		}

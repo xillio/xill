@@ -26,9 +26,6 @@ public class AllMatchesConstruct extends Construct {
 
 	@Inject
 	private RegexService regexService;
-	@Inject
-	private RegexConstruct regexConstruct;
-
 	/**
 	 * Create a new {@link AllMatchesConstruct}
 	 *
@@ -41,14 +38,14 @@ public class AllMatchesConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(valueVar, regexVar, timeout) -> process(regexConstruct, valueVar, regexVar, timeout, regexService),
+			(valueVar, regexVar, timeout) -> process(valueVar, regexVar, timeout, regexService),
 			new Argument("value", ATOMIC),
 			new Argument("regex", ATOMIC),
 			new Argument("timeout", fromValue(RegexConstruct.REGEX_TIMEOUT), ATOMIC));
 	}
 
 	@SuppressWarnings("javadoc")
-	public static MetaExpression process(final RegexConstruct regexConstruct, final MetaExpression textVar, final MetaExpression regexVar, final MetaExpression timeoutVar,
+	public static MetaExpression process(final MetaExpression textVar, final MetaExpression regexVar, final MetaExpression timeoutVar,
 			final RegexService regexService) {
 
 		List<MetaExpression> list = new ArrayList<>();
@@ -58,7 +55,7 @@ public class AllMatchesConstruct extends Construct {
 		int timeout = (int) timeoutVar.getNumberValue().doubleValue() * 1000;
 
 		try {
-			Matcher matcher = regexConstruct.getMatcher(regex, text, timeout);
+			Matcher matcher = regexService.getMatcher(regex, text, timeout);
 			List<String> results = regexService.tryMatch(matcher);
 			for (String s : results) {
 				list.add(fromValue(s));

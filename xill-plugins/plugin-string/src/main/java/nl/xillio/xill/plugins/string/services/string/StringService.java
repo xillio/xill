@@ -167,5 +167,18 @@ public interface StringService {
 	 *         Returns the wrapped text.
 	 */
 	public String wrap(String text, int width, boolean wrapLongWords);
+	
+	/**
+	 * Returns a substring of a given string at the indices of start and end.
+	 * @param text
+	 * 					The main string.
+	 * @param start
+	 * 					The start index.
+	 * @param end
+	 * 					The end index.
+	 * @return
+	 * 					The substring.
+	 */
+	public String subString(String text, int start, int end);
 
 }

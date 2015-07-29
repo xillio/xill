@@ -22,9 +22,6 @@ import com.google.inject.Inject;
  *
  */
 public class ReplaceConstruct extends Construct {
-
-	@Inject
-	private RegexConstruct regexConstruct;
 	@Inject
 	private RegexService regexService;
 	@Inject
@@ -48,11 +45,11 @@ public class ReplaceConstruct extends Construct {
 				new Argument("replaceall", TRUE, ATOMIC),
 				new Argument("timeout", fromValue(RegexConstruct.REGEX_TIMEOUT), ATOMIC)};
 
-		return new ConstructProcessor((a) -> process(regexConstruct, a, regexService, stringService), args);
+		return new ConstructProcessor((a) -> process(a, regexService, stringService), args);
 
 	}
 
-	private static MetaExpression process(final RegexConstruct regexConstruct, final MetaExpression[] input, final RegexService regexService, final StringService stringService) {
+	private static MetaExpression process(final MetaExpression[] input, final RegexService regexService, final StringService stringService) {
 
 		for (int i = 0; i < 5; i++) {
 			assertNotNull(input[i], "input");
@@ -66,7 +63,7 @@ public class ReplaceConstruct extends Construct {
 		int timeout = (int) input[5].getNumberValue().doubleValue() * 1000;
 
 		if (useregex) {
-			Matcher m = regexConstruct.getMatcher(needle, text, timeout);
+			Matcher m = regexService.getMatcher(needle, text, timeout);
 			if (replaceall) {
 				return fromValue(regexService.replaceAll(m, replacement));
 			}
