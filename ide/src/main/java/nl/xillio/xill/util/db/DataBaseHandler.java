@@ -8,7 +8,8 @@ import java.util.Map;
 import nl.xillio.xill.util.IOUtil;
 
 public class DataBaseHandler {
-	private static String CONNECTORPACKAGE = "nl.xillio.xill.util.db.connectors", CONNECTORFOLDER = CONNECTORPACKAGE.replace(".", "/");
+	private static String CONNECTORPACKAGE = "nl.xillio.xill.util.db.connectors";
+	private static String CONNECTORFOLDER = CONNECTORPACKAGE.replace(".", "/");
 
 	private static Map<String, Connector> connectors = new HashMap<>();
 	private static Map<String, Connection> connections = new HashMap<>();

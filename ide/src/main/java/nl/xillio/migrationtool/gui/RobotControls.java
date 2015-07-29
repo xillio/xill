@@ -28,7 +28,11 @@ import nl.xillio.xill.api.events.RobotPausedAction;
  */
 public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolicy {
 
-	private final Button start, stop, pause, stepin, stepover;
+	private final Button start;
+	private final Button stop;
+	private final Button pause;
+	private final Button stepin;
+	private final Button stepover;
 	private final RobotTab tab;
 	private boolean running = false;
 	private final CheckMenuItem shouldStopOnError;

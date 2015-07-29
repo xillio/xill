@@ -36,9 +36,13 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 	@FXML
 	private TextField tfEditorSearchQuery;
 	@FXML
-	private Label lblEditorSearchIndex, lblEditorSearchCount;
+	private Label lblEditorSearchIndex;
 	@FXML
-	private ToggleButton tbnEditorRegexSearch, tbnEditorCaseSensitive;
+	private Label lblEditorSearchCount;
+	@FXML
+	private ToggleButton tbnEditorRegexSearch;
+	@FXML
+	private ToggleButton tbnEditorCaseSensitive;
 	private ToggleButton toggleButton;
 
 	/**

@@ -54,12 +54,41 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 	// Shortcut is Ctrl on Windows and Meta on Mac.
 	@SuppressWarnings("javadoc")
-	public static final String HOTKEY_SAVE = "Shortcut+S", HOTKEY_SAVEAS = "Shortcut+Alt+S",
-					HOTKEY_SAVEALL = "Shortcut+Shift+S", HOTKEY_NEW = "Shortcut+N", HOTKEY_OPEN = "Shortcut+O",
-					HOTKEY_CLOSE = "Shortcut+W", HOTKEY_HELP = "F1", HOTKEY_RUN = "F6", HOTKEY_PAUSE = "F7", HOTKEY_STOP = "F8",
-					HOTKEY_STEPIN = "F9", HOTKEY_STEPOVER = "F10", HOTKEY_CLEARCONSOLE = "Shortcut+L",
-					HOTKEY_COPY = "Shortcut+C", HOTKEY_CUT = "Shortcut+X", HOTKEY_PASTE = "Shortcut+V",
-					HOTKEY_RESET_ZOOM = "Shortcut+0", HOTKEY_FIND = "Shortcut+F";
+	public static final String HOTKEY_SAVE = "Shortcut+S";
+	@SuppressWarnings("javadoc")
+	public static final String HOTKEY_SAVEAS = "Shortcut+Alt+S";
+	@SuppressWarnings("javadoc")
+	public static final String HOTKEY_SAVEALL = "Shortcut+Shift+S";
+	@SuppressWarnings("javadoc")
+	public static final String HOTKEY_NEW = "Shortcut+N";
+	@SuppressWarnings("javadoc")
+	public static final String HOTKEY_OPEN = "Shortcut+O";
+	@SuppressWarnings("javadoc")
+	public static final String HOTKEY_CLOSE = "Shortcut+W";
+	@SuppressWarnings("javadoc")
+	public static final String HOTKEY_HELP = "F1";
+	@SuppressWarnings("javadoc")
+	public static final String HOTKEY_RUN = "F6";
+	@SuppressWarnings("javadoc")
+	public static final String HOTKEY_PAUSE = "F7";
+	@SuppressWarnings("javadoc")
+	public static final String HOTKEY_STOP = "F8";
+	@SuppressWarnings("javadoc")
+	public static final String HOTKEY_STEPIN = "F9";
+	@SuppressWarnings("javadoc")
+	public static final String HOTKEY_STEPOVER = "F10";
+	@SuppressWarnings("javadoc")
+	public static final String HOTKEY_CLEARCONSOLE = "Shortcut+L";
+	@SuppressWarnings("javadoc")
+	public static final String HOTKEY_COPY = "Shortcut+C";
+	@SuppressWarnings("javadoc")
+	public static final String HOTKEY_CUT = "Shortcut+X";
+	@SuppressWarnings("javadoc")
+	public static final String HOTKEY_PASTE = "Shortcut+V";
+	@SuppressWarnings("javadoc")
+	public static final String HOTKEY_RESET_ZOOM = "Shortcut+0";
+	@SuppressWarnings("javadoc")
+	public static final String HOTKEY_FIND = "Shortcut+F";
 
 	/*
 	 * ******************************************************* Buttons, fields,
@@ -67,13 +96,51 @@ public class FXController implements Initializable, EventHandler<Event> {
 	 */
 
 	@FXML
-	private Button btnOpenFile, btnSave, btnSaveAs, btnSaveAll, btnRemoveAllBreakpoints, btnEvaluate, btnRun,
-					btnStepOver, btnStepIn, btnPause, btnStop, btnSearch, btnBrowser, btnRegexTester, btnClearConsole,
-					btnPreviewOpenBrowser, btnPreviewOpenRegex, btnHideLeftPane, btnShowLeftPane;
+	private Button btnOpenFile;
+	@FXML
+	private Button btnSave;
+	@FXML
+	private Button btnSaveAs;
+	@FXML
+	private Button btnSaveAll;
+	@FXML
+	private Button btnRemoveAllBreakpoints;
+	@FXML
+	private Button btnEvaluate;
+	@FXML
+	private Button btnRun;
+	@FXML
+	private Button btnStepOver;
+	@FXML
+	private Button btnStepIn;
+	@FXML
+	private Button btnPause;
+	@FXML
+	private Button btnStop;
+	@FXML
+	private Button btnSearch;
+	@FXML
+	private Button btnBrowser;
+	@FXML
+	private Button btnRegexTester;
+	@FXML
+	private Button btnClearConsole;
+	@FXML
+	private Button btnPreviewOpenBrowser;
+	@FXML
+	private Button btnPreviewOpenRegex;
+	@FXML
+	private Button btnHideLeftPane;
+	@FXML
+	private Button btnShowLeftPane;
 	@FXML
 	private TabPane tpnBots;
 	@FXML
-	private AnchorPane apnRoot, apnPreviewPane, apnLeft;
+	private AnchorPane apnRoot;
+	@FXML
+	private AnchorPane apnPreviewPane;
+	@FXML
+	private AnchorPane apnLeft;
 	@FXML
 	private VBox vbxLeftHidden;
 	@FXML
@@ -83,7 +150,9 @@ public class FXController implements Initializable, EventHandler<Event> {
 	@FXML
 	private HBox hbxMain;
 	@FXML
-	private SplitPane spnMain, spnLeft;
+	private SplitPane spnMain;
+	@FXML
+	private SplitPane spnLeft;
 	@FXML
 	private HelpPane helppane;
 

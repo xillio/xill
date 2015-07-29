@@ -1,6 +1,9 @@
 /*
 * Please do not change this file unless explicitely instructed to. The values you can change are found in gradle.properties
 */
+plugins {
+	id "org.sonarqube" version "1.0"
+}
 
 allprojects {
 	apply plugin: 'java'
@@ -25,8 +28,10 @@ allprojects {
 	 * MAVEN PUBLISH
 	 */
 	 if(project.name != 'xill-plugins') {
-		apply plugin: 'maven-publish'
-		publishing {
+		 apply plugin: 'maven-publish'
+		 apply plugin: 'jacoco'
+
+		 publishing {
 			publications {
 				main(MavenPublication) {
 					groupId group
@@ -52,7 +57,31 @@ allprojects {
 						}
 				}
 		}
-	}
+
+		// It would be easier if we could just ask git which branch it is handling, but unfortunately this does not work when
+		// mr. Jenkins is building our stuff. So we ask for a -PprojectId="${PROJECT_NAME}" (note the quotes) switch that is
+		// stripped from its prefix.
+		def projectName = 'xill-' + project.name
+		def projectKey = group + ":" + projectName
+
+		if (hasProperty('projectId')) {
+			String x = projectId
+			int i = x.lastIndexOf("/")
+			if (i >= 0) {
+			 x = x.substring(i + 1);
+			}
+			projectName += "-" + x
+			projectKey += "-" + x
+		}
+
+		sonarqube {
+			properties {
+				property "sonar.projectName", projectName
+				property "sonar.projectKey", projectKey
+			}
+		}
+
+	 }
 	
 	test{
 		useTestNG{
@@ -75,6 +104,7 @@ allprojects {
 			attributes "Implementation-Title": project.getProperties().get(project.name + "ProjectName")
 		}
 	}
+
 }
 
 description = 'this root project contains the overview of the contenttools application'
