@@ -15,9 +15,9 @@ import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertNotNull;
 
 /**
- * Test the IterateFilesConstruct
+ * Test the IterateFoldersConstruct
  */
-public class IterateFilesConstructTest {
+public class IterateFoldersConstructTest {
 
     @Test
     public void testProcessNormalTrue() throws Exception {
@@ -26,7 +26,7 @@ public class IterateFilesConstructTest {
         when(recursive.getBooleanValue()).thenReturn(true);
 
         //Uri
-        String path = "This is the file uri";
+        String path = "This is the folder uri";
         MetaExpression uri = mock(MetaExpression.class);
         when(uri.getStringValue()).thenReturn(path);
 
@@ -43,11 +43,11 @@ public class IterateFilesConstructTest {
 
 
         //Run the Method
-        MetaExpression result = IterateFilesConstruct.process(context, fileUtils, uri, recursive);
+        MetaExpression result = IterateFoldersConstruct.process(context, fileUtils, uri, recursive);
 
         //Verify
         verify(fileUtils, times(1)).buildFile(robotID, path);
-        verify(fileUtils, times(1)).iterateFiles(file, true);
+        verify(fileUtils, times(1)).iterateFolders(file, true);
 
         //Assert
         assertNotNull(result.getMeta(MetaExpressionIterator.class));
@@ -55,14 +55,14 @@ public class IterateFilesConstructTest {
 
     @Test(
             expectedExceptions = RobotRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Failed to iterate files: This is an error")
+            expectedExceptionsMessageRegExp = "Failed to iterate folders: This is an error")
     public void testProcessIOException() throws IOException {
         //FileUtils
         FileUtilities fileUtils = mock(FileUtilities.class);
-        when(fileUtils.iterateFiles(any(File.class), anyBoolean())).thenThrow(new IOException("This is an error"));
+        when(fileUtils.iterateFolders(any(File.class), anyBoolean())).thenThrow(new IOException("This is an error"));
         when(fileUtils.buildFile(any(RobotID.class), anyString())).thenReturn(mock(File.class));
 
         //Run the Method
-        IterateFilesConstruct.process(mock(ConstructContext.class), fileUtils, mock(MetaExpression.class), mock(MetaExpression.class));
+        IterateFoldersConstruct.process(mock(ConstructContext.class), fileUtils, mock(MetaExpression.class), mock(MetaExpression.class));
     }
 }
