@@ -14,7 +14,7 @@ import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 
 /**
- * Test the SizeConstruct
+ * Test the GetSizeConstruct
  */
 public class SizeConstructTest {
 
@@ -38,7 +38,7 @@ public class SizeConstructTest {
 		when(fileUtils.getByteSize(file)).thenReturn(size);
 
 		//Run the Method
-		MetaExpression result = SizeConstruct.process(context, fileUtils, uri);
+		MetaExpression result = GetSizeConstruct.process(context, fileUtils, uri);
 
 		//Verify
 		verify(fileUtils, times(1)).buildFile(robotID, path);
@@ -57,6 +57,6 @@ public class SizeConstructTest {
 		when(fileUtils.getByteSize(any())).thenThrow(new IOException("This is an error message"));
 
 		//Run the method
-		SizeConstruct.process(mock(ConstructContext.class), fileUtils, mock(MetaExpression.class));
+		GetSizeConstruct.process(mock(ConstructContext.class), fileUtils, mock(MetaExpression.class));
 	}
 }

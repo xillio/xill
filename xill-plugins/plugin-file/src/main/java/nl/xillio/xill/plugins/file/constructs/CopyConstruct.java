@@ -25,7 +25,10 @@ public class CopyConstruct extends Construct {
 
     @Override
     public ConstructProcessor prepareProcess(final ConstructContext context) {
-        return new ConstructProcessor((source, target) -> process(context, fileUtils, source, target), new Argument("source", ATOMIC), new Argument("target", ATOMIC));
+        return new ConstructProcessor(
+                (source, target) -> process(context, fileUtils, source, target),
+                new Argument("source", ATOMIC),
+                new Argument("target", ATOMIC));
     }
 
     static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression source, final MetaExpression target) {
@@ -36,7 +39,7 @@ public class CopyConstruct extends Construct {
         try {
             fileUtils.copy(sourceFile, targetFile);
         } catch (IOException e) {
-            context.getRootLogger().error("Failed to copy " + sourceFile.getName() + " to " + targetFile.getName(), e);
+            context.getRootLogger().error("Failed to copy " + sourceFile.getName() + " to " + targetFile.getName() + ": " + e.getMessage(), e);
             success = false;
         }
 

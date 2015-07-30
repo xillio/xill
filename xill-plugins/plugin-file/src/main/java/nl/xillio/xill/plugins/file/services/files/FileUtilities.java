@@ -16,7 +16,7 @@ import java.util.Iterator;
 public interface FileUtilities extends XillService {
 
     /**
-     * Copy a source file to a target destination
+     * Copy a source file to a target destination, overwriting it if it exists
      *
      * @param source the source file
      * @param target the target file

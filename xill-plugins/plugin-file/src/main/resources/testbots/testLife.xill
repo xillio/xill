@@ -1,4 +1,0 @@
-use System;
-use Example;
-
-System.assert(Example.life(), 42, "The meaning of life should be 42");

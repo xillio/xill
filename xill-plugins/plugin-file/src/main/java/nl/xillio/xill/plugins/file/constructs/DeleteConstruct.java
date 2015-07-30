@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * This class deletes a file or folder. Returns true if the file does not exist after deletion
+ * This class deletes a file or folder. Returns the absolute path to the folder
  */
 @Singleton
 public class DeleteConstruct extends Construct {
@@ -23,7 +23,9 @@ public class DeleteConstruct extends Construct {
 
     @Override
     public ConstructProcessor prepareProcess(final ConstructContext context) {
-        return new ConstructProcessor((uri) -> process(context, fileUtils, uri), new Argument("uri", ATOMIC));
+        return new ConstructProcessor(
+                (uri) -> process(context, fileUtils, uri),
+                new Argument("uri", ATOMIC));
     }
 
     static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri) {
@@ -35,6 +37,6 @@ public class DeleteConstruct extends Construct {
             context.getRootLogger().error("Failed to delete " + file.getAbsolutePath(), e);
         }
 
-        return fromValue(!file.exists());
+        return fromValue(file.getAbsolutePath());
     }
 }

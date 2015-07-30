@@ -17,7 +17,7 @@ import java.io.IOException;
  * This construct returns the size of a file or throws an error when the file was not found
  */
 @Singleton
-public class SizeConstruct extends Construct {
+public class GetSizeConstruct extends Construct {
 
 	@Inject
 	private FileUtilities fileUtils;

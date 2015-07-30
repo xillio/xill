@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <parameters>
+        <param name="uri"/>
+        <param name="timeout" default="2000"/>
+    </parameters>
+    <description>
+        <![CDATA[Extract text from a file if possible.
+        This construct also supports most other textual file formats like html, pdf and rtf]]></description>
+    <examples>
+        <example description="Executing..."><![CDATA[
+        use File;
+        use System;
+        var file = File.saveTo("tmp.txt", "This is the content");
+        var text = File.getText(file);
+        System.print(text);
+    ]]></example>
+        <example description="Will print..."><![CDATA[
+        INFO: This is the content
+    ]]></example>
+    </examples>
+    <references>
+    </references>
+    <searchTags>
+    </searchTags>
+</function>
