@@ -1,5 +1,8 @@
 package nl.xillio.xill.plugins.string.services.string;
 
+import java.util.List;
+import java.util.MissingFormatArgumentException;
+
 import nl.xillio.xill.plugins.string.StringXillPlugin;
 
 import com.google.inject.ImplementedBy;
@@ -198,5 +201,17 @@ public interface StringService {
 	 * 					A string which can be printed.
 	 */
 	public String printBase64Binary(byte[] data);
+	
+	/**
+	 * Formats a texts with specified arguments.
+	 * @param text
+	 * 					The text we format.
+	 * @param args
+	 * 					The arguments we give.
+	 * @return
+	 * 				Returns the formatted text.
+	 * @throws MissingFormatArgumentException 
+	 */
+	public String format(String text, List<Object> args) throws MissingFormatArgumentException ;
 
 }

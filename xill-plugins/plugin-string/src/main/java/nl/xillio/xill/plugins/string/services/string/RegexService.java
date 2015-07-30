@@ -3,6 +3,7 @@ package nl.xillio.xill.plugins.string.services.string;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.regex.Matcher;
+import java.util.regex.PatternSyntaxException;
 
 import com.google.inject.ImplementedBy;
 
@@ -108,7 +109,9 @@ public interface RegexService {
 	 * @param timeout
 	 *        in seconds
 	 * @return the matcher
+	 * @throws IllegalArgumentException 
+	 * @throws PatternSyntaxException 
 	 */
-	public Matcher getMatcher(String regex, String value, int timeout);
+	public Matcher getMatcher(String regex, String value, int timeout)  throws IllegalArgumentException, PatternSyntaxException ;
 
 }

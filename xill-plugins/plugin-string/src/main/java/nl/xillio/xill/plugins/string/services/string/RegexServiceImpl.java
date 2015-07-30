@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import java.util.stream.IntStream;
 
 import nl.xillio.xill.plugins.string.constructs.RegexConstruct;
@@ -88,7 +89,7 @@ public class RegexServiceImpl implements RegexService {
 	}
 
 	@Override
-	public Matcher getMatcher(final String regex, final String value, int timeout) {
+	public Matcher getMatcher(final String regex, final String value, int timeout) throws IllegalArgumentException, PatternSyntaxException {
 		if (timeout < 0) {
 			timeout = RegexConstruct.REGEX_TIMEOUT;
 		}

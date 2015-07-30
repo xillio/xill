@@ -1,5 +1,8 @@
 package nl.xillio.xill.plugins.string.services.string;
 
+import java.util.List;
+import java.util.MissingFormatArgumentException;
+
 import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.lang3.StringUtils;
@@ -91,5 +94,10 @@ public class StringServiceImpl implements StringService {
 	@Override
 	public String printBase64Binary(byte[] data) {
 		return DatatypeConverter.printBase64Binary(data);
+	}
+
+	@Override
+	public String format(String text, List<Object> args) throws MissingFormatArgumentException {
+		return String.format(text, args.toArray());
 	}
 }
