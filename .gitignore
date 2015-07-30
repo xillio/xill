@@ -16,3 +16,7 @@ build/
 .metadata/
 .classpath
 .project
+
+# IntelliJ
+*.iml
+.idea/

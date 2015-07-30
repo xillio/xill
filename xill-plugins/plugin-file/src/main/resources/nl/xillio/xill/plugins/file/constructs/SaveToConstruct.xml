@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <parameters>
+        <param name="uri"/>
+        <param name="content" default="&quot;&quot;"/>
+    </parameters>
+    <description>
+        <![CDATA[Saves content in the form of text to a file, creating it if it doesn't exist and overwriting it if it does. Returns the absolute path to the file.]]></description>
+    <examples>
+        <example description="Saving a string to a file:"><![CDATA[
+        use File;
+        File.saveTo("file.txt", "This is the file content");
+    ]]></example>
+        <example description="Create an empty file:"><![CDATA[
+        use File;
+        File.saveTo("file.txt");
+    ]]></example>
+    </examples>
+    <references>
+        <reference package="File">appendTo</reference>
+    </references>
+    <searchTags>
+        write, text, new, create, append, add
+    </searchTags>
+</function>

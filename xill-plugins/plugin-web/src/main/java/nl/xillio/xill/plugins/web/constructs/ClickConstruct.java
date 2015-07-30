@@ -19,7 +19,7 @@ public class ClickConstruct extends Construct {
 			new Argument("element"));
 	}
 
-	public static MetaExpression process(final MetaExpression elementVar) {
+	static MetaExpression process(final MetaExpression elementVar) {
 
 		if (!NodeVariable.checkType(elementVar)) {
 			throw new RobotRuntimeException("Invalid variable type. NODE type expected!");

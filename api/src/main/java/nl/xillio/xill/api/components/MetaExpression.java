@@ -1,592 +1,550 @@
 package nl.xillio.xill.api.components;
 
-import java.util.ArrayList;
-import java.util.IdentityHashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import nl.xillio.util.IdentityArrayList;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.behavior.BooleanBehavior;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.NotImplementedException;
 
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
+
 /**
  *
  */
 public abstract class MetaExpression implements Expression, Processable {
-	private static final Gson gson = new GsonBuilder().enableComplexMapKeySerialization().serializeNulls()
-	  // .setPrettyPrinting()
-	  .disableHtmlEscaping().disableInnerClassSerialization().serializeSpecialFloatingPointValues()
-	  .serializeNulls().create();
-	private final MetadataExpressionPool<Object> metadataPool = new MetadataExpressionPool<>();
-	private Object value;
-	private ExpressionDataType type = ExpressionDataType.ATOMIC;
-	private boolean isClosed;
-	private int referenceCount;
-	private boolean preventDispose;
+    private static final Gson gson = new GsonBuilder()
+            .enableComplexMapKeySerialization()
+            .serializeNulls()
+                    // .setPrettyPrinting()
+            .disableHtmlEscaping()
+            .disableInnerClassSerialization()
+            .serializeSpecialFloatingPointValues()
+            .serializeNulls()
+            .create();
 
-	/**
-	 * Get a value from the {@link MetadataExpressionPool}
-	 *
-	 * @param <T>
-	 *        the type of object to fetch
-	 *
-	 * @param clazz
-	 *        The type of class to fetch. <b>Note</b> that this doesn't take inheritance into account.
-	 * @return The stored value or null if none was found
-	 * @throws IllegalStateException
-	 *         if this expression has been closed
-	 */
-	public <T> T getMeta(final Class<T> clazz) {
-		if (isClosed()) {
-			throw new IllegalStateException("This expression has already been closed.");
-		}
-		return metadataPool.get(clazz);
-	}
+    private final MetadataExpressionPool<Object> metadataPool = new MetadataExpressionPool<>();
+    private Object value;
+    private ExpressionDataType type = ExpressionDataType.ATOMIC;
+    private boolean isClosed;
+    private int referenceCount;
+    private boolean preventDispose;
 
-	/**
-	 * Store a value in the {@link MetadataExpressionPool} and default the key to the class of the object as returned by {@link Object#getClass()}
-	 *
-	 * @param <T>
-	 *        the type key to store the object as
-	 *
-	 * @param object
-	 *        The object to store
-	 * @return The previous stored value in the pool or null if no value was
-	 *         stored.
-	 * @throws IllegalStateException
-	 *         if this expression has been closed
-	 */
-	@SuppressWarnings("unchecked")
-	public <T> T storeMeta(final T object) {
-		return storeMeta((Class<T>) object.getClass(), object);
-	}
+    /**
+     * Get a value from the {@link MetadataExpressionPool}
+     *
+     * @param <T>   the type of object to fetch
+     * @param clazz The type of class to fetch. <b>Note</b> that this doesn't take inheritance into account.
+     * @return The stored value or null if none was found
+     * @throws IllegalStateException if this expression has been closed
+     */
+    public <T> T getMeta(final Class<T> clazz) {
+        if (isClosed()) {
+            throw new IllegalStateException("This expression has already been closed.");
+        }
+        return metadataPool.get(clazz);
+    }
 
-	/**
-	 * Store a value in the {@link MetadataExpressionPool}
-	 *
-	 * @param <T>
-	 *        the type key to store the object as
-	 *
-	 * @param clazz
-	 *        The object type to store
-	 * @param object
-	 *        the object to store
-	 * @return The previous stored value in the pool or null if no value was
-	 *         stored.
-	 * @throws IllegalStateException
-	 *         if this expression has been closed
-	 */
-	public <T> T storeMeta(final Class<T> clazz, final T object) {
-		if (isClosed()) {
-			throw new IllegalStateException("This expression has already been closed.");
-		}
-		return metadataPool.put(clazz, object);
-	}
+    /**
+     * Store a value in the {@link MetadataExpressionPool} and default the key to the class of the object as returned by
+     * {@link Object#getClass()}
+     *
+     * @param <T>    the type key to store the object as
+     * @param object The object to store
+     * @return The previous stored value in the pool or null if no value was stored.
+     * @throws IllegalStateException if this expression has been closed
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T storeMeta(final T object) {
+        return storeMeta((Class<T>) object.getClass(), object);
+    }
 
-	/**
-	 * Set the value of this variable to an {@link ExpressionDataType#ATOMIC} value
-	 *
-	 * @param value
-	 *        The {@link ExpressionDataType#ATOMIC} value to store
-	 * @return self
-	 * @throws IllegalStateException
-	 *         if this expression has been closed
-	 */
-	protected MetaExpression setValue(final Expression value) {
-		if (isClosed()) {
-			throw new IllegalStateException("This expression has already been closed.");
-		}
-		this.value = value;
-		type = ExpressionDataType.ATOMIC;
-		return this;
-	}
+    /**
+     * Store a value in the {@link MetadataExpressionPool}
+     *
+     * @param <T>    the type key to store the object as
+     * @param clazz  The object type to store
+     * @param object the object to store
+     * @return The previous stored value in the pool or null if no value was stored.
+     * @throws IllegalStateException if this expression has been closed
+     */
+    public <T> T storeMeta(final Class<T> clazz, final T object) {
+        if (isClosed()) {
+            throw new IllegalStateException("This expression has already been closed.");
+        }
+        return metadataPool.put(clazz, object);
+    }
 
-	/**
-	 * Set the value of this expression to that of another one
-	 *
-	 * @param value
-	 *        The other {@link MetaExpression} to copy the value from
-	 * @return this
-	 * @throws IllegalStateException
-	 *         if this expression has been closed
-	 */
-	protected MetaExpression setValue(final MetaExpression value) {
-		if (isClosed()) {
-			throw new IllegalStateException("This expression has already been closed.");
-		}
-		this.value = value.getValue();
-		type = value.getType();
-		return this;
-	}
+    /**
+     * Set the value of this variable to an {@link ExpressionDataType#ATOMIC} value
+     *
+     * @param value The {@link ExpressionDataType#ATOMIC} value to store
+     * @return self
+     * @throws IllegalStateException if this expression has been closed
+     */
+    protected MetaExpression setValue(final Expression value) {
+        if (isClosed()) {
+            throw new IllegalStateException("This expression has already been closed.");
+        }
+        this.value = value;
+        type = ExpressionDataType.ATOMIC;
+        return this;
+    }
 
-	/**
-	 * Set the value of this variable to a {@link ExpressionDataType#LIST} value
-	 *
-	 * @param value
-	 *        the {@link ExpressionDataType#LIST} to set the value to
-	 * @return self
-	 * @throws IllegalStateException
-	 *         if this expression has been closed
-	 */
-	protected MetaExpression setValue(final List<MetaExpression> value) {
-		if (isClosed()) {
-			throw new IllegalStateException("This expression has already been closed.");
-		}
-		this.value = value;
-		type = ExpressionDataType.LIST;
-		return this;
-	}
+    /**
+     * Set the value of this expression to that of another one
+     *
+     * @param value The other {@link MetaExpression} to copy the value from
+     * @return this
+     * @throws IllegalStateException if this expression has been closed
+     */
+    protected MetaExpression setValue(final MetaExpression value) {
+        if (isClosed()) {
+            throw new IllegalStateException("This expression has already been closed.");
+        }
+        this.value = value.getValue();
+        type = value.getType();
+        return this;
+    }
 
-	/**
-	 * Set the value of this variable to an {@link ExpressionDataType#OBJECT} value
-	 *
-	 * @param value
-	 *        in a linked hash map to enforce order
-	 * @return self
-	 * @throws IllegalStateException
-	 *         if this expression has been closed
-	 */
-	protected MetaExpression setValue(final LinkedHashMap<String, MetaExpression> value) {
-		if (isClosed()) {
-			throw new IllegalStateException("This expression has already been closed.");
-		}
-		this.value = value;
-		type = ExpressionDataType.OBJECT;
-		return this;
-	}
+    /**
+     * Set the value of this variable to a {@link ExpressionDataType#LIST} value
+     *
+     * @param value the {@link ExpressionDataType#LIST} to set the value to
+     * @return self
+     * @throws IllegalStateException if this expression has been closed
+     */
+    protected MetaExpression setValue(final List<MetaExpression> value) {
+        if (isClosed()) {
+            throw new IllegalStateException("This expression has already been closed.");
+        }
+        this.value = value;
+        type = ExpressionDataType.LIST;
+        return this;
+    }
 
-	/**
-	 * <p>
-	 * Get the contained value of this {@link MetaExpression}. The return type of this method will be different for each type of {@link ExpressionDataType} which can be found by calling
-	 * {@link #getType()}.
-	 * </p>
-	 * <ul>
-	 * <li>{@link ExpressionDataType#ATOMIC}: Returns an {@link Expression}</li>
-	 * <li>{@link ExpressionDataType#LIST}: Returns a {@link List
-	 * List&lt;MetaExpression&gt;}</li>
-	 * <li>{@link ExpressionDataType#OBJECT}: Returns a {@link Map
-	 * Map&lt;String, MetaExpression&gt;}</li>
-	 * </ul>
-	 *
-	 * @return the value according to the {@link ExpressionDataType} specification
-	 * @throws IllegalStateException
-	 *         if this expression has been closed
-	 */
-	public Object getValue() {
-		if (isClosed()) {
-			throw new IllegalStateException("This expression has already been closed.");
-		}
-		return value;
-	}
+    /**
+     * Set the value of this variable to an {@link ExpressionDataType#OBJECT} value
+     *
+     * @param value in a linked hash map to enforce order
+     * @return self
+     * @throws IllegalStateException if this expression has been closed
+     */
+    protected MetaExpression setValue(final LinkedHashMap<String, MetaExpression> value) {
+        if (isClosed()) {
+            throw new IllegalStateException("This expression has already been closed.");
+        }
+        this.value = value;
+        type = ExpressionDataType.OBJECT;
+        return this;
+    }
 
-	/**
-	 * <p>
-	 * Returns the type of data stored in this {@link MetaExpression}
-	 * </p>
-	 * <ul>
-	 * <li>{@link ExpressionDataType#ATOMIC}: A single value</li>
-	 * <li>{@link ExpressionDataType#LIST}: A list of {@link MetaExpression}</li>
-	 * <li>{@link ExpressionDataType#OBJECT}: An object with {@link String} indices</li>
-	 * </ul>
-	 *
-	 * @return the type
-	 * @throws IllegalStateException
-	 *         if this expression has been closed
-	 */
-	public ExpressionDataType getType() {
-		if (isClosed()) {
-			throw new IllegalStateException("This expression has already been closed.");
-		}
-		return type;
-	}
+    /**
+     * <p>
+     * Get the contained value of this {@link MetaExpression}. The return type of this method will be different for each type of {@link ExpressionDataType} which can be found by calling
+     * {@link #getType()}.
+     * </p>
+     * <ul>
+     * <li>{@link ExpressionDataType#ATOMIC}: Returns an {@link Expression}</li>
+     * <li>{@link ExpressionDataType#LIST}: Returns a {@link List
+     * List&lt;MetaExpression&gt;}</li>
+     * <li>{@link ExpressionDataType#OBJECT}: Returns a {@link Map
+     * Map&lt;String, MetaExpression&gt;}</li>
+     * </ul>
+     *
+     * @return the value according to the {@link ExpressionDataType} specification
+     * @throws IllegalStateException if this expression has been closed
+     */
+    public Object getValue() {
+        if (isClosed()) {
+            throw new IllegalStateException("This expression has already been closed.");
+        }
+        return value;
+    }
 
-	/**
-	 * <p>
-	 * Generate the JSON representation of this expression using a {@link Gson} parser
-	 * </p>
-	 * <b>NOTE: </b> This is not the string value of this expression. It is
-	 * JSON. For the string value use {@link MetaExpression#getStringValue()}
-	 *
-	 * @return JSON representation
-	 */
-	@Override
-	public String toString() {
-		return toString(gson);
-	}
+    /**
+     * <p>
+     * Returns the type of data stored in this {@link MetaExpression}
+     * </p>
+     * <ul>
+     * <li>{@link ExpressionDataType#ATOMIC}: A single value</li>
+     * <li>{@link ExpressionDataType#LIST}: A list of {@link MetaExpression}</li>
+     * <li>{@link ExpressionDataType#OBJECT}: An object with {@link String} indices</li>
+     * </ul>
+     *
+     * @return the type
+     * @throws IllegalStateException if this expression has been closed
+     */
+    public ExpressionDataType getType() {
+        if (isClosed()) {
+            throw new IllegalStateException("This expression has already been closed.");
+        }
+        return type;
+    }
 
-	/**
-	 * <p>
-	 * Generate the JSON representation of this expression using a {@link Gson} parser
-	 * </p>
-	 *
-	 * <p>
-	 * <b>NOTE: </b> This is not the string value of this expression. It is JSON. For the string value use {@link MetaExpression#getStringValue()}
-	 * </p>
-	 *
-	 * @param gsonParser
-	 *        The gson parser that should be used
-	 *
-	 * @return JSON representation
-	 */
-	public String toString(final Gson gsonParser) {
-		MetaExpression cleaned = removeCircularReference(this, new IdentityArrayList<>(),
-		  ExpressionBuilderHelper.fromValue("<<CIRCULAR REFERENCE>>"));
-		return gsonParser.toJson(extractValue(cleaned));
-	}
+    /**
+     * <p>
+     * Generate the JSON representation of this expression using a {@link Gson} parser
+     * </p>
+     * <b>NOTE: </b> This is not the string value of this expression. It is
+     * JSON. For the string value use {@link MetaExpression#getStringValue()}
+     *
+     * @return JSON representation
+     */
+    @Override
+    public String toString() {
+        return toString(gson);
+    }
 
-	/**
-	 * Remove all circular references to prepare for serialisation
-	 *
-	 * @param metaExpression
-	 * @param currentlyProcessing
-	 * @param replacement
-	 *        The replacement for circular references
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	private static MetaExpression removeCircularReference(final MetaExpression metaExpression,
-	    final List<MetaExpression> currentlyProcessing, final MetaExpression replacement) {
-		MetaExpression result = ExpressionBuilderHelper.NULL;
-		currentlyProcessing.add(metaExpression);
+    /**
+     * <p>
+     * Generate the JSON representation of this expression using a {@link Gson} parser
+     * </p>
+     * <p>
+     * <b>NOTE: </b> This is not the string value of this expression. It is JSON. For the string value use {@link MetaExpression#getStringValue()}
+     * </p>
+     *
+     * @param gsonParser The gson parser that should be used
+     * @return JSON representation
+     */
+    public String toString(final Gson gsonParser) {
 
-		switch (metaExpression.getType()) {
-			case LIST:
-				List<MetaExpression> resultListValue = new ArrayList<>();
+        MetaExpression cleaned = removeCircularReference(this, new IdentityArrayList<>(),
+                                                         ExpressionBuilderHelper.fromValue("<<CIRCULAR REFERENCE>>"));
+        return gsonParser.toJson(extractValue(cleaned));
+    }
 
-				for (MetaExpression child : (List<MetaExpression>) metaExpression.getValue()) {
-					if (currentlyProcessing.stream().anyMatch(metaExp -> metaExp == child)) {
-						// Circular reference
-						resultListValue.add(replacement);
-					} else {
-						// No Circular reference
-						resultListValue.add(removeCircularReference(child, currentlyProcessing, replacement));
-					}
-				}
+    /**
+     * Remove all circular references to prepare for serialisation
+     *
+     * @param metaExpression      the expression to remove references from
+     * @param currentlyProcessing the list of expressions that are currently being processed
+     * @param replacement         The replacement for circular references
+     * @return A copy of the original expression where all circular references have been removed by the replacement
+     */
+    @SuppressWarnings("unchecked")
+    private static MetaExpression removeCircularReference(final MetaExpression metaExpression,
+                                                          final List<MetaExpression> currentlyProcessing, final MetaExpression replacement) {
+        MetaExpression result = ExpressionBuilderHelper.NULL;
+        currentlyProcessing.add(metaExpression);
 
-				result = ExpressionBuilderHelper.fromValue(resultListValue);
+        switch (metaExpression.getType()) {
+            case LIST:
+                List<MetaExpression> resultListValue = new ArrayList<>();
 
-				break;
-			case OBJECT:
-				LinkedHashMap<String, MetaExpression> resultMapValue = new LinkedHashMap<>();
+                for (MetaExpression child : (List<MetaExpression>) metaExpression.getValue()) {
+                    if (currentlyProcessing.stream().anyMatch(metaExp -> metaExp == child)) {
+                        // Circular reference
+                        resultListValue.add(replacement);
+                    } else {
+                        // No Circular reference
+                        resultListValue.add(removeCircularReference(child, currentlyProcessing, replacement));
+                    }
+                }
 
-				for (Map.Entry<String, MetaExpression> pair : ((Map<String, MetaExpression>) metaExpression.getValue())
-				  .entrySet()) {
+                result = ExpressionBuilderHelper.fromValue(resultListValue);
 
-					if (currentlyProcessing.stream().anyMatch(metaExp -> metaExp == pair.getValue())) {
-						// Circular reference
-						resultMapValue.put(pair.getKey(), replacement);
-					} else {
-						resultMapValue.put(pair.getKey(), removeCircularReference(pair.getValue(), currentlyProcessing, replacement));
-					}
-				}
-				result = ExpressionBuilderHelper.fromValue(resultMapValue);
-				break;
-			case ATOMIC:
-				result = metaExpression;
-				break;
-		}
+                break;
+            case OBJECT:
+                LinkedHashMap<String, MetaExpression> resultMapValue = new LinkedHashMap<>();
 
-		currentlyProcessing.remove(metaExpression);
-		return result;
-	}
+                for (Map.Entry<String, MetaExpression> pair : ((Map<String, MetaExpression>) metaExpression.getValue())
+                        .entrySet()) {
 
-	@Override
-	public boolean equals(final Object obj) {
-		// Only compare to MetaExpression
-		if (!(obj instanceof MetaExpression)) {
-			return false;
-		}
+                    if (currentlyProcessing.stream().anyMatch(metaExp -> metaExp == pair.getValue())) {
+                        // Circular reference
+                        resultMapValue.put(pair.getKey(), replacement);
+                    } else {
+                        resultMapValue.put(pair.getKey(), removeCircularReference(pair.getValue(), currentlyProcessing, replacement));
+                    }
+                }
+                result = ExpressionBuilderHelper.fromValue(resultMapValue);
+                break;
+            case ATOMIC:
+                result = metaExpression;
+                break;
+        }
 
-		MetaExpression other = (MetaExpression) obj;
+        currentlyProcessing.remove(metaExpression);
+        return result;
+    }
 
-		// Compare the type
-		if (getType() != other.getType()) {
-			return false;
-		}
+    @Override
+    public boolean equals(final Object obj) {
+        // Only compare to MetaExpression
+        if (!(obj instanceof MetaExpression)) {
+            return false;
+        }
 
-		switch (getType()) {
-			case ATOMIC:
-				return getBooleanValue() == other.getBooleanValue() &&
-				    getStringValue().equals(other.getStringValue()) &&
-				    (getNumberValue().doubleValue() == other.getNumberValue().doubleValue()
-				        || Double.isNaN(getNumberValue().doubleValue()) && Double.isNaN(getNumberValue().doubleValue()));
-			case LIST:
-				return getValue().equals(other.getValue());
-			case OBJECT:
-				return getValue().equals(other.getValue());
-		}
+        MetaExpression other = (MetaExpression) obj;
 
-		return false;
-	}
+        // Compare the type
+        if (getType() != other.getType()) {
+            return false;
+        }
 
-	@Override
-	public InstructionFlow<MetaExpression> process(final Debugger debugger) {
-		return InstructionFlow.doResume(this);
-	}
+        switch (getType()) {
+            case ATOMIC:
+                return getBooleanValue() == other.getBooleanValue() &&
+                        getStringValue().equals(other.getStringValue()) &&
+                        (getNumberValue().doubleValue() == other.getNumberValue().doubleValue()
+                                || Double.isNaN(getNumberValue().doubleValue()) && Double.isNaN(getNumberValue().doubleValue()));
+            case LIST:
+                return getValue().equals(other.getValue());
+            case OBJECT:
+                return getValue().equals(other.getValue());
+        }
 
-	/**
-	 * Extracts the actual Java Object value for this expression.
-	 *
-	 * @param expression
-	 *        The {@link MetaExpression} to extract a value from.
-	 * @return
-	 *         <ul>
-	 *         <<<<<<< HEAD
-	 *         <li>{@link ExpressionDataType#ATOMIC}: returns an {@link Object}
-	 *         <br/>
-	 *         This represents a singular value that is parsed in the folowing
-	 *         way:
-	 *         =======
-	 *         <li>{@link ExpressionDataType#ATOMIC}: returns an {@link Object} This represents a singular value that is parsed in the folowing way:
-	 *         >>>>>>> origin/develop
-	 *         <ol>
-	 *         <li>If the value is null: return null</li>
-	 *         <li>If the expression is created using {@link ExpressionBuilder#fromValue(boolean)}: return {@link Boolean}</li>
-	 *         <li>If the value can be a number (so also string constants like "5.7") it will return a {@link Double}</li>
-	 *         <li>In all other cases return a {@link String} representation.
-	 *         </ol>
-	 *         </li>
-	 *         <li>{@link ExpressionDataType#LIST}: returns a {@link List
-	 *         List&lt;Object&gt;} where {@link Object} is the result of a recursive call of this method.</li>
-	 *         <li>{@link ExpressionDataType#OBJECT}: returns a {@link Map
-	 *         Map&lt;String, Object&gt;} where {@link Object} is the result of a recursive call of this method.</li>
-	 *         </ul>
-	 */
-	public static Object extractValue(final MetaExpression expression) {
-		return extractValue(expression, new LinkedHashMap<>());
+        return false;
+    }
 
-	}
+    @Override
+    public InstructionFlow<MetaExpression> process(final Debugger debugger) {
+        return InstructionFlow.doResume(this);
+    }
 
-	@SuppressWarnings("unchecked")
-	private static Object extractValue(final MetaExpression expression, final Map<MetaExpression, Object> results) {
-		if (results.containsKey(expression)) {
-			return results.get(expression);
-		}
+    /**
+     * Extracts the actual Java Object value for this expression.
+     *
+     * @param expression The {@link MetaExpression} to extract a value from.
+     * @return <ul>
+     * <li>{@link ExpressionDataType#ATOMIC}: returns an {@link Object} This represents a singular value that is parsed in the folowing way:
+     * <li>{@link ExpressionDataType#ATOMIC}: returns an {@link Object} This represents a singular value that is parsed in the folowing way:
+     * <ol>
+     * <li>If the value is null: return null</li>
+     * <li>If the expression is created using {@link ExpressionBuilder#fromValue(boolean)}: return {@link Boolean}</li>
+     * <li>If the value can be a number (so also string constants like "5.7") it will return a {@link Double}</li>
+     * <li>In all other cases return a {@link String} representation.
+     * </ol>
+     * </li>
+     * <li>{@link ExpressionDataType#LIST}: returns a {@link List
+     * List&lt;Object&gt;} where {@link Object} is the result of a recursive call of this method.</li>
+     * <li>{@link ExpressionDataType#OBJECT}: returns a {@link Map
+     * Map&lt;String, Object&gt;} where {@link Object} is the result of a recursive call of this method.</li>
+     * </ul>
+     */
+    public static Object extractValue(final MetaExpression expression) {
+        return extractValue(expression, new LinkedHashMap<>());
 
-		Object result = null;
-		switch (expression.getType()) {
-			case ATOMIC:
-				// null
-				if (expression.isNull()) {
-					return null;
-				}
+    }
 
-				// Boolean
-				if (expression.getValue() instanceof BooleanBehavior) {
-					result = expression.getBooleanValue();
-				}
+    @SuppressWarnings("unchecked")
+    private static Object extractValue(final MetaExpression expression, final Map<MetaExpression, Object> results) {
+        if (results.containsKey(expression)) {
+            return results.get(expression);
+        }
 
-				// String
-				else if (Double.isNaN(expression.getNumberValue().doubleValue())) {
-					result = expression.getStringValue();
-				}
+        Object result;
+        switch (expression.getType()) {
+            case ATOMIC:
+                // null
+                if (expression.isNull()) {
+                    return null;
+                }
 
-				// Int
-				else if (expression.getNumberValue().intValue() == expression.getNumberValue().doubleValue()) {
-					result = expression.getNumberValue().intValue();
-				} else {
+                // Boolean
+                if (expression.getValue() instanceof BooleanBehavior) {
+                    result = expression.getBooleanValue();
+                }
 
-					// Double
-					result = expression.getNumberValue();
-				}
-				break;
-			case LIST:
-				List<Object> resultList = new ArrayList<>();
-				results.put(expression, resultList);
-				resultList.addAll(((List<MetaExpression>) expression.getValue()).stream().map(v -> extractValue(v, results))
-				  .collect(Collectors.toList()));
-				result = resultList;
-				break;
-			case OBJECT:
-				Map<String, Object> resultObject = new LinkedHashMap<>();
-				results.put(expression, resultObject);
-				for (Entry<String, MetaExpression> pair : ((Map<String, MetaExpression>) expression.getValue()).entrySet()) {
-					resultObject.put(pair.getKey(), extractValue(pair.getValue(), results));
-				}
-				result = resultObject;
-				break;
-			default:
-				throw new NotImplementedException("This type has not been implemented.");
-		}
-		return result;
+                // String
+                else if (Double.isNaN(expression.getNumberValue().doubleValue())) {
+                    result = expression.getStringValue();
+                }
 
-	}
+                // Int
+                else if (expression.getNumberValue().intValue() == expression.getNumberValue().doubleValue()) {
+                    result = expression.getNumberValue().intValue();
+                } else {
 
-	/**
-	 * Register a reference to this variable.
-	 * This generally only happens during assignment
-	 */
-	public final void registerReference() {
-		referenceCount++;
-	}
+                    // Double
+                    result = expression.getNumberValue();
+                }
+                break;
+            case LIST:
+                List<Object> resultList = new ArrayList<>();
+                results.put(expression, resultList);
+                resultList.addAll(((List<MetaExpression>) expression.getValue()).stream().map(v -> extractValue(v, results))
+                                          .collect(Collectors.toList()));
+                result = resultList;
+                break;
+            case OBJECT:
+                Map<String, Object> resultObject = new LinkedHashMap<>();
+                results.put(expression, resultObject);
+                for (Entry<String, MetaExpression> pair : ((Map<String, MetaExpression>) expression.getValue()).entrySet()) {
+                    resultObject.put(pair.getKey(), extractValue(pair.getValue(), results));
+                }
+                result = resultObject;
+                break;
+            default:
+                throw new NotImplementedException("This type has not been implemented.");
+        }
+        return result;
 
-	/**
-	 * Release a reference to this expression
-	 * This generally only happens at the end of scope
-	 */
-	public final void releaseReference() {
-		referenceCount--;
+    }
 
-		if (!preventDispose && referenceCount <= 0) {
-			try {
-				close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+    /**
+     * Register a reference to this variable.
+     * This generally only happens during assignment
+     */
+    public final void registerReference() {
+        referenceCount++;
+    }
 
-		preventDispose = false;
-	}
+    /**
+     * Release a reference to this expression
+     * This generally only happens at the end of scope
+     */
+    public final void releaseReference() {
+        referenceCount--;
 
-	/**
-	 * Next time a reference is released, this expression won't be disposed.
-	 */
-	public final void preventDisposal() {
-		preventDispose = true;
-	}
+        if (!preventDispose && referenceCount <= 0) {
+            try {
+                close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
-	/**
-	 * @return true if this expression has been closed using {@link MetaExpression#close()}
-	 */
-	public final boolean isClosed() {
-		return isClosed;
-	}
+        preventDispose = false;
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public void close() throws Exception {
-		if (isClosed || this == ExpressionBuilderHelper.NULL) {
-			return;
-		}
+    /**
+     * Next time a reference is released, this expression won't be disposed.
+     */
+    public final void preventDisposal() {
+        preventDispose = true;
+    }
 
-		isClosed = true;
-		closeMetaPool();
+    /**
+     * @return true if this expression has been closed using {@link MetaExpression#close()}
+     */
+    public final boolean isClosed() {
+        return isClosed;
+    }
 
-		// Close children
-		switch (type) {
-			case LIST:
-				for (MetaExpression expr : (List<MetaExpression>) value) {
-					expr.releaseReference();
-				}
-				break;
-			case OBJECT:
-				for (MetaExpression expr : ((Map<String, MetaExpression>) value).values()) {
-					expr.releaseReference();
-				}
-				break;
-			default:
-				break;
-		}
-		value = null;
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public void close() throws Exception {
+        if (isClosed || this == ExpressionBuilderHelper.NULL) {
+            return;
+        }
 
-	/**
-	 * Dispose all items in the {@link MetadataExpressionPool}
-	 */
-	protected void closeMetaPool() {
-		try {
-			metadataPool.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+        isClosed = true;
+        closeMetaPool();
 
-	/**
-	 * Reset the reference count to 0
-	 */
-	protected void resetReferences() {
-		referenceCount = 0;
-	}
+        // Close children
+        switch (type) {
+            case LIST:
+                ((List<MetaExpression>) value).forEach(nl.xillio.xill.api.components.MetaExpression::releaseReference);
+                break;
+            case OBJECT:
+                ((Map<String, MetaExpression>) value).values().forEach(nl.xillio.xill.api.components.MetaExpression::releaseReference);
+                break;
+            default:
+                break;
+        }
+        value = null;
+    }
 
-	/**
-	 * Attempt to parse an object into a MetaExpression
-	 *
-	 * @param value
-	 *        the object to parse
-	 * @return a {@link MetaExpression}, not null
-	 * @throws IllegalArgumentException
-	 *         when the value cannot be parsed
-	 *
-	 */
-	public static MetaExpression parseObject(final Object value) throws IllegalArgumentException {
-		return parseObject(value, new IdentityHashMap<>());
-	}
+    /**
+     * Dispose all items in the {@link MetadataExpressionPool}
+     */
+    protected void closeMetaPool() {
+        try {
+            metadataPool.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-	@SuppressWarnings("unchecked")
-	private static MetaExpression parseObject(final Object root, final Map<Object, MetaExpression> cache) throws IllegalArgumentException {
-		// Check the cache (Don't use key because we need REFERENCE equality not CONTENT)
-		for (Map.Entry<Object, MetaExpression> entry : cache.entrySet()) {
-			if (entry.getKey() == root) {
-				// It seems like we found our match
-				return entry.getValue();
-			}
-		}
+    /**
+     * Reset the reference count to 0
+     */
+    protected void resetReferences() {
+        referenceCount = 0;
+    }
 
-		if (root instanceof List) {
-			// Push stub
-			MetaExpression result = ExpressionBuilderHelper.emptyList();
-			cache.put(root, result);
-			List<MetaExpression> values = (List<MetaExpression>) result.getValue();
+    /**
+     * Attempt to parse an object into a MetaExpression
+     *
+     * @param value the object to parse
+     * @return a {@link MetaExpression}, not null
+     * @throws IllegalArgumentException when the value cannot be parsed
+     */
+    public static MetaExpression parseObject(final Object value) throws IllegalArgumentException {
+        return parseObject(value, new IdentityHashMap<>());
+    }
 
-			// Parse children
-			for (Object child : (List<?>) root) {
-				values.add(parseObject(child, cache));
-			}
+    @SuppressWarnings("unchecked")
+    private static MetaExpression parseObject(final Object root, final Map<Object, MetaExpression> cache) throws IllegalArgumentException {
+        // Check the cache (Don't use key because we need REFERENCE equality not CONTENT)
+        for (Map.Entry<Object, MetaExpression> entry : cache.entrySet()) {
+            if (entry.getKey() == root) {
+                // It seems like we found our match
+                return entry.getValue();
+            }
+        }
 
-			// Push list
-			result.setValue(values);
+        if (root instanceof List) {
+            // Push stub
+            MetaExpression result = ExpressionBuilderHelper.emptyList();
+            cache.put(root, result);
+            List<MetaExpression> values = (List<MetaExpression>) result.getValue();
 
-			return result;
-		}
+            // Parse children
+            values.addAll(((List<?>) root).stream().map(child -> parseObject(child, cache)).collect(Collectors.toList()));
 
-		if (root instanceof Map) {
-			// Push stub
-			MetaExpression result = ExpressionBuilderHelper.emptyObject();
-			cache.put(root, result);
-			LinkedHashMap<String, MetaExpression> values = (LinkedHashMap<String, MetaExpression>) result.getValue();
+            // Push list
+            result.setValue(values);
 
-			// Parse children
-			for (Entry<?, ?> child : ((Map<?, ?>) root).entrySet()) {
-				values.put(child.getKey().toString(), parseObject(child.getValue(), cache));
-			}
+            return result;
+        }
 
-			// Push map
-			result.setValue(values);
+        if (root instanceof Map) {
+            // Push stub
+            MetaExpression result = ExpressionBuilderHelper.emptyObject();
+            cache.put(root, result);
+            LinkedHashMap<String, MetaExpression> values = (LinkedHashMap<String, MetaExpression>) result.getValue();
 
-			return result;
-		}
+            // Parse children
+            for (Entry<?, ?> child : ((Map<?, ?>) root).entrySet()) {
+                values.put(child.getKey().toString(), parseObject(child.getValue(), cache));
+            }
 
-		// No list, no map. This must be an atomic value. No need to cache those since they cannot be circular
-		// Boolean
-		if (root instanceof Boolean) {
-			return ExpressionBuilderHelper.fromValue((Boolean) root);
-		}
+            // Push map
+            result.setValue(values);
 
-		// Numbers
-		if (root instanceof Integer) {
-			return ExpressionBuilderHelper.fromValue((Integer) root);
-		}
+            return result;
+        }
 
-		if (root instanceof Long) {
-			return ExpressionBuilderHelper.fromValue((Long) root);
-		}
+        // No list, no map. This must be an atomic value. No need to cache those since they cannot be circular
+        // Boolean
+        if (root instanceof Boolean) {
+            return ExpressionBuilderHelper.fromValue((Boolean) root);
+        }
 
-		if (root instanceof Double) {
-			return ExpressionBuilderHelper.fromValue((Double) root);
-		}
+        // Numbers
+        if (root instanceof Integer) {
+            return ExpressionBuilderHelper.fromValue((Integer) root);
+        }
 
-		if (root instanceof String) {
-			return ExpressionBuilderHelper.fromValue((String) root);
-		}
+        if (root instanceof Long) {
+            return ExpressionBuilderHelper.fromValue((Long) root);
+        }
 
-		throw new IllegalArgumentException("The class type " + root.getClass().getName() + " has not been implemented by parseObject");
-	}
+        if (root instanceof Double) {
+            return ExpressionBuilderHelper.fromValue((Double) root);
+        }
+
+        if (root instanceof String) {
+            return ExpressionBuilderHelper.fromValue((String) root);
+        }
+
+        throw new IllegalArgumentException("The class type " + root.getClass().getName() + " has not been implemented by parseObject");
+    }
 }
