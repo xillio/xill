@@ -1,6 +1,5 @@
 package nl.xillio.xill.plugins.string.services.string;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import nl.xillio.xill.plugins.string.constructs.RegexConstruct;
 import nl.xillio.xill.plugins.string.exceptions.FailedToGetMatcherException;
@@ -24,9 +23,8 @@ public class RegexServiceImpl implements RegexService {
     /**
      * The implementation of the {@link RegexService}
      */
-    @Inject
-    public RegexServiceImpl(RegexTimer regexTimer) {
-        this.regexTimer = regexTimer;
+    public RegexServiceImpl() {
+        this.regexTimer = new RegexTimer();
         new Thread(regexTimer).start();
     }
 
