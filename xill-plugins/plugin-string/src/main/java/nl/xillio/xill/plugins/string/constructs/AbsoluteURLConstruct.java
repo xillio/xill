@@ -44,13 +44,17 @@ public class AbsoluteURLConstruct extends Construct {
 		if (relativeurl.isEmpty()) {
 			return new AtomicExpression(urlService.cleanupUrl(pageurl));
 		}
+		try {
+			String processed = urlService.tryConvert(pageurl, relativeurl);
 
-		String processed = urlService.tryConvert(pageurl, relativeurl);
-
-		if (processed != null) {
-			return new AtomicExpression(processed);
-		} else {
-			throw new RobotRuntimeException("The page url is invalid.");
+			if (processed != null) {
+				return new AtomicExpression(processed);
+			} else {
+				throw new RobotRuntimeException("The page url is invalid.");
+			}
+		} catch (IllegalArgumentException e) {
+			throw new RobotRuntimeException("Illegal argument was handed to the matcher when trying to convert the URL");
 		}
+
 	}
 }

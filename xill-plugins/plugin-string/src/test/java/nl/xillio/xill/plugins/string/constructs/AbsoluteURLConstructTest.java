@@ -99,5 +99,29 @@ public class AbsoluteURLConstructTest {
 		// Verify
 		verify(url, times(1)).tryConvert(pageUrlValue, relativeUrlValue);
 	}
+	
+	/**
+	 * Tests the process when it fails to return a value.
+	 */
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Illegal argument was handed to the matcher when trying to convert the URL")
+	public void processErrorOnConvert()
+	{
+		// Mock
+		String pageUrlValue = "http://www.xillio.nl/calendar/";
+		MetaExpression pageUrl = mock(MetaExpression.class);
+		when(pageUrl.getStringValue()).thenReturn(pageUrlValue);
 
+		String relativeUrlValue = "../";
+		MetaExpression relativeUrl = mock(MetaExpression.class);
+		when(relativeUrl.getStringValue()).thenReturn(relativeUrlValue);
+
+		UrlService url = mock(UrlService.class);
+		when(url.tryConvert(pageUrlValue, relativeUrlValue)).thenThrow(new IllegalArgumentException());
+
+		// Run
+		AbsoluteURLConstruct.process(pageUrl, relativeUrl, url);
+
+		// Verify
+		verify(url, times(1)).tryConvert(pageUrlValue, relativeUrlValue);
+	}
 }

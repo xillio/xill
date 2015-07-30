@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.string.services.string;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.regex.PatternSyntaxException;
 
 import nl.xillio.xill.plugins.string.StringXillPlugin;
 
@@ -43,8 +44,10 @@ public interface UrlService {
 	 *        The relativeUrl.
 	 * @return
 	 *         A converted relativeUrl as a string.
+	 * @throws IllegalArgumentException 
+	 * @throws PatternSyntaxException 
 	 */
-	public String tryConvert(final String pageUrl, final String relativeUrl);
+	public String tryConvert(final String pageUrl, final String relativeUrl) throws IllegalArgumentException, PatternSyntaxException;
 
 	/**
 	 * Writes a given output in a file.

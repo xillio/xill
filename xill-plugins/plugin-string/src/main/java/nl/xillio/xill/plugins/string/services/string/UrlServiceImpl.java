@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import org.apache.commons.io.FileUtils;
 
@@ -46,7 +47,7 @@ public class UrlServiceImpl implements UrlService {
 	}
 
 	@Override
-	public String tryConvert(final String pageUrl, final String relativeUrl) {
+	public String tryConvert(final String pageUrl, final String relativeUrl) throws IllegalArgumentException, PatternSyntaxException {
 		if (relativeUrl.startsWith("http://") || relativeUrl.startsWith("https://")) {
 			return cleanupUrl(relativeUrl);
 		}
