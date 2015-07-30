@@ -17,9 +17,9 @@ public class PrintConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(text, level) -> process(text, level, context.getRootLogger()), 
-			new Argument("text", fromValue("")), 
-			new Argument("loglevel", fromValue("info"), ATOMIC));
+		  (text, level) -> process(text, level, context.getRootLogger()),
+		  new Argument("text", fromValue("")),
+		  new Argument("loglevel", fromValue("info"), ATOMIC));
 	}
 
 	static MetaExpression process(final MetaExpression textVar, final MetaExpression logLevel, final Logger robotLog) {
@@ -36,7 +36,7 @@ public class PrintConstruct extends Construct {
 		} else {
 			robotLog.info(text);
 		}
-		
+
 		return NULL;
 	}
 }

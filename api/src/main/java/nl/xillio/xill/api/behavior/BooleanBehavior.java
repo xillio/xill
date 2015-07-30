@@ -3,7 +3,9 @@ package nl.xillio.xill.api.behavior;
 import nl.xillio.xill.api.components.Expression;
 
 /**
- * This class represents the behavior of a boolean.<br/>
+ * <p>
+ * This class represents the behavior of a boolean.
+ * </p>
  * Values:
  * <ul>
  * <li><b>{@link String}: </b> true or false</li>

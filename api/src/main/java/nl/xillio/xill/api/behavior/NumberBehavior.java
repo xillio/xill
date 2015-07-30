@@ -3,7 +3,9 @@ package nl.xillio.xill.api.behavior;
 import nl.xillio.xill.api.components.Expression;
 
 /**
- * This class represents the behavior of a number.<br/>
+ * <p>
+ * This class represents the behavior of a number.
+ * </p>
  * Values:
  * <ul>
  * <li><b>{@link String}: </b> the actual value as a string</li>

@@ -1,14 +1,18 @@
 package nl.xillio.xill.plugins.system.constructs;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
@@ -59,18 +63,14 @@ public class ParseJSONConstructTest extends ConstructTest {
 	 * @throws Throwable
 	 *         while testing
 	 */
-	@Test(expectedExceptions = JsonParseException.class)
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp="Invalid JSON input: (.+)")
 	public void testProcessInvalid() throws Throwable {
 		// Mock context
 		MetaExpression expression = mockExpression(ATOMIC);
 		JsonParser parser = mock(JsonParser.class);
-		when(parser.fromJson(anyString(), any())).thenThrow(new JsonParseException("CORRECT"));
+		when(parser.fromJson(anyString(), any())).thenThrow(new JsonSyntaxException("CORRECT"));
 
-		try {
-			// Run method
-			ParseJSONConstruct.process(expression, parser);
-		} catch (RobotRuntimeException e) {
-			throw e.getCause();
-		}
+		// Run method
+		ParseJSONConstruct.process(expression, parser);
 	}
 }

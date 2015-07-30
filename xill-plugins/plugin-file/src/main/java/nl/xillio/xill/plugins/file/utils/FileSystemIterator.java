@@ -21,7 +21,7 @@ import java.util.function.Predicate;
  * @see FileIterator
  * @see FolderIterator
  */
-public abstract class FileSystemIterator {
+abstract class FileSystemIterator {
     private static final Logger logger = LogManager.getLogger();
     private final Stack<DirectoryStreamWithIterator> stack = new Stack<>();
     private Path nextValue;
@@ -36,7 +36,7 @@ public abstract class FileSystemIterator {
      * @param recursive  weather the stream should also list files in sub folders
      * @throws IOException if the rootFolder does not exist
      */
-    public FileSystemIterator(File rootFolder, boolean recursive, Predicate<Path> resultChecker) throws IOException {
+    FileSystemIterator(File rootFolder, boolean recursive, Predicate<Path> resultChecker) throws IOException {
         this.recursive = recursive;
         this.resultChecker = resultChecker;
         addFolder(rootFolder.toPath());
@@ -51,6 +51,11 @@ public abstract class FileSystemIterator {
         }
     }
 
+    /**
+     * Check if there is a next value in this iterator
+     *
+     * @return true if there is a next value
+     */
     public boolean hasNext() {
         selectNext();
 
@@ -86,7 +91,7 @@ public abstract class FileSystemIterator {
         }
     }
 
-    protected Path getNextValue() {
+    Path getNextValue() {
         if (!hasNext()) {
             throw new IllegalStateException("No next file present");
         }
@@ -123,7 +128,7 @@ public abstract class FileSystemIterator {
      * @param path the path to check
      * @return true if and only if the path was denied access to while iterating
      */
-    protected boolean isAccessible(Path path) {
+    boolean isAccessible(Path path) {
         return !noAccessPaths.contains(path);
     }
 }
