@@ -1,9 +1,11 @@
 package nl.xillio.xill.plugins.string.constructs;
 
 import java.util.ArrayList;
+import java.util.IllegalFormatException;
 import java.util.List;
 import java.util.MissingFormatArgumentException;
 import java.util.regex.Matcher;
+import java.util.regex.PatternSyntaxException;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
@@ -11,37 +13,44 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.string.exceptions.FailedToGetMatcherException;
+import nl.xillio.xill.plugins.string.services.string.RegexService;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
+
+import com.google.inject.Inject;
 
 /**
  *
- * Formats the string with the provided values. </br>
+ * <p>
+ * Formats the string with the provided values.
+ * </p>
+ * <p>
  * Does not support Time/Date.
+ * </p>
  *
  * @author Sander
  *
  */
 public class FormatConstruct extends Construct {
-	private final RegexConstruct regexConstruct;
+	@Inject
+	private RegexService regexService;
+	@Inject
+	private StringUtilityService stringService;
 
 	/**
 	 * Create a new {@link FormatConstruct}
-	 *
-	 * @param regexConstruct
-	 *        the contruct used to find the format parameters
 	 */
-	public FormatConstruct(final RegexConstruct regexConstruct) {
-		this.regexConstruct = regexConstruct;
-	}
+	public FormatConstruct() {}
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(textVar, valueVar) -> process(regexConstruct, textVar, valueVar),
+			(textVar, valueVar) -> process(textVar, valueVar, regexService, stringService),
 			new Argument("text", ATOMIC),
 			new Argument("value", LIST));
 	}
 
-	private static MetaExpression process(final RegexConstruct regexConstruct, final MetaExpression textVar, final MetaExpression valueVar) {
+	static MetaExpression process(final MetaExpression textVar, final MetaExpression valueVar, final RegexService regexService, final StringUtilityService stringService) {
 		assertNotNull(textVar, "text");
 
 		List<MetaExpression> formatList = new ArrayList<>();
@@ -49,12 +58,16 @@ public class FormatConstruct extends Construct {
 		@SuppressWarnings("unchecked")
 		List<MetaExpression> numberList = (List<MetaExpression>) valueVar.getValue();
 
-		// Find the format syntax in the input string.
-		Matcher matcher = regexConstruct.getMatcher("%[[^a-zA-Z%]]*([a-zA-Z]|[%])", textVar.getStringValue(), RegexConstruct.REGEX_TIMEOUT);
-		int i = 0;
-		while (matcher.find()) {
-			formatList.add(i, fromValue(matcher.group()));
-			i++;
+		try {
+			Matcher matcher = regexService.getMatcher("%[[^a-zA-Z%]]*([a-zA-Z]|[%])", textVar.getStringValue(), RegexConstruct.REGEX_TIMEOUT);
+			List<String> tryFormat = regexService.tryMatch(matcher);
+			for (String s : tryFormat) {
+				formatList.add(fromValue(s));
+			}
+		} catch (PatternSyntaxException e) {
+			throw new RobotRuntimeException("SyntaxError in the by the system provided pattern.");
+		} catch (IllegalArgumentException | FailedToGetMatcherException e) {
+			throw new RobotRuntimeException("Illegal argument handed when trying to match.");
 		}
 
 		// Cast the MetaExpressions to the right type.
@@ -107,9 +120,11 @@ public class FormatConstruct extends Construct {
 			}
 		}
 		try {
-			return fromValue(String.format(textVar.getStringValue(), list.toArray()));
+			return fromValue(stringService.format(textVar.getStringValue(), list));
 		} catch (MissingFormatArgumentException e) {
 			throw new RobotRuntimeException("Not enough arguments.");
+		} catch (IllegalFormatException e) {
+			throw new RobotRuntimeException("Illegal format handed.");
 		}
 	}
 }

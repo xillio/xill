@@ -1,46 +1,45 @@
 package nl.xillio.xill.plugins.string.constructs;
 
-import java.util.List;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
+
+import com.google.inject.Inject;
 
 /**
+ * <p>
  * Returns true when the first value contains the second value.
+ * </p>
  *
  *
  * @author Sander
  */
 public class ContainsConstruct extends Construct {
 
+	@Inject
+	private StringUtilityService stringService;
+
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			ContainsConstruct::process,
-			new Argument("haystack"),
+			(haystack, needle) -> process(haystack, needle, stringService),
+			new Argument("haystack", ATOMIC, LIST),
 			new Argument("needle", ATOMIC));
 	}
 
-	@SuppressWarnings("unchecked")
-	private static MetaExpression process(final MetaExpression haystack, final MetaExpression needle) {
+	static MetaExpression process(final MetaExpression haystack, final MetaExpression needle, final StringUtilityService stringService) {
 		// If either is null then false.
 		if (haystack == NULL || needle == NULL) {
 			return fromValue(false);
 		}
 
-		// Compare lists
-		if (haystack.getType() == LIST) {
-			List<MetaExpression> list = (List<MetaExpression>) haystack.getValue();
-			return fromValue(list.contains(needle));
-		}
-
 		// Compare strings
 		String value1 = haystack.getStringValue();
 		String value2 = needle.getStringValue();
-		return fromValue(value1.contains(value2));
+		return fromValue(stringService.contains(value1, value2));
 	}
 
 }

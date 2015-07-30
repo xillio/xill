@@ -5,26 +5,29 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
+
+import com.google.inject.Inject;
 
 /**
- *
- *
  * Makes the provided text lower case.
  *
  * @author Sander
  *
  */
 public class ToLowerConstruct extends Construct {
+	@Inject
+	StringUtilityService stringService;
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			ToLowerConstruct::process, 
+			(string) -> process(string, stringService),
 			new Argument("string", ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression string) {
+	static MetaExpression process(final MetaExpression string, final StringUtilityService stringService) {
 
-		return fromValue(string.getStringValue().toLowerCase());
+		return fromValue(stringService.toLowerCase(string.getStringValue()));
 	}
 }

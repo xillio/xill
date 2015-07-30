@@ -1,64 +1,61 @@
 package nl.xillio.xill.plugins.string.constructs;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-
+import com.google.inject.Inject;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.string.exceptions.FailedToGetMatcherException;
+import nl.xillio.xill.plugins.string.services.string.RegexService;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.PatternSyntaxException;
 
 /**
- * Extracts all matching substrings of text into a list.
+ * <p>
+ * Extracts all matching subStrings of text into a list.
+ * </p>
  *
  * @author Sander
- *
  */
 public class AllMatchesConstruct extends Construct {
 
-	private final RegexConstruct regexConstruct;
+    @Inject
+    private RegexService regexService;
 
-	/**
-	 * Create a new {@link AllMatchesConstruct}
-	 *
-	 * @param regexConstruct
-	 *        the construct used to perform the matching
-	 */
-	public AllMatchesConstruct(final RegexConstruct regexConstruct) {
-		this.regexConstruct = regexConstruct;
-	}
+    @Override
+    public ConstructProcessor prepareProcess(final ConstructContext context) {
+        return new ConstructProcessor(
+                (valueVar, regexVar, timeout) -> process(valueVar, regexVar, timeout, regexService),
+                new Argument("value", ATOMIC),
+                new Argument("regex", ATOMIC),
+                new Argument("timeout", fromValue(RegexConstruct.REGEX_TIMEOUT), ATOMIC));
+    }
 
-	@Override
-	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(
-			(valueVar, regexVar, timeout) -> process(regexConstruct, valueVar, regexVar, timeout),
-			new Argument("value", ATOMIC),
-			new Argument("regex", ATOMIC),
-			new Argument("timeout", fromValue(RegexConstruct.REGEX_TIMEOUT), ATOMIC));
-	}
+    static MetaExpression process(final MetaExpression textVar, final MetaExpression regexVar, final MetaExpression timeoutVar,
+                                  final RegexService regexService) {
 
-	private static MetaExpression process(final RegexConstruct regexConstruct, final MetaExpression textVar, final MetaExpression regexVar, final MetaExpression timeoutVar) {
+        List<MetaExpression> list = new ArrayList<>();
 
-		List<MetaExpression> list = new ArrayList<>();
+        String text = textVar.getStringValue();
+        String regex = regexVar.getStringValue();
+        int timeout = (int) timeoutVar.getNumberValue().doubleValue() * 1000;
 
-		String text = textVar.getStringValue();
-		String regex = regexVar.getStringValue();
-		int timeout = (int) timeoutVar.getNumberValue().doubleValue() * 1000;
-
-		try {
-			Matcher matcher = regexConstruct.getMatcher(regex, text, timeout);
-			int i = 0;
-			while (matcher.find()) {
-				list.add(i, fromValue(matcher.group()));
-			}
-		} catch (Exception e) {
-			throw new RobotRuntimeException("Invalid pattern.");
-		}
-		return fromValue(list);
-
-	}
-
+        try {
+            Matcher matcher = regexService.getMatcher(regex, text, timeout);
+            List<String> results = regexService.tryMatch(matcher);
+            for (String s : results) {
+                list.add(fromValue(s));
+            }
+        } catch (PatternSyntaxException e) {
+            throw new RobotRuntimeException("Invalid pattern handed.");
+        } catch (IllegalArgumentException | FailedToGetMatcherException e) {
+            throw new RobotRuntimeException("Illegal argument handed.");
+        }
+        return fromValue(list);
+    }
 }
