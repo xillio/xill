@@ -5,7 +5,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.plugins.string.services.string.StringService;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -30,7 +30,7 @@ public class ContainsConstructTest {
 		when(child.getStringValue()).thenReturn(childValue);
 
 		boolean returnValue = true;
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(stringService.contains(parentValue, childValue)).thenReturn(returnValue);
 		// Run
 		MetaExpression result = ContainsConstruct.process(parent, child, stringService);

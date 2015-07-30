@@ -9,7 +9,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.plugins.string.services.string.StringService;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 
 import com.google.inject.Inject;
 
@@ -30,7 +30,7 @@ import com.google.inject.Inject;
  */
 public class TrimConstruct extends Construct {
 	@Inject
-	StringService stringService;
+	StringUtilityService stringService;
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
@@ -40,7 +40,7 @@ public class TrimConstruct extends Construct {
 			new Argument("internal", FALSE, ATOMIC));
 	}
 
-	static MetaExpression process(final MetaExpression string, final MetaExpression internal, final StringService stringService) {
+	static MetaExpression process(final MetaExpression string, final MetaExpression internal, final StringUtilityService stringService) {
 		assertNotNull(string, "string");
 
 		if (string.getType() == ExpressionDataType.LIST) {
@@ -62,7 +62,7 @@ public class TrimConstruct extends Construct {
 		return fromValue(doTrimming(string, internal, stringService).getStringValue());
 	}
 
-	private static MetaExpression doTrimming(final MetaExpression string, final MetaExpression internal, final StringService stringService) {
+	private static MetaExpression doTrimming(final MetaExpression string, final MetaExpression internal, final StringUtilityService stringService) {
 		String text = string.getStringValue();
 
 		text = stringService.replaceAll(text, "\u00A0", " ");

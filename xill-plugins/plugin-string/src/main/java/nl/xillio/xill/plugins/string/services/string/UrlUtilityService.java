@@ -11,8 +11,8 @@ import com.google.inject.ImplementedBy;
 /**
  * This interface represents some of the operations for the {@link StringXillPlugin}.
  */
-@ImplementedBy(UrlServiceImpl.class)
-public interface UrlService {
+@ImplementedBy(UrlUtilityServiceImpl.class)
+public interface UrlUtilityService {
 
 	/**
 	 * Recieves an URL and returns a cleaned version.
@@ -22,7 +22,7 @@ public interface UrlService {
 	 * @return
 	 *         The cleaned version of the URL.
 	 */
-	public String cleanupUrl(final String url);
+	String cleanupUrl(final String url);
 
 	/**
 	 * Reads a file to a byte array given a filename.
@@ -33,7 +33,7 @@ public interface UrlService {
 	 *         A bytearray with content.
 	 * @throws IOException
 	 */
-	public byte[] readFileToByteArray(String fileName) throws IOException;
+	byte[] readFileToByteArray(String fileName) throws IOException;
 
 	/**
 	 * Tries to convert the relativeUrl using the pageUrl
@@ -47,7 +47,7 @@ public interface UrlService {
 	 * @throws IllegalArgumentException 
 	 * @throws PatternSyntaxException 
 	 */
-	public String tryConvert(final String pageUrl, final String relativeUrl) throws IllegalArgumentException, PatternSyntaxException;
+	String tryConvert(final String pageUrl, final String relativeUrl) throws IllegalArgumentException;
 
 	/**
 	 * Writes a given output in a file.
@@ -59,6 +59,6 @@ public interface UrlService {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public void write(String fileName, byte[] output) throws FileNotFoundException, IOException;
+	void write(String fileName, byte[] output) throws IOException;
 
 }

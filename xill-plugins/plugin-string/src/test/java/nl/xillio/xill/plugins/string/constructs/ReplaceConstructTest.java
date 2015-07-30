@@ -13,7 +13,7 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.string.exceptions.FailedToGetMatcherException;
 import nl.xillio.xill.plugins.string.services.string.RegexService;
-import nl.xillio.xill.plugins.string.services.string.StringService;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -31,7 +31,7 @@ public class ReplaceConstructTest {
 	 * @throws PatternSyntaxException
 	 */
 	@Test
-	public void processUseRegexReplaceAll() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
+	public void processUseRegexReplaceAll() throws IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String textValue = "ReplaceR";
 		MetaExpression text = mock(MetaExpression.class);
@@ -59,7 +59,7 @@ public class ReplaceConstructTest {
 
 		String returnValue = "OeplaceO";
 		RegexService regexService = mock(RegexService.class);
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(regexService.replaceAll(any(), eq(replacementValue))).thenReturn(returnValue);
 
 		// Run
@@ -85,7 +85,7 @@ public class ReplaceConstructTest {
 	 * @throws PatternSyntaxException
 	 */
 	@Test
-	public void processUseRegexReplaceFirst() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
+	public void processUseRegexReplaceFirst() throws IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String textValue = "ReplaceR";
 		MetaExpression text = mock(MetaExpression.class);
@@ -113,7 +113,7 @@ public class ReplaceConstructTest {
 
 		String returnValue = "OeplaceO";
 		RegexService regexService = mock(RegexService.class);
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(regexService.replaceFirst(any(), eq(replacementValue))).thenReturn(returnValue);
 
 		// Run
@@ -139,7 +139,7 @@ public class ReplaceConstructTest {
 	 * @throws PatternSyntaxException
 	 */
 	@Test
-	public void processDontUseRegexReplaceAll() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
+	public void processDontUseRegexReplaceAll() throws IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String textValue = "ReplaceR";
 		MetaExpression text = mock(MetaExpression.class);
@@ -167,7 +167,7 @@ public class ReplaceConstructTest {
 
 		String returnValue = "OeplaceO";
 		RegexService regexService = mock(RegexService.class);
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(stringService.replaceAll(textValue, needleValue, replacementValue)).thenReturn(returnValue);
 
 		// Run
@@ -193,7 +193,7 @@ public class ReplaceConstructTest {
 	 * @throws PatternSyntaxException
 	 */
 	@Test
-	public void processDontUseRegexReplaceFirst() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
+	public void processDontUseRegexReplaceFirst() throws IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String textValue = "ReplaceR";
 		MetaExpression text = mock(MetaExpression.class);
@@ -221,7 +221,7 @@ public class ReplaceConstructTest {
 
 		String returnValue = "OeplaceO";
 		RegexService regexService = mock(RegexService.class);
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(stringService.replaceFirst(textValue, needleValue, replacementValue)).thenReturn(returnValue);
 
 		// Run
@@ -247,7 +247,7 @@ public class ReplaceConstructTest {
 	 * @throws PatternSyntaxException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid pattern in regex\\(\\)")
-	public void processInvalidException() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
+	public void processInvalidException() throws IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String textValue = "ReplaceR";
 		MetaExpression text = mock(MetaExpression.class);
@@ -275,7 +275,7 @@ public class ReplaceConstructTest {
 
 		Exception returnValue = new PatternSyntaxException(needleValue, textValue, timeoutValue);
 		RegexService regexService = mock(RegexService.class);
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(regexService.getMatcher(needleValue, textValue, timeoutValue * 1000)).thenThrow(returnValue);
 
 		// Run
@@ -298,7 +298,7 @@ public class ReplaceConstructTest {
 	 * @throws PatternSyntaxException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Error while executing the regex")
-	public void processIllegalArgumentException() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
+	public void processIllegalArgumentException() throws IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String textValue = "ReplaceR";
 		MetaExpression text = mock(MetaExpression.class);
@@ -326,7 +326,7 @@ public class ReplaceConstructTest {
 
 		Exception returnValue = new IllegalArgumentException();
 		RegexService regexService = mock(RegexService.class);
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(regexService.getMatcher(needleValue, textValue, timeoutValue * 1000)).thenThrow(returnValue);
 
 		// Run

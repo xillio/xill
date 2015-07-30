@@ -29,7 +29,7 @@ public class MatchesConstructTest {
 	 * @throws PatternSyntaxException
 	 */
 	@Test
-	public void processStandardInput() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
+	public void processStandardInput() throws IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String valueValue = "I need a doctor";
 		MetaExpression value = mock(MetaExpression.class);
@@ -65,7 +65,7 @@ public class MatchesConstructTest {
 	 * @throws PatternSyntaxException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid pattern in matches.")
-	public void processInvalidPattern() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
+	public void processInvalidPattern() throws IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String valueValue = "I need a doctor";
 		MetaExpression value = mock(MetaExpression.class);
@@ -97,7 +97,7 @@ public class MatchesConstructTest {
 	 * @throws PatternSyntaxException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Illegal argument given.")
-	public void processIllegalArgument() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
+	public void processIllegalArgument() throws IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String valueValue = "I need a doctor";
 		MetaExpression value = mock(MetaExpression.class);

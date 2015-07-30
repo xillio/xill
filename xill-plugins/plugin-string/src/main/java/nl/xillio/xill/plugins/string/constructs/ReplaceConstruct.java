@@ -11,7 +11,7 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.string.exceptions.FailedToGetMatcherException;
 import nl.xillio.xill.plugins.string.services.string.RegexService;
-import nl.xillio.xill.plugins.string.services.string.StringService;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 
 import com.google.inject.Inject;
 
@@ -28,7 +28,7 @@ public class ReplaceConstruct extends Construct {
 	@Inject
 	private RegexService regexService;
 	@Inject
-	private StringService stringService;
+	private StringUtilityService stringService;
 
 	/**
 	 * Create a new {@link ReplaceConstruct}
@@ -52,7 +52,7 @@ public class ReplaceConstruct extends Construct {
 
 	}
 
-	static MetaExpression process(final MetaExpression[] input, final RegexService regexService, final StringService stringService) {
+	static MetaExpression process(final MetaExpression[] input, final RegexService regexService, final StringUtilityService stringService) {
 
 		for (int i = 0; i < 5; i++) {
 			assertNotNull(input[i], "input");

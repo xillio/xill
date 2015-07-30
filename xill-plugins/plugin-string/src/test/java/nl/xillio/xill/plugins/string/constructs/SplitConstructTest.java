@@ -10,7 +10,7 @@ import java.util.List;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.string.services.string.StringService;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -54,7 +54,7 @@ public class SplitConstructTest extends ExpressionBuilderHelper {
 		when(fourth.getStringValue()).thenReturn(fourthValue);
 
 		String returnValue[] = {firstValue, secondValue, thirdValue, fourthValue, ""};
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(stringService.split(stringValue, delimiterValue)).thenReturn(returnValue);
 		// Run
 		MetaExpression result = SplitConstruct.process(string, delimiter, keepEmpty, stringService);
@@ -107,7 +107,7 @@ public class SplitConstructTest extends ExpressionBuilderHelper {
 		when(fourth.getStringValue()).thenReturn(fourthValue);
 
 		String returnValue[] = {firstValue, secondValue, thirdValue, fourthValue, ""};
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(stringService.split(stringValue, delimiterValue)).thenReturn(returnValue);
 		// Run
 		MetaExpression result = SplitConstruct.process(string, delimiter, keepEmpty, stringService);
@@ -146,7 +146,7 @@ public class SplitConstructTest extends ExpressionBuilderHelper {
 		MetaExpression keepEmpty = mock(MetaExpression.class);
 		when(keepEmpty.getBooleanValue()).thenReturn(keepEmptyValue);
 
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		SplitConstruct.process(string, delimiter, keepEmpty, stringService);
 	}
 }

@@ -14,10 +14,10 @@ import org.apache.commons.io.FileUtils;
 import com.google.inject.Singleton;
 
 /**
- * This is the main implementation of the {@link UrlService}
+ * This is the main implementation of the {@link UrlUtilityService}
  */
 @Singleton
-public class UrlServiceImpl implements UrlService {
+public class UrlUtilityServiceImpl implements UrlUtilityService {
 
 	private static String getParentUrl(final String pageurl, String relativeurl) {
 		if (relativeurl.equals("..")) {
@@ -47,7 +47,7 @@ public class UrlServiceImpl implements UrlService {
 	}
 
 	@Override
-	public String tryConvert(final String pageUrl, final String relativeUrl) throws IllegalArgumentException, PatternSyntaxException {
+	public String tryConvert(final String pageUrl, final String relativeUrl) throws IllegalArgumentException {
 		if (relativeUrl.startsWith("http://") || relativeUrl.startsWith("https://")) {
 			return cleanupUrl(relativeUrl);
 		}
@@ -94,7 +94,7 @@ public class UrlServiceImpl implements UrlService {
 	}
 
 	@Override
-	public void write(final String fileName, final byte[] output) throws FileNotFoundException, IOException {
+	public void write(final String fileName, final byte[] output) throws IOException {
 		OutputStream out = new FileOutputStream(fileName);
 		out.write(output);
 		out.close();

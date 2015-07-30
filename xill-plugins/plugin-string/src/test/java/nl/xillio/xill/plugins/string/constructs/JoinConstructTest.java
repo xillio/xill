@@ -13,7 +13,7 @@ import java.util.Map;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
-import nl.xillio.xill.plugins.string.services.string.StringService;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -39,7 +39,7 @@ public class JoinConstructTest extends ExpressionBuilderHelper {
 		when(delimiter.getStringValue()).thenReturn(delimiterValue);
 
 		String returnValue = "CORRECT";
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		// Run
 		MetaExpression result = JoinConstruct.process(value, delimiter, stringService);
 
@@ -75,7 +75,7 @@ public class JoinConstructTest extends ExpressionBuilderHelper {
 		when(delimiter.getStringValue()).thenReturn(delimiterValue);
 
 		String returnValue = "CORRECTMONSIEUR";
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(stringService.join(listValueAsStrings, delimiterValue)).thenReturn(returnValue);
 		// Run
 		MetaExpression result = JoinConstruct.process(list, delimiter, stringService);
@@ -115,7 +115,7 @@ public class JoinConstructTest extends ExpressionBuilderHelper {
 		when(delimiter.getStringValue()).thenReturn(delimiterValue);
 
 		String returnValue = "CORRECTMONSIEUR";
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(stringService.join(listValueAsStrings, delimiterValue)).thenReturn(returnValue);
 		// Run
 		MetaExpression result = JoinConstruct.process(object, delimiter, stringService);

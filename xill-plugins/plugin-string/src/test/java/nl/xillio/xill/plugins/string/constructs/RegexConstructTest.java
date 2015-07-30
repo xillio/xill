@@ -32,7 +32,7 @@ public class RegexConstructTest extends ExpressionBuilderHelper {
 	 * @throws PatternSyntaxException
 	 */
 	@Test
-	public void processStandardInput() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
+	public void processStandardInput() throws IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String valueValue = "I need a doctor";
 		MetaExpression value = mock(MetaExpression.class);
@@ -75,7 +75,7 @@ public class RegexConstructTest extends ExpressionBuilderHelper {
 	 * @throws PatternSyntaxException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid pattern in regex\\(\\)")
-	public void processInvalidPattern() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
+	public void processInvalidPattern() throws IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String valueValue = "I need a doctor";
 		MetaExpression value = mock(MetaExpression.class);
@@ -107,7 +107,7 @@ public class RegexConstructTest extends ExpressionBuilderHelper {
 	 * @throws PatternSyntaxException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Error while executing the regex")
-	public void processIllegalArgument() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
+	public void processIllegalArgument() throws IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String valueValue = "I need a doctor";
 		MetaExpression value = mock(MetaExpression.class);
@@ -139,7 +139,7 @@ public class RegexConstructTest extends ExpressionBuilderHelper {
 	 * @throws PatternSyntaxException
 	 */
 	@Test
-	public void processNoMatches() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException
+	public void processNoMatches() throws IllegalArgumentException, FailedToGetMatcherException
 	{
 		// Mock
 		String valueValue = "I need a doctor";

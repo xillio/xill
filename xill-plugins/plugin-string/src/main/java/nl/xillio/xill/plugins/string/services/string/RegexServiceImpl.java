@@ -1,179 +1,158 @@
 package nl.xillio.xill.plugins.string.services.string;
 
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import nl.xillio.xill.plugins.string.constructs.RegexConstruct;
+import nl.xillio.xill.plugins.string.exceptions.FailedToGetMatcherException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 import java.util.stream.IntStream;
 
-import nl.xillio.xill.plugins.string.constructs.RegexConstruct;
-import nl.xillio.xill.plugins.string.exceptions.FailedToGetMatcherException;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-
-import com.google.inject.Singleton;
-
 /**
- * @author Ivor
- *
+ * This is the main implementation of the RegexService
  */
 @Singleton
 public class RegexServiceImpl implements RegexService {
+    private RegexTimer regexTimer = null;
+    private static Logger logger = LogManager.getLogger();
 
-	private class RegexTimer implements Runnable {
-		private long targetTime = 0;
-		private boolean stop = false;
-		private boolean timeout = false;
+    /**
+     * The implementation of the {@link RegexService}
+     */
+    @Inject
+    public RegexServiceImpl(RegexTimer regexTimer) {
+        this.regexTimer = regexTimer;
+        new Thread(regexTimer).start();
+    }
 
-		public RegexTimer() {
-			Runtime.getRuntime().addShutdownHook(new Thread(this::stop));
-		}
 
-		@Override
-		public void run() {
-			while (!stop) {
-				try {
-					Thread.sleep(1000);
-				} catch (Exception e) {}
-				if (targetTime > 0 && targetTime < System.currentTimeMillis()) {
-					timeout = true;
-					targetTime = 0;
-				}
-			}
-		}
+    @Override
+    public Matcher getMatcher(final String regex, final String value, int timeout) throws FailedToGetMatcherException, IllegalArgumentException {
+        if (timeout < 0) {
+            timeout = RegexConstruct.REGEX_TIMEOUT;
+        }
 
-		public void setTimer(final int millis) {
-			timeout = false;
-			targetTime = System.currentTimeMillis() + millis;
-		}
+        regexTimer.setTimer(timeout);
+        return Pattern.compile(regex, Pattern.DOTALL).matcher(new TimeoutCharSequence(value));
+    }
 
-		public void stop() {
-			stop = true;
-		}
+    @Override
+    public boolean matches(final Matcher matcher) {
+        return matcher.matches();
+    }
 
-		public synchronized boolean timeOut() {
-			return timeout;
-		}
-	}
+    @Override
+    public String replaceAll(final Matcher matcher, final String replacement) {
+        return matcher.replaceAll(replacement);
+    }
 
-	private class TimeoutCharSequence implements CharSequence {
+    @Override
+    public String replaceFirst(final Matcher matcher, final String replacement) {
+        return matcher.replaceFirst(replacement);
+    }
 
-		private final CharSequence inner;
+    @Override
+    public List<String> tryMatch(final Matcher matcher) {
+        List<String> list = new ArrayList<>();
+        while (matcher.find()) {
+            list.add(matcher.group());
+        }
+        return list;
+    }
 
-		public TimeoutCharSequence(final CharSequence inner) {
-			super();
-			this.inner = inner;
-		}
+    @Override
+    public List<String> tryMatchElseNull(final Matcher matcher) {
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i <= matcher.groupCount(); i++) {
+            list.add(matcher.group(i));
+        }
+        return list;
+    }
 
-		@Override
-		public char charAt(final int index) {
-			if (regexTimer.timeOut()) {
-				throw new RuntimeException("Pattern match timed out!");
-			}
-			return inner.charAt(index);
-		}
+    private class RegexTimer implements Runnable {
+        private long targetTime = 0;
+        private boolean stop = false;
+        private boolean timeout = false;
 
-		@Override
-		public IntStream chars() {
-			return inner.chars();
-		}
+        public RegexTimer() {
+            Runtime.getRuntime().addShutdownHook(new Thread(this::stop));
+        }
 
-		@Override
-		public IntStream codePoints() {
-			return inner.codePoints();
-		}
+        @Override
+        public void run() {
+            while (!stop) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    logger.error("Exception while running timer.", e);
+                }
+                if (targetTime > 0 && targetTime < System.currentTimeMillis()) {
+                    timeout = true;
+                    targetTime = 0;
+                }
+            }
+        }
 
-		@Override
-		public int length() {
-			return inner.length();
-		}
+        public void setTimer(final int millis) {
+            timeout = false;
+            targetTime = System.currentTimeMillis() + millis;
+        }
 
-		@Override
-		public CharSequence subSequence(final int start, final int end) {
-			return new TimeoutCharSequence(inner.subSequence(start, end));
-		}
+        public void stop() {
+            stop = true;
+        }
 
-		@Override
-		public String toString() {
-			return inner.toString();
-		}
-	}
+        public synchronized boolean timeOut() {
+            return timeout;
+        }
+    }
 
-	private RegexTimer regexTimer = null;
+    private class TimeoutCharSequence implements CharSequence {
 
-	/**
-	 * The implementation of the {@link RegexService}
-	 */
-	public RegexServiceImpl() {
-		regexTimer = new RegexTimer();
-		new Thread(regexTimer).start();
-	}
+        private final CharSequence inner;
 
-	@Override
-	public String createMD5Construct(final String input) throws NoSuchAlgorithmException {
-		MessageDigest md5 = MessageDigest.getInstance("MD5");
-		md5.update(StandardCharsets.UTF_8.encode(input));
-		return String.format("%032x", new BigInteger(1, md5.digest()));
-	}
+        public TimeoutCharSequence(final CharSequence inner) {
+            super();
+            this.inner = inner;
+        }
 
-	@Override
-	public String escapeXML(final String text) {
-		return StringEscapeUtils.escapeXml11(text);
-	}
+        @Override
+        public char charAt(final int index) {
+            if (regexTimer.timeOut()) {
+                throw new RuntimeException("Pattern match timed out!");
+            }
+            return inner.charAt(index);
+        }
 
-	@Override
-	public Matcher getMatcher(final String regex, final String value, int timeout) throws FailedToGetMatcherException, IllegalArgumentException, PatternSyntaxException {
-		if (timeout < 0) {
-			timeout = RegexConstruct.REGEX_TIMEOUT;
-		}
+        @Override
+        public IntStream chars() {
+            return inner.chars();
+        }
 
-		regexTimer.setTimer(timeout);
-		return Pattern.compile(regex, Pattern.DOTALL).matcher(new TimeoutCharSequence(value));
-	}
+        @Override
+        public IntStream codePoints() {
+            return inner.codePoints();
+        }
 
-	@Override
-	public boolean matches(final Matcher matcher) {
-		return matcher.matches();
-	}
+        @Override
+        public int length() {
+            return inner.length();
+        }
 
-	@Override
-	public String replaceAll(final Matcher matcher, final String replacement) {
-		return matcher.replaceAll(replacement);
-	}
+        @Override
+        public CharSequence subSequence(final int start, final int end) {
+            return new TimeoutCharSequence(inner.subSequence(start, end));
+        }
 
-	@Override
-	public String replaceFirst(final Matcher matcher, final String replacement) {
-		return matcher.replaceFirst(replacement);
-	}
+        @Override
+        public String toString() {
+            return inner.toString();
+        }
+    }
 
-	@Override
-	public List<String> tryMatch(final Matcher matcher) {
-		List<String> list = new ArrayList<>();
-		while (matcher.find()) {
-			list.add(matcher.group());
-		}
-		return list;
-	}
-
-	@Override
-	public List<String> tryMatchElseNull(final Matcher matcher) {
-		List<String> list = new ArrayList<>();
-		for (int i = 0; i <= matcher.groupCount(); i++) {
-			list.add(matcher.group(i));
-		}
-		return list;
-	}
-
-	@Override
-	public String unescapeXML(String text, final int passes) {
-		for (int i = 0; i < passes; i++) {
-			text = StringEscapeUtils.unescapeXml(text);
-		}
-		return text;
-	}
 }

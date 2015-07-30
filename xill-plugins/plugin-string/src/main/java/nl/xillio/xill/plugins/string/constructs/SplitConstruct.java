@@ -9,7 +9,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.plugins.string.services.string.StringService;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 
 import com.google.inject.Inject;
 
@@ -28,7 +28,7 @@ import com.google.inject.Inject;
  */
 public class SplitConstruct extends Construct {
 	@Inject
-	private StringService stringService;
+	private StringUtilityService stringService;
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
@@ -39,7 +39,7 @@ public class SplitConstruct extends Construct {
 			new Argument("keepEmpty", FALSE, ATOMIC));
 	}
 
-	static MetaExpression process(final MetaExpression string, final MetaExpression delimiter, final MetaExpression keepempty, final StringService stringService) {
+	static MetaExpression process(final MetaExpression string, final MetaExpression delimiter, final MetaExpression keepempty, final StringUtilityService stringService) {
 		assertNotNull(string, "string");
 		assertNotNull(delimiter, "delimiter");
 

@@ -9,8 +9,8 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.string.services.string.StringService;
-import nl.xillio.xill.plugins.string.services.string.UrlService;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
+import nl.xillio.xill.plugins.string.services.string.UrlUtilityService;
 
 import com.google.inject.Inject;
 
@@ -25,19 +25,19 @@ import com.google.inject.Inject;
  */
 public class Base64DecodeConstruct extends Construct {
 	@Inject
-	StringService stringService;
+	StringUtilityService stringService;
 	@Inject
-	UrlService urlService;
+	UrlUtilityService urlUtilityService;
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(content, filename) -> process(content, filename, stringService, urlService),
+			(content, filename) -> process(content, filename, stringService, urlUtilityService),
 			new Argument("content", ATOMIC),
 			new Argument("filename", ATOMIC));
 	}
 
-	static MetaExpression process(final MetaExpression contentVar, final MetaExpression filenameVar, final StringService stringService, final UrlService urlService) {
+	static MetaExpression process(final MetaExpression contentVar, final MetaExpression filenameVar, final StringUtilityService stringService, final UrlUtilityService urlUtilityService) {
 
 		assertNotNull(contentVar, "content");
 		assertNotNull(filenameVar, "filename");
@@ -48,7 +48,7 @@ public class Base64DecodeConstruct extends Construct {
 		byte[] data = stringService.parseBase64Binary(content);
 
 		try {
-			urlService.write(filename, data);
+			urlUtilityService.write(filename, data);
 		} catch (FileNotFoundException e) {
 			throw new RobotRuntimeException("The file could not be found or the filename is invalid: '" + filename + "'");
 		} catch (IOException e) {

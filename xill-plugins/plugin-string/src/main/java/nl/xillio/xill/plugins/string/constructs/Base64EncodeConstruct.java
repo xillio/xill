@@ -8,8 +8,8 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.string.services.string.StringService;
-import nl.xillio.xill.plugins.string.services.string.UrlService;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
+import nl.xillio.xill.plugins.string.services.string.UrlUtilityService;
 
 import com.google.inject.Inject;
 
@@ -23,26 +23,26 @@ import com.google.inject.Inject;
  */
 public class Base64EncodeConstruct extends Construct {
 	@Inject
-	StringService stringService;
+	StringUtilityService stringService;
 
 	@Inject
-	UrlService urlService;
+	UrlUtilityService urlUtilityService;
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(file) -> process(file, stringService, urlService),
+			(file) -> process(file, stringService, urlUtilityService),
 			new Argument("file", ATOMIC));
 	}
 
-	static MetaExpression process(final MetaExpression file, final StringService stringService, final UrlService urlService) {
+	static MetaExpression process(final MetaExpression file, final StringUtilityService stringService, final UrlUtilityService urlUtilityService) {
 		assertNotNull(file, "file");
 
 		byte[] data = null;
 
 		try {
 			String filename = file.getStringValue();
-			data = urlService.readFileToByteArray(filename);
+			data = urlUtilityService.readFileToByteArray(filename);
 		} catch (IOException e) {
 			throw new RobotRuntimeException("IO Exception");
 		}

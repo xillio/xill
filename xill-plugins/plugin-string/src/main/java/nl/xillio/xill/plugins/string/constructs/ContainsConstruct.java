@@ -5,7 +5,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.plugins.string.services.string.StringService;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 
 import com.google.inject.Inject;
 
@@ -20,7 +20,7 @@ import com.google.inject.Inject;
 public class ContainsConstruct extends Construct {
 
 	@Inject
-	private StringService stringService;
+	private StringUtilityService stringService;
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
@@ -30,7 +30,7 @@ public class ContainsConstruct extends Construct {
 			new Argument("needle", ATOMIC));
 	}
 
-	static MetaExpression process(final MetaExpression haystack, final MetaExpression needle, final StringService stringService) {
+	static MetaExpression process(final MetaExpression haystack, final MetaExpression needle, final StringUtilityService stringService) {
 		// If either is null then false.
 		if (haystack == NULL || needle == NULL) {
 			return fromValue(false);

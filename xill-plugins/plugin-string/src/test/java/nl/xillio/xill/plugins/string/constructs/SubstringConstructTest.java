@@ -6,7 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.string.services.string.StringService;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -38,7 +38,7 @@ public class SubstringConstructTest {
 		when(end.isNull()).thenReturn(false);
 
 		String returnValue = "est";
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(stringService.subString(stringValue, startValue, endValue)).thenReturn(returnValue);
 		// Run
 		MetaExpression result = SubstringConstruct.process(string, start, end, stringService);
@@ -72,7 +72,7 @@ public class SubstringConstructTest {
 		when(end.isNull()).thenReturn(false);
 
 		String returnValue = stringValue;
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(stringService.subString(stringValue, startValue, stringValue.length())).thenReturn(returnValue);
 		// Run
 		MetaExpression result = SubstringConstruct.process(string, start, end, stringService);
@@ -106,7 +106,7 @@ public class SubstringConstructTest {
 		when(end.isNull()).thenReturn(false);
 
 		String returnValue = "est";
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(stringService.subString(stringValue, 0, endValue)).thenReturn(returnValue);
 		// Run
 		MetaExpression result = SubstringConstruct.process(string, start, end, stringService);
@@ -140,7 +140,7 @@ public class SubstringConstructTest {
 		when(end.isNull()).thenReturn(false);
 
 		Exception returnValue = new StringIndexOutOfBoundsException();
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(stringService.subString(stringValue, startValue, endValue)).thenThrow(returnValue);
 		SubstringConstruct.process(string, start, end, stringService);
 

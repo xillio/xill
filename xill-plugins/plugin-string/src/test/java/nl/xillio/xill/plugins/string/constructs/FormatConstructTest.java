@@ -22,7 +22,7 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.string.exceptions.FailedToGetMatcherException;
 import nl.xillio.xill.plugins.string.services.string.RegexService;
-import nl.xillio.xill.plugins.string.services.string.StringService;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 
 import org.testng.annotations.Test;
 
@@ -52,7 +52,7 @@ public class FormatConstructTest {
 	 * @throws PatternSyntaxException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "SyntaxError in the by the system provided pattern.")
-	public void processPatternSyntaxException() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
+	public void processPatternSyntaxException() throws IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String fileNameValue = "decimal %d%n";
 		MetaExpression fileName = mock(MetaExpression.class);
@@ -65,7 +65,7 @@ public class FormatConstructTest {
 
 		Exception exception = new PatternSyntaxException("", "", 0);
 		RegexService regexService = mock(RegexService.class);
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(regexService.getMatcher(anyString(), anyString(), anyInt())).thenThrow(exception);
 
 		// Run
@@ -87,7 +87,7 @@ public class FormatConstructTest {
 	 * @throws PatternSyntaxException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Illegal argument handed when trying to match.")
-	public void processIllegalArgumentException() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
+	public void processIllegalArgumentException() throws IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String fileNameValue = "decimal %d%n";
 		MetaExpression fileName = mock(MetaExpression.class);
@@ -100,7 +100,7 @@ public class FormatConstructTest {
 
 		Exception exception = new IllegalArgumentException();
 		RegexService regexService = mock(RegexService.class);
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(regexService.getMatcher(anyString(), anyString(), anyInt())).thenThrow(exception);
 
 		// Run
@@ -122,7 +122,7 @@ public class FormatConstructTest {
 	 * @throws PatternSyntaxException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Date/Time conversions are not supported.")
-	public void processDateTimeConversion() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
+	public void processDateTimeConversion() throws IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String fileNameValue = "decimal %T%n";
 		MetaExpression fileName = mock(MetaExpression.class);
@@ -138,7 +138,7 @@ public class FormatConstructTest {
 		String errorValue = "T";
 		List<String> matchValue = Arrays.asList(errorValue);
 		RegexService regexService = mock(RegexService.class);
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(regexService.tryMatch(any())).thenReturn(matchValue);
 
 		// Run
@@ -160,7 +160,7 @@ public class FormatConstructTest {
 	 * @throws PatternSyntaxException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Unexpected conversion type: Z")
-	public void processUnexpectedConversion() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
+	public void processUnexpectedConversion() throws IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String fileNameValue = "decimal %Z%n";
 		MetaExpression fileName = mock(MetaExpression.class);
@@ -176,7 +176,7 @@ public class FormatConstructTest {
 		String errorValue = "Z";
 		List<String> matchValue = Arrays.asList(errorValue);
 		RegexService regexService = mock(RegexService.class);
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(regexService.tryMatch(any())).thenReturn(matchValue);
 
 		// Run
@@ -198,7 +198,7 @@ public class FormatConstructTest {
 	 * @throws PatternSyntaxException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Not enough arguments.")
-	public void processMissingFormatException() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
+	public void processMissingFormatException() throws IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String textValue = "decimal";
 		MetaExpression text = mock(MetaExpression.class);
@@ -213,7 +213,7 @@ public class FormatConstructTest {
 
 		List<String> matchValue = Arrays.asList();
 		RegexService regexService = mock(RegexService.class);
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(regexService.tryMatch(any())).thenReturn(matchValue);
 		when(stringService.format(eq(textValue), any())).thenThrow(new MissingFormatArgumentException("argument"));
 
@@ -236,7 +236,7 @@ public class FormatConstructTest {
 	 * @throws PatternSyntaxException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Illegal format handed.")
-	public void processIllegalFormatException() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
+	public void processIllegalFormatException() throws IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String textValue = "decimal";
 		MetaExpression text = mock(MetaExpression.class);
@@ -251,7 +251,7 @@ public class FormatConstructTest {
 
 		List<String> matchValue = Arrays.asList();
 		RegexService regexService = mock(RegexService.class);
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(regexService.tryMatch(any())).thenReturn(matchValue);
 		when(stringService.format(eq(textValue), any())).thenThrow(new IllegalFormatPrecisionException(3));
 

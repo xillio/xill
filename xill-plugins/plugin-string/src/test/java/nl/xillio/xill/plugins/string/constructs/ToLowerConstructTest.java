@@ -5,7 +5,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.plugins.string.services.string.StringService;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -27,7 +27,7 @@ public class ToLowerConstructTest {
 		when(string.isNull()).thenReturn(false);
 
 		String returnValue = "testing";
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(stringService.toLowerCase(stringValue)).thenReturn(returnValue);
 		// Run
 		MetaExpression result = ToLowerConstruct.process(string, stringService);

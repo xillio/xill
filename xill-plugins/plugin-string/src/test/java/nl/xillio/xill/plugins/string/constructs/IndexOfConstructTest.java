@@ -5,7 +5,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.plugins.string.services.string.StringService;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -34,7 +34,7 @@ public class IndexOfConstructTest {
 		when(index.getNumberValue()).thenReturn(indexValue);
 
 		int returnValue = 7;
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(stringService.indexOf(parentValue, childValue, indexValue)).thenReturn(returnValue);
 		// Run
 		MetaExpression result = IndexOfConstruct.process(parent, child, index, stringService);

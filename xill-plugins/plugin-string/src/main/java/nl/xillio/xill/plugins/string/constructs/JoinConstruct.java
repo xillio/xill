@@ -8,7 +8,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.plugins.string.services.string.StringService;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 
 import com.google.inject.Inject;
 
@@ -17,7 +17,7 @@ import com.google.inject.Inject;
  */
 public class JoinConstruct extends Construct {
 	@Inject
-	private StringService stringService;
+	private StringUtilityService stringService;
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
@@ -27,7 +27,7 @@ public class JoinConstruct extends Construct {
 			new Argument("delimiter", fromValue(""), ATOMIC));
 	}
 
-	static MetaExpression process(final MetaExpression list, final MetaExpression delimiter, final StringService stringService) {
+	static MetaExpression process(final MetaExpression list, final MetaExpression delimiter, final StringUtilityService stringService) {
 		String output = "";
 
 		switch (list.getType()) {

@@ -5,7 +5,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.plugins.string.services.string.StringService;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 
 import com.google.inject.Inject;
 
@@ -21,7 +21,7 @@ import com.google.inject.Inject;
  */
 public class StartsWithConstruct extends Construct {
 	@Inject
-	StringService stringService;
+	StringUtilityService stringService;
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
@@ -31,7 +31,7 @@ public class StartsWithConstruct extends Construct {
 			new Argument("prefix", ATOMIC));
 	}
 
-	static MetaExpression process(final MetaExpression string1, final MetaExpression string2, final StringService stringService) {
+	static MetaExpression process(final MetaExpression string1, final MetaExpression string2, final StringUtilityService stringService) {
 		assertNotNull(string1, "string1");
 		assertNotNull(string2, "string2");
 

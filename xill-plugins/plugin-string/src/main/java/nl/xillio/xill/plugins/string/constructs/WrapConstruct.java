@@ -5,7 +5,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.plugins.string.services.string.StringService;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 
 import com.google.inject.Inject;
 
@@ -14,7 +14,7 @@ import com.google.inject.Inject;
  */
 public class WrapConstruct extends Construct {
 	@Inject
-	StringService stringService;
+	StringUtilityService stringService;
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
@@ -25,7 +25,7 @@ public class WrapConstruct extends Construct {
 			new Argument("wrapLongWords", ATOMIC));
 	}
 
-	static MetaExpression process(final MetaExpression text, final MetaExpression width, final MetaExpression wrapLong, final StringService stringService) {
+	static MetaExpression process(final MetaExpression text, final MetaExpression width, final MetaExpression wrapLong, final StringUtilityService stringService) {
 
 		String result = stringService.wrap(text.getStringValue(), width.getNumberValue().intValue(), wrapLong.getBooleanValue());
 		return fromValue(result);

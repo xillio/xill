@@ -6,7 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.string.services.string.StringService;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -33,7 +33,7 @@ public class StartsWithConstructTest {
 		when(prefix.isNull()).thenReturn(false);
 
 		boolean returnValue = true;
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(stringService.startsWith(stringValue, prefixValue)).thenReturn(returnValue);
 		// Run
 		MetaExpression result = StartsWithConstruct.process(string, prefix, stringService);
@@ -61,7 +61,7 @@ public class StartsWithConstructTest {
 		when(prefix.getStringValue()).thenReturn(prefixValue);
 		when(prefix.isNull()).thenReturn(true);
 
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 
 		StartsWithConstruct.process(string, prefix, stringService);
 

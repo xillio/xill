@@ -6,7 +6,7 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.string.services.string.StringService;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 
 import com.google.inject.Inject;
 
@@ -27,7 +27,7 @@ import com.google.inject.Inject;
  */
 public class SubstringConstruct extends Construct {
 	@Inject
-	private StringService stringService;
+	private StringUtilityService stringService;
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
@@ -38,7 +38,7 @@ public class SubstringConstruct extends Construct {
 			new Argument("end", ATOMIC));
 	}
 
-	static MetaExpression process(final MetaExpression string, final MetaExpression startVar, final MetaExpression endVar, final StringService stringService) {
+	static MetaExpression process(final MetaExpression string, final MetaExpression startVar, final MetaExpression endVar, final StringUtilityService stringService) {
 		assertNotNull(string, "string");
 		assertNotNull(startVar, "start");
 		assertNotNull(endVar, "end");

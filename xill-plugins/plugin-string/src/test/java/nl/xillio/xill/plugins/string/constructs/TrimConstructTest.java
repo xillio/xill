@@ -12,7 +12,7 @@ import java.util.List;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.string.services.string.StringService;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -40,7 +40,7 @@ public class TrimConstructTest extends ExpressionBuilderHelper {
 
 		String replaceValue = "testing";
 		String returnValue = "Testing";
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(stringService.replaceAll(stringValue, "\u00A0", " ")).thenReturn(replaceValue);
 		when(stringService.trim(replaceValue)).thenReturn(returnValue);
 		// Run
@@ -74,7 +74,7 @@ public class TrimConstructTest extends ExpressionBuilderHelper {
 		String replaceValue = "testing";
 		String trimValue = "Testing";
 		String returnValue = "Return";
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(stringService.replaceAll(stringValue, "\u00A0", " ")).thenReturn(replaceValue);
 		when(stringService.trim(replaceValue)).thenReturn(trimValue);
 		when(stringService.replaceAll(trimValue, "[\\s]+", " ")).thenReturn(returnValue);
@@ -118,7 +118,7 @@ public class TrimConstructTest extends ExpressionBuilderHelper {
 		MetaExpression internal = mock(MetaExpression.class);
 		when(internal.getBooleanValue()).thenReturn(internalValue);
 
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(stringService.replaceAll(firstValue, "\u00A0", " ")).thenReturn(firstReplaceValue);
 		when(stringService.trim(firstReplaceValue)).thenReturn(firstTrimValue);
 		when(stringService.replaceAll(secondValue, "\u00A0", " ")).thenReturn(secondReplaceValue);
@@ -174,7 +174,7 @@ public class TrimConstructTest extends ExpressionBuilderHelper {
 		MetaExpression internal = mock(MetaExpression.class);
 		when(internal.getBooleanValue()).thenReturn(internalValue);
 
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(stringService.replaceAll(firstValue, "\u00A0", " ")).thenReturn(firstReplaceValue);
 		when(stringService.trim(firstReplaceValue)).thenReturn(firstTrimValue);
 		when(stringService.replaceAll(firstTrimValue, "[\\s]+", " ")).thenReturn(firstReturnValue);
@@ -218,7 +218,7 @@ public class TrimConstructTest extends ExpressionBuilderHelper {
 		MetaExpression internal = mock(MetaExpression.class);
 		when(internal.getBooleanValue()).thenReturn(internalValue);
 
-		StringService stringService = mock(StringService.class);
+		StringUtilityService stringService = mock(StringUtilityService.class);
 
 		// Run
 		TrimConstruct.process(string, internal, stringService);

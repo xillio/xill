@@ -7,7 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.string.services.string.UrlService;
+import nl.xillio.xill.plugins.string.services.string.UrlUtilityService;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -32,7 +32,7 @@ public class AbsoluteURLConstructTest {
 		when(relativeUrl.getStringValue()).thenReturn(relativeUrlValue);
 
 		String UrlReturnValue = "http://www.xillio.nl/";
-		UrlService url = mock(UrlService.class);
+		UrlUtilityService url = mock(UrlUtilityService.class);
 		when(url.tryConvert(pageUrlValue, relativeUrlValue)).thenReturn(UrlReturnValue);
 
 		// Run
@@ -60,7 +60,7 @@ public class AbsoluteURLConstructTest {
 		when(relativeUrl.getStringValue()).thenReturn(relativeUrlValue);
 
 		String UrlReturnValue = "http://www.xillio.nl/calendar";
-		UrlService url = mock(UrlService.class);
+		UrlUtilityService url = mock(UrlUtilityService.class);
 		when(url.tryConvert(pageUrlValue, relativeUrlValue)).thenReturn(UrlReturnValue);
 		when(url.cleanupUrl(UrlReturnValue)).thenReturn(UrlReturnValue);
 
@@ -90,7 +90,7 @@ public class AbsoluteURLConstructTest {
 		MetaExpression relativeUrl = mock(MetaExpression.class);
 		when(relativeUrl.getStringValue()).thenReturn(relativeUrlValue);
 
-		UrlService url = mock(UrlService.class);
+		UrlUtilityService url = mock(UrlUtilityService.class);
 		when(url.tryConvert(pageUrlValue, relativeUrlValue)).thenReturn(null);
 
 		// Run
@@ -115,7 +115,7 @@ public class AbsoluteURLConstructTest {
 		MetaExpression relativeUrl = mock(MetaExpression.class);
 		when(relativeUrl.getStringValue()).thenReturn(relativeUrlValue);
 
-		UrlService url = mock(UrlService.class);
+		UrlUtilityService url = mock(UrlUtilityService.class);
 		when(url.tryConvert(pageUrlValue, relativeUrlValue)).thenThrow(new IllegalArgumentException());
 
 		// Run

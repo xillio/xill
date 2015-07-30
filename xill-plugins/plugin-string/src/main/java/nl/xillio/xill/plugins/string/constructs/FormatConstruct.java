@@ -15,7 +15,7 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.string.exceptions.FailedToGetMatcherException;
 import nl.xillio.xill.plugins.string.services.string.RegexService;
-import nl.xillio.xill.plugins.string.services.string.StringService;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 
 import com.google.inject.Inject;
 
@@ -35,7 +35,7 @@ public class FormatConstruct extends Construct {
 	@Inject
 	private RegexService regexService;
 	@Inject
-	private StringService stringService;
+	private StringUtilityService stringService;
 
 	/**
 	 * Create a new {@link FormatConstruct}
@@ -50,7 +50,7 @@ public class FormatConstruct extends Construct {
 			new Argument("value", LIST));
 	}
 
-	static MetaExpression process(final MetaExpression textVar, final MetaExpression valueVar, final RegexService regexService, final StringService stringService) {
+	static MetaExpression process(final MetaExpression textVar, final MetaExpression valueVar, final RegexService regexService, final StringUtilityService stringService) {
 		assertNotNull(textVar, "text");
 
 		List<MetaExpression> formatList = new ArrayList<>();

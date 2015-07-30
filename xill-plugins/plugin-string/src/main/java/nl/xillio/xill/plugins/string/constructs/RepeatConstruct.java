@@ -5,7 +5,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.plugins.string.services.string.StringService;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 
 import com.google.inject.Inject;
 
@@ -18,7 +18,7 @@ import com.google.inject.Inject;
  */
 public class RepeatConstruct extends Construct {
 	@Inject
-	private StringService stringService;
+	private StringUtilityService stringService;
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
@@ -28,7 +28,7 @@ public class RepeatConstruct extends Construct {
 			new Argument("value", ATOMIC));
 	}
 
-	static MetaExpression process(final MetaExpression string, final MetaExpression value, final StringService stringService) {
+	static MetaExpression process(final MetaExpression string, final MetaExpression value, final StringUtilityService stringService) {
 		assertNotNull(string, "string");
 		assertNotNull(value, "value");
 
