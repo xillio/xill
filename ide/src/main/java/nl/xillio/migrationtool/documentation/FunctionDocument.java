@@ -50,7 +50,9 @@ import javafx.util.Pair;
  * @author Ivor
  */
 public class FunctionDocument extends HtmlGenerator {
-	private String description, version, packet = "testRealm";
+	private String description;
+	private String version;
+	private String packet = "testRealm";
 	private List<Pair<String, String>> parameters = new ArrayList<>();
 	private final List<Pair<String, String>> examples = new ArrayList<>();
 	private final Set<Pair<String, String>> links = new HashSet<>();

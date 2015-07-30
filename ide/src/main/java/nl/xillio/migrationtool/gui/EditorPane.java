@@ -49,13 +49,39 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 	private static final Logger log = LogManager.getLogger();
 
 	@FXML
-	private Button btnUndo, btnRedo, btnBrowser, btnRegexTester, btnPreviewOpenBrowser, btnPreviewOpenRegex;
+	private Button btnUndo;
+	@FXML
+	private Button btnRedo;
+	@FXML
+	private Button btnBrowser;
+	@FXML
+	private Button btnRegexTester;
+	@FXML
+	private Button btnPreviewOpenBrowser;
+	@FXML
+	private Button btnPreviewOpenRegex;
 
 	@FXML
-	private CheckMenuItem cmiDebug, cmiInfo, cmiWarning, cmiError;
+	private CheckMenuItem cmiDebug;
+	@FXML
+	private CheckMenuItem cmiInfo;
+	@FXML
+	private CheckMenuItem cmiWarning;
+	@FXML
+	private CheckMenuItem cmiError;
 
 	@FXML
-	private Button btnRemoveAllBreakpoints, btnRun, btnStepOver, btnStepIn, btnPause, btnStop;
+	private Button btnRemoveAllBreakpoints;
+	@FXML
+	private Button btnRun;
+	@FXML
+	private Button btnStepOver;
+	@FXML
+	private Button btnStepIn;
+	@FXML
+	private Button btnPause;
+	@FXML
+	private Button btnStop;
 
 	@FXML
 	private ReplaceBar editorReplaceBar;

@@ -23,7 +23,9 @@ public class StatusBar extends AnchorPane {
 	@FXML
 	private ProgressBar barRobotProgress;
 	@FXML
-	private Labeled lblTimeRemaining, lblStatusVal;
+	private Labeled lblTimeRemaining;
+	@FXML
+	private Labeled lblStatusVal;
 
 	/**
 	 * Default constructor. A robot has to be attached to the component using setProcessor.

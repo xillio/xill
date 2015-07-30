@@ -38,9 +38,15 @@ public class UploadToServerDialog extends FXMLDialog {
 	private static final CloseableHttpClient client = HttpClientBuilder.create().build();
 
 	@FXML
-	private TextField tfserver, tfusername, tfpassword;
+	private TextField tfserver;
+	@FXML
+	private TextField tfusername;
+	@FXML
+	private TextField tfpassword;
 
-	private String serverResult, usernameResult, passwordResult;
+	private String serverResult;
+	private String usernameResult;
+	private String passwordResult;
 	private final TreeItem<Pair<File, String>> treeItem;
 	private final ProjectPane projectPane;
 

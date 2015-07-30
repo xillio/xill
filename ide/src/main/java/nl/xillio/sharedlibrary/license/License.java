@@ -57,7 +57,11 @@ public class License {
 	private boolean isValid = false;
 
 	private Document license = null;
-	private String company, contactname, contactemail, dateissued, dateexpires;
+	private String company;
+	private String contactname;
+	private String contactemail;
+	private String dateissued;
+	private String dateexpires;
 	private LicenseType licensetype;
 	private final List<SoftwareModule> modules = new LinkedList<>();
 

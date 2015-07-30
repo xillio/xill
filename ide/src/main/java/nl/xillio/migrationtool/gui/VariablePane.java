@@ -27,7 +27,11 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
 	private TableView<ObservableVariable> tblVariables;
 
 	@FXML
-	private TableColumn<ObservableVariable, String> colVariableName, colVariableType, colVariableValue;
+	private TableColumn<ObservableVariable, String> colVariableName;
+	@FXML
+	private TableColumn<ObservableVariable, String> colVariableType;
+	@FXML
+	private TableColumn<ObservableVariable, String> colVariableValue;
 	@FXML
 	private TableColumn<ObservableVariable, Boolean> colVariableGlobal;
 
