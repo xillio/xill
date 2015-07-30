@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.IllegalFormatPrecisionException;
 import java.util.List;
 import java.util.MissingFormatArgumentException;
 import java.util.regex.PatternSyntaxException;
@@ -194,6 +195,40 @@ public class FormatConstructTest {
 		StringService stringService = mock(StringService.class);
 		when(regexService.tryMatch(any())).thenReturn(matchValue);
 		when(stringService.format(eq(textValue), any())).thenThrow(new MissingFormatArgumentException("argument"));
+
+		// Run
+		FormatConstruct.process(text, list, regexService, stringService);
+
+		// Verify
+		verify(regexService, times(1)).getMatcher(anyString(), anyString(), anyInt());
+		verify(regexService, times(1)).tryMatch(any());
+		verify(stringService, times(1)).format(anyString(), any());
+	}
+	
+	/**
+	 * <p>
+	 * Tests wheter the process can handle an illegal argument given to the matcher.
+	 * </p>
+	 */
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Illegal format handed.")
+	public void processIllegalFormatException() {
+		// Mock
+		String textValue = "decimal";
+		MetaExpression text = mock(MetaExpression.class);
+		when(text.getStringValue()).thenReturn(textValue);
+		when(text.isNull()).thenReturn(false);
+
+		List<MetaExpression> listValue = new ArrayList<>();
+		MetaExpression listItem = mock(MetaExpression.class);
+		listValue.add(listItem);
+		MetaExpression list = mock(MetaExpression.class);
+		when(list.getValue()).thenReturn(listValue);
+
+		List<String> matchValue = Arrays.asList();
+		RegexService regexService = mock(RegexService.class);
+		StringService stringService = mock(StringService.class);
+		when(regexService.tryMatch(any())).thenReturn(matchValue);
+		when(stringService.format(eq(textValue), any())).thenThrow(new IllegalFormatPrecisionException(3));
 
 		// Run
 		FormatConstruct.process(text, list, regexService, stringService);

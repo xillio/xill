@@ -1,6 +1,7 @@
 package nl.xillio.xill.plugins.string.constructs;
 
 import java.util.ArrayList;
+import java.util.IllegalFormatException;
 import java.util.List;
 import java.util.MissingFormatArgumentException;
 import java.util.regex.Matcher;
@@ -121,6 +122,9 @@ public class FormatConstruct extends Construct {
 			return fromValue(stringService.format(textVar.getStringValue(), list));
 		} catch (MissingFormatArgumentException e) {
 			throw new RobotRuntimeException("Not enough arguments.");
+		}
+		catch (IllegalFormatException e){
+			throw new RobotRuntimeException("Illegal format handed.");
 		}
 	}
 }

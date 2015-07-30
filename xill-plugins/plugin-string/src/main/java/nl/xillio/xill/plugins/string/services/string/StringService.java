@@ -1,7 +1,7 @@
 package nl.xillio.xill.plugins.string.services.string;
 
+import java.util.IllegalFormatException;
 import java.util.List;
-import java.util.MissingFormatArgumentException;
 
 import nl.xillio.xill.plugins.string.StringXillPlugin;
 
@@ -39,16 +39,16 @@ public interface StringService {
 
 	/**
 	 * Formats a texts with specified arguments.
-	 * 
+	 *
 	 * @param text
 	 *        The text we format.
 	 * @param args
 	 *        The arguments we give.
 	 * @return
 	 *         Returns the formatted text.
-	 * @throws MissingFormatArgumentException
+	 * @throws IllegalFormatException
 	 */
-	public String format(String text, List<Object> args) throws MissingFormatArgumentException;
+	public String format(String text, List<Object> args) throws IllegalFormatException;
 
 	/**
 	 * Returns the index of the first occurrance of the needle in the haystack, starting from an index.
@@ -78,7 +78,7 @@ public interface StringService {
 
 	/**
 	 * Converts the string argument into an array of bytes.
-	 * 
+	 *
 	 * @param text
 	 *        The string we're convering.
 	 * @return
@@ -88,7 +88,7 @@ public interface StringService {
 
 	/**
 	 * Returns a string which represents the printed form of the data.
-	 * 
+	 *
 	 * @param data
 	 *        The data we want to convert.
 	 * @return
@@ -162,7 +162,7 @@ public interface StringService {
 
 	/**
 	 * Returns a substring of a given string at the indices of start and end.
-	 * 
+	 *
 	 * @param text
 	 *        The main string.
 	 * @param start

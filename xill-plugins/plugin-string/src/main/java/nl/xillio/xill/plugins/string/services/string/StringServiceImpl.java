@@ -1,7 +1,7 @@
 package nl.xillio.xill.plugins.string.services.string;
 
+import java.util.IllegalFormatException;
 import java.util.List;
-import java.util.MissingFormatArgumentException;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -27,7 +27,7 @@ public class StringServiceImpl implements StringService {
 	}
 
 	@Override
-	public String format(final String text, final List<Object> args) throws MissingFormatArgumentException {
+	public String format(final String text, final List<Object> args) throws IllegalFormatException {
 		return String.format(text, args.toArray());
 	}
 
