@@ -16,7 +16,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  *
  * Test the {@link RemoveConstructConstruct}.
  *
- * @author Sander
+ * @author Sander Visser
  *
  */
 public class RemoveConstructTest extends ExpressionBuilderHelper {
@@ -27,6 +27,7 @@ public class RemoveConstructTest extends ExpressionBuilderHelper {
 	@Test
 	public void testProcessRemoveExistingElementFromList() {
 
+		@SuppressWarnings("unchecked")
 		ArrayList<MetaExpression> list = mock(ArrayList.class);
 
 		// mock
@@ -60,6 +61,7 @@ public class RemoveConstructTest extends ExpressionBuilderHelper {
 	@Test
 	public void testProcessRemoveExistingElementFromObject() {
 
+		@SuppressWarnings("unchecked")
 		LinkedHashMap<String, MetaExpression> obj = mock(LinkedHashMap.class);
 
 		// mock
@@ -93,6 +95,7 @@ public class RemoveConstructTest extends ExpressionBuilderHelper {
 	@Test
 	public void testProcessRemoveNotExistingElementFromObject() {
 
+		@SuppressWarnings("unchecked")
 		LinkedHashMap<String, MetaExpression> obj = mock(LinkedHashMap.class);
 
 		// mock
@@ -129,6 +132,7 @@ public class RemoveConstructTest extends ExpressionBuilderHelper {
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Index is out of bounds: (.+)")
 	public void testProcessIndexOutOfBounds() throws Throwable {
 		// mock
+		@SuppressWarnings("unchecked")
 		ArrayList<MetaExpression> list = mock(ArrayList.class);
 
 		MetaExpression input = mock(MetaExpression.class);

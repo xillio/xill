@@ -25,7 +25,7 @@ public class RemoveConstruct extends Construct {
 		return new ConstructProcessor((input, index) -> process(input, index), new Argument("input", LIST, OBJECT), new Argument("index", ATOMIC));
 	}
 
- static MetaExpression process(final MetaExpression input, final MetaExpression indexVar) {
+	static MetaExpression process(final MetaExpression input, final MetaExpression indexVar) {
 		if (input.getType() == LIST) {
 			@SuppressWarnings("unchecked")
 			List<MetaExpression> list = (List<MetaExpression>) input.getValue();

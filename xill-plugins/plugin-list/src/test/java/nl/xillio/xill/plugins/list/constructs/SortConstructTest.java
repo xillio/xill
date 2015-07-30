@@ -28,9 +28,12 @@ public class SortConstructTest extends ExpressionBuilderHelper {
 	public void  testProcessWithNormalInput() {
 
 		// mock
-
+		String expectedOutput = "This is the expected output";
+		MetaExpression outputExpression = fromValue(expectedOutput);
+		
+		
 		Sort sort = mock(Sort.class);
-		when(sort.asSorted(null, true, true)).thenReturn(true);
+		when(sort.asSorted(extractValue(outputExpression), true, true)).thenReturn(true);
 
 		MetaExpression recursive = mock(MetaExpression.class);
 		when(recursive.getBooleanValue()).thenReturn(true);
@@ -39,10 +42,10 @@ public class SortConstructTest extends ExpressionBuilderHelper {
 		when(onKeys.getBooleanValue()).thenReturn(true);
 
 		// run
-		MetaExpression output = SortConstruct.process(NULL, recursive, onKeys, sort);
+		MetaExpression output = SortConstruct.process(outputExpression, recursive, onKeys, sort);
 
 		// verify
-		verify(sort, times(1)).asSorted(null, true, true);
+		verify(sort, times(1)).asSorted(extractValue(outputExpression), true, true);
 		verify(recursive, times(1)).getBooleanValue();
 		verify(onKeys, times(1)).getBooleanValue();
 
