@@ -65,7 +65,7 @@ public class RegexConstructTest extends ExpressionBuilderHelper {
 	/**
 	 * Test the process method for when it throws an error.
 	 */
-	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid pattern in regex()")
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid pattern in regex\\(\\)")
 	public void processInvalidPattern() {
 		// Mock
 		String valueValue = "I need a doctor";
