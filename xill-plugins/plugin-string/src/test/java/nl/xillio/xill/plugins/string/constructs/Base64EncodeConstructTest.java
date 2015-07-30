@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.math.constructs;
+package nl.xillio.xill.plugins.string.constructs;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -11,7 +11,6 @@ import java.io.IOException;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.string.constructs.Base64EncodeConstruct;
 import nl.xillio.xill.plugins.string.services.string.StringService;
 import nl.xillio.xill.plugins.string.services.string.UrlService;
 

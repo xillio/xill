@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.math.constructs;
+package nl.xillio.xill.plugins.string.constructs;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -10,7 +10,6 @@ import java.util.regex.PatternSyntaxException;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.string.constructs.MatchesConstruct;
 import nl.xillio.xill.plugins.string.services.string.RegexService;
 
 import org.testng.Assert;
@@ -80,7 +79,7 @@ public class MatchesConstructTest {
 		verify(regexService, times(1)).matches(any());
 		verify(regexService, times(1)).getMatcher(regexValue, valueValue, timeoutValue * 1000);
 	}
-	
+
 	/**
 	 * Test the process method for when it throws an error.
 	 */

@@ -40,8 +40,7 @@ public class TrimConstruct extends Construct {
 			new Argument("internal", FALSE, ATOMIC));
 	}
 
-	@SuppressWarnings("javadoc")
-	public static MetaExpression process(final MetaExpression string, final MetaExpression internal, final StringService stringService) {
+	static MetaExpression process(final MetaExpression string, final MetaExpression internal, final StringService stringService) {
 		assertNotNull(string, "string");
 
 		if (string.getType() == ExpressionDataType.LIST) {

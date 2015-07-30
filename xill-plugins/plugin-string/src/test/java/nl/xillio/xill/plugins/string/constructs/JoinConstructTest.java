@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.math.constructs;
+package nl.xillio.xill.plugins.string.constructs;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -13,7 +13,6 @@ import java.util.Map;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
-import nl.xillio.xill.plugins.string.constructs.JoinConstruct;
 import nl.xillio.xill.plugins.string.services.string.StringService;
 
 import org.testng.Assert;

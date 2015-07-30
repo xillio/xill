@@ -15,7 +15,7 @@ public interface UrlService {
 
 	/**
 	 * Recieves an URL and returns a cleaned version.
-	 * 
+	 *
 	 * @param url
 	 *        The URL to clean.
 	 * @return
@@ -24,8 +24,19 @@ public interface UrlService {
 	public String cleanupUrl(final String url);
 
 	/**
-	 * Tries to convert the relativeUrl using the pageUrl
+	 * Reads a file to a byte array given a filename.
 	 * 
+	 * @param fileName
+	 *        The name of the file we want to read.
+	 * @return
+	 *         A bytearray with content.
+	 * @throws IOException
+	 */
+	public byte[] readFileToByteArray(String fileName) throws IOException;
+
+	/**
+	 * Tries to convert the relativeUrl using the pageUrl
+	 *
 	 * @param pageUrl
 	 *        The pageUrl.
 	 * @param relativeUrl
@@ -34,26 +45,17 @@ public interface UrlService {
 	 *         A converted relativeUrl as a string.
 	 */
 	public String tryConvert(final String pageUrl, final String relativeUrl);
-	
+
 	/**
 	 * Writes a given output in a file.
+	 * 
 	 * @param fileName
-	 * 					The name of the file.
+	 *        The name of the file.
 	 * @param output
-	 * 					The output to write.
-	 * @throws FileNotFoundException 
-	 * @throws IOException 
+	 *        The output to write.
+	 * @throws FileNotFoundException
+	 * @throws IOException
 	 */
 	public void write(String fileName, byte[] output) throws FileNotFoundException, IOException;
-	
-	/**
-	 * Reads a file to a byte array given a filename.
-	 * @param fileName
-	 * 					The name of the file we want to read.
-	 * @return
-	 * 					A bytearray with content.
-	 * @throws IOException 
-	 */
-	public byte[] readFileToByteArray(String fileName) throws IOException;
 
 }

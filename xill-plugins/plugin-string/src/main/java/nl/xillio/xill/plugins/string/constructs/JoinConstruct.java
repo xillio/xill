@@ -27,8 +27,6 @@ public class JoinConstruct extends Construct {
 			new Argument("delimiter", fromValue(""), ATOMIC));
 	}
 
-	@SuppressWarnings({"unchecked", "javadoc"})
-	public
 	static MetaExpression process(final MetaExpression list, final MetaExpression delimiter, final StringService stringService) {
 		String output = "";
 
@@ -37,10 +35,12 @@ public class JoinConstruct extends Construct {
 				output = list.getStringValue();
 				break;
 			case LIST:
+				@SuppressWarnings("unchecked")
 				String[] stringList = ((List<MetaExpression>) list.getValue()).stream().map(MetaExpression::getStringValue).toArray(i -> new String[i]);
 				output = stringService.join(stringList, delimiter.getStringValue());
 				break;
 			case OBJECT:
+				@SuppressWarnings("unchecked")
 				String[] stringObject = ((Map<String, MetaExpression>) list.getValue()).values().stream().map(MetaExpression::getStringValue).toArray(i -> new String[i]);
 				output = stringService.join(stringObject, delimiter.getStringValue());
 				break;

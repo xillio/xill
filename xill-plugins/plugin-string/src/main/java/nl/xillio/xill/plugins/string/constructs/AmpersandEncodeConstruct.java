@@ -29,9 +29,7 @@ public class AmpersandEncodeConstruct extends Construct {
 			new Argument("String", ATOMIC));
 	}
 
-	@SuppressWarnings("javadoc")
-	public static MetaExpression process(final MetaExpression stringVar, final RegexService regexService) {
-
+	static MetaExpression process(final MetaExpression stringVar, final RegexService regexService) {
 		assertNotNull(stringVar, "string");
 
 		String text = stringVar.getStringValue();

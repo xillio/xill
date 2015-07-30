@@ -26,14 +26,14 @@ public class AllMatchesConstruct extends Construct {
 
 	@Inject
 	private RegexService regexService;
+
 	/**
 	 * Create a new {@link AllMatchesConstruct}
 	 *
 	 * @param regexConstruct
 	 *        the construct used to perform the matching
 	 */
-	public AllMatchesConstruct() {
-	}
+	public AllMatchesConstruct() {}
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
@@ -44,8 +44,7 @@ public class AllMatchesConstruct extends Construct {
 			new Argument("timeout", fromValue(RegexConstruct.REGEX_TIMEOUT), ATOMIC));
 	}
 
-	@SuppressWarnings("javadoc")
-	public static MetaExpression process(final MetaExpression textVar, final MetaExpression regexVar, final MetaExpression timeoutVar,
+	static MetaExpression process(final MetaExpression textVar, final MetaExpression regexVar, final MetaExpression timeoutVar,
 			final RegexService regexService) {
 
 		List<MetaExpression> list = new ArrayList<>();

@@ -10,9 +10,12 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 
+import com.google.inject.Singleton;
+
 /**
  * This is the main implementation of the {@link UrlService}
  */
+@Singleton
 public class UrlServiceImpl implements UrlService {
 
 	private static String getParentUrl(final String pageurl, String relativeurl) {
@@ -35,6 +38,11 @@ public class UrlServiceImpl implements UrlService {
 	public String cleanupUrl(final String url) {
 		String cleaned = url.replace("/./", "/");
 		return cleaned.replaceAll("/[^/]*/\\.\\./", "/");
+	}
+
+	@Override
+	public byte[] readFileToByteArray(final String fileName) throws IOException {
+		return FileUtils.readFileToByteArray(new File(fileName));
 	}
 
 	@Override
@@ -85,14 +93,9 @@ public class UrlServiceImpl implements UrlService {
 	}
 
 	@Override
-	public void write(String fileName, byte[] output) throws FileNotFoundException, IOException {
+	public void write(final String fileName, final byte[] output) throws FileNotFoundException, IOException {
 		OutputStream out = new FileOutputStream(fileName);
 		out.write(output);
 		out.close();
-	}
-
-	@Override
-	public byte[] readFileToByteArray(String fileName) throws IOException {
-		return FileUtils.readFileToByteArray(new File(fileName));
 	}
 }

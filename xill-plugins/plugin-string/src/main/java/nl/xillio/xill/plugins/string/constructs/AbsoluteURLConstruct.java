@@ -29,15 +29,14 @@ public class AbsoluteURLConstruct extends Construct {
 			new Argument("relativeUrl", ATOMIC));
 	}
 
-	@SuppressWarnings("javadoc")
-	public static MetaExpression process(final MetaExpression pageurlVar, final MetaExpression relativeurlVar, final UrlService urlService) {
+	static MetaExpression process(final MetaExpression pageurlVar, final MetaExpression relativeurlVar, final UrlService urlService) {
 		String pageurl = pageurlVar.getStringValue().trim();
 		String relativeurl = relativeurlVar.getStringValue().trim();
 
 		if (!pageurl.startsWith("http://") && !pageurl.startsWith("https://")) {
 			pageurl = "http://" + pageurl;
 		}
-		
+
 		if (pageurl.endsWith("/") && relativeurl.isEmpty()) {
 			pageurl = pageurl.substring(0, pageurl.length() - 1);
 		}

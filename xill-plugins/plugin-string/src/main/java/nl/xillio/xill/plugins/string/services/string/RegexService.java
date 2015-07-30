@@ -35,8 +35,22 @@ public interface RegexService {
 	public String escapeXML(String text);
 
 	/**
+	 *
+	 * @param regex
+	 *        the pattern
+	 * @param value
+	 *        the haystack
+	 * @param timeout
+	 *        in seconds
+	 * @return the matcher
+	 * @throws IllegalArgumentException
+	 * @throws PatternSyntaxException
+	 */
+	public Matcher getMatcher(String regex, String value, int timeout) throws IllegalArgumentException, PatternSyntaxException;
+
+	/**
 	 * Attempts to match an entire region to a pattern.
-	 * 
+	 *
 	 * @param matcher
 	 *        The Matcher we're matching with.
 	 * @return
@@ -46,7 +60,7 @@ public interface RegexService {
 
 	/**
 	 * Lets the matcher replace all subsequences of a given input with the replacement.
-	 * 
+	 *
 	 * @param matcher
 	 *        The matcher we're using.
 	 * @param replacement
@@ -58,7 +72,7 @@ public interface RegexService {
 
 	/**
 	 * Lets the matcher replace the first subsequence of a given input with the replacement.
-	 * 
+	 *
 	 * @param matcher
 	 *        The matcher we're using.
 	 * @param replacement
@@ -70,7 +84,7 @@ public interface RegexService {
 
 	/**
 	 * Returns a list of matches form a matcher.
-	 * 
+	 *
 	 * @param matcher
 	 *        The Matcher we're using.
 	 * @return
@@ -80,7 +94,7 @@ public interface RegexService {
 
 	/**
 	 * Returns a list of matches from a matcher
-	 * 
+	 *
 	 * @param matcher
 	 *        The Matcher we're using.
 	 * @return
@@ -99,19 +113,5 @@ public interface RegexService {
 	 *         An unescaped text.
 	 */
 	public String unescapeXML(String text, int passes);
-	
-	/**
-	 *
-	 * @param regex
-	 *        the pattern
-	 * @param value
-	 *        the haystack
-	 * @param timeout
-	 *        in seconds
-	 * @return the matcher
-	 * @throws IllegalArgumentException 
-	 * @throws PatternSyntaxException 
-	 */
-	public Matcher getMatcher(String regex, String value, int timeout)  throws IllegalArgumentException, PatternSyntaxException ;
 
 }

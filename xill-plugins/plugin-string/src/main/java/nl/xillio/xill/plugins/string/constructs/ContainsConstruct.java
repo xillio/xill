@@ -30,8 +30,7 @@ public class ContainsConstruct extends Construct {
 			new Argument("needle", ATOMIC));
 	}
 
-	@SuppressWarnings("javadoc")
-	public static MetaExpression process(final MetaExpression haystack, final MetaExpression needle, final StringService stringService) {
+	static MetaExpression process(final MetaExpression haystack, final MetaExpression needle, final StringService stringService) {
 		// If either is null then false.
 		if (haystack == NULL || needle == NULL) {
 			return fromValue(false);

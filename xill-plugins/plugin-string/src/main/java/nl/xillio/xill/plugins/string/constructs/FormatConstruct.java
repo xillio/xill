@@ -48,8 +48,7 @@ public class FormatConstruct extends Construct {
 			new Argument("value", LIST));
 	}
 
-	@SuppressWarnings("javadoc")
-	public static MetaExpression process(final MetaExpression textVar, final MetaExpression valueVar, final RegexService regexService, final StringService stringService) {
+	static MetaExpression process(final MetaExpression textVar, final MetaExpression valueVar, final RegexService regexService, final StringService stringService) {
 		assertNotNull(textVar, "text");
 
 		List<MetaExpression> formatList = new ArrayList<>();

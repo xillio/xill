@@ -1,7 +1,5 @@
 package nl.xillio.xill.plugins.string.constructs;
 
-import com.google.inject.Inject;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
@@ -9,6 +7,8 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.string.services.string.StringService;
+
+import com.google.inject.Inject;
 
 /**
  *
@@ -38,8 +38,7 @@ public class SubstringConstruct extends Construct {
 			new Argument("end", ATOMIC));
 	}
 
-	@SuppressWarnings("javadoc")
-	public static MetaExpression process(final MetaExpression string, final MetaExpression startVar, final MetaExpression endVar, StringService stringService) {
+	static MetaExpression process(final MetaExpression string, final MetaExpression startVar, final MetaExpression endVar, final StringService stringService) {
 		assertNotNull(string, "string");
 		assertNotNull(startVar, "start");
 		assertNotNull(endVar, "end");
@@ -61,7 +60,7 @@ public class SubstringConstruct extends Construct {
 		}
 
 		try {
-			return fromValue(stringService.subString(text,start, end));
+			return fromValue(stringService.subString(text, start, end));
 		} catch (StringIndexOutOfBoundsException e) {
 			throw new RobotRuntimeException("Index out of bounds.");
 		}

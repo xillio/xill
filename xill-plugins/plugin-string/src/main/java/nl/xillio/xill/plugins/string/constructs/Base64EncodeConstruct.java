@@ -35,8 +35,7 @@ public class Base64EncodeConstruct extends Construct {
 			new Argument("file", ATOMIC));
 	}
 
-	@SuppressWarnings("javadoc")
-	public static MetaExpression process(final MetaExpression file, final StringService stringService, final UrlService urlService) {
+	static MetaExpression process(final MetaExpression file, final StringService stringService, final UrlService urlService) {
 		assertNotNull(file, "file");
 
 		byte[] data = null;

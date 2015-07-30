@@ -27,6 +27,11 @@ public class StringServiceImpl implements StringService {
 	}
 
 	@Override
+	public String format(final String text, final List<Object> args) throws MissingFormatArgumentException {
+		return String.format(text, args.toArray());
+	}
+
+	@Override
 	public int indexOf(final String haystack, final String needle, final int index) {
 		return haystack.indexOf(needle, index);
 	}
@@ -34,6 +39,16 @@ public class StringServiceImpl implements StringService {
 	@Override
 	public String join(final String[] input, final String delimiter) {
 		return StringUtils.join(input, delimiter);
+	}
+
+	@Override
+	public byte[] parseBase64Binary(final String text) {
+		return DatatypeConverter.parseBase64Binary(text);
+	}
+
+	@Override
+	public String printBase64Binary(final byte[] data) {
+		return DatatypeConverter.printBase64Binary(data);
 	}
 
 	@Override
@@ -62,6 +77,11 @@ public class StringServiceImpl implements StringService {
 	}
 
 	@Override
+	public String subString(final String text, final int start, final int end) {
+		return text.substring(start, end);
+	}
+
+	@Override
 	public String toLowerCase(final String toLower) {
 		return toLower.toLowerCase();
 	}
@@ -79,25 +99,5 @@ public class StringServiceImpl implements StringService {
 	@Override
 	public String wrap(final String text, final int width, final boolean wrapLongWords) {
 		return WordUtils.wrap(text, width, "\n", wrapLongWords);
-	}
-
-	@Override
-	public String subString(String text, int start, int end) {
-		return text.substring(start, end);
-	}
-
-	@Override
-	public byte[] parseBase64Binary(String text) {
-		return DatatypeConverter.parseBase64Binary(text);
-	}
-
-	@Override
-	public String printBase64Binary(byte[] data) {
-		return DatatypeConverter.printBase64Binary(data);
-	}
-
-	@Override
-	public String format(String text, List<Object> args) throws MissingFormatArgumentException {
-		return String.format(text, args.toArray());
 	}
 }

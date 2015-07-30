@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.math.constructs;
+package nl.xillio.xill.plugins.string.constructs;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -9,7 +9,6 @@ import java.security.NoSuchAlgorithmException;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.string.constructs.CreateMD5Construct;
 import nl.xillio.xill.plugins.string.services.string.RegexService;
 
 import org.testng.Assert;

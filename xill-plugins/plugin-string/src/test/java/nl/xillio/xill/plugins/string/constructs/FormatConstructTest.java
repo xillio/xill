@@ -1,12 +1,13 @@
-package nl.xillio.xill.plugins.math.constructs;
+package nl.xillio.xill.plugins.string.constructs;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -18,7 +19,6 @@ import java.util.regex.PatternSyntaxException;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.string.constructs.FormatConstruct;
 import nl.xillio.xill.plugins.string.services.string.RegexService;
 import nl.xillio.xill.plugins.string.services.string.StringService;
 
@@ -70,7 +70,7 @@ public class FormatConstructTest {
 		verify(regexService, times(0)).tryMatch(any());
 		verify(stringService, times(0)).format(anyString(), any());
 	}
-	
+
 	/**
 	 * <p>
 	 * Tests wheter the process can handle an illegal argument given to the matcher.
@@ -101,7 +101,7 @@ public class FormatConstructTest {
 		verify(regexService, times(0)).tryMatch(any());
 		verify(stringService, times(0)).format(anyString(), any());
 	}
-	
+
 	/**
 	 * <p>
 	 * Tests wheter the process can handle an illegal argument given to the matcher.
@@ -135,7 +135,7 @@ public class FormatConstructTest {
 		verify(regexService, times(1)).tryMatch(any());
 		verify(stringService, times(0)).format(anyString(), any());
 	}
-	
+
 	/**
 	 * <p>
 	 * Tests wheter the process can handle an illegal argument given to the matcher.
@@ -169,7 +169,7 @@ public class FormatConstructTest {
 		verify(regexService, times(1)).tryMatch(any());
 		verify(stringService, times(0)).format(anyString(), any());
 	}
-	
+
 	/**
 	 * <p>
 	 * Tests wheter the process can handle an illegal argument given to the matcher.

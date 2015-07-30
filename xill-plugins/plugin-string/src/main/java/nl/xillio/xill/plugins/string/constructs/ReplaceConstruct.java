@@ -51,8 +51,7 @@ public class ReplaceConstruct extends Construct {
 
 	}
 
-	@SuppressWarnings("javadoc")
-	public static MetaExpression process(final MetaExpression[] input, final RegexService regexService, final StringService stringService) {
+	static MetaExpression process(final MetaExpression[] input, final RegexService regexService, final StringService stringService) {
 
 		for (int i = 0; i < 5; i++) {
 			assertNotNull(input[i], "input");

@@ -1,20 +1,19 @@
-package nl.xillio.xill.plugins.math.constructs;
+package nl.xillio.xill.plugins.string.constructs;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.plugins.string.constructs.ToUpperConstruct;
 import nl.xillio.xill.plugins.string.services.string.StringService;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * Test the {@link ToUpperConstruct}.
+ * Test the {@link ToLowerConstruct}.
  */
-public class ToUpperConstructTest {
+public class ToLowerConstructTest {
 
 	/**
 	 * Test the process method under normal circumstances.
@@ -27,14 +26,14 @@ public class ToUpperConstructTest {
 		when(string.getStringValue()).thenReturn(stringValue);
 		when(string.isNull()).thenReturn(false);
 
-		String returnValue = "TESTING";
+		String returnValue = "testing";
 		StringService stringService = mock(StringService.class);
-		when(stringService.toUpperCase(stringValue)).thenReturn(returnValue);
+		when(stringService.toLowerCase(stringValue)).thenReturn(returnValue);
 		// Run
-		MetaExpression result = ToUpperConstruct.process(string, stringService);
+		MetaExpression result = ToLowerConstruct.process(string, stringService);
 
 		// Verify
-		verify(stringService, times(1)).toUpperCase(stringValue);
+		verify(stringService, times(1)).toLowerCase(stringValue);
 
 		// Assert
 		Assert.assertEquals(result.getStringValue(), returnValue);

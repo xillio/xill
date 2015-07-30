@@ -13,7 +13,9 @@ import nl.xillio.xill.plugins.string.services.string.RegexService;
 import com.google.inject.Inject;
 
 /**
- *<p> Returns a MD5 hash of the given variable.</p>
+ * <p>
+ * Returns a MD5 hash of the given variable.
+ * </p>
  *
  * @author Sander
  *
@@ -27,8 +29,7 @@ public class CreateMD5Construct extends Construct {
 		return new ConstructProcessor(value -> process(value, regexService), new Argument("value", ATOMIC));
 	}
 
-	@SuppressWarnings("javadoc")
-	public static MetaExpression process(final MetaExpression value, final RegexService regexService) {
+	static MetaExpression process(final MetaExpression value, final RegexService regexService) {
 		assertNotNull(value, "value");
 		try {
 			return fromValue(regexService.createMD5Construct(value.getStringValue()));

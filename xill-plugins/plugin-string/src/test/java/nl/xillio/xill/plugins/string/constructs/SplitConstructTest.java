@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.math.constructs;
+package nl.xillio.xill.plugins.string.constructs;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -10,7 +10,6 @@ import java.util.List;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.string.constructs.SplitConstruct;
 import nl.xillio.xill.plugins.string.services.string.StringService;
 
 import org.testng.Assert;
@@ -128,7 +127,7 @@ public class SplitConstructTest extends ExpressionBuilderHelper {
 	}
 
 	/**
-	 *Test the process when the given values are null.
+	 * Test the process when the given values are null.
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class)
 	public void processNullValueGiven() {

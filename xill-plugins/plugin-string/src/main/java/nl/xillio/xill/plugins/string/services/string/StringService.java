@@ -38,6 +38,19 @@ public interface StringService {
 	public boolean endsWith(String haystack, String needle);
 
 	/**
+	 * Formats a texts with specified arguments.
+	 * 
+	 * @param text
+	 *        The text we format.
+	 * @param args
+	 *        The arguments we give.
+	 * @return
+	 *         Returns the formatted text.
+	 * @throws MissingFormatArgumentException
+	 */
+	public String format(String text, List<Object> args) throws MissingFormatArgumentException;
+
+	/**
 	 * Returns the index of the first occurrance of the needle in the haystack, starting from an index.
 	 *
 	 * @param haystack
@@ -64,8 +77,28 @@ public interface StringService {
 	public String join(String[] input, String delimiter);
 
 	/**
-	 * Recieves a string and returns repeated a few times.
+	 * Converts the string argument into an array of bytes.
 	 * 
+	 * @param text
+	 *        The string we're convering.
+	 * @return
+	 *         An array of bytes.
+	 */
+	public byte[] parseBase64Binary(String text);
+
+	/**
+	 * Returns a string which represents the printed form of the data.
+	 * 
+	 * @param data
+	 *        The data we want to convert.
+	 * @return
+	 *         A string which can be printed.
+	 */
+	public String printBase64Binary(byte[] data);
+
+	/**
+	 * Recieves a string and returns repeated a few times.
+	 *
 	 * @param value
 	 *        The string we're repeating.
 	 * @param repeat
@@ -77,7 +110,7 @@ public interface StringService {
 
 	/**
 	 * Replaces each substring of the needle in the haystack with the replacement string.
-	 * 
+	 *
 	 * @param haystack
 	 *        The string we're altering.
 	 * @param needle
@@ -91,7 +124,7 @@ public interface StringService {
 
 	/**
 	 * Replaces the first substring of the needle in the haystack with the replacement string.
-	 * 
+	 *
 	 * @param haystack
 	 *        The string we're altering.
 	 * @param needle
@@ -105,7 +138,7 @@ public interface StringService {
 
 	/**
 	 * Recieves a haystack string and splits it in the needle string.
-	 * 
+	 *
 	 * @param haystack
 	 *        The haystack string.
 	 * @param needle
@@ -117,7 +150,7 @@ public interface StringService {
 
 	/**
 	 * Recieves a haystack string and returns wheter it starts with the given needle string.
-	 * 
+	 *
 	 * @param haystack
 	 *        The string we're checking.
 	 * @param needle
@@ -128,8 +161,22 @@ public interface StringService {
 	public boolean startsWith(String haystack, String needle);
 
 	/**
-	 * Recieves a string and returns in lowercased.
+	 * Returns a substring of a given string at the indices of start and end.
 	 * 
+	 * @param text
+	 *        The main string.
+	 * @param start
+	 *        The start index.
+	 * @param end
+	 *        The end index.
+	 * @return
+	 *         The substring.
+	 */
+	public String subString(String text, int start, int end);
+
+	/**
+	 * Recieves a string and returns in lowercased.
+	 *
 	 * @param toLower
 	 *        The string to lower.
 	 * @return
@@ -139,7 +186,7 @@ public interface StringService {
 
 	/**
 	 * Recieves a string and returns it uppercased.
-	 * 
+	 *
 	 * @param toUpper
 	 *        The string to upper.
 	 * @return
@@ -149,7 +196,7 @@ public interface StringService {
 
 	/**
 	 * Recieves a string and returns a trimmed version.
-	 * 
+	 *
 	 * @param toTrim
 	 *        the string to trim.
 	 * @return
@@ -159,7 +206,7 @@ public interface StringService {
 
 	/**
 	 * wraps a single line of text, identifying words by ' '
-	 * 
+	 *
 	 * @param text
 	 *        The text we're wrapping, may be null.
 	 * @param width
@@ -170,48 +217,5 @@ public interface StringService {
 	 *         Returns the wrapped text.
 	 */
 	public String wrap(String text, int width, boolean wrapLongWords);
-	
-	/**
-	 * Returns a substring of a given string at the indices of start and end.
-	 * @param text
-	 * 					The main string.
-	 * @param start
-	 * 					The start index.
-	 * @param end
-	 * 					The end index.
-	 * @return
-	 * 					The substring.
-	 */
-	public String subString(String text, int start, int end);
-	
-	/**
-	 * Converts the string argument into an array of bytes.
-	 * @param text
-	 * 					The string we're convering.
-	 * @return
-	 * 					An array of bytes.
-	 */
-	public byte[] parseBase64Binary(String text);
-	
-	/**
-	 * Returns a string which represents the printed form of the data.
-	 * @param data
-	 * 					The data we want to convert.
-	 * @return
-	 * 					A string which can be printed.
-	 */
-	public String printBase64Binary(byte[] data);
-	
-	/**
-	 * Formats a texts with specified arguments.
-	 * @param text
-	 * 					The text we format.
-	 * @param args
-	 * 					The arguments we give.
-	 * @return
-	 * 				Returns the formatted text.
-	 * @throws MissingFormatArgumentException 
-	 */
-	public String format(String text, List<Object> args) throws MissingFormatArgumentException ;
 
 }

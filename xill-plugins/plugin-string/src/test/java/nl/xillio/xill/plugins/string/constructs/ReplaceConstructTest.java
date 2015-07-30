@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.math.constructs;
+package nl.xillio.xill.plugins.string.constructs;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -11,7 +11,6 @@ import java.util.regex.PatternSyntaxException;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.string.constructs.ReplaceConstruct;
 import nl.xillio.xill.plugins.string.services.string.RegexService;
 import nl.xillio.xill.plugins.string.services.string.StringService;
 
@@ -222,7 +221,7 @@ public class ReplaceConstructTest {
 		// Assert
 		Assert.assertEquals(result.getStringValue(), returnValue);
 	}
-	
+
 	/**
 	 * Test the process method when getMatcher throws a PatternSyntax
 	 */
@@ -269,7 +268,7 @@ public class ReplaceConstructTest {
 		verify(stringService, times(0)).replaceAll(textValue, needleValue, replacementValue);
 		verify(stringService, times(0)).replaceFirst(textValue, needleValue, replacementValue);
 	}
-	
+
 	/**
 	 * Test the method when getMatcher returns an illegalArgumentException.
 	 */

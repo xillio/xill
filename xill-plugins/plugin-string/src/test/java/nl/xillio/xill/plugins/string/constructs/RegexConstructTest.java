@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.math.constructs;
+package nl.xillio.xill.plugins.string.constructs;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -13,7 +13,6 @@ import java.util.regex.PatternSyntaxException;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.string.constructs.RegexConstruct;
 import nl.xillio.xill.plugins.string.services.string.RegexService;
 
 import org.testng.Assert;
@@ -90,7 +89,7 @@ public class RegexConstructTest extends ExpressionBuilderHelper {
 		verify(regexService, times(1)).matches(any());
 		verify(regexService, times(1)).getMatcher(regexValue, valueValue, timeoutValue * 1000);
 	}
-	
+
 	/**
 	 * Test the process method for when it throws an error.
 	 */
@@ -118,39 +117,39 @@ public class RegexConstructTest extends ExpressionBuilderHelper {
 		verify(regexService, times(1)).matches(any());
 		verify(regexService, times(1)).getMatcher(regexValue, valueValue, timeoutValue * 1000);
 	}
-	
+
 	/**
 	 * Tests if the process returns NULL if no matches are found.
 	 */
 	@Test
 	public void processNoMatches()
 	{
-	// Mock
-			String valueValue = "I need a doctor";
-			MetaExpression value = mock(MetaExpression.class);
-			when(value.getStringValue()).thenReturn(valueValue);
+		// Mock
+		String valueValue = "I need a doctor";
+		MetaExpression value = mock(MetaExpression.class);
+		when(value.getStringValue()).thenReturn(valueValue);
 
-			String regexValue = ".*doctor*.";
-			MetaExpression regex = mock(MetaExpression.class);
-			when(regex.getStringValue()).thenReturn(regexValue);
+		String regexValue = ".*doctor*.";
+		MetaExpression regex = mock(MetaExpression.class);
+		when(regex.getStringValue()).thenReturn(regexValue);
 
-			int timeoutValue = 10;
-			MetaExpression timeout = mock(MetaExpression.class);
-			when(timeout.getNumberValue()).thenReturn(timeoutValue);
+		int timeoutValue = 10;
+		MetaExpression timeout = mock(MetaExpression.class);
+		when(timeout.getNumberValue()).thenReturn(timeoutValue);
 
-			List<String> resultValue = Arrays.asList("a", "b", "c");
-			RegexService regexService = mock(RegexService.class);
-			when(regexService.matches(any())).thenReturn(false);
-			when(regexService.tryMatchElseNull(any())).thenReturn(resultValue);
-			// Run
-			MetaExpression result = RegexConstruct.process(value, regex, timeout, regexService);
+		List<String> resultValue = Arrays.asList("a", "b", "c");
+		RegexService regexService = mock(RegexService.class);
+		when(regexService.matches(any())).thenReturn(false);
+		when(regexService.tryMatchElseNull(any())).thenReturn(resultValue);
+		// Run
+		MetaExpression result = RegexConstruct.process(value, regex, timeout, regexService);
 
-			// Verify
-			verify(regexService, times(1)).matches(any());
-			verify(regexService, times(0)).tryMatchElseNull(any());
-			verify(regexService, times(1)).getMatcher(regexValue, valueValue, timeoutValue * 1000);
+		// Verify
+		verify(regexService, times(1)).matches(any());
+		verify(regexService, times(0)).tryMatchElseNull(any());
+		verify(regexService, times(1)).getMatcher(regexValue, valueValue, timeoutValue * 1000);
 
-			// Assert
-			Assert.assertEquals(result, NULL);
+		// Assert
+		Assert.assertEquals(result, NULL);
 	}
 }

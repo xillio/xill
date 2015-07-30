@@ -26,8 +26,7 @@ public class ToLowerConstruct extends Construct {
 			new Argument("string", ATOMIC));
 	}
 
-	@SuppressWarnings("javadoc")
-	public static MetaExpression process(final MetaExpression string, final StringService stringService) {
+	static MetaExpression process(final MetaExpression string, final StringService stringService) {
 
 		return fromValue(stringService.toLowerCase(string.getStringValue()));
 	}

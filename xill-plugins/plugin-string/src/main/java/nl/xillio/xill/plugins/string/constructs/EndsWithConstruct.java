@@ -27,11 +27,10 @@ public class EndsWithConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor((string, suffix) ->
-			process(string, suffix, stringService), new Argument("string", ATOMIC), new Argument("suffix", ATOMIC));
+		process(string, suffix, stringService), new Argument("string", ATOMIC), new Argument("suffix", ATOMIC));
 	}
 
-	@SuppressWarnings("javadoc")
-	public static MetaExpression process(final MetaExpression string1, final MetaExpression string2, final StringService stringService) {
+	static MetaExpression process(final MetaExpression string1, final MetaExpression string2, final StringService stringService) {
 		assertNotNull(string1, "string1");
 		assertNotNull(string2, "string2");
 

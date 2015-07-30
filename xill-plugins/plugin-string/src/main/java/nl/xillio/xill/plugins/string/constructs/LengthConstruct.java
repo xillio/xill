@@ -23,7 +23,7 @@ public class LengthConstruct extends Construct {
 			new Argument("value", ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression value) {
+	static MetaExpression process(final MetaExpression value) {
 		int length = value.getStringValue().length();
 		return fromValue(length);
 	}

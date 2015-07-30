@@ -1,11 +1,10 @@
-package nl.xillio.xill.plugins.math.constructs;
+package nl.xillio.xill.plugins.string.constructs;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.plugins.string.constructs.WrapConstruct;
 import nl.xillio.xill.plugins.string.services.string.StringService;
 
 import org.testng.Assert;

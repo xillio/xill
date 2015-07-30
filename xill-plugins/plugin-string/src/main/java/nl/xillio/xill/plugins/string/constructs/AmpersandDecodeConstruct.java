@@ -31,9 +31,7 @@ public class AmpersandDecodeConstruct extends Construct {
 			new Argument("passes", fromValue(1), ATOMIC));
 	}
 
-	@SuppressWarnings("javadoc")
-	public static MetaExpression process(final MetaExpression stringVar, final MetaExpression passesVar, final RegexService regexService) {
-
+	static MetaExpression process(final MetaExpression stringVar, final MetaExpression passesVar, final RegexService regexService) {
 		assertNotNull(stringVar, "string");
 		assertNotNull(passesVar, "passes");
 

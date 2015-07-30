@@ -34,8 +34,7 @@ public class IndexOfConstruct extends Construct {
 			new Argument("value", fromValue(0), ATOMIC));
 	}
 
-	@SuppressWarnings("javadoc")
-	public static MetaExpression process(final MetaExpression string1, final MetaExpression string2, final MetaExpression value, final StringService stringService) {
+	static MetaExpression process(final MetaExpression string1, final MetaExpression string2, final MetaExpression value, final StringService stringService) {
 		assertNotNull(string1, "string1");
 		assertNotNull(string2, "string2");
 

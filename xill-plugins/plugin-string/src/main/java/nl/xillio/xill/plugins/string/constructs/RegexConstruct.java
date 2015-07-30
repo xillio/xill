@@ -20,7 +20,7 @@ import com.google.inject.Singleton;
  * <p>
  * Returns a list of matches of the specified regex on the provide string.
  * </p>
- * 
+ *
  * @author Sander
  */
 @Singleton
@@ -50,8 +50,7 @@ public class RegexConstruct extends Construct {
 			new Argument("timeout", fromValue(REGEX_TIMEOUT), ATOMIC));
 	}
 
-	@SuppressWarnings("javadoc")
-	public static MetaExpression process(final MetaExpression valueVar, final MetaExpression regexVar, final MetaExpression timeoutVar, final RegexService regexService) {
+	static MetaExpression process(final MetaExpression valueVar, final MetaExpression regexVar, final MetaExpression timeoutVar, final RegexService regexService) {
 
 		String regex = regexVar.getStringValue();
 		int timeout = (int) timeoutVar.getNumberValue().doubleValue() * 1000;
