@@ -22,7 +22,7 @@ public class WordDistanceConstruct extends Construct {
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 
 		return new ConstructProcessor(
-			WordDistanceConstruct::process,
+			(source, target, relative) -> process(source, target, relative),
 			new Argument("source", ATOMIC),
 			new Argument("target", ATOMIC),
 			new Argument("relative", TRUE));

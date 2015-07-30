@@ -180,5 +180,23 @@ public interface StringService {
 	 * 					The substring.
 	 */
 	public String subString(String text, int start, int end);
+	
+	/**
+	 * Converts the string argument into an array of bytes.
+	 * @param text
+	 * 					The string we're convering.
+	 * @return
+	 * 					An array of bytes.
+	 */
+	public byte[] parseBase64Binary(String text);
+	
+	/**
+	 * Returns a string which represents the printed form of the data.
+	 * @param data
+	 * 					The data we want to convert.
+	 * @return
+	 * 					A string which can be printed.
+	 */
+	public String printBase64Binary(byte[] data);
 
 }

@@ -1,7 +1,14 @@
 package nl.xillio.xill.plugins.string.services.string;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.io.FileUtils;
 
 /**
  * This is the main implementation of the {@link UrlService}
@@ -75,5 +82,17 @@ public class UrlServiceImpl implements UrlService {
 			return cleanupUrl(parenturl + relativeUrl);
 		}
 		return null;
+	}
+
+	@Override
+	public void write(String fileName, byte[] output) throws FileNotFoundException, IOException {
+		OutputStream out = new FileOutputStream(fileName);
+		out.write(output);
+		out.close();
+	}
+
+	@Override
+	public byte[] readFileToByteArray(String fileName) throws IOException {
+		return FileUtils.readFileToByteArray(new File(fileName));
 	}
 }

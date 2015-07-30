@@ -38,7 +38,8 @@ public class SubstringConstruct extends Construct {
 			new Argument("end", ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression string, final MetaExpression startVar, final MetaExpression endVar, StringService stringService) {
+	@SuppressWarnings("javadoc")
+	public static MetaExpression process(final MetaExpression string, final MetaExpression startVar, final MetaExpression endVar, StringService stringService) {
 		assertNotNull(string, "string");
 		assertNotNull(startVar, "start");
 		assertNotNull(endVar, "end");

@@ -29,7 +29,8 @@ public class ToUpperConstruct extends Construct {
 			new Argument("string", ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression string, StringService stringService) {
+	@SuppressWarnings("javadoc")
+	public static MetaExpression process(final MetaExpression string, StringService stringService) {
 
 		return fromValue(stringService.toUpperCase(string.getStringValue()));
 	}

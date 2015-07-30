@@ -1,5 +1,8 @@
 package nl.xillio.xill.plugins.string.services.string;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import nl.xillio.xill.plugins.string.StringXillPlugin;
 
 import com.google.inject.ImplementedBy;
@@ -31,5 +34,26 @@ public interface UrlService {
 	 *         A converted relativeUrl as a string.
 	 */
 	public String tryConvert(final String pageUrl, final String relativeUrl);
+	
+	/**
+	 * Writes a given output in a file.
+	 * @param fileName
+	 * 					The name of the file.
+	 * @param output
+	 * 					The output to write.
+	 * @throws FileNotFoundException 
+	 * @throws IOException 
+	 */
+	public void write(String fileName, byte[] output) throws FileNotFoundException, IOException;
+	
+	/**
+	 * Reads a file to a byte array given a filename.
+	 * @param fileName
+	 * 					The name of the file we want to read.
+	 * @return
+	 * 					A bytearray with content.
+	 * @throws IOException 
+	 */
+	public byte[] readFileToByteArray(String fileName) throws IOException;
 
 }

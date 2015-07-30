@@ -1,5 +1,7 @@
 package nl.xillio.xill.plugins.string.services.string;
 
+import javax.xml.bind.DatatypeConverter;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 
@@ -79,5 +81,15 @@ public class StringServiceImpl implements StringService {
 	@Override
 	public String subString(String text, int start, int end) {
 		return text.substring(start, end);
+	}
+
+	@Override
+	public byte[] parseBase64Binary(String text) {
+		return DatatypeConverter.parseBase64Binary(text);
+	}
+
+	@Override
+	public String printBase64Binary(byte[] data) {
+		return DatatypeConverter.printBase64Binary(data);
 	}
 }

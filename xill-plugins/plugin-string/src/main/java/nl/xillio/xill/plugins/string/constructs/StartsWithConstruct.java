@@ -29,7 +29,8 @@ public class StartsWithConstruct extends Construct {
 			new Argument("prefix", ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression string1, final MetaExpression string2, StringService stringService) {
+	@SuppressWarnings("javadoc")
+	public static MetaExpression process(final MetaExpression string1, final MetaExpression string2, StringService stringService) {
 		assertNotNull(string1, "string1");
 		assertNotNull(string2, "string2");
 

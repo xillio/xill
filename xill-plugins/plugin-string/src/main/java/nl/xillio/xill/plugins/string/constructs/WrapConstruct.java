@@ -25,7 +25,8 @@ public class WrapConstruct extends Construct {
 			new Argument("wrapLongWords", ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression text, final MetaExpression width, final MetaExpression wrapLong, final StringService stringService) {
+	@SuppressWarnings("javadoc")
+	public static MetaExpression process(final MetaExpression text, final MetaExpression width, final MetaExpression wrapLong, final StringService stringService) {
 
 		String result = stringService.wrap(text.getStringValue(), width.getNumberValue().intValue(), wrapLong.getBooleanValue());
 		return fromValue(result);

@@ -15,7 +15,6 @@ import nl.xillio.xill.plugins.string.constructs.IndexOfConstruct;
 import nl.xillio.xill.plugins.string.constructs.JoinConstruct;
 import nl.xillio.xill.plugins.string.constructs.LengthConstruct;
 import nl.xillio.xill.plugins.string.constructs.MatchesConstruct;
-import nl.xillio.xill.plugins.string.constructs.RegexConstruct;
 import nl.xillio.xill.plugins.string.constructs.RepeatConstruct;
 import nl.xillio.xill.plugins.string.constructs.ReplaceConstruct;
 import nl.xillio.xill.plugins.string.constructs.SplitConstruct;
@@ -34,7 +33,6 @@ public class StringXillPlugin extends XillPlugin {
 
 	@Override
 	public void loadConstructs() {
-		RegexConstruct regex = new RegexConstruct();
 
 		add(
 			new AbsoluteURLConstruct(),

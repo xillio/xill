@@ -35,7 +35,8 @@ public class SplitConstruct extends Construct {
 			new Argument("keepEmpty", FALSE, ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression string, final MetaExpression delimiter, final MetaExpression keepempty, StringService stringService) {
+	@SuppressWarnings("javadoc")
+	public static MetaExpression process(final MetaExpression string, final MetaExpression delimiter, final MetaExpression keepempty, StringService stringService) {
 		assertNotNull(string, "string");
 		assertNotNull(delimiter, "delimiter");
 
