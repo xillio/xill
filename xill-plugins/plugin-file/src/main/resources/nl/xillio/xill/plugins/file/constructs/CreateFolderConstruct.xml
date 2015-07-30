@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <parameters>
+        <param name="uri"/>
+    </parameters>
+    <description>
+        <![CDATA[Creates an empty folder at the target uri if it doesn't exist.
+        Returns the absolute path to that folder]]></description>
+    <examples>
+        <example description="Create a folder:"><![CDATA[
+        use File;
+        var folder = File.createFolder("newFolder");
+    ]]></example>
+    </examples>
+    <references>
+        <reference package="File">saveTo</reference>
+    </references>
+    <searchTags>
+    </searchTags>
+</function>

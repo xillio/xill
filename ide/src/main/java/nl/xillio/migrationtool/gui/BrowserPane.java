@@ -594,7 +594,6 @@ public class BrowserPane extends AnchorPane {
 
 		return text.toString().trim();
 	}
-
 	// ////////////////////////////////////////////////////////////////////
 	// Innerclass for handling namespaces
 

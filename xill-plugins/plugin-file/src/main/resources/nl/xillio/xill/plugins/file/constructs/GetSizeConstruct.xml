@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <parameters>
+        <param name="uri"/>
+    </parameters>
+    <description>
+        <![CDATA[Returns the size of a file or folder in bytes]]></description>
+    <examples>
+        <example description="Get the size of a folder:"><![CDATA[
+        use File;
+        var size = File.getSize("C:/Users/Me");
+    ]]></example>
+    </examples>
+    <references>
+    </references>
+    <searchTags>
+    </searchTags>
+</function>

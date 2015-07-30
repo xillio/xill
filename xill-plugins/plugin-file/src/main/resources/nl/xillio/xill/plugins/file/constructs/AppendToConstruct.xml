@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <parameters>
+        <param name="uri"/>
+        <param name="content"/>
+    </parameters>
+    <description>
+        <![CDATA[Appends content in the form of text to a file, creating it if it doesn't exist. Returns the absolute path to the file.]]></description>
+    <examples>
+        <example description="Appending a string to a file:"><![CDATA[
+        use File;
+        File.appendTo("file.txt", "Add this line");
+    ]]></example>
+    </examples>
+    <references>
+        <reference package="File">saveTo</reference>
+    </references>
+    <searchTags>
+        write, text, new, create, append, add
+    </searchTags>
+</function>
