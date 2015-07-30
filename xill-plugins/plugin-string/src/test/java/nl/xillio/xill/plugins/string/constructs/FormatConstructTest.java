@@ -20,6 +20,7 @@ import java.util.regex.PatternSyntaxException;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.string.exceptions.FailedToGetMatcherException;
 import nl.xillio.xill.plugins.string.services.string.RegexService;
 import nl.xillio.xill.plugins.string.services.string.StringService;
 
@@ -45,9 +46,13 @@ public class FormatConstructTest {
 	 * <p>
 	 * Tests wheter the process can handle a syntax error in the pattern given to the matcher
 	 * </p>
+	 * 
+	 * @throws FailedToGetMatcherException
+	 * @throws IllegalArgumentException
+	 * @throws PatternSyntaxException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "SyntaxError in the by the system provided pattern.")
-	public void processPatternSyntaxException() {
+	public void processPatternSyntaxException() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String fileNameValue = "decimal %d%n";
 		MetaExpression fileName = mock(MetaExpression.class);
@@ -76,9 +81,13 @@ public class FormatConstructTest {
 	 * <p>
 	 * Tests wheter the process can handle an illegal argument given to the matcher.
 	 * </p>
+	 * 
+	 * @throws FailedToGetMatcherException
+	 * @throws IllegalArgumentException
+	 * @throws PatternSyntaxException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Illegal argument handed when trying to match.")
-	public void processIllegalArgumentException() {
+	public void processIllegalArgumentException() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String fileNameValue = "decimal %d%n";
 		MetaExpression fileName = mock(MetaExpression.class);
@@ -107,9 +116,13 @@ public class FormatConstructTest {
 	 * <p>
 	 * Tests wheter the process can handle an illegal argument given to the matcher.
 	 * </p>
+	 * 
+	 * @throws FailedToGetMatcherException
+	 * @throws IllegalArgumentException
+	 * @throws PatternSyntaxException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Date/Time conversions are not supported.")
-	public void processDateTimeConversion() {
+	public void processDateTimeConversion() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String fileNameValue = "decimal %T%n";
 		MetaExpression fileName = mock(MetaExpression.class);
@@ -141,9 +154,13 @@ public class FormatConstructTest {
 	 * <p>
 	 * Tests wheter the process can handle an illegal argument given to the matcher.
 	 * </p>
+	 * 
+	 * @throws FailedToGetMatcherException
+	 * @throws IllegalArgumentException
+	 * @throws PatternSyntaxException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Unexpected conversion type: Z")
-	public void processUnexpectedConversion() {
+	public void processUnexpectedConversion() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String fileNameValue = "decimal %Z%n";
 		MetaExpression fileName = mock(MetaExpression.class);
@@ -175,9 +192,13 @@ public class FormatConstructTest {
 	 * <p>
 	 * Tests wheter the process can handle an illegal argument given to the matcher.
 	 * </p>
+	 * 
+	 * @throws FailedToGetMatcherException
+	 * @throws IllegalArgumentException
+	 * @throws PatternSyntaxException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Not enough arguments.")
-	public void processMissingFormatException() {
+	public void processMissingFormatException() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String textValue = "decimal";
 		MetaExpression text = mock(MetaExpression.class);
@@ -204,14 +225,18 @@ public class FormatConstructTest {
 		verify(regexService, times(1)).tryMatch(any());
 		verify(stringService, times(1)).format(anyString(), any());
 	}
-	
+
 	/**
 	 * <p>
 	 * Tests wheter the process can handle an illegal argument given to the matcher.
 	 * </p>
+	 * 
+	 * @throws FailedToGetMatcherException
+	 * @throws IllegalArgumentException
+	 * @throws PatternSyntaxException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Illegal format handed.")
-	public void processIllegalFormatException() {
+	public void processIllegalFormatException() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String textValue = "decimal";
 		MetaExpression text = mock(MetaExpression.class);

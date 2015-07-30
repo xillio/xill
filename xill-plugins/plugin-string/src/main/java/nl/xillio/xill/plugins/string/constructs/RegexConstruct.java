@@ -11,6 +11,7 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.string.exceptions.FailedToGetMatcherException;
 import nl.xillio.xill.plugins.string.services.string.RegexService;
 
 import com.google.inject.Inject;
@@ -73,7 +74,7 @@ public class RegexConstruct extends Construct {
 			return NULL;
 		} catch (PatternSyntaxException e) {
 			throw new RobotRuntimeException("Invalid pattern in regex()");
-		} catch (Exception e) {
+		} catch (IllegalArgumentException | FailedToGetMatcherException e) {
 			throw new RobotRuntimeException("Error while executing the regex");
 		}
 	}

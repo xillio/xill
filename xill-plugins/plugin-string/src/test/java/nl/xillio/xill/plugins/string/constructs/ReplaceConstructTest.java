@@ -11,6 +11,7 @@ import java.util.regex.PatternSyntaxException;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.string.exceptions.FailedToGetMatcherException;
 import nl.xillio.xill.plugins.string.services.string.RegexService;
 import nl.xillio.xill.plugins.string.services.string.StringService;
 
@@ -24,9 +25,13 @@ public class ReplaceConstructTest {
 
 	/**
 	 * Test the process method when we use regex and want to replace all.
+	 * 
+	 * @throws FailedToGetMatcherException
+	 * @throws IllegalArgumentException
+	 * @throws PatternSyntaxException
 	 */
 	@Test
-	public void processUseRegexReplaceAll() {
+	public void processUseRegexReplaceAll() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String textValue = "ReplaceR";
 		MetaExpression text = mock(MetaExpression.class);
@@ -74,9 +79,13 @@ public class ReplaceConstructTest {
 
 	/**
 	 * Test the process method when we use regex and want to replace the first
+	 * 
+	 * @throws FailedToGetMatcherException
+	 * @throws IllegalArgumentException
+	 * @throws PatternSyntaxException
 	 */
 	@Test
-	public void processUseRegexReplaceFirst() {
+	public void processUseRegexReplaceFirst() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String textValue = "ReplaceR";
 		MetaExpression text = mock(MetaExpression.class);
@@ -124,9 +133,13 @@ public class ReplaceConstructTest {
 
 	/**
 	 * Test the process method when we don't use regex and want to replace all.
+	 * 
+	 * @throws FailedToGetMatcherException
+	 * @throws IllegalArgumentException
+	 * @throws PatternSyntaxException
 	 */
 	@Test
-	public void processDontUseRegexReplaceAll() {
+	public void processDontUseRegexReplaceAll() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String textValue = "ReplaceR";
 		MetaExpression text = mock(MetaExpression.class);
@@ -174,9 +187,13 @@ public class ReplaceConstructTest {
 
 	/**
 	 * Test the process method when we don't use regex and want to replace only the first.
+	 * 
+	 * @throws FailedToGetMatcherException
+	 * @throws IllegalArgumentException
+	 * @throws PatternSyntaxException
 	 */
 	@Test
-	public void processDontUseRegexReplaceFirst() {
+	public void processDontUseRegexReplaceFirst() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String textValue = "ReplaceR";
 		MetaExpression text = mock(MetaExpression.class);
@@ -224,9 +241,13 @@ public class ReplaceConstructTest {
 
 	/**
 	 * Test the process method when getMatcher throws a PatternSyntax
+	 * 
+	 * @throws FailedToGetMatcherException
+	 * @throws IllegalArgumentException
+	 * @throws PatternSyntaxException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid pattern in regex\\(\\)")
-	public void processInvalidException() {
+	public void processInvalidException() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String textValue = "ReplaceR";
 		MetaExpression text = mock(MetaExpression.class);
@@ -271,9 +292,13 @@ public class ReplaceConstructTest {
 
 	/**
 	 * Test the method when getMatcher returns an illegalArgumentException.
+	 * 
+	 * @throws FailedToGetMatcherException
+	 * @throws IllegalArgumentException
+	 * @throws PatternSyntaxException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Error while executing the regex")
-	public void processExecuteError() {
+	public void processIllegalArgumentException() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String textValue = "ReplaceR";
 		MetaExpression text = mock(MetaExpression.class);

@@ -99,7 +99,7 @@ public class AbsoluteURLConstructTest {
 		// Verify
 		verify(url, times(1)).tryConvert(pageUrlValue, relativeUrlValue);
 	}
-	
+
 	/**
 	 * Tests the process when it fails to return a value.
 	 */

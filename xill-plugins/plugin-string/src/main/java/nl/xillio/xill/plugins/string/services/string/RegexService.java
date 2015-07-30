@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.PatternSyntaxException;
 
+import nl.xillio.xill.plugins.string.exceptions.FailedToGetMatcherException;
+
 import com.google.inject.ImplementedBy;
 
 /**
@@ -43,10 +45,11 @@ public interface RegexService {
 	 * @param timeout
 	 *        in seconds
 	 * @return the matcher
+	 * @throws FailedToGetMatcherException 
 	 * @throws IllegalArgumentException
 	 * @throws PatternSyntaxException
 	 */
-	public Matcher getMatcher(String regex, String value, int timeout) throws IllegalArgumentException, PatternSyntaxException;
+	public Matcher getMatcher(String regex, String value, int timeout) throws FailedToGetMatcherException, IllegalArgumentException, PatternSyntaxException;
 
 	/**
 	 * Attempts to match an entire region to a pattern.

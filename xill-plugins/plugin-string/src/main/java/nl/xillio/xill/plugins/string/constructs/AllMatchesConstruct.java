@@ -3,6 +3,7 @@ package nl.xillio.xill.plugins.string.constructs;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
+import java.util.regex.PatternSyntaxException;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
@@ -10,6 +11,7 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.string.exceptions.FailedToGetMatcherException;
 import nl.xillio.xill.plugins.string.services.string.RegexService;
 
 import com.google.inject.Inject;
@@ -59,8 +61,10 @@ public class AllMatchesConstruct extends Construct {
 			for (String s : results) {
 				list.add(fromValue(s));
 			}
-		} catch (Exception e) {
-			throw new RobotRuntimeException("Invalid pattern.");
+		} catch (PatternSyntaxException e) {
+			throw new RobotRuntimeException("Invalid pattern handed.");
+		} catch (IllegalArgumentException | FailedToGetMatcherException e) {
+			throw new RobotRuntimeException("Illegal argument handed.");
 		}
 		return fromValue(list);
 	}

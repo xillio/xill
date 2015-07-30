@@ -13,6 +13,7 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.string.exceptions.FailedToGetMatcherException;
 import nl.xillio.xill.plugins.string.services.string.RegexService;
 import nl.xillio.xill.plugins.string.services.string.StringService;
 
@@ -65,7 +66,7 @@ public class FormatConstruct extends Construct {
 			}
 		} catch (PatternSyntaxException e) {
 			throw new RobotRuntimeException("SyntaxError in the by the system provided pattern.");
-		} catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException | FailedToGetMatcherException e) {
 			throw new RobotRuntimeException("Illegal argument handed when trying to match.");
 		}
 
@@ -122,8 +123,7 @@ public class FormatConstruct extends Construct {
 			return fromValue(stringService.format(textVar.getStringValue(), list));
 		} catch (MissingFormatArgumentException e) {
 			throw new RobotRuntimeException("Not enough arguments.");
-		}
-		catch (IllegalFormatException e){
+		} catch (IllegalFormatException e) {
 			throw new RobotRuntimeException("Illegal format handed.");
 		}
 	}

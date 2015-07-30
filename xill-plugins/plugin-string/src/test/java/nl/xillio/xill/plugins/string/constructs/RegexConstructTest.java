@@ -13,6 +13,7 @@ import java.util.regex.PatternSyntaxException;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.string.exceptions.FailedToGetMatcherException;
 import nl.xillio.xill.plugins.string.services.string.RegexService;
 
 import org.testng.Assert;
@@ -25,9 +26,13 @@ public class RegexConstructTest extends ExpressionBuilderHelper {
 
 	/**
 	 * Test the process method with an ATOMIC value given.
+	 * 
+	 * @throws FailedToGetMatcherException
+	 * @throws IllegalArgumentException
+	 * @throws PatternSyntaxException
 	 */
 	@Test
-	public void processStandardInput() {
+	public void processStandardInput() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String valueValue = "I need a doctor";
 		MetaExpression value = mock(MetaExpression.class);
@@ -64,9 +69,13 @@ public class RegexConstructTest extends ExpressionBuilderHelper {
 
 	/**
 	 * Test the process method for when it throws an error.
+	 * 
+	 * @throws FailedToGetMatcherException
+	 * @throws IllegalArgumentException
+	 * @throws PatternSyntaxException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid pattern in regex\\(\\)")
-	public void processInvalidPattern() {
+	public void processInvalidPattern() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String valueValue = "I need a doctor";
 		MetaExpression value = mock(MetaExpression.class);
@@ -92,9 +101,13 @@ public class RegexConstructTest extends ExpressionBuilderHelper {
 
 	/**
 	 * Test the process method for when it throws an error.
+	 * 
+	 * @throws FailedToGetMatcherException
+	 * @throws IllegalArgumentException
+	 * @throws PatternSyntaxException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Error while executing the regex")
-	public void processIllegalArgument() {
+	public void processIllegalArgument() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String valueValue = "I need a doctor";
 		MetaExpression value = mock(MetaExpression.class);
@@ -120,9 +133,13 @@ public class RegexConstructTest extends ExpressionBuilderHelper {
 
 	/**
 	 * Tests if the process returns NULL if no matches are found.
+	 * 
+	 * @throws FailedToGetMatcherException
+	 * @throws IllegalArgumentException
+	 * @throws PatternSyntaxException
 	 */
 	@Test
-	public void processNoMatches()
+	public void processNoMatches() throws PatternSyntaxException, IllegalArgumentException, FailedToGetMatcherException
 	{
 		// Mock
 		String valueValue = "I need a doctor";

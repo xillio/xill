@@ -12,6 +12,7 @@ import java.util.regex.PatternSyntaxException;
 import java.util.stream.IntStream;
 
 import nl.xillio.xill.plugins.string.constructs.RegexConstruct;
+import nl.xillio.xill.plugins.string.exceptions.FailedToGetMatcherException;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -126,7 +127,7 @@ public class RegexServiceImpl implements RegexService {
 	}
 
 	@Override
-	public Matcher getMatcher(final String regex, final String value, int timeout) throws IllegalArgumentException, PatternSyntaxException {
+	public Matcher getMatcher(final String regex, final String value, int timeout) throws FailedToGetMatcherException, IllegalArgumentException, PatternSyntaxException {
 		if (timeout < 0) {
 			timeout = RegexConstruct.REGEX_TIMEOUT;
 		}
