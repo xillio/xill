@@ -23,7 +23,7 @@
     ]]></example>
     </examples>
     <references>
-        <reference package="File">iterateFolders</reference>
+        <reference package="File">iterateFiles</reference>
     </references>
     <searchTags>
     </searchTags>

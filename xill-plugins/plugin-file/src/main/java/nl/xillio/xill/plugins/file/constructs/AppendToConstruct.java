@@ -11,7 +11,9 @@ import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 import java.io.File;
 import java.io.IOException;
 
-
+/**
+ * Appends content in the form of text to a file, creating it if it doesn't exist. Returns the absolute path to the file.
+ */
 public class AppendToConstruct extends Construct {
 
 	@Inject
