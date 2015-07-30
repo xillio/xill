@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xilldoc>
+<function>
+	<parameters>
+		<param name="value1" />
+		<param name="value2" />
+	</parameters>
+	<description><![CDATA[Returns true if the string value1 ends with the (sub)string value2.]]></description>
+	<examples>
+		<example description="The following calls to endswith all return true:"><![CDATA[testvalue = endswith("testing", "ing");
+]]></example>
+		<example
+			description="testvalue = endswith(&quot;Welcome to our site!&quot;, &quot;our site!&quot;);"><![CDATA[]]>
+		</example>
+		<example description="While the following would return false:"><![CDATA[testvalue = endswith("testing", "test");
+]]></example>
+	</examples>
+	<references>
+		<reference package="String">startsWith</reference>
+		<reference package="String">contains</reference>
+	</references>
+</function>

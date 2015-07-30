@@ -1,6 +1,5 @@
 package nl.xillio.xill.plugins.string.constructs;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.MissingFormatArgumentException;
@@ -11,7 +10,6 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.construct.HelpComponent;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
@@ -22,7 +20,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  * @author Sander
  *
  */
-public class FormatConstruct extends Construct implements HelpComponent {
+public class FormatConstruct extends Construct {
 	private final RegexConstruct regexConstruct;
 
 	/**
@@ -37,12 +35,13 @@ public class FormatConstruct extends Construct implements HelpComponent {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor((textVar, valueVar) -> process(regexConstruct, textVar, valueVar), new Argument("text"), new Argument("value"));
+		return new ConstructProcessor(
+			(textVar, valueVar) -> process(regexConstruct, textVar, valueVar),
+			new Argument("text", ATOMIC),
+			new Argument("value", LIST));
 	}
 
 	private static MetaExpression process(final RegexConstruct regexConstruct, final MetaExpression textVar, final MetaExpression valueVar) {
-		assertType(textVar, "text", ATOMIC);
-		assertType(valueVar, "value", LIST);
 		assertNotNull(textVar, "text");
 
 		List<MetaExpression> formatList = new ArrayList<>();
@@ -112,10 +111,5 @@ public class FormatConstruct extends Construct implements HelpComponent {
 		} catch (MissingFormatArgumentException e) {
 			throw new RobotRuntimeException("Not enough arguments.");
 		}
-	}
-
-	@Override
-	public InputStream openDocumentationStream() {
-		return getClass().getResourceAsStream("/helpfiles/format.xml");
 	}
 }

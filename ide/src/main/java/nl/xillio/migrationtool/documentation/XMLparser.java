@@ -12,7 +12,8 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -29,7 +30,7 @@ import org.xml.sax.SAXException;
  *
  */
 public class XMLparser {
-	protected static final Logger log = Logger.getLogger(PluginListener.class);
+	private static final Logger log = LogManager.getLogger();
 
 	/**
 	 * This function parses XML given by a package and can return a

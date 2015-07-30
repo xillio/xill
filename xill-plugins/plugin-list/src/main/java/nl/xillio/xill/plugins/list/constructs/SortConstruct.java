@@ -1,43 +1,45 @@
 package nl.xillio.xill.plugins.list.constructs;
 
+import com.google.inject.Inject;
+
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.plugins.list.util.Sort;
+import nl.xillio.xill.plugins.list.services.sort.Sort;
 
 /**
  *
  * returns the sorted list.
+ * <p>
  * if recursive is true it will also sort lists inside the list.
+ * <p>
  * if onKeys is true it will sort by key.
  *
- *
- * @author Sander
+ * @author Sander Visser
  *
  */
 public class SortConstruct extends Construct {
 
-	@Override
-	public String getName() {
-
-		return "sort";
-	}
+	@Inject
+	private Sort sort;
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(SortConstruct::process, new Argument("list"), new Argument("recursive", FALSE), new Argument("onKeys", FALSE));
+		return new ConstructProcessor(
+			(list, recursive, onKeys) -> process(list, recursive, onKeys, sort),
+			new Argument("list", LIST, OBJECT),
+			new Argument("recursive", FALSE,ATOMIC),
+			new Argument("onKeys", FALSE,ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression inputList, final MetaExpression recursive, final MetaExpression onKeys) {
+	static MetaExpression process(final MetaExpression inputList, final MetaExpression recursive, final MetaExpression onKeys, final Sort sort) {
 
 		boolean sortKeys = onKeys.getBooleanValue();
 		boolean sortRecursive = recursive.getBooleanValue();
-		Sort sort = new Sort();
-		assertNotType(inputList, "input", ATOMIC);
 		Object obj = extractValue(inputList);
-		sort.doSorting(obj, sortRecursive, sortKeys);
+		obj = sort.asSorted(obj, sortRecursive, sortKeys);
 		MetaExpression m = MetaExpression.parseObject(obj);
 		return m;
 

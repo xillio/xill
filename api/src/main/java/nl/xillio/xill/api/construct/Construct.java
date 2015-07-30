@@ -1,16 +1,18 @@
 package nl.xillio.xill.api.construct;
 
+import java.io.InputStream;
+
 import org.apache.commons.lang3.text.WordUtils;
 
-import nl.xillio.xill.api.PluginPackage;
-import nl.xillio.xill.api.components.ExpressionDataType;
+import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.services.inject.InjectorUtils;
 
 /**
  * This interface contains the core functionality for all constructs
  */
-public abstract class Construct extends ExpressionBuilderHelper {
+public abstract class Construct extends ExpressionBuilderHelper implements HelpComponent {
 	private final String defaultName;
 
 	/**
@@ -24,20 +26,9 @@ public abstract class Construct extends ExpressionBuilderHelper {
 			name = name.substring(0, name.length() - superName.length());
 		}
 		defaultName = WordUtils.uncapitalize(name);
-	}
 
-	/**
-	 * @see ExpressionDataType#LIST
-	 */
-	protected static final ExpressionDataType LIST = ExpressionDataType.LIST;
-	/**
-	 * @see ExpressionDataType#ATOMIC
-	 */
-	protected static final ExpressionDataType ATOMIC = ExpressionDataType.ATOMIC;
-	/**
-	 * @see ExpressionDataType#OBJECT
-	 */
-	protected static final ExpressionDataType OBJECT = ExpressionDataType.OBJECT;
+		InjectorUtils.getGlobalInjector().injectMembers(this);
+	}
 
 	/**
 	 * <p>
@@ -46,8 +37,8 @@ public abstract class Construct extends ExpressionBuilderHelper {
 	 * </p>
 	 *
 	 * <p>
-	 * By default the name of a {@link PluginPackage} is the concrete implementation name
-	 * acquired using {@link Class#getSimpleName()} without the {@link PluginPackage} suffix.
+	 * By default the name of a {@link XillPlugin} is the concrete implementation name
+	 * acquired using {@link Class#getSimpleName()} without the {@link XillPlugin} suffix.
 	 * It is also uncapitalized using {@link WordUtils#uncapitalize(String)}
 	 * </p>
 	 *
@@ -66,49 +57,6 @@ public abstract class Construct extends ExpressionBuilderHelper {
 	 * @return A prepared processor loaded with the {@link Construct} behaviour.
 	 */
 	public abstract ConstructProcessor prepareProcess(final ConstructContext context);
-
-	/**
-	 * Check if a {@link MetaExpression} is a {@link ExpressionDataType}. If not
-	 * then a {@link RobotRuntimeException} exception will be thrown informing
-	 * the developer about the incorrect type.
-	 *
-	 * @param expression
-	 *        The expression to evaluate
-	 * @param argumentName
-	 *        The name of the passed argument. This value is used to provide
-	 *        the developer with a clear error message.
-	 * @param expectedType
-	 *        The expected type for the expression
-	 * @throws RobotRuntimeException
-	 *         when the assertion fails
-	 */
-	protected static void assertType(final MetaExpression expression, final String argumentName, final ExpressionDataType expectedType) {
-		if (expression.getType() != expectedType) {
-			throw new RobotRuntimeException("Expected type " + expectedType.toString() + " for " + argumentName);
-		}
-	}
-
-	/**
-	 * Check if a {@link MetaExpression} is <b>NOT</b> a
-	 * {@link ExpressionDataType}. If so then a {@link RobotRuntimeException}
-	 * exception will be thrown informing the developer about the incorrect
-	 * type.
-	 *
-	 * @param expression
-	 *        The expression to evaluate
-	 * @param argumentName
-	 *        The name of the passed argument. This value is used to provide
-	 *        the developer with a clear error message.
-	 * @param expectedType
-	 *        The illegal type for the expression
-	 * @throws RobotRuntimeException
-	 *         when the assertion fails
-	 */
-	protected static void assertNotType(final MetaExpression expression, final String argumentName, final ExpressionDataType expectedType) {
-		if (expression.getType() == expectedType) {
-			throw new RobotRuntimeException("Expected type " + expectedType.toString() + " for " + argumentName);
-		}
-	}
 
 	/**
 	 * Check if a {@link MetaExpression} is <b>NOT</b> null. This is checked by
@@ -176,31 +124,18 @@ public abstract class Construct extends ExpressionBuilderHelper {
 		return value;
 	}
 
-	/**
-	 * A shortcut to {@link MetaExpression#extractValue(MetaExpression)}
-	 *
-	 * @param expression
-	 *        The expression to extract Java objects from
-	 * @return The value specified in
-	 *         {@link MetaExpression#extractValue(MetaExpression)}
-	 * @see MetaExpression#extractValue(MetaExpression)
-	 */
-	protected static Object extractValue(final MetaExpression expression) {
-		return MetaExpression.extractValue(expression);
+	@Override
+	public InputStream openDocumentationStream() {
+		String url = "/" + getClass().getName().replace('.', '/') + ".xml";
+		return getClass().getResourceAsStream(url);
 	}
 
 	/**
-	 * A shortcut to {@link MetaExpression#parseObject(Object)}
+	 * Hide this construct from documentation
 	 * 
-	 * @param value
-	 *        the object to parse into a {@link MetaExpression}
-	 * @return the {@link MetaExpression} not null
-	 * @throws IllegalArgumentException
-	 *         if parsing the value failed
-	 * @see MetaExpression#parseObject(Object)
+	 * @return true if it should be hidden
 	 */
-	protected static MetaExpression parseObject(final Object value) throws IllegalArgumentException {
-		return MetaExpression.parseObject(value);
+	public boolean hideDocumentation() {
+		return false;
 	}
-
 }

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import nl.xillio.xill.api.Debugger;
-import nl.xillio.xill.api.NullDebugger;
 import nl.xillio.xill.api.behavior.BooleanBehavior;
 import nl.xillio.xill.api.behavior.NumberBehavior;
 import nl.xillio.xill.api.behavior.StringBehavior;
@@ -16,13 +14,25 @@ import nl.xillio.xill.api.components.ImmutableLiteral;
 import nl.xillio.xill.api.components.ListExpression;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.ObjectExpression;
-import nl.xillio.xill.api.components.Processable;
 
 /**
  * This class contains various useful utility functions to create Expressions
  */
 public class ExpressionBuilderHelper {
-	private static final Debugger expressionDebugger = new NullDebugger();
+
+	/**
+	 * @see ExpressionDataType#LIST
+	 */
+	protected static final ExpressionDataType LIST = ExpressionDataType.LIST;
+	/**
+	 * @see ExpressionDataType#ATOMIC
+	 */
+	protected static final ExpressionDataType ATOMIC = ExpressionDataType.ATOMIC;
+	/**
+	 * @see ExpressionDataType#OBJECT
+	 */
+	protected static final ExpressionDataType OBJECT = ExpressionDataType.OBJECT;
+
 	/**
 	 * The true literal
 	 */
@@ -89,7 +99,7 @@ public class ExpressionBuilderHelper {
 	 * @return the expression
 	 */
 	public static MetaExpression fromValue(final List<MetaExpression> value) {
-		return new ListExpression(value).process(expressionDebugger).get();
+		return new ListExpression(value);
 	}
 
 	/**
@@ -100,13 +110,7 @@ public class ExpressionBuilderHelper {
 	 * @return the expression
 	 */
 	public static MetaExpression fromValue(final LinkedHashMap<String, MetaExpression> value) {
-		LinkedHashMap<Processable, Processable> procValue = new LinkedHashMap<>(value.size());
-
-		value.forEach((key, expression) -> {
-			procValue.put(fromValue(key), expression);
-		});
-
-		return new ObjectExpression(procValue).process(expressionDebugger).get();
+		return new ObjectExpression(value);
 	}
 
 	/**
@@ -125,6 +129,33 @@ public class ExpressionBuilderHelper {
 	 */
 	public static MetaExpression emptyObject() {
 		return fromValue(new LinkedHashMap<>());
+	}
+
+	/**
+	 * A shortcut to {@link MetaExpression#extractValue(MetaExpression)}
+	 *
+	 * @param expression
+	 *        The expression to extract Java objects from
+	 * @return The value specified in
+	 *         {@link MetaExpression#extractValue(MetaExpression)}
+	 * @see MetaExpression#extractValue(MetaExpression)
+	 */
+	protected static Object extractValue(final MetaExpression expression) {
+		return MetaExpression.extractValue(expression);
+	}
+
+	/**
+	 * A shortcut to {@link MetaExpression#parseObject(Object)}
+	 *
+	 * @param value
+	 *        the object to parse into a {@link MetaExpression}
+	 * @return the {@link MetaExpression} not null
+	 * @throws IllegalArgumentException
+	 *         if parsing the value failed
+	 * @see MetaExpression#parseObject(Object)
+	 */
+	protected static MetaExpression parseObject(final Object value) throws IllegalArgumentException {
+		return MetaExpression.parseObject(value);
 	}
 
 	/**

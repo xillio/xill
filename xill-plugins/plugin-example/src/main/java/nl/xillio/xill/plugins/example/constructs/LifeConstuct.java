@@ -5,7 +5,7 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 
 /**
- * This construct will return the meaning of life. <br/>
+ * This construct will return the meaning of life.
  * This construct is the minimal required implementation for a function in the
  * language.
  */

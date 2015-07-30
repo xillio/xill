@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.rendersnake.HtmlCanvas;
 
 import javafx.util.Pair;
@@ -27,6 +29,7 @@ import javafx.util.Pair;
  *
  */
 public class PackageDocument extends HtmlGenerator {
+	private static Logger log = LogManager.getLogger();
 	private final Set<FunctionDocument> functions = new HashSet<>();
 
 	@Override

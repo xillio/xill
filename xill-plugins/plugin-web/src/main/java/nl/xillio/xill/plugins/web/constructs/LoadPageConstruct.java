@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -25,7 +28,7 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.PageVariable;
 import nl.xillio.xill.plugins.web.PhantomJSPool;
-import nl.xillio.xill.plugins.web.WebPluginPackage;
+import nl.xillio.xill.plugins.web.WebXillPlugin;
 
 public class LoadPageConstruct extends Construct implements AutoCloseable {
 
@@ -61,7 +64,18 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 		PhantomJSDriver driver = (PhantomJSDriver) item.getDriver();
 
 		try {
-			// get the page
+			URL newUrl;
+			try {
+				newUrl = new URL(url);
+				
+				if(newUrl.getRef() != null) {
+					driver.get("about:blank"); // this is because of (something like) clearing the PJS cache (CTC-667) 
+				}
+				
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+
 			driver.get(url);
 		} catch (TimeoutException e) {
 			throw new RobotRuntimeException("Loadpage timeout", e);
@@ -253,6 +267,7 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 				// set infinite timeout
 				driver.manage().timeouts().pageLoadTimeout(-1, TimeUnit.MILLISECONDS);
 			}
+			
 
 			// driver.manage().deleteAllCookies();
 		}
@@ -271,6 +286,7 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 			dcap.setJavascriptEnabled(enableJS);
 
 			ArrayList<String> phantomArgs = new ArrayList<String>();
+			phantomArgs.add("--disk-cache=false");
 			// phantomArgs.add("--webdriver-logfile=NONE"); //! this option
 			// doesn't work (why not?) - it will create an empty file anyway
 			phantomArgs.add("--webdriver-loglevel=NONE");// values can be NONE |
@@ -391,7 +407,7 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 				System.setProperty("phantomjs.binary.path", phantomJStoolPath);
 
 				// extract file into the current directory
-				InputStream reader = WebPluginPackage.class.getResourceAsStream(nativeBinarySource);
+				InputStream reader = WebXillPlugin.class.getResourceAsStream(nativeBinarySource);
 				if (reader == null) {
 					throw new Exception("Cannot find phantomjs.exe resource file!");
 				}

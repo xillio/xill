@@ -80,6 +80,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 
 	private final List<Integer> occurences = new ArrayList<>();
 	private RobotTab tab;
+	private boolean searchActive = false; // is searching in console active?
 
 	/**
 	 * Create an initialize a ConsolePane
@@ -274,7 +275,11 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 		// Update the filter predicate
 		filteredLog.setPredicate(entry -> {
 			LogType type = entry.getType();
-			return filters.get(type);
+			if (this.searchActive) {
+				return (filters.get(type) && entry.getSelected());
+			} else {
+				return filters.get(type);
+			}
 		});
 	}
 
@@ -294,19 +299,27 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 
 	/* Searching */
 
+	void clearSelected() {
+		// Clears selected flag at all items
+		masterLog.forEach(item -> item.setSelected(false));
+	}
+
 	@Override
 	public void searchPattern(final String pattern, final boolean caseSensitive) {
 		// Clear the list
 		occurences.clear();
+		searchActive = true;
+		clearSelected();
 
 		// Check if the pattern is valid
 		Pattern validPattern;
 		try {
 			validPattern = caseSensitive ? Pattern.compile(pattern) : Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
 			// Search over all log entries
-			for (int i = 0; i < tblConsoleOut.getItems().size(); i++) {
-				if (validPattern.matcher(tblConsoleOut.getItems().get(i).getLine()).find()) {
+			for (int i = 0; i < masterLog.size(); i++) {
+				if (validPattern.matcher(masterLog.get(i).getLine()).find()) {
 					occurences.add(i);
+					masterLog.get(i).setSelected(true); // set the item as selected  
 				}
 			}
 			checkSelection();
@@ -319,10 +332,12 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 	public void search(final String needle, final boolean caseSensitive) {
 		// Clear the list
 		occurences.clear();
+		searchActive = true;
+		clearSelected();
 
 		// Search over all log entries
-		for (int i = 0; i < tblConsoleOut.getItems().size(); i++) {
-			String line = tblConsoleOut.getItems().get(i).getLine();
+		for (int i = 0; i < masterLog.size(); i++) {
+			String line = masterLog.get(i).getLine();
 			// Check case sensitivity
 			if (!caseSensitive) {
 				line = line.toLowerCase();
@@ -330,6 +345,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 
 			if (line.contains(caseSensitive ? needle : needle.toLowerCase())) {
 				occurences.add(i);
+				masterLog.get(i).setSelected(true); // set the item as selected  
 			}
 		}
 
@@ -341,6 +357,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 		if (occurences.isEmpty()) {
 			tblConsoleOut.getSelectionModel().clearSelection();
 		}
+		updateFilters();
 	}
 
 	@Override
@@ -351,21 +368,27 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 	@Override
 	public void highlight(final int occurrence) {
 		// Clear and select, scroll to the occurrence
-		int line = occurences.get(occurrence);
+		int line = occurrence; // only selected lines are shown in tblConsoleOut so line = occurrence
 		tblConsoleOut.getSelectionModel().clearAndSelect(line);
 		tblConsoleOut.scrollTo(line);
 	}
 
 	@Override
 	public void highlightAll() {
-		// Clear the selection and highlight all occurrences
-		tblConsoleOut.getSelectionModel().clearSelection();
-		occurences.forEach(i -> tblConsoleOut.getSelectionModel().select(i));
+		//not used
 	}
 
 	@Override
 	public void clearSearch() {
+		LogEntry lastSelected = tblConsoleOut.getSelectionModel().getSelectedItem(); // remember last selected line
+		searchActive = false;
+		this.updateFilters(); // show all lines (without searching affected)
 		tblConsoleOut.getSelectionModel().clearSelection();
+		int index = tblConsoleOut.getItems().indexOf(lastSelected);
+		if (index > -1) {
+			tblConsoleOut.getSelectionModel().select(index); // select and scroll to last selected line in a search
+			tblConsoleOut.scrollTo(index);
+		}
 	}
 
 	/* Drag selection */

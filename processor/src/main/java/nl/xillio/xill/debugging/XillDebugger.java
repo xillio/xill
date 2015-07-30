@@ -9,7 +9,9 @@ import java.util.Optional;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 import nl.xillio.events.Event;
 import nl.xillio.events.EventHost;
@@ -34,7 +36,7 @@ import xill.lang.xill.Target;
  * This class contains all information and controls required for debugging
  */
 public class XillDebugger implements Debugger {
-	private static final Logger log = Logger.getLogger(XillDebugger.class);
+	private static final Logger log = LogManager.getLogger();
 	private final List<Breakpoint> breakpoints;
 	private Instruction previousInstruction;
 	private Instruction currentInstruction;

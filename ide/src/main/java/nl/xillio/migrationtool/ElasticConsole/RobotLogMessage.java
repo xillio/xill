@@ -1,7 +1,5 @@
 package nl.xillio.migrationtool.ElasticConsole;
 
-import org.apache.log4j.Priority;
-
 /**
  * This class represents all information about a log event.
  */
@@ -16,7 +14,6 @@ public class RobotLogMessage {
 	 * @param id
 	 *        a robot it
 	 * @param level
-	 *        as defined in {@link Priority}
 	 * @param message
 	 *        the message to log
 	 */

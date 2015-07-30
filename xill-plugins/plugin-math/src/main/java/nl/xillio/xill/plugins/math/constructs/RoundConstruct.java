@@ -1,13 +1,14 @@
 package nl.xillio.xill.plugins.math.constructs;
 
-import java.io.InputStream;
+import com.google.inject.Inject;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.construct.HelpComponent;
+import nl.xillio.xill.plugins.math.services.math.MathOperationsImpl;
+import nl.xillio.xill.plugins.math.services.math.MathOperations;
 
 /**
  * The construct of the Round function which rounds a numbervalue.
@@ -15,29 +16,20 @@ import nl.xillio.xill.api.construct.HelpComponent;
  * @author Ivor
  *
  */
-public class RoundConstruct extends Construct implements HelpComponent {
+public class RoundConstruct extends Construct {
+
+	@Inject
+	private MathOperationsImpl mathService;
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(RoundConstruct::process, new Argument("value"));
+		return new ConstructProcessor(
+		  value -> process(value, mathService),
+		  new Argument("value", ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression value) {
-		Number number = value.getNumberValue();
-		if (number instanceof Integer) {
-			return fromValue(number.intValue());
-		} else if (number instanceof Long) {
-			return fromValue(number.longValue());
-		} else if (number instanceof Float) {
-			return fromValue(Math.round(number.floatValue()));
-		} else {
-			return fromValue(Math.round(number.doubleValue()));
-		}
-	}
-
-	@Override
-	public InputStream openDocumentationStream() {
-		return getClass().getResourceAsStream("/helpfiles/round.xml");
+	static MetaExpression process(final MetaExpression value, final MathOperations math) {
+		return fromValue(math.round(value.getNumberValue()));
 	}
 
 }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * This class represents a literal in the xill language
+ * This class represents a constant literal in the xill language
  */
 public class ImmutableLiteral extends MetaExpression {
 
@@ -16,6 +16,7 @@ public class ImmutableLiteral extends MetaExpression {
 	 */
 	public ImmutableLiteral(final Expression value) {
 		this.value = value;
+		setValue(value);
 	}
 
 	@Override

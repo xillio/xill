@@ -9,7 +9,8 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -35,25 +36,21 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import nl.xillio.migrationtool.Loader;
 import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient;
-import nl.xillio.migrationtool.documentation.PluginListener;
-import nl.xillio.plugins.CircularReferenceException;
-import nl.xillio.plugins.PluginLoader;
+import nl.xillio.plugins.XillPlugin;
 import nl.xillio.sharedlibrary.license.License;
 import nl.xillio.sharedlibrary.license.License.LicenseType;
 import nl.xillio.sharedlibrary.license.License.SoftwareModule;
 import nl.xillio.sharedlibrary.settings.SettingsHandler;
-import nl.xillio.xill.api.PluginPackage;
 import nl.xillio.xill.api.Xill;
 
 /**
  * This class is the global controller for the application
  */
 public class FXController implements Initializable, EventHandler<Event> {
-	private static final Logger log = Logger.getLogger("XMT");
+	private static final Logger log = LogManager.getLogger(FXController.class);
 	private static final SettingsHandler settings = SettingsHandler.getSettingsHandler();
 
 	private static final File DEFAULT_OPEN_BOT = new File("scripts/Hello-Xillio." + Xill.FILE_EXTENSION);
-	private static final File PLUGIN_FOLDER = new File("plugins");
 
 	// Shortcut is Ctrl on Windows and Meta on Mac.
 	@SuppressWarnings("javadoc")
@@ -92,8 +89,6 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 	@FXML
 	private ProjectPane projectpane;
-
-	private final PluginLoader<PluginPackage> pluginLoader = PluginLoader.load(PluginPackage.class);
 
 	/**
 	 * Initialize custom components
@@ -139,6 +134,11 @@ public class FXController implements Initializable, EventHandler<Event> {
 				.saveSimpleSetting("ProjectHeight", Double.toString(newPos.doubleValue())));
 		});
 
+		// Open the help index whenever initialize is done
+		Loader.getInitializer().getOnLoadComplete().addListener(homepage -> {
+			helppane.display(homepage);
+		});
+
 		// Start the elasticsearch console
 		Platform.runLater(ESConsoleClient::getInstance);
 
@@ -175,37 +175,6 @@ public class FXController implements Initializable, EventHandler<Event> {
 		Platform.runLater(() -> {
 			verifyLicense();
 			showReleaseNotes();
-		});
-
-		// Subscribe to plugin events
-		getPluginLoader().getPluginManager().onPluginAccepted().addListener(p -> {
-			log.info("Loaded Xill Package: " + p.getName());
-		});
-		getPluginLoader().getPluginManager().onPluginDenied().addListener(p -> {
-			log.error("Failed to load Xill Package: " + p.getName());
-		});
-		PluginListener documentationListener = PluginListener.attach(getPluginLoader());
-		documentationListener.getOnDeployedFiles().addListener(homePage -> helppane.display(homePage));
-
-		// Now we're done loading queue up the generation of documentation and loading of plugins
-		Thread pluginLoadingThread = new Thread(() -> {
-			// Deploy documentation system
-			documentationListener.deployFiles();
-
-			// Initialize plugin loader
-			PLUGIN_FOLDER.mkdirs();
-			getPluginLoader().addFolder(PLUGIN_FOLDER);
-			try {
-				getPluginLoader().load();
-			} catch (CircularReferenceException e) {
-				throw new RuntimeException(e);
-			}
-
-			documentationListener.forceGenerateIndex();
-		});
-
-		Platform.runLater(() -> {
-			pluginLoadingThread.start();
 		});
 
 	}
@@ -415,7 +384,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 		tpnBots.getTabs().forEach(tab -> closeTab(tab, false));
 
 		// Purge plugins
-		for (PluginPackage plugin : getPluginLoader().getPluginManager().getPlugins()) {
+		for (XillPlugin plugin : Loader.getInitializer().getPlugins()) {
 			try {
 				plugin.close();
 			} catch (Exception e) {
@@ -587,10 +556,6 @@ public class FXController implements Initializable, EventHandler<Event> {
 		if (index >= 0) {
 			tpnBots.getSelectionModel().clearAndSelect(index);
 		}
-	}
-
-	public PluginLoader<PluginPackage> getPluginLoader() {
-		return pluginLoader;
 	}
 
 	/**

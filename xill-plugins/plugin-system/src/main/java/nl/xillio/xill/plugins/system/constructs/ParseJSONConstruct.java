@@ -2,9 +2,8 @@ package nl.xillio.xill.plugins.system.constructs;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import com.google.inject.Inject;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
@@ -12,31 +11,36 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.services.json.JsonParser;
 
 /**
  * Forwards a JSON string to GSON
  */
 public class ParseJSONConstruct extends Construct {
 
-	private static final Gson gson = new GsonBuilder().create();
+	@Inject
+	JsonParser jsonParser;
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(ParseJSONConstruct::process, new Argument("json"));
+		return new ConstructProcessor(
+			json -> process(json, jsonParser),
+			new Argument("json", ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression json) {
+	static MetaExpression process(final MetaExpression json, final JsonParser jsonParser) {
+		assertNotNull(json, "input");
 		String jsonValue = json.getStringValue();
 
 		try {
-			Object result = gson.fromJson(jsonValue, Object.class);
+			Object result = jsonParser.fromJson(jsonValue, Object.class);
 			return parseObject(result);
-		}catch(JsonSyntaxException e) {
+		} catch (JsonSyntaxException e) {
 			Throwable exception = ExceptionUtils.getRootCause(e);
-			if(exception == null) {
+			if (exception == null) {
 				exception = e;
 			}
-			
+
 			throw new RobotRuntimeException("Invalid JSON input: " + exception.getMessage(), e);
 		}
 	}

@@ -5,7 +5,7 @@ import nl.xillio.xill.api.behavior.NumberBehavior;
 import nl.xillio.xill.api.behavior.StringBehavior;
 
 /**
- * This interface represents a language component that can hold a value
+ * This interface represents a language component that can hold a value. Every expression should have all three types: {@link Boolean}, {@link String} and {@link Number}
  * 
  * @see BooleanBehavior
  * @see NumberBehavior
@@ -29,7 +29,7 @@ public interface Expression extends AutoCloseable {
 	public boolean getBooleanValue();
 
 	/**
-	 * @return True if the expression is considered null
+	 * @return true if and only if the expression is considered null
 	 */
 	public boolean isNull();
 }

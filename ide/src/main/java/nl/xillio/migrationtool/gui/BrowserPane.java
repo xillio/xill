@@ -15,7 +15,8 @@ import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -34,7 +35,7 @@ import javafx.scene.web.WebView;
  *
  */
 public class BrowserPane extends AnchorPane {
-	private final Logger log = Logger.getLogger("XMT");
+	private final Logger log = LogManager.getLogger();
 
 	public static enum ContentType {
 		HTML, XML
