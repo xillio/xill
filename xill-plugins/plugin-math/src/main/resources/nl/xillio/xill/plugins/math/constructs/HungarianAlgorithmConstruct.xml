@@ -1,42 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<function Tag="hungarianalgorithm">
-  <name>hungarianalgorithm</name>
+<function Tag="hungarianAlgorithm">
+  <name>hungarianAlgorithm</name>
   <parameters>
     <param name="matrix">
-      <type>list</type>
     </param>
-    <param name="max ">
-      <type>boolean</type>
+    <param name="max">
     </param>
   </parameters>
-  <description><![CDATA[Solves the optimal assignment problem using the Hungarian Algorithm on matrix, which is a two-dimensional list containing numbers. Returns the optimal combination of rows / columns and the optimal sum as an object. The optional argument max (defaults to true) defines wether maximum sum or minimum sum should be returned. Useful for calculating optimal costs or income based on a matrix.]]></description>
+  <description><![CDATA[Solves the optimal assignment problem using the Hungarian Algorithm on matrix, which is a two-dimensional list containing numbers. Returns the optimal combination of rows / columns and the optimal sum as an object. The optional argument max (defaults to true) defines whether maximum sum or minimum sum should be returned. Useful for calculating optimal costs or income based on a matrix.]]></description>
   <examples>
     <example description="Executing the following:"><![CDATA[
-    matrix = {{0,1,3}, {2,2,3}, {5,4,1}};
-    System.print(Math.hungarianalgorithm(matrix))
+    var matrix = {{0,1,3}, {2,2,3}, {5,4,1}};
+    System.print(Math.hungarianAlgorithm(matrix, max));
 ]]></example>
-    <example description="will print:"><![CDATA[{
-  "cells": [
-    {
-      "col": 2,
-      "row": 0
-    },
-    {
-      "col": 1,
-      "row": 1
-    },
-    {
-      "col": 0,
-      "row": 2
-    }
-  ],
-  "sum": 10.0
-}
+    <example description="will print:"><![CDATA[
+    [{"sum" : 10.0},
+    {"cells" : 
+    	[{"row":0, "col":2},
+    	 {"row":1, "col":1},
+    	 {"row":2, "col":0}]
+    }]
 ]]></example>
     <example description="Explanation:"><![CDATA[
-     the algorithm treats the list as a matrix checks each column and calculates in which row the maximum value is found. 
+     The algorithm treats the list as a matrix checks each column and calculates in which row the maximum value is found. 
      Then it marks this row down and adds that number to the sum. 
-     However each row and each column may only be used once, so it will try all interesting combinations and return only the optimum. 
+     However, each row and each column may only be used once so it will try all interesting combinations and return only the optimum. 
      Thus in this case the maximum sum in this matrix is 10, using the number 3 in the first row, the number 2 in the second row and the number 5 in the last row.
      ]]>
      </example>

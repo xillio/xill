@@ -2,11 +2,10 @@
 <function Tag="round">
   <name>round</name>
   <parameters>
-    <param name="value ">
-      <type>number</type>
+    <param name="value">
     </param>
   </parameters>
-  <description><![CDATA[Rounds the provided value to the neares whole number.]]></description>
+  <description><![CDATA[Rounds the provided value to the nearest whole number.]]></description>
   <examples>
     <example description="Perform round on three different inputs:"><![CDATA[
     System.print(Math.round(6))
@@ -20,5 +19,6 @@
     -4
     </example>
   </examples>
+  <references />
   <searchTags />
 </function>
