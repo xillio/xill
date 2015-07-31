@@ -51,8 +51,7 @@ public class RemoveConstructTest extends ExpressionBuilderHelper {
 		verify(list,times(1)).size();
 		
 		// assert
-		Assert.assertSame(result, NULL);
-
+		Assert.assertEquals(result, NULL);
 	}
 
 	/**
@@ -86,7 +85,7 @@ public class RemoveConstructTest extends ExpressionBuilderHelper {
 		verify(obj,times(1)).containsKey(indexReturnValue);
 		
 		// assert
-		Assert.assertSame(result, NULL);
+		Assert.assertEquals(result, NULL);
 	}
 	
 	/**
@@ -120,7 +119,7 @@ public class RemoveConstructTest extends ExpressionBuilderHelper {
 		verify(obj,times(1)).containsKey(indexReturnValue);
 		
 		// assert
-		Assert.assertSame(result, NULL);
+		Assert.assertEquals(result, NULL);
 	}
 
 	/**
