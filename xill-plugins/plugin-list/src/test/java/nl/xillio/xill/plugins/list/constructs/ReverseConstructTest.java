@@ -4,13 +4,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.plugins.list.services.reverse.Reverse;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  *
@@ -33,7 +32,7 @@ public class ReverseConstructTest extends ExpressionBuilderHelper {
 
 		Reverse reverse = mock(Reverse.class);
 		when(reverse.asReversed(extractValue(outputExpression), true)).thenReturn(true);
-		
+
 		MetaExpression recursive = mock(MetaExpression.class);
 		when(recursive.getBooleanValue()).thenReturn(true);
 

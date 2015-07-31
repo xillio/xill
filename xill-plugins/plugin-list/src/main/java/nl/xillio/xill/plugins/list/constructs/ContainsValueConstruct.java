@@ -29,7 +29,7 @@ public class ContainsValueConstruct extends Construct {
 
 	/**
 	 * Returns true if the value is contained in the given list or object. Otherwise false.
-	 * 
+	 *
 	 * @param input
 	 *        the list or object.
 	 * @param value

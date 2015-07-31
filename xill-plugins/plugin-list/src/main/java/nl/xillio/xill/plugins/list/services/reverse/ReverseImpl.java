@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Stack;
 
+import com.google.inject.Singleton;
+
 /**
  *
  * This is the main implementation of {@link Reverse}.
@@ -14,6 +16,7 @@ import java.util.Stack;
  * @author Sander Visser
  *
  */
+@Singleton
 public class ReverseImpl implements Reverse {
 
 	@Override

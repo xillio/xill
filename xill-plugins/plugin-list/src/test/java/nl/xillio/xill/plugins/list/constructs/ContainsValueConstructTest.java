@@ -8,12 +8,12 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Map;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.NotImplementedException;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  *
@@ -85,8 +85,12 @@ public class ContainsValueConstructTest extends ExpressionBuilderHelper {
 	}
 
 	/**
-	 * <p>Test the process method with not implemented type</p>
-	 * <p>(since the type has not been implemented, we use ATOMIC type to check.</p>
+	 * <p>
+	 * Test the process method with not implemented type
+	 * </p>
+	 * <p>
+	 * (since the type has not been implemented, we use ATOMIC type to check.
+	 * </p>
 	 *
 	 *
 	 * @throws Throwable
@@ -106,7 +110,7 @@ public class ContainsValueConstructTest extends ExpressionBuilderHelper {
 		when(list.contains(value)).thenReturn(true);
 
 		ContainsValueConstruct.process(input, value);
-		
+
 		// verify
 		verify(list, times(0)).contains(value);
 		verify(input, times(1)).getType();

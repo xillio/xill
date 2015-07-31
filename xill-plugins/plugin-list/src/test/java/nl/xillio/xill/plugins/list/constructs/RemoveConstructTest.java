@@ -1,16 +1,19 @@
 package nl.xillio.xill.plugins.list.constructs;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  *
@@ -42,14 +45,14 @@ public class RemoveConstructTest extends ExpressionBuilderHelper {
 
 		when(list.size()).thenReturn(3);
 		when(list.remove(1)).thenReturn(fromValue("a"));
-		
+
 		// run
 		MetaExpression result = RemoveConstruct.process(input, index);
 
 		// verify
-		verify(list,times(1)).remove(indexReturnValue);
-		verify(list,times(1)).size();
-		
+		verify(list, times(1)).remove(indexReturnValue);
+		verify(list, times(1)).size();
+
 		// assert
 		Assert.assertEquals(result, NULL);
 	}
@@ -79,15 +82,15 @@ public class RemoveConstructTest extends ExpressionBuilderHelper {
 		MetaExpression result = RemoveConstruct.process(input, index);
 
 		// verify
-		verify(input,times(1)).getValue();
-		verify(input,times(2)).getType();
-		verify(obj,times(1)).remove(indexReturnValue);
-		verify(obj,times(1)).containsKey(indexReturnValue);
-		
+		verify(input, times(1)).getValue();
+		verify(input, times(2)).getType();
+		verify(obj, times(1)).remove(indexReturnValue);
+		verify(obj, times(1)).containsKey(indexReturnValue);
+
 		// assert
 		Assert.assertEquals(result, NULL);
 	}
-	
+
 	/**
 	 * Test the process method with object where the element it tries to remove does not exist.
 	 */
@@ -113,11 +116,11 @@ public class RemoveConstructTest extends ExpressionBuilderHelper {
 		MetaExpression result = RemoveConstruct.process(input, index);
 
 		// verify
-		verify(input,times(1)).getValue();
-		verify(input,times(2)).getType();
-		verify(obj,times(0)).remove(indexReturnValue);
-		verify(obj,times(1)).containsKey(indexReturnValue);
-		
+		verify(input, times(1)).getValue();
+		verify(input, times(2)).getType();
+		verify(obj, times(0)).remove(indexReturnValue);
+		verify(obj, times(1)).containsKey(indexReturnValue);
+
 		// assert
 		Assert.assertEquals(result, NULL);
 	}

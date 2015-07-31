@@ -4,15 +4,17 @@ import nl.xillio.xill.plugins.list.ListXillPlugin;
 import nl.xillio.xill.services.XillService;
 
 /**
- * 
+ *
  * This interface represents the sort operation for the {@link ListXillPlugin}
+ * 
  * @author Sander Visser
  *
  */
 public interface Sort extends XillService {
-	
+
 	/**
 	 * Sorts a LIST or an OBJECT.
+	 * 
 	 * @param input
 	 *        the list
 	 * @param recursive
@@ -22,5 +24,5 @@ public interface Sort extends XillService {
 	 * @return the sorted list
 	 */
 	public Object asSorted(Object input, boolean recursive, boolean onKeys);
-	
+
 }

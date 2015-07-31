@@ -4,13 +4,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.plugins.list.services.sort.Sort;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  *
@@ -25,13 +24,12 @@ public class SortConstructTest extends ExpressionBuilderHelper {
 	 * Test the process method under normal circumstances.
 	 */
 	@Test
-	public void  testProcessWithNormalInput() {
+	public void testProcessWithNormalInput() {
 
 		// mock
 		String expectedOutput = "This is the expected output";
 		MetaExpression outputExpression = fromValue(expectedOutput);
-		
-		
+
 		Sort sort = mock(Sort.class);
 		when(sort.asSorted(extractValue(outputExpression), true, true)).thenReturn(true);
 
