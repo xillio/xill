@@ -14,6 +14,9 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.PageVariable;
 
+/**
+ * Capture screenshot of currently loaded page and save it to a .png file 
+ */
 public class ScreenshotConstruct extends Construct {
 
 	@Override
@@ -21,6 +24,13 @@ public class ScreenshotConstruct extends Construct {
 		return new ConstructProcessor(ScreenshotConstruct::process, new Argument("page"), new Argument("filename"));
 	}
 
+	/**
+	 * @param pageVar
+	 * 				input variable (should be of a PAGE type)
+	 * @param filenameVar
+	 * 				input string variable - output .png filepath 
+	 * @return null variable
+	 */
 	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression filenameVar) {
 
 		String filename = filenameVar.getStringValue();
