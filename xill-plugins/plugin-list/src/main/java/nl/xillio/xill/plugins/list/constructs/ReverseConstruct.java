@@ -11,12 +11,12 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.plugins.list.services.reverse.Reverse;
 
 /**
- *
+ *<p>
  * returns the reverse of the given {@link ExpressionDataType#LIST} or {@link ExpressionDataType#OBJECT}.
+ * </p>
  * <p>
- *
- * if recursive is true it will also reverse lists and objects inside the given list or object.
- *
+ * If recursive is true it will also reverse lists and objects inside the given list or object.
+ *</p>
  *
  * @author Sander Visser
  *
@@ -28,7 +28,10 @@ public class ReverseConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor((list, recursive) -> process(list, recursive, reverse), new Argument("list", LIST, OBJECT), new Argument("recursive", FALSE,ATOMIC));
+		return new ConstructProcessor(
+			(list, recursive) -> process(list, recursive, reverse),
+			new Argument("list", LIST, OBJECT),
+			new Argument("recursive", FALSE, ATOMIC));
 	}
 
 	static MetaExpression process(final MetaExpression input, final MetaExpression recursiveVar, final Reverse reverse) {

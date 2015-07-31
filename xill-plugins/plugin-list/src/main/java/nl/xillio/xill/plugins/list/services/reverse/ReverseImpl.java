@@ -9,19 +9,25 @@ import java.util.Stack;
 
 /**
  *
- * This is the main implementation of {@link Reverse}
+ * This is the main implementation of {@link Reverse}.
  *
  * @author Sander Visser
  *
  */
 public class ReverseImpl implements Reverse {
 
-	private final List<Object> disc = new ArrayList<>();
-	private final Map<String, Object> disc2 = new LinkedHashMap<String, Object>();
-
 	@Override
-	@SuppressWarnings("unchecked")
 	public Object asReversed(final Object input, final boolean recursive) {
+		if (input instanceof List<?>) {
+			return asReversedIteration(input, recursive, new ArrayList<Object>());
+		}
+		else {
+			return asReversedIteration(input, recursive, new LinkedHashMap<String, Object>());
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private Object asReversedIteration(final Object input, final boolean recursive, final List<Object> disc) {
 		if (input instanceof List<?>) {
 			List<Object> list = (List<Object>) input;
 			Stack<Object> s = new Stack<>();
@@ -38,10 +44,10 @@ public class ReverseImpl implements Reverse {
 				}
 				if (recursive) {
 					if (m instanceof List<?>) {
-						asReversed(m, recursive);
+						asReversedIteration(m, recursive, disc);
 					}
 					if (m instanceof Map<?, ?>) {
-						asReversed(m, recursive);
+						asReversedIteration(m, recursive, disc);
 					}
 				}
 
@@ -52,37 +58,40 @@ public class ReverseImpl implements Reverse {
 				((List<Object>) input).add(s.pop());
 			}
 
-		} else if (input instanceof Map<?, ?>) {
-			Map<String, Object> list = (Map<String, Object>) input;
-			Stack<Entry<String, Object>> s = new Stack<>();
-			disc2.putAll(list);
-			outerloop: for (Entry<String, Object> entry : list.entrySet()) {
-				s.push(entry);
+		}
+		return input;
+	}
 
-				for (Entry<String, Object> entry2 : disc2.entrySet()) {
-					{
-						if (entry2.equals(entry)) {
-							continue outerloop;
-						}
+	@SuppressWarnings("unchecked")
+	private Object asReversedIteration(final Object input, final boolean recursive, final Map<String, Object> disc) {
+		Map<String, Object> list = (Map<String, Object>) input;
+		Stack<Entry<String, Object>> s = new Stack<>();
+		disc.putAll(list);
+		outerloop: for (Entry<String, Object> entry : list.entrySet()) {
+			s.push(entry);
+
+			for (Entry<String, Object> entry2 : disc.entrySet()) {
+				{
+					if (entry2.equals(entry)) {
+						continue outerloop;
 					}
 				}
-				if (recursive) {
-					if (entry.getValue() instanceof List<?>) {
-						entry.setValue(asReversed(entry.getValue(), recursive));
-					}
-					if (entry.getValue() instanceof Map<?, ?>) {
-						entry.setValue(asReversed(entry.getValue(), recursive));
-					}
+			}
+			if (recursive) {
+				if (entry.getValue() instanceof List<?>) {
+					entry.setValue(asReversedIteration(entry.getValue(), recursive, disc));
 				}
-
-			}
-			((Map<String, Object>) input).clear();
-			int size = s.size();
-			for (int i = 0; i < size; i++) {
-				Entry<String, Object> e = s.pop();
-				((Map<String, Object>) input).put(e.getKey().toString(), e.getValue());
+				if (entry.getValue() instanceof Map<?, ?>) {
+					entry.setValue(asReversedIteration(entry.getValue(), recursive, disc));
+				}
 			}
 
+		}
+		((Map<String, Object>) input).clear();
+		int size = s.size();
+		for (int i = 0; i < size; i++) {
+			Entry<String, Object> e = s.pop();
+			((Map<String, Object>) input).put(e.getKey().toString(), e.getValue());
 		}
 		return input;
 	}

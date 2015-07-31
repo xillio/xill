@@ -22,7 +22,10 @@ public class RemoveConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor((input, index) -> process(input, index), new Argument("input", LIST, OBJECT), new Argument("index", ATOMIC));
+		return new ConstructProcessor(
+			(input, index) -> process(input, index),
+			new Argument("input", LIST, OBJECT),
+			new Argument("index", ATOMIC));
 	}
 
 	static MetaExpression process(final MetaExpression input, final MetaExpression indexVar) {

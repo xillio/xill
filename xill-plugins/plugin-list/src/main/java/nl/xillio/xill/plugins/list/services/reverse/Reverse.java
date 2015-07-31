@@ -12,6 +12,7 @@ import nl.xillio.xill.services.XillService;
 public interface Reverse extends XillService {
 	
 	/**
+	 * Receives either a LIST or an OBJECT and returns the reversed version.
 	 * @param input the list
 	 * @param recursive whether lists inside the list should be reversed too.
 	 * @return the reversed list.

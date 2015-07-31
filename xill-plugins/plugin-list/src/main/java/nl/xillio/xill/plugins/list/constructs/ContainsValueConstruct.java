@@ -9,6 +9,7 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.NotImplementedException;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
  * Returns true if the value is contained in the given list or object otherwise false.
@@ -20,10 +21,15 @@ public class ContainsValueConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor((input, value) -> process(input, value), new Argument("input", LIST, OBJECT), new Argument("value", ATOMIC));
+		return new ConstructProcessor(
+			(input, value) -> process(input, value),
+			new Argument("input", LIST, OBJECT),
+			new Argument("value", ATOMIC));
 	}
 
 	/**
+	 * Returns true if the value is contained in the given list or object. Otherwise false.
+	 * 
 	 * @param input
 	 *        the list or object.
 	 * @param value
@@ -36,12 +42,20 @@ public class ContainsValueConstruct extends Construct {
 			case OBJECT:
 				@SuppressWarnings("unchecked")
 				Map<String, MetaExpression> m = (Map<String, MetaExpression>) input.getValue();
-				result = m.containsValue(value);
+				try {
+					result = m.containsValue(value);
+				} catch (ClassCastException | NullPointerException e) {
+					throw new RobotRuntimeException("The value handed was no valid MetaExpression");
+				}
 				break;
 			case LIST:
 				@SuppressWarnings("unchecked")
 				List<MetaExpression> l = (List<MetaExpression>) input.getValue();
-				result = l.contains(value);
+				try {
+					result = l.contains(value);
+				} catch (ClassCastException | NullPointerException e) {
+					throw new RobotRuntimeException("The value handed was no valid MetaExpression");
+				}
 				break;
 			default:
 				throw new NotImplementedException("This type is not implemented.");

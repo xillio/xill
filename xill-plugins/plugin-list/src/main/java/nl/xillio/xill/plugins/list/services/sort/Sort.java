@@ -12,6 +12,7 @@ import nl.xillio.xill.services.XillService;
 public interface Sort extends XillService {
 	
 	/**
+	 * Sorts a LIST or an OBJECT.
 	 * @param input
 	 *        the list
 	 * @param recursive

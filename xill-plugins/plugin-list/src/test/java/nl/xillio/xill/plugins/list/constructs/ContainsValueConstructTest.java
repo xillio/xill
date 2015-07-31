@@ -36,10 +36,10 @@ public class ContainsValueConstructTest extends ExpressionBuilderHelper {
 		// mock
 		MetaExpression input = mock(MetaExpression.class);
 		MetaExpression value = mock(MetaExpression.class);
-		MetaExpression expectedOutput = TRUE;
+		boolean expectedOutput = true;
 		when(input.getType()).thenReturn(LIST);
 		when(input.getValue()).thenReturn(list);
-		when(list.contains(value)).thenReturn(true);
+		when(list.contains(value)).thenReturn(expectedOutput);
 
 		// run
 		MetaExpression output = ContainsValueConstruct.process(input, value);
@@ -50,7 +50,7 @@ public class ContainsValueConstructTest extends ExpressionBuilderHelper {
 		verify(input, times(1)).getValue();
 
 		// assert
-		Assert.assertEquals(output, expectedOutput);
+		Assert.assertEquals(output.getBooleanValue(), expectedOutput);
 
 	}
 
@@ -66,10 +66,10 @@ public class ContainsValueConstructTest extends ExpressionBuilderHelper {
 		// mock
 		MetaExpression input = mock(MetaExpression.class);
 		MetaExpression value = mock(MetaExpression.class);
-		MetaExpression expectedOutput = TRUE;
+		boolean expectedOutput = true;
 		when(input.getType()).thenReturn(OBJECT);
 		when(input.getValue()).thenReturn(obj);
-		when(obj.containsValue(value)).thenReturn(true);
+		when(obj.containsValue(value)).thenReturn(expectedOutput);
 
 		// run
 		MetaExpression output = ContainsValueConstruct.process(input, value);
@@ -80,13 +80,13 @@ public class ContainsValueConstructTest extends ExpressionBuilderHelper {
 		verify(input, times(1)).getValue();
 
 		// assert
-		Assert.assertEquals(output, expectedOutput);
+		Assert.assertEquals(output.getBooleanValue(), expectedOutput);
 
 	}
 
 	/**
-	 * Test the process method with not implemented type
-	 * (since the type has not been implemented, we use ATOMIC type to check.
+	 * <p>Test the process method with not implemented type</p>
+	 * <p>(since the type has not been implemented, we use ATOMIC type to check.</p>
 	 *
 	 *
 	 * @throws Throwable
@@ -106,6 +106,11 @@ public class ContainsValueConstructTest extends ExpressionBuilderHelper {
 		when(list.contains(value)).thenReturn(true);
 
 		ContainsValueConstruct.process(input, value);
+		
+		// verify
+		verify(list, times(0)).contains(value);
+		verify(input, times(1)).getType();
+		verify(input, times(0)).getValue();
 
 	}
 
