@@ -8,7 +8,9 @@ import java.sql.SQLException;
 public abstract class DBConnection implements nl.xillio.xill.util.db.Connection {
 	private Connection connection = null;
 
-	private String type = null, connectionString = null, driverName = null;
+	private String type = null;
+	private String connectionString = null;
+	private String driverName = null;
 
 	public DBConnection(final String type, final String driverName, final String connectionString) throws SQLException {
 		this.type = type;

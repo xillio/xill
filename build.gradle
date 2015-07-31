@@ -1,11 +1,18 @@
 /*
 * Please do not change this file unless explicitely instructed to. The values you can change are found in gradle.properties
 */
+plugins {
+	id "org.sonarqube" version "1.0"
+}
+
+apply plugin: 'jacoco'
 
 allprojects {
 	apply plugin: 'java'
 	apply plugin: 'eclipse'
-	group = mavenPublicationGroup
+	apply plugin: 'jacoco'
+
+	group = 'nl.xillio'
 	version = version
 	
 	repositories {
@@ -25,8 +32,9 @@ allprojects {
 	 * MAVEN PUBLISH
 	 */
 	 if(project.name != 'xill-plugins') {
-		apply plugin: 'maven-publish'
-		publishing {
+		 apply plugin: 'maven-publish'
+
+		 publishing {
 			publications {
 				main(MavenPublication) {
 					artifactId 'xill-' + project.name
@@ -50,7 +58,8 @@ allprojects {
 						}
 				}
 		}
-	}
+
+	 }
 	
 	test{
 		useTestNG{
@@ -73,6 +82,7 @@ allprojects {
 			attributes "Implementation-Title": project.getProperties().get(project.name + "ProjectName")
 		}
 	}
+
 }
 
 description = 'this root project contains the overview of the contenttools application'

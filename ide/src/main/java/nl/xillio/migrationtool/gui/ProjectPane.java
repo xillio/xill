@@ -53,7 +53,13 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 	private TreeView<Pair<File, String>> trvProjects;
 
 	@FXML
-	private Button btnAddFolder, btnUpload, btnRename, btnDelete;
+	private Button btnAddFolder;
+	@FXML
+	private Button btnUpload;
+	@FXML
+	private Button btnRename;
+	@FXML
+	private Button btnDelete;
 	/**
 	 * A file filter filtering on the FXController.BOT_EXTENSION extension. Protected to avoid synthetic accessors.
 	 */

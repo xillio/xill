@@ -5,10 +5,15 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
+
+import com.google.inject.Inject;
 
 /**
  *
- * Returns whether the first string ends with the second string. </br>
+ * <p>
+ * Returns whether the first string ends with the second string.
+ * </p>
  *
  *
  * @author Sander
@@ -16,18 +21,19 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
  */
 public class EndsWithConstruct extends Construct {
 
+	@Inject
+	StringUtilityService stringService;
+
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(
-			EndsWithConstruct::process,
-			new Argument("string", ATOMIC),
-			new Argument("suffix", ATOMIC));
+		return new ConstructProcessor((string, suffix) ->
+			process(string, suffix, stringService), new Argument("string", ATOMIC), new Argument("suffix", ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression string1, final MetaExpression string2) {
+	static MetaExpression process(final MetaExpression string1, final MetaExpression string2, final StringUtilityService stringService) {
 		assertNotNull(string1, "string1");
 		assertNotNull(string2, "string2");
 
-		return fromValue(string1.getStringValue().endsWith(string2.getStringValue()));
+		return fromValue(stringService.endsWith(string1.getStringValue(), string2.getStringValue()));
 	}
 }
