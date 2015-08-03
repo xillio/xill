@@ -1,30 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<function Tag="abs">
-  <name>abs</name>
-  <parameters>
-    <param name="value" default = "0">
-    </param>
-  </parameters>
-  <description><![CDATA[Returns the absolute value of the provided value.]]></description>
-  <examples>
-    <example description="Perform abs on three different inputs:"><![CDATA[
+<function>
+    <parameters>
+        <param name="value"/>
+    </parameters>
+    <description><![CDATA[Returns the absolute value of the provided value.]]></description>
+    <examples>
+        <example description="Perform abs on three different inputs:"><![CDATA[
     System.print(Math.abs(6))
     System.print(Math.abs(-5))
     System.print(Math.abs(-3.14))]]></example>
-    <example description="This will print:"><![CDATA[
+        <example description="This will print:"><![CDATA[
     6
-    -5
-    -3.14]]>
-    </example>
-  </examples>
-  <references>
-  	<reference package = "Math">round</reference>
-  	<reference package = "Math">round</reference>
-  	<reference package = "Math">round</reference>
-  </references>
-   <searchTags>
-	<searchTag>
-	absolute
-	</searchTag>
-  </searchTags>
+    5
+    3.14]]>
+        </example>
+    </examples>
+    <references>
+    </references>
+    <searchTags>
+        <searchTag>
+            absolute
+        </searchTag>
+    </searchTags>
 </function>
