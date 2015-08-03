@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function Tag="regex">
+  <name>regex</name>
+  <parameters>
+    <param name="text">
+    </param>
+    <param name="needle">
+    </param>
+    <param name="replacement">
+    </param>
+    <param name="useRegex" default="true">
+    </param>
+    <param name="replaceAll" default="true">
+    </param>
+    <param name="timeout" default="5">
+    </param>
+  </parameters>
+  <description><![CDATA[
+Returns a new string based on the string text in which occurrences of the string needle have been replaced by the string replacement. If the optional parameter replaceall is set to false, the routine will only replace the first occurrence of needle (defaults to true).
+
+Note that needle is by default interpreted as a regex pattern, so all special regex characters have to be escaped when used as a literal. 
+Also in replacement you can use the capture groups from needle as "$1", "$2", etc. To use a literal "$" in replacement, you need to escape it like this: "\$".
+
+Set useregex to false to have the function treat the needle and replacement as regular text.
+Optionally a timeout can be provided in seconds, the default value is 5 seconds and applies when omitted. 
+
+Set timeout to zero to let the function run without timeout. This should only be altered when dealing with large source documents. The timeout is there to protect the system from hanging on invalid expressions.
+See the Regular Expressions page for more about Regular Expression support in Content Tools.
+  ]]></description>
+  <examples>
+    <example description="Executing:"><![CDATA[
+    	String.replace("The quick brown fox.", "fox", "dog");
+    	
+    	String.replace("The quick brown fox. The quick brown fox", "fox", "dog");
+    	
+    	String.replace("The quick brown fox. The quick brown ladyfox.", "fox", "dog", false);
+    	
+    	String.replace("The quick brown fox. The quick brown fox.", "fox", "dog", false, false);	
+    ]]></example>
+    <example description="Will return:"><![CDATA[
+    	"The quick brown dog."
+    	
+    	"The quick brown dog, the quick brown dog."
+    	
+    	"The quick brown dog, the quick brown ladyfox."
+    	
+    	"The quick brown dog, the quick brown fox."
+		]]>
+    </example>
+    <example description="One could use it to:"><![CDATA[
+    	Repair misspelled URL’s (with one slash):
+    
+    	url = "http:/www.xillio.com/";
+		url = replace(url, "(^http:/)([^/].*)", "http://$2");
+		System.print(url);
+    ]]>
+    </example>
+    <example description="This will print:"><![CDATA[
+		http://www.xillio.com/
+    ]]>
+    </example>
+  </examples>
+  <references />
+   <searchTags>
+	<searchTag>
+	regex
+	</searchTag>
+  </searchTags>
+</function>
