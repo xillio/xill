@@ -18,6 +18,9 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.NodeVariable;
 import nl.xillio.xill.plugins.web.PageVariable;
 
+/**
+ * Select web element(s) on the page according to provided XPath selector  
+ */
 public class XPathConstruct extends Construct {
 
 	@Override
@@ -25,11 +28,17 @@ public class XPathConstruct extends Construct {
 		return new ConstructProcessor(
 			XPathConstruct::process,
 			new Argument("element"),
-			new Argument("xpath"),
-			new Argument("namespace", NULL));
+			new Argument("xpath"));
 	}
 
-	public static MetaExpression process(final MetaExpression elementVar, final MetaExpression xpathVar, final MetaExpression namespaceVar) {
+	/**
+	 * @param elementVar
+	 * 				input variable (should be of a NODE or PAGE type) 
+	 * @param xpathVar
+	 * 				string variable specifying XPath selector
+	 * @return NODE variable or list of NODE variables or null variable (according to count of selected web elements - more/1/0)
+	 */
+	public static MetaExpression process(final MetaExpression elementVar, final MetaExpression xpathVar) {
 
 		String query = xpathVar.getStringValue();
 

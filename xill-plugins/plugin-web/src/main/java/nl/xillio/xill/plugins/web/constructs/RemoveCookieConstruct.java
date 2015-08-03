@@ -12,6 +12,9 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.PageVariable;
 
+/**
+ * Removes cookie from a currently loaded page context 
+ */
 public class RemoveCookieConstruct extends Construct {
 
 	@Override
@@ -19,6 +22,13 @@ public class RemoveCookieConstruct extends Construct {
 		return new ConstructProcessor(RemoveCookieConstruct::process, new Argument("page"), new Argument("cookie"));
 	}
 
+	/**
+	 * @param pageVar
+	 * 				input variable (should be of a PAGE type)
+	 * @param cookieVar
+	 * 				input variable - string (cookie name) or  list of strings or boolean
+	 * @return null variable
+	 */
 	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression cookieVar) {
 
 		if (cookieVar.isNull()) {
@@ -43,9 +53,7 @@ public class RemoveCookieConstruct extends Construct {
 				}
 			} else {
 				Object value = MetaExpression.extractValue(cookieVar);
-				if (value instanceof Integer) {// boolean type cannot be
-					// determined in Xill 3.0 (at
-					// least for now)
+				if (value instanceof Integer) {// boolean type cannot be determined in Xill 3.0 (at least for now)
 					if (cookieVar.getBooleanValue()) {
 						driver.manage().deleteAllCookies();
 					}

@@ -10,6 +10,9 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.NodeVariable;
 
+/**
+ * Simulates key presses on provided web element (i.e. clear and write text) 
+ */
 public class InputConstruct extends Construct {
 
 	@Override
@@ -17,6 +20,13 @@ public class InputConstruct extends Construct {
 		return new ConstructProcessor(InputConstruct::process, new Argument("element"), new Argument("text"));
 	}
 
+	/**
+	 * @param elementVar
+	 * 				input variable (should be of a NODE type) - web element
+	 * @param textVar
+	 * 				input string variable - text to be written to web element
+	 * @return null variable
+	 */
 	public static MetaExpression process(final MetaExpression elementVar, final MetaExpression textVar) {
 
 		if (!NodeVariable.checkType(elementVar)) {

@@ -12,6 +12,9 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.NodeVariable;
 
+/**
+ * It will focus the provided web element on the web page 
+ */
 public class FocusConstruct extends Construct {
 
 	@Override
@@ -19,6 +22,11 @@ public class FocusConstruct extends Construct {
 		return new ConstructProcessor(FocusConstruct::process, new Argument("element"));
 	}
 
+	/**
+	 * @param elementVar
+	 * 				input variable (should be of a NODE type)
+	 * @return null variable
+	 */
 	private static MetaExpression process(final MetaExpression elementVar) {
 
 		if (!NodeVariable.checkType(elementVar)) {

@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
@@ -30,6 +29,10 @@ import nl.xillio.xill.plugins.web.PageVariable;
 import nl.xillio.xill.plugins.web.PhantomJSPool;
 import nl.xillio.xill.plugins.web.WebXillPlugin;
 
+/**
+ * @author Zbynek Hochmann
+ * Loads the new page via PhantomJS process and holds the context of a page 
+ */
 public class LoadPageConstruct extends Construct implements AutoCloseable {
 
 	private static final PhantomJSPool pool = new PhantomJSPool(10);
@@ -44,6 +47,13 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 		return new ConstructProcessor(LoadPageConstruct::process, new Argument("url"), new Argument("options", NULL));
 	}
 
+	/**
+	 * @param urlVar
+	 * 				string variable - page URL
+	 * @param optionsVar
+	 * 				list variable - options for loading the page (see CT help for details)
+	 * @return PAGE variable
+	 */
 	public static MetaExpression process(final MetaExpression urlVar, final MetaExpression optionsVar) {
 
 		String url = urlVar.getStringValue();
@@ -85,8 +95,11 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 	}
 
 	/**
-	 * @author Zbynek Hochmann Set of browser options for use with the loadpage
-	 *         function
+	 * Class encapsulate PhantomJS options handling (parsing, validating, creating new PhantomJS process, etc.)
+	 * Class attributes represents all browser options for use in the loadpage function
+	 * It contains both CLI options and non-CLI options.
+	 * CLI options are those that must be provided when PhantomJS is starting and cannot be changed anymore for already started PhantomJS process
+	 * non-CLI options are those that can be set whenever at whatever existing PhantomJS process
 	 */
 	public static class Options {
 
@@ -100,8 +113,7 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 		private boolean insecureSSL = false;
 		private boolean loadImages = true;
 		private String sslProtocol; // null==(default==) "sslv3"
-		private boolean ltrUrlAccess; // --local-to-remote-url-access
-		// (default==null== "false")
+		private boolean ltrUrlAccess; // --local-to-remote-url-access (default==null== "false")
 
 		private String proxyHost;
 		private int proxyPort = 0;
@@ -223,42 +235,52 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 			}
 		}
 
+		/**
+		 * @return current proxy user
+		 */
 		public String getProxyUser() {
 			return proxyUser;
 		}
 
+		/**
+		 * @return current proxy pasword
+		 */
 		public String getProxyPass() {
 			return proxyPass;
 		}
 
+		/**
+		 * @return current HTTP auth user
+		 */
 		public String getHttpAuthUser() {
 			return httpAuthUser;
 		}
 
+		/**
+		 * @return current HTTP auth password
+		 */
 		public String getHttpAuthPass() {
 			return httpAuthPass;
 		}
 
+		/**
+		 * Creates new PhantomJS process - it uses current (CLI + non-CLI) options for starting the process 
+		 * 
+		 * @return newly created PhantomJS process
+		 */
 		public WebDriver createDriver() {
 			return createPhantomJSDriver();
 		}
 
 		/**
-		 * It sets the options that are to be set after the driver is created
+		 * It sets the non-CLI options (i.e. the option that can be set after the process is created)
 		 *
 		 * @param driver
 		 *        Existing WebDriver
 		 */
 		public void setDriverOptions(final WebDriver driver) {
-			driver.manage().window().setSize(new Dimension(1920, 1080)); // setting
-			// up
-			// bigger
-			// size
-			// of
-			// viewport
-			// (default
-			// is
-			// 400x300)
+			// setting up bigger size of viewport (default is 400x300)
+			driver.manage().window().setSize(new Dimension(1920, 1080));  
 
 			// page load timeout
 			if (timeout != 0) {
@@ -267,19 +289,16 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 				// set infinite timeout
 				driver.manage().timeouts().pageLoadTimeout(-1, TimeUnit.MILLISECONDS);
 			}
-			
 
-			// driver.manage().deleteAllCookies();
+			// driver.manage().deleteAllCookies(); - probably not needed
 		}
 
 		/**
-		 * Creates CLI options
-		 *
-		 * @return The object encapsulating all CLI parameters for PhantomJS.exe
-		 *         process
+		 * Creates the object that holds all current CLI options.
+		 * 
+		 * @return The object encapsulating all CLI parameters for PhantomJS process
 		 */
 		private DesiredCapabilities createDCapOptions() {
-			// DesiredCapabilities dcap = new DesiredCapabilities();
 			DesiredCapabilities dcap = DesiredCapabilities.phantomjs();
 
 			// enable JavaScript
@@ -287,13 +306,8 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 
 			ArrayList<String> phantomArgs = new ArrayList<String>();
 			phantomArgs.add("--disk-cache=false");
-			// phantomArgs.add("--webdriver-logfile=NONE"); //! this option
-			// doesn't work (why not?) - it will create an empty file anyway
-			phantomArgs.add("--webdriver-loglevel=NONE");// values can be NONE |
-			// ERROR | WARN | INFO
-			// | DEBUG (if NONE
-			// then the log file is
-			// not created)
+			// phantomArgs.add("--webdriver-logfile=NONE"); //! this option doesn't work (why not?) - it will create an empty file anyway
+			phantomArgs.add("--webdriver-loglevel=NONE");// values can be NONE | ERROR | WARN | INFO | DEBUG (if NONE then the log file is not created)
 			phantomArgs.add("--ignore-ssl-errors=" + (insecureSSL ? "true" : "false"));
 			phantomArgs.add("--load-images=" + (loadImages ? "true" : "false"));
 			phantomArgs.add("--web-security=" + (enableWebSecurity ? "true" : "false"));
@@ -321,6 +335,11 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 			return dcap;
 		}
 
+		/**
+		 * @param s1 first string value
+		 * @param s2 second string value
+		 * @return if provided string are equal or not (including null strings)
+		 */
 		private static boolean strEq(final String s1, final String s2) {
 			if (s1 == null) {
 				return s2 == null;
@@ -332,11 +351,11 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 		}
 
 		/**
-		 * It compares provided options with this options
+		 * It compares provided CLI options with current CLI options
 		 *
 		 * @param options
-		 *        contains actual LoadPage settings
-		 * @return true if both options exactly matches otherwise false
+		 *        contains actual LoadPage CLI settings
+		 * @return true if matches otherwise false
 		 */
 		public boolean compareDCap(final Options options) {
 			return strEq(browser, options.browser) && enableJS == options.enableJS && enableWebSecurity == options.enableWebSecurity && insecureSSL == options.insecureSSL
@@ -346,20 +365,21 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 		}
 
 		private WebDriver createPhantomJSDriver() {
-			DesiredCapabilities dcap = createDCapOptions();// creates CLI
-			// options
-			PhantomJSDriver driver = new PhantomJSDriver(dcap);// creates new
-			// PhantomJS..exe
-			// process with
-			// given CLI
-			// options
-			setDriverOptions(driver); // set other (non-CLI) options
+			// creates CLI options
+			DesiredCapabilities dcap = createDCapOptions();
+
+			// creates new PhantomJS process with given CLI options
+			PhantomJSDriver driver = new PhantomJSDriver(dcap);
+
+			// set other (non-CLI) options
+			setDriverOptions(driver);
+
 			return driver;
 		}
 	}// end of class Options
 
 	/*
-	 * Method deletes all existing phantomjs..exe files from temp folder (on
+	 * Method deletes all existing PhantomJS process files from temp folder (on
 	 * Windows only) There are cases when the file is not removed after CT is
 	 * closed (e.g. when CT crashes or is manually terminated, etc.) This
 	 * prevents from cumulating useless files in the system.
@@ -375,7 +395,7 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 				String path = phantomJStoolBinary.toPath().getParent().toString();
 				phantomJStoolBinary.delete();
 
-				// delete all phantomjs...exe files
+				// delete all phantomjs process files
 				File dir = new File(path);
 				File[] files = dir.listFiles((final File file, final String name) -> name.startsWith("phantomjs") && name.endsWith(".exe"));
 				for (File file : files) {
@@ -389,6 +409,10 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 		}
 	}
 
+	/*
+	 * Creates new PhantomJS.exe file in temporary folder - on MS Windows only
+	 * For other operating systems, PhantomJS is expected to be properly installed in the path.
+	 */
 	private static void extractNativeBinary() {
 
 		try {
@@ -422,8 +446,6 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 				reader.close();
 				return;
 			}
-
-			// For other OS's, phantomJS is expected to be installed in the path
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 			return;
@@ -432,6 +454,7 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 
 	@Override
 	public void close() throws Exception {
+		// it will dispose entire PJS pool (all PJS processes will be terminated and temporary PJS files deleted)
 		pool.dispose();
 	}
 
