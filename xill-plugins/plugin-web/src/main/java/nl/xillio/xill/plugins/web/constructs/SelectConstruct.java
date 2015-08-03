@@ -10,6 +10,9 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.NodeVariable;
 
+/**
+ * Simulates selection of an item in HTML list 
+ */
 public class SelectConstruct extends Construct {
 
 	@Override
@@ -20,6 +23,13 @@ public class SelectConstruct extends Construct {
 			new Argument("select"));
 	}
 
+	/**
+	 * @param elementVar
+	 * 				input variable (should be of a NODE type) - web element
+	 * @param selectVar
+	 * 				input boolean variable
+	 * @return null variable
+	 */
 	public static MetaExpression process(final MetaExpression elementVar, final MetaExpression selectVar) {
 
 		if (!NodeVariable.checkType(elementVar)) {

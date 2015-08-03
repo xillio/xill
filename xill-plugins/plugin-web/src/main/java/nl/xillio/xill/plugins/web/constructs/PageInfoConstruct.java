@@ -13,6 +13,9 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.PageVariable;
 
+/**
+ * Returns the info about currently loaded web page 
+ */
 public class PageInfoConstruct extends Construct {
 
 	@Override
@@ -20,6 +23,11 @@ public class PageInfoConstruct extends Construct {
 		return new ConstructProcessor(PageInfoConstruct::process, new Argument("page"));
 	}
 
+	/**
+	 * @param pageVar
+	 * 				input variable (should be of a PAGE type)
+	 * @return list of string variable
+	 */
 	public static MetaExpression process(final MetaExpression pageVar) {
 
 		if (!PageVariable.checkType(pageVar)) {
