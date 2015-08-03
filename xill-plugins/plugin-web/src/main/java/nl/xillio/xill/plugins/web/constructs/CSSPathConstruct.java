@@ -20,6 +20,9 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.NodeVariable;
 import nl.xillio.xill.plugins.web.PageVariable;
 
+/**
+ * Select web element(s) on the page according to provided CSS Path selector  
+ */
 public class CSSPathConstruct extends Construct {
 
 	@Override
@@ -31,7 +34,14 @@ public class CSSPathConstruct extends Construct {
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(CSSPathConstruct::process, new Argument("element"), new Argument("csspath"));
 	}
-
+	
+	/**
+	 * @param elementVar
+	 * 				input variable (should be of a NODE or PAGE type) 
+	 * @param cssPathVar
+	 * 				string variable specifying CSS Path selector
+	 * @return NODE variable or list of NODE variables or null variable (according to count of selected web elements - more/1/0)
+	 */
 	private static MetaExpression process(final MetaExpression elementVar, final MetaExpression cssPathVar) {
 
 		String query = cssPathVar.getStringValue();
