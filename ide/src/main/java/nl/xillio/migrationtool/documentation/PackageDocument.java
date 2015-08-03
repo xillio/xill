@@ -3,6 +3,7 @@ package nl.xillio.migrationtool.documentation;
 import static org.rendersnake.HtmlAttributesFactory.href;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,7 +29,11 @@ import javafx.util.Pair;
  * @author Ivor
  *
  */
-public class PackageDocument extends HtmlGenerator {
+public class PackageDocument extends HtmlGenerator implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static Logger log = LogManager.getLogger();
 	private final Set<FunctionDocument> functions = new HashSet<>();
 

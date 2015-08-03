@@ -113,13 +113,12 @@ public class DocumentationGenerator {
 				} else {
 					log.error("Invalid name found for the package or a function in the package.");
 				}
-
+				FileUtils.write(new File(HELP_FOLDER, plugin.getName() + "/" + docu.getName() + ".txt"), docu.toPackageString());
 				stream.close();
 			} catch (IOException e) {
 				log.error("Failed to load:" + construct.getName());
 				e.printStackTrace();
 			}
-
 		}
 
 		if (!generatedDocuments.isEmpty()) {
