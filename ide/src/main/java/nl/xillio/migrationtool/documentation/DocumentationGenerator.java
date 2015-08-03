@@ -68,15 +68,14 @@ public class DocumentationGenerator {
 
 		XMLparser parser = new XMLparser();
 		DocumentSearcher searcher = new DocumentSearcher(ESConsoleClient.getInstance().getClient());
-		PackageDocument thisPackage = new PackageDocument();
-		thisPackage.setName(plugin.getName());
+
 
 		List<String> generatedDocuments = new ArrayList<>();
 		for (Construct construct : plugin.getConstructs()) {
-			// If the version of the allready indexed function different
+			// If the version of the already indexed function different
 			// from the version of the package
 			// or the function is non-existant in the database, we parse the
-			// new xml and generate html.
+			// new XML and generate HTML.
 			if (construct.hideDocumentation() || !needsUpdate(plugin, construct)) {
 				continue;
 			}
@@ -95,7 +94,7 @@ public class DocumentationGenerator {
 			try {
 				// parse the xml and default the name of the functiondocument to the name of the construct
 				docu = parser.parseXML(stream, plugin.getName(), plugin.getVersion());
-				thisPackage.addDescriptiveLink(docu);
+				//thisPackage.addDescriptiveLink(docu);
 				docu.setName(construct.getName());
 
 				// Write an html file
@@ -124,7 +123,7 @@ public class DocumentationGenerator {
 		if (!generatedDocuments.isEmpty()) {
 			log.debug("Generated html for " + generatedDocuments);
 		}
-
+		PackageDocument thisPackage = new PackageDocument(new File(HELP_FOLDER, plugin.getName() + "/"), plugin.getName());
 		packages.addPackageDocument(thisPackage);
 	}
 
