@@ -27,7 +27,7 @@ public class FocusConstruct extends Construct {
 	 * 				input variable (should be of a NODE type)
 	 * @return null variable
 	 */
-	private static MetaExpression process(final MetaExpression elementVar) {
+	static MetaExpression process(final MetaExpression elementVar) {
 
 		if (!NodeVariable.checkType(elementVar)) {
 			throw new RobotRuntimeException("Invalid variable type. NODE type expected!");
