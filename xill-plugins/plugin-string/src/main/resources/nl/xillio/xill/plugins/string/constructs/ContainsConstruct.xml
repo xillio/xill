@@ -16,8 +16,8 @@
     	String.contains(["ferrari", "diet", "cola"], ferrari);
     ]]></example>
     <example description="Will return:"><![CDATA[
-		TRUE
-		TRUE
+		true
+		true
     	]]>
     </example>
     <example description="Executing:"><![CDATA[
@@ -26,8 +26,8 @@
     	]]>
     </example>
     <example description="Will return:"><![CDATA[
-    	FALSE
-    	FALSE
+    	false
+    	false
     	]]>
     </example>
   </examples>

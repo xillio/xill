@@ -10,21 +10,21 @@
     </param>
   </parameters>
   <description><![CDATA[
-  		Seeks and returns the first index higher than startPos  of string2 contained in string1.
-  		Returns -1 if not found.
-  		startPos defaults to 0.
+	Returns an integer higher or equal to startPos of the index of string2 in string1.
+	startPos defaults to 0.
+	Returns -1 if the index could not be found.
   ]]></description>
   <examples>
     <example description="Executing:"><![CDATA[
-    	String.indexOf("megaTestTest", "Test");
-    	String.indexOf("megaTestTest", "Test", 4);
-    	String.indexOf("megaTestTest, "Test", 5);
-    	String.indexOf("megaTestTest, "test");
+    	String.indexOf("maxTestTest", "Test");
+    	String.indexOf("maxTestTest", "Test", 3);
+    	String.indexOf("maxTestTest", "Test", 5);
+    	String.indexOf("maxTestTest", "test");
     ]]></example>
     <example description="Will return:"><![CDATA[
-		4
-		4
-		8
+		3
+		3
+		7
 		-1
     	]]>
     </example>

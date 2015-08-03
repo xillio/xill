@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function Tag="trim">
+  <name>trim</name>
+  <parameters>
+    <param name="string">
+    </param>
+    <param name="internal" default="false">
+    </param>
+  </parameters>
+  <description><![CDATA[
+	Returns the trimmed version of the string. 
+	If the optional boolean parameter internal is set to true, the routine will also replace slack white space inside the string with a single space.
+  ]]></description>
+  <examples>
+    <example description="Executing:"><![CDATA[
+    	String.trim("   Xillio Xillio    Xillio Xillio Xillio    ");
+    	String.trim("   Xillio Xillio    Xillio Xillio Xillio    ", true);
+    ]]></example>
+    <example description="Will return:"><![CDATA[
+		"Xillio Xillio    Xillio Xillio Xillio"
+		"Xillio Xillio Xillio Xillio Xillio"
+    	]]>
+    </example>
+  </examples>
+  <references>
+  </references>
+  <searchTags>
+  	<searchTag>
+  		whitespace
+  	</searchTag>
+  </searchTags>
+</function>

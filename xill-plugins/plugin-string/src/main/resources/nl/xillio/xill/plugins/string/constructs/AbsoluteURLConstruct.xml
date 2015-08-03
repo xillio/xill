@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<function Tag="absoluteUrl">
-  <name>absoluteUrl</name>
+<function Tag="absoluteURL">
+  <name>absoluteURL</name>
   <parameters>
     <param name="pageUrl">
     </param>
@@ -12,15 +12,16 @@
   ]]></description>
   <examples>
     <example description="Executing:"><![CDATA[
-    	String.absoluteUrl("http://www.xillio.nl/calendar/", "movies");
+    	String.absoluteURL("http://www.xillio.nl/calendar/", "movies");
     ]]></example>
     <example description="Will return:"><![CDATA[
     	"http://www.xillio.nl/calendar/movies"]]>
     </example>
-    <example description="Executing:">![CDATA[
-    	String.absoluteUrl("http://www.xillio.nl/calendar/", "../");
-    ]]></example>
-    </example description="returns:">![CDATA[
+    <example description="Executing:"><![CDATA[
+    	String.absoluteURL("http://www.xillio.nl/calendar/", "../");
+    ]]>
+    </example>
+    <example description="returns:"><![CDATA[
    		"http://www.xillio.nl/"
     ]]>
     </example>

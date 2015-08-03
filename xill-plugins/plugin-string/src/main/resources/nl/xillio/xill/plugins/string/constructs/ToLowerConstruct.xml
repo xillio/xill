@@ -1,28 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<function Tag="endsWith">
-  <name>endsWith</name>
+<function Tag="toLower">
+  <name>toLower</name>
   <parameters>
-    <param name="string1">
-    </param>
-    <param name="string2">
+    <param name="string">
     </param>
   </parameters>
   <description><![CDATA[
-	Returns a boolean whether the string1 ends with string2.
+	Returns the string lowercased.
   ]]></description>
   <examples>
     <example description="Executing:"><![CDATA[
-    	String.endsWith("testing", "ing");	
-    	String.endsWith("testing", "test");
+    	String.toLower("HiGher");
     ]]></example>
     <example description="Will return:"><![CDATA[
-		TRUE
-		FALSE
+		"higher"
     	]]>
     </example>
   </examples>
   <references>
   </references>
   <searchTags>
+  	<searchTag>
+  		case
+  	</searchTag>
+  	<searchTag>
+  		lower
+  	</searchTag>
   </searchTags>
 </function>

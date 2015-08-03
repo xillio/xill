@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.logging.Log;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -118,6 +119,9 @@ public class DocumentationGenerator {
 			} catch (IOException e) {
 				log.error("Failed to load:" + construct.getName());
 				e.printStackTrace();
+			}
+			catch (NullPointerException e){
+				log.error("NullpointerException at:" + construct.getName());
 			}
 
 		}
