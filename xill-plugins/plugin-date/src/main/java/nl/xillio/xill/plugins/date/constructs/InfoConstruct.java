@@ -26,7 +26,7 @@ public class InfoConstruct extends BaseDateConstruct {
 
 	}
 
-	private static MetaExpression process(final MetaExpression dateVar, DateService dateService) {
+	static MetaExpression process(final MetaExpression dateVar, DateService dateService) {
 		ZonedDateTime date = getDate(dateVar, "date");
 		ZonedDateTime now = now();
 

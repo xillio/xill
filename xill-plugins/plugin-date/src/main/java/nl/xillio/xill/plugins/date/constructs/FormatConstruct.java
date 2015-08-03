@@ -28,7 +28,7 @@ public class FormatConstruct extends BaseDateConstruct {
 		return new ConstructProcessor((dateVar, formatVar) -> process(dateVar, formatVar, getDateService()), new Argument("date"), new Argument("format", NULL));
 	}
 
-	private static MetaExpression process(final MetaExpression dateVar,
+	static MetaExpression process(final MetaExpression dateVar,
 	    final MetaExpression formatVar, DateService dateService) {
 
 		ZonedDateTime date = getDate(dateVar, "date");

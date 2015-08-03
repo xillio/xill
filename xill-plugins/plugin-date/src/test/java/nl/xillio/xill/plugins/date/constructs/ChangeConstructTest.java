@@ -1,15 +1,16 @@
 package nl.xillio.xill.plugins.date.constructs;
 
-import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.chrono.ChronoZonedDateTime;
 import java.util.LinkedHashMap;
 
 import nl.xillio.xill.api.components.MetaExpression;
@@ -17,6 +18,8 @@ import nl.xillio.xill.plugins.date.services.DateService;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -42,9 +45,19 @@ public class ChangeConstructTest {
 	 */
 	@BeforeMethod
 	public void setup() {
+		// Mock DateService, simply returns the date passed in
 		dateService = mock(DateService.class);
-		when(dateService.changeTimeZone(any(), any())).then(returnsFirstArg());
-		when(dateService.add(any(), any())).then(returnsFirstArg());
+
+		// Answer returning the first argument as a ZonedDateTime
+		Answer<ZonedDateTime> returnAsZonedDateTime = new Answer<ZonedDateTime>() {
+			@Override
+			public ZonedDateTime answer(InvocationOnMock invocation) throws Throwable {
+				return ZonedDateTime.from(invocation.getArgumentAt(0, ChronoZonedDateTime.class));
+			}
+		};
+
+		when(dateService.changeTimeZone(any(), any())).then(returnAsZonedDateTime);
+		when(dateService.add(any(), any())).then(returnAsZonedDateTime);
 
 		// ZonedDateTime is final, don't mock
 		date = ZonedDateTime.of(2015, 1, 1, 0, 0, 0, 0, ZoneId.systemDefault());
@@ -61,37 +74,55 @@ public class ChangeConstructTest {
 	@Test
 	public void testProcessUnits() {
 		// Mock
-		changes.put("Nanos", mockNumberExpression(42));
-		changes.put("Hours", mockNumberExpression(42));
-		changes.put("Centuries", mockNumberExpression(42));
+		addUnitsChange();
 
 		// Run
-		MetaExpression newDate = ChangeConstruct.process(log, dateExpression, changesExpression, dateService);
+		MetaExpression newDate = runProcess();
 
 		// Verify
 		verify(dateService).add(any(), any());
 		verify(dateService, times(0)).changeTimeZone(any(), any());
 
 		// Assert
+		assertEqualDate(newDate);
 	}
 
 	/**
-	 * Test the preocess mthod with just time zone change
+	 * Test the process method with just time zone change
 	 */
 	@Test
 	public void testProcessZone() {
 		// Mock
-		MetaExpression zone = mock(MetaExpression.class);
-		when(zone.getStringValue()).thenReturn("Europe/Amsterdam");
-		changes.put("zone", zone);
+		addZoneChange();
 
 		// Run
-		MetaExpression newDate = ChangeConstruct.process(log, dateExpression, changesExpression, dateService);
+		MetaExpression newDate = runProcess();
 
 		// Verify
 		verify(dateService).changeTimeZone(any(), any());
 
 		// Assert
+		assertEqualDate(newDate);
+	}
+
+	/**
+	 * Test both time unit changes and time zone change
+	 */
+	@Test
+	public void testProcessUnitsZone() {
+		// Mock
+		addUnitsChange();
+		addZoneChange();
+
+		// Run
+		MetaExpression newDate = runProcess();
+
+		// Verify
+		verify(dateService).add(any(), any());
+		verify(dateService).changeTimeZone(any(), any());
+
+		// Assert
+		assertEqualDate(newDate);
 	}
 
 	/**
@@ -102,7 +133,7 @@ public class ChangeConstructTest {
 		// Mock
 
 		// Run
-		MetaExpression newDate = ChangeConstruct.process(log, dateExpression, changesExpression, dateService);
+		MetaExpression newDate = runProcess();
 
 		// Verify
 		verify(dateService, times(0)).changeTimeZone(any(), any());
@@ -115,5 +146,25 @@ public class ChangeConstructTest {
 		MetaExpression integer = mock(MetaExpression.class);
 		when(integer.getNumberValue()).thenReturn(number);
 		return integer;
+	}
+
+	private void addUnitsChange() {
+		changes.put("Nanos", mockNumberExpression(42));
+		changes.put("Hours", mockNumberExpression(42));
+		changes.put("Centuries", mockNumberExpression(42));
+	}
+
+	private void addZoneChange() {
+		MetaExpression zone = mock(MetaExpression.class);
+		when(zone.getStringValue()).thenReturn("Europe/Amsterdam");
+		changes.put("zone", zone);
+	}
+
+	private MetaExpression runProcess() {
+		return ChangeConstruct.process(log, dateExpression, changesExpression, dateService);
+	}
+
+	private void assertEqualDate(MetaExpression newDate) {
+		assertEquals(newDate.getMeta(ZonedDateTime.class), date);
 	}
 }

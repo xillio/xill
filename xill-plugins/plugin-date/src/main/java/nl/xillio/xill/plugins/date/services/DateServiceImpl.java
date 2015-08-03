@@ -6,10 +6,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.chrono.ChronoZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAccessor;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -63,26 +65,26 @@ public class DateServiceImpl implements DateService {
 	}
 
 	@Override
-	public ZonedDateTime add(ZonedDateTime original, Map<ChronoUnit, Long> toAdd) {
+	public ZonedDateTime add(ChronoZonedDateTime<?> original, Map<ChronoUnit, Long> toAdd) {
 		for (Entry<ChronoUnit, Long> entry : toAdd.entrySet()) {
 			original = original.plus(entry.getValue(), entry.getKey());
 		}
-		return original;
+		return ZonedDateTime.from(original);
 	}
 
 	@Override
-	public ZonedDateTime changeTimeZone(ZonedDateTime original, ZoneId newZone) {
-		return original.withZoneSameInstant(newZone);
+	public ZonedDateTime changeTimeZone(ChronoZonedDateTime<?> original, ZoneId newZone) {
+		return ZonedDateTime.from(original.withZoneSameInstant(newZone));
 	}
 
 	@Override
-	public String formatDate(ZonedDateTime date, String format) {
+	public String formatDate(ChronoZonedDateTime<?> date, String format) {
 		DateTimeFormatter formatter = createDateTimeFormatter(format);
 		return formatter.format(date);
 	}
 
 	@Override
-	public String formatDateLocalized(ZonedDateTime date, FormatStyle dateStyle, FormatStyle timeStyle, Locale locale) {
+	public String formatDateLocalized(ChronoZonedDateTime<?> date, FormatStyle dateStyle, FormatStyle timeStyle, Locale locale) {
 		DateTimeFormatter formatter = null;
 		if (locale == null)
 			formatter = DEFAULT_FORMATTER;
@@ -97,7 +99,7 @@ public class DateServiceImpl implements DateService {
 	}
 
 	@Override
-	public Map<String, Long> getFieldValues(ZonedDateTime date) {
+	public Map<String, Long> getFieldValues(ChronoZonedDateTime<?> date) {
 		Map<String, Long> fields = new HashMap<>();
 		for (ChronoField field : ChronoField.values()) {
 			if (date.isSupported(field)) {
@@ -108,21 +110,22 @@ public class DateServiceImpl implements DateService {
 	}
 
 	@Override
-	public ZoneId getTimezone(ZonedDateTime date) {
+	public ZoneId getTimezone(ChronoZonedDateTime<?> date) {
 		return date.getZone();
 	}
 
 	@Override
-	public boolean isInFuture(ZonedDateTime date) {
+	public boolean isInFuture(ChronoZonedDateTime<?> date) {
 		return date.isAfter(now());
 	}
 
 	@Override
-	public boolean isInPast(ZonedDateTime date) {
+	public boolean isInPast(ChronoZonedDateTime<?> date) {
 		return date.isBefore(now());
 	}
 
-	public Map<String, Double> difference(ZonedDateTime date1, ZonedDateTime date2, boolean absolute) {
+	@Override
+	public Map<String, Double> difference(Temporal date1, Temporal date2, boolean absolute) {
 		// Calculate difference and convert to seconds
 		long nanoDifference = date1.until(date2, ChronoUnit.NANOS);
 		if (absolute)
