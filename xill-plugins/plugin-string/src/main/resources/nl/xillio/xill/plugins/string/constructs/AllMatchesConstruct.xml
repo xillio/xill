@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function Tag="allMatches">
+  <name>allMatches</name>
+  <parameters>
+    <param name="text">
+    </param>
+    <param name="regex">
+    </param>
+  </parameters>
+  <description><![CDATA[
+	 Returns a list with all substrings matching regex.
+	 See the Regular Expressions page for more about Regular Expression support in Xillio Content Tools.
+  ]]></description>
+  <examples>
+    <example description="Executing:"><![CDATA[
+    	var s = "abc def ghi jkl. Mno";
+		String.allMatches(s, "\\w+");
+    ]]></example>
+    <example description="Will return:"><![CDATA[
+    	{
+    		"abc",
+    		"def",
+    		"ghi",
+    		"jkl",
+   		 	"Mno"
+		}
+		]]>
+    </example>
+  </examples>
+  <references />
+   <searchTags>
+	<searchTag>
+	regex
+	</searchTag>
+	<searchTag>
+	match
+	</searchTag>
+	<searchTag>
+	relative
+	</searchTag>
+  </searchTags>
+</function>

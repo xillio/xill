@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function Tag="base64Decode">
+  <name>base64Decode</name>
+  <parameters>
+    <param name="content">
+    </param>
+    <param name="fileName">
+    </param>
+  </parameters>
+  <description><![CDATA[
+	 Base-64 decode the string content, and store it in the file fileName. 
+	 Commonly used to decode binary data transferred over a text channel (such as attachments in e-mails).
+  ]]></description>
+  <examples>
+    <example description="Executing:"><![CDATA[
+    	String.base64Encode("C:/tmp/note.xml");   	
+    ]]></example>
+    <example description="Will:"><![CDATA[
+    	Read the textfile note.xml and return:
+		"PG5vdGU+DQo8dG8+VG92ZTwvdG8+DQo8ZnJvbT5KYW5pPC9mcm9tPg0KPGhlYWRpbmc+UmVtaW5kZXI8L2hlYWRpbmc+DQo8Ym9keT5Eb24ndCBmb3JnZXQgbWUgdGhpcyB3ZWVrZW5kITwvYm9keT4NCjwvbm90ZT4="
+		Assuming note.xml contains the following text:
+
+    	<note>
+    	<to>Tove</to>
+    	<from>Jani</from>
+    	<heading>Reminder</heading>
+   		<body>Don't forget me this weekend!</body>
+    	</note>
+    	]]>
+    </example>
+  </examples>
+  <references>
+  	<reference package="String">
+  		base64Decode
+  	</reference>
+  </references>
+  <searchTags>
+	<searchTag>
+		Base64
+	</searchTag>
+	<searchTag>
+		encode
+	</searchTag>
+  </searchTags>
+</function>

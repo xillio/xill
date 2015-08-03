@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function Tag="indexOf">
+  <name>indexOf</name>
+  <parameters>
+    <param name="string1">
+    </param>
+    <param name="string2">
+    </param>
+    <param name="startPos" default="0">
+    </param>
+  </parameters>
+  <description><![CDATA[
+  		Seeks and returns the first index higher than startPos  of string2 contained in string1.
+  		Returns -1 if not found.
+  		startPos defaults to 0.
+  ]]></description>
+  <examples>
+    <example description="Executing:"><![CDATA[
+    	String.indexOf("megaTestTest", "Test");
+    	String.indexOf("megaTestTest", "Test", 4);
+    	String.indexOf("megaTestTest, "Test", 5);
+    	String.indexOf("megaTestTest, "test");
+    ]]></example>
+    <example description="Will return:"><![CDATA[
+		4
+		4
+		8
+		-1
+    	]]>
+    </example>
+  </examples>
+  <references>
+  </references>
+  <searchTags>
+  </searchTags>
+</function>

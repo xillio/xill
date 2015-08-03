@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function Tag="contains">
+  <name>contains</name>
+  <parameters>
+    <param name="haystack">
+    </param>
+    <param name="needle">
+    </param>
+  </parameters>
+  <description><![CDATA[
+	Returns a boolean whether the string or list haystack contains the element needle.
+  ]]></description>
+  <examples>
+    <example description="Executing:"><![CDATA[
+    	String.contains("testing", "ing");  	
+    	String.contains(["ferrari", "diet", "cola"], ferrari);
+    ]]></example>
+    <example description="Will return:"><![CDATA[
+		TRUE
+		TRUE
+    	]]>
+    </example>
+    <example description="Executing:"><![CDATA[
+    	String.contains("testing", "ts");
+    	String.contains(["ferrari", "diet", "cola"], Volkswagen);
+    	]]>
+    </example>
+    <example description="Will return:"><![CDATA[
+    	FALSE
+    	FALSE
+    	]]>
+    </example>
+  </examples>
+  <references>
+  </references>
+  <searchTags>
+	<searchTag>
+		search
+	</searchTag>
+	<searchTag>
+		list
+	</searchTag>
+  </searchTags>
+</function>

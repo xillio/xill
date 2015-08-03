@@ -31,7 +31,7 @@ public class IndexOfConstruct extends Construct {
 			(string1, string2, value) -> process(string1, string2, value, stringService),
 			new Argument("string1", ATOMIC),
 			new Argument("string2", ATOMIC),
-			new Argument("value", fromValue(0), ATOMIC));
+			new Argument("startPos", fromValue(0), ATOMIC));
 	}
 
 	static MetaExpression process(final MetaExpression string1, final MetaExpression string2, final MetaExpression value, final StringUtilityService stringService) {
