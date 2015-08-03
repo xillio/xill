@@ -17,6 +17,13 @@ import nl.xillio.xill.plugins.date.services.DateService;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+/**
+ * 
+ * Test the {@link FormatConstruct}
+ * 
+ * @author Geert Konijnendijk
+ *
+ */
 public class FormatConstructTest {
 
 	@DataProvider(name = "format")

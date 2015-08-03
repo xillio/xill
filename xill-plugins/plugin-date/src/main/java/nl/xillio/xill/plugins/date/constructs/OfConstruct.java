@@ -32,7 +32,7 @@ public class OfConstruct extends BaseDateConstruct {
 		return new ConstructProcessor((a) -> process(a, getDateService()), args);
 	}
 
-	private static MetaExpression process(final MetaExpression[] input, DateService dateService) {
+	static MetaExpression process(final MetaExpression[] input, DateService dateService) {
 		ZonedDateTime date;
 		ZoneId zone;
 

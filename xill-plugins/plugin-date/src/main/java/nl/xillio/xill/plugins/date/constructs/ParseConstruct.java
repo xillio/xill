@@ -36,11 +36,11 @@ public class ParseConstruct extends BaseDateConstruct {
 		  new Argument("format", NULL, ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression dateVar, final MetaExpression formatVar, DateService dateService) {
+	static MetaExpression process(final MetaExpression dateVar, final MetaExpression formatVar, DateService dateService) {
 		// Process
 		ZonedDateTime result = null;
 
-		if (dateVar == NULL) {
+		if (dateVar.isNull()) {
 			result = dateService.now();
 		} else {
 

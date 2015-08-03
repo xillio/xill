@@ -5,6 +5,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -16,7 +17,17 @@ import nl.xillio.xill.plugins.date.services.DateService;
 
 import org.testng.annotations.Test;
 
+/**
+ * Test the {@link InfoConstruct}
+ * 
+ * @author Geert Konijnendijk
+ *
+ */
 public class InfoConstructTest {
+
+	/**
+	 * Test the process method and see if it returns the correct keys in the returned map
+	 */
 	@Test
 	public void testProcess() {
 		// Mock
@@ -27,9 +38,11 @@ public class InfoConstructTest {
 		fieldValues.put("Field3", 30l);
 		when(dateService.getFieldValues(any())).thenReturn(fieldValues);
 		ZoneId zoneId = mock(ZoneId.class);
+		when(zoneId.toString()).thenReturn("Europe/Amsterdam");
 		when(dateService.getTimezone(any())).thenReturn(zoneId);
-		when(dateService.isInFuture(any())).thenReturn(true);
-		when(dateService.isInPast(any())).thenReturn(false);
+		boolean isInFuture = true, isInPast = false;;
+		when(dateService.isInFuture(any())).thenReturn(isInFuture);
+		when(dateService.isInPast(any())).thenReturn(isInPast);
 		// ZonedDateTime is final, don't mock
 		ZonedDateTime date = ZonedDateTime.now();
 		MetaExpression dateExpression = mockDateExpression(date);
@@ -43,7 +56,11 @@ public class InfoConstructTest {
 		verify(dateService).isInFuture(any());
 		verify(dateService).isInPast(any());
 
-		// Test
-
+		// Assert
+		Map<String, MetaExpression> infoMap = (Map<String, MetaExpression>) info.getValue();
+		fieldValues.forEach((k, v) -> assertEquals(infoMap.get(k).getNumberValue().longValue(), (long) v));
+		assertEquals(infoMap.get("TimeZone").getStringValue(), zoneId.toString());
+		assertEquals(infoMap.get("IsInFuture").getBooleanValue(), isInFuture);
+		assertEquals(infoMap.get("IsInPast").getBooleanValue(), isInPast);
 	}
 }

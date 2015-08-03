@@ -35,7 +35,7 @@ public class LocalizedFormatConstruct extends BaseDateConstruct {
 		  new Argument("timestyle", NULL));
 	}
 
-	private static MetaExpression process(final MetaExpression dateVar,
+	static MetaExpression process(final MetaExpression dateVar,
 	    final MetaExpression localeVar, final MetaExpression dateStyleVar, final MetaExpression timeStyleVar, DateService dateService) {
 
 		ZonedDateTime date = getDate(dateVar, "date");
@@ -43,7 +43,7 @@ public class LocalizedFormatConstruct extends BaseDateConstruct {
 		FormatStyle timeStyle;
 
 		// no styles are given so we use medium
-		if (dateStyleVar == NULL) {
+		if (dateStyleVar.isNull()) {
 			dateStyle = FormatStyle.MEDIUM;
 		} else {
 			try {
@@ -53,7 +53,7 @@ public class LocalizedFormatConstruct extends BaseDateConstruct {
 			}
 		}
 
-		if (timeStyleVar == NULL) {
+		if (timeStyleVar.isNull()) {
 			timeStyle = FormatStyle.MEDIUM;
 		} else {
 			try {
