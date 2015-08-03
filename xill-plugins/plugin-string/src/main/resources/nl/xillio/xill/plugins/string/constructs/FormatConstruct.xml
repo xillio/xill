@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function Tag="endsWith">
+  <name>endsWith</name>
+  <parameters>
+    <param name="string1">
+    </param>
+    <param name="value">
+    </param>
+  </parameters>
+  <description><![CDATA[
+	The first parameter, text, is a format string specifying how the objects in the second parameter, values, are to be formatted. The format string contains plain text as well as format specifiers, which are special characters that format the arguments of values.
+
+values accepts a single parameter. The format string expects parameters supplied as a list surrounded by "[]".
+
+Format specifiers begin with a percent sign (%) and end with a converter. The converter is a character indicating the type of argument to be formatted. In between the percent sign (%) and the converter you can have optional flags and specifiers.
+  ]]></description>
+  <examples>
+  	<example description="Some converters and flags used in formatstrings">
+  	Converters:
+  	d || A decimal integer.
+  	f || A float. Eg: 0.3f is a float with 3 decimals. It rounds.
+  	n || A newline character appropriate for the platform. Note to always use %n.
+  	
+  	Flags:
+  	8  || (or any other integer). Set the width to that integer. Defaults right-justified.
+  	08 || Fill up the empty space with 0's if necessary. (Doesn't work on left justified formats.)
+  	-  || Left justified.
+  	+  || Print the sign, with both positive and negative numbers. (Note that negative numbers always have their sign printed).
+  	,  || Include locale specific grouping characters. (change 100000 to 100,000).
+  	
+  	</example>
+    <example description="Executing:"><![CDATA[
+    	//An example of argument indices to re-order input
+    	String.format("%3$2s %1$2s %1$2s %2$2s" , ["a", "b", "c"] );
+    	
+    	//An example of setting the width and precision of an argument.
+    	var v = 0.1234567891
+    	String.format("value = %+10.4f or value = %010.7f or value = %-8.1f or  value= %+.3f" , [v, v , v, -v]);
+    ]]></example>
+    <example description="Will return:"><![CDATA[
+    	//The example of argument indices to re-order input:
+		"c a a b"
+		
+		//The example of setting the width and precision of an argument.
+		"value =        +0.1235 or value =  00.1234568 or value = 0.1          value = -0.123'
+    	]]>
+    </example>
+  </examples>
+  <references>
+  </references>
+  <searchTags>
+  </searchTags>
+</function>
