@@ -19,7 +19,7 @@ import org.rendersnake.HtmlCanvas;
  * The {@link FunctionIndex} can generate HTML through generating the html of each {@link PackageDocument}
  * </p>
  *
- * @author Ivor
+ * @author Ivor van der Hoog.
  *
  */
 public class FunctionIndex extends HtmlGenerator {

@@ -6,10 +6,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
@@ -17,10 +13,14 @@ import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient;
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.api.construct.Construct;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * This class is responsible for generating and managing the required files for the documentation system
  *
- * @author Ivor
+ * @author Ivor van der Hoog.
  *
  */
 public class DocumentationGenerator {
@@ -69,7 +69,6 @@ public class DocumentationGenerator {
 		XMLparser parser = new XMLparser();
 		DocumentSearcher searcher = new DocumentSearcher(ESConsoleClient.getInstance().getClient());
 
-
 		List<String> generatedDocuments = new ArrayList<>();
 		for (Construct construct : plugin.getConstructs()) {
 			// If the version of the already indexed function different
@@ -94,7 +93,7 @@ public class DocumentationGenerator {
 			try {
 				// parse the xml and default the name of the functiondocument to the name of the construct
 				docu = parser.parseXML(stream, plugin.getName(), plugin.getVersion());
-				//thisPackage.addDescriptiveLink(docu);
+				// thisPackage.addDescriptiveLink(docu);
 				docu.setName(construct.getName());
 
 				// Write an html file
@@ -112,7 +111,7 @@ public class DocumentationGenerator {
 				} else {
 					log.error("Invalid name found for the package or a function in the package.");
 				}
-				FileUtils.write(new File(HELP_FOLDER, plugin.getName() + "/" + docu.getName() + ".txt"), docu.toPackageString());
+				FileUtils.writeStringToFile(new File(HELP_FOLDER, plugin.getName() + "/functions.txt"), docu.toPackageString(), true);
 				stream.close();
 			} catch (IOException e) {
 				log.error("Failed to load:" + construct.getName());
@@ -123,7 +122,7 @@ public class DocumentationGenerator {
 		if (!generatedDocuments.isEmpty()) {
 			log.debug("Generated html for " + generatedDocuments);
 		}
-		PackageDocument thisPackage = new PackageDocument(new File(HELP_FOLDER, plugin.getName() + "/"), plugin.getName());
+		PackageDocument thisPackage = new PackageDocument(new File(HELP_FOLDER, plugin.getName() + "/functions.txt"), plugin.getName());
 		packages.addPackageDocument(thisPackage);
 	}
 
@@ -138,7 +137,7 @@ public class DocumentationGenerator {
 	 * @param construct
 	 *        The {@link Construct} which version we're checking.
 	 * @return
-	 * 				A boolean value wheter we need to update the helpfile of the construct.
+	 *         A boolean value wheter we need to update the helpfile of the construct.
 	 */
 	private boolean needsUpdate(final XillPlugin plugin, final Construct construct) {
 		// Check if version is changed

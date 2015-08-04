@@ -8,11 +8,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javafx.util.Pair;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 import org.rendersnake.HtmlCanvas;
-
-import javafx.util.Pair;
 
 /**
  * <p>
@@ -49,7 +48,7 @@ import javafx.util.Pair;
  * The FunctionDocument is capable of generating its own HTML page with the function toHTML().
  * </p>
  *
- * @author Ivor
+ * @author Ivor van der Hoog.
  */
 public class FunctionDocument extends HtmlGenerator {
 	private String description;
@@ -59,30 +58,29 @@ public class FunctionDocument extends HtmlGenerator {
 	private final List<Pair<String, String>> examples = new ArrayList<>();
 	private final Set<Pair<String, String>> links = new HashSet<>();
 	private final Set<String> searchTags = new HashSet<>();
-	
-	public FunctionDocument(String toParse){
+
+	public FunctionDocument(final String toParse) {
 		String[] splitted = toParse.split("\\n");
-		this.setName(splitted[0]);
+		setName(splitted[0]);
 		int t = 2;
-		try{
-		int parameterCount = Integer.parseInt(splitted[1]);
-		while(t - 2 < parameterCount){
-			addParameter(splitted[t]);
-			++t;
-		}
-		}
-		catch(NumberFormatException e){
+		try {
+			int parameterCount = Integer.parseInt(splitted[1]);
+			while (t - 2 < parameterCount) {
+				addParameter(splitted[t]);
+				++t;
+			}
+		} catch (NumberFormatException e) {
 			throw new RobotRuntimeException("A package contains a corrupt functionsFile.");
 		}
 		StringBuilder sb = new StringBuilder();
-		while(t < splitted.length){
+		while (t < splitted.length) {
 			sb.append("\n" + splitted[t]);
 			++t;
 		}
-		this.setDescription(sb.toString());
+		setDescription(sb.toString());
 	}
-	
-	public FunctionDocument(){}
+
+	public FunctionDocument() {}
 
 	/**
 	 * Sets the description of the {@link FunctionDocument}
@@ -103,6 +101,11 @@ public class FunctionDocument extends HtmlGenerator {
 		return description;
 	}
 
+	@Override
+	public int hashCode() {
+		return getName().hashCode();
+	}
+
 	/**
 	 * Sets the version of the {@link FunctionDocument}
 	 *
@@ -119,9 +122,6 @@ public class FunctionDocument extends HtmlGenerator {
 	public String getVersion() {
 		return version;
 	}
-	
-
-
 
 	/**
 	 * Sets the package of the {@link FunctionDocument}
@@ -152,7 +152,7 @@ public class FunctionDocument extends HtmlGenerator {
 
 	/**
 	 * Adds a parameter with defaultvalue to the {@link FunctionDocument}
-	 * 
+	 *
 	 * @param name
 	 * @param defaultValue
 	 */
@@ -199,7 +199,7 @@ public class FunctionDocument extends HtmlGenerator {
 	 * @param link
 	 *        The package and the function we're referring to.
 	 * @return
-	 * 				Returns a string which represents a link path
+	 *         Returns a string which represents a link path
 	 */
 	@Override
 	protected String generateLink(final Pair<String, String> link) {
@@ -339,24 +339,23 @@ public class FunctionDocument extends HtmlGenerator {
 	public void setParameters(final List<Pair<String, String>> params) {
 		parameters = params;
 	}
-	
 
 	/**
 	 * Compresses the Function to a string which can be added to the txt file of the package.
+	 *
 	 * @return
-	 * 		A string which can be added to the txt file of the package.
+	 *         A string which can be added to the txt file of the package.
 	 */
-	public String toPackageString(){
-		int parametersize = parameters.size();
-		StringBuilder sb = new StringBuilder();
-		sb.append(this.getName() + "\n" + parametersize);
-		for(Pair<String, String> parameter : parameters)
-			sb.append("\n" + parameter.getKey());
-		sb.append("\n" + description);
-		String backEnd = sb.toString();
-		sb = new StringBuilder();
-		sb.append(backEnd.length() + "\n");
-		sb.append(backEnd);
-		return backEnd;
+	public String toPackageString() {
+		String s = getName();
+		for (Pair<String, String> parameter : parameters) {
+			if (parameter.getValue() != null) {
+				s += " " + parameter.getKey() + " " + parameter.getValue();
+			}
+			else {
+				s += " " + parameter.getKey() + " " + "NULL";
+			}
+		}
+		return s += '\n';
 	}
 }
