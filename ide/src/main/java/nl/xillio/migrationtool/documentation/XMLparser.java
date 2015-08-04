@@ -15,6 +15,7 @@ import javax.xml.xpath.XPathFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -44,7 +45,7 @@ public class XMLparser {
 	 *        A {@link String} with the version name.
 	 * @return The parsed {@link FunctionDocument} contained in the stream
 	 */
-	public FunctionDocument parseXML(final InputStream xml, final String packet, final String version) {
+	public FunctionDocument parseXML(final InputStream xml, final String packet, final String version) throws NullPointerException {
 		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder;
 		try {
@@ -64,19 +65,17 @@ public class XMLparser {
 				// Parse the description
 				XPathExpression descriptionExpr = xpath.compile("/function/description/text()");
 				func.setDescription(((String) descriptionExpr.evaluate(doc, XPathConstants.STRING)).trim());
-
+				
 				// Parse the parameters
-				XPathExpression paramsNameExpr = xpath.compile("/function/parameters/param/@name");
-				XPathExpression paramsDefExpr = xpath.compile("/function/parameters/param/@default");
-				NodeList parameterNames = (NodeList) paramsNameExpr.evaluate(doc, XPathConstants.NODESET);
-				NodeList defaultValues = (NodeList) paramsDefExpr.evaluate(doc, XPathConstants.NODESET);
-				for (int t = 0; t < parameterNames.getLength(); ++t) {
-					String parameterName = parameterNames.item(t).getTextContent().trim();
-					if (defaultValues.item(t) != null) {
-						String defaultValue = defaultValues.item(t).getTextContent().trim();
-						func.addParameter(parameterName, defaultValue);
-					} else {
-						func.addParameter(parameterName);
+				NodeList params = (NodeList) xpath.compile("/function/parameters/param").evaluate(doc, XPathConstants.NODESET);
+				for(int t = 0; t < params.getLength(); ++t){
+					Node currentParameter = params.item(t);
+					String par = currentParameter.getAttributes().getNamedItem("name").getNodeValue();
+					if(currentParameter.getAttributes().getNamedItem("default") == null){
+						func.addParameter(par);
+					}
+					else{
+						func.addParameter(par,currentParameter.getAttributes().getNamedItem("default").getNodeValue() );
 					}
 				}
 
