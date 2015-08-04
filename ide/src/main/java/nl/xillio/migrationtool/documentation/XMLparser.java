@@ -117,7 +117,7 @@ public class XMLparser {
 				}
 				}
 				catch(NullPointerException | IllegalArgumentException | XPathExpressionException e){
-					throw new RobotRuntimeException("Invalid XML in a reference in the following package: " + packet);
+					log.error("Invalid XML in a reference in the following package: " + packet);
 				}
 
 
