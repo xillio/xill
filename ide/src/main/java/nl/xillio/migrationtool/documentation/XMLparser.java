@@ -138,6 +138,7 @@ public class XMLparser {
 				func.setVersion(version);
 				func.setPackage(packet);
 				func.addSearchTag(packet);
+			
 				return func;
 			} catch (SAXException e) {
 				log.error("failed to parse an xmlFile in: " + packet);

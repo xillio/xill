@@ -1,14 +1,11 @@
 package nl.xillio.xill.plugins.string.services.string;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-
 import org.apache.commons.io.FileUtils;
 
 import com.google.inject.Singleton;

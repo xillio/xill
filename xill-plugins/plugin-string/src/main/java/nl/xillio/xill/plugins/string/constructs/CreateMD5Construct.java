@@ -24,7 +24,9 @@ public class CreateMD5Construct extends Construct {
 
     @Override
     public ConstructProcessor prepareProcess(final ConstructContext context) {
-        return new ConstructProcessor(value -> process(value, stringService), new Argument("value", ATOMIC));
+        return new ConstructProcessor(
+        		value -> process(value, stringService),
+        		new Argument("value", ATOMIC));
     }
 
     static MetaExpression process(final MetaExpression value, final StringUtilityService stringService) {

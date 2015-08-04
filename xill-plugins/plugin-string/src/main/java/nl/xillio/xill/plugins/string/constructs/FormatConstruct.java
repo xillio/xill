@@ -47,7 +47,7 @@ public class FormatConstruct extends Construct {
 		return new ConstructProcessor(
 			(textVar, valueVar) -> process(textVar, valueVar, regexService, stringService),
 			new Argument("text", ATOMIC),
-			new Argument("value", LIST));
+			new Argument("values", LIST));
 	}
 
 	static MetaExpression process(final MetaExpression textVar, final MetaExpression valueVar, final RegexService regexService, final StringUtilityService stringService) {
