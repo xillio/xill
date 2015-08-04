@@ -14,3 +14,7 @@ description 'This plugin is to make changes to excel files'
  * Uncomment this to package the plugin with the ide by default
  */
 includeInBuild project
+
+dependencies {
+ compile 'org.apache.poi:poi:3.12'
+}
