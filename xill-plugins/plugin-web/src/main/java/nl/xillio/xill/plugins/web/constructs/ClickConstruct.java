@@ -6,7 +6,7 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.NodeVariable;
+import nl.xillio.xill.plugins.web.NodeVariableService;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
 import org.openqa.selenium.StaleElementReferenceException;
@@ -17,6 +17,8 @@ import com.google.inject.Inject;
  * Simulates click on the provided web element on the web page
  */
 public class ClickConstruct extends Construct {
+	@Inject
+	private NodeVariableService nodeVariableService;
 
 	@Inject
 	private WebService webService;
@@ -24,7 +26,7 @@ public class ClickConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(element) -> process(element, webService),
+			(element) -> process(element, webService, nodeVariableService),
 			new Argument("element"));
 	}
 
@@ -33,14 +35,14 @@ public class ClickConstruct extends Construct {
 	 *        input variable (should be of a NODE type)
 	 * @return null variable
 	 */
-	static MetaExpression process(final MetaExpression elementVar, final WebService webService) {
+	static MetaExpression process(final MetaExpression elementVar, final WebService webService, final NodeVariableService nodeVariableService) {
 
-		if (!NodeVariable.checkType(elementVar)) {
+		if (!nodeVariableService.checkType(elementVar)) {
 			throw new RobotRuntimeException("Invalid variable type. NODE type expected!");
 		}
 		// else
 		try {
-			webService.click(NodeVariable.get(elementVar));
+			webService.click(nodeVariableService.get(elementVar));
 		} catch (StaleElementReferenceException e) {
 			throw new RobotRuntimeException("Stale element clicked.");
 		}

@@ -32,4 +32,19 @@ public class WebServiceImpl implements WebService {
 	public void moveToElement(WebDriver page, WebElement element) {
 		new Actions(page).moveToElement(element).perform();
 	}
+
+	@Override
+	public String getTagName(WebElement element) {
+		return element.getTagName();
+	}
+
+	@Override
+	public String getAttribute(WebElement element, String name) {
+		return element.getAttribute(name);
+	}
+
+	@Override
+	public String getText(WebElement element) {
+		return element.getText();
+	}
 }

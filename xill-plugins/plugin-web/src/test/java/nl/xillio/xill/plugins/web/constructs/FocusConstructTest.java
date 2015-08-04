@@ -8,6 +8,7 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.NodeVariable;
+import nl.xillio.xill.plugins.web.NodeVariableService;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
 import org.openqa.selenium.WebDriver;
@@ -32,20 +33,21 @@ public class FocusConstructTest extends ExpressionBuilderHelper {
 		WebElement element = mock(WebElement.class);
 		WebDriver page = mock(WebDriver.class);
 		WebService webService = mock(WebService.class);
-		// NodeVariable nodeVariable = mock(NodeVariable.class);
+		NodeVariableService nodeVariableService = mock(NodeVariableService.class);
+
 
 		boolean isNode = true;
-		when(NodeVariable.checkType(input)).thenReturn(isNode);
-		when(NodeVariable.get(input)).thenReturn(element);
-		when(NodeVariable.getDriver(input)).thenReturn(page);
+		when(nodeVariableService.checkType(input)).thenReturn(isNode);
+		when(nodeVariableService.get(input)).thenReturn(element);
+		when(nodeVariableService.getDriver(input)).thenReturn(page);
 
 		// run
-		MetaExpression output = ClickConstruct.process(input, webService);
+		MetaExpression output = FocusConstruct.process(input, webService, nodeVariableService);
 
 		// verify
-		verify(NodeVariable.checkType(input), times(1));
-		verify(NodeVariable.get(input), times(1));
-		verify(NodeVariable.getDriver(input), times(1));
+		verify(nodeVariableService, times(1)).checkType(input);
+		verify(nodeVariableService, times(1)).get(input);
+		verify(nodeVariableService, times(1)).getDriver(input);
 		verify(webService, times(1)).moveToElement(page, element);
 
 		// assert
@@ -63,20 +65,20 @@ public class FocusConstructTest extends ExpressionBuilderHelper {
 		WebElement element = mock(WebElement.class);
 		WebDriver page = mock(WebDriver.class);
 		WebService webService = mock(WebService.class);
-		// NodeVariable nodeVariable = mock(NodeVariable.class);
+		NodeVariableService nodeVariableService = mock(NodeVariableService.class);
 
 		boolean isNode = false;
-		when(NodeVariable.checkType(input)).thenReturn(isNode);
-		when(NodeVariable.get(input)).thenReturn(element);
-		when(NodeVariable.getDriver(input)).thenReturn(page);
+		when(nodeVariableService.checkType(input)).thenReturn(isNode);
+		when(nodeVariableService.get(input)).thenReturn(element);
+		when(nodeVariableService.getDriver(input)).thenReturn(page);
 
 		// run
-		ClickConstruct.process(input, webService);
+		FocusConstruct.process(input, webService, nodeVariableService);
 
 		// verify
-		verify(NodeVariable.checkType(input), times(1));
-		verify(NodeVariable.get(input), times(0));
-		verify(NodeVariable.getDriver(input), times(0));
+		verify(nodeVariableService, times(1)).checkType(input);
+		verify(nodeVariableService, times(0)).get(input);
+		verify(nodeVariableService, times(0)).getDriver(input);
 		verify(webService, times(0)).moveToElement(page, element);
 	}
 }

@@ -2,6 +2,8 @@ package nl.xillio.xill.plugins.web.constructs;
 
 import static org.mockito.Mockito.*;
 
+import java.util.Arrays;
+
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -12,11 +14,10 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.NodeVariable;
-import nl.xillio.xill.plugins.web.NodeVariable;
 import nl.xillio.xill.plugins.web.NodeVariableService;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
-public class ClickConstructTest extends ExpressionBuilderHelper {
+public class GetTextConstructTest extends ExpressionBuilderHelper {
 
 	/**
 	 * test the construct with normal input. No exceptions should be thrown, element.click is called once and output is NULL.
@@ -25,20 +26,30 @@ public class ClickConstructTest extends ExpressionBuilderHelper {
 	public void testProcessNormalUsage(){
 		// mock
 		//the input
-		MetaExpression input = mock(MetaExpression.class);
-		WebService webService = mock(WebService.class);
+		MetaExpression first = mock(MetaExpression.class);
+		MetaExpression second = mock(MetaExpression.class);
 		NodeVariableService nodeVariableService = mock(NodeVariableService.class);
 		
+		MetaExpression elementList = mock(MetaExpression.class);
+		when(elementList.isNull()).thenReturn(false);
+		when(elementList.getType()).thenReturn(LIST);
+		when(elementList.getValue()).thenReturn(Arrays.asList(first, second));
+		
+		
+		
+		WebService webService = mock(WebService.class);
+		//NodeVariable nodeVariable = mock(NodeVariable.class);
+		
 		boolean isNode = true;
-		when(nodeVariableService.checkType(input)).thenReturn(isNode);
+		when(NodeVariable.checkType(input)).thenReturn(isNode);
 
 
 		// run
-		MetaExpression output = ClickConstruct.process(input, webService, nodeVariableService);
+		MetaExpression output = ClickConstruct.process(input, webService);
 
 		// verify
-		verify(nodeVariableService, times(1)).checkType(input);
-		verify(nodeVariableService, times(1)).get(input);
+		verify(NodeVariable.checkType(input), times(1));
+		verify(NodeVariable.get(input), times(1));
 		verify(webService, times(1)).click(any());
 
 		// assert
@@ -54,42 +65,42 @@ public class ClickConstructTest extends ExpressionBuilderHelper {
 		//the input
 		MetaExpression input = mock(MetaExpression.class);
 		WebService webService = mock(WebService.class);
-		NodeVariableService nodeVariableService = mock(NodeVariableService.class);
+		//NodeVariable nodeVariable = mock(NodeVariable.class);
 		
 		boolean isNode = false;
-		when(nodeVariableService.checkType(input)).thenReturn(isNode);
+		when(NodeVariable.checkType(input)).thenReturn(isNode);
 
 
 		// run
-		ClickConstruct.process(input, webService, nodeVariableService);
+		ClickConstruct.process(input, webService);
 
 		// verify
-		verify(nodeVariableService, times(1)).checkType(input);
-		verify(nodeVariableService, times(0)).get(input);
+		verify(NodeVariable.checkType(input), times(1));
+		verify(NodeVariable.get(input), times(0));
 		verify(webService, times(0)).click(any());
 	}
 	
 	/**
 	 * test the construct when the service fails.
 	 */
-	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Stale element clicked.")
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "StaleElementClicked.")
 	public void testProcessFailureToClick(){
 		// mock
 		//the input
 		MetaExpression input = mock(MetaExpression.class);
 		WebService webService = mock(WebService.class);
-		NodeVariableService nodeVariableService = mock(NodeVariableService.class);
+		//NodeVariable nodeVariable = mock(NodeVariable.class);
 		
 		boolean isNode = true;
-		when(nodeVariableService.checkType(input)).thenReturn(isNode);
+		when(NodeVariable.checkType(input)).thenReturn(isNode);
 		doThrow(new StaleElementReferenceException("")).when(webService).click(any());
 
 		// run
-		ClickConstruct.process(input, webService, nodeVariableService);
+		ClickConstruct.process(input, webService);
 
 		// verify
-		verify(nodeVariableService, times(1)).checkType(input);
-		verify(nodeVariableService, times(0)).get(input);
+		verify(NodeVariable.checkType(input), times(1));
+		verify(NodeVariable.get(input), times(0));
 		verify(webService, times(0)).click(any());
 	}
 }

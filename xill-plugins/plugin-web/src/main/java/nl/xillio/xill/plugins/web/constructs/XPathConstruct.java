@@ -3,55 +3,62 @@ package nl.xillio.xill.plugins.web.constructs;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.InvalidSelectorException;
-import org.openqa.selenium.SearchContext;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.NodeVariable;
-import nl.xillio.xill.plugins.web.PageVariable;
+import nl.xillio.xill.plugins.web.NodeVariableService;
+import nl.xillio.xill.plugins.web.PageVariableService;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.InvalidSelectorException;
+import org.openqa.selenium.SearchContext;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
+import com.google.inject.Inject;
 
 /**
- * Select web element(s) on the page according to provided XPath selector  
+ * Select web element(s) on the page according to provided XPath selector
  */
 public class XPathConstruct extends Construct {
+	@Inject
+	private NodeVariableService nodeVariableService;
+
+	@Inject
+	private PageVariableService pageVariableService;
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			XPathConstruct::process,
+			(element, xpath) -> process(element, xpath, nodeVariableService, pageVariableService),
 			new Argument("element"),
 			new Argument("xpath"));
 	}
 
 	/**
 	 * @param elementVar
-	 * 				input variable (should be of a NODE or PAGE type) 
+	 *        input variable (should be of a NODE or PAGE type)
 	 * @param xpathVar
-	 * 				string variable specifying XPath selector
+	 *        string variable specifying XPath selector
 	 * @return NODE variable or list of NODE variables or null variable (according to count of selected web elements - more/1/0)
 	 */
-	public static MetaExpression process(final MetaExpression elementVar, final MetaExpression xpathVar) {
+	public static MetaExpression process(final MetaExpression elementVar, final MetaExpression xpathVar, final NodeVariableService nodeVariableService, final PageVariableService pageVariableService) {
 
 		String query = xpathVar.getStringValue();
 
-		if (PageVariable.checkType(elementVar)) {
-			return processSELNode(PageVariable.getDriver(elementVar), PageVariable.getDriver(elementVar), query);
-		} else if (NodeVariable.checkType(elementVar)) {
-			return processSELNode(NodeVariable.getDriver(elementVar), NodeVariable.get(elementVar), query);
+		if (pageVariableService.checkType(elementVar)) {
+			return processSELNode(pageVariableService.getDriver(elementVar), pageVariableService.getDriver(elementVar), query, nodeVariableService);
+		} else if (nodeVariableService.checkType(elementVar)) {
+			return processSELNode(nodeVariableService.getDriver(elementVar), nodeVariableService.get(elementVar), query, nodeVariableService);
 		} else {
 			throw new RobotRuntimeException("Unsupported variable type!");
 		}
 	}
 
-	private static MetaExpression processSELNode(final WebDriver driver, final SearchContext node, String query) {
+	private static MetaExpression processSELNode(final WebDriver driver, final SearchContext node, String query, final NodeVariableService nodeVariableService) {
 
 		try {
 
@@ -74,12 +81,12 @@ public class XPathConstruct extends Construct {
 				// log.debug("No results");
 				return NULL;
 			} else if (results.size() == 1) {
-				return parseSELVariable(driver, results.get(0), textquery, attribute);
+				return parseSELVariable(driver, results.get(0), textquery, attribute, nodeVariableService);
 			} else {
 				ArrayList<MetaExpression> list = new ArrayList<MetaExpression>();
 
 				for (WebElement he : results) {
-					list.add(parseSELVariable(driver, he, textquery, attribute));
+					list.add(parseSELVariable(driver, he, textquery, attribute, nodeVariableService));
 				}
 
 				return fromValue(list);
@@ -89,7 +96,7 @@ public class XPathConstruct extends Construct {
 		}
 	}
 
-	private static MetaExpression parseSELVariable(final WebDriver driver, final WebElement e, final boolean textquery, final String attribute) {
+	private static MetaExpression parseSELVariable(final WebDriver driver, final WebElement e, final boolean textquery, final String attribute, final NodeVariableService nodeVariableService) {
 		if (textquery) {
 			return fromValue(e.getAttribute("innerHTML"));
 		}
@@ -102,7 +109,7 @@ public class XPathConstruct extends Construct {
 			return fromValue(val);
 		}
 
-		return NodeVariable.create(driver, e);
+		return nodeVariableService.create(driver, e);
 	}
 
 }

@@ -10,6 +10,17 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import nl.xillio.xill.api.components.ExpressionDataType;
+import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.construct.Argument;
+import nl.xillio.xill.api.construct.Construct;
+import nl.xillio.xill.api.construct.ConstructContext;
+import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.web.PageVariableService;
+import nl.xillio.xill.plugins.web.PhantomJSPool;
+import nl.xillio.xill.plugins.web.WebXillPlugin;
+
 import org.apache.commons.codec.binary.Base64;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.TimeoutException;
@@ -18,22 +29,15 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import nl.xillio.xill.api.components.ExpressionDataType;
-import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.construct.Argument;
-import nl.xillio.xill.api.construct.Construct;
-import nl.xillio.xill.api.construct.ConstructContext;
-import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.PageVariable;
-import nl.xillio.xill.plugins.web.PhantomJSPool;
-import nl.xillio.xill.plugins.web.WebXillPlugin;
+import com.google.inject.Inject;
 
 /**
  * @author Zbynek Hochmann
- * Loads the new page via PhantomJS process and holds the context of a page 
+ *         Loads the new page via PhantomJS process and holds the context of a page
  */
 public class LoadPageConstruct extends Construct implements AutoCloseable {
+	@Inject
+	PageVariableService pageVariableService;
 
 	private static final PhantomJSPool pool = new PhantomJSPool(10);
 
@@ -44,17 +48,20 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(LoadPageConstruct::process, new Argument("url"), new Argument("options", NULL));
+		return new ConstructProcessor(
+			(url, options) -> process(url, options, pageVariableService),
+			new Argument("url"),
+			new Argument("options", NULL));
 	}
 
 	/**
 	 * @param urlVar
-	 * 				string variable - page URL
+	 *        string variable - page URL
 	 * @param optionsVar
-	 * 				list variable - options for loading the page (see CT help for details)
+	 *        list variable - options for loading the page (see CT help for details)
 	 * @return PAGE variable
 	 */
-	public static MetaExpression process(final MetaExpression urlVar, final MetaExpression optionsVar) {
+	public static MetaExpression process(final MetaExpression urlVar, final MetaExpression optionsVar, final PageVariableService pageVariableService) {
 
 		String url = urlVar.getStringValue();
 
@@ -77,11 +84,11 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 			URL newUrl;
 			try {
 				newUrl = new URL(url);
-				
-				if(newUrl.getRef() != null) {
-					driver.get("about:blank"); // this is because of (something like) clearing the PJS cache (CTC-667) 
+
+				if (newUrl.getRef() != null) {
+					driver.get("about:blank"); // this is because of (something like) clearing the PJS cache (CTC-667)
 				}
-				
+
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
@@ -91,7 +98,7 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 			throw new RobotRuntimeException("Loadpage timeout", e);
 		}
 
-		return PageVariable.create(item);
+		return pageVariableService.create(item);
 	}
 
 	/**
@@ -264,8 +271,8 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 		}
 
 		/**
-		 * Creates new PhantomJS process - it uses current (CLI + non-CLI) options for starting the process 
-		 * 
+		 * Creates new PhantomJS process - it uses current (CLI + non-CLI) options for starting the process
+		 *
 		 * @return newly created PhantomJS process
 		 */
 		public WebDriver createDriver() {
@@ -280,7 +287,7 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 		 */
 		public void setDriverOptions(final WebDriver driver) {
 			// setting up bigger size of viewport (default is 400x300)
-			driver.manage().window().setSize(new Dimension(1920, 1080));  
+			driver.manage().window().setSize(new Dimension(1920, 1080));
 
 			// page load timeout
 			if (timeout != 0) {
@@ -295,7 +302,7 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 
 		/**
 		 * Creates the object that holds all current CLI options.
-		 * 
+		 *
 		 * @return The object encapsulating all CLI parameters for PhantomJS process
 		 */
 		private DesiredCapabilities createDCapOptions() {
@@ -336,8 +343,10 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 		}
 
 		/**
-		 * @param s1 first string value
-		 * @param s2 second string value
+		 * @param s1
+		 *        first string value
+		 * @param s2
+		 *        second string value
 		 * @return if provided string are equal or not (including null strings)
 		 */
 		private static boolean strEq(final String s1, final String s2) {
@@ -359,9 +368,9 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 		 */
 		public boolean compareDCap(final Options options) {
 			return strEq(browser, options.browser) && enableJS == options.enableJS && enableWebSecurity == options.enableWebSecurity && insecureSSL == options.insecureSSL
-							&& loadImages == options.loadImages && strEq(sslProtocol, options.sslProtocol) && ltrUrlAccess == options.ltrUrlAccess && strEq(proxyHost, options.proxyHost)
-							&& proxyPort == options.proxyPort && strEq(proxyUser, options.proxyUser) && strEq(proxyPass, options.proxyPass) && strEq(proxyType, options.proxyType)
-							&& strEq(httpAuthUser, options.httpAuthUser) && strEq(httpAuthPass, options.httpAuthPass);
+					&& loadImages == options.loadImages && strEq(sslProtocol, options.sslProtocol) && ltrUrlAccess == options.ltrUrlAccess && strEq(proxyHost, options.proxyHost)
+					&& proxyPort == options.proxyPort && strEq(proxyUser, options.proxyUser) && strEq(proxyPass, options.proxyPass) && strEq(proxyType, options.proxyType)
+					&& strEq(httpAuthUser, options.httpAuthUser) && strEq(httpAuthPass, options.httpAuthPass);
 		}
 
 		private WebDriver createPhantomJSDriver() {

@@ -31,6 +31,35 @@ public interface WebService {
 	 * 				  The element as a {@link WebElement}.
 	 */
 	public void moveToElement(WebDriver page, WebElement element);
+	
+	/**
+	 * Returns the tag name of a {@link WebElement}.
+	 * @param element
+	 * 						The element we want to know the tag name of.
+	 * @return
+	 * 				The name of the tag of the element.
+	 */
+	public String getTagName(WebElement element);
+	
+	/**
+	 * Returns a given attribute of a {@link WebElement}.
+	 * @param element
+	 * 						The element we want to know the attribute of.
+	 * @param name
+	 * 						The name of the attribute we want to retrieve.
+	 * @return
+	 * 				The attribute of the element.
+	 */
+	public String getAttribute(WebElement element, String name);
+	
+	/**
+	 * Returns the text contained in a {@link WebElement}.
+	 * @param element
+	 * 					The element from which we want to extract text.
+	 * @return
+	 * 				Returns the text in the element.
+	 */
+	public String getText(WebElement element);
 			
 
 

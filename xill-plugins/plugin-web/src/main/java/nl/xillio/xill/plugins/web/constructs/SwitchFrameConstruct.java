@@ -1,49 +1,55 @@
 package nl.xillio.xill.plugins.web.constructs;
 
-import org.openqa.selenium.NoSuchFrameException;
-import org.openqa.selenium.WebDriver;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.NodeVariable;
-import nl.xillio.xill.plugins.web.PageVariable;
+import nl.xillio.xill.plugins.web.NodeVariableService;
+import nl.xillio.xill.plugins.web.PageVariableService;
+
+import org.openqa.selenium.NoSuchFrameException;
+import org.openqa.selenium.WebDriver;
+
+import com.google.inject.Inject;
 
 /**
  * Switch current page context to a provided frame
  */
 public class SwitchFrameConstruct extends Construct {
+	@Inject
+	NodeVariableService nodeVariableService;
+	@Inject
+	PageVariableService pageVariableService;
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			SwitchFrameConstruct::process,
+			(page, frame) -> process(page, frame, nodeVariableService, pageVariableService),
 			new Argument("page"),
 			new Argument("frame"));
 	}
 
 	/**
 	 * @param pageVar
-	 * 				input variable (should be of a PAGE type)
+	 *        input variable (should be of a PAGE type)
 	 * @param frameVar
-	 * 				input variable - frame specification - string or number or web element (NODE variable)
+	 *        input variable - frame specification - string or number or web element (NODE variable)
 	 * @return null variable
 	 */
-	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression frameVar) {
+	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression frameVar, final NodeVariableService nodeVariableService, final PageVariableService pageVariableService) {
 
-		if (!PageVariable.checkType(pageVar)) {
+		if (!pageVariableService.checkType(pageVar)) {
 			throw new RobotRuntimeException("Invalid variable type. Page NODE type expected!");
 		}
 		// else
 
-		WebDriver driver = PageVariable.getDriver(pageVar);
+		WebDriver driver = pageVariableService.getDriver(pageVar);
 
 		try {
-			if (NodeVariable.checkType(frameVar)) {
-				driver.switchTo().frame(NodeVariable.get(frameVar));
+			if (nodeVariableService.checkType(frameVar)) {
+				driver.switchTo().frame(nodeVariableService.get(frameVar));
 			} else {
 				Object frame = MetaExpression.extractValue(frameVar);
 				if (frame instanceof Integer) {
