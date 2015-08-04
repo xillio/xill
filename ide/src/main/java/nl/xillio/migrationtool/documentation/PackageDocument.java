@@ -2,17 +2,22 @@ package nl.xillio.migrationtool.documentation;
 
 import static org.rendersnake.HtmlAttributesFactory.href;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javafx.util.Pair;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.rendersnake.HtmlCanvas;
-
-import javafx.util.Pair;
 
 /**
  * <p>
@@ -25,12 +30,49 @@ import javafx.util.Pair;
  * The PackageDocument can generate HTML to display itself.
  * </p>
  *
- * @author Ivor
+ * @author Ivor van der Hoog.
  *
  */
 public class PackageDocument extends HtmlGenerator {
 	private static Logger log = LogManager.getLogger();
-	private final Set<FunctionDocument> functions = new HashSet<>();
+	private List<FunctionDocument> functions = new ArrayList<>();
+
+	public PackageDocument(final File file, final String name) {
+		setName(name);
+		System.out.println("reachedThis");
+
+		try (BufferedReader br = new BufferedReader(new FileReader(file.getAbsoluteFile()))) {
+			String line;
+			// Read every function.
+			while ((line = br.readLine()) != null) {
+				FunctionDocument docu = new FunctionDocument();
+				String[] content = line.split(" ");
+				docu.setName(content[0]);
+				docu.setPackage(getName());
+
+				// Read and add every parameter.
+				for (int t = 1; t + 1 < content.length; t += 2) {
+					if (!content[t + 1].equals("NULL")) {
+						docu.addParameter(content[t], content[t + 1]);
+					}
+					else {
+						docu.addParameter(content[t], null);
+					}
+				}
+				functions = functions.stream().filter(x -> !x.getName().equals(docu.getName())).collect(Collectors.toList());
+				functions.add(docu);
+			}
+		} catch (IOException e) {}
+		String s = "";
+		for (FunctionDocument func : functions) {
+			s += func.toPackageString();
+		}
+		try {
+			FileUtils.write(file, s);
+		} catch (IOException e) {
+			log.error("Failed to write to: " + file.getAbsolutePath());
+		}
+	}
 
 	@Override
 	public String toHTML() throws IOException {
@@ -70,7 +112,7 @@ public class PackageDocument extends HtmlGenerator {
 		for (FunctionDocument desLink : sortedFunctions) {
 			try {
 				canvas = canvas.tr().td().p()
-					.a(href(generateLink(new Pair<String, String>(desLink.getPackage(), desLink.getName()))));
+						.a(href(generateLink(new Pair<String, String>(desLink.getPackage(), desLink.getName()))));
 				canvas = desLink.addFunction(canvas);
 				canvas = canvas._a()._p()._td()._tr();
 			} catch (IOException e) {
@@ -83,9 +125,9 @@ public class PackageDocument extends HtmlGenerator {
 
 	/**
 	 * Returns the amount of {@link FunctionDocument} present in the {@link PackageDocument}
-	 * 
+	 *
 	 * @return
-	 * 				Returns the amount of functions in the package.
+	 *         Returns the amount of functions in the package.
 	 */
 	public int getPackageSize() {
 		return functions.size();

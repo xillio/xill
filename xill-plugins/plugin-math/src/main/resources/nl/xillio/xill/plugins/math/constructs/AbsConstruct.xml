@@ -3,7 +3,8 @@
     <parameters>
         <param name="value"/>
     </parameters>
-    <description><![CDATA[Returns the absolute value of the provided value.]]></description>
+    <description><![CDATA[Returns the absolute value of the provided value.
+    we randomly put a sentence here]]></description>
     <examples>
         <example description="Perform abs on three different inputs:"><![CDATA[
     System.print(Math.abs(6))
