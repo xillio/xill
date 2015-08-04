@@ -79,6 +79,11 @@ public class FunctionDocument extends HtmlGenerator {
 		}
 		setDescription(sb.toString());
 	}
+	
+	@Override
+	public String toString(){
+		return this.getName();
+	}
 
 	public FunctionDocument() {}
 

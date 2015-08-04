@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,10 +35,11 @@ import org.rendersnake.HtmlCanvas;
  */
 public class PackageDocument extends HtmlGenerator {
 	private static Logger log = LogManager.getLogger();
-	private final Set<FunctionDocument> functions = new HashSet<>();
+	private List<FunctionDocument> functions = new ArrayList<>();
 
 	public PackageDocument(final File file, final String name) {
 		setName(name);
+		System.out.println("reachedThis");
 
 		try (BufferedReader br = new BufferedReader(new FileReader(file.getAbsoluteFile()))) {
 			String line;
@@ -57,7 +59,7 @@ public class PackageDocument extends HtmlGenerator {
 						docu.addParameter(content[t], null);
 					}
 				}
-				functions.remove(docu);
+				functions = functions.stream().filter(x -> !x.getName().equals(docu.getName())).collect(Collectors.toList());
 				functions.add(docu);
 			}
 		} catch (IOException e) {}
