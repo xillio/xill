@@ -7,28 +7,23 @@ import java.util.Map;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
-import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.PageVariableService;
+import nl.xillio.xill.plugins.web.PhantomJSConstruct;
 
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 
-import com.google.inject.Inject;
-
 /**
  * Set cookie in a currently loaded page context
  */
-public class SetCookieConstruct extends Construct {
-	@Inject
-	private PageVariableService pageVariableService;
+public class SetCookieConstruct extends PhantomJSConstruct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(page, cookies) -> process(page, cookies, pageVariableService),
+			(page, cookies) -> process(page, cookies),
 			new Argument("page"),
 			new Argument("cookies", LIST, OBJECT));
 	}
@@ -40,18 +35,18 @@ public class SetCookieConstruct extends Construct {
 	 *        input string variable - associated array or list of associated arrays (see CT help for details)
 	 * @return null variable
 	 */
-	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression cookiesVar, final PageVariableService pageVariableService) {
+	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression cookiesVar) {
 
 		if (cookiesVar.isNull()) {
 			return NULL;
 		}
 
-		if (!pageVariableService.checkType(pageVar)) {
+		if (!checkPageType(pageVar)) {
 			throw new RobotRuntimeException("Invalid variable type. Page NODE type expected!");
 		}
 		// else
 
-		WebDriver driver = pageVariableService.getDriver(pageVar);
+		WebDriver driver = getPageDriver(pageVar);
 
 		if (cookiesVar.getType() == OBJECT) {
 			processCookie(driver, cookiesVar);

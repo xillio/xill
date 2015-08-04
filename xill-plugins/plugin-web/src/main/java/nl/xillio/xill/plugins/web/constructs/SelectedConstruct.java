@@ -2,27 +2,22 @@ package nl.xillio.xill.plugins.web.constructs;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
-import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.NodeVariableService;
+import nl.xillio.xill.plugins.web.PhantomJSConstruct;
 
 import org.openqa.selenium.WebElement;
-
-import com.google.inject.Inject;
 
 /**
  * Returns information if provided web element is selected or not
  */
-public class SelectedConstruct extends Construct {
-	@Inject
-	NodeVariableService nodeVariableService;
+public class SelectedConstruct extends PhantomJSConstruct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(element) -> process(element, nodeVariableService),
+			(element) -> process(element),
 			new Argument("element"));
 	}
 
@@ -31,14 +26,14 @@ public class SelectedConstruct extends Construct {
 	 *        input variable (should be of a NODE type) - web element
 	 * @return boolean variable (true=selected, false=not selected)
 	 */
-	public static MetaExpression process(final MetaExpression elementVar, final NodeVariableService nodeVariableService) {
+	public static MetaExpression process(final MetaExpression elementVar) {
 
-		if (!nodeVariableService.checkType(elementVar)) {
+		if (!checkNodeType(elementVar)) {
 			throw new RobotRuntimeException("Invalid variable type. NODE type expected!");
 		}
 		// else
 
-		WebElement element = nodeVariableService.get(elementVar);
+		WebElement element = getNode(elementVar);
 
 		try {
 			return fromValue(element.isSelected());

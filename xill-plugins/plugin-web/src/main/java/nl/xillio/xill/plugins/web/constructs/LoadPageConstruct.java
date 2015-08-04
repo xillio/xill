@@ -13,11 +13,10 @@ import java.util.concurrent.TimeUnit;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
-import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.PageVariableService;
+import nl.xillio.xill.plugins.web.PhantomJSConstruct;
 import nl.xillio.xill.plugins.web.PhantomJSPool;
 import nl.xillio.xill.plugins.web.WebXillPlugin;
 
@@ -29,15 +28,11 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import com.google.inject.Inject;
-
 /**
  * @author Zbynek Hochmann
  *         Loads the new page via PhantomJS process and holds the context of a page
  */
-public class LoadPageConstruct extends Construct implements AutoCloseable {
-	@Inject
-	PageVariableService pageVariableService;
+public class LoadPageConstruct extends PhantomJSConstruct implements AutoCloseable {
 
 	private static final PhantomJSPool pool = new PhantomJSPool(10);
 
@@ -49,7 +44,7 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(url, options) -> process(url, options, pageVariableService),
+			(url, options) -> process(url, options),
 			new Argument("url"),
 			new Argument("options", NULL));
 	}
@@ -61,7 +56,7 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 	 *        list variable - options for loading the page (see CT help for details)
 	 * @return PAGE variable
 	 */
-	public static MetaExpression process(final MetaExpression urlVar, final MetaExpression optionsVar, final PageVariableService pageVariableService) {
+	public static MetaExpression process(final MetaExpression urlVar, final MetaExpression optionsVar) {
 
 		String url = urlVar.getStringValue();
 
@@ -98,7 +93,7 @@ public class LoadPageConstruct extends Construct implements AutoCloseable {
 			throw new RobotRuntimeException("Loadpage timeout", e);
 		}
 
-		return pageVariableService.create(item);
+		return createPage(item);
 	}
 
 	/**

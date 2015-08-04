@@ -4,28 +4,23 @@ import java.util.LinkedHashMap;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
-import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.PageVariableService;
+import nl.xillio.xill.plugins.web.PhantomJSConstruct;
 
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 
-import com.google.inject.Inject;
-
 /**
  * Returns the info about currently loaded web page
  */
-public class PageInfoConstruct extends Construct {
-	@Inject
-	private PageVariableService pageVariableService;
+public class PageInfoConstruct extends PhantomJSConstruct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(page) -> process(page, pageVariableService),
+			(page) -> process(page),
 			new Argument("page"));
 	}
 
@@ -34,16 +29,16 @@ public class PageInfoConstruct extends Construct {
 	 *        input variable (should be of a PAGE type)
 	 * @return list of string variable
 	 */
-	public static MetaExpression process(final MetaExpression pageVar, final PageVariableService pageVariableService) {
+	public static MetaExpression process(final MetaExpression pageVar) {
 
-		if (!pageVariableService.checkType(pageVar)) {
+		if (!checkPageType(pageVar)) {
 			throw new RobotRuntimeException("Invalid variable type. Node PAGE type expected!");
 		}
 		// else
 
 		try {
 
-			WebDriver page = pageVariableService.getDriver(pageVar);
+			WebDriver page = getPageDriver(pageVar);
 			LinkedHashMap<String, MetaExpression> list = new LinkedHashMap<>();
 
 			list.put("url", fromValue(page.getCurrentUrl()));
@@ -51,7 +46,7 @@ public class PageInfoConstruct extends Construct {
 
 			LinkedHashMap<String, MetaExpression> cookies = new LinkedHashMap<>();
 			for (Cookie cookie : page.manage().getCookies()) {
-				cookies.put(cookie.getName(), pageVariableService.makeCookie(cookie));
+				cookies.put(cookie.getName(), makeCookie(cookie));
 			}
 			list.put("cookies", fromValue(cookies));
 			return fromValue(list);

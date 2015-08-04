@@ -4,27 +4,22 @@ import java.util.List;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
-import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.PageVariableService;
+import nl.xillio.xill.plugins.web.PhantomJSConstruct;
 
 import org.openqa.selenium.WebDriver;
-
-import com.google.inject.Inject;
 
 /**
  * Removes cookie from a currently loaded page context
  */
-public class RemoveCookieConstruct extends Construct {
-	@Inject
-	private PageVariableService pageVariableService;
+public class RemoveCookieConstruct extends PhantomJSConstruct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(page, cookie) -> process(page, cookie, pageVariableService),
+			(page, cookie) -> process(page, cookie),
 			new Argument("page"),
 			new Argument("cookie"));
 	}
@@ -36,19 +31,19 @@ public class RemoveCookieConstruct extends Construct {
 	 *        input variable - string (cookie name) or list of strings or boolean
 	 * @return null variable
 	 */
-	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression cookieVar, final PageVariableService pageVariableService) {
+	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression cookieVar) {
 
 		if (cookieVar.isNull()) {
 			return NULL;
 		}
 		// else
 
-		if (!pageVariableService.checkType(pageVar)) {
+		if (!checkPageType(pageVar)) {
 			throw new RobotRuntimeException("Invalid variable type. PAGE type expected!");
 		}
 		// else
 
-		WebDriver driver = pageVariableService.getDriver(pageVar);
+		WebDriver driver = getPageDriver(pageVar);
 
 		try {
 

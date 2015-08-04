@@ -6,12 +6,11 @@ import org.openqa.selenium.WebElement;
 /**
  * This class represents NODE "pseudo" variable, it encapsulates basic operations.
  *
- * @author Zbynek Hochmann
+ * @author Ivor van der Hoog.
  */
 public class NodeVariable {
 	private final WebDriver driver;
 	private final WebElement element;
-	static String name = "Selenium:node";
 
 	/**
 	 * <p>

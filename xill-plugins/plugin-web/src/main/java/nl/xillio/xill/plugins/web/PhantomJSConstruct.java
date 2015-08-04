@@ -5,17 +5,62 @@ import java.util.LinkedHashMap;
 
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 import nl.xillio.xill.api.components.AtomicExpression;
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 
-import com.google.inject.Singleton;
-
-@Singleton
-public class PageVariableService {
-	String name = "Selenium:page";
+public abstract class PhantomJSConstruct extends Construct {
 	
+	 /**
+   * Creates new {@link NodeVariable}
+   *
+   * @param driver  PhantomJS driver (page)
+   * @param element web element on the page (represented by driver)
+   *
+   * @return created variable
+   */
+  protected static MetaExpression createNode(final WebDriver driver, final WebElement element) {
+      MetaExpression var = new AtomicExpression(element.getAttribute("outerHTML"));
+      var.storeMeta(new NodeVariable(driver, element));
+      return var;
+  }
+  
+  /**
+   * Extracts web element from {@link NodeVariable}
+   *
+   * @param var input variable (should be of a NODE type)
+   *
+   * @return web element
+   */
+  protected static WebElement getNode(final MetaExpression var) {
+      return var.getMeta(NodeVariable.class).getElement();
+  }
+  
+	/**
+   * Do the test if input {@link MetaExpression} if it's of NODE type
+   *
+   * @param var MetaExpression (any variable)
+   *
+   * @return true if it's of NODE type
+   */
+  protected static boolean checkNodeType(final MetaExpression var) {
+      return var.getMeta(NodeVariable.class) != null;
+  }
+  
+  /**
+   * Extracts driver/page from {@link NodeVariable}
+   *
+   * @param var input variable (should be of a NODE type)
+   *
+   * @return driver (page)
+   */
+  protected static WebDriver getNodeDriver(final MetaExpression var) {
+      return var.getMeta(NodeVariable.class).getDriver();
+  }
+  
   /**
    * Creates new {@link PageVariable}
    *
@@ -23,9 +68,8 @@ public class PageVariableService {
    *
    * @return created PAGE variable
    */
-  public MetaExpression create(final PhantomJSPool.Entity item) {
+  protected static MetaExpression createPage(final PhantomJSPool.Entity item) {
       MetaExpression var = new AtomicExpression(item.getDriver().getCurrentUrl());
-      var.storeMeta(name);
       var.storeMeta(item);
       return var;
   }
@@ -37,7 +81,7 @@ public class PageVariableService {
    *
    * @return PhantomJS pool item
    */
-  public PhantomJSPool.Entity get(final MetaExpression var) {
+  private PhantomJSPool.Entity getPage(final MetaExpression var) {
       return var.getMeta(PhantomJSPool.Entity.class);
   }
   
@@ -48,7 +92,7 @@ public class PageVariableService {
    *
    * @return driver (page)
    */
-  public WebDriver getDriver(final MetaExpression var) {
+  protected static WebDriver getPageDriver(final MetaExpression var) {
       return var.getMeta(PhantomJSPool.Entity.class).getDriver();
   }
   
@@ -59,9 +103,8 @@ public class PageVariableService {
    *
    * @return true if it's of PAGE type
    */
-  public boolean checkType(final MetaExpression var) {
-      String metaName = var.getMeta(String.class);
-      return metaName != null && metaName.equals(name) && var.getMeta(PhantomJSPool.Entity.class) != null;
+  protected static boolean checkPageType(final MetaExpression var) {
+      return var.getMeta(PhantomJSPool.Entity.class) != null;
   }
   
   /**
@@ -71,7 +114,7 @@ public class PageVariableService {
    *
    * @return created cookie variable
    */
-  public MetaExpression makeCookie(final Cookie cookie) {
+  protected static MetaExpression makeCookie(final Cookie cookie) {
       LinkedHashMap<String, MetaExpression> map = new LinkedHashMap<String, MetaExpression>();
       map.put("name", ExpressionBuilderHelper.fromValue(cookie.getName()));
       map.put("domain", ExpressionBuilderHelper.fromValue(cookie.getDomain()));
@@ -84,6 +127,4 @@ public class PageVariableService {
 
       return ExpressionBuilderHelper.fromValue(map);
   }
-
-
 }

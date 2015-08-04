@@ -2,28 +2,22 @@ package nl.xillio.xill.plugins.web.constructs;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
-import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.NodeVariableService;
+import nl.xillio.xill.plugins.web.PhantomJSConstruct;
 
 import org.openqa.selenium.WebElement;
-
-import com.google.inject.Inject;
 
 /**
  * Simulates key presses on provided web element (i.e. clear and write text)
  */
-public class InputConstruct extends Construct {
-
-	@Inject
-	private NodeVariableService nodeVariableService;
+public class InputConstruct extends PhantomJSConstruct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(element, text) -> process(element, text, nodeVariableService),
+			(element, text) -> process(element, text),
 			new Argument("element"),
 			new Argument("text"));
 	}
@@ -35,16 +29,16 @@ public class InputConstruct extends Construct {
 	 *        input string variable - text to be written to web element
 	 * @return null variable
 	 */
-	public static MetaExpression process(final MetaExpression elementVar, final MetaExpression textVar, final NodeVariableService nodeVariableService) {
+	public static MetaExpression process(final MetaExpression elementVar, final MetaExpression textVar) {
 
-		if (!nodeVariableService.checkType(elementVar)) {
+		if (!checkNodeType(elementVar)) {
 			throw new RobotRuntimeException("Invalid variable type. NODE type expected!");
 		}
 		// else
 
 		String text = textVar.getStringValue();
 
-		WebElement element = nodeVariableService.get(elementVar);
+		WebElement element = getNode(elementVar);
 
 		try {
 			element.clear();
