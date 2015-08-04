@@ -44,10 +44,12 @@ public class NodeVariable {
      * @return web element
      */
     public static WebElement get(final MetaExpression var) {
-        return var.getMeta(NodeVariable.class).element;
+        return var.getMeta(NodeVariable.class).getElement();
     }
 
-    /**
+   
+
+		/**
      * Do the test if input {@link MetaExpression} if it's of NODE type
      *
      * @param var MetaExpression (any variable)
@@ -67,6 +69,14 @@ public class NodeVariable {
      * @return driver (page)
      */
     public static WebDriver getDriver(final MetaExpression var) {
-        return var.getMeta(NodeVariable.class).driver;
+        return var.getMeta(NodeVariable.class).getDriver();
     }
+    
+    public WebDriver getDriver() {
+			return driver;
+		}
+
+		public WebElement getElement() {
+			return element;
+		}
 }

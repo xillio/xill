@@ -44,12 +44,13 @@ public class SelectConstructTest extends ExpressionBuilderHelper{
 		WebDriver driver = mock(WebDriver.class);
 		WebElement element = mock(WebElement.class);
 		MetaExpression input = mock(MetaExpression.class);
-		MetaExpression meta = NodeVariable.create(driver, element);
+		NodeVariable node = mock(NodeVariable.class);
 
 		when(NodeVariable.checkType(input)).thenReturn(null);
 		when(input.getMeta(String.class)).thenReturn("Selenium:node");
-		when(input.getMeta(NodeVariable.class)).thenReturn(meta.getMeta(NodeVariable.class));
-
+		when(input.getMeta(NodeVariable.class)).thenReturn(node);
+		when(node.getElement()).thenReturn(element);
+		
 		MetaExpression select = mock(MetaExpression.class);
 		
 		when(select.getBooleanValue()).thenReturn(false); //false
