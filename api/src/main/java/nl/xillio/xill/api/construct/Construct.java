@@ -8,6 +8,8 @@ import org.apache.commons.lang3.text.WordUtils;
 
 import java.io.InputStream;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 /**
  * This interface contains the core functionality for all constructs
  */
@@ -31,14 +33,12 @@ public abstract class Construct extends ExpressionBuilderHelper implements HelpC
 
 	/**
 	 * <p>
-	 * Returns the name of the construct. This name is also the command by which
-	 * this construct can be called inside scripts.
+	 * Returns the name of the construct. This name is also the command by which this construct can be called inside scripts.
 	 * </p>
 	 *
 	 * <p>
-	 * By default the name of a {@link XillPlugin} is the concrete implementation name
-	 * acquired using {@link Class#getSimpleName()} without the {@link XillPlugin} suffix.
-	 * It is also uncapitalized using {@link WordUtils#uncapitalize(String)}
+	 * By default the name of a {@link XillPlugin} is the concrete implementation name acquired using {@link Class#getSimpleName()} without the {@link XillPlugin} suffix. It is also uncapitalized using
+	 * {@link WordUtils#uncapitalize(String)}
 	 * </p>
 	 *
 	 * @return the name of the construct. This name is also the command by which
@@ -75,8 +75,7 @@ public abstract class Construct extends ExpressionBuilderHelper implements HelpC
 	}
 
 	/**
-	 * Check if a {@link MetaExpression} is null. This is checked by calling
-	 * {@link MetaExpression#isNull()}.
+	 * Check if a {@link MetaExpression} is null. This is checked by calling {@link MetaExpression#isNull()}.
 	 *
 	 * @param expression
 	 *        The expression to check
@@ -86,8 +85,8 @@ public abstract class Construct extends ExpressionBuilderHelper implements HelpC
 	 *         when the assertion fails
 	 */
 	protected static void assertIsNull(final MetaExpression expression, final String argumentName) {
-		if (expression.isNull()) {
-			throw new RobotRuntimeException(argumentName + " cannot be null");
+		if (!expression.isNull()) {
+			throw new RobotRuntimeException(argumentName + " must be null");
 		}
 	}
 

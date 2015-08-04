@@ -1,8 +1,6 @@
 package nl.xillio.xill.plugins.date.constructs;
 
 import java.time.ZonedDateTime;
-import java.time.temporal.ChronoField;
-import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.LinkedHashMap;
 
 import nl.xillio.xill.api.components.MetaExpression;
@@ -10,6 +8,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.plugins.date.BaseDateConstruct;
+import nl.xillio.xill.plugins.date.services.DateService;
 
 /**
  *
@@ -23,29 +22,21 @@ public class InfoConstruct extends BaseDateConstruct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(InfoConstruct::process, new Argument("date"));
+		return new ConstructProcessor((dateVar) -> process(dateVar, getDateService()), new Argument("date"));
 
 	}
 
-	private static MetaExpression process(final MetaExpression dateVar) {
+	static MetaExpression process(final MetaExpression dateVar, DateService dateService) {
 		ZonedDateTime date = getDate(dateVar, "date");
-		ZonedDateTime now = now();
 
 		LinkedHashMap<String, MetaExpression> info = new LinkedHashMap<>();
 
-		for (ChronoField field : ChronoField.values()) {
-			if (date.isSupported(field)) {
-				try {
-					info.put(field.toString(), fromValue(date.get(field)));
-				} catch (UnsupportedTemporalTypeException e) {
-					info.put(field.toString(), fromValue(date.getLong(field)));
-				}
-			}
-		}
+		// Get ChronoField values
+		dateService.getFieldValues(date).forEach((k, v) -> info.put(k, fromValue(v)));
 
-		info.put("TimeZone", fromValue(date.getZone().toString()));
-		info.put("IsInFuture", fromValue(date.isAfter(now)));
-		info.put("IsInPast", fromValue(date.isBefore(now)));
+		info.put("TimeZone", fromValue(dateService.getTimezone(date).toString()));
+		info.put("IsInFuture", fromValue(dateService.isInFuture(date)));
+		info.put("IsInPast", fromValue(dateService.isInPast(date)));
 
 		return fromValue(info);
 
