@@ -65,11 +65,13 @@ public class TrimConstruct extends Construct {
 	private static MetaExpression doTrimming(final MetaExpression string, final MetaExpression internal, final StringUtilityService stringService) {
 		String text = string.getStringValue();
 
+		// Ensure unicode non breaking space is converted also
 		text = stringService.replaceAll(text, "\u00A0", " ");
 		text = stringService.trim(text);
 
 		if (internal.getBooleanValue()) {
 			text = stringService.replaceAll(text, "[\\s]+", " ");
+			
 		}
 		return fromValue(text);
 	}

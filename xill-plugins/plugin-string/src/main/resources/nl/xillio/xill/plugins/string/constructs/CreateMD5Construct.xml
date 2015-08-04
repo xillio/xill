@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function Tag="createMD5">
+  <name>createMD5</name>
+  <parameters>
+    <param name="value">
+    </param>
+  </parameters>
+  <description><![CDATA[
+	Returns a string containing the MD5 hash over the passed variable value. 
+	This is commonly used to check if files have changed, since any slight change will cause the MD5 hash to be completely different.
+  ]]></description>
+  <examples>
+    <example description="Executing:"><![CDATA[
+    	String.createMD5("string");
+    ]]></example>
+    <example description="Will return:"><![CDATA[
+		"b45cffe084dd3d20d928bee85e7b0f21"
+    	]]>
+    </example>
+  </examples>
+  <references>
+  </references>
+  <searchTags>
+	<searchTag>
+		MD5
+	</searchTag>
+	<searchTag>
+		md5
+	</searchTag>
+	<searchTag>
+		hash
+	</searchTag>
+	<searchTag>
+		encode
+	</searchTag>
+  </searchTags>
+</function>

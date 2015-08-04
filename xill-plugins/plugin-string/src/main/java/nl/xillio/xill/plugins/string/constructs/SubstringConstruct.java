@@ -35,7 +35,7 @@ public class SubstringConstruct extends Construct {
 			(string, start, end) -> process(string, start, end, stringService),
 			new Argument("string", ATOMIC),
 			new Argument("start", ATOMIC),
-			new Argument("end", ATOMIC));
+			new Argument("end", fromValue(0), ATOMIC));
 	}
 
 	static MetaExpression process(final MetaExpression string, final MetaExpression startVar, final MetaExpression endVar, final StringUtilityService stringService) {
