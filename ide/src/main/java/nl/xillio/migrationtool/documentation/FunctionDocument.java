@@ -8,9 +8,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.rendersnake.HtmlCanvas;
-
 import javafx.util.Pair;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
+
+import org.rendersnake.HtmlCanvas;
 
 /**
  * <p>
@@ -47,7 +48,7 @@ import javafx.util.Pair;
  * The FunctionDocument is capable of generating its own HTML page with the function toHTML().
  * </p>
  *
- * @author Ivor
+ * @author Ivor van der Hoog.
  */
 public class FunctionDocument extends HtmlGenerator {
 	private String description;
@@ -57,6 +58,34 @@ public class FunctionDocument extends HtmlGenerator {
 	private final List<Pair<String, String>> examples = new ArrayList<>();
 	private final Set<Pair<String, String>> links = new HashSet<>();
 	private final Set<String> searchTags = new HashSet<>();
+
+	public FunctionDocument(final String toParse) {
+		String[] splitted = toParse.split("\\n");
+		setName(splitted[0]);
+		int t = 2;
+		try {
+			int parameterCount = Integer.parseInt(splitted[1]);
+			while (t - 2 < parameterCount) {
+				addParameter(splitted[t]);
+				++t;
+			}
+		} catch (NumberFormatException e) {
+			throw new RobotRuntimeException("A package contains a corrupt functionsFile.");
+		}
+		StringBuilder sb = new StringBuilder();
+		while (t < splitted.length) {
+			sb.append("\n" + splitted[t]);
+			++t;
+		}
+		setDescription(sb.toString());
+	}
+	
+	@Override
+	public String toString(){
+		return this.getName();
+	}
+
+	public FunctionDocument() {}
 
 	/**
 	 * Sets the description of the {@link FunctionDocument}
@@ -75,6 +104,11 @@ public class FunctionDocument extends HtmlGenerator {
 	 */
 	public String getDescription() {
 		return description;
+	}
+
+	@Override
+	public int hashCode() {
+		return getName().hashCode();
 	}
 
 	/**
@@ -123,7 +157,7 @@ public class FunctionDocument extends HtmlGenerator {
 
 	/**
 	 * Adds a parameter with defaultvalue to the {@link FunctionDocument}
-	 * 
+	 *
 	 * @param name
 	 * @param defaultValue
 	 */
@@ -170,7 +204,7 @@ public class FunctionDocument extends HtmlGenerator {
 	 * @param link
 	 *        The package and the function we're referring to.
 	 * @return
-	 * 				Returns a string which represents a link path
+	 *         Returns a string which represents a link path
 	 */
 	@Override
 	protected String generateLink(final Pair<String, String> link) {
@@ -309,5 +343,24 @@ public class FunctionDocument extends HtmlGenerator {
 	 */
 	public void setParameters(final List<Pair<String, String>> params) {
 		parameters = params;
+	}
+
+	/**
+	 * Compresses the Function to a string which can be added to the txt file of the package.
+	 *
+	 * @return
+	 *         A string which can be added to the txt file of the package.
+	 */
+	public String toPackageString() {
+		String s = getName();
+		for (Pair<String, String> parameter : parameters) {
+			if (parameter.getValue() != null) {
+				s += " " + parameter.getKey() + " " + parameter.getValue();
+			}
+			else {
+				s += " " + parameter.getKey() + " " + "NULL";
+			}
+		}
+		return s += '\n';
 	}
 }

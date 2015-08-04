@@ -27,9 +27,7 @@
     </example>
   </examples>
   <references>
-  	<reference package="String">
-  		base64Encode
-  	</reference>
+  	<reference package="String">base64Decode</reference>
   </references>
   <searchTags>
 	<searchTag>

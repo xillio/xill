@@ -31,11 +31,11 @@ See the Regular Expressions page for more about Regular Expression support in Co
     <example description="Executing:"><![CDATA[
     	String.replace("The quick brown fox.", "fox", "dog");
     	
-    	String.replace("The quick brown fox. The quick brown fox", "fox", "dog");
+    	String.replace("The quick brown fox, The quick brown fox.", "fox", "dog");
     	
-    	String.replace("The quick brown fox. The quick brown ladyfox.", "fox", "dog", false);
+    	String.replace("The quick brown fox, The quick brown ladyfox.", "fox", "dog", false);
     	
-    	String.replace("The quick brown fox. The quick brown fox.", "fox", "dog", false, false);	
+    	String.replace("The quick brown fox, The quick brown fox.", "fox", "dog", false, false);	
     ]]></example>
     <example description="Will return:"><![CDATA[
     	"The quick brown dog."
@@ -48,9 +48,9 @@ See the Regular Expressions page for more about Regular Expression support in Co
 		]]>
     </example>
     <example description="One could use it to:"><![CDATA[
-    	Repair misspelled URL’s (with one slash):
+    	//Repair misspelled URL’s (with one slash):
     
-    	url = "http:/www.xillio.com/";
+    	var url = "http:/www.xillio.com/";
 		url = replace(url, "(^http:/)([^/].*)", "http://$2");
 		System.print(url);
     ]]>

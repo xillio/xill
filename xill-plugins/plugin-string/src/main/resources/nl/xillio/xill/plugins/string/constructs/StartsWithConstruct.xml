@@ -12,8 +12,8 @@
   ]]></description>
   <examples>
     <example description="Executing:"><![CDATA[
-    	String.endsWith("testing", "ing");	
-    	String.endsWith("testing", "test");
+    	String.startsWith("testing", "ing");	
+    	String.startsWith("testing", "test");
     ]]></example>
     <example description="Will return:"><![CDATA[
 		false
@@ -22,6 +22,7 @@
     </example>
   </examples>
   <references>
+  <reference package="String">endsWith</reference>
   </references>
   <searchTags>
   </searchTags>

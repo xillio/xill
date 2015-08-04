@@ -16,7 +16,7 @@
     	String.ampersandDecode("Jack &amp; Jill");
     ]]></example>
     <example description="Will return:"><![CDATA[
-    	"Jack and Jill"
+    	"Jack & Jill"
     	]]>
     </example>
     <example description="Executing:"><![CDATA[

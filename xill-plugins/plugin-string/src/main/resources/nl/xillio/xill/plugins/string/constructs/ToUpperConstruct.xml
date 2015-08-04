@@ -18,6 +18,7 @@
     </example>
   </examples>
   <references>
+    <reference package="String">toLower</reference>
   </references>
   <searchTags>
   	<searchTag>

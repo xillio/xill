@@ -22,7 +22,7 @@
     </example>
   </examples>
   <references>
-  </references>
+  <reference package="String">startsWith</reference></references>
   <searchTags>
   </searchTags>
 </function>

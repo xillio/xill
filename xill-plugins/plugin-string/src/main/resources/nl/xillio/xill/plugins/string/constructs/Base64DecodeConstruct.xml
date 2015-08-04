@@ -30,9 +30,7 @@
     </example>
   </examples>
   <references>
-  	<reference package="String">
-  		base64Decode
-  	</reference>
+  	<reference package="String">base64Encode</reference>
   </references>
   <searchTags>
 	<searchTag>

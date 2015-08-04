@@ -26,7 +26,7 @@ import org.xml.sax.SAXException;
  * The class parses using XPath commands.
  * </p>
  *
- * @author Ivor
+ * @author Ivor van der Hoog.
  *
  */
 public class XMLparser {

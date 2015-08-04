@@ -13,7 +13,7 @@
   <examples>
     <example description="Executing:"><![CDATA[
     	String.contains("testing", "ing");  	
-    	String.contains(["ferrari", "diet", "cola"], ferrari);
+    	String.contains(["ferrari", "diet", "cola"], "ferrari");
     ]]></example>
     <example description="Will return:"><![CDATA[
 		true
@@ -22,7 +22,7 @@
     </example>
     <example description="Executing:"><![CDATA[
     	String.contains("testing", "ts");
-    	String.contains(["ferrari", "diet", "cola"], Volkswagen);
+    	String.contains(["ferrari", "diet", "cola"], "Volkswagen");
     	]]>
     </example>
     <example description="Will return:"><![CDATA[

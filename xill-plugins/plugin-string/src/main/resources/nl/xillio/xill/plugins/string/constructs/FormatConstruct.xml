@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<function Tag="endsWith">
-  <name>endsWith</name>
+<function Tag="format">
+  <name>format</name>
   <parameters>
     <param name="string1">
     </param>
@@ -34,7 +34,7 @@ Format specifiers begin with a percent sign (%) and end with a converter. The co
     	String.format("%3$2s %1$2s %1$2s %2$2s" , ["a", "b", "c"] );
     	
     	//An example of setting the width and precision of an argument.
-    	var v = 0.1234567891
+    	var v = 0.1234567891;
     	String.format("value = %+10.4f or value = %010.7f or value = %-8.1f or  value= %+.3f" , [v, v , v, -v]);
     ]]></example>
     <example description="Will return:"><![CDATA[
