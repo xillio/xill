@@ -9,6 +9,7 @@ include 'xill-plugins:plugin-date'
 include  'xill-plugins:plugin-web'
 include 'xill-plugins:plugin-math' 
 include 'xill-plugins:plugin-file'
+include 'xill-plugins:plugin-excel'
 
 // Set the rootname of the project (do not use the name of the current directory. Jenkins needs this)
 rootProject.name='xill'
