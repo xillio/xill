@@ -28,7 +28,6 @@ public class InfoConstruct extends BaseDateConstruct {
 
 	static MetaExpression process(final MetaExpression dateVar, DateService dateService) {
 		ZonedDateTime date = getDate(dateVar, "date");
-		ZonedDateTime now = now();
 
 		LinkedHashMap<String, MetaExpression> info = new LinkedHashMap<>();
 

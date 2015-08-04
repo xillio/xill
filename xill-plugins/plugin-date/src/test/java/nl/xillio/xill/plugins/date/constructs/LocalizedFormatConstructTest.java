@@ -33,8 +33,8 @@ public class LocalizedFormatConstructTest {
 
 	@DataProvider(name = "localeFormatPermutations")
 	private Object[][] localeFormatProvider() {
-		String[] formatStyles = {"Full", "Long", "Medium", "Short", null};
-		FormatStyle[] expectedStyles = {FormatStyle.FULL, FormatStyle.LONG, FormatStyle.MEDIUM, FormatStyle.SHORT, FormatStyle.MEDIUM};
+		String[] formatStyles = {"Full", null};
+		FormatStyle[] expectedStyles = {FormatStyle.FULL, FormatStyle.MEDIUM};
 		String[] locales = {"en-GB", "en", null};
 		Locale[] expectedLocales = {Locale.UK, Locale.ENGLISH, null};
 
