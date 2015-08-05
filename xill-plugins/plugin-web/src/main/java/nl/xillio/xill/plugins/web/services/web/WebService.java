@@ -172,5 +172,21 @@ public interface WebService {
 		 * 				The value of the cookie.
 		 */
 		public String getValue(Cookie cookie);
+		
+		/**
+		 * Deletes the cookie in the {@link WebDriver}  with the given name.
+		 * @param driver
+		 * 						The driver we're deleting on.
+		 * @param name
+		 * 						The name of the cookie we're deleting.
+		 */
+		public void deleteCookieNamed(WebDriver driver, String name);
+		
+		/**
+		 * Deletes all cookies on a {@link WebDriver}.
+		 * @param driver
+		 * 					The driver we're deleting cookies on.
+		 */
+		public void deleteCookies(WebDriver driver);
 
 }

@@ -100,4 +100,14 @@ public class WebServiceImpl implements WebService {
 		public String getValue(Cookie cookie) {
 			return cookie.getValue();
 		}
+
+		@Override
+		public void deleteCookieNamed(WebDriver driver, String name) {
+			driver.manage().deleteCookieNamed(name);	
+		}
+
+		@Override
+		public void deleteCookies(WebDriver driver) {
+			driver.manage().deleteAllCookies();
+		}
 }

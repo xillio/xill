@@ -29,7 +29,7 @@ public class PageInfoConstructTest extends ExpressionBuilderHelper{
 	/**
 	 * Tests the construct under normal circumstances
 	 */
-	@SuppressWarnings("unchecked")
+
 	@Test
 	public void testProcessNormalUsage(){
 		// mock

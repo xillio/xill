@@ -8,6 +8,7 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.PhantomJSConstruct;
+import nl.xillio.xill.plugins.web.services.web.WebService;
 
 import org.openqa.selenium.WebDriver;
 
@@ -19,7 +20,7 @@ public class RemoveCookieConstruct extends PhantomJSConstruct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(page, cookie) -> process(page, cookie),
+			(page, cookie) -> process(page, cookie, webService),
 			new Argument("page"),
 			new Argument("cookie"));
 	}
@@ -31,7 +32,7 @@ public class RemoveCookieConstruct extends PhantomJSConstruct {
 	 *        input variable - string (cookie name) or list of strings or boolean
 	 * @return null variable
 	 */
-	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression cookieVar) {
+	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression cookieVar, final WebService webService) {
 
 		if (cookieVar.isNull()) {
 			return NULL;
@@ -51,24 +52,14 @@ public class RemoveCookieConstruct extends PhantomJSConstruct {
 				@SuppressWarnings("unchecked")
 				List<MetaExpression> list = (List<MetaExpression>) cookieVar.getValue();
 				for (MetaExpression cookie : list) {
-					driver.manage().deleteCookieNamed(cookie.getStringValue());
+					webService.deleteCookieNamed(driver, cookie.getStringValue());
 				}
 			} else {
-				Object value = MetaExpression.extractValue(cookieVar);
-				if (value instanceof Integer) {// boolean type cannot be determined in Xill 3.0 (at least for now)
-					if (cookieVar.getBooleanValue()) {
-						driver.manage().deleteAllCookies();
-					}
-				} else if (value instanceof String) {
-					driver.manage().deleteCookieNamed(value.toString());
-				} else {
-					throw new RobotRuntimeException("Invalid cookie type!");
-				}
+				webService.deleteCookieNamed(driver, cookieVar.getStringValue());
 			}
 		} catch (Exception e) {
 			throw new RobotRuntimeException(e.getClass().getSimpleName(), e);
 		}
-
 		return NULL;
 	}
 }
