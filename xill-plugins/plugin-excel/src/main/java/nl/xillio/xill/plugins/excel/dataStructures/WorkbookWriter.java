@@ -12,48 +12,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-import static nl.xillio.xill.plugins.excel.dataStructures.WorkbookType.*;
-
 /**
  * Created by Daan Knoope on 5-8-2015.
  */
-public class WorkbookWriter {
+public abstract class WorkbookWriter {
 
-	private Workbook workbook;
-	private WorkbookType workbookType;
+	protected Workbook workbook;
+	protected String extension;
 
 	//Constructor
-	public WorkbookWriter(WorkbookType type){
-		workbookType = type;
-		workbook = createWorkbook(type);
-	}
-
-	private String[] getSheetNames(){
-		String[] sheetNames = new String[workbook.getNumberOfSheets()];
-		for(int i = 0; i < workbook.getNumberOfSheets(); i++){
-			sheetNames[i] = workbook.getSheetName(i);
-		}
-		return sheetNames;
-	}
-
-	private Workbook createWorkbook(WorkbookType type){
-		Workbook workbook;
-		switch(type){
-			case xls:
-				workbook = new HSSFWorkbook();
-				break;
-			case xlsx:
-				workbook = new XSSFWorkbook();
-				break;
-			default:
-				throw new NotImplementedException("The given workbooktype has not been implemented");
-		}
-
-		return workbook;
-	}
+	public WorkbookWriter(){}
 
 	//Creates the cells in the POI system to write to
-	public void createWorkSheet(String name, int rows, int columns){
+	private void createWorkSheet(String name, int rows, int columns){
 		Sheet sheet = workbook.createSheet(name);
 		for(int i = 0; i < rows; i++)
 		{
@@ -64,7 +35,7 @@ public class WorkbookWriter {
 		}
 	}
 
-	//Finds max size
+	//Finds max size and create cells in the POI system
 	public void createWorkSheet(String name, List<CellData> CellDataList){
 		short maxColumn = 0;
 		short maxRow 		= 0;
@@ -78,31 +49,31 @@ public class WorkbookWriter {
 		createWorkSheet(name, maxRow, maxColumn);
 	}
 
+	public void createWorkSheet(String name, CellData cellData){
+		createWorkSheet(name,cellData.getCellCoordinates().getRow(), cellData.getCellCoordinates().getColumn());
+	}
+
 	//Finds the cell to write to and changes its value
 	private void setCellValue(Sheet sheet, CellCoordinates cellCoordinates, String value){
 		sheet.getRow(cellCoordinates.getRow() - 1).getCell(cellCoordinates.getColumn() - 1).setCellValue(workbook.getCreationHelper().createRichTextString(value));
 		int i = 0;
 	}
 
-	public void setCellValue(String sheet, CellCoordinates cellCoordinates, String value){
-		setCellValue(workbook.getSheet(sheet), cellCoordinates, value);
-	}
-
 	//Sets cell values for multiple cells
-	public void setCellValue(Sheet sheet, List<CellData> CellDataList){
+	private void setCellValue(Sheet sheet, List<CellData> CellDataList){
 		for(CellData data : CellDataList){
 			setCellValue(sheet,data.getCellCoordinates(), data.getValue());
 		}
 	}
 
-	public void createSheetAndSetValues(String Sheet, List<CellData> cellDatas){
-		createWorkSheet(Sheet, cellDatas);
+	public void createSheetAndSetValues(String Sheet, List<CellData> cellDataList){
+		createWorkSheet(Sheet, cellDataList);
 		Sheet sheet = workbook.getSheet(Sheet);
-		setCellValue(sheet,cellDatas);
+		setCellValue(sheet,cellDataList);
 	}
 
 	public boolean writeToFS(String filename){
-		filename += "." + workbookType.toString(); //adds extension to filename
+		filename += extension; //adds extension to filename
 		FileOutputStream fileOut;
 		try {
 			fileOut = new FileOutputStream(filename);

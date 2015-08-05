@@ -7,10 +7,7 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.NotImplementedException;
-import nl.xillio.xill.plugins.excel.dataStructures.CellCoordinates;
-import nl.xillio.xill.plugins.excel.dataStructures.CellData;
-import nl.xillio.xill.plugins.excel.dataStructures.WorkbookType;
-import nl.xillio.xill.plugins.excel.dataStructures.WorkbookWriter;
+import nl.xillio.xill.plugins.excel.dataStructures.*;
 import nl.xillio.xill.plugins.excel.services.ExcelService;
 
 import org.apache.poi.ss.usermodel.Row;
@@ -40,20 +37,20 @@ public class WriteConstruct extends Construct {
 
 		WorkbookWriter workbookWriter;
 
-		switch(extension.getStringValue()) {
+		//move this away?
+		switch(extension.getStringValue()){
 			case "xls":
-				workbookWriter = new WorkbookWriter(WorkbookType.xls);
+				workbookWriter = new LegacyWorkbookWriter();
 				break;
 			case "xlsx":
-				workbookWriter = new WorkbookWriter(WorkbookType.xlsx);
+				workbookWriter = new ModernWorkbookWriter();
 				break;
 			default:
-				throw new NotImplementedException("Only xls and xlsx are supported as file extensions for an excel file.");
+				throw new NotImplementedException("This extension is not known for excel files.");
 		}
 
-
 		workbookWriter.createSheetAndSetValues("Sheet1", Collections.singletonList(new CellData(valueToWrite.getStringValue(),
-						new CellCoordinates(RowNr.getNumberValue().shortValue(),ColumnNr.getNumberValue().shortValue()))));
+						new CellCoordinates(RowNr.getNumberValue().shortValue(), ColumnNr.getNumberValue().shortValue()))));
 
 		return fromValue(workbookWriter.writeToFS(filename.getStringValue()));
 	}
