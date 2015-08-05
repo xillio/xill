@@ -12,9 +12,12 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import nl.xillio.xill.api.errors.RobotRuntimeException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -44,7 +47,7 @@ public class XMLparser {
 	 *        A {@link String} with the version name.
 	 * @return The parsed {@link FunctionDocument} contained in the stream
 	 */
-	public FunctionDocument parseXML(final InputStream xml, final String packet, final String version) {
+	public FunctionDocument parseXML(final InputStream xml, final String packet, final String version) throws NullPointerException {
 		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder;
 		try {
@@ -62,24 +65,33 @@ public class XMLparser {
 				XPath xpath = xpathFactory.newXPath();
 
 				// Parse the description
+				try{
 				XPathExpression descriptionExpr = xpath.compile("/function/description/text()");
 				func.setDescription(((String) descriptionExpr.evaluate(doc, XPathConstants.STRING)).trim());
-
+				}
+				catch(NullPointerException | IllegalArgumentException | XPathExpressionException e){
+					throw new RobotRuntimeException("Invalid XML in a description in the following package: " + packet);
+				}
+				
 				// Parse the parameters
-				XPathExpression paramsNameExpr = xpath.compile("/function/parameters/param/@name");
-				XPathExpression paramsDefExpr = xpath.compile("/function/parameters/param/@default");
-				NodeList parameterNames = (NodeList) paramsNameExpr.evaluate(doc, XPathConstants.NODESET);
-				NodeList defaultValues = (NodeList) paramsDefExpr.evaluate(doc, XPathConstants.NODESET);
-				for (int t = 0; t < parameterNames.getLength(); ++t) {
-					String parameterName = parameterNames.item(t).getTextContent().trim();
-					if (defaultValues.item(t) != null) {
-						String defaultValue = defaultValues.item(t).getTextContent().trim();
-						func.addParameter(parameterName, defaultValue);
-					} else {
-						func.addParameter(parameterName);
+				try{
+				NodeList params = (NodeList) xpath.compile("/function/parameters/param").evaluate(doc, XPathConstants.NODESET);
+				for(int t = 0; t < params.getLength(); ++t){
+					Node currentParameter = params.item(t);
+					String par = currentParameter.getAttributes().getNamedItem("name").getNodeValue();
+					if(currentParameter.getAttributes().getNamedItem("default") == null){
+						func.addParameter(par);
+					}
+					else{
+						func.addParameter(par,currentParameter.getAttributes().getNamedItem("default").getNodeValue() );
 					}
 				}
-
+				}
+				catch(NullPointerException | IllegalArgumentException | XPathExpressionException e){
+					throw new RobotRuntimeException("Invalid XML in a parameter in the following package: " + packet);
+				}
+				
+				try{
 				// Parse the examples
 				XPathExpression examplesExpr = xpath.compile("/function/examples/example/text()");
 				XPathExpression exampleDescriptionsExpr = xpath.compile("/function/examples/example/@description");
@@ -89,8 +101,13 @@ public class XMLparser {
 					func.addExample(exampleDescriptions.item(t).getTextContent().trim(),
 						examples.item(t).getTextContent().trim());
 				}
+				}
+				catch(NullPointerException | IllegalArgumentException | XPathExpressionException e){
+					throw new RobotRuntimeException("Invalid XML in an example in the following package: " + packet);
+				}
 
-				// Parse the tags
+				// Parse the references
+				try{
 				XPathExpression tagsExpr = xpath.compile("/function/references/reference/text()");
 				XPathExpression tagsPackageExpr = xpath.compile("/function/references/reference/@package");
 				NodeList tags = (NodeList) tagsExpr.evaluate(doc, XPathConstants.NODESET);
@@ -98,12 +115,22 @@ public class XMLparser {
 				for (int t = 0; t < tags.getLength(); ++t) {
 					func.addLink(tagsPackage.item(t).getTextContent().trim(), tags.item(t).getTextContent().trim());
 				}
+				}
+				catch(NullPointerException | IllegalArgumentException | XPathExpressionException e){
+					log.error("Invalid XML in a reference in the following package: " + packet);
+				}
+
 
 				// Parse the searchTags
+				try{
 				XPathExpression searchTagsExpr = xpath.compile("/function/searchTags/searchTag");
 				NodeList searchTags = (NodeList) searchTagsExpr.evaluate(doc, XPathConstants.NODESET);
 				for (int t = 0; t < searchTags.getLength(); ++t) {
 					func.addSearchTag(searchTags.item(0).getTextContent().trim());
+				}
+				}
+				catch(NullPointerException | IllegalArgumentException | XPathExpressionException e){
+					throw new RobotRuntimeException("Invalid XML in a searchTag in the following package: " + packet);
 				}
 
 				// Set the version and the package of the FunctionDocument and add a
@@ -111,16 +138,14 @@ public class XMLparser {
 				func.setVersion(version);
 				func.setPackage(packet);
 				func.addSearchTag(packet);
+			
 				return func;
 			} catch (SAXException e) {
-				log.error(xml);
-				e.printStackTrace();
+				log.error("failed to parse an xmlFile in: " + packet);
 			}
 
-		} catch (ParserConfigurationException | IOException e) {
-			e.printStackTrace();
-		} catch (XPathExpressionException e) {
-			e.printStackTrace();
+		} catch (ParserConfigurationException | IOException | NullPointerException e) {
+			log.error("failed to parse an xmlFile in: " + packet);
 		}
 
 		return null;

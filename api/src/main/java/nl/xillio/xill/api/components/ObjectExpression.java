@@ -1,18 +1,18 @@
 package nl.xillio.xill.api.components;
 
+import nl.xillio.xill.api.Debugger;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import nl.xillio.xill.api.Debugger;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
-
 /**
  * <p>
  * This class represents a written object in a script e.g. { "keyValue": 6 }.
  * </p>
- *
+ * <p>
  * Values:
  * <ul>
  * <li><b>{@link String}: </b> a JSON representation</li>
@@ -25,13 +25,13 @@ public class ObjectExpression extends MetaExpression {
 	private final LinkedHashMap<String, MetaExpression> value;
 
 	/**
-	 * @param object
-	 *        the value to set
+	 * @param object the value to set
 	 */
 	public ObjectExpression(final LinkedHashMap<String, MetaExpression> object) {
 		value = object;
 
 		setValue(value);
+		object.values().forEach(MetaExpression::registerReference);
 	}
 
 	@Override
