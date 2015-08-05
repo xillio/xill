@@ -81,6 +81,7 @@ public class WorkbookWriter {
 	//Finds the cell to write to and changes its value
 	private void setCellValue(Sheet sheet, CellCoordinates cellCoordinates, String value){
 		sheet.getRow(cellCoordinates.getRow() - 1).getCell(cellCoordinates.getColumn() - 1).setCellValue(workbook.getCreationHelper().createRichTextString(value));
+		int i = 0;
 	}
 
 	public void setCellValue(String sheet, CellCoordinates cellCoordinates, String value){
@@ -92,6 +93,12 @@ public class WorkbookWriter {
 		for(CellData data : CellDataList){
 			setCellValue(sheet,data.getCellCoordinates(), data.getValue());
 		}
+	}
+
+	public void createSheetAndSetValues(String Sheet, List<CellData> cellDatas){
+		createWorkSheet(Sheet, cellDatas);
+		Sheet sheet = workbook.getSheet(Sheet);
+		setCellValue(sheet,cellDatas);
 	}
 
 	public boolean writeToFS(String filename){
