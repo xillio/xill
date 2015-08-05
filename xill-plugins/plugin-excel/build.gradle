@@ -17,4 +17,5 @@ includeInBuild project
 
 dependencies {
  compile 'org.apache.poi:poi:3.12'
+ compile 'org.apache.poi:poi-ooxml:3.12'
 }
