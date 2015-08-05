@@ -28,14 +28,14 @@ public class IterateFilesConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-				(uri, content) -> process(context, fileUtils, uri, content),
-				new Argument("uri", ATOMIC),
-				new Argument("recursive", FALSE, ATOMIC));
+						(uri, content) -> process(context, fileUtils, uri, content),
+						new Argument("uri", ATOMIC),
+						new Argument("recursive", FALSE, ATOMIC));
 	}
 
 	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils,
-																final MetaExpression uri, final MetaExpression recursive) {
-		File file = fileUtils.buildFile(context.getRobotID(), uri.getStringValue());
+					final MetaExpression uri, final MetaExpression recursive) {
+		File file = getFile(context.getRobotID(), uri.getStringValue());
 		boolean isRecursive = recursive.getBooleanValue();
 		try {
 			MetaExpression result = fromValue("List files " + (isRecursive ? "recursively " : "") + "in " + file.getAbsolutePath());

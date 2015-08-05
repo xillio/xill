@@ -1,13 +1,6 @@
 package nl.xillio.xill.components.expressions;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import com.google.inject.Inject;
 import nl.xillio.plugins.PluginLoader;
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.XillProcessor;
@@ -21,6 +14,15 @@ import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.errors.XillParsingException;
+import nl.xillio.xill.services.files.FileResolver;
+import nl.xillio.xill.services.inject.InjectorUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * This class represents calling another robot
@@ -33,28 +35,29 @@ public class CallbotExpression implements Processable {
 	private final PluginLoader<XillPlugin> pluginLoader;
 	private Processable argument;
 
+	@Inject
+	private FileResolver resolver;
+
 	/**
 	 * Create a new {@link CallbotExpression}
 	 *
 	 * @param path
-	 * @param robotID
-	 *        The root robot of this tree
+	 * @param robotID      The root robot of this tree
 	 * @param pluginLoader
-	 * @param debugger
 	 */
 	public CallbotExpression(final Processable path, final RobotID robotID, final PluginLoader<XillPlugin> pluginLoader) {
 		this.path = path;
 		this.robotID = robotID;
 		this.pluginLoader = pluginLoader;
 		robotLogger = RobotAppender.getLogger(robotID);
+		InjectorUtils.getGlobalInjector().injectMembers(this);
 	}
 
 	@Override
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		MetaExpression pathExpression = path.process(debugger).get();
 
-		File currentRobotDir = robotID.getPath().getParentFile();
-		File otherRobot = new File(currentRobotDir, pathExpression.getStringValue());
+		File otherRobot = resolver.buildFile(robotID, pathExpression.getStringValue());
 
 		log.debug("Evaluating callbot for " + otherRobot.getAbsolutePath());
 
@@ -119,7 +122,7 @@ public class CallbotExpression implements Processable {
 
 	/**
 	 * Set the argument that will be passed to the called robot
-	 * 
+	 *
 	 * @param argument
 	 */
 	public void setArgument(final Processable argument) {
