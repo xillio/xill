@@ -1,11 +1,5 @@
 package nl.xillio.xill.components.instructions;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Stack;
-
-import org.apache.commons.lang3.StringUtils;
-
 import nl.xillio.xill.CodePosition;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.ExpressionBuilder;
@@ -15,6 +9,10 @@ import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.components.operators.Assign;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Stack;
 
 /**
  * This {@link Instruction} represents the start of a variable's lifespan
@@ -60,8 +58,9 @@ public class VariableDeclaration extends Instruction {
 	 * @param value
 	 */
 	public void replaceVariable(final MetaExpression value) {
-		releaseVariable();
+		MetaExpression current = valueStack.pop();
 		pushVariable(value);
+		current.releaseReference();
 	}
 
 	/**

@@ -21,14 +21,14 @@ public class ListExpression extends MetaExpression {
 	private final List<? extends MetaExpression> value;
 
 	/**
-	 * @param value
-	 *        the value to set
+	 * @param value the value to set
 	 */
 	public ListExpression(final List<MetaExpression> value) {
 		this.value = value;
 
 		setValue(value);
-
+		//Register references
+		value.forEach(MetaExpression::registerReference);
 	}
 
 	@Override
