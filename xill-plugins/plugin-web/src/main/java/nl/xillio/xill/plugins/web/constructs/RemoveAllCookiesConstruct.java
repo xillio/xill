@@ -35,7 +35,7 @@ public class RemoveAllCookiesConstruct extends PhantomJSConstruct {
 	public static MetaExpression process(final MetaExpression page, final WebService webService){
 		
 		if (!checkPageType(page)) {
-			throw new RobotRuntimeException("Invalid variable type. PAGE type expected!");
+			throw new RobotRuntimeException("Invalid variable type. Node PAGE type expected!");
 		}
 		
 		WebDriver driver = getPageDriver(page);

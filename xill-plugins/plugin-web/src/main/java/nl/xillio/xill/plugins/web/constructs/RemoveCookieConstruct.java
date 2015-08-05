@@ -40,7 +40,7 @@ public class RemoveCookieConstruct extends PhantomJSConstruct {
 		// else
 
 		if (!checkPageType(pageVar)) {
-			throw new RobotRuntimeException("Invalid variable type. PAGE type expected!");
+			throw new RobotRuntimeException("Invalid variable type. Node PAGE type expected!");
 		}
 		// else
 

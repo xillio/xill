@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.web.services.web;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -10,16 +11,20 @@ import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
+
+import com.google.inject.Singleton;
 
 /**
  * The implementation of the {@link WebService} interface.
- *
  */
+@Singleton
 public class WebServiceImpl implements WebService {
 
 	@Override
@@ -109,5 +114,11 @@ public class WebServiceImpl implements WebService {
 		@Override
 		public void deleteCookies(WebDriver driver) {
 			driver.manage().deleteAllCookies();
+		}
+
+		@Override
+		public File getScreenshotAsFile(WebDriver driver) {
+			PhantomJSDriver castedDriver = (PhantomJSDriver) driver;
+			return castedDriver.getScreenshotAs(OutputType.FILE);
 		}
 }

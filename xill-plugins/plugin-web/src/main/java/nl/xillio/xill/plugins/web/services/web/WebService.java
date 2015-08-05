@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.web.services.web;
 
+import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
@@ -15,6 +16,9 @@ import org.openqa.selenium.WebElement;
 
 import com.google.inject.ImplementedBy;
 
+/**
+ * Provides an interface for a webService.
+ */
 @ImplementedBy(WebServiceImpl.class)
 public interface WebService {
 
@@ -188,5 +192,14 @@ public interface WebService {
 		 * 					The driver we're deleting cookies on.
 		 */
 		public void deleteCookies(WebDriver driver);
+		
+		/**
+		 * Makes a screenshot on a {@link WebDriver} and returns it as file.
+		 * @param driver
+		 * 						The driver we're screenshotting.
+		 * @return
+		 * 				A file containing the screenshot.
+		 */
+		public File getScreenshotAsFile(WebDriver driver);
 
 }

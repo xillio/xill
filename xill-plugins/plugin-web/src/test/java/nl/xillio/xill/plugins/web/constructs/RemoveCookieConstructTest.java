@@ -1,8 +1,5 @@
 package nl.xillio.xill.plugins.web.constructs;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
@@ -26,6 +23,9 @@ import org.testng.annotations.Test;
 import com.google.common.collect.Sets;
 
 
+/**
+ *
+ */
 public class RemoveCookieConstructTest extends ExpressionBuilderHelper {
 	
 	@Test
@@ -93,7 +93,7 @@ public class RemoveCookieConstructTest extends ExpressionBuilderHelper {
 		//The cookie
 		MetaExpression cookie = mock(MetaExpression.class);
 		when(cookie.isNull()).thenReturn(false);
-		when(cookie.getValue()).thenReturn("deleteThisCookie");
+		when(cookie.getStringValue()).thenReturn("deleteThisCookie");
 		when(cookie.getType()).thenReturn(ATOMIC);
 		
 		// run
@@ -141,6 +141,23 @@ public class RemoveCookieConstructTest extends ExpressionBuilderHelper {
 		
 		RemoveCookieConstruct.process(page, cookie, webService);
 	}
-
-
+	
+	/**
+	 * Test the process when no page is given.
+	 */
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid variable type. Node PAGE type expected!")
+	public void testProcessNoPageGiven(){
+		// mock
+		WebService webService = mock(WebService.class);
+		
+		//The page
+		MetaExpression page = mock(MetaExpression.class);
+		when(page.getMeta(PhantomJSPool.Entity.class)).thenReturn(null);
+		
+		//The cookie
+		MetaExpression cookie = mock(MetaExpression.class);
+		
+		// run
+		RemoveCookieConstruct.process(page, cookie, webService);
+	}
 }
