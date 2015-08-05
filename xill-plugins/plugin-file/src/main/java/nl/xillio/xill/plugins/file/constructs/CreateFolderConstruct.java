@@ -24,13 +24,13 @@ public class CreateFolderConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-				(uri) -> process(context, fileUtils, uri),
-				new Argument("uri", ATOMIC));
+						(uri) -> process(context, fileUtils, uri),
+						new Argument("uri", ATOMIC));
 	}
 
 	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri) {
 
-		File folder = fileUtils.buildFile(context.getRobotID(), uri.getStringValue());
+		File folder = getFile(context.getRobotID(), uri.getStringValue());
 
 		try {
 			fileUtils.createFolder(folder);

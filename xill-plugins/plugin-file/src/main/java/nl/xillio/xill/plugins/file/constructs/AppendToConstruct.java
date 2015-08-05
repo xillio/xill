@@ -22,13 +22,13 @@ public class AppendToConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-				(uri, content) -> process(context, fileUtils, uri, content),
-				new Argument("uri", ATOMIC),
-				new Argument("content", ATOMIC));
+						(uri, content) -> process(context, fileUtils, uri, content),
+						new Argument("uri", ATOMIC),
+						new Argument("content", ATOMIC));
 	}
 
 	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri, final MetaExpression content) {
-		File file = fileUtils.buildFile(context.getRobotID(), uri.getStringValue());
+		File file = getFile(context.getRobotID(), uri.getStringValue());
 		try {
 			fileUtils.appendStringToFile(content.getStringValue(), file);
 		} catch (IOException e) {
