@@ -1,15 +1,10 @@
 package nl.xillio.xill.plugins.list.services.sort;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.IdentityHashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.inject.Singleton;
+
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
-
-import com.google.inject.Singleton;
 
 /**
  * This is the main implementation of {@link Sort}
@@ -47,15 +42,15 @@ public class SortImpl implements Comparator<Object>, Sort {
 		} else if (input instanceof Map) {
 			// Sort the map by extracting single entries and sorting them either by key or
 			Map.Entry<String, Object>[] sortedEntries = ((Map<String, Object>) input)
-					.entrySet()
-					.stream()
-					.sorted((a, b) -> {
-						if (onKeys) {
-							return a.getKey().compareTo(b.getKey());
-						}
-						return compare(a, b);
-					})
-					.toArray(i -> new Map.Entry[i]);
+							.entrySet()
+							.stream()
+							.sorted((a, b) -> {
+								if (onKeys) {
+									return a.getKey().compareTo(b.getKey());
+								}
+								return compare(a.getValue(), b.getValue());
+							})
+							.toArray(i -> new Map.Entry[i]);
 
 			Map<String, Object> map = new LinkedHashMap<>();
 			for (Entry<String, Object> entry : sortedEntries) {
