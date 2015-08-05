@@ -26,7 +26,7 @@ public class GetTextConstruct extends PhantomJSConstruct {
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
 			(element) -> process(element, webService),
-			new Argument("element"));
+			new Argument("element", LIST, ATOMIC));
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class GetTextConstruct extends PhantomJSConstruct {
 		if (checkNodeType(var)) {
 			element = getNode(var);
 		} else if (checkPageType(var)) {
-			element = (WebElement) getPageDriver(var);
+			element = webService.driverToElement(getPageDriver(var));
 		} else {
 			throw new RobotRuntimeException("Invalid variable type.");
 		}

@@ -7,12 +7,18 @@ import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import com.google.inject.Inject;
+
 import nl.xillio.xill.api.components.AtomicExpression;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
+import nl.xillio.xill.plugins.web.services.web.WebService;
 
 public abstract class PhantomJSConstruct extends Construct {
+	@Inject
+	protected WebService webService;
+
 	
 	 /**
    * Creates new {@link NodeVariable}
@@ -22,8 +28,8 @@ public abstract class PhantomJSConstruct extends Construct {
    *
    * @return created variable
    */
-  protected static MetaExpression createNode(final WebDriver driver, final WebElement element) {
-      MetaExpression var = new AtomicExpression(element.getAttribute("outerHTML"));
+  protected static MetaExpression createNode(final WebDriver driver, final WebElement element, final WebService webService) {
+      MetaExpression var = fromValue(webService.getAttribute(element, "outerHTML"));
       var.storeMeta(new NodeVariable(driver, element));
       return var;
   }
@@ -68,8 +74,8 @@ public abstract class PhantomJSConstruct extends Construct {
    *
    * @return created PAGE variable
    */
-  protected static MetaExpression createPage(final PhantomJSPool.Entity item) {
-      MetaExpression var = new AtomicExpression(item.getDriver().getCurrentUrl());
+  protected static MetaExpression createPage(final PhantomJSPool.Entity item, final WebService webService) {
+      MetaExpression var = fromValue(webService.getCurrentUrl(item.getDriver()));
       var.storeMeta(item);
       return var;
   }
@@ -114,12 +120,12 @@ public abstract class PhantomJSConstruct extends Construct {
    *
    * @return created cookie variable
    */
-  protected static MetaExpression makeCookie(final Cookie cookie) {
+  protected static MetaExpression makeCookie(final Cookie cookie, final WebService webService) {
       LinkedHashMap<String, MetaExpression> map = new LinkedHashMap<String, MetaExpression>();
-      map.put("name", ExpressionBuilderHelper.fromValue(cookie.getName()));
-      map.put("domain", ExpressionBuilderHelper.fromValue(cookie.getDomain()));
-      map.put("path", ExpressionBuilderHelper.fromValue(cookie.getPath()));
-      map.put("value", ExpressionBuilderHelper.fromValue(cookie.getValue()));
+      map.put("name", ExpressionBuilderHelper.fromValue(webService.getName(cookie)));
+      map.put("domain", ExpressionBuilderHelper.fromValue(webService.getDomain(cookie)));
+      map.put("path", ExpressionBuilderHelper.fromValue(webService.getPath(cookie)));
+      map.put("value", ExpressionBuilderHelper.fromValue(webService.getValue(cookie)));
 
       if (cookie.getExpiry() != null) {
           map.put("expires", ExpressionBuilderHelper.fromValue(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S").format(cookie.getExpiry())));

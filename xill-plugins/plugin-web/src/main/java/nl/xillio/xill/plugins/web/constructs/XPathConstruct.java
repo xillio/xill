@@ -9,6 +9,7 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.PhantomJSConstruct;
+import nl.xillio.xill.plugins.web.services.web.WebService;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.InvalidSelectorException;
@@ -24,7 +25,7 @@ public class XPathConstruct extends PhantomJSConstruct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(element, xpath) -> process(element, xpath),
+			(element, xpath) -> process(element, xpath, webService),
 			new Argument("element"),
 			new Argument("xpath"));
 	}
@@ -36,20 +37,20 @@ public class XPathConstruct extends PhantomJSConstruct {
 	 *        string variable specifying XPath selector
 	 * @return NODE variable or list of NODE variables or null variable (according to count of selected web elements - more/1/0)
 	 */
-	public static MetaExpression process(final MetaExpression elementVar, final MetaExpression xpathVar) {
+	public static MetaExpression process(final MetaExpression elementVar, final MetaExpression xpathVar, final WebService webService) {
 
 		String query = xpathVar.getStringValue();
 
 		if (checkPageType(elementVar)) {
-			return processSELNode(getPageDriver(elementVar), getPageDriver(elementVar), query);
+			return processSELNode(getPageDriver(elementVar), getPageDriver(elementVar), query, webService);
 		} else if (checkNodeType(elementVar)) {
-			return processSELNode(getNodeDriver(elementVar), getNode(elementVar), query);
+			return processSELNode(getNodeDriver(elementVar), getNode(elementVar), query, webService);
 		} else {
 			throw new RobotRuntimeException("Unsupported variable type!");
 		}
 	}
 
-	private static MetaExpression processSELNode(final WebDriver driver, final SearchContext node, String query) {
+	private static MetaExpression processSELNode(final WebDriver driver, final SearchContext node, String query, final WebService webService) {
 
 		try {
 
@@ -72,12 +73,12 @@ public class XPathConstruct extends PhantomJSConstruct {
 				// log.debug("No results");
 				return NULL;
 			} else if (results.size() == 1) {
-				return parseSELVariable(driver, results.get(0), textquery, attribute);
+				return parseSELVariable(driver, results.get(0), textquery, attribute, webService);
 			} else {
 				ArrayList<MetaExpression> list = new ArrayList<MetaExpression>();
 
 				for (WebElement he : results) {
-					list.add(parseSELVariable(driver, he, textquery, attribute));
+					list.add(parseSELVariable(driver, he, textquery, attribute, webService));
 				}
 
 				return fromValue(list);
@@ -87,7 +88,7 @@ public class XPathConstruct extends PhantomJSConstruct {
 		}
 	}
 
-	private static MetaExpression parseSELVariable(final WebDriver driver, final WebElement e, final boolean textquery, final String attribute) {
+	private static MetaExpression parseSELVariable(final WebDriver driver, final WebElement e, final boolean textquery, final String attribute, final WebService webService) {
 		if (textquery) {
 			return fromValue(e.getAttribute("innerHTML"));
 		}
@@ -100,7 +101,7 @@ public class XPathConstruct extends PhantomJSConstruct {
 			return fromValue(val);
 		}
 
-		return createNode(driver, e);
+		return createNode(driver, e, webService);
 	}
 
 }

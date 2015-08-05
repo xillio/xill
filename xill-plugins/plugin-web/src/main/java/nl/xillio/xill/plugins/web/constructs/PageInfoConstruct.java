@@ -8,6 +8,7 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.PhantomJSConstruct;
+import nl.xillio.xill.plugins.web.services.web.WebService;
 
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
@@ -20,16 +21,18 @@ public class PageInfoConstruct extends PhantomJSConstruct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(page) -> process(page),
+			(page) -> process(page, webService),
 			new Argument("page"));
 	}
 
 	/**
 	 * @param pageVar
 	 *        input variable (should be of a PAGE type)
+	 * @param webService 
+	 * 					the webService we're using.
 	 * @return list of string variable
 	 */
-	public static MetaExpression process(final MetaExpression pageVar) {
+	public static MetaExpression process(final MetaExpression pageVar, final WebService webService) {
 
 		if (!checkPageType(pageVar)) {
 			throw new RobotRuntimeException("Invalid variable type. Node PAGE type expected!");
@@ -38,15 +41,15 @@ public class PageInfoConstruct extends PhantomJSConstruct {
 
 		try {
 
-			WebDriver page = getPageDriver(pageVar);
+			WebDriver driver = getPageDriver(pageVar);
 			LinkedHashMap<String, MetaExpression> list = new LinkedHashMap<>();
 
-			list.put("url", fromValue(page.getCurrentUrl()));
-			list.put("title", fromValue(page.getTitle()));
+			list.put("url", fromValue(webService.getCurrentUrl(driver)));
+			list.put("title", fromValue(webService.getTitle(driver)));
 
 			LinkedHashMap<String, MetaExpression> cookies = new LinkedHashMap<>();
-			for (Cookie cookie : page.manage().getCookies()) {
-				cookies.put(cookie.getName(), makeCookie(cookie));
+			for (Cookie cookie : webService.getCookies(driver)) {
+				cookies.put(webService.getName(cookie), makeCookie(cookie, webService));
 			}
 			list.put("cookies", fromValue(cookies));
 			return fromValue(list);

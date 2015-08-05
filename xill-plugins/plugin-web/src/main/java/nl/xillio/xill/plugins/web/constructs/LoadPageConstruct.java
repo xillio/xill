@@ -19,6 +19,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.PhantomJSConstruct;
 import nl.xillio.xill.plugins.web.PhantomJSPool;
 import nl.xillio.xill.plugins.web.WebXillPlugin;
+import nl.xillio.xill.plugins.web.services.web.WebService;
 
 import org.apache.commons.codec.binary.Base64;
 import org.openqa.selenium.Dimension;
@@ -44,7 +45,7 @@ public class LoadPageConstruct extends PhantomJSConstruct implements AutoCloseab
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(url, options) -> process(url, options),
+			(url, options) -> process(url, options, webService),
 			new Argument("url"),
 			new Argument("options", NULL));
 	}
@@ -56,7 +57,7 @@ public class LoadPageConstruct extends PhantomJSConstruct implements AutoCloseab
 	 *        list variable - options for loading the page (see CT help for details)
 	 * @return PAGE variable
 	 */
-	public static MetaExpression process(final MetaExpression urlVar, final MetaExpression optionsVar) {
+	public static MetaExpression process(final MetaExpression urlVar, final MetaExpression optionsVar, final WebService webService) {
 
 		String url = urlVar.getStringValue();
 
@@ -93,7 +94,7 @@ public class LoadPageConstruct extends PhantomJSConstruct implements AutoCloseab
 			throw new RobotRuntimeException("Loadpage timeout", e);
 		}
 
-		return createPage(item);
+		return createPage(item, webService);
 	}
 
 	/**
@@ -186,7 +187,7 @@ public class LoadPageConstruct extends PhantomJSConstruct implements AutoCloseab
 				case "sslprotocol":
 					sslProtocol = value.getStringValue();
 					if (!sslProtocol.equalsIgnoreCase("sslv3") && !sslProtocol.equalsIgnoreCase("sslv2") && !sslProtocol.equalsIgnoreCase("tlsv1") && !sslProtocol.equalsIgnoreCase("any")) {
-						throw new Exception("Invalid sslprotocol.");
+						throw new RobotRuntimeException("Invalid sslprotocol.");
 					}
 					break;
 
@@ -194,28 +195,28 @@ public class LoadPageConstruct extends PhantomJSConstruct implements AutoCloseab
 					httpAuthUser = value.getStringValue();
 					httpAuthPass = getString(options, "pass");
 					if (httpAuthPass == null || httpAuthPass.isEmpty()) {
-						throw new Exception("Http password must be set if user is used.");
+						throw new RobotRuntimeException("Http password must be set if user is used.");
 					}
 					break;
 
 				case "browser":
 					browser = value.getStringValue();
 					if (!browser.equals("PHANTOMJS")) {
-						throw new Exception("Invalid \"browser\" option.");
+						throw new RobotRuntimeException("Invalid \"browser\" option.");
 					}
 					break;
 
 				default:
-					throw new Exception("Unknow option: " + option);
+					throw new RobotRuntimeException("Unknow option: " + option);
 			}
 		}
 
 		private void processOptions(final MetaExpression optionsVar) throws Exception {
-			if (optionsVar.isNull()) { // no option specified - so default is
-				// used
+			//no option specified - so default is used.
+			if (optionsVar.isNull()) {
 				return;
 			}
-			// else
+			else{
 
 			if (optionsVar.getType() != ExpressionDataType.OBJECT) {
 				throw new Exception("Invalid options variable!");
@@ -225,6 +226,7 @@ public class LoadPageConstruct extends PhantomJSConstruct implements AutoCloseab
 
 			for (Map.Entry<String, MetaExpression> entry : options.entrySet()) {
 				processOption(options, entry.getKey(), entry.getValue());
+			}
 			}
 		}
 

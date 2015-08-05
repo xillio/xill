@@ -8,6 +8,7 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.PhantomJSConstruct;
+import nl.xillio.xill.plugins.web.services.web.WebService;
 
 import org.apache.commons.io.FileUtils;
 
@@ -19,7 +20,7 @@ public class StringToPageConstruct extends PhantomJSConstruct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(content) -> process(content),
+			(content) -> process(content, webService),
 			new Argument("content"));
 	}
 
@@ -28,7 +29,7 @@ public class StringToPageConstruct extends PhantomJSConstruct {
 	 *        input string variable (HTML code of a web page)
 	 * @return PAGE variable
 	 */
-	public static MetaExpression process(final MetaExpression contentVar) {
+	public static MetaExpression process(final MetaExpression contentVar, WebService webService) {
 		String content = contentVar.getStringValue();
 
 		try {
@@ -36,7 +37,7 @@ public class StringToPageConstruct extends PhantomJSConstruct {
 			htmlFile.deleteOnExit();
 			FileUtils.writeStringToFile(htmlFile, content);
 			String uri = "file:///" + htmlFile.getAbsolutePath();
-			return LoadPageConstruct.process(fromValue(uri), NULL);
+			return LoadPageConstruct.process(fromValue(uri), NULL, webService);
 		} catch (Exception e) {
 			throw new RobotRuntimeException(e.getClass().getSimpleName(), e);
 		}

@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.web.constructs;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -10,66 +11,70 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.NodeVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * The unit tests for the {@link FocusConstruct}.
- *
- */
-public class FocusConstructTest extends ExpressionBuilderHelper {
-
+public class InputConstructTest extends ExpressionBuilderHelper {
+	
 	/**
-	 * test the construct with normal input. No exceptions should be thrown, element.click is called once and output is NULL.
+	 * Tests the construct under normal circumstances
 	 */
 	@Test
-	public void testProcessNormalUsage() {
+	public void testProcessNormalUsage(){
 		// mock
-		// the input
+		WebService webService = mock(WebService.class);
+		
+		//The input
 		MetaExpression input = mock(MetaExpression.class);
 		NodeVariable nodeVariable = mock(NodeVariable.class);
 		WebElement element = mock(WebElement.class);
-		WebDriver page = mock(WebDriver.class);
-		WebService webService = mock(WebService.class);
-
-
+		
+		//The text input
+		MetaExpression text = mock(MetaExpression.class);
+		
 		when(input.getMeta(NodeVariable.class)).thenReturn(nodeVariable);
 		when(nodeVariable.getElement()).thenReturn(element);
-		when(nodeVariable.getDriver()).thenReturn(page);
+		when(text.getStringValue()).thenReturn("Text");
+
 
 		// run
-		MetaExpression output = FocusConstruct.process(input, webService);
+		MetaExpression output = InputConstruct.process(input, text, webService);
 
 		// verify
-		verify(input, times(3)).getMeta(NodeVariable.class);
+		verify(input, times(2)).getMeta(NodeVariable.class);
 		verify(nodeVariable, times(1)).getElement();
-		verify(nodeVariable, times(1)).getDriver();
-		verify(webService, times(1)).moveToElement(page, element);
+		verify(webService, times(1)).clear(element);
+		verify(webService, times(1)).sendKeys(element, "Text");
+
+		// assert
+		Assert.assertEquals(output, NULL);
+	}
+	
+	/**
+	 * Test the process when no node was in the expression.
+	 */
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid variable type. NODE type expected!")
+	public void testProcessNoNodeGiven(){
+		// mock
+		WebService webService = mock(WebService.class);
+		
+		//The input
+		MetaExpression input = mock(MetaExpression.class);
+		
+		//The text input
+		MetaExpression text = mock(MetaExpression.class);
+		
+		when(input.getMeta(NodeVariable.class)).thenReturn(null);
+
+		// run
+		MetaExpression output = InputConstruct.process(input, text, webService);
+
+		// verify
+		verify(input, times(2)).getMeta(NodeVariable.class);
 
 		// assert
 		Assert.assertEquals(output, NULL);
 	}
 
-	/**
-	 * test the construct when no node is given.
-	 */
-	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid variable type. NODE type expected!")
-	public void testProcessNoNodeGiven() {
-		// mock
-		// the input
-		MetaExpression input = mock(MetaExpression.class);
-		WebElement element = mock(WebElement.class);
-		WebDriver page = mock(WebDriver.class);
-		WebService webService = mock(WebService.class);
-
-		boolean isNode = false;
-		when(input.getMeta(NodeVariable.class)).thenReturn(null);
-		// run
-		FocusConstruct.process(input, webService);
-
-		// verify
-		verify(input, times(1)).getMeta(NodeVariable.class);
-	}
 }

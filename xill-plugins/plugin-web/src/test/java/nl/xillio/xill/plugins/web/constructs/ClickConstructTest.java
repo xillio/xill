@@ -12,10 +12,12 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.NodeVariable;
-import nl.xillio.xill.plugins.web.NodeVariable;
-import nl.xillio.xill.plugins.web.NodeVariableService;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
+/**
+ * test the {@link ClickConstruct}.
+ *
+ */
 public class ClickConstructTest extends ExpressionBuilderHelper {
 
 	/**
@@ -24,21 +26,21 @@ public class ClickConstructTest extends ExpressionBuilderHelper {
 	@Test
 	public void testProcessNormalUsage(){
 		// mock
-		//the input
 		MetaExpression input = mock(MetaExpression.class);
 		WebService webService = mock(WebService.class);
-		NodeVariableService nodeVariableService = mock(NodeVariableService.class);
+		NodeVariable nodeVariable = mock(NodeVariable.class);
+		WebElement webElement = mock(WebElement.class);
 		
-		boolean isNode = true;
-		when(nodeVariableService.checkType(input)).thenReturn(isNode);
+		when(input.getMeta(NodeVariable.class)).thenReturn(nodeVariable);
+		when(nodeVariable.getElement()).thenReturn(webElement);
 
 
 		// run
-		MetaExpression output = ClickConstruct.process(input, webService, nodeVariableService);
+		MetaExpression output = ClickConstruct.process(input, webService);
 
 		// verify
-		verify(nodeVariableService, times(1)).checkType(input);
-		verify(nodeVariableService, times(1)).get(input);
+		verify(input, times(2)).getMeta(NodeVariable.class);
+		verify(nodeVariable, times(1)).getElement();
 		verify(webService, times(1)).click(any());
 
 		// assert
@@ -54,19 +56,12 @@ public class ClickConstructTest extends ExpressionBuilderHelper {
 		//the input
 		MetaExpression input = mock(MetaExpression.class);
 		WebService webService = mock(WebService.class);
-		NodeVariableService nodeVariableService = mock(NodeVariableService.class);
 		
-		boolean isNode = false;
-		when(nodeVariableService.checkType(input)).thenReturn(isNode);
+		when(input.getMeta(NodeVariable.class)).thenReturn(null);
 
 
 		// run
-		ClickConstruct.process(input, webService, nodeVariableService);
-
-		// verify
-		verify(nodeVariableService, times(1)).checkType(input);
-		verify(nodeVariableService, times(0)).get(input);
-		verify(webService, times(0)).click(any());
+		MetaExpression output = ClickConstruct.process(input, webService);		
 	}
 	
 	/**
@@ -75,21 +70,13 @@ public class ClickConstructTest extends ExpressionBuilderHelper {
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Stale element clicked.")
 	public void testProcessFailureToClick(){
 		// mock
-		//the input
 		MetaExpression input = mock(MetaExpression.class);
 		WebService webService = mock(WebService.class);
-		NodeVariableService nodeVariableService = mock(NodeVariableService.class);
+		NodeVariable nodeVariable = mock(NodeVariable.class);
+		WebElement webElement = mock(WebElement.class);
 		
-		boolean isNode = true;
-		when(nodeVariableService.checkType(input)).thenReturn(isNode);
+		when(input.getMeta(NodeVariable.class)).thenReturn(nodeVariable);
+		when(nodeVariable.getElement()).thenReturn(webElement);
 		doThrow(new StaleElementReferenceException("")).when(webService).click(any());
-
-		// run
-		ClickConstruct.process(input, webService, nodeVariableService);
-
-		// verify
-		verify(nodeVariableService, times(1)).checkType(input);
-		verify(nodeVariableService, times(0)).get(input);
-		verify(webService, times(0)).click(any());
 	}
 }

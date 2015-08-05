@@ -17,9 +17,6 @@ import com.google.inject.Inject;
  */
 public class ClickConstruct extends PhantomJSConstruct {
 
-	@Inject
-	private WebService webService;
-
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
