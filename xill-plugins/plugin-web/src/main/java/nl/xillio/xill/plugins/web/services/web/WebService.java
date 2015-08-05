@@ -201,5 +201,14 @@ public interface WebService {
 		 * 				A file containing the screenshot.
 		 */
 		public File getScreenshotAsFile(WebDriver driver);
+		
+		/**
+		 * Checks whether a {@link WebElement} is selected.
+		 * @param element
+		 * 						The element we're checking.
+		 * @return
+		 * 				Returns whether the element is selected.
+		 */
+		public boolean isSelected(WebElement element);
 
 }

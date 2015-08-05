@@ -121,4 +121,9 @@ public class WebServiceImpl implements WebService {
 			PhantomJSDriver castedDriver = (PhantomJSDriver) driver;
 			return castedDriver.getScreenshotAs(OutputType.FILE);
 		}
+
+		@Override
+		public boolean isSelected(WebElement element) {
+			return element.isSelected();
+		}
 }
