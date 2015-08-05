@@ -41,7 +41,6 @@ public abstract class Construct extends ExpressionBuilderHelper implements HelpC
 	 * Returns the name of the construct. This name is also the command by which this construct can be called inside scripts.
 	 * </p>
 	 * <p>
-	 * <p>
 	 * By default the name of a {@link XillPlugin} is the concrete implementation name acquired using {@link Class#getSimpleName()} without the {@link XillPlugin} suffix. It is also uncapitalized using
 	 * {@link WordUtils#uncapitalize(String)}
 	 * </p>
