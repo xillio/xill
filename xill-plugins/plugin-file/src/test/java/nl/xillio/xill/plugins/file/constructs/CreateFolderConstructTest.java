@@ -1,30 +1,24 @@
 package nl.xillio.xill.plugins.file.constructs;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-
-import java.io.File;
-import java.io.IOException;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
+import nl.xillio.xill.plugins.file.TestInjectorModule;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
-
 import org.apache.logging.log4j.Logger;
 import org.testng.annotations.Test;
+
+import java.io.IOException;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
 
 /**
  * Test the CreateFolderConstruct
  */
-public class CreateFolderConstructTest {
+public class CreateFolderConstructTest extends TestInjectorModule {
 
 	@Test
 	public void testProcessNormal() throws Exception {
@@ -40,20 +34,16 @@ public class CreateFolderConstructTest {
 		when(context.getRobotID()).thenReturn(robotID);
 
 		// FileUtilities
-		String fileString = "This is the absolute path";
-		File file = mock(File.class);
-		when(file.getAbsolutePath()).thenReturn(fileString);
 		FileUtilities fileUtils = mock(FileUtilities.class);
-		when(fileUtils.buildFile(robotID, folderPath)).thenReturn(file);
 
 		// Run the method
 		MetaExpression result = CreateFolderConstruct.process(context, fileUtils, folder);
 
 		// Verify
-		verify(fileUtils, times(1)).createFolder(file);
+		verify(fileUtils, times(1)).createFolder(FILE);
 
 		// Assert
-		assertEquals(result.getStringValue(), fileString);
+		assertEquals(result.getStringValue(), ABS_PATH);
 	}
 
 	@Test
@@ -70,20 +60,16 @@ public class CreateFolderConstructTest {
 		when(context.getRootLogger()).thenReturn(logger);
 
 		// FileUtilities
-		String fileString = "This is the absolute path";
-		File file = mock(File.class);
-		when(file.getAbsolutePath()).thenReturn(fileString);
 		FileUtilities fileUtils = mock(FileUtilities.class);
-		when(fileUtils.buildFile(any(RobotID.class), anyString())).thenReturn(file);
-		doThrow(new IOException("Something Failed")).when(fileUtils).createFolder(file);
+		doThrow(new IOException("Something Failed")).when(fileUtils).createFolder(FILE);
 
 		// Run the method
 		MetaExpression result = CreateFolderConstruct.process(context, fileUtils, folder);
 
 		// Verify
-		verify(logger).error(eq("Failed to create " + fileString), any(IOException.class));
+		verify(logger).error(eq("Failed to create " + ABS_PATH), any(IOException.class));
 
 		// Assert
-		assertEquals(result.getStringValue(), fileString);
+		assertEquals(result.getStringValue(), ABS_PATH);
 	}
 }

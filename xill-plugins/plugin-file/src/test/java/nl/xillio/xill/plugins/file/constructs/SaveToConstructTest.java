@@ -1,30 +1,26 @@
 package nl.xillio.xill.plugins.file.constructs;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
+import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.components.RobotID;
+import nl.xillio.xill.api.construct.ConstructContext;
+import nl.xillio.xill.plugins.file.TestInjectorModule;
+import nl.xillio.xill.plugins.file.services.files.FileUtilities;
+import org.apache.logging.log4j.Logger;
+import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
 
-import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.components.RobotID;
-import nl.xillio.xill.api.construct.ConstructContext;
-import nl.xillio.xill.plugins.file.services.files.FileUtilities;
-
-import org.apache.logging.log4j.Logger;
-import org.testng.annotations.Test;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
 
 /**
  * Test the SaveToConstruct
  */
-public class SaveToConstructTest {
+public class SaveToConstructTest extends TestInjectorModule {
 
 	@Test
 	public void testProcessNormal() throws IOException {
@@ -34,9 +30,7 @@ public class SaveToConstructTest {
 		when(content.getStringValue()).thenReturn(contentString);
 
 		// Uri
-		String path = "This is the path to the file";
 		MetaExpression uri = mock(MetaExpression.class);
-		when(uri.getStringValue()).thenReturn(path);
 
 		// Context
 		RobotID robotID = mock(RobotID.class);
@@ -44,20 +38,16 @@ public class SaveToConstructTest {
 		when(context.getRobotID()).thenReturn(robotID);
 
 		// FileUtilities
-		File file = mock(File.class);
-		when(file.getAbsolutePath()).thenReturn(path);
 		FileUtilities fileUtils = mock(FileUtilities.class);
-		when(fileUtils.buildFile(robotID, path)).thenReturn(file);
 
 		// Run the Method
 		MetaExpression result = SaveToConstruct.process(context, fileUtils, uri, content);
 
 		// Verify
-		verify(fileUtils, times(1)).buildFile(robotID, path);
-		verify(fileUtils, times(1)).saveStringToFile(contentString, file);
+		verify(fileUtils, times(1)).saveStringToFile(contentString, FILE);
 
 		// Assert
-		assertEquals(result.getStringValue(), path);
+		assertEquals(result.getStringValue(), ABS_PATH);
 
 	}
 
