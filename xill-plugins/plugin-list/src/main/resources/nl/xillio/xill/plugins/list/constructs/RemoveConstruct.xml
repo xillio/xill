@@ -2,30 +2,33 @@
 <function Tag="remove">
   <name>remove</name>
   <parameters>
-    <param name="list">
-    </param>
+    <param name="list"/>
+    <param name="index"/>
   </parameters>
   <description><![CDATA[
-	Returns the string lowercased.
+		HERE COMES THE DISCRIPTION
   ]]></description>
   <examples>
     <example description="Executing:"><![CDATA[
-    	String.toLower("HiGher");
+    	var list = ["a","b","c","d"];
+    	List.remove(list,2);
+    	System.print(list);
+    	
+    	var object = {"a":"first","b":"second","c":"third"};
+    	List.remove(object,"b");
+    	System.print(object);
     ]]></example>
     <example description="Will return:"><![CDATA[
-		"higher"
+		["a","b","d"]
+		{"a":"first,"c":"third"}
     	]]>
     </example>
   </examples>
   <references>
-  <reference package="String">toUpper</reference>
   </references>
   <searchTags>
   	<searchTag>
-  		case
-  	</searchTag>
-  	<searchTag>
-  		lower
+  		remove
   	</searchTag>
   </searchTags>
 </function>

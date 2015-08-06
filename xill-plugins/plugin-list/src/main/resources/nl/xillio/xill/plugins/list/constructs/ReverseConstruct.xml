@@ -1,31 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<function Tag="toLower">
-  <name>toLower</name>
+<function Tag="reverse">
+  <name>reverse</name>
   <parameters>
-    <param name="list">
-    </param>
+    <param name="list"/>
+    <param name="recursive" default="false"/>
   </parameters>
   <description><![CDATA[
-	Returns the string lowercased.
+		HERE COMES THE DISCRIPTION
   ]]></description>
   <examples>
     <example description="Executing:"><![CDATA[
-    	String.toLower("HiGher");
+    	var list1 = [1,2,3,4,5];
+		var list2 = [1,[1,2,3],2,3];
+
+		System.print(List.reverse(list1));
+		System.print(List.reverse(list2,false));
+		System.print(List.reverse(list2,true));
     ]]></example>
     <example description="Will return:"><![CDATA[
-		"higher"
+		[5,4,3,2,1]
+		[3,2,[1,2,3],1]
+		[3,2,[3,2,1],1]
+		
     	]]>
     </example>
   </examples>
   <references>
-  <reference package="String">toUpper</reference>
   </references>
   <searchTags>
   	<searchTag>
-  		case
-  	</searchTag>
-  	<searchTag>
-  		lower
+  		reverse
   	</searchTag>
   </searchTags>
 </function>

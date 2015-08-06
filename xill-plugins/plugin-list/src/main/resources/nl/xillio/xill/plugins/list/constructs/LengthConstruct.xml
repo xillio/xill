@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<function Tag="toLower">
-  <name>toLower</name>
+<function Tag="length">
+  <name>length</name>
   <parameters>
-    <param name="list">
-    </param>
+    <param name="list"/>
   </parameters>
   <description><![CDATA[
-	Returns the string lowercased.
+		HERE COMES THE DISCRIPTION
   ]]></description>
   <examples>
     <example description="Executing:"><![CDATA[
-    	String.toLower("HiGher");
+    var list = ["a","b","c","d","e"]; //list with five elements
+    System.print(List.length(list));
+    
+    var object = {1:"a",2:"b",3:"c"}; //object with three elements
+    System.print(List.length(object));
     ]]></example>
     <example description="Will return:"><![CDATA[
-		"higher"
+		5
+		3
     	]]>
     </example>
   </examples>
   <references>
-  <reference package="String">toUpper</reference>
   </references>
   <searchTags>
   	<searchTag>
-  		case
-  	</searchTag>
-  	<searchTag>
-  		lower
+  		length
   	</searchTag>
   </searchTags>
 </function>
