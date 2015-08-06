@@ -16,9 +16,12 @@ import java.io.IOException;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
+import nl.xillio.xill.plugins.file.TestInjectorModule;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
+import nl.xillio.xill.services.inject.InjectorUtils;
 
 import org.apache.logging.log4j.Logger;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 /**
@@ -26,8 +29,7 @@ import org.testng.annotations.Test;
  *
  * @author Thomas Biesaart
  */
-public class AppendToConstructTest {
-
+public class AppendToConstructTest  extends TestInjectorModule {
 	/**
 	 * Test the process method under normal circumstances
 	 */
@@ -41,13 +43,8 @@ public class AppendToConstructTest {
 		// RobotID
 		RobotID robotID = mock(RobotID.class);
 
-		// File
-		File file = mock(File.class);
-		when(file.getAbsolutePath()).thenReturn(pathString);
-
 		// buildFile
 		FileUtilities fileUtils = mock(FileUtilities.class);
-		when(fileUtils.buildFile(robotID, pathString)).thenReturn(file);
 
 		// Content
 		String textContent = "this is the content";
@@ -62,11 +59,10 @@ public class AppendToConstructTest {
 		MetaExpression result = AppendToConstruct.process(context, fileUtils, path, content);
 
 		// Verify
-		verify(fileUtils, times(1)).appendStringToFile(textContent, file);
-		verify(fileUtils, times(1)).buildFile(robotID, pathString);
+		verify(fileUtils, times(1)).appendStringToFile(textContent, TestInjectorModule.FILE);
 
 		// Assert
-		assertEquals(result.getStringValue(), pathString);
+		assertEquals(result.getStringValue(), TestInjectorModule.ABS_PATH);
 	}
 
 	/**
@@ -79,14 +75,9 @@ public class AppendToConstructTest {
 		// Uri
 		MetaExpression path = mock(MetaExpression.class);
 
-		// File
-		File file = mock(File.class);
-		when(file.getAbsolutePath()).thenReturn("");
-
 		// fileUtils
 		FileUtilities fileUtils = mock(FileUtilities.class);
 		doThrow(new IOException("Something went wrong")).when(fileUtils).appendStringToFile(anyString(), any(File.class));
-		when(fileUtils.buildFile(any(RobotID.class), anyString())).thenReturn(file);
 
 		// Logger
 		Logger logger = mock(Logger.class);

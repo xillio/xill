@@ -1,25 +1,20 @@
 package nl.xillio.xill.plugins.file.constructs;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertSame;
-
-import java.io.File;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
+import nl.xillio.xill.plugins.file.TestInjectorModule;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
-
 import org.testng.annotations.Test;
+
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertSame;
 
 /**
  * Test the ExistsConstruct
  */
-public class ExistsConstructTest {
+public class ExistsConstructTest extends TestInjectorModule {
 
 	@Test
 	public void testProcessNormalTrueAndFalse() throws Exception {
@@ -34,17 +29,14 @@ public class ExistsConstructTest {
 		when(context.getRobotID()).thenReturn(robotID);
 
 		// FileUtils
-		File file = mock(File.class);
 		FileUtilities fileUtils = mock(FileUtilities.class);
-		when(fileUtils.buildFile(robotID, path)).thenReturn(file);
-		when(fileUtils.exists(file)).thenReturn(true, false);
+		when(fileUtils.exists(FILE)).thenReturn(true, false);
 
 		// Run the method once for true
 		MetaExpression result = ExistsConstruct.process(context, fileUtils, uri);
 
 		// Verify
-		verify(fileUtils).buildFile(robotID, path);
-		verify(fileUtils).exists(file);
+		verify(fileUtils).exists(FILE);
 
 		// Assert
 		assertSame(result, ExpressionBuilderHelper.TRUE);
@@ -53,8 +45,7 @@ public class ExistsConstructTest {
 		result = ExistsConstruct.process(context, fileUtils, uri);
 
 		// Verify
-		verify(fileUtils, times(2)).buildFile(robotID, path);
-		verify(fileUtils, times(2)).exists(file);
+		verify(fileUtils, times(2)).exists(FILE);
 
 		// Assert
 		assertSame(result, ExpressionBuilderHelper.FALSE);

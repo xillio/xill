@@ -28,7 +28,7 @@ public class GetSizeConstruct extends Construct {
 	}
 
 	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri) {
-		File file = fileUtils.buildFile(context.getRobotID(), uri.getStringValue());
+		File file = getFile(context.getRobotID(), uri.getStringValue());
 		try {
 			return fromValue(fileUtils.getByteSize(file));
 		} catch (IOException e) {

@@ -25,13 +25,13 @@ public class SaveToConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-				(uri, content) -> process(context, fileUtils, uri, content),
-				new Argument("uri", ATOMIC),
-				new Argument("content", NULL, ATOMIC));
+						(uri, content) -> process(context, fileUtils, uri, content),
+						new Argument("uri", ATOMIC),
+						new Argument("content", NULL, ATOMIC));
 	}
 
 	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri, final MetaExpression content) {
-		File file = fileUtils.buildFile(context.getRobotID(), uri.getStringValue());
+		File file = getFile(context.getRobotID(), uri.getStringValue());
 		try {
 			fileUtils.saveStringToFile(content.getStringValue(), file);
 		} catch (IOException e) {
