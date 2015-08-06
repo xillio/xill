@@ -8,6 +8,7 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.PhantomJSConstruct;
+import nl.xillio.xill.plugins.web.WebVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
 import org.openqa.selenium.Cookie;
@@ -41,7 +42,7 @@ public class PageInfoConstruct extends PhantomJSConstruct {
 
 		try {
 
-			WebDriver driver = getPageDriver(pageVar);
+			WebVariable driver = getPage(pageVar);
 			LinkedHashMap<String, MetaExpression> list = new LinkedHashMap<>();
 
 			list.put("url", fromValue(webService.getCurrentUrl(driver)));

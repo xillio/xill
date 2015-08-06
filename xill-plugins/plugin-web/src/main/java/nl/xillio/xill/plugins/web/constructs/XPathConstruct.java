@@ -9,6 +9,7 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.PhantomJSConstruct;
+import nl.xillio.xill.plugins.web.WebVariable;
 import nl.xillio.xill.plugins.web.services.web.StringService;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
@@ -55,15 +56,15 @@ public class XPathConstruct extends PhantomJSConstruct {
 		String query = xpathVar.getStringValue();
 
 		if (checkPageType(elementVar)) {
-			return processSELNode(getPageDriver(elementVar), getPageDriver(elementVar), query, stringService, webService);
+			return processSELNode(getPage(elementVar), query, stringService, webService);
 		} else if (checkNodeType(elementVar)) {
-			return processSELNode(getNodeDriver(elementVar), getNode(elementVar), query, stringService, webService);
+			return processSELNode(getNode(elementVar), query, stringService, webService);
 		} else {
 			throw new RobotRuntimeException("Unsupported variable type!");
 		}
 	}
 
-	private static MetaExpression processSELNode(final WebDriver driver, final SearchContext node, String query, final StringService stringService, final WebService webService) {
+	private static MetaExpression processSELNode(final WebVariable driver, String query, final StringService stringService, final WebService webService) {
 
 		try {
 			

@@ -1,9 +1,11 @@
 package nl.xillio.xill.plugins.web;
 
 import nl.xillio.xill.plugins.web.constructs.LoadPageConstruct.Options;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 import java.util.Vector;
 
@@ -87,6 +89,8 @@ public class PhantomJSPool {
             used = true;
             return driver;
         }
+        
+ 
 
         /**
          * Determines if the identifier 'id' matches this entity
@@ -133,8 +137,8 @@ public class PhantomJSPool {
         /**
          * @return WebDriver of this entity (PhantomJS process class)
          */
-        public WebDriver getDriver() {
-            return driver;
+        public PageVariable getPage() {
+            return new PageVariable(driver, (WebElement) driver);
         }
 
         @Override

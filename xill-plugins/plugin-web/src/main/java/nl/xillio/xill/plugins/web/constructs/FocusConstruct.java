@@ -38,13 +38,10 @@ public class FocusConstruct extends PhantomJSConstruct {
 		if (!checkNodeType(elementVar)) {
 			throw new RobotRuntimeException("Invalid variable type. NODE type expected!");
 		}
-		// else
+		else{
 
-		WebElement element = getNode(elementVar);
-		WebDriver page = getNodeDriver(elementVar);
-
-		webService.moveToElement(page, element);
-
+		webService.moveToElement(getNode(elementVar));
 		return NULL;
+		}
 	}
 }

@@ -10,6 +10,7 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.PhantomJSConstruct;
+import nl.xillio.xill.plugins.web.WebVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
 import org.openqa.selenium.By;
@@ -53,28 +54,28 @@ public class CSSPathConstruct extends PhantomJSConstruct {
 		if (elementVar.isNull()) {
 			return NULL;
 		} else if (checkNodeType(elementVar)) {
-			return processSELNode(getNodeDriver(elementVar), getNode(elementVar), query, webService);
+			return processSELNode(getNode(elementVar), query, webService);
 		} else if (checkPageType(elementVar)) {
-			return processSELNode(getPageDriver(elementVar), getPageDriver(elementVar), query, webService);
+			return processSELNode(getPage(elementVar), query, webService);
 		} else {
 			throw new RobotRuntimeException("Invalid variable type. PAGE or NODE type expected!");
 		}
 	}
 
-	private static MetaExpression processSELNode(final WebDriver driver, final SearchContext node, final String selector, final WebService webService) {
+	private static MetaExpression processSELNode(final WebVariable node, final String selector, final WebService webService) {
 
 		try {
-			List<WebElement> results = webService.findElementsWithCssPath(node, selector);
+			List<WebVariable> results = webService.findElementsWithCssPath(node, selector);
 
 			if (results.isEmpty()) {
 				return NULL;
 			} else if (results.size() == 1) {
-				return createNode(driver, results.get(0), webService);
+				return createNode(node, results.get(0), webService);
 			} else {
 				ArrayList<MetaExpression> list = new ArrayList<MetaExpression>();
 
-				for (WebElement he : results) {
-					list.add(createNode(driver, he, webService));
+				for (WebVariable element : results) {
+					list.add(createNode(node, element, webService));
 				}
 
 				return ExpressionBuilderHelper.fromValue(list);

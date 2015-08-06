@@ -4,12 +4,14 @@ import java.io.File;
 import java.util.List;
 import java.util.Set;
 
+import nl.xillio.xill.plugins.web.NodeVariable;
+import nl.xillio.xill.plugins.web.WebVariable;
+import nl.xillio.xill.plugins.web.PhantomJSPool;
+
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.InvalidSelectorException;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 
 import com.google.inject.ImplementedBy;
 
@@ -20,142 +22,127 @@ import com.google.inject.ImplementedBy;
 public interface WebService {
 
 	/**
-	 * Tries to click a {@link WebElement}.
-	 *
-	 * @param element
-	 *        The {@link WebElement} we're trying to click on.
+	 * Tries to click a {@link WebVariable}.
+	 * @param var
+	 * 					The variable we want to click.					
 	 * @throws StaleElementReferenceException
 	 *         Throws an exception when the element is stale.
 	 */
-	public void click(WebElement element) throws StaleElementReferenceException;
+	public void click(WebVariable var) throws StaleElementReferenceException;
 
 	/**
 	 * Sets focus on an element on a given page.
 	 *
-	 * @param page
-	 *        The page as a {@link WebDriver}.
-	 * @param element
-	 *        The element as a {@link WebElement}.
+	 * @param var
+	 * 				 The element we want to move to.
 	 */
-	public void moveToElement(WebDriver page, WebElement element);
+	public void moveToElement(WebVariable var);
 
 	/**
-	 * Returns the tag name of a {@link WebElement}.
-	 *
-	 * @param element
-	 *        The element we want to know the tag name of.
+	 * Returns the tag name of a {@link WebVariable}
+	 *@param var
+	 *				 The variable we want the tag of.
 	 * @return
-	 *         The name of the tag of the element.
+	 *         The name of the tag of the variable.
 	 */
-	public String getTagName(WebElement element);
+	public String getTagName(WebVariable var);
 
 	/**
-	 * Returns a given attribute of a {@link WebElement}.
+	 * Returns a given attribute of a {@link WebVariable}.
 	 *
-	 * @param element
-	 *        The element we want to know the attribute of.
+	 * @param var
+	 * 				The variable we want to get an attribute from
 	 * @param name
 	 *        The name of the attribute we want to retrieve.
 	 * @return
 	 *         The attribute of the element.
 	 */
-	public String getAttribute(WebElement element, String name);
+	public String getAttribute(WebVariable var, String name);
 
 	/**
-	 * Returns the text contained in a {@link WebElement}.
+	 * Returns the text contained in a {@link WebVariable}.
 	 *
-	 * @param element
-	 *        The element from which we want to extract text.
+	 * @param var
+	 * 				The variable we want to get text from.
 	 * @return
 	 *         Returns the text in the element.
 	 */
-	public String getText(WebElement element);
+	public String getText(WebVariable var);
 
 	/**
-	 * Returns the title of a {@link WebDriver}.
+	 * Returns the title of a {@link WebVariable}.
 	 * 
-	 * @param driver
-	 *        The driver we want the title from.
+	 * @param var
+	 * 				The variable we want to a title from.
 	 * @return
 	 *         The title.
 	 */
-	public String getTitle(WebDriver driver);
+	public String getTitle(WebVariable var);
 
 	/**
 	 * Finds all the elements in a node given a cssPath.
 	 * 
-	 * @param node
-	 *        The node we're searching.
+	 * @param var
+	 * 				The {@link WebVariable} we're searching.
 	 * @param cssPath
 	 *        The cssPath we're using.
 	 * @return
-	 *         Returns a list of elements: {@link WebElement}.
+	 *         Returns a list of elements: {@link WebVariable}.
 	 * @throws InvalidSelectorException 
 	 */
-	public List<WebElement> findElementsWithCssPath(SearchContext node, String cssPath) throws InvalidSelectorException;
+	public List<WebVariable> findElementsWithCssPath(WebVariable var, String cssPath) throws InvalidSelectorException;
 	
 	/**
 	 * Finds all the elements in a node given a cssPath.
 	 * 
-	 * @param node
-	 *        The node we're searching.
+	 * @param var
+	 * 				The {@link WebVariable} we're searching.
 	 * @param xpath
 	 *        The xpath we're using.
 	 * @return
-	 *         Returns a list of elements: {@link WebElement}.
+	 *         Returns a list of elements: {@link WebVariable}.
 	 * @throws InvalidSelectorException 
 	 */
-	public List<WebElement> findElementsWithXpath(SearchContext node, String xpath) throws InvalidSelectorException;
+	public List<WebVariable> findElementsWithXpath(WebVariable var, String xpath) throws InvalidSelectorException;
 
 	/**
-	 * Returns the current URL of a {@link WebDriver}.
+	 * Returns the current URL of a {@link WebVariable}.
 	 * 
-	 * @param driver
-	 *        The driver we want the URL from.
+	 * @param var
+	 * 				the variable we want the url from.
 	 * @return
 	 *         A string which is the current URL.
 	 */
-	public String getCurrentUrl(WebDriver driver);
+	public String getCurrentUrl(WebVariable var);
 
 	/**
-	 * Recieves a {@link WebDriver} and returns a {@link WebElement}
+	 * Clears a {@link WebVariable}.
 	 * 
-	 * @param driver
-	 *        The driver we're casting.
-	 * @return
-	 *         The driver as a webelement.
-	 * @throws ClassCastException
+	 * @param var
+	 * 					the variable we want to clear.
 	 */
-	public WebElement driverToElement(WebDriver driver) throws ClassCastException;
+	public void clear(WebVariable var);
 
 	/**
-	 * Clears a {@link WebElement}.
-	 * 
-	 * @param element
-	 *        The element we want to clear.
-	 */
-	public void clear(WebElement element);
-
-	/**
-	 * Simulates sending a key to an {@link WebElement}.
+	 * Simulates sending a key to an {@link WebVariable}.
 	 * May alter its value.
 	 * 
-	 * @param element
-	 *        the element we're sending the key to.
+	 * @param var
+	 * 				The variable we want to send keys to.
 	 * @param key
 	 *        the key we want to send.
 	 */
-	public void sendKeys(WebElement element, String key);
+	public void sendKeys(WebVariable var, String key);
 
 	/**
-	 * Gets the cookies from a {@link WebDriver}.
+	 * Gets the cookies from a {@link WebVariable}.
 	 * 
 	 * @param driver
 	 *        the driver we're retrieving from.
 	 * @return
 	 *         A set of Cookies.
 	 */
-	public Set<Cookie> getCookies(WebDriver driver);
+	public Set<Cookie> getCookies(WebVariable var);
 
 	/**
 	 * Gets the name of a {@link Cookie}
@@ -198,62 +185,63 @@ public interface WebService {
 	public String getValue(Cookie cookie);
 
 	/**
-	 * Deletes the cookie in the {@link WebDriver} with the given name.
+	 * Deletes the cookie in the {@link WebVariable} with the given name.
 	 * 
-	 * @param driver
-	 *        The driver we're deleting on.
+	 * @param var
+	 * 				The variable we want to delete cookies on.
 	 * @param name
 	 *        The name of the cookie we're deleting.
 	 */
-	public void deleteCookieNamed(WebDriver driver, String name);
+	public void deleteCookieNamed(WebVariable var, String name);
 
 	/**
-	 * Deletes all cookies on a {@link WebDriver}.
+	 * Deletes all cookies on a {@link WebVariable}.
 	 * 
-	 * @param driver
-	 *        The driver we're deleting cookies on.
+	 * @param var
+	 * 					The variable we're deleting cookies on.
 	 */
-	public void deleteCookies(WebDriver driver);
+	public void deleteCookies(WebVariable driver);
 
 	/**
-	 * Makes a screenshot on a {@link WebDriver} and returns it as file.
+	 * Makes a screenshot on a {@link WebVariable} and returns it as file.
 	 * 
-	 * @param driver
-	 *        The driver we're screenshotting.
+	 * @param var
+	 * 					The variable we're screenshotting.
 	 * @return
 	 *         A file containing the screenshot.
 	 */
-	public File getScreenshotAsFile(WebDriver driver);
+	public File getScreenshotAsFile(WebVariable var);
 
 	/**
-	 * Checks whether a {@link WebElement} is selected.
+	 * Checks whether a {@link WebVariable} is selected.
 	 * 
-	 * @param element
-	 *        The element we're checking.
+	 * @param var
+	 * 					The variable we want to query.
 	 * @return
-	 *         Returns whether the element is selected.
+	 *         Returns whether the variable is selected.
 	 */
-	public boolean isSelected(WebElement element);
-
-	/**
-	 * Switches to a given frame on a {@link WebDriver}.
-	 * 
-	 * @param driver
-	 *        The driver we're using.
-	 * @param element
-	 *        The frame as a {@link WebElement}.
-	 */
-	public void switchToFrame(WebDriver driver, WebElement element);
+	public boolean isSelected(WebVariable var);
 
 	/**
 	 * Switches to a given frame.
 	 * 
-	 * @param driver
-	 *        The driver we're using.
+	 * @param page
+	 * 				The page we want to switch to.
 	 * @param element
-	 *        The frame as a String.
+	 * 				The element we want to switch to.
 	 */
-	public void switchToFrame(WebDriver driver, String element);
+	public void switchToFrame(WebVariable page, WebVariable element);
+
+	/**
+	 * Switches to a given frame.
+	 * 
+	 * @param var
+	 * 					the page we want to switch to.
+	 * @param element
+	 * 					The element we want to switch to.
+	 * 					
+	 */
+	public void switchToFrame(WebVariable var, String element);
 
 	/**
 	 * Switches to a given frame.
@@ -263,6 +251,26 @@ public interface WebService {
 	 * @param element
 	 *        The frame as an integer.
 	 */
-	public void switchToFrame(WebDriver driver, int element);
+	public void switchToFrame(WebVariable driver, int element);
+	
+	/**
+	 * Places a Cookie on a webvariable
+	 * @param var
+	 * 					The webVariable we want to place the cookie on
+	 * @param cookie
+	 * 					The cookie
+	 */
+	public void addCookie(WebVariable var, Cookie cookie);
+	
+	/**
+	 * Creates a node variable with a given page and element.
+	 * @param page
+	 * 					The page of the node.
+	 * @param element
+	 * 					The element of the node.
+	 * @return
+	 * 					A new node.
+	 */
+	public NodeVariable createNodeVariable(WebVariable page, WebVariable element);
 
 }

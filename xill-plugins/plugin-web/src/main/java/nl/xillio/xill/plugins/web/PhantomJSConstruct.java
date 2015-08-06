@@ -28,9 +28,9 @@ public abstract class PhantomJSConstruct extends Construct {
    *
    * @return created variable
    */
-  protected static MetaExpression createNode(final WebDriver driver, final WebElement element, final WebService webService) {
+  protected static MetaExpression createNode(final WebVariable driver, final WebVariable element, final WebService webService) {
       MetaExpression var = fromValue(webService.getAttribute(element, "outerHTML"));
-      var.storeMeta(new NodeVariable(driver, element));
+      var.storeMeta(webService.createNodeVariable(driver, element));
       return var;
   }
   
@@ -41,8 +41,8 @@ public abstract class PhantomJSConstruct extends Construct {
    *
    * @return web element
    */
-  protected static WebElement getNode(final MetaExpression var) {
-      return var.getMeta(NodeVariable.class).getElement();
+  protected static NodeVariable getNode(final MetaExpression var) {
+      return var.getMeta(NodeVariable.class);
   }
   
 	/**
@@ -56,16 +56,6 @@ public abstract class PhantomJSConstruct extends Construct {
       return var.getMeta(NodeVariable.class) != null;
   }
   
-  /**
-   * Extracts driver/page from {@link NodeVariable}
-   *
-   * @param var input variable (should be of a NODE type)
-   *
-   * @return driver (page)
-   */
-  protected static WebDriver getNodeDriver(final MetaExpression var) {
-      return var.getMeta(NodeVariable.class).getDriver();
-  }
   
   /**
    * Creates new {@link PageVariable}
@@ -74,32 +64,22 @@ public abstract class PhantomJSConstruct extends Construct {
    *
    * @return created PAGE variable
    */
-  protected static MetaExpression createPage(final PhantomJSPool.Entity item, final WebService webService) {
-      MetaExpression var = fromValue(webService.getCurrentUrl(item.getDriver()));
+  protected static MetaExpression createPage(final PageVariable item, final WebService webService) {
+      MetaExpression var = fromValue(webService.getCurrentUrl(item));
       var.storeMeta(item);
       return var;
   }
   
-  /**
-   * Extracts PhantomJS pool item from {@link PageVariable}
-   *
-   * @param var input variable (should be of a PAGE type)
-   *
-   * @return PhantomJS pool item
-   */
-  private PhantomJSPool.Entity getPage(final MetaExpression var) {
-      return var.getMeta(PhantomJSPool.Entity.class);
-  }
   
   /**
-   * Extracts driver/page from {@link PageVariable}
+   * Extracts a 
    *
    * @param var input variable (should be of a PAGE type)
    *
    * @return driver (page)
    */
-  protected static WebDriver getPageDriver(final MetaExpression var) {
-      return var.getMeta(PhantomJSPool.Entity.class).getDriver();
+  protected static PageVariable getPage(final MetaExpression var) {
+      return var.getMeta(PageVariable.class);
   }
   
   /**
