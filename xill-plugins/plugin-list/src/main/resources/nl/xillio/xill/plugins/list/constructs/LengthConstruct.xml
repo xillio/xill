@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function Tag="toLower">
+  <name>toLower</name>
+  <parameters>
+    <param name="list">
+    </param>
+  </parameters>
+  <description><![CDATA[
+	Returns the string lowercased.
+  ]]></description>
+  <examples>
+    <example description="Executing:"><![CDATA[
+    	String.toLower("HiGher");
+    ]]></example>
+    <example description="Will return:"><![CDATA[
+		"higher"
+    	]]>
+    </example>
+  </examples>
+  <references>
+  <reference package="String">toUpper</reference>
+  </references>
+  <searchTags>
+  	<searchTag>
+  		case
+  	</searchTag>
+  	<searchTag>
+  		lower
+  	</searchTag>
+  </searchTags>
+</function>

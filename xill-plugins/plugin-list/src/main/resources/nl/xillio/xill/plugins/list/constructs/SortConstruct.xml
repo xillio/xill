@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function Tag="sort">
+  <name>sort</name>
+  <parameters>
+    <param name="list"/>
+  	<param name="recursive" default="false"/>
+    <param name="onkeys" default="false"/>
+    <param name="reverse" default="false"/>
+  
+  </parameters>
+  <description><![CDATA[
+	HERE COMES THE DISCRIPTION
+  ]]></description>
+  <examples>
+    <example description="Executing:"><![CDATA[
+    	String.toLower("HiGher");
+    ]]></example>
+    <example description="Will return:"><![CDATA[
+		"higher"
+    	]]>
+    </example>
+  </examples>
+  <references>
+  </references>
+  <searchTags>
+  	<searchTag>
+  		case
+  	</searchTag>
+  	<searchTag>
+  		lower
+  	</searchTag>
+  </searchTags>
+</function>

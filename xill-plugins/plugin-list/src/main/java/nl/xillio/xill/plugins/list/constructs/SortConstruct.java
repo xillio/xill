@@ -25,18 +25,20 @@ public class SortConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-						(list, recursive, onKeys) -> process(list, recursive, onKeys, sort),
+						(list, recursive, onKeys,reverse) -> process(list, recursive, onKeys,reverse, sort),
 						new Argument("list", LIST, OBJECT),
 						new Argument("recursive", FALSE, ATOMIC),
-						new Argument("onKeys", FALSE, ATOMIC));
+						new Argument("onKeys", FALSE, ATOMIC),
+				    new Argument("reverse",FALSE,ATOMIC));
 	}
 
-	static MetaExpression process(final MetaExpression inputList, final MetaExpression recursive, final MetaExpression onKeys, final Sort sort) {
+	static MetaExpression process(final MetaExpression inputList, final MetaExpression recursive, final MetaExpression onKeys, final MetaExpression reverse, final Sort sort) {
 
-		boolean sortKeys = onKeys.getBooleanValue();
 		boolean sortRecursive = recursive.getBooleanValue();
+		boolean sortKeys = onKeys.getBooleanValue();
+		boolean lowFirst = reverse.getBooleanValue();
 		Object obj = extractValue(inputList);
-		obj = sort.asSorted(obj, sortRecursive, sortKeys);
+		obj = sort.asSorted(obj, sortRecursive, sortKeys,lowFirst);
 		MetaExpression m = MetaExpression.parseObject(obj);
 		return m;
 
