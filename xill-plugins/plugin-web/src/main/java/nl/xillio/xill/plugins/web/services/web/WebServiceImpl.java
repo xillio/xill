@@ -1,16 +1,12 @@
 package nl.xillio.xill.plugins.web.services.web;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
-import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
+import org.openqa.selenium.InvalidSelectorException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -51,9 +47,15 @@ public class WebServiceImpl implements WebService {
 	public String getText(final WebElement element) {
 		return element.getText();
 	}
+	
 	@Override
-	public List<WebElement> findElements(SearchContext node, String cssPath) {
+	public List<WebElement> findElementsWithCssPath(SearchContext node, String cssPath) throws InvalidSelectorException {
 		return node.findElements(By.cssSelector(cssPath));
+	}
+	
+	@Override
+	public List<WebElement> findElementsWithXpath(SearchContext node, String xpath) throws InvalidSelectorException {
+		return node.findElements(By.xpath(xpath));
 	}
 
 	@Override
@@ -125,5 +127,21 @@ public class WebServiceImpl implements WebService {
 		@Override
 		public boolean isSelected(WebElement element) {
 			return element.isSelected();
+		}
+
+		@Override
+		public void switchToFrame(WebDriver driver, WebElement element) {
+			driver.switchTo().frame(element);
+			
+		}
+
+		@Override
+		public void switchToFrame(WebDriver driver, String element) {
+			driver.switchTo().frame(element);		
+		}
+
+		@Override
+		public void switchToFrame(WebDriver driver, int element) {
+			driver.switchTo().frame(element);			
 		}
 }

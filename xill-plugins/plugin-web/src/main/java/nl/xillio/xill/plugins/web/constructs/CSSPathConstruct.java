@@ -64,7 +64,7 @@ public class CSSPathConstruct extends PhantomJSConstruct {
 	private static MetaExpression processSELNode(final WebDriver driver, final SearchContext node, final String selector, final WebService webService) {
 
 		try {
-			List<WebElement> results = webService.findElements(node, selector);
+			List<WebElement> results = webService.findElementsWithCssPath(node, selector);
 
 			if (results.isEmpty()) {
 				return NULL;

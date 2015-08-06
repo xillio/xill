@@ -54,6 +54,8 @@ public class SelectConstructTest extends ExpressionBuilderHelper {
 			MetaExpression output = SelectConstruct.process(node, select, webService);
 			
 			// verify
+			verify(node, times(2)).getMeta(NodeVariable.class);
+			verify(nodeVariable, times(1)).getElement();
 			verify(webService, times(1)).isSelected(element);
 			verify(webService, times(1)).click(element);
 			
@@ -87,6 +89,8 @@ public class SelectConstructTest extends ExpressionBuilderHelper {
 			MetaExpression output = SelectConstruct.process(node, select, webService);
 			
 			// verify
+			verify(node, times(2)).getMeta(NodeVariable.class);
+			verify(nodeVariable, times(1)).getElement();
 			verify(webService, times(1)).isSelected(element);
 			verify(webService, times(0)).click(element);
 			

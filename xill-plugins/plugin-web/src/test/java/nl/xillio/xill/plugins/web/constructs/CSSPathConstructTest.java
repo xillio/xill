@@ -50,7 +50,7 @@ public class CSSPathConstructTest extends ExpressionBuilderHelper {
 		when(element.getMeta(NodeVariable.class)).thenReturn(nodeVariable);
 		when(nodeVariable.getElement()).thenReturn(webElement);
 		when(nodeVariable.getDriver()).thenReturn(webDriver);
-		when(webService.findElements(webElement, query)).thenReturn(Arrays.asList(firstResult, secondResult));
+		when(webService.findElementsWithCssPath(webElement, query)).thenReturn(Arrays.asList(firstResult, secondResult));
 		when(webService.getAttribute(eq(firstResult), anyString())).thenReturn("first");
 		when(webService.getAttribute(eq(secondResult), anyString())).thenReturn("second");
 		
@@ -62,7 +62,7 @@ public class CSSPathConstructTest extends ExpressionBuilderHelper {
 		verify(element, times(3)).getMeta(NodeVariable.class);
 		verify(nodeVariable, times(1)).getElement();
 		verify(nodeVariable, times(1)).getDriver();
-		verify(webService, times(1)).findElements(webElement, query);
+		verify(webService, times(1)).findElementsWithCssPath(webElement, query);
 		verify(webService, times(1)).getAttribute(eq(firstResult), anyString());
 		verify(webService, times(1)).getAttribute(eq(secondResult), anyString());
 		
@@ -93,7 +93,7 @@ public class CSSPathConstructTest extends ExpressionBuilderHelper {
 		when(element.getMeta(NodeVariable.class)).thenReturn(nodeVariable);
 		when(nodeVariable.getElement()).thenReturn(webElement);
 		when(nodeVariable.getDriver()).thenReturn(webDriver);
-		when(webService.findElements(webElement, query)).thenReturn(Arrays.asList(firstResult));
+		when(webService.findElementsWithCssPath(webElement, query)).thenReturn(Arrays.asList(firstResult));
 		when(webService.getAttribute(eq(firstResult), anyString())).thenReturn("first");
 		
 		//run
@@ -104,7 +104,7 @@ public class CSSPathConstructTest extends ExpressionBuilderHelper {
 		verify(element, times(3)).getMeta(NodeVariable.class);
 		verify(nodeVariable, times(1)).getElement();
 		verify(nodeVariable, times(1)).getDriver();
-		verify(webService, times(1)).findElements(webElement, query);
+		verify(webService, times(1)).findElementsWithCssPath(webElement, query);
 		verify(webService, times(1)).getAttribute(eq(firstResult), anyString());
 		
 		//assert
@@ -128,7 +128,7 @@ public class CSSPathConstructTest extends ExpressionBuilderHelper {
 		when(element.getMeta(NodeVariable.class)).thenReturn(nodeVariable);
 		when(nodeVariable.getElement()).thenReturn(webElement);
 		when(nodeVariable.getDriver()).thenReturn(webDriver);
-		when(webService.findElements(webElement, query)).thenReturn(Arrays.asList());
+		when(webService.findElementsWithCssPath(webElement, query)).thenReturn(Arrays.asList());
 
 		//run
 		MetaExpression output = CSSPathConstruct.process(element, cssPath, webService);
@@ -138,7 +138,7 @@ public class CSSPathConstructTest extends ExpressionBuilderHelper {
 		verify(element, times(3)).getMeta(NodeVariable.class);
 		verify(nodeVariable, times(1)).getElement();
 		verify(nodeVariable, times(1)).getDriver();
-		verify(webService, times(1)).findElements(webElement, query);
+		verify(webService, times(1)).findElementsWithCssPath(webElement, query);
 		verify(webService, times(0)).getAttribute(any(), anyString());
 		
 		//assert
