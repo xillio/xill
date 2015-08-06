@@ -16,6 +16,13 @@
 							<children>
 								<Label fx:id="lblConsoleHeader" focusTraversable="false" styleClass="paneHeaderTitle" text="Console" HBox.hgrow="NEVER" />
 								<Pane fx:id="pnConsoleHeader" HBox.hgrow="ALWAYS" />
+                        <HBox alignment="CENTER_RIGHT" prefHeight="0.0" prefWidth="200.0">
+                           <children>
+                              <Label fx:id="tbnLogsCount" alignment="CENTER" prefHeight="17.0" prefWidth="151.0" text="Label" />
+                              <Button fx:id="btnNavigateBack" mnemonicParsing="false" onAction="#buttonNavigateBack" text="&lt;" />
+                              <Button fx:id="btnNavigateForward" mnemonicParsing="false" onAction="#buttonNavigateForward" text="&gt;" />
+                           </children>
+                        </HBox>
 								<HBox fx:id="hbxLogToggles" alignment="CENTER">
 									<children>
 										<ToggleButton fx:id="tbnToggleLogsInfo" mnemonicParsing="false" selected="true" styleClass="iconButton" text="15k">

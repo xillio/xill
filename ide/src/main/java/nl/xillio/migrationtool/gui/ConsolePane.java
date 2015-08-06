@@ -8,9 +8,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-
 import com.sun.javafx.scene.control.behavior.CellBehaviorBase;
 
 import javafx.animation.KeyFrame;
@@ -23,6 +20,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
@@ -72,7 +70,17 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 	private ToggleButton tbnToggleLogsError;
 	@FXML
 	private ToggleButton tbnConsoleSearch;
-
+	@FXML
+	private Label tbnLogsCount;
+	@FXML
+	private Button btnNavigateBack;
+	@FXML
+	private Button btnNavigateForward;
+	
+	public static enum Scroll {
+		NONE, START, END, TOTALEND
+	}
+	
 	// private Robot robot;
 
 	// Log entry lists. Master contains everything, filtered contains only selected entries.
@@ -81,8 +89,9 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 
 	// Updating the console
 	private final Timeline updateTimeline;
-	private final int maxEntries = 1000;
-
+	private final int maxEntries = 100;
+	private int startEntry = 0;
+				
 	// Time format
 	private final DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
@@ -92,7 +101,9 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 
 	private final List<Integer> occurences = new ArrayList<>();
 	private RobotTab tab;
-	private boolean searchActive = false; // is searching in console active?
+	
+	private boolean searchRegExp = false;
+	private String searchNeedle = "";
 
 	/**
 	 * Create an initialize a ConsolePane
@@ -113,7 +124,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 		apnConsoleSearchBar.setButton(tbnConsoleSearch, 1);
 
 		// Console updater timeline
-		updateTimeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> updateLog()));
+		updateTimeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> updateLog(Scroll.TOTALEND)));
 		updateTimeline.play();
 
 		// Set the cell factories
@@ -186,6 +197,21 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 	}
 
 	@FXML
+	private void buttonNavigateBack() {
+		this.startEntry -= this.maxEntries;
+		if (this.startEntry < 0) {
+			this.startEntry = 0;
+		}
+		this.updateLog(Scroll.END);
+	}
+	
+	@FXML
+	private void buttonNavigateForward() {
+		this.startEntry += this.maxEntries;
+		this.updateLog(Scroll.START);
+	}
+	
+	@FXML
 	private void buttonClearConsole() {
 		// Clear the log in elasticsearch
 		String robotId = getRobotID().toString();
@@ -199,7 +225,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 		updateLabels();
 	}
 
-	private void updateLog() {
+	private void updateLog(Scroll scroll) {
 		Platform.runLater(() -> {
 			// Clear the log
 			masterLog.clear();
@@ -207,8 +233,25 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 			// Reset the filter counts
 			resetLabels();
 
-			// Get the last log entries
-			List<Map<String, Object>> entries = ESConsoleClient.getInstance().getLastEntries(getRobotID().toString(), maxEntries);
+			ESConsoleClient.SearchFilter filter = ESConsoleClient.getInstance().createSearchFilter(searchNeedle, this.searchRegExp, this.filters);;
+			
+			int count = ESConsoleClient.getInstance().countFilteredEntries(getRobotID().toString(), filter);
+			
+			int lastEntry = this.startEntry + this.maxEntries - 1;
+			if ( (count <= lastEntry) || (scroll == Scroll.TOTALEND) ) {
+				lastEntry = count-1;
+				this.startEntry = lastEntry-this.maxEntries+1;
+				if (this.startEntry < 0) {
+					this.startEntry = 0;
+				}
+			}
+			int showCount = lastEntry - this.startEntry + 1; 
+
+			tbnLogsCount.setText(String.format("%2$d-%3$d/%1$d", count, this.startEntry+1, lastEntry+1));
+			
+			List<Map<String, Object>> entries = ESConsoleClient.getInstance().getFilteredEntries(
+				getRobotID().toString(), this.startEntry, lastEntry, filter);
+			
 			for (Map<String, Object> entry : entries) {
 				// Get all properties
 				String time = timeFormat.format(new Date((long) entry.get("timestamp")));
@@ -227,10 +270,10 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 				}
 			}
 
-			// Scroll to the bottom of the table
-			int last = tblConsoleOut.getItems().size() - 1;
-			if (last >= 0) {
-				tblConsoleOut.scrollTo(last);
+			if ((scroll == Scroll.END) || (scroll == Scroll.TOTALEND)) {
+				tblConsoleOut.scrollTo(showCount);
+			} else if (scroll == Scroll.START) {
+				tblConsoleOut.scrollTo(0);
 			}
 
 			updateLabels();
@@ -284,15 +327,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 	}
 
 	private void updateFilters() {
-		// Update the filter predicate
-		filteredLog.setPredicate(entry -> {
-			LogType type = entry.getType();
-			if (this.searchActive) {
-				return (filters.get(type) && entry.getSelected());
-			} else {
-				return filters.get(type);
-			}
-		});
+		this.updateLog(Scroll.NONE);
 	}
 
 	/* Filter labels */
@@ -311,65 +346,26 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 
 	/* Searching */
 
-	void clearSelected() {
-		// Clears selected flag at all items
-		masterLog.forEach(item -> item.setSelected(false));
-	}
-
 	@Override
 	public void searchPattern(final String pattern, final boolean caseSensitive) {
 		// Clear the list
 		occurences.clear();
-		searchActive = true;
-		clearSelected();
 
-		// Check if the pattern is valid
-		Pattern validPattern;
-		try {
-			validPattern = caseSensitive ? Pattern.compile(pattern) : Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
-			// Search over all log entries
-			for (int i = 0; i < masterLog.size(); i++) {
-				if (validPattern.matcher(masterLog.get(i).getLine()).find()) {
-					occurences.add(i);
-					masterLog.get(i).setSelected(true); // set the item as selected  
-				}
-			}
-			checkSelection();
-		} catch (PatternSyntaxException e) {
-			// nothing to do
-		}
+		this.searchNeedle = pattern;
+		this.searchRegExp = true;
+		this.startEntry = 0;
+		this.updateLog(Scroll.START);
 	}
 
 	@Override
 	public void search(final String needle, final boolean caseSensitive) {
 		// Clear the list
 		occurences.clear();
-		searchActive = true;
-		clearSelected();
 
-		// Search over all log entries
-		for (int i = 0; i < masterLog.size(); i++) {
-			String line = masterLog.get(i).getLine();
-			// Check case sensitivity
-			if (!caseSensitive) {
-				line = line.toLowerCase();
-			}
-
-			if (line.contains(caseSensitive ? needle : needle.toLowerCase())) {
-				occurences.add(i);
-				masterLog.get(i).setSelected(true); // set the item as selected  
-			}
-		}
-
-		checkSelection();
-	}
-
-	private void checkSelection() {
-		// Clear the selection if we have no matches
-		if (occurences.isEmpty()) {
-			tblConsoleOut.getSelectionModel().clearSelection();
-		}
-		updateFilters();
+		this.searchNeedle = needle;
+		this.searchRegExp = false;
+		this.startEntry = 0;
+		this.updateLog(Scroll.START);
 	}
 
 	@Override
@@ -393,7 +389,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 	@Override
 	public void clearSearch() {
 		LogEntry lastSelected = tblConsoleOut.getSelectionModel().getSelectedItem(); // remember last selected line
-		searchActive = false;
+		this.searchNeedle = "";
 		this.updateFilters(); // show all lines (without searching affected)
 		tblConsoleOut.getSelectionModel().clearSelection();
 		int index = tblConsoleOut.getItems().indexOf(lastSelected);
@@ -480,7 +476,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 	public void initialize(final RobotTab tab) {
 		this.tab = tab;
 
-		this.tab.getProcessor().getDebugger().getOnRobotStart().addListener(start -> updateLog());
+		this.tab.getProcessor().getDebugger().getOnRobotStart().addListener(start -> updateLog(Scroll.TOTALEND));
 		ESConsoleClient.getLogEvent(tab.getProcessor().getRobotID()).addListener(msg -> updateTimeline.play());
 	}
 
