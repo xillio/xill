@@ -1,6 +1,10 @@
 package nl.xillio.xill.plugins.excel.services;
 
 import com.google.inject.ImplementedBy;
+import org.apache.poi.ss.usermodel.Workbook;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by Daan Knoope on 4-8-2015.
@@ -8,4 +12,6 @@ import com.google.inject.ImplementedBy;
 @ImplementedBy(ExcelServiceImpl.class)
 public interface ExcelService {
 	String testFunction();
+	Workbook loadWorkbook(String filePath, File file) throws IOException;
+	String getFilePath(File file) throws IOException;
 }
