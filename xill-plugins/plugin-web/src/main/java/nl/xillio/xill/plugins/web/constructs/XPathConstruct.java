@@ -79,8 +79,7 @@ public class XPathConstruct extends PhantomJSConstruct {
 					log.error("An indexOutoFBoundsException occurred on: " + query);
 				}
 			}
-
-			if (attributequery) {
+			else if (attributequery) {
 				try{
 				attribute = stringService.subString(query, 0, stringService.lastIndexOf(query, '@') + 1);
 				query = stringService.subString(query, 0, stringService.lastIndexOf(query, '/'));
@@ -115,15 +114,15 @@ public class XPathConstruct extends PhantomJSConstruct {
 			return fromValue(webService.getAttribute(element, "innerHTML"));
 		}
 
-		if (attribute != null) {
+		else if (attribute != null) {
 			String val = webService.getAttribute(element, attribute);
 			if (val == null) {
 				return NULL;
 			}
 			return fromValue(val);
 		}
-
+		else{
 		return createNode(driver, element, webService);
+		}
 	}
-
 }
