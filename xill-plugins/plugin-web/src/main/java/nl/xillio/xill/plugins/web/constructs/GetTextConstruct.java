@@ -11,8 +11,6 @@ import nl.xillio.xill.plugins.web.PhantomJSConstruct;
 import nl.xillio.xill.plugins.web.WebVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
-import org.openqa.selenium.WebElement;
-
 import com.google.inject.Inject;
 
 /**

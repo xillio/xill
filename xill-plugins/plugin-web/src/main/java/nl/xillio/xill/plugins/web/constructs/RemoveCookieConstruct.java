@@ -11,8 +11,6 @@ import nl.xillio.xill.plugins.web.PhantomJSConstruct;
 import nl.xillio.xill.plugins.web.WebVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
-import org.openqa.selenium.WebDriver;
-
 /**
  * Removes cookie from a currently loaded page context
  */

@@ -12,7 +12,6 @@ import nl.xillio.xill.plugins.web.WebVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
 import org.openqa.selenium.Cookie;
-import org.openqa.selenium.WebDriver;
 
 /**
  * Returns the info about currently loaded web page
@@ -29,8 +28,8 @@ public class PageInfoConstruct extends PhantomJSConstruct {
 	/**
 	 * @param pageVar
 	 *        input variable (should be of a PAGE type)
-	 * @param webService 
-	 * 					the webService we're using.
+	 * @param webService
+	 *        the webService we're using.
 	 * @return list of string variable
 	 */
 	public static MetaExpression process(final MetaExpression pageVar, final WebService webService) {

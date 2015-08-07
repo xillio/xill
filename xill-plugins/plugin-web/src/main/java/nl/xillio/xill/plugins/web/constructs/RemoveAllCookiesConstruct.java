@@ -1,7 +1,5 @@
 package nl.xillio.xill.plugins.web.constructs;
 
-import org.openqa.selenium.WebDriver;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
@@ -16,37 +14,37 @@ import nl.xillio.xill.plugins.web.services.web.WebService;
  *
  */
 public class RemoveAllCookiesConstruct extends PhantomJSConstruct {
-	
+
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
 			(page) -> process(page, webService),
 			new Argument("page"));
 	}
-	
+
 	/**
 	 * Tries to delete all cookies from a page in a {@link MetaExpression}.
+	 * 
 	 * @param page
-	 * 					The {@link MetaExpression} containing the page.
+	 *        The {@link MetaExpression} containing the page.
 	 * @param webService
-	 * 					The service we're using.
+	 *        The service we're using.
 	 * @return
-	 * 				  Returns NULL.
+	 *         Returns NULL.
 	 */
-	public static MetaExpression process(final MetaExpression page, final WebService webService){
-		
+	public static MetaExpression process(final MetaExpression page, final WebService webService) {
+
 		if (!checkPageType(page)) {
 			throw new RobotRuntimeException("Invalid variable type. Node PAGE type expected!");
 		}
-		
+
 		WebVariable driver = getPage(page);
-		try{
+		try {
 			webService.deleteCookies(driver);
-		}
-		catch (Exception e){
+		} catch (Exception e) {
 			throw new RobotRuntimeException("Failed to delete all cookies in driver.");
 		}
-		
+
 		return NULL;
 	}
 

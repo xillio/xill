@@ -1,16 +1,15 @@
 package nl.xillio.xill.plugins.web.services.web;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Set;
 
 import nl.xillio.xill.plugins.web.NodeVariable;
 import nl.xillio.xill.plugins.web.WebVariable;
-import nl.xillio.xill.plugins.web.PhantomJSPool;
 
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.InvalidSelectorException;
-import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.StaleElementReferenceException;
 
 import com.google.inject.ImplementedBy;
@@ -23,8 +22,9 @@ public interface WebService {
 
 	/**
 	 * Tries to click a {@link WebVariable}.
+	 * 
 	 * @param var
-	 * 					The variable we want to click.					
+	 *        The variable we want to click.
 	 * @throws StaleElementReferenceException
 	 *         Throws an exception when the element is stale.
 	 */
@@ -34,14 +34,15 @@ public interface WebService {
 	 * Sets focus on an element on a given page.
 	 *
 	 * @param var
-	 * 				 The element we want to move to.
+	 *        The element we want to move to.
 	 */
 	public void moveToElement(WebVariable var);
 
 	/**
 	 * Returns the tag name of a {@link WebVariable}
-	 *@param var
-	 *				 The variable we want the tag of.
+	 *
+	 * @param var
+	 *        The variable we want the tag of.
 	 * @return
 	 *         The name of the tag of the variable.
 	 */
@@ -51,7 +52,7 @@ public interface WebService {
 	 * Returns a given attribute of a {@link WebVariable}.
 	 *
 	 * @param var
-	 * 				The variable we want to get an attribute from
+	 *        The variable we want to get an attribute from
 	 * @param name
 	 *        The name of the attribute we want to retrieve.
 	 * @return
@@ -63,7 +64,7 @@ public interface WebService {
 	 * Returns the text contained in a {@link WebVariable}.
 	 *
 	 * @param var
-	 * 				The variable we want to get text from.
+	 *        The variable we want to get text from.
 	 * @return
 	 *         Returns the text in the element.
 	 */
@@ -71,9 +72,9 @@ public interface WebService {
 
 	/**
 	 * Returns the title of a {@link WebVariable}.
-	 * 
+	 *
 	 * @param var
-	 * 				The variable we want to a title from.
+	 *        The variable we want to a title from.
 	 * @return
 	 *         The title.
 	 */
@@ -81,35 +82,35 @@ public interface WebService {
 
 	/**
 	 * Finds all the elements in a node given a cssPath.
-	 * 
+	 *
 	 * @param var
-	 * 				The {@link WebVariable} we're searching.
+	 *        The {@link WebVariable} we're searching.
 	 * @param cssPath
 	 *        The cssPath we're using.
 	 * @return
 	 *         Returns a list of elements: {@link WebVariable}.
-	 * @throws InvalidSelectorException 
+	 * @throws InvalidSelectorException
 	 */
 	public List<WebVariable> findElementsWithCssPath(WebVariable var, String cssPath) throws InvalidSelectorException;
-	
+
 	/**
 	 * Finds all the elements in a node given a cssPath.
-	 * 
+	 *
 	 * @param var
-	 * 				The {@link WebVariable} we're searching.
+	 *        The {@link WebVariable} we're searching.
 	 * @param xpath
 	 *        The xpath we're using.
 	 * @return
 	 *         Returns a list of elements: {@link WebVariable}.
-	 * @throws InvalidSelectorException 
+	 * @throws InvalidSelectorException
 	 */
 	public List<WebVariable> findElementsWithXpath(WebVariable var, String xpath) throws InvalidSelectorException;
 
 	/**
 	 * Returns the current URL of a {@link WebVariable}.
-	 * 
+	 *
 	 * @param var
-	 * 				the variable we want the url from.
+	 *        the variable we want the url from.
 	 * @return
 	 *         A string which is the current URL.
 	 */
@@ -117,18 +118,18 @@ public interface WebService {
 
 	/**
 	 * Clears a {@link WebVariable}.
-	 * 
+	 *
 	 * @param var
-	 * 					the variable we want to clear.
+	 *        the variable we want to clear.
 	 */
 	public void clear(WebVariable var);
 
 	/**
 	 * Simulates sending a key to an {@link WebVariable}.
 	 * May alter its value.
-	 * 
+	 *
 	 * @param var
-	 * 				The variable we want to send keys to.
+	 *        The variable we want to send keys to.
 	 * @param key
 	 *        the key we want to send.
 	 */
@@ -136,7 +137,7 @@ public interface WebService {
 
 	/**
 	 * Gets the cookies from a {@link WebVariable}.
-	 * 
+	 *
 	 * @param driver
 	 *        the driver we're retrieving from.
 	 * @return
@@ -146,7 +147,7 @@ public interface WebService {
 
 	/**
 	 * Gets the name of a {@link Cookie}
-	 * 
+	 *
 	 * @param cookie
 	 *        The cookie.
 	 * @return
@@ -156,7 +157,7 @@ public interface WebService {
 
 	/**
 	 * Gets the domain of a {@link Cookie}
-	 * 
+	 *
 	 * @param cookie
 	 *        The cookie.
 	 * @return
@@ -166,7 +167,7 @@ public interface WebService {
 
 	/**
 	 * Gets the path of a {@link Cookie}
-	 * 
+	 *
 	 * @param cookie
 	 *        The cookie.
 	 * @return
@@ -176,7 +177,7 @@ public interface WebService {
 
 	/**
 	 * Gets the value of a {@link Cookie}.
-	 * 
+	 *
 	 * @param cookie
 	 *        The cookie.
 	 * @return
@@ -186,9 +187,9 @@ public interface WebService {
 
 	/**
 	 * Deletes the cookie in the {@link WebVariable} with the given name.
-	 * 
+	 *
 	 * @param var
-	 * 				The variable we want to delete cookies on.
+	 *        The variable we want to delete cookies on.
 	 * @param name
 	 *        The name of the cookie we're deleting.
 	 */
@@ -196,17 +197,17 @@ public interface WebService {
 
 	/**
 	 * Deletes all cookies on a {@link WebVariable}.
-	 * 
+	 *
 	 * @param var
-	 * 					The variable we're deleting cookies on.
+	 *        The variable we're deleting cookies on.
 	 */
 	public void deleteCookies(WebVariable driver);
 
 	/**
 	 * Makes a screenshot on a {@link WebVariable} and returns it as file.
-	 * 
+	 *
 	 * @param var
-	 * 					The variable we're screenshotting.
+	 *        The variable we're screenshotting.
 	 * @return
 	 *         A file containing the screenshot.
 	 */
@@ -214,9 +215,9 @@ public interface WebService {
 
 	/**
 	 * Checks whether a {@link WebVariable} is selected.
-	 * 
+	 *
 	 * @param var
-	 * 					The variable we want to query.
+	 *        The variable we want to query.
 	 * @return
 	 *         Returns whether the variable is selected.
 	 */
@@ -224,53 +225,76 @@ public interface WebService {
 
 	/**
 	 * Switches to a given frame.
-	 * 
+	 *
 	 * @param page
-	 * 				The page we want to switch to.
+	 *        The page we want to switch to.
 	 * @param element
-	 * 				The element we want to switch to.
+	 *        The element we want to switch to.
 	 */
 	public void switchToFrame(WebVariable page, WebVariable element);
 
 	/**
 	 * Switches to a given frame.
-	 * 
+	 *
 	 * @param var
-	 * 					the page we want to switch to.
+	 *        the page we want to switch to.
 	 * @param element
-	 * 					The element we want to switch to.
-	 * 					
+	 *        The element we want to switch to.
+	 * 
 	 */
 	public void switchToFrame(WebVariable var, String element);
 
 	/**
 	 * Switches to a given frame.
-	 * 
+	 *
 	 * @param driver
 	 *        The driver we're using.
 	 * @param element
 	 *        The frame as an integer.
 	 */
 	public void switchToFrame(WebVariable driver, int element);
-	
+
 	/**
 	 * Places a Cookie on a webvariable
+	 * 
 	 * @param var
-	 * 					The webVariable we want to place the cookie on
+	 *        The webVariable we want to place the cookie on
 	 * @param cookie
-	 * 					The cookie
+	 *        The cookie
 	 */
 	public void addCookie(WebVariable var, Cookie cookie);
-	
+
 	/**
 	 * Creates a node variable with a given page and element.
+	 * 
 	 * @param page
-	 * 					The page of the node.
+	 *        The page of the node.
 	 * @param element
-	 * 					The element of the node.
+	 *        The element of the node.
 	 * @return
-	 * 					A new node.
+	 *         A new node.
 	 */
 	public NodeVariable createNodeVariable(WebVariable page, WebVariable element);
+
+	/**
+	 * Executes HTTP GET on a {@link WebVariable} and an URL.
+	 * 
+	 * @param var
+	 *        The webpage.
+	 * @param url
+	 *        The url.
+	 */
+	public void httpGet(WebVariable var, String url) throws ClassCastException, MalformedURLException;
+
+	/**
+	 * Creates an URL and gets the anchor (also known as the "reference") of this URL.
+	 * 
+	 * @param url
+	 *        The url.
+	 * @return
+	 *         the reference of this url.
+	 * @throws MalformedURLException
+	 */
+	public String getRef(String url) throws MalformedURLException;
 
 }

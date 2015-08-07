@@ -1,6 +1,5 @@
 package nl.xillio.xill.plugins.web.constructs;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -15,21 +14,21 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class InputConstructTest extends ExpressionBuilderHelper {
-	
+
 	/**
 	 * Tests the construct under normal circumstances
 	 */
 	@Test
-	public void testProcessNormalUsage(){
+	public void testProcessNormalUsage() {
 		// mock
 		WebService webService = mock(WebService.class);
-		
-		//The input
+
+		// The input
 		MetaExpression input = mock(MetaExpression.class);
 		NodeVariable nodeVariable = mock(NodeVariable.class);
 		when(input.getMeta(NodeVariable.class)).thenReturn(nodeVariable);
-		
-		//The text input
+
+		// The text input
 		MetaExpression text = mock(MetaExpression.class);
 		when(text.getStringValue()).thenReturn("Text");
 
@@ -44,21 +43,21 @@ public class InputConstructTest extends ExpressionBuilderHelper {
 		// assert
 		Assert.assertEquals(output, NULL);
 	}
-	
+
 	/**
 	 * Test the process when no node was in the expression.
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid variable type. NODE type expected!")
-	public void testProcessNoNodeGiven(){
+	public void testProcessNoNodeGiven() {
 		// mock
 		WebService webService = mock(WebService.class);
-		
-		//The input
+
+		// The input
 		MetaExpression input = mock(MetaExpression.class);
-		
-		//The text input
+
+		// The text input
 		MetaExpression text = mock(MetaExpression.class);
-		
+
 		when(input.getMeta(NodeVariable.class)).thenReturn(null);
 
 		// run

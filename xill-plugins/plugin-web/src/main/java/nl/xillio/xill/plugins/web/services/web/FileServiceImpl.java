@@ -14,30 +14,30 @@ import com.google.inject.Singleton;
 public class FileServiceImpl implements FileService {
 
 	@Override
-	public void copyFile(File sourceFile, File destinationFile) throws IOException {
+	public void copyFile(final File sourceFile, final File destinationFile) throws IOException {
 		FileUtils.copyFile(sourceFile, destinationFile);
 	}
 
 	@Override
-	public File makeFile(String fileName) {
+	public File makeFile(final String fileName) {
 		return new File(fileName);
 	}
 
 	@Override
-	public String getAbsolutePath(File file) {
+	public String getAbsolutePath(final File file) {
 		return file.getAbsolutePath();
 	}
 
 	@Override
-	public File createTempFile(String prefix, String suffix) throws IOException {
+	public File createTempFile(final String prefix, final String suffix) throws IOException {
 		File file = File.createTempFile(prefix, suffix);
 		file.deleteOnExit();
 		return file;
 	}
 
 	@Override
-	public void writeStringToFile(File file, String text) throws IOException {
-		FileUtils.writeStringToFile(file, text);	
+	public void writeStringToFile(final File file, final String text) throws IOException {
+		FileUtils.writeStringToFile(file, text);
 	}
 
 }

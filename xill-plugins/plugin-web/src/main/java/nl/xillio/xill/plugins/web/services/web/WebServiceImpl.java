@@ -1,6 +1,8 @@
 package nl.xillio.xill.plugins.web.services.web;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -8,7 +10,6 @@ import java.util.Set;
 import nl.xillio.xill.plugins.web.NodeVariable;
 import nl.xillio.xill.plugins.web.PageVariable;
 import nl.xillio.xill.plugins.web.WebVariable;
-import nl.xillio.xill.plugins.web.PhantomJSPool;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
@@ -30,179 +31,187 @@ import com.google.inject.Singleton;
 public class WebServiceImpl implements WebService {
 
 	@Override
-	public void click(WebVariable node) throws StaleElementReferenceException {
+	public void click(final WebVariable node) throws StaleElementReferenceException {
 		WebElement webElement = node.getElement();
 		webElement.click();
 	}
 
 	@Override
-	public void moveToElement(WebVariable var) {
+	public void moveToElement(final WebVariable var) {
 		WebDriver page = var.getDriver();
 		WebElement element = var.getElement();
 		new Actions(page).moveToElement(element).perform();
 	}
 
 	@Override
-	public String getTagName(WebVariable var) {
+	public String getTagName(final WebVariable var) {
 		WebElement element = var.getElement();
 		return element.getTagName();
 	}
 
 	@Override
-	public String getAttribute(WebVariable var, final String name) {
+	public String getAttribute(final WebVariable var, final String name) {
 		WebElement element = var.getElement();
 		return element.getAttribute(name);
 	}
 
 	@Override
-	public String getText(WebVariable var) {
+	public String getText(final WebVariable var) {
 		WebElement element = var.getElement();
 		return element.getText();
 	}
-	
+
 	@Override
-	public List<WebVariable> findElementsWithCssPath(WebVariable var, String cssPath) throws InvalidSelectorException {
+	public List<WebVariable> findElementsWithCssPath(final WebVariable var, final String cssPath) throws InvalidSelectorException {
 		SearchContext node;
-		if(var instanceof PageVariable){
-		node = var.getDriver();
+		if (var instanceof PageVariable) {
+			node = var.getDriver();
 		}
-		else{
-		node = var.getElement();
+		else {
+			node = var.getElement();
 		}
 		List<WebElement> searchResults = node.findElements(By.cssSelector(cssPath));
 		List<WebVariable> result = new ArrayList<>();
-		for(WebElement element : searchResults){
-			result.add(new NodeVariable(null, element));
-		}
-		return result;
-	}
-	
-	@Override
-	public List<WebVariable> findElementsWithXpath(WebVariable var, String xpath) throws InvalidSelectorException {
-		SearchContext node;
-		if(var instanceof PageVariable){
-		node = var.getDriver();
-		}
-		else{
-		node = var.getElement();
-		}
-		List<WebElement> searchResults = node.findElements(By.xpath(xpath));
-		List<WebVariable> result = new ArrayList<>();
-		for(WebElement element : searchResults){
+		for (WebElement element : searchResults) {
 			result.add(new NodeVariable(null, element));
 		}
 		return result;
 	}
 
 	@Override
-	public String getCurrentUrl(WebVariable var) {
+	public List<WebVariable> findElementsWithXpath(final WebVariable var, final String xpath) throws InvalidSelectorException {
+		SearchContext node;
+		if (var instanceof PageVariable) {
+			node = var.getDriver();
+		}
+		else {
+			node = var.getElement();
+		}
+		List<WebElement> searchResults = node.findElements(By.xpath(xpath));
+		List<WebVariable> result = new ArrayList<>();
+		for (WebElement element : searchResults) {
+			result.add(new NodeVariable(null, element));
+		}
+		return result;
+	}
+
+	@Override
+	public String getCurrentUrl(final WebVariable var) {
 		WebDriver driver = var.getDriver();
 		return driver.getCurrentUrl();
 	}
 
-	private WebElement driverToElement(WebDriver driver) throws ClassCastException {
-		return (WebElement) driver;
-	}
-
 	@Override
-	public void clear(WebVariable var) {
+	public void clear(final WebVariable var) {
 		WebElement element = var.getElement();
 		element.clear();
 	}
 
 	@Override
-	public void sendKeys(WebVariable var, String key) {
+	public void sendKeys(final WebVariable var, final String key) {
 		WebElement element = var.getElement();
-		element.sendKeys(key);	
+		element.sendKeys(key);
 	}
 
 	@Override
-	public String getTitle(WebVariable var) {
+	public String getTitle(final WebVariable var) {
 		WebDriver driver = var.getDriver();
 		return driver.getTitle();
 	}
 
 	@Override
-	public Set<Cookie> getCookies(WebVariable var) {
+	public Set<Cookie> getCookies(final WebVariable var) {
 		WebDriver driver = var.getDriver();
 		return driver.manage().getCookies();
 	}
 
-		@Override
-		public String getName(Cookie cookie) {
-			return cookie.getName();
-		}
+	@Override
+	public String getName(final Cookie cookie) {
+		return cookie.getName();
+	}
 
-		@Override
-		public String getDomain(Cookie cookie) {
-			return cookie.getDomain();
-		}
+	@Override
+	public String getDomain(final Cookie cookie) {
+		return cookie.getDomain();
+	}
 
-		@Override
-		public String getPath(Cookie cookie) {
-			return cookie.getPath();
-		}
+	@Override
+	public String getPath(final Cookie cookie) {
+		return cookie.getPath();
+	}
 
-		@Override
-		public String getValue(Cookie cookie) {
-			return cookie.getValue();
-		}
+	@Override
+	public String getValue(final Cookie cookie) {
+		return cookie.getValue();
+	}
 
-		@Override
-		public void deleteCookieNamed(WebVariable var, String name) {
-			WebDriver driver = var.getDriver();
-			driver.manage().deleteCookieNamed(name);	
-		}
+	@Override
+	public void deleteCookieNamed(final WebVariable var, final String name) {
+		WebDriver driver = var.getDriver();
+		driver.manage().deleteCookieNamed(name);
+	}
 
-		@Override
-		public void deleteCookies(WebVariable var) {
-			WebDriver driver = var.getDriver();
-			driver.manage().deleteAllCookies();
-		}
+	@Override
+	public void deleteCookies(final WebVariable var) {
+		WebDriver driver = var.getDriver();
+		driver.manage().deleteAllCookies();
+	}
 
-		@Override
-		public File getScreenshotAsFile(WebVariable var) {
-			WebDriver driver = var.getDriver();
-			PhantomJSDriver castedDriver = (PhantomJSDriver) driver;
-			return castedDriver.getScreenshotAs(OutputType.FILE);
-		}
+	@Override
+	public File getScreenshotAsFile(final WebVariable var) {
+		WebDriver driver = var.getDriver();
+		PhantomJSDriver castedDriver = (PhantomJSDriver) driver;
+		return castedDriver.getScreenshotAs(OutputType.FILE);
+	}
 
-		@Override
-		public boolean isSelected(WebVariable var) {
-			WebElement element = var.getElement();
-			return element.isSelected();
-		}
+	@Override
+	public boolean isSelected(final WebVariable var) {
+		WebElement element = var.getElement();
+		return element.isSelected();
+	}
 
-		@Override
-		public void switchToFrame(WebVariable page, WebVariable elem) {
-			WebElement element = elem.getElement();
-			WebDriver driver = page.getDriver();
-			driver.switchTo().frame(element);
-			
-		}
+	@Override
+	public void switchToFrame(final WebVariable page, final WebVariable elem) {
+		WebElement element = elem.getElement();
+		WebDriver driver = page.getDriver();
+		driver.switchTo().frame(element);
 
-		@Override
-		public void switchToFrame(WebVariable var, String element) {
-			WebDriver driver = var.getDriver();
-			driver.switchTo().frame(element);		
-		}
+	}
 
-		@Override
-		public void switchToFrame(WebVariable var, int element) {
-			WebDriver driver = var.getDriver();
-			driver.switchTo().frame(element);			
-		}
+	@Override
+	public void switchToFrame(final WebVariable var, final String element) {
+		WebDriver driver = var.getDriver();
+		driver.switchTo().frame(element);
+	}
 
-		@Override
-		public void addCookie(WebVariable var, Cookie cookie) {
-			WebDriver driver = var.getDriver();
-			driver.manage().addCookie(cookie);
-		}
+	@Override
+	public void switchToFrame(final WebVariable var, final int element) {
+		WebDriver driver = var.getDriver();
+		driver.switchTo().frame(element);
+	}
 
-		@Override
-		public NodeVariable createNodeVariable(WebVariable page, WebVariable element) {
-			WebDriver newDriver = page.getDriver();
-			WebElement newElement = element.getElement();
-			return new NodeVariable(newDriver, newElement);
-		}
+	@Override
+	public void addCookie(final WebVariable var, final Cookie cookie) {
+		WebDriver driver = var.getDriver();
+		driver.manage().addCookie(cookie);
+	}
+
+	@Override
+	public NodeVariable createNodeVariable(final WebVariable page, final WebVariable element) {
+		WebDriver newDriver = page.getDriver();
+		WebElement newElement = element.getElement();
+		return new NodeVariable(newDriver, newElement);
+	}
+
+	@Override
+	public void httpGet(final WebVariable var, final String url) throws ClassCastException, MalformedURLException {
+		PhantomJSDriver driver = (PhantomJSDriver) var.getDriver();
+		driver.get("about:blank");
+	}
+
+	@Override
+	public String getRef(final String url) throws MalformedURLException {
+		URL newURL = new URL(url);
+		return newURL.getRef();
+	}
 }

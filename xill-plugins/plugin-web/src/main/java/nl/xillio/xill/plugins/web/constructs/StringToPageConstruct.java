@@ -12,8 +12,6 @@ import nl.xillio.xill.plugins.web.PhantomJSConstruct;
 import nl.xillio.xill.plugins.web.services.web.FileService;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
-import org.apache.commons.io.FileUtils;
-
 import com.google.inject.Inject;
 
 /**
@@ -33,11 +31,11 @@ public class StringToPageConstruct extends PhantomJSConstruct {
 	/**
 	 * @param contentVar
 	 *        input string variable (HTML code of a web page)
-	 * @param fileService 
-	 * @param webService 
+	 * @param fileService
+	 * @param webService
 	 * @return PAGE variable
 	 */
-	public static MetaExpression process(final MetaExpression contentVar, FileService fileService, WebService webService) {
+	public static MetaExpression process(final MetaExpression contentVar, final FileService fileService, final WebService webService) {
 		String content = contentVar.getStringValue();
 
 		try {
@@ -47,8 +45,7 @@ public class StringToPageConstruct extends PhantomJSConstruct {
 			return LoadPageConstruct.process(fromValue(uri), NULL, webService);
 		} catch (IOException e) {
 			throw new RobotRuntimeException("An IO error occurred.");
-		}
-		catch (Exception e){
+		} catch (Exception e) {
 			throw new RobotRuntimeException("An error occurred.", e);
 		}
 	}

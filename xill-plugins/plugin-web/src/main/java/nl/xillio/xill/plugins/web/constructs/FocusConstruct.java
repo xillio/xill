@@ -8,9 +8,6 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.PhantomJSConstruct;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-
 import com.google.inject.Inject;
 
 /**
@@ -38,10 +35,10 @@ public class FocusConstruct extends PhantomJSConstruct {
 		if (!checkNodeType(elementVar)) {
 			throw new RobotRuntimeException("Invalid variable type. NODE type expected!");
 		}
-		else{
+		else {
 
-		webService.moveToElement(getNode(elementVar));
-		return NULL;
+			webService.moveToElement(getNode(elementVar));
+			return NULL;
 		}
 	}
 }

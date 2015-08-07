@@ -9,8 +9,6 @@ import nl.xillio.xill.plugins.web.PhantomJSConstruct;
 import nl.xillio.xill.plugins.web.WebVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
-import org.openqa.selenium.WebElement;
-
 /**
  * Simulates selection of an item in HTML list
  */
@@ -36,20 +34,20 @@ public class SelectConstruct extends PhantomJSConstruct {
 		if (!checkNodeType(elementVar)) {
 			throw new RobotRuntimeException("Invalid variable type. NODE type expected!");
 		}
-		else{
+		else {
 
-		boolean select = selectVar.getBooleanValue();
+			boolean select = selectVar.getBooleanValue();
 
-		WebVariable element = getNode(elementVar);
+			WebVariable element = getNode(elementVar);
 
-		try {
-			//Check if we need to click
-			if (select != webService.isSelected(element)) {
-				webService.click(element);
+			try {
+				// Check if we need to click
+				if (select != webService.isSelected(element)) {
+					webService.click(element);
+				}
+			} catch (Exception e) {
+				throw new RobotRuntimeException("Failed to access NODE correctly");
 			}
-		} catch (Exception e) {
-			throw new RobotRuntimeException("Failed to access NODE correctly");
-		}
 		}
 		return NULL;
 	}

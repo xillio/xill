@@ -19,7 +19,7 @@ public class NodeVariable extends WebVariable {
 	 * <p>
 	 * This class represents the NODE "pseudo" variable.
 	 * </p>
-	 * 
+	 *
 	 * @param driver
 	 *        The {@link WebDriver} we're using.
 	 * @param element
@@ -29,12 +29,12 @@ public class NodeVariable extends WebVariable {
 		this.driver = driver;
 		this.element = element;
 	}
-	
+
 	@Override
 	public WebDriver getDriver() {
 		return driver;
 	}
-	
+
 	@Override
 	public WebElement getElement() {
 		return element;

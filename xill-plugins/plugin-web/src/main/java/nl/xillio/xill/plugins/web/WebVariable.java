@@ -8,12 +8,12 @@ import org.openqa.selenium.WebElement;
  *
  */
 public abstract class WebVariable {
-	
+
 	/**
 	 * @return Returns a {@link WebElement}.
 	 */
 	public abstract WebElement getElement();
-	
+
 	/**
 	 * @return Returns a {@link WebDriver}.
 	 */

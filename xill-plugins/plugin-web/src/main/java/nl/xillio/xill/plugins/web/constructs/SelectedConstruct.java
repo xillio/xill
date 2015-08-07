@@ -9,8 +9,6 @@ import nl.xillio.xill.plugins.web.PhantomJSConstruct;
 import nl.xillio.xill.plugins.web.WebVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
-import org.openqa.selenium.WebElement;
-
 /**
  * Returns information if provided web element is selected or not
  */
@@ -26,8 +24,8 @@ public class SelectedConstruct extends PhantomJSConstruct {
 	/**
 	 * @param elementVar
 	 *        input variable (should be of a NODE type) - web element
-	 * @param webService 
-	 * 				the service we're using.
+	 * @param webService
+	 *        the service we're using.
 	 * @return boolean variable (true=selected, false=not selected)
 	 */
 	public static MetaExpression process(final MetaExpression elementVar, final WebService webService) {

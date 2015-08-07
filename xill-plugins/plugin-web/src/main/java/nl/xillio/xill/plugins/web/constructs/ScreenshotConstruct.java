@@ -13,11 +13,6 @@ import nl.xillio.xill.plugins.web.WebVariable;
 import nl.xillio.xill.plugins.web.services.web.FileService;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
-import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
-
 import com.google.inject.Inject;
 
 /**
@@ -52,18 +47,18 @@ public class ScreenshotConstruct extends PhantomJSConstruct {
 		if (!checkPageType(pageVar)) {
 			throw new RobotRuntimeException("Invalid variable type. Node PAGE type expected!");
 		}
-		else{
-		WebVariable driver = getPage(pageVar);
+		else {
+			WebVariable driver = getPage(pageVar);
 
-		try {
-			File srcFile = webService.getScreenshotAsFile(driver);
-			File desFile = fileService.makeFile(fileName);
-			fileService.copyFile(srcFile, desFile);
-		} catch (IOException e) {
-			throw new RobotRuntimeException("Failed to copy to: " + fileName);
-		} catch (Exception e) {
-			throw new RobotRuntimeException("Failed to access page without errors.");
-		}
+			try {
+				File srcFile = webService.getScreenshotAsFile(driver);
+				File desFile = fileService.makeFile(fileName);
+				fileService.copyFile(srcFile, desFile);
+			} catch (IOException e) {
+				throw new RobotRuntimeException("Failed to copy to: " + fileName);
+			} catch (Exception e) {
+				throw new RobotRuntimeException("Failed to access page without errors.");
+			}
 		}
 
 		return NULL;

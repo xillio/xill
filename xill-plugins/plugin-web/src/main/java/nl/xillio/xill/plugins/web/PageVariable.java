@@ -14,7 +14,7 @@ public class PageVariable extends WebVariable {
 	 * <p>
 	 * This class represents the Page "pseudo" variable.
 	 * </p>
-	 * 
+	 *
 	 * @param driver
 	 *        The {@link WebDriver} we're using.
 	 * @param element
@@ -25,10 +25,12 @@ public class PageVariable extends WebVariable {
 		this.element = element;
 	}
 
+	@Override
 	public WebDriver getDriver() {
 		return driver;
 	}
 
+	@Override
 	public WebElement getElement() {
 		return element;
 	}

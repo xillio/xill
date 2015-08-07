@@ -9,8 +9,6 @@ import nl.xillio.xill.plugins.web.PhantomJSConstruct;
 import nl.xillio.xill.plugins.web.WebVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
-import org.openqa.selenium.WebElement;
-
 /**
  * Simulates key presses on provided web element (i.e. clear and write text)
  */

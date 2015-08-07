@@ -15,7 +15,6 @@ import nl.xillio.xill.plugins.web.WebVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
 import org.openqa.selenium.Cookie;
-import org.openqa.selenium.WebDriver;
 
 /**
  * Set cookie in a currently loaded page context

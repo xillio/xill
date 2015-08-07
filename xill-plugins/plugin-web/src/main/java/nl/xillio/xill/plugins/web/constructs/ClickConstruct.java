@@ -8,10 +8,6 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.PhantomJSConstruct;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
-import org.openqa.selenium.StaleElementReferenceException;
-
-import com.google.inject.Inject;
-
 /**
  * Simulates click on the provided web element on the web page
  */
@@ -38,7 +34,7 @@ public class ClickConstruct extends PhantomJSConstruct {
 		try {
 			webService.click(getNode(elementVar));
 		} catch (Exception e) {
-				throw new RobotRuntimeException("Stale element clicked.");
+			throw new RobotRuntimeException("Stale element clicked.");
 		}
 
 		return NULL;

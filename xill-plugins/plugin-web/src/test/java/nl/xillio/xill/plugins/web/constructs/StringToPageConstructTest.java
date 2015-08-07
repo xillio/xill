@@ -1,6 +1,10 @@
 package nl.xillio.xill.plugins.web.constructs;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,57 +21,59 @@ import org.testng.annotations.Test;
  *
  */
 public class StringToPageConstructTest {
-	
+
 	/**
 	 * Test the process under normal circumstances.
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	@Test
-	public void testProcessNormalUsage() throws IOException{
-			// mock
-			WebService webService = mock(WebService.class);
-			FileService fileService = mock(FileService.class);
-			
-			//the content variable
-			String contentValue = "This is the content";
-			MetaExpression content = mock(MetaExpression.class);
-			when(content.getStringValue()).thenReturn(contentValue);
-			
-			//the file variable
-			File file = mock(File.class);
-			
-			//the process
-			when(fileService.createTempFile(anyString(), anyString())).thenReturn(file);
-			when(fileService.getAbsolutePath(file)).thenReturn("file");
-			
-			// run
-			StringToPageConstruct.process(content, fileService, webService);
-			
-			// verify
-			verify(fileService, times(1)).createTempFile(anyString(), anyString());
-			verify(fileService, times(1)).getAbsolutePath(file);
+	public void testProcessNormalUsage() throws IOException {
+		// mock
+		WebService webService = mock(WebService.class);
+		FileService fileService = mock(FileService.class);
+
+		// the content variable
+		String contentValue = "This is the content";
+		MetaExpression content = mock(MetaExpression.class);
+		when(content.getStringValue()).thenReturn(contentValue);
+
+		// the file variable
+		File file = mock(File.class);
+
+		// the process
+		when(fileService.createTempFile(anyString(), anyString())).thenReturn(file);
+		when(fileService.getAbsolutePath(file)).thenReturn("file");
+
+		// run
+		StringToPageConstruct.process(content, fileService, webService);
+
+		// verify
+		verify(fileService, times(1)).createTempFile(anyString(), anyString());
+		verify(fileService, times(1)).getAbsolutePath(file);
 	}
-	
+
 	/**
 	 * Test the process under normal circumstances.
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "An IO error occurred.")
-	public void testProcessIOException() throws IOException{
-			// mock
-			WebService webService = mock(WebService.class);
-			FileService fileService = mock(FileService.class);
-			
-			//the content variable
-			String contentValue = "This is the content";
-			MetaExpression content = mock(MetaExpression.class);
-			when(content.getStringValue()).thenReturn(contentValue);
-			
-			//the process
-			when(fileService.createTempFile(anyString(), anyString())).thenThrow(new IOException());
-			
-			// run
-			StringToPageConstruct.process(content, fileService, webService);
+	public void testProcessIOException() throws IOException {
+		// mock
+		WebService webService = mock(WebService.class);
+		FileService fileService = mock(FileService.class);
+
+		// the content variable
+		String contentValue = "This is the content";
+		MetaExpression content = mock(MetaExpression.class);
+		when(content.getStringValue()).thenReturn(contentValue);
+
+		// the process
+		when(fileService.createTempFile(anyString(), anyString())).thenThrow(new IOException());
+
+		// run
+		StringToPageConstruct.process(content, fileService, webService);
 	}
 
 }

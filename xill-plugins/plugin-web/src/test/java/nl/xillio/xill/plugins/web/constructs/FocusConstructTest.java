@@ -10,7 +10,6 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.NodeVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
-
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -27,12 +26,12 @@ public class FocusConstructTest extends ExpressionBuilderHelper {
 	public void testProcessNormalUsage() {
 		// mock
 		WebService webService = mock(WebService.class);
-		
-		//The input
+
+		// The input
 		MetaExpression element = mock(MetaExpression.class);
 		NodeVariable nodeVariable = mock(NodeVariable.class);
 		when(element.getMeta(NodeVariable.class)).thenReturn(nodeVariable);
-		
+
 		// run
 		MetaExpression output = FocusConstruct.process(element, webService);
 
@@ -51,11 +50,10 @@ public class FocusConstructTest extends ExpressionBuilderHelper {
 	public void testProcessNoNodeGiven() {
 		// mock
 		WebService webService = mock(WebService.class);
-		
-		//The input
+
+		// The input
 		MetaExpression element = mock(MetaExpression.class);
 		when(element.getMeta(NodeVariable.class)).thenReturn(null);
-
 
 		// run
 		FocusConstruct.process(element, webService);

@@ -15,11 +15,7 @@ import nl.xillio.xill.plugins.web.services.web.WebService;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.openqa.selenium.By;
 import org.openqa.selenium.InvalidSelectorException;
-import org.openqa.selenium.SearchContext;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 
 import com.google.inject.Inject;
 
@@ -28,7 +24,7 @@ import com.google.inject.Inject;
  */
 public class XPathConstruct extends PhantomJSConstruct {
 	private static final Logger log = LogManager.getLogger();
-	
+
 	@Inject
 	private StringService stringService;
 
@@ -46,9 +42,9 @@ public class XPathConstruct extends PhantomJSConstruct {
 	 * @param xpathVar
 	 *        string variable specifying XPath selector
 	 * @param stringService
-	 * 					The string service we're using.
+	 *        The string service we're using.
 	 * @param webService
-	 * 					The web service we're using.
+	 *        The web service we're using.
 	 * @return NODE variable or list of NODE variables or null variable (according to count of selected web elements - more/1/0)
 	 */
 	public static MetaExpression process(final MetaExpression elementVar, final MetaExpression xpathVar, final StringService stringService, final WebService webService) {
@@ -67,25 +63,23 @@ public class XPathConstruct extends PhantomJSConstruct {
 	private static MetaExpression processSELNode(final WebVariable driver, String query, final StringService stringService, final WebService webService) {
 
 		try {
-			
+
 			boolean textquery = stringService.endsWith(query, "/text()");
 			boolean attributequery = stringService.matches(query, "^.*@\\w+$");
 			String attribute = null;
 
 			if (textquery) {
-				try{
-				query = stringService.subString(query, 0, query.length() - 7);
-				}
-				catch(IndexOutOfBoundsException e){
+				try {
+					query = stringService.subString(query, 0, query.length() - 7);
+				} catch (IndexOutOfBoundsException e) {
 					log.error("An indexOutoFBoundsException occurred on: " + query);
 				}
 			}
 			else if (attributequery) {
-				try{
-				attribute = stringService.subString(query, 0, stringService.lastIndexOf(query, '@') + 1);
-				query = stringService.subString(query, 0, stringService.lastIndexOf(query, '/'));
-				}
-				catch(IndexOutOfBoundsException e){
+				try {
+					attribute = stringService.subString(query, 0, stringService.lastIndexOf(query, '@') + 1);
+					query = stringService.subString(query, 0, stringService.lastIndexOf(query, '/'));
+				} catch (IndexOutOfBoundsException e) {
 					log.error("An indexOutoFBoundsException occurred on: " + query);
 				}
 			}
@@ -122,8 +116,8 @@ public class XPathConstruct extends PhantomJSConstruct {
 			}
 			return fromValue(val);
 		}
-		else{
-		return createNode(driver, element, webService);
+		else {
+			return createNode(driver, element, webService);
 		}
 	}
 }
