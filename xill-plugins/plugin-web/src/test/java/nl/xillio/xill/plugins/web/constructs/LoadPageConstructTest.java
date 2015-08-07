@@ -18,9 +18,50 @@ import nl.xillio.xill.plugins.web.services.web.WebService;
 
 import org.openqa.selenium.StaleElementReferenceException;
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 public class LoadPageConstructTest extends ExpressionBuilderHelper {
+	
+	@DataProvider(name = "booleanOptionTest")
+	public static String[] strings(){
+		return new String[]{"enablejs", "enablewebsecurity", "loadimages", "insecuressl", "ltrurlaccess"};
+	}
+	
+	@Test(dataProvider = "booleanOptionTest")
+	public void testBooleanOptions(String name){
+		// mock
+		WebService webService = mock(WebService.class);
+		
+		//The url
+		String urlValue = "This is an url";
+		MetaExpression url = mock(MetaExpression.class);
+		when(url.getStringValue()).thenReturn(urlValue);
+		
+		//The options
+		LinkedHashMap<String, MetaExpression> optionsValue = new LinkedHashMap<>();
+		boolean enable = true;
+		MetaExpression option = mock(MetaExpression.class);
+		when(option.getBooleanValue()).thenReturn(enable);
+		optionsValue.put(name, option);
+		
+		MetaExpression options = mock(MetaExpression.class);
+		when(options.getValue()).thenReturn(optionsValue);
+		when(options.getType()).thenReturn(OBJECT);
+		
+		//the process
+		//There is currently no other way to do this; we have to sort out the functions one day.
+		PageVariable pageVariable = mock(PageVariable.class);
+		when(webService.getPageFromPool(any(), any())).thenReturn(pageVariable);
+		
+		// run
+		MetaExpression output = LoadPageConstruct.process(url, options, webService);
+		
+		// verify
+		verify(option, times(1)).getBooleanValue();
+		
+	}
 
 	
 	@Test
