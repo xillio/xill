@@ -3,6 +3,7 @@ package nl.xillio.xill.api.construct;
 import com.google.inject.Inject;
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.components.MetadataExpression;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.services.files.FileResolver;
@@ -102,7 +103,7 @@ public abstract class Construct extends ExpressionBuilderHelper implements HelpC
 	 * @return the requested meta object
 	 * @throws RobotRuntimeException when the assertion fails
 	 */
-	protected static <T> T assertMeta(final MetaExpression expression, final String expressionName, final Class<T> type, final String friendlyTypeName) {
+	protected static <T extends MetadataExpression> T assertMeta(final MetaExpression expression, final String expressionName, final Class<T> type, final String friendlyTypeName) {
 		T value = expression.getMeta(type);
 		if (value == null) {
 			throw new RobotRuntimeException("Expected " + expressionName + " to be a " + friendlyTypeName);
