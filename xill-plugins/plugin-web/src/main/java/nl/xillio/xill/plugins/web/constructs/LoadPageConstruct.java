@@ -16,6 +16,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.web.PageVariable;
 import nl.xillio.xill.plugins.web.PhantomJSConstruct;
 import nl.xillio.xill.plugins.web.PhantomJSPool;
 import nl.xillio.xill.plugins.web.WebXillPlugin;
@@ -70,7 +71,7 @@ public class LoadPageConstruct extends PhantomJSConstruct implements AutoCloseab
 		}
 
 		// getting properly configured webdriver
-		PhantomJSPool.Entity item = LoadPageConstruct.pool.get(LoadPageConstruct.pool.createIdentifier(options));
+		PageVariable item = LoadPageConstruct.pool.get(LoadPageConstruct.pool.createIdentifier(options)).getPage();
 		if (item == null) {
 			throw new RobotRuntimeException("Loadpage error - PhantomJS pool is fully used and cannot provide another instance!");
 		}

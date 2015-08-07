@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import nl.xillio.xill.plugins.web.NodeVariable;
+import nl.xillio.xill.plugins.web.PageVariable;
 import nl.xillio.xill.plugins.web.WebVariable;
 import nl.xillio.xill.plugins.web.PhantomJSPool;
 
@@ -72,7 +73,13 @@ public class WebServiceImpl implements WebService {
 	
 	@Override
 	public List<WebVariable> findElementsWithXpath(WebVariable var, String xpath) throws InvalidSelectorException {
-		SearchContext node = var.getElement();
+		SearchContext node;
+		if(var instanceof PageVariable){
+		node = var.getDriver();
+		}
+		else{
+		node = var.getElement();
+		}
 		List<WebElement> searchResults = node.findElements(By.xpath(xpath));
 		List<WebVariable> result = new ArrayList<>();
 		for(WebElement element : searchResults){

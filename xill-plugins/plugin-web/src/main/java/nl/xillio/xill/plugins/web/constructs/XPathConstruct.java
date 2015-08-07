@@ -90,7 +90,7 @@ public class XPathConstruct extends PhantomJSConstruct {
 				}
 			}
 
-			List<WebElement> results = webService.findElementsWithXpath(node, query);
+			List<WebVariable> results = webService.findElementsWithXpath(driver, query);
 
 			if (results.size() == 0) {
 				return NULL;
@@ -99,7 +99,7 @@ public class XPathConstruct extends PhantomJSConstruct {
 			} else {
 				ArrayList<MetaExpression> list = new ArrayList<MetaExpression>();
 
-				for (WebElement he : results) {
+				for (WebVariable he : results) {
 					list.add(parseSELVariable(driver, he, textquery, attribute, webService));
 				}
 
@@ -110,7 +110,7 @@ public class XPathConstruct extends PhantomJSConstruct {
 		}
 	}
 
-	private static MetaExpression parseSELVariable(final WebDriver driver, final WebElement element, final boolean textquery, final String attribute, final WebService webService) {
+	private static MetaExpression parseSELVariable(final WebVariable driver, final WebVariable element, final boolean textquery, final String attribute, final WebService webService) {
 		if (textquery) {
 			return fromValue(webService.getAttribute(element, "innerHTML"));
 		}

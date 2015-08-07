@@ -2,7 +2,7 @@ package nl.xillio.xill.plugins.web.constructs;
 
 import static org.mockito.Mockito.*;
 
-
+import org.openqa.selenium.StaleElementReferenceException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

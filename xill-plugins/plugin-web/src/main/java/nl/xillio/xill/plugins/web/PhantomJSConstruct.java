@@ -90,7 +90,7 @@ public abstract class PhantomJSConstruct extends Construct {
    * @return true if it's of PAGE type
    */
   protected static boolean checkPageType(final MetaExpression var) {
-      return var.getMeta(PhantomJSPool.Entity.class) != null;
+      return var.getMeta(PageVariable.class) != null;
   }
   
   /**

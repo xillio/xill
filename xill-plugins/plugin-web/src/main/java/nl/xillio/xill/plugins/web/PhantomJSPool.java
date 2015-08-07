@@ -138,7 +138,7 @@ public class PhantomJSPool {
          * @return WebDriver of this entity (PhantomJS process class)
          */
         public PageVariable getPage() {
-            return new PageVariable(driver, (WebElement) driver);
+            return new PageVariable(driver, null);
         }
 
         @Override
