@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 
 import nl.xillio.xill.plugins.web.NodeVariable;
+import nl.xillio.xill.plugins.web.Options;
+import nl.xillio.xill.plugins.web.PhantomJSPool;
 import nl.xillio.xill.plugins.web.WebVariable;
 
 import org.openqa.selenium.Cookie;
@@ -22,7 +24,7 @@ public interface WebService {
 
 	/**
 	 * Tries to click a {@link WebVariable}.
-	 * 
+	 *
 	 * @param var
 	 *        The variable we want to click.
 	 * @throws StaleElementReferenceException
@@ -240,7 +242,7 @@ public interface WebService {
 	 *        the page we want to switch to.
 	 * @param element
 	 *        The element we want to switch to.
-	 * 
+	 *
 	 */
 	public void switchToFrame(WebVariable var, String element);
 
@@ -256,7 +258,7 @@ public interface WebService {
 
 	/**
 	 * Places a Cookie on a webvariable
-	 * 
+	 *
 	 * @param var
 	 *        The webVariable we want to place the cookie on
 	 * @param cookie
@@ -266,7 +268,7 @@ public interface WebService {
 
 	/**
 	 * Creates a node variable with a given page and element.
-	 * 
+	 *
 	 * @param page
 	 *        The page of the node.
 	 * @param element
@@ -278,7 +280,7 @@ public interface WebService {
 
 	/**
 	 * Executes HTTP GET on a {@link WebVariable} and an URL.
-	 * 
+	 *
 	 * @param var
 	 *        The webpage.
 	 * @param url
@@ -287,14 +289,41 @@ public interface WebService {
 	public void httpGet(WebVariable var, String url) throws ClassCastException, MalformedURLException;
 
 	/**
-	 * Creates an URL and gets the anchor (also known as the "reference") of this URL.
+	 * Creates a page as a {@link WebVariable} given a {@link Options} as setting.
 	 * 
-	 * @param url
-	 *        The url.
+	 * @param options
+	 *        The options.
 	 * @return
-	 *         the reference of this url.
-	 * @throws MalformedURLException
+	 *         The page
 	 */
-	public String getRef(String url) throws MalformedURLException;
+	public WebVariable createPage(Options options);
+	
+	/**
+	 * Drags a page as a {@link WebVariable} from the pool.
+	 * Creates it when it doesn't exist yet.
+	 * @param options
+	 * 						The options the page has.
+	 * @return
+	 * 				The page.
+	 */
+	public WebVariable getPageFromPool(PhantomJSPool pool, Options options);
+
+	/**
+	 * Sets the drivers default options of a {@link WebVariable}.
+	 * 
+	 * @param var
+	 *        The variable we're setting the options for.
+	 * @param timeOut
+	 *        A timeout in milliseconds.
+	 */
+	public void setDriverOptions(WebVariable var, int timeOut);
+
+	/**
+	 * Closes a {@link WebVariable} and all pages associated.
+	 * 
+	 * @param var
+	 *        The variable we want to quit.
+	 */
+	public void quit(WebVariable var);
 
 }

@@ -1,34 +1,19 @@
 package nl.xillio.xill.plugins.web.constructs;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
-import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.Options;
-import nl.xillio.xill.plugins.web.PageVariable;
 import nl.xillio.xill.plugins.web.PhantomJSConstruct;
 import nl.xillio.xill.plugins.web.PhantomJSPool;
-import nl.xillio.xill.plugins.web.WebXillPlugin;
+import nl.xillio.xill.plugins.web.WebVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
-import org.apache.commons.codec.binary.Base64;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriverService;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 /**
  * @author Zbynek Hochmann
@@ -71,32 +56,20 @@ public class LoadPageConstruct extends PhantomJSConstruct implements AutoCloseab
 		}
 
 		// getting properly configured webdriver
-		PageVariable item = LoadPageConstruct.pool.get(LoadPageConstruct.pool.createIdentifier(options)).getPage();
+		WebVariable item = webService.getPageFromPool(pool, options);
 		if (item == null) {
 			throw new RobotRuntimeException("Loadpage error - PhantomJS pool is fully used and cannot provide another instance!");
 		}
 
 		try {
-			try {
-
-				if (webService.getRef(url) != null) {
-					webService.httpGet(item, "about:blank");// this is because of (something like) clearing the PJS cache (CTC-667)
-				}
-			} catch (MalformedURLException e) {
-				throw new RobotRuntimeException("Malformed url given: " + url);
-			}
-
 			webService.httpGet(item, url);
 		} catch (TimeoutException e) {
 			throw new RobotRuntimeException("Loadpage timeout", e);
-		} catch (ClassCastException e) {
-			throw new RobotRuntimeException("Failed to convert the PhantomJSDriver", e);
 		} catch (MalformedURLException e) {
 			throw new RobotRuntimeException("Malformed url given: " + url);
 		}
 		return createPage(item, webService);
 	}
-	
 
 	@Override
 	public void close() throws Exception {

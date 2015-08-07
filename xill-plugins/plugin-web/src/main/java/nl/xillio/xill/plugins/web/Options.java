@@ -19,7 +19,6 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-
 /**
  * Class encapsulate PhantomJS options handling (parsing, validating, creating new PhantomJS process, etc.)
  * Class attributes represents all browser options for use in the loadpage function
@@ -51,8 +50,9 @@ public class Options {
 
 	/**
 	 * Processes the Proxy option given an object with options.
+	 *
 	 * @param options
-	 * 					The options OBJECT, already parsed.
+	 *        The options OBJECT, already parsed.
 	 */
 	private void processProxy(final Map<String, MetaExpression> options) {
 		MetaExpression proxyPortME = options.get("proxyport");
@@ -64,10 +64,9 @@ public class Options {
 		proxyUser = getString(options, "proxyuser");
 		proxyPass = getString(options, "proxypass");
 		proxyType = getString(options, "proxytype");
-		
-		
-		//Check if the proxyUserValue is null or empty
-		//Check if the proxyPassValue is null or empty
+
+		// Check if the proxyUserValue is null or empty
+		// Check if the proxyPassValue is null or empty
 		boolean proxyUserEmpty = proxyUser == null || proxyUser.isEmpty();
 		boolean proxyPassEmpty = proxyPass == null || proxyPass.isEmpty();
 		if (proxyUserEmpty != proxyPassEmpty) {
@@ -89,6 +88,13 @@ public class Options {
 			case "proxyhost":
 				proxyHost = value.getStringValue();
 				processProxy(options);
+				break;
+			
+			//needed if we want to set proxyhost
+			case "proxyport":
+			case "proxyuser":
+			case "proxypass":
+			case "proxytype":
 				break;
 
 			case "enablejs":
@@ -128,6 +134,10 @@ public class Options {
 				if (httpAuthPass == null || httpAuthPass.isEmpty()) {
 					throw new RobotRuntimeException("Http password must be set if user is used.");
 				}
+				break;
+				
+			//Needed if we want to set user
+			case "pass":
 				break;
 
 			case "browser":
@@ -224,8 +234,6 @@ public class Options {
 			// set infinite timeout
 			driver.manage().timeouts().pageLoadTimeout(-1, TimeUnit.MILLISECONDS);
 		}
-
-		// driver.manage().deleteAllCookies(); - probably not needed
 	}
 
 	/**
@@ -314,79 +322,86 @@ public class Options {
 		return driver;
 	}
 
-/*
- * Method deletes all existing PhantomJS process files from temp folder (on
- * Windows only) There are cases when the file is not removed after CT is
- * closed (e.g. when CT crashes or is manually terminated, etc.) This
- * prevents from cumulating useless files in the system.
- */
-public static void cleanUnusedPJSExe() {
-	try {
-		File phantomJStoolBinary;
+	/*
+	 * Method deletes all existing PhantomJS process files from temp folder (on
+	 * Windows only) There are cases when the file is not removed after CT is
+	 * closed (e.g. when CT crashes or is manually terminated, etc.) This
+	 * prevents from cumulating useless files in the system.
+	 */
+	public static void cleanUnusedPJSExe() {
+		try {
+			File phantomJStoolBinary;
 
-		String os = System.getProperty("os.name").toLowerCase();
-		// Windows
-		if (os.indexOf("win") >= 0) {
-			phantomJStoolBinary = File.createTempFile("phantomjs", ".exe");
-			String path = phantomJStoolBinary.toPath().getParent().toString();
-			phantomJStoolBinary.delete();
+			String os = System.getProperty("os.name").toLowerCase();
+			// Windows
+			if (os.indexOf("win") >= 0) {
+				phantomJStoolBinary = File.createTempFile("phantomjs", ".exe");
+				String path = phantomJStoolBinary.toPath().getParent().toString();
+				phantomJStoolBinary.delete();
 
-			// delete all phantomjs process files
-			File dir = new File(path);
-			File[] files = dir.listFiles((final File file, final String name) -> name.startsWith("phantomjs") && name.endsWith(".exe"));
-			for (File file : files) {
-				try {
-					file.delete();
-				} catch (Exception e) {}
+				// delete all phantomjs process files
+				File dir = new File(path);
+				File[] files = dir.listFiles((final File file, final String name) -> name.startsWith("phantomjs") && name.endsWith(".exe"));
+				for (File file : files) {
+					try {
+						file.delete();
+					} catch (Exception e) {}
+				}
 			}
+		} catch (IOException e) {
+			throw new RobotRuntimeException("IO error when deleting existing PhantomJS files  from temp folder", e);
 		}
-	} catch (IOException e) {
-		throw new RobotRuntimeException("IO error when deleting existing PhantomJS files  from temp folder", e);
 	}
-}
 
-/*
- * Creates new PhantomJS.exe file in temporary folder - on MS Windows only
- * For other operating systems, PhantomJS is expected to be properly installed in the path.
- */
-public static void extractNativeBinary() {
+	/*
+	 * Creates new PhantomJS.exe file in temporary folder - on MS Windows only
+	 * For other operating systems, PhantomJS is expected to be properly installed in the path.
+	 */
+	public static void extractNativeBinary() {
 
-	try {
-		File phantomJStoolBinary;
-		String nativeBinarySource;
+		try {
+			File phantomJStoolBinary;
+			String nativeBinarySource;
 
-		String os = System.getProperty("os.name").toLowerCase();
-		// Windows
-		if (os.indexOf("win") >= 0) {
-			phantomJStoolBinary = File.createTempFile("phantomjs", ".exe");
-			nativeBinarySource = "/phantomjs/phantomjs.exe";
+			String os = System.getProperty("os.name").toLowerCase();
+			// Windows
+			if (os.indexOf("win") >= 0) {
+				phantomJStoolBinary = File.createTempFile("phantomjs", ".exe");
+				nativeBinarySource = "/phantomjs/phantomjs.exe";
 
-			phantomJStoolBinary.deleteOnExit();
-			String phantomJStoolPath = phantomJStoolBinary.getAbsolutePath();
+				phantomJStoolBinary.deleteOnExit();
+				String phantomJStoolPath = phantomJStoolBinary.getAbsolutePath();
 
-			System.setProperty("phantomjs.binary.path", phantomJStoolPath);
+				System.setProperty("phantomjs.binary.path", phantomJStoolPath);
 
-			// extract file into the current directory
-			InputStream reader = WebXillPlugin.class.getResourceAsStream(nativeBinarySource);
-			if (reader == null) {
-				throw new Exception("Cannot find phantomjs.exe resource file!");
+				// extract file into the current directory
+				InputStream reader = WebXillPlugin.class.getResourceAsStream(nativeBinarySource);
+				if (reader == null) {
+					throw new Exception("Cannot find phantomjs.exe resource file!");
+				}
+				FileOutputStream writer = new FileOutputStream(phantomJStoolPath);
+				byte[] buffer = new byte[1024];
+				int bytesRead = 0;
+				while ((bytesRead = reader.read(buffer)) != -1) {
+					writer.write(buffer, 0, bytesRead);
+				}
+
+				writer.close();
+				reader.close();
+				return;
 			}
-			FileOutputStream writer = new FileOutputStream(phantomJStoolPath);
-			byte[] buffer = new byte[1024];
-			int bytesRead = 0;
-			while ((bytesRead = reader.read(buffer)) != -1) {
-				writer.write(buffer, 0, bytesRead);
-			}
-
-			writer.close();
-			reader.close();
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
 			return;
 		}
-	} catch (Exception e) {
-		System.err.println(e.getMessage());
-		return;
 	}
-}
 
+	/**
+	 * @return
+	 *         Returns the timeOut value in the options.
+	 */
+	public int getTimeOut() {
+		return timeout;
+	}
 
 }

@@ -64,7 +64,7 @@ public abstract class PhantomJSConstruct extends Construct {
 	 *
 	 * @return created PAGE variable
 	 */
-	protected static MetaExpression createPage(final PageVariable item, final WebService webService) {
+	protected static MetaExpression createPage(final WebVariable item, final WebService webService) {
 		MetaExpression var = fromValue(webService.getCurrentUrl(item));
 		var.storeMeta(item);
 		return var;

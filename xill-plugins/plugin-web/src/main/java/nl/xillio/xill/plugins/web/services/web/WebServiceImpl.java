@@ -6,13 +6,18 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import nl.xillio.xill.plugins.web.NodeVariable;
+import nl.xillio.xill.plugins.web.Options;
 import nl.xillio.xill.plugins.web.PageVariable;
+import nl.xillio.xill.plugins.web.PhantomJSPool;
 import nl.xillio.xill.plugins.web.WebVariable;
+import nl.xillio.xill.plugins.web.constructs.LoadPageConstruct;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.InvalidSelectorException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.SearchContext;
@@ -206,12 +211,56 @@ public class WebServiceImpl implements WebService {
 	@Override
 	public void httpGet(final WebVariable var, final String url) throws ClassCastException, MalformedURLException {
 		PhantomJSDriver driver = (PhantomJSDriver) var.getDriver();
-		driver.get("about:blank");
+		if(getRef(url) !=  null){
+			driver.get("about:blank");
+		}
+		driver.get(url);
+	}
+
+	/**
+	 * Creates an URL and gets the anchor (also known as the "reference") of this URL.
+	 *
+	 * @param url
+	 *        The url.
+	 * @return
+	 *         the reference of this url.
+	 * @throws MalformedURLException
+	 */
+	private String getRef(String url) throws MalformedURLException{
+		URL newURL = new URL(url);
+		return newURL.getRef();
 	}
 
 	@Override
-	public String getRef(final String url) throws MalformedURLException {
-		URL newURL = new URL(url);
-		return newURL.getRef();
+	public WebVariable createPage(final Options options) {
+		WebDriver driver = options.createDriver();
+		return new PageVariable(driver, null);
+	}
+
+	@Override
+	public void setDriverOptions(final WebVariable var, final int timeOut) {
+		WebDriver driver = var.getDriver();
+		// setting up bigger size of viewport (default is 400x300)
+		driver.manage().window().setSize(new Dimension(1920, 1080));
+
+		// page load timeout
+		if (timeOut != 0) {
+			driver.manage().timeouts().pageLoadTimeout(timeOut, TimeUnit.MILLISECONDS);
+		} else {
+			// set infinite timeout
+			driver.manage().timeouts().pageLoadTimeout(-1, TimeUnit.MILLISECONDS);
+		}
+
+	}
+
+	@Override
+	public void quit(final WebVariable var) {
+		WebDriver driver = var.getDriver();
+		driver.quit();
+	}
+
+	@Override
+	public WebVariable getPageFromPool(PhantomJSPool pool, Options options) {
+		return pool.get(pool.createIdentifier(options), this).getPage();
 	}
 }

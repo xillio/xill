@@ -13,17 +13,18 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.NodeVariable;
+import nl.xillio.xill.plugins.web.PageVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
 import org.openqa.selenium.StaleElementReferenceException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class LoadPageConstructTest {
+public class LoadPageConstructTest extends ExpressionBuilderHelper {
 
 	
 	@Test
-	public void testNormalUsage(){
+	public void testNormalUsage() {
 		
 		// mock
 		WebService webService = mock(WebService.class);
@@ -112,7 +113,7 @@ public class LoadPageConstructTest {
 		String sslProtocolValue = "sslv3";
 		MetaExpression sslProtocol = mock(MetaExpression.class);
 		when(sslProtocol.getStringValue()).thenReturn(sslProtocolValue);
-		optionsValue.put("sslProtocol", sslProtocol);
+		optionsValue.put("sslprotocol", sslProtocol);
 		
 		//the browser option
 		String browserValue = "PHANTOMJS";
@@ -133,7 +134,16 @@ public class LoadPageConstructTest {
 		optionsValue.put("pass", pass);
 		//--------------------------------------------------------------------------------------
 		
+		MetaExpression options = mock(MetaExpression.class);
+		when(options.getValue()).thenReturn(optionsValue);
+		when(options.getType()).thenReturn(OBJECT);
+		//the process
+		//There is currently no other way to do this; we have to sort out the functions one day.
+		PageVariable pageVariable = mock(PageVariable.class);
+		when(webService.getPageFromPool(any(), any())).thenReturn(pageVariable);
 		
+		// run
+		MetaExpression output = LoadPageConstruct.process(url, options, webService);
 		// verify
 		
 		//The proxyhost option:
@@ -151,6 +161,10 @@ public class LoadPageConstructTest {
 		verify(timeout, times(1)).getNumberValue();
 		verify(ltrUrlAccess, times(1)).getBooleanValue();
 		verify(browser, times(1)).getStringValue();
+		
+		//the user option:
+		verify(user, times(1)).getStringValue();
+		verify(pass, times(1)).getStringValue();
 		
 	}
 
