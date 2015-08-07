@@ -1,17 +1,18 @@
 package nl.xillio.xill.plugins.date.services;
 
+import com.google.inject.Singleton;
+import nl.xillio.xill.plugins.date.data.Date;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.chrono.ChronoZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAccessor;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -19,14 +20,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.google.inject.Singleton;
-
 /**
  * Implementation providing {@link DateService} functions.
- * 
+ *
  * @author Sander Visser
  * @author Geert Konijnendijk
- *
  */
 @Singleton
 public class DateServiceImpl implements DateService {
@@ -34,57 +32,57 @@ public class DateServiceImpl implements DateService {
 	private static final DateTimeFormatter DEFAULT_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 	@Override
-	public ZonedDateTime now() {
-		return ZonedDateTime.now();
+	public Date now() {
+		return new Date(ZonedDateTime.now());
 	}
 
 	@Override
-	public ZonedDateTime constructDate(int year, int month, int day, int hour, int minute, int second, int nano, ZoneId zone) {
-		return ZonedDateTime.of(year, month, day, hour, minute, second, nano, zone);
+	public Date constructDate(int year, int month, int day, int hour, int minute, int second, int nano, ZoneId zone) {
+		return new Date(ZonedDateTime.of(year, month, day, hour, minute, second, nano, zone));
 	}
 
 	@Override
-	public ZonedDateTime parseDate(String date, String format) {
+	public Date parseDate(String date, String format) {
 		DateTimeFormatter formatter = createDateTimeFormatter(format);
 		TemporalAccessor time = formatter.parse(date);
-
+		ZonedDateTime result;
 		if (time instanceof ZonedDateTime) {
-			return (ZonedDateTime) time;
+			result = (ZonedDateTime) time;
+		} else if (time instanceof LocalDateTime) {
+			result = ZonedDateTime.of((LocalDateTime) time, ZoneId.systemDefault());
+		} else {
+			result = LocalDate.from(time).atStartOfDay(ZoneId.systemDefault());
 		}
-		else if (time instanceof LocalDateTime) {
-			return ZonedDateTime.of((LocalDateTime) time, ZoneId.systemDefault());
-		}
-		else {
-			return LocalDate.from(time).atStartOfDay(ZoneId.systemDefault());
-		}
+
+		return new Date(result);
 	}
 
 	private DateTimeFormatter createDateTimeFormatter(String format) {
-		DateTimeFormatter formatter = format != null ? DateTimeFormatter.ofPattern(format) : DEFAULT_FORMATTER;
-		return formatter;
+		return format != null ? DateTimeFormatter.ofPattern(format) : DEFAULT_FORMATTER;
 	}
 
 	@Override
-	public ZonedDateTime add(ChronoZonedDateTime<?> original, Map<ChronoUnit, Long> toAdd) {
+	public Date add(Date original, Map<ChronoUnit, Long> toAdd) {
+		ZonedDateTime value = original.getZoned();
 		for (Entry<ChronoUnit, Long> entry : toAdd.entrySet()) {
-			original = original.plus(entry.getValue(), entry.getKey());
+			value = value.plus(entry.getValue(), entry.getKey());
 		}
-		return ZonedDateTime.from(original);
+		return new Date(value);
 	}
 
 	@Override
-	public ZonedDateTime changeTimeZone(ChronoZonedDateTime<?> original, ZoneId newZone) {
-		return ZonedDateTime.from(original.withZoneSameInstant(newZone));
+	public Date changeTimeZone(Date original, ZoneId newZone) {
+		return new Date(ZonedDateTime.from(original.getZoned().withZoneSameInstant(newZone)));
 	}
 
 	@Override
-	public String formatDate(ChronoZonedDateTime<?> date, String format) {
+	public String formatDate(Date date, String format) {
 		DateTimeFormatter formatter = createDateTimeFormatter(format);
-		return formatter.format(date);
+		return formatter.format(date.getZoned());
 	}
 
 	@Override
-	public String formatDateLocalized(ChronoZonedDateTime<?> date, FormatStyle dateStyle, FormatStyle timeStyle, Locale locale) {
+	public String formatDateLocalized(Date date, FormatStyle dateStyle, FormatStyle timeStyle, Locale locale) {
 		DateTimeFormatter formatter = null;
 		if (locale == null)
 			formatter = DEFAULT_FORMATTER;
@@ -93,43 +91,45 @@ public class DateServiceImpl implements DateService {
 		else if (dateStyle == null && timeStyle != null)
 			formatter = DateTimeFormatter.ofLocalizedTime(timeStyle).withLocale(locale);
 		else if (dateStyle != null && timeStyle == null)
-		  formatter = DateTimeFormatter.ofLocalizedDate(dateStyle).withLocale(locale);
+			formatter = DateTimeFormatter.ofLocalizedDate(dateStyle).withLocale(locale);
+		else
+			throw new IllegalArgumentException("No dateStyle or timeStyle was provided");
 
-		return formatter.format(date);
+		return formatter.format(date.getZoned());
 	}
 
 	@Override
-	public Map<String, Long> getFieldValues(ChronoZonedDateTime<?> date) {
+	public Map<String, Long> getFieldValues(Date date) {
 		Map<String, Long> fields = new HashMap<>();
 		for (ChronoField field : ChronoField.values()) {
-			if (date.isSupported(field)) {
-				fields.put(field.toString(), date.getLong(field));
+			if (date.getZoned().isSupported(field)) {
+				fields.put(field.toString(), date.getZoned().getLong(field));
 			}
 		}
 		return fields;
 	}
 
 	@Override
-	public ZoneId getTimezone(ChronoZonedDateTime<?> date) {
-		return date.getZone();
+	public ZoneId getTimezone(Date date) {
+		return date.getZoned().getZone();
 	}
 
 	@Override
-	public boolean isInFuture(ChronoZonedDateTime<?> date) {
-		return date.isAfter(now());
+	public boolean isInFuture(Date date) {
+		return date.getZoned().isAfter(now().getZoned());
 	}
 
 	@Override
-	public boolean isInPast(ChronoZonedDateTime<?> date) {
-		return date.isBefore(now());
+	public boolean isInPast(Date date) {
+		return date.getZoned().isBefore(now().getZoned());
 	}
 
 	@Override
-	public Map<String, Double> difference(Temporal date1, Temporal date2, boolean absolute) {
+	public Map<String, Double> difference(Date date1, Date date2, boolean absolute) {
 		// Calculate difference and convert to seconds
-		long nanoDifference = date1.until(date2, ChronoUnit.NANOS);
+		long nanoDifference = date1.getZoned().until(date2.getZoned(), ChronoUnit.NANOS);
 		if (absolute)
-		  nanoDifference = Math.abs(nanoDifference);
+			nanoDifference = Math.abs(nanoDifference);
 		BigDecimal difference = new BigDecimal(nanoDifference).multiply(TimeUnits.Nanos.getNumSeconds());
 		// Calculate the totals
 		Map<String, Double> diff = new LinkedHashMap<>();
@@ -148,13 +148,12 @@ public class DateServiceImpl implements DateService {
 
 	/**
 	 * Represents different kinds of time units, containing their name and the amount of nanoseconds they contain.
-	 * 
+	 * <p>
 	 * The units should be listed in growing order of length.
-	 * 
-	 * @author Geert Konijnendijk
 	 *
+	 * @author Geert Konijnendijk
 	 */
-	private static enum TimeUnits {
+	private enum TimeUnits {
 
 		// @formatter:off
 		Nanos("1E-9"),
@@ -177,11 +176,9 @@ public class DateServiceImpl implements DateService {
 		private BigDecimal numSeconds;
 
 		/**
-		 * 
-		 * @param numSecond
-		 *        Number of seconds that fit into one unit of this kind in {@link BigDecimal} String representation
+		 * @param numSeconds Number of seconds that fit into one unit of this kind in {@link BigDecimal} String representation
 		 */
-		private TimeUnits(String numSeconds) {
+		TimeUnits(String numSeconds) {
 			this.numSeconds = new BigDecimal(numSeconds);
 		}
 

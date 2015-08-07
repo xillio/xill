@@ -1,14 +1,11 @@
 package nl.xillio.xill.plugins.date.constructs;
 
-import static nl.xillio.xill.plugins.date.utils.MockUtils.mockDateExpression;
-import static nl.xillio.xill.plugins.date.utils.MockUtils.mockNullExpression;
-import static nl.xillio.xill.plugins.date.utils.MockUtils.mockStringExpression;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertSame;
+import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.date.data.Date;
+import nl.xillio.xill.plugins.date.services.DateService;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 import java.time.ZonedDateTime;
 import java.time.format.FormatStyle;
@@ -16,18 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.date.services.DateService;
-
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import static nl.xillio.xill.plugins.date.utils.MockUtils.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertSame;
 
 /**
  * Test the {@link LocalizedFormatConstruct}
- * 
- * @author Geert Konijnendijk
  *
+ * @author Geert Konijnendijk
  */
 public class LocalizedFormatConstructTest {
 
@@ -70,29 +64,23 @@ public class LocalizedFormatConstructTest {
 
 	/**
 	 * Test the process method with different permutations of normal input
-	 * 
-	 * @param localeExpression
-	 *        Locale variable
-	 * @param expectedLocale
-	 *        Locale expected to be passed to the {@link DateService}
-	 * @param dateStyleExpression
-	 *        FormatStyle variable
-	 * @param expectedDateStyle
-	 *        FormatStyle expected to be passed to the {@link DateService}
-	 * @param timeStyleExpression
-	 *        FormatStyle variable
-	 * @param expectedTimeStyle
-	 *        Locale expected to be passed to the {@link DateService}
+	 *
+	 * @param localeExpression    Locale variable
+	 * @param expectedLocale      Locale expected to be passed to the {@link DateService}
+	 * @param dateStyleExpression FormatStyle variable
+	 * @param expectedDateStyle   FormatStyle expected to be passed to the {@link DateService}
+	 * @param timeStyleExpression FormatStyle variable
+	 * @param expectedTimeStyle   Locale expected to be passed to the {@link DateService}
 	 */
 	@Test(dataProvider = "localeFormatPermutations")
 	public void testProcess(MetaExpression dateStyleExpression, FormatStyle expectedDateStyle, MetaExpression timeStyleExpression,
-	    FormatStyle expectedTimeStyle, MetaExpression localeExpression, Locale expectedLocale) {
+					FormatStyle expectedTimeStyle, MetaExpression localeExpression, Locale expectedLocale) {
 
 		// Mock
 		DateService dateService = mock(DateService.class);
 		String returnString = "2015-08-03 13:40";
 		when(dateService.formatDateLocalized(any(), any(), any(), any())).thenReturn(returnString);
-		ZonedDateTime date = ZonedDateTime.now();
+		Date date = mock(Date.class);
 		MetaExpression dateExpression = mockDateExpression(date);
 
 		// Run
@@ -107,16 +95,14 @@ public class LocalizedFormatConstructTest {
 
 	@DataProvider(name = "wrongStyle")
 	private Object[][] wrongStyleProvider() {
-		return new Object[][] { {mockStringExpression("Wrong"), mockNullExpression()}, {mockNullExpression(), mockStringExpression("Wrong")}};
+		return new Object[][] {{mockStringExpression("Wrong"), mockNullExpression()}, {mockNullExpression(), mockStringExpression("Wrong")}};
 	}
 
 	/**
 	 * Test the process method with strings unparsable by {@link FormatStyle}.
-	 * 
-	 * @param dateStyleExpression
-	 *        Sate style String MetaExpression
-	 * @param timeStyleExpression
-	 *        Time style String MetaExpression
+	 *
+	 * @param dateStyleExpression Sate style String MetaExpression
+	 * @param timeStyleExpression Time style String MetaExpression
 	 */
 	@Test(dataProvider = "wrongStyle", expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "^.*style\\shas\\sto\\sbe\\s'full','long','medium'\\sor\\s'short'.*$")
 	public void testProcessWrongFormat(MetaExpression dateStyleExpression, MetaExpression timeStyleExpression) {
