@@ -13,12 +13,9 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.NodeVariable;
-import nl.xillio.xill.plugins.web.PhantomJSPool;
 import nl.xillio.xill.plugins.web.services.web.FileService;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -38,26 +35,23 @@ public class SelectConstructTest extends ExpressionBuilderHelper {
 			
 			//The element
 			NodeVariable nodeVariable = mock(NodeVariable.class);
-			WebElement element = mock(WebElement.class);
 			MetaExpression node = mock(MetaExpression.class);
 			when(node.getMeta(NodeVariable.class)).thenReturn(nodeVariable);
-			when(nodeVariable.getElement()).thenReturn(element);
 			
 			//The select boolean
 			MetaExpression select = mock(MetaExpression.class);
 			when(select.getBooleanValue()).thenReturn(true);
 			
 			//the process
-			when(webService.isSelected(element)).thenReturn(false);
+			when(webService.isSelected(nodeVariable)).thenReturn(false);
 			
 			// run
 			MetaExpression output = SelectConstruct.process(node, select, webService);
 			
 			// verify
 			verify(node, times(2)).getMeta(NodeVariable.class);
-			verify(nodeVariable, times(1)).getElement();
-			verify(webService, times(1)).isSelected(element);
-			verify(webService, times(1)).click(element);
+			verify(webService, times(1)).isSelected(nodeVariable);
+			verify(webService, times(1)).click(nodeVariable);
 			
 			// assert
 			Assert.assertEquals(output, NULL);
@@ -73,26 +67,23 @@ public class SelectConstructTest extends ExpressionBuilderHelper {
 			
 			//The element
 			NodeVariable nodeVariable = mock(NodeVariable.class);
-			WebElement element = mock(WebElement.class);
 			MetaExpression node = mock(MetaExpression.class);
 			when(node.getMeta(NodeVariable.class)).thenReturn(nodeVariable);
-			when(nodeVariable.getElement()).thenReturn(element);
 			
 			//The select boolean
 			MetaExpression select = mock(MetaExpression.class);
 			when(select.getBooleanValue()).thenReturn(true);
 			
 			//the process
-			when(webService.isSelected(element)).thenReturn(true);
+			when(webService.isSelected(nodeVariable)).thenReturn(true);
 			
 			// run
 			MetaExpression output = SelectConstruct.process(node, select, webService);
 			
 			// verify
 			verify(node, times(2)).getMeta(NodeVariable.class);
-			verify(nodeVariable, times(1)).getElement();
-			verify(webService, times(1)).isSelected(element);
-			verify(webService, times(0)).click(element);
+			verify(webService, times(1)).isSelected(nodeVariable);
+			verify(webService, times(0)).click(nodeVariable);
 			
 			// assert
 			Assert.assertEquals(output, NULL);
@@ -127,17 +118,15 @@ public class SelectConstructTest extends ExpressionBuilderHelper {
 		
 		//The element
 		NodeVariable nodeVariable = mock(NodeVariable.class);
-		WebElement element = mock(WebElement.class);
 		MetaExpression node = mock(MetaExpression.class);
 		when(node.getMeta(NodeVariable.class)).thenReturn(nodeVariable);
-		when(nodeVariable.getElement()).thenReturn(element);
 		
 		//The select boolean
 		MetaExpression select = mock(MetaExpression.class);
 		when(select.getBooleanValue()).thenReturn(false);
 		
 		//the process
-		when(webService.isSelected(element)).thenThrow(new RobotRuntimeException("I broke."));
+		when(webService.isSelected(nodeVariable)).thenThrow(new RobotRuntimeException("I broke."));
 		
 		// run
 		SelectConstruct.process(node, select, webService);

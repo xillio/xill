@@ -11,7 +11,6 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.NodeVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -28,24 +27,19 @@ public class InputConstructTest extends ExpressionBuilderHelper {
 		//The input
 		MetaExpression input = mock(MetaExpression.class);
 		NodeVariable nodeVariable = mock(NodeVariable.class);
-		WebElement element = mock(WebElement.class);
+		when(input.getMeta(NodeVariable.class)).thenReturn(nodeVariable);
 		
 		//The text input
 		MetaExpression text = mock(MetaExpression.class);
-		
-		when(input.getMeta(NodeVariable.class)).thenReturn(nodeVariable);
-		when(nodeVariable.getElement()).thenReturn(element);
 		when(text.getStringValue()).thenReturn("Text");
-
 
 		// run
 		MetaExpression output = InputConstruct.process(input, text, webService);
 
 		// verify
 		verify(input, times(2)).getMeta(NodeVariable.class);
-		verify(nodeVariable, times(1)).getElement();
-		verify(webService, times(1)).clear(element);
-		verify(webService, times(1)).sendKeys(element, "Text");
+		verify(webService, times(1)).clear(nodeVariable);
+		verify(webService, times(1)).sendKeys(nodeVariable, "Text");
 
 		// assert
 		Assert.assertEquals(output, NULL);

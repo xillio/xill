@@ -37,8 +37,8 @@ public class ClickConstruct extends PhantomJSConstruct {
 		// else
 		try {
 			webService.click(getNode(elementVar));
-		} catch (StaleElementReferenceException e) {
-			throw new RobotRuntimeException("Stale element clicked.");
+		} catch (Exception e) {
+				throw new RobotRuntimeException("Stale element clicked.");
 		}
 
 		return NULL;

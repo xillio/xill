@@ -27,18 +27,14 @@ public class ClickConstructTest extends ExpressionBuilderHelper {
 		MetaExpression input = mock(MetaExpression.class);
 		WebService webService = mock(WebService.class);
 		NodeVariable nodeVariable = mock(NodeVariable.class);
-		WebElement webElement = mock(WebElement.class);
 		
 		when(input.getMeta(NodeVariable.class)).thenReturn(nodeVariable);
-		when(nodeVariable.getElement()).thenReturn(webElement);
-
 
 		// run
 		MetaExpression output = ClickConstruct.process(input, webService);
 
 		// verify
 		verify(input, times(2)).getMeta(NodeVariable.class);
-		verify(nodeVariable, times(1)).getElement();
 		verify(webService, times(1)).click(any());
 
 		// assert
@@ -57,9 +53,8 @@ public class ClickConstructTest extends ExpressionBuilderHelper {
 		
 		when(input.getMeta(NodeVariable.class)).thenReturn(null);
 
-
 		// run
-		MetaExpression output = ClickConstruct.process(input, webService);		
+		ClickConstruct.process(input, webService);		
 	}
 	
 	/**
@@ -71,10 +66,8 @@ public class ClickConstructTest extends ExpressionBuilderHelper {
 		MetaExpression input = mock(MetaExpression.class);
 		WebService webService = mock(WebService.class);
 		NodeVariable nodeVariable = mock(NodeVariable.class);
-		WebElement webElement = mock(WebElement.class);
 		
 		when(input.getMeta(NodeVariable.class)).thenReturn(nodeVariable);
-		when(nodeVariable.getElement()).thenReturn(webElement);
 		doThrow(new StaleElementReferenceException("")).when(webService).click(any());
 	}
 }

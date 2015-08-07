@@ -1,8 +1,5 @@
 package nl.xillio.xill.plugins.web.constructs;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
@@ -14,12 +11,11 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.NodeVariable;
+import nl.xillio.xill.plugins.web.PageVariable;
 import nl.xillio.xill.plugins.web.PhantomJSPool;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
 import org.openqa.selenium.Cookie;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -42,21 +38,18 @@ public class RemoveAllCookiesConstructTest extends ExpressionBuilderHelper {
 		WebService webService = mock(WebService.class);
 		
 		//The page
-		PhantomJSPool.Entity pageVariable = mock(PhantomJSPool.Entity.class);
-		WebDriver driver = mock(WebDriver.class);
+		PageVariable pageVariable = mock(PageVariable.class);
 		MetaExpression page = mock(MetaExpression.class);
-		when(page.getMeta(PhantomJSPool.Entity.class)).thenReturn(pageVariable);
-		when(pageVariable.getDriver()).thenReturn(driver);
+		when(page.getMeta(PageVariable.class)).thenReturn(pageVariable);
 		
 		// run
 		MetaExpression output = RemoveAllCookiesConstruct.process(page, webService);
 		
 		//Wheter we parse the pageVariable only once
-		verify(page, times(2)).getMeta(PhantomJSPool.Entity.class);
-		verify(pageVariable, times(1)).getDriver();
+		verify(page, times(2)).getMeta(PageVariable.class);
 		
 		//We had one item to delete
-		verify(webService, times(1)).deleteCookies(driver);
+		verify(webService, times(1)).deleteCookies(pageVariable);
 		
 		// assert
 		Assert.assertEquals(output, NULL);		
@@ -71,14 +64,12 @@ public class RemoveAllCookiesConstructTest extends ExpressionBuilderHelper {
 		WebService webService = mock(WebService.class);
 		
 		//The page
-		PhantomJSPool.Entity pageVariable = mock(PhantomJSPool.Entity.class);
-		WebDriver driver = mock(WebDriver.class);
+		PageVariable pageVariable = mock(PageVariable.class);
 		MetaExpression page = mock(MetaExpression.class);
-		when(page.getMeta(PhantomJSPool.Entity.class)).thenReturn(pageVariable);
-		when(pageVariable.getDriver()).thenReturn(driver);
+		when(page.getMeta(PageVariable.class)).thenReturn(pageVariable);
 		
 		//we make it break
-		doThrow(new RobotRuntimeException("Resistance is futile.")).when(webService).deleteCookies(any());
+		doThrow(new RobotRuntimeException("Resistance is futile.")).when(webService).deleteCookies(pageVariable);
 		
 		// run
 		RemoveAllCookiesConstruct.process(page, webService);

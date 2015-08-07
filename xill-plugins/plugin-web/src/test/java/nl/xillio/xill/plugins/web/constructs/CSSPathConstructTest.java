@@ -1,17 +1,10 @@
 package nl.xillio.xill.plugins.web.constructs;
 
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.openqa.selenium.SearchContext;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -20,6 +13,7 @@ import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.NodeVariable;
 import nl.xillio.xill.plugins.web.NodeVariable;
+import nl.xillio.xill.plugins.web.WebVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
 /**
@@ -34,35 +28,37 @@ public class CSSPathConstructTest extends ExpressionBuilderHelper {
 	 */
 	@Test
 	public void testNormalNodeUsage(){
-		//mock
-		MetaExpression element = mock(MetaExpression.class);
-		MetaExpression cssPath = mock(MetaExpression.class);
+		// mock
 		WebService webService = mock(WebService.class);
+		
+		//The element
+		MetaExpression element = mock(MetaExpression.class);
 		NodeVariable nodeVariable = mock(NodeVariable.class);
-		WebElement webElement = mock(WebElement.class);
-		WebDriver webDriver = mock(WebDriver.class);
-		
-		WebElement firstResult = mock(WebElement.class);
-		WebElement secondResult = mock(WebElement.class);
-		String query = "cssPath";
-		
-		when(cssPath.getStringValue()).thenReturn(query);
 		when(element.getMeta(NodeVariable.class)).thenReturn(nodeVariable);
-		when(nodeVariable.getElement()).thenReturn(webElement);
-		when(nodeVariable.getDriver()).thenReturn(webDriver);
-		when(webService.findElementsWithCssPath(webElement, query)).thenReturn(Arrays.asList(firstResult, secondResult));
+		
+		//The css path
+		String query = "cssPath";
+		MetaExpression cssPath = mock(MetaExpression.class);
+		when(cssPath.getStringValue()).thenReturn(query);
+
+		//The result from findElements
+		NodeVariable firstResult = mock(NodeVariable.class);
+		NodeVariable secondResult = mock(NodeVariable.class);
+		
+		//The process
+		when(webService.findElementsWithCssPath(nodeVariable, query)).thenReturn(Arrays.asList(firstResult, secondResult));
 		when(webService.getAttribute(eq(firstResult), anyString())).thenReturn("first");
 		when(webService.getAttribute(eq(secondResult), anyString())).thenReturn("second");
+		when(webService.createNodeVariable(nodeVariable, firstResult)).thenReturn(firstResult);
+		when(webService.createNodeVariable(nodeVariable, secondResult)).thenReturn(secondResult);
 		
 		//run
 		MetaExpression output = CSSPathConstruct.process(element, cssPath, webService);
 		
 		//verify
 		verify(cssPath, times(1)).getStringValue();
-		verify(element, times(3)).getMeta(NodeVariable.class);
-		verify(nodeVariable, times(1)).getElement();
-		verify(nodeVariable, times(1)).getDriver();
-		verify(webService, times(1)).findElementsWithCssPath(webElement, query);
+		verify(element, times(2)).getMeta(NodeVariable.class);
+		verify(webService, times(1)).findElementsWithCssPath(nodeVariable, query);
 		verify(webService, times(1)).getAttribute(eq(firstResult), anyString());
 		verify(webService, times(1)).getAttribute(eq(secondResult), anyString());
 		
@@ -78,33 +74,36 @@ public class CSSPathConstructTest extends ExpressionBuilderHelper {
 	 */
 	@Test
 	public void testProcessSingleResultValue() {
-		//mock
-		MetaExpression element = mock(MetaExpression.class);
-		MetaExpression cssPath = mock(MetaExpression.class);
+		// mock
 		WebService webService = mock(WebService.class);
+		
+		//The element
+		MetaExpression element = mock(MetaExpression.class);
 		NodeVariable nodeVariable = mock(NodeVariable.class);
-		WebElement webElement = mock(WebElement.class);
-		WebDriver webDriver = mock(WebDriver.class);
-		
-		WebElement firstResult = mock(WebElement.class);
-		String query = "cssPath";
-		
-		when(cssPath.getStringValue()).thenReturn(query);
 		when(element.getMeta(NodeVariable.class)).thenReturn(nodeVariable);
-		when(nodeVariable.getElement()).thenReturn(webElement);
-		when(nodeVariable.getDriver()).thenReturn(webDriver);
-		when(webService.findElementsWithCssPath(webElement, query)).thenReturn(Arrays.asList(firstResult));
+		
+		//The css path
+		String query = "cssPath";
+		MetaExpression cssPath = mock(MetaExpression.class);
+		when(cssPath.getStringValue()).thenReturn(query);
+		
+		//The result of findElements
+		NodeVariable firstResult = mock(NodeVariable.class);
+		
+		//The process
+		when(webService.findElementsWithCssPath(nodeVariable, query)).thenReturn(Arrays.asList(firstResult));
 		when(webService.getAttribute(eq(firstResult), anyString())).thenReturn("first");
+		when(webService.createNodeVariable(nodeVariable, firstResult)).thenReturn(firstResult);
+
+		
 		
 		//run
 		MetaExpression output = CSSPathConstruct.process(element, cssPath, webService);
 		
 		//verify
 		verify(cssPath, times(1)).getStringValue();
-		verify(element, times(3)).getMeta(NodeVariable.class);
-		verify(nodeVariable, times(1)).getElement();
-		verify(nodeVariable, times(1)).getDriver();
-		verify(webService, times(1)).findElementsWithCssPath(webElement, query);
+		verify(element, times(2)).getMeta(NodeVariable.class);
+		verify(webService, times(1)).findElementsWithCssPath(nodeVariable, query);
 		verify(webService, times(1)).getAttribute(eq(firstResult), anyString());
 		
 		//assert
@@ -113,35 +112,32 @@ public class CSSPathConstructTest extends ExpressionBuilderHelper {
 	
 	@Test
 	public void testProcessNoValueFound(){
-		//mock
-		MetaExpression element = mock(MetaExpression.class);
-		MetaExpression cssPath = mock(MetaExpression.class);
+		// mock
 		WebService webService = mock(WebService.class);
-		NodeVariable nodeVariable = mock(NodeVariable.class);
-		WebElement webElement = mock(WebElement.class);
-		WebDriver webDriver = mock(WebDriver.class);
-
-		WebElement secondResult = mock(WebElement.class);
-		String query = "cssPath";
 		
-		when(cssPath.getStringValue()).thenReturn(query);
+		//The element
+		MetaExpression element = mock(MetaExpression.class);
+		NodeVariable nodeVariable = mock(NodeVariable.class);
 		when(element.getMeta(NodeVariable.class)).thenReturn(nodeVariable);
-		when(nodeVariable.getElement()).thenReturn(webElement);
-		when(nodeVariable.getDriver()).thenReturn(webDriver);
-		when(webService.findElementsWithCssPath(webElement, query)).thenReturn(Arrays.asList());
+		
+		//The css path
+		String query = "cssPath";
+		MetaExpression cssPath = mock(MetaExpression.class);
+		when(cssPath.getStringValue()).thenReturn(query);
+		
+		//The process
+		when(webService.findElementsWithCssPath(nodeVariable, query)).thenReturn(Arrays.asList());
 
-		//run
+		// run
 		MetaExpression output = CSSPathConstruct.process(element, cssPath, webService);
 		
-		//verify
+		// verify
 		verify(cssPath, times(1)).getStringValue();
-		verify(element, times(3)).getMeta(NodeVariable.class);
-		verify(nodeVariable, times(1)).getElement();
-		verify(nodeVariable, times(1)).getDriver();
-		verify(webService, times(1)).findElementsWithCssPath(webElement, query);
+		verify(element, times(2)).getMeta(NodeVariable.class);
+		verify(webService, times(1)).findElementsWithCssPath(nodeVariable, query);
 		verify(webService, times(0)).getAttribute(any(), anyString());
 		
-		//assert
+		// assert
 		Assert.assertEquals(output, NULL);
 	}
 }

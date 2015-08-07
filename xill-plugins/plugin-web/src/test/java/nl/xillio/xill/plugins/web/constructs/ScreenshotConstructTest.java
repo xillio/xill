@@ -13,11 +13,12 @@ import java.io.IOException;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.PhantomJSPool;
+import nl.xillio.xill.plugins.web.PageVariable;
 import nl.xillio.xill.plugins.web.services.web.FileService;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
-import org.openqa.selenium.WebDriver;
+
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -37,11 +38,9 @@ public class ScreenshotConstructTest extends ExpressionBuilderHelper {
 		FileService fileService = mock(FileService.class);
 		
 		//The page
-		PhantomJSPool.Entity pageVariable = mock(PhantomJSPool.Entity.class);
-		WebDriver driver = mock(WebDriver.class);
+		PageVariable pageVariable = mock(PageVariable.class);
 		MetaExpression page = mock(MetaExpression.class);
-		when(page.getMeta(PhantomJSPool.Entity.class)).thenReturn(pageVariable);
-		when(pageVariable.getDriver()).thenReturn(driver);
+		when(page.getMeta(PageVariable.class)).thenReturn(pageVariable);
 		
 		//The name
 		String nameValue = "Tony";
@@ -53,18 +52,17 @@ public class ScreenshotConstructTest extends ExpressionBuilderHelper {
 		File desFile = mock(File.class);
 		
 		//The process
-		when(webService.getScreenshotAsFile(driver)).thenReturn(srcFile);
+		when(webService.getScreenshotAsFile(pageVariable)).thenReturn(srcFile);
 		when(fileService.makeFile(nameValue)).thenReturn(desFile);
 		
 		// run
 		MetaExpression output = ScreenshotConstruct.process(page, name, fileService, webService);
 		
 		//Wheter we parse the pageVariable only once
-		verify(page, times(2)).getMeta(PhantomJSPool.Entity.class);
-		verify(pageVariable, times(1)).getDriver();
+		verify(page, times(2)).getMeta(PageVariable.class);
 		
 		//We make one screenshot and store it once
-		verify(webService, times(1)).getScreenshotAsFile(driver);
+		verify(webService, times(1)).getScreenshotAsFile(pageVariable);
 		verify(fileService, times(1)).makeFile(nameValue);
 		verify(fileService, times(1)).copyFile(srcFile, desFile);
 		
@@ -82,11 +80,9 @@ public class ScreenshotConstructTest extends ExpressionBuilderHelper {
 		FileService fileService = mock(FileService.class);
 		
 		//The page
-		PhantomJSPool.Entity pageVariable = mock(PhantomJSPool.Entity.class);
-		WebDriver driver = mock(WebDriver.class);
+		PageVariable pageVariable = mock(PageVariable.class);
 		MetaExpression page = mock(MetaExpression.class);
-		when(page.getMeta(PhantomJSPool.Entity.class)).thenReturn(pageVariable);
-		when(pageVariable.getDriver()).thenReturn(driver);
+		when(page.getMeta(PageVariable.class)).thenReturn(pageVariable);
 		
 		//The name
 		String nameValue = "Tony";
@@ -94,7 +90,7 @@ public class ScreenshotConstructTest extends ExpressionBuilderHelper {
 		when(name.getStringValue()).thenReturn(nameValue);
 		
 		//The process
-		when(webService.getScreenshotAsFile(driver)).thenThrow(new RobotRuntimeException(""));
+		when(webService.getScreenshotAsFile(pageVariable)).thenThrow(new RobotRuntimeException(""));
 		
 		// run
 		ScreenshotConstruct.process(page, name, fileService, webService);
@@ -111,11 +107,9 @@ public class ScreenshotConstructTest extends ExpressionBuilderHelper {
 		FileService fileService = mock(FileService.class);
 		
 		//The page
-		PhantomJSPool.Entity pageVariable = mock(PhantomJSPool.Entity.class);
-		WebDriver driver = mock(WebDriver.class);
+		PageVariable pageVariable = mock(PageVariable.class);
 		MetaExpression page = mock(MetaExpression.class);
-		when(page.getMeta(PhantomJSPool.Entity.class)).thenReturn(pageVariable);
-		when(pageVariable.getDriver()).thenReturn(driver);
+		when(page.getMeta(PageVariable.class)).thenReturn(pageVariable);
 		
 		//The name
 		String nameValue = "Tony";
@@ -127,7 +121,7 @@ public class ScreenshotConstructTest extends ExpressionBuilderHelper {
 		File desFile = mock(File.class);
 		
 		//The process
-		when(webService.getScreenshotAsFile(driver)).thenReturn(srcFile);
+		when(webService.getScreenshotAsFile(pageVariable)).thenReturn(srcFile);
 		when(fileService.makeFile(nameValue)).thenReturn(desFile);
 		doThrow(new IOException()).when(fileService).copyFile(srcFile, desFile);
 		
@@ -135,11 +129,10 @@ public class ScreenshotConstructTest extends ExpressionBuilderHelper {
 		MetaExpression output = ScreenshotConstruct.process(page, name, fileService, webService);
 		
 		//Wheter we parse the pageVariable only once
-		verify(page, times(2)).getMeta(PhantomJSPool.Entity.class);
-		verify(pageVariable, times(1)).getDriver();
+		verify(page, times(2)).getMeta(PageVariable.class);
 		
 		//We make one screenshot and store it once
-		verify(webService, times(1)).getScreenshotAsFile(driver);
+		verify(webService, times(1)).getScreenshotAsFile(pageVariable);
 		verify(fileService, times(1)).makeFile(nameValue);
 		verify(fileService, times(1)).copyFile(srcFile, desFile);
 		
@@ -159,7 +152,7 @@ public class ScreenshotConstructTest extends ExpressionBuilderHelper {
 		
 		//The page
 		MetaExpression page = mock(MetaExpression.class);
-		when(page.getMeta(PhantomJSPool.Entity.class)).thenReturn(null);
+		when(page.getMeta(PageVariable.class)).thenReturn(null);
 		
 		//The name
 		String nameValue = "Tony";
