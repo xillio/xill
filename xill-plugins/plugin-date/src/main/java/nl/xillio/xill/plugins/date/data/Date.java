@@ -16,7 +16,9 @@ public class Date implements MetadataExpression {
 	private final ZonedDateTime date;
 
 	public Date(ZonedDateTime date) {
-
+		if (date == null) {
+			throw new NullPointerException();
+		}
 		this.date = date;
 	}
 
@@ -27,5 +29,9 @@ public class Date implements MetadataExpression {
 	 */
 	public ZonedDateTime getZoned() {
 		return date;
+	}
+
+	@Override public String toString() {
+		return getZoned().toString();
 	}
 }

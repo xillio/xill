@@ -1,23 +1,19 @@
 package nl.xillio.xill.plugins.date.constructs;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertSame;
+import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.plugins.date.data.Date;
+import nl.xillio.xill.plugins.date.services.DateService;
+import org.testng.annotations.Test;
 
 import java.time.ZonedDateTime;
 
-import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.plugins.date.services.DateService;
-
-import org.testng.annotations.Test;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertSame;
 
 /**
- * 
  * Tests the {@link NowConstruct}
- * 
- * @author Geert Konijnendijk
  *
+ * @author Geert Konijnendijk
  */
 public class NowConstructTest {
 
@@ -29,7 +25,7 @@ public class NowConstructTest {
 		// Mock
 
 		// ZonedDateTime is final, don't mock
-		ZonedDateTime mockDate = ZonedDateTime.now();
+		Date mockDate = mock(Date.class);
 		DateService dateService = mock(DateService.class);
 		when(dateService.now()).thenReturn(mockDate);
 
@@ -40,6 +36,6 @@ public class NowConstructTest {
 		verify(dateService).now();
 
 		// Assert
-		assertSame(date.getMeta(ZonedDateTime.class), mockDate);
+		assertSame(date.getMeta(Date.class), mockDate);
 	}
 }

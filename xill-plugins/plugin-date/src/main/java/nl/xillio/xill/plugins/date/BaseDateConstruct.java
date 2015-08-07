@@ -27,14 +27,14 @@ public abstract class BaseDateConstruct extends Construct {
 	 * @param name    The name of the parameter
 	 * @return
 	 */
-	protected static ZonedDateTime getDate(final MetaExpression dateVar, final String name) {
+	protected static Date getDate(final MetaExpression dateVar, final String name) {
 		Date date = dateVar.getMeta(Date.class);
 
 		if (date == null) {
 			throw new RobotRuntimeException("Expected a date. Create a date using either Date.parse() or Date.of().");
 		}
 
-		return date.getZoned();
+		return date;
 	}
 
 	/**
@@ -50,9 +50,9 @@ public abstract class BaseDateConstruct extends Construct {
 	 * @param date
 	 * @return
 	 */
-	protected static MetaExpression fromValue(final ZonedDateTime date) {
+	protected static MetaExpression fromValue(final Date date) {
 		MetaExpression value = fromValue(date.toString());
-		value.storeMeta(Date.class, new Date(date));
+		value.storeMeta(Date.class, date);
 		return value;
 	}
 
