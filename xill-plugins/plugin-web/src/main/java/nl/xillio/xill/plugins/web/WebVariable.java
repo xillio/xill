@@ -1,5 +1,7 @@
 package nl.xillio.xill.plugins.web;
 
+import nl.xillio.xill.api.components.MetadataExpression;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -7,7 +9,7 @@ import org.openqa.selenium.WebElement;
  * Defines an interface for a WebVariable
  *
  */
-public abstract class WebVariable {
+public abstract class WebVariable implements MetadataExpression{
 
 	/**
 	 * @return Returns a {@link WebElement}.

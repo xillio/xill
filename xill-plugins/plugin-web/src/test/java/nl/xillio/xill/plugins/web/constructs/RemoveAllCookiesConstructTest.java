@@ -9,7 +9,6 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.PageVariable;
-import nl.xillio.xill.plugins.web.PhantomJSPool;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
 import org.testng.Assert;
@@ -77,7 +76,7 @@ public class RemoveAllCookiesConstructTest extends ExpressionBuilderHelper {
 
 		// The page
 		MetaExpression page = mock(MetaExpression.class);
-		when(page.getMeta(PhantomJSPool.Entity.class)).thenReturn(null);
+		when(page.getMeta(PageVariable.class)).thenReturn(null);
 
 		// run
 		RemoveAllCookiesConstruct.process(page, webService);

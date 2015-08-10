@@ -1,9 +1,11 @@
 package nl.xillio.xill.plugins.web;
 
+import nl.xillio.xill.api.components.MetadataExpression;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-public class PageVariable extends WebVariable {
+public class PageVariable extends WebVariable implements MetadataExpression {
 	private final WebDriver driver;
 	private final WebElement element;
 
