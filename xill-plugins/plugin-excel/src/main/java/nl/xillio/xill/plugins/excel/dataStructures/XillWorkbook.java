@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.excel.dataStructures;
 
+import nl.xillio.xill.api.components.MetadataExpression;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -13,7 +14,7 @@ import java.io.InputStream;
 /**
  * Created by Daan Knoope on 7-8-2015.
  */
-public class XillWorkbook {
+public class XillWorkbook implements MetadataExpression{
 	Workbook workbook;
 	Sheet sheet;
 

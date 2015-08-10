@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.excel.dataStructures;
 
+import nl.xillio.xill.api.components.MetadataExpression;
 import nl.xillio.xill.api.errors.NotImplementedException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DateUtil;
@@ -9,7 +10,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 /**
  * Created by Daan Knoope on 7-8-2015.
  */
-public class XillSheet {
+public class XillSheet implements MetadataExpression {
 	private Sheet sheet;
 	private String name;
 	private int columnLength;
