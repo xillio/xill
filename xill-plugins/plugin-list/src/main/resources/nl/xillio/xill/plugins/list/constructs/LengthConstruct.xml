@@ -5,7 +5,7 @@
     <param name="list"/>
   </parameters>
   <description><![CDATA[
-		HERE COMES THE DISCRIPTION
+		 Returns the length of the given list or object.
   ]]></description>
   <examples>
     <example description="Executing:"><![CDATA[

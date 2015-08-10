@@ -120,7 +120,10 @@ public class SortImpl implements Sort {
 			}
 
 			// These objects are of the same type.
+			try{
 			if (objectA.equals(objectB)) {
+				result = 0;
+			}}catch(NullPointerException e){
 				result = 0;
 			}
 

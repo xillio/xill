@@ -6,7 +6,7 @@
     <param name="value"/>
   </parameters>
   <description><![CDATA[
-	HERE COMES THE DISCRIPTION
+	Returns true if the value is contained in the given list or object. Otherwise false.
   ]]></description>
   <examples>
     <example description="Executing:"><![CDATA[

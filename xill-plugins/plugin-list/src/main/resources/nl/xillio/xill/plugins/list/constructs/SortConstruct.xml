@@ -9,7 +9,10 @@
   
   </parameters>
   <description><![CDATA[
-	HERE COMES THE DISCRIPTION
+	returns the sorted list or object.
+	If recursive is true it will also sort the lists and object inside the given list or object.
+	If onKeys is true it will sort object by key instead of by value.
+	If reverse is true it will sort highest first.
   ]]></description>
   <examples>
     <example description="Executing:"><![CDATA[

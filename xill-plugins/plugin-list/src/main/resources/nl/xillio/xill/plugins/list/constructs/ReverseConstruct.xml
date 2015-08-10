@@ -6,7 +6,8 @@
     <param name="recursive" default="false"/>
   </parameters>
   <description><![CDATA[
-		HERE COMES THE DISCRIPTION
+		returns the reverse of the given list or object.
+ 		 If recursive is true it will also reverse lists and objects inside the given list or object.
   ]]></description>
   <examples>
     <example description="Executing:"><![CDATA[

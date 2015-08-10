@@ -6,7 +6,8 @@
     <param name="index"/>
   </parameters>
   <description><![CDATA[
-		HERE COMES THE DISCRIPTION
+		If the input is a list it will remove the element at the given index.
+		If the input is an object it will remove the element with the given key.
   ]]></description>
   <examples>
     <example description="Executing:"><![CDATA[
