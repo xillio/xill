@@ -1,5 +1,11 @@
 package nl.xillio.xill.plugins.web.services.web;
 
+import com.google.inject.Singleton;
+import nl.xillio.xill.plugins.web.*;
+import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -7,27 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-
-import nl.xillio.xill.plugins.web.CookieVariable;
-import nl.xillio.xill.plugins.web.NodeVariable;
-import nl.xillio.xill.plugins.web.Options;
-import nl.xillio.xill.plugins.web.PageVariable;
-import nl.xillio.xill.plugins.web.PhantomJSPool;
-import nl.xillio.xill.plugins.web.WebVariable;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.Cookie;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.InvalidSelectorException;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.SearchContext;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
-
-import com.google.inject.Singleton;
 
 /**
  * The implementation of the {@link WebService} interface.
@@ -71,8 +56,7 @@ public class WebServiceImpl implements WebService {
 		SearchContext node;
 		if (var instanceof PageVariable) {
 			node = var.getDriver();
-		}
-		else {
+		} else {
 			node = var.getElement();
 		}
 		List<WebElement> searchResults = node.findElements(By.cssSelector(cssPath));
@@ -88,8 +72,7 @@ public class WebServiceImpl implements WebService {
 		SearchContext node;
 		if (var instanceof PageVariable) {
 			node = var.getDriver();
-		}
-		else {
+		} else {
 			node = var.getElement();
 		}
 		List<WebElement> searchResults = node.findElements(By.xpath(xpath));
@@ -233,8 +216,8 @@ public class WebServiceImpl implements WebService {
 	}
 
 	@Override
-	public WebVariable createPage(final Options options) {
-		if(options == null){
+	public PageVariable createPage(final Options options) {
+		if (options == null) {
 			throw new NullPointerException("Options cannot be null.");
 		}
 		WebDriver driver = options.createDriver();

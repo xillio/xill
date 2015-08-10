@@ -1,21 +1,15 @@
 package nl.xillio.xill.plugins.web.services.web;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.util.List;
-import java.util.Set;
-
-import nl.xillio.xill.plugins.web.CookieVariable;
-import nl.xillio.xill.plugins.web.NodeVariable;
-import nl.xillio.xill.plugins.web.Options;
-import nl.xillio.xill.plugins.web.PhantomJSPool;
-import nl.xillio.xill.plugins.web.WebVariable;
-
+import com.google.inject.ImplementedBy;
+import nl.xillio.xill.plugins.web.*;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.InvalidSelectorException;
 import org.openqa.selenium.StaleElementReferenceException;
 
-import com.google.inject.ImplementedBy;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Provides an interface for a webService.
@@ -31,7 +25,7 @@ public interface WebService {
 	 * @throws StaleElementReferenceException
 	 *         Throws an exception when the element is stale.
 	 */
-	public void click(WebVariable var) throws StaleElementReferenceException;
+	void click(WebVariable var) throws StaleElementReferenceException;
 
 	/**
 	 * Sets focus on an element on a given page.
@@ -39,7 +33,7 @@ public interface WebService {
 	 * @param var
 	 *        The element we want to move to.
 	 */
-	public void moveToElement(WebVariable var);
+	void moveToElement(WebVariable var);
 
 	/**
 	 * Returns the tag name of a {@link WebVariable}
@@ -49,7 +43,7 @@ public interface WebService {
 	 * @return
 	 *         The name of the tag of the variable.
 	 */
-	public String getTagName(WebVariable var);
+	String getTagName(WebVariable var);
 
 	/**
 	 * Returns a given attribute of a {@link WebVariable}.
@@ -61,7 +55,7 @@ public interface WebService {
 	 * @return
 	 *         The attribute of the element.
 	 */
-	public String getAttribute(WebVariable var, String name);
+	String getAttribute(WebVariable var, String name);
 
 	/**
 	 * Returns the text contained in a {@link WebVariable}.
@@ -71,7 +65,7 @@ public interface WebService {
 	 * @return
 	 *         Returns the text in the element.
 	 */
-	public String getText(WebVariable var);
+	String getText(WebVariable var);
 
 	/**
 	 * Returns the title of a {@link WebVariable}.
@@ -81,7 +75,7 @@ public interface WebService {
 	 * @return
 	 *         The title.
 	 */
-	public String getTitle(WebVariable var);
+	String getTitle(WebVariable var);
 
 	/**
 	 * Finds all the elements in a node given a cssPath.
@@ -94,7 +88,7 @@ public interface WebService {
 	 *         Returns a list of elements: {@link WebVariable}.
 	 * @throws InvalidSelectorException
 	 */
-	public List<WebVariable> findElementsWithCssPath(WebVariable var, String cssPath) throws InvalidSelectorException;
+	List<WebVariable> findElementsWithCssPath(WebVariable var, String cssPath) throws InvalidSelectorException;
 
 	/**
 	 * Finds all the elements in a node given a cssPath.
@@ -107,7 +101,7 @@ public interface WebService {
 	 *         Returns a list of elements: {@link WebVariable}.
 	 * @throws InvalidSelectorException
 	 */
-	public List<WebVariable> findElementsWithXpath(WebVariable var, String xpath) throws InvalidSelectorException;
+	List<WebVariable> findElementsWithXpath(WebVariable var, String xpath) throws InvalidSelectorException;
 
 	/**
 	 * Returns the current URL of a {@link WebVariable}.
@@ -117,7 +111,7 @@ public interface WebService {
 	 * @return
 	 *         A string which is the current URL.
 	 */
-	public String getCurrentUrl(WebVariable var);
+	String getCurrentUrl(WebVariable var);
 
 	/**
 	 * Clears a {@link WebVariable}.
@@ -125,7 +119,7 @@ public interface WebService {
 	 * @param var
 	 *        the variable we want to clear.
 	 */
-	public void clear(WebVariable var);
+	void clear(WebVariable var);
 
 	/**
 	 * Simulates sending a key to an {@link WebVariable}.
@@ -135,19 +129,19 @@ public interface WebService {
 	 *        The variable we want to send keys to.
 	 * @param key
 	 *        the key we want to send.
-	 * @throws Exception 
+	 * @throws Exception
 	 * 				The selenium implementation can throw an exception.
 	 */
-	public void sendKeys(WebVariable var, String key) throws Exception;
+	void sendKeys(WebVariable var, String key) throws Exception;
 
 	/**
 	 * Gets the cookies from a {@link WebVariable}.
-	 * @param var 
+	 * @param var
 	 * 					The webpage we're retrieving cookies from.
 	 * @return
 	 *         A set of Cookies.
 	 */
-	public Set<Cookie> getCookies(WebVariable var);
+	Set<Cookie> getCookies(WebVariable var);
 
 	/**
 	 * Gets the name of a {@link Cookie}
@@ -157,7 +151,7 @@ public interface WebService {
 	 * @return
 	 *         The name of the cookie.
 	 */
-	public String getName(Cookie cookie);
+	String getName(Cookie cookie);
 
 	/**
 	 * Gets the domain of a {@link Cookie}
@@ -167,7 +161,7 @@ public interface WebService {
 	 * @return
 	 *         The domain of the cookie.
 	 */
-	public String getDomain(Cookie cookie);
+	String getDomain(Cookie cookie);
 
 	/**
 	 * Gets the path of a {@link Cookie}
@@ -177,7 +171,7 @@ public interface WebService {
 	 * @return
 	 *         The path of the cookie.
 	 */
-	public String getPath(Cookie cookie);
+	String getPath(Cookie cookie);
 
 	/**
 	 * Gets the value of a {@link Cookie}.
@@ -187,7 +181,7 @@ public interface WebService {
 	 * @return
 	 *         The value of the cookie.
 	 */
-	public String getValue(Cookie cookie);
+	String getValue(Cookie cookie);
 
 	/**
 	 * Deletes the cookie in the {@link WebVariable} with the given name.
@@ -197,17 +191,17 @@ public interface WebService {
 	 * @param name
 	 *        The name of the cookie we're deleting.
 	 */
-	public void deleteCookieNamed(WebVariable var, String name);
+	void deleteCookieNamed(WebVariable var, String name);
 
 	/**
 	 * Deletes all cookies on a {@link WebVariable}.
 	 *
-	 * @param var	
+	 * @param var
 	 *        The variable we're deleting cookies on.
-	 * @throws Exception 
+	 * @throws Exception
 	 * 				The selinium implementation can throw exceptions.
 	 */
-	public void deleteCookies(WebVariable var) throws Exception;
+	void deleteCookies(WebVariable var) throws Exception;
 
 	/**
 	 * Makes a screenshot on a {@link WebVariable} and returns it as file.
@@ -217,7 +211,7 @@ public interface WebService {
 	 * @return
 	 *         A file containing the screenshot.
 	 */
-	public File getScreenshotAsFile(WebVariable var);
+	File getScreenshotAsFile(WebVariable var);
 
 	/**
 	 * Checks whether a {@link WebVariable} is selected.
@@ -227,7 +221,7 @@ public interface WebService {
 	 * @return
 	 *         Returns whether the variable is selected.
 	 */
-	public boolean isSelected(WebVariable var);
+	boolean isSelected(WebVariable var);
 
 	/**
 	 * Switches to a given frame.
@@ -237,7 +231,7 @@ public interface WebService {
 	 * @param element
 	 *        The element we want to switch to.
 	 */
-	public void switchToFrame(WebVariable page, WebVariable element);
+	void switchToFrame(WebVariable page, WebVariable element);
 
 	/**
 	 * Switches to a given frame.
@@ -248,7 +242,7 @@ public interface WebService {
 	 *        The element we want to switch to.
 	 *
 	 */
-	public void switchToFrame(WebVariable var, String element);
+	void switchToFrame(WebVariable var, String element);
 
 	/**
 	 * Switches to a given frame.
@@ -258,7 +252,7 @@ public interface WebService {
 	 * @param element
 	 *        The frame as an integer.
 	 */
-	public void switchToFrame(WebVariable driver, int element);
+	void switchToFrame(WebVariable driver, int element);
 
 	/**
 	 * Places a Cookie on a webvariable
@@ -268,7 +262,7 @@ public interface WebService {
 	 * @param cookie
 	 *        The cookie
 	 */
-	public void addCookie(WebVariable var, CookieVariable cookie);
+	void addCookie(WebVariable var, CookieVariable cookie);
 
 	/**
 	 * Creates a node variable with a given page and element.
@@ -280,7 +274,7 @@ public interface WebService {
 	 * @return
 	 *         A new node.
 	 */
-	public NodeVariable createNodeVariable(WebVariable page, WebVariable element);
+	NodeVariable createNodeVariable(WebVariable page, WebVariable element);
 
 	/**
 	 * Executes HTTP GET on a {@link WebVariable} and an URL.
@@ -289,12 +283,12 @@ public interface WebService {
 	 *        The webpage.
 	 * @param url
 	 *        The url.
-	 * @throws ClassCastException 
+	 * @throws ClassCastException
 	 * 						The implementations casts to a class. When that goes wrong we need to catch it.
-	 * @throws MalformedURLException 
+	 * @throws MalformedURLException
 	 * 						When the url is malformed an exception can occur.
 	 */
-	public void httpGet(WebVariable var, String url) throws ClassCastException, MalformedURLException;
+	void httpGet(WebVariable var, String url) throws ClassCastException, MalformedURLException;
 
 	/**
 	 * Creates a page as a {@link WebVariable} given a {@link Options} as setting.
@@ -303,22 +297,22 @@ public interface WebService {
 	 *        The options.
 	 * @return
 	 *         The page
-	 * @throws NullPointerException.
+	 * @throws NullPointerException
 	 * 					When the options are null.
 	 */
-	public WebVariable createPage(Options options);
+	PageVariable createPage(Options options);
 
 	/**
 	 * Drags a page as a {@link WebVariable} from the pool.
 	 * Creates it when it doesn't exist yet.
-	 * @param pool 
+	 * @param pool
 	 * 				The pool we're extracting the page from.
 	 * @param options
 	 *        The options the page has.
 	 * @return
 	 *         The page.
 	 */
-	public WebVariable getPageFromPool(PhantomJSPool pool, Options options);
+	WebVariable getPageFromPool(PhantomJSPool pool, Options options);
 
 	/**
 	 * Sets the drivers default options of a {@link WebVariable}.
@@ -328,7 +322,7 @@ public interface WebService {
 	 * @param timeOut
 	 *        A timeout in milliseconds.
 	 */
-	public void setDriverOptions(WebVariable var, int timeOut);
+	void setDriverOptions(WebVariable var, int timeOut);
 
 	/**
 	 * Closes a {@link WebVariable} and all pages associated.
@@ -336,6 +330,6 @@ public interface WebService {
 	 * @param var
 	 *        The variable we want to quit.
 	 */
-	public void quit(WebVariable var);
+	void quit(WebVariable var);
 
 }
