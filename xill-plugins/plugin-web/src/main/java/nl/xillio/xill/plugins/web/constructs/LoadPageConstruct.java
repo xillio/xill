@@ -58,7 +58,7 @@ public class LoadPageConstruct extends PhantomJSConstruct implements AutoCloseab
 		try {
 			// processing input options
 			options = optionsFactory.processOptions(optionsVar);
-			if(options == null){
+			if (options == null) {
 				options = new Options();
 			}
 			WebVariable item = webService.getPageFromPool(pool, options);

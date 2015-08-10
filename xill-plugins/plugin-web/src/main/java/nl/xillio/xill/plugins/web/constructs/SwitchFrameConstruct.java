@@ -29,8 +29,8 @@ public class SwitchFrameConstruct extends PhantomJSConstruct {
 	 *        input variable (should be of a PAGE type)
 	 * @param frameVar
 	 *        input variable - frame specification - string or number or web element (NODE variable)
-	 * @param webService 
-	 * 				The service we're using to access the web.
+	 * @param webService
+	 *        The service we're using to access the web.
 	 * @return null variable
 	 */
 	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression frameVar, final WebService webService) {
@@ -58,10 +58,9 @@ public class SwitchFrameConstruct extends PhantomJSConstruct {
 			}
 		} catch (NoSuchFrameException e) {
 			throw new RobotRuntimeException("Requested frame doesn't exist.", e);
-		} 
-		catch(RobotRuntimeException e){
+		} catch (RobotRuntimeException e) {
 			throw e;
-	}catch (Exception e) {
+		} catch (Exception e) {
 			throw new RobotRuntimeException(e.getClass().getSimpleName(), e);
 		}
 

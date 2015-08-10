@@ -135,8 +135,10 @@ public interface WebService {
 	 *        The variable we want to send keys to.
 	 * @param key
 	 *        the key we want to send.
+	 * @throws Exception 
+	 * 				The selenium implementation can throw an exception.
 	 */
-	public void sendKeys(WebVariable var, String key);
+	public void sendKeys(WebVariable var, String key) throws Exception;
 
 	/**
 	 * Gets the cookies from a {@link WebVariable}.
@@ -301,6 +303,8 @@ public interface WebService {
 	 *        The options.
 	 * @return
 	 *         The page
+	 * @throws NullPointerException.
+	 * 					When the options are null.
 	 */
 	public WebVariable createPage(Options options);
 

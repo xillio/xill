@@ -1,13 +1,15 @@
 package nl.xillio.xill.plugins.web.constructs;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.CookieFactory;
 import nl.xillio.xill.plugins.web.NodeVariable;
 import nl.xillio.xill.plugins.web.PageVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
@@ -117,7 +119,7 @@ public class SwitchFrameConstructTest extends ExpressionBuilderHelper {
 		// assert
 		Assert.assertEquals(output, NULL);
 	}
-	
+
 	/**
 	 * Test the process under normal circumstances with an invalid variable type given.
 	 */
@@ -139,16 +141,16 @@ public class SwitchFrameConstructTest extends ExpressionBuilderHelper {
 		when(frame.getMeta(NodeVariable.class)).thenReturn(null);
 		when(frame.getType()).thenReturn(ATOMIC);
 		when(frame.getNumberValue()).thenReturn(frameValue);
-		
+
 		// run
-		 SwitchFrameConstruct.process(page, frame, webService);
+		SwitchFrameConstruct.process(page, frame, webService);
 	}
-	
+
 	/**
 	 * Test the process when the webservice fails and throws a no such frame exception.
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Requested frame doesn't exist.")
-	public void testNoSuchFrameException(){
+	public void testNoSuchFrameException() {
 		// mock
 		WebService webService = mock(WebService.class);
 
@@ -164,8 +166,8 @@ public class SwitchFrameConstructTest extends ExpressionBuilderHelper {
 		when(frame.getMeta(NodeVariable.class)).thenReturn(null);
 		when(frame.getType()).thenReturn(ATOMIC);
 		when(frame.getNumberValue()).thenReturn(frameValue);
-		
-		//The exception
+
+		// The exception
 		doThrow(new NoSuchFrameException("error")).when(webService).switchToFrame(any(), anyInt());
 
 		// run
@@ -179,8 +181,7 @@ public class SwitchFrameConstructTest extends ExpressionBuilderHelper {
 		// assert
 		Assert.assertEquals(output, NULL);
 	}
-		
-	
+
 	/**
 	 * Test the process with an invalid page handed.
 	 */

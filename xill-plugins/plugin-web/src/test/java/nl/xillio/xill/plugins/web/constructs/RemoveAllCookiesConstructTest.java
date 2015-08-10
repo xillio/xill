@@ -22,7 +22,8 @@ public class RemoveAllCookiesConstructTest extends ExpressionBuilderHelper {
 
 	/**
 	 * test the process with normal usage.
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	@Test
 	public void testProcessNormalUsage() throws Exception {
@@ -49,7 +50,8 @@ public class RemoveAllCookiesConstructTest extends ExpressionBuilderHelper {
 
 	/**
 	 * Test the process when the webService breaks
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to delete all cookies in driver.")
 	public void testProcessWhenWebServiceBreaks() throws Exception {

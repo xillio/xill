@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.web.constructs;
 
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -17,9 +18,11 @@ public class InputConstructTest extends ExpressionBuilderHelper {
 
 	/**
 	 * Tests the construct under normal circumstances
+	 * 
+	 * @throws Exception
 	 */
 	@Test
-	public void testProcessNormalUsage() {
+	public void testProcessNormalUsage() throws Exception {
 		// mock
 		WebService webService = mock(WebService.class);
 
@@ -42,6 +45,30 @@ public class InputConstructTest extends ExpressionBuilderHelper {
 
 		// assert
 		Assert.assertEquals(output, NULL);
+	}
+
+	/**
+	 * Tests the construct under normal circumstances
+	 * 
+	 * @throws Exception
+	 */
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "An exception occurred when trying to use the webService.")
+	public void testProcessFailureToSendKeys() throws Exception {
+		// mock
+		WebService webService = mock(WebService.class);
+
+		// The input
+		MetaExpression input = mock(MetaExpression.class);
+		NodeVariable nodeVariable = mock(NodeVariable.class);
+		when(input.getMeta(NodeVariable.class)).thenReturn(nodeVariable);
+
+		// The text input
+		MetaExpression text = mock(MetaExpression.class);
+		when(text.getStringValue()).thenReturn("Text");
+		doThrow(new RobotRuntimeException("I broke!")).when(webService).sendKeys(nodeVariable, "Text");
+
+		// run
+		InputConstruct.process(input, text, webService);
 	}
 
 	/**

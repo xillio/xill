@@ -27,8 +27,8 @@ public class InputConstruct extends PhantomJSConstruct {
 	 *        input variable (should be of a NODE type) - web element
 	 * @param textVar
 	 *        input string variable - text to be written to web element
-	 * @param webService 
-	 * 				The webService we're using.
+	 * @param webService
+	 *        The webService we're using.
 	 * @return null variable
 	 */
 	public static MetaExpression process(final MetaExpression elementVar, final MetaExpression textVar, final WebService webService) {
@@ -46,7 +46,7 @@ public class InputConstruct extends PhantomJSConstruct {
 			webService.clear(element);
 			webService.sendKeys(element, text);
 		} catch (Exception e) {
-			throw new RobotRuntimeException(e.getClass().getSimpleName(), e);
+			throw new RobotRuntimeException("An exception occurred when trying to use the webService.", e);
 		}
 
 		return NULL;

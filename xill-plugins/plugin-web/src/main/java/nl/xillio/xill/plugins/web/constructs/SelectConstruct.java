@@ -27,8 +27,8 @@ public class SelectConstruct extends PhantomJSConstruct {
 	 *        input variable (should be of a NODE type) - web element
 	 * @param selectVar
 	 *        input boolean variable
-	 * @param webService 
-	 * 				The service we're using for accesing the web.
+	 * @param webService
+	 *        The service we're using for accesing the web.
 	 * @return null variable
 	 */
 	public static MetaExpression process(final MetaExpression elementVar, final MetaExpression selectVar, final WebService webService) {

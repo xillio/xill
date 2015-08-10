@@ -113,7 +113,7 @@ public class WebServiceImpl implements WebService {
 	}
 
 	@Override
-	public void sendKeys(final WebVariable var, final String key) {
+	public void sendKeys(final WebVariable var, final String key) throws Exception {
 		WebElement element = var.getElement();
 		element.sendKeys(key);
 	}
@@ -234,14 +234,10 @@ public class WebServiceImpl implements WebService {
 
 	@Override
 	public WebVariable createPage(final Options options) {
-		WebDriver driver;
-		if (options != null) {
-			driver = options.createDriver();
+		if(options == null){
+			throw new NullPointerException("Options cannot be null.");
 		}
-		else {
-			Options defaultOptions = new Options();
-			driver = defaultOptions.createDriver();
-		}
+		WebDriver driver = options.createDriver();
 		return new PageVariable(driver, null);
 	}
 

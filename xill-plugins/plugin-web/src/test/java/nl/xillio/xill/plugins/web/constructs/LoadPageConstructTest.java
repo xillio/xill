@@ -119,9 +119,9 @@ public class LoadPageConstructTest extends ExpressionBuilderHelper {
 		// run
 		LoadPageConstruct.process(url, options, optionsFactory, webService);
 	}
-	
+
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Loadpage error - PhantomJS pool is fully used and cannot provide another instance!")
-	public void testFullPhantomPool() throws Exception{
+	public void testFullPhantomPool() throws Exception {
 		// mock
 		WebService webService = mock(WebService.class);
 		OptionsFactory optionsFactory = mock(OptionsFactory.class);
@@ -145,7 +145,7 @@ public class LoadPageConstructTest extends ExpressionBuilderHelper {
 
 		// run
 		LoadPageConstruct.process(url, options, optionsFactory, webService);
-		
+
 	}
 
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to execute httpGet.")

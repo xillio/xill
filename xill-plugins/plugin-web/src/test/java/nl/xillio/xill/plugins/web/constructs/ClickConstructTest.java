@@ -73,7 +73,7 @@ public class ClickConstructTest extends ExpressionBuilderHelper {
 
 		when(input.getMeta(NodeVariable.class)).thenReturn(nodeVariable);
 		doThrow(new StaleElementReferenceException("")).when(webService).click(any());
-		
+
 		// run
 		ClickConstruct.process(input, webService);
 	}

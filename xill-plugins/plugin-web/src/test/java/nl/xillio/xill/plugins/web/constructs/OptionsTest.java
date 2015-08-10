@@ -29,26 +29,25 @@ public class OptionsTest extends ExpressionBuilderHelper {
 				{"ltrurlaccess", "ltrurlaccess"}};
 		return result;
 	}
-	
+
 	@DataProvider(name = "proxytypes")
-	public static Object[][] proxyTypeTest(){
-		Object [][] result = {
+	public static Object[][] proxyTypeTest() {
+		Object[][] result = {
 				{"proxytype", "http"},
 				{"proxytype", "socks5"},
 				{"proxytype", null}
 		};
 		return result;
 	}
-	
+
 	@DataProvider(name = "invalidHttpUserPasses")
-		public static Object[][] invalidPasses(){
-			Object [][] result = {
-					{"pass", null},
-					{"pass", ""}
-			};
-			return result;
-		}
-	
+	public static Object[][] invalidPasses() {
+		Object[][] result = {
+				{"pass", null},
+				{"pass", ""}
+		};
+		return result;
+	}
 
 	@DataProvider(name = "stringOptionTest")
 	public static Object[][] stringTestStrings() {
@@ -63,7 +62,7 @@ public class OptionsTest extends ExpressionBuilderHelper {
 	}
 
 	@Test(dataProvider = "proxytypes")
-	public void testProxyOption(String proxytypes, String type) throws Exception {
+	public void testProxyOption(final String proxytypes, final String type) throws Exception {
 		// mock
 		OptionsFactory optionsFactory = new OptionsFactory();
 
@@ -172,7 +171,7 @@ public class OptionsTest extends ExpressionBuilderHelper {
 		// run
 		optionsFactory.processOptions(options);
 	}
-	
+
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Proxyport must be given in the options OBJECT")
 	public void TestProxyNoProxyPort() throws Exception {
 		// mock
@@ -307,7 +306,7 @@ public class OptionsTest extends ExpressionBuilderHelper {
 	}
 
 	@Test(dataProvider = "invalidHttpUserPasses", expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Http password must be set if user is used.")
-	public void testUserOptionNoHTTPPass(String httpUserpass, String passValue) throws Exception {
+	public void testUserOptionNoHTTPPass(final String httpUserpass, final String passValue) throws Exception {
 		// mock
 		OptionsFactory optionsFactory = new OptionsFactory();
 

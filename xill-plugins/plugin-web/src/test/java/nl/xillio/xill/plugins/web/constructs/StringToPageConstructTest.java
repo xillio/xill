@@ -62,7 +62,7 @@ public class StringToPageConstructTest {
 
 	/**
 	 * Test the process when an IO exception is thrown
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "An IO error occurred.")
@@ -86,7 +86,7 @@ public class StringToPageConstructTest {
 
 	/**
 	 * Test the process when another exception is thrown.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "An error occurred.")

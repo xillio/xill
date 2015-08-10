@@ -33,11 +33,11 @@ public class ScreenshotConstruct extends PhantomJSConstruct {
 	/**
 	 * @param pageVar
 	 *        input variable (should be of a PAGE type)
-	 * @param fileService 
-	 * 				The service we're using for files.
-	 * @param webService 
-	 * 				The service we're using for accessing the web.
-	 * @param filenameVar
+	 * @param fileService
+	 *        The service we're using for files.
+	 * @param webService
+	 *        The service we're using for accessing the web.
+	 * @param fileNameVar
 	 *        input string variable - output .png filepath
 	 * @return null variable
 	 */

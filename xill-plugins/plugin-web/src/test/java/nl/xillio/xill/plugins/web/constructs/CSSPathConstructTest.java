@@ -144,12 +144,12 @@ public class CSSPathConstructTest extends ExpressionBuilderHelper {
 		// assert
 		Assert.assertEquals(output, NULL);
 	}
-	
+
 	/**
 	 * Test the construct when no node or page is given.
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid variable type. PAGE or NODE type expected!")
-	public void testNoNodeOrPageGiven(){
+	public void testNoNodeOrPageGiven() {
 		// mock
 		WebService webService = mock(WebService.class);
 
@@ -168,7 +168,7 @@ public class CSSPathConstructTest extends ExpressionBuilderHelper {
 		// run
 		CSSPathConstruct.process(element, cssPath, webService);
 	}
-	
+
 	/**
 	 * test the construct when a single resultvalue is returned.
 	 */
@@ -193,7 +193,7 @@ public class CSSPathConstructTest extends ExpressionBuilderHelper {
 		// run
 		CSSPathConstruct.process(element, cssPath, webService);
 	}
-	
+
 	/**
 	 * test the construct when a single resultvalue is returned.
 	 */
