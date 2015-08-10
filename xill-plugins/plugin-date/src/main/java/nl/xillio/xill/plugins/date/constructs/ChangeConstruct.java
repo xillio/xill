@@ -1,28 +1,24 @@
 package nl.xillio.xill.plugins.date.constructs;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.plugins.date.BaseDateConstruct;
+import nl.xillio.xill.plugins.date.data.Date;
 import nl.xillio.xill.plugins.date.services.DateService;
-
 import org.apache.logging.log4j.Logger;
 
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 /**
- *
- *
  * Modifies the provided date with the specified changes from a list.
  *
  * @author Sander
- *
  */
 public class ChangeConstruct extends BaseDateConstruct {
 
@@ -33,7 +29,7 @@ public class ChangeConstruct extends BaseDateConstruct {
 
 	@SuppressWarnings("unchecked")
 	static MetaExpression process(final Logger logger, final MetaExpression dateVar, final MetaExpression changeVar, DateService dateService) {
-		ZonedDateTime date = getDate(dateVar, "date");
+		Date date = getDate(dateVar, "date");
 
 		// First we need the zone
 		ZoneId zone = null;
@@ -44,7 +40,7 @@ public class ChangeConstruct extends BaseDateConstruct {
 			zone = ZoneId.of(map.get("timezone").getStringValue());
 		}
 
-		ZonedDateTime newDate = date;
+		Date newDate = date;
 		if (zone != null) {
 			// Change the timezone to the new one
 			newDate = dateService.changeTimeZone(date, zone);
