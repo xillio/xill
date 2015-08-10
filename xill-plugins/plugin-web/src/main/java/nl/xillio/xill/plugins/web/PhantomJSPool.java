@@ -256,8 +256,13 @@ public class PhantomJSPool {
 		 *
 		 * @param options
 		 *        The CLI options that has been used when given PJS process has been started
+		 * @throws NullPointerException
+		 * 				Throws a NullPointerException when the options were null.
 		 */
 		public Identifier(final Options options) {
+			if(options == null){
+				throw new NullPointerException("Options can't be null");
+			}
 			this.options = options;
 		}
 

@@ -58,6 +58,9 @@ public class LoadPageConstruct extends PhantomJSConstruct implements AutoCloseab
 		try {
 			// processing input options
 			options = optionsFactory.processOptions(optionsVar);
+			if(options == null){
+				options = new Options();
+			}
 			WebVariable item = webService.getPageFromPool(pool, options);
 			if (item == null) {
 				throw new RobotRuntimeException("Loadpage error - PhantomJS pool is fully used and cannot provide another instance!");

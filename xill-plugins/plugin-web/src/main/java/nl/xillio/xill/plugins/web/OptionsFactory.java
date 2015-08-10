@@ -130,7 +130,7 @@ public class OptionsFactory {
 		Options options = new Options();
 		// no option specified - so default is used.
 		if (optionsVar == ExpressionBuilderHelper.NULL || optionsVar.isNull()) {
-			return null;
+			return options;
 		}
 		else {
 
