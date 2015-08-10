@@ -6,11 +6,13 @@ import static nl.xillio.xill.plugins.database.util.Database.ORACLE;
 import static nl.xillio.xill.plugins.database.util.Database.SQLITE;
 
 import java.sql.Connection;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
 import nl.xillio.xill.api.components.AtomicExpression;
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.components.ObjectExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
@@ -32,7 +34,9 @@ public class ConnectConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		Argument[] args = {new Argument("database", ATOMIC), new Argument("type", ATOMIC), new Argument("user", ATOMIC), new Argument("pass", ATOMIC), new Argument("options", OBJECT)};
+		Argument[] args =
+		{new Argument("database", ATOMIC), new Argument("type", ATOMIC), new Argument("user", NULL, ATOMIC), new Argument("pass", NULL, ATOMIC),
+		    new Argument("options", new ObjectExpression(new LinkedHashMap<>()), OBJECT)};
 		return new ConstructProcessor((a) -> process(a, service), args);
 	}
 
@@ -40,7 +44,7 @@ public class ConnectConstruct extends Construct {
 	 */
 	@SuppressWarnings("unchecked")
 	static MetaExpression process(final MetaExpression[] args, DatabaseService service) {
-		String database = args[0].getStringValue();
+		String database = args[0].isNull() ? null : args[0].getStringValue();
 		String type = args[1].getStringValue();
 		String user = args[2].isNull() ? null : args[2].getStringValue();
 		String pass = args[3].isNull() ? null : args[3].getStringValue();
@@ -49,7 +53,8 @@ public class ConnectConstruct extends Construct {
 		String url;
 		Properties properties = null;
 
-		Tuple<String, String>[] optionsArray = (Tuple[]) options.entrySet().stream().map((e) -> new Tuple<String, String>(e.getKey(), e.getValue().getStringValue())).toArray();
+		Tuple<String, String>[] optionsArray =
+		    (Tuple[]) options.entrySet().stream().map((e) -> new Tuple<String, String>(e.getKey(), e.getValue().getStringValue())).toArray((s) -> new Tuple[s]);
 
 		if (type.equals(ORACLE.getName())) {
 			url = service.createOracleURL(database, user, pass);

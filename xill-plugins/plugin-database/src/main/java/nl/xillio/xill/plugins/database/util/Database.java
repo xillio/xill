@@ -1,7 +1,7 @@
 package nl.xillio.xill.plugins.database.util;
 
 public enum Database {
-	ORACLE("oracle", "oracle.jdbc.OracleDriver"), MSSQL("mssql", "net.sourceforge.jtds.jdbc.Driver"), MYSQL("mysql", "org.mariadb.jdbc.Driver"), SQLITE("sqlite", "org.sqlite.JDBC");
+	ORACLE("oracle", "oracle.jdbc.OracleDriver"), MSSQL("mssql", "net.sourceforge.jtds.jdbc.Driver"), SQLITE("sqlite", "org.sqlite.JDBC"), MYSQL("mysql", "org.mariadb.jdbc.Driver");
 
 	private String name;
 	private String driverClass;
