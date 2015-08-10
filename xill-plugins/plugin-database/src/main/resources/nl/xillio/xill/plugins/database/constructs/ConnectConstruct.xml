@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
-
+  <parameters>
+    <param name="database" />
+    <param name="type" />
+    <param name="user" />
+    <param name="pass" />
+    <param name="options" />
+  </parameters>
+  <description>
+    <![CDATA[]]>
+  </description>
 </function>
