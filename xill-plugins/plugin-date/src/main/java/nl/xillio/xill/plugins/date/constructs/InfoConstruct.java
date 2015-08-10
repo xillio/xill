@@ -1,22 +1,19 @@
 package nl.xillio.xill.plugins.date.constructs;
 
-import java.time.ZonedDateTime;
-import java.util.LinkedHashMap;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.plugins.date.BaseDateConstruct;
+import nl.xillio.xill.plugins.date.data.Date;
 import nl.xillio.xill.plugins.date.services.DateService;
 
+import java.util.LinkedHashMap;
+
 /**
- *
- *
  * Returns detailed info on the specified date.
  *
  * @author Sander
- *
  */
 public class InfoConstruct extends BaseDateConstruct {
 
@@ -27,7 +24,7 @@ public class InfoConstruct extends BaseDateConstruct {
 	}
 
 	static MetaExpression process(final MetaExpression dateVar, DateService dateService) {
-		ZonedDateTime date = getDate(dateVar, "date");
+		Date date = getDate(dateVar, "date");
 
 		LinkedHashMap<String, MetaExpression> info = new LinkedHashMap<>();
 

@@ -12,16 +12,15 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-
 /**
- *
+ * This class represents a general expression in the Xill language.
  */
 public abstract class MetaExpression implements Expression, Processable {
 	private static final Gson gson = new GsonBuilder().enableComplexMapKeySerialization().serializeNulls()
-		// .setPrettyPrinting()
-		.disableHtmlEscaping().disableInnerClassSerialization().serializeSpecialFloatingPointValues()
-		.serializeNulls().create();
-	private final MetadataExpressionPool<Object> metadataPool = new MetadataExpressionPool<>();
+					// .setPrettyPrinting()
+					.disableHtmlEscaping().disableInnerClassSerialization().serializeSpecialFloatingPointValues()
+					.serializeNulls().create();
+	private final MetadataExpressionPool<MetadataExpression> metadataPool = new MetadataExpressionPool<>();
 	private Object value;
 	private ExpressionDataType type = ExpressionDataType.ATOMIC;
 	private boolean isClosed;
@@ -31,16 +30,12 @@ public abstract class MetaExpression implements Expression, Processable {
 	/**
 	 * Get a value from the {@link MetadataExpressionPool}
 	 *
-	 * @param <T>
-	 *        the type of object to fetch
-	 *
-	 * @param clazz
-	 *        The type of class to fetch. <b>Note</b> that this doesn't take inheritance into account.
+	 * @param <T>   the type of object to fetch
+	 * @param clazz The type of class to fetch. <b>Note</b> that this doesn't take inheritance into account.
 	 * @return The stored value or null if none was found
-	 * @throws IllegalStateException
-	 *         if this expression has been closed
+	 * @throws IllegalStateException if this expression has been closed
 	 */
-	public <T> T getMeta(final Class<T> clazz) {
+	public <T extends MetadataExpression> T getMeta(final Class<T> clazz) {
 		if (isClosed()) {
 			throw new IllegalStateException("This expression has already been closed.");
 		}
@@ -50,37 +45,28 @@ public abstract class MetaExpression implements Expression, Processable {
 	/**
 	 * Store a value in the {@link MetadataExpressionPool} and default the key to the class of the object as returned by {@link Object#getClass()}
 	 *
-	 * @param <T>
-	 *        the type key to store the object as
-	 *
-	 * @param object
-	 *        The object to store
+	 * @param <T>    the type key to store the object as
+	 * @param object The object to store
 	 * @return The previous stored value in the pool or null if no value was
-	 *         stored.
-	 * @throws IllegalStateException
-	 *         if this expression has been closed
+	 * stored.
+	 * @throws IllegalStateException if this expression has been closed
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T storeMeta(final T object) {
+	public <T extends MetadataExpression> T storeMeta(final T object) {
 		return storeMeta((Class<T>) object.getClass(), object);
 	}
 
 	/**
 	 * Store a value in the {@link MetadataExpressionPool}
 	 *
-	 * @param <T>
-	 *        the type key to store the object as
-	 *
-	 * @param clazz
-	 *        The object type to store
-	 * @param object
-	 *        the object to store
+	 * @param <T>    the type key to store the object as
+	 * @param clazz  The object type to store
+	 * @param object the object to store
 	 * @return The previous stored value in the pool or null if no value was
-	 *         stored.
-	 * @throws IllegalStateException
-	 *         if this expression has been closed
+	 * stored.
+	 * @throws IllegalStateException if this expression has been closed
 	 */
-	public <T> T storeMeta(final Class<T> clazz, final T object) {
+	public <T extends MetadataExpression> T storeMeta(final Class<T> clazz, final T object) {
 		if (isClosed()) {
 			throw new IllegalStateException("This expression has already been closed.");
 		}
@@ -90,11 +76,9 @@ public abstract class MetaExpression implements Expression, Processable {
 	/**
 	 * Set the value of this variable to an {@link ExpressionDataType#ATOMIC} value
 	 *
-	 * @param value
-	 *        The {@link ExpressionDataType#ATOMIC} value to store
+	 * @param value The {@link ExpressionDataType#ATOMIC} value to store
 	 * @return self
-	 * @throws IllegalStateException
-	 *         if this expression has been closed
+	 * @throws IllegalStateException if this expression has been closed
 	 */
 	protected MetaExpression setValue(final Expression value) {
 		if (isClosed()) {
@@ -108,11 +92,9 @@ public abstract class MetaExpression implements Expression, Processable {
 	/**
 	 * Set the value of this expression to that of another one
 	 *
-	 * @param value
-	 *        The other {@link MetaExpression} to copy the value from
+	 * @param value The other {@link MetaExpression} to copy the value from
 	 * @return this
-	 * @throws IllegalStateException
-	 *         if this expression has been closed
+	 * @throws IllegalStateException if this expression has been closed
 	 */
 	protected MetaExpression setValue(final MetaExpression value) {
 		if (isClosed()) {
@@ -126,11 +108,9 @@ public abstract class MetaExpression implements Expression, Processable {
 	/**
 	 * Set the value of this variable to a {@link ExpressionDataType#LIST} value
 	 *
-	 * @param value
-	 *        the {@link ExpressionDataType#LIST} to set the value to
+	 * @param value the {@link ExpressionDataType#LIST} to set the value to
 	 * @return self
-	 * @throws IllegalStateException
-	 *         if this expression has been closed
+	 * @throws IllegalStateException if this expression has been closed
 	 */
 	protected MetaExpression setValue(final List<MetaExpression> value) {
 		if (isClosed()) {
@@ -144,11 +124,9 @@ public abstract class MetaExpression implements Expression, Processable {
 	/**
 	 * Set the value of this variable to an {@link ExpressionDataType#OBJECT} value
 	 *
-	 * @param value
-	 *        in a linked hash map to enforce order
+	 * @param value in a linked hash map to enforce order
 	 * @return self
-	 * @throws IllegalStateException
-	 *         if this expression has been closed
+	 * @throws IllegalStateException if this expression has been closed
 	 */
 	protected MetaExpression setValue(final LinkedHashMap<String, MetaExpression> value) {
 		if (isClosed()) {
@@ -173,8 +151,7 @@ public abstract class MetaExpression implements Expression, Processable {
 	 * </ul>
 	 *
 	 * @return the value according to the {@link ExpressionDataType} specification
-	 * @throws IllegalStateException
-	 *         if this expression has been closed
+	 * @throws IllegalStateException if this expression has been closed
 	 */
 	public Object getValue() {
 		if (isClosed()) {
@@ -194,8 +171,7 @@ public abstract class MetaExpression implements Expression, Processable {
 	 * </ul>
 	 *
 	 * @return the type
-	 * @throws IllegalStateException
-	 *         if this expression has been closed
+	 * @throws IllegalStateException if this expression has been closed
 	 */
 	public ExpressionDataType getType() {
 		if (isClosed()) {
@@ -223,38 +199,30 @@ public abstract class MetaExpression implements Expression, Processable {
 	 * <p>
 	 * Generate the JSON representation of this expression using a {@link Gson} parser
 	 * </p>
-	 *
 	 * <p>
 	 * <b>NOTE: </b> This is not the string value of this expression. It is JSON. For the string value use {@link MetaExpression#getStringValue()}
 	 * </p>
 	 *
-	 * @param gsonParser
-	 *        The gson parser that should be used
-	 *
+	 * @param gsonParser The gson parser that should be used
 	 * @return JSON representation
 	 */
 	public String toString(final Gson gsonParser) {
 		MetaExpression cleaned = removeCircularReference(this, new IdentityArrayList<>(),
-			ExpressionBuilderHelper.fromValue("<<CIRCULAR REFERENCE>>"));
+						ExpressionBuilderHelper.fromValue("<<CIRCULAR REFERENCE>>"));
 		return gsonParser.toJson(extractValue(cleaned));
 	}
 
 	/**
 	 * Remove all circular references to prepare for serialisation
 	 *
-	 * @param metaExpression
-	 *        <<<<<<< HEAD
-	 * @param currentParsing
-	 *        =======
-	 * @param currentlyProcessing
-	 *        >>>>>>> origin/develop
-	 * @param replacement
-	 *        The replacement for circular references
-	 * @return
+	 * @param metaExpression      the expression to remove references from
+	 * @param currentlyProcessing the currently processing expressions
+	 * @param replacement         The replacement for circular references
+	 * @return a copy of the passed expression without any circular references
 	 */
 	@SuppressWarnings("unchecked")
 	private static MetaExpression removeCircularReference(final MetaExpression metaExpression,
-			final List<MetaExpression> currentlyProcessing, final MetaExpression replacement) {
+					final List<MetaExpression> currentlyProcessing, final MetaExpression replacement) {
 		MetaExpression result = ExpressionBuilderHelper.NULL;
 		currentlyProcessing.add(metaExpression);
 
@@ -279,7 +247,7 @@ public abstract class MetaExpression implements Expression, Processable {
 				LinkedHashMap<String, MetaExpression> resultMapValue = new LinkedHashMap<>();
 
 				for (Map.Entry<String, MetaExpression> pair : ((Map<String, MetaExpression>) metaExpression.getValue())
-					.entrySet()) {
+								.entrySet()) {
 
 					if (currentlyProcessing.stream().anyMatch(metaExp -> metaExp == pair.getValue())) {
 						// Circular reference
@@ -311,8 +279,7 @@ public abstract class MetaExpression implements Expression, Processable {
 	/**
 	 * Check equality to other {@link MetaExpression}
 	 *
-	 * @param other
-	 *        the other
+	 * @param other the other
 	 * @return true if and only if the expressions have equal value
 	 */
 	public boolean equals(final MetaExpression other) {
@@ -325,9 +292,9 @@ public abstract class MetaExpression implements Expression, Processable {
 		switch (getType()) {
 			case ATOMIC:
 				return getBooleanValue() == other.getBooleanValue() &&
-						getStringValue().equals(other.getStringValue()) &&
-						(getNumberValue().doubleValue() == other.getNumberValue().doubleValue()
-								|| Double.isNaN(getNumberValue().doubleValue()) && Double.isNaN(getNumberValue().doubleValue()));
+								getStringValue().equals(other.getStringValue()) &&
+								(getNumberValue().doubleValue() == other.getNumberValue().doubleValue()
+												|| Double.isNaN(getNumberValue().doubleValue()) && Double.isNaN(getNumberValue().doubleValue()));
 			case LIST:
 				return getValue().equals(other.getValue());
 			case OBJECT:
@@ -345,23 +312,21 @@ public abstract class MetaExpression implements Expression, Processable {
 	/**
 	 * Extracts the actual Java Object value for this expression.
 	 *
-	 * @param expression
-	 *        The {@link MetaExpression} to extract a value from.
-	 * @return
-	 * 				<ul>
-	 *         <li>{@link ExpressionDataType#ATOMIC}: returns an {@link Object} This represents a singular value that is parsed in the folowing way:
-	 *         <ol>
-	 *         <li>If the value is null: return null</li>
-	 *         <li>If the expression is created using {@link ExpressionBuilder#fromValue(boolean)}: return {@link Boolean}</li>
-	 *         <li>If the value can be a number (so also string constants like "5.7") it will return a {@link Double}</li>
-	 *         <li>In all other cases return a {@link String} representation.
-	 *         </ol>
-	 *         </li>
-	 *         <li>{@link ExpressionDataType#LIST}: returns a {@link List
-	 *         List&lt;Object&gt;} where {@link Object} is the result of a recursive call of this method.</li>
-	 *         <li>{@link ExpressionDataType#OBJECT}: returns a {@link Map
-	 *         Map&lt;String, Object&gt;} where {@link Object} is the result of a recursive call of this method.</li>
-	 *         </ul>
+	 * @param expression The {@link MetaExpression} to extract a value from.
+	 * @return <ul>
+	 * <li>{@link ExpressionDataType#ATOMIC}: returns an {@link Object} This represents a singular value that is parsed in the folowing way:
+	 * <ol>
+	 * <li>If the value is null: return null</li>
+	 * <li>If the expression is created using {@link ExpressionBuilder#fromValue(boolean)}: return {@link Boolean}</li>
+	 * <li>If the value can be a number (so also string constants like "5.7") it will return a {@link Double}</li>
+	 * <li>In all other cases return a {@link String} representation.
+	 * </ol>
+	 * </li>
+	 * <li>{@link ExpressionDataType#LIST}: returns a {@link List
+	 * List&lt;Object&gt;} where {@link Object} is the result of a recursive call of this method.</li>
+	 * <li>{@link ExpressionDataType#OBJECT}: returns a {@link Map
+	 * Map&lt;String, Object&gt;} where {@link Object} is the result of a recursive call of this method.</li>
+	 * </ul>
 	 */
 	public static Object extractValue(final MetaExpression expression) {
 		return extractValue(expression, new LinkedHashMap<>());
@@ -374,7 +339,7 @@ public abstract class MetaExpression implements Expression, Processable {
 			return results.get(expression);
 		}
 
-		Object result = null;
+		Object result;
 		switch (expression.getType()) {
 			case ATOMIC:
 				// null
@@ -405,7 +370,7 @@ public abstract class MetaExpression implements Expression, Processable {
 				List<Object> resultList = new ArrayList<>();
 				results.put(expression, resultList);
 				resultList.addAll(((List<MetaExpression>) expression.getValue()).stream().map(v -> extractValue(v, results))
-					.collect(Collectors.toList()));
+								.collect(Collectors.toList()));
 				result = resultList;
 				break;
 			case OBJECT:
@@ -476,14 +441,10 @@ public abstract class MetaExpression implements Expression, Processable {
 		// Close children
 		switch (type) {
 			case LIST:
-				for (MetaExpression expr : (List<MetaExpression>) value) {
-					expr.releaseReference();
-				}
+				((List<MetaExpression>) value).forEach(nl.xillio.xill.api.components.MetaExpression::releaseReference);
 				break;
 			case OBJECT:
-				for (MetaExpression expr : ((Map<String, MetaExpression>) value).values()) {
-					expr.releaseReference();
-				}
+				((Map<String, MetaExpression>) value).values().forEach(nl.xillio.xill.api.components.MetaExpression::releaseReference);
 				break;
 			default:
 				break;
@@ -512,12 +473,9 @@ public abstract class MetaExpression implements Expression, Processable {
 	/**
 	 * Attempt to parse an object into a MetaExpression
 	 *
-	 * @param value
-	 *        the object to parse
+	 * @param value the object to parse
 	 * @return a {@link MetaExpression}, not null
-	 * @throws IllegalArgumentException
-	 *         when the value cannot be parsed
-	 *
+	 * @throws IllegalArgumentException when the value cannot be parsed
 	 */
 	public static MetaExpression parseObject(final Object value) throws IllegalArgumentException {
 		return parseObject(value, new IdentityHashMap<>());
@@ -532,8 +490,8 @@ public abstract class MetaExpression implements Expression, Processable {
 				return entry.getValue();
 			}
 		}
-		
-		if(root == null) {
+
+		if (root == null) {
 			return ExpressionBuilder.NULL;
 		}
 
@@ -544,9 +502,7 @@ public abstract class MetaExpression implements Expression, Processable {
 			List<MetaExpression> values = (List<MetaExpression>) result.getValue();
 
 			// Parse children
-			for (Object child : (List<?>) root) {
-				values.add(parseObject(child, cache));
-			}
+			values.addAll(((List<?>) root).stream().map(child -> parseObject(child, cache)).collect(Collectors.toList()));
 
 			// Push list
 			result.setValue(values);
