@@ -58,7 +58,10 @@ public class SwitchFrameConstruct extends PhantomJSConstruct {
 			}
 		} catch (NoSuchFrameException e) {
 			throw new RobotRuntimeException("Requested frame doesn't exist.", e);
-		} catch (Exception e) {
+		} 
+		catch(RobotRuntimeException e){
+			throw e;
+	}catch (Exception e) {
 			throw new RobotRuntimeException(e.getClass().getSimpleName(), e);
 		}
 
