@@ -6,6 +6,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.web.CookieFactory;
 import nl.xillio.xill.plugins.web.NodeVariable;
 import nl.xillio.xill.plugins.web.PageVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
@@ -80,6 +82,29 @@ public class SwitchFrameConstructTest extends ExpressionBuilderHelper {
 		// assert
 		Assert.assertEquals(output, NULL);
 	}
+	
+	/**
+	 * Test the process under normal circumstances with an invalid variable type given.
+	 */
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid variable type. Page NODE type expected!")
+	public void testProcessInvalidVariableType() {
+		// mock
+		WebService webService = mock(WebService.class);
+
+		// the page
+		MetaExpression page = mock(MetaExpression.class);
+		PageVariable pageVariable = mock(PageVariable.class);
+		when(page.getMeta(PageVariable.class)).thenReturn(pageVariable);
+
+		// The frame
+		MetaExpression frameValue = mock(MetaExpression.class);
+		MetaExpression frame = mock(MetaExpression.class);
+		when(frame.getType()).thenReturn(ATOMIC);
+		when(frame.isNull()).thenReturn(true);
+		// run
+		 SwitchFrameConstruct.process(page, frame, webService);
+
+	}
 
 	/**
 	 * Test the process under normal circumstances with a String given.
@@ -113,5 +138,21 @@ public class SwitchFrameConstructTest extends ExpressionBuilderHelper {
 
 		// assert
 		Assert.assertEquals(output, NULL);
+	}
+	
+	/**
+	 * Test the process with an invalid page handed.
+	 */
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid variable type. Page NODE type expected!")
+	public void testNoPageGiven() {
+		// mock
+		WebService webService = mock(WebService.class);
+
+		// the page
+		MetaExpression page = mock(MetaExpression.class);
+		MetaExpression frame = mock(MetaExpression.class);
+
+		// run
+		SwitchFrameConstruct.process(page, frame, webService);
 	}
 }

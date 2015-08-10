@@ -22,9 +22,10 @@ public class RemoveAllCookiesConstructTest extends ExpressionBuilderHelper {
 
 	/**
 	 * test the process with normal usage.
+	 * @throws Exception 
 	 */
 	@Test
-	public void testProcessNormalUsage() {
+	public void testProcessNormalUsage() throws Exception {
 		// mock
 		WebService webService = mock(WebService.class);
 
@@ -48,9 +49,10 @@ public class RemoveAllCookiesConstructTest extends ExpressionBuilderHelper {
 
 	/**
 	 * Test the process when the webService breaks
+	 * @throws Exception 
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to delete all cookies in driver.")
-	public void testProcessWhenWebServiceBreaks() {
+	public void testProcessWhenWebServiceBreaks() throws Exception {
 		// mock
 		WebService webService = mock(WebService.class);
 

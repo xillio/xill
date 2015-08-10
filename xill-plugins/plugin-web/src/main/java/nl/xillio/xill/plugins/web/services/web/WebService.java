@@ -200,10 +200,12 @@ public interface WebService {
 	/**
 	 * Deletes all cookies on a {@link WebVariable}.
 	 *
-	 * @param var
+	 * @param var	
 	 *        The variable we're deleting cookies on.
+	 * @throws Exception 
+	 * 				The selinium implementation can throw exceptions.
 	 */
-	public void deleteCookies(WebVariable var);
+	public void deleteCookies(WebVariable var) throws Exception;
 
 	/**
 	 * Makes a screenshot on a {@link WebVariable} and returns it as file.

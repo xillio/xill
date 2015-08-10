@@ -44,7 +44,6 @@ public class RemoveAllCookiesConstruct extends PhantomJSConstruct {
 		} catch (Exception e) {
 			throw new RobotRuntimeException("Failed to delete all cookies in driver.");
 		}
-
 		return NULL;
 	}
 

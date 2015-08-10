@@ -157,7 +157,7 @@ public class WebServiceImpl implements WebService {
 	}
 
 	@Override
-	public void deleteCookies(final WebVariable var) {
+	public void deleteCookies(final WebVariable var) throws Exception {
 		WebDriver driver = var.getDriver();
 		driver.manage().deleteAllCookies();
 	}
@@ -198,7 +198,7 @@ public class WebServiceImpl implements WebService {
 	@Override
 	public void addCookie(final WebVariable var, final CookieVariable cookieVar) {
 		WebDriver driver = var.getDriver();
-		Cookie cookie = new Cookie(cookieVar.getName(), cookieVar.getValue(), cookieVar.getDomain(), cookieVar.getPath(), cookieVar.getExpireDate(), false);	
+		Cookie cookie = new Cookie(cookieVar.getName(), cookieVar.getValue(), cookieVar.getDomain(), cookieVar.getPath(), cookieVar.getExpireDate(), false);
 		driver.manage().addCookie(cookie);
 	}
 
@@ -234,7 +234,14 @@ public class WebServiceImpl implements WebService {
 
 	@Override
 	public WebVariable createPage(final Options options) {
-		WebDriver driver = options.createDriver();
+		WebDriver driver;
+		if (options != null) {
+			driver = options.createDriver();
+		}
+		else {
+			Options defaultOptions = new Options();
+			driver = defaultOptions.createDriver();
+		}
 		return new PageVariable(driver, null);
 	}
 
