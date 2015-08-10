@@ -31,6 +31,8 @@ public class GetTextConstruct extends PhantomJSConstruct {
 	/**
 	 * @param elementVar
 	 *        input variable (should be of a NODE type or list of NODE type variables)
+	 * @param webService
+	 *        the service we're using.
 	 * @return string variable that contains the text(s) of the provided web element(s)
 	 */
 	public static MetaExpression process(final MetaExpression elementVar, final WebService webService) {

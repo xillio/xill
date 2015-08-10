@@ -29,6 +29,8 @@ public class SwitchFrameConstruct extends PhantomJSConstruct {
 	 *        input variable (should be of a PAGE type)
 	 * @param frameVar
 	 *        input variable - frame specification - string or number or web element (NODE variable)
+	 * @param webService 
+	 * 				The service we're using to access the web.
 	 * @return null variable
 	 */
 	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression frameVar, final WebService webService) {

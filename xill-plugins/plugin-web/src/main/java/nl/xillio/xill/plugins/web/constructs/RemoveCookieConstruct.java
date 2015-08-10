@@ -29,6 +29,8 @@ public class RemoveCookieConstruct extends PhantomJSConstruct {
 	 *        input variable (should be of a PAGE type)
 	 * @param cookieVar
 	 *        input variable - string (cookie name) or list of strings or boolean
+	 * @param webService 
+	 * 				the webservice we're using.
 	 * @return null variable
 	 */
 	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression cookieVar, final WebService webService) {

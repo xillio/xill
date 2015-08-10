@@ -9,7 +9,7 @@ import org.openqa.selenium.WebElement;
  * Defines an interface for a WebVariable
  *
  */
-public abstract class WebVariable implements MetadataExpression{
+public abstract class WebVariable implements MetadataExpression {
 
 	/**
 	 * @return Returns a {@link WebElement}.

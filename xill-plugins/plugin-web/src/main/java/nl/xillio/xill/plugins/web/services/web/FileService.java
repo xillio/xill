@@ -13,7 +13,7 @@ public interface FileService {
 
 	/**
 	 * Copies a source File to a destination File.
-	 * 
+	 *
 	 * @param sourceFile
 	 *        The source File.
 	 * @param destinationFile
@@ -24,7 +24,7 @@ public interface FileService {
 
 	/**
 	 * Makes a file with a given name.
-	 * 
+	 *
 	 * @param fileName
 	 *        The name of the File.
 	 * @return
@@ -34,7 +34,7 @@ public interface FileService {
 
 	/**
 	 * Returns the absolute pathname as a String.
-	 * 
+	 *
 	 * @param file
 	 *        The file we want the absolute path from.
 	 * @return
@@ -44,7 +44,7 @@ public interface FileService {
 
 	/**
 	 * Creates a temporary {@link File} with a given prefix and suffix.
-	 * 
+	 *
 	 * @param prefix
 	 *        The prefix.
 	 * @param suffix
@@ -57,7 +57,7 @@ public interface FileService {
 
 	/**
 	 * Writes a string to a {@link File}
-	 * 
+	 *
 	 * @param file
 	 *        The file we want to write to.
 	 * @param text

@@ -24,7 +24,7 @@ public class RemoveAllCookiesConstruct extends PhantomJSConstruct {
 
 	/**
 	 * Tries to delete all cookies from a page in a {@link MetaExpression}.
-	 * 
+	 *
 	 * @param page
 	 *        The {@link MetaExpression} containing the page.
 	 * @param webService

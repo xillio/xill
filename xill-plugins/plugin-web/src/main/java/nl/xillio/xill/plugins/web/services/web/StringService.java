@@ -36,7 +36,7 @@ public interface StringService {
 
 	/**
 	 * Tells whether the String matches a given regular expression.
-	 * 
+	 *
 	 * @param text
 	 *        The String.
 	 * @param regex
@@ -49,7 +49,7 @@ public interface StringService {
 	/**
 	 * Returns the last index of a given character in a String.
 	 * If no could be found, returns -1.
-	 * 
+	 *
 	 * @param text
 	 *        The text we're searing through
 	 * @param ch

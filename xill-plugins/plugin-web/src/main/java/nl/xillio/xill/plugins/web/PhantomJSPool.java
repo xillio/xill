@@ -27,6 +27,8 @@ public class PhantomJSPool {
 	 *
 	 * @param id
 	 *        in fact it is PJS process CLI options
+	 * @param webService 
+	 * 				the webService we're using.
 	 *
 	 * @return Entity containing a page (i.e. PhantomJS process) with provided options that can be used for web operations
 	 */

@@ -13,7 +13,6 @@ import nl.xillio.xill.plugins.web.Options;
 import nl.xillio.xill.plugins.web.PageVariable;
 import nl.xillio.xill.plugins.web.PhantomJSPool;
 import nl.xillio.xill.plugins.web.WebVariable;
-import nl.xillio.xill.plugins.web.constructs.LoadPageConstruct;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
@@ -211,7 +210,7 @@ public class WebServiceImpl implements WebService {
 	@Override
 	public void httpGet(final WebVariable var, final String url) throws ClassCastException, MalformedURLException {
 		PhantomJSDriver driver = (PhantomJSDriver) var.getDriver();
-		if(getRef(url) !=  null){
+		if (getRef(url) != null) {
 			driver.get("about:blank");
 		}
 		driver.get(url);
@@ -226,7 +225,7 @@ public class WebServiceImpl implements WebService {
 	 *         the reference of this url.
 	 * @throws MalformedURLException
 	 */
-	private String getRef(String url) throws MalformedURLException{
+	private String getRef(final String url) throws MalformedURLException {
 		URL newURL = new URL(url);
 		return newURL.getRef();
 	}
@@ -260,7 +259,7 @@ public class WebServiceImpl implements WebService {
 	}
 
 	@Override
-	public WebVariable getPageFromPool(PhantomJSPool pool, Options options) {
+	public WebVariable getPageFromPool(final PhantomJSPool pool, final Options options) {
 		return pool.get(pool.createIdentifier(options), this).getPage();
 	}
 }

@@ -139,9 +139,8 @@ public interface WebService {
 
 	/**
 	 * Gets the cookies from a {@link WebVariable}.
-	 *
-	 * @param driver
-	 *        the driver we're retrieving from.
+	 * @param var 
+	 * 					The webpage we're retrieving cookies from.
 	 * @return
 	 *         A set of Cookies.
 	 */
@@ -203,7 +202,7 @@ public interface WebService {
 	 * @param var
 	 *        The variable we're deleting cookies on.
 	 */
-	public void deleteCookies(WebVariable driver);
+	public void deleteCookies(WebVariable var);
 
 	/**
 	 * Makes a screenshot on a {@link WebVariable} and returns it as file.
@@ -285,32 +284,38 @@ public interface WebService {
 	 *        The webpage.
 	 * @param url
 	 *        The url.
+	 * @throws ClassCastException 
+	 * 						The implementations casts to a class. When that goes wrong we need to catch it.
+	 * @throws MalformedURLException 
+	 * 						When the url is malformed an exception can occur.
 	 */
 	public void httpGet(WebVariable var, String url) throws ClassCastException, MalformedURLException;
 
 	/**
 	 * Creates a page as a {@link WebVariable} given a {@link Options} as setting.
-	 * 
+	 *
 	 * @param options
 	 *        The options.
 	 * @return
 	 *         The page
 	 */
 	public WebVariable createPage(Options options);
-	
+
 	/**
 	 * Drags a page as a {@link WebVariable} from the pool.
 	 * Creates it when it doesn't exist yet.
+	 * @param pool 
+	 * 				The pool we're extracting the page from.
 	 * @param options
-	 * 						The options the page has.
+	 *        The options the page has.
 	 * @return
-	 * 				The page.
+	 *         The page.
 	 */
 	public WebVariable getPageFromPool(PhantomJSPool pool, Options options);
 
 	/**
 	 * Sets the drivers default options of a {@link WebVariable}.
-	 * 
+	 *
 	 * @param var
 	 *        The variable we're setting the options for.
 	 * @param timeOut
@@ -320,7 +325,7 @@ public interface WebService {
 
 	/**
 	 * Closes a {@link WebVariable} and all pages associated.
-	 * 
+	 *
 	 * @param var
 	 *        The variable we want to quit.
 	 */

@@ -34,6 +34,8 @@ public class SetCookieConstruct extends PhantomJSConstruct {
 	 *        input variable (should be of a PAGE type)
 	 * @param cookiesVar
 	 *        input string variable - associated array or list of associated arrays (see CT help for details)
+	 * @param webService 
+	 * 				The service we're using for accesing the web.
 	 * @return null variable
 	 */
 	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression cookiesVar, final WebService webService) {

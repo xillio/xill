@@ -26,7 +26,7 @@ public class ScreenshotConstructTest extends ExpressionBuilderHelper {
 
 	/**
 	 * test the process with normal usage.
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	@Test
@@ -96,7 +96,7 @@ public class ScreenshotConstructTest extends ExpressionBuilderHelper {
 
 	/**
 	 * Test the process when the fileService breaks
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to copy to: Tony")

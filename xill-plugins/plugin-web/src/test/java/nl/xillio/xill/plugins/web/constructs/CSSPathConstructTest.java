@@ -27,7 +27,7 @@ public class CSSPathConstructTest extends ExpressionBuilderHelper {
 
 	/**
 	 * test the construct with normal input.
-	 * 
+	 *
 	 */
 	@Test
 	public void testNormalNodeUsage() {

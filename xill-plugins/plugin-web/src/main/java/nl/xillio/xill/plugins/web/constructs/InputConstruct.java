@@ -27,6 +27,8 @@ public class InputConstruct extends PhantomJSConstruct {
 	 *        input variable (should be of a NODE type) - web element
 	 * @param textVar
 	 *        input string variable - text to be written to web element
+	 * @param webService 
+	 * 				The webService we're using.
 	 * @return null variable
 	 */
 	public static MetaExpression process(final MetaExpression elementVar, final MetaExpression textVar, final WebService webService) {

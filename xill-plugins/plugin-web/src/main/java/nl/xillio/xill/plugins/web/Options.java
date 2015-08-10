@@ -5,11 +5,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import nl.xillio.xill.api.components.ExpressionDataType;
-import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.components.MetadataExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 import org.apache.commons.codec.binary.Base64;
@@ -26,7 +24,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
  * CLI options are those that must be provided when PhantomJS is starting and cannot be changed anymore for already started PhantomJS process
  * non-CLI options are those that can be set whenever at whatever existing PhantomJS process
  */
-public class Options {
+public class Options implements MetadataExpression {
 
 	// Driver options
 	private int timeout = 0;
@@ -48,136 +46,64 @@ public class Options {
 	private String httpAuthUser;
 	private String httpAuthPass;
 
-	/**
-	 * Processes the Proxy option given an object with options.
-	 *
-	 * @param options
-	 *        The options OBJECT, already parsed.
-	 */
-	private void processProxy(final Map<String, MetaExpression> options) {
-		MetaExpression proxyPortME = options.get("proxyport");
-		if (proxyPortME == null) {
-			throw new RobotRuntimeException("Proxyport must be given in the options OBJECT");
-		}
-		proxyPort = proxyPortME.getNumberValue().intValue();
-
-		proxyUser = getString(options, "proxyuser");
-		proxyPass = getString(options, "proxypass");
-		proxyType = getString(options, "proxytype");
-
-		// Check if the proxyUserValue is null or empty
-		// Check if the proxyPassValue is null or empty
-		boolean proxyUserEmpty = proxyUser == null || proxyUser.isEmpty();
-		boolean proxyPassEmpty = proxyPass == null || proxyPass.isEmpty();
-		if (proxyUserEmpty != proxyPassEmpty) {
-			throw new RobotRuntimeException("The Proxyuser and proxypass must both be set up in the options OBJECT or none of them.");
-		}
-
-		if (proxyType == null) {
-			proxyType = "http";
-		}
-		if (!proxyType.equalsIgnoreCase("http") && !proxyType.equalsIgnoreCase("socks5")) {
-			throw new RobotRuntimeException("Invalid proxytype.");
-		}
+	public void setProxyHost(final String name) {
+		proxyHost = name;
 	}
 
-	private void processOption(final Map<String, MetaExpression> options, final String option, final MetaExpression value) throws Exception {
-
-		switch (option) {
-
-			case "proxyhost":
-				proxyHost = value.getStringValue();
-				processProxy(options);
-				break;
-			
-			//needed if we want to set proxyhost
-			case "proxyport":
-			case "proxyuser":
-			case "proxypass":
-			case "proxytype":
-				break;
-
-			case "enablejs":
-				enableJS = value.getBooleanValue();
-				break;
-
-			case "enablewebsecurity":
-				enableWebSecurity = value.getBooleanValue();
-				break;
-
-			case "loadimages":
-				loadImages = value.getBooleanValue();
-				break;
-
-			case "insecuressl":
-				insecureSSL = value.getBooleanValue();
-				break;
-
-			case "timeout":
-				timeout = value.getNumberValue().intValue();
-				break;
-
-			case "ltrurlaccess":
-				ltrUrlAccess = value.getBooleanValue();
-				break;
-
-			case "sslprotocol":
-				sslProtocol = value.getStringValue();
-				if (!sslProtocol.equalsIgnoreCase("sslv3") && !sslProtocol.equalsIgnoreCase("sslv2") && !sslProtocol.equalsIgnoreCase("tlsv1") && !sslProtocol.equalsIgnoreCase("any")) {
-					throw new RobotRuntimeException("Invalid sslprotocol.");
-				}
-				break;
-
-			case "user":
-				httpAuthUser = value.getStringValue();
-				httpAuthPass = getString(options, "pass");
-				if (httpAuthPass == null || httpAuthPass.isEmpty()) {
-					throw new RobotRuntimeException("Http password must be set if user is used.");
-				}
-				break;
-				
-			//Needed if we want to set user
-			case "pass":
-				break;
-
-			case "browser":
-				browser = value.getStringValue();
-				if (!browser.equals("PHANTOMJS")) {
-					throw new RobotRuntimeException("Invalid \"browser\" option.");
-				}
-				break;
-
-			default:
-				throw new RobotRuntimeException("Unknow option: " + option);
-		}
+	public void setProxyPort(final int value) {
+		proxyPort = value;
 	}
 
-	public void processOptions(final MetaExpression optionsVar) throws Exception {
-		// no option specified - so default is used.
-		if (optionsVar.isNull()) {
-			return;
-		}
-		else {
-
-			if (optionsVar.getType() != ExpressionDataType.OBJECT) {
-				throw new Exception("Invalid options variable!");
-			}
-			@SuppressWarnings("unchecked")
-			Map<String, MetaExpression> options = (Map<String, MetaExpression>) optionsVar.getValue();
-
-			for (Map.Entry<String, MetaExpression> entry : options.entrySet()) {
-				processOption(options, entry.getKey(), entry.getValue());
-			}
-		}
+	public void setTimeout(final int value) {
+		timeout = value;
 	}
 
-	private static String getString(final Map<String, MetaExpression> options, final String option) {
-		MetaExpression me = options.get(option);
-		if (me != null) {
-			return me.getStringValue();
-		} else {
-			return null;
-		}
+	public void setProxyUser(final String name) {
+		proxyUser = name;
+	}
+
+	public void setProxyPass(final String name) {
+		proxyPass = name;
+	}
+
+	public void setProxyType(final String name) {
+		proxyType = name;
+	}
+
+	public void setHttpAuthUser(final String name) {
+		httpAuthUser = name;
+	}
+
+	public void setHttpAuthPass(final String name) {
+		httpAuthPass = name;
+	}
+
+	public void setBrowser(final String name) {
+		browser = name;
+	}
+
+	public void setSslProtocol(final String name) {
+		sslProtocol = name;
+	}
+
+	public void enableJS(final boolean enabled) {
+		enableJS = enabled;
+	}
+
+	public void enableWebSecurity(final boolean enabled) {
+		enableWebSecurity = enabled;
+	}
+
+	public void enableInsecureSSL(final boolean enabled) {
+		insecureSSL = enabled;
+	}
+
+	public void enableLoadImages(final boolean enabled) {
+		loadImages = enabled;
+	}
+
+	public void enableLtrUrlAccess(final boolean enabled) {
+		ltrUrlAccess = enabled;
 	}
 
 	/**
