@@ -1,13 +1,17 @@
 package nl.xillio.xill.plugins.excel.services;
 
 import com.google.inject.Singleton;
+import nl.xillio.xill.api.components.Robot;
+import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import nl.xillio.xill.plugins.excel.dataStructures.XillWorkbook;
+import org.apache.log4j.Logger;
+import org.apache.log4j.spi.RootLogger;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
+import java.util.List;
 
 /**
  * Created by Daan Knoope on 4-8-2015.
@@ -19,18 +23,21 @@ public class ExcelServiceImpl implements ExcelService {
 		return "teststring";
 	}
 
-	@Override public Workbook loadWorkbook(String filePath, File file) throws IOException {
-		Workbook workbook = null; //if loading fails, null will be added to result
-		InputStream fileStream = new FileInputStream(file);
-		if(filePath.endsWith(".xls"))
-			workbook = new HSSFWorkbook(fileStream);
-		else if (filePath.endsWith(".xlsx"))
-			workbook = new XSSFWorkbook(fileStream);
+	@Override public XillWorkbook loadWorkbook(ConstructContext context, String filePath, File file) throws RobotRuntimeException {
+		if(!file.canWrite())
+			context.getRootLogger().warn("Workbook opened in read-only mode");
+		if(!file.exists())
+			throw new RobotRuntimeException("There is no file at the given path");
+		if(!(filePath.endsWith(".xls") || filePath.endsWith(".xlsx")))
+			throw new RobotRuntimeException("Path does not lead to an xls or xlsx Microsoft Excel file");
+		XillWorkbook workbook = new XillWorkbook();
+		workbook.loadWorkbook(filePath, file);
+
 		return workbook;
 	}
 
 	@Override public String getFilePath(File file) throws IOException {
-		return file.getCanonicalPath().toString();
+		return file.getCanonicalPath();
 	}
 
 	@Override public Sheet loadSheet(Workbook workbook, String sheetName) {
@@ -43,9 +50,10 @@ public class ExcelServiceImpl implements ExcelService {
 
 	@Override public int columnSize(Sheet sheet) {
 		int maxColumnSize = -1; //Initialized to -1 because 1 will be added at return and minimum is zero
+
 		for(int i = 0; i < sheet.getLastRowNum(); i++)
 			if(maxColumnSize < sheet.getRow(i).getLastCellNum())
-				maxColumnSize = sheet.getRow(i).getFirstCellNum();
+				maxColumnSize = sheet.getRow(i).getLastCellNum();
 		return maxColumnSize + 1; // Added one because POI is zero index
 	}
 

@@ -1,6 +1,7 @@
 package nl.xillio.xill.plugins.excel.dataStructures;
 
 import nl.xillio.xill.api.components.MetadataExpression;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -15,12 +16,13 @@ import java.io.InputStream;
  * Created by Daan Knoope on 7-8-2015.
  */
 public class XillWorkbook implements MetadataExpression{
-	Workbook workbook;
-	Sheet sheet;
+	private Workbook workbook;
+	private String message = "I am cool";
 
-	public XillWorkbook(){
-
+	public String getString() {
+		return message;
 	}
+	public XillWorkbook(){}
 
 	public XillWorkbook(boolean legacy){
 		if(legacy)
@@ -29,15 +31,29 @@ public class XillWorkbook implements MetadataExpression{
 			workbook = new XSSFWorkbook();
 	}
 
-	public String loadWorkbook(String path, File file) throws IOException {
-		Workbook workbook = null; //if loading fails, null will be added to result
-		InputStream fileStream = new FileInputStream(file);
-		if(path.endsWith(".xls"))
-			workbook = new HSSFWorkbook(fileStream);
-		else if (path.endsWith(".xlsx"))
-			workbook = new XSSFWorkbook(fileStream);
+	public void loadWorkbook(String filePath, File file) throws RobotRuntimeException {
+		Workbook workbook = null;
+		InputStream fileStream;
+		try {
+			fileStream = new FileInputStream(file);
+		}catch(Exception e){
+			throw new RobotRuntimeException("File cannot be opened");
+		}
+		if(filePath.endsWith(".xls")) {
+			try{
+				workbook = new HSSFWorkbook(fileStream);
+			}catch(IOException e){
+				throw new RobotRuntimeException("File cannot be opened as Excel Workbook");
+			}
+		}
+		else if (filePath.endsWith(".xlsx")){
+			try {
+				workbook = new XSSFWorkbook(fileStream);
+			}catch(IOException e){
+				throw new RobotRuntimeException("File cannot be opened as Excel Workbook");
+			}
+		}
 		this.workbook = workbook;
-		return "Excel Workbook [" + getFilePath(file) + "]";
 	}
 
 	public String getFilePath(File file) throws IOException{

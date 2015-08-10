@@ -10,6 +10,7 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.excel.dataStructures.XillWorkbook;
 import nl.xillio.xill.plugins.excel.services.ExcelService;
+import nl.xillio.xill.services.inject.InjectorUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -31,20 +32,24 @@ public class LoadWorkbookConstruct extends Construct {
 	}
 
 	static MetaExpression process(ExcelService excelService, ConstructContext context, MetaExpression filePath){
+
 		String path = filePath.getStringValue();
 		File file = getFile(context.getRobotID(), path);
 		String workbookText = null;
 		XillWorkbook workbook = null;
 		try {
-			//pathToFile = excelService.getFilePath(file);
-			workbook = new XillWorkbook();
-			workbookText = workbook.loadWorkbook(path, file);
-			//workbook = excelService.loadWorkbook(path,file);
-		} catch (IOException e) {
-			throw new RobotRuntimeException(e.getMessage() + ": Could not load file");
+			workbook = excelService.loadWorkbook(context, path,file);
+			workbookText = "Excel Workbook [" + workbook.getFilePath(file) + "]";
+		} catch (RobotRuntimeException e) {
+			throw e;
+		} catch(IOException e){
+			throw new RobotRuntimeException("Could not load fle");
 		}
+
+
+
 		MetaExpression result = fromValue(workbookText);
-		result.storeMeta(workbook);
+		result.storeMeta(XillWorkbook.class, workbook);
 		return result;
 	}
 }
