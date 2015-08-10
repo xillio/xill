@@ -33,8 +33,6 @@ public class ScreenshotConstruct extends PhantomJSConstruct {
 	/**
 	 * @param pageVar
 	 *        input variable (should be of a PAGE type)
-	 * @param fileNameVar 
-	 * 				The name of the file where we want to put the screenshot.
 	 * @param fileService 
 	 * 				The service we're using for files.
 	 * @param webService 

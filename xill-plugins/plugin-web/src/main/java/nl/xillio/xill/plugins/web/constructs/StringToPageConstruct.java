@@ -39,7 +39,7 @@ public class StringToPageConstruct extends PhantomJSConstruct {
 	 * @param fileService
 	 *        The service for files we're using.
 	 * @param webService
-	 *        The webservice the {@link LoadPageConstuct} will be using.
+	 *        The webservice the {@link LoadPageConstruct} will be using.
 	 * @return PAGE variable
 	 */
 	public static MetaExpression process(final MetaExpression contentVar, final OptionsFactory optionsFactory, final FileService fileService, final WebService webService) {
