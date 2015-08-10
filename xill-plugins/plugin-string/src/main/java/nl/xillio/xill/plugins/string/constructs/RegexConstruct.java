@@ -19,7 +19,7 @@ import com.google.inject.Singleton;
 
 /**
  * <p>
- * Returns a list of matches of the specified regex on the provide string.
+ * Returns a list of matches of the specified regex on the provided string.
  * </p>
  *
  * @author Sander

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function Tag="toUpper">
+  <name>toUpper</name>
+  <parameters>
+    <param name="string">
+    </param>
+  </parameters>
+  <description><![CDATA[
+	Returns the string uppercased.
+  ]]></description>
+  <examples>
+    <example description="Executing:"><![CDATA[
+    	String.toUpper("LoWer");
+    ]]></example>
+    <example description="Will return:"><![CDATA[
+		"LOWER"
+    	]]>
+    </example>
+  </examples>
+  <references>
+    <reference package="String">toLower</reference>
+  </references>
+  <searchTags>
+  	<searchTag>
+  		case
+  	</searchTag>
+  	<searchTag>
+  		upper
+  	</searchTag>
+  </searchTags>
+</function>

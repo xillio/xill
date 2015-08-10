@@ -1,18 +1,6 @@
 package nl.xillio.migrationtool.gui;
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-
 import com.sun.javafx.scene.control.behavior.CellBehaviorBase;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -23,22 +11,11 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TablePositionBase;
-import javafx.scene.control.TableView;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseDragEvent;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import nl.xillio.migrationtool.ElasticConsole.Counter;
@@ -47,6 +24,13 @@ import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient.LogType;
 import nl.xillio.migrationtool.ElasticConsole.LogEntry;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.preview.Searchable;
+
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * This pane displays the console log stored in elasticsearch
@@ -213,18 +197,8 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 				// Get all properties
 				String time = timeFormat.format(new Date((long) entry.get("timestamp")));
 				LogType type = LogType.valueOf(entry.get("type").toString().toUpperCase());
-				String[] lines = entry.get("message").toString().split("\n");
-
-				// Check if the message is empty
-				if (lines.length == 0) {
-					lines = new String[] {""};
-				}
-
-				// Add the first entry with type and time, and the message of all new lines
-				addTableEntry(time, type, lines[0], false);
-				for (int i = 1; i < lines.length; i++) {
-					addTableEntry(time, type, lines[i], true);
-				}
+				String text = entry.get("message").toString();
+				addTableEntry(time, type, text, false);
 			}
 
 			// Scroll to the bottom of the table
@@ -405,6 +379,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 
 	/* Drag selection */
 
+
 	/**
 	 * The cell factory which creates DragSelectionCells for the console table.
 	 */
@@ -415,24 +390,26 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 		}
 	}
 
+
 	/**
 	 * A selection cell which can be selected by dragging over it with the mouse.
 	 */
 	private class DragSelectionCell extends TableCell<LogEntry, String> {
+
 		public DragSelectionCell() {
 			// Set event handlers
 			setOnDragDetected(new DragDetectedEventHandler(this));
 			setOnMouseDragEntered(new DragEnteredEventHandler(this));
-		}
+			Text text = new Text();
+			text.wrappingWidthProperty().bind(this.widthProperty());
+			text.textProperty().bind(this.itemProperty());
 
-		@Override
-		public void updateItem(final String item, final boolean empty) {
-			// Update the content
-			super.updateItem(item, empty);
-			setText(empty ? null : item);
-			setTooltip(new Tooltip(item));
+			setGraphic(text);
+			//Update width
+			Platform.runLater(() -> setWidth(getWidth() + 0.1));
 		}
 	}
+
 
 	private class DragDetectedEventHandler implements EventHandler<MouseEvent> {
 		private final TableCell<LogEntry, String> tableCell;
@@ -447,6 +424,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 			tableCell.startFullDrag();
 		}
 	}
+
 
 	private class DragEnteredEventHandler implements EventHandler<MouseDragEvent> {
 		private final TableCell<LogEntry, String> tableCell;

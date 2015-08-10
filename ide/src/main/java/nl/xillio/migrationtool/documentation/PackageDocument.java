@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -39,7 +38,6 @@ public class PackageDocument extends HtmlGenerator {
 
 	public PackageDocument(final File file, final String name) {
 		setName(name);
-		System.out.println("reachedThis");
 
 		try (BufferedReader br = new BufferedReader(new FileReader(file.getAbsoluteFile()))) {
 			String line;
@@ -112,7 +110,7 @@ public class PackageDocument extends HtmlGenerator {
 		for (FunctionDocument desLink : sortedFunctions) {
 			try {
 				canvas = canvas.tr().td().p()
-						.a(href(generateLink(new Pair<String, String>(desLink.getPackage(), desLink.getName()))));
+					.a(href(generateLink(new Pair<String, String>(desLink.getPackage(), desLink.getName()))));
 				canvas = desLink.addFunction(canvas);
 				canvas = canvas._a()._p()._td()._tr();
 			} catch (IOException e) {

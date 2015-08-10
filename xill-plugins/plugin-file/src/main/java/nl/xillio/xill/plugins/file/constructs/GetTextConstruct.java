@@ -28,19 +28,19 @@ public class GetTextConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-				(file, timeout) -> process(context, textExtractor, fileUtilities, file, timeout),
-				new Argument("file", ATOMIC),
-				new Argument("timeout", fromValue(2000)));
+						(file, timeout) -> process(context, textExtractor, fileUtilities, file, timeout),
+						new Argument("file", ATOMIC),
+						new Argument("timeout", fromValue(2000)));
 	}
 
 	static MetaExpression process(final ConstructContext context, final TextExtractor extractor, final FileUtilities fileUtils,
-																final MetaExpression file, final MetaExpression timeout) {
+					final MetaExpression file, final MetaExpression timeout) {
 		double timeoutValue = timeout.getNumberValue().doubleValue();
 		if (Double.isNaN(timeoutValue)) {
 			throw new RobotRuntimeException("Expected a valid number for timeout.");
 		}
 
-		File target = fileUtils.buildFile(context.getRobotID(), file.getStringValue());
+		File target = getFile(context.getRobotID(), file.getStringValue());
 		try {
 			String text = extractor.extractText(target, (int) timeoutValue);
 

@@ -18,25 +18,25 @@ import java.io.IOException;
 @Singleton
 public class DeleteConstruct extends Construct {
 
-    @Inject
-    private FileUtilities fileUtils;
+	@Inject
+	private FileUtilities fileUtils;
 
-    @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
-        return new ConstructProcessor(
-                (uri) -> process(context, fileUtils, uri),
-                new Argument("uri", ATOMIC));
-    }
+	@Override
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
+		return new ConstructProcessor(
+						(uri) -> process(context, fileUtils, uri),
+						new Argument("uri", ATOMIC));
+	}
 
-    static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri) {
+	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri) {
 
-        File file = fileUtils.buildFile(context.getRobotID(), uri.getStringValue());
-        try {
-            fileUtils.delete(file);
-        } catch (IOException e) {
-            context.getRootLogger().error("Failed to delete " + file.getAbsolutePath(), e);
-        }
+		File file = getFile(context.getRobotID(), uri.getStringValue());
+		try {
+			fileUtils.delete(file);
+		} catch (IOException e) {
+			context.getRootLogger().error("Failed to delete " + file.getAbsolutePath(), e);
+		}
 
-        return fromValue(file.getAbsolutePath());
-    }
+		return fromValue(file.getAbsolutePath());
+	}
 }

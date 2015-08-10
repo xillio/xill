@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function Tag="wrap">
+  <name>wrap</name>
+  <parameters>
+    <param name="text">
+    </param>
+    <param name="width">
+    </param>
+    <param name="wrapLongWords">
+    </param>
+  </parameters>
+  <description><![CDATA[
+  		Wraps a single line of text, identifying words by ' '.
+  		If wrapLongWords is true then words are split aswell.
+		Leading spaces on a new line are stripped. Trailing spaces are not stripped.
+  ]]></description>
+  <examples>
+    <example description="Executing:"><![CDATA[
+    	String.wrap("     \n      Time is an illusion. Lunchtime doubly so.                           \n    ", 10, false);
+    ]]></example>
+    <example description="Will return:"><![CDATA[
+    	"\n  \nTime is an\nillusion.\nLunchtime\ndoubly\nso.\n\n"
+    	]]>
+    </example>
+    <example description="Executing:"><![CDATA[
+    	String.wrap("		Time is an illusion. Lunchtime doubly so.", 10, false);
+    ]]></example>
+    <example description="Will return:"><![CDATA[
+    	"Time is an\nillusion.\nLunchtime\ndoubly\nso."
+    	]]>
+    </example>
+    <example description="Executing:"><![CDATA[
+    	String.wrap("Time is an illusion. Lunchtime doubly so.", 5, true);
+    ]]></example>
+    <example description="Will return:"><![CDATA[
+    	"Time\nis an\n illus\nsion.\nLunch\ntime\ndoubl\ny\nso."
+    	]]>
+    </example>
+  </examples>
+  <references>
+  </references>
+  <searchTags>
+  	<searchTag>
+  		format
+  	</searchTag>
+  </searchTags>
+</function>

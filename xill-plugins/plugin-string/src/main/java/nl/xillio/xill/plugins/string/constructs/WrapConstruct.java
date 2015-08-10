@@ -20,8 +20,8 @@ public class WrapConstruct extends Construct {
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
 			(text, width, wrapLongWords) -> process(text, width, wrapLongWords, stringService),
-			new Argument("Text", ATOMIC),
-			new Argument("Width", ATOMIC),
+			new Argument("text", ATOMIC),
+			new Argument("width", ATOMIC),
 			new Argument("wrapLongWords", ATOMIC));
 	}
 

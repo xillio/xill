@@ -8,7 +8,7 @@ import java.util.function.Function;
  * construction loops over an ATOMIC value holding this element it will iterate over all the values in this
  * MetaExpressionIterator instead
  */
-public class MetaExpressionIterator<E> implements Iterator<MetaExpression> {
+public class MetaExpressionIterator<E> implements Iterator<MetaExpression>, MetadataExpression {
 	private final Iterator<E> iterator;
 	private final Function<E, MetaExpression> transformer;
 

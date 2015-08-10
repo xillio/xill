@@ -179,7 +179,6 @@
 						-fx-background-color: transparent;
 						-fx-font-family: "Ubuntu Mono";
 						-fx-font-size: 1em;
-						-fx-cell-size: 1.25em;
 					}
 					#tblConsoleOut .table-row-cell:hover {
 						-fx-background-color: -fx-cell-hover-background-color;
@@ -1208,7 +1207,7 @@
 	}
 
 
-/* TABLE */ 
+/* TABLE */
 
 .table-view {
 	-fx-background-color: transparent;
@@ -1216,27 +1215,27 @@
 	-fx-padding: 0;
 	-fx-table-cell-border-color: transparent;
 }
-	.table-view .column-header, 
+	.table-view .column-header,
 	.table-view .filler,
 	.table-view .show-hide-columns-button {
-		-fx-font-size: 1em; 
+		-fx-font-size: 1em;
 		-fx-font-weight: normal;
 		-fx-size: 2em;
 		-fx-border-style: null;
 		-fx-border-color: transparent;
 		-fx-border-insets: 0;
 		-fx-border-width: 0;
-		-fx-background-color: -fx-control-border-color, -fx-control-background-color; 
-		-fx-background-insets: 0, 0 0 1 0; 
+		-fx-background-color: -fx-control-border-color, -fx-control-background-color;
+		-fx-background-insets: 0, 0 0 1 0;
 		-fx-padding: 0 0 0 0.25em;
 	}
-	.table-view .filler, 
+	.table-view .filler,
 	.table-view .show-hide-columns-button {
 		-fx-padding: 0;
 	}
-	.table-view .column-header:hover, 
+	.table-view .column-header:hover,
 	.table-view .filler:hover {
-		-fx-background-color: -fx-control-hover-border-color, -fx-control-hover-background-color; 
+		-fx-background-color: -fx-control-hover-border-color, -fx-control-hover-background-color;
 	}
 		.table-view .column-header .sort-order {
 			-fx-font-size: 1em;
@@ -1269,13 +1268,12 @@
 		-fx-background-color: transparent;
 		-fx-background-insets: 0;
 		-fx-padding: 0em;
-		-fx-cell-size: 2.0em; 
 	}
 	.table-row-cell:odd {
 		-fx-background-color: -fx-cell-odd-background-color;
 	}
 	.table-row-cell:hover {
-		-fx-background-color: -fx-cell-hover-background-color; 
+		-fx-background-color: -fx-cell-hover-background-color;
 		-fx-background-insets: 0;
 	}
 	.table-row-cell:selected,

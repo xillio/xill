@@ -23,9 +23,9 @@ public class RepeatConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(string, value) -> process(string, value, stringService),
+			(string, count) -> process(string, count, stringService),
 			new Argument("string", ATOMIC),
-			new Argument("value", ATOMIC));
+			new Argument("count", ATOMIC));
 	}
 
 	static MetaExpression process(final MetaExpression string, final MetaExpression value, final StringUtilityService stringService) {
