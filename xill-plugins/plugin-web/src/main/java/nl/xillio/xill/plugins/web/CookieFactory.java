@@ -8,8 +8,22 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
+/**
+ * This is a factory which creates a {@link CookieVariable} and stores it using a {@link WebService}.
+ * @author Ivor
+ *
+ */
 public class CookieFactory {
 
+	/**
+	 * Sets a cookie and stores in the {@link WebService}.
+	 * @param driver
+	 * 						The page we're getting the cookies from.
+	 * @param cookie
+	 * 						The settings for the cookie we want to add.
+	 * @param webService
+	 * 						The webService we're storing the cookie in.
+	 */
 	public void setCookie(final WebVariable driver, final Map<String, MetaExpression> cookie, final WebService webService) {
 		String cookieName = cookie.get("name").getStringValue();
 		String cookieDomain = cookie.get("domain").getStringValue();
