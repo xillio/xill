@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.web;
 
 import java.util.Vector;
 
+import nl.xillio.xill.api.components.MetadataExpression;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
 import org.apache.logging.log4j.LogManager;
@@ -145,7 +146,7 @@ public class PhantomJSPool {
 	 * So the CLI options are like identificators when we are looking in the pool for PJS process with given CLI
 	 * options.
 	 */
-	public class Entity implements AutoCloseable {
+	public class Entity implements AutoCloseable, MetadataExpression {
 		private final WebService webService;
 
 		public Entity(final WebService webService) {
