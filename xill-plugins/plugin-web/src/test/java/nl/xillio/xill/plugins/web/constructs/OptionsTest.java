@@ -29,6 +29,26 @@ public class OptionsTest extends ExpressionBuilderHelper {
 				{"ltrurlaccess", "ltrurlaccess"}};
 		return result;
 	}
+	
+	@DataProvider(name = "proxytypes")
+	public static Object[][] proxyTypeTest(){
+		Object [][] result = {
+				{"proxytype", "http"},
+				{"proxytype", "socks5"},
+				{"proxytype", null}
+		};
+		return result;
+	}
+	
+	@DataProvider(name = "invalidHttpUserPasses")
+		public static Object[][] invalidPasses(){
+			Object [][] result = {
+					{"pass", null},
+					{"pass", ""}
+			};
+			return result;
+		}
+	
 
 	@DataProvider(name = "stringOptionTest")
 	public static Object[][] stringTestStrings() {
@@ -42,8 +62,8 @@ public class OptionsTest extends ExpressionBuilderHelper {
 		return result;
 	}
 
-	@Test
-	public void testProxyOption() throws Exception {
+	@Test(dataProvider = "proxytypes")
+	public void testProxyOption(String proxytypes, String type) throws Exception {
 		// mock
 		OptionsFactory optionsFactory = new OptionsFactory();
 
@@ -83,10 +103,10 @@ public class OptionsTest extends ExpressionBuilderHelper {
 		optionsValue.put("proxypass", proxyPass);
 
 		// the proxy type
-		String proxyTypeValue = "socks5";
+		String proxyTypeValue = type;
 		MetaExpression proxyType = mock(MetaExpression.class);
 		when(proxyType.getStringValue()).thenReturn(proxyTypeValue);
-		optionsValue.put("proxytype", proxyType);
+		optionsValue.put(proxytypes, proxyType);
 
 		// run
 		Options output = optionsFactory.processOptions(options);
@@ -130,6 +150,50 @@ public class OptionsTest extends ExpressionBuilderHelper {
 		MetaExpression proxyPort = mock(MetaExpression.class);
 		when(proxyPort.getNumberValue()).thenReturn(proxyPortValue);
 		optionsValue.put("proxyport", proxyPort);
+
+		// The proxy user
+		String proxyUserValue = "value of the proxyUser";
+		MetaExpression proxyUser = mock(MetaExpression.class);
+		when(proxyUser.getStringValue()).thenReturn(proxyUserValue);
+		optionsValue.put("proxyuser", proxyUser);
+
+		// the proxy pass
+		String proxyPassValue = "you shall pass";
+		MetaExpression proxyPass = mock(MetaExpression.class);
+		when(proxyPass.getStringValue()).thenReturn(proxyPassValue);
+		optionsValue.put("proxypass", proxyPass);
+
+		// the proxy type
+		String proxyTypeValue = "invalidValue";
+		MetaExpression proxyType = mock(MetaExpression.class);
+		when(proxyType.getStringValue()).thenReturn(proxyTypeValue);
+		optionsValue.put("proxytype", proxyType);
+
+		// run
+		optionsFactory.processOptions(options);
+	}
+	
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Proxyport must be given in the options OBJECT")
+	public void TestProxyNoProxyPort() throws Exception {
+		// mock
+		OptionsFactory optionsFactory = new OptionsFactory();
+
+		// The url
+		String urlValue = "This is an url";
+		MetaExpression url = mock(MetaExpression.class);
+		when(url.getStringValue()).thenReturn(urlValue);
+
+		// The options
+		LinkedHashMap<String, MetaExpression> optionsValue = new LinkedHashMap<>();
+		MetaExpression options = mock(MetaExpression.class);
+		when(options.getValue()).thenReturn(optionsValue);
+		when(options.getType()).thenReturn(OBJECT);
+
+		// The proxyHost:
+		String proxyHostValue = "option of proxyhost";
+		MetaExpression proxyHost = mock(MetaExpression.class);
+		when(proxyHost.getStringValue()).thenReturn(proxyHostValue);
+		optionsValue.put("proxyhost", proxyHost);
 
 		// The proxy user
 		String proxyUserValue = "value of the proxyUser";
@@ -242,8 +306,8 @@ public class OptionsTest extends ExpressionBuilderHelper {
 		Assert.assertEquals(output.getHttpAuthPass(), passValue);
 	}
 
-	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Http password must be set if user is used.")
-	public void testUserOptionNoPass() throws Exception {
+	@Test(dataProvider = "invalidHttpUserPasses", expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Http password must be set if user is used.")
+	public void testUserOptionNoHTTPPass(String httpUserpass, String passValue) throws Exception {
 		// mock
 		OptionsFactory optionsFactory = new OptionsFactory();
 
@@ -265,10 +329,9 @@ public class OptionsTest extends ExpressionBuilderHelper {
 		optionsValue.put("user", user);
 
 		// the pass that belongs with the user
-		String passValue = null;
 		MetaExpression pass = mock(MetaExpression.class);
 		when(pass.getStringValue()).thenReturn(passValue);
-		optionsValue.put("pass", pass);
+		optionsValue.put(httpUserpass, pass);
 
 		optionsFactory.processOptions(options);
 	}

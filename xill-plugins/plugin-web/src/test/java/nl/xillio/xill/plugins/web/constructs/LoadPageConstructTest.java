@@ -57,7 +57,7 @@ public class LoadPageConstructTest extends ExpressionBuilderHelper {
 		Assert.assertEquals(output.getStringValue(), urlValue);
 	}
 
-	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to convert LoadPage options.")
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to parse the options.")
 	public void testFailedToParseOptions() throws Exception {
 
 		// mock
@@ -75,7 +75,7 @@ public class LoadPageConstructTest extends ExpressionBuilderHelper {
 
 		// the process
 		// There is currently no other way to do this; we have to sort out the functions one day.
-		when(optionsFactory.processOptions(options)).thenThrow(new RobotRuntimeException("Failed to parse the options"));
+		when(optionsFactory.processOptions(options)).thenThrow(new RobotRuntimeException("Failed to parse the options."));
 		PageVariable pageVariable = mock(PageVariable.class);
 		when(webService.getPageFromPool(any(), any())).thenReturn(pageVariable);
 		when(webService.getCurrentUrl(pageVariable)).thenReturn(urlValue);
@@ -117,15 +117,35 @@ public class LoadPageConstructTest extends ExpressionBuilderHelper {
 		doThrow(new MalformedURLException()).when(webService).httpGet(pageVariable, urlValue);
 
 		// run
-		MetaExpression output = LoadPageConstruct.process(url, options, optionsFactory, webService);
+		LoadPageConstruct.process(url, options, optionsFactory, webService);
+	}
+	
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Loadpage error - PhantomJS pool is fully used and cannot provide another instance!")
+	public void testFullPhantomPool() throws Exception{
+		// mock
+		WebService webService = mock(WebService.class);
+		OptionsFactory optionsFactory = mock(OptionsFactory.class);
+		Options returnedOptions = mock(Options.class);
 
-		// verify
-		verify(optionsFactory, times(1)).processOptions(options);
-		verify(webService, times(1)).getPageFromPool(any(), any());
-		verify(webService, times(1)).getCurrentUrl(pageVariable);
+		// The url
+		String urlValue = "This is an url";
+		MetaExpression url = mock(MetaExpression.class);
+		when(url.getStringValue()).thenReturn(urlValue);
 
-		// assert
-		Assert.assertEquals(output.getStringValue(), urlValue);
+		// The options
+		MetaExpression options = mock(MetaExpression.class);
+
+		// the process
+		// There is currently no other way to do this; we have to sort out the functions one day.
+		when(optionsFactory.processOptions(options)).thenReturn(returnedOptions);;
+		PageVariable pageVariable = mock(PageVariable.class);
+		when(webService.getPageFromPool(any(), any())).thenReturn(null);
+		when(webService.getCurrentUrl(pageVariable)).thenReturn(urlValue);
+		doThrow(new MalformedURLException()).when(webService).httpGet(pageVariable, urlValue);
+
+		// run
+		LoadPageConstruct.process(url, options, optionsFactory, webService);
+		
 	}
 
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to execute httpGet.")

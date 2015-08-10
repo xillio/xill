@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Set;
 
+import nl.xillio.xill.plugins.web.CookieVariable;
 import nl.xillio.xill.plugins.web.NodeVariable;
 import nl.xillio.xill.plugins.web.Options;
 import nl.xillio.xill.plugins.web.PhantomJSPool;
@@ -263,7 +264,7 @@ public interface WebService {
 	 * @param cookie
 	 *        The cookie
 	 */
-	public void addCookie(WebVariable var, Cookie cookie);
+	public void addCookie(WebVariable var, CookieVariable cookie);
 
 	/**
 	 * Creates a node variable with a given page and element.

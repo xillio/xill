@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import nl.xillio.xill.plugins.web.CookieVariable;
 import nl.xillio.xill.plugins.web.NodeVariable;
 import nl.xillio.xill.plugins.web.Options;
 import nl.xillio.xill.plugins.web.PageVariable;
@@ -195,8 +196,9 @@ public class WebServiceImpl implements WebService {
 	}
 
 	@Override
-	public void addCookie(final WebVariable var, final Cookie cookie) {
+	public void addCookie(final WebVariable var, final CookieVariable cookieVar) {
 		WebDriver driver = var.getDriver();
+		Cookie cookie = new Cookie(cookieVar.getName(), cookieVar.getValue(), cookieVar.getDomain(), cookieVar.getPath(), cookieVar.getExpireDate(), false);	
 		driver.manage().addCookie(cookie);
 	}
 

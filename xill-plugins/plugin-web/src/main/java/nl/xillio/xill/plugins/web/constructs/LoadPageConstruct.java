@@ -65,7 +65,7 @@ public class LoadPageConstruct extends PhantomJSConstruct implements AutoCloseab
 			webService.httpGet(item, url);
 			return createPage(item, webService);
 		} catch (RobotRuntimeException e) {
-			throw new RobotRuntimeException("Failed to convert LoadPage options.", e);
+			throw e;
 		} catch (ClassCastException e) {
 			throw new RobotRuntimeException("Failed to execute httpGet.");
 		} catch (MalformedURLException e) {

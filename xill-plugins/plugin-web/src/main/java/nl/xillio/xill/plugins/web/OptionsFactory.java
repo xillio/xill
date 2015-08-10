@@ -148,13 +148,20 @@ public class OptionsFactory {
 		return options;
 	}
 
+	
+	/**
+	 * Retrieves a string value from an option in options.
+	 * Note that this function must not be called if the option is not in the options
+	 * @param options
+	 * 					A map containing all the options.
+	 * @param option
+	 * 					The option we want.
+	 * @return
+	 * 				The stringvalue of the requested option.
+	 */
 	private static String getString(final Map<String, MetaExpression> options, final String option) {
 		MetaExpression me = options.get(option);
-		if (me != null) {
-			return me.getStringValue();
-		} else {
-			return null;
-		}
+		return me.getStringValue();
 	}
 
 }

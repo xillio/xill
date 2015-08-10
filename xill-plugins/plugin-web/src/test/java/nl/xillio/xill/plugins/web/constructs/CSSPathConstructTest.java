@@ -13,9 +13,12 @@ import java.util.List;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.NodeVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
+import org.openqa.selenium.InvalidElementStateException;
+import org.openqa.selenium.InvalidSelectorException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -140,5 +143,79 @@ public class CSSPathConstructTest extends ExpressionBuilderHelper {
 
 		// assert
 		Assert.assertEquals(output, NULL);
+	}
+	
+	/**
+	 * Test the construct when no node or page is given.
+	 */
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid variable type. PAGE or NODE type expected!")
+	public void testNoNodeOrPageGiven(){
+		// mock
+		WebService webService = mock(WebService.class);
+
+		// The element
+		MetaExpression element = mock(MetaExpression.class);
+		NodeVariable nodeVariable = mock(NodeVariable.class);
+
+		// The css path
+		String query = "cssPath";
+		MetaExpression cssPath = mock(MetaExpression.class);
+		when(cssPath.getStringValue()).thenReturn(query);
+
+		// The process
+		when(webService.findElementsWithCssPath(nodeVariable, query)).thenReturn(Arrays.asList());
+
+		// run
+		CSSPathConstruct.process(element, cssPath, webService);
+	}
+	
+	/**
+	 * test the construct when a single resultvalue is returned.
+	 */
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid CSSPath")
+	public void testProcessInvalidSelectorExceptionThrown() {
+		// mock
+		WebService webService = mock(WebService.class);
+
+		// The element
+		MetaExpression element = mock(MetaExpression.class);
+		NodeVariable nodeVariable = mock(NodeVariable.class);
+		when(element.getMeta(NodeVariable.class)).thenReturn(nodeVariable);
+
+		// The css path
+		String query = "cssPath";
+		MetaExpression cssPath = mock(MetaExpression.class);
+		when(cssPath.getStringValue()).thenReturn(query);
+
+		// The process
+		when(webService.findElementsWithCssPath(nodeVariable, query)).thenThrow(new InvalidSelectorException("invalid selector"));
+
+		// run
+		CSSPathConstruct.process(element, cssPath, webService);
+	}
+	
+	/**
+	 * test the construct when a single resultvalue is returned.
+	 */
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid CSSPath")
+	public void testProcessInvaliElementStateExceptionThrown() {
+		// mock
+		WebService webService = mock(WebService.class);
+
+		// The element
+		MetaExpression element = mock(MetaExpression.class);
+		NodeVariable nodeVariable = mock(NodeVariable.class);
+		when(element.getMeta(NodeVariable.class)).thenReturn(nodeVariable);
+
+		// The css path
+		String query = "cssPath";
+		MetaExpression cssPath = mock(MetaExpression.class);
+		when(cssPath.getStringValue()).thenReturn(query);
+
+		// The process
+		when(webService.findElementsWithCssPath(nodeVariable, query)).thenThrow(new InvalidElementStateException());
+
+		// run
+		CSSPathConstruct.process(element, cssPath, webService);
 	}
 }
