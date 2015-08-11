@@ -7,6 +7,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.web.PhantomJSConstruct;
 import nl.xillio.xill.plugins.web.data.Options;
 import nl.xillio.xill.plugins.web.data.OptionsFactory;
 import nl.xillio.xill.plugins.web.data.PhantomJSPool;

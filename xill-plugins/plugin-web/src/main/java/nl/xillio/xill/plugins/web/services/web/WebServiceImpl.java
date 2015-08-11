@@ -227,7 +227,14 @@ public class WebServiceImpl implements WebService {
 	 */
 	private String getRef(final String url) throws MalformedURLException {
 		URL newURL = new URL(url);
+		if(newURL == null || !checkSupportedURL(newURL)){
+			throw new MalformedURLException();
+		}
 		return newURL.getRef();
+	}
+	
+	private boolean checkSupportedURL(URL url){
+		return url.getProtocol().toLowerCase().equals("http") ||url.getProtocol().toLowerCase().equals("https");
 	}
 
 	@Override

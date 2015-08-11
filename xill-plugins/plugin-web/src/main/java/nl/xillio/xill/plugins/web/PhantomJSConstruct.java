@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.web.constructs;
+package nl.xillio.xill.plugins.web;
 
 import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
@@ -10,6 +10,8 @@ import nl.xillio.xill.plugins.web.data.NodeVariable;
 import nl.xillio.xill.plugins.web.data.PageVariable;
 import nl.xillio.xill.plugins.web.data.WebVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
+
+
 
 import org.openqa.selenium.Cookie;
 
