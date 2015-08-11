@@ -100,7 +100,7 @@ public class LoadWorkbookConstructTest {
 			when(id.getPath()).thenReturn(new File("."));
 		  when(service.loadWorkbook(anyString(), any(File.class))).thenReturn(workbook);
 			when(context.getRobotID()).thenReturn(id);
-			when(workbook.getFilePath()).thenThrow(new IOException());
+			when(workbook.getFileString()).thenThrow(new IOException());
 			LoadWorkbookConstruct.process(service,context,fromValue("."));
 	}
 
