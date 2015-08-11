@@ -10,6 +10,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.text.ParseException;
 
 /**
@@ -17,8 +18,8 @@ import java.text.ParseException;
  */
 @ImplementedBy(ExcelServiceImpl.class)
 public interface ExcelService {
-	String testFunction();
-	XillWorkbook loadWorkbook(String filePath, File file) throws FileNotFoundException, IllegalArgumentException, IOException, ParseException;
+	XillWorkbook loadWorkbook(File file) throws IllegalArgumentException, IOException, ParseException;
+	XillWorkbook createWorkbook(File file) throws FileAlreadyExistsException, IOException;
 	String getFilePath(File file) throws IOException;
 	Sheet loadSheet(Workbook workbook, String sheetName);
 	int rowSize(Sheet sheet);

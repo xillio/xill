@@ -14,7 +14,7 @@ import java.io.InputStream;
  */
 public abstract class XillWorkbookFactory {
 
-	public abstract XillWorkbook createWorkbook();
+	public abstract XillWorkbook createWorkbook(File file) throws IOException;
 	protected abstract XillWorkbook loadWorkbook(InputStream stream, boolean readonly, File file) throws IOException;
 	public XillWorkbook loadWorkbook(File file) throws IOException{
 		InputStream fileStream = new FileInputStream(file);

@@ -43,7 +43,7 @@ public class LoadWorkbookConstructTest {
 		when(id.getPath()).thenReturn(new File("."));
 		when(context.getRobotID()).thenReturn(id);
 
-		when(service.loadWorkbook(anyString(), any(File.class))).thenReturn(workbook);
+		when(service.loadWorkbook(any(File.class))).thenReturn(workbook);
 
 		MetaExpression filePath = mock(MetaExpression.class);
 		when(filePath.getStringValue()).thenReturn("testpath");
@@ -51,7 +51,7 @@ public class LoadWorkbookConstructTest {
 
 
 		// Verify
-		verify(service, times(1)).loadWorkbook(anyString(), any());
+		verify(service, times(1)).loadWorkbook(any());
 
 		// Assert
 		assertEquals(expression.getMeta(XillWorkbook.class), workbook);
@@ -74,7 +74,7 @@ public class LoadWorkbookConstructTest {
 		RobotID id = mock(RobotID.class);
 		when(id.getPath()).thenReturn(new File("."));
 		when(context.getRobotID()).thenReturn(id);
-		when(service.loadWorkbook(anyString(), any(File.class))).thenThrow(new IllegalArgumentException());
+		when(service.loadWorkbook(any(File.class))).thenThrow(new IllegalArgumentException());
 		LoadWorkbookConstruct.process(service,context,fromValue("."));
 	}
 
@@ -86,23 +86,9 @@ public class LoadWorkbookConstructTest {
 			RobotID id = mock(RobotID.class);
 			when(id.getPath()).thenReturn(new File("."));
 			when(context.getRobotID()).thenReturn(id);
-			when(service.loadWorkbook(anyString(), any(File.class))).thenThrow(new FileNotFoundException());
+			when(service.loadWorkbook(any(File.class))).thenThrow(new FileNotFoundException());
 			LoadWorkbookConstruct.process(service, context, fromValue("."));
 		}
-
-	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "File could not be read")
-		public void testProccessIOException() throws Exception{
-			InjectorUtils.getGlobalInjector();
-			ExcelService service = mock(ExcelService.class);
-			ConstructContext context = mock(ConstructContext.class);
-			XillWorkbook workbook = mock(XillWorkbook.class);
-			RobotID id = mock(RobotID.class);
-			when(id.getPath()).thenReturn(new File("."));
-		  when(service.loadWorkbook(anyString(), any(File.class))).thenReturn(workbook);
-			when(context.getRobotID()).thenReturn(id);
-			when(workbook.getFileString()).thenThrow(new IOException());
-			LoadWorkbookConstruct.process(service,context,fromValue("."));
-	}
 
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "File cannot be opened as Excel Workbook")
 		public void testProcessParseException() throws Exception{
@@ -113,7 +99,7 @@ public class LoadWorkbookConstructTest {
 		RobotID id = mock(RobotID.class);
 		when(id.getPath()).thenReturn(new File("."));
 		when(context.getRobotID()).thenReturn(id);
-		when(service.loadWorkbook(anyString(), any(File.class))).thenThrow(new ParseException("blabla", 0));
+		when(service.loadWorkbook(any(File.class))).thenThrow(new ParseException("blabla", 0));
 		LoadWorkbookConstruct.process(service,context,fromValue("."));
 	}
 
@@ -126,7 +112,7 @@ public class LoadWorkbookConstructTest {
 		Logger logger = mock(Logger.class);
 		RobotID id = mock(RobotID.class);
 		when(id.getPath()).thenReturn(new File("."));
-		when(service.loadWorkbook(anyString(), any(File.class))).thenReturn(workbook);
+		when(service.loadWorkbook(any(File.class))).thenReturn(workbook);
 		when(context.getRobotID()).thenReturn(id);
 		when(workbook.isReadonly()).thenReturn(true);
 		when(context.getRootLogger()).thenReturn(logger);
@@ -146,7 +132,7 @@ public class LoadWorkbookConstructTest {
 		Logger logger = mock(Logger.class);
 		RobotID id = mock(RobotID.class);
 		when(id.getPath()).thenReturn(new File("."));
-		when(service.loadWorkbook(anyString(), any(File.class))).thenReturn(workbook);
+		when(service.loadWorkbook(any(File.class))).thenReturn(workbook);
 		when(context.getRobotID()).thenReturn(id);
 		when(workbook.isReadonly()).thenReturn(false);
 		when(context.getRootLogger()).thenReturn(logger);
@@ -164,7 +150,7 @@ public class LoadWorkbookConstructTest {
 		Logger logger = mock(Logger.class);
 		RobotID id = mock(RobotID.class);
 		when(id.getPath()).thenReturn(new File("."));
-		when(service.loadWorkbook(anyString(), any(File.class))).thenReturn(workbook);
+		when(service.loadWorkbook(any(File.class))).thenReturn(workbook);
 		when(context.getRobotID()).thenReturn(id);
 		MetaExpression expr = LoadWorkbookConstruct.process(service, context, fromValue("."));
 		assertEquals(expr.getMeta(XillWorkbook.class), workbook);

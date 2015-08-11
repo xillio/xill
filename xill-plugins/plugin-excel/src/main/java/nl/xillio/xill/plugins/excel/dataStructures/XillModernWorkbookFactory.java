@@ -8,14 +8,14 @@ import java.io.InputStream;
 
 public class XillModernWorkbookFactory extends XillWorkbookFactory{
 
-	@Override public XillWorkbook createWorkbook() {
+	@Override public XillWorkbook createWorkbook(File file) throws IOException {
 		XSSFWorkbook workbook = new XSSFWorkbook();
-		return new ModernXillWorkbook(workbook);
+		return new ModernXillWorkbook(workbook, file);
 	}
 
 	@Override public XillWorkbook loadWorkbook(InputStream stream, boolean readonly, File file) throws IOException {
 		XSSFWorkbook workbook = new XSSFWorkbook(stream);
-		ModernXillWorkbook modernXillWorkbook = new ModernXillWorkbook(workbook);
+		ModernXillWorkbook modernXillWorkbook = new ModernXillWorkbook(workbook, file);
 		modernXillWorkbook.setReadonly(readonly);
 		modernXillWorkbook.file = file;
 		return modernXillWorkbook;

@@ -39,7 +39,7 @@ public class LoadWorkbookConstruct extends Construct {
 		String workbookText = null;
 		XillWorkbook workbook = null;
 		try {
-			workbook = excelService.loadWorkbook(path,file);
+			workbook = excelService.loadWorkbook(file);
 			workbookText = workbook.getFileString();
 		} catch (IllegalArgumentException e) {
 			throw new RobotRuntimeException("Path does not lead to an xls or xlsx Microsoft Excel file");

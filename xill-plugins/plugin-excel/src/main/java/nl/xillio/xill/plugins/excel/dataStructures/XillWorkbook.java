@@ -20,52 +20,16 @@ public abstract class XillWorkbook implements MetadataExpression{
 	protected Workbook workbook;
 	protected File file;
 	private boolean readonly;
+	private String location;
 
-	public XillWorkbook(){}
-
-	public XillWorkbook(Workbook workbook){
+	public XillWorkbook(Workbook workbook, File file) throws IOException {
 		this.workbook = workbook;
-	}
-	//---------------------------------------------------------------------------------------
-	public XillWorkbook(boolean legacy){
-		if(legacy)
-			workbook = new HSSFWorkbook();
-		else
-			workbook = new XSSFWorkbook();
-	}
-/*
-	public void loadWorkbook(String filePath, File file) throws ParseException, IOException {
-		Workbook workbook = null;
 		this.file = file;
-		InputStream fileStream;
-		try {
-			fileStream = new FileInputStream(file);
-		}catch(Exception e){
-			throw new IOException("File cannot be opened");
-		}
-		if(filePath.endsWith(".xls")) {
-			try{
-				workbook = new HSSFWorkbook(fileStream);
-			}catch(IOException e){
-				throw new ParseException("File cannot be opened as Excel Workbook",0);
-			}
-		}
-		else if (filePath.endsWith(".xlsx")){
-			try {
-				workbook = new XSSFWorkbook(fileStream);
-			}catch(IOException e){
-				throw new ParseException("File cannot be opened as Excel Workbook",0);
-			}
-		}
-		this.workbook = workbook;
-	}*/
-
-	public String getFilePath() throws IOException{
-		return file.getCanonicalPath().toString();
+		location = file.getCanonicalPath();
 	}
 
-	public String getFileString() throws IOException{
-		return "Excel Workbook [" + getFilePath() + "]";
+	public String getFileString(){
+		return "Excel Workbook [" + location + "]";
 	}
 
 	public int rowSize(Sheet sheet){
