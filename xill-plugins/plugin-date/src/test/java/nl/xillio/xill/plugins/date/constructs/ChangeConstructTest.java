@@ -1,41 +1,32 @@
 package nl.xillio.xill.plugins.date.constructs;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertSame;
-
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.chrono.ChronoZonedDateTime;
-import java.util.LinkedHashMap;
-
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.plugins.date.data.Date;
 import nl.xillio.xill.plugins.date.services.DateService;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.LinkedHashMap;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
+
 /**
- * 
  * Test the {@link ChangeConstruct}
- * 
- * @author Geert Konijnendijk
  *
+ * @author Geert Konijnendijk
  */
 public class ChangeConstructTest {
 
 	private static final Logger log = LogManager.getLogger();
 
 	private DateService dateService;
-	private ZonedDateTime date;
+	private Date date;
 	private MetaExpression dateExpression;
 	private LinkedHashMap<String, MetaExpression> changes;
 	private MetaExpression changesExpression;
@@ -49,20 +40,14 @@ public class ChangeConstructTest {
 		dateService = mock(DateService.class);
 
 		// Answer returning the first argument as a ZonedDateTime
-		Answer<ZonedDateTime> returnAsZonedDateTime = new Answer<ZonedDateTime>() {
-			@Override
-			public ZonedDateTime answer(InvocationOnMock invocation) throws Throwable {
-				return ZonedDateTime.from(invocation.getArgumentAt(0, ChronoZonedDateTime.class));
-			}
-		};
+		Answer<Date> returnAsZonedDateTime = invocation -> invocation.getArgumentAt(0, Date.class);
 
 		when(dateService.changeTimeZone(any(), any())).then(returnAsZonedDateTime);
 		when(dateService.add(any(), any())).then(returnAsZonedDateTime);
 
-		// ZonedDateTime is final, don't mock
-		date = ZonedDateTime.of(2015, 1, 1, 0, 0, 0, 0, ZoneId.systemDefault());
+		date = mock(Date.class);
 		dateExpression = mock(MetaExpression.class);
-		when(dateExpression.getMeta(ZonedDateTime.class)).thenReturn(date);
+		when(dateExpression.getMeta(Date.class)).thenReturn(date);
 		changes = new LinkedHashMap<>();
 		changesExpression = mock(MetaExpression.class);
 		when(changesExpression.getValue()).thenReturn(changes);
@@ -139,7 +124,7 @@ public class ChangeConstructTest {
 		verify(dateService, times(0)).changeTimeZone(any(), any());
 
 		// Assert
-		assertSame(newDate.getMeta(ZonedDateTime.class), date);
+		assertSame(newDate.getMeta(Date.class), date);
 	}
 
 	private MetaExpression mockNumberExpression(int number) {
@@ -165,6 +150,6 @@ public class ChangeConstructTest {
 	}
 
 	private void assertEqualDate(MetaExpression newDate) {
-		assertEquals(newDate.getMeta(ZonedDateTime.class), date);
+		assertEquals(newDate.getMeta(Date.class), date);
 	}
 }

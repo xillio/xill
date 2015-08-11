@@ -1,36 +1,31 @@
 package nl.xillio.xill.plugins.date.constructs;
 
-import static nl.xillio.xill.plugins.date.utils.MockUtils.mockBoolExpression;
-import static nl.xillio.xill.plugins.date.utils.MockUtils.mockDateExpression;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
+import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.plugins.date.services.DateService;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.plugins.date.services.DateService;
-
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import static nl.xillio.xill.plugins.date.utils.MockUtils.mockBoolExpression;
+import static nl.xillio.xill.plugins.date.utils.MockUtils.mockDateExpression;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
 
 /**
- * 
  * Tests for the {@link DiffConstruct}
- * 
- * @author Geert Konijnendijk
  *
+ * @author Geert Konijnendijk
  */
 public class DiffConstructTest {
 
 	/**
 	 * @return Data containing two maps (which should be returned from the mock {@link DateService#difference(java.time.temporal.Temporal, java.time.temporal.Temporal, boolean)}) for testing absolute
-	 *         and relative difference.
+	 * and relative difference.
 	 */
 	@DataProvider(name = "differences")
 	private Object[][] mapProvider() {
@@ -44,16 +39,14 @@ public class DiffConstructTest {
 		relativeDifference.put("Unit2", 20.0);
 		MetaExpression falseExpression = mockBoolExpression(false);
 
-		return new Object[][] { {absoluteDifference, trueExpression}, {relativeDifference, falseExpression}};
+		return new Object[][] {{absoluteDifference, trueExpression}, {relativeDifference, falseExpression}};
 	}
 
 	/**
 	 * Test the process method
-	 * 
-	 * @param differences
-	 *        Map with differences as could be returned by {@link DateService#difference(java.time.temporal.Temporal, java.time.temporal.Temporal, boolean)}.
-	 * @param absolute
-	 *        Whether the difference should be absolute or relative
+	 *
+	 * @param differences Map with differences as could be returned by {@link DateService#difference(nl.xillio.xill.plugins.date.data.Date, nl.xillio.xill.plugins.date.data.Date, boolean)}.
+	 * @param absolute    Whether the difference should be absolute or relative
 	 */
 	@Test(dataProvider = "differences")
 	public void testProcess(Map<String, Double> differences, MetaExpression absolute) {

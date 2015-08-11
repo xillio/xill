@@ -1,15 +1,6 @@
 package nl.xillio.migrationtool.gui;
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import com.sun.javafx.scene.control.behavior.CellBehaviorBase;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -20,24 +11,11 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TablePositionBase;
-import javafx.scene.control.TableView;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseDragEvent;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import nl.xillio.migrationtool.ElasticConsole.Counter;
@@ -46,6 +24,11 @@ import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient.LogType;
 import nl.xillio.migrationtool.ElasticConsole.LogEntry;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.preview.Searchable;
+
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * This pane displays the console log stored in elasticsearch
@@ -79,11 +62,12 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 	private Button btnNavigateForward;
 	@FXML
 	private Slider sldNavigation;
-	
+
+
 	public static enum Scroll {
 		NONE, START, END, TOTALEND, CLEAR
 	}
-	
+
 	// private Robot robot;
 
 	// Log entry lists. Master contains everything, filtered contains only selected entries.
@@ -98,7 +82,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 	private boolean updateSlider = true; // if changes on slider value has to invoke updateLog()
 	private final Timeline sliderTimeline; // update cycle for slider changes 
 	private boolean sliderChanged = false; // if slider value has changed from outside - because of some user activity
-	
+
 	// Time format
 	private final DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
@@ -108,7 +92,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 
 	private final List<Integer> occurences = new ArrayList<>();
 	private RobotTab tab;
-	
+
 	private boolean searchRegExp = false;
 	private String searchNeedle = "";
 
@@ -181,7 +165,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 				this.startEntry = (this.entriesCount * newValue.intValue()) / 100;
 				this.sliderChanged = true;
 			}
-	});
+		});
 
 	}
 
@@ -230,7 +214,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 		}
 		this.updateLog(Scroll.END, false);
 	}
-	
+
 	@FXML
 	private void buttonNavigateForward() {
 		this.startEntry += this.maxEntries;
@@ -258,7 +242,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 
 			// Reset the filter counts
 			resetLabels();
-			
+
 			if (scroll == Scroll.CLEAR) {
 				// this explicit variant is here because if you click Clear then the ES starts to remove all items,
 				//  but when runtime come here, ES still can have some values "not deleted yet" and 
@@ -270,60 +254,51 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 				return;
 			}
 
-			ESConsoleClient.SearchFilter filter = ESConsoleClient.getInstance().createSearchFilter(searchNeedle, this.searchRegExp, this.filters);;
-			
+			ESConsoleClient.SearchFilter filter = ESConsoleClient.getInstance().createSearchFilter(searchNeedle, this.searchRegExp, this.filters);
+			;
+
 			this.entriesCount = ESConsoleClient.getInstance().countFilteredEntries(getRobotID().toString(), filter);
-			
+
 			int lastEntry = this.startEntry + this.maxEntries - 1;
-			if ( (this.entriesCount <= lastEntry) || (scroll == Scroll.TOTALEND) ) {
-				lastEntry = this.entriesCount-1;
-				this.startEntry = lastEntry-this.maxEntries+1;
+			if ((this.entriesCount <= lastEntry) || (scroll == Scroll.TOTALEND)) {
+				lastEntry = this.entriesCount - 1;
+				this.startEntry = lastEntry - this.maxEntries + 1;
 				if (this.startEntry < 0) {
 					this.startEntry = 0;
 				}
 			}
 			int showCount = lastEntry - this.startEntry + 1;
-			
+
 			if (!fromSlider) {
 				this.updateSlider = false;
 				if (this.entriesCount == 0) {
 					this.sldNavigation.setValue(0);
 				} else {
-					this.sldNavigation.setValue((this.startEntry*100) / this.entriesCount);
+					this.sldNavigation.setValue((this.startEntry * 100) / this.entriesCount);
 				}
 				this.updateSlider = true;
 			}
-			
+
 			if (this.entriesCount == 0) {
 				tbnLogsCount.setText("0-0/0");
 			} else {
-				tbnLogsCount.setText(String.format("%1$d-%2$d/%3$d", this.startEntry+1, lastEntry+1, this.entriesCount));				
+				tbnLogsCount.setText(String.format("%1$d-%2$d/%3$d", this.startEntry + 1, lastEntry + 1, this.entriesCount));
 			}
-			
+
 			List<Map<String, Object>> entries = ESConsoleClient.getInstance().getFilteredEntries(
-				getRobotID().toString(), this.startEntry, lastEntry, filter);
-			
+					getRobotID().toString(), this.startEntry, lastEntry, filter);
+
 			for (Map<String, Object> entry : entries) {
 				// Get all properties
 				String time = timeFormat.format(new Date((long) entry.get("timestamp")));
 				LogType type = LogType.valueOf(entry.get("type").toString().toUpperCase());
-				String[] lines = entry.get("message").toString().split("\n");
-
-				// Check if the message is empty
-				if (lines.length == 0) {
-					lines = new String[] {""};
-				}
-
-				// Add the first entry with type and time, and the message of all new lines
-				addTableEntry(time, type, lines[0], false);
-				for (int i = 1; i < lines.length; i++) {
-					addTableEntry(time, type, lines[i], true);
-				}
+				String text = entry.get("message").toString();
+				addTableEntry(time, type, text, false);
 			}
 
 			// Do scroll
 			if ((scroll == Scroll.END) || (scroll == Scroll.TOTALEND)) {
-				tblConsoleOut.scrollTo(tblConsoleOut.getItems().size()-1);
+				tblConsoleOut.scrollTo(tblConsoleOut.getItems().size() - 1);
 			} else if (scroll == Scroll.START) {
 				tblConsoleOut.scrollTo(0);
 			}
@@ -448,6 +423,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 
 	/* Drag selection */
 
+
 	/**
 	 * The cell factory which creates DragSelectionCells for the console table.
 	 */
@@ -458,24 +434,26 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 		}
 	}
 
+
 	/**
 	 * A selection cell which can be selected by dragging over it with the mouse.
 	 */
 	private class DragSelectionCell extends TableCell<LogEntry, String> {
+
 		public DragSelectionCell() {
 			// Set event handlers
 			setOnDragDetected(new DragDetectedEventHandler(this));
 			setOnMouseDragEntered(new DragEnteredEventHandler(this));
-		}
+			Text text = new Text();
+			text.wrappingWidthProperty().bind(this.widthProperty());
+			text.textProperty().bind(this.itemProperty());
 
-		@Override
-		public void updateItem(final String item, final boolean empty) {
-			// Update the content
-			super.updateItem(item, empty);
-			setText(empty ? null : item);
-			setTooltip(new Tooltip(item));
+			setGraphic(text);
+			//Update width
+			Platform.runLater(() -> setWidth(getWidth() + 0.1));
 		}
 	}
+
 
 	private class DragDetectedEventHandler implements EventHandler<MouseEvent> {
 		private final TableCell<LogEntry, String> tableCell;
@@ -490,6 +468,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 			tableCell.startFullDrag();
 		}
 	}
+
 
 	private class DragEnteredEventHandler implements EventHandler<MouseDragEvent> {
 		private final TableCell<LogEntry, String> tableCell;
