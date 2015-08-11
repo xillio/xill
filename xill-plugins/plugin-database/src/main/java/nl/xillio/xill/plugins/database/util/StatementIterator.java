@@ -44,20 +44,6 @@ public class StatementIterator implements Iterator<Object> {
 	}
 
 	/**
-	 * Create an iterator over all results of a {@link Statement} after the first update count has been retrieved.
-	 * 
-	 * @param stmt
-	 *        The statement to iterate over
-	 * @param startingUpdateCount
-	 *        The first update count returned by the iterator
-	 */
-	public StatementIterator(Statement stmt, int startingUpdateCount) {
-		this.stmt = stmt;
-		this.currentUpdateCount = startingUpdateCount;
-		hasNext = true;
-	}
-
-	/**
 	 * Sets the currentUpdateCount or the currentSet depending on the current result of the statement.
 	 */
 	private void retrieveNextResult(boolean resultSetPossible) {
