@@ -7,6 +7,7 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
@@ -33,4 +34,11 @@ public class ExcelServiceImplTest {
 		service.loadWorkbook(file);
 	}
 
+	@Test (expectedExceptions = FileAlreadyExistsException.class, expectedExceptionsMessageRegExp = "File already exists: no new workbook has been created.")
+	public void testCreateWorkbookFileAlreadyExists() throws Exception {
+		File file = mock(File.class);
+		when(file.exists()).thenReturn(true);
+		ExcelService service = new ExcelServiceImpl();
+		service.createWorkbook(file);
+	}
 }

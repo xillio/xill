@@ -35,8 +35,6 @@ public class ExcelServiceImpl implements ExcelService {
 	@Override public XillWorkbook createWorkbook(File file) throws FileAlreadyExistsException, IOException {
 		if(file.exists())
 			throw new FileAlreadyExistsException("File already exists: no new workbook has been created.");
-		//if(!file.canWrite())
-		//	throw new IllegalArgumentException("Path is read-only.");
 
 		String filePath = file.getCanonicalPath();
 		XillWorkbookFactory factory = XillWorkbookFactorySelector.getFactory(filePath);
