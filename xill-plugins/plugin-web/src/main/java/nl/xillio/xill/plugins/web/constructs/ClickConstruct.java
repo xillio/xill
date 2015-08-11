@@ -15,7 +15,7 @@ public class ClickConstruct extends PhantomJSConstruct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(element) -> process(element, webService),
+			element -> process(element, webService),
 			new Argument("element", ATOMIC));
 	}
 
@@ -33,7 +33,7 @@ public class ClickConstruct extends PhantomJSConstruct {
 		try {
 			webService.click(getNode(elementVar));
 		} catch (Exception e) {
-			throw new RobotRuntimeException("Stale element clicked.");
+			throw new RobotRuntimeException("Stale element clicked.", e);
 		}
 
 		return NULL;

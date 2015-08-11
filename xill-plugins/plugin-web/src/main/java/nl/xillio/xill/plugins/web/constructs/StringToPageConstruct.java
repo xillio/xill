@@ -26,7 +26,7 @@ public class StringToPageConstruct extends PhantomJSConstruct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(content) -> process(content, optionsFactory, fileService, webService),
+			content -> process(content, optionsFactory, fileService, webService),
 			new Argument("content", ATOMIC));
 	}
 
@@ -50,7 +50,7 @@ public class StringToPageConstruct extends PhantomJSConstruct {
 			String uri = "file:///" + fileService.getAbsolutePath(htmlFile);
 			return LoadPageConstruct.process(fromValue(uri), NULL, optionsFactory, webService);
 		} catch (IOException e) {
-			throw new RobotRuntimeException("An IO error occurred.");
+			throw new RobotRuntimeException("An IO error occurred.", e);
 		} catch (Exception e) {
 			throw new RobotRuntimeException("Failed to load the generated page.", e);
 		}

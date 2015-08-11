@@ -47,7 +47,7 @@ public class SelectConstruct extends PhantomJSConstruct {
 					webService.click(element);
 				}
 			} catch (Exception e) {
-				throw new RobotRuntimeException("Failed to access NODE correctly");
+				throw new RobotRuntimeException("Failed to access NODE correctly", e);
 			}
 		}
 		return NULL;

@@ -23,7 +23,7 @@ public class GetTextConstruct extends PhantomJSConstruct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(element) -> process(element, webService),
+			element -> process(element, webService),
 			new Argument("element", LIST, ATOMIC));
 	}
 

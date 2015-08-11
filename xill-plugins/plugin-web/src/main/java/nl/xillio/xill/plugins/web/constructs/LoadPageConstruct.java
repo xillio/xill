@@ -69,9 +69,9 @@ public class LoadPageConstruct extends PhantomJSConstruct implements AutoCloseab
 		} catch (RobotRuntimeException e) {
 			throw e;
 		} catch (ClassCastException e) {
-			throw new RobotRuntimeException("Failed to execute httpGet.");
+			throw new RobotRuntimeException("Failed to execute httpGet.", e);
 		} catch (MalformedURLException e) {
-			throw new RobotRuntimeException("Malformed URL during httpGet.");
+			throw new RobotRuntimeException("Malformed URL during httpGet.", e);
 		}
 	}
 

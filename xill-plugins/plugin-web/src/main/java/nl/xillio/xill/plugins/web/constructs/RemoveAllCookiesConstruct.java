@@ -17,7 +17,7 @@ public class RemoveAllCookiesConstruct extends PhantomJSConstruct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(page) -> process(page, webService),
+			page -> process(page, webService),
 			new Argument("page", ATOMIC));
 	}
 
@@ -41,7 +41,7 @@ public class RemoveAllCookiesConstruct extends PhantomJSConstruct {
 		try {
 			webService.deleteCookies(driver);
 		} catch (Exception e) {
-			throw new RobotRuntimeException("Failed to delete all cookies in driver.");
+			throw new RobotRuntimeException("Failed to delete all cookies in driver.", e);
 		}
 		return NULL;
 	}

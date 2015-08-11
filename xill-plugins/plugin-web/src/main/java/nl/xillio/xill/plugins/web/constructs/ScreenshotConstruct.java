@@ -58,9 +58,9 @@ public class ScreenshotConstruct extends PhantomJSConstruct {
 				File desFile = fileService.makeFile(fileName);
 				fileService.copyFile(srcFile, desFile);
 			} catch (IOException e) {
-				throw new RobotRuntimeException("Failed to copy to: " + fileName);
+				throw new RobotRuntimeException("Failed to copy to: " + fileName, e);
 			} catch (Exception e) {
-				throw new RobotRuntimeException("Failed to access page without errors.");
+				throw new RobotRuntimeException("Failed to access page without errors.", e);
 			}
 		}
 

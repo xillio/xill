@@ -16,7 +16,7 @@ public class SelectedConstruct extends PhantomJSConstruct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(element) -> process(element, webService),
+			element -> process(element, webService),
 			new Argument("element", ATOMIC));
 	}
 
@@ -38,7 +38,7 @@ public class SelectedConstruct extends PhantomJSConstruct {
 		try {
 			return fromValue(webService.isSelected(element));
 		} catch (Exception e) {
-			throw new RobotRuntimeException("Failed to access NODE correctly");
+			throw new RobotRuntimeException("Failed to access NODE correctly", e);
 		}
 	}
 }

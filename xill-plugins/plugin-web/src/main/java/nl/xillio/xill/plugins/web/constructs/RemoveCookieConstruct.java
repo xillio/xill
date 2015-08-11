@@ -59,7 +59,7 @@ public class RemoveCookieConstruct extends PhantomJSConstruct {
 				webService.deleteCookieNamed(driver, cookieName);
 			}
 		} catch (Exception e) {
-			throw new RobotRuntimeException("Failed to delete cookie: " + cookieName);
+			throw new RobotRuntimeException("Failed to delete cookie: " + cookieName, e);
 		}
 		return NULL;
 	}

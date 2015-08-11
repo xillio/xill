@@ -20,7 +20,7 @@ public class FocusConstruct extends PhantomJSConstruct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(element) -> process(element, webService),
+			element -> process(element, webService),
 			new Argument("element", ATOMIC));
 	}
 
@@ -38,7 +38,7 @@ public class FocusConstruct extends PhantomJSConstruct {
 			try {
 				webService.moveToElement(getNode(elementVar));
 			} catch (Exception e) {
-				throw new RobotRuntimeException("Failed to focus on element.");
+				throw new RobotRuntimeException("Failed to focus on element.", e);
 			}
 			return NULL;
 		}
