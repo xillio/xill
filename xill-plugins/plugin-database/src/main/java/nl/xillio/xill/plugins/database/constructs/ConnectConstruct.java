@@ -9,10 +9,10 @@ import nl.xillio.xill.api.components.AtomicExpression;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.ObjectExpression;
 import nl.xillio.xill.api.construct.Argument;
-import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.database.BaseDatabaseConstruct;
 import nl.xillio.xill.plugins.database.services.DatabaseService;
 import nl.xillio.xill.plugins.database.services.DatabaseServiceFactory;
 import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
@@ -21,22 +21,18 @@ import nl.xillio.xill.plugins.database.util.Tuple;
 /**
  *
  */
-public class ConnectConstruct extends Construct {
-
-	private static DatabaseServiceFactory factory = new DatabaseServiceFactory();
+public class ConnectConstruct extends BaseDatabaseConstruct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		Argument[] args =
 		{new Argument("database", ATOMIC), new Argument("type", ATOMIC), new Argument("user", NULL, ATOMIC), new Argument("pass", NULL, ATOMIC),
 		    new Argument("options", new ObjectExpression(new LinkedHashMap<>()), OBJECT)};
-		return new ConstructProcessor(ConnectConstruct::process, args);
+		return new ConstructProcessor((a) -> process(a, factory), args);
 	}
 
-	/**
-	 */
 	@SuppressWarnings("unchecked")
-	static MetaExpression process(final MetaExpression[] args) {
+	static MetaExpression process(final MetaExpression[] args, DatabaseServiceFactory factory) {
 		String database = args[0].isNull() ? null : args[0].getStringValue();
 		String type = args[1].getStringValue();
 		String user = args[2].isNull() ? null : args[2].getStringValue();
