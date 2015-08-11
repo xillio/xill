@@ -1,7 +1,7 @@
-package nl.xillio.migrationtool.ElasticConsole;
+package nl.xillio.migrationtool.elasticconsole;
 
 import javafx.beans.property.SimpleStringProperty;
-import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient.LogType;
+import nl.xillio.migrationtool.elasticconsole.ESConsoleClient.LogType;
 
 public class LogEntry {
 	// These are used by the cell value factories from the console tableview

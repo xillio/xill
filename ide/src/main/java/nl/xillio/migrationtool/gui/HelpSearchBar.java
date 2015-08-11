@@ -11,7 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.AnchorPane;
-import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient;
+import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
 import nl.xillio.migrationtool.documentation.DocumentSearcher;
 
 /**
