@@ -30,6 +30,10 @@ public class FocusConstruct extends PhantomJSConstruct {
 	 * @return null variable
 	 */
 	static MetaExpression process(final MetaExpression elementVar, final WebService webService) {
+		
+		if(elementVar.isNull()){
+			return NULL;
+		}
 
 		if (!checkNodeType(elementVar)) {
 			throw new RobotRuntimeException("Invalid variable type. NODE type expected!");

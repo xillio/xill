@@ -34,7 +34,7 @@ public class RemoveCookieConstruct extends PhantomJSConstruct {
 	 */
 	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression cookieVar, final WebService webService) {
 
-		if (cookieVar.isNull()) {
+		if (cookieVar.isNull() || pageVar.isNull()) {
 			return NULL;
 		}
 		// else

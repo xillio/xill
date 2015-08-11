@@ -42,7 +42,7 @@ public class SetCookieConstruct extends PhantomJSConstruct {
 	 */
 	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression cookiesVar, final CookieFactory cookieFactory, final WebService webService) {
 
-		if (cookiesVar.isNull()) {
+		if (cookiesVar.isNull() || pageVar.isNull()) {
 			return NULL;
 		}
 

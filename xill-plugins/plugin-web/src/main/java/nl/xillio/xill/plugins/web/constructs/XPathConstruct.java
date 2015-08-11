@@ -38,7 +38,11 @@ public class XPathConstruct extends PhantomJSConstruct {
 	public static MetaExpression process(final MetaExpression elementVar, final MetaExpression xpathVar, final WebService webService) {
 
 		String query = xpathVar.getStringValue();
-
+		
+		if(elementVar.isNull()){
+			return NULL;
+		}
+		
 		if (checkPageType(elementVar)) {
 			return processSELNode(getPage(elementVar), query, webService);
 		} else if (checkNodeType(elementVar)) {

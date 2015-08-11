@@ -32,6 +32,10 @@ public class RemoveAllCookiesConstruct extends PhantomJSConstruct {
 	 *         Returns NULL.
 	 */
 	public static MetaExpression process(final MetaExpression page, final WebService webService) {
+		
+		if(page.isNull()){
+			return NULL;
+		}
 
 		if (!checkPageType(page)) {
 			throw new RobotRuntimeException("Invalid variable type. Node PAGE type expected!");

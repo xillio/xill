@@ -41,7 +41,11 @@ public class ScreenshotConstruct extends PhantomJSConstruct {
 	 * @return null variable
 	 */
 	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression fileNameVar, final FileService fileService, final WebService webService) {
-
+		
+		if(pageVar.isNull()){
+			return NULL;
+		}
+		
 		String fileName = fileNameVar.getStringValue();
 		if (fileName.isEmpty()) {
 			throw new RobotRuntimeException("Invalid variable value. Filename is empty!");

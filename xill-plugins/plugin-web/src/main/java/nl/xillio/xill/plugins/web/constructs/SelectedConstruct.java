@@ -28,7 +28,11 @@ public class SelectedConstruct extends PhantomJSConstruct {
 	 * @return boolean variable (true=selected, false=not selected)
 	 */
 	public static MetaExpression process(final MetaExpression elementVar, final WebService webService) {
-
+		
+		if(elementVar.isNull()){
+			return NULL;
+		}
+			
 		if (!checkNodeType(elementVar)) {
 			throw new RobotRuntimeException("Invalid variable type. NODE type expected!");
 		}

@@ -32,6 +32,10 @@ public class PageInfoConstruct extends PhantomJSConstruct {
 	 * @return list of string variable
 	 */
 	public static MetaExpression process(final MetaExpression pageVar, final WebService webService) {
+		
+		if(pageVar.isNull()){
+			return NULL;
+		}
 
 		if (!checkPageType(pageVar)) {
 			throw new RobotRuntimeException("Invalid variable type. Node PAGE type expected!");
