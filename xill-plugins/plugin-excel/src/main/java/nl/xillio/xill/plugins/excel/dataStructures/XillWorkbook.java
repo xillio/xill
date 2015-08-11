@@ -16,20 +16,24 @@ import java.text.ParseException;
 /**
  * Created by Daan Knoope on 7-8-2015.
  */
-public class XillWorkbook implements MetadataExpression{
-	private Workbook workbook;
-	private File file;
+public abstract class XillWorkbook implements MetadataExpression{
+	protected Workbook workbook;
+	protected File file;
 	private boolean readonly;
 
 	public XillWorkbook(){}
 
+	public XillWorkbook(Workbook workbook){
+		this.workbook = workbook;
+	}
+	//---------------------------------------------------------------------------------------
 	public XillWorkbook(boolean legacy){
 		if(legacy)
 			workbook = new HSSFWorkbook();
 		else
 			workbook = new XSSFWorkbook();
 	}
-
+/*
 	public void loadWorkbook(String filePath, File file) throws ParseException, IOException {
 		Workbook workbook = null;
 		this.file = file;
@@ -54,7 +58,7 @@ public class XillWorkbook implements MetadataExpression{
 			}
 		}
 		this.workbook = workbook;
-	}
+	}*/
 
 	public String getFilePath() throws IOException{
 		return file.getCanonicalPath().toString();
@@ -92,3 +96,4 @@ public class XillWorkbook implements MetadataExpression{
 		this.readonly = readonly;
 	}
 }
+

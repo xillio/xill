@@ -4,7 +4,10 @@ import com.google.inject.Singleton;
 import nl.xillio.xill.api.components.Robot;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.excel.dataStructures.XillLegacyWorkbookFactory;
+import nl.xillio.xill.plugins.excel.dataStructures.XillModernWorkbookFactory;
 import nl.xillio.xill.plugins.excel.dataStructures.XillWorkbook;
+import nl.xillio.xill.plugins.excel.dataStructures.XillWorkbookFactory;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.RootLogger;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -25,16 +28,17 @@ public class ExcelServiceImpl implements ExcelService {
 	}
 
 	@Override public XillWorkbook loadWorkbook(String filePath, File file) throws ParseException, IllegalArgumentException, IOException{
-
 		if(!file.exists())
 			throw new FileNotFoundException("There is no file at the given path");
 		if(!(filePath.endsWith(".xls") || filePath.endsWith(".xlsx")))
 			throw new IllegalArgumentException("Path does not lead to an xls or xlsx Microsoft Excel file");
-		XillWorkbook workbook = new XillWorkbook();
-		workbook.loadWorkbook(filePath, file);
-		if(!file.canWrite())
-			workbook.setReadonly(true);
-		return workbook;
+
+		XillWorkbookFactory factory = null;
+		if(filePath.endsWith(".xls"))
+			factory = new XillLegacyWorkbookFactory();
+		else if(filePath.endsWith(".xlsx"))
+			factory = new XillModernWorkbookFactory();
+		return factory.loadWorkbook(file);
 	}
 
 	@Override public String getFilePath(File file) throws IOException {
