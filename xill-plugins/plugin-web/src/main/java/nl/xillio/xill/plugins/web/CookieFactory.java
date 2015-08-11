@@ -18,7 +18,7 @@ public class CookieFactory {
 	/**
 	 * Sets a cookie and stores in the {@link WebService}.
 	 * @param driver
-	 * 						The page we're getting the cookies from.
+	 * 						The page we want to set the cookie on.
 	 * @param cookie
 	 * 						The settings for the cookie we want to add.
 	 * @param webService

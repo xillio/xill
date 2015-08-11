@@ -17,8 +17,17 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+/**
+ * Test the {@link OptionsFactory}
+ *
+ */
 public class OptionsTest extends ExpressionBuilderHelper {
 
+	/**
+	 * All the names of the options that require a boolean.
+	 * @return
+	 * 				A list of all the names that require a boolean.
+	 */
 	@DataProvider(name = "booleanOptionTest")
 	public static Object[][] booleanTestStrings() {
 		Object[][] result = {
@@ -30,6 +39,11 @@ public class OptionsTest extends ExpressionBuilderHelper {
 		return result;
 	}
 
+	/**
+	 * All the values of proxytype that we accept.
+	 * @return
+	 * 				A list with the name string "proxytype" combined with the accepted value.
+	 */
 	@DataProvider(name = "proxytypes")
 	public static Object[][] proxyTypeTest() {
 		Object[][] result = {
@@ -40,6 +54,11 @@ public class OptionsTest extends ExpressionBuilderHelper {
 		return result;
 	}
 
+	/**
+	 * All the invalud values for a HttpUserPass.
+	 * @return
+	 * 			A list with the name string "pass" combined with invalid values.
+	 */
 	@DataProvider(name = "invalidHttpUserPasses")
 	public static Object[][] invalidPasses() {
 		Object[][] result = {
@@ -49,6 +68,11 @@ public class OptionsTest extends ExpressionBuilderHelper {
 		return result;
 	}
 
+	/**
+	 * All the options that require a string and their valid values.
+	 * @return
+	 * 				A list with the name string combined with the valid value.
+	 */
 	@DataProvider(name = "stringOptionTest")
 	public static Object[][] stringTestStrings() {
 		Object[][] result = {
@@ -61,6 +85,15 @@ public class OptionsTest extends ExpressionBuilderHelper {
 		return result;
 	}
 
+	/**
+	 * A test which tests the proxy option with all proxy values.
+	 * @param proxytypes
+	 * 					The name string for the proxytype option
+	 * @param type
+	 * 					The actual valid type.	  				
+	 * @throws Exception
+	 * 					
+	 */
 	@Test(dataProvider = "proxytypes")
 	public void testProxyOption(final String proxytypes, final String type) throws Exception {
 		// mock
@@ -122,6 +155,10 @@ public class OptionsTest extends ExpressionBuilderHelper {
 		Assert.assertEquals(output.getProxyPass(), proxyPassValue);
 	}
 
+	/**
+	 * Tests the proxy option error handling when an invalid proxytype is handed.
+	 * @throws Exception
+	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid proxytype.")
 	public void TestProxyOptionInvalidProxyType() throws Exception {
 		// mock
@@ -172,6 +209,10 @@ public class OptionsTest extends ExpressionBuilderHelper {
 		optionsFactory.processOptions(options);
 	}
 
+	/**
+	 * Tests the proxy option error handling when no proxyport is handed.
+	 * @throws Exception
+	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Proxyport must be given in the options OBJECT")
 	public void TestProxyNoProxyPort() throws Exception {
 		// mock
@@ -216,6 +257,10 @@ public class OptionsTest extends ExpressionBuilderHelper {
 		optionsFactory.processOptions(options);
 	}
 
+	/**
+	 * Tests the error handling of the proxy option when the proxyUser is set but no proxypass is given or the other way around.
+	 * @throws Exception
+	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "The Proxyuser and proxypass must either both be set up in the options OBJECT or none of them.")
 	public void testProxyOptionIncorrectSetup() throws Exception {
 		// mock
@@ -266,6 +311,10 @@ public class OptionsTest extends ExpressionBuilderHelper {
 		optionsFactory.processOptions(options);
 	}
 
+	/**
+	 * Tests the httAuthUser option.
+	 * @throws Exception
+	 */
 	@Test
 	public void testUserOption() throws Exception {
 		// mock
@@ -305,6 +354,14 @@ public class OptionsTest extends ExpressionBuilderHelper {
 		Assert.assertEquals(output.getHttpAuthPass(), passValue);
 	}
 
+	/**
+	 * Tests the httpUserOption when an invalid pass is given.
+	 * @param httpUserpass
+	 * 					The name string for the httpUserPass.
+	 * @param passValue
+	 * 					The value of the pass.
+	 * @throws Exception
+	 */
 	@Test(dataProvider = "invalidHttpUserPasses", expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Http password must be set if user is used.")
 	public void testUserOptionNoHTTPPass(final String httpUserpass, final String passValue) throws Exception {
 		// mock
@@ -335,6 +392,14 @@ public class OptionsTest extends ExpressionBuilderHelper {
 		optionsFactory.processOptions(options);
 	}
 
+	/**
+	 * Tests all the options that require a boolean value. (We default to false).
+	 * @param name
+	 * 					the name string of the option.
+	 * @param name2
+	 * 					The name string again (had to hand two values).
+	 * @throws Exception
+	 */
 	@Test(dataProvider = "booleanOptionTest")
 	public void testBooleanOptions(final String name, final String name2) throws Exception {
 		// mock
@@ -347,7 +412,7 @@ public class OptionsTest extends ExpressionBuilderHelper {
 
 		// The options
 		LinkedHashMap<String, MetaExpression> optionsValue = new LinkedHashMap<>();
-		boolean enable = true;
+		boolean enable = false;
 		MetaExpression option = mock(MetaExpression.class);
 		when(option.getBooleanValue()).thenReturn(enable);
 		optionsValue.put(name, option);
@@ -363,6 +428,14 @@ public class OptionsTest extends ExpressionBuilderHelper {
 		verify(option, times(1)).getBooleanValue();
 	}
 
+	/**
+	 * Tests all the options that require a string value.
+	 * @param tagName
+	 * 					The name string of the option.
+	 * @param value
+	 * 					The value we want to set the option to.
+	 * @throws Exception
+	 */
 	@Test(dataProvider = "stringOptionTest")
 	public void testStringOptions(final String tagName, final String value) throws Exception {
 		// mock
@@ -390,6 +463,10 @@ public class OptionsTest extends ExpressionBuilderHelper {
 		verify(option, times(1)).getStringValue();
 	}
 
+	/**
+	 * Tests the error handling when an invalid sslProtocol is handed.
+	 * @throws Exception
+	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid sslprotocol.")
 	public void testInvalidSslProtocol() throws Exception {
 		// mock
@@ -414,6 +491,10 @@ public class OptionsTest extends ExpressionBuilderHelper {
 		optionsFactory.processOptions(options);
 	}
 
+	/**
+	 * Tests the browser option error handling with an invalid browser given.
+	 * @throws Exception
+	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid \"browser\" option.")
 	public void testInvalidBrowserOption() throws Exception {
 		// mock
@@ -438,6 +519,10 @@ public class OptionsTest extends ExpressionBuilderHelper {
 		optionsFactory.processOptions(options);
 	}
 
+	/**
+	 * Tests the error handling when an unknown option is trying to be set.
+	 * @throws Exception
+	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Unknow option: nonExistingOption")
 	public void testUnknownOption() throws Exception {
 		// mock
@@ -462,6 +547,10 @@ public class OptionsTest extends ExpressionBuilderHelper {
 		optionsFactory.processOptions(options);
 	}
 
+	/**
+	 * Tests the options error handling. when we do not hand an object but an ATOMIC value.
+	 * @throws Exception
+	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid options variable!")
 	public void testNoObjectGiven() throws Exception {
 		// mock

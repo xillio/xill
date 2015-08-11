@@ -39,8 +39,7 @@ public class XPathConstructTest extends ExpressionBuilderHelper {
 		when(page.getMeta(PageVariable.class)).thenReturn(pageVariable);
 
 		// The xpath
-		String xPathValue = "xpath";
-		String shortenedXPathValue = "shorter xpath";
+		String xPathValue = "xpath/text()";
 		MetaExpression xpath = mock(MetaExpression.class);
 		when(xpath.getStringValue()).thenReturn(xPathValue);
 
@@ -49,7 +48,7 @@ public class XPathConstructTest extends ExpressionBuilderHelper {
 		String elementText = "the text in the attribute of the element";
 
 		// process SEL node
-		when(webService.findElementsWithXpath(pageVariable, shortenedXPathValue)).thenReturn(Collections.singletonList(element));
+		when(webService.findElementsWithXpath(eq(pageVariable), anyString())).thenReturn(Collections.singletonList(element));
 		when(webService.getAttribute(element, "innerHTML")).thenReturn(elementText);
 
 		// run
@@ -77,8 +76,7 @@ public class XPathConstructTest extends ExpressionBuilderHelper {
 		when(node.getMeta(NodeVariable.class)).thenReturn(nodeVariable);
 
 		// The xpath
-		String xPathValue = "xpath";
-		String shortenedXPathValue = "shorter xpath";
+		String xPathValue = "xpath/text()";
 		MetaExpression xpath = mock(MetaExpression.class);
 		when(xpath.getStringValue()).thenReturn(xPathValue);
 
@@ -89,7 +87,7 @@ public class XPathConstructTest extends ExpressionBuilderHelper {
 		String element2Text = "element2";
 
 		// process SEL node
-		when(webService.findElementsWithXpath(nodeVariable, shortenedXPathValue)).thenReturn(Arrays.asList(element1, element2));
+		when(webService.findElementsWithXpath(eq(nodeVariable), anyString())).thenReturn(Arrays.asList(element1, element2));
 		when(webService.getAttribute(element1, "innerHTML")).thenReturn(element1Text);
 		when(webService.getAttribute(element2, "innerHTML")).thenReturn(element2Text);
 
@@ -122,8 +120,7 @@ public class XPathConstructTest extends ExpressionBuilderHelper {
 		when(page.getMeta(PageVariable.class)).thenReturn(pageVariable);
 
 		// The xpath
-		String xPathValue = "xpath";
-		String shortenedXPathValue = "shorter xpath";
+		String xPathValue = "xpath/text()";
 		MetaExpression xpath = mock(MetaExpression.class);
 		when(xpath.getStringValue()).thenReturn(xPathValue);
 
@@ -134,7 +131,7 @@ public class XPathConstructTest extends ExpressionBuilderHelper {
 		String element2Text = "element2";
 
 		// process SEL node
-		when(webService.findElementsWithXpath(pageVariable, shortenedXPathValue)).thenReturn(Arrays.asList(element1, element2));
+		when(webService.findElementsWithXpath(eq(pageVariable), anyString())).thenReturn(Arrays.asList(element1, element2));
 		when(webService.getAttribute(element1, "innerHTML")).thenReturn(element1Text);
 		when(webService.getAttribute(element2, "innerHTML")).thenReturn(element2Text);
 
@@ -200,8 +197,7 @@ public class XPathConstructTest extends ExpressionBuilderHelper {
 		when(page.getMeta(PageVariable.class)).thenReturn(pageVariable);
 
 		// The xpath
-		String xPathValue = "xpath";
-		String shortenedXPathValue = "shorter xpath";
+		String xPathValue = "xpath/@attribute";
 		MetaExpression xpath = mock(MetaExpression.class);
 		when(xpath.getStringValue()).thenReturn(xPathValue);
 
@@ -215,7 +211,7 @@ public class XPathConstructTest extends ExpressionBuilderHelper {
 
 		// process SEL node
 
-		when(webService.findElementsWithXpath(pageVariable, shortenedXPathValue)).thenReturn(Arrays.asList(element1, element2));
+		when(webService.findElementsWithXpath(eq(pageVariable), anyString())).thenReturn(Arrays.asList(element1, element2));
 		when(webService.getAttribute(element1, "innerHTML")).thenReturn(element1Text);
 		when(webService.getAttribute(element2, "innerHTML")).thenReturn(element2Text);
 
@@ -236,4 +232,44 @@ public class XPathConstructTest extends ExpressionBuilderHelper {
 		Assert.assertEquals(result.get(0).getStringValue(), element1Result);
 		Assert.assertEquals(result.get(1).getStringValue(), element2Result);
 	}
+	
+	/**
+	 * tests the process under normal circumstances with a page given.
+	 * We have an attribute query but cannot find the attribute.
+	 */
+	@Test
+	public void testNormalUsageWithPageAndOneAttributeAndNoAttributeFound(){
+		// mock
+		WebService webService = mock(WebService.class);
+
+		// The page
+		MetaExpression page = mock(MetaExpression.class);
+		PageVariable pageVariable = mock(PageVariable.class);
+		when(page.getMeta(PageVariable.class)).thenReturn(pageVariable);
+
+		// The xpath
+		String xPathValue = "xpath/@attribute";
+		MetaExpression xpath = mock(MetaExpression.class);
+		when(xpath.getStringValue()).thenReturn(xPathValue);
+
+		// The WebElements
+		WebVariable element1 = mock(WebVariable.class);
+
+		// process SEL node
+
+		when(webService.findElementsWithXpath(eq(pageVariable), anyString())).thenReturn(Arrays.asList(element1));
+
+		// The second attribute part
+		when(webService.getAttribute(element1, "attribute")).thenReturn(null);
+
+		// run
+		MetaExpression output = XPathConstruct.process(page, xpath, webService);
+
+		// verify
+		verify(webService, times(1)).getAttribute(any(), anyString());
+
+		// assert
+		Assert.assertEquals(output, NULL);
+	}
+	
 }

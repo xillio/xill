@@ -46,62 +46,138 @@ public class Options implements MetadataExpression {
 	private String httpAuthUser;
 	private String httpAuthPass;
 
+	/**
+	 * Set the proxy host.
+	 * @param name
+	 * 					The name of the host.
+	 */
 	public void setProxyHost(final String name) {
 		proxyHost = name;
 	}
 
+	/**
+	 * Set the proxy port.
+	 * @param value
+	 * 					The name of the port.
+	 */
 	public void setProxyPort(final int value) {
 		proxyPort = value;
 	}
 
+	/**
+	 * Set the timeout value.
+	 * @param value
+	 * 					The value of the timeout in ms.
+	 */
 	public void setTimeout(final int value) {
 		timeout = value;
 	}
 
+	/**
+	 * Set the proxy user.
+	 * @param name
+	 * 					The username.
+	 */
 	public void setProxyUser(final String name) {
 		proxyUser = name;
 	}
 
+	/**
+	 * Set the proxy pass.
+	 * @param name
+	 * 				 The name of the pass.
+	 */
 	public void setProxyPass(final String name) {
 		proxyPass = name;
 	}
 
+	/**
+	 * Set proxy type.
+	 * @param name
+	 * 					The name of the proxyType. (Supported: http, socks5)
+	 */
 	public void setProxyType(final String name) {
 		proxyType = name;
 	}
 
+	/**
+	 * Set the httpAuthUser.
+	 * @param name
+	 * 					The name of the user.
+	 */
 	public void setHttpAuthUser(final String name) {
 		httpAuthUser = name;
 	}
 
+	/**
+	 * Set a pass for the httpAuthUser.
+	 * @param name
+	 * 					The name of the pass.
+	 */
 	public void setHttpAuthPass(final String name) {
 		httpAuthPass = name;
 	}
 
+	/**
+	 * Set the browser.
+	 * @param name
+	 * 					The name of the browser. (currently supported: PHANTOMJS)
+	 */
 	public void setBrowser(final String name) {
 		browser = name;
 	}
 
+	/**
+	 * Set the sslProtocol.
+	 * @param name
+	 * 					The name of the protocol. (supported: sslv3, sslv2, tlsv1, any).
+	
+	 */
 	public void setSslProtocol(final String name) {
 		sslProtocol = name;
 	}
 
+	/**
+	 * Enable or disable JavaScript.
+	 * @param enabled
+	 * 					Whether or not we want JS enabled.
+	 */
 	public void enableJS(final boolean enabled) {
 		enableJS = enabled;
 	}
 
+	/**
+	 * Enable of disable WebSecurity.
+	 * @param enabled
+	 * 					Whether or not we want security enabled.
+	 */
 	public void enableWebSecurity(final boolean enabled) {
 		enableWebSecurity = enabled;
 	}
 
+	/**
+	 * Enable or disable insecure SSL.
+	 * @param enabled
+	 * 					Whether or not we want insecure SSL enabled.
+	 */
 	public void enableInsecureSSL(final boolean enabled) {
 		insecureSSL = enabled;
 	}
 
+	/**
+	 * Enable or disable load images.
+	 * @param enabled
+	 * 					Whether or not we want load images enabled.
+	 */
 	public void enableLoadImages(final boolean enabled) {
 		loadImages = enabled;
 	}
 
+	/**
+	 * Enable or disable ltr URL access.
+	 * @param enabled
+	 * 					Whether or not we want this access enabled.
+	 */
 	public void enableLtrUrlAccess(final boolean enabled) {
 		ltrUrlAccess = enabled;
 	}
@@ -248,7 +324,7 @@ public class Options implements MetadataExpression {
 		return driver;
 	}
 
-	/*
+	/**
 	 * Method deletes all existing PhantomJS process files from temp folder (on
 	 * Windows only) There are cases when the file is not removed after CT is
 	 * closed (e.g. when CT crashes or is manually terminated, etc.) This
@@ -279,7 +355,7 @@ public class Options implements MetadataExpression {
 		}
 	}
 
-	/*
+	/**
 	 * Creates new PhantomJS.exe file in temporary folder - on MS Windows only
 	 * For other operating systems, PhantomJS is expected to be properly installed in the path.
 	 */

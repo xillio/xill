@@ -22,10 +22,13 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- *
+ *Test the {@link RemoveCookieConstruct}.
  */
 public class RemoveCookieConstructTest extends ExpressionBuilderHelper {
 
+	/**
+	 * Test the process when a list of cookies to remove is handed.
+	 */
 	@Test
 	public void testProcessListUsage() {
 		// mock
@@ -73,6 +76,9 @@ public class RemoveCookieConstructTest extends ExpressionBuilderHelper {
 		Assert.assertEquals(output, NULL);
 	}
 
+	/**
+	 * Test the process when a single cookie to delete is handed.
+	 */
 	@Test
 	public void testProcessAtomicUsage() {
 		// mock

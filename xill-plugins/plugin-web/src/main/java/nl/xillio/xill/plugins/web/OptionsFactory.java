@@ -7,6 +7,10 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
+/**
+ * The factory for the {@link Options} variable.
+ *
+ */
 public class OptionsFactory {
 
 	/**
@@ -126,6 +130,13 @@ public class OptionsFactory {
 		}
 	}
 
+	/**
+	 * Process the options handed as a metaExpression.
+	 * @param optionsVar
+	 * 					The options we want to set. If it is null we return a default value.
+	 * @return	
+	 * 			A new {@link Options}.
+	 */
 	public Options processOptions(final MetaExpression optionsVar) {
 		Options options = new Options();
 		// no option specified - so default is used.

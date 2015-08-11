@@ -20,8 +20,16 @@ import nl.xillio.xill.plugins.web.services.web.WebService;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+/**
+ * Test the {@link LoadPageConstruct}.
+ *
+ */
 public class LoadPageConstructTest extends ExpressionBuilderHelper {
 
+	/**
+	 *Test the process under normal circumstances.
+	 * @throws Exception 
+	 */
 	@Test
 	public void testNormalUsage() throws Exception {
 
@@ -57,6 +65,10 @@ public class LoadPageConstructTest extends ExpressionBuilderHelper {
 		Assert.assertEquals(output.getStringValue(), urlValue);
 	}
 
+	/**
+	 * Test the error handling when we {@link OptionsFactory} fails to process the options.
+	 * @throws Exception
+	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to parse the options.")
 	public void testFailedToParseOptions() throws Exception {
 
@@ -92,6 +104,10 @@ public class LoadPageConstructTest extends ExpressionBuilderHelper {
 		Assert.assertEquals(output.getStringValue(), urlValue);
 	}
 
+	/**
+	 * Test the error handling when httpGet returns a MalFormedURLException.
+	 * @throws Exception
+	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Malformed URL during httpGet.")
 	public void testMalFormedURL() throws Exception {
 
@@ -120,6 +136,10 @@ public class LoadPageConstructTest extends ExpressionBuilderHelper {
 		LoadPageConstruct.process(url, options, optionsFactory, webService);
 	}
 
+	/**
+	 * Tests the process when we have a full PhantomJSpool.
+	 * @throws Exception 
+	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Loadpage error - PhantomJS pool is fully used and cannot provide another instance!")
 	public void testFullPhantomPool() throws Exception {
 		// mock
@@ -148,6 +168,11 @@ public class LoadPageConstructTest extends ExpressionBuilderHelper {
 
 	}
 
+	/**
+	 * Tests the process when a classCast exception is thrown.
+	 * Note that this is not allowed to ever happen.
+	 * @throws Exception 
+	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to execute httpGet.")
 	public void testClassCastException() throws Exception {
 

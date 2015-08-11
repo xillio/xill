@@ -3,6 +3,10 @@ package nl.xillio.xill.plugins.web;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+/**
+ * An adapter which represents a Page and encapsulates the selenium library.
+ *
+ */
 public class PageVariable implements WebVariable, AutoCloseable {
 	private final WebDriver driver;
 	private final WebElement element;
@@ -34,6 +38,11 @@ public class PageVariable implements WebVariable, AutoCloseable {
 		return element;
 	}
 
+	/**
+	 * Sets the entity which generated the page variable
+	 * @param entity
+	 * 					The entity.
+	 */
 	public void setEntity(PhantomJSPool.Entity entity) {
 		this.entity = entity;
 	}

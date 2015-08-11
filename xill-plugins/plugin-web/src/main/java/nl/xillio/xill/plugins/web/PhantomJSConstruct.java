@@ -12,6 +12,10 @@ import org.openqa.selenium.Cookie;
 
 import com.google.inject.Inject;
 
+/**
+ * The base class for all the constructs which use PhantomJS.
+ *
+ */
 public abstract class PhantomJSConstruct extends Construct {
 	@Inject
 	protected WebService webService;

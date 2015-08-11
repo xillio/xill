@@ -30,7 +30,6 @@ public class CSSPathConstructTest extends ExpressionBuilderHelper {
 
 	/**
 	 * test the construct with normal input.
-	 *
 	 */
 	@Test
 	public void testNormalNodeUsage() {
@@ -114,6 +113,9 @@ public class CSSPathConstructTest extends ExpressionBuilderHelper {
 		Assert.assertEquals(output.getType(), ATOMIC);
 	}
 
+	/**
+	 * test the process when no result can be found.
+	 */
 	@Test
 	public void testProcessNoValueFound() {
 		// mock

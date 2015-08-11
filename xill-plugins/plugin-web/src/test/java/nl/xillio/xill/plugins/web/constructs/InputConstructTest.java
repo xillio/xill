@@ -14,6 +14,10 @@ import nl.xillio.xill.plugins.web.services.web.WebService;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+/**
+ * Test the {@link InputConstruct}.
+ *
+ */
 public class InputConstructTest extends ExpressionBuilderHelper {
 
 	/**

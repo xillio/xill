@@ -20,6 +20,10 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.Sets;
 
+/**
+ *Test the {@link PageInfoConstruct}.
+ *
+ */
 public class PageInfoConstructTest extends ExpressionBuilderHelper {
 
 	/**

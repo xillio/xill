@@ -148,6 +148,11 @@ public class PhantomJSPool {
 	public class Entity implements AutoCloseable, MetadataExpression {
 		private final WebService webService;
 
+		/**
+		 * The constructor for the Entity class.
+		 * @param webService
+		 * 					The webService the class will be using.
+		 */
 		public Entity(final WebService webService) {
 			this.webService = webService;
 		}
