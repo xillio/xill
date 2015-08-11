@@ -104,7 +104,7 @@ public class SetCookieConstructTest extends ExpressionBuilderHelper {
 	/**
 	 * Test the process with a list handed with no objects in it.
 	 */
-	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "A value which was not an OBJECT found in the list")
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "A value which was not an OBJECT found.")
 	public void testListWithNoObject() {
 		// mock
 		WebService webService = mock(WebService.class);

@@ -1,8 +1,10 @@
 package nl.xillio.xill.plugins.web.services.web;
 
-import com.google.inject.ImplementedBy;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.util.List;
+import java.util.Set;
 
-import nl.xillio.xill.plugins.web.*;
 import nl.xillio.xill.plugins.web.data.CookieVariable;
 import nl.xillio.xill.plugins.web.data.NodeVariable;
 import nl.xillio.xill.plugins.web.data.Options;
@@ -14,10 +16,7 @@ import org.openqa.selenium.Cookie;
 import org.openqa.selenium.InvalidSelectorException;
 import org.openqa.selenium.StaleElementReferenceException;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.util.List;
-import java.util.Set;
+import com.google.inject.ImplementedBy;
 
 /**
  * Provides an interface for a webService.
@@ -138,14 +137,15 @@ public interface WebService {
 	 * @param key
 	 *        the key we want to send.
 	 * @throws Exception
-	 * 				The selenium implementation can throw an exception.
+	 *         The selenium implementation can throw an exception.
 	 */
 	void sendKeys(WebVariable var, String key) throws Exception;
 
 	/**
 	 * Gets the cookies from a {@link WebVariable}.
+	 * 
 	 * @param var
-	 * 					The webpage we're retrieving cookies from.
+	 *        The webpage we're retrieving cookies from.
 	 * @return
 	 *         A set of Cookies.
 	 */
@@ -207,7 +207,7 @@ public interface WebService {
 	 * @param var
 	 *        The variable we're deleting cookies on.
 	 * @throws Exception
-	 * 				The selinium implementation can throw exceptions.
+	 *         The selinium implementation can throw exceptions.
 	 */
 	void deleteCookies(WebVariable var) throws Exception;
 
@@ -292,9 +292,9 @@ public interface WebService {
 	 * @param url
 	 *        The url.
 	 * @throws ClassCastException
-	 * 						The implementations casts to a class. When that goes wrong we need to catch it.
+	 *         The implementations casts to a class. When that goes wrong we need to catch it.
 	 * @throws MalformedURLException
-	 * 						When the url is malformed an exception can occur.
+	 *         When the url is malformed an exception can occur.
 	 */
 	void httpGet(WebVariable var, String url) throws ClassCastException, MalformedURLException;
 
@@ -306,15 +306,16 @@ public interface WebService {
 	 * @return
 	 *         The page
 	 * @throws NullPointerException
-	 * 					When the options are null.
+	 *         When the options are null.
 	 */
 	PageVariable createPage(Options options);
 
 	/**
 	 * Drags a page as a {@link WebVariable} from the pool.
 	 * Creates it when it doesn't exist yet.
+	 * 
 	 * @param pool
-	 * 				The pool we're extracting the page from.
+	 *        The pool we're extracting the page from.
 	 * @param options
 	 *        The options the page has.
 	 * @return

@@ -89,7 +89,7 @@ public class StringToPageConstructTest {
 	 *
 	 * @throws Exception
 	 */
-	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "An error occurred.")
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to load the generated page.")
 	public void testProcessExceptionThrown() throws Exception {
 		// mock
 		WebService webService = mock(WebService.class);

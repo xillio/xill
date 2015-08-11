@@ -1,9 +1,9 @@
 package nl.xillio.xill.plugins.web.services.web;
 
-import com.google.inject.ImplementedBy;
-
 import java.io.File;
 import java.io.IOException;
+
+import com.google.inject.ImplementedBy;
 
 /**
  * Provides an interface for file services.

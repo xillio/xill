@@ -1,19 +1,5 @@
 package nl.xillio.xill.plugins.web.services.web;
 
-import com.google.inject.Singleton;
-
-import nl.xillio.xill.plugins.web.*;
-import nl.xillio.xill.plugins.web.data.CookieVariable;
-import nl.xillio.xill.plugins.web.data.NodeVariable;
-import nl.xillio.xill.plugins.web.data.Options;
-import nl.xillio.xill.plugins.web.data.PageVariable;
-import nl.xillio.xill.plugins.web.data.PhantomJSPool;
-import nl.xillio.xill.plugins.web.data.WebVariable;
-
-import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
-
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -21,6 +7,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
+import nl.xillio.xill.plugins.web.data.CookieVariable;
+import nl.xillio.xill.plugins.web.data.NodeVariable;
+import nl.xillio.xill.plugins.web.data.Options;
+import nl.xillio.xill.plugins.web.data.PageVariable;
+import nl.xillio.xill.plugins.web.data.PhantomJSPool;
+import nl.xillio.xill.plugins.web.data.WebVariable;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.InvalidSelectorException;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.SearchContext;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
+
+import com.google.inject.Singleton;
 
 /**
  * The implementation of the {@link WebService} interface.
