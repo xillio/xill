@@ -11,17 +11,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
 
 /**
  * Created by Daan Knoope on 7-8-2015.
  */
 public class XillWorkbook implements MetadataExpression{
 	private Workbook workbook;
-	private String message = "I am cool";
+	private File file;
+	private boolean readonly;
 
-	public String getString() {
-		return message;
-	}
 	public XillWorkbook(){}
 
 	public XillWorkbook(boolean legacy){
@@ -31,33 +30,38 @@ public class XillWorkbook implements MetadataExpression{
 			workbook = new XSSFWorkbook();
 	}
 
-	public void loadWorkbook(String filePath, File file) throws RobotRuntimeException {
+	public void loadWorkbook(String filePath, File file) throws ParseException, IOException {
 		Workbook workbook = null;
+		this.file = file;
 		InputStream fileStream;
 		try {
 			fileStream = new FileInputStream(file);
 		}catch(Exception e){
-			throw new RobotRuntimeException("File cannot be opened");
+			throw new IOException("File cannot be opened");
 		}
 		if(filePath.endsWith(".xls")) {
 			try{
 				workbook = new HSSFWorkbook(fileStream);
 			}catch(IOException e){
-				throw new RobotRuntimeException("File cannot be opened as Excel Workbook");
+				throw new ParseException("File cannot be opened as Excel Workbook",0);
 			}
 		}
 		else if (filePath.endsWith(".xlsx")){
 			try {
 				workbook = new XSSFWorkbook(fileStream);
 			}catch(IOException e){
-				throw new RobotRuntimeException("File cannot be opened as Excel Workbook");
+				throw new ParseException("File cannot be opened as Excel Workbook",0);
 			}
 		}
 		this.workbook = workbook;
 	}
 
-	public String getFilePath(File file) throws IOException{
+	public String getFilePath() throws IOException{
 		return file.getCanonicalPath().toString();
+	}
+
+	public String getFileString() throws IOException{
+		return "Excel Workbook [" + getFilePath() + "]";
 	}
 
 	public int rowSize(Sheet sheet){
@@ -78,5 +82,13 @@ public class XillWorkbook implements MetadataExpression{
 
 	public String name(Sheet sheet){
 		return sheet.getSheetName();
+	}
+
+	public boolean isReadonly() {
+		return readonly;
+	}
+
+	public void setReadonly(boolean readonly) {
+		this.readonly = readonly;
 	}
 }

@@ -16,6 +16,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
+import java.text.ParseException;
 
 /**
  * Created by Daan Knoope on 6-8-2015.
@@ -38,13 +39,19 @@ public class LoadWorkbookConstruct extends Construct {
 		String workbookText = null;
 		XillWorkbook workbook = null;
 		try {
-			workbook = excelService.loadWorkbook(context, path,file);
-			workbookText = "Excel Workbook [" + workbook.getFilePath(file) + "]";
-		} catch (RobotRuntimeException e) {
-			throw e;
+			workbook = excelService.loadWorkbook(path,file);
+			workbookText = workbook.getFileString();
+		} catch (IllegalArgumentException e) {
+			throw new RobotRuntimeException("Path does not lead to an xls or xlsx Microsoft Excel file");
+		} catch(FileNotFoundException e){
+			throw new RobotRuntimeException("There is no file at the given path");
 		} catch(IOException e){
-			throw new RobotRuntimeException("Could not load fle");
+			throw new RobotRuntimeException("File could not be read", e);
+		}catch (ParseException e){
+			throw new RobotRuntimeException("File cannot be opened as Excel Workbook");
 		}
+		if(workbook.isReadonly())
+			context.getRootLogger().warn("Opened in read-only mode.");
 
 
 

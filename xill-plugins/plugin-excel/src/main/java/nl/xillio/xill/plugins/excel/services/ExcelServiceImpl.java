@@ -11,6 +11,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.*;
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -23,16 +24,16 @@ public class ExcelServiceImpl implements ExcelService {
 		return "teststring";
 	}
 
-	@Override public XillWorkbook loadWorkbook(ConstructContext context, String filePath, File file) throws RobotRuntimeException {
-		if(!file.canWrite())
-			context.getRootLogger().warn("Workbook opened in read-only mode");
+	@Override public XillWorkbook loadWorkbook(String filePath, File file) throws ParseException, IllegalArgumentException, IOException{
+
 		if(!file.exists())
-			throw new RobotRuntimeException("There is no file at the given path");
+			throw new FileNotFoundException("There is no file at the given path");
 		if(!(filePath.endsWith(".xls") || filePath.endsWith(".xlsx")))
-			throw new RobotRuntimeException("Path does not lead to an xls or xlsx Microsoft Excel file");
+			throw new IllegalArgumentException("Path does not lead to an xls or xlsx Microsoft Excel file");
 		XillWorkbook workbook = new XillWorkbook();
 		workbook.loadWorkbook(filePath, file);
-
+		if(!file.canWrite())
+			workbook.setReadonly(true);
 		return workbook;
 	}
 
