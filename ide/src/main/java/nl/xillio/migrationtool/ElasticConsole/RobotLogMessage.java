@@ -1,4 +1,4 @@
-package nl.xillio.migrationtool.ElasticConsole;
+package nl.xillio.migrationtool.elasticconsole;
 
 /**
  * This class represents all information about a log event.
