@@ -27,6 +27,6 @@ public class XillWorkbookFactorySelectorTest {
 	@Test(expectedExceptions = NotImplementedException.class, expectedExceptionsMessageRegExp = "This extension is not supported as Excel workbook.")
 	public void testGetFactoryNotImplemented() throws Exception{
 		String filePath = "xls.adbc";
-		XillWorkbookFactorySelector.getFactory(filePath); 
+		XillWorkbookFactorySelector.getFactory(filePath);
 	}
 }

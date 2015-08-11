@@ -32,13 +32,12 @@ public class LoadSheetConstruct extends Construct {
 
 	static MetaExpression process(ExcelService excelService,
 					MetaExpression workbookInput, MetaExpression sheetName){
-		XillWorkbook workbook = assertMeta(workbookInput, "workbook", XillWorkbook.class, "Excel workbook");
+		XillWorkbook workbook = assertMeta(workbookInput, "parameter 'workbook'", XillWorkbook.class, "result of loadWorkbook or createWorkbook");
 		XillSheet sheet = null;
-		try {
-			sheet = workbook.getSheet(sheetName.getStringValue());
-		} catch (Exception e) {
-			throw new RobotRuntimeException(e.getMessage() + ": Could not find the sheet in this workbook or because no workbook was loaded.");
-		}
+		sheet = workbook.getSheet(sheetName.getStringValue());
+		if(sheet == null)
+			throw new RobotRuntimeException("Sheet can not be found in the supplied workbook");
+
 		LinkedHashMap<String, MetaExpression> properties = new LinkedHashMap<>();
 		properties.put("Sheet name", fromValue(sheet.getName()));
 		properties.put("Rows", fromValue(sheet.getRowLength()));
