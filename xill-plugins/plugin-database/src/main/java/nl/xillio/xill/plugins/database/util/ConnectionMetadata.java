@@ -15,14 +15,20 @@ import nl.xillio.xill.api.components.MetadataExpression;
  */
 public class ConnectionMetadata implements MetadataExpression {
 
+	String databaseName;
 	private Connection connection;
 
-	public ConnectionMetadata(Connection connection) {
+	public ConnectionMetadata(String databaseName, Connection connection) {
 		super();
+		this.databaseName = databaseName;
 		this.connection = connection;
 	}
 
 	public Connection getConnection() {
 		return connection;
+	}
+
+	public String getDatabaseName() {
+		return databaseName;
 	}
 }

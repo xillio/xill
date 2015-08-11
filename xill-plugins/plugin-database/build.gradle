@@ -10,6 +10,8 @@
 dependencies {
  compile 'com.oracle:ojdbc7:12.1.0.1.0'
  compile 'org.xerial:sqlite-jdbc:3.8.11.1'
- compile 'org.mariadb.jdbc:mariadb-java-client:1.2.0'
+ // There's a bug in the MariaDB connector, for now use the MySQL connector 
+ //compile 'org.mariadb.jdbc:mariadb-java-client:1.2.0'
+ compile 'mysql:mysql-connector-java:5.1.36'
  compile 'net.sourceforge.jtds:jtds:1.3.1'
 }

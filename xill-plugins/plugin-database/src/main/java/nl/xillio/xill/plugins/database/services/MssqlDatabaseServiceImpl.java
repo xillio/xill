@@ -7,13 +7,13 @@ import nl.xillio.xill.plugins.database.util.Database;
 import nl.xillio.xill.plugins.database.util.Tuple;
 
 /**
- * 
- * Database service for SQLite
+ * Database service for Microsoft SQL Server
  * 
  * @author Geert Konijnendijk
+ * @author Sander Visser
  *
  */
-public class SQLiteDatabaseServiceImpl extends BaseDatabaseService {
+public class MssqlDatabaseServiceImpl extends BaseDatabaseService {
 
 	@Override
 	public Connection createConnection(String database, String user, String pass, Tuple<String, String>... options) throws SQLException {
@@ -21,14 +21,13 @@ public class SQLiteDatabaseServiceImpl extends BaseDatabaseService {
 	}
 
 	@Override
-	protected String createConnectionURL(String database, String user, String pass, Tuple<String, String>... options) {
-		String path = database == null ? ":memory:" : database;
-		return String.format("jdbc:sqlite:%s", path);
+	protected String createConnectionURL(String database, String user, String pass, Tuple<String, String>... options) throws SQLException {
+		return createJDBCURL(Database.MSSQL.getName(), database, user, pass, options);
 	}
 
 	@Override
 	public void loadDriver() throws ClassNotFoundException {
-		Class.forName(Database.SQLITE.getDriverClass());
+		Class.forName(Database.MSSQL.getDriverClass());
 	}
 
 }

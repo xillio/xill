@@ -8,12 +8,13 @@ import nl.xillio.xill.plugins.database.util.Tuple;
 
 /**
  * 
- * Database service for SQLite
+ * Database service for MySQL
  * 
  * @author Geert Konijnendijk
+ * @author Sander Visser
  *
  */
-public class SQLiteDatabaseServiceImpl extends BaseDatabaseService {
+public class MysqlDatabaseServiceImpl extends BaseDatabaseService {
 
 	@Override
 	public Connection createConnection(String database, String user, String pass, Tuple<String, String>... options) throws SQLException {
@@ -22,13 +23,12 @@ public class SQLiteDatabaseServiceImpl extends BaseDatabaseService {
 
 	@Override
 	protected String createConnectionURL(String database, String user, String pass, Tuple<String, String>... options) {
-		String path = database == null ? ":memory:" : database;
-		return String.format("jdbc:sqlite:%s", path);
+		return createJDBCURL("mysql", database, user, pass, options);
 	}
 
 	@Override
 	public void loadDriver() throws ClassNotFoundException {
-		Class.forName(Database.SQLITE.getDriverClass());
+		Class.forName(Database.MYSQL.getDriverClass());
 	}
 
 }

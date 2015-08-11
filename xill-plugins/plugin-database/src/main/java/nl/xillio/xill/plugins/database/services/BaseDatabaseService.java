@@ -2,13 +2,13 @@ package nl.xillio.xill.plugins.database.services;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Properties;
 
-import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.database.util.StatementIterator;
 import nl.xillio.xill.plugins.database.util.Tuple;
-
-import org.apache.commons.lang3.tuple.Pair;
 
 @SuppressWarnings("unchecked")
 public abstract class BaseDatabaseService implements DatabaseService {
@@ -20,12 +20,8 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 *        URL to connect to
 	 * @return A connection ready to execute queries on
 	 */
-	protected Connection connect(String url) {
-		try {
-			return DriverManager.getConnection(url);
-		} catch (SQLException e) {
-			throw new RobotRuntimeException("Could not connect to database", e);
-		}
+	protected Connection connect(String url) throws SQLException {
+		return DriverManager.getConnection(url);
 	}
 
 	/**
@@ -38,12 +34,28 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 * @return A connection ready to execute queries on
 	 * 
 	 */
-	protected Connection connect(String url, Properties properties) {
-		try {
-			return DriverManager.getConnection(url, properties);
-		} catch (SQLException e) {
-			throw new RobotRuntimeException("Could not connect to database", e);
+	protected Connection connect(String url, Properties properties) throws SQLException {
+		return DriverManager.getConnection(url, properties);
+	}
+
+	@Override
+	public Object query(Connection connection, String query, int timeout) throws SQLException {
+		Statement stmt = connection.createStatement();
+		stmt.setQueryTimeout(timeout);
+		stmt.execute(query);
+
+		// If the first result is the only result and an update count simply return that count, otherwise create an iterator over the statement
+		int firstCount = stmt.getUpdateCount();
+		if (firstCount != -1) {
+			boolean more = stmt.getMoreResults();
+			int secondCount = stmt.getUpdateCount();
+			ResultSet secondSet = stmt.getResultSet();
+			if (!more && secondCount == -1)
+				return firstCount;
+			else
+				return new StatementIterator(stmt, firstCount);
 		}
+		return new StatementIterator(stmt);
 	}
 
 	/**
@@ -59,43 +71,9 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 *        JDBC specific options
 	 * @return Connection String
 	 */
-	protected abstract String createConnectionURL(String database, String user, String pass, Tuple<String, String>... options);
+	protected abstract String createConnectionURL(String database, String user, String pass, Tuple<String, String>... options) throws SQLException;
 
 	public abstract void loadDriver() throws ClassNotFoundException;
-
-	// @Override
-	// public String createMysqlURL(String database, String user, String pass, Tuple<String, String>... options) {
-	// return createJDBCURL("mysql", database, user, pass);
-	// }
-	//
-	// @Override
-	// public String createOracleURL(String database, String user, String pass) {
-	// if (user == null ^ pass == null)
-	// throw new IllegalArgumentException("User and pass should be both null or both non-null");
-	// if (user != null && pass != null)
-	// // prepend username and password
-	// return String.format("jdbc:oracle:thin:%s/%s@//%s:%s/%s", user, pass, database);
-	// else
-	// // url without username and password
-	// return String.format("jdbc:oracle:thin:@//%s:%s/%s", database);
-	// }
-	//
-	// @Override
-	// public Properties createOracleOptions(Tuple<String, String>... options) {
-	// Properties properties = new Properties();
-	// Arrays.stream(options).forEach(p -> properties.put(p.getKey(), p.getValue()));
-	// return properties;
-	// }
-	//
-	// @Override
-	// public String createMssqlURL(String database, String user, String pass, Tuple<String, String>... options) {
-	// return createJDBCURL("mssql", database, user, pass);
-	// }
-	//
-	// @Override
-	// public String createSqliteURL(String file) {
-	//
-	// }
 
 	/**
 	 * 
@@ -111,8 +89,8 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 *        Driver specific options
 	 * @return
 	 */
-	private String createJDBCURL(String type, String database, String user, String pass, Pair<String, String>... options) {
-		String url = String.format("jdbc:%s//%s", type, database, user, pass);
+	protected String createJDBCURL(String type, String database, String user, String pass, Tuple<String, String>... options) {
+		String url = String.format("jdbc:%s://%s", type, database);
 		// no other parameters, so return
 		if (user == null && pass == null && options.length == 0)
 		  return url;
@@ -123,14 +101,13 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		if (user != null && pass != null)
 		{
 			// append username and password options
-			url = String.format("%susername=%s&", url, user);
-			url = String.format("%spassword=%s&", pass);
+			url = String.format("%suser=%s&", url, user);
+			url = String.format("%spassword=%s&", url, pass);
 		}
 		// append other options
-		for (Pair<String, String> option : options) {
+		for (Tuple<String, String> option : options) {
 			url = String.format("%s%s=%s&", url, option.getKey(), option.getValue());
 		}
 		return url;
 	}
-
 }

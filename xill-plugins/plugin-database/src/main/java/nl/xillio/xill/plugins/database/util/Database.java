@@ -4,11 +4,16 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import nl.xillio.xill.plugins.database.services.BaseDatabaseService;
+import nl.xillio.xill.plugins.database.services.MssqlDatabaseServiceImpl;
+import nl.xillio.xill.plugins.database.services.MysqlDatabaseServiceImpl;
+import nl.xillio.xill.plugins.database.services.OracleDatabaseServiceImpl;
 import nl.xillio.xill.plugins.database.services.SQLiteDatabaseServiceImpl;
 
 public enum Database {
-	ORACLE("oracle", "oracle.jdbc.OracleDriver", null), MSSQL("mssql", "net.sourceforge.jtds.jdbc.Driver", null), SQLITE("sqlite", "org.sqlite.JDBC", SQLiteDatabaseServiceImpl.class), MYSQL("mysql",
-	    "org.mariadb.jdbc.Driver", null);
+	ORACLE("oracle", "oracle.jdbc.OracleDriver", OracleDatabaseServiceImpl.class),
+	MSSQL("mssql", "net.sourceforge.jtds.jdbc.Driver", MssqlDatabaseServiceImpl.class),
+	SQLITE("sqlite", "org.sqlite.JDBC", SQLiteDatabaseServiceImpl.class),
+	MYSQL("mysql", "com.mysql.jdbc.Driver", MysqlDatabaseServiceImpl.class);
 
 	private String name;
 	private String driverClass;

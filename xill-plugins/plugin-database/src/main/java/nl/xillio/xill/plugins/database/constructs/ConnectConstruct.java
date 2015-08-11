@@ -1,6 +1,7 @@
 package nl.xillio.xill.plugins.database.constructs;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -52,9 +53,14 @@ public class ConnectConstruct extends BaseDatabaseConstruct {
 			throw new RobotRuntimeException("DBMS type is not supported", e1);
 		}
 
-		Connection connection = service.createConnection(database, user, pass, optionsArray);
+		Connection connection;
+		try {
+			connection = service.createConnection(database, user, pass, optionsArray);
+		} catch (SQLException e1) {
+			throw new RobotRuntimeException(e1.getMessage(), e1);
+		}
 		MetaExpression metaExpression = new AtomicExpression(database);
-		metaExpression.storeMeta(new ConnectionMetadata(connection));
+		metaExpression.storeMeta(new ConnectionMetadata(type, connection));
 
 		return metaExpression;
 	}
