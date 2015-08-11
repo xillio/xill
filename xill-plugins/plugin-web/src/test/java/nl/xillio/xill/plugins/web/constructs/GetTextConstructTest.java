@@ -90,6 +90,23 @@ public class GetTextConstructTest extends ExpressionBuilderHelper {
 	}
 
 	/**
+	 * Test the process with null input given.
+	 */
+	@Test(expectedExceptions = RobotRuntimeException.class)
+	public void testNullInput() {
+		// mock
+		WebService webService = mock(WebService.class);
+		MetaExpression input = mock(MetaExpression.class);
+		when(input.isNull()).thenReturn(true);
+
+		// run
+		MetaExpression output = GetTextConstruct.process(input, webService);
+
+		// assert
+		Assert.assertEquals(output, NULL);
+	}
+
+	/**
 	 * test the construct with normal input.
 	 * The input is a ATOMIC object with no required tag.
 	 */

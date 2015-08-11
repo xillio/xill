@@ -25,7 +25,7 @@ public class OptionsTest extends ExpressionBuilderHelper {
 
 	/**
 	 * All the names of the options that require a boolean.
-	 * 
+	 *
 	 * @return
 	 *         A list of all the names that require a boolean.
 	 */
@@ -42,7 +42,7 @@ public class OptionsTest extends ExpressionBuilderHelper {
 
 	/**
 	 * All the values of proxytype that we accept.
-	 * 
+	 *
 	 * @return
 	 *         A list with the name string "proxytype" combined with the accepted value.
 	 */
@@ -58,7 +58,7 @@ public class OptionsTest extends ExpressionBuilderHelper {
 
 	/**
 	 * All the invalud values for a HttpUserPass.
-	 * 
+	 *
 	 * @return
 	 *         A list with the name string "pass" combined with invalid values.
 	 */
@@ -73,7 +73,7 @@ public class OptionsTest extends ExpressionBuilderHelper {
 
 	/**
 	 * All the options that require a string and their valid values.
-	 * 
+	 *
 	 * @return
 	 *         A list with the name string combined with the valid value.
 	 */
@@ -91,13 +91,13 @@ public class OptionsTest extends ExpressionBuilderHelper {
 
 	/**
 	 * A test which tests the proxy option with all proxy values.
-	 * 
+	 *
 	 * @param proxytypes
 	 *        The name string for the proxytype option
 	 * @param type
 	 *        The actual valid type.
 	 * @throws Exception
-	 * 
+	 *
 	 */
 	@Test(dataProvider = "proxytypes")
 	public void testProxyOption(final String proxytypes, final String type) throws Exception {
@@ -162,7 +162,7 @@ public class OptionsTest extends ExpressionBuilderHelper {
 
 	/**
 	 * Tests the proxy option error handling when an invalid proxytype is handed.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid proxytype.")
@@ -217,7 +217,7 @@ public class OptionsTest extends ExpressionBuilderHelper {
 
 	/**
 	 * Tests the proxy option error handling when no proxyport is handed.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Proxyport must be given in the options OBJECT")
@@ -266,7 +266,7 @@ public class OptionsTest extends ExpressionBuilderHelper {
 
 	/**
 	 * Tests the error handling of the proxy option when the proxyUser is set but no proxypass is given or the other way around.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "The Proxyuser and proxypass must either both be set up in the options OBJECT or none of them.")
@@ -321,7 +321,7 @@ public class OptionsTest extends ExpressionBuilderHelper {
 
 	/**
 	 * Tests the httAuthUser option.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -365,7 +365,7 @@ public class OptionsTest extends ExpressionBuilderHelper {
 
 	/**
 	 * Tests the httpUserOption when an invalid pass is given.
-	 * 
+	 *
 	 * @param httpUserpass
 	 *        The name string for the httpUserPass.
 	 * @param passValue
@@ -404,7 +404,7 @@ public class OptionsTest extends ExpressionBuilderHelper {
 
 	/**
 	 * Tests all the options that require a boolean value. (We default to false).
-	 * 
+	 *
 	 * @param name
 	 *        the name string of the option.
 	 * @param name2
@@ -441,7 +441,7 @@ public class OptionsTest extends ExpressionBuilderHelper {
 
 	/**
 	 * Tests all the options that require a string value.
-	 * 
+	 *
 	 * @param tagName
 	 *        The name string of the option.
 	 * @param value
@@ -477,7 +477,7 @@ public class OptionsTest extends ExpressionBuilderHelper {
 
 	/**
 	 * Tests the error handling when an invalid sslProtocol is handed.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid sslprotocol.")
@@ -506,7 +506,7 @@ public class OptionsTest extends ExpressionBuilderHelper {
 
 	/**
 	 * Tests the browser option error handling with an invalid browser given.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid \"browser\" option.")
@@ -535,7 +535,7 @@ public class OptionsTest extends ExpressionBuilderHelper {
 
 	/**
 	 * Tests the error handling when an unknown option is trying to be set.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Unknow option: nonExistingOption")
@@ -564,7 +564,7 @@ public class OptionsTest extends ExpressionBuilderHelper {
 
 	/**
 	 * Tests the options error handling. when we do not hand an object but an ATOMIC value.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid options variable!")

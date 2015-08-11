@@ -5,6 +5,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.data.NodeVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
@@ -16,7 +17,7 @@ import org.testng.annotations.Test;
  * Test the {@link SelectedConstruct}.
  *
  */
-public class SelectedConstructTest {
+public class SelectedConstructTest extends ExpressionBuilderHelper {
 
 	/**
 	 * Test the process under normal circumstances.
@@ -43,6 +44,23 @@ public class SelectedConstructTest {
 
 		// assert
 		Assert.assertEquals(output.getBooleanValue(), true);
+	}
+
+	/**
+	 * Test the process with null input given.
+	 */
+	@Test
+	public void testNullInput() {
+		// mock
+		WebService webService = mock(WebService.class);
+		MetaExpression input = mock(MetaExpression.class);
+		when(input.isNull()).thenReturn(true);
+
+		// run
+		MetaExpression output = SelectedConstruct.process(input, webService);
+
+		// assert
+		Assert.assertEquals(output, NULL);
 	}
 
 	/**

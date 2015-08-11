@@ -67,6 +67,23 @@ public class PageInfoConstructTest extends ExpressionBuilderHelper {
 	}
 
 	/**
+	 * Test the process with null input given.
+	 */
+	@Test
+	public void testNullInput() {
+		// mock
+		WebService webService = mock(WebService.class);
+		MetaExpression input = mock(MetaExpression.class);
+		when(input.isNull()).thenReturn(true);
+
+		// run
+		MetaExpression output = PageInfoConstruct.process(input, webService);
+
+		// assert
+		Assert.assertEquals(output, NULL);
+	}
+
+	/**
 	 * Test the process when no node was in the expression.
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid variable type. Node PAGE type expected!")

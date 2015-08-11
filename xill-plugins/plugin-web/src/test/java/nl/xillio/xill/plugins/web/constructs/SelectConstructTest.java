@@ -52,6 +52,24 @@ public class SelectConstructTest extends ExpressionBuilderHelper {
 	}
 
 	/**
+	 * Test the process with null page given.
+	 */
+	@Test
+	public void testNullInput() {
+		// mock
+		WebService webService = mock(WebService.class);
+		MetaExpression page = mock(MetaExpression.class);
+		MetaExpression element = mock(MetaExpression.class);
+		when(page.isNull()).thenReturn(true);
+
+		// run
+		MetaExpression output = SelectConstruct.process(page, element, webService);
+
+		// assert
+		Assert.assertEquals(output, NULL);
+	}
+
+	/**
 	 * Tests the process when there is no need to take action.
 	 */
 	@Test

@@ -278,6 +278,24 @@ public class XPathConstructTest extends ExpressionBuilderHelper {
 	}
 
 	/**
+	 * Test the process with null page given.
+	 */
+	@Test
+	public void testNullPage() {
+		// mock
+		WebService webService = mock(WebService.class);
+		MetaExpression page = mock(MetaExpression.class);
+		MetaExpression xpath = mock(MetaExpression.class);
+		when(page.isNull()).thenReturn(true);
+
+		// run
+		MetaExpression output = XPathConstruct.process(page, xpath, webService);
+
+		// assert
+		Assert.assertEquals(output, NULL);
+	}
+
+	/**
 	 * tests the process under normal circumstances with a page given.
 	 * We have a text query and findElements only returns one item.
 	 */

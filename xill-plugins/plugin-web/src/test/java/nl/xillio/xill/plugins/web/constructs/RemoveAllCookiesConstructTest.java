@@ -49,6 +49,23 @@ public class RemoveAllCookiesConstructTest extends ExpressionBuilderHelper {
 	}
 
 	/**
+	 * Test the process with null input given.
+	 */
+	@Test
+	public void testNullInput() {
+		// mock
+		WebService webService = mock(WebService.class);
+		MetaExpression input = mock(MetaExpression.class);
+		when(input.isNull()).thenReturn(true);
+
+		// run
+		MetaExpression output = RemoveAllCookiesConstruct.process(input, webService);
+
+		// assert
+		Assert.assertEquals(output, NULL);
+	}
+
+	/**
 	 * Test the process when the webService breaks
 	 *
 	 * @throws Exception

@@ -76,4 +76,21 @@ public class ClickConstructTest extends ExpressionBuilderHelper {
 		// run
 		ClickConstruct.process(input, webService);
 	}
+
+	/**
+	 * Test the process with null input given.
+	 */
+	@Test
+	public void testNullInput() {
+		// mock
+		WebService webService = mock(WebService.class);
+		MetaExpression input = mock(MetaExpression.class);
+		when(input.isNull()).thenReturn(true);
+
+		// run
+		MetaExpression output = ClickConstruct.process(input, webService);
+
+		// assert
+		Assert.assertEquals(output, NULL);
+	}
 }

@@ -75,6 +75,24 @@ public class CSSPathConstructTest extends ExpressionBuilderHelper {
 	}
 
 	/**
+	 * Test the process with null input given.
+	 */
+	@Test
+	public void testNullInput() {
+		// mock
+		WebService webService = mock(WebService.class);
+		MetaExpression input = mock(MetaExpression.class);
+		MetaExpression csspath = mock(MetaExpression.class);
+		when(input.isNull()).thenReturn(true);
+
+		// run
+		MetaExpression output = CSSPathConstruct.process(input, csspath, webService);
+
+		// assert
+		Assert.assertEquals(output, NULL);
+	}
+
+	/**
 	 * test the construct when a single resultvalue is returned.
 	 */
 	@Test

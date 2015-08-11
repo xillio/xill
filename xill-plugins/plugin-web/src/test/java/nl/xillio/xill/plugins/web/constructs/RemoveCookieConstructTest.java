@@ -77,6 +77,42 @@ public class RemoveCookieConstructTest extends ExpressionBuilderHelper {
 	}
 
 	/**
+	 * Test the process with null page given.
+	 */
+	@Test
+	public void testNullPage() {
+		// mock
+		WebService webService = mock(WebService.class);
+		MetaExpression input = mock(MetaExpression.class);
+		MetaExpression cookie = mock(MetaExpression.class);
+		when(input.isNull()).thenReturn(true);
+
+		// run
+		MetaExpression output = RemoveCookieConstruct.process(input, cookie, webService);
+
+		// assert
+		Assert.assertEquals(output, NULL);
+	}
+
+	/**
+	 * Test the process with null page given.
+	 */
+	@Test
+	public void testNullCookie() {
+		// mock
+		WebService webService = mock(WebService.class);
+		MetaExpression input = mock(MetaExpression.class);
+		MetaExpression cookie = mock(MetaExpression.class);
+		when(cookie.isNull()).thenReturn(true);
+
+		// run
+		MetaExpression output = RemoveCookieConstruct.process(input, cookie, webService);
+
+		// assert
+		Assert.assertEquals(output, NULL);
+	}
+
+	/**
 	 * Test the process when a single cookie to delete is handed.
 	 */
 	@Test

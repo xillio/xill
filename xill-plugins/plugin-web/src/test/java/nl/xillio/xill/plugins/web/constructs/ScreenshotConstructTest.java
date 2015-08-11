@@ -69,6 +69,25 @@ public class ScreenshotConstructTest extends ExpressionBuilderHelper {
 	}
 
 	/**
+	 * Test the process with null page given.
+	 */
+	@Test
+	public void testNullInput() {
+		// mock
+		WebService webService = mock(WebService.class);
+		FileService fileService = mock(FileService.class);
+		MetaExpression input = mock(MetaExpression.class);
+		MetaExpression fileName = mock(MetaExpression.class);
+		when(input.isNull()).thenReturn(true);
+
+		// run
+		MetaExpression output = ScreenshotConstruct.process(input, fileName, fileService, webService);
+
+		// assert
+		Assert.assertEquals(output, NULL);
+	}
+
+	/**
 	 * Test the process when the webService breaks
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to access page without errors.")

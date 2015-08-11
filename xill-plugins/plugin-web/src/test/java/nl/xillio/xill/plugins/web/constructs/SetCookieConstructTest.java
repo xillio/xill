@@ -61,6 +61,44 @@ public class SetCookieConstructTest extends ExpressionBuilderHelper {
 	}
 
 	/**
+	 * Test the process with null page given.
+	 */
+	@Test
+	public void testNullPage() {
+		// mock
+		WebService webService = mock(WebService.class);
+		CookieFactory factory = mock(CookieFactory.class);
+		MetaExpression page = mock(MetaExpression.class);
+		MetaExpression cookie = mock(MetaExpression.class);
+		when(page.isNull()).thenReturn(true);
+
+		// run
+		MetaExpression output = SetCookieConstruct.process(page, cookie, factory, webService);
+
+		// assert
+		Assert.assertEquals(output, NULL);
+	}
+
+	/**
+	 * Test the process with null cookie given
+	 */
+	@Test
+	public void testNullCookie() {
+		// mock
+		WebService webService = mock(WebService.class);
+		CookieFactory factory = mock(CookieFactory.class);
+		MetaExpression page = mock(MetaExpression.class);
+		MetaExpression cookie = mock(MetaExpression.class);
+		when(cookie.isNull()).thenReturn(true);
+
+		// run
+		MetaExpression output = SetCookieConstruct.process(page, cookie, factory, webService);
+
+		// assert
+		Assert.assertEquals(output, NULL);
+	}
+
+	/**
 	 * Test the process with a list handed
 	 */
 	@Test
