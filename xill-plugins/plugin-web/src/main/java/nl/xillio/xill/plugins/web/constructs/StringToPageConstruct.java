@@ -8,8 +8,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.OptionsFactory;
-import nl.xillio.xill.plugins.web.PhantomJSConstruct;
+import nl.xillio.xill.plugins.web.data.OptionsFactory;
 import nl.xillio.xill.plugins.web.services.web.FileService;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
@@ -28,7 +27,7 @@ public class StringToPageConstruct extends PhantomJSConstruct {
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
 			(content) -> process(content, optionsFactory, fileService, webService),
-			new Argument("content"));
+			new Argument("content", ATOMIC));
 	}
 
 	/**
@@ -53,7 +52,7 @@ public class StringToPageConstruct extends PhantomJSConstruct {
 		} catch (IOException e) {
 			throw new RobotRuntimeException("An IO error occurred.");
 		} catch (Exception e) {
-			throw new RobotRuntimeException("An error occurred.", e);
+			throw new RobotRuntimeException("Failed to load the generated page.", e);
 		}
 	}
 

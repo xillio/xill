@@ -7,8 +7,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.PhantomJSConstruct;
-import nl.xillio.xill.plugins.web.WebVariable;
+import nl.xillio.xill.plugins.web.data.WebVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
 /**
@@ -20,8 +19,8 @@ public class RemoveCookieConstruct extends PhantomJSConstruct {
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
 			(page, cookie) -> process(page, cookie, webService),
-			new Argument("page"),
-			new Argument("cookie"));
+			new Argument("page", ATOMIC),
+			new Argument("cookie", ATOMIC, LIST));
 	}
 
 	/**
@@ -46,20 +45,21 @@ public class RemoveCookieConstruct extends PhantomJSConstruct {
 		// else
 
 		WebVariable driver = getPage(pageVar);
-
+		String cookieName = "";
 		try {
-
 			if (cookieVar.getType() == LIST) {
 				@SuppressWarnings("unchecked")
 				List<MetaExpression> list = (List<MetaExpression>) cookieVar.getValue();
 				for (MetaExpression cookie : list) {
-					webService.deleteCookieNamed(driver, cookie.getStringValue());
+					cookieName = cookie.getStringValue();
+					webService.deleteCookieNamed(driver, cookieName);
 				}
 			} else {
-				webService.deleteCookieNamed(driver, cookieVar.getStringValue());
+				cookieName = cookieVar.getStringValue();
+				webService.deleteCookieNamed(driver, cookieName);
 			}
 		} catch (Exception e) {
-			throw new RobotRuntimeException(e.getClass().getSimpleName(), e);
+			throw new RobotRuntimeException("Failed to delete cookie: " + cookieName);
 		}
 		return NULL;
 	}

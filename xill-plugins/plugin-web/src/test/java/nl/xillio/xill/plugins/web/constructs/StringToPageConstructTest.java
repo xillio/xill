@@ -12,8 +12,8 @@ import java.io.IOException;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.OptionsFactory;
-import nl.xillio.xill.plugins.web.PageVariable;
+import nl.xillio.xill.plugins.web.data.OptionsFactory;
+import nl.xillio.xill.plugins.web.data.PageVariable;
 import nl.xillio.xill.plugins.web.services.web.FileService;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 

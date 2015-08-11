@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.web;
+package nl.xillio.xill.plugins.web.data;
 
 import java.util.Map;
 
@@ -59,7 +59,7 @@ public class OptionsFactory {
 				processProxy(options, optionParameters);
 				break;
 
-			// needed if we want to set proxyhost
+				// needed if we want to set proxyhost
 			case "proxyport":
 			case "proxyuser":
 			case "proxypass":
@@ -111,7 +111,7 @@ public class OptionsFactory {
 				}
 				break;
 
-			// Needed if we want to set user
+				// Needed if we want to set user
 			case "pass":
 				break;
 
@@ -132,10 +132,11 @@ public class OptionsFactory {
 
 	/**
 	 * Process the options handed as a metaExpression.
+	 * 
 	 * @param optionsVar
-	 * 					The options we want to set. If it is null we return a default value.
-	 * @return	
-	 * 			A new {@link Options}.
+	 *        The options we want to set. If it is null we return a default value.
+	 * @return
+	 *         A new {@link Options}.
 	 */
 	public Options processOptions(final MetaExpression optionsVar) {
 		Options options = new Options();
@@ -159,16 +160,16 @@ public class OptionsFactory {
 		return options;
 	}
 
-	
 	/**
 	 * Retrieves a string value from an option in options.
 	 * Note that this function must not be called if the option is not in the options
+	 * 
 	 * @param options
-	 * 					A map containing all the options.
+	 *        A map containing all the options.
 	 * @param option
-	 * 					The option we want.
+	 *        The option we want.
 	 * @return
-	 * 				The stringvalue of the requested option.
+	 *         The stringvalue of the requested option.
 	 */
 	private static String getString(final Map<String, MetaExpression> options, final String option) {
 		MetaExpression me = options.get(option);

@@ -1,7 +1,15 @@
 package nl.xillio.xill.plugins.web.services.web;
 
 import com.google.inject.ImplementedBy;
+
 import nl.xillio.xill.plugins.web.*;
+import nl.xillio.xill.plugins.web.data.CookieVariable;
+import nl.xillio.xill.plugins.web.data.NodeVariable;
+import nl.xillio.xill.plugins.web.data.Options;
+import nl.xillio.xill.plugins.web.data.PageVariable;
+import nl.xillio.xill.plugins.web.data.PhantomJSPool;
+import nl.xillio.xill.plugins.web.data.WebVariable;
+
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.InvalidSelectorException;
 import org.openqa.selenium.StaleElementReferenceException;

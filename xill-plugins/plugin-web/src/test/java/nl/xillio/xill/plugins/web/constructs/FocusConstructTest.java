@@ -1,5 +1,7 @@
 package nl.xillio.xill.plugins.web.constructs;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -7,7 +9,7 @@ import static org.mockito.Mockito.when;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.NodeVariable;
+import nl.xillio.xill.plugins.web.data.NodeVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
 import org.testng.Assert;
@@ -54,6 +56,28 @@ public class FocusConstructTest extends ExpressionBuilderHelper {
 		// The input
 		MetaExpression element = mock(MetaExpression.class);
 		when(element.getMeta(NodeVariable.class)).thenReturn(null);
+
+		// run
+		FocusConstruct.process(element, webService);
+
+		// verify
+		verify(element, times(1)).getMeta(NodeVariable.class);
+	}
+
+	/**
+	 * test the process when the webService fails.
+	 */
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to focus on element.")
+	public void testProcessFailedToFocus() {
+		// mock
+		WebService webService = mock(WebService.class);
+
+		// The input
+		NodeVariable nodeVariable = mock(NodeVariable.class);
+		MetaExpression element = mock(MetaExpression.class);
+		when(element.getMeta(NodeVariable.class)).thenReturn(nodeVariable);
+
+		doThrow(new RobotRuntimeException("Error")).when(webService).moveToElement(any());
 
 		// run
 		FocusConstruct.process(element, webService);

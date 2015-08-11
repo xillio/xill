@@ -6,14 +6,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.NodeVariable;
+import nl.xillio.xill.plugins.web.data.NodeVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- *Test the {@link SelectedConstruct}.
+ * Test the {@link SelectedConstruct}.
  *
  */
 public class SelectedConstructTest {

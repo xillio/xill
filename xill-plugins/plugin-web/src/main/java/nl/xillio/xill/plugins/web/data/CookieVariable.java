@@ -1,9 +1,9 @@
-package nl.xillio.xill.plugins.web;
+package nl.xillio.xill.plugins.web.data;
 
 import java.util.Date;
 
 /**
- *This is an adapter which represents a webcookie.
+ * This is an adapter which represents a webcookie.
  */
 public class CookieVariable {
 
@@ -50,8 +50,9 @@ public class CookieVariable {
 
 	/**
 	 * Set the name of the cookie.
-	 * @param name 
-	 * 					The name.
+	 * 
+	 * @param name
+	 *        The name.
 	 */
 	public void setName(final String name) {
 		this.name = name;
@@ -59,8 +60,9 @@ public class CookieVariable {
 
 	/**
 	 * Set the domain of the cookie.
-	 * @param name 
-	 * 					The name of the domain.
+	 * 
+	 * @param name
+	 *        The name of the domain.
 	 */
 	public void setDomain(final String name) {
 		domain = name;
@@ -68,8 +70,9 @@ public class CookieVariable {
 
 	/**
 	 * Set the path of the cookie.
+	 * 
 	 * @param name
-	 * 					The name of the path.
+	 *        The name of the path.
 	 */
 	public void setPath(final String name) {
 		path = name;
@@ -77,8 +80,9 @@ public class CookieVariable {
 
 	/**
 	 * Set the value of the cookie.
+	 * 
 	 * @param name
-	 * 					The name of the value.
+	 *        The name of the value.
 	 */
 	public void setValue(final String name) {
 		value = name;
@@ -86,8 +90,9 @@ public class CookieVariable {
 
 	/**
 	 * Set the expiration date of the cookie.
+	 * 
 	 * @param date
-	 * 					The expiration date.
+	 *        The expiration date.
 	 */
 	public void setExpireDate(final Date date) {
 		expireDate = date;

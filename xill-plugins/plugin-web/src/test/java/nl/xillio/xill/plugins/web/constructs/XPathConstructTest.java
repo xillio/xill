@@ -1,22 +1,27 @@
 package nl.xillio.xill.plugins.web.constructs;
 
-import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
-import nl.xillio.xill.plugins.web.NodeVariable;
-import nl.xillio.xill.plugins.web.PageVariable;
-import nl.xillio.xill.plugins.web.WebVariable;
-import nl.xillio.xill.plugins.web.services.web.WebService;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.web.data.NodeVariable;
+import nl.xillio.xill.plugins.web.data.PageVariable;
+import nl.xillio.xill.plugins.web.data.WebVariable;
+import nl.xillio.xill.plugins.web.services.web.WebService;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * Test the {@link XPathConstruct}
@@ -232,13 +237,13 @@ public class XPathConstructTest extends ExpressionBuilderHelper {
 		Assert.assertEquals(result.get(0).getStringValue(), element1Result);
 		Assert.assertEquals(result.get(1).getStringValue(), element2Result);
 	}
-	
+
 	/**
 	 * tests the process under normal circumstances with a page given.
 	 * We have an attribute query but cannot find the attribute.
 	 */
 	@Test
-	public void testNormalUsageWithPageAndOneAttributeAndNoAttributeFound(){
+	public void testNormalUsageWithPageAndOneAttributeAndNoAttributeFound() {
 		// mock
 		WebService webService = mock(WebService.class);
 
@@ -271,5 +276,39 @@ public class XPathConstructTest extends ExpressionBuilderHelper {
 		// assert
 		Assert.assertEquals(output, NULL);
 	}
-	
+
+	/**
+	 * tests the process under normal circumstances with a page given.
+	 * We have a text query and findElements only returns one item.
+	 */
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to create node.")
+	public void testProcessWhenCreateNodeFails() {
+		// mock
+		WebService webService = mock(WebService.class);
+
+		// The page
+		MetaExpression page = mock(MetaExpression.class);
+		PageVariable pageVariable = mock(PageVariable.class);
+		when(page.getMeta(PageVariable.class)).thenReturn(pageVariable);
+
+		// The xpath
+		String xPathValue = "xpath";
+		MetaExpression xpath = mock(MetaExpression.class);
+		when(xpath.getStringValue()).thenReturn(xPathValue);
+
+		// The WebElement
+		WebVariable element = mock(WebVariable.class);
+		String elementText = "the text in the attribute of the element";
+
+		// process SEL node
+		when(webService.findElementsWithXpath(eq(pageVariable), anyString())).thenReturn(Collections.singletonList(element));
+		when(webService.getAttribute(element, "outerHTML")).thenThrow(new RobotRuntimeException("crash"));
+
+		// run
+		MetaExpression output = XPathConstruct.process(page, xpath, webService);
+
+		// assert
+		Assert.assertEquals(output.getStringValue(), elementText);
+	}
+
 }

@@ -1,6 +1,7 @@
-package nl.xillio.xill.plugins.web;
+package nl.xillio.xill.plugins.web.data;
 
 import nl.xillio.xill.api.components.MetadataExpression;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -9,14 +10,14 @@ import org.openqa.selenium.WebElement;
  */
 public interface WebVariable extends MetadataExpression {
 
-		/**
-		 * @return Returns a {@link WebElement}.
-		 */
-		WebElement getElement();
+	/**
+	 * @return Returns a {@link WebElement}.
+	 */
+	WebElement getElement();
 
-		/**
-		 * @return Returns a {@link WebDriver}.
-		 */
-		WebDriver getDriver();
+	/**
+	 * @return Returns a {@link WebDriver}.
+	 */
+	WebDriver getDriver();
 
 }

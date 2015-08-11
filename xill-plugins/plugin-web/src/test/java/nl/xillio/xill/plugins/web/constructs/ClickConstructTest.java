@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.NodeVariable;
+import nl.xillio.xill.plugins.web.data.NodeVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
 import org.openqa.selenium.StaleElementReferenceException;
@@ -18,7 +18,6 @@ import org.testng.annotations.Test;
 
 /**
  * test the {@link ClickConstruct}.
- *
  */
 public class ClickConstructTest extends ExpressionBuilderHelper {
 

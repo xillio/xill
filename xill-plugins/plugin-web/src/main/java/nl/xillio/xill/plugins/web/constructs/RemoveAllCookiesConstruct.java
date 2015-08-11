@@ -5,8 +5,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.PhantomJSConstruct;
-import nl.xillio.xill.plugins.web.WebVariable;
+import nl.xillio.xill.plugins.web.data.WebVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
 /**
@@ -19,7 +18,7 @@ public class RemoveAllCookiesConstruct extends PhantomJSConstruct {
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
 			(page) -> process(page, webService),
-			new Argument("page"));
+			new Argument("page", ATOMIC));
 	}
 
 	/**

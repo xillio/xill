@@ -5,8 +5,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.PhantomJSConstruct;
-import nl.xillio.xill.plugins.web.WebVariable;
+import nl.xillio.xill.plugins.web.data.WebVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
 /**
@@ -18,7 +17,7 @@ public class SelectedConstruct extends PhantomJSConstruct {
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
 			(element) -> process(element, webService),
-			new Argument("element"));
+			new Argument("element", ATOMIC));
 	}
 
 	/**

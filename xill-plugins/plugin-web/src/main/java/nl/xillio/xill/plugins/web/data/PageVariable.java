@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.web;
+package nl.xillio.xill.plugins.web.data;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -20,8 +20,10 @@ public class PageVariable implements WebVariable, AutoCloseable {
 	 * This class represents the Page "pseudo" variable.
 	 * </p>
 	 *
-	 * @param driver  The {@link WebDriver} we're using.
-	 * @param element The {@link WebElement} we're representing the node of.
+	 * @param driver
+	 *        The {@link WebDriver} we're using.
+	 * @param element
+	 *        The {@link WebElement} we're representing the node of.
 	 */
 	public PageVariable(final WebDriver driver, final WebElement element) {
 		this.driver = driver;
@@ -40,10 +42,11 @@ public class PageVariable implements WebVariable, AutoCloseable {
 
 	/**
 	 * Sets the entity which generated the page variable
+	 * 
 	 * @param entity
-	 * 					The entity.
+	 *        The entity.
 	 */
-	public void setEntity(PhantomJSPool.Entity entity) {
+	public void setEntity(final PhantomJSPool.Entity entity) {
 		this.entity = entity;
 	}
 

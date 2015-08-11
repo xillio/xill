@@ -7,8 +7,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.PhantomJSConstruct;
-import nl.xillio.xill.plugins.web.WebVariable;
+import nl.xillio.xill.plugins.web.data.WebVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
 import org.openqa.selenium.Cookie;
@@ -22,7 +21,7 @@ public class PageInfoConstruct extends PhantomJSConstruct {
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
 			(page) -> process(page, webService),
-			new Argument("page"));
+			new Argument("page", ATOMIC));
 	}
 
 	/**
@@ -37,8 +36,6 @@ public class PageInfoConstruct extends PhantomJSConstruct {
 		if (!checkPageType(pageVar)) {
 			throw new RobotRuntimeException("Invalid variable type. Node PAGE type expected!");
 		}
-		// else
-
 		try {
 
 			WebVariable driver = getPage(pageVar);
@@ -55,7 +52,7 @@ public class PageInfoConstruct extends PhantomJSConstruct {
 			return fromValue(list);
 
 		} catch (Exception e) {
-			throw new RobotRuntimeException(e.getClass().getSimpleName(), e);
+			throw new RobotRuntimeException("Failed to extract info", e);
 		}
 	}
 

@@ -1,11 +1,12 @@
-package nl.xillio.xill.plugins.web;
+package nl.xillio.xill.plugins.web.data;
+
+import java.util.Vector;
 
 import nl.xillio.xill.api.components.MetadataExpression;
 import nl.xillio.xill.plugins.web.services.web.WebService;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.Vector;
 
 /**
  * This class encapsulates the pooling mechanism for Selenium's PhantomJS processes used in Web.loadpage() Xill
@@ -28,7 +29,7 @@ public class PhantomJSPool {
 	 * @param id
 	 *        in fact it is PJS process CLI options
 	 * @param webService
-	 * 				the webService we're using.
+	 *        the webService we're using.
 	 *
 	 * @return Entity containing a page (i.e. PhantomJS process) with provided options that can be used for web operations
 	 */
@@ -150,8 +151,9 @@ public class PhantomJSPool {
 
 		/**
 		 * The constructor for the Entity class.
+		 * 
 		 * @param webService
-		 * 					The webService the class will be using.
+		 *        The webService the class will be using.
 		 */
 		public Entity(final WebService webService) {
 			this.webService = webService;
@@ -245,7 +247,6 @@ public class PhantomJSPool {
 		}
 	}
 
-
 	/**
 	 * It represents the options that have been used as CLI arguments of
 	 * PhantomJS process. It helps to identify the proper PhantomJS
@@ -264,7 +265,7 @@ public class PhantomJSPool {
 		 * @param options
 		 *        The CLI options that has been used when given PJS process has been started
 		 * @throws NullPointerException
-		 * 				Throws a NullPointerException when the options were null.
+		 *         Throws a NullPointerException when the options were null.
 		 */
 		public Identifier(final Options options) {
 			if (options == null) {

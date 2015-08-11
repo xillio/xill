@@ -9,8 +9,7 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.PhantomJSConstruct;
-import nl.xillio.xill.plugins.web.WebVariable;
+import nl.xillio.xill.plugins.web.data.WebVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
 import org.openqa.selenium.InvalidElementStateException;
@@ -30,8 +29,8 @@ public class CSSPathConstruct extends PhantomJSConstruct {
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
 			(element, csspath) -> process(element, csspath, webService),
-			new Argument("element"),
-			new Argument("csspath"));
+			new Argument("element", ATOMIC),
+			new Argument("csspath", ATOMIC));
 	}
 
 	/**

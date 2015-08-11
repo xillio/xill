@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.web;
+package nl.xillio.xill.plugins.web.data;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 import nl.xillio.xill.api.components.MetadataExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.web.WebXillPlugin;
 
 import org.apache.commons.codec.binary.Base64;
 import org.openqa.selenium.Dimension;
@@ -48,8 +49,9 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Set the proxy host.
+	 * 
 	 * @param name
-	 * 					The name of the host.
+	 *        The name of the host.
 	 */
 	public void setProxyHost(final String name) {
 		proxyHost = name;
@@ -57,8 +59,9 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Set the proxy port.
+	 * 
 	 * @param value
-	 * 					The name of the port.
+	 *        The name of the port.
 	 */
 	public void setProxyPort(final int value) {
 		proxyPort = value;
@@ -66,8 +69,9 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Set the timeout value.
+	 * 
 	 * @param value
-	 * 					The value of the timeout in ms.
+	 *        The value of the timeout in ms.
 	 */
 	public void setTimeout(final int value) {
 		timeout = value;
@@ -75,8 +79,9 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Set the proxy user.
+	 * 
 	 * @param name
-	 * 					The username.
+	 *        The username.
 	 */
 	public void setProxyUser(final String name) {
 		proxyUser = name;
@@ -84,8 +89,9 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Set the proxy pass.
+	 * 
 	 * @param name
-	 * 				 The name of the pass.
+	 *        The name of the pass.
 	 */
 	public void setProxyPass(final String name) {
 		proxyPass = name;
@@ -93,8 +99,9 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Set proxy type.
+	 * 
 	 * @param name
-	 * 					The name of the proxyType. (Supported: http, socks5)
+	 *        The name of the proxyType. (Supported: http, socks5)
 	 */
 	public void setProxyType(final String name) {
 		proxyType = name;
@@ -102,8 +109,9 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Set the httpAuthUser.
+	 * 
 	 * @param name
-	 * 					The name of the user.
+	 *        The name of the user.
 	 */
 	public void setHttpAuthUser(final String name) {
 		httpAuthUser = name;
@@ -111,8 +119,9 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Set a pass for the httpAuthUser.
+	 * 
 	 * @param name
-	 * 					The name of the pass.
+	 *        The name of the pass.
 	 */
 	public void setHttpAuthPass(final String name) {
 		httpAuthPass = name;
@@ -120,8 +129,9 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Set the browser.
+	 * 
 	 * @param name
-	 * 					The name of the browser. (currently supported: PHANTOMJS)
+	 *        The name of the browser. (currently supported: PHANTOMJS)
 	 */
 	public void setBrowser(final String name) {
 		browser = name;
@@ -129,9 +139,9 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Set the sslProtocol.
+	 * 
 	 * @param name
-	 * 					The name of the protocol. (supported: sslv3, sslv2, tlsv1, any).
-	
+	 *        The name of the protocol. (supported: sslv3, sslv2, tlsv1, any).
 	 */
 	public void setSslProtocol(final String name) {
 		sslProtocol = name;
@@ -139,8 +149,9 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Enable or disable JavaScript.
+	 * 
 	 * @param enabled
-	 * 					Whether or not we want JS enabled.
+	 *        Whether or not we want JS enabled.
 	 */
 	public void enableJS(final boolean enabled) {
 		enableJS = enabled;
@@ -148,8 +159,9 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Enable of disable WebSecurity.
+	 * 
 	 * @param enabled
-	 * 					Whether or not we want security enabled.
+	 *        Whether or not we want security enabled.
 	 */
 	public void enableWebSecurity(final boolean enabled) {
 		enableWebSecurity = enabled;
@@ -157,8 +169,9 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Enable or disable insecure SSL.
+	 * 
 	 * @param enabled
-	 * 					Whether or not we want insecure SSL enabled.
+	 *        Whether or not we want insecure SSL enabled.
 	 */
 	public void enableInsecureSSL(final boolean enabled) {
 		insecureSSL = enabled;
@@ -166,8 +179,9 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Enable or disable load images.
+	 * 
 	 * @param enabled
-	 * 					Whether or not we want load images enabled.
+	 *        Whether or not we want load images enabled.
 	 */
 	public void enableLoadImages(final boolean enabled) {
 		loadImages = enabled;
@@ -175,8 +189,9 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Enable or disable ltr URL access.
+	 * 
 	 * @param enabled
-	 * 					Whether or not we want this access enabled.
+	 *        Whether or not we want this access enabled.
 	 */
 	public void enableLtrUrlAccess(final boolean enabled) {
 		ltrUrlAccess = enabled;

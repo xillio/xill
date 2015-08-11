@@ -1,19 +1,19 @@
 package nl.xillio.xill.plugins.web.constructs;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.PhantomJSConstruct;
-import nl.xillio.xill.plugins.web.WebVariable;
+import nl.xillio.xill.plugins.web.data.WebVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.InvalidSelectorException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Select web element(s) on the page according to provided XPath selector
@@ -24,9 +24,9 @@ public class XPathConstruct extends PhantomJSConstruct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-				(element, xpath) -> process(element, xpath, webService),
-				new Argument("element"),
-				new Argument("xpath"));
+			(element, xpath) -> process(element, xpath, webService),
+			new Argument("element", ATOMIC),
+			new Argument("xpath", ATOMIC));
 	}
 
 	/**
@@ -47,7 +47,7 @@ public class XPathConstruct extends PhantomJSConstruct {
 		} else if (checkNodeType(elementVar)) {
 			return processSELNode(getNode(elementVar), query, webService);
 		} else {
-			throw new RobotRuntimeException("Unsupported variable type!");
+			throw new RobotRuntimeException("Unsupported variable type. PAGE or NODE type expected!");
 		}
 	}
 
@@ -104,7 +104,11 @@ public class XPathConstruct extends PhantomJSConstruct {
 			}
 			return fromValue(val);
 		} else {
-			return createNode(driver, element, webService);
+			try {
+				return createNode(driver, element, webService);
+			} catch (Exception e) {
+				throw new RobotRuntimeException("Failed to create node.");
+			}
 		}
 	}
 }

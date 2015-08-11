@@ -5,8 +5,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.PhantomJSConstruct;
-import nl.xillio.xill.plugins.web.WebVariable;
+import nl.xillio.xill.plugins.web.data.WebVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
 import org.openqa.selenium.NoSuchFrameException;
@@ -20,8 +19,8 @@ public class SwitchFrameConstruct extends PhantomJSConstruct {
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
 			(page, frame) -> process(page, frame, webService),
-			new Argument("page"),
-			new Argument("frame"));
+			new Argument("page", ATOMIC),
+			new Argument("frame", ATOMIC));
 	}
 
 	/**

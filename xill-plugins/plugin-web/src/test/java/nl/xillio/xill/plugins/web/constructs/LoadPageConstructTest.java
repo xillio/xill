@@ -12,9 +12,9 @@ import java.net.MalformedURLException;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.Options;
-import nl.xillio.xill.plugins.web.OptionsFactory;
-import nl.xillio.xill.plugins.web.PageVariable;
+import nl.xillio.xill.plugins.web.data.Options;
+import nl.xillio.xill.plugins.web.data.OptionsFactory;
+import nl.xillio.xill.plugins.web.data.PageVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
 import org.testng.Assert;
@@ -27,8 +27,9 @@ import org.testng.annotations.Test;
 public class LoadPageConstructTest extends ExpressionBuilderHelper {
 
 	/**
-	 *Test the process under normal circumstances.
-	 * @throws Exception 
+	 * Test the process under normal circumstances.
+	 * 
+	 * @throws Exception
 	 */
 	@Test
 	public void testNormalUsage() throws Exception {
@@ -67,6 +68,7 @@ public class LoadPageConstructTest extends ExpressionBuilderHelper {
 
 	/**
 	 * Test the error handling when we {@link OptionsFactory} fails to process the options.
+	 * 
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to parse the options.")
@@ -106,6 +108,7 @@ public class LoadPageConstructTest extends ExpressionBuilderHelper {
 
 	/**
 	 * Test the error handling when httpGet returns a MalFormedURLException.
+	 * 
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Malformed URL during httpGet.")
@@ -138,7 +141,8 @@ public class LoadPageConstructTest extends ExpressionBuilderHelper {
 
 	/**
 	 * Tests the process when we have a full PhantomJSpool.
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Loadpage error - PhantomJS pool is fully used and cannot provide another instance!")
 	public void testFullPhantomPool() throws Exception {
@@ -171,7 +175,8 @@ public class LoadPageConstructTest extends ExpressionBuilderHelper {
 	/**
 	 * Tests the process when a classCast exception is thrown.
 	 * Note that this is not allowed to ever happen.
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to execute httpGet.")
 	public void testClassCastException() throws Exception {

@@ -5,7 +5,6 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.PhantomJSConstruct;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
 import com.google.inject.Inject;
@@ -22,7 +21,7 @@ public class FocusConstruct extends PhantomJSConstruct {
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
 			(element) -> process(element, webService),
-			new Argument("element"));
+			new Argument("element", ATOMIC));
 	}
 
 	/**
@@ -36,8 +35,11 @@ public class FocusConstruct extends PhantomJSConstruct {
 			throw new RobotRuntimeException("Invalid variable type. NODE type expected!");
 		}
 		else {
-
-			webService.moveToElement(getNode(elementVar));
+			try {
+				webService.moveToElement(getNode(elementVar));
+			} catch (Exception e) {
+				throw new RobotRuntimeException("Failed to focus on element.");
+			}
 			return NULL;
 		}
 	}
