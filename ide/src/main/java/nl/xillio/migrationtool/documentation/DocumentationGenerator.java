@@ -9,7 +9,7 @@ import java.util.List;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
-import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient;
+import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.api.construct.Construct;
 

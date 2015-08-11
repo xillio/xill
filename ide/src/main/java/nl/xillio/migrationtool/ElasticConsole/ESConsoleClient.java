@@ -1,4 +1,4 @@
-package nl.xillio.migrationtool.ElasticConsole;
+package nl.xillio.migrationtool.elasticconsole;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -18,10 +18,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 import javafx.util.Duration;
-import nl.xillio.migrationtool.ElasticConsole.Counter;
-import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient;
-import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient.LogType;
-import nl.xillio.migrationtool.ElasticConsole.LogEntry;
+import nl.xillio.migrationtool.elasticconsole.Counter;
+import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
+import nl.xillio.migrationtool.elasticconsole.ESConsoleClient.LogType;
+import nl.xillio.migrationtool.elasticconsole.LogEntry;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.preview.Searchable;
 
