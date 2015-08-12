@@ -8,7 +8,6 @@ import java.util.Map;
  * @author Ivor van der Hoog
  * @since 12-8-2015
  */
-public interface DocumentationEntity {
+public interface DocumentationEntity extends PropertiesProvider {
     String getIdentity();
-    Map<String, ? extends Object> getProperties();
 }
