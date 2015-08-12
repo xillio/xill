@@ -1,9 +1,6 @@
 package nl.xillio.xill.plugins.web.data;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -12,6 +9,9 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.WebXillPlugin;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
@@ -26,7 +26,8 @@ import org.openqa.selenium.remote.DesiredCapabilities;
  * non-CLI options are those that can be set whenever at whatever existing PhantomJS process
  */
 public class Options implements MetadataExpression {
-
+	private static final Logger LOGGER = LogManager.getLogger();
+	private static final String TEMP_FILE_BASE = "phantomjs";
 	// Driver options
 	private int timeout = 0;
 
@@ -259,19 +260,19 @@ public class Options implements MetadataExpression {
 	 * @return The object encapsulating all CLI parameters for PhantomJS process
 	 */
 	private DesiredCapabilities createDCapOptions() {
-		DesiredCapabilities dcap = DesiredCapabilities.phantomjs();
+		DesiredCapabilities dCap = DesiredCapabilities.phantomjs();
 
 		// enable JavaScript
-		dcap.setJavascriptEnabled(enableJS);
+		dCap.setJavascriptEnabled(enableJS);
 
-		ArrayList<String> phantomArgs = new ArrayList<String>();
+		ArrayList<String> phantomArgs = new ArrayList<>();
 		phantomArgs.add("--disk-cache=false");
 		// phantomArgs.add("--webdriver-logfile=NONE"); //! this option doesn't work (why not?) - it will create an empty file anyway
 		phantomArgs.add("--webdriver-loglevel=NONE");// values can be NONE | ERROR | WARN | INFO | DEBUG (if NONE then the log file is not created)
-		phantomArgs.add("--ignore-ssl-errors=" + (insecureSSL ? "true" : "false"));
-		phantomArgs.add("--load-images=" + (loadImages ? "true" : "false"));
-		phantomArgs.add("--web-security=" + (enableWebSecurity ? "true" : "false"));
-		phantomArgs.add("--local-to-remote-url-access=" + (ltrUrlAccess ? "true" : "false"));
+		phantomArgs.add("--ignore-ssl-errors=" + Boolean.toString(insecureSSL));
+		phantomArgs.add("--load-images=" + Boolean.toString(loadImages));
+		phantomArgs.add("--web-security=" + Boolean.toString(enableWebSecurity));
+		phantomArgs.add("--local-to-remote-url-access=" + Boolean.toString(ltrUrlAccess));
 
 		if (sslProtocol != null) {
 			phantomArgs.add("--ssl-protocol=" + sslProtocol);
@@ -287,12 +288,12 @@ public class Options implements MetadataExpression {
 
 		if (httpAuthUser != null) {
 			String s = String.format("%1$s:%2$s", httpAuthUser, httpAuthPass);
-			dcap.setCapability(PhantomJSDriverService.PHANTOMJS_PAGE_CUSTOMHEADERS_PREFIX, "Authorization: Basic " + Base64.encodeBase64String(s.getBytes()));
+			dCap.setCapability(PhantomJSDriverService.PHANTOMJS_PAGE_CUSTOMHEADERS_PREFIX, "Authorization: Basic " + Base64.encodeBase64String(s.getBytes()));
 		}
 
-		dcap.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, phantomArgs);
+		dCap.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, phantomArgs);
 
-		return dcap;
+		return dCap;
 	}
 
 	/**
@@ -306,10 +307,7 @@ public class Options implements MetadataExpression {
 		if (s1 == null) {
 			return s2 == null;
 		}
-		if (s2 == null) {
-			return false;
-		}
-		return s1.equals(s2);
+		return s2 != null && s1.equals(s2);
 	}
 
 	/**
@@ -320,10 +318,16 @@ public class Options implements MetadataExpression {
 	 * @return true if matches otherwise false
 	 */
 	public boolean compareDCap(final Options options) {
-		return strEq(browser, options.browser) && enableJS == options.enableJS && enableWebSecurity == options.enableWebSecurity && insecureSSL == options.insecureSSL
-				&& loadImages == options.loadImages && strEq(sslProtocol, options.sslProtocol) && ltrUrlAccess == options.ltrUrlAccess && strEq(proxyHost, options.proxyHost)
-				&& proxyPort == options.proxyPort && strEq(proxyUser, options.proxyUser) && strEq(proxyPass, options.proxyPass) && strEq(proxyType, options.proxyType)
-				&& strEq(httpAuthUser, options.httpAuthUser) && strEq(httpAuthPass, options.httpAuthPass);
+		return 	strEq(dCapString(), options.dCapString());
+	}
+
+	private String dCapString() {
+		return StringUtils.join(
+				browser,		enableJS, 		enableWebSecurity,
+				insecureSSL, 	loadImages, 	sslProtocol,
+				ltrUrlAccess, 	proxyHost,		proxyPort,
+				proxyUser, 		proxyPass, 		proxyType,
+				httpAuthUser, 	httpAuthPass);
 	}
 
 	private WebDriver createPhantomJSDriver() {
@@ -343,7 +347,7 @@ public class Options implements MetadataExpression {
 	 * Method deletes all existing PhantomJS process files from temp folder (on
 	 * Windows only) There are cases when the file is not removed after CT is
 	 * closed (e.g. when CT crashes or is manually terminated, etc.) This
-	 * prevents from cumulating useless files in the system.
+	 * prevents from accumulating useless files in the system.
 	 */
 	public static void cleanUnusedPJSExe() {
 		try {
@@ -351,23 +355,30 @@ public class Options implements MetadataExpression {
 
 			String os = System.getProperty("os.name").toLowerCase();
 			// Windows
-			if (os.indexOf("win") >= 0) {
-				phantomJStoolBinary = File.createTempFile("phantomjs", ".exe");
+			if (os.contains("win")) {
+				phantomJStoolBinary = File.createTempFile(TEMP_FILE_BASE, ".exe");
 				String path = phantomJStoolBinary.toPath().getParent().toString();
-				phantomJStoolBinary.delete();
+				delete(phantomJStoolBinary);
 
 				// delete all phantomjs process files
 				File dir = new File(path);
-				File[] files = dir.listFiles((final File file, final String name) -> name.startsWith("phantomjs") && name.endsWith(".exe"));
+				File[] files = dir.listFiles((final File file, final String name) -> name.startsWith(TEMP_FILE_BASE) && name.endsWith(".exe"));
 				for (File file : files) {
-					try {
-						file.delete();
-					} catch (Exception e) {}
+					delete(file);
 				}
 			}
 		} catch (IOException e) {
 			throw new RobotRuntimeException("IO error when deleting existing PhantomJS files  from temp folder", e);
 		}
+	}
+
+	private static boolean delete(File file) {
+		try {
+			return file.delete();
+		} catch (Exception e) {
+			LOGGER.error("Failed to delete file", e);
+		}
+		return false;
 	}
 
 	/**
@@ -382,8 +393,8 @@ public class Options implements MetadataExpression {
 
 			String os = System.getProperty("os.name").toLowerCase();
 			// Windows
-			if (os.indexOf("win") >= 0) {
-				phantomJStoolBinary = File.createTempFile("phantomjs", ".exe");
+			if (os.contains("win")) {
+				phantomJStoolBinary = File.createTempFile(TEMP_FILE_BASE, ".exe");
 				nativeBinarySource = "/phantomjs/phantomjs.exe";
 
 				phantomJStoolBinary.deleteOnExit();
@@ -394,22 +405,20 @@ public class Options implements MetadataExpression {
 				// extract file into the current directory
 				InputStream reader = WebXillPlugin.class.getResourceAsStream(nativeBinarySource);
 				if (reader == null) {
-					throw new Exception("Cannot find phantomjs.exe resource file!");
+					throw new FileNotFoundException("Cannot find phantomjs.exe resource file!");
 				}
 				FileOutputStream writer = new FileOutputStream(phantomJStoolPath);
 				byte[] buffer = new byte[1024];
-				int bytesRead = 0;
+				int bytesRead;
 				while ((bytesRead = reader.read(buffer)) != -1) {
 					writer.write(buffer, 0, bytesRead);
 				}
 
 				writer.close();
 				reader.close();
-				return;
 			}
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
-			return;
+			LOGGER.catching(e);
 		}
 	}
 

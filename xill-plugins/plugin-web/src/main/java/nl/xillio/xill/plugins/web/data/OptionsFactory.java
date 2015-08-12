@@ -41,8 +41,8 @@ public class OptionsFactory {
 		if (proxyType == null) {
 			proxyType = "http";
 		}
-		if (!proxyType.equalsIgnoreCase("http") && !proxyType.equalsIgnoreCase("socks5")) {
-			throw new RobotRuntimeException("Invalid proxytype.");
+		if (!"http".equalsIgnoreCase(proxyType) && !"socks5".equalsIgnoreCase(proxyType)) {
+			throw new RobotRuntimeException("Invalid proxy type.");
 		}
 
 		options.setProxyUser(proxyUser);
@@ -117,7 +117,7 @@ public class OptionsFactory {
 
 			case "browser":
 				String browser = value.getStringValue();
-				if (!browser.equals("PHANTOMJS")) {
+				if (!"PHANTOMJS".equals(browser)) {
 					throw new RobotRuntimeException("Invalid \"browser\" option.");
 				}
 				else {

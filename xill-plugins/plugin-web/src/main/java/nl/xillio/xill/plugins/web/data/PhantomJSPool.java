@@ -1,5 +1,7 @@
 package nl.xillio.xill.plugins.web.data;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import nl.xillio.xill.api.components.MetadataExpression;
@@ -16,10 +18,23 @@ import org.apache.logging.log4j.Logger;
  */
 public class PhantomJSPool {
 
-	private final Logger log = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 
-	Vector<Entity> poolEntities = new Vector<Entity>();
+	List<Entity> poolEntities = new ArrayList<>();
 	int maxPoolSize = 10; // maximum of entities in pool (entity means running PhantomJS process)
+
+
+	/**
+	 * Creates PJS pool
+	 *
+	 * @param maxPoolSize
+	 *        Maximum amount of entities (PhantomJS processes) that can
+	 *        be in the pool at one time
+	 */
+	public PhantomJSPool(final int maxPoolSize) {
+		this.maxPoolSize = maxPoolSize;
+		Runtime.getRuntime().addShutdownHook(new Thread(this::dispose));
+	}
 
 	/**
 	 * This covers the core of entire pool mechanism
@@ -34,30 +49,28 @@ public class PhantomJSPool {
 	 * @return Entity containing a page (i.e. PhantomJS process) with provided options that can be used for web operations
 	 */
 	public Entity get(final Identifier id, final WebService webService) {
-		// System.out.println(String.format("PJS: PhantomJSPool get(), thread %1$d", Thread.currentThread().getId()));
-		log.debug("PJSPool: New request for WebDriver...");
+		LOGGER.debug("PJSPool: New request for WebDriver...");
 		Entity item = findFirstFreeEntityAndReuse(id);
 		if (item == null) { // no proper found
 			// we create new one
-			if (poolEntities.size() >= maxPoolSize) {
+			if (poolEntities.size() >= maxPoolSize && !freeUnusedEntity()) {
 				// pool reached full size - will try to release not used one
 				// entity (with different id (CLI options) - obviously because
 				// there is no free PJS process with required id to use.
-				if (!freeUnusedEntity()) {
-					// there is no unused entity available
-					log.error("PJSPool: No free slot for next PhantomJS process!");
-					return null; // cannot create new PJS process!
-				}
+
+				// there is no unused entity available
+				LOGGER.error("PJSPool: No free slot for next PhantomJS process!");
+				return null; // cannot create new PJS process!
 			}
 			// else
 			// create brand new entity
-			log.debug("PJSPool: Creating new driver...");
+			LOGGER.debug("PJSPool: Creating new driver...");
 			item = new Entity(webService);
 			item.page = item.create(id);
 			poolEntities.add(item);
 		} else {
 			// found free entity with the same id
-			log.debug("PJSPool: Reusing new driver...");
+			LOGGER.debug("PJSPool: Reusing new driver...");
 		}
 		return item;
 	}
@@ -97,25 +110,11 @@ public class PhantomJSPool {
 	 */
 	public void dispose() {
 		try {
-			for (Entity item : poolEntities) {
-				item.dispose();
-			}
+			poolEntities.forEach(PhantomJSPool.Entity::dispose);
 			poolEntities.clear();
 		} catch (Exception e) {
-			log.error("Error when closing PhantomJS instances! " + e.getMessage());
+			LOGGER.error("Error when closing PhantomJS instances! " + e.getMessage());
 		}
-	}
-
-	/**
-	 * Creates PJS pool
-	 *
-	 * @param maxPoolSize
-	 *        Maximum amount of entities (PhantomJS processes) that can
-	 *        be in the pool at one time
-	 */
-	public PhantomJSPool(final int maxPoolSize) {
-		this.maxPoolSize = maxPoolSize;
-		Runtime.getRuntime().addShutdownHook(new Thread(this::dispose));
 	}
 
 	/**
@@ -149,6 +148,10 @@ public class PhantomJSPool {
 	public class Entity implements AutoCloseable, MetadataExpression {
 		private final WebService webService;
 
+		private WebVariable page;
+		private Identifier id;
+		private boolean used = false; // is this entity in use (true) or free to use (false)?
+
 		/**
 		 * The constructor for the Entity class.
 		 * 
@@ -159,9 +162,6 @@ public class PhantomJSPool {
 			this.webService = webService;
 		}
 
-		private WebVariable page;
-		private Identifier id;
-		private boolean used = false; // is this entity in use (true) or free to use (false)?
 
 		/**
 		 * @return true if this PJS process is currently in use; otherwise false which means that this PJS process is
@@ -183,10 +183,10 @@ public class PhantomJSPool {
 		 */
 		private WebVariable create(final Identifier id) {
 			this.id = id;
-			PageVariable page = webService.createPage(id.getOptions());
-			page.setEntity(this);
+			PageVariable pageVariable = webService.createPage(id.getOptions());
+			pageVariable.setEntity(this);
 			used = true;
-			return page;
+			return pageVariable;
 		}
 
 		/**
