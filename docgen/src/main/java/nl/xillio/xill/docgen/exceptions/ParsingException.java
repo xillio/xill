@@ -6,4 +6,8 @@ package nl.xillio.xill.docgen.exceptions;
  * @since 12-8-2015
  */
 public class ParsingException extends Exception {
+
+	public ParsingException(String string) {
+		// TODO Auto-generated constructor stub
+	}
 }

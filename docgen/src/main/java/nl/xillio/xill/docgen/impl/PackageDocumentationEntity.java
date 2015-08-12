@@ -19,8 +19,14 @@ public class PackageDocumentationEntity implements DocumentationEntity {
     }
 
     @Override
-    public Map<String, ? extends Object> getProperties() {
+    public Map<String, Object> getProperties() {
         //TODO Implement method
         return null;
     }
+
+		@Override
+		public String getType() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 }
