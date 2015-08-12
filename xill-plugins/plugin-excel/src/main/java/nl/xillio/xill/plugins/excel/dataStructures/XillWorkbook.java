@@ -12,20 +12,23 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Daan Knoope on 7-8-2015.
  */
-public abstract class XillWorkbook implements MetadataExpression{
+public class XillWorkbook implements MetadataExpression{
 	protected Workbook workbook;
-	protected File file;
-	private boolean readonly;
+	private File file;
+	private boolean readonly = false;
 	private String location;
 
 	public XillWorkbook(Workbook workbook, File file) throws IOException {
 		this.workbook = workbook;
 		this.file = file;
 		location = file.getCanonicalPath();
+		readonly = !file.canWrite();
 	}
 
 	public String getFileString(){
@@ -48,9 +51,17 @@ public abstract class XillWorkbook implements MetadataExpression{
 		return new XillSheet(workbook.getSheet(sheetName));
 	}
 
-	public XillSheet makeSheet(String sheetName){
+	public XillSheet makeSheet(String sheetName) throws IllegalArgumentException{
 		return new XillSheet(workbook.createSheet(sheetName));
 	}
+
+	public List<String> getSheetNames() {
+		List<String> sheetnames = new ArrayList<>();
+		for(int i = 0; i < workbook.getNumberOfSheets(); i++)
+			sheetnames.add(workbook.getSheetAt(i).getSheetName());
+		return sheetnames;
+	}
+
 
 	public String name(Sheet sheet){
 		return sheet.getSheetName();

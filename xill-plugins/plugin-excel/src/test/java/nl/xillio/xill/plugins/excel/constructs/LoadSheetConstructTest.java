@@ -8,6 +8,7 @@ import nl.xillio.xill.plugins.excel.dataStructures.XillWorkbook;
 import nl.xillio.xill.plugins.excel.services.ExcelService;
 import nl.xillio.xill.services.inject.InjectorUtils;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static nl.xillio.xill.api.construct.ExpressionBuilderHelper.fromValue;
@@ -20,9 +21,13 @@ import static org.testng.Assert.*;
  */
 public class LoadSheetConstructTest {
 
+	@BeforeClass
+	public void initializeInjector(){
+		InjectorUtils.getGlobalInjector();
+	}
+
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Expected parameter 'workbook' to be a result of loadWorkbook or createWorkbook")
 	public void testProcessNoWorkbook() throws Exception {
-		InjectorUtils.getGlobalInjector();
 		XillWorkbook workbook = null;//mock(XillWorkbook.class);
 		MetaExpression input = fromValue("workbook object");
 		input.storeMeta(XillWorkbook.class, workbook);
@@ -32,7 +37,6 @@ public class LoadSheetConstructTest {
 
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Sheet can not be found in the supplied workbook")
 	public void testProcessNoSheet() throws Exception{
-		InjectorUtils.getGlobalInjector();
 		XillWorkbook workbook = mock(XillWorkbook.class);//mock(XillWorkbook.class);
 		XillSheet sheet = null;
 		when(workbook.getSheet(anyString())).thenReturn(sheet);
@@ -42,9 +46,9 @@ public class LoadSheetConstructTest {
 		LoadSheetConstruct.process(service, input, fromValue("Sheet"));
 	}
 
+
 	@Test
 	public void testProcessReturnsCorrectly() throws Exception{
-		InjectorUtils.getGlobalInjector();
 		XillWorkbook workbook = mock(XillWorkbook.class);//mock(XillWorkbook.class);
 		XillSheet sheet = mock(XillSheet.class);
 		when(workbook.getSheet(anyString())).thenReturn(sheet);
@@ -56,8 +60,8 @@ public class LoadSheetConstructTest {
 		ExcelService service = mock(ExcelService.class);
 		MetaExpression result = LoadSheetConstruct.process(service, input, fromValue("Sheet"));
 		assertEquals(result.getStringValue(), "{\"Sheet name\":\"SheetName\",\"Rows\":3,\"Columns\":5}");
-		//XillSheet resultSheet = result.getMeta(XillSheet.class);
-		//assertEquals(resultSheet, sheet);
+		XillSheet resultSheet = result.getMeta(XillSheet.class);
+		assertEquals(resultSheet, sheet);
 	}
 
 }

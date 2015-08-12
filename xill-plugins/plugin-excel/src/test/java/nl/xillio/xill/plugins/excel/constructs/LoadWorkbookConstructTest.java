@@ -136,4 +136,5 @@ public class LoadWorkbookConstructTest {
 			MetaExpression expr = LoadWorkbookConstruct.process(service, context, fromValue("."));
 			assertEquals(expr.getMeta(XillWorkbook.class), workbook);
 		}
-	}
+
+}
