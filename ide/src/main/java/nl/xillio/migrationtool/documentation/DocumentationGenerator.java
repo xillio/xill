@@ -128,8 +128,8 @@ public class DocumentationGenerator {
 
 	/**
 	 * <p>
-	 * We check wheter we need to update a helpfile of a construct in a plugin through comparing the version of the construct in the database and comparing it to the version of the plugin and through
-	 * checking wheter a helpfile exists.
+	 * We check whether we need to update a helpfile of a construct in a plugin through comparing the version of the construct in the database and comparing it to the version of the plugin and through
+	 * checking whether a helpfile exists.
 	 * <p>
 	 *
 	 * @param plugin
@@ -137,7 +137,7 @@ public class DocumentationGenerator {
 	 * @param construct
 	 *        The {@link Construct} which version we're checking.
 	 * @return
-	 *         A boolean value wheter we need to update the helpfile of the construct.
+	 *         A boolean value whether we need to update the helpfile of the construct.
 	 */
 	private boolean needsUpdate(final XillPlugin plugin, final Construct construct) {
 		// Check if version is changed

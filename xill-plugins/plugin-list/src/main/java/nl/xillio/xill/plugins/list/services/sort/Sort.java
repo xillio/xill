@@ -21,8 +21,11 @@ public interface Sort extends XillService {
 	 *        whether it should sort lists inside the list
 	 * @param onKeys
 	 *        whether it should sort by key
+	 * @param reverse
+	 * 				if true it sorts lowest first    
+	 *    
 	 * @return the sorted list
 	 */
-	public Object asSorted(Object input, boolean recursive, boolean onKeys);
+	public Object asSorted(Object input, boolean recursive, boolean onKeys,boolean reverse);
 
 }
