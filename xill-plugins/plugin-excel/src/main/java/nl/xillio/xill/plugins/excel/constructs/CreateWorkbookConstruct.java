@@ -33,9 +33,9 @@ public class CreateWorkbookConstruct extends Construct{
 		try {
 			workbook = excelService.createWorkbook(file);
 		} catch (FileAlreadyExistsException e) {
-			throw new RobotRuntimeException(e.getMessage());
+			throw new RobotRuntimeException(e.getMessage(),e);
 		} catch(IOException e){
-			throw new RobotRuntimeException("Cannot write to the supplied path");
+			throw new RobotRuntimeException("Cannot write to the supplied path",e);
 		}
 
 		String toReturn = workbook.getFileString();

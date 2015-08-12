@@ -31,7 +31,7 @@ public class GetCellConstruct extends Construct {
 		XillSheet sheet = assertMeta(sheetInput, "sheet", XillSheet.class, "Excel Sheet");
 		//test if column is in numeric or alphabetic notation
 		XillCellRef cell;
-		if(column.getNumberValue().doubleValue() == Double.NaN) //Then String Representation
+		if(Double.isNaN(column.getNumberValue().doubleValue())) //Then String Representation
 		{
 			cell = new XillCellRef(column.getStringValue(), (int)row.getNumberValue());
 		}

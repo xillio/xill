@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Custom suite" parallel="none">
+  <test verbose="1" name="xill" annotations="JDK">
+    <classes>
+      <class name="nl.xillio.xill.plugins.excel.constructs.LoadWorkbookConstructTest"/>
+      <class name="nl.xillio.xill.plugins.excel.constructs.CreateWorkbookConstructTest"/>
+      <class name="nl.xillio.xill.plugins.excel.services.ExcelServiceImplTest"/>
+      <class name="nl.xillio.xill.plugins.excel.constructs.LoadSheetConstructTest"/>
+      <class name="nl.xillio.xill.plugins.excel.dataStructures.XillWorkbookFactorySelectorTest"/>
+    </classes>
+  </test>
+</suite>
