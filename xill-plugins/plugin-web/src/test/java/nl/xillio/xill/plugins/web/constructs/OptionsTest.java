@@ -31,13 +31,12 @@ public class OptionsTest extends ExpressionBuilderHelper {
 	 */
 	@DataProvider(name = "booleanOptionTest")
 	public static Object[][] booleanTestStrings() {
-		Object[][] result = {
+		return new Object[][]{
 				{"enablejs", "enablejs"},
 				{"enablewebsecurity", "enablewebsecurity"},
 				{"loadimages", "loadimages"},
 				{"insecuressl", "insecuressl"},
 				{"ltrurlaccess", "ltrurlaccess"}};
-		return result;
 	}
 
 	/**
@@ -48,12 +47,11 @@ public class OptionsTest extends ExpressionBuilderHelper {
 	 */
 	@DataProvider(name = "proxytypes")
 	public static Object[][] proxyTypeTest() {
-		Object[][] result = {
+		return new Object[][]{
 				{"proxytype", "http"},
 				{"proxytype", "socks5"},
 				{"proxytype", null}
 		};
-		return result;
 	}
 
 	/**
@@ -64,11 +62,10 @@ public class OptionsTest extends ExpressionBuilderHelper {
 	 */
 	@DataProvider(name = "invalidHttpUserPasses")
 	public static Object[][] invalidPasses() {
-		Object[][] result = {
+		return new Object[][]{
 				{"pass", null},
 				{"pass", ""}
 		};
-		return result;
 	}
 
 	/**
@@ -79,14 +76,13 @@ public class OptionsTest extends ExpressionBuilderHelper {
 	 */
 	@DataProvider(name = "stringOptionTest")
 	public static Object[][] stringTestStrings() {
-		Object[][] result = {
+		return new Object[][]{
 				{"sslprotocol", "sslv3"},
 				{"sslprotocol", "sslv2"},
 				{"sslprotocol", "tlsv1"},
 				{"sslprotocol", "any"},
 				{"browser", "PHANTOMJS"}
 		};
-		return result;
 	}
 
 	/**
@@ -140,9 +136,8 @@ public class OptionsTest extends ExpressionBuilderHelper {
 		optionsValue.put("proxypass", proxyPass);
 
 		// the proxy type
-		String proxyTypeValue = type;
 		MetaExpression proxyType = mock(MetaExpression.class);
-		when(proxyType.getStringValue()).thenReturn(proxyTypeValue);
+		when(proxyType.getStringValue()).thenReturn(type);
 		optionsValue.put(proxytypes, proxyType);
 
 		// run
@@ -165,7 +160,7 @@ public class OptionsTest extends ExpressionBuilderHelper {
 	 *
 	 * @throws Exception
 	 */
-	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid proxytype.")
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid proxy type.")
 	public void TestProxyOptionInvalidProxyType() throws Exception {
 		// mock
 		OptionsFactory optionsFactory = new OptionsFactory();
@@ -304,9 +299,8 @@ public class OptionsTest extends ExpressionBuilderHelper {
 		optionsValue.put("proxyuser", proxyUser);
 
 		// the proxy pass
-		String proxyPassValue = null;
 		MetaExpression proxyPass = mock(MetaExpression.class);
-		when(proxyPass.getStringValue()).thenReturn(proxyPassValue);
+		when(proxyPass.getStringValue()).thenReturn(null);
 		optionsValue.put("proxypass", proxyPass);
 
 		// the proxy type
@@ -423,9 +417,8 @@ public class OptionsTest extends ExpressionBuilderHelper {
 
 		// The options
 		LinkedHashMap<String, MetaExpression> optionsValue = new LinkedHashMap<>();
-		boolean enable = false;
 		MetaExpression option = mock(MetaExpression.class);
-		when(option.getBooleanValue()).thenReturn(enable);
+		when(option.getBooleanValue()).thenReturn(false);
 		optionsValue.put(name, option);
 
 		MetaExpression options = mock(MetaExpression.class);
