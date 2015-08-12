@@ -58,7 +58,7 @@ public class XmlDocumentationParser implements DocumentationParser {
 		return null;
 	}
 
-	private DocumentationEntity tryParse(final Document doc, final String identity) {
+	private ConstructDocumentationEntity tryParse(final Document doc, final String identity) {
 		// Create XPathFactory object
 		XPathFactory xpathFactory = XPathFactory.newInstance();
 

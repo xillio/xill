@@ -1,5 +1,6 @@
 package nl.xillio.xill.docgen.impl;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,7 @@ import java.util.Set;
 import nl.xillio.xill.docgen.DocumentationEntity;
 import nl.xillio.xill.docgen.PropertiesProvider;
 import nl.xillio.xill.docgen.data.Example;
+import nl.xillio.xill.docgen.data.ExampleNode;
 import nl.xillio.xill.docgen.data.Parameter;
 import nl.xillio.xill.docgen.data.Reference;
 
@@ -41,7 +43,7 @@ public class ConstructDocumentationEntity implements DocumentationEntity {
 
 	@Override
 	public String getIdentity() {
-		return "construct";
+		return identity;
 	}
 
 	@Override
@@ -67,6 +69,15 @@ public class ConstructDocumentationEntity implements DocumentationEntity {
 	public void setDescription(final String Description) {
 		description = Description;
 	}
+	
+	/**
+	 * Returns the description of the construct.
+	 * @return
+	 * 				The description.
+	 */
+	public String getDescription(){
+		return description;
+	}
 
 	/**
 	 * Set the {@link Parameter}(s) of the construct.
@@ -77,6 +88,19 @@ public class ConstructDocumentationEntity implements DocumentationEntity {
 	public void setParameters(final List<Parameter> parameters) {
 		this.parameters = parameters;
 	}
+	
+	/**
+	 * Returns the names of all parameters in an array.
+	 * @return
+	 * 			The name of all parameters.
+	 */
+	public List<String> getParameterNames(){
+		List<String> parameterNames = new ArrayList<>();
+		for(int t = 0; t < parameters.size(); ++t){
+			parameterNames.add(parameters.get(t).getName());
+		}
+		return parameterNames;
+	}
 
 	/**
 	 * Set the {@link Example}(s) of the construct.
@@ -86,6 +110,27 @@ public class ConstructDocumentationEntity implements DocumentationEntity {
 	 */
 	public void setExamples(final List<Example> examples) {
 		this.examples = examples;
+	}
+	
+	/**
+	 * Returns all example code in the construct through parsing all exampleNodes in each example to see:
+	 * If the exampleNode is a codeblock.
+	 * Add the content of that code block.
+	 * @return
+	 * 				All example code in the construct.
+	 */
+	public List<String> getExampleCode(){
+		List<String> exampleCode = new ArrayList<>();
+			
+		for(Example example : examples){
+			for(ExampleNode node : example.getExampleNodes()){
+				if(node.getTagName() == "code"){
+					exampleCode.add(node.getContent());
+				}
+			}
+		}
+		
+		return exampleCode;
 	}
 
 	/**
@@ -106,6 +151,19 @@ public class ConstructDocumentationEntity implements DocumentationEntity {
 	 */
 	public void setSearchTags(final Set<String> searchTags) {
 		this.searchTags = searchTags;
+	}
+	
+	/**
+	 * Returns all search tags in an array.
+	 * @return
+	 * 				All search tags.
+	 */
+	public List<String> getSearchTags(){
+		List<String> result = new ArrayList<>();
+		for(String s : searchTags){
+			result.add(s);
+		}
+		return result;
 	}
 
 	@Override

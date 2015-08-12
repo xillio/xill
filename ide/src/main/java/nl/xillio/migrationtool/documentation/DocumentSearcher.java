@@ -161,8 +161,7 @@ public class DocumentSearcher {
 					.execute().actionGet();
 
 	}
-
-	/**
+	 /**
 	 * Check if the index exists, if not then create it
 	 */
 	private void checkIndex() {

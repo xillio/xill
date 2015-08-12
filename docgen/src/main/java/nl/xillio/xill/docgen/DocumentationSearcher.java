@@ -2,6 +2,8 @@ package nl.xillio.xill.docgen;
 
 import java.util.List;
 
+import nl.xillio.xill.docgen.impl.ConstructDocumentationEntity;
+
 /**
  * This interface represents an object that can run search queries on a collection of entities
  * @author Thomas Biesaart
@@ -9,6 +11,7 @@ import java.util.List;
  * @since 12-8-2015
  */
 public interface DocumentationSearcher {
-    List<DocumentationEntity> search(String query);
-    void index(DocumentationEntity entity);
+    String[] search(String query);
+    
+    void index(String packet, ConstructDocumentationEntity entity);
 }

@@ -7,6 +7,9 @@ import java.util.Map;
 
 import nl.xillio.xill.docgen.PropertiesProvider;
 
+/**
+ * This class represents a parameter in a {@link ConstructDocumentationEntity}.
+ */
 public class Parameter implements PropertiesProvider  {
 	private String name = null;
 	private String defaultValue = null;
@@ -32,7 +35,17 @@ public class Parameter implements PropertiesProvider  {
 	}
 	
 	/**
+	 * Returns the name of the parameter.
+	 * @return
+	 * 			The name of the parameter.
+	 */
+	public String getName(){
+		return name;
+	}
+	
+	/**
 	 * Add all parameter types.
+	 * We default to ANY if there are no types given.
 	 * @param types
 	 * 					The parameter types as String.
 	 */
@@ -42,6 +55,9 @@ public class Parameter implements PropertiesProvider  {
 			for(String type : theseTypes){
 				this.types.add(type);
 			}
+		}
+		else{
+			this.types.add("ANY");
 		}
 	}
 	

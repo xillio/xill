@@ -32,4 +32,22 @@ public class ExampleNode implements PropertiesProvider {
 		properties.put("value", content);
 		return properties;
 	}
+	
+	/**
+	 * Returns the tag name of the Node.
+	 * @return
+	 * 				The tag name of the Node.
+	 */
+	public String getTagName(){
+		return tagName;
+	}
+	
+	/**
+	 * Returns the content of the Node.
+	 * @return
+	 * 				The content of the Node.
+	 */
+	public String getContent(){
+		return content;
+	}
 }
