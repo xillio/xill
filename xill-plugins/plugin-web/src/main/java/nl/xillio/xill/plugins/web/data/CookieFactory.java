@@ -34,40 +34,40 @@ public class CookieFactory {
 		String cookieExpires = cookie.get("expires").getStringValue();
 		CookieVariable cookieVariable = new CookieVariable();
 
-		if (cookieName.equals("null")) {
+		if ("null".equals(cookieName)) {
 			throw new RobotRuntimeException("Invalid cookie. Attribute 'name' is empty.");
 		}
 		else {
 			cookieVariable.setName(cookieName);
 		}
 
-		if (cookieValue.equals("null")) {
+		if ("null".equals(cookieValue)) {
 			cookieVariable.setValue("");
 		}
 		else {
 			cookieVariable.setValue(cookieValue);
 		}
-		if (cookieDomain.equals("null")) {
+		if ("null".equals(cookieDomain)) {
 			cookieVariable.setDomain(null);
 		}
 		else {
 			cookieVariable.setDomain(cookieDomain);
 		}
-		if (cookiePath.equals("null")) {
+		if ("null".equals(cookiePath)) {
 			cookieVariable.setPath(null);
 		}
 		else {
 			cookieVariable.setPath(cookiePath);
 		}
 
-		if (cookieExpires.equals("null")) {
+		if ("null".equals(cookieExpires)) {
 			cookieVariable.setExpireDate(null);
 		} else {
 			try {
 				Date cookieExpiresDate = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(cookieExpires);
 				cookieVariable.setExpireDate(cookieExpiresDate);
 			} catch (Exception e) {
-				throw new RobotRuntimeException("Invalid cookie. Atribute 'expires' does not have the format yyyy-MM-ddThh:mm:ss");
+				throw new RobotRuntimeException("Invalid cookie. Atribute 'expires' does not have the format yyyy-MM-ddThh:mm:ss", e);
 			}
 		}
 

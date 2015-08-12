@@ -53,7 +53,7 @@ public class GetTextConstruct extends PhantomJSConstruct {
 	}
 
 	private static String processItem(final MetaExpression var, final WebService webService) {
-		WebVariable element = null;
+		WebVariable element;
 		if (checkNodeType(var)) {
 			element = getNode(var);
 		} else if (checkPageType(var)) {
@@ -62,8 +62,8 @@ public class GetTextConstruct extends PhantomJSConstruct {
 			throw new RobotRuntimeException("Invalid variable type. NODE or PAGE expected.");
 		}
 
-		String text = "";
-		if (webService.getTagName(element).equals("input") || webService.getTagName(element).equals("textarea")) {
+		String text;
+		if ("input".equals(webService.getTagName(element)) || "textarea".equals(webService.getTagName(element))) {
 			text = webService.getAttribute(element, "value");
 		} else {
 			text = webService.getText(element);

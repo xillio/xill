@@ -113,7 +113,7 @@ public class PhantomJSPool {
 			poolEntities.forEach(PhantomJSPool.Entity::dispose);
 			poolEntities.clear();
 		} catch (Exception e) {
-			LOGGER.error("Error when closing PhantomJS instances! " + e.getMessage());
+			LOGGER.error("Error when closing PhantomJS instances! " + e.getMessage(), e);
 		}
 	}
 

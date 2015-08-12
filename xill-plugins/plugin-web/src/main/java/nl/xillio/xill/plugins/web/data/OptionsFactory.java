@@ -92,7 +92,11 @@ public class OptionsFactory {
 
 			case "sslprotocol":
 				String sslProtocol = value.getStringValue();
-				if (!sslProtocol.equalsIgnoreCase("sslv3") && !sslProtocol.equalsIgnoreCase("sslv2") && !sslProtocol.equalsIgnoreCase("tlsv1") && !sslProtocol.equalsIgnoreCase("any")) {
+				if (	!"sslv3".equalsIgnoreCase(sslProtocol) &&
+						!"sslv2".equalsIgnoreCase(sslProtocol) &&
+						!"tlsv1".equalsIgnoreCase(sslProtocol) &&
+						!"any".equalsIgnoreCase(sslProtocol)) {
+
 					throw new RobotRuntimeException("Invalid sslprotocol.");
 				}
 				else {

@@ -53,32 +53,32 @@ public class XPathConstruct extends PhantomJSConstruct {
 		}
 	}
 
-	private static MetaExpression processSELNode(final WebVariable driver, String query, final WebService webService) {
+	private static MetaExpression processSELNode(final WebVariable driver, final String query, final WebService webService) {
 
 		try {
-
-			boolean textquery = query.endsWith("/text()");
-			boolean attributequery = query.matches("^.*@\\w+$");
+			String cleanedQuery = query;
+			boolean textQuery = query.endsWith("/text()");
+			boolean attributeQuery = query.matches("^.*@\\w+$");
 			String attribute = null;
 
-			if (textquery) {
-				query = stripTextTag(query);
-			} else if (attributequery) {
+			if (textQuery) {
+				cleanedQuery = stripTextTag(query);
+			} else if (attributeQuery) {
 				attribute = getAttribute(query);
-				query = stripAttributeQuery(query);
+				cleanedQuery = stripAttributeQuery(query);
 			}
 
-			List<WebVariable> results = webService.findElementsWithXpath(driver, query);
+			List<WebVariable> results = webService.findElementsWithXpath(driver, cleanedQuery);
 
-			if (results.size() == 0) {
+			if (results.isEmpty()) {
 				return NULL;
 			} else if (results.size() == 1) {
-				return parseSELVariable(driver, results.get(0), textquery, attribute, webService);
+				return parseSELVariable(driver, results.get(0), textQuery, attribute, webService);
 			} else {
-				ArrayList<MetaExpression> list = new ArrayList<MetaExpression>();
+				ArrayList<MetaExpression> list = new ArrayList<>();
 
 				for (WebVariable he : results) {
-					list.add(parseSELVariable(driver, he, textquery, attribute, webService));
+					list.add(parseSELVariable(driver, he, textQuery, attribute, webService));
 				}
 
 				return fromValue(list);
