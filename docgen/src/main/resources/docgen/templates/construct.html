@@ -12,32 +12,34 @@
     </section>
     <section id="signature">
         <header><h2>Signature</h2></header>
-        <span class="package-name">${packageName}</span>.<span class="construct-name">${identity}</span>
-            (
-            <#if parameters?size != 0>
-            <span class="parameters">
-                <br>
-                <#list parameters as parameter>
-                <span class="parameter">
-                    &lt;<span class="parameter-type">
-                        ${parameter.type}
-                    </span>&gt;
-                    <span class="parameter-name">
-                        ${parameter.name}
+        <div class="signature-content">
+            <span class="package-name">${packageName}</span>.<span class="construct-name">${identity}</span>
+                (
+                <#if parameters?size != 0>
+                <span class="parameters">
+                    <br>
+                    <#list parameters as parameter>
+                    <span class="parameter">
+                        <span class="parameter-type">
+                            <a href="../docs/structures.html">${parameter.type}</a>
+                        </span>
+                        <span class="parameter-name">
+                            ${parameter.name}
+                        </span>
+                        <#if parameter.defaultValue??>
+                        = <span class="parameter-default">${parameter.defaultValue}</span>
+                        </#if>
+                        <#if parameter?index + 1 != parameters?size>
+                        ,
+                        </#if>
                     </span>
-                    <#if parameter.defaultValue??>
-                    = <span class="parameter-default">${parameter.defaultValue}</span>
-                    </#if>
-                    <#if parameter?index + 1 != parameters?size>
-                    ,
-                    </#if>
+                    <br>
+                    </#list>
                 </span>
-                <br>
-                </#list>
+                );
+                </#if>
             </span>
-            );
-            </#if>
-        </span>
+        </div>
         <table>
         </table>
     </section>
@@ -49,13 +51,13 @@
         <#list parameters as parameter>
         <div class="parameter-row">
             <table class="parameter-table">
-                <tr><td class="header-cell">Name: </td><td>${parameter.name}</td></tr>
-                <tr><td class="header-cell">Type: </td><td>${parameter.type}</td></tr>
+                <tr><th>Name: </th><td>${parameter.name}</td></tr>
+                <tr><th>Type: </th><td><a href="../docs/structures.html">${parameter.type}</a></td></tr>
                 <#if parameter.defaultValue??>
-                <tr><td class="header-cell">Default: </td><td>${parameter.defaultValue}</td></tr>
+                <tr><th>Default: </th><td>${parameter.defaultValue}</td></tr>
                 </#if>
                 <#if parameter.description?? && parameters.description?length != 0>
-                <tr><td class="header-cell">Description: </td><td>${parameter.description}</td></tr>
+                <tr><th>Description: </th><td>${parameter.description}</td></tr>
                 </#if>
             </table>
         </div>
@@ -67,6 +69,14 @@
     <#if examples?? && examples?size != 0>
     <section id="examples">
         <header><h2>Examples</h2></header>
+        <#list examples as example>
+            <h3>Title</h3>
+            <div class="example">
+                <#list example.nodes as node>
+                    NODE<br>
+                </#list>
+            </div>
+        </#list>
     </section>
     </#if>
 </main>

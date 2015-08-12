@@ -3,7 +3,6 @@ package nl.xillio.xill.docgen;
 import nl.xillio.xill.docgen.exceptions.ParsingException;
 import nl.xillio.xill.docgen.impl.XillDocGen;
 
-import javax.xml.crypto.dsig.dom.DOMValidateContext;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
