@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function Tag="remove">
+  <name>remove</name>
+  <parameters>
+    <param name="list"/>
+    <param name="index"/>
+  </parameters>
+  <description><![CDATA[
+		If the input is a list it will remove the element at the given index.
+		If the input is an object it will remove the element with the given key.
+  ]]></description>
+  <examples>
+    <example description="Executing:"><![CDATA[
+    	var list = ["a","b","c","d"];
+    	List.remove(list,2);
+    	System.print(list);
+    	
+    	var object = {"a":"first","b":"second","c":"third"};
+    	List.remove(object,"b");
+    	System.print(object);
+    ]]></example>
+    <example description="Will return:"><![CDATA[
+		["a","b","d"]
+		{"a":"first,"c":"third"}
+    	]]>
+    </example>
+  </examples>
+  <references>
+  </references>
+  <searchTags>
+  	<searchTag>
+  		remove
+  	</searchTag>
+  </searchTags>
+</function>

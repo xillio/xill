@@ -31,21 +31,25 @@ public class SortConstructTest extends ExpressionBuilderHelper {
 		MetaExpression outputExpression = fromValue(expectedOutput);
 
 		Sort sort = mock(Sort.class);
-		when(sort.asSorted(extractValue(outputExpression), true, true)).thenReturn(true);
+		when(sort.asSorted(extractValue(outputExpression), true, true,true)).thenReturn(true);
 
 		MetaExpression recursive = mock(MetaExpression.class);
 		when(recursive.getBooleanValue()).thenReturn(true);
 
 		MetaExpression onKeys = mock(MetaExpression.class);
 		when(onKeys.getBooleanValue()).thenReturn(true);
+		
+		MetaExpression reverse = mock(MetaExpression.class);
+		when(reverse.getBooleanValue()).thenReturn(true);
 
 		// run
-		MetaExpression output = SortConstruct.process(outputExpression, recursive, onKeys, sort);
+		MetaExpression output = SortConstruct.process(outputExpression, recursive, onKeys,reverse, sort);
 
 		// verify
-		verify(sort, times(1)).asSorted(extractValue(outputExpression), true, true);
+		verify(sort, times(1)).asSorted(extractValue(outputExpression), true, true,true);
 		verify(recursive, times(1)).getBooleanValue();
 		verify(onKeys, times(1)).getBooleanValue();
+		verify(reverse,times(1)).getBooleanValue();
 
 		// assert
 		Assert.assertEquals(output, TRUE);

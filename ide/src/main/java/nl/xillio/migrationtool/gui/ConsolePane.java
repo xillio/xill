@@ -18,10 +18,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 import javafx.util.Duration;
-import nl.xillio.migrationtool.ElasticConsole.Counter;
-import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient;
-import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient.LogType;
-import nl.xillio.migrationtool.ElasticConsole.LogEntry;
+import nl.xillio.migrationtool.elasticconsole.Counter;
+import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
+import nl.xillio.migrationtool.elasticconsole.ESConsoleClient.LogType;
+import nl.xillio.migrationtool.elasticconsole.LogEntry;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.preview.Searchable;
 
@@ -29,8 +29,6 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 /**
  * This pane displays the console log stored in elasticsearch
@@ -56,6 +54,19 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 	private ToggleButton tbnToggleLogsError;
 	@FXML
 	private ToggleButton tbnConsoleSearch;
+	@FXML
+	private Label tbnLogsCount;
+	@FXML
+	private Button btnNavigateBack;
+	@FXML
+	private Button btnNavigateForward;
+	@FXML
+	private Slider sldNavigation;
+
+
+	public static enum Scroll {
+		NONE, START, END, TOTALEND, CLEAR
+	}
 
 	// private Robot robot;
 
@@ -65,7 +76,12 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 
 	// Updating the console
 	private final Timeline updateTimeline;
-	private final int maxEntries = 1000;
+	private final int maxEntries = 1000; // the number of lines in one "page"
+	private int startEntry = 0; // first entry to show
+	private int entriesCount = 0; // number of total entries in ES 
+	private boolean updateSlider = true; // if changes on slider value has to invoke updateLog()
+	private final Timeline sliderTimeline; // update cycle for slider changes 
+	private boolean sliderChanged = false; // if slider value has changed from outside - because of some user activity
 
 	// Time format
 	private final DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
@@ -76,7 +92,9 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 
 	private final List<Integer> occurences = new ArrayList<>();
 	private RobotTab tab;
-	private boolean searchActive = false; // is searching in console active?
+
+	private boolean searchRegExp = false;
+	private String searchNeedle = "";
 
 	/**
 	 * Create an initialize a ConsolePane
@@ -97,8 +115,19 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 		apnConsoleSearchBar.setButton(tbnConsoleSearch, 1);
 
 		// Console updater timeline
-		updateTimeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> updateLog()));
+		updateTimeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> updateLog(Scroll.TOTALEND, false)));
 		updateTimeline.play();
+
+		// Log updater - when some slider changes happen
+		sliderTimeline = new Timeline(new KeyFrame(Duration.millis(1000), e -> {
+			if (this.sliderChanged) {
+				Platform.runLater(() -> {
+					this.updateLog(Scroll.START, true);
+				});
+			}
+		}));
+		sliderTimeline.setCycleCount(Timeline.INDEFINITE);
+		sliderTimeline.play();
 
 		// Set the cell factories
 		DragSelectionCellFactory fac = new DragSelectionCellFactory();
@@ -129,6 +158,14 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 		updateLabels();
 
 		addEventHandler(KeyEvent.KEY_PRESSED, this);
+
+		// Listener for slider value changes 
+		sldNavigation.valueProperty().addListener((observable, oldValue, newValue) -> {
+			if (this.updateSlider) {
+				this.startEntry = (this.entriesCount * newValue.intValue()) / 100;
+				this.sliderChanged = true;
+			}
+		});
 
 	}
 
@@ -170,6 +207,21 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 	}
 
 	@FXML
+	private void buttonNavigateBack() {
+		this.startEntry -= this.maxEntries;
+		if (this.startEntry < 0) {
+			this.startEntry = 0;
+		}
+		this.updateLog(Scroll.END, false);
+	}
+
+	@FXML
+	private void buttonNavigateForward() {
+		this.startEntry += this.maxEntries;
+		this.updateLog(Scroll.START, false);
+	}
+
+	@FXML
 	private void buttonClearConsole() {
 		// Clear the log in elasticsearch
 		String robotId = getRobotID().toString();
@@ -180,10 +232,10 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 
 		// Reset all counts
 		resetLabels();
-		updateLabels();
+		updateLog(Scroll.CLEAR, false);
 	}
 
-	private void updateLog() {
+	private void updateLog(Scroll scroll, boolean fromSlider) {
 		Platform.runLater(() -> {
 			// Clear the log
 			masterLog.clear();
@@ -191,8 +243,51 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 			// Reset the filter counts
 			resetLabels();
 
-			// Get the last log entries
-			List<Map<String, Object>> entries = ESConsoleClient.getInstance().getLastEntries(getRobotID().toString(), maxEntries);
+			if (scroll == Scroll.CLEAR) {
+				// this explicit variant is here because if you click Clear then the ES starts to remove all items,
+				//  but when runtime come here, ES still can have some values "not deleted yet" and 
+				//  because the clear operation on ES is asynchronous
+				this.startEntry = 0;
+				this.entriesCount = 0;
+				tbnLogsCount.setText("0-0/0");
+				updateLabels();
+				return;
+			}
+
+			ESConsoleClient.SearchFilter filter = ESConsoleClient.getInstance().createSearchFilter(searchNeedle, this.searchRegExp, this.filters);
+			;
+
+			this.entriesCount = ESConsoleClient.getInstance().countFilteredEntries(getRobotID().toString(), filter);
+
+			int lastEntry = this.startEntry + this.maxEntries - 1;
+			if ((this.entriesCount <= lastEntry) || (scroll == Scroll.TOTALEND)) {
+				lastEntry = this.entriesCount - 1;
+				this.startEntry = lastEntry - this.maxEntries + 1;
+				if (this.startEntry < 0) {
+					this.startEntry = 0;
+				}
+			}
+			int showCount = lastEntry - this.startEntry + 1;
+
+			if (!fromSlider) {
+				this.updateSlider = false;
+				if (this.entriesCount == 0) {
+					this.sldNavigation.setValue(0);
+				} else {
+					this.sldNavigation.setValue((this.startEntry * 100) / this.entriesCount);
+				}
+				this.updateSlider = true;
+			}
+
+			if (this.entriesCount == 0) {
+				tbnLogsCount.setText("0-0/0");
+			} else {
+				tbnLogsCount.setText(String.format("%1$d-%2$d/%3$d", this.startEntry + 1, lastEntry + 1, this.entriesCount));
+			}
+
+			List<Map<String, Object>> entries = ESConsoleClient.getInstance().getFilteredEntries(
+					getRobotID().toString(), this.startEntry, lastEntry, filter);
+
 			for (Map<String, Object> entry : entries) {
 				// Get all properties
 				String time = timeFormat.format(new Date((long) entry.get("timestamp")));
@@ -201,13 +296,15 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 				addTableEntry(time, type, text, false);
 			}
 
-			// Scroll to the bottom of the table
-			int last = tblConsoleOut.getItems().size() - 1;
-			if (last >= 0) {
-				tblConsoleOut.scrollTo(last);
+			// Do scroll
+			if ((scroll == Scroll.END) || (scroll == Scroll.TOTALEND)) {
+				tblConsoleOut.scrollTo(tblConsoleOut.getItems().size() - 1);
+			} else if (scroll == Scroll.START) {
+				tblConsoleOut.scrollTo(0);
 			}
 
 			updateLabels();
+			this.sliderChanged = false;
 		});
 	}
 
@@ -258,15 +355,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 	}
 
 	private void updateFilters() {
-		// Update the filter predicate
-		filteredLog.setPredicate(entry -> {
-			LogType type = entry.getType();
-			if (this.searchActive) {
-				return (filters.get(type) && entry.getSelected());
-			} else {
-				return filters.get(type);
-			}
-		});
+		this.updateLog(Scroll.NONE, false);
 	}
 
 	/* Filter labels */
@@ -285,65 +374,26 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 
 	/* Searching */
 
-	void clearSelected() {
-		// Clears selected flag at all items
-		masterLog.forEach(item -> item.setSelected(false));
-	}
-
 	@Override
 	public void searchPattern(final String pattern, final boolean caseSensitive) {
 		// Clear the list
 		occurences.clear();
-		searchActive = true;
-		clearSelected();
 
-		// Check if the pattern is valid
-		Pattern validPattern;
-		try {
-			validPattern = caseSensitive ? Pattern.compile(pattern) : Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
-			// Search over all log entries
-			for (int i = 0; i < masterLog.size(); i++) {
-				if (validPattern.matcher(masterLog.get(i).getLine()).find()) {
-					occurences.add(i);
-					masterLog.get(i).setSelected(true); // set the item as selected  
-				}
-			}
-			checkSelection();
-		} catch (PatternSyntaxException e) {
-			// nothing to do
-		}
+		this.searchNeedle = pattern;
+		this.searchRegExp = true;
+		this.startEntry = 0;
+		this.updateLog(Scroll.START, false);
 	}
 
 	@Override
 	public void search(final String needle, final boolean caseSensitive) {
 		// Clear the list
 		occurences.clear();
-		searchActive = true;
-		clearSelected();
 
-		// Search over all log entries
-		for (int i = 0; i < masterLog.size(); i++) {
-			String line = masterLog.get(i).getLine();
-			// Check case sensitivity
-			if (!caseSensitive) {
-				line = line.toLowerCase();
-			}
-
-			if (line.contains(caseSensitive ? needle : needle.toLowerCase())) {
-				occurences.add(i);
-				masterLog.get(i).setSelected(true); // set the item as selected  
-			}
-		}
-
-		checkSelection();
-	}
-
-	private void checkSelection() {
-		// Clear the selection if we have no matches
-		if (occurences.isEmpty()) {
-			tblConsoleOut.getSelectionModel().clearSelection();
-		}
-		updateFilters();
+		this.searchNeedle = needle;
+		this.searchRegExp = false;
+		this.startEntry = 0;
+		this.updateLog(Scroll.START, false);
 	}
 
 	@Override
@@ -366,15 +416,9 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 
 	@Override
 	public void clearSearch() {
-		LogEntry lastSelected = tblConsoleOut.getSelectionModel().getSelectedItem(); // remember last selected line
-		searchActive = false;
+		this.searchNeedle = "";
 		this.updateFilters(); // show all lines (without searching affected)
 		tblConsoleOut.getSelectionModel().clearSelection();
-		int index = tblConsoleOut.getItems().indexOf(lastSelected);
-		if (index > -1) {
-			tblConsoleOut.getSelectionModel().select(index); // select and scroll to last selected line in a search
-			tblConsoleOut.scrollTo(index);
-		}
 	}
 
 	/* Drag selection */
@@ -458,7 +502,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 	public void initialize(final RobotTab tab) {
 		this.tab = tab;
 
-		this.tab.getProcessor().getDebugger().getOnRobotStart().addListener(start -> updateLog());
+		this.tab.getProcessor().getDebugger().getOnRobotStart().addListener(start -> updateLog(Scroll.TOTALEND, false));
 		ESConsoleClient.getLogEvent(tab.getProcessor().getRobotID()).addListener(msg -> updateTimeline.play());
 	}
 
