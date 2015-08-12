@@ -1,9 +1,7 @@
 package nl.xillio.xill.docgen.impl;
 
-import nl.xillio.xill.docgen.DocGen;
-import nl.xillio.xill.docgen.DocumentationGenerator;
-import nl.xillio.xill.docgen.DocumentationParser;
-import nl.xillio.xill.docgen.DocumentationSearcher;
+import freemarker.template.Configuration;
+import nl.xillio.xill.docgen.*;
 
 import org.elasticsearch.client.Client;
 
@@ -15,25 +13,36 @@ import org.elasticsearch.client.Client;
  * @since 12-8-2015
  */
 public class XillDocGen implements DocGen {
-	Client client;
+	private final Client client;
+  private final DocGenConfiguration config = new DocGenConfiguration();
 
 	public XillDocGen(final Client client) {
 		this.client = client;
 	}
 
 	@Override
-	public DocumentationParser getParser() {
+	 public DocumentationParser getParser() {
 		return new XmlDocumentationParser();
 	}
 
 	@Override
-	public DocumentationGenerator getGenerator(final String collectionIdentity) {
-		return new FreeMarkerDocumentationGenerator(collectionIdentity);
+	public DocumentationGenerator getGenerator(String collectionIdentity) {
+		return new FreeMarkerDocumentationGenerator(
+			collectionIdentity,
+			getFreeMarkerConfig(),
+			config.getDocumentationFolder());
 	}
 
 	@Override
 	public DocumentationSearcher getSearcher() {
 		return new ElasticsearchDocumentationSearcher(client);
+	}
+
+	Configuration getFreeMarkerConfig() {
+		Configuration configuration = new Configuration(Configuration.VERSION_2_3_23);
+		configuration.setClassForTemplateLoading(getClass(), config.getTemplateUrl());
+
+		return configuration;
 	}
 
 }

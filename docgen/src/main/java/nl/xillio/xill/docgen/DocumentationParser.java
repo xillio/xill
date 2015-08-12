@@ -1,5 +1,7 @@
 package nl.xillio.xill.docgen;
 
+import nl.xillio.xill.docgen.exceptions.ParsingException;
+
 import java.net.URL;
 
 /**
@@ -9,5 +11,5 @@ import java.net.URL;
  * @since 12-8-2015
  */
 public interface DocumentationParser {
-    DocumentationEntity parse(URL resource, String identity);
+    DocumentationEntity parse(URL resource, String identity) throws ParsingException;
 }

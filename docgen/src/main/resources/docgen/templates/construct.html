@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>${packageName}.${identity}</title>
+    <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+<main>
+    <section id="header">
+        <header><h1><a href="../${packageName}.html">${packageName}</a>.${identity}</h1></header>
+    </section>
+    <section id="signature">
+        <header><h2>Signature</h2></header>
+        <span class="package-name">${packageName}</span>.<span class="construct-name">${identity}</span>
+            (
+            <#if parameters?size != 0>
+            <span class="parameters">
+                <br>
+                <#list parameters as parameter>
+                <span class="parameter">
+                    &lt;<span class="parameter-type">
+                        ${parameter.type}
+                    </span>&gt;
+                    <span class="parameter-name">
+                        ${parameter.name}
+                    </span>
+                    <#if parameter.defaultValue??>
+                    = <span class="parameter-default">${parameter.defaultValue}</span>
+                    </#if>
+                    <#if parameter?index + 1 != parameters?size>
+                    ,
+                    </#if>
+                </span>
+                <br>
+                </#list>
+            </span>
+            );
+            </#if>
+        </span>
+        <table>
+        </table>
+    </section>
+
+    <#if parameters?? && parameters?size != 0>
+    <section id="parameters">
+        <header><h2>Parameters</h2></header>
+        <div class="parameter-list">
+        <#list parameters as parameter>
+        <div class="parameter-row">
+            <table class="parameter-table">
+                <tr><td class="header-cell">Name: </td><td>${parameter.name}</td></tr>
+                <tr><td class="header-cell">Type: </td><td>${parameter.type}</td></tr>
+                <#if parameter.defaultValue??>
+                <tr><td class="header-cell">Default: </td><td>${parameter.defaultValue}</td></tr>
+                </#if>
+                <#if parameter.description?? && parameters.description?length != 0>
+                <tr><td class="header-cell">Description: </td><td>${parameter.description}</td></tr>
+                </#if>
+            </table>
+        </div>
+        </#list>
+        </div>
+    </section>
+    </#if>
+
+    <#if examples?? && examples?size != 0>
+    <section id="examples">
+        <header><h2>Examples</h2></header>
+    </section>
+    </#if>
+</main>
+</body>
+</html>
