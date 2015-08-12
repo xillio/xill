@@ -21,8 +21,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebView;
 import nl.xillio.migrationtool.BreakpointPool;
 import nl.xillio.migrationtool.Loader;
-import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient;
-import nl.xillio.migrationtool.ElasticConsole.RobotLogMessage;
+import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
+import nl.xillio.migrationtool.elasticconsole.RobotLogMessage;
 import nl.xillio.migrationtool.gui.editor.AceEditor;
 
 /**

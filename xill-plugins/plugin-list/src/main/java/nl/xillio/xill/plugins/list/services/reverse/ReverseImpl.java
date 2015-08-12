@@ -19,6 +19,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class ReverseImpl implements Reverse {
 
+	//checks whether it is a list or an Object
 	@Override
 	public Object asReversed(final Object input, final boolean recursive) {
 		if (input instanceof List<?>) {
@@ -28,7 +29,7 @@ public class ReverseImpl implements Reverse {
 			return asReversedIteration(input, recursive, new LinkedHashMap<String, Object>());
 		}
 	}
-
+	//reverses the given input. if recursive is true is reverses list and objects inside the given list.
 	@SuppressWarnings("unchecked")
 	private Object asReversedIteration(final Object input, final boolean recursive, final List<Object> disc) {
 		if (input instanceof List<?>) {
@@ -64,7 +65,7 @@ public class ReverseImpl implements Reverse {
 		}
 		return input;
 	}
-
+//reverses the given input. if recursive is true is reverses list and objects inside the given object
 	@SuppressWarnings("unchecked")
 	private Object asReversedIteration(final Object input, final boolean recursive, final Map<String, Object> disc) {
 		Map<String, Object> list = (Map<String, Object>) input;

@@ -35,7 +35,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import nl.xillio.migrationtool.Loader;
-import nl.xillio.migrationtool.ElasticConsole.ESConsoleClient;
+import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.sharedlibrary.license.License;
 import nl.xillio.sharedlibrary.license.License.LicenseType;

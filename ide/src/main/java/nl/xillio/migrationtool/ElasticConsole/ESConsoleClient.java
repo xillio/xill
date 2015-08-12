@@ -1,14 +1,11 @@
-package nl.xillio.migrationtool.ElasticConsole;
+package nl.xillio.migrationtool.elasticconsole;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.count.CountRequestBuilder;
@@ -37,6 +34,82 @@ import nl.xillio.xill.api.components.RobotID;
 
 public class ESConsoleClient {
 
+	public class SearchFilter {
+		public String text = ""; // needle or pattern
+		public boolean regExp;
+		public Map<LogType, Boolean> types;
+			
+		private String getWildcardNeedle() {
+			return String.format("*%1$s*", text);
+		}
+
+		void setCountRequestFilter(CountRequestBuilder request) {
+			if (!this.text.isEmpty()) {
+				if (this.regExp) {
+					request.setQuery(QueryBuilders.regexpQuery("message", this.text));
+				} else {
+					request.setQuery(QueryBuilders.wildcardQuery("message", this.getWildcardNeedle()));
+				}
+			}
+			
+			ArrayList<String> typeList = new ArrayList<String>();
+			if (types.get(LogType.DEBUG)) {
+				typeList.add("debug");
+			}
+			if (types.get(LogType.INFO)) {
+				typeList.add("info");
+			}
+			if (types.get(LogType.WARN)) {
+				typeList.add("warn");
+			}
+			if (types.get(LogType.ERROR)) {
+				typeList.add("error");
+			}
+			if (types.get(LogType.FATAL)) {
+				typeList.add("fatal");
+			}
+			request.setTypes(typeList.toArray(new String[typeList.size()]));
+		}
+		
+		public void setSearchRequestFilter(SearchRequestBuilder request) {
+			if (!this.text.isEmpty()) {
+				if (this.regExp) {
+					request.setQuery(QueryBuilders.regexpQuery("message", this.text));
+				} else {
+					request.setQuery(QueryBuilders.wildcardQuery("message", this.getWildcardNeedle()));
+				}
+			}
+			
+			ArrayList<String> typeList = new ArrayList<String>();
+			if (types.get(LogType.DEBUG)) {
+				typeList.add("debug");
+			}
+			if (types.get(LogType.INFO)) {
+				typeList.add("info");
+			}
+			if (types.get(LogType.WARN)) {
+				typeList.add("warn");
+			}
+			if (types.get(LogType.ERROR)) {
+				typeList.add("error");
+			}
+			if (types.get(LogType.FATAL)) {
+				typeList.add("fatal");
+			}
+			request.setTypes(typeList.toArray(new String[typeList.size()]));
+			
+		}
+	}
+	
+	public SearchFilter createSearchFilter(String text, boolean regExp, Map<LogType, Boolean> types) {
+		SearchFilter filter = new SearchFilter();
+		filter.text = text;
+		filter.regExp = regExp;
+		filter.types = types;
+		return filter;
+	}
+
+	
 	/**
 	 * The different logging message types.
 	 */
@@ -180,6 +253,64 @@ public class ESConsoleClient {
 		}
 	}
 
+	public int countFilteredEntries(final String robotId, final SearchFilter searchFilter) {
+		// Normalize index
+		String normalizedId = normalizeId(robotId);
+			
+		CountRequestBuilder request = getClient().prepareCount(normalizedId);
+		
+		if (searchFilter != null) {
+			searchFilter.setCountRequestFilter(request);
+		}
+		
+		CountResponse response = null;
+		try {
+			// Refresh the index to make sure everything is properly indexed etc
+			getClient().admin().indices().prepareRefresh(normalizedId).execute().actionGet();
+			// Get the response
+			response = request.execute().actionGet();
+		} catch (SearchPhaseExecutionException | IndexMissingException e) {
+			return 0;
+		}
+		
+		// Return the count
+		return (int) response.getCount();
+	}
+	
+	public ArrayList<Map<String, Object>> getFilteredEntries(final String robotId, final int from, final int to, final SearchFilter searchFilter) {
+		// Normalize index
+		String normalizedId = normalizeId(robotId);
+			
+		SearchRequestBuilder request = getClient().prepareSearch(normalizedId).setQuery(QueryBuilders.matchAllQuery());
+		
+		if (searchFilter != null) {
+			searchFilter.setSearchRequestFilter(request);
+		}
+		
+		request.addSort("timestamp", SortOrder.ASC).addSort("order", SortOrder.ASC)
+				.setFrom(from)
+				.setSize(to-from+1);
+		
+		return this.getEntries(normalizedId, request);		
+	}
+	
+	private ArrayList<Map<String, Object>> getEntries(final String normalizedId, final SearchRequestBuilder request) {
+		
+		SearchResponse response = null;
+		try {
+			// Refresh the index to make sure everything is properly indexed etc
+			getClient().admin().indices().prepareRefresh(normalizedId).execute().actionGet();
+			// Get the response
+			response = request.execute().actionGet();
+		} catch (SearchPhaseExecutionException | IndexMissingException e) {
+			// If an exception is thrown, return an empty list
+			return new ArrayList<>(0);
+		}
+
+		// Return the hits as a list of maps
+		return hitsToList(response.getHits());
+	}
+	
 	/**
 	 * Searches for the last log entries for the specified robot and types, sorted by the timestamp.
 	 *
@@ -198,19 +329,7 @@ public class ESConsoleClient {
 		SearchRequestBuilder request = getClient().prepareSearch(normalizedId).setQuery(QueryBuilders.matchAllQuery());
 		request.addSort("timestamp", SortOrder.ASC).addSort("order", SortOrder.ASC).setFrom(from).setSize(amount);
 
-		SearchResponse response = null;
-		try {
-			// Refresh the index to make sure everything is properly indexed etc
-			getClient().admin().indices().prepareRefresh(normalizedId).execute().actionGet();
-			// Get the response
-			response = request.execute().actionGet();
-		} catch (SearchPhaseExecutionException | IndexMissingException e) {
-			// If an exception is thrown, return an empty list
-			return new ArrayList<>(0);
-		}
-
-		// Return the hits as a list of maps
-		return hitsToList(response.getHits());
+		return this.getEntries(normalizedId, request);
 	}
 
 	/**

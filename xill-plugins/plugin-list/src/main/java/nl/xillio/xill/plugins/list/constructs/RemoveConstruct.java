@@ -24,7 +24,7 @@ public class RemoveConstruct extends Construct {
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
 			(input, index) -> process(input, index),
-			new Argument("input", LIST, OBJECT),
+			new Argument("list", LIST, OBJECT),
 			new Argument("index", ATOMIC));
 	}
 
