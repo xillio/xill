@@ -20,10 +20,6 @@ import java.text.ParseException;
 public interface ExcelService {
 	XillWorkbook loadWorkbook(File file) throws IllegalArgumentException, IOException, ParseException;
 	XillWorkbook createWorkbook(File file) throws FileAlreadyExistsException, IOException;
-	String getFilePath(File file) throws IOException;
-	Sheet loadSheet(Workbook workbook, String sheetName);
-	int rowSize(Sheet sheet);
-	int columnSize(Sheet sheet);
-	String name (Sheet sheet);
+
 
 }

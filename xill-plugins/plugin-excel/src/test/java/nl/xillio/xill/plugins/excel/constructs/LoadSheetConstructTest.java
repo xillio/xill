@@ -42,7 +42,7 @@ public class LoadSheetConstructTest {
 		LoadSheetConstruct.process(service, input, fromValue("Sheet"));
 	}
 
-	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Sheet can not be found in the supplied workbook")
+	@Test
 	public void testProcessReturnsCorrectly() throws Exception{
 		InjectorUtils.getGlobalInjector();
 		XillWorkbook workbook = mock(XillWorkbook.class);//mock(XillWorkbook.class);

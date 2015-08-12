@@ -48,6 +48,10 @@ public abstract class XillWorkbook implements MetadataExpression{
 		return new XillSheet(workbook.getSheet(sheetName));
 	}
 
+	public XillSheet makeSheet(String sheetName){
+		return new XillSheet(workbook.createSheet(sheetName));
+	}
+
 	public String name(Sheet sheet){
 		return sheet.getSheetName();
 	}
