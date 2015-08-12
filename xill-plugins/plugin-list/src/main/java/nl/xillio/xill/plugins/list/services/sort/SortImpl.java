@@ -1,15 +1,10 @@
 package nl.xillio.xill.plugins.list.services.sort;
 
+import com.google.inject.Singleton;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.IdentityHashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
-import com.google.inject.Singleton;
 
 /**
  * This is the main implementation of {@link Sort}
@@ -40,7 +35,7 @@ public class SortImpl implements Sort {
 			if (recursive) {
 				for (int i = 0; i < sorted.size(); i++) {
 					Object child = sorted.get(i);
-					sorted.set(i, asSorted(child, recursive, onKeys, reverse, results));
+					sorted.set(i, asSorted(child, true, onKeys, reverse, results));
 				}
 			}
 
@@ -48,15 +43,15 @@ public class SortImpl implements Sort {
 		} else if (input instanceof Map) {
 			// Sort the map by extracting single entries and sorting them either by key or
 			Map.Entry<String, Object>[] sortedEntries = ((Map<String, Object>) input)
-				.entrySet()
-				.stream()
-				.sorted((a, b) -> {
-					if (onKeys) {
-						return a.getKey().compareTo(b.getKey());
-					}
-					return sorter.compare(a.getValue(), b.getValue());
-				})
-				.toArray(i -> new Map.Entry[i]);
+					.entrySet()
+					.stream()
+					.sorted((a, b) -> {
+						if (onKeys) {
+							return a.getKey().compareTo(b.getKey());
+						}
+						return sorter.compare(a.getValue(), b.getValue());
+					})
+					.toArray(Entry[]::new);
 
 			Map<String, Object> map = new LinkedHashMap<>();
 			for (Entry<String, Object> entry : sortedEntries) {
@@ -67,7 +62,7 @@ public class SortImpl implements Sort {
 			if (recursive) {
 				for (String key : map.keySet()) {
 					Object child = map.get(key);
-					map.put(key, asSorted(child, recursive, onKeys, reverse, results));
+					map.put(key, asSorted(child, true, onKeys, reverse, results));
 				}
 			}
 
@@ -76,7 +71,8 @@ public class SortImpl implements Sort {
 
 		return input;
 	}
-	//returns the priority of the type of the input. 
+
+	//returns the priority of the type of the input.
 	private static int getPriorityIndex(final Object object) {
 		if (object instanceof List) {
 			return 0;
@@ -120,10 +116,11 @@ public class SortImpl implements Sort {
 			}
 
 			// These objects are of the same type.
-			try{
-			if (objectA.equals(objectB)) {
-				result = 0;
-			}}catch(NullPointerException e){
+			try {
+				if (objectA.equals(objectB)) {
+					result = 0;
+				}
+			} catch (NullPointerException e) {
 				result = 0;
 			}
 
@@ -145,7 +142,7 @@ public class SortImpl implements Sort {
 			if (objectA instanceof Entry) {
 				result = ((Entry<String, Object>) objectA).getValue().toString().compareTo(((Entry<String, Object>) objectB).getValue().toString());
 			}
-			if(objectA instanceof String){
+			if (objectA instanceof String) {
 				result = objectA.toString().compareTo(objectB.toString());
 			}
 
