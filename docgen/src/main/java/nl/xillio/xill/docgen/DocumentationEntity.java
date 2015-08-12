@@ -9,5 +9,6 @@ import java.util.Map;
  * @since 12-8-2015
  */
 public interface DocumentationEntity {
+    String getIdentity();
     Map<String, ? extends Object> getProperties();
 }
