@@ -27,13 +27,16 @@ public class ConnectConstruct extends BaseDatabaseConstruct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		Argument[] args =
-		{new Argument("database", ATOMIC), new Argument("type", ATOMIC), new Argument("user", NULL, ATOMIC), new Argument("pass", NULL, ATOMIC),
+		{new Argument("database", ATOMIC),
+		    new Argument("type", ATOMIC),
+		    new Argument("user", NULL, ATOMIC),
+		    new Argument("pass", NULL, ATOMIC),
 		    new Argument("options", new ObjectExpression(new LinkedHashMap<>()), OBJECT)};
 		return new ConstructProcessor((a) -> process(a, factory), args);
 	}
 
 	@SuppressWarnings("unchecked")
-	static MetaExpression process(final MetaExpression[] args, DatabaseServiceFactory factory) {
+	static public MetaExpression process(final MetaExpression[] args, DatabaseServiceFactory factory) {
 		String database = args[0].isNull() ? null : args[0].getStringValue();
 		String type = args[1].getStringValue();
 		String user = args[2].isNull() ? null : args[2].getStringValue();

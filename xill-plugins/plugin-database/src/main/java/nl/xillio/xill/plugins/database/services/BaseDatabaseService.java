@@ -2,13 +2,14 @@ package nl.xillio.xill.plugins.database.services;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 
 import nl.xillio.xill.plugins.database.util.StatementIterator;
 import nl.xillio.xill.plugins.database.util.Tuple;
+
+import com.google.common.collect.Iterators;
 
 @SuppressWarnings("unchecked")
 public abstract class BaseDatabaseService implements DatabaseService {
@@ -49,11 +50,11 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		if (firstCount != -1) {
 			boolean more = stmt.getMoreResults();
 			int secondCount = stmt.getUpdateCount();
-			ResultSet secondSet = stmt.getResultSet();
 			if (!more && secondCount == -1)
 				return firstCount;
 			else
-				return new StatementIterator(stmt, firstCount);
+				// Append the already retrieved count to a new statement iterator
+				return Iterators.concat(Iterators.forArray(firstCount), new StatementIterator(stmt));
 		}
 		return new StatementIterator(stmt);
 	}

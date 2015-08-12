@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.database.constructs;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.Map;
 
 import nl.xillio.xill.api.components.MetaExpression;
@@ -13,7 +14,6 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.database.BaseDatabaseConstruct;
 import nl.xillio.xill.plugins.database.services.DatabaseServiceFactory;
 import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
-import nl.xillio.xill.plugins.database.util.StatementIterator;
 
 /**
  * 
@@ -34,6 +34,7 @@ public class QueryConstruct extends BaseDatabaseConstruct {
 		  new Argument("timeout", fromValue(30), ATOMIC));
 	}
 
+	@SuppressWarnings("unchecked")
 	static MetaExpression process(MetaExpression query, MetaExpression database, MetaExpression timeout, DatabaseServiceFactory factory) {
 		String sql = query.getStringValue();
 		ConnectionMetadata metaData = database.getMeta(ConnectionMetadata.class);
@@ -52,9 +53,9 @@ public class QueryConstruct extends BaseDatabaseConstruct {
 		if (result instanceof Integer) {
 			return fromValue((int) result);
 		}
-		else if (result instanceof StatementIterator) {
+		else if (result instanceof Iterator) {
 			// Wrap StatementIterator into MetaExpressionIterator
-			MetaExpressionIterator<Object> it = new MetaExpressionIterator<>((StatementIterator) result, (o) -> {
+			MetaExpressionIterator<Object> it = new MetaExpressionIterator<>((Iterator<Object>) result, (o) -> {
 				if (o instanceof Integer)
 					return fromValue((int) o);
 				else if (o instanceof Map)
