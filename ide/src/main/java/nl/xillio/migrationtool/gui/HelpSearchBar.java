@@ -2,17 +2,11 @@ package nl.xillio.migrationtool.gui;
 
 import java.io.IOException;
 
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.AnchorPane;
-import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
-import nl.xillio.migrationtool.documentation.DocumentSearcher;
 
 /**
  * A search bar, with the defined options and behavior.
@@ -24,7 +18,7 @@ public class HelpSearchBar extends AnchorPane {
 	// Implement the FXML for this
 	@FXML
 	private ComboBox<String> box;
-	private final DocumentSearcher searcher;
+	//private final DocumentSearcher searcher;
 	private int comboBoxLength = 0;
 
 	/**
@@ -41,7 +35,7 @@ public class HelpSearchBar extends AnchorPane {
 			e.printStackTrace();
 		}
 
-		// The searcher
+		/*// The searcher
 		searcher = new DocumentSearcher(ESConsoleClient.getInstance().getClient());
 		box.setEditable(true);
 
@@ -60,7 +54,7 @@ public class HelpSearchBar extends AnchorPane {
 				runSearch(newValue);
 			}
 		});
-		getChildren().add(box);
+		getChildren().add(box);*/
 	}
 
 	/**
@@ -73,7 +67,7 @@ public class HelpSearchBar extends AnchorPane {
 
 	// Runs the search
 	private void runSearch(final String query) {
-		if (query != null && !query.isEmpty()) {
+		/*if (query != null && !query.isEmpty()) {
 			// Search for a list of possible functions and store the result
 			String[] results = searcher.search(query);
 			ObservableList<String> options = FXCollections.observableArrayList();
@@ -97,6 +91,6 @@ public class HelpSearchBar extends AnchorPane {
 			});
 		} else {
 			box.hide();
-		}
+		}*/
 	}
 }

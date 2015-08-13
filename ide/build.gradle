@@ -13,6 +13,7 @@ dependencies {
 	compile 'org.mariadb.jdbc:mariadb-java-client:1.1.8'
 	
 	compile project(':api')
+	compile project(':docgen')
 }
 
 jar{

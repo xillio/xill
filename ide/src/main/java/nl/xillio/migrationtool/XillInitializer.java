@@ -12,7 +12,6 @@ import com.google.inject.Module;
 
 import nl.xillio.events.Event;
 import nl.xillio.events.EventHost;
-import nl.xillio.migrationtool.documentation.DocumentationGenerator;
 import nl.xillio.plugins.CircularReferenceException;
 import nl.xillio.plugins.PluginLoader;
 import nl.xillio.plugins.XillPlugin;
@@ -24,7 +23,7 @@ import nl.xillio.xill.services.inject.PluginInjectorModule;
  */
 public class XillInitializer extends Thread {
 	private static final Logger log = LogManager.getLogger();
-	private final DocumentationGenerator generator = new DocumentationGenerator();
+	//private final DocumentationGenerator generator = new DocumentationGenerator();
 	private static final File PLUGIN_FOLDER = new File("plugins");
 	private PluginLoader<XillPlugin> pluginLoader;
 	private final EventHost<URL> onLoadComplete = new EventHost<>();
@@ -34,7 +33,7 @@ public class XillInitializer extends Thread {
 		log.info("Loading Xill language plugins");
 
 		// Deploy documentation system static files
-		generator.deployFiles();
+		//generator.deployFiles();
 
 		// Initialize the loader
 		initializeLoader();
@@ -50,14 +49,15 @@ public class XillInitializer extends Thread {
 
 		// Now we generate documentation
 		generateDocumentation();
-		generator.forceGenerateIndex();
+		//generator.forceGenerateIndex();
 
 		log.info("Done loading plugins");
-		try {
+		/*try {
 			onLoadComplete.invoke(new File(DocumentationGenerator.HELP_FOLDER, "index.html").toURI().toURL());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
-		}
+		}*/
+
 
 	}
 
@@ -78,7 +78,7 @@ public class XillInitializer extends Thread {
 
 	private void generateDocumentation() {
 		for (XillPlugin plugin : getPlugins()) {
-			generator.generate(plugin);
+			//generator.generate(plugin);
 		}
 	}
 
