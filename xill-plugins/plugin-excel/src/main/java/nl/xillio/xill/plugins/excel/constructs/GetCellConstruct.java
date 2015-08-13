@@ -19,8 +19,7 @@ public class GetCellConstruct extends Construct {
 	private ExcelService excelService;
 
 	@Override public ConstructProcessor prepareProcess(ConstructContext context) {
-		return new ConstructProcessor((a,b,c) ->
-						process(excelService, a, b, c),
+		return new ConstructProcessor((a,b,c) -> process(excelService, a, b, c),
 						new Argument("sheet", OBJECT),
 						new Argument("column", ATOMIC),
 						new Argument("row", ATOMIC));
