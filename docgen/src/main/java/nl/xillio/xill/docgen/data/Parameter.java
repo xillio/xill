@@ -17,6 +17,11 @@ public class Parameter implements PropertiesProvider  {
 	private String description = null;
 	private List<String> types = new ArrayList<>();
 
+	/**
+	 * The constructor for the parameter which sets the types and the name.
+	 * @param types
+	 * @param name
+	 */
 	public Parameter(String types, String name) {
 		setType(types);
 		this.name = name;
@@ -77,10 +82,20 @@ public class Parameter implements PropertiesProvider  {
 		this.defaultValue = defaultValue;
 	}
 
+	/**
+	 * Get the description of the parameter.
+	 * @return
+	 * 			The description of the parameter.
+	 */
 	public String getDescription() {
 		return description;
 	}
 
+	/**
+	 * Set the description of the parameter.
+	 * @param description
+	 * 					The description we want the parameter to have.
+	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
