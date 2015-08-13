@@ -32,6 +32,7 @@ import org.testng.annotations.Test;
 public class XmlDocumentationParserTest {
 	
 	/**
+	 *TODO make the javadoc correct
 	 * Tests the process with normal usage. Every xpathquery gives null but the parser should be able to handle that.
 	 * @throws ParsingException 
 	 * @throws MalformedURLException 
@@ -61,27 +62,75 @@ public class XmlDocumentationParserTest {
 	 * @throws ParsingException
 	 * @throws MalformedURLException
 	 */
-	@Test(expectedExceptions = ParsingException.class, expectedExceptionsMessageRegExp = "Failed to parse the description")
-	public void testFailingToParseDescription() throws XPathExpressionException, ParsingException, MalformedURLException{
+	@Test(expectedExceptions = ParsingException.class, expectedExceptionsMessageRegExp = "Failed to parse description")
+	public void testNullPointerWhenParsingDescription() throws XPathExpressionException, ParsingException, MalformedURLException{
 		// mock
 		
-		//The xpath
+		//The Document
+		Document doc = mock(Document.class);
 		
+		//The parser
 		XPath xpath = setupXPath();
 		XPathFactory factory = mock(XPathFactory.class);
 		when(factory.newXPath()).thenReturn(xpath);
+		XmlDocumentationParser parser = setupParser(factory);
 		
 		//The evaluation of the description.		
-		XPathExpression descriptionExpression = mock(XPathExpression.class);
-		when(xpath.compile("/function/description/text()")).thenReturn(descriptionExpression);
-		when(descriptionExpression.evaluate(any(Document.class), eq(XPathConstants.STRING))).thenReturn(null);
-		
-		//the url resource
-		URL resource = new URL("http://www.w3schools.com:80/xml/note.xml");
-		
+		when(xpath.compile("/function/description/text()")).thenReturn(null);		
 		// run
+		parser.parseDescription(doc, xpath);
+	}
+	
+	/**
+	 * Test the parser then it cannot find a description node.
+	 * @throws XPathExpressionException
+	 * @throws ParsingException
+	 * @throws MalformedURLException
+	 */
+	@Test(expectedExceptions = ParsingException.class, expectedExceptionsMessageRegExp = "Failed to parse description")
+	public void testXPathExceptionWhenParsingDescription() throws XPathExpressionException, ParsingException, MalformedURLException{
+		// mock
+		
+		//The Document
+		Document doc = mock(Document.class);
+		
+		//The parser
+		XPath xpath = setupXPath();
+		XPathFactory factory = mock(XPathFactory.class);
+		when(factory.newXPath()).thenReturn(xpath);
 		XmlDocumentationParser parser = setupParser(factory);
-		parser.parse(resource, "functionName");
+		
+		//The evaluation of the description.		
+		when(xpath.compile("/function/description/text()")).thenThrow(new XPathExpressionException("I failed"));	
+		// run
+		parser.parseDescription(doc, xpath);
+	}
+	
+	/**
+	 * Test the parsing of the description
+	 * @throws XPathExpressionException
+	 * @throws ParsingException
+	 * @throws MalformedURLException
+	 */
+	@Test
+	public void testParsingDescription() throws XPathExpressionException, ParsingException, MalformedURLException{
+		// mock
+		
+		//The Document
+		Document doc = mock(Document.class);
+		
+		//The parser
+		XPath xpath = setupXPath();
+		XPathFactory factory = mock(XPathFactory.class);
+		when(factory.newXPath()).thenReturn(xpath);
+		XmlDocumentationParser parser = setupParser(factory);
+		
+		//The evaluation of the description.		
+		XPathExpression expression = mock(XPathExpression.class);
+		when(xpath.compile("/function/description/text()")).thenReturn(expression);
+		when(expression.evaluate(any(Document.class), eq(XPathConstants.STRING))).thenReturn("description");
+		// run
+		parser.parseDescription(doc, xpath);
 	}
 	
 	/**
@@ -91,26 +140,51 @@ public class XmlDocumentationParserTest {
 	 * @throws MalformedURLException
 	 */
 	@Test(expectedExceptions = ParsingException.class, expectedExceptionsMessageRegExp = "Failed to parse parameters")
-	public void testFailingToParseAllParameters() throws XPathExpressionException, ParsingException, MalformedURLException{
+	public void testNullPointerWhenParsingAllParameters() throws XPathExpressionException, ParsingException, MalformedURLException{
 		// mock
 		
-		//The xpath
+		//The document
+		Document doc = mock(Document.class);
 		
+		//The parser
 		XPath xpath = setupXPath();
 		XPathFactory factory = mock(XPathFactory.class);
 		when(factory.newXPath()).thenReturn(xpath);
+		XmlDocumentationParser parser = setupParser(factory);
+
 		
 		//The evaluation of the parameters.		
-		XPathExpression parametersExpression = mock(XPathExpression.class);
-		when(xpath.compile("/function/parameters/param")).thenReturn(parametersExpression);
-		when(parametersExpression.evaluate(any(Document.class), eq(XPathConstants.NODESET))).thenReturn(null);
-		
-		//the url resource
-		URL resource = new URL("http://www.w3schools.com:80/xml/note.xml");
+		when(xpath.compile("/function/parameters/param")).thenReturn(null);
 		
 		// run
+		parser.parseParameters(doc, xpath);
+	}
+	
+	/**
+	 * Test the parser when it fails to find a parameters node.
+	 * @throws XPathExpressionException
+	 * @throws ParsingException
+	 * @throws MalformedURLException
+	 */
+	@Test(expectedExceptions = ParsingException.class, expectedExceptionsMessageRegExp = "Failed to parse parameters")
+	public void testXPathExceptionWhenParsingAllParameters() throws XPathExpressionException, ParsingException, MalformedURLException{
+		// mock
+		
+		//The document
+		Document doc = mock(Document.class);
+		
+		//The parser
+		XPath xpath = setupXPath();
+		XPathFactory factory = mock(XPathFactory.class);
+		when(factory.newXPath()).thenReturn(xpath);
 		XmlDocumentationParser parser = setupParser(factory);
-		parser.parse(resource, "functionName");
+
+		
+		//The evaluation of the parameters.		
+		when(xpath.compile("/function/parameters/param")).thenThrow(new XPathExpressionException("I failed!"));
+		
+		// run
+		parser.parseParameters(doc, xpath);
 	}
 	
 	/**
