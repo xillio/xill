@@ -31,12 +31,9 @@ public class GetCellConstruct extends Construct {
 		//test if column is in numeric or alphabetic notation
 		XillCellRef cell;
 		if(Double.isNaN(column.getNumberValue().doubleValue())) //Then String Representation
-		{
-			cell = new XillCellRef(column.getStringValue(), (int)row.getNumberValue());
-		}
-		else{
+			cell = new XillCellRef(column.getStringValue(), row.getNumberValue().intValue());
+		else
 			cell = new XillCellRef((column.getNumberValue().intValue()), row.getNumberValue().intValue());
-		}
 		Object cellValue = sheet.getCellValue(cell);
 		return parseObject(cellValue);
 	}
