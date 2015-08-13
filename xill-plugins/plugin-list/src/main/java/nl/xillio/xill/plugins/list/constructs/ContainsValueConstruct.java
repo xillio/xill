@@ -23,7 +23,7 @@ public class ContainsValueConstruct extends Construct {
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
 			(input, value) -> process(input, value),
-			new Argument("input", LIST, OBJECT),
+			new Argument("list", LIST, OBJECT),
 			new Argument("value", ATOMIC));
 	}
 

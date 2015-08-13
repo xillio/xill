@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -15,7 +16,34 @@
 						<HBox fx:id="hbxConsoleHeader" alignment="CENTER_LEFT" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 							<children>
 								<Label fx:id="lblConsoleHeader" focusTraversable="false" styleClass="paneHeaderTitle" text="Console" HBox.hgrow="NEVER" />
-								<Pane fx:id="pnConsoleHeader" HBox.hgrow="ALWAYS" />
+								<Pane fx:id="pnConsoleHeader" prefHeight="35.0" prefWidth="110.0" HBox.hgrow="ALWAYS" />
+                        <HBox alignment="CENTER_RIGHT" prefHeight="35.0" prefWidth="266.0">
+                           <children>
+                              <Label fx:id="tbnLogsCount" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="137.0" text="Label" />
+                              <Slider fx:id="sldNavigation" prefHeight="14.0" prefWidth="70.0">
+                                 <HBox.margin>
+                                    <Insets left="5.0" right="5.0" />
+                                 </HBox.margin></Slider>
+                              
+                              <Button fx:id="btnNavigateBack" mnemonicParsing="false" onAction="#buttonNavigateBack" prefHeight="25.0" prefWidth="15.0" styleClass="iconButton" text="&lt;">
+                               <graphic>
+                                 <Pane styleClass="icon" />
+                               </graphic>
+                                <tooltip>
+                                  <Tooltip text="Go one page back" />
+                                </tooltip>
+                              </Button>
+                              
+                              <Button fx:id="btnNavigateForward" mnemonicParsing="false" onAction="#buttonNavigateForward" styleClass="iconButton" text="&gt;" textAlignment="CENTER">
+                              <graphic>
+                                 <Pane styleClass="icon" />
+                               </graphic>
+                                <tooltip>
+                                  <Tooltip text="Go one page forward" />
+                                </tooltip>
+                              </Button>
+                           </children>
+                        </HBox>
 								<HBox fx:id="hbxLogToggles" alignment="CENTER">
 									<children>
 										<ToggleButton fx:id="tbnToggleLogsInfo" mnemonicParsing="false" selected="true" styleClass="iconButton" text="15k">

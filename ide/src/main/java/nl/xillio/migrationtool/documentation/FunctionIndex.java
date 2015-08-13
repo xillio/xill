@@ -1,15 +1,16 @@
 package nl.xillio.migrationtool.documentation;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.rendersnake.HtmlCanvas;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -25,8 +26,8 @@ import org.rendersnake.HtmlCanvas;
 public class FunctionIndex extends HtmlGenerator {
 	private static final Logger log = LogManager.getLogger();
 	// All the packages that are in the Index
-	private final List<PackageDocument> packages = new ArrayList<>();
-	// Wheter we want the HTML to display empty packages in the index or not.
+	private final List<PackageDocument> packages = Collections.synchronizedList(new ArrayList<>());
+	// Whether we want the HTML to display empty packages in the index or not.
 	private final boolean displayEmptyPackages = false;
 
 	/**
@@ -98,13 +99,13 @@ public class FunctionIndex extends HtmlGenerator {
 		for (PackageDocument p : packages) {
 			try {
 				FileUtils.write(
-					new File(HELP_FOLDER, "packages/" + p.getName() + ".html"), p.toHTML());
+						new File(HELP_FOLDER, "packages/" + p.getName() + ".html"), p.toHTML());
 			} catch (IOException e) {
-				log.error("The FunctionIndex could not generate the HTML file of the " + p.getName() + " plugin.");
+				log.error("The FunctionIndex could not generate the HTML file of the " + p.getName() + " plugin.", e);
 			}
 			try {
 				FileUtils.write(
-					new File(HELP_FOLDER, "index.html"), toHTML());
+						new File(HELP_FOLDER, "index.html"), toHTML());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
