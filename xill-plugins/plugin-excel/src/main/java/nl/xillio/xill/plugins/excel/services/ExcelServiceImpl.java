@@ -46,7 +46,7 @@ public class ExcelServiceImpl implements ExcelService {
 	@Override public XillSheet createSheet(XillWorkbook workbook, String sheetName) {
 		if(workbook == null)
 			throw new NullPointerException("The provided workbook is invalid.");
-		if(sheetName == null || sheetName == "")
+		if(sheetName == null || sheetName.isEmpty())
 			throw new IllegalArgumentException("No name was supplied: sheet names must be at least one character long.");
 		if(sheetName.length() > 31)
 			throw new IllegalArgumentException("Sheet name is too long: must be less than 32 characters.");
