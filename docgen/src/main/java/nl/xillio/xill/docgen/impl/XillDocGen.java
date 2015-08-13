@@ -17,6 +17,11 @@ import org.elasticsearch.client.Client;
 public class XillDocGen implements DocGen {
 	Client client;
 
+	/**
+	 * The constructor for the {@link XillDocGen}.
+	 * @param client
+	 * 					The {@link Client}  we're using for data storage and retrieval.
+	 */
 	public XillDocGen(final Client client) {
 		this.client = client;
 	}

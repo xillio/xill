@@ -22,7 +22,7 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 
 /**
- * //TODO javadoc
+ * 
  *
  * @author Thomas Biesaart
  * @author Ivor van der Hoog
