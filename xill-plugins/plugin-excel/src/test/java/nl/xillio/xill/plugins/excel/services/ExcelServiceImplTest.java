@@ -124,20 +124,6 @@ public class ExcelServiceImplTest {
 		service.createSheet(createWorkbook(true),"a");
 	}
 
-	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "Sheet name contains illegal characters: cannot contain 0x0000, 0x0003, \\\\, \\*, \\?, \\/, \\[, \\] and start or end with a single quote.")
-	public void testCreateSheetIllegalName() throws Exception{
-		ExcelService service = createService(null);
-		service.createSheet(createWorkbook(false),"'bla");
-	}
-
-
-	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "There already exists a sheet with that name in the provided workbook")
-	public void testCreateSheetSameName() throws Exception{
-		ExcelService service = createService(null);
-		XillWorkbook workbook = createWorkbook(false);
-		when(workbook.makeSheet(anyString())).thenThrow(new IllegalArgumentException());
-		service.createSheet(workbook,"bla");
-	}
 
 	@Test
 	public void testCreateSheet() throws Exception{
