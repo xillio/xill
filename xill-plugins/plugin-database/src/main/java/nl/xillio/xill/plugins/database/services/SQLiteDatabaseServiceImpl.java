@@ -21,7 +21,7 @@ public class SQLiteDatabaseServiceImpl extends BaseDatabaseService {
 	}
 
 	@Override
-	protected String createConnectionURL(String database, String user, String pass, Tuple<String, String>... options) {
+	protected String createConnectionURL(String database, String user, String pass, Tuple<String, String>... options)  throws SQLException{
 		String path = database == null ? ":memory:" : database;
 		return String.format("jdbc:sqlite:%s", path);
 	}

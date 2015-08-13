@@ -12,6 +12,7 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.database.BaseDatabaseConstruct;
+import nl.xillio.xill.plugins.database.services.BaseDatabaseService;
 import nl.xillio.xill.plugins.database.services.DatabaseServiceFactory;
 import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
 
@@ -30,15 +31,22 @@ public class QueryConstruct extends BaseDatabaseConstruct {
 	public ConstructProcessor prepareProcess(ConstructContext context) {
 		return new ConstructProcessor((query, database, timeout) -> process(query, database, timeout, factory),
 		  new Argument("query", ATOMIC),
-		  new Argument("database", ATOMIC),
+		  new Argument("database", NULL,ATOMIC),
 		  new Argument("timeout", fromValue(30), ATOMIC));
 	}
 
 	@SuppressWarnings("unchecked")
 	static MetaExpression process(MetaExpression query, MetaExpression database, MetaExpression timeout, DatabaseServiceFactory factory) {
 		String sql = query.getStringValue();
-		ConnectionMetadata metaData = database.getMeta(ConnectionMetadata.class);
+		ConnectionMetadata metaData;
+		if(database.equals(NULL)){
+			metaData = BaseDatabaseService.getLastConnection();
+		}else{
+			metaData = database.getMeta(ConnectionMetadata.class);
+			BaseDatabaseService.setLastConnection(metaData);
+		}
 		Connection connection = metaData.getConnection();
+		
 		int to = timeout.getNumberValue().intValue();
 
 		Object result = null;

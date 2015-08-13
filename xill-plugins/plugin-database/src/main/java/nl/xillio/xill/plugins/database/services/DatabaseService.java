@@ -2,6 +2,9 @@ package nl.xillio.xill.plugins.database.services;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import nl.xillio.xill.plugins.database.util.StatementIterator;
 import nl.xillio.xill.plugins.database.util.Tuple;
@@ -24,5 +27,28 @@ public interface DatabaseService extends XillService {
 	 *         When the query fails
 	 */
 	Object query(Connection connection, String query, int timeout) throws SQLException;
+
+	/**
+	 * @param connection
+	 * @param tblName
+	 * @param constraints
+	 * @param databaseName
+	 * @return
+	 * @throws SQLException
+	 */
+	Object getObject(Connection connection, String tblName, LinkedHashMap<String, Object> constraints, String databaseName) throws SQLException;
+
+	/**
+	 * @param connection
+	 * @param table
+	 * @param newObject
+	 * @param keys
+	 * @param overwrite
+	 * @param name
+	 * @throws SQLException
+	 */
+	void storeObject(Connection connection, String table, LinkedHashMap<String, Object> newObject, List<String> keys, boolean overwrite, String name) throws SQLException;
+
+
 
 }

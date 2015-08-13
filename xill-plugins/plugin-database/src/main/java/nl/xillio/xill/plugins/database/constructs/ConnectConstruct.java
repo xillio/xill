@@ -14,6 +14,7 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.database.BaseDatabaseConstruct;
+import nl.xillio.xill.plugins.database.services.BaseDatabaseService;
 import nl.xillio.xill.plugins.database.services.DatabaseService;
 import nl.xillio.xill.plugins.database.services.DatabaseServiceFactory;
 import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
@@ -63,7 +64,9 @@ public class ConnectConstruct extends BaseDatabaseConstruct {
 			throw new RobotRuntimeException(e1.getMessage(), e1);
 		}
 		MetaExpression metaExpression = new AtomicExpression(database);
-		metaExpression.storeMeta(new ConnectionMetadata(type, connection));
+		ConnectionMetadata newConnection = new ConnectionMetadata(type,connection);
+	  BaseDatabaseService.setLastConnection(newConnection);
+	  metaExpression.storeMeta(newConnection);
 
 		return metaExpression;
 	}
