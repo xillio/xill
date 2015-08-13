@@ -23,6 +23,8 @@ import org.w3c.dom.NodeList;
 
 
 
+
+import nl.xillio.xill.docgen.data.Parameter;
 import nl.xillio.xill.docgen.exceptions.ParsingException;
 import nl.xillio.xill.docgen.impl.XmlDocumentationParser;
 
@@ -194,26 +196,49 @@ public class XmlDocumentationParserTest {
 	 * @throws MalformedURLException
 	 */
 	@Test(expectedExceptions = ParsingException.class, expectedExceptionsMessageRegExp = "Failed to parse examples")
-	public void testFailingToParseAllExamples() throws XPathExpressionException, ParsingException, MalformedURLException{
+	public void testNullPointerWhenParsingAllExamples() throws XPathExpressionException, ParsingException, MalformedURLException{
 		// mock
 		
-		//The xpath
+		//the document
+		Document doc = mock(Document.class);
 		
+		//The parser
 		XPath xpath = setupXPath();
 		XPathFactory factory = mock(XPathFactory.class);
 		when(factory.newXPath()).thenReturn(xpath);
+		XmlDocumentationParser parser = setupParser(factory);
 		
 		//The evaluation of the parameters.		
-		XPathExpression parametersExpression = mock(XPathExpression.class);
-		when(xpath.compile("/function/examples/example")).thenReturn(parametersExpression);
-		when(parametersExpression.evaluate(any(Document.class), eq(XPathConstants.NODESET))).thenReturn(null);
-		
-		//the url resource
-		URL resource = new URL("http://www.w3schools.com:80/xml/note.xml");
+		when(xpath.compile("/function/examples/example")).thenReturn(null);
 		
 		// run
+		parser.parseExamples(doc, xpath);
+	}
+	
+	/**
+	 * Test the parser when it fails to find an examples node.
+	 * @throws XPathExpressionException
+	 * @throws ParsingException
+	 * @throws MalformedURLException
+	 */
+	@Test(expectedExceptions = ParsingException.class, expectedExceptionsMessageRegExp = "Failed to parse examples")
+	public void testXPathExceptionWhenParsingAllExamples() throws XPathExpressionException, ParsingException, MalformedURLException{
+		// mock
+		
+		//the document
+		Document doc = mock(Document.class);
+		
+		//The parser
+		XPath xpath = setupXPath();
+		XPathFactory factory = mock(XPathFactory.class);
+		when(factory.newXPath()).thenReturn(xpath);
 		XmlDocumentationParser parser = setupParser(factory);
-		parser.parse(resource, "functionName");
+		
+		//The evaluation of the parameters.		
+		when(xpath.compile("/function/examples/example")).thenThrow(new XPathExpressionException("I failed!"));
+		
+		// run
+		parser.parseExamples(doc, xpath);
 	}
 	
 	/**
@@ -255,35 +280,24 @@ public class XmlDocumentationParserTest {
 	@Test
 	public void testParseAllParameters() throws XPathExpressionException, ParsingException, MalformedURLException{
 		// mock
+		//The document
+		Document doc = mock(Document.class);
 		
-		//The xpath
-		
+		//The parser
 		XPath xpath = setupXPath();
 		XPathFactory factory = mock(XPathFactory.class);
 		when(factory.newXPath()).thenReturn(xpath);
-		
-		//The nodelist we return:
-		
-		//the first node
-		//This one is a fully correct node
-		Node correctParameter = mock(Node.class);
-		Node nameAttribute = mock(Node.class);
-		NamedNodeMap correctParameterMap = mock(NamedNodeMap.class);
-		when(correctParameter.getAttributes()).thenReturn(correctParameterMap);
-		when(correctParameterMap.getNamedItem(any())).thenReturn(nameAttribute);
-		when(nameAttribute.getNodeValue()).thenReturn("a name");
-		
-		//the second node
-		//this node has no attributes and hence cannot be read as a parameter
-		Node failedParameter = mock(Node.class);
-		NamedNodeMap failedParameterMap = mock(NamedNodeMap.class);
-		when(failedParameter.getAttributes()).thenReturn(failedParameterMap);
+		XmlDocumentationParser parser = setupParser(factory);
 		
 		//The nodelist:
+		Node node = mock(Node.class);
 		NodeList nodeList = mock(NodeList.class);
-		when(nodeList.getLength()).thenReturn(2);
-		when(nodeList.item(0)).thenReturn(correctParameter);
-		when(nodeList.item(1)).thenReturn(failedParameter);
+		when(nodeList.getLength()).thenReturn(1);
+		when(nodeList.item(0)).thenReturn(node);
+		
+		//We mock the parseParameter function
+		Parameter param = mock(Parameter.class);
+		doReturn(param).when(parser).parseParameter(node);
 		
 		XPathExpression parametersExpression = mock(XPathExpression.class);
 		when(xpath.compile("/function/parameters/param")).thenReturn(parametersExpression);
@@ -293,8 +307,7 @@ public class XmlDocumentationParserTest {
 		URL resource = new URL("http://www.w3schools.com:80/xml/note.xml");
 		
 		// run
-		XmlDocumentationParser parser = setupParser(factory);
-		parser.parse(resource, "functionName");
+		parser.parseParameters(doc, xpath);
 	}
 	
 	/**
@@ -317,16 +330,13 @@ public class XmlDocumentationParserTest {
 		
 		//node in the nodelist
 		//This one is a fully correct node
-		Node filledExample = mock(Node.class);
-		NodeList exampleContent = mock(NodeList.class);
-		when(filledExample.getChildNodes()).thenReturn(exampleContent);
-		when(exampleContent.getLength()).thenReturn(1);
-		when(exampleContent.item(0)).thenReturn(filledExample);
+		
 		
 		//The nodelist:
+		Node node = mock(Node.class);
 		NodeList nodeList = mock(NodeList.class);
 		when(nodeList.getLength()).thenReturn(1);
-		when(nodeList.item(0)).thenReturn(filledExample);
+		when(nodeList.item(0)).thenReturn(node);
 	
 		
 		XPathExpression parametersExpression = mock(XPathExpression.class);
