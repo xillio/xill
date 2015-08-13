@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>${packageName}.${identity}</title>
+    <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+<main>
+    <section id="header">
+        <header><h1><a href="../${packageName}.html">${packageName}</a>.${identity}</h1></header>
+    </section>
+    <section id="signature">
+        <header><h2>Signature</h2></header>
+        <div class="signature-content">
+            <span class="package-name">${packageName}</span>.<span class="construct-name">${identity}</span>
+                (
+                <#if parameters?size != 0>
+                <span class="parameters">
+                    <br>
+                    <#list parameters as parameter>
+                    <span class="parameter">
+                        <span class="parameter-type">
+                            <a href="../docs/structures.html">${parameter.type}</a>
+                        </span>
+                        <span class="parameter-name">
+                            ${parameter.name}
+                        </span>
+                        <#if parameter.defaultValue??>
+                        = <span class="parameter-default">${parameter.defaultValue}</span>
+                        </#if>
+                        <#if parameter?index + 1 != parameters?size>
+                        ,
+                        </#if>
+                    </span>
+                    <br>
+                    </#list>
+                </span>
+                );
+                </#if>
+            </span>
+        </div>
+        <table>
+        </table>
+    </section>
+
+    <#if parameters?? && parameters?size != 0>
+    <section id="parameters">
+        <header><h2>Parameters</h2></header>
+        <div class="parameter-list">
+        <#list parameters as parameter>
+        <div class="parameter-row">
+            <table class="parameter-table">
+                <tr><th>Name: </th><td>${parameter.name}</td></tr>
+                <tr><th>Type: </th><td><a href="../docs/structures.html">${parameter.type}</a></td></tr>
+                <#if parameter.defaultValue??>
+                <tr><th>Default: </th><td>${parameter.defaultValue}</td></tr>
+                </#if>
+                <#if parameter.description?? && parameters.description?length != 0>
+                <tr><th>Description: </th><td>${parameter.description}</td></tr>
+                </#if>
+            </table>
+        </div>
+        </#list>
+        </div>
+    </section>
+    </#if>
+
+    <#if examples?? && examples?size != 0>
+    <section id="examples">
+        <header><h2>Examples</h2></header>
+        <#list examples as example>
+            <h3>Title</h3>
+            <div class="example">
+                <#list example.nodes as node>
+                    NODE<br>
+                </#list>
+            </div>
+        </#list>
+    </section>
+    </#if>
+</main>
+</body>
+</html>

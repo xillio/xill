@@ -31,11 +31,10 @@ public class ConstructDocumentationEntity implements DocumentationEntity {
 	/**
 	 * The constructor for the {@link ConstructDocumentationEntity}.
 	 * Gets handed the name of the package of the construct and the name of the construct.
-	 * 
-	 * @param packageName
+	 *
+	 * @param identity
 	 *        The name of the package of the construct.
 	 * @param identity
-	 *        The name of the identity of the construct.
 	 */
 	public ConstructDocumentationEntity(final String identity) {
 		this.identity = identity;

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <parameters>
+        <param name="minimal">This is the description of this parameter</param>
+        <param type="ATOMIC" default="false" name="expressed" />
+        <param type="ATOMIC LIST" default="false" name="expressed2" />
+    </parameters>
+    <description>Returns the absolute value of the provided value.</description>
+    <examples>
+        <example>
+            <header>Perform abs on three different inputs</header>
+            <header>Like</header>
+            <code>
+                System.print(Math.abs(6));
+                System.print(Math.abs(-5));
+                System.print(Math.abs(-3.14
+            </code>
+            <header>This will print:</header>
+            <code>
+                6
+                5
+                3.14
+            </code>
+        </example>
+        <example title="Calling abs">
+            <header>Perform abs on three different inputs:</header>
+            <code>
+                System.print(Math.abs(6));
+                System.print(Math.abs(-5));
+                System.print(Math.abs(-3.14
+            </code>
+            <header>This will print:</header>
+            <code>
+                6
+                5
+                3.14
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>String.test</reference>
+    </references>
+    <searchTags>
+        abs, negative, normal
+    </searchTags>
+</function>

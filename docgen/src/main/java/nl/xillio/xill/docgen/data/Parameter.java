@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import nl.xillio.xill.docgen.PropertiesProvider;
+import org.elasticsearch.common.lang3.StringUtils;
 
 /**
  * This class represents a parameter in a {@link ConstructDocumentationEntity}.
@@ -13,8 +14,13 @@ import nl.xillio.xill.docgen.PropertiesProvider;
 public class Parameter implements PropertiesProvider  {
 	private String name = null;
 	private String defaultValue = null;
+	private String description = null;
 	private List<String> types = new ArrayList<>();
 
+	public Parameter(String types, String name) {
+		setType(types);
+		this.name = name;
+	}
 
 	@Override
 	public Map<String, Object> getProperties() {
@@ -22,6 +28,7 @@ public class Parameter implements PropertiesProvider  {
 		map.put("name", name);
 		map.put("defaultValue", defaultValue);
 		map.put("types", types);
+		map.put("type", StringUtils.join(types, ", "));
 		return map;
 	}
 	
@@ -51,7 +58,7 @@ public class Parameter implements PropertiesProvider  {
 	 */
 	public void setType(String types){
 		if(types != null){
-			String[] theseTypes = types.split(", ");
+			String[] theseTypes = types.split("\\s");
 			for(String type : theseTypes){
 				this.types.add(type);
 			}
@@ -68,5 +75,13 @@ public class Parameter implements PropertiesProvider  {
 	 */
 	public void setDefault(String defaultValue){
 		this.defaultValue = defaultValue;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

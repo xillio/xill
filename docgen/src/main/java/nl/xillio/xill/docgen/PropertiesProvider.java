@@ -14,8 +14,7 @@ import java.util.stream.Collectors;
  */
 public interface PropertiesProvider {
     Map<String, Object> getProperties();
-    
-    public static List<Map<String, Object>> extractContent(Collection<?extends PropertiesProvider> collection){
+    static List<Map<String, Object>> extractContent(Collection<?extends PropertiesProvider> collection){
     	return collection.stream()
 						.map(PropertiesProvider::getProperties)
 						.collect(Collectors.toList());
