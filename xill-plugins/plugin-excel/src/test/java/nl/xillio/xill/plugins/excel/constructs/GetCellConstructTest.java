@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
 
 import static nl.xillio.xill.api.construct.ExpressionBuilderHelper.fromValue;
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 /**
  * Created by Daan Knoope on 13-8-2015.

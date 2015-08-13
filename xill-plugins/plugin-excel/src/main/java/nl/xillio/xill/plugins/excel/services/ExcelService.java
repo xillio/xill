@@ -14,8 +14,8 @@ import java.text.ParseException;
  */
 @ImplementedBy(ExcelServiceImpl.class)
 public interface ExcelService {
-	XillWorkbook loadWorkbook(File file) throws IllegalArgumentException, IOException, ParseException;
-	XillWorkbook createWorkbook(File file) throws FileAlreadyExistsException, IOException;
+	XillWorkbook loadWorkbook(File file) throws IOException;
+	XillWorkbook createWorkbook(File file) throws IOException;
 	XillSheet createSheet(XillWorkbook workbook, String sheetName);
 
 }

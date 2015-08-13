@@ -14,6 +14,7 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InvalidObjectException;
 import java.text.ParseException;
 
 import static nl.xillio.xill.api.construct.ExpressionBuilderHelper.fromValue;
@@ -38,7 +39,7 @@ public class LoadWorkbookConstructTest {
 		LoadWorkbookConstruct.process(service,context,fromValue("."));
 	}
 
-	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "File could not be read")
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "File could not be opened")
 	public void testProcessIOException() throws Exception {
 			InjectorUtils.getGlobalInjector();
 			ExcelService service = mock(ExcelService.class);
@@ -64,7 +65,7 @@ public class LoadWorkbookConstructTest {
 		}
 
 		@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "File cannot be opened as Excel Workbook")
-		public void testProcessParseException ()throws Exception {
+		public void testProcessInvalidObjectException ()throws Exception {
 			InjectorUtils.getGlobalInjector();
 			ExcelService service = mock(ExcelService.class);
 			ConstructContext context = mock(ConstructContext.class);
@@ -72,7 +73,7 @@ public class LoadWorkbookConstructTest {
 			RobotID id = mock(RobotID.class);
 			when(id.getPath()).thenReturn(new File("."));
 			when(context.getRobotID()).thenReturn(id);
-			when(service.loadWorkbook(any(File.class))).thenThrow(new ParseException("blabla", 0));
+			when(service.loadWorkbook(any(File.class))).thenThrow(new InvalidObjectException("File cannot be opened as Excel Workbook"));
 			LoadWorkbookConstruct.process(service, context, fromValue("."));
 		}
 

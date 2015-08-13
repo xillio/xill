@@ -18,11 +18,11 @@ public class GetSheetNamesConstruct extends Construct {
 	private ExcelService excelService;
 
 	@Override public ConstructProcessor prepareProcess(ConstructContext context) {
-		return new ConstructProcessor((a) -> process(excelService,a),
+		return new ConstructProcessor(a -> process(a),
 						new Argument("workbook", ATOMIC));
 	}
 
-	static MetaExpression process(ExcelService service, MetaExpression workbookInput){
+	static MetaExpression process(MetaExpression workbookInput){
 		XillWorkbook workbook = assertMeta(workbookInput, "parameter 'workbook'",
 						XillWorkbook.class, "result of loadWorkbook or createWorkbook");
 		List<String> workbookNames = workbook.getSheetNames();

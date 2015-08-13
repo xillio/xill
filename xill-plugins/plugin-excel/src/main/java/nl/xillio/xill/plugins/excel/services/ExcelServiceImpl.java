@@ -5,13 +5,11 @@ import com.google.inject.Singleton;
 import nl.xillio.xill.plugins.excel.dataStructures.XillSheet;
 import nl.xillio.xill.plugins.excel.dataStructures.XillWorkbook;
 import nl.xillio.xill.plugins.excel.dataStructures.XillWorkbookFactory;
-import org.apache.poi.ss.util.WorkbookUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
-import java.text.ParseException;
 
 /**
  * Created by Daan Knoope on 4-8-2015.
@@ -27,7 +25,7 @@ public class ExcelServiceImpl implements ExcelService {
 	}
 
 	@Override
-	public XillWorkbook loadWorkbook( File file) throws ParseException, IllegalArgumentException, IOException{
+	public XillWorkbook loadWorkbook( File file) throws IOException{
 		String filePath = file.getCanonicalPath();
 		if(!file.exists())
 			throw new FileNotFoundException("There is no file at the given path");
