@@ -1,6 +1,5 @@
 package nl.xillio.xill.plugins.excel.services;
 
-import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.plugins.excel.dataStructures.XillSheet;
 import nl.xillio.xill.plugins.excel.dataStructures.XillWorkbook;
 import nl.xillio.xill.plugins.excel.dataStructures.XillWorkbookFactory;
@@ -10,11 +9,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 /**
  * Created by Daan Knoope on 11-8-2015.

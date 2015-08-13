@@ -2,20 +2,16 @@ package nl.xillio.xill.plugins.excel.services;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import nl.xillio.xill.api.components.Robot;
-import nl.xillio.xill.api.construct.ConstructContext;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.excel.dataStructures.*;
-import org.apache.log4j.Logger;
-import org.apache.log4j.spi.RootLogger;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import nl.xillio.xill.plugins.excel.dataStructures.XillSheet;
+import nl.xillio.xill.plugins.excel.dataStructures.XillWorkbook;
+import nl.xillio.xill.plugins.excel.dataStructures.XillWorkbookFactory;
 import org.apache.poi.ss.util.WorkbookUtil;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.text.ParseException;
-import java.util.List;
 
 /**
  * Created by Daan Knoope on 4-8-2015.

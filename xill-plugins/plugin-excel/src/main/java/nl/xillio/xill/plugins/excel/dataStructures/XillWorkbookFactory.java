@@ -1,6 +1,5 @@
 package nl.xillio.xill.plugins.excel.dataStructures;
 
-import com.google.inject.ImplementedBy;
 import nl.xillio.xill.api.errors.NotImplementedException;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -9,7 +8,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Created by Daan Knoope on 11-8-2015.
