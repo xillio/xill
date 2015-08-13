@@ -8,10 +8,10 @@ import java.util.Date;
 public class CookieVariable {
 
 	private String name;
-	private String domain;
-	private String path;
-	private String value;
-	private Date expireDate;
+	private String domain = "";
+	private String path = "";
+	private String value = "";
+	private Date expireDate = null;
 
 	/**
 	 * @return the name of the cookie.
