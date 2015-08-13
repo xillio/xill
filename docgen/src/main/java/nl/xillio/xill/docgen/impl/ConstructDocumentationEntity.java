@@ -65,8 +65,8 @@ public class ConstructDocumentationEntity implements DocumentationEntity {
 	 * @param Description
 	 *        The description of the function.
 	 */
-	public void setDescription(final String Description) {
-		description = Description;
+	public void setDescription(final String description) {
+		this.description = description;
 	}
 	
 	/**

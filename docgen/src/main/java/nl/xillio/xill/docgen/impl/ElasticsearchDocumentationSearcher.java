@@ -50,14 +50,22 @@ public class ElasticsearchDocumentationSearcher implements DocumentationSearcher
 		//Setup the query
 		BoolQueryBuilder question = setupQuery(query);
 		
+		SearchResponse response = null;
 		// Retrieve a response
-		SearchResponse response = client.prepareSearch(DOCUMENTATION_INDEX).setQuery(question).execute().actionGet();
-		
+		try{
+		response = client.prepareSearch(DOCUMENTATION_INDEX).setQuery(question).execute().actionGet();
+		}
+		catch(NullPointerException e){
+			LOGGER.error("Failed to retrieve a response from query", e);
+		}
 		// Return the response.
 		return handleSearchResponse(response);
 	}
 	
 	private String[] handleSearchResponse(SearchResponse response){
+	if(response == null){
+		return null;
+	}
 		// Return the ID of each response (The function name).
 		SearchHit[] hits = response.getHits().getHits();
 		String[] results = new String[hits.length];
@@ -89,7 +97,7 @@ public class ElasticsearchDocumentationSearcher implements DocumentationSearcher
 		try {
 			client.prepareIndex(DOCUMENTATION_INDEX, packet, entity.getIdentity())
 				.setSource(entity.getProperties()).execute().actionGet();
-		} catch (ElasticsearchException e) {
+		} catch (ElasticsearchException | NullPointerException e) {
 			LOGGER.error("Failed to index: " + packet + "." + entity.getIdentity(), e);
 		}
 	}
@@ -104,7 +112,7 @@ public class ElasticsearchDocumentationSearcher implements DocumentationSearcher
 			IndicesExistsResponse result = client.admin().indices()
 				.exists(new IndicesExistsRequest(DOCUMENTATION_INDEX)).get();
 			indexFound = result.isExists();
-		} catch (InterruptedException | ExecutionException e) {
+		} catch (InterruptedException | ExecutionException | NullPointerException e) {
 			LOGGER.error("Failed to check index of the " + DOCUMENTATION_INDEX + "for ES", e);
 		}
 
@@ -112,7 +120,7 @@ public class ElasticsearchDocumentationSearcher implements DocumentationSearcher
 			try {
 				client.admin().indices().create(new CreateIndexRequest(DOCUMENTATION_INDEX)).get();
 				client.admin().indices().refresh(new RefreshRequest(DOCUMENTATION_INDEX)).get();
-			} catch (InterruptedException | ExecutionException e) {
+			} catch (InterruptedException | ExecutionException | NullPointerException e) {
 				LOGGER.error("Failed to create an index for: " + DOCUMENTATION_INDEX + "for ES", e);
 			}
 		}
