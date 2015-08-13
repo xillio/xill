@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>${packageName}.${identity}</title>
-    <link rel="stylesheet" type="text/css" href="../style.css">
+    <link rel="stylesheet" type="text/css" href="../_assets/css/style.css">
 </head>
 <body>
 <main>
     <section id="header">
-        <header><h1><a href="../${packageName}.html">${packageName}</a>.${identity}</h1></header>
+        <header><h1><a href="../${packageName}/_index.html">${packageName}</a>.${identity}</h1></header>
     </section>
     <section id="signature">
         <header><h2>Signature</h2></header>
@@ -56,7 +56,7 @@
                 <#if parameter.defaultValue??>
                 <tr><th>Default: </th><td>${parameter.defaultValue}</td></tr>
                 </#if>
-                <#if parameter.description?? && parameters.description?length != 0>
+                <#if parameter.description?? && parameter.description?length != 0>
                 <tr><th>Description: </th><td>${parameter.description}</td></tr>
                 </#if>
             </table>
@@ -70,15 +70,19 @@
     <section id="examples">
         <header><h2>Examples</h2></header>
         <#list examples as example>
-            <h3>Title</h3>
+            <#if example.title??>
+            <h3>${example.title}</h3>
+            </#if>
             <div class="example">
                 <#list example.nodes as node>
-                    NODE<br>
+                <div class="example-node ${node.tag}"><#if node.contents??>${node.contents}</#if></div>
                 </#list>
             </div>
         </#list>
     </section>
     </#if>
 </main>
+<script src="../_assets/js/ace/ace.js"></script>
+<script src="../_assets/js/load-ace.js"></script>
 </body>
 </html>

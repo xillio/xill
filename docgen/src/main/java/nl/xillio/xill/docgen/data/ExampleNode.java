@@ -1,7 +1,9 @@
 package nl.xillio.xill.docgen.data;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.OptionalInt;
 
 import nl.xillio.xill.docgen.PropertiesProvider;
 
@@ -22,14 +24,77 @@ public class ExampleNode implements PropertiesProvider {
 	 */
 	public ExampleNode(String tagName, String content){
 		this.tagName = tagName;
-		this.content = content;
+
+		//Special case: code
+		if("code".equalsIgnoreCase(tagName)) {
+			this.content = cleanCode(content);
+		}else {
+			this.content = content;
+		}
+	}
+
+	static private String cleanCode(String content) {
+		String[] lines = getLines(content);
+		int indentOffset = getOffset(lines);
+
+		if(indentOffset == -1) {
+			//No content
+			return "";
+		}
+
+		String[] cleaned = removeCharacters(indentOffset, lines);
+
+		return String.join("\n", cleaned);
+	}
+
+	static String[] removeCharacters(int indentOffset, String[] lines) {
+		return Arrays.stream(lines)
+			.map(line -> {
+				if(indentOffset >= line.length()) {
+					//Is white line
+					return "";
+				}
+
+				return line.substring(indentOffset, line.length());
+			}).toArray(i -> new String[i]);
+	}
+
+	static int getOffset(String[] lines) {
+		OptionalInt offset = Arrays.stream(lines)
+			.mapToInt(line -> countWhiteSpaces(line))
+			.min();
+
+		if(!offset.isPresent())
+			return -1;
+
+		return offset.getAsInt();
+	}
+
+	static int countWhiteSpaces(String line) {
+		for(int i = 0; i < line.length(); i++) {
+			if(!Character.isWhitespace(line.charAt(i))) {
+				return i;
+			}
+		}
+		return 0;
+	}
+
+	static String[] getLines(String content) {
+		//Remove trailing newline
+		String code = content.replaceAll("^\\s*\n|\n\\s*$", "");
+
+		//Split
+		return Arrays.stream(code.split("\n"))
+			.map(line -> line.replaceAll("\\s", "").isEmpty() ? "" : line)
+			.map(line -> line.replaceAll("\\s*\n", "\n"))
+			.toArray(i -> new String[i]);
 	}
 
 	@Override
 	public Map<String, Object> getProperties() {
 		Map<String, Object> properties = new LinkedHashMap<>();
 		properties.put("tag", tagName);
-		properties.put("value", content);
+		properties.put("contents", content);
 		return properties;
 	}
 	

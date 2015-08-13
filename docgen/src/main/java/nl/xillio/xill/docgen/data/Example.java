@@ -14,11 +14,18 @@ import nl.xillio.xill.docgen.impl.ConstructDocumentationEntity;
  */
 public class Example implements PropertiesProvider {
 	private final List<ExampleNode> content = new ArrayList<>();
- //TODO Add example title
+	private final String title;
+
+	public Example(String title) {
+		this.title = title;
+	}
+
+	//TODO Add example title
 	@Override
 	public Map<String, Object> getProperties() {
 		Map<String, Object> properties = new HashMap<>();
 		properties.put("nodes", PropertiesProvider.extractContent(content));
+		properties.put("title", title);
 		return properties;
 	}
 

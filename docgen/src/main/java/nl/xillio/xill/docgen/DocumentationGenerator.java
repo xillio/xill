@@ -18,4 +18,10 @@ public interface DocumentationGenerator extends AutoCloseable {
      * @throws IllegalStateException if this DocumentationGenerator has already been closed
      */
     void generate(DocumentationEntity entity) throws ParsingException, IllegalFormatException;
+
+    /**
+     * Generate the index of all packages
+     * @throws ParsingException if parsing wasn't successful
+     */
+    void generateIndex() throws ParsingException;
 }

@@ -18,13 +18,22 @@ public class RunDocGen {
 	public static void main(String... args) throws ParsingException {
 		DocGen docgen = new XillDocGen(null);
 
+
 		DocumentationParser parser = docgen.getParser();
 
-		DocumentationEntity entity = parser.parse(RunDocGen.class.getResource("/test.xml"), "testMe");
+		try(DocumentationGenerator generator = docgen.getGenerator("MyPackage")) {
 
-		DocumentationGenerator generator = docgen.getGenerator("MyPackage");
+			DocumentationEntity entity = parser.parse(RunDocGen.class.getResource("/test.xml"), "testMe");
+			DocumentationEntity entity2 = parser.parse(RunDocGen.class.getResource("/test.xml"), "otherConstruct");
 
-		generator.generate(entity);
+			generator.generate(entity);
+			generator.generate(entity2);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		docgen.generateIndex();
 
 	}
 
