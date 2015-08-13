@@ -1,16 +1,24 @@
 package nl.xillio.xill.docgen.impl;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import nl.xillio.xill.docgen.DocumentationEntity;
 import nl.xillio.xill.docgen.DocumentationGenerator;
+import nl.xillio.xill.docgen.PropertiesProvider;
 import nl.xillio.xill.docgen.exceptions.ParsingException;
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,64 +29,159 @@ import java.util.Map;
  * @since 12-8-2015
  */
 public class FreeMarkerDocumentationGenerator implements DocumentationGenerator {
-    private final String packageName;
-    private final Configuration fmConfig;
-    private boolean isClosed;
-    private final File packageFolder;
+	private static final Gson GSON = new GsonBuilder()
+		.create();
+	private static final Logger LOGGER = LogManager.getLogger();
+	private static final String JSON_INDEX_NAME = "_index.json";
+	private final String packageName;
+	private final Configuration fmConfig;
+	private final File documentationFolder;
+	private boolean isClosed;
+	private final File packageFolder;
+	private final PackageDocumentationEntity packageEntity;
 
-    public FreeMarkerDocumentationGenerator(String collectionIdentity, Configuration fmConfig, File documentationFolder) {
-        packageName = collectionIdentity;
-        this.fmConfig = fmConfig;
-        this.packageFolder = new File(documentationFolder, collectionIdentity);
-    }
+	public FreeMarkerDocumentationGenerator(String collectionIdentity, Configuration fmConfig, File documentationFolder) {
+		packageName = collectionIdentity;
+		this.fmConfig = fmConfig;
+		this.documentationFolder = documentationFolder;
+		this.packageFolder = new File(documentationFolder, collectionIdentity);
+		packageEntity = new PackageDocumentationEntity();
+		packageEntity.setName(collectionIdentity);
+	}
 
-    @Override
-    public void generate(DocumentationEntity entity) throws ParsingException, IllegalStateException {
-        if(isClosed) {
-            throw new IllegalStateException("This generator has already been closed");
-        }
+	@Override
+	public void generate(DocumentationEntity entity) throws ParsingException, IllegalStateException {
+		if (isClosed) {
+			throw new IllegalStateException("This generator has already been closed");
+		}
 
-        //Get template
-        Template template = getTemplate(entity.getType());
-        Map<String, Object> model = getModel(entity);
+		//Get template
+		Template template = getTemplate(entity.getType());
+		Map<String, Object> model = getModel(entity);
 
-        //Prepare target
-        File target = new File(packageFolder, entity.getIdentity() + ".html");
+		//Prepare target
+		File target = new File(packageFolder, entity.getIdentity() + ".html");
 
-        try {
-            doGenerate(template, target, model);
-        } catch (IOException e) {
-            throw new ParsingException("Failed to write to " + target.getAbsolutePath(), e);
-        } catch (TemplateException e) {
-            throw new ParsingException("Error in template " + template.getName(), e);
-        }
-    }
+		//Generate
+		try {
+			doGenerate(template, target, model);
+		} catch (IOException e) {
+			throw new ParsingException("Failed to write to " + target.getAbsolutePath(), e);
+		} catch (TemplateException e) {
+			throw new ParsingException("Error in template " + template.getName(), e);
+		}
 
-    void doGenerate(Template template, File target, Map<String, Object> model) throws IOException, TemplateException {
-        //Make sure the target file exists
-        FileUtils.touch(target);
+		//Save to list
+		packageEntity.add(entity);
+	}
 
-        //Generate
-        FileWriter writer = new FileWriter(target);
-        template.process(model, writer);
-    }
+	@Override
+	public void generateIndex() throws ParsingException {
+		List<PackageDocumentationEntity> packages = getPackagesFromJson();
 
-    private Map<String, Object> getModel(DocumentationEntity entity) {
-        Map<String, Object> model = entity.getProperties();
-        model.put("packageName", packageName);
-        return model;
-    }
+		//Build model
+		Map<String, Object> model = new HashMap<>();
+		model.put("packages", PropertiesProvider.extractContent(packages));
 
-    private Template getTemplate(String name) throws ParsingException {
-        try {
-            return fmConfig.getTemplate(name + ".html");
-        } catch (IOException e) {
-            throw new ParsingException("Failed to get template", e);
-        }
-    }
+		//Get template
+		Template template = getTemplate("index");
 
-    @Override
-    public void close() throws Exception {
-        isClosed = true;
-    }
+		//Generate
+		File target = new File(documentationFolder, "index.html");
+
+		try {
+			doGenerate(template, target, model);
+		} catch (IOException e) {
+			throw new ParsingException("Failed to write to " + target.getAbsolutePath(), e);
+		} catch (TemplateException e) {
+			throw new ParsingException("Syntax error", e);
+		}
+	}
+
+	public List<PackageDocumentationEntity> getPackagesFromJson() {
+		List<PackageDocumentationEntity> result = new ArrayList<>();
+		//Gather all json files
+		File[] folders = documentationFolder.listFiles();
+		for (File folder : folders) {
+			File jsonFile = getJsonFile(folder);
+
+			if (jsonFile == null) {
+				continue;
+			}
+
+			String json = null;
+			try {
+				json = FileUtils.readFileToString(jsonFile);
+			} catch (IOException e) {
+				LOGGER.error("Failed to read json from " + jsonFile.getAbsolutePath(), e);
+			}
+
+			result.add(GSON.fromJson(json, PackageDocumentationEntity.class));
+
+		}
+
+		return result;
+	}
+
+	private File getJsonFile(File folder) {
+		File jsonFile = new File(folder, JSON_INDEX_NAME);
+		if (!jsonFile.exists()) {
+			return null;
+		}
+
+		return jsonFile;
+	}
+
+	void doGenerate(Template template, File target, Map<String, Object> model) throws IOException, TemplateException {
+		//Make sure the target file exists
+		FileUtils.touch(target);
+
+		//Generate
+		FileWriter writer = new FileWriter(target);
+		template.process(model, writer);
+	}
+
+	private Map<String, Object> getModel(DocumentationEntity entity) {
+		Map<String, Object> model = entity.getProperties();
+		model.put("packageName", packageName);
+		return model;
+	}
+
+	private Template getTemplate(String name) throws ParsingException {
+		try {
+			return fmConfig.getTemplate(name + ".html");
+		} catch (IOException e) {
+			throw new ParsingException("Failed to get template", e);
+		}
+	}
+
+	@Override
+	public void close() throws Exception {
+		isClosed = true;
+
+		try {
+			generatePackageIndex();
+			saveJsonSummary();
+		} catch (ParsingException e) {
+			LOGGER.error("Failed to generate package index for " + packageName, e);
+			throw e;
+		}
+	}
+
+	private void generatePackageIndex() throws ParsingException, IOException, TemplateException {
+		File target = new File(packageFolder, "_index.html");
+		Template template = getTemplate("package");
+		Map<String, Object> packageModel = getModel(packageEntity);
+		doGenerate(template, target, packageModel);
+	}
+
+	private void saveJsonSummary() throws ParsingException {
+		String jsonString = GSON.toJson(packageEntity);
+
+		try {
+			FileUtils.writeStringToFile(new File(packageFolder, JSON_INDEX_NAME), jsonString);
+		} catch (IOException e) {
+			throw new ParsingException("Failed to write json summary of " + packageName, e);
+		}
+	}
 }

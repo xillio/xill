@@ -1,6 +1,7 @@
 package nl.xillio.xill.docgen;
 
 import com.google.inject.ImplementedBy;
+import nl.xillio.xill.docgen.exceptions.ParsingException;
 import nl.xillio.xill.docgen.impl.XillDocGen;
 
 /**
@@ -11,7 +12,9 @@ import nl.xillio.xill.docgen.impl.XillDocGen;
  */
 @ImplementedBy(XillDocGen.class)
 public interface DocGen {
-    DocumentationParser getParser();
+    DocumentationParser getParser() throws ParsingException;
     DocumentationGenerator getGenerator(String collectionIdentity);
     DocumentationSearcher getSearcher();
+
+    void generateIndex() throws ParsingException;
 }

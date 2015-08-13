@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import nl.xillio.xill.docgen.PropertiesProvider;
+import nl.xillio.xill.docgen.impl.ConstructDocumentationEntity;
 import org.elasticsearch.common.lang3.StringUtils;
 
 /**
@@ -34,6 +35,7 @@ public class Parameter implements PropertiesProvider  {
 		map.put("defaultValue", defaultValue);
 		map.put("types", types);
 		map.put("type", StringUtils.join(types, ", "));
+		map.put("description", description);
 		return map;
 	}
 	
