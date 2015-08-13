@@ -54,21 +54,7 @@ public class ExcelServiceImpl implements ExcelService {
 			throw new IllegalArgumentException("Sheet name is too long: must be less than 32 characters.");
 		if(workbook.isReadonly())
 			throw new IllegalArgumentException("Workbook is read-only");
-
-		WorkbookUtil util = new WorkbookUtil();
-		try{
-			util.validateSheetName(sheetName);
-		}catch(IllegalArgumentException e){
-			throw new IllegalArgumentException("Sheet name contains illegal characters: "
-							+ "cannot contain 0x0000, 0x0003, \\, *, ?, /, [, ] and start or end with a single quote.", e);
-		}
-		XillSheet sheet;
-		try{
-			sheet = workbook.makeSheet(sheetName);
-		}catch(IllegalArgumentException e){
-			throw new IllegalArgumentException("There already exists a sheet with that name in the provided workbook");
-		}
-		return sheet;
+		return workbook.makeSheet(sheetName);
 	}
 
 }
