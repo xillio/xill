@@ -51,7 +51,7 @@ public class CookieFactory {
 		try {
 			webService.addCookie(page, cookie);
 		} catch (Exception e) {
-			throw new RobotRuntimeException("Failed to add cookie.", e);
+			throw new RobotRuntimeException("Failed to add cookie: " + cookie.getName(), e);
 		}
 	}
 

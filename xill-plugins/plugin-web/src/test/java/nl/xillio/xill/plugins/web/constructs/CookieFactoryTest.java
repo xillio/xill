@@ -117,6 +117,22 @@ public class CookieFactoryTest {
 		factory.setCookie(webVariable, cookie, webService);
 	}
 	
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to add cookie: cookieName")
+	public void testProcessWhenWeFailToAddCookie(){
+		// mock
+		WebVariable webVariable = mock(WebVariable.class);
+		WebService webService = mock(WebService.class);
+
+		Map<String, MetaExpression> cookie = new HashMap<>();
+		cookie.put("name", getName("cookieName"));
+		CookieFactory factory = new CookieFactory();
+		
+		doThrow(new RobotRuntimeException("I crashed!")).when(webService).addCookie(any(), any());
+		
+		//run
+		factory.setCookie(webVariable, cookie, webService);
+	}
+	
 	
 	private MetaExpression getName(String value){
 		MetaExpression name = mock(MetaExpression.class);
