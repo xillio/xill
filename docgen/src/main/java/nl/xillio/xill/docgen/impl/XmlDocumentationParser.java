@@ -110,16 +110,20 @@ public class XmlDocumentationParser implements DocumentationParser {
 			params = (NodeList) xpath.compile("/function/parameters/param").evaluate(doc, XPathConstants.NODESET);
 			
 			for (int t = 0; t < params.getLength(); ++t) {
-				try {
-					parameters.add(parseParameter(params.item(t)));
-				}catch(NullPointerException e) {
-					LOGGER.error("Failed to parse a parameter", e);
-				}
+				addParameter(parameters, params.item(t));
 			}
 		} catch (XPathExpressionException  | NullPointerException e) {
 			throw new ParsingException("Failed to parse parameters", e);
 		}
 		return parameters;
+	}
+	
+	private void addParameter(final List<Parameter> parameters, final Node node){
+		try {
+			parameters.add(parseParameter(node));
+		}catch(NullPointerException e) {
+			LOGGER.error("Failed to parse a parameter", e);
+		}
 	}
 
 	private Parameter parseParameter(final Node node) throws NullPointerException {
@@ -182,16 +186,20 @@ public class XmlDocumentationParser implements DocumentationParser {
 			exampleNodes = (NodeList) xpath.compile("/function/references/reference").evaluate(doc, XPathConstants.NODESET);
 			
 			for (int t = 0; t < exampleNodes.getLength(); ++t) {
-				try {
-					references.add(parseReference(exampleNodes.item(t)));
-				}catch (ParsingException | NullPointerException e) {
-					LOGGER.error("Failed to parse reference", e);
-				}
+				addReference(references, exampleNodes.item(t));
 			}
 		}catch(XPathExpressionException | IllegalArgumentException | NullPointerException e) {
 			throw new ParsingException("Failed to parse references", e);
 		}
 		return references;
+	}
+	
+	private void addReference(final List<Reference> references, final Node node){
+		try {
+			references.add(parseReference(node));
+		}catch (ParsingException | NullPointerException e) {
+			LOGGER.error("Failed to parse reference", e);
+		}
 	}
 
 	private Reference parseReference(final Node node) throws ParsingException, NullPointerException {
@@ -214,7 +222,7 @@ public class XmlDocumentationParser implements DocumentationParser {
 			}
 			return new HashSet<>(Arrays.asList(searchTags));
 		}catch(XPathExpressionException | NullPointerException e) {
-			throw new ParsingException("Failed to parse searchTags");
+			throw new ParsingException("Failed to parse searchTags", e);
 		}
 	}
 }
