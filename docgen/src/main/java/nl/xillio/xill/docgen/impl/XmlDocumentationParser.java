@@ -99,7 +99,7 @@ public class XmlDocumentationParser implements DocumentationParser {
 		try {
 			XPathExpression descriptionExpr = xpath.compile("/function/description/text()");
 			return ((String) descriptionExpr.evaluate(doc, XPathConstants.STRING));
-		} catch (XPathExpressionException e) {
+		} catch (XPathExpressionException | NullPointerException e) {
 			throw new ParsingException("Failed to parse description", e);
 		}
 	}
@@ -110,16 +110,16 @@ public class XmlDocumentationParser implements DocumentationParser {
 
 		try {
 			params = (NodeList) xpath.compile("/function/parameters/param").evaluate(doc, XPathConstants.NODESET);
-		} catch (XPathExpressionException e) {
-			throw new ParsingException("Failed to parse parameters", e);
-		}
-
-		for (int t = 0; t < params.getLength(); ++t) {
-			try {
-				parameters.add(parseParameter(params.item(t)));
-			}catch(NullPointerException e) {
-				LOGGER.error("Failed to parse parameter", e);
+			
+			for (int t = 0; t < params.getLength(); ++t) {
+				try {
+					parameters.add(parseParameter(params.item(t)));
+				}catch(NullPointerException e) {
+					LOGGER.error("Failed to parse parameter", e);
+				}
 			}
+		} catch (XPathExpressionException | NullPointerException  e) {
+			throw new ParsingException("Failed to parse parameters", e);
 		}
 
 		return parameters;
@@ -157,13 +157,15 @@ public class XmlDocumentationParser implements DocumentationParser {
 		NodeList exampleNodes;
 		try {
 			exampleNodes = (NodeList) xpath.compile("/function/examples/example").evaluate(doc, XPathConstants.NODESET);
-		} catch (XPathExpressionException e) {
+			
+			for (int t = 0; t < exampleNodes.getLength(); ++t) {
+				examples.add(parseExample(exampleNodes.item(t)));
+			}
+		} catch (XPathExpressionException | NullPointerException e) {
 			throw new ParsingException("Failed to parse examples", e);
 		}
 
-		for (int t = 0; t < exampleNodes.getLength(); ++t) {
-			examples.add(parseExample(exampleNodes.item(t)));
-		}
+
 		return examples;
 	}
 
@@ -184,20 +186,20 @@ public class XmlDocumentationParser implements DocumentationParser {
 	List<Reference> parseReferences(final Document doc, final XPath xpath) throws ParsingException {
 		List<Reference> references = new ArrayList<>();
 		NodeList exampleNodes;
-
 		try {
 			exampleNodes = (NodeList) xpath.compile("/function/references/reference").evaluate(doc, XPathConstants.NODESET);
-		}catch(XPathExpressionException | IllegalArgumentException e) {
+
+			for (int t = 0; t < exampleNodes.getLength(); ++t) {
+				try {
+					references.add(parseReference(exampleNodes.item(t)));
+				}catch (ParsingException e) {
+					LOGGER.error("Failed to parse reference", e);
+				}
+			}
+		}catch(XPathExpressionException | IllegalArgumentException | NullPointerException e) {
 			throw new ParsingException("Failed to parse references", e);
 		}
 
-		for (int t = 0; t < exampleNodes.getLength(); ++t) {
-			try {
-				references.add(parseReference(exampleNodes.item(t)));
-			}catch (ParsingException e) {
-				LOGGER.error("Failed to parse reference", e);
-			}
-		}
 
 		return references;
 	}
@@ -212,14 +214,14 @@ public class XmlDocumentationParser implements DocumentationParser {
 
 	Set<String> parseSearchTags(final Document doc, final XPath xpath) throws ParsingException {
 		Node searchTagNode;
+		String[] searchTags = new String[0];
 		try {
 			XPathExpression searchTagsExpr = xpath.compile("/function/searchTags");
 			searchTagNode = (Node) searchTagsExpr.evaluate(doc, XPathConstants.NODE);
-		}catch(XPathExpressionException e) {
+			searchTags = searchTagNode.getTextContent().split("\\.");
+		}catch(XPathExpressionException | NullPointerException e) {
 			throw new ParsingException("Failed to parse searchtags", e);
 		}
-
-		String[] searchTags = searchTagNode.getTextContent().split("\\.");
 
 		return new HashSet<>(Arrays.asList(searchTags));
 	}

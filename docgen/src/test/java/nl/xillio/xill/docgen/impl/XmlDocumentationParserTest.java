@@ -1,9 +1,11 @@
-package nl.xillio.xill.docgen.tests;
+package nl.xillio.xill.docgen.impl;
 
 import static org.mockito.Mockito.*;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.HashSet;
 
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
@@ -15,6 +17,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+
 
 
 
@@ -47,7 +51,7 @@ public class XmlDocumentationParserTest {
 		URL resource = new URL("http://www.w3schools.com:80/xml/note.xml");
 		
 		// run
-		XmlDocumentationParser parser = new XmlDocumentationParser(factory);
+		XmlDocumentationParser parser = setupParser(factory);
 		parser.parse(resource, "functionName");
 	}
 	
@@ -76,7 +80,7 @@ public class XmlDocumentationParserTest {
 		URL resource = new URL("http://www.w3schools.com:80/xml/note.xml");
 		
 		// run
-		XmlDocumentationParser parser = new XmlDocumentationParser(factory);
+		XmlDocumentationParser parser = setupParser(factory);
 		parser.parse(resource, "functionName");
 	}
 	
@@ -105,7 +109,7 @@ public class XmlDocumentationParserTest {
 		URL resource = new URL("http://www.w3schools.com:80/xml/note.xml");
 		
 		// run
-		XmlDocumentationParser parser = new XmlDocumentationParser(factory);
+		XmlDocumentationParser parser = setupParser(factory);
 		parser.parse(resource, "functionName");
 	}
 	
@@ -134,7 +138,7 @@ public class XmlDocumentationParserTest {
 		URL resource = new URL("http://www.w3schools.com:80/xml/note.xml");
 		
 		// run
-		XmlDocumentationParser parser = new XmlDocumentationParser(factory);
+		XmlDocumentationParser parser = setupParser(factory);
 		parser.parse(resource, "functionName");
 	}
 	
@@ -163,7 +167,7 @@ public class XmlDocumentationParserTest {
 		URL resource = new URL("http://www.w3schools.com:80/xml/note.xml");
 		
 		// run
-		XmlDocumentationParser parser = new XmlDocumentationParser(factory);
+		XmlDocumentationParser parser = setupParser(factory);
 		parser.parse(resource, "functionName");
 	}
 		
@@ -215,7 +219,7 @@ public class XmlDocumentationParserTest {
 		URL resource = new URL("http://www.w3schools.com:80/xml/note.xml");
 		
 		// run
-		XmlDocumentationParser parser = new XmlDocumentationParser(factory);
+		XmlDocumentationParser parser = setupParser(factory);
 		parser.parse(resource, "functionName");
 	}
 	
@@ -259,7 +263,7 @@ public class XmlDocumentationParserTest {
 		URL resource = new URL("http://www.w3schools.com:80/xml/note.xml");
 		
 		// run
-		XmlDocumentationParser parser = new XmlDocumentationParser(factory);
+		XmlDocumentationParser parser = setupParser(factory);
 		parser.parse(resource, "functionName");
 	}
 	
@@ -309,7 +313,7 @@ public class XmlDocumentationParserTest {
 		URL resource = new URL("http://www.w3schools.com:80/xml/note.xml");
 		
 		// run
-		XmlDocumentationParser parser = new XmlDocumentationParser(factory);
+		XmlDocumentationParser parser = setupParser(factory);
 		parser.parse(resource, "functionName");
 	}
 	
@@ -344,7 +348,7 @@ public class XmlDocumentationParserTest {
 		URL resource = new URL("http://www.w3schools.com:80/xml/note.xml");
 		
 		// run
-		XmlDocumentationParser parser = new XmlDocumentationParser(factory);
+		XmlDocumentationParser parser = setupParser(factory);
 		parser.parse(resource, "functionName");
 	}
 		
@@ -366,6 +370,12 @@ public class XmlDocumentationParserTest {
 		when(expression.evaluate(any(Document.class), eq(XPathConstants.STRING))).thenReturn("a string");
 		
 		return xpath;
+	}
+	
+	private XmlDocumentationParser setupParser(XPathFactory factory) throws ParsingException{
+		XmlDocumentationParser parser = spy(new XmlDocumentationParser(factory));
+		doReturn(new HashSet<String>(Arrays.asList())).when(parser).parseSearchTags(any(), any());
+		return parser;
 	}
 
 }
