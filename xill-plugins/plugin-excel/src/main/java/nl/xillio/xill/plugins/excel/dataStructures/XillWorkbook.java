@@ -42,11 +42,11 @@ public class XillWorkbook implements MetadataExpression{
 	}
 
 	public XillSheet getSheet(String sheetName) {
-		return new XillSheet(workbook.getSheet(sheetName));
+		return new XillSheet(workbook.getSheet(sheetName), readonly);
 	}
 
 	public XillSheet makeSheet(String sheetName){
-		return new XillSheet(workbook.createSheet(sheetName));
+		return new XillSheet(workbook.createSheet(sheetName), readonly);
 	}
 
 	public List<String> getSheetNames() {

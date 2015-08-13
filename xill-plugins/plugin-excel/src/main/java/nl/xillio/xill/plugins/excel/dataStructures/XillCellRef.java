@@ -20,4 +20,12 @@ public class XillCellRef implements MetadataExpression{
 	public CellReference getCellReference() {
 		return cellReference;
 	}
+
+	public int getColumn(){
+		return cellReference.getCol();
+	}
+
+	public int getRow(){
+		return cellReference.getRow();
+	}
 }

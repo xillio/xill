@@ -15,8 +15,10 @@ public class XillSheet implements MetadataExpression {
 	private String name;
 	private int columnLength;
 	private int rowLength;
+	private boolean readonly;
 
-	public XillSheet(Sheet sheet){
+	public XillSheet(Sheet sheet, boolean readonly){
+		this.readonly = readonly;
 		this.sheet = sheet;
 		rowLength = sheet.getLastRowNum() + 1; //Added one because POI is zero indexed
 		columnLength = calculateColumnLength();
@@ -56,6 +58,38 @@ public class XillSheet implements MetadataExpression {
 		return getValueFromCell(cell);
 	}
 
+	private Cell getCell(XillCellRef cellRef){
+		int columnNr = cellRef.getColumn();
+		int rowNr = cellRef.getRow();
+		//TODO implement sepperately
+		Row row = sheet.getRow(rowNr);
+		if(row == null) {
+			sheet.createRow(rowNr);
+			row = sheet.getRow(rowNr);
+		}
+		Cell cell = row.getCell(columnNr);
+		if(cell == null) {
+			row.createCell(columnNr);
+			cell = row.getCell(columnNr);
+		}
+		return cell;
+	}
+
+	public void setCellValue(XillCellRef cellRef, String value){
+		if(value.startsWith("="))
+			getCell(cellRef).setCellFormula(value);
+		else
+			getCell(cellRef).setCellValue(value);
+	}
+
+	public void setCellValue(XillCellRef cellRef, Double value){
+		getCell(cellRef).setCellValue(value);
+	}
+
+	public void setCellValue(XillCellRef cellRef, boolean value){
+		getCell(cellRef).setCellValue(value);
+	}
+
 	private Object getValueFromCell(Cell cell){
 		Object toReturn;
 		if(cell !=null){
@@ -85,5 +119,9 @@ public class XillSheet implements MetadataExpression {
 			toReturn = "[EMPTY]";
 		}
 		return toReturn;
+	}
+
+	public boolean isReadonly() {
+		return readonly;
 	}
 }
