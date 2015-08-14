@@ -5,7 +5,9 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +44,8 @@ public class XillWorkbook implements MetadataExpression{
 	}
 
 	public XillSheet getSheet(String sheetName) {
+		if(workbook.getSheetIndex(sheetName) == -1)
+			throw new IllegalArgumentException("Sheet can not be found in the supplied workbook");
 		return new XillSheet(workbook.getSheet(sheetName), readonly);
 	}
 
@@ -65,8 +69,42 @@ public class XillWorkbook implements MetadataExpression{
 		return readonly;
 	}
 
-	public void setReadonly(boolean readonly) {
-		this.readonly = readonly;
+	public boolean fileExists(){
+		return file.exists();
 	}
+
+	public String getLocation(){
+		return this.location;
+	}
+
+	public boolean removeSheet(String sheetName){
+		int sheetIndex = workbook.getSheetIndex(sheetName);
+		if(sheetIndex == -1)
+			throw new IllegalArgumentException("Sheet " + sheetName + " does not exist in this workbook");
+		workbook.removeSheetAt(workbook.getSheetIndex(sheetName));
+		return true;
+	}
+
+	public void save() throws IOException {
+		try {
+			OutputStream outputStream = new FileOutputStream(location);
+			workbook.write(outputStream);
+			outputStream.close();
+		}catch(IOException e){
+			throw new IOException("Could not write to this file",e);
+		}
+	}
+
+	public void save(File file) throws IOException{
+		try {
+			OutputStream outputStream = new FileOutputStream(file);
+			workbook.write(outputStream);
+			outputStream.close();
+		}catch(IOException e){
+			throw new IOException("Could not write to this file",e);
+		}
+
+	}
+
 }
 

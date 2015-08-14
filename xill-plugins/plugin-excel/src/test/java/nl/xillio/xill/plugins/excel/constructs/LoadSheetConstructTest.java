@@ -40,7 +40,6 @@ public class LoadSheetConstructTest {
 		when(workbook.getSheet(anyString())).thenReturn(sheet);
 		MetaExpression input = fromValue("workbook object");
 		input.storeMeta(XillWorkbook.class, workbook);
-		ExcelService service = mock(ExcelService.class);
 		LoadSheetConstruct.process(input, fromValue("Sheet"));
 	}
 
