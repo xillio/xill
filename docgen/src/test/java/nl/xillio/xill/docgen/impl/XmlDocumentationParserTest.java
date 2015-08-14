@@ -519,6 +519,18 @@ public class XmlDocumentationParserTest {
 		// run
 		parser.parseParameter(node);
 	}
+	
+	/**
+	 * @return
+	 *         Returns all possible values for an example node.
+	 */
+	@DataProvider(name = "possibleExampleValues")
+	public Object[][] createExampleData() {
+		return new Object[][] {
+				{mock(Node.class), null},
+				{mock(Node.class), "a string"}
+		};
+	}
 
 	/**
 	 * Tests the parser for when extracting values from an example node.
@@ -527,15 +539,15 @@ public class XmlDocumentationParserTest {
 	 * @throws MalformedURLException
 	 * @throws ParsingException
 	 */
-	@Test
-	public void testParseExample() throws XPathExpressionException, MalformedURLException, ParsingException {
+	@Test(dataProvider = "possibleExampleValues")
+	public void testParseExample(Node node, String nodeName) throws XPathExpressionException, MalformedURLException, ParsingException {
 		// mock
 		// The node
-		Node node = mock(Node.class);
 		NodeList nodeList = mock(NodeList.class);
 		when(node.getChildNodes()).thenReturn(nodeList);
 		when(nodeList.getLength()).thenReturn(1);
 		when(nodeList.item(0)).thenReturn(node);
+		when(node.getNodeName()).thenReturn(nodeName);
 
 		// The parser
 		XPath xpath = setupXPath();
@@ -553,7 +565,7 @@ public class XmlDocumentationParserTest {
 	 *         Returns all possible values in a reference field.
 	 */
 	@DataProvider(name = "possibleReferenceValues")
-	public Object[][] createData() {
+	public Object[][] createReferenceData() {
 		return new Object[][] {
 				{"singleConstruct", "singleConstruct"},
 				{"Package.construct", "Package.construct"}
