@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>${packageName}.${identity}</title>
-    <link rel="stylesheet" type="text/css" href="../_assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="${cssFile}">
+    <link rel="stylesheet" type="text/css" href="${aceCssFile}">
 </head>
 <body>
 <main>
@@ -96,7 +97,7 @@
     </section>
     </#if>
 </main>
-<script src="../_assets/js/ace/ace.js"></script>
-<script src="../_assets/js/load-ace.js"></script>
+<script src="${aceFile}"></script>
+<script src="${aceLoader}"></script>
 </body>
 </html>
