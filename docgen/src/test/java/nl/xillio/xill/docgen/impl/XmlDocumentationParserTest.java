@@ -1,5 +1,7 @@
 package nl.xillio.xill.docgen.impl;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 import java.net.MalformedURLException;
@@ -24,7 +26,12 @@ import org.w3c.dom.NodeList;
 
 
 
+
+
+
+import nl.xillio.xill.docgen.data.Example;
 import nl.xillio.xill.docgen.data.Parameter;
+import nl.xillio.xill.docgen.data.Reference;
 import nl.xillio.xill.docgen.exceptions.ParsingException;
 import nl.xillio.xill.docgen.impl.XmlDocumentationParser;
 
@@ -242,34 +249,109 @@ public class XmlDocumentationParserTest {
 	}
 	
 	/**
-	 * Test the parser when it fails to find a reference node.
+	 * Test the parser when it fails to find an examples node.
 	 * @throws XPathExpressionException
 	 * @throws ParsingException
 	 * @throws MalformedURLException
 	 */
 	@Test(expectedExceptions = ParsingException.class, expectedExceptionsMessageRegExp = "Failed to parse references")
-	public void testFailingToParseAllReferences() throws XPathExpressionException, ParsingException, MalformedURLException{
+	public void testNullPointerWhenParsingAllReferences() throws XPathExpressionException, ParsingException, MalformedURLException{
 		// mock
 		
-		//The xpath
+		//the document
+		Document doc = mock(Document.class);
 		
+		//The parser
 		XPath xpath = setupXPath();
 		XPathFactory factory = mock(XPathFactory.class);
 		when(factory.newXPath()).thenReturn(xpath);
+		XmlDocumentationParser parser = setupParser(factory);
 		
 		//The evaluation of the parameters.		
-		XPathExpression parametersExpression = mock(XPathExpression.class);
-		when(xpath.compile("/function/references/reference")).thenReturn(parametersExpression);
-		when(parametersExpression.evaluate(any(Document.class), eq(XPathConstants.NODESET))).thenReturn(null);
-		
-		//the url resource
-		URL resource = new URL("http://www.w3schools.com:80/xml/note.xml");
+		when(xpath.compile("/function/references/reference")).thenReturn(null);
 		
 		// run
-		XmlDocumentationParser parser = setupParser(factory);
-		parser.parse(resource, "functionName");
+		parser.parseReferences(doc, xpath);
 	}
+	
+	/**
+	 * Test the parser when it fails to find an examples node.
+	 * @throws XPathExpressionException
+	 * @throws ParsingException
+	 * @throws MalformedURLException
+	 */
+	@Test(expectedExceptions = ParsingException.class, expectedExceptionsMessageRegExp = "Failed to parse references")
+	public void testXPathExceptionWhenParsingAllReferences() throws XPathExpressionException, ParsingException, MalformedURLException{
+		// mock
 		
+		//the document
+		Document doc = mock(Document.class);
+		
+		//The parser
+		XPath xpath = setupXPath();
+		XPathFactory factory = mock(XPathFactory.class);
+		when(factory.newXPath()).thenReturn(xpath);
+		XmlDocumentationParser parser = setupParser(factory);
+		
+		//The evaluation of the parameters.		
+		when(xpath.compile("/function/references/reference")).thenThrow(new XPathExpressionException("I failed!"));
+		
+		// run
+		parser.parseReferences(doc, xpath);
+	}
+	
+	/**
+	 * Test the parser when it fails to find an examples node.
+	 * @throws XPathExpressionException
+	 * @throws ParsingException
+	 * @throws MalformedURLException
+	 */
+	@Test(expectedExceptions = ParsingException.class, expectedExceptionsMessageRegExp = "Failed to parse searchtags")
+	public void testNullPointerExceptionWhenParsingSearchTags() throws XPathExpressionException, ParsingException, MalformedURLException{
+		// mock
+		
+		//the document
+		Document doc = mock(Document.class);
+		
+		//The parser
+		XPath xpath = setupXPath();
+		XPathFactory factory = mock(XPathFactory.class);
+		when(factory.newXPath()).thenReturn(xpath);
+		XmlDocumentationParser parser = setupParser(factory);
+		
+		//The evaluation of the parameters.		
+		when(xpath.compile("/function/searchTags")).thenReturn(null);
+		
+		// run
+		parser.parseSearchTags(doc, xpath);
+	}
+	
+	
+	/**
+	 * Test the parser when it fails to find an examples node.
+	 * @throws XPathExpressionException
+	 * @throws ParsingException
+	 * @throws MalformedURLException
+	 */
+	@Test(expectedExceptions = ParsingException.class, expectedExceptionsMessageRegExp = "Failed to parse searchtags")
+	public void testXPathExceptionWhenParsingSearchTags() throws XPathExpressionException, ParsingException, MalformedURLException{
+		// mock
+		
+		//the document
+		Document doc = mock(Document.class);
+		
+		//The parser
+		XPath xpath = setupXPath();
+		XPathFactory factory = mock(XPathFactory.class);
+		when(factory.newXPath()).thenReturn(xpath);
+		XmlDocumentationParser parser = setupParser(factory);
+		
+		//The evaluation of the parameters.		
+		when(xpath.compile("/function/searchTags")).thenThrow(new XPathExpressionException("I failed!"));
+		
+		// run
+		parser.parseSearchTags(doc, xpath);
+	}
 	
 	/**
 	 * Test the parser with all possible parametervalues.
@@ -303,9 +385,6 @@ public class XmlDocumentationParserTest {
 		when(xpath.compile("/function/parameters/param")).thenReturn(parametersExpression);
 		when(parametersExpression.evaluate(any(Document.class), eq(XPathConstants.NODESET))).thenReturn(nodeList);
 		
-		//the url resource
-		URL resource = new URL("http://www.w3schools.com:80/xml/note.xml");
-		
 		// run
 		parser.parseParameters(doc, xpath);
 	}
@@ -319,18 +398,14 @@ public class XmlDocumentationParserTest {
 	@Test
 	public void testParseAllExamples() throws XPathExpressionException, ParsingException, MalformedURLException{
 		// mock
+		//The document
+		Document doc = mock(Document.class);
 		
-		//The xpath
-		
+		//The parser
 		XPath xpath = setupXPath();
 		XPathFactory factory = mock(XPathFactory.class);
 		when(factory.newXPath()).thenReturn(xpath);
-		
-		//The nodelist we return:
-		
-		//node in the nodelist
-		//This one is a fully correct node
-		
+		XmlDocumentationParser parser = setupParser(factory);
 		
 		//The nodelist:
 		Node node = mock(Node.class);
@@ -338,17 +413,16 @@ public class XmlDocumentationParserTest {
 		when(nodeList.getLength()).thenReturn(1);
 		when(nodeList.item(0)).thenReturn(node);
 	
-		
+		//Retrieving the nodelist
 		XPathExpression parametersExpression = mock(XPathExpression.class);
 		when(xpath.compile("/function/examples/example")).thenReturn(parametersExpression);
 		when(parametersExpression.evaluate(any(Document.class), eq(XPathConstants.NODESET))).thenReturn(nodeList);
 		
-		//the url resource
-		URL resource = new URL("http://www.w3schools.com:80/xml/note.xml");
+		Example example = mock(Example.class);
+		doReturn(example).when(parser).parseExample(node);
 		
 		// run
-		XmlDocumentationParser parser = setupParser(factory);
-		parser.parse(resource, "functionName");
+		parser.parseExamples(doc, xpath);
 	}
 	
 	/**
@@ -360,45 +434,31 @@ public class XmlDocumentationParserTest {
 	@Test
 	public void testParseAllReferences() throws XPathExpressionException, ParsingException, MalformedURLException{
 		// mock
+		//The document
+		Document doc = mock(Document.class);
 		
-		//The xpath
-		
+		//The parser
 		XPath xpath = setupXPath();
 		XPathFactory factory = mock(XPathFactory.class);
 		when(factory.newXPath()).thenReturn(xpath);
-		
-		//The nodelist we return:
-		
-		//node in the nodelist
-		//This one is a fully correct reference
-		Node correctReference = mock(Node.class);
-		when(correctReference.getTextContent()).thenReturn("package.construct");
-	
-		//node in the nodelist
-		//This node is an incorrect reference.
-		Node incorrectReference = mock(Node.class);
-		when(incorrectReference.getTextContent()).thenReturn("package_construct");
-		
-		//This node is an empty reference
-		Node emptyReference = mock(Node.class);
+		XmlDocumentationParser parser = setupParser(factory);
 		
 		//The nodelist:
+		Node node = mock(Node.class);
 		NodeList nodeList = mock(NodeList.class);
-		when(nodeList.getLength()).thenReturn(3);
-		when(nodeList.item(0)).thenReturn(correctReference);
-		when(nodeList.item(1)).thenReturn(incorrectReference);
-		when(nodeList.item(2)).thenReturn(emptyReference);
-		
+		when(nodeList.getLength()).thenReturn(1);
+		when(nodeList.item(0)).thenReturn(node);
+	
+		//Retrieving the nodelist
 		XPathExpression parametersExpression = mock(XPathExpression.class);
 		when(xpath.compile("/function/references/reference")).thenReturn(parametersExpression);
 		when(parametersExpression.evaluate(any(Document.class), eq(XPathConstants.NODESET))).thenReturn(nodeList);
 		
-		//the url resource
-		URL resource = new URL("http://www.w3schools.com:80/xml/note.xml");
+		Reference reference = mock(Reference.class);
+		doReturn(reference).when(parser).parseReference(node);
 		
 		// run
-		XmlDocumentationParser parser = setupParser(factory);
-		parser.parse(resource, "functionName");
+		parser.parseReferences(doc, xpath);
 	}
 	
 	/**
@@ -410,17 +470,16 @@ public class XmlDocumentationParserTest {
 	@Test
 	public void testParseSearchTags() throws XPathExpressionException, MalformedURLException, ParsingException{
 		// mock
+		//The document
+		Document doc = mock(Document.class);
 		
-		//The xpath
-		
+		//The parser
 		XPath xpath = setupXPath();
 		XPathFactory factory = mock(XPathFactory.class);
 		when(factory.newXPath()).thenReturn(xpath);
+		XmlDocumentationParser parser = setupParser(factory);
 		
-		//The nodelist we return:
-		
-		//node in the nodelist
-		//This one is a fully correct reference
+		//The search tags
 		Node correctSearchTag = mock(Node.class);
 		when(correctSearchTag.getTextContent()).thenReturn("math, abs, absolute");
 
@@ -428,14 +487,8 @@ public class XmlDocumentationParserTest {
 		when(xpath.compile("/function/searchTags")).thenReturn(parametersExpression);
 		when(parametersExpression.evaluate(any(Document.class), eq(XPathConstants.NODE))).thenReturn(correctSearchTag);
 		
-		//the url resource
-		URL resource = new URL("http://www.w3schools.com:80/xml/note.xml");
-		
-		// run
-		XmlDocumentationParser parser = setupParser(factory);
-		parser.parse(resource, "functionName");
+		parser.parseSearchTags(doc, xpath);
 	}
-		
 		
 	private XPath setupXPath() throws XPathExpressionException{
 		XPath xpath = mock(XPath.class);
@@ -458,7 +511,6 @@ public class XmlDocumentationParserTest {
 	
 	private XmlDocumentationParser setupParser(XPathFactory factory) throws ParsingException{
 		XmlDocumentationParser parser = spy(new XmlDocumentationParser(factory));
-		doReturn(new HashSet<String>(Arrays.asList())).when(parser).parseSearchTags(any(), any());
 		return parser;
 	}
 

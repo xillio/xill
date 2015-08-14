@@ -218,11 +218,10 @@ public class XmlDocumentationParser implements DocumentationParser {
 	}
 
 	Set<String> parseSearchTags(final Document doc, final XPath xpath) throws ParsingException {
-		Node searchTagNode;
 		String[] searchTags = new String[0];
 		try {
 			XPathExpression searchTagsExpr = xpath.compile("/function/searchTags");
-			searchTagNode = (Node) searchTagsExpr.evaluate(doc, XPathConstants.NODE);
+			Node searchTagNode = (Node) searchTagsExpr.evaluate(doc, XPathConstants.NODE);
 			if(searchTagNode != null) {
 				searchTags = searchTagNode.getTextContent().split("\\.");
 			}
