@@ -28,7 +28,7 @@ import java.util.*;
 public class FreeMarkerDocumentationGenerator implements DocumentationGenerator {
 	private static final Gson GSON = new GsonBuilder()
 		.create();
-	private static final Logger LOGGER = LogManager.getLogger();
+	static final Logger LOGGER = LogManager.getLogger();
 	private static final String JSON_INDEX_NAME = "_index.json";
 	private final String packageName;
 	private final Configuration fmConfig;
@@ -107,12 +107,10 @@ public class FreeMarkerDocumentationGenerator implements DocumentationGenerator 
 
 	public List<PackageDocumentationEntity> getPackagesFromJson() {
 		List<PackageDocumentationEntity> result = new ArrayList<>();
+
 		//Gather all json files
-		File[] folders = documentationFolder.listFiles();
-		if (folders == null) {
-			LOGGER.error("No packages were found");
-			return Collections.emptyList();
-		}
+		File[] folders = getDocumentationSubFolders();
+
 		for (File folder : folders) {
 			File jsonFile = getJsonFile(folder);
 
@@ -122,16 +120,27 @@ public class FreeMarkerDocumentationGenerator implements DocumentationGenerator 
 
 			String json = null;
 			try {
-				json = FileUtils.readFileToString(jsonFile);
+				json = getJsonFromFile(jsonFile);
+				result.add(GSON.fromJson(json, PackageDocumentationEntity.class));
 			} catch (IOException e) {
 				LOGGER.error("Failed to read json from " + jsonFile.getAbsolutePath(), e);
 			}
-
-			result.add(GSON.fromJson(json, PackageDocumentationEntity.class));
-
 		}
 
 		return result;
+	}
+
+	String getJsonFromFile(File file) throws IOException {
+		return FileUtils.readFileToString(file);
+	}
+
+	File[] getDocumentationSubFolders() {
+		File[] folders = documentationFolder.listFiles();
+		if (folders == null) {
+			LOGGER.error("No generated packages were found.");
+			return new File[0];
+		}
+		return folders;
 	}
 
 	File getJsonFile(File folder) {
@@ -145,11 +154,16 @@ public class FreeMarkerDocumentationGenerator implements DocumentationGenerator 
 
 	void doGenerate(Template template, File target, Map<String, Object> model) throws IOException, TemplateException {
 		//Make sure the target file exists
-		FileUtils.touch(target);
+		touch(target);
 
 		//Generate
 		FileWriter writer = new FileWriter(target);
 		template.process(model, writer);
+		writer.close();
+	}
+
+	void touch(File file) throws IOException {
+		FileUtils.touch(file);
 	}
 
 	private Map<String, Object> defaultModel() {
@@ -163,7 +177,7 @@ public class FreeMarkerDocumentationGenerator implements DocumentationGenerator 
 		return model;
 	}
 
-	private Template getTemplate(String name) throws ParsingException {
+	Template getTemplate(String name) throws ParsingException {
 		try {
 			return fmConfig.getTemplate(name + ".html");
 		} catch (IOException e) {
@@ -173,6 +187,7 @@ public class FreeMarkerDocumentationGenerator implements DocumentationGenerator 
 
 	@Override
 	public void close() throws Exception {
+		assertNotClosed();
 		isClosed = true;
 
 		try {
