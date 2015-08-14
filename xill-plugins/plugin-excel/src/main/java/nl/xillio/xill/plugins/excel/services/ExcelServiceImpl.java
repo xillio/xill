@@ -44,7 +44,8 @@ public class ExcelServiceImpl implements ExcelService {
 		return factory.createWorkbook(file);
 	}
 
-	@Override public XillSheet createSheet(XillWorkbook workbook, String sheetName) {
+	@Override
+	public XillSheet createSheet(XillWorkbook workbook, String sheetName) {
 		if(workbook == null)
 			throw new NullPointerException("The provided workbook is invalid.");
 		if(sheetName == null || sheetName.isEmpty())
@@ -57,7 +58,8 @@ public class ExcelServiceImpl implements ExcelService {
 	}
 
 
-	@Override public void removeSheet(XillWorkbook workbook, String sheetName) {
+	@Override
+	public void removeSheet(XillWorkbook workbook, String sheetName) {
 		if(workbook.isReadonly())
 			throw new IllegalArgumentException(workbook.getFileString() + " is read-only");
 		if(!workbook.fileExists())
@@ -79,7 +81,8 @@ public class ExcelServiceImpl implements ExcelService {
 			return "";
 	}
 
-	@Override public void removeSheets(XillWorkbook workbook, List<String> inputSheetNames){
+	@Override
+	public void removeSheets(XillWorkbook workbook, List<String> inputSheetNames){
 		if(workbook.isReadonly())
 			throw new IllegalArgumentException(workbook.getFileString() + " is read-only");
 		if(!workbook.fileExists())
@@ -89,33 +92,20 @@ public class ExcelServiceImpl implements ExcelService {
 			throw new IllegalArgumentException(notinworkbook);
 	}
 
-	@Override public String save(File file, XillWorkbook workbook) throws IOException {
+	@Override
+	public String save(File file, XillWorkbook workbook) throws IOException {
 		if(workbook.isReadonly())
 			throw new IllegalArgumentException("Cannot write to this file: read-only");
 		workbook.save(file);
 		return file.getCanonicalPath();
 	}
 
-	@Override public String save(XillWorkbook workbook) throws IOException{
+	@Override
+	public String save(XillWorkbook workbook) throws IOException{
 		if(workbook.isReadonly())
 			throw new IllegalArgumentException("Cannot write to this file: read-only");
 		workbook.save();
 		return workbook.getLocation();
 	}
-/*
-	@Override String save(File file, XillWorkbook workbook) throws IOException {
-		if(workbook.isReadonly())
-			throw new IllegalArgumentException("Cannot write to this file: read-only");
-		String path;
-		try{
-			path = file.getCanonicalPath();
-		}catch(IOException e){
-			throw new IllegalArgumentException("Cannot get access to file", e);
-		}
-		if(path != workbook.getLocation()) // && file exists
-			throw new IllegalArgumentException("File already exists: can only overwrite current file, no other existing files");
-		workbook.Save();
-		ret
-	}*/
 
 }

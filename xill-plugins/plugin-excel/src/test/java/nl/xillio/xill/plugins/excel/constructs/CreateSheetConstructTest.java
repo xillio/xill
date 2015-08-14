@@ -6,6 +6,7 @@ import nl.xillio.xill.plugins.excel.dataStructures.XillSheet;
 import nl.xillio.xill.plugins.excel.dataStructures.XillWorkbook;
 import nl.xillio.xill.plugins.excel.services.ExcelService;
 import nl.xillio.xill.services.inject.InjectorUtils;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static nl.xillio.xill.api.construct.ExpressionBuilderHelper.fromValue;
@@ -17,9 +18,13 @@ import static org.testng.Assert.assertEquals;
  */
 public class CreateSheetConstructTest {
 
+	@BeforeClass
+	public void initializeInjector(){
+		InjectorUtils.getGlobalInjector();
+	}
+
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Sheet name contains illegal characters: cannot contain 0x0000, 0x0003")
 	public void testProcessNullPointerException() throws Exception {
-		InjectorUtils.getGlobalInjector();
 		ExcelService service = mock(ExcelService.class);
 		MetaExpression workbookInput = fromValue("workbook");
 		XillWorkbook workbook = mock(XillWorkbook.class);
@@ -30,7 +35,6 @@ public class CreateSheetConstructTest {
 
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "^illegal$")
 	public void testProcessIllegalArgumentException() throws Exception {
-		InjectorUtils.getGlobalInjector();
 		ExcelService service = mock(ExcelService.class);
 		MetaExpression workbookInput = fromValue("workbook");
 		XillWorkbook workbook = mock(XillWorkbook.class);
@@ -41,7 +45,6 @@ public class CreateSheetConstructTest {
 
 	@Test
 	public void testProcessReturnsSheetInMeta() throws Exception{
-		InjectorUtils.getGlobalInjector();
 		ExcelService service = mock(ExcelService.class);
 		MetaExpression workbookInput = fromValue("workbook");
 		XillWorkbook workbook = mock(XillWorkbook.class);

@@ -22,7 +22,8 @@ public class RemoveSheetConstruct extends Construct{
 	@Inject
 	private ExcelService excelService;
 
-	@Override public ConstructProcessor prepareProcess(ConstructContext context) {
+	@Override
+	public ConstructProcessor prepareProcess(ConstructContext context) {
 		return new ConstructProcessor(
 						(a,b) -> process(excelService, a, b),
 						new Argument("workbook", ATOMIC),

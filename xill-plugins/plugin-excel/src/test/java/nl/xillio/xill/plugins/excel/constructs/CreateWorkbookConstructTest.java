@@ -7,6 +7,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.excel.dataStructures.XillWorkbook;
 import nl.xillio.xill.plugins.excel.services.ExcelService;
 import nl.xillio.xill.services.inject.InjectorUtils;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -22,10 +23,13 @@ import static org.testng.Assert.assertEquals;
  */
 public class CreateWorkbookConstructTest {
 
+	@BeforeClass
+	public void initializeInjector(){
+		InjectorUtils.getGlobalInjector();
+	}
+
 	@Test (expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "File already exists: no new workbook has been created.")
 	public void testProcessFileAlreadyExists() throws Exception {
-		InjectorUtils.getGlobalInjector();
-		File file = mock(File.class);
 		ExcelService service = mock(ExcelService.class);
 		ConstructContext context = mock(ConstructContext.class);
 		RobotID id = mock(RobotID.class);
@@ -37,8 +41,6 @@ public class CreateWorkbookConstructTest {
 
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Cannot write to the supplied path")
 	public void testProcessCannotWriteToPath() throws Exception{
-		InjectorUtils.getGlobalInjector();
-		File file = mock(File.class);
 		ExcelService service = mock(ExcelService.class);
 		ConstructContext context = mock(ConstructContext.class);
 		RobotID id = mock(RobotID.class);
@@ -50,8 +52,6 @@ public class CreateWorkbookConstructTest {
 
 	@Test
 	public void testProcessContainsWorkbookInMeta() throws Exception{
-		InjectorUtils.getGlobalInjector();
-		File file = mock(File.class);
 		ExcelService service = mock(ExcelService.class);
 		ConstructContext context = mock(ConstructContext.class);
 		XillWorkbook workbook = mock(XillWorkbook.class);

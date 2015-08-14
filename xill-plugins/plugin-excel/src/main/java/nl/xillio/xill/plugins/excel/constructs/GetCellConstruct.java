@@ -13,7 +13,8 @@ import nl.xillio.xill.plugins.excel.dataStructures.XillSheet;
  */
 public class GetCellConstruct extends Construct {
 
-	@Override public ConstructProcessor prepareProcess(ConstructContext context) {
+	@Override
+	public ConstructProcessor prepareProcess(ConstructContext context) {
 		return new ConstructProcessor(
 						GetCellConstruct::process,
 						new Argument("sheet", OBJECT),

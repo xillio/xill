@@ -12,7 +12,8 @@ import java.util.stream.Collectors;
  */
 public class GetSheetNamesConstruct extends Construct {
 
-	@Override public ConstructProcessor prepareProcess(ConstructContext context) {
+	@Override
+	public ConstructProcessor prepareProcess(ConstructContext context) {
 		return new ConstructProcessor(
 						GetSheetNamesConstruct::process,
 						new Argument("workbook", ATOMIC));

@@ -14,13 +14,17 @@ import nl.xillio.xill.plugins.excel.services.ExcelService;
 import java.util.LinkedHashMap;
 
 /**
- * Created by Daan Knoope on 12-8-2015.
+ * Construct to Creates a new sheet in the given workbook.
+ *
+ * @author Daan Knoope
  */
 public class CreateSheetConstruct extends Construct {
+
 	@Inject
 	private ExcelService excelService;
 
-	@Override public ConstructProcessor prepareProcess(ConstructContext context) {
+	@Override
+	public ConstructProcessor prepareProcess(ConstructContext context) {
 		return new ConstructProcessor(
 						(a, b) -> process(excelService, a,b),
 						new Argument("workboook", ATOMIC),

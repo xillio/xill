@@ -22,7 +22,8 @@ public class CreateWorkbookConstruct extends Construct{
 	@Inject
 	private ExcelService excelService;
 
-	@Override public ConstructProcessor prepareProcess(ConstructContext context) {
+	@Override
+	public ConstructProcessor prepareProcess(ConstructContext context) {
 		return new ConstructProcessor(
 						a -> process(excelService, context, a),
 						new Argument("filePath", ATOMIC));

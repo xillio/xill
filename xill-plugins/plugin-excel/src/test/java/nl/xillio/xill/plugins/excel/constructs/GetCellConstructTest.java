@@ -3,6 +3,8 @@ package nl.xillio.xill.plugins.excel.constructs;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.plugins.excel.dataStructures.XillCellRef;
 import nl.xillio.xill.plugins.excel.dataStructures.XillSheet;
+import nl.xillio.xill.services.inject.InjectorUtils;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static nl.xillio.xill.api.construct.ExpressionBuilderHelper.fromValue;
@@ -13,6 +15,11 @@ import static org.testng.Assert.assertEquals;
  * Created by Daan Knoope on 13-8-2015.
  */
 public class GetCellConstructTest {
+
+	@BeforeClass
+	public void initializeInjector(){
+		InjectorUtils.getGlobalInjector();
+	}
 
 	private MetaExpression createSheetInput(String cellContent){
 		XillSheet sheet = mock(XillSheet.class);
