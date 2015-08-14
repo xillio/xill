@@ -32,38 +32,49 @@ public class SetCellConstruct extends Construct {
 
 	public static MetaExpression process(MetaExpression sheetInput, MetaExpression column, MetaExpression row, MetaExpression value){
 		XillSheet sheet = assertMeta(sheetInput, "sheet", XillSheet.class, "Excel Sheet");
-		boolean result = false;
+		boolean result;
 
 		if(sheet == null)
 			throw new RobotRuntimeException("Incorrect sheet provided");
 		if(sheet.isReadonly())
 			throw new RobotRuntimeException("Cannot write on sheet: sheet is read-only");
-		if(Double.isNaN(row.getNumberValue().doubleValue()))
+		if(!isNumeric(row))
 			throw new RobotRuntimeException("Wrong notation for row \"" + row.getStringValue() + "\", should be numeric (e.g. 12)");
-		if(!Pattern.matches("[a-zA-Z]*|[0-9]*", column.getStringValue()))
+		if(isNumericXORAlphabetic(column))
 			throw new RobotRuntimeException("Wrong notation for column \"" + column.getStringValue() + "\", should be numerical or alphabetical notation (e.g. AB or 12)");
 
-		XillCellRef cellRef;
-		if(!Double.isNaN(column.getNumberValue().doubleValue()))
-			cellRef = new XillCellRef((column.getNumberValue().intValue()), row.getNumberValue().intValue());
-		else
-			cellRef = new XillCellRef(column.getStringValue(), row.getNumberValue().intValue());
-
-		if(!Double.isNaN(value.getNumberValue().doubleValue())) {
-			sheet.setCellValue(cellRef, value.getNumberValue().doubleValue());
-			result = true;
-		}
-		if(value.getValue() instanceof BooleanBehavior) { // DO NOT REPEAT ANYWHERE ELSE, WAS UNAVOIDABLE :-(
-			sheet.setCellValue(cellRef, value.getBooleanValue());
-			result = true;
-		}
-		else {
-			sheet.setCellValue(cellRef, value.getStringValue());
-			result = true;
-		}
+		result = setValue(value,sheet,getCellRef(column, row));
 		return fromValue(result);
 
 	}
 
+	private static boolean setValue(MetaExpression value, XillSheet sheet, XillCellRef cellRef){
+		if(isNumeric(value)) {
+			sheet.setCellValue(cellRef, value.getNumberValue().doubleValue());
+			return true;
+		}
+		else if(value.getValue() instanceof BooleanBehavior) { // DO NOT REPEAT ANYWHERE ELSE, WAS UNAVOIDABLE :-(
+			sheet.setCellValue(cellRef, value.getBooleanValue());
+			return true;
+		}
+		else {
+			sheet.setCellValue(cellRef, value.getStringValue());
+			return true;
+		}
+	}
+
+	private static XillCellRef getCellRef(MetaExpression column, MetaExpression row){
+		if(isNumeric(column))
+			return new XillCellRef(column.getNumberValue().intValue(), row.getNumberValue().intValue());
+		return new XillCellRef(column.getStringValue(), row.getNumberValue().intValue());
+	}
+
+	private static boolean isNumeric(MetaExpression expression){
+		return !Double.isNaN(expression.getNumberValue().doubleValue());
+	}
+
+	private static boolean isNumericXORAlphabetic(MetaExpression expression){
+		return Pattern.matches("[a-zA-Z]*|[0-9]*", expression.getStringValue());
+	}
 
 }

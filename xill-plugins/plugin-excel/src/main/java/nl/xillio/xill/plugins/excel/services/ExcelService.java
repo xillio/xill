@@ -6,8 +6,6 @@ import nl.xillio.xill.plugins.excel.dataStructures.XillWorkbook;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
-import java.text.ParseException;
 
 /**
  * Created by Daan Knoope on 4-8-2015.

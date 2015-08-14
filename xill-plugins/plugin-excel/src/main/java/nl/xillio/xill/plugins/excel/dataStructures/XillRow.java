@@ -13,6 +13,7 @@ public class XillRow {
 		this.row = row;
 	}
 
-
-
+	public Row getRow() {
+		return row;
+	}
 }
