@@ -102,6 +102,8 @@ public class XmlDocumentationParser implements DocumentationParser {
 		} catch (XPathExpressionException | NullPointerException e) {
 			throw new ParsingException("Failed to parse description", e);
 		}
+
+
 	}
 
 	List<Parameter> parseParameters(final Document doc, final XPath xpath) throws ParsingException {
@@ -205,11 +207,14 @@ public class XmlDocumentationParser implements DocumentationParser {
 	}
 
 	Reference parseReference(final Node node) throws ParsingException {
-		String[] reference = node.getTextContent().split("\\.");
-		if (reference.length != 2) {
-			throw new ParsingException("Incorrect reference in xml. More than one or no '.' found.");
+		String[] reference = node.getTextContent().trim().split("\\.");
+		if(reference.length == 1) {
+			return new Reference(null, reference[0]);
+		}else if(reference.length == 2) {
+			return new Reference(reference[0], reference[1]);
+		}else{
+			throw new ParsingException("Invalid reference format");
 		}
-		return new Reference(reference[0], reference[1]);
 	}
 
 	Set<String> parseSearchTags(final Document doc, final XPath xpath) throws ParsingException {
@@ -218,7 +223,9 @@ public class XmlDocumentationParser implements DocumentationParser {
 		try {
 			XPathExpression searchTagsExpr = xpath.compile("/function/searchTags");
 			searchTagNode = (Node) searchTagsExpr.evaluate(doc, XPathConstants.NODE);
-			searchTags = searchTagNode.getTextContent().split("\\.");
+			if(searchTagNode != null) {
+				searchTags = searchTagNode.getTextContent().split("\\.");
+			}
 		}catch(XPathExpressionException | NullPointerException e) {
 			throw new ParsingException("Failed to parse searchtags", e);
 		}

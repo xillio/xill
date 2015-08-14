@@ -81,6 +81,20 @@
         </#list>
     </section>
     </#if>
+
+    <#if references?? && references?size != 0>
+    <section id="references">
+        <header><h2>See Also</h2></header>
+        <#list references as reference>
+        <#if reference.package??>
+            <a href="../${reference.package}/${reference.construct}.html">${reference.package}.${reference.construct}()</a>
+        </#if>
+        <#if !(reference.package??)>
+            <a href="${reference.construct}.html">${packageName}.${reference.construct}()</a>
+        </#if>
+        </#list>
+    </section>
+    </#if>
 </main>
 <script src="../_assets/js/ace/ace.js"></script>
 <script src="../_assets/js/load-ace.js"></script>

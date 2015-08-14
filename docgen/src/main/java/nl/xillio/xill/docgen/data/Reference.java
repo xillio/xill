@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import nl.xillio.xill.docgen.PropertiesProvider;
+import nl.xillio.xill.docgen.impl.ConstructDocumentationEntity;
 
 /**
  *Represents a reference from a {@link ConstructDocumentationEntity} to another {@link ConstructDocumentationEntity}.
