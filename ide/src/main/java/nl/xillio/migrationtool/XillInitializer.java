@@ -1,10 +1,15 @@
 package nl.xillio.migrationtool;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 
+import com.google.common.reflect.Reflection;
+import com.google.inject.Inject;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.docgen.DocGen;
 import nl.xillio.xill.docgen.DocumentationEntity;
@@ -12,6 +17,8 @@ import nl.xillio.xill.docgen.DocumentationGenerator;
 import nl.xillio.xill.docgen.DocumentationParser;
 import nl.xillio.xill.docgen.exceptions.ParsingException;
 import nl.xillio.xill.docgen.impl.XillDocGen;
+import org.apache.commons.io.Charsets;
+import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,9 +42,17 @@ public class XillInitializer extends Thread {
 	private static final File PLUGIN_FOLDER = new File("plugins");
 	private PluginLoader<XillPlugin> pluginLoader;
 	private final EventHost<URL> onLoadComplete = new EventHost<>();
+	private final String cssFile;
+	private final String aceJSFile;
+	private final String aceLoader;
+	private final String editorCss;
 
-	public XillInitializer() {
-		docGen = new XillDocGen(null);
+	public XillInitializer(DocGen docGen) {
+		this.docGen = docGen;
+		cssFile = getClass().getResource(docGen.getConfig().getResourceUrl() + "/_assets/css/style.css").toExternalForm();
+		aceJSFile = getClass().getResource("/ace/ace.js").toExternalForm();
+		aceLoader = getClass().getResource("/ace/load-doc.js").toExternalForm();
+		editorCss = getClass().getResource("/editor.css").toExternalForm();
 	}
 
 	@Override
@@ -88,7 +103,21 @@ public class XillInitializer extends Thread {
 	 * Deploy the static resources for the documentation system
 	 */
 	void deployResources() {
+		List<String> files = listResources();
+		log.info(files);
+	}
 
+	List<String> listResources() {
+		try(InputStream resourceFolder = getClass().getClassLoader().getResourceAsStream(docGen.getConfig().getResourceUrl())) {
+			if(resourceFolder != null) {
+				return IOUtils.readLines(resourceFolder, Charsets.UTF_8);
+			}else{
+				log.warn("Did not find resource folder " + docGen.getConfig().getResourceUrl());
+			}
+		} catch (IOException e) {
+			log.error("Failed to list resources", e);
+		}
+		return Collections.emptyList();
 	}
 
 	DocumentationParser getParser() {
@@ -119,11 +148,21 @@ public class XillInitializer extends Thread {
 	}
 
 	private void generateDocumentation(XillPlugin plugin) {
-		try(DocumentationGenerator generator = docGen.getGenerator(plugin.getName())) {
+		try(DocumentationGenerator generator = generator(plugin.getName())) {
 			plugin.getConstructs().forEach(construct -> generateDocumentation(construct, generator));
 		}catch(Exception e) {
 			throw new RuntimeException("Failed to generate documentation for " + plugin.getClass().getName(), e);
 		}
+	}
+
+	DocumentationGenerator generator(String name) {
+		DocumentationGenerator generator = docGen.getGenerator(name);
+		generator.setProperty("cssFile", cssFile);
+		generator.setProperty("aceFile", aceJSFile);
+		generator.setProperty("aceLoader", aceLoader);
+		generator.setProperty("aceCssFile", editorCss);
+
+		return  generator;
 	}
 
 	private void generateDocumentation(Construct construct, DocumentationGenerator generator) {
@@ -146,9 +185,8 @@ public class XillInitializer extends Thread {
 		PLUGIN_FOLDER.mkdirs();
 		pluginLoader.addFolder(PLUGIN_FOLDER);
 
-		pluginLoader.getPluginManager().onPluginAccepted().addListener(plugin -> {
-			log.info("Loaded " + plugin.getClass().getSimpleName());
-		});
+		pluginLoader.getPluginManager().onPluginAccepted().addListener(plugin ->
+			log.info("Loaded " + plugin.getClass().getSimpleName()));
 	}
 
 	private void loadPlugins() {

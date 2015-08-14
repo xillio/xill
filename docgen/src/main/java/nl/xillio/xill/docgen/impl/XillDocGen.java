@@ -2,7 +2,6 @@ package nl.xillio.xill.docgen.impl;
 
 import freemarker.template.Configuration;
 import nl.xillio.xill.docgen.*;
-
 import nl.xillio.xill.docgen.exceptions.ParsingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,20 +18,20 @@ import org.elasticsearch.client.Client;
 public class XillDocGen implements DocGen {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private final Client client;
-  private final DocGenConfiguration config = new DocGenConfiguration();
+	private final DocGenConfiguration config = new DocGenConfiguration();
 	private DocumentationGenerator lastGenerator;
 
 	/**
 	 * The constructor for the {@link XillDocGen}.
-	 * @param client
-	 * 					The {@link Client}  we're using for data storage and retrieval.
+	 *
+	 * @param client The {@link Client}  we're using for data storage and retrieval.
 	 */
 	public XillDocGen(final Client client) {
 		this.client = client;
 	}
 
 	@Override
-	 public DocumentationParser getParser() throws ParsingException {
+	public DocumentationParser getParser() throws ParsingException {
 		return new XmlDocumentationParser();
 	}
 
@@ -51,8 +50,13 @@ public class XillDocGen implements DocGen {
 	}
 
 	@Override
+	public DocGenConfiguration getConfig() {
+		return config;
+	}
+
+	@Override
 	public void generateIndex() throws ParsingException {
-		if(lastGenerator == null) {
+		if (lastGenerator == null) {
 			throw new ParsingException("No packages have been parsed");
 		}
 
@@ -65,5 +69,6 @@ public class XillDocGen implements DocGen {
 
 		return configuration;
 	}
+
 
 }

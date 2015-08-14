@@ -41,11 +41,11 @@ public class HelpPane extends AnchorPane {
 	}
 
 	private void home() {
-		/*try {
-			this.display(new File(DocumentationGenerator.HELP_FOLDER, "index.html").toURI().toURL());
+		try {
+			this.display(new File("helpfiles", "index.html").toURI().toURL());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
-		}*/
+		}
 	}
 
 	/**

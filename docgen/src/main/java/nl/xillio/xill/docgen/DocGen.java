@@ -15,6 +15,7 @@ public interface DocGen {
     DocumentationParser getParser() throws ParsingException;
     DocumentationGenerator getGenerator(String collectionIdentity);
     DocumentationSearcher getSearcher();
+    DocGenConfiguration getConfig();
 
     void generateIndex() throws ParsingException;
 }

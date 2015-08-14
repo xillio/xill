@@ -1,0 +1,89 @@
+/* ------ Typography ------ */
+body {
+	-fx-font-family: "Glober SemiBold";
+	font-family: "Glober SemiBold", Glober, Segoe UI, Arial, sans-serif;
+	font-size: 12px;
+	background-color: #e5e5e5;
+	color: #3f4c54;
+	margin: 0;
+	padding: 0;
+}
+
+h1, .example-node.h1 {
+	border-bottom: 1px solid #cecece;
+	color: #777777;
+	font-size: 150%;
+	font-weight: bold;
+	margin: 0 0 0.5em 0;
+	padding: 0 0 0.25em 0px;
+}
+
+h2, .example-node.h2 {
+	border-bottom: 1px solid #cecece;
+	color: #777777;
+	font-size: 125%;
+	font-weight: bold;
+	margin: 0 0 0.5em 0;
+	padding: 0 0 0.25em 0px;
+}
+
+h3, h4, h5, h6 , .example-node.h3, .example-node.h4, .example-node.h5, .example-node.h6, .example-node.header{
+	font-weight: bold;
+	color: #777777;
+	margin: 0 0 0.5em 0;
+	padding: 0;
+}
+
+a {
+	color: #5FA9BC;
+	text-decoration: none;
+}
+
+a:visited {
+	color: #5FA9BC;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+/* ------ Table ------ */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom:20px;
+}
+table, th, td {
+   border: 1px solid #cecece
+}
+td {
+    padding: 5px;
+}
+th {
+   width: 100px;
+   font-weight: bold;
+}
+
+/* ------ Signature ------ */
+#signature .signature-content {
+   font-size: 1.5em;
+}
+#signature .parameter {
+    margin-left: 20px;
+}
+#signature .parameter-default {
+   font-weight: bold;
+}
+
+/* ----- Editor ------ */
+.example-node.code { 
+	width: 100%;
+	height: 300px;
+}
+
+.example-node.code div.ace_marker-layer div.ace_active-line{
+   background: transparent;
+}
+
+/* ------ Package index ------ */

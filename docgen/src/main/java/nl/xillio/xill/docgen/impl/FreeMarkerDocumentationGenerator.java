@@ -16,10 +16,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This is the FreeMarker implementation of the {@link DocumentationGenerator}
@@ -39,6 +36,7 @@ public class FreeMarkerDocumentationGenerator implements DocumentationGenerator 
 	private boolean isClosed;
 	private final File packageFolder;
 	private final PackageDocumentationEntity packageEntity;
+	private final Map<String, Object> defaultValues = new HashMap<>();
 
 	public FreeMarkerDocumentationGenerator(String collectionIdentity, Configuration fmConfig, File documentationFolder) {
 		packageName = collectionIdentity;
@@ -80,7 +78,7 @@ public class FreeMarkerDocumentationGenerator implements DocumentationGenerator 
 		List<PackageDocumentationEntity> packages = getPackagesFromJson();
 
 		//Build model
-		Map<String, Object> model = new HashMap<>();
+		Map<String, Object> model = defaultModel();
 		model.put("packages", PropertiesProvider.extractContent(packages));
 
 		//Get template
@@ -98,10 +96,19 @@ public class FreeMarkerDocumentationGenerator implements DocumentationGenerator 
 		}
 	}
 
+	@Override
+	public void setProperty(String name, String value) {
+		defaultValues.put(name, value);
+	}
+
 	public List<PackageDocumentationEntity> getPackagesFromJson() {
 		List<PackageDocumentationEntity> result = new ArrayList<>();
 		//Gather all json files
 		File[] folders = documentationFolder.listFiles();
+		if (folders == null) {
+			LOGGER.error("No packages were found");
+			return Collections.emptyList();
+		}
 		for (File folder : folders) {
 			File jsonFile = getJsonFile(folder);
 
@@ -141,8 +148,13 @@ public class FreeMarkerDocumentationGenerator implements DocumentationGenerator 
 		template.process(model, writer);
 	}
 
+	private Map<String, Object> defaultModel() {
+		return new HashMap<>(defaultValues);
+	}
+
 	private Map<String, Object> getModel(DocumentationEntity entity) {
-		Map<String, Object> model = entity.getProperties();
+		Map<String, Object> model = defaultModel();
+		model.putAll(entity.getProperties());
 		model.put("packageName", packageName);
 		return model;
 	}
