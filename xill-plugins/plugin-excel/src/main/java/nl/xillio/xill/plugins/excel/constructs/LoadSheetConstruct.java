@@ -22,12 +22,12 @@ public class LoadSheetConstruct extends Construct {
 	private ExcelService excelService;
 
 	@Override public ConstructProcessor prepareProcess(ConstructContext context) {
-		return new ConstructProcessor((a, b) -> process(excelService, a, b),
+		return new ConstructProcessor(
+						LoadSheetConstruct::process,
 						new Argument("workbook", ATOMIC), new Argument("sheetName", ATOMIC));
 	}
 
-	static MetaExpression process(ExcelService excelService,
-					MetaExpression workbookInput, MetaExpression sheetName){
+	static MetaExpression process(MetaExpression workbookInput, MetaExpression sheetName){
 		XillWorkbook workbook = assertMeta(workbookInput, "parameter 'workbook'", XillWorkbook.class, "result of loadWorkbook or createWorkbook");
 		XillSheet sheet = null;
 		sheet = workbook.getSheet(sheetName.getStringValue());

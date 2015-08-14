@@ -30,8 +30,7 @@ public class LoadSheetConstructTest {
 		XillWorkbook workbook = null;//mock(XillWorkbook.class);
 		MetaExpression input = fromValue("workbook object");
 		input.storeMeta(XillWorkbook.class, workbook);
-		ExcelService service = mock(ExcelService.class);
-		LoadSheetConstruct.process(service, input, fromValue("Sheet"));
+		LoadSheetConstruct.process(input, fromValue("Sheet"));
 	}
 
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Sheet can not be found in the supplied workbook")
@@ -42,7 +41,7 @@ public class LoadSheetConstructTest {
 		MetaExpression input = fromValue("workbook object");
 		input.storeMeta(XillWorkbook.class, workbook);
 		ExcelService service = mock(ExcelService.class);
-		LoadSheetConstruct.process(service, input, fromValue("Sheet"));
+		LoadSheetConstruct.process(input, fromValue("Sheet"));
 	}
 
 
@@ -56,8 +55,7 @@ public class LoadSheetConstructTest {
 		when(sheet.getColumnLength()).thenReturn(5);
 		MetaExpression input = fromValue("workbook object");
 		input.storeMeta(XillWorkbook.class, workbook);
-		ExcelService service = mock(ExcelService.class);
-		MetaExpression result = LoadSheetConstruct.process(service, input, fromValue("Sheet"));
+		MetaExpression result = LoadSheetConstruct.process(input, fromValue("Sheet"));
 		assertEquals(result.getStringValue(), "{\"Sheet name\":\"SheetName\",\"Rows\":3,\"Columns\":5}");
 		XillSheet resultSheet = result.getMeta(XillSheet.class);
 		assertEquals(resultSheet, sheet);

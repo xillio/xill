@@ -1,10 +1,8 @@
 package nl.xillio.xill.plugins.excel.constructs;
 
-import com.google.inject.Inject;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.*;
 import nl.xillio.xill.plugins.excel.dataStructures.XillWorkbook;
-import nl.xillio.xill.plugins.excel.services.ExcelService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,11 +12,9 @@ import java.util.stream.Collectors;
  */
 public class GetSheetNamesConstruct extends Construct {
 
-	@Inject
-	private ExcelService excelService;
-
 	@Override public ConstructProcessor prepareProcess(ConstructContext context) {
-		return new ConstructProcessor(a -> process(a),
+		return new ConstructProcessor(
+						GetSheetNamesConstruct::process,
 						new Argument("workbook", ATOMIC));
 	}
 

@@ -26,7 +26,9 @@ public class LoadWorkbookConstruct extends Construct {
 
 
 	@Override public ConstructProcessor prepareProcess(ConstructContext context) {
-		return new ConstructProcessor((a) -> process(excelService, context, a), new Argument("filePath", ATOMIC));
+		return new ConstructProcessor(
+						a -> process(excelService, context, a),
+						new Argument("filePath", ATOMIC));
 	}
 
 	static MetaExpression process(ExcelService excelService, ConstructContext context, MetaExpression filePath) {

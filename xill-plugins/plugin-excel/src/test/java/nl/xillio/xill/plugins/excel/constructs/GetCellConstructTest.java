@@ -3,7 +3,6 @@ package nl.xillio.xill.plugins.excel.constructs;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.plugins.excel.dataStructures.XillCellRef;
 import nl.xillio.xill.plugins.excel.dataStructures.XillSheet;
-import nl.xillio.xill.plugins.excel.services.ExcelService;
 import org.testng.annotations.Test;
 
 import static nl.xillio.xill.api.construct.ExpressionBuilderHelper.fromValue;
@@ -27,25 +26,22 @@ public class GetCellConstructTest {
 
 	@Test
 	public void testProcessReturnsNull() throws Exception {
-		ExcelService service = mock(ExcelService.class);
 		MetaExpression sheetInput = createSheetInput(null);
-		MetaExpression result = GetCellConstruct.process(service,sheetInput, fromValue(1), fromValue(1));
+		MetaExpression result = GetCellConstruct.process(sheetInput, fromValue(1), fromValue(1));
 		assertEquals(false, result.getBooleanValue());
 	}
 
 	@Test
 	public void testProcessReturnsValueNumericNotation() throws Exception{
-		ExcelService service = mock(ExcelService.class);
 		MetaExpression sheetInput = createSheetInput("INFO");
-		MetaExpression result = GetCellConstruct.process(service,sheetInput, fromValue(14), fromValue(19));
+		MetaExpression result = GetCellConstruct.process(sheetInput, fromValue(14), fromValue(19));
 		assertEquals(true, result.getBooleanValue());
 	}
 
 	@Test
 	public void testProcessReturnsValueAlphabeticNotation() throws Exception{
-		ExcelService service = mock(ExcelService.class);
 		MetaExpression sheetInput = createSheetInput("INFO");
-		MetaExpression result = GetCellConstruct.process(service,sheetInput, fromValue("AB"), fromValue(19));
+		MetaExpression result = GetCellConstruct.process(sheetInput, fromValue("AB"), fromValue(19));
 		assertEquals(true, result.getBooleanValue());
 	}
 

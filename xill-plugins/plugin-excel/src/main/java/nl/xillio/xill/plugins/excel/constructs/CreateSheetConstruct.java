@@ -21,7 +21,10 @@ public class CreateSheetConstruct extends Construct {
 	private ExcelService excelService;
 
 	@Override public ConstructProcessor prepareProcess(ConstructContext context) {
-		return new ConstructProcessor((a, b) -> process(excelService, a,b), new Argument("workboook", ATOMIC), new Argument("name", ATOMIC));
+		return new ConstructProcessor(
+						(a, b) -> process(excelService, a,b),
+						new Argument("workboook", ATOMIC),
+						new Argument("name", ATOMIC));
 	}
 
 	static MetaExpression process(ExcelService service, MetaExpression workbookInput, MetaExpression name){
