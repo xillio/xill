@@ -49,9 +49,7 @@ public class FreeMarkerDocumentationGenerator implements DocumentationGenerator 
 
 	@Override
 	public void generate(DocumentationEntity entity) throws ParsingException, IllegalStateException {
-		if (isClosed) {
-			throw new IllegalStateException("This generator has already been closed");
-		}
+		assertNotClosed();
 
 		//Get template
 		Template template = getTemplate(entity.getType());
@@ -71,6 +69,12 @@ public class FreeMarkerDocumentationGenerator implements DocumentationGenerator 
 
 		//Save to list
 		packageEntity.add(entity);
+	}
+
+	void assertNotClosed() {
+		if (isClosed) {
+			throw new IllegalStateException("This generator has already been closed");
+		}
 	}
 
 	@Override
@@ -130,7 +134,7 @@ public class FreeMarkerDocumentationGenerator implements DocumentationGenerator 
 		return result;
 	}
 
-	private File getJsonFile(File folder) {
+	File getJsonFile(File folder) {
 		File jsonFile = new File(folder, JSON_INDEX_NAME);
 		if (!jsonFile.exists()) {
 			return null;
@@ -152,7 +156,7 @@ public class FreeMarkerDocumentationGenerator implements DocumentationGenerator 
 		return new HashMap<>(defaultValues);
 	}
 
-	private Map<String, Object> getModel(DocumentationEntity entity) {
+	Map<String, Object> getModel(DocumentationEntity entity) {
 		Map<String, Object> model = defaultModel();
 		model.putAll(entity.getProperties());
 		model.put("packageName", packageName);
@@ -180,14 +184,14 @@ public class FreeMarkerDocumentationGenerator implements DocumentationGenerator 
 		}
 	}
 
-	private void generatePackageIndex() throws ParsingException, IOException, TemplateException {
+	void generatePackageIndex() throws ParsingException, IOException, TemplateException {
 		File target = new File(packageFolder, "_index.html");
 		Template template = getTemplate("package");
 		Map<String, Object> packageModel = getModel(packageEntity);
 		doGenerate(template, target, packageModel);
 	}
 
-	private void saveJsonSummary() throws ParsingException {
+	void saveJsonSummary() throws ParsingException {
 		String jsonString = GSON.toJson(packageEntity);
 
 		try {

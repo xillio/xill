@@ -33,8 +33,7 @@ public class ConstructDocumentationEntity implements DocumentationEntity {
 	 * Gets handed the name of the package of the construct and the name of the construct.
 	 *
 	 * @param identity
-	 *        The name of the package of the construct.
-	 * @param identity
+	 *        The name of the package of the construct
 	 */
 	public ConstructDocumentationEntity(final String identity) {
 		this.identity = identity;
@@ -62,7 +61,7 @@ public class ConstructDocumentationEntity implements DocumentationEntity {
 	/**
 	 * Sets the description of the {@link ConstructDocumentationEntity}
 	 *
-	 * @param Description
+	 * @param description
 	 *        The description of the function.
 	 */
 	public void setDescription(final String description) {
