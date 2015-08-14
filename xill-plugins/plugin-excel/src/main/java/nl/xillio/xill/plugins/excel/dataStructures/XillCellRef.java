@@ -14,6 +14,11 @@ public class XillCellRef implements MetadataExpression{
 		return cellRef.getColumn() == this.getColumn() && cellRef.getRow() == this.getRow();
 	}
 
+	@Override
+	public int hashCode(){
+		return getColumn() * 100000 + getRow();
+	}
+
 	private CellReference cellReference;
 
 	public XillCellRef(String column, int row){
