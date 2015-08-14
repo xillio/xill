@@ -163,8 +163,12 @@ public class WebServiceImpl implements WebService {
 	@Override
 	public File getScreenshotAsFile(final WebVariable var) {
 		WebDriver driver = var.getDriver();
-		PhantomJSDriver castedDriver = (PhantomJSDriver) driver;
+		PhantomJSDriver castedDriver = getJSDriver(driver);
 		return castedDriver.getScreenshotAs(OutputType.FILE);
+	}
+	
+	PhantomJSDriver getJSDriver(WebDriver driver){
+		return (PhantomJSDriver) driver;
 	}
 
 	@Override
@@ -178,7 +182,6 @@ public class WebServiceImpl implements WebService {
 		WebElement element = elem.getElement();
 		WebDriver driver = page.getDriver();
 		driver.switchTo().frame(element);
-
 	}
 
 	@Override
@@ -209,7 +212,7 @@ public class WebServiceImpl implements WebService {
 
 	@Override
 	public void httpGet(final WebVariable var, final String url) throws ClassCastException, MalformedURLException {
-		PhantomJSDriver driver = (PhantomJSDriver) var.getDriver();
+		PhantomJSDriver driver = getJSDriver(var.getDriver());
 		if (getRef(url) != null) {
 			driver.get("about:blank");
 		}
@@ -225,7 +228,7 @@ public class WebServiceImpl implements WebService {
 	 *         the reference of this url.
 	 * @throws MalformedURLException
 	 */
-	private String getRef(final String url) throws MalformedURLException {
+	String getRef(final String url) throws MalformedURLException {
 		URL newURL = new URL(url);
 		if(newURL == null || !checkSupportedURL(newURL)){
 			throw new MalformedURLException();
@@ -233,8 +236,8 @@ public class WebServiceImpl implements WebService {
 		return newURL.getRef();
 	}
 	
-	private boolean checkSupportedURL(URL url){
-		return url.getProtocol().toLowerCase().equals("http") ||url.getProtocol().toLowerCase().equals("https");
+	boolean checkSupportedURL(URL url){
+		return "http".equalsIgnoreCase(url.getProtocol()) || "https".equalsIgnoreCase(url.getProtocol());
 	}
 
 	@Override
@@ -259,7 +262,6 @@ public class WebServiceImpl implements WebService {
 			// set infinite timeout
 			driver.manage().timeouts().pageLoadTimeout(-1, TimeUnit.MILLISECONDS);
 		}
-
 	}
 
 	@Override
