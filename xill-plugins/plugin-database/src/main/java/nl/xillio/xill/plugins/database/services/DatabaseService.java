@@ -18,14 +18,17 @@ public interface DatabaseService extends XillService {
 	 * @param connection
 	 *        The JDBC connection
 	 * @param query
-	 *        A SQL query, can contain multiple queries
+	 *        A SQL query, can contain multiple queries (if enabled in the JDBC driver).
+	 *        Can be parametrised with ":parameterName". All other colons should be escaped.
+	 * @param parameters
+	 *        Parameters of which the values are filled into the query at points where ":key" is found
 	 * @param timeout
 	 *        Maximum timeout in seconds
 	 * @return An Integer if the query contains one insert or update statement, a {@link StatementIterator} otherwise.
 	 * @throws SQLException
 	 *         When the query fails
 	 */
-	Object query(Connection connection, String query, int timeout) throws SQLException;
+	Object query(Connection connection, String query, List<LinkedHashMap<String, Object>> parameters, int timeout) throws SQLException;
 
 	/**
 	 * @param connection
@@ -34,7 +37,7 @@ public interface DatabaseService extends XillService {
 	 * @return
 	 * @throws SQLException
 	 */
-	LinkedHashMap<String,Object> getObject(Connection connection, String tblName, LinkedHashMap<String, Object> constraints) throws SQLException;
+	LinkedHashMap<String, Object> getObject(Connection connection, String tblName, LinkedHashMap<String, Object> constraints) throws SQLException;
 
 	/**
 	 * @param connection

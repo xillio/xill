@@ -6,13 +6,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -21,12 +22,13 @@ import nl.xillio.xill.plugins.database.util.StatementIterator;
 import nl.xillio.xill.plugins.database.util.Tuple;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.core.config.plugins.validation.ConstraintValidator;
 
 import com.google.common.collect.Iterators;
 
 @SuppressWarnings("unchecked")
 public abstract class BaseDatabaseService implements DatabaseService {
+
+	private static final Pattern PARAMETER_PATTERN = Pattern.compile("(?!\\\\):([a-zA-Z]+)");
 
 	private static ConnectionMetadata lastConnection;
 
@@ -58,10 +60,23 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	}
 
 	@Override
-	public Object query(final Connection connection, final String query, final int timeout) throws SQLException {
-		Statement stmt = connection.createStatement();
+	public Object query(final Connection connection, final String query, List<LinkedHashMap<String, Object>> parameters, final int timeout) throws SQLException {
+		PreparedStatement stmt = parseNamedParameters(connection, query);
 		stmt.setQueryTimeout(timeout);
-		stmt.execute(query);
+
+		if (parameters == null || parameters.size() == 0) {
+			stmt.execute(query);
+		}
+		else if (parameters.size() == 1) {
+			LinkedHashMap<String, Object> parameter = parameters.get(0);
+			fillStatement(parameter, stmt, 1);
+			stmt.execute();
+		}
+		else
+		{
+			int[] updateCounts = executeBatch(stmt, extractParameterNames(query), parameters);
+			return Arrays.asList(updateCounts, 0).iterator();
+		}
 
 		// If the first result is the only result and an update count simply return that count, otherwise create an iterator over the statement
 		int firstCount = stmt.getUpdateCount();
@@ -76,6 +91,56 @@ public abstract class BaseDatabaseService implements DatabaseService {
 			}
 		}
 		return new StatementIterator(stmt);
+	}
+
+	/**
+	 * Parse a {@link PreparedStatement} from a query with named parameters
+	 * 
+	 * @param connection
+	 * @param query
+	 *        The query to parse
+	 * @return An unused {@link PreparedStatement}.
+	 * @throws SQLException
+	 */
+	private PreparedStatement parseNamedParameters(Connection connection, String query) throws SQLException {
+		Matcher m = PARAMETER_PATTERN.matcher(query);
+
+		String preparedQuery = m.replaceAll("?");
+		PreparedStatement stmt = connection.prepareStatement(preparedQuery);
+
+		return stmt;
+	}
+
+	/**
+	 * 
+	 * @param query
+	 * @return The names of the parameters in the given query in order of appearance
+	 */
+	private List<String> extractParameterNames(String query) {
+		Matcher m = PARAMETER_PATTERN.matcher(query);
+		List<String> indexedParameters = new ArrayList<>();
+		while (m.find()) {
+			String paramName = m.group(1);
+			// Object parameter = parameters.get(paramName);
+			// if (parameter == null)
+			// throw new IllegalArgumentException("The Parameters argument should contain: \"" + paramName + "\"");
+			indexedParameters.add(paramName);
+		}
+		return indexedParameters;
+	}
+
+	private int[] executeBatch(PreparedStatement stmt, List<String> indexedParameters, List<LinkedHashMap<String, Object>> parameters) throws SQLException {
+		for (LinkedHashMap<String, Object> parameter : parameters) {
+			for (int i = 0; i < indexedParameters.size(); i++) {
+				String indexedParameter = indexedParameters.get(i);
+				Object value = parameter.get(indexedParameter);
+				if (value == null)
+				  throw new IllegalArgumentException("The Parameters argument should contain: \"" + indexedParameter + "\"");
+				stmt.setObject(i + 1, value);
+			}
+			stmt.addBatch();
+		}
+		return stmt.executeBatch();
 	}
 
 	/**
@@ -133,30 +198,28 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	}
 
 	@Override
-	public LinkedHashMap<String,Object> getObject(final Connection connection, final String table, final LinkedHashMap<String, Object> constraints) throws SQLException {
+	public LinkedHashMap<String, Object> getObject(final Connection connection, final String table, final LinkedHashMap<String, Object> constraints) throws SQLException {
 		// prepare statement
 		PreparedStatement statement = null;
-		LinkedHashMap<String,Object> notNullConstraints = new LinkedHashMap<>
-		(constraints.entrySet().stream()
-				.filter(e -> e.getValue() != null)
-				.collect(Collectors.toMap(e->e.getKey(),e->e.getValue())));
-		
+		LinkedHashMap<String, Object> notNullConstraints = new LinkedHashMap<>
+		    (constraints.entrySet().stream()
+		      .filter(e -> e.getValue() != null)
+		      .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue())));
+
 		String query = createSelectQuery(table, new ArrayList<String>(notNullConstraints.keySet()));
 		statement = connection.prepareStatement(query);
 
-		
 		// Fill out values
-		fillStatement(notNullConstraints, statement,1);
+		fillStatement(notNullConstraints, statement, 1);
 
 		// perform query
 
 		ResultSet result = statement.executeQuery();
 		ResultSetMetaData rs = result.getMetaData();
-		
+
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		if (result.next()) {
-			
-			
+
 			for (String s : constraints.keySet()) {
 				String here = rs.getColumnName(result.findColumn(s));
 				Object value = result.getObject(s);
@@ -231,7 +294,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		String sql = "INSERT INTO " + table + " (" + ks + ") VALUES (" + vs + ")";
 
 		PreparedStatement statement = connection.prepareStatement(sql);
-		fillStatement(newObject, statement,1);
+		fillStatement(newObject, statement, 1);
 		statement.execute();
 	}
 
@@ -243,12 +306,12 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		String sql = "UPDATE " + table + " SET " + ss + " WHERE " + ws;
 
 		PreparedStatement statement = connection.prepareStatement(sql);
-		
-		fillStatement(newObject, statement,1);
-		LinkedHashMap<String, Object > constraintsValues = new LinkedHashMap<>();
-		keys.forEach(e->constraintsValues.put(e, newObject.get(e)));
-		fillStatement(constraintsValues, statement,newObject.size() + 1);
-		
+
+		fillStatement(newObject, statement, 1);
+		LinkedHashMap<String, Object> constraintsValues = new LinkedHashMap<>();
+		keys.forEach(e -> constraintsValues.put(e, newObject.get(e)));
+		fillStatement(constraintsValues, statement, newObject.size() + 1);
+
 		statement.execute();
 		// if no rows were affected by an update, insert a new row
 		if (statement.getUpdateCount() == 0) {
@@ -286,4 +349,5 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	public static ConnectionMetadata getLastConnection() {
 		return lastConnection;
 	}
+
 }
