@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -68,13 +69,17 @@ public class ExcelServiceImpl implements ExcelService {
 	}
 
 	String notInWorkbook(List<String> inputSheetNames, XillWorkbook workbook){
-		List<String> inWorkbook = workbook.getSheetNames();
-		inWorkbook.removeAll(inputSheetNames);
-		if(!inWorkbook.isEmpty()){
+		List<String> notInWorkbook = new ArrayList<>(inputSheetNames);
+		notInWorkbook.removeAll(workbook.getSheetNames());
+		List<String> inWorkbook = new ArrayList<>(inputSheetNames);
+		inWorkbook.removeAll(notInWorkbook);
+		for(String sheet : inWorkbook)
+			workbook.removeSheet(sheet);
+		if(!notInWorkbook.isEmpty()){
 			String notRemoved = "Sheet(s) [";
-			for(int i = 0; i < inWorkbook.size() - 1; i++)
-				notRemoved += inWorkbook.get(i) + ",";
-			notRemoved += inWorkbook.get(inWorkbook.size() -1) + "] do not exist in the current workbook, no sheets have been deleted.";
+			for(int i = 0; i < notInWorkbook.size() - 1; i++)
+				notRemoved += notInWorkbook.get(i) + ",";
+			notRemoved += notInWorkbook.get(notInWorkbook.size() -1) + "] do not exist in the current workbook; they could not be deleted.";
 			return notRemoved;
 		}
 		else

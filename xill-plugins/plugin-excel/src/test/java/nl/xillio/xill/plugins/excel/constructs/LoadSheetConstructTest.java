@@ -43,6 +43,16 @@ public class LoadSheetConstructTest {
 	}
 
 
+	@Test(expectedExceptions = RobotRuntimeException.class)
+	public void testProcessThrowsRobotRuntime() throws Exception{
+		XillWorkbook workbook = mock(XillWorkbook.class);
+		when(workbook.getSheet(anyString())).thenThrow(new IllegalArgumentException(""));
+		MetaExpression input = fromValue("workbook object");
+		input.storeMeta(XillWorkbook.class, workbook);
+		LoadSheetConstruct.process(input, fromValue("sheet"));
+	}
+
+
 	@Test
 	public void testProcessReturnsCorrectly() throws Exception{
 		XillWorkbook workbook = mock(XillWorkbook.class);//mock(XillWorkbook.class);

@@ -51,11 +51,11 @@ public class RemoveSheetConstruct extends Construct{
 		return fromValue(true);
 	}
 
-	static MetaExpression processMultiple(ExcelService service, XillWorkbook workbook, MetaExpression sheetNames){
-		List<MetaExpression> sheets = (List<MetaExpression>)(sheetNames.getValue());
-		List<String> sheetnames = sheets.stream().map(MetaExpression::getStringValue).collect(Collectors.toList());
+	static MetaExpression processMultiple(ExcelService service, XillWorkbook workbook, MetaExpression sheetNamesInput){
+		List<String> sheetNames = ((List<MetaExpression>)(sheetNamesInput.getValue())).stream().
+						map(MetaExpression::getStringValue).collect(Collectors.toList());
 		try{
-			service.removeSheets(workbook, sheetnames);
+			service.removeSheets(workbook, sheetNames);
 		}catch(IllegalArgumentException e){
 			throw new RobotRuntimeException(e.getMessage(), e);
 		}

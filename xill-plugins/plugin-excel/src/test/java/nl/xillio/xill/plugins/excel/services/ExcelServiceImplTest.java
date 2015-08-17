@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
@@ -59,7 +61,7 @@ public class ExcelServiceImplTest {
 	@Test (expectedExceptions = FileAlreadyExistsException.class,
 					expectedExceptionsMessageRegExp = "File already exists: no new workbook has been created.")
 	public void testCreateWorkbookFileAlreadyExists() throws Exception {
-		File file = createFile(true,true);
+		File file = createFile(true, true);
 		ExcelService service = createService(null);
 		service.createWorkbook(file);
 	}
@@ -121,7 +123,7 @@ public class ExcelServiceImplTest {
 					expectedExceptionsMessageRegExp = "Workbook is read-only")
 	public void testCreateSheetReadOnly() throws Exception{
 		ExcelService service = createService(null);
-		service.createSheet(createWorkbook(true),"a");
+		service.createSheet(createWorkbook(true), "a");
 	}
 
 
@@ -132,6 +134,132 @@ public class ExcelServiceImplTest {
 		XillSheet sheet = mock(XillSheet.class);
 		when(workbook.makeSheet(anyString())).thenReturn(sheet);
 		assertEquals(sheet, service.createSheet(workbook, "bla"));
+	}
+
+	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = ".* is read-only")
+	public void testRemoveSheetReadOnly() throws Exception{
+		XillWorkbook workbook = mock(XillWorkbook.class);
+		ExcelServiceImpl service = new ExcelServiceImpl(null);
+		when(workbook.isReadonly()).thenReturn(true);
+		service.removeSheet(workbook, "sheetname");
+	}
+
+	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = ".* does not exist anymore")
+	public void testRemoveSheetFileDoesNotExist() throws Exception{
+		XillWorkbook workbook = mock(XillWorkbook.class);
+		ExcelServiceImpl service = new ExcelServiceImpl(null);
+		when(workbook.isReadonly()).thenReturn(false);
+		when(workbook.fileExists()).thenReturn(false);
+		service.removeSheet(workbook, "name");
+	}
+
+	@Test
+	public void testRemovesheet() throws Exception{
+		XillWorkbook workbook = mock(XillWorkbook.class);
+		ExcelServiceImpl service = new ExcelServiceImpl(null);
+		when(workbook.isReadonly()).thenReturn(false);
+		when(workbook.fileExists()).thenReturn(true);
+		service.removeSheet(workbook, "name");
+		verify(workbook,times(1)).removeSheet(anyString());
+	}
+
+	@Test
+	public void testNotInWorkbook() throws Exception{
+		ExcelServiceImpl service = new ExcelServiceImpl(null);
+
+		List<String> existingSheetNames = Arrays.asList("foo", "bar");
+		XillWorkbook workbook = mock(XillWorkbook.class);
+		when(workbook.getSheetNames()).thenReturn(existingSheetNames);
+
+		List<String> notInWorkbook = Arrays.asList("Oak", "Willow", "Maple");
+		List<String> partiallyInWorkbook = Arrays.asList("foo", "Oak");
+		List<String> singletonInWorbook = Arrays.asList("foo");
+		List<String> exactlyInWorkbook = Arrays.asList("foo", "bar");
+
+		assertEquals(service.notInWorkbook(notInWorkbook, workbook), "Sheet(s) [Oak,Willow,Maple] do not exist in the current workbook; they could not be deleted.");
+		assertEquals(service.notInWorkbook(partiallyInWorkbook, workbook), "Sheet(s) [Oak] do not exist in the current workbook; they could not be deleted.");
+		verify(workbook, times(1)).removeSheet("foo");
+		assertEquals(service.notInWorkbook(singletonInWorbook, workbook), "");
+		verify(workbook, times(2)).removeSheet("foo");
+		assertEquals(service.notInWorkbook(exactlyInWorkbook, workbook), "");
+		verify(workbook, times(3)).removeSheet("foo");
+		verify(workbook, times(1)).removeSheet("bar");
+		verify(workbook, times(4)).removeSheet(anyString());
+	}
+
+	@Test (expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = ".* is read-only")
+	public void removeSheetsReadonly() throws Exception{
+		XillWorkbook workbook = mock(XillWorkbook.class);
+		when(workbook.isReadonly()).thenReturn(true);
+		ExcelServiceImpl service = new ExcelServiceImpl(null);
+		service.removeSheets(workbook, null);
+	}
+
+	@Test (expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = ".* does not exist anymore")
+	public void removeSheetsFileDoesNotExist() throws Exception{
+		XillWorkbook workbook = mock(XillWorkbook.class);
+		when(workbook.isReadonly()).thenReturn(false);
+		when(workbook.fileExists()).thenReturn(false);
+		ExcelServiceImpl service = new ExcelServiceImpl(null);
+		service.removeSheets(workbook, null);
+	}
+
+	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp =
+					"Sheet\\(s\\) \\[Apple\\] do not exist in the current workbook\\; they could not be deleted\\.")
+	public void removeSheetsInvalidNames() throws Exception{
+		XillWorkbook workbook = mock(XillWorkbook.class);
+		when(workbook.isReadonly()).thenReturn(false);
+		when(workbook.fileExists()).thenReturn(true);
+		when(workbook.getSheetNames()).thenReturn(Arrays.asList("foo", "Pear"));
+		ExcelServiceImpl service = new ExcelServiceImpl(null);
+		service.removeSheets(workbook, Arrays.asList("foo", "Apple"));
+	}
+
+	@Test
+	public void removeSheets() throws Exception{
+		XillWorkbook workbook = mock(XillWorkbook.class);
+		when(workbook.isReadonly()).thenReturn(false);
+		when(workbook.fileExists()).thenReturn(true);
+		when(workbook.getSheetNames()).thenReturn(Arrays.asList("Pear", "Banana"));
+		ExcelServiceImpl service = new ExcelServiceImpl(null);
+		service.removeSheets(workbook, Arrays.asList("Pear", "Banana"));
+	}
+
+	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "Cannot write to this file: read-only")
+	public void saveReadOnly() throws Exception{
+		XillWorkbook workbook = mock(XillWorkbook.class);
+		ExcelService service = new ExcelServiceImpl(null);
+		when(workbook.isReadonly()).thenReturn(true);
+		service.save(mock(File.class), workbook);
+	}
+
+	@Test
+	public void save() throws Exception{
+		ExcelService service = new ExcelServiceImpl(null);
+		XillWorkbook workbook = mock(XillWorkbook.class);
+		when(workbook.isReadonly()).thenReturn(false);
+		File file = mock(File.class);
+		when(file.getCanonicalPath()).thenReturn("thispath");
+		assertEquals(service.save(file, workbook), "thispath");
+		verify(workbook, times(1)).save(file);
+	}
+
+	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "Cannot write to this file: read-only")
+	public void saveOverrideReadOnly() throws Exception{
+		ExcelService service = new ExcelServiceImpl(null);
+		XillWorkbook workbook = mock(XillWorkbook.class);
+		when(workbook.isReadonly()).thenReturn(true);
+		service.save(workbook);
+	}
+
+	@Test
+	public void saveOverride() throws Exception{
+		ExcelService service = new ExcelServiceImpl(null);
+		XillWorkbook workbook = mock(XillWorkbook.class);
+		when(workbook.isReadonly()).thenReturn(false);
+		when(workbook.getLocation()).thenReturn("location");
+		assertEquals(service.save(workbook), "location");
+		verify(workbook, times(1)).save();
 	}
 
 }
