@@ -1,24 +1,14 @@
 package nl.xillio.migrationtool;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.reflect.Reflection;
-import com.google.inject.Inject;
 import nl.xillio.xill.api.construct.Construct;
-import nl.xillio.xill.docgen.DocGen;
-import nl.xillio.xill.docgen.DocumentationEntity;
-import nl.xillio.xill.docgen.DocumentationGenerator;
-import nl.xillio.xill.docgen.DocumentationParser;
+import nl.xillio.xill.docgen.*;
 import nl.xillio.xill.docgen.exceptions.ParsingException;
-import nl.xillio.xill.docgen.impl.XillDocGen;
-import org.apache.commons.io.Charsets;
-import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,20 +23,26 @@ import nl.xillio.xill.services.inject.InjectorUtils;
 import nl.xillio.xill.services.inject.PluginInjectorModule;
 
 /**
- * This {@link Thread} is responsible for loading the plugins an and initializing the language
+ * This {@link Thread} is responsible for loading the plugins an and initializing the language.
+ * @author Thomas Biesaart
  */
 public class XillInitializer extends Thread {
 	private final DocGen docGen;
 	private DocumentationParser parser;
-	private static final Logger log = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	private static final File PLUGIN_FOLDER = new File("plugins");
 	private PluginLoader<XillPlugin> pluginLoader;
-	private final EventHost<URL> onLoadComplete = new EventHost<>();
+	private final EventHost<InitializationResult> onLoadComplete = new EventHost<>();
 	private final String cssFile;
 	private final String aceJSFile;
 	private final String aceLoader;
 	private final String editorCss;
+	private DocumentationSearcher searcher;
 
+	/**
+	 * Create a new XillInitializer.
+	 * @param docGen the DocGen set to use
+	 */
 	public XillInitializer(DocGen docGen) {
 		this.docGen = docGen;
 		cssFile = getClass().getResource(docGen.getConfig().getResourceUrl() + "/_assets/css/style.css").toExternalForm();
@@ -59,65 +55,42 @@ public class XillInitializer extends Thread {
 	public void run() {
 		parser = getParser();
 
-		log.info("Loading Xill language plugins");
+		LOGGER.info("Loading Xill language plugins...");
 
-		// Deploy documentation system static files
-		deployResources();
-
-		// Initialize the loader
+		LOGGER.debug("Initializing loader...");
 		initializeLoader();
 
-		// Load
+		LOGGER.debug("Loading plugins...");
 		loadPlugins();
 
-		// We are done loading now set up the injector
+		LOGGER.debug("Initializing injector...");
 		initializeInjector();
 
-		// Load the constructs
+		LOGGER.debug("Initializing plugins...");
 		initializePlugins();
 
-		// Now we generate documentation
+		LOGGER.debug("Generating documentation...");
 		generateDocumentation();
 
-		// And finally generate the index
+		LOGGER.debug("Generating documentation index...");
 		generateIndex();
 
-		log.info("Done loading plugins");
-		/*try {
-			onLoadComplete.invoke(new File(DocumentationGenerator.HELP_FOLDER, "index.html").toURI().toURL());
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}*/
+		LOGGER.info("Done loading plugins...");
 
+		try {
+			URL docUrl = new File(docGen.getConfig().getDocumentationFolder(), "index.html").toURI().toURL();
+			onLoadComplete.invoke(new InitializationResult(docUrl, getSearcher()));
+		} catch (MalformedURLException e) {
+			LOGGER.error("Failed to call onLoadComplete event!", e);
+		}
 	}
 
 	private void generateIndex() {
 		try {
 			docGen.generateIndex();
 		} catch (ParsingException e) {
-			log.error("Failed to generate index", e);
+			LOGGER.error("Failed to generate index", e);
 		}
-	}
-
-	/**
-	 * Deploy the static resources for the documentation system
-	 */
-	void deployResources() {
-		List<String> files = listResources();
-		log.info(files);
-	}
-
-	List<String> listResources() {
-		try(InputStream resourceFolder = getClass().getClassLoader().getResourceAsStream(docGen.getConfig().getResourceUrl())) {
-			if(resourceFolder != null) {
-				return IOUtils.readLines(resourceFolder, Charsets.UTF_8);
-			}else{
-				log.warn("Did not find resource folder " + docGen.getConfig().getResourceUrl());
-			}
-		} catch (IOException e) {
-			log.error("Failed to list resources", e);
-		}
-		return Collections.emptyList();
 	}
 
 	DocumentationParser getParser() {
@@ -126,6 +99,14 @@ public class XillInitializer extends Thread {
 		} catch (ParsingException e) {
 			throw new RuntimeException("Failed get parser", e);
 		}
+	}
+	
+	DocumentationSearcher getSearcher() {
+		if(this.searcher == null) {
+			this.searcher = docGen.getSearcher();
+		}
+
+		return this.searcher;
 	}
 
 	private void initializeInjector() {
@@ -136,9 +117,9 @@ public class XillInitializer extends Thread {
 	private void initializePlugins() {
 		for (XillPlugin plugin : getPlugins()) {
 			try {
-				plugin.initialize();	
+				plugin.initialize();
 			} catch (Exception e) {
-				log.error("Exception while initializing " + plugin, e);
+				LOGGER.error("Exception while initializing " + plugin, e);
 			}
 		}
 	}
@@ -148,9 +129,9 @@ public class XillInitializer extends Thread {
 	}
 
 	private void generateDocumentation(XillPlugin plugin) {
-		try(DocumentationGenerator generator = generator(plugin.getName())) {
+		try (DocumentationGenerator generator = generator(plugin.getName())) {
 			plugin.getConstructs().forEach(construct -> generateDocumentation(construct, generator));
-		}catch(Exception e) {
+		} catch (Exception e) {
 			throw new RuntimeException("Failed to generate documentation for " + plugin.getClass().getName(), e);
 		}
 	}
@@ -162,21 +143,22 @@ public class XillInitializer extends Thread {
 		generator.setProperty("aceLoader", aceLoader);
 		generator.setProperty("aceCssFile", editorCss);
 
-		return  generator;
+		return generator;
 	}
 
 	private void generateDocumentation(Construct construct, DocumentationGenerator generator) {
 		URL url = construct.getDocumentationResource();
 
-		if(url == null) {
+		if (url == null) {
 			return;
 		}
 
 		try {
 			DocumentationEntity entity = parser.parse(url, construct.getName());
+			getSearcher().index(generator.getIdentity(), entity);
 			generator.generate(entity);
 		} catch (ParsingException e) {
-			log.error("Failed to generate documentation from " + url, e);
+			LOGGER.error("Failed to generate documentation from " + url, e);
 		}
 	}
 
@@ -186,7 +168,7 @@ public class XillInitializer extends Thread {
 		pluginLoader.addFolder(PLUGIN_FOLDER);
 
 		pluginLoader.getPluginManager().onPluginAccepted().addListener(plugin ->
-			log.info("Loaded " + plugin.getClass().getSimpleName()));
+			LOGGER.info("Loaded " + plugin.getClass().getSimpleName()));
 	}
 
 	private void loadPlugins() {
@@ -198,13 +180,15 @@ public class XillInitializer extends Thread {
 	}
 
 	/**
+	 * List the plugins.
 	 * @return a list of all loaded plugins
 	 */
 	public List<XillPlugin> getPlugins() {
-		return pluginLoader.getPluginManager().getPlugins();
+		return new ArrayList<>(pluginLoader.getPluginManager().getPlugins());
 	}
 
 	/**
+	 * Get the loader.
 	 * @return the last created {@link PluginLoader}
 	 */
 	public PluginLoader<XillPlugin> getLoader() {
@@ -212,11 +196,29 @@ public class XillInitializer extends Thread {
 	}
 
 	/**
-	 * This event is called every time the initializer is done loading plugins
+	 * This event is called every time the initializer is done loading plugins.
 	 *
 	 * @return the event
 	 */
-	public Event<URL> getOnLoadComplete() {
+	public Event<InitializationResult> getOnLoadComplete() {
 		return onLoadComplete.getEvent();
+	}
+
+	public static class InitializationResult {
+		private final URL documentationIndex;
+		private final DocumentationSearcher searcher;
+
+		public InitializationResult(URL documentationIndex, DocumentationSearcher searcher) {
+			this.documentationIndex = documentationIndex;
+			this.searcher = searcher;
+		}
+
+		public URL getDocumentationIndex() {
+			return documentationIndex;
+		}
+
+		public DocumentationSearcher getSearcher() {
+			return searcher;
+		}
 	}
 }

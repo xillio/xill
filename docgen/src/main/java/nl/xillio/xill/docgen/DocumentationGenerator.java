@@ -29,4 +29,10 @@ public interface DocumentationGenerator extends AutoCloseable {
 	void generateIndex() throws ParsingException;
 
 	void setProperty(String name, String value);
+
+	/**
+	 * Get the name of this generator.
+	 * @return the name
+	 */
+	String getIdentity();
 }

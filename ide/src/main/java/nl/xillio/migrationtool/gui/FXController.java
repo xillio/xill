@@ -203,11 +203,6 @@ public class FXController implements Initializable, EventHandler<Event> {
 				.saveSimpleSetting("ProjectHeight", Double.toString(newPos.doubleValue())));
 		});
 
-		// Open the help index whenever initialize is done
-		Loader.getInitializer().getOnLoadComplete().addListener(homepage -> {
-			helppane.display(homepage);
-		});
-
 		// Start the elasticsearch console
 		Platform.runLater(ESConsoleClient::getInstance);
 

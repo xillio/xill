@@ -105,6 +105,11 @@ public class FreeMarkerDocumentationGenerator implements DocumentationGenerator 
 		defaultValues.put(name, value);
 	}
 
+	@Override
+	public String getIdentity() {
+		return packageName;
+	}
+
 	public List<PackageDocumentationEntity> getPackagesFromJson() {
 		List<PackageDocumentationEntity> result = new ArrayList<>();
 

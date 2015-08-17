@@ -13,5 +13,5 @@ import nl.xillio.xill.docgen.impl.ConstructDocumentationEntity;
 public interface DocumentationSearcher {
     String[] search(String query);
     
-    void index(String packet, ConstructDocumentationEntity entity);
+    void index(String packet, DocumentationEntity entity);
 }

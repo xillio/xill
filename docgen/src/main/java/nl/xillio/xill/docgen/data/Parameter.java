@@ -103,6 +103,10 @@ public class Parameter implements PropertiesProvider {
 	 * @param description The description we want the parameter to have.
 	 */
 	public void setDescription(String description) {
-		this.description = description;
+		if(description != null) {
+			this.description = description.trim();
+		}else{
+			this.description = description;
+		}
 	}
 }

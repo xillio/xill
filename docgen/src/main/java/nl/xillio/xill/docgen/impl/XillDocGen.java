@@ -46,7 +46,7 @@ public class XillDocGen implements DocGen {
 
 	@Override
 	public DocumentationSearcher getSearcher() {
-		return new ElasticsearchDocumentationSearcher(client);
+		return new InMemoryDocumentationSearcher();
 	}
 
 	@Override

@@ -3,10 +3,7 @@ package nl.xillio.xill.docgen.impl;
 import nl.xillio.xill.docgen.DocumentationEntity;
 import nl.xillio.xill.docgen.PropertiesProvider;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * //TODO javadoc
@@ -29,6 +26,11 @@ public class PackageDocumentationEntity implements DocumentationEntity {
 	@Override
 	public String getType() {
 		return "package";
+	}
+
+	@Override
+	public List<String> getTags() {
+		return Collections.emptyList();
 	}
 
 	@Override

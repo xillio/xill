@@ -1,25 +1,38 @@
 package nl.xillio.migrationtool.gui;
 
-import java.io.IOException;
-
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.control.ComboBox;
+import javafx.scene.Scene;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Window;
+import nl.xillio.xill.docgen.DocumentationSearcher;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import java.io.IOException;
 
 /**
  * A search bar, with the defined options and behavior.
+ * @author Thomas Biesaart
  */
 public class HelpSearchBar extends AnchorPane {
-
+	private static final Logger LOGGER = LogManager.getLogger();
+	private static final int ROW_HEIGHT = 26;
 	private HelpPane helpPane;
+	private final Tooltip hoverToolTip;
 
-	// Implement the FXML for this
 	@FXML
-	private ComboBox<String> box;
-	//private final DocumentSearcher searcher;
-	private int comboBoxLength = 0;
+	private TextField searchField;
+
+	private ObservableList<String> data = FXCollections.observableArrayList();
+	private DocumentationSearcher searcher;
 
 	/**
 	 * Default constructor.
@@ -32,65 +45,70 @@ public class HelpSearchBar extends AnchorPane {
 			Node ui = loader.load();
 			getChildren().add(ui);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Failed to load help pane", e);
 		}
 
-		/*// The searcher
-		searcher = new DocumentSearcher(ESConsoleClient.getInstance().getClient());
-		box.setEditable(true);
+		//Result list
+		ListView<String> list = new ListView<>(data);
 
-		// Handle click
-		box.setOnAction((event) -> {
-			try {
-				String[] s = box.getSelectionModel().getSelectedItem().toString().split("\\.");
-				box.hide();
-				helpPane.display(s[0], s[1]);
-			} catch (Exception e) {}
-		});
+		//Result wrapper
+		hoverToolTip = new Tooltip();
+		hoverToolTip.setGraphic(list);
+		hoverToolTip.prefWidthProperty().bind(searchField.widthProperty());
 
-		// Handle text getting edited.
-		box.getEditor().textProperty().addListener((ChangeListener<String>) (observable, oldValue, newValue) -> {
-			if (oldValue != newValue) {
-				runSearch(newValue);
-			}
-		});
-		getChildren().add(box);*/
+		//Listen to search changes
+		searchField.textProperty().addListener(this::searchTextChanged);
 	}
 
 	/**
-	 * @param help
-	 *        The help pane in which the search bar is embedded
+	 * Set the searcher that should be used
+	 * @param searcher the searcher
+	 */
+	public void setSearcher(DocumentationSearcher searcher) {
+		this.searcher = searcher;
+	}
+
+	/**
+	 * Set the HelpPane.
+	 * @param help The help pane in which the search bar is embedded
 	 */
 	public void setHelpPane(final HelpPane help) {
 		helpPane = help;
 	}
 
+
 	// Runs the search
 	private void runSearch(final String query) {
-		/*if (query != null && !query.isEmpty()) {
-			// Search for a list of possible functions and store the result
-			String[] results = searcher.search(query);
-			ObservableList<String> options = FXCollections.observableArrayList();
-			for (String result : results) {
-				options.add(result);
-			}
+		if(searcher == null) {
+			data.clear();
+			return;
+		}
 
-			// Adjust the combobox accordingly
-			Platform.runLater(() -> {
-				box.getItems().clear();
-				box.getItems().addAll(results);
-				if (!box.getItems().isEmpty()) {
-					if (box.getItems().size() != comboBoxLength) {
-						box.hide();
-						box.show();
-						comboBoxLength = box.getItems().size();
-					}
-				} else {
-					box.hide();
-				}
-			});
-		} else {
-			box.hide();
-		}*/
+		String[] results = searcher.search(query);
+
+		data.clear();
+		data.addAll(results);
+	}
+
+	private void searchTextChanged(Object source, String oldValue, String newValue) {
+		if(newValue == null || newValue.isEmpty()) {
+			hoverToolTip.hide();
+			return;
+		}
+
+		runSearch(searchField.getText());
+
+		showResults();
+	}
+
+	private void showResults() {
+		Point2D position = searchField.localToScene(0.0, 0.0);
+		Scene scene = searchField.getScene();
+		Window window = scene.getWindow();
+
+		hoverToolTip.show(
+			searchField,
+			position.getX() + scene.getX() + window.getX(),
+			position.getY() + scene.getY() + window.getY() + searchField.getHeight());
 	}
 }

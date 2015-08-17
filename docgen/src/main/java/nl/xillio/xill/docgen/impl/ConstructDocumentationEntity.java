@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import nl.xillio.xill.docgen.DocumentationEntity;
 import nl.xillio.xill.docgen.PropertiesProvider;
@@ -157,15 +158,16 @@ public class ConstructDocumentationEntity implements DocumentationEntity {
 	 * 				All search tags.
 	 */
 	public List<String> getSearchTags(){
-		List<String> result = new ArrayList<>();
-		for(String s : searchTags){
-			result.add(s);
-		}
-		return result;
+		return searchTags.stream().collect(Collectors.toList());
 	}
 
 	@Override
 	public String getType() {
 		return "construct";
+	}
+
+	@Override
+	public List<String> getTags() {
+		return new ArrayList<>(searchTags);
 	}
 }

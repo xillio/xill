@@ -11,16 +11,21 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebView;
+import nl.xillio.migrationtool.Loader;
 
 /**
- * This pane contains the documentation information
+ * This pane contains the documentation information.
+ * @author Thomas Biesaart
  */
 public class HelpPane extends AnchorPane {
 	@FXML
 	private WebView webFunctionDoc;
 
+	@FXML
+	private HelpSearchBar helpSearchBar;
+
 	/**
-	 * Instantiate the HelpPane and load the home page
+	 * Instantiate the HelpPane and load the home page.
 	 */
 	public HelpPane() {
 
@@ -34,10 +39,12 @@ public class HelpPane extends AnchorPane {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		HelpSearchBar helper = new HelpSearchBar();
-		helper.setHelpPane(this);
+		helpSearchBar.setHelpPane(this);
 
-		getChildren().add(helper);
+		Loader.getInitializer().getOnLoadComplete().addListener(init -> {
+			home();
+			helpSearchBar.setSearcher(init.getSearcher());
+		});
 	}
 
 	private void home() {
@@ -49,30 +56,24 @@ public class HelpPane extends AnchorPane {
 	}
 
 	/**
-	 * Display the page corresponding to a keyword
+	 * Display the page corresponding to a keyword.
 	 *
-	 * @param pluginPackage
-	 *        The package the function we want to display comes from
-	 * @param keyword
-	 *        The name of the function in the package
+	 * @param pluginPackage The package the function we want to display comes from
+	 * @param keyword       The name of the function in the package
 	 */
 	public void display(final String pluginPackage, final String keyword) {
 		File file = new File("helpfiles/" + pluginPackage + "/" + keyword + ".html");
 
-		Platform.runLater(() -> {
-			webFunctionDoc.getEngine().load(file.toURI().toString());
-		});
+		Platform.runLater(() -> webFunctionDoc.getEngine().load(file.toURI().toString()));
 	}
 
 	/**
-	 * Load the passed resource
-	 * 
-	 * @param resource
+	 * Load the passed resource.
+	 *
+	 * @param resource the resource to display
 	 */
 	public void display(final URL resource) {
-		Platform.runLater(() -> {
-			webFunctionDoc.getEngine().load(resource.toString());
-		});
+		Platform.runLater(() -> webFunctionDoc.getEngine().load(resource.toExternalForm()));
 	}
 
 	private void back() {
@@ -99,5 +100,6 @@ public class HelpPane extends AnchorPane {
 	}
 
 	@FXML
-	private void buttonHelpInfo() {}
+	private void buttonHelpInfo() {
+	}
 }
