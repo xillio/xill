@@ -24,16 +24,16 @@ import static org.testng.Assert.assertEquals;
 public class SaveConstructTest {
 
 	@BeforeClass
-	public void initializeInjector(){
+	public void initializeInjector() {
 		InjectorUtils.getGlobalInjector();
 	}
 
 	@Test(expectedExceptions = RobotRuntimeException.class,
 					expectedExceptionsMessageRegExp = "Expected parameter 'workbook' to be a result of loadWorkbook or createWorkbook")
-	public void testProcessNoValidWorkbook() throws Exception{
+	public void testProcessNoValidWorkbook() throws Exception {
 		ExcelService service = mock(ExcelService.class);
 		ConstructContext context = mock(ConstructContext.class);
-		SaveConstruct.process(service,context,fromValue((String)null),fromValue("path"));
+		SaveConstruct.process(service, context, fromValue((String) null), fromValue("path"));
 	}
 
 	@Test
@@ -48,7 +48,7 @@ public class SaveConstructTest {
 	}
 
 	@Test
-	public void testProcessPath() throws Exception{
+	public void testProcessPath() throws Exception {
 		ExcelService service = mock(ExcelService.class);
 		ConstructContext context = mock(ConstructContext.class);
 		RobotID robotID = mock(RobotID.class);
@@ -62,12 +62,12 @@ public class SaveConstructTest {
 		assertEquals(SaveConstruct.process(service, context, workbookInput, inputPath).getStringValue(), "saved to dir");
 	}
 
-	@Test (expectedExceptions = RobotRuntimeException.class)
-	public void testProcessOverwriteThrowsException() throws Exception{
+	@Test(expectedExceptions = RobotRuntimeException.class)
+	public void testProcessOverwriteThrowsException() throws Exception {
 		ExcelService service = mock(ExcelService.class);
 		XillWorkbook workbook = mock(XillWorkbook.class);
 		doThrow(new IOException()).when(service).save(any(XillWorkbook.class));
-		SaveConstruct.processOverwrite(service,workbook);
+		SaveConstruct.processOverwrite(service, workbook);
 	}
 
 	@Test
@@ -75,15 +75,15 @@ public class SaveConstructTest {
 		ExcelService service = mock(ExcelService.class);
 		XillWorkbook workbook = mock(XillWorkbook.class);
 		when(service.save(any(XillWorkbook.class))).thenReturn("Correctly Saved");
-		assertEquals(SaveConstruct.processOverwrite(service,workbook),fromValue("Correctly Saved"));
+		assertEquals(SaveConstruct.processOverwrite(service, workbook), fromValue("Correctly Saved"));
 	}
 
 	@Test(expectedExceptions = RobotRuntimeException.class)
-	public void testProcessToFolderThrowsException() throws Exception{
+	public void testProcessToFolderThrowsException() throws Exception {
 		ExcelService service = mock(ExcelService.class);
 		XillWorkbook workbook = mock(XillWorkbook.class);
 		when(service.save(any(File.class), any(XillWorkbook.class))).thenThrow(new IOException());
-		SaveConstruct.processToFolder(service,workbook,mock(File.class));
+		SaveConstruct.processToFolder(service, workbook, mock(File.class));
 	}
 
 	@Test
@@ -91,6 +91,6 @@ public class SaveConstructTest {
 		ExcelService service = mock(ExcelService.class);
 		XillWorkbook workbook = mock(XillWorkbook.class);
 		when(service.save(any(File.class), any(XillWorkbook.class))).thenReturn("correct");
-		assertEquals(fromValue("correct"), SaveConstruct.processToFolder(service,workbook, mock(File.class)));
+		assertEquals(fromValue("correct"), SaveConstruct.processToFolder(service, workbook, mock(File.class)));
 	}
 }

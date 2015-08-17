@@ -13,7 +13,7 @@ public class XillSheet implements MetadataExpression {
 	private int rowLength;
 	private boolean readonly;
 
-	public XillSheet(Sheet sheet, boolean readonly){
+	public XillSheet(Sheet sheet, boolean readonly) {
 		this.readonly = readonly;
 		this.sheet = sheet;
 		rowLength = sheet.getLastRowNum() + 1; //Added one because POI is zero indexed
@@ -22,10 +22,10 @@ public class XillSheet implements MetadataExpression {
 		int i = 0;
 	}
 
-	private int calculateColumnLength(){
+	private int calculateColumnLength() {
 		//CPU intensive, use only once, then use the columnLength property
 		int maxColumnSize = 0; //Initialized to -1 because 1 will be added at return and minimum is zero
-		for(int i = 0; i < rowLength; i++)
+		for (int i = 0; i < rowLength; i++)
 			if (sheet.getRow(i) != null &&
 							maxColumnSize < sheet.getRow(i).getLastCellNum()) {
 				maxColumnSize = sheet.getRow(i).getLastCellNum();
@@ -53,25 +53,25 @@ public class XillSheet implements MetadataExpression {
 		return cell.getValue();
 	}
 
-	XillRow getRow(int rowNr){
+	XillRow getRow(int rowNr) {
 		return new XillRow(sheet.getRow(rowNr));
 	}
 
-	void createRow(int rowNr){
+	void createRow(int rowNr) {
 		sheet.createRow(rowNr);
 	}
 
-	private XillCell getCell(XillCellRef cellRef){
+	private XillCell getCell(XillCellRef cellRef) {
 		int columnNr = cellRef.getColumn();
 		int rowNr = cellRef.getRow();
 
 		XillRow row = getRow(rowNr);
-		if(row.isNull()){
+		if (row.isNull()) {
 			createRow(rowNr);
 			row = getRow(rowNr);
 		}
 		XillCell cell = row.getCell(columnNr);
-		if(cell.isNull()){
+		if (cell.isNull()) {
 			row.createCell(columnNr);
 			cell = row.getCell(columnNr);
 		}
@@ -79,15 +79,15 @@ public class XillSheet implements MetadataExpression {
 		return cell;
 	}
 
-	public void setCellValue(XillCellRef cellRef, String value){
+	public void setCellValue(XillCellRef cellRef, String value) {
 		getCell(cellRef).setCellValue(value);
 	}
 
-	public void setCellValue(XillCellRef cellRef, Double value){
+	public void setCellValue(XillCellRef cellRef, Double value) {
 		getCell(cellRef).setCellValue(value);
 	}
 
-	public void setCellValue(XillCellRef cellRef, boolean value){
+	public void setCellValue(XillCellRef cellRef, boolean value) {
 		getCell(cellRef).setCellValue(value);
 	}
 

@@ -16,32 +16,31 @@ import static org.testng.Assert.*;
  */
 public class SetCellConstructTest {
 
-
 	@Test
 	public void testIsNumericFalse() throws Exception {
 		String[] testValues = {"A", "AB", "AB2", "2AB", "A2B", "2222A"};
-		for(String test : testValues)
+		for (String test : testValues)
 			assertFalse(SetCellConstruct.isNumeric(fromValue(test)));
 	}
 
 	@Test
-	public void testIsNumericTrue() throws Exception{
+	public void testIsNumericTrue() throws Exception {
 		Double[] testValues = {11.4, 12d, 0d, 19d, 16.39, 612534.82, 1d, 10d, 12d, 2d};
-		for(Double d : testValues)
+		for (Double d : testValues)
 			assertTrue(SetCellConstruct.isNumeric(fromValue(d)));
 	}
 
 	@Test
 	public void testIsNumericXORAlphabeticFalse() throws Exception {
 		String[] testValues = {"A2", "@", "34231R", "r3", "rR9", "0A", "0x0003", ":"};
-		for(String test : testValues)
+		for (String test : testValues)
 			assertFalse(SetCellConstruct.isNumericXORAlphabetic(fromValue(test)));
 	}
 
 	@Test
-	public void testIsNumericXORAlphabeticTrue() throws Exception{
+	public void testIsNumericXORAlphabeticTrue() throws Exception {
 		String[] testValues = {"A", "a", "3", "33", "Aa", "BAA", "38481", "0", "1", "ZA", "z"};
-		for(String test : testValues)
+		for (String test : testValues)
 			assertTrue(SetCellConstruct.isNumericXORAlphabetic(fromValue(test)));
 	}
 
@@ -58,42 +57,42 @@ public class SetCellConstructTest {
 	}
 
 	@Test
-	public void testSetValueBool() throws Exception{
+	public void testSetValueBool() throws Exception {
 		ArgumentCaptor<Boolean> captor = ArgumentCaptor.forClass(Boolean.class);
 		XillSheet sheet = mock(XillSheet.class);
 		XillCellRef cellRef = mock(XillCellRef.class);
 
 		SetCellConstruct.setValue(fromValue(true), sheet, cellRef);
 
-		verify(sheet,times(1)).setCellValue(any(XillCellRef.class), captor.capture());
+		verify(sheet, times(1)).setCellValue(any(XillCellRef.class), captor.capture());
 		assertTrue(captor.getValue());
 	}
 
 	@Test
-	public void testSetValueString() throws Exception{
+	public void testSetValueString() throws Exception {
 		ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
 		XillSheet sheet = mock(XillSheet.class);
 		XillCellRef cellRef = mock(XillCellRef.class);
 
 		SetCellConstruct.setValue(fromValue("inputString"), sheet, cellRef);
 
-		verify(sheet,times(1)).setCellValue(any(XillCellRef.class), captor.capture());
+		verify(sheet, times(1)).setCellValue(any(XillCellRef.class), captor.capture());
 		assertEquals(captor.getValue(), "inputString");
 	}
 
 	@Test
 	public void testGetCellRefNumericColumn() throws Exception {
-		XillCellRef cellRef = new XillCellRef(3,4);
+		XillCellRef cellRef = new XillCellRef(3, 4);
 		assertTrue(cellRef.equals(SetCellConstruct.getCellRef(fromValue(3), fromValue(4))));
 	}
 
 	@Test
-	public void testGetCellRefAlphabeticColumn() throws Exception{
+	public void testGetCellRefAlphabeticColumn() throws Exception {
 		XillCellRef cellRef = new XillCellRef("A", 5);
 		assertTrue(cellRef.equals(SetCellConstruct.getCellRef(fromValue("A"), fromValue(5))));
 	}
 
-	@Test (expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Expected parameter 'sheet' to be a result of loadSheet or createSheet")
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Expected parameter 'sheet' to be a result of loadSheet or createSheet")
 	public void testProcessIncorrectSheet() throws Exception {
 		MetaExpression sheetInput = fromValue("sheetinput");
 		sheetInput.storeMeta(XillSheet.class, null);
@@ -101,7 +100,7 @@ public class SetCellConstructTest {
 	}
 
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Cannot write on sheet: sheet is read-only")
-	public void testProcessReadOnly() throws Exception{
+	public void testProcessReadOnly() throws Exception {
 		MetaExpression sheetInput = fromValue("sheetinput");
 		XillSheet sheet = mock(XillSheet.class);
 		when(sheet.isReadonly()).thenReturn(true);
@@ -110,7 +109,7 @@ public class SetCellConstructTest {
 	}
 
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Wrong notation for row \"A\", should be numeric \\(e\\.g\\. 12\\)")
-	 public void testProcessWrongRowNotation() throws Exception{
+	public void testProcessWrongRowNotation() throws Exception {
 		MetaExpression sheetInput = fromValue("sheetinput");
 		XillSheet sheet = mock(XillSheet.class);
 		when(sheet.isReadonly()).thenReturn(false);
@@ -119,7 +118,7 @@ public class SetCellConstructTest {
 	}
 
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Wrong notation for column \"AB2\", should be numerical or alphabetical notation \\(e\\.g\\. AB or 12\\)")
-	public void testProcessWrongColumnNotation() throws Exception{
+	public void testProcessWrongColumnNotation() throws Exception {
 		MetaExpression sheetInput = fromValue("sheetinput");
 		XillSheet sheet = mock(XillSheet.class);
 		when(sheet.isReadonly()).thenReturn(false);
@@ -128,7 +127,7 @@ public class SetCellConstructTest {
 	}
 
 	@Test
-	public void testProcessReturnsCorrectly() throws Exception{
+	public void testProcessReturnsCorrectly() throws Exception {
 		MetaExpression sheetInput = fromValue("sheetInput");
 		XillSheet sheet = mock(XillSheet.class);
 		when(sheet.isReadonly()).thenReturn(false);

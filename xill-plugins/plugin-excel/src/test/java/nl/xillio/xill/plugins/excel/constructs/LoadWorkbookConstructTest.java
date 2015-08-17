@@ -25,9 +25,8 @@ import static org.testng.Assert.assertEquals;
  */
 public class LoadWorkbookConstructTest {
 
-
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Path does not lead to an xls or xlsx Microsoft Excel file")
-	public void testProcessIllegalArgumentException() throws Exception{
+	public void testProcessIllegalArgumentException() throws Exception {
 		InjectorUtils.getGlobalInjector();
 		ExcelService service = mock(ExcelService.class);
 		ConstructContext context = mock(ConstructContext.class);
@@ -35,98 +34,98 @@ public class LoadWorkbookConstructTest {
 		when(id.getPath()).thenReturn(new File("."));
 		when(context.getRobotID()).thenReturn(id);
 		when(service.loadWorkbook(any(File.class))).thenThrow(new IllegalArgumentException());
-		LoadWorkbookConstruct.process(service,context,fromValue("."));
+		LoadWorkbookConstruct.process(service, context, fromValue("."));
 	}
 
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "File could not be opened")
 	public void testProcessIOException() throws Exception {
-			InjectorUtils.getGlobalInjector();
-			ExcelService service = mock(ExcelService.class);
-			ConstructContext context = mock(ConstructContext.class);
-			XillWorkbook workbook = mock(XillWorkbook.class);
-			RobotID id = mock(RobotID.class);
-			when(id.getPath()).thenReturn(new File("."));
-			when(context.getRobotID()).thenReturn(id);
-			when(service.loadWorkbook(any(File.class))).thenThrow(new IOException());
-			LoadWorkbookConstruct.process(service, context, fromValue("."));
-		}
+		InjectorUtils.getGlobalInjector();
+		ExcelService service = mock(ExcelService.class);
+		ConstructContext context = mock(ConstructContext.class);
+		XillWorkbook workbook = mock(XillWorkbook.class);
+		RobotID id = mock(RobotID.class);
+		when(id.getPath()).thenReturn(new File("."));
+		when(context.getRobotID()).thenReturn(id);
+		when(service.loadWorkbook(any(File.class))).thenThrow(new IOException());
+		LoadWorkbookConstruct.process(service, context, fromValue("."));
+	}
 
-		@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "There is no file at the given path")
-		public void testProcessFileNotFound ()throws Exception {
-			InjectorUtils.getGlobalInjector();
-			ExcelService service = mock(ExcelService.class);
-			ConstructContext context = mock(ConstructContext.class);
-			RobotID id = mock(RobotID.class);
-			when(id.getPath()).thenReturn(new File("."));
-			when(context.getRobotID()).thenReturn(id);
-			when(service.loadWorkbook(any(File.class))).thenThrow(new FileNotFoundException());
-			LoadWorkbookConstruct.process(service, context, fromValue("."));
-		}
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "There is no file at the given path")
+	public void testProcessFileNotFound() throws Exception {
+		InjectorUtils.getGlobalInjector();
+		ExcelService service = mock(ExcelService.class);
+		ConstructContext context = mock(ConstructContext.class);
+		RobotID id = mock(RobotID.class);
+		when(id.getPath()).thenReturn(new File("."));
+		when(context.getRobotID()).thenReturn(id);
+		when(service.loadWorkbook(any(File.class))).thenThrow(new FileNotFoundException());
+		LoadWorkbookConstruct.process(service, context, fromValue("."));
+	}
 
-		@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "File cannot be opened as Excel Workbook")
-		public void testProcessInvalidObjectException ()throws Exception {
-			InjectorUtils.getGlobalInjector();
-			ExcelService service = mock(ExcelService.class);
-			ConstructContext context = mock(ConstructContext.class);
-			XillWorkbook workbook = mock(XillWorkbook.class);
-			RobotID id = mock(RobotID.class);
-			when(id.getPath()).thenReturn(new File("."));
-			when(context.getRobotID()).thenReturn(id);
-			when(service.loadWorkbook(any(File.class))).thenThrow(new InvalidObjectException("File cannot be opened as Excel Workbook"));
-			LoadWorkbookConstruct.process(service, context, fromValue("."));
-		}
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "File cannot be opened as Excel Workbook")
+	public void testProcessInvalidObjectException() throws Exception {
+		InjectorUtils.getGlobalInjector();
+		ExcelService service = mock(ExcelService.class);
+		ConstructContext context = mock(ConstructContext.class);
+		XillWorkbook workbook = mock(XillWorkbook.class);
+		RobotID id = mock(RobotID.class);
+		when(id.getPath()).thenReturn(new File("."));
+		when(context.getRobotID()).thenReturn(id);
+		when(service.loadWorkbook(any(File.class))).thenThrow(new InvalidObjectException("File cannot be opened as Excel Workbook"));
+		LoadWorkbookConstruct.process(service, context, fromValue("."));
+	}
 
-		@Test
-		public void testProcessReadOnlyThrowsWarning ()throws Exception {
-			InjectorUtils.getGlobalInjector();
-			ExcelService service = mock(ExcelService.class);
-			ConstructContext context = mock(ConstructContext.class);
-			XillWorkbook workbook = mock(XillWorkbook.class);
-			Logger logger = mock(Logger.class);
-			RobotID id = mock(RobotID.class);
-			when(id.getPath()).thenReturn(new File("."));
-			when(service.loadWorkbook(any(File.class))).thenReturn(workbook);
-			when(context.getRobotID()).thenReturn(id);
-			when(workbook.isReadonly()).thenReturn(true);
-			when(context.getRootLogger()).thenReturn(logger);
-			LoadWorkbookConstruct.process(service, context, fromValue("."));
-			ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-			verify(logger).warn(captor.capture());
-			assertEquals(captor.getValue(), "Opened in read-only mode.");
+	@Test
+	public void testProcessReadOnlyThrowsWarning() throws Exception {
+		InjectorUtils.getGlobalInjector();
+		ExcelService service = mock(ExcelService.class);
+		ConstructContext context = mock(ConstructContext.class);
+		XillWorkbook workbook = mock(XillWorkbook.class);
+		Logger logger = mock(Logger.class);
+		RobotID id = mock(RobotID.class);
+		when(id.getPath()).thenReturn(new File("."));
+		when(service.loadWorkbook(any(File.class))).thenReturn(workbook);
+		when(context.getRobotID()).thenReturn(id);
+		when(workbook.isReadonly()).thenReturn(true);
+		when(context.getRootLogger()).thenReturn(logger);
+		LoadWorkbookConstruct.process(service, context, fromValue("."));
+		ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+		verify(logger).warn(captor.capture());
+		assertEquals(captor.getValue(), "Opened in read-only mode.");
 
-		}
+	}
 
-		@Test
-		public void testProcessWriteAccessThrowsNoReadOnlyWarning ()throws Exception {
-			InjectorUtils.getGlobalInjector();
-			ExcelService service = mock(ExcelService.class);
-			ConstructContext context = mock(ConstructContext.class);
-			XillWorkbook workbook = mock(XillWorkbook.class);
-			Logger logger = mock(Logger.class);
-			RobotID id = mock(RobotID.class);
-			when(id.getPath()).thenReturn(new File("."));
-			when(service.loadWorkbook(any(File.class))).thenReturn(workbook);
-			when(context.getRobotID()).thenReturn(id);
-			when(workbook.isReadonly()).thenReturn(false);
-			when(context.getRootLogger()).thenReturn(logger);
-			LoadWorkbookConstruct.process(service, context, fromValue("."));
-			verify(logger, never()).warn(anyString());
+	@Test
+	public void testProcessWriteAccessThrowsNoReadOnlyWarning() throws Exception {
+		InjectorUtils.getGlobalInjector();
+		ExcelService service = mock(ExcelService.class);
+		ConstructContext context = mock(ConstructContext.class);
+		XillWorkbook workbook = mock(XillWorkbook.class);
+		Logger logger = mock(Logger.class);
+		RobotID id = mock(RobotID.class);
+		when(id.getPath()).thenReturn(new File("."));
+		when(service.loadWorkbook(any(File.class))).thenReturn(workbook);
+		when(context.getRobotID()).thenReturn(id);
+		when(workbook.isReadonly()).thenReturn(false);
+		when(context.getRootLogger()).thenReturn(logger);
+		LoadWorkbookConstruct.process(service, context, fromValue("."));
+		verify(logger, never()).warn(anyString());
 
-		}
+	}
 
-		@Test
-		public void testProcessResultContainsMeta ()throws Exception {
-			InjectorUtils.getGlobalInjector();
-			ExcelService service = mock(ExcelService.class);
-			ConstructContext context = mock(ConstructContext.class);
-			XillWorkbook workbook = mock(XillWorkbook.class);
-			Logger logger = mock(Logger.class);
-			RobotID id = mock(RobotID.class);
-			when(id.getPath()).thenReturn(new File("."));
-			when(service.loadWorkbook(any(File.class))).thenReturn(workbook);
-			when(context.getRobotID()).thenReturn(id);
-			MetaExpression expr = LoadWorkbookConstruct.process(service, context, fromValue("."));
-			assertEquals(expr.getMeta(XillWorkbook.class), workbook);
-		}
+	@Test
+	public void testProcessResultContainsMeta() throws Exception {
+		InjectorUtils.getGlobalInjector();
+		ExcelService service = mock(ExcelService.class);
+		ConstructContext context = mock(ConstructContext.class);
+		XillWorkbook workbook = mock(XillWorkbook.class);
+		Logger logger = mock(Logger.class);
+		RobotID id = mock(RobotID.class);
+		when(id.getPath()).thenReturn(new File("."));
+		when(service.loadWorkbook(any(File.class))).thenReturn(workbook);
+		when(context.getRobotID()).thenReturn(id);
+		MetaExpression expr = LoadWorkbookConstruct.process(service, context, fromValue("."));
+		assertEquals(expr.getMeta(XillWorkbook.class), workbook);
+	}
 
 }

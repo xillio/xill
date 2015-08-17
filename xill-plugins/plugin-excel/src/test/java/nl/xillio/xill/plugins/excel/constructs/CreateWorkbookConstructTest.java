@@ -24,11 +24,11 @@ import static org.testng.Assert.assertEquals;
 public class CreateWorkbookConstructTest {
 
 	@BeforeClass
-	public void initializeInjector(){
+	public void initializeInjector() {
 		InjectorUtils.getGlobalInjector();
 	}
 
-	@Test (expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "File already exists: no new workbook has been created.")
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "File already exists: no new workbook has been created.")
 	public void testProcessFileAlreadyExists() throws Exception {
 		ExcelService service = mock(ExcelService.class);
 		ConstructContext context = mock(ConstructContext.class);
@@ -40,7 +40,7 @@ public class CreateWorkbookConstructTest {
 	}
 
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Cannot write to the supplied path")
-	public void testProcessCannotWriteToPath() throws Exception{
+	public void testProcessCannotWriteToPath() throws Exception {
 		ExcelService service = mock(ExcelService.class);
 		ConstructContext context = mock(ConstructContext.class);
 		RobotID id = mock(RobotID.class);
@@ -51,7 +51,7 @@ public class CreateWorkbookConstructTest {
 	}
 
 	@Test
-	public void testProcessContainsWorkbookInMeta() throws Exception{
+	public void testProcessContainsWorkbookInMeta() throws Exception {
 		ExcelService service = mock(ExcelService.class);
 		ConstructContext context = mock(ConstructContext.class);
 		XillWorkbook workbook = mock(XillWorkbook.class);
@@ -60,7 +60,7 @@ public class CreateWorkbookConstructTest {
 		when(context.getRobotID()).thenReturn(id);
 		when(service.createWorkbook(any(File.class))).thenReturn(workbook);
 		when(workbook.getFileString()).thenReturn("string");
-		MetaExpression returned = CreateWorkbookConstruct.process(service,context,fromValue("."));
+		MetaExpression returned = CreateWorkbookConstruct.process(service, context, fromValue("."));
 		assertEquals(returned.getMeta(XillWorkbook.class), workbook);
 	}
 }

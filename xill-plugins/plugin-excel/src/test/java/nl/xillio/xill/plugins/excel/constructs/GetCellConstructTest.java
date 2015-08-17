@@ -17,11 +17,11 @@ import static org.testng.Assert.assertEquals;
 public class GetCellConstructTest {
 
 	@BeforeClass
-	public void initializeInjector(){
+	public void initializeInjector() {
 		InjectorUtils.getGlobalInjector();
 	}
 
-	private MetaExpression createSheetInput(String cellContent){
+	private MetaExpression createSheetInput(String cellContent) {
 		XillSheet sheet = mock(XillSheet.class);
 		MetaExpression sheetInput = fromValue("Sheet");
 		sheetInput.storeMeta(XillSheet.class, sheet);
@@ -29,7 +29,6 @@ public class GetCellConstructTest {
 		when(sheet.getCellValue(any(XillCellRef.class))).thenReturn(cellContent);
 		return sheetInput;
 	}
-
 
 	@Test
 	public void testProcessReturnsNull() throws Exception {
@@ -39,14 +38,14 @@ public class GetCellConstructTest {
 	}
 
 	@Test
-	public void testProcessReturnsValueNumericNotation() throws Exception{
+	public void testProcessReturnsValueNumericNotation() throws Exception {
 		MetaExpression sheetInput = createSheetInput("INFO");
 		MetaExpression result = GetCellConstruct.process(sheetInput, fromValue(14), fromValue(19));
 		assertEquals(true, result.getBooleanValue());
 	}
 
 	@Test
-	public void testProcessReturnsValueAlphabeticNotation() throws Exception{
+	public void testProcessReturnsValueAlphabeticNotation() throws Exception {
 		MetaExpression sheetInput = createSheetInput("INFO");
 		MetaExpression result = GetCellConstruct.process(sheetInput, fromValue("AB"), fromValue(19));
 		assertEquals(true, result.getBooleanValue());

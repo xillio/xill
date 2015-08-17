@@ -3,12 +3,11 @@
  * The main requirements is that the jar that implements the PluginPackage (found in META-INF/services/PluginPackage)
  * contains the classpath to all it's dependencies.
  */
- 
- /*
-  * Plugin description
-  */
-description 'This plugin is to make changes to excel files'
 
+/*
+ * Plugin description
+ */
+description 'This plugin is to make changes to excel files'
 
 /*
  * Uncomment this to package the plugin with the ide by default
@@ -16,7 +15,7 @@ description 'This plugin is to make changes to excel files'
 includeInBuild project
 
 dependencies {
- compile 'org.apache.poi:poi:3.12'
- compile 'org.apache.poi:poi-ooxml:3.12'
- compile project(':xill-plugins:plugin-date')
+    compile 'org.apache.poi:poi:3.12'
+    compile 'org.apache.poi:poi-ooxml:3.12'
+    compile project(':xill-plugins:plugin-date')
 }

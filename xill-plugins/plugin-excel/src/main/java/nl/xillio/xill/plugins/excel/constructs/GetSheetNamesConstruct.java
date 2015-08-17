@@ -12,18 +12,18 @@ import java.util.stream.Collectors;
  */
 public class GetSheetNamesConstruct extends Construct {
 
-	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
-		return new ConstructProcessor(
-						GetSheetNamesConstruct::process,
-						new Argument("workbook", ATOMIC));
-	}
-
-	static MetaExpression process(MetaExpression workbookInput){
+	static MetaExpression process(MetaExpression workbookInput) {
 		XillWorkbook workbook = assertMeta(workbookInput, "parameter 'workbook'",
 						XillWorkbook.class, "result of loadWorkbook or createWorkbook");
 		List<String> workbookNames = workbook.getSheetNames();
 		List<MetaExpression> toReturn = workbookNames.stream().map(ExpressionBuilderHelper::fromValue).collect(Collectors.toList());
 		return fromValue(toReturn);
+	}
+
+	@Override
+	public ConstructProcessor prepareProcess(ConstructContext context) {
+		return new ConstructProcessor(
+						GetSheetNamesConstruct::process,
+						new Argument("workbook", ATOMIC));
 	}
 }

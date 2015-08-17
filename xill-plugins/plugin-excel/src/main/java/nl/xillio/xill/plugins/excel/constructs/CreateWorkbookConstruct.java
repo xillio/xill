@@ -17,33 +17,33 @@ import java.nio.file.FileAlreadyExistsException;
 /**
  * Created by Daan Knoope on 11-8-2015.
  */
-public class CreateWorkbookConstruct extends Construct{
+public class CreateWorkbookConstruct extends Construct {
 
 	@Inject
 	private ExcelService excelService;
 
-	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
-		return new ConstructProcessor(
-						a -> process(excelService, context, a),
-						new Argument("filePath", ATOMIC));
-	}
-
-	static MetaExpression process(ExcelService excelService, ConstructContext context, MetaExpression filePath){
+	static MetaExpression process(ExcelService excelService, ConstructContext context, MetaExpression filePath) {
 		String inputPath = filePath.getStringValue();
 		File file = getFile(context.getRobotID(), inputPath);
 		XillWorkbook workbook;
 		try {
 			workbook = excelService.createWorkbook(file);
 		} catch (FileAlreadyExistsException e) {
-			throw new RobotRuntimeException(e.getMessage(),e);
-		} catch(IOException e){
-			throw new RobotRuntimeException("Cannot write to the supplied path",e);
+			throw new RobotRuntimeException(e.getMessage(), e);
+		} catch (IOException e) {
+			throw new RobotRuntimeException("Cannot write to the supplied path", e);
 		}
 
 		String toReturn = workbook.getFileString();
 		MetaExpression expr = fromValue(toReturn);
 		expr.storeMeta(XillWorkbook.class, workbook);
 		return expr;
+	}
+
+	@Override
+	public ConstructProcessor prepareProcess(ConstructContext context) {
+		return new ConstructProcessor(
+						a -> process(excelService, context, a),
+						new Argument("filePath", ATOMIC));
 	}
 }

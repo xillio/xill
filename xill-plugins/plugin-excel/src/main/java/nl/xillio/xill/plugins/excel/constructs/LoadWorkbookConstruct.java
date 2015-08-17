@@ -24,14 +24,6 @@ public class LoadWorkbookConstruct extends Construct {
 	@Inject
 	private ExcelService excelService;
 
-
-	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
-		return new ConstructProcessor(
-						a -> process(excelService, context, a),
-						new Argument("filePath", ATOMIC));
-	}
-
 	static MetaExpression process(ExcelService excelService, ConstructContext context, MetaExpression filePath) {
 
 		String path = filePath.getStringValue();
@@ -45,18 +37,23 @@ public class LoadWorkbookConstruct extends Construct {
 			throw new RobotRuntimeException("Path does not lead to an xls or xlsx Microsoft Excel file");
 		} catch (FileNotFoundException e) {
 			throw new RobotRuntimeException("There is no file at the given path", e);
-		}catch(InvalidObjectException e){
+		} catch (InvalidObjectException e) {
 			throw new RobotRuntimeException(e.getMessage(), e);
-		}catch(IOException e){
+		} catch (IOException e) {
 			throw new RobotRuntimeException("File could not be opened", e);
 		}
-		if(workbook.isReadonly())
+		if (workbook.isReadonly())
 			context.getRootLogger().warn("Opened in read-only mode.");
-
-
 
 		MetaExpression result = fromValue(workbookText);
 		result.storeMeta(XillWorkbook.class, workbook);
 		return result;
+	}
+
+	@Override
+	public ConstructProcessor prepareProcess(ConstructContext context) {
+		return new ConstructProcessor(
+						a -> process(excelService, context, a),
+						new Argument("filePath", ATOMIC));
 	}
 }

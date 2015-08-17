@@ -12,15 +12,15 @@ public class XillRow {
 		this.row = row;
 	}
 
-	public XillCell getCell(int columnNr){
+	public XillCell getCell(int columnNr) {
 		return new XillCell(row.getCell(columnNr));
 	}
 
-	public boolean isNull(){
-		return  row == null;
+	public boolean isNull() {
+		return row == null;
 	}
 
-	public void createCell(int columnNr){
+	public void createCell(int columnNr) {
 		row.createCell(columnNr);
 	}
 }

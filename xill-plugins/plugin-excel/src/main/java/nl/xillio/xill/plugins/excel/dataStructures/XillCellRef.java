@@ -6,7 +6,17 @@ import org.apache.poi.hssf.util.CellReference;
 /**
  * Created by Daan Knoope on 7-8-2015.
  */
-public class XillCellRef implements MetadataExpression{
+public class XillCellRef implements MetadataExpression {
+
+	private CellReference cellReference;
+
+	public XillCellRef(String column, int row) {
+		cellReference = new CellReference(column + row); //A, 12 => A12
+	}
+
+	public XillCellRef(int column, int row) {
+		cellReference = new CellReference(column, row);
+	}
 
 	@Override public boolean equals(Object o) {
 		if (this == o)
@@ -24,25 +34,15 @@ public class XillCellRef implements MetadataExpression{
 		return cellReference != null ? cellReference.hashCode() : 0;
 	}
 
-	private CellReference cellReference;
-
-	public XillCellRef(String column, int row){
-		cellReference = new CellReference(column + row); //A, 12 => A12
-	}
-
-	public XillCellRef(int column, int row){
-			cellReference = new CellReference(column,row);
-	}
-
 	public CellReference getCellReference() {
 		return cellReference;
 	}
 
-	public int getColumn(){
+	public int getColumn() {
 		return cellReference.getCol();
 	}
 
-	public int getRow(){
+	public int getRow() {
 		return cellReference.getRow();
 	}
 }

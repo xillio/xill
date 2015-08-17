@@ -16,7 +16,7 @@ import static org.testng.Assert.assertTrue;
  */
 public class XillCellTest {
 
-	@Test (expectedExceptions = NotImplementedException.class, expectedExceptionsMessageRegExp
+	@Test(expectedExceptions = NotImplementedException.class, expectedExceptionsMessageRegExp
 					= "A cell format that has been used in the Excel file is currently unsupported.")
 	public void testGetValue() throws Exception {
 		Cell cell = mock(Cell.class);
@@ -56,7 +56,7 @@ public class XillCellTest {
 	}
 
 	@Test
-	public void setCellValue() throws Exception{
+	public void setCellValue() throws Exception {
 		Cell cell = mock(Cell.class);
 		XillCell testCell = new XillCell(cell);
 		testCell.setCellValue("=1");

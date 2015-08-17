@@ -20,19 +20,10 @@ public class SaveConstruct extends Construct {
 	@Inject
 	private ExcelService service;
 
-	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
-		return new ConstructProcessor(
-						(a,b) -> process(service,context,a,b),
-						new Argument("workbook", ATOMIC),
-						new Argument("path", NULL, ATOMIC)
-		);
-	}
-
-	static MetaExpression process(ExcelService service, ConstructContext context, MetaExpression workbookInput, MetaExpression path){
+	static MetaExpression process(ExcelService service, ConstructContext context, MetaExpression workbookInput, MetaExpression path) {
 
 		XillWorkbook workbook = assertMeta(workbookInput, "parameter 'workbook'", XillWorkbook.class, "result of loadWorkbook or createWorkbook");
-		if(path == NULL)
+		if (path == NULL)
 			return processOverwrite(service, workbook);
 		else {
 			File file = getFile(context.getRobotID(), path.getStringValue());
@@ -40,9 +31,9 @@ public class SaveConstruct extends Construct {
 		}
 	}
 
-	static MetaExpression processOverwrite(ExcelService service, XillWorkbook workbook){
+	static MetaExpression processOverwrite(ExcelService service, XillWorkbook workbook) {
 		String returnValue = "";
-		try{
+		try {
 			returnValue = service.save(workbook);
 		} catch (IOException e) {
 			throw new RobotRuntimeException(e.getMessage(), e);
@@ -50,7 +41,7 @@ public class SaveConstruct extends Construct {
 		return fromValue(returnValue);
 	}
 
-	static MetaExpression processToFolder(ExcelService service, XillWorkbook workbook, File file){
+	static MetaExpression processToFolder(ExcelService service, XillWorkbook workbook, File file) {
 		String returnValue = "";
 		try {
 			returnValue = service.save(file, workbook);
@@ -58,6 +49,15 @@ public class SaveConstruct extends Construct {
 			throw new RobotRuntimeException(e.getMessage(), e);
 		}
 		return fromValue(returnValue);
+	}
+
+	@Override
+	public ConstructProcessor prepareProcess(ConstructContext context) {
+		return new ConstructProcessor(
+						(a, b) -> process(service, context, a, b),
+						new Argument("workbook", ATOMIC),
+						new Argument("path", NULL, ATOMIC)
+		);
 	}
 
 }

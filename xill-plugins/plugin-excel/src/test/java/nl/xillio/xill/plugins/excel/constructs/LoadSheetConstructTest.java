@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 public class LoadSheetConstructTest {
 
 	@BeforeClass
-	public void initializeInjector(){
+	public void initializeInjector() {
 		InjectorUtils.getGlobalInjector();
 	}
 
@@ -33,7 +33,7 @@ public class LoadSheetConstructTest {
 	}
 
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Sheet can not be found in the supplied workbook")
-	public void testProcessNoSheet() throws Exception{
+	public void testProcessNoSheet() throws Exception {
 		XillWorkbook workbook = mock(XillWorkbook.class);//mock(XillWorkbook.class);
 		XillSheet sheet = null;
 		when(workbook.getSheet(anyString())).thenReturn(sheet);
@@ -42,9 +42,8 @@ public class LoadSheetConstructTest {
 		LoadSheetConstruct.process(input, fromValue("Sheet"));
 	}
 
-
 	@Test(expectedExceptions = RobotRuntimeException.class)
-	public void testProcessThrowsRobotRuntime() throws Exception{
+	public void testProcessThrowsRobotRuntime() throws Exception {
 		XillWorkbook workbook = mock(XillWorkbook.class);
 		when(workbook.getSheet(anyString())).thenThrow(new IllegalArgumentException(""));
 		MetaExpression input = fromValue("workbook object");
@@ -52,9 +51,8 @@ public class LoadSheetConstructTest {
 		LoadSheetConstruct.process(input, fromValue("sheet"));
 	}
 
-
 	@Test
-	public void testProcessReturnsCorrectly() throws Exception{
+	public void testProcessReturnsCorrectly() throws Exception {
 		XillWorkbook workbook = mock(XillWorkbook.class);//mock(XillWorkbook.class);
 		XillSheet sheet = mock(XillSheet.class);
 		when(workbook.getSheet(anyString())).thenReturn(sheet);

@@ -21,22 +21,15 @@ public class LoadSheetConstruct extends Construct {
 	@Inject
 	private ExcelService excelService;
 
-	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
-		return new ConstructProcessor(
-						LoadSheetConstruct::process,
-						new Argument("workbook", ATOMIC), new Argument("sheetName", ATOMIC));
-	}
-
-	static MetaExpression process(MetaExpression workbookInput, MetaExpression sheetName){
+	static MetaExpression process(MetaExpression workbookInput, MetaExpression sheetName) {
 		XillWorkbook workbook = assertMeta(workbookInput, "parameter 'workbook'", XillWorkbook.class, "result of loadWorkbook or createWorkbook");
 		XillSheet sheet = null;
 		try {
 			sheet = workbook.getSheet(sheetName.getStringValue());
-		}catch(IllegalArgumentException e){
+		} catch (IllegalArgumentException e) {
 			throw new RobotRuntimeException(e.getMessage(), e);
 		}
-		if(sheet == null)
+		if (sheet == null)
 			throw new RobotRuntimeException("Sheet can not be found in the supplied workbook");
 
 		LinkedHashMap<String, MetaExpression> properties = new LinkedHashMap<>();
@@ -46,5 +39,12 @@ public class LoadSheetConstruct extends Construct {
 		MetaExpression result = fromValue(properties);
 		result.storeMeta(XillSheet.class, sheet);
 		return result;
+	}
+
+	@Override
+	public ConstructProcessor prepareProcess(ConstructContext context) {
+		return new ConstructProcessor(
+						LoadSheetConstruct::process,
+						new Argument("workbook", ATOMIC), new Argument("sheetName", ATOMIC));
 	}
 }

@@ -13,6 +13,19 @@ import nl.xillio.xill.plugins.excel.dataStructures.XillSheet;
  */
 public class GetCellConstruct extends Construct {
 
+	static MetaExpression process(MetaExpression sheetInput, MetaExpression column, MetaExpression row) {
+		//extract sheet from meta
+		XillSheet sheet = assertMeta(sheetInput, "sheet", XillSheet.class, "Excel Sheet");
+		//test if column is in numeric or alphabetic notation
+		XillCellRef cell;
+		if (Double.isNaN(column.getNumberValue().doubleValue())) //Then String Representation
+			cell = new XillCellRef(column.getStringValue(), row.getNumberValue().intValue());
+		else
+			cell = new XillCellRef((column.getNumberValue().intValue()), row.getNumberValue().intValue());
+		Object cellValue = sheet.getCellValue(cell);
+		return parseObject(cellValue);
+	}
+
 	@Override
 	public ConstructProcessor prepareProcess(ConstructContext context) {
 		return new ConstructProcessor(
@@ -20,18 +33,5 @@ public class GetCellConstruct extends Construct {
 						new Argument("sheet", OBJECT),
 						new Argument("column", ATOMIC),
 						new Argument("row", ATOMIC));
-	}
-
-	static MetaExpression process(MetaExpression sheetInput, MetaExpression column, MetaExpression row){
-		//extract sheet from meta
-		XillSheet sheet = assertMeta(sheetInput, "sheet", XillSheet.class, "Excel Sheet");
-		//test if column is in numeric or alphabetic notation
-		XillCellRef cell;
-		if(Double.isNaN(column.getNumberValue().doubleValue())) //Then String Representation
-			cell = new XillCellRef(column.getStringValue(), row.getNumberValue().intValue());
-		else
-			cell = new XillCellRef((column.getNumberValue().intValue()), row.getNumberValue().intValue());
-		Object cellValue = sheet.getCellValue(cell);
-		return parseObject(cellValue);
 	}
 }

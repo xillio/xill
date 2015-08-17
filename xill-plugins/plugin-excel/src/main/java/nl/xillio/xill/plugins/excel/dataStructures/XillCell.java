@@ -15,14 +15,14 @@ public class XillCell {
 		this.cell = cell;
 	}
 
-	boolean isDateFormatted(){
+	boolean isDateFormatted() {
 		return DateUtil.isCellDateFormatted(cell);
 	}
 
-	public Object getValue(){
+	public Object getValue() {
 		Object toReturn;
-		if(!isNull()){
-			switch(cell.getCellType()){
+		if (!isNull()) {
+			switch (cell.getCellType()) {
 				case Cell.CELL_TYPE_STRING:
 					toReturn = cell.getRichStringCellValue().getString();
 					break;
@@ -33,39 +33,37 @@ public class XillCell {
 					toReturn = cell.getCellFormula();
 					break;
 				case Cell.CELL_TYPE_NUMERIC:
-					if(isDateFormatted()){
+					if (isDateFormatted()) {
 						toReturn = cell.getDateCellValue();
-					}
-					else{
+					} else {
 						toReturn = cell.getNumericCellValue();
 					}
 					break;
 				default:
 					throw new NotImplementedException("A cell format that has been used in the Excel file is currently unsupported.");
 			}
-		}
-		else{
+		} else {
 			toReturn = "[EMPTY]";
 		}
 		return toReturn;
 	}
 
-	public boolean isNull(){
+	public boolean isNull() {
 		return cell == null;
 	}
 
-	public void setCellValue(String value){
-		if(value.startsWith("="))
+	public void setCellValue(String value) {
+		if (value.startsWith("="))
 			cell.setCellFormula(value);
 		else
 			cell.setCellValue(value);
 	}
 
-	public void setCellValue(Double value){
+	public void setCellValue(Double value) {
 		cell.setCellValue(value);
 	}
 
-	public void setCellValue(boolean value){
+	public void setCellValue(boolean value) {
 		cell.setCellValue(value);
 	}
 

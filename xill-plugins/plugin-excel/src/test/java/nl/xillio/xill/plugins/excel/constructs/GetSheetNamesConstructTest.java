@@ -18,7 +18,7 @@ import static org.testng.Assert.assertEquals;
  */
 public class GetSheetNamesConstructTest {
 
-	private MetaExpression createWorkbookInput(List<String> sheetNames){
+	private MetaExpression createWorkbookInput(List<String> sheetNames) {
 		XillWorkbook workbook = mock(XillWorkbook.class);
 		MetaExpression workbookInput = fromValue("workbook");
 		workbookInput.storeMeta(XillWorkbook.class, workbook);
@@ -34,7 +34,7 @@ public class GetSheetNamesConstructTest {
 	}
 
 	@Test
-	public void testProcessReturnsList() throws Exception{
+	public void testProcessReturnsList() throws Exception {
 		MetaExpression workbookInput = createWorkbookInput(Arrays.asList("Sheet1", "Sheet2"));
 		String result = GetSheetNamesConstruct.process(workbookInput).getStringValue();
 		assertEquals(result, "[\"Sheet1\",\"Sheet2\"]");

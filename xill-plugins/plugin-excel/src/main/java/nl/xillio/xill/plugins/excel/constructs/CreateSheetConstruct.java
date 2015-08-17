@@ -23,23 +23,15 @@ public class CreateSheetConstruct extends Construct {
 	@Inject
 	private ExcelService excelService;
 
-	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
-		return new ConstructProcessor(
-						(a, b) -> process(excelService, a,b),
-						new Argument("workboook", ATOMIC),
-						new Argument("name", ATOMIC));
-	}
-
-	static MetaExpression process(ExcelService service, MetaExpression workbookInput, MetaExpression name){
+	static MetaExpression process(ExcelService service, MetaExpression workbookInput, MetaExpression name) {
 		XillWorkbook workbook = assertMeta(workbookInput, "parameter 'workbook'", XillWorkbook.class, "result of loadWorkbook or createWorkbook");
 		String sheetName = name.getStringValue();
 		XillSheet sheet;
-		try{
-		sheet = service.createSheet(workbook,sheetName);
-		}catch(NullPointerException e) {
+		try {
+			sheet = service.createSheet(workbook, sheetName);
+		} catch (NullPointerException e) {
 			throw new RobotRuntimeException(e.getMessage(), e);
-		}catch(IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 			throw new RobotRuntimeException(e.getMessage(), e);
 		}
 
@@ -50,5 +42,13 @@ public class CreateSheetConstruct extends Construct {
 		MetaExpression toReturn = fromValue(properties);
 		toReturn.storeMeta(XillSheet.class, sheet);
 		return toReturn;
+	}
+
+	@Override
+	public ConstructProcessor prepareProcess(ConstructContext context) {
+		return new ConstructProcessor(
+						(a, b) -> process(excelService, a, b),
+						new Argument("workboook", ATOMIC),
+						new Argument("name", ATOMIC));
 	}
 }

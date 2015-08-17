@@ -19,7 +19,7 @@ import static org.testng.Assert.assertEquals;
 public class CreateSheetConstructTest {
 
 	@BeforeClass
-	public void initializeInjector(){
+	public void initializeInjector() {
 		InjectorUtils.getGlobalInjector();
 	}
 
@@ -44,7 +44,7 @@ public class CreateSheetConstructTest {
 	}
 
 	@Test
-	public void testProcessReturnsSheetInMeta() throws Exception{
+	public void testProcessReturnsSheetInMeta() throws Exception {
 		ExcelService service = mock(ExcelService.class);
 		MetaExpression workbookInput = fromValue("workbook");
 		XillWorkbook workbook = mock(XillWorkbook.class);
@@ -54,7 +54,7 @@ public class CreateSheetConstructTest {
 		when(sheet.getName()).thenReturn("name");
 		when(sheet.getRowLength()).thenReturn(0);
 		when(sheet.getColumnLength()).thenReturn(0);
-		MetaExpression result = CreateSheetConstruct.process(service,workbookInput, fromValue("name"));
+		MetaExpression result = CreateSheetConstruct.process(service, workbookInput, fromValue("name"));
 		assertEquals(result.getStringValue(), "{\"Name\":\"name\",\"Rows\":0,\"Columns\":0}");
 		assertEquals(result.getMeta(XillSheet.class), sheet);
 	}
