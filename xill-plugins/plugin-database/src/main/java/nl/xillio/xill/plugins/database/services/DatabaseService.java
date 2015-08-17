@@ -32,11 +32,12 @@ public interface DatabaseService extends XillService {
 	 * @param connection
 	 * @param tblName
 	 * @param constraints
+	 * @param columnsString 
 	 * @param databaseName
 	 * @return
 	 * @throws SQLException
 	 */
-	Object getObject(Connection connection, String tblName, LinkedHashMap<String, Object> constraints, String databaseName) throws SQLException;
+	Object getObject(Connection connection, String tblName, LinkedHashMap<String, Object> constraints, List<String> columnsString, String databaseName) throws SQLException;
 
 	/**
 	 * @param connection

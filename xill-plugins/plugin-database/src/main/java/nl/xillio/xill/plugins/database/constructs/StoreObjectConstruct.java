@@ -64,7 +64,7 @@ public class StoreObjectConstruct extends BaseDatabaseConstruct{
 		try {
 			factory.getService(metaData.getDatabaseName()).storeObject(connection,tblName,newObject,keys,overwrite,metaData.getDatabaseName());
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
-			throw new RobotRuntimeException("OH SHIII THAT WENT PRETTY WRONG!");
+			throw new RobotRuntimeException("SQL Exception, " + e.getMessage());
 		}
 	
 		

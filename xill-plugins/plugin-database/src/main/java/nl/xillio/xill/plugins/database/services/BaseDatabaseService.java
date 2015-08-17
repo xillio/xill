@@ -16,6 +16,7 @@ import java.util.Properties;
 
 import com.google.common.collect.Iterators;
 
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
 import nl.xillio.xill.plugins.database.util.StatementIterator;
 import nl.xillio.xill.plugins.database.util.Tuple;
@@ -128,7 +129,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	}
 
  @Override
-	public Object getObject(final Connection connection, final String table, final LinkedHashMap<String, Object> constraints, final String name) throws SQLException {
+	public Object getObject(final Connection connection, final String table, final LinkedHashMap<String, Object> constraints, final List<String> columns,final String name) throws SQLException {
 		// prepare statement
 		PreparedStatement statement = null;
 		String query = createSelectQuery(table, new ArrayList<String>(constraints.keySet()), name);
@@ -145,16 +146,21 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		ResultSet result = statement.executeQuery();
 		ResultSetMetaData rs = result.getMetaData();
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		result.next();
+		if(result.next()){
 
-		for (Map.Entry<String, Object> e : constraints.entrySet()) {
-			String here = rs.getColumnName(result.findColumn(e.getKey()));
-			Object value = result.getObject(e.getKey());
+		for (String s : columns) {
+			String here = rs.getColumnName(result.findColumn(s));
+			Object value = result.getObject(s);
 			map.put(here, value);
 		}
 
 		return map;
-	}
+		} else{
+			//return "No objects found with given constraints.";
+			return null;
+		}
+		}
+	
 
 	private void setValue(final PreparedStatement statement, final String key, final String value, final int i) throws SQLException {
 		if (value.equals("null")) {
@@ -258,7 +264,12 @@ public abstract class BaseDatabaseService implements DatabaseService {
 
 		int i = 1;
 		for (String key : keys) {
-			setValue(statementExists, key, newObject.get(key).toString(), i++);
+			if(newObject.containsKey(key)){
+			String value = newObject.get(key).toString();
+			setValue(statementExists, key, value, i++);
+			}else{
+				throw new RobotRuntimeException("The given key: (" + key + ") does not exists in the table. Columns: (" + String.join(", ", newObject.keySet()) + ").");
+			}
 		}
 
 		if (statementExists.execute()) {

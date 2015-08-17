@@ -2,7 +2,9 @@ package nl.xillio.xill.plugins.database.constructs;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import com.google.inject.Inject;
 
@@ -30,14 +32,15 @@ public class GetObjectConstruct extends BaseDatabaseConstruct{
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(table,object,database) -> process(table,object,database,factory),
+			(table,object,columns,database) -> process(table,object,columns,database,factory),
 			new Argument("table",ATOMIC),
 			new Argument("object",OBJECT),
+			new Argument("columns",LIST),
 			new Argument("database",NULL, ATOMIC)
 				);
 	}
 	
-	static MetaExpression process(final MetaExpression table, final MetaExpression object,final MetaExpression database,final DatabaseServiceFactory factory){
+	static MetaExpression process(final MetaExpression table, final MetaExpression object,final MetaExpression columns,final MetaExpression database,final DatabaseServiceFactory factory){
 		String tblName = table.getStringValue();
 		LinkedHashMap<String,Object> constraints = (LinkedHashMap<String, Object>) object.getValue();
 		ConnectionMetadata metaData;
@@ -50,8 +53,14 @@ public class GetObjectConstruct extends BaseDatabaseConstruct{
 		Connection connection = metaData.getConnection();
 		Object result = null;
 		
+		List<MetaExpression> columnsMeta = (ArrayList<MetaExpression>)columns.getValue();
+		List<String> columnsString = new ArrayList<String>();
+		for(MetaExpression e : columnsMeta){
+			columnsString.add(e.getStringValue());
+		}
+		
 		try {
-			result = factory.getService(metaData.getDatabaseName()).getObject(connection,tblName,constraints,metaData.getDatabaseName());
+			result = factory.getService(metaData.getDatabaseName()).getObject(connection,tblName,constraints,columnsString,metaData.getDatabaseName());
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
 			throw new RobotRuntimeException(e.getMessage());
 		}
