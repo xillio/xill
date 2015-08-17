@@ -1,10 +1,6 @@
 package nl.xillio.xill.plugins.excel.dataStructures;
 
 import nl.xillio.xill.api.components.MetadataExpression;
-import nl.xillio.xill.api.errors.NotImplementedException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.DateUtil;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
 /**
@@ -49,37 +45,42 @@ public class XillSheet implements MetadataExpression {
 		return name;
 	}
 
-	public Object getCellValue(XillCellRef cellRef){
-		Row row = sheet.getRow(cellRef.getCellReference().getRow());
-		Cell cell = null;
-		if(row != null){
+	public Object getCellValue(XillCellRef cellRef) {
+		XillRow row = getRow(cellRef.getCellReference().getRow());
+		XillCell cell = null;
+		if (!row.isNull())
 			cell = row.getCell(cellRef.getCellReference().getCol());
-		}
-		return getValueFromCell(cell);
+		return cell.getValue();
 	}
 
-	private Cell getCell(XillCellRef cellRef){
+	XillRow getRow(int rowNr){
+		return new XillRow(sheet.getRow(rowNr));
+	}
+
+	void createRow(int rowNr){
+		sheet.createRow(rowNr);
+	}
+
+	private XillCell getCell(XillCellRef cellRef){
 		int columnNr = cellRef.getColumn();
 		int rowNr = cellRef.getRow();
-		//TODO implement sepperately
-		Row row = sheet.getRow(rowNr);
-		if(row == null) {
-			sheet.createRow(rowNr);
-			row = sheet.getRow(rowNr);
+
+		XillRow row = getRow(rowNr);
+		if(row.isNull()){
+			createRow(rowNr);
+			row = getRow(rowNr);
 		}
-		Cell cell = row.getCell(columnNr);
-		if(cell == null) {
+		XillCell cell = row.getCell(columnNr);
+		if(cell.isNull()){
 			row.createCell(columnNr);
 			cell = row.getCell(columnNr);
 		}
+
 		return cell;
 	}
 
 	public void setCellValue(XillCellRef cellRef, String value){
-		if(value.startsWith("="))
-			getCell(cellRef).setCellFormula(value);
-		else
-			getCell(cellRef).setCellValue(value);
+		getCell(cellRef).setCellValue(value);
 	}
 
 	public void setCellValue(XillCellRef cellRef, Double value){
@@ -88,37 +89,6 @@ public class XillSheet implements MetadataExpression {
 
 	public void setCellValue(XillCellRef cellRef, boolean value){
 		getCell(cellRef).setCellValue(value);
-	}
-
-	private Object getValueFromCell(Cell cell){
-		Object toReturn;
-		if(cell !=null){
-		switch(cell.getCellType()){
-			case Cell.CELL_TYPE_STRING:
-				toReturn = cell.getRichStringCellValue().getString();
-				break;
-			case Cell.CELL_TYPE_BOOLEAN:
-				toReturn = cell.getBooleanCellValue();
-				break;
-			case Cell.CELL_TYPE_FORMULA:
-				toReturn = cell.getCellFormula();
-				break;
-			case Cell.CELL_TYPE_NUMERIC:
-				if(DateUtil.isCellDateFormatted(cell)){
-					toReturn = cell.getDateCellValue();
-				}
-				else{
-					toReturn = cell.getNumericCellValue();
-				}
-				break;
-			default:
-				throw new NotImplementedException("A cell formats tha has been used in the Excel file is currently unsupported.");
-			}
-		}
-		else{
-			toReturn = "[EMPTY]";
-		}
-		return toReturn;
 	}
 
 	public boolean isReadonly() {

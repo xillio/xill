@@ -8,15 +8,20 @@ import org.apache.poi.hssf.util.CellReference;
  */
 public class XillCellRef implements MetadataExpression{
 
-	@Override
-	public boolean equals(Object obj) {
-		XillCellRef cellRef = (XillCellRef) obj;
-		return cellRef.getColumn() == this.getColumn() && cellRef.getRow() == this.getRow();
+	@Override public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+
+		XillCellRef cellRef = (XillCellRef) o;
+
+		return !(cellReference != null ? !cellReference.equals(cellRef.cellReference) : cellRef.cellReference != null);
+
 	}
 
-	@Override
-	public int hashCode(){
-		return getColumn() * 100000 + getRow();
+	@Override public int hashCode() {
+		return cellReference != null ? cellReference.hashCode() : 0;
 	}
 
 	private CellReference cellReference;
