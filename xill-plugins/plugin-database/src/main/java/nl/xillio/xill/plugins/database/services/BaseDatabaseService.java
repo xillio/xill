@@ -13,6 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
@@ -20,6 +21,7 @@ import nl.xillio.xill.plugins.database.util.StatementIterator;
 import nl.xillio.xill.plugins.database.util.Tuple;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.core.config.plugins.validation.ConstraintValidator;
 
 import com.google.common.collect.Iterators;
 
@@ -131,23 +133,31 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	}
 
 	@Override
-	public Object getObject(final Connection connection, final String table, final LinkedHashMap<String, Object> constraints, final List<String> columns) throws SQLException {
+	public LinkedHashMap<String,Object> getObject(final Connection connection, final String table, final LinkedHashMap<String, Object> constraints) throws SQLException {
 		// prepare statement
 		PreparedStatement statement = null;
-		String query = createSelectQuery(table, new ArrayList<String>(constraints.keySet()));
+		LinkedHashMap<String,Object> notNullConstraints = new LinkedHashMap<>
+		(constraints.entrySet().stream()
+				.filter(e -> e.getValue() != null)
+				.collect(Collectors.toMap(e->e.getKey(),e->e.getValue())));
+		
+		String query = createSelectQuery(table, new ArrayList<String>(notNullConstraints.keySet()));
 		statement = connection.prepareStatement(query);
 
+		
 		// Fill out values
-		fillStatement(constraints, statement);
+		fillStatement(notNullConstraints, statement,1);
 
 		// perform query
 
 		ResultSet result = statement.executeQuery();
 		ResultSetMetaData rs = result.getMetaData();
+		
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		if (result.next()) {
-
-			for (String s : columns) {
+			
+			
+			for (String s : constraints.keySet()) {
 				String here = rs.getColumnName(result.findColumn(s));
 				Object value = result.getObject(s);
 				map.put(here, value);
@@ -155,8 +165,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 
 			return map;
 		} else {
-			// return "No objects found with given constraints.";
-			return null;
+			throw new IllegalArgumentException("No objects found with given constraints.");
 		}
 	}
 
@@ -222,7 +231,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		String sql = "INSERT INTO " + table + " (" + ks + ") VALUES (" + vs + ")";
 
 		PreparedStatement statement = connection.prepareStatement(sql);
-		fillStatement(newObject, statement);
+		fillStatement(newObject, statement,1);
 		statement.execute();
 	}
 
@@ -234,7 +243,12 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		String sql = "UPDATE " + table + " SET " + ss + " WHERE " + ws;
 
 		PreparedStatement statement = connection.prepareStatement(sql);
-		fillStatement(newObject, statement);
+		
+		fillStatement(newObject, statement,1);
+		LinkedHashMap<String, Object > constraintsValues = new LinkedHashMap<>();
+		keys.forEach(e->constraintsValues.put(e, newObject.get(e)));
+		fillStatement(constraintsValues, statement,newObject.size() + 1);
+		
 		statement.execute();
 		// if no rows were affected by an update, insert a new row
 		if (statement.getUpdateCount() == 0) {
@@ -251,8 +265,8 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 *        Prepared statements with as many '?' markers as entries in the newObject map
 	 * @throws SQLException
 	 */
-	private void fillStatement(final LinkedHashMap<String, Object> newObject, PreparedStatement statement) throws SQLException {
-		int i = 1;
+	private void fillStatement(final LinkedHashMap<String, Object> newObject, PreparedStatement statement, int firstMarkerNumber) throws SQLException {
+		int i = firstMarkerNumber;
 		for (Entry<String, Object> e : newObject.entrySet()) {
 			setValue(statement, e.getKey(), e.getValue(), i++);
 		}

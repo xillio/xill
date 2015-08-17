@@ -28,16 +28,15 @@ public class GetObjectConstruct extends BaseDatabaseConstruct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-		  (table, object, columns, database) -> process(table, object, columns, database, factory),
+		  (table, object, database) -> process(table, object, database, factory),
 		  new Argument("table", ATOMIC),
 		  new Argument("object", OBJECT),
-		  new Argument("columns", LIST),
 		  new Argument("database", NULL, ATOMIC));
 	}
 
-	static MetaExpression process(final MetaExpression table, final MetaExpression object, final MetaExpression columns, final MetaExpression database, final DatabaseServiceFactory factory) {
+	static MetaExpression process(final MetaExpression table, final MetaExpression object, final MetaExpression database, final DatabaseServiceFactory factory) {
 		String tblName = table.getStringValue();
-		LinkedHashMap<String, Object> constraints = (LinkedHashMap<String, Object>) object.getValue();
+		LinkedHashMap<String, Object> constraints =(LinkedHashMap<String, Object>) extractValue(object);
 		ConnectionMetadata metaData;
 		if (database.equals(NULL)) {
 			metaData = BaseDatabaseService.getLastConnection();
@@ -46,18 +45,17 @@ public class GetObjectConstruct extends BaseDatabaseConstruct {
 			BaseDatabaseService.setLastConnection(metaData);
 		}
 		Connection connection = metaData.getConnection();
-		Object result = null;
-
-		List<MetaExpression> columnsMeta = (ArrayList<MetaExpression>) columns.getValue();
-		List<String> columnsStrings = columnsMeta.stream().map(m -> m.getStringValue()).collect(Collectors.toList());
-
+		LinkedHashMap<String,Object> result = null;
 		try {
-			result = factory.getService(metaData.getDatabaseName()).getObject(connection, tblName, constraints, columnsStrings);
-		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
-			throw new RobotRuntimeException(e.getMessage());
+			result = factory.getService(metaData.getDatabaseName()).getObject(connection, tblName, constraints);
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException | IllegalArgumentException e) {
+			throw new RobotRuntimeException(e.getMessage(),e);
 		}
-
-		return parseObject(result);
+		LinkedHashMap<String, MetaExpression> value = (LinkedHashMap<String, MetaExpression>)object.getValue();
+		value.clear();
+		result.forEach((k,v) -> value.put(k,parseObject(v)));
+		return NULL;
+		
 
 	}
 }

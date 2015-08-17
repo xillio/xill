@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
@@ -51,10 +52,8 @@ public class StoreObjectConstruct extends BaseDatabaseConstruct {
 		Connection connection = metaData.getConnection();
 
 		List<MetaExpression> keysMeta = (ArrayList<MetaExpression>) args[2].getValue();
-		List<String> keys = new ArrayList<String>();
-		for (MetaExpression e : keysMeta) {
-			keys.add(e.getStringValue());
-		}
+		List<String> keys = keysMeta.stream().map(m -> m.getStringValue()).collect(Collectors.toList());
+		
 		boolean overwrite = args[3].getBooleanValue();
 
 		try {
