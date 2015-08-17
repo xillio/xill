@@ -1,48 +1,51 @@
 package nl.xillio.xill.plugins.web.constructs;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
-import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.NodeVariable;
+import nl.xillio.xill.plugins.web.PhantomJSConstruct;
+import nl.xillio.xill.plugins.web.services.web.WebService;
+
+import com.google.inject.Inject;
 
 /**
- * It will focus the provided web element on the web page 
+ * It will focus the provided web element on the web page
  */
-public class FocusConstruct extends Construct {
+public class FocusConstruct extends PhantomJSConstruct {
+
+	@Inject
+	private WebService webService;
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(FocusConstruct::process, new Argument("element"));
+		return new ConstructProcessor(
+			element -> process(element, webService),
+			new Argument("element", ATOMIC));
 	}
 
 	/**
 	 * @param elementVar
-	 * 				input variable (should be of a NODE type)
+	 *        input variable (should be of a NODE type)
 	 * @return null variable
 	 */
-	private static MetaExpression process(final MetaExpression elementVar) {
+	static MetaExpression process(final MetaExpression elementVar, final WebService webService) {
+		
+		if(elementVar.isNull()){
+			return NULL;
+		}
 
-		if (!NodeVariable.checkType(elementVar)) {
+		if (!checkNodeType(elementVar)) {
 			throw new RobotRuntimeException("Invalid variable type. NODE type expected!");
 		}
-		// else
-
-		WebElement element = NodeVariable.get(elementVar);
-		WebDriver page = NodeVariable.getDriver(elementVar);
-
-		try {
-			new Actions(page).moveToElement(element).perform();
-		} catch (Exception e) {
-			throw new RobotRuntimeException(e.getClass().getSimpleName(), e);
+		else {
+			try {
+				webService.moveToElement(getNode(elementVar));
+			} catch (Exception e) {
+				throw new RobotRuntimeException("Failed to focus on element.", e);
+			}
+			return NULL;
 		}
-
-		return NULL;
 	}
 }

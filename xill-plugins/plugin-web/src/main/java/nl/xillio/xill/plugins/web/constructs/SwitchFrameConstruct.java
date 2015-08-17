@@ -1,61 +1,65 @@
 package nl.xillio.xill.plugins.web.constructs;
 
-import org.openqa.selenium.NoSuchFrameException;
-import org.openqa.selenium.WebDriver;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
-import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.NodeVariable;
-import nl.xillio.xill.plugins.web.PageVariable;
+import nl.xillio.xill.plugins.web.PhantomJSConstruct;
+import nl.xillio.xill.plugins.web.data.WebVariable;
+import nl.xillio.xill.plugins.web.services.web.WebService;
+
+import org.openqa.selenium.NoSuchFrameException;
 
 /**
  * Switch current page context to a provided frame
  */
-public class SwitchFrameConstruct extends Construct {
+public class SwitchFrameConstruct extends PhantomJSConstruct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			SwitchFrameConstruct::process,
-			new Argument("page"),
-			new Argument("frame"));
+			(page, frame) -> process(page, frame, webService),
+			new Argument("page", ATOMIC),
+			new Argument("frame", ATOMIC));
 	}
 
 	/**
 	 * @param pageVar
-	 * 				input variable (should be of a PAGE type)
+	 *        input variable (should be of a PAGE type)
 	 * @param frameVar
-	 * 				input variable - frame specification - string or number or web element (NODE variable)
+	 *        input variable - frame specification - string or number or web element (NODE variable)
+	 * @param webService
+	 *        The service we're using to access the web.
 	 * @return null variable
 	 */
-	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression frameVar) {
+	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression frameVar, final WebService webService) {
 
-		if (!PageVariable.checkType(pageVar)) {
+		if (!checkPageType(pageVar)) {
 			throw new RobotRuntimeException("Invalid variable type. Page NODE type expected!");
 		}
 		// else
 
-		WebDriver driver = PageVariable.getDriver(pageVar);
+		WebVariable driver = getPage(pageVar);
 
 		try {
-			if (NodeVariable.checkType(frameVar)) {
-				driver.switchTo().frame(NodeVariable.get(frameVar));
+			if (checkNodeType(frameVar)) {
+				WebVariable element = getNode(frameVar);
+				webService.switchToFrame(driver, element);
 			} else {
 				Object frame = MetaExpression.extractValue(frameVar);
 				if (frame instanceof Integer) {
-					driver.switchTo().frame((Integer) frame);
+					webService.switchToFrame(driver, (Integer) frame);
 				} else if (frame instanceof String) {
-					driver.switchTo().frame(frame.toString());
+					webService.switchToFrame(driver, frame.toString());
 				} else {
 					throw new RobotRuntimeException("Invalid variable type of frame parameter!");
 				}
 			}
 		} catch (NoSuchFrameException e) {
 			throw new RobotRuntimeException("Requested frame doesn't exist.", e);
+		} catch (RobotRuntimeException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new RobotRuntimeException(e.getClass().getSimpleName(), e);
 		}
