@@ -37,9 +37,10 @@ public class StoreObjectConstruct extends BaseDatabaseConstruct {
 		return new ConstructProcessor((a) -> process(a, factory), args);
 	}
 
+	@SuppressWarnings("unchecked")
 	static MetaExpression process(final MetaExpression[] args, final DatabaseServiceFactory factory) {
 		String tblName = args[0].getStringValue();
-		LinkedHashMap<String, Object> newObject = (LinkedHashMap<String, Object>) args[1].getValue();
+		LinkedHashMap<String, Object> newObject = (LinkedHashMap<String, Object>) extractValue(args[1]);
 		ConnectionMetadata metaData;
 		if (args[4].equals(NULL)) {
 			metaData = BaseDatabaseService.getLastConnection();
