@@ -1,7 +1,6 @@
 package nl.xillio.migrationtool.gui;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,6 +10,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Window;
 import nl.xillio.xill.docgen.DocumentationSearcher;
@@ -25,6 +27,7 @@ import java.io.IOException;
 public class HelpSearchBar extends AnchorPane {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final int ROW_HEIGHT = 26;
+	private final ListView<String> listView;
 	private HelpPane helpPane;
 	private final Tooltip hoverToolTip;
 
@@ -49,19 +52,46 @@ public class HelpSearchBar extends AnchorPane {
 		}
 
 		//Result list
-		ListView<String> list = new ListView<>(data);
+		listView = new ListView<>(data);
+		listView.setOnMouseClicked(this::onClick);
+		listView.setOnKeyPressed(this::onKeyPressed);
 
 		//Result wrapper
 		hoverToolTip = new Tooltip();
-		hoverToolTip.setGraphic(list);
+		hoverToolTip.setGraphic(listView);
 		hoverToolTip.prefWidthProperty().bind(searchField.widthProperty());
 
 		//Listen to search changes
 		searchField.textProperty().addListener(this::searchTextChanged);
 	}
 
+	private void onKeyPressed(KeyEvent keyEvent) {
+		if(keyEvent.getCode() == KeyCode.ENTER) {
+			openSelected();
+		}
+	}
+
+	private void onClick(MouseEvent mouseEvent) {
+		openSelected();
+	}
+
+
+	void openSelected() {
+		String selected = listView.getSelectionModel().getSelectedItem();
+
+		if(selected == null) {
+			return;
+		}
+
+		String[] parts = selected.split("\\.");
+		helpPane.display(parts[0], parts[1]);
+		hoverToolTip.hide();
+		searchField.clear();
+		helpPane.requestFocus();
+	}
+
 	/**
-	 * Set the searcher that should be used
+	 * Set the searcher that should be used.
 	 * @param searcher the searcher
 	 */
 	public void setSearcher(DocumentationSearcher searcher) {
@@ -111,4 +141,5 @@ public class HelpSearchBar extends AnchorPane {
 			position.getX() + scene.getX() + window.getX(),
 			position.getY() + scene.getY() + window.getY() + searchField.getHeight());
 	}
+
 }

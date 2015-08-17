@@ -45,6 +45,9 @@ public class HelpPane extends AnchorPane {
 			home();
 			helpSearchBar.setSearcher(init.getSearcher());
 		});
+
+		//Load splash page
+		webFunctionDoc.getEngine().load(getClass().getResource("/docgen/resources/splash.html").toExternalForm());
 	}
 
 	private void home() {
@@ -101,5 +104,10 @@ public class HelpPane extends AnchorPane {
 
 	@FXML
 	private void buttonHelpInfo() {
+	}
+
+	@Override
+	public void requestFocus() {
+		webFunctionDoc.requestFocus();
 	}
 }

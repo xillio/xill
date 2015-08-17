@@ -13,6 +13,7 @@
     <section id="packages">
         <header><h2>Packages</h2></header>
         <#list packages as package>
+        <#if package.constructs?size != 0>
         <div class="package ${package.packageName}">
             <h3>${package.packageName}</h3>
             <ul>
@@ -21,6 +22,7 @@
                 </#list>
             </ul>
         </div>
+        </#if>
         </#list>
 
     </section>
