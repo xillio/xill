@@ -7,6 +7,8 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Provides an interface for file services.
+ * @author Ivor van der Hoog
+ * @author Thomas Biesaart
  */
 @ImplementedBy(FileServiceImpl.class)
 public interface FileService {
@@ -18,9 +20,9 @@ public interface FileService {
 	 *        The source File.
 	 * @param destinationFile
 	 *        The destination File.
-	 * @throws IOException
+	 * @throws IOException when copying the file failed
 	 */
-	public void copyFile(File sourceFile, File destinationFile) throws IOException;
+	void copyFile(File sourceFile, File destinationFile) throws IOException;
 
 	/**
 	 * Makes a file with a given name.
@@ -30,7 +32,7 @@ public interface FileService {
 	 * @return
 	 *         A new File.
 	 */
-	public File makeFile(String fileName);
+	File makeFile(String fileName);
 
 	/**
 	 * Returns the absolute pathname as a String.
@@ -40,7 +42,7 @@ public interface FileService {
 	 * @return
 	 *         The absolute path of the file.
 	 */
-	public String getAbsolutePath(File file);
+	String getAbsolutePath(File file);
 
 	/**
 	 * Creates a temporary {@link File} with a given prefix and suffix.
@@ -51,19 +53,19 @@ public interface FileService {
 	 *        The suffix.
 	 * @return
 	 *         Returns a temporary file.
-	 * @throws IOException
+	 * @throws IOException when an error occurs
 	 */
-	public File createTempFile(String prefix, String suffix) throws IOException;
+	File createTempFile(String prefix, String suffix) throws IOException;
 
 	/**
-	 * Writes a string to a {@link File}
+	 * Writes a string to a {@link File}.
 	 *
 	 * @param file
 	 *        The file we want to write to.
 	 * @param text
 	 *        The text we're writing.
-	 * @throws IOException
+	 * @throws IOException then a writing error occurs
 	 */
-	public void writeStringToFile(File file, String text) throws IOException;
+	void writeStringToFile(File file, String text) throws IOException;
 
 }

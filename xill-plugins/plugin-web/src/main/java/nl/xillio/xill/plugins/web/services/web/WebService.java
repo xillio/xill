@@ -20,6 +20,8 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Provides an interface for a webService.
+ * @author Ivor van der hoog
+ * @author Thomas Biesaart
  */
 @ImplementedBy(WebServiceImpl.class)
 public interface WebService {
@@ -43,7 +45,7 @@ public interface WebService {
 	void moveToElement(WebVariable var);
 
 	/**
-	 * Returns the tag name of a {@link WebVariable}
+	 * Returns the tag name of a {@link WebVariable}.
 	 *
 	 * @param var
 	 *        The variable we want the tag of.
@@ -93,7 +95,7 @@ public interface WebService {
 	 *        The cssPath we're using.
 	 * @return
 	 *         Returns a list of elements: {@link WebVariable}.
-	 * @throws InvalidSelectorException
+	 * @throws InvalidSelectorException if the cssPath query is invalid
 	 */
 	List<WebVariable> findElementsWithCssPath(WebVariable var, String cssPath) throws InvalidSelectorException;
 
@@ -106,7 +108,7 @@ public interface WebService {
 	 *        The xpath we're using.
 	 * @return
 	 *         Returns a list of elements: {@link WebVariable}.
-	 * @throws InvalidSelectorException
+	 * @throws InvalidSelectorException if the xpath query is invalid
 	 */
 	List<WebVariable> findElementsWithXpath(WebVariable var, String xpath) throws InvalidSelectorException;
 
@@ -152,7 +154,7 @@ public interface WebService {
 	Set<Cookie> getCookies(WebVariable var);
 
 	/**
-	 * Gets the name of a {@link Cookie}
+	 * Gets the name of a {@link Cookie}.
 	 *
 	 * @param cookie
 	 *        The cookie.
@@ -162,7 +164,7 @@ public interface WebService {
 	String getName(Cookie cookie);
 
 	/**
-	 * Gets the domain of a {@link Cookie}
+	 * Gets the domain of a {@link Cookie}.
 	 *
 	 * @param cookie
 	 *        The cookie.
@@ -172,7 +174,7 @@ public interface WebService {
 	String getDomain(Cookie cookie);
 
 	/**
-	 * Gets the path of a {@link Cookie}
+	 * Gets the path of a {@link Cookie}.
 	 *
 	 * @param cookie
 	 *        The cookie.
@@ -263,7 +265,7 @@ public interface WebService {
 	void switchToFrame(WebVariable driver, int element);
 
 	/**
-	 * Places a Cookie on a webvariable
+	 * Places a Cookie onto a WebVariable.
 	 *
 	 * @param var
 	 *        The webVariable we want to place the cookie on

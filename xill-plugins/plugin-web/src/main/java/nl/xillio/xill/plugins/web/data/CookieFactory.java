@@ -21,7 +21,7 @@ public class CookieFactory {
 	 *
 	 * @param driver
 	 *        The page we want to set the cookie on.
-	 * @param cookie
+	 * @param cookieValues
 	 *        The settings for the cookie we want to add.
 	 * @param webService
 	 *        The webService we're storing the cookie in.

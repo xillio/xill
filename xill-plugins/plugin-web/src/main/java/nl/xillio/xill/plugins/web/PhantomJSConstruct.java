@@ -26,12 +26,14 @@ public abstract class PhantomJSConstruct extends Construct {
 	protected WebService webService;
 
 	/**
-	 * Creates new {@link NodeVariable}
+	 * Creates new {@link NodeVariable}.
 	 *
 	 * @param driver
 	 *        PhantomJS driver (page)
 	 * @param element
 	 *        web element on the page (represented by driver)
+	 * @param webService
+	 * 				the service that should be used
 	 *
 	 * @return created variable
 	 */
@@ -42,7 +44,7 @@ public abstract class PhantomJSConstruct extends Construct {
 	}
 
 	/**
-	 * Extracts web element from {@link NodeVariable}
+	 * Extracts web element from {@link NodeVariable}.
 	 *
 	 * @param var
 	 *        input variable (should be of a NODE type)
@@ -54,7 +56,7 @@ public abstract class PhantomJSConstruct extends Construct {
 	}
 
 	/**
-	 * Do the test if input {@link MetaExpression} if it's of NODE type
+	 * Do the test if input {@link MetaExpression} if it's of NODE type.
 	 *
 	 * @param var
 	 *        MetaExpression (any variable)
@@ -66,10 +68,12 @@ public abstract class PhantomJSConstruct extends Construct {
 	}
 
 	/**
-	 * Creates new {@link PageVariable}
+	 * Creates new {@link PageVariable}.
 	 *
 	 * @param item
 	 *        from PhantomJS pool
+	 * @param webService
+	 * 				the service that should be used
 	 *
 	 * @return created PAGE variable
 	 */
@@ -80,10 +84,10 @@ public abstract class PhantomJSConstruct extends Construct {
 	}
 
 	/**
-	 * Extracts a
+	 * Extracts a PageVariable from a MetaExpression.
 	 *
 	 * @param var
-	 *        input variable (should be of a PAGE type)
+	 *        input variable (should be of a PAGE type).
 	 *
 	 * @return driver (page)
 	 */
@@ -92,7 +96,7 @@ public abstract class PhantomJSConstruct extends Construct {
 	}
 
 	/**
-	 * Do the test if input {@link MetaExpression} if it's of PAGE type
+	 * Do the test if input {@link MetaExpression} if it's of PAGE type.
 	 *
 	 * @param var
 	 *        MetaExpression (any variable)
@@ -104,10 +108,12 @@ public abstract class PhantomJSConstruct extends Construct {
 	}
 
 	/**
-	 * Creates an associated list variable that contains all information about one cookie
+	 * Creates an associated list variable that contains all information about one cookie.
 	 *
 	 * @param cookie
 	 *        Selenium's cookie class
+	 * @param webService
+	 * 				the service that should be used
 	 *
 	 * @return created cookie variable
 	 */
