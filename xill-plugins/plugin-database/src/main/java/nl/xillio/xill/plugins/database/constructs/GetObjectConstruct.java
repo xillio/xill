@@ -5,20 +5,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-
-import com.google.inject.Inject;
+import java.util.stream.Collectors;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
-import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.database.BaseDatabaseConstruct;
 import nl.xillio.xill.plugins.database.services.BaseDatabaseService;
-import nl.xillio.xill.plugins.database.services.DatabaseService;
 import nl.xillio.xill.plugins.database.services.DatabaseServiceFactory;
-import nl.xillio.xill.plugins.database.services.EscapeService;
 import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
 
 /**
@@ -27,46 +23,41 @@ import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
  * @author Sander Visser
  *
  */
-public class GetObjectConstruct extends BaseDatabaseConstruct{
+public class GetObjectConstruct extends BaseDatabaseConstruct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(table,object,columns,database) -> process(table,object,columns,database,factory),
-			new Argument("table",ATOMIC),
-			new Argument("object",OBJECT),
-			new Argument("columns",LIST),
-			new Argument("database",NULL, ATOMIC)
-				);
+		  (table, object, columns, database) -> process(table, object, columns, database, factory),
+		  new Argument("table", ATOMIC),
+		  new Argument("object", OBJECT),
+		  new Argument("columns", LIST),
+		  new Argument("database", NULL, ATOMIC));
 	}
-	
-	static MetaExpression process(final MetaExpression table, final MetaExpression object,final MetaExpression columns,final MetaExpression database,final DatabaseServiceFactory factory){
+
+	static MetaExpression process(final MetaExpression table, final MetaExpression object, final MetaExpression columns, final MetaExpression database, final DatabaseServiceFactory factory) {
 		String tblName = table.getStringValue();
-		LinkedHashMap<String,Object> constraints = (LinkedHashMap<String, Object>) object.getValue();
+		LinkedHashMap<String, Object> constraints = (LinkedHashMap<String, Object>) object.getValue();
 		ConnectionMetadata metaData;
-		if(database.equals(NULL)){
+		if (database.equals(NULL)) {
 			metaData = BaseDatabaseService.getLastConnection();
-		}else{
+		} else {
 			metaData = database.getMeta(ConnectionMetadata.class);
 			BaseDatabaseService.setLastConnection(metaData);
 		}
 		Connection connection = metaData.getConnection();
 		Object result = null;
-		
-		List<MetaExpression> columnsMeta = (ArrayList<MetaExpression>)columns.getValue();
-		List<String> columnsString = new ArrayList<String>();
-		for(MetaExpression e : columnsMeta){
-			columnsString.add(e.getStringValue());
-		}
-		
+
+		List<MetaExpression> columnsMeta = (ArrayList<MetaExpression>) columns.getValue();
+		List<String> columnsStrings = columnsMeta.stream().map(m -> m.getStringValue()).collect(Collectors.toList());
+
 		try {
-			result = factory.getService(metaData.getDatabaseName()).getObject(connection,tblName,constraints,columnsString,metaData.getDatabaseName());
+			result = factory.getService(metaData.getDatabaseName()).getObject(connection, tblName, constraints, columnsStrings);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
 			throw new RobotRuntimeException(e.getMessage());
 		}
-		
-		return parseObject(result);
-		
-	}
 
+		return parseObject(result);
+
+	}
 }

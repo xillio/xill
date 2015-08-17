@@ -30,5 +30,4 @@ public class MysqlDatabaseServiceImpl extends BaseDatabaseService {
 	public void loadDriver() throws ClassNotFoundException {
 		Class.forName(Database.MYSQL.getDriverClass());
 	}
-
 }

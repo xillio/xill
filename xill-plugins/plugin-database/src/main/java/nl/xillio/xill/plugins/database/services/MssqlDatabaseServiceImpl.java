@@ -30,4 +30,9 @@ public class MssqlDatabaseServiceImpl extends BaseDatabaseService {
 		Class.forName(Database.MSSQL.getDriverClass());
 	}
 
+	@Override
+	protected String createSelectQuery(String table, String constraintsSql) {
+		return String.format("SELECT TOP 1 * FROM %1$s WHERE %2$s", table, constraintsSql);
+	}
+
 }

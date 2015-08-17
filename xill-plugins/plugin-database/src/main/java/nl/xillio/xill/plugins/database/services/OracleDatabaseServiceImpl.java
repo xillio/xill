@@ -38,4 +38,9 @@ public class OracleDatabaseServiceImpl extends BaseDatabaseService {
 		Class.forName(Database.ORACLE.getDriverClass());
 	}
 
+	@Override
+	protected String createSelectQuery(String table, String constraintsSql) {
+		return String.format("SELECT * FROM %1$s WHERE %2$s AND rownum <= 1", table, constraintsSql);
+	}
+
 }

@@ -7,25 +7,27 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.stream.StreamSupport;
 
-import com.google.common.collect.Iterators;
-
-import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
 import nl.xillio.xill.plugins.database.util.StatementIterator;
 import nl.xillio.xill.plugins.database.util.Tuple;
+
+import org.apache.commons.lang3.StringUtils;
+
+import com.google.common.collect.Iterators;
 
 @SuppressWarnings("unchecked")
 public abstract class BaseDatabaseService implements DatabaseService {
 
 	private static ConnectionMetadata lastConnection;
-	
+
 	/**
 	 * Create a JDBC {@link Connection} to the database at the given URL
 	 * if no URL is given then return the last connection that was made in the robot.
@@ -33,7 +35,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 * @param url
 	 *        URL to connect to
 	 * @return A connection ready to execute queries on
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	protected Connection connect(final String url) throws SQLException {
 		return DriverManager.getConnection(url);
@@ -50,7 +52,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 *
 	 */
 	protected Connection connect(final String url, final Properties properties) throws SQLException {
-		return DriverManager.getConnection(url,properties);
+		return DriverManager.getConnection(url, properties);
 	}
 
 	@Override
@@ -128,193 +130,146 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		return url;
 	}
 
- @Override
-	public Object getObject(final Connection connection, final String table, final LinkedHashMap<String, Object> constraints, final List<String> columns,final String name) throws SQLException {
+	@Override
+	public Object getObject(final Connection connection, final String table, final LinkedHashMap<String, Object> constraints, final List<String> columns) throws SQLException {
 		// prepare statement
 		PreparedStatement statement = null;
-		String query = createSelectQuery(table, new ArrayList<String>(constraints.keySet()), name);
+		String query = createSelectQuery(table, new ArrayList<String>(constraints.keySet()));
 		statement = connection.prepareStatement(query);
 
 		// Fill out values
-		int i = 1;
-		for (String key : constraints.keySet()) {
-			setValue(statement, key, constraints.get(key).toString(), i++);
-		}
+		fillStatement(constraints, statement);
 
 		// perform query
 
 		ResultSet result = statement.executeQuery();
 		ResultSetMetaData rs = result.getMetaData();
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		if(result.next()){
+		if (result.next()) {
 
-		for (String s : columns) {
-			String here = rs.getColumnName(result.findColumn(s));
-			Object value = result.getObject(s);
-			map.put(here, value);
-		}
+			for (String s : columns) {
+				String here = rs.getColumnName(result.findColumn(s));
+				Object value = result.getObject(s);
+				map.put(here, value);
+			}
 
-		return map;
-		} else{
-			//return "No objects found with given constraints.";
+			return map;
+		} else {
+			// return "No objects found with given constraints.";
 			return null;
 		}
-		}
-	
-
-	private void setValue(final PreparedStatement statement, final String key, final String value, final int i) throws SQLException {
-		if (value.equals("null")) {
-			setNull(statement, key, i);
-		} else {
-			try {
-				statement.setObject(i, value.replaceAll("\"", ""));
-			} catch (Exception e1) {
-				throw new SQLException("Failed to set value '" + value + "' for column '" + key + "'.");
-			}
-		}
 	}
 
-	private void setNull(final PreparedStatement statement, final String key, final int i) throws SQLException {
+	private void setValue(final PreparedStatement statement, final String key, final Object value, final int i) throws SQLException {
 		try {
-			statement.setString(i, null);
-		} catch (SQLException e) {
-			for (int type : new int[] {Types.INTEGER, Types.DECIMAL, Types.DOUBLE, Types.BOOLEAN, Types.BIGINT, Types.TINYINT, Types.FLOAT}) {
-				try {
-					statement.setNull(i, type);
-					break;
-				} catch (SQLException e1) {
-					throw new SQLException("Datatype for column '" + key + "' not implemented.");
-				}
-			}
+			// All supported databases allow setObject(i, null), so no setNull needed
+			statement.setObject(i, value);
+		} catch (Exception e1) {
+			throw new SQLException("Failed to set value '" + value + "' for column '" + key + "'.");
 		}
 	}
 
-	private String createSelectQuery(final String table, final List<String> keys, final String name) {
+	private String createSelectQuery(final String table, final List<String> keys) {
 
 		// creates WHERE conditions SQL string
-		StringBuilder qb = new StringBuilder();
+		String constraintsSql;
 		if (keys.size() > 0) {
-			for (String k : keys) {
-				qb.append(" ").append(k).append(" = ? AND ");
-			}
-			qb.append("END"); // because of right trim last " AND "
+			constraintsSql = createQueryPart(keys, " AND ");
 		} else {
-			qb.append("1");
+			constraintsSql = "1";
 		}
-		String constraintsSql = qb.toString().replace("AND END", "");
 
 		// creates entire SQL query according to DB type
-		String sqlQuery = null;
-		switch (name) {
-			case "oracle":
-				sqlQuery = String.format("SELECT * FROM %1$s WHERE %2$s AND rownum <= 1", table, constraintsSql);
-				break;
-			case "mssql":
-				sqlQuery = String.format("SELECT TOP 1 * FROM %1$s WHERE %2$s", table, constraintsSql);
-				break;
-			default:// MySQL..
-				sqlQuery = String.format("SELECT * FROM %1$s WHERE %2$s LIMIT 1", table, constraintsSql);
-		}
-
-		return sqlQuery;
+		return createSelectQuery(table, constraintsSql);
 	}
 
- @Override
-	public void storeObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject, final List<String> keys, final boolean overwrite, final String name) throws SQLException {
+	/**
+	 * Create a select query for getting one row from the database
+	 * 
+	 * @param constraintsSql
+	 *        Constrainsts for selecting (containing AND, OR, etc.)
+	 * @param table
+	 *        The table to select from
+	 * @return A SQL query that selects one row using the given constraints
+	 */
+	protected String createSelectQuery(String table, String constraintsSql) {
+		return String.format("SELECT * FROM %1$s WHERE %2$s LIMIT 1", table, constraintsSql);
+	}
+
+	@Override
+	public void storeObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject, final List<String> keys, final boolean overwrite)
+	    throws SQLException {
 		PreparedStatement statement;
 
-		if (keys.size() == 0) {
+		if (keys.size() == 0 || !overwrite) {
 			// insert into table
-			statement = connection.prepareStatement(insertObject(connection, table, newObject, keys));
-
+			insertObject(connection, table, newObject);
 		} else {
 			// update the table
-			statement = connection.prepareStatement(updateObject(connection, table, newObject, keys, overwrite, name));
-
+			updateObject(connection, table, newObject, keys);
 		}
 
+	}
+
+	private void insertObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject) throws SQLException {
+		String ks = StringUtils.join(newObject.keySet(), ',');
+
+		// Create the same number of prepared statement markers as there are keys
+		char[] markers = new char[newObject.size()];
+		Arrays.fill(markers, '?');
+		String vs = StringUtils.join(markers, ',');
+
+		String sql = "INSERT INTO " + table + " (" + ks + ") VALUES (" + vs + ")";
+
+		PreparedStatement statement = connection.prepareStatement(sql);
+		fillStatement(newObject, statement);
 		statement.execute();
 	}
 
-	private String insertObject(final Connection connection, final String table, final Map<String, Object> newObject, final List<String> keys) {
-		// insert into table
-		StringBuilder keyString = new StringBuilder();
-		StringBuilder valueString = new StringBuilder();
+	private void updateObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject, final List<String> keys)
+	    throws SQLException {
+		String ss = createQueryPart(newObject.keySet(), ",");
+		String ws = createQueryPart(keys, " AND ");
 
-		for (Map.Entry<String, Object> e : newObject.entrySet()) {
-			keyString.append(e.getKey() + ",");
-			valueString.append(e.getValue() + ",");
+		String sql = "UPDATE " + table + " SET " + ss + " WHERE " + ws;
+
+		PreparedStatement statement = connection.prepareStatement(sql);
+		fillStatement(newObject, statement);
+		statement.execute();
+		// if no rows were affected by an update, insert a new row
+		if (statement.getUpdateCount() == 0) {
+			insertObject(connection, table, newObject);
 		}
-
-		keyString.append("END");
-		valueString.append("END");
-
-		String ks = keyString.toString().replace(",END", "");
-		String vs = valueString.toString().replace(",END", "");
-
-		return "INSERT INTO " + table + " (" + ks + ") VALUES (" + vs + ")";
 	}
 
-	private String updateObject(final Connection connection, final String table, final Map<String, Object> newObject, final List<String> keys, final boolean overwrite, final String name) throws SQLException {
-		String output = "";
-		boolean exists = false;
-		PreparedStatement statementExists = null;
-		String query = createSelectQuery(table, keys, name);
-		statementExists = connection.prepareStatement(query);
-
+	/**
+	 * Fills a {@link PreparedStatement} from a map
+	 * 
+	 * @param newObject
+	 *        The map of which all keys represent columns
+	 * @param statement
+	 *        Prepared statements with as many '?' markers as entries in the newObject map
+	 * @throws SQLException
+	 */
+	private void fillStatement(final LinkedHashMap<String, Object> newObject, PreparedStatement statement) throws SQLException {
 		int i = 1;
-		for (String key : keys) {
-			if(newObject.containsKey(key)){
-			String value = newObject.get(key).toString();
-			setValue(statementExists, key, value, i++);
-			}else{
-				throw new RobotRuntimeException("The given key: (" + key + ") does not exists in the table. Columns: (" + String.join(", ", newObject.keySet()) + ").");
-			}
+		for (Entry<String, Object> e : newObject.entrySet()) {
+			setValue(statement, e.getKey(), e.getValue(), i++);
 		}
-
-		if (statementExists.execute()) {
-			ResultSet rs = statementExists.getResultSet();
-			if (rs.getType() != ResultSet.TYPE_FORWARD_ONLY) {
-				exists = rs.first();
-			} else // sqlite
-			{
-				while (rs.next()) {
-					exists = true;
-					break;
-				}
-			}
-		}
-
-		if (exists && overwrite) {
-			// actually update one of the things.
-			StringBuilder set = new StringBuilder();
-			StringBuilder where = new StringBuilder();
-
-			for (Map.Entry<String, Object> e : newObject.entrySet()) {
-				set.append(e.getKey() + "=" + newObject.get(e.getKey()) + ",");
-			}
-
-			for (String s : keys) {
-				where.append(s + "=" + newObject.get(s).toString() + " AND ");
-			}
-			where.append("END");
-			set.append("END");
-
-			String ss = set.toString().replace(",END", "");
-			String ws = where.toString().replace("AND END", "");
-
-			output = "UPDATE " + table + " SET " + ss + " WHERE " + ws;
-		} else {
-			output = insertObject(connection, table, newObject, keys); // create new
-		}
-
-		return output;
 	}
-	
-	public static void setLastConnection(ConnectionMetadata connection){
+
+	/**
+	 * Create a String in this form (where "," is the separator in this case): "key1 = ?,key2 = ?,key3 = ? "
+	 */
+	private String createQueryPart(final Iterable<String> keys, String separator) {
+		return StreamSupport.stream(keys.spliterator(), false).map(k -> k + " = ?").reduce((q, k) -> q + separator + k).get();
+	}
+
+	public static void setLastConnection(ConnectionMetadata connection) {
 		lastConnection = connection;
 	}
-	public static ConnectionMetadata getLastConnection(){
+
+	public static ConnectionMetadata getLastConnection() {
 		return lastConnection;
 	}
 }

@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import nl.xillio.xill.plugins.database.util.StatementIterator;
 import nl.xillio.xill.plugins.database.util.Tuple;
@@ -32,12 +31,10 @@ public interface DatabaseService extends XillService {
 	 * @param connection
 	 * @param tblName
 	 * @param constraints
-	 * @param columnsString 
-	 * @param databaseName
 	 * @return
 	 * @throws SQLException
 	 */
-	Object getObject(Connection connection, String tblName, LinkedHashMap<String, Object> constraints, List<String> columnsString, String databaseName) throws SQLException;
+	Object getObject(Connection connection, String tblName, LinkedHashMap<String, Object> constraints, final List<String> columns) throws SQLException;
 
 	/**
 	 * @param connection
@@ -45,11 +42,8 @@ public interface DatabaseService extends XillService {
 	 * @param newObject
 	 * @param keys
 	 * @param overwrite
-	 * @param name
 	 * @throws SQLException
 	 */
-	void storeObject(Connection connection, String table, LinkedHashMap<String, Object> newObject, List<String> keys, boolean overwrite, String name) throws SQLException;
-
-
+	void storeObject(Connection connection, String table, LinkedHashMap<String, Object> newObject, List<String> keys, boolean overwrite) throws SQLException;
 
 }
