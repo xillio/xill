@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Set;
 
 import javafx.util.Pair;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 import org.rendersnake.HtmlCanvas;
 
@@ -58,27 +57,6 @@ public class FunctionDocument extends HtmlGenerator {
 	private final List<Pair<String, String>> examples = new ArrayList<>();
 	private final Set<Pair<String, String>> links = new HashSet<>();
 	private final Set<String> searchTags = new HashSet<>();
-
-	public FunctionDocument(final String toParse) {
-		String[] splitted = toParse.split("\\n");
-		setName(splitted[0]);
-		int t = 2;
-		try {
-			int parameterCount = Integer.parseInt(splitted[1]);
-			while (t - 2 < parameterCount) {
-				addParameter(splitted[t]);
-				++t;
-			}
-		} catch (NumberFormatException e) {
-			throw new RobotRuntimeException("A package contains a corrupt functionsFile.");
-		}
-		StringBuilder sb = new StringBuilder();
-		while (t < splitted.length) {
-			sb.append("\n" + splitted[t]);
-			++t;
-		}
-		setDescription(sb.toString());
-	}
 	
 	@Override
 	public String toString(){
@@ -111,6 +89,10 @@ public class FunctionDocument extends HtmlGenerator {
 		return getName().hashCode();
 	}
 
+	@Override
+	public boolean equals(Object object) {
+		return object instanceof FunctionDocument && ((FunctionDocument)object).getName().equals(getName());
+	}
 	/**
 	 * Sets the version of the {@link FunctionDocument}
 	 *
@@ -146,23 +128,23 @@ public class FunctionDocument extends HtmlGenerator {
 	}
 
 	/**
-	 * Adds a parameter without defaultvalue to the {@link FunctionDocument}
+	 * Adds a parameter without default value to the {@link FunctionDocument}
 	 *
 	 * @param name
 	 *        The name of the parameter.
 	 */
 	public void addParameter(final String name) {
-		parameters.add(new Pair<String, String>(name, null));
+		parameters.add(new Pair<>(name, null));
 	}
 
 	/**
-	 * Adds a parameter with defaultvalue to the {@link FunctionDocument}
+	 * Adds a parameter with default value to the {@link FunctionDocument}
 	 *
-	 * @param name
-	 * @param defaultValue
+	 * @param name the name of the parameter
+	 * @param defaultValue the value of the parameter
 	 */
 	public void addParameter(final String name, final String defaultValue) {
-		parameters.add(new Pair<String, String>(name, defaultValue));
+		parameters.add(new Pair<>(name, defaultValue));
 	}
 
 	/**
@@ -228,9 +210,9 @@ public class FunctionDocument extends HtmlGenerator {
 	 */
 	public void addLink(final String packet, final String function) {
 		if (packet != null) {
-			links.add(new Pair<String, String>(packet.replace(" ", ""), function.replace(" ", "")));
+			links.add(new Pair<>(packet.replace(" ", ""), function.replace(" ", "")));
 		} else {
-			links.add(new Pair<String, String>("NoPackageGiven", function.replace(" ", "")));
+			links.add(new Pair<>("NoPackageGiven", function.replace(" ", "")));
 		}
 	}
 
@@ -248,7 +230,7 @@ public class FunctionDocument extends HtmlGenerator {
 	 * @return Returns the search tags of the {@link FunctionDocument}
 	 */
 	public List<String> getSearchTags() {
-		return new ArrayList<String>(searchTags);
+		return new ArrayList<>(searchTags);
 	}
 
 	@Override
@@ -321,7 +303,7 @@ public class FunctionDocument extends HtmlGenerator {
 	 *         Throws an IOException when failing to generate correct HTML.
 	 */
 	private HtmlCanvas addPackageHeader(final HtmlCanvas canvas) throws IOException {
-		return canvas.a(href(generateLink(new Pair<String, String>("packages", packet)))).write(packet + ".")._a();
+		return canvas.a(href(generateLink(new Pair<>("packages", packet)))).write(packet + ".")._a();
 	}
 
 	/**
@@ -333,16 +315,6 @@ public class FunctionDocument extends HtmlGenerator {
 	 */
 	protected HtmlCanvas addDescription(final HtmlCanvas canvas) throws IOException {
 		return canvas.section().h2().write("Description")._h2().p().write(description)._p()._section();
-	}
-
-	/**
-	 * Sets the parameters of a {@link FunctionDocument}
-	 *
-	 * @param params
-	 *        the parameters.
-	 */
-	public void setParameters(final List<Pair<String, String>> params) {
-		parameters = params;
 	}
 
 	/**
@@ -361,6 +333,7 @@ public class FunctionDocument extends HtmlGenerator {
 				s += " " + parameter.getKey() + " " + "NULL";
 			}
 		}
-		return s += '\n';
+		s += '\n';
+		return s;
 	}
 }
