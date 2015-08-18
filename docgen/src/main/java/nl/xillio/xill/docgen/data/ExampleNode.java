@@ -55,12 +55,13 @@ public class ExampleNode implements PropertiesProvider {
 					return "";
 				}
 
-				return line.substring(indentOffset, line.length());
+				return line.substring(indentOffset, line.length()).replaceAll("\\s+$", "");
 			}).toArray(i -> new String[i]);
 	}
 
 	static int getOffset(String[] lines) {
 		OptionalInt offset = Arrays.stream(lines)
+			.filter(line -> !line.replaceAll("\\s", "").isEmpty())
 			.mapToInt(line -> countWhiteSpaces(line))
 			.min();
 

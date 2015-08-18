@@ -170,7 +170,7 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 		Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
 
 		// Start loading plugins
-		initializer = new XillInitializer(new XillDocGen(null));
+		initializer = new XillInitializer(new XillDocGen());
 		initializer.start();
 
 		try (InputStream image = this.getClass().getResourceAsStream("/icon.png")) {

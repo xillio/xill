@@ -3,9 +3,6 @@ package nl.xillio.xill.docgen.impl;
 import freemarker.template.Configuration;
 import nl.xillio.xill.docgen.*;
 import nl.xillio.xill.docgen.exceptions.ParsingException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.elasticsearch.client.Client;
 
 
 /**
@@ -16,19 +13,8 @@ import org.elasticsearch.client.Client;
  * @since 12-8-2015
  */
 public class XillDocGen implements DocGen {
-	private static final Logger LOGGER = LogManager.getLogger();
-	private final Client client;
 	private final DocGenConfiguration config = new DocGenConfiguration();
 	private DocumentationGenerator lastGenerator;
-
-	/**
-	 * The constructor for the {@link XillDocGen}.
-	 *
-	 * @param client The {@link Client}  we're using for data storage and retrieval.
-	 */
-	public XillDocGen(final Client client) {
-		this.client = client;
-	}
 
 	@Override
 	public DocumentationParser getParser() throws ParsingException {

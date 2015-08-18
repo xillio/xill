@@ -49,7 +49,7 @@ public class ConstructDocumentationEntity implements DocumentationEntity {
 		properties.put("parameters", PropertiesProvider.extractContent(parameters));
 		properties.put("examples", PropertiesProvider.extractContent(examples));
 		properties.put("references", PropertiesProvider.extractContent(references));
-		properties.put("searchTags", searchTags);
+		properties.put("tags", searchTags);
 
 		return properties;
 	}
