@@ -1,6 +1,7 @@
 package nl.xillio.xill.docgen.impl;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,7 +35,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * //TODO javadoc
+ * The class represents a parser that will parse xml files into {@link DocumentationEntity}
  *
  * @author Thomas Biesaart
  * @author Ivor van der Hoog
@@ -43,39 +44,44 @@ import org.xml.sax.SAXException;
 public class XmlDocumentationParser implements DocumentationParser {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private final XPathFactory xpathFactory;
+	private final DocumentBuilderFactory documentBuilderFactory;
 
 	/**
 	 * The constructor for the parser when we hand it a factory.
-	 * 
+	 *
 	 * @param xpathFactory
 	 *        The {@link XPathFactory} we want the parser to use.
+	 * @param documentBuilderFactory
 	 */
-	public XmlDocumentationParser(final XPathFactory xpathFactory) {
+	public XmlDocumentationParser(final XPathFactory xpathFactory, DocumentBuilderFactory documentBuilderFactory) {
 		this.xpathFactory = xpathFactory;
+		this.documentBuilderFactory = documentBuilderFactory;
 	}
 
 	/**
-	 * TODO better javadoc.
-	 * The empty constructor for the parser.
+	 * Instantiate a new XmlDocumentationParser using the default factories
 	 */
 	public XmlDocumentationParser() {
 		xpathFactory = XPathFactory.newInstance();
+		documentBuilderFactory = DocumentBuilderFactory.newInstance();
 	}
 
 	@Override
 	public DocumentationEntity parse(final URL resource, final String identity) throws ParsingException {
 		try {
-			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder docBuilder;
-			docBuilder = docBuilderFactory.newDocumentBuilder();
-			Document doc = docBuilder.parse(resource.openStream());
+			DocumentBuilder docBuilder = documentBuilderFactory.newDocumentBuilder();
+			Document doc = docBuilder.parse(openStream(resource));
 
 			return doParse(doc, identity);
 		} catch (IllegalArgumentException | IOException e) {
-			throw new ParsingException("Failed to access XML for: " + resource.toExternalForm(), e);
+			throw new ParsingException("Failed to access XML for: " + identity, e);
 		} catch (ParserConfigurationException | SAXException e) {
 			throw new ParsingException("Failed to parse XML for: " + identity, e);
 		}
+	}
+
+	InputStream openStream(URL url) throws IOException {
+		return url.openStream();
 	}
 
 	DocumentationEntity doParse(final Document doc, final String identity) throws ParsingException {
@@ -99,7 +105,7 @@ public class XmlDocumentationParser implements DocumentationParser {
 		try {
 			XPathExpression descriptionExpr = xpath.compile("/function/description/text()");
 			return (String) descriptionExpr.evaluate(doc, XPathConstants.STRING);
-		} catch (XPathExpressionException | NullPointerException e) {
+		} catch (XPathExpressionException e) {
 			throw new ParsingException("Failed to parse description", e);
 		}
 

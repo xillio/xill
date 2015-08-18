@@ -20,7 +20,6 @@ public class Example implements PropertiesProvider {
 		this.title = title;
 	}
 
-	//TODO Add example title
 	@Override
 	public Map<String, Object> getProperties() {
 		Map<String, Object> properties = new HashMap<>();

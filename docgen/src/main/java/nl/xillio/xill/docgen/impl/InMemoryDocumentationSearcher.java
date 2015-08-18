@@ -23,7 +23,7 @@ public class InMemoryDocumentationSearcher implements DocumentationSearcher {
 		return ArrayUtils.addAll(nameResults, tagResults);
 	}
 
-	private String[] searchByTags(String query) {
+	String[] searchByTags(String query) {
 		String[] tags = query.toLowerCase().split("\\s");
 
 		List<String> results = new ArrayList<>();
@@ -70,7 +70,7 @@ public class InMemoryDocumentationSearcher implements DocumentationSearcher {
 	 * @param parts the search query
 	 * @return the packages
 	 */
-	String[] getPackages(String[] parts) {
+	private String[] getPackages(String[] parts) {
 		if(parts.length > 1) {
 			return constructs.keySet().stream().filter(pack -> matchPackage(pack, parts)).toArray(String[]::new);
 		}else{

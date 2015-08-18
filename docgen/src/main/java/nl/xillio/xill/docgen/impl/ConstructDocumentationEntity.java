@@ -1,21 +1,16 @@
 package nl.xillio.xill.docgen.impl;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import nl.xillio.xill.docgen.DocumentationEntity;
 import nl.xillio.xill.docgen.PropertiesProvider;
 import nl.xillio.xill.docgen.data.Example;
-import nl.xillio.xill.docgen.data.ExampleNode;
 import nl.xillio.xill.docgen.data.Parameter;
 import nl.xillio.xill.docgen.data.Reference;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 /**
- * //TODO javadoc
+ * This class represents the documentation of a single construct
  *
  * @author Thomas Biesaart
  * @author Ivor van der Hoog
@@ -95,8 +90,8 @@ public class ConstructDocumentationEntity implements DocumentationEntity {
 	 */
 	public List<String> getParameterNames(){
 		List<String> parameterNames = new ArrayList<>();
-		for(int t = 0; t < parameters.size(); ++t){
-			parameterNames.add(parameters.get(t).getName());
+		for (Parameter parameter : parameters) {
+			parameterNames.add(parameter.getName());
 		}
 		return parameterNames;
 	}
@@ -109,27 +104,6 @@ public class ConstructDocumentationEntity implements DocumentationEntity {
 	 */
 	public void setExamples(final List<Example> examples) {
 		this.examples = examples;
-	}
-	
-	/**
-	 * Returns all example code in the construct through parsing all exampleNodes in each example to see:
-	 * If the exampleNode is a codeblock.
-	 * Add the content of that code block.
-	 * @return
-	 * 				All example code in the construct.
-	 */
-	public List<String> getExampleCode(){
-		List<String> exampleCode = new ArrayList<>();
-			
-		for(Example example : examples){
-			for(ExampleNode node : example.getExampleNodes()){
-				if(node.getTagName() == "code"){
-					exampleCode.add(node.getContent());
-				}
-			}
-		}
-		
-		return exampleCode;
 	}
 
 	/**

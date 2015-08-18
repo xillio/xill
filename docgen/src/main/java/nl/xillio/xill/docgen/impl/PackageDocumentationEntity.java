@@ -6,7 +6,7 @@ import nl.xillio.xill.docgen.PropertiesProvider;
 import java.util.*;
 
 /**
- * //TODO javadoc
+ * This class represents the documentation of a package
  *
  * @author Thomas Biesaart
  * @author Ivor van der Hoog

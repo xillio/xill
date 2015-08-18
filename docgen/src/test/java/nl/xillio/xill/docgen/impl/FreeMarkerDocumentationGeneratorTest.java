@@ -19,6 +19,7 @@ import java.util.Map;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
 import static org.testng.Assert.fail;
 
 /**
@@ -243,7 +244,45 @@ public class FreeMarkerDocumentationGeneratorTest {
 
 		generator.generatePackageIndex();
 
-		verify(generator).doGenerate(any(),any(),any());
+		verify(generator).doGenerate(any(), any(), any());
+	}
+
+	@Test
+		 public void testGetTemplate() throws IOException, ParsingException {
+		Configuration config = mock(Configuration.class);
+		FreeMarkerDocumentationGenerator generator = spy(new FreeMarkerDocumentationGenerator("__UNIT_TEST__", config, ROOT_FOLDER));
+		Template template = mock(Template.class);
+		when(config.getTemplate("name.html")).thenReturn(template);
+
+		// Call the method
+		Template result = generator.getTemplate("name");
+
+		assertSame(template, result);
+	}
+
+	@Test(expectedExceptions = ParsingException.class)
+	public void testGetTemplateIOException() throws IOException, ParsingException {
+		Configuration config = mock(Configuration.class);
+		FreeMarkerDocumentationGenerator generator = spy(new FreeMarkerDocumentationGenerator("__UNIT_TEST__", config, ROOT_FOLDER));
+		when(config.getTemplate("name.html")).thenThrow(new IOException());
+
+		// Call the method
+		Template result = generator.getTemplate("name");
+	}
+
+	@Test
+	public void testGetModelValues() throws IOException {
+		FreeMarkerDocumentationGenerator generator = spyGenerator();
+		DocumentationEntity entity = mock(DocumentationEntity.class);
+		Map<String, Object> props = new HashMap<>();
+		props.put("testKey", "testValue");
+		when(entity.getProperties()).thenReturn(props);
+
+		Map<String, Object> result = generator.getModel(entity);
+
+		assertSame(result.get("testKey"), props.get("testKey"));
+		assertEquals(result.get("packageName"), "__UNIT_TEST__");
+
 	}
 
 	private FreeMarkerDocumentationGenerator spyGenerator() throws IOException {
