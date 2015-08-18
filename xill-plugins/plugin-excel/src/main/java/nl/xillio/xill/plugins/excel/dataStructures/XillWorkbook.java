@@ -1,13 +1,9 @@
 package nl.xillio.xill.plugins.excel.datastructures;
 
 import nl.xillio.xill.api.components.MetadataExpression;
-import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,18 +27,6 @@ public class XillWorkbook implements MetadataExpression {
 		return "Excel Workbook [" + location + "]";
 	}
 
-	public int rowSize(Sheet sheet) {
-		return sheet.getLastRowNum() + 1; //Added one because POI is zero indexed
-	}
-
-	public int columnSize(Sheet sheet) {
-		int maxColumnSize = -1; //Initialized to -1 because 1 will be added at return and minimum is zero
-		for (int i = 0; i < rowSize(sheet); i++)
-			if (maxColumnSize < sheet.getRow(i).getLastCellNum())
-				maxColumnSize = sheet.getRow(i).getFirstCellNum();
-		return maxColumnSize + 1; // Added one because POI is zero index
-	}
-
 	public XillSheet getSheet(String sheetName) {
 		if (workbook.getSheetIndex(sheetName) == -1)
 			throw new IllegalArgumentException("Sheet can not be found in the supplied workbook");
@@ -58,10 +42,6 @@ public class XillWorkbook implements MetadataExpression {
 		for (int i = 0; i < workbook.getNumberOfSheets(); i++)
 			sheetnames.add(workbook.getSheetAt(i).getSheetName());
 		return sheetnames;
-	}
-
-	public String name(Sheet sheet) {
-		return sheet.getSheetName();
 	}
 
 	public boolean isReadonly() {
@@ -84,9 +64,13 @@ public class XillWorkbook implements MetadataExpression {
 		return true;
 	}
 
+	public FileOutputStream getOuputStream() throws FileNotFoundException {
+		return new FileOutputStream(location);
+	}
+
 	public void save() throws IOException {
 		try {
-			OutputStream outputStream = new FileOutputStream(location);
+			OutputStream outputStream = getOuputStream();
 			workbook.write(outputStream);
 			outputStream.close();
 		} catch (IOException e) {
@@ -96,7 +80,7 @@ public class XillWorkbook implements MetadataExpression {
 
 	public void save(File file) throws IOException {
 		try {
-			OutputStream outputStream = new FileOutputStream(file);
+			OutputStream outputStream = getOuputStream();
 			workbook.write(outputStream);
 			outputStream.close();
 		} catch (IOException e) {
