@@ -61,8 +61,8 @@ public class QueryConstruct extends BaseDatabaseConstruct {
 			result = factory.getService(metaData.getDatabaseName()).query(connection, sql, objectParams, to);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			throw new RobotRuntimeException("Illegal DBMS type", e);
-		} catch (SQLException e) {
-			throw new RobotRuntimeException(e.getMessage());
+		} catch (SQLException | IllegalArgumentException e) {
+			throw new RobotRuntimeException(e.getMessage(),e);
 		}
 
 		if (result instanceof Integer) {

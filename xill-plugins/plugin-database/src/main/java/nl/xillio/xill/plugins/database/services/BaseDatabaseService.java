@@ -21,6 +21,7 @@ import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
 import nl.xillio.xill.plugins.database.util.StatementIterator;
 import nl.xillio.xill.plugins.database.util.Tuple;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Iterators;
@@ -65,7 +66,10 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		stmt.setQueryTimeout(timeout);
 
 		if (parameters == null || parameters.size() == 0) {
-			stmt.execute(query);
+			if(extractParameterNames(query).size() > 0){
+				throw new IllegalArgumentException("Parameters is empty for parametrised query.");
+			}
+			stmt.execute();
 		}
 		else if (parameters.size() == 1) {
 			LinkedHashMap<String, Object> parameter = parameters.get(0);
@@ -74,8 +78,10 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		}
 		else
 		{
-			int[] updateCounts = executeBatch(stmt, extractParameterNames(query), parameters);
-			return Arrays.asList(updateCounts, 0).iterator();
+			//convert int[] to Integer[] to be able to create an iterator.
+			Integer[] updateCounts = ArrayUtils.toObject(executeBatch(stmt, extractParameterNames(query), parameters));
+			
+			return (Arrays.asList(updateCounts)).iterator();
 		}
 
 		// If the first result is the only result and an update count simply return that count, otherwise create an iterator over the statement
@@ -121,9 +127,6 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		List<String> indexedParameters = new ArrayList<>();
 		while (m.find()) {
 			String paramName = m.group(1);
-			// Object parameter = parameters.get(paramName);
-			// if (parameter == null)
-			// throw new IllegalArgumentException("The Parameters argument should contain: \"" + paramName + "\"");
 			indexedParameters.add(paramName);
 		}
 		return indexedParameters;
@@ -133,8 +136,9 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		for (LinkedHashMap<String, Object> parameter : parameters) {
 			for (int i = 0; i < indexedParameters.size(); i++) {
 				String indexedParameter = indexedParameters.get(i);
+				//returns null on null value and when key is not contained in map
 				Object value = parameter.get(indexedParameter);
-				if (value == null)
+				if (!parameter.containsKey(indexedParameter))
 				  throw new IllegalArgumentException("The Parameters argument should contain: \"" + indexedParameter + "\"");
 				stmt.setObject(i + 1, value);
 			}
