@@ -69,10 +69,10 @@ public class XillSheetTest {
 		XillCellRef cellRef = new XillCellRef(3,3);
 		XillSheet sheet = spy(new XillSheet(mock(Sheet.class), false));
 		XillRow row = mock(XillRow.class);
-		doReturn(row).when(sheet).getRow(4);
+		doReturn(row).when(sheet).getRow(cellRef.getRow());
 		when(row.isNull()).thenReturn(false);
 		XillCell cell = mock(XillCell.class);
-		when(row.getCell(4)).thenReturn(cell);
+		when(row.getCell(cellRef.getRow())).thenReturn(cell);
 		when(cell.isNull()).thenReturn(false);
 		assertTrue(sheet.getCell(cellRef).equals(cell));
 	}
@@ -88,12 +88,12 @@ public class XillSheetTest {
 
 		XillRow newRow = mock(XillRow.class);
 		XillCell cell = mock(XillCell.class);
-		when(newRow.getCell(5)).thenReturn(cell);
+		when(newRow.getCell(cellRef.getColumn())).thenReturn(cell);
 		when(cell.isNull()).thenReturn(true);
-		when(newRow.createCell(5)).thenReturn(cell);
+		when(newRow.createCell(cellRef.getColumn())).thenReturn(cell);
 
-		doReturn(emptyRow).when(testSheet).getRow(4);
-		doReturn(newRow).when(testSheet).createRow(4);
+		doReturn(emptyRow).when(testSheet).getRow(cellRef.getRow());
+		doReturn(newRow).when(testSheet).createRow(cellRef.getRow());
 
 		assertTrue(cell.equals(testSheet.getCell(cellRef)));
 	}
