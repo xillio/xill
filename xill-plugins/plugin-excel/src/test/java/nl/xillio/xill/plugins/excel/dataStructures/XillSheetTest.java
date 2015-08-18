@@ -110,7 +110,7 @@ public class XillSheetTest {
 		testSheet.setCellValue(cellRef, value);
 		testSheet.setCellValue(cellRef, 3d);
 		testSheet.setCellValue(cellRef, false);
-		verify(testSheet.getCell(cellRef), times(3));
+		verify(testSheet, times(3)).getCell(cellRef);
 	}
 
 	@Test
