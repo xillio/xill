@@ -14,7 +14,6 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
@@ -135,7 +134,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 				String indexedParameter = indexedParameters.get(i);
 				Object value = parameter.get(indexedParameter);
 				if (value == null)
-				  throw new IllegalArgumentException("The Parameters argument should contain: \"" + indexedParameter + "\"");
+					throw new IllegalArgumentException("The Parameters argument should contain: \"" + indexedParameter + "\"");
 				stmt.setObject(i + 1, value);
 			}
 			stmt.addBatch();
@@ -201,10 +200,12 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	public LinkedHashMap<String, Object> getObject(final Connection connection, final String table, final LinkedHashMap<String, Object> constraints) throws SQLException {
 		// prepare statement
 		PreparedStatement statement = null;
-		LinkedHashMap<String, Object> notNullConstraints = new LinkedHashMap<>
-		    (constraints.entrySet().stream()
-		      .filter(e -> e.getValue() != null)
-		      .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue())));
+		final LinkedHashMap<String, Object> notNullConstraints = new LinkedHashMap<>();
+		constraints.forEach((k, v) -> {
+			if (v != null) {
+				notNullConstraints.put(k, v);
+			}
+		});
 
 		String query = createSelectQuery(table, new ArrayList<String>(notNullConstraints.keySet()));
 		statement = connection.prepareStatement(query);
@@ -270,7 +271,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 
 	@Override
 	public void storeObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject, final List<String> keys, final boolean overwrite)
-	    throws SQLException {
+			throws SQLException {
 		PreparedStatement statement;
 
 		if (keys.size() == 0 || !overwrite) {
@@ -299,7 +300,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	}
 
 	private void updateObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject, final List<String> keys)
-	    throws SQLException {
+			throws SQLException {
 		String ss = createQueryPart(newObject.keySet(), ",");
 		String ws = createQueryPart(keys, " AND ");
 
