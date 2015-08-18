@@ -7,14 +7,15 @@
         <![CDATA[Creates an empty folder at the target uri if it doesn't exist.
         Returns the absolute path to that folder]]></description>
     <examples>
-        <example description="Create a folder:"><![CDATA[
-        use File;
-        var folder = File.createFolder("newFolder");
-    ]]></example>
+        <example title="Usage">
+            <header>Create a folder</header>
+            <code>
+                use File;
+                var folder = File.createFolder("newFolder");
+            </code>
+        </example>
     </examples>
     <references>
-        <reference package="File">saveTo</reference>
+        <reference>saveTo</reference>
     </references>
-    <searchTags>
-    </searchTags>
 </function>

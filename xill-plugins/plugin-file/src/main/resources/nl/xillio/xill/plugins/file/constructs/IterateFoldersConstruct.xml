@@ -8,19 +8,21 @@
         <![CDATA[Iterates over all folders in a folder. If recursive is set to true all folders in sub folders will also be iterated
         The iterator returns an object containing various pieces of information about the folder access.]]></description>
     <examples>
-        <example description="Executing:"><![CDATA[
-        use File;
-        use System;
-        var iterator = File.iterateFolders("C:/Users");
-        foreach(folder in iterator) {
-            System.print(folder);
-        }
-    ]]></example>
-        <example description="Will print:"><![CDATA[
-        INFO: {"path":"C:\\Users\\Public","canRead":1,"canWrite":1,"isAccessible":1,"parent":"C:\\Users"}
-        INFO: {"path":"C:\\Users\\Default User","canRead":1,"canWrite":1,"isAccessible":1,"parent":"C:\\Users"}
-        etc...
-    ]]></example>
+        <example title="Usage">
+            <header>Executing</header>
+            <code>
+                use File;
+                use System;
+                var iterator = File.iterateFolders("C:/Users");
+                foreach(folder in iterator) {
+                    System.print(folder);
+                }
+            </code>
+            <header>Will print</header>
+            <p>
+                INFO: {"path":"C:\\Users\\Public","canRead":1,"canWrite":1,"isAccessible":1,"parent":"C:\\Users"}
+            </p>
+        </example>
     </examples>
     <references>
         <reference package="File">iterateFiles</reference>

@@ -39,6 +39,9 @@ public class InMemoryDocumentationSearcher implements DocumentationSearcher {
 
 	String[] searchByName(String query) {
 		String[] parts = query.split("\\.");
+		if(parts.length == 0) {
+			return new String[0];
+		}
 		List<String> results = new ArrayList<>();
 
 		for(String packageName : getPackages(parts)) {
@@ -59,7 +62,7 @@ public class InMemoryDocumentationSearcher implements DocumentationSearcher {
 	boolean matchConstructName(String item, String query) {
 		String[] parts = item.split("\\.");
 
-		return parts[1].toLowerCase().contains(query.toLowerCase());
+		return parts[1].toLowerCase().contains(query.toLowerCase()) || parts[0].toLowerCase().contains(query.toLowerCase());
 	}
 
 	/**

@@ -7,18 +7,19 @@
     <description>
         <![CDATA[Iterates over all files in a folder. If recursive is set to true all files in sub folders will also be iterated]]></description>
     <examples>
-        <example description="Print all files in a folder:"><![CDATA[
-        use File;
-        use System;
-        var iterator = File.iterateFiles("../files", true);
-        foreach(file in iterator) {
-            System.print(file);
-        }
-    ]]></example>
+        <example title="Usage">
+            <header>Print all files in a folder</header>
+            <code>
+                use File;
+                use System;
+                var iterator = File.iterateFiles("../files", true);
+                foreach(file in iterator) {
+                    System.print(file);
+                }
+            </code>
+        </example>
     </examples>
     <references>
-        <reference package="File">iterateFolders</reference>
+        <reference>iterateFolders</reference>
     </references>
-    <searchTags>
-    </searchTags>
 </function>

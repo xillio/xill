@@ -2,6 +2,7 @@ package nl.xillio.migrationtool.gui;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.CookieHandler;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -43,6 +44,8 @@ public class HelpPane extends AnchorPane {
 
 		Loader.getInitializer().getOnLoadComplete().addListener(init -> {
 			home();
+			webFunctionDoc.getEngine().getHistory().setMaxSize(0);
+			webFunctionDoc.getEngine().getHistory().setMaxSize(100);
 			helpSearchBar.setSearcher(init.getSearcher());
 		});
 
