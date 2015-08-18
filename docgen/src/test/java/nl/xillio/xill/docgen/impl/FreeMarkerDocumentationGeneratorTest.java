@@ -267,7 +267,7 @@ public class FreeMarkerDocumentationGeneratorTest {
 		when(config.getTemplate("name.html")).thenThrow(new IOException());
 
 		// Call the method
-		Template result = generator.getTemplate("name");
+		generator.getTemplate("name");
 	}
 
 	@Test

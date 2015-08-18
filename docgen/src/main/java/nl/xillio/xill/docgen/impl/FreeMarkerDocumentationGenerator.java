@@ -28,7 +28,7 @@ import java.util.*;
 public class FreeMarkerDocumentationGenerator implements DocumentationGenerator {
 	private static final Gson GSON = new GsonBuilder()
 		.create();
-	static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	private static final String JSON_INDEX_NAME = "_index.json";
 	private final String packageName;
 	private final Configuration fmConfig;
@@ -48,7 +48,7 @@ public class FreeMarkerDocumentationGenerator implements DocumentationGenerator 
 	}
 
 	@Override
-	public void generate(DocumentationEntity entity) throws ParsingException, IllegalStateException {
+	public void generate(DocumentationEntity entity) throws ParsingException {
 		assertNotClosed();
 
 		//Get template
@@ -123,7 +123,7 @@ public class FreeMarkerDocumentationGenerator implements DocumentationGenerator 
 				continue;
 			}
 
-			String json = null;
+			String json;
 			try {
 				json = getJsonFromFile(jsonFile);
 				result.add(GSON.fromJson(json, PackageDocumentationEntity.class));

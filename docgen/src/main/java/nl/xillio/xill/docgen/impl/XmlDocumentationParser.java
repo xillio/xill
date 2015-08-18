@@ -38,6 +38,7 @@ public class XmlDocumentationParser implements DocumentationParser {
 	private XPathExpression parameterXPathQuery;
 	private XPathExpression descriptionXPathQuery;
 	private XPathExpression tagXPathQuery;
+	private XPathExpression exampleNodesXPathQuery;
 
 	/**
 	 * The constructor for the parser when we hand it a factory.
@@ -51,15 +52,8 @@ public class XmlDocumentationParser implements DocumentationParser {
 		try {
 			buildQueries();
 		} catch (XPathExpressionException e) {
-			throw new IllegalStateException("Failed to build xPath queries");
+			throw new IllegalStateException("Failed to build xPath queries", e);
 		}
-	}
-
-	private void buildQueries() throws XPathExpressionException {
-		XPath xPath = xpathFactory.newXPath();
-		descriptionXPathQuery = xPath.compile("/function/description/text()");
-		parameterXPathQuery = xPath.compile("/function/parameters/param");
-		tagXPathQuery = xPath.compile("/function/tags");
 	}
 
 	/**
@@ -68,6 +62,15 @@ public class XmlDocumentationParser implements DocumentationParser {
 	public XmlDocumentationParser() {
 		this(XPathFactory.newInstance(), DocumentBuilderFactory.newInstance());
 	}
+
+	private void buildQueries() throws XPathExpressionException {
+		XPath xPath = xpathFactory.newXPath();
+		descriptionXPathQuery = xPath.compile("/function/description/text()");
+		parameterXPathQuery = xPath.compile("/function/parameters/param");
+		tagXPathQuery = xPath.compile("/function/tags");
+		exampleNodesXPathQuery = xPath.compile("/function/examples/example");
+	}
+
 
 	@Override
 	public DocumentationEntity parse(final URL resource, final String identity) throws ParsingException {
@@ -95,16 +98,16 @@ public class XmlDocumentationParser implements DocumentationParser {
 
 		ConstructDocumentationEntity construct = new ConstructDocumentationEntity(identity);
 
-		construct.setDescription(parseDescription(doc, xpath));
-		construct.setParameters(parseParameters(doc, xpath));
-		construct.setExamples(parseExamples(doc, xpath));
-		construct.setReferences(parseReferences(doc, xpath));
-		construct.setSearchTags(parseSearchTags(doc, xpath));
+		construct.setDescription(parseDescription(doc));
+		construct.setParameters(parseParameters(doc));
+		construct.setExamples(parseExamples(doc));
+		construct.setReferences(parseReferences(doc));
+		construct.setSearchTags(parseSearchTags(doc));
 
 		return construct;
 	}
 
-	String parseDescription(final Document doc, final XPath xpath) throws ParsingException {
+	String parseDescription(final Document doc) throws ParsingException {
 		try {
 			return (String) descriptionXPathQuery.evaluate(doc, XPathConstants.STRING);
 		} catch (XPathExpressionException e) {
@@ -113,7 +116,7 @@ public class XmlDocumentationParser implements DocumentationParser {
 
 	}
 
-	List<Parameter> parseParameters(final Document doc, final XPath xpath) throws ParsingException {
+	List<Parameter> parseParameters(final Document doc) throws ParsingException {
 		List<Parameter> parameters = new ArrayList<>();
 		NodeList params;
 
@@ -166,11 +169,11 @@ public class XmlDocumentationParser implements DocumentationParser {
 		return attribute.getNodeValue();
 	}
 
-	List<Example> parseExamples(final Document doc, final XPath xpath) throws ParsingException {
+	List<Example> parseExamples(final Document doc) throws ParsingException {
 		List<Example> examples = new ArrayList<>();
 		NodeList exampleNodes;
 		try {
-			exampleNodes = (NodeList) xpath.compile("/function/examples/example").evaluate(doc, XPathConstants.NODESET);
+			exampleNodes = (NodeList) exampleNodesXPathQuery.evaluate(doc, XPathConstants.NODESET);
 
 			for (int t = 0; t < exampleNodes.getLength(); ++t) {
 				examples.add(parseExample(exampleNodes.item(t)));
@@ -182,7 +185,7 @@ public class XmlDocumentationParser implements DocumentationParser {
 		return examples;
 	}
 
-	Example parseExample(final Node node) throws NullPointerException {
+	Example parseExample(final Node node) {
 		// Get the example title
 		Example example = new Example(getAttributeOrNull("title", node));
 		NodeList exampleContent = node.getChildNodes();
@@ -196,7 +199,7 @@ public class XmlDocumentationParser implements DocumentationParser {
 		return example;
 	}
 
-	List<Reference> parseReferences(final Document doc, final XPath xpath) throws ParsingException {
+	List<Reference> parseReferences(final Document doc) throws ParsingException {
 		List<Reference> references = new ArrayList<>();
 		NodeList exampleNodes;
 		try {
@@ -216,7 +219,7 @@ public class XmlDocumentationParser implements DocumentationParser {
 		return references;
 	}
 
-	Reference parseReference(final Node node) throws ParsingException, NullPointerException {
+	Reference parseReference(final Node node) throws ParsingException {
 		String[] reference = node.getTextContent().trim().split("\\.");
 		if (reference.length == 0) {
 			throw new ParsingException("Failed to parse reference because no content was found");
@@ -231,7 +234,7 @@ public class XmlDocumentationParser implements DocumentationParser {
 		return new Reference(packageName, constructName);
 	}
 
-	Set<String> parseSearchTags(final Document doc, final XPath xpath) throws ParsingException {
+	Set<String> parseSearchTags(final Document doc) throws ParsingException {
 		String[] searchTags = new String[0];
 		try {
 			Node searchTagNode = (Node) tagXPathQuery.evaluate(doc, XPathConstants.NODE);
