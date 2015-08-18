@@ -25,7 +25,7 @@ public class XillRow {
 		return new XillCell(row.getCell(columnNr));
 	}
 
-	public int getLastCellNum(){
+	public int getLastCellNum() {
 		return row.getLastCellNum();
 	}
 }

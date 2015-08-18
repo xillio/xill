@@ -20,7 +20,7 @@ public class XillSheetTest {
 		Row row2 = mock(Row.class);
 		when(sheet.getRow(0)).thenReturn(row1);
 		when(sheet.getRow(1)).thenReturn(row2);
-		when(row1.getLastCellNum()).thenReturn((short)82);
+		when(row1.getLastCellNum()).thenReturn((short) 82);
 		when(row2.getLastCellNum()).thenReturn((short) 81);
 		XillSheet testSheet = new XillSheet(sheet, false);
 		assertEquals(83, testSheet.getColumnLength());
@@ -38,7 +38,7 @@ public class XillSheetTest {
 	public void testGetName() throws Exception {
 		Sheet sheet = mock(Sheet.class);
 		when(sheet.getSheetName()).thenReturn("sheet");
-		XillSheet testsheet = new XillSheet(sheet,false);
+		XillSheet testsheet = new XillSheet(sheet, false);
 		assertEquals("sheet", testsheet.getName());
 	}
 
@@ -55,7 +55,7 @@ public class XillSheetTest {
 	}
 
 	@Test
-	public void testGetCellValueEmpty() throws Exception{
+	public void testGetCellValueEmpty() throws Exception {
 		Sheet sheet = mock(Sheet.class);
 		XillSheet xillSheet = spy(new XillSheet(sheet, false));
 		XillRow row = mock(XillRow.class);
@@ -66,7 +66,7 @@ public class XillSheetTest {
 
 	@Test
 	public void getCell() throws Exception {
-		XillCellRef cellRef = new XillCellRef(3,3);
+		XillCellRef cellRef = new XillCellRef(3, 3);
 		XillSheet sheet = spy(new XillSheet(mock(Sheet.class), false));
 		XillRow row = mock(XillRow.class);
 		doReturn(row).when(sheet).getRow(cellRef.getRow());
@@ -78,8 +78,8 @@ public class XillSheetTest {
 	}
 
 	@Test
-	public void getCellDoesNotExist() throws Exception{
-		XillCellRef cellRef = new XillCellRef(4,3);
+	public void getCellDoesNotExist() throws Exception {
+		XillCellRef cellRef = new XillCellRef(4, 3);
 		Sheet sheet = mock(Sheet.class);
 		XillSheet testSheet = spy(new XillSheet(sheet, false));
 
@@ -100,7 +100,7 @@ public class XillSheetTest {
 
 	@Test
 	public void testSetCellValue() throws Exception {
-		XillCellRef cellRef = new XillCellRef(5,3);
+		XillCellRef cellRef = new XillCellRef(5, 3);
 		String value = "val";
 		Sheet sheet = mock(Sheet.class);
 		XillSheet testSheet = spy(new XillSheet(sheet, false));

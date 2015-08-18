@@ -3,7 +3,6 @@ package nl.xillio.xill.plugins.excel.datastructures;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.testng.annotations.Test;
-import sun.reflect.annotation.ExceptionProxy;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,14 +12,15 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Created by Daan Knoope on 18-8-2015.
  */
 public class XillWorkbookTest {
 
-	public File createFile(String path, boolean readonly) throws Exception{
+	public File createFile(String path, boolean readonly) throws Exception {
 		File file = mock(File.class);
 		when(file.getCanonicalPath()).thenReturn(path);
 		when(file.canWrite()).thenReturn(!readonly);
@@ -38,7 +38,7 @@ public class XillWorkbookTest {
 	}
 
 	@Test
-	public void testGetSheet() throws Exception{
+	public void testGetSheet() throws Exception {
 		Workbook workbook = mock(Workbook.class);
 		File file = createFile("path", false);
 		XillWorkbook testWorkbook = new XillWorkbook(workbook, file);
@@ -54,7 +54,7 @@ public class XillWorkbookTest {
 	public void testMakeSheet() throws Exception {
 		Workbook workbook = mock(Workbook.class);
 		File file = createFile("path", false);
-		XillWorkbook testWorkbook = new XillWorkbook(workbook,file);
+		XillWorkbook testWorkbook = new XillWorkbook(workbook, file);
 		Sheet sheet = mock(Sheet.class);
 		when(workbook.createSheet("name")).thenReturn(sheet);
 		when(sheet.getSheetName()).thenReturn("name");
@@ -73,7 +73,7 @@ public class XillWorkbookTest {
 	}
 
 	@Test
-	public void testGetSheetNames() throws Exception{
+	public void testGetSheetNames() throws Exception {
 		List<String> sheetNames = Arrays.asList("Apple", "Bee", "Cow");
 
 		Workbook workbook = mock(Workbook.class);
@@ -81,7 +81,7 @@ public class XillWorkbookTest {
 		when(workbook.getNumberOfSheets()).thenReturn(sheetNames.size());
 
 		Sheet[] sheets = new Sheet[3];
-		for(int i = 0; i < sheets.length; i++) {
+		for (int i = 0; i < sheets.length; i++) {
 			sheets[i] = mock(Sheet.class);
 			when(sheets[i].getSheetName()).thenReturn(sheetNames.get(i));
 			when(workbook.getSheetAt(i)).thenReturn(sheets[i]);
@@ -116,8 +116,8 @@ public class XillWorkbookTest {
 		verify(workbook, times(1)).removeSheetAt(3);
 	}
 
-	@Test (expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "Sheet sheet does not exist in this workbook")
-	public void testRemoveSheetDoesNotExist() throws Exception{
+	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "Sheet sheet does not exist in this workbook")
+	public void testRemoveSheetDoesNotExist() throws Exception {
 		Workbook workbook = mock(Workbook.class);
 		File file = createFile("path", false);
 		XillWorkbook testWorkbook = new XillWorkbook(workbook, file);
@@ -136,9 +136,9 @@ public class XillWorkbookTest {
 		testWorkbook.save(file);
 	}
 
-	@Test (expectedExceptions = IOException.class,
-	expectedExceptionsMessageRegExp = "Could not write to this file")
-	public void testSaveException() throws Exception{
+	@Test(expectedExceptions = IOException.class,
+					expectedExceptionsMessageRegExp = "Could not write to this file")
+	public void testSaveException() throws Exception {
 		Workbook workbook = mock(Workbook.class);
 		File file = createFile("path", false);
 		XillWorkbook testWorkbook = spy(new XillWorkbook(workbook, file));
@@ -146,9 +146,9 @@ public class XillWorkbookTest {
 		testWorkbook.save();
 	}
 
-	@Test (expectedExceptions = IOException.class,
-	expectedExceptionsMessageRegExp = "Could not write to this file")
-	public void testSaveWithFileException() throws Exception{
+	@Test(expectedExceptions = IOException.class,
+					expectedExceptionsMessageRegExp = "Could not write to this file")
+	public void testSaveWithFileException() throws Exception {
 		Workbook workbook = mock(Workbook.class);
 		File file = createFile("path", false);
 		XillWorkbook testWorkbook = spy(new XillWorkbook(workbook, file));
