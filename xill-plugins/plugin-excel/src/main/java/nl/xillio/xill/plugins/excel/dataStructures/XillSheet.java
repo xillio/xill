@@ -46,10 +46,10 @@ public class XillSheet implements MetadataExpression {
 	}
 
 	public Object getCellValue(XillCellRef cellRef) {
-		XillRow row = getRow(cellRef.getCellReference().getRow());
+		XillRow row = getRow(cellRef.getRow());
 		XillCell cell = null;
 		if (!row.isNull())
-			cell = row.getCell(cellRef.getCellReference().getCol());
+			cell = row.getCell(cellRef.getColumn());
 		return cell == null ? new XillCell(null).getValue() : cell.getValue();
 	}
 

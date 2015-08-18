@@ -39,10 +39,10 @@ public class XillCellRef implements MetadataExpression {
 	}
 
 	public int getColumn() {
-		return cellReference.getCol() + 1;
+		return cellReference.getCol() -1 ;
 	}
 
 	public int getRow() {
-		return cellReference.getRow() + 1;
+		return cellReference.getRow() -1;
 	}
 }
