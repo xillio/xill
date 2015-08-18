@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.excel.dataStructures;
+package nl.xillio.xill.plugins.excel.datastructures;
 
 import nl.xillio.xill.api.components.MetadataExpression;
 import org.apache.poi.hssf.util.CellReference;
@@ -15,7 +15,7 @@ public class XillCellRef implements MetadataExpression {
 	}
 
 	public XillCellRef(int column, int row) {
-		cellReference = new CellReference(column, row);
+		cellReference = new CellReference(row, column);
 	}
 
 	@Override public boolean equals(Object o) {
@@ -39,10 +39,10 @@ public class XillCellRef implements MetadataExpression {
 	}
 
 	public int getColumn() {
-		return cellReference.getCol();
+		return cellReference.getCol() + 1;
 	}
 
 	public int getRow() {
-		return cellReference.getRow();
+		return cellReference.getRow() + 1;
 	}
 }

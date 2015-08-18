@@ -1,8 +1,8 @@
 package nl.xillio.xill.plugins.excel.services;
 
-import nl.xillio.xill.plugins.excel.dataStructures.XillSheet;
-import nl.xillio.xill.plugins.excel.dataStructures.XillWorkbook;
-import nl.xillio.xill.plugins.excel.dataStructures.XillWorkbookFactory;
+import nl.xillio.xill.plugins.excel.datastructures.XillSheet;
+import nl.xillio.xill.plugins.excel.datastructures.XillWorkbook;
+import nl.xillio.xill.plugins.excel.datastructures.XillWorkbookFactory;
 import org.testng.annotations.Test;
 
 import java.io.File;

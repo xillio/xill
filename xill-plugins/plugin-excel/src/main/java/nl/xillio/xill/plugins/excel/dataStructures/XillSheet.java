@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.excel.dataStructures;
+package nl.xillio.xill.plugins.excel.datastructures;
 
 import nl.xillio.xill.api.components.MetadataExpression;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -22,15 +22,15 @@ public class XillSheet implements MetadataExpression {
 		int i = 0;
 	}
 
-	private int calculateColumnLength() {
+	int calculateColumnLength() {
 		//CPU intensive, use only once, then use the columnLength property
-		int maxColumnSize = 0; //Initialized to -1 because 1 will be added at return and minimum is zero
+		int maxColumnSize = 0;
 		for (int i = 0; i < rowLength; i++)
 			if (sheet.getRow(i) != null &&
-							maxColumnSize < sheet.getRow(i).getLastCellNum()) {
-				maxColumnSize = sheet.getRow(i).getLastCellNum();
+							maxColumnSize < getRow(i).getLastCellNum()) {
+				maxColumnSize = getRow(i).getLastCellNum();
 			}
-		return maxColumnSize;
+		return maxColumnSize == 0 ? 0 : maxColumnSize + 1; //plus one because zero indexed
 	}
 
 	public int getColumnLength() {
@@ -50,31 +50,28 @@ public class XillSheet implements MetadataExpression {
 		XillCell cell = null;
 		if (!row.isNull())
 			cell = row.getCell(cellRef.getCellReference().getCol());
-		return cell.getValue();
+		return cell == null ? new XillCell(null).getValue() : cell.getValue();
 	}
 
 	XillRow getRow(int rowNr) {
 		return new XillRow(sheet.getRow(rowNr));
 	}
 
-	void createRow(int rowNr) {
+	XillRow createRow(int rowNr) {
 		sheet.createRow(rowNr);
+		return new XillRow(sheet.getRow(rowNr));
 	}
 
-	private XillCell getCell(XillCellRef cellRef) {
+	XillCell getCell(XillCellRef cellRef) {
 		int columnNr = cellRef.getColumn();
 		int rowNr = cellRef.getRow();
 
 		XillRow row = getRow(rowNr);
-		if (row.isNull()) {
-			createRow(rowNr);
-			row = getRow(rowNr);
-		}
+		if (row.isNull())
+			row = createRow(rowNr);
 		XillCell cell = row.getCell(columnNr);
-		if (cell.isNull()) {
-			row.createCell(columnNr);
-			cell = row.getCell(columnNr);
-		}
+		if (cell.isNull())
+			cell = row.createCell(columnNr);
 
 		return cell;
 	}

@@ -5,8 +5,8 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.plugins.excel.dataStructures.XillCellRef;
-import nl.xillio.xill.plugins.excel.dataStructures.XillSheet;
+import nl.xillio.xill.plugins.excel.datastructures.XillCellRef;
+import nl.xillio.xill.plugins.excel.datastructures.XillSheet;
 
 /**
  * Created by Daan Knoope on 7-8-2015.

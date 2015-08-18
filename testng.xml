@@ -7,7 +7,7 @@
       <class name="nl.xillio.xill.plugins.excel.constructs.CreateWorkbookConstructTest"/>
       <class name="nl.xillio.xill.plugins.excel.services.ExcelServiceImplTest"/>
       <class name="nl.xillio.xill.plugins.excel.constructs.LoadSheetConstructTest"/>
-      <class name="nl.xillio.xill.plugins.excel.dataStructures.XillWorkbookFactorySelectorTest"/>
+      <class name="nl.xillio.xill.plugins.excel.datastructures.XillWorkbookFactorySelectorTest"/>
     </classes>
   </test>
 </suite>

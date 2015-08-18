@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.excel.dataStructures;
+package nl.xillio.xill.plugins.excel.datastructures;
 
 import org.apache.poi.ss.usermodel.Row;
 
@@ -20,7 +20,12 @@ public class XillRow {
 		return row == null;
 	}
 
-	public void createCell(int columnNr) {
+	public XillCell createCell(int columnNr) {
 		row.createCell(columnNr);
+		return new XillCell(row.getCell(columnNr));
+	}
+
+	public int getLastCellNum(){
+		return row.getLastCellNum();
 	}
 }
