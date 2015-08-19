@@ -5,9 +5,8 @@ import java.util.Collection;
 import java.util.List;
 
 import nl.xillio.xill.api.Debugger;
-import nl.xillio.xill.api.components.InstructionFlow;
-import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.components.Processable;
+import nl.xillio.xill.api.Xill;
+import nl.xillio.xill.api.components.*;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.components.instructions.FunctionDeclaration;
 
@@ -21,6 +20,10 @@ public class FunctionCall implements Processable {
 
 	@Override
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
+		if(debugger.getStackTrace().size() > Xill.MAX_STACK_SIZE) {
+			throw new RobotRuntimeException("The robot went in too many recursions. This hints to an infinite loop.");
+		}
+
 		// Process arguments
 		List<MetaExpression> expressions = new ArrayList<>();
 
@@ -29,6 +32,7 @@ public class FunctionCall implements Processable {
 		}
 
 		return function.run(debugger, expressions);
+
 	}
 
 	/**

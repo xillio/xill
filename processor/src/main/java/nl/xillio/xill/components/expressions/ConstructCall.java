@@ -63,7 +63,7 @@ public class ConstructCall implements Processable {
 			return InstructionFlow.doResume(processor.process());
 
 		} catch (Exception e) {
-			// Catch all exceptions that happen in constructs. (Unsafe envirionment)
+			// Catch all exceptions that happen in constructs. (Unsafe environment)
 			debugger.handle(e);
 		}
 
