@@ -1,5 +1,9 @@
 package nl.xillio.xill.plugins.database.services;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -228,6 +232,9 @@ public abstract class BaseDatabaseService implements DatabaseService {
 			for (String s : constraints.keySet()) {
 				String here = rs.getColumnName(result.findColumn(s));
 				Object value = result.getObject(s);
+				if(value instanceof Clob){
+					value = clobToString((Clob)value);
+				}
 				map.put(here, value);
 			}
 
@@ -346,6 +353,26 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	private String createQueryPart(final Iterable<String> keys, String separator) {
 		return StreamSupport.stream(keys.spliterator(), false).map(k -> k + " = ?").reduce((q, k) -> q + separator + k).get();
 	}
+	
+	private static String clobToString(Clob data) {
+    StringBuilder sb = new StringBuilder();
+    try {
+        Reader reader = data.getCharacterStream();
+        BufferedReader br = new BufferedReader(reader);
+
+        String line;
+        while(null != (line = br.readLine())) {
+            sb.append(line);
+        }
+        br.close();
+    } catch (SQLException e) {
+        // handle this exception
+    } catch (IOException e) {
+        // handle this exception
+    }
+    return sb.toString();
+}
+	
 
 	public static void setLastConnection(ConnectionMetadata connection) {
 		lastConnection = connection;

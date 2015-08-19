@@ -1,5 +1,9 @@
 package nl.xillio.xill.plugins.database.util;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.sql.Clob;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -100,7 +104,11 @@ public class StatementIterator implements Iterator<Object> {
 				// Build the resulting map using all column labels
 				for (int i = 1; i <= currentMeta.getColumnCount(); i++) {
 					String columnLabel = currentMeta.getColumnLabel(i);
-					result.put(columnLabel, currentSet.getObject(columnLabel));
+					Object obj = currentSet.getObject(columnLabel);
+					if(obj instanceof Clob){
+						obj = clobToString((Clob)obj);
+					}
+					result.put(columnLabel, obj);
 				}
 
 				// Advance the ResultSet
@@ -118,6 +126,26 @@ public class StatementIterator implements Iterator<Object> {
 		}
 	}
 
+	
+	private static String clobToString(Clob data) {
+    StringBuilder sb = new StringBuilder();
+    try {
+        Reader reader = data.getCharacterStream();
+        BufferedReader br = new BufferedReader(reader);
+
+        String line;
+        while(null != (line = br.readLine())) {
+            sb.append(line);
+        }
+        br.close();
+    } catch (SQLException e) {
+        // handle this exception
+    } catch (IOException e) {
+        // handle this exception
+    }
+    return sb.toString();
+}
+	
 	/**
 	 * Thrown when a problem arises while iterating over a {@link Statement} in a {@link StatementIterator}.
 	 * 

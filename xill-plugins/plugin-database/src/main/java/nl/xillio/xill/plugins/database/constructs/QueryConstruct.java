@@ -1,5 +1,9 @@
 package nl.xillio.xill.plugins.database.constructs;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Iterator;
@@ -84,21 +88,5 @@ public class QueryConstruct extends BaseDatabaseConstruct {
 		}
 
 		return null;
-	}
-
-	private static final Pattern PARAMETER_PATTERN = Pattern.compile("(?!\\\\):([a-zA-Z]+)");
-
-	public static void main(String[] args) {
-		String sql = "SELECT * from table where (x=:bla) ";
-		// System.out.println(Arrays.toString(PARAMETER_PATTERN.split(sql)));
-		Matcher m = PARAMETER_PATTERN.matcher(sql);
-		while (m.find()) {
-			System.out.println(m.group(1));
-
-		}
-
-		System.out.println(m.replaceAll("?"));
-		// m.
-
 	}
 }
