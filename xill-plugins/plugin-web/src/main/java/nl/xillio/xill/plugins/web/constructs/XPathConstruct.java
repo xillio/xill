@@ -3,83 +3,82 @@ package nl.xillio.xill.plugins.web.constructs;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.InvalidSelectorException;
-import org.openqa.selenium.SearchContext;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
-import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.NodeVariable;
-import nl.xillio.xill.plugins.web.PageVariable;
+import nl.xillio.xill.plugins.web.PhantomJSConstruct;
+import nl.xillio.xill.plugins.web.data.WebVariable;
+import nl.xillio.xill.plugins.web.services.web.WebService;
+
+import org.openqa.selenium.InvalidSelectorException;
 
 /**
- * Select web element(s) on the page according to provided XPath selector  
+ * Select web element(s) on the page according to provided XPath selector
  */
-public class XPathConstruct extends Construct {
-
+public class XPathConstruct extends PhantomJSConstruct {
+	
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			XPathConstruct::process,
-			new Argument("element"),
-			new Argument("xpath"));
+			(element, xpath) -> process(element, xpath, webService),
+			new Argument("element", ATOMIC),
+			new Argument("xpath", ATOMIC));
 	}
 
 	/**
 	 * @param elementVar
-	 * 				input variable (should be of a NODE or PAGE type) 
+	 *        input variable (should be of a NODE or PAGE type)
 	 * @param xpathVar
-	 * 				string variable specifying XPath selector
+	 *        string variable specifying XPath selector
+	 * @param webService
+	 *        The web service we're using.
 	 * @return NODE variable or list of NODE variables or null variable (according to count of selected web elements - more/1/0)
 	 */
-	public static MetaExpression process(final MetaExpression elementVar, final MetaExpression xpathVar) {
+	public static MetaExpression process(final MetaExpression elementVar, final MetaExpression xpathVar, final WebService webService) {
 
 		String query = xpathVar.getStringValue();
-
-		if (PageVariable.checkType(elementVar)) {
-			return processSELNode(PageVariable.getDriver(elementVar), PageVariable.getDriver(elementVar), query);
-		} else if (NodeVariable.checkType(elementVar)) {
-			return processSELNode(NodeVariable.getDriver(elementVar), NodeVariable.get(elementVar), query);
+		
+		if(elementVar.isNull()){
+			return NULL;
+		}
+		
+		if (checkPageType(elementVar)) {
+			return processSELNode(getPage(elementVar), query, webService);
+		} else if (checkNodeType(elementVar)) {
+			return processSELNode(getNode(elementVar), query, webService);
 		} else {
-			throw new RobotRuntimeException("Unsupported variable type!");
+			throw new RobotRuntimeException("Unsupported variable type. PAGE or NODE type expected!");
 		}
 	}
 
-	private static MetaExpression processSELNode(final WebDriver driver, final SearchContext node, String query) {
+	private static MetaExpression processSELNode(final WebVariable driver, final String query, final WebService webService) {
 
 		try {
-
-			boolean textquery = query.endsWith("/text()");
-			boolean attributequery = query.matches("^.*@\\w+$");
+			String cleanedQuery = query;
+			boolean textQuery = query.endsWith("/text()");
+			boolean attributeQuery = query.matches("^.*@\\w+$");
 			String attribute = null;
 
-			if (textquery) {
-				query = query.substring(0, query.length() - 7);
+			if (textQuery) {
+				cleanedQuery = stripTextTag(query);
+			} else if (attributeQuery) {
+				attribute = getAttribute(query);
+				cleanedQuery = stripAttributeQuery(query);
 			}
 
-			if (attributequery) {
-				attribute = query.substring(query.lastIndexOf('@') + 1);
-				query = query.substring(0, query.lastIndexOf('/'));
-			}
+			List<WebVariable> results = webService.findElementsWithXpath(driver, cleanedQuery);
 
-			List<WebElement> results = node.findElements(By.xpath(query));
-
-			if (results.size() == 0) {
-				// log.debug("No results");
+			if (results.isEmpty()) {
 				return NULL;
 			} else if (results.size() == 1) {
-				return parseSELVariable(driver, results.get(0), textquery, attribute);
+				return parseSELVariable(driver, results.get(0), textQuery, attribute, webService);
 			} else {
-				ArrayList<MetaExpression> list = new ArrayList<MetaExpression>();
+				ArrayList<MetaExpression> list = new ArrayList<>();
 
-				for (WebElement he : results) {
-					list.add(parseSELVariable(driver, he, textquery, attribute));
+				for (WebVariable he : results) {
+					list.add(parseSELVariable(driver, he, textQuery, attribute, webService));
 				}
 
 				return fromValue(list);
@@ -89,20 +88,69 @@ public class XPathConstruct extends Construct {
 		}
 	}
 
-	private static MetaExpression parseSELVariable(final WebDriver driver, final WebElement e, final boolean textquery, final String attribute) {
-		if (textquery) {
-			return fromValue(e.getAttribute("innerHTML"));
+	/**
+	 * Strips the query from the /text()
+	 * 
+	 * @param query
+	 *        The query we need to strip.
+	 * @return
+	 *         The stripped query
+	 */
+	private static String stripTextTag(final String query) {
+		try {
+			return query.substring(0, query.length() - 7);
+		} catch (IndexOutOfBoundsException e) {
+			throw new RobotRuntimeException("An indexOutOfBoundsException occurred on: " + query, e);
 		}
+	}
 
-		if (attribute != null) {
-			String val = e.getAttribute(attribute);
+	/**
+	 * Gets the attribute part of the xpath
+	 * 
+	 * @param xpath
+	 *        The xpath we want to extract the attribute from.
+	 * @return
+	 *         The attribute name.
+	 */
+	private static String getAttribute(final String xpath) {
+		try {
+			return xpath.substring(xpath.indexOf('@') + 1);
+		} catch (IndexOutOfBoundsException e) {
+			throw new RobotRuntimeException("An indexOutOfBoundsException occurred on: " + xpath + " when extracting the attribute.", e);
+		}
+	}
+
+	/**
+	 * Strips an attribute xpath till its core.
+	 * 
+	 * @param query
+	 *        The query we want to strip.
+	 * @return
+	 *         The stripped query.
+	 */
+	private static String stripAttributeQuery(final String query) {
+		try {
+			return query.substring(0, query.lastIndexOf('/'));
+		} catch (IndexOutOfBoundsException e) {
+			throw new RobotRuntimeException("An indexOutOfBoundsException occurred on: " + query + " when indexing \\.", e);
+		}
+	}
+
+	private static MetaExpression parseSELVariable(final WebVariable driver, final WebVariable element, final boolean textquery, final String attribute, final WebService webService) {
+		if (textquery) {
+			return fromValue(webService.getAttribute(element, "innerHTML"));
+		} else if (attribute != null) {
+			String val = webService.getAttribute(element, attribute);
 			if (val == null) {
 				return NULL;
 			}
 			return fromValue(val);
+		} else {
+			try {
+				return createNode(driver, element, webService);
+			} catch (Exception e) {
+				throw new RobotRuntimeException("Failed to create node.", e);
+			}
 		}
-
-		return NodeVariable.create(driver, e);
 	}
-
 }

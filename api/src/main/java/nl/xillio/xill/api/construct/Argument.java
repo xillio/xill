@@ -35,14 +35,14 @@ public class Argument {
 	 *
 	 * @param name
 	 *        the name of the argument
-	 * @param defaultvalue
+	 * @param defaultValue
 	 *        the default value
 	 * @param acceptedTypes
 	 *        the accepted structures for this argument
 	 */
-	public Argument(final String name, final MetaExpression defaultvalue, final ExpressionDataType... acceptedTypes) {
+	public Argument(final String name, final MetaExpression defaultValue, final ExpressionDataType... acceptedTypes) {
 		this.name = name;
-		defaultValue = defaultvalue;
+		this.defaultValue = defaultValue;
 
 		if (acceptedTypes.length == 0) {
 			// No types provided so accept everything
@@ -131,4 +131,14 @@ public class Argument {
 		return typeDescription;
 	}
 
+	/**
+	 * Returns the default values as a string.
+	 * @return The string representation of the default value or null if non is set
+	 */
+	public String getDefaultValueAsString() {
+		if(defaultValue == null) {
+			return null;
+		}
+		return defaultValue.toString();
+	}
 }

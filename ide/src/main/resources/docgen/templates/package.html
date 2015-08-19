@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>${packageName}</title>
+    <link rel="stylesheet" type="text/css" href="${cssFile}">
+</head>
+<body>
+<main>
+    <section id="header">
+        <header><h1><a href="../index.html">Packages</a> &gt; ${packageName}</h1></header>
+    </section>
+    <section id="contents">
+        <header><h2>Constructs</h2></header>
+        <ul>
+            <#list constructs as construct>
+            <li class="construct">
+                <h3>
+                    <a href="${construct.identity}.html">
+                        ${construct.identity}(<#list construct.parameters as parameter><#if parameter?index != 0>, </#if><span class="parameter">${parameter.name}</span></#list>);
+                    </a>
+                </h3>
+            </li>
+            </#list>
+        </ul>
+
+    </section>
+</main>
+</body>
