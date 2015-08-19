@@ -221,4 +221,8 @@ public class ConstructProcessor {
 
 		return processor.process();
 	}
+
+	public String getArgumentDefault(int i) {
+		return parameters[i].getDefaultValueAsString();
+	}
 }

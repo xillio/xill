@@ -61,4 +61,7 @@ public class RobotID {
 		return projectPath;
 	}
 
+	public static RobotID dummyRobot() {
+		return new RobotID(new File("."), new File("."));
+	}
 }
