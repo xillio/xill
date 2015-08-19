@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
-    <parameters>
-        <param name="uri"/>
-    </parameters>
     <description>
-        <![CDATA[Check if a file or folder exists.
-        Returns true if the file or folder exists otherwise false]]></description>
+        Check if a file or folder exists.
+        Returns true if the file or folder exists otherwise false
+    </description>
     <examples>
-        <example description="Create and verify a folder:"><![CDATA[
-        use File;
-        use System;
-        var folder = File.createFolder("toBeDeleted");
-        if(!File.exists(folder)) {
-            System.print("The folder was not created...", "error");
-        }
-    ]]></example>
+        <example title="Usage">
+            <header>Create and verify a folder</header>
+            <code>
+                use File;
+                use System;
+                var folder = File.createFolder("toBeDeleted");
+                if(!File.exists(folder)) {
+                System.print("The folder was not created...", "error");
+                }
+            </code>
+        </example>
     </examples>
     <references>
-        <reference package="File">createFolder</reference>
-        <reference package="File">saveTo</reference>
+        <reference>createFolder</reference>
+        <reference>saveTo</reference>
     </references>
-    <searchTags>
-    </searchTags>
 </function>

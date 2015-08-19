@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Xill Documentation</title>
+    <link rel="stylesheet" type="text/css" href="${cssFile}">
+</head>
+<body>
+<main>
+    <section id="header">
+        <header><h1>Xill Documentation</h1></header>
+    </section>
+    <section id="packages">
+        <header><h2>Packages</h2></header>
+        <#list packages as package>
+        <#if package.constructs?size != 0>
+        <div class="package ${package.packageName}">
+            <h3>${package.packageName}</h3>
+            <ul>
+                <#list package.constructs as construct>
+                <li><h4><a href="${package.packageName}/${construct.identity}.html">${construct.identity}(<#list construct.parameters as parameter><#if parameter?index != 0>, </#if>${parameter.name}</#list>)</a></h4></li>
+                </#list>
+            </ul>
+        </div>
+        </#if>
+        </#list>
+
+    </section>
+</main>
+</body>

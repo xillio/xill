@@ -12,6 +12,7 @@ import org.apache.commons.lang3.text.WordUtils;
 
 import java.io.File;
 import java.io.InputStream;
+import java.net.URL;
 
 /**
  * This interface contains the core functionality for all constructs
@@ -113,9 +114,9 @@ public abstract class Construct extends ExpressionBuilderHelper implements HelpC
 	}
 
 	@Override
-	public InputStream openDocumentationStream() {
+	public URL getDocumentationResource() {
 		String url = "/" + getClass().getName().replace('.', '/') + ".xml";
-		return getClass().getResourceAsStream(url);
+		return getClass().getResource(url);
 	}
 
 	/**
