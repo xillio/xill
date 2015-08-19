@@ -122,12 +122,12 @@ public abstract class Construct extends ExpressionBuilderHelper implements HelpC
 	/**
 	 * Uses the FileResolver service to get a File object from a path
 	 *
-	 * @param robotID the robotID
+	 * @param context the construct context
 	 * @param path    the path
 	 * @return the file
 	 */
-	protected static File getFile(RobotID robotID, String path) {
-		return fileResolver.buildFile(robotID, path);
+	protected static File getFile(ConstructContext context, String path) {
+		return fileResolver.buildFile(context, path);
 	}
 
 	/**

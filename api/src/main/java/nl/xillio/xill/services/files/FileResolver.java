@@ -1,7 +1,7 @@
 package nl.xillio.xill.services.files;
 
 import com.google.inject.ImplementedBy;
-import nl.xillio.xill.api.components.RobotID;
+import nl.xillio.xill.api.construct.ConstructContext;
 
 import java.io.File;
 
@@ -18,9 +18,9 @@ public interface FileResolver {
 	/**
 	 * Resolve a file using the general file system rules
 	 *
-	 * @param robotID the robot to resolve the file for
+	 * @param context the robot to resolve the file for
 	 * @param path    the path
 	 * @return the file
 	 */
-	File buildFile(RobotID robotID, String path);
+	File buildFile(ConstructContext context, String path);
 }
