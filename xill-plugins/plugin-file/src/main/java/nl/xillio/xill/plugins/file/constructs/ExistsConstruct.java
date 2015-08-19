@@ -28,7 +28,7 @@ public class ExistsConstruct extends Construct {
 	}
 
 	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri) {
-		File file = getFile(context.getRobotID(), uri.getStringValue());
+		File file = getFile(context, uri.getStringValue());
 		return fromValue(fileUtils.exists(file));
 	}
 }

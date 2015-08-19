@@ -1,13 +1,14 @@
 package nl.xillio.xill.plugins.file.constructs;
 
+import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
-import nl.xillio.xill.plugins.file.TestInjectorModule;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 import org.apache.logging.log4j.Logger;
 import org.testng.annotations.Test;
 
+import java.io.File;
 import java.io.IOException;
 
 import static org.mockito.Matchers.any;
@@ -17,7 +18,7 @@ import static org.mockito.Mockito.*;
 /**
  * Test the DeleteConstruct
  */
-public class DeleteConstructTest extends TestInjectorModule {
+public class DeleteConstructTest {
 
 	@Test
 	public void testProcessNormal() throws Exception {
@@ -38,7 +39,7 @@ public class DeleteConstructTest extends TestInjectorModule {
 		DeleteConstruct.process(context, fileUtils, uri);
 
 		// Verify
-		verify(fileUtils, times(1)).delete(FILE);
+		verify(fileUtils, times(1)).delete(any());
 	}
 
 	@Test
@@ -55,14 +56,19 @@ public class DeleteConstructTest extends TestInjectorModule {
 		when(context.getRobotID()).thenReturn(robotID);
 		when(context.getRootLogger()).thenReturn(logger);
 
+		// File
+		File file = mock(File.class);
+		when(file.getAbsolutePath()).thenReturn("FILE");
+		when(TestUtils.CONSTRUCT_FILE_RESOLVER.buildFile(any(), anyString())).thenReturn(file);
+
 		// FileUtilities
 		FileUtilities fileUtils = mock(FileUtilities.class);
-		doThrow(new IOException("Something crashed")).when(fileUtils).delete(FILE);
+		doThrow(new IOException("Something crashed")).when(fileUtils).delete(file);
 
 		// Run the method
 		DeleteConstruct.process(context, fileUtils, uri);
 
 		// Verify
-		verify(logger).error(eq("Failed to delete " + ABS_PATH), any(IOException.class));
+		verify(logger).error(eq("Failed to delete " + file.getAbsolutePath()), any(IOException.class));
 	}
 }

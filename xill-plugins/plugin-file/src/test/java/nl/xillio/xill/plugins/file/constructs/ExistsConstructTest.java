@@ -4,7 +4,6 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
-import nl.xillio.xill.plugins.file.TestInjectorModule;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 import org.testng.annotations.Test;
 
@@ -14,7 +13,7 @@ import static org.testng.Assert.assertSame;
 /**
  * Test the ExistsConstruct
  */
-public class ExistsConstructTest extends TestInjectorModule {
+public class ExistsConstructTest {
 
 	@Test
 	public void testProcessNormalTrueAndFalse() throws Exception {
@@ -30,13 +29,13 @@ public class ExistsConstructTest extends TestInjectorModule {
 
 		// FileUtils
 		FileUtilities fileUtils = mock(FileUtilities.class);
-		when(fileUtils.exists(FILE)).thenReturn(true, false);
+		when(fileUtils.exists(any())).thenReturn(true, false);
 
 		// Run the method once for true
 		MetaExpression result = ExistsConstruct.process(context, fileUtils, uri);
 
 		// Verify
-		verify(fileUtils).exists(FILE);
+		verify(fileUtils).exists(any());
 
 		// Assert
 		assertSame(result, ExpressionBuilderHelper.TRUE);
@@ -45,7 +44,7 @@ public class ExistsConstructTest extends TestInjectorModule {
 		result = ExistsConstruct.process(context, fileUtils, uri);
 
 		// Verify
-		verify(fileUtils, times(2)).exists(FILE);
+		verify(fileUtils, times(2)).exists(any());
 
 		// Assert
 		assertSame(result, ExpressionBuilderHelper.FALSE);

@@ -37,7 +37,7 @@ public class IterateFoldersConstruct extends Construct {
 
 	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils,
 					final MetaExpression uri, final MetaExpression recursive) {
-		File file = getFile(context.getRobotID(), uri.getStringValue());
+		File file = getFile(context, uri.getStringValue());
 		boolean isRecursive = recursive.getBooleanValue();
 		try {
 			MetaExpression result = fromValue("List folders " + (isRecursive ? "recursively " : "") + "in " + file.getAbsolutePath());
