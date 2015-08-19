@@ -21,7 +21,7 @@ public class FunctionCall implements Processable {
 	@Override
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		if(debugger.getStackTrace().size() > Xill.MAX_STACK_SIZE) {
-			throw new RobotRuntimeException("The robot went in too many recursions. This hints to an infinite loop.");
+			throw new RobotRuntimeException("The robot went in too many recursions. The language currently supports up to " + Xill.MAX_STACK_SIZE + " recursions");
 		}
 
 		// Process arguments
