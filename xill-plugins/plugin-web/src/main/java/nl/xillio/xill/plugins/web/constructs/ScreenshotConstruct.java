@@ -39,6 +39,8 @@ public class ScreenshotConstruct extends PhantomJSConstruct {
 	 *        The service we're using for accessing the web.
 	 * @param fileNameVar
 	 *        input string variable - output .png filepath
+	 * @param context
+	 * 				the context of this construct
 	 * @return null variable
 	 */
 	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression fileNameVar, final FileService fileService, final WebService webService, final ConstructContext context) {

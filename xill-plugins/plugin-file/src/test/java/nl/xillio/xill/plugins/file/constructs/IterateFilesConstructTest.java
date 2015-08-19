@@ -5,7 +5,6 @@ import nl.xillio.xill.api.components.MetaExpressionIterator;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.file.TestInjectorModule;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 import org.testng.annotations.Test;
 
@@ -20,7 +19,7 @@ import static org.testng.Assert.assertNotNull;
 /**
  * Test the IterateFilesConstruct
  */
-public class IterateFilesConstructTest extends TestInjectorModule {
+public class IterateFilesConstructTest {
 
 	@Test
 	public void testProcessNormalTrue() throws Exception {
@@ -45,7 +44,7 @@ public class IterateFilesConstructTest extends TestInjectorModule {
 		MetaExpression result = IterateFilesConstruct.process(context, fileUtils, uri, recursive);
 
 		// Verify
-		verify(fileUtils, times(1)).iterateFiles(FILE, true);
+		verify(fileUtils, times(1)).iterateFiles(any(), eq(true));
 
 		// Assert
 		assertNotNull(result.getMeta(MetaExpressionIterator.class));

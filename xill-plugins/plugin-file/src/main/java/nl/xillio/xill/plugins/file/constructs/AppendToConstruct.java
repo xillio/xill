@@ -28,7 +28,7 @@ public class AppendToConstruct extends Construct {
 	}
 
 	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri, final MetaExpression content) {
-		File file = getFile(context.getRobotID(), uri.getStringValue());
+		File file = getFile(context, uri.getStringValue());
 		try {
 			fileUtils.appendStringToFile(content.getStringValue(), file);
 		} catch (IOException e) {

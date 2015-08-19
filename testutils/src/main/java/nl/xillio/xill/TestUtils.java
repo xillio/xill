@@ -6,6 +6,11 @@ import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.services.files.FileResolver;
 import nl.xillio.xill.services.inject.InjectorUtils;
 
+import java.io.File;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -26,5 +31,9 @@ public class TestUtils extends ExpressionBuilderHelper {
 			bind(FileResolver.class).toInstance(CONSTRUCT_FILE_RESOLVER);
 			requestStaticInjection(Construct.class);
 		}
+	}
+
+	public static void setFileResolverReturnValue(File file) {
+		doReturn(file).when(CONSTRUCT_FILE_RESOLVER).buildFile(any(), anyString());
 	}
 }

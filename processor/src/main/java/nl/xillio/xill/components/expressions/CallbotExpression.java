@@ -11,6 +11,7 @@ import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.components.RobotID;
+import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.errors.XillParsingException;
@@ -57,7 +58,7 @@ public class CallbotExpression implements Processable {
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		MetaExpression pathExpression = path.process(debugger).get();
 
-		File otherRobot = resolver.buildFile(robotID, pathExpression.getStringValue());
+		File otherRobot = resolver.buildFile(new ConstructContext(robotID, robotID,null), pathExpression.getStringValue());
 
 		log.debug("Evaluating callbot for " + otherRobot.getAbsolutePath());
 

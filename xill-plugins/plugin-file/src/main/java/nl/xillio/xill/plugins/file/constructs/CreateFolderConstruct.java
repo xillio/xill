@@ -30,7 +30,7 @@ public class CreateFolderConstruct extends Construct {
 
 	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri) {
 
-		File folder = getFile(context.getRobotID(), uri.getStringValue());
+		File folder = getFile(context, uri.getStringValue());
 
 		try {
 			fileUtils.createFolder(folder);
