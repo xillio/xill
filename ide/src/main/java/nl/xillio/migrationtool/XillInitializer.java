@@ -6,9 +6,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.Construct;
+import nl.xillio.xill.api.construct.ConstructContext;
+import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.docgen.*;
+import nl.xillio.xill.docgen.data.Parameter;
 import nl.xillio.xill.docgen.exceptions.ParsingException;
+import nl.xillio.xill.docgen.impl.ConstructDocumentationEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -53,7 +58,7 @@ public class XillInitializer extends Thread {
 
 	@Override
 	public void run() {
-		parser = getParser();
+		parser = docGen.getParser();
 
 		LOGGER.info("Loading Xill language plugins...");
 
@@ -90,14 +95,6 @@ public class XillInitializer extends Thread {
 			docGen.generateIndex();
 		} catch (ParsingException e) {
 			LOGGER.error("Failed to generate index", e);
-		}
-	}
-
-	DocumentationParser getParser() {
-		try {
-			return docGen.getParser();
-		} catch (ParsingException e) {
-			throw new RuntimeException("Failed get parser", e);
 		}
 	}
 	
@@ -147,19 +144,52 @@ public class XillInitializer extends Thread {
 	}
 
 	private void generateDocumentation(Construct construct, DocumentationGenerator generator) {
+		// When the construct explicitly requests no documentation it will be skipped
+		if(construct.hideDocumentation()) {
+			return;
+		}
+
 		URL url = construct.getDocumentationResource();
 
 		if (url == null) {
+			LOGGER.warn("No documentation found for " + construct.getClass().getName());
 			return;
 		}
 
 		try {
 			DocumentationEntity entity = parser.parse(url, construct.getName());
 			getSearcher().index(generator.getIdentity(), entity);
+			generateParameters(construct, (ConstructDocumentationEntity)entity);
 			generator.generate(entity);
 		} catch (ParsingException e) {
 			LOGGER.error("Failed to generate documentation from " + url, e);
 		}
+	}
+
+	/**
+	 * Peek into the construct to get it's signature
+	 * @param construct the construct
+	 * @param entity the entity to push the signature into
+	 */
+	private void generateParameters(Construct construct, ConstructDocumentationEntity entity) {
+		ConstructContext context = new ConstructContext(RobotID.dummyRobot(), RobotID.dummyRobot(), construct);
+		ConstructProcessor proc = construct.prepareProcess(context);
+		List<Parameter> parameters = new ArrayList<>();
+
+		for(int i = 0; i < proc.getNumberOfArguments(); i++) {
+			String name = proc.getArgumentName(i);
+			String type = proc.getArgumentType(i);
+			String defaultValue = proc.getArgumentDefault(i);
+
+			Parameter parameter = new Parameter(type, name);
+			if(defaultValue != null) {
+				parameter.setDefault(defaultValue);
+			}
+
+			parameters.add(parameter);
+		}
+
+		entity.setParameters(parameters);
 	}
 
 	private void initializeLoader() {

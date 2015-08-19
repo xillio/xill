@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
-    <parameters>
-        <param name="uri"/>
-    </parameters>
     <description>
-        <![CDATA[Creates an empty folder at the target uri if it doesn't exist.
-        Returns the absolute path to that folder]]></description>
+        Creates an empty folder at the target uri if it doesn't exist.
+        Returns the absolute path to that folder
+    </description>
     <examples>
         <example title="Usage">
             <header>Create a folder</header>

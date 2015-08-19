@@ -23,7 +23,7 @@
                     <#list parameters as parameter>
                     <span class="parameter">
                         <span class="parameter-type">
-                            <a href="../docs/structures.html">${parameter.type}</a>
+                            ${parameter.type}
                         </span>
                         <span class="parameter-name">
                             ${parameter.name}
@@ -45,28 +45,6 @@
         <table>
         </table>
     </section>
-
-    <#if parameters?? && parameters?size != 0>
-    <section id="parameters">
-        <header><h2>Parameters</h2></header>
-        <div class="parameter-list">
-        <#list parameters as parameter>
-        <div class="parameter-row">
-            <table class="parameter-table">
-                <tr><th>Name: </th><td>${parameter.name}</td></tr>
-                <tr><th>Type: </th><td><a href="../docs/structures.html">${parameter.type}</a></td></tr>
-                <#if parameter.defaultValue??>
-                <tr><th>Default: </th><td>${parameter.defaultValue}</td></tr>
-                </#if>
-                <#if parameter.description?? && parameter.description?length != 0>
-                <tr><th>Description: </th><td>${parameter.description}</td></tr>
-                </#if>
-            </table>
-        </div>
-        </#list>
-        </div>
-    </section>
-    </#if>
 
     <#if examples?? && examples?size != 0>
     <section id="examples">

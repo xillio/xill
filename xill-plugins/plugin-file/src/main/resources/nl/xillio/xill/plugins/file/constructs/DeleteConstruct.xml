@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
-    <parameters>
-        <param name="uri"/>
-    </parameters>
     <description>
-        <![CDATA[Delete a file or folder.
-        Returns the absolute path to the file or folder]]></description>
+        Delete a file or folder.
+        Returns the absolute path to the file or folder
+    </description>
     <examples>
         <example title="Usage">
             <header>Create and delete a folder:</header>
@@ -17,7 +15,7 @@
         </example>
     </examples>
     <references>
-        <reference package="File">createFolder</reference>
+        <reference>createFolder</reference>
     </references>
     <tags>
         write, text, new, create, append, add

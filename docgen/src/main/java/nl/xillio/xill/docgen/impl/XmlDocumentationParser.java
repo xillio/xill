@@ -4,7 +4,6 @@ import nl.xillio.xill.docgen.DocumentationEntity;
 import nl.xillio.xill.docgen.DocumentationParser;
 import nl.xillio.xill.docgen.data.Example;
 import nl.xillio.xill.docgen.data.ExampleNode;
-import nl.xillio.xill.docgen.data.Parameter;
 import nl.xillio.xill.docgen.data.Reference;
 import nl.xillio.xill.docgen.exceptions.ParsingException;
 import org.apache.logging.log4j.LogManager;
@@ -35,10 +34,10 @@ public class XmlDocumentationParser implements DocumentationParser {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private final XPathFactory xpathFactory;
 	private final DocumentBuilderFactory documentBuilderFactory;
-	private XPathExpression parameterXPathQuery;
 	private XPathExpression descriptionXPathQuery;
 	private XPathExpression tagXPathQuery;
 	private XPathExpression exampleNodesXPathQuery;
+	private XPathExpression referenceXPathQuery;
 
 	/**
 	 * The constructor for the parser when we hand it a factory.
@@ -66,9 +65,9 @@ public class XmlDocumentationParser implements DocumentationParser {
 	private void buildQueries() throws XPathExpressionException {
 		XPath xPath = xpathFactory.newXPath();
 		descriptionXPathQuery = xPath.compile("/function/description/text()");
-		parameterXPathQuery = xPath.compile("/function/parameters/param");
 		tagXPathQuery = xPath.compile("/function/tags");
 		exampleNodesXPathQuery = xPath.compile("/function/examples/example");
+		referenceXPathQuery = xPath.compile("/function/references/reference");
 	}
 
 
@@ -95,7 +94,6 @@ public class XmlDocumentationParser implements DocumentationParser {
 		ConstructDocumentationEntity construct = new ConstructDocumentationEntity(identity);
 
 		construct.setDescription(parseDescription(doc));
-		construct.setParameters(parseParameters(doc));
 		construct.setExamples(parseExamples(doc));
 		construct.setReferences(parseReferences(doc));
 		construct.setSearchTags(parseSearchTags(doc));
@@ -109,50 +107,6 @@ public class XmlDocumentationParser implements DocumentationParser {
 		} catch (XPathExpressionException e) {
 			throw new ParsingException("Failed to parse description", e);
 		}
-
-	}
-
-	List<Parameter> parseParameters(final Document doc) throws ParsingException {
-		List<Parameter> parameters = new ArrayList<>();
-		NodeList params;
-
-		try {
-			params = (NodeList) parameterXPathQuery.evaluate(doc, XPathConstants.NODESET);
-
-		} catch (XPathExpressionException e) {
-			throw new ParsingException("Failed to parse parameters", e);
-		}
-
-		for (int t = 0; t < params.getLength(); ++t) {
-			tryParseParameter(parameters, params.item(t));
-		}
-
-		return parameters;
-	}
-
-	void tryParseParameter(final List<Parameter> target, final Node node) {
-		try {
-			target.add(parseParameter(node));
-		} catch (NullPointerException e) {
-			LOGGER.error("Failed to parse parameter", e);
-		}
-	}
-
-	Parameter parseParameter(final Node node) {
-		String name = getAttribute("name", node);
-		String types = getAttributeOrNull("type", node);
-		Parameter param = new Parameter(types, name);
-		param.setDefault(getAttributeOrNull("default", node));
-		param.setDescription(node.getTextContent());
-		return param;
-	}
-
-	String getAttribute(final String name, final Node node) {
-		String result = getAttributeOrNull(name, node);
-		if (result == null) {
-			throw new NullPointerException("Value of attribute `" + name + "` is null");
-		}
-		return result;
 	}
 
 	String getAttributeOrNull(final String name, final Node node) {
@@ -199,7 +153,7 @@ public class XmlDocumentationParser implements DocumentationParser {
 		List<Reference> references = new ArrayList<>();
 		NodeList exampleNodes;
 		try {
-			exampleNodes = (NodeList) parameterXPathQuery.evaluate(doc, XPathConstants.NODESET);
+			exampleNodes = (NodeList) referenceXPathQuery.evaluate(doc, XPathConstants.NODESET);
 		} catch (XPathExpressionException | IllegalArgumentException | NullPointerException e) {
 			throw new ParsingException("Failed to parse references", e);
 		}

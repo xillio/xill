@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
-    <parameters>
-        <param name="uri"/>
-        <param name="recursive" default="false"/>
-    </parameters>
     <description>
-        <![CDATA[Iterates over all folders in a folder. If recursive is set to true all folders in sub folders will also be iterated
-        The iterator returns an object containing various pieces of information about the folder access.]]></description>
+        Iterates over all folders in a folder. If recursive is set to true all folders in sub folders will also be iterated
+        The iterator returns an object containing various pieces of information about the folder access.
+    </description>
     <examples>
         <example title="Usage">
             <header>Executing</header>
@@ -25,8 +22,6 @@
         </example>
     </examples>
     <references>
-        <reference package="File">iterateFiles</reference>
+        <reference>iterateFiles</reference>
     </references>
-    <searchTags>
-    </searchTags>
 </function>

@@ -12,7 +12,6 @@ import java.util.*;
 public class Parameter implements PropertiesProvider {
 	private String name = null;
 	private String defaultValue = null;
-	private String description = null;
 	private final List<String> types = new ArrayList<>();
 
 	/**
@@ -37,7 +36,6 @@ public class Parameter implements PropertiesProvider {
 		map.put("defaultValue", defaultValue);
 		map.put("types", types);
 		map.put("type", StringUtils.join(types, ", "));
-		map.put("description", description);
 		return map;
 	}
 
@@ -67,7 +65,7 @@ public class Parameter implements PropertiesProvider {
 	 */
 	public void setType(String types) {
 		if (types != null) {
-			String[] theseTypes = types.split("\\s");
+			String[] theseTypes = types.toUpperCase().split("\\s+,");
 			Collections.addAll(this.types, theseTypes);
 		} else {
 			this.types.add("ANY");
@@ -81,27 +79,5 @@ public class Parameter implements PropertiesProvider {
 	 */
 	public void setDefault(String defaultValue) {
 		this.defaultValue = defaultValue;
-	}
-
-	/**
-	 * Get the description of the parameter.
-	 *
-	 * @return The description of the parameter.
-	 */
-	public String getDescription() {
-		return description;
-	}
-
-	/**
-	 * Set the description of the parameter.
-	 *
-	 * @param description The description we want the parameter to have.
-	 */
-	public void setDescription(String description) {
-		if(description != null) {
-			this.description = description.trim();
-		}else{
-			this.description = null;
-		}
 	}
 }
