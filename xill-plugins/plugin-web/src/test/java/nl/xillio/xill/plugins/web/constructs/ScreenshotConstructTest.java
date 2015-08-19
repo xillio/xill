@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.io.IOException;
 
+import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
@@ -16,11 +17,13 @@ import nl.xillio.xill.plugins.web.data.PageVariable;
 import nl.xillio.xill.plugins.web.services.web.FileService;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
+import nl.xillio.xill.services.inject.InjectorUtils;
 import org.testng.Assert;
+import org.testng.TestNGUtils;
 import org.testng.annotations.Test;
 
 /**
- * Test the {@link ScreenShotConstruct}.
+ * Test the {@link ScreenshotConstruct}.
  */
 public class ScreenshotConstructTest extends ExpressionBuilderHelper {
 
@@ -51,17 +54,16 @@ public class ScreenshotConstructTest extends ExpressionBuilderHelper {
 
 		// The process
 		when(webService.getScreenshotAsFile(pageVariable)).thenReturn(srcFile);
-		when(fileService.makeFile(nameValue)).thenReturn(desFile);
+		when(TestUtils.CONSTRUCT_FILE_RESOLVER.buildFile(null, nameValue)).thenReturn(desFile);
 
 		// run
-		MetaExpression output = ScreenshotConstruct.process(page, name, fileService, webService);
+		MetaExpression output = ScreenshotConstruct.process(page, name, fileService, webService, null);
 
 		// Wheter we parse the pageVariable only once
 		verify(page, times(2)).getMeta(PageVariable.class);
 
 		// We make one screenshot and store it once
 		verify(webService, times(1)).getScreenshotAsFile(pageVariable);
-		verify(fileService, times(1)).makeFile(nameValue);
 		verify(fileService, times(1)).copyFile(srcFile, desFile);
 
 		// assert
@@ -81,7 +83,7 @@ public class ScreenshotConstructTest extends ExpressionBuilderHelper {
 		when(input.isNull()).thenReturn(true);
 
 		// run
-		MetaExpression output = ScreenshotConstruct.process(input, fileName, fileService, webService);
+		MetaExpression output = ScreenshotConstruct.process(input, fileName, fileService, webService, null);
 
 		// assert
 		Assert.assertEquals(output, NULL);
@@ -110,7 +112,7 @@ public class ScreenshotConstructTest extends ExpressionBuilderHelper {
 		when(webService.getScreenshotAsFile(pageVariable)).thenThrow(new RobotRuntimeException(""));
 
 		// run
-		ScreenshotConstruct.process(page, name, fileService, webService);
+		ScreenshotConstruct.process(page, name, fileService, webService, null);
 	}
 
 	/**
@@ -140,18 +142,17 @@ public class ScreenshotConstructTest extends ExpressionBuilderHelper {
 
 		// The process
 		when(webService.getScreenshotAsFile(pageVariable)).thenReturn(srcFile);
-		when(fileService.makeFile(nameValue)).thenReturn(desFile);
+		when(TestUtils.CONSTRUCT_FILE_RESOLVER.buildFile(null, nameValue)).thenReturn(desFile);
 		doThrow(new IOException()).when(fileService).copyFile(srcFile, desFile);
 
 		// run
-		MetaExpression output = ScreenshotConstruct.process(page, name, fileService, webService);
+		MetaExpression output = ScreenshotConstruct.process(page, name, fileService, webService, null);
 
 		// Wheter we parse the pageVariable only once
 		verify(page, times(2)).getMeta(PageVariable.class);
 
 		// We make one screenshot and store it once
 		verify(webService, times(1)).getScreenshotAsFile(pageVariable);
-		verify(fileService, times(1)).makeFile(nameValue);
 		verify(fileService, times(1)).copyFile(srcFile, desFile);
 
 		// assert
@@ -178,7 +179,7 @@ public class ScreenshotConstructTest extends ExpressionBuilderHelper {
 		when(name.getStringValue()).thenReturn(nameValue);
 
 		// run
-		ScreenshotConstruct.process(page, name, fileService, webService);
+		ScreenshotConstruct.process(page, name, fileService, webService, null);
 	}
 
 	/**
@@ -198,7 +199,7 @@ public class ScreenshotConstructTest extends ExpressionBuilderHelper {
 		MetaExpression page = mock(MetaExpression.class);
 
 		// run
-		ScreenshotConstruct.process(page, name, fileService, webService);
+		ScreenshotConstruct.process(page, name, fileService, webService, null);
 	}
 
 }

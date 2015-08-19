@@ -25,16 +25,6 @@ public interface FileService {
 	void copyFile(File sourceFile, File destinationFile) throws IOException;
 
 	/**
-	 * Makes a file with a given name.
-	 *
-	 * @param fileName
-	 *        The name of the File.
-	 * @return
-	 *         A new File.
-	 */
-	File makeFile(String fileName);
-
-	/**
 	 * Returns the absolute pathname as a String.
 	 *
 	 * @param file

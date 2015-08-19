@@ -1,6 +1,6 @@
 package nl.xillio.xill.services.files;
 
-import nl.xillio.xill.api.components.RobotID;
+import nl.xillio.xill.api.construct.ConstructContext;
 
 import java.io.File;
 
@@ -14,12 +14,12 @@ import java.io.File;
  */
 public class FileResolverImpl implements FileResolver {
 
-	@Override public File buildFile(RobotID robotID, String path) {
+	@Override public File buildFile(ConstructContext context, String path) {
 		//First check if the provided path is absolute
 		File file = new File(path);
 		if (!file.isAbsolute()) {
 			//It's not absolute so we make it relative to the robot
-			file = new File(robotID.getPath().getParentFile(), file.getPath());
+			file = new File(context.getRootRobot().getPath().getParentFile(), file.getPath());
 		}
 		return file;
 	}
