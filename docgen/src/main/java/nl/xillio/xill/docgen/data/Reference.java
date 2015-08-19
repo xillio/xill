@@ -1,17 +1,17 @@
 package nl.xillio.xill.docgen.data;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import nl.xillio.xill.docgen.PropertiesProvider;
 import nl.xillio.xill.docgen.impl.ConstructDocumentationEntity;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *Represents a reference from a {@link ConstructDocumentationEntity} to another {@link ConstructDocumentationEntity}.
  */
 public class Reference implements PropertiesProvider {
-	private String packet;
-	private String construct;
+	private final String packet;
+	private final String construct;
 	
 	/**
 	 * The constructor for the {@link Reference}

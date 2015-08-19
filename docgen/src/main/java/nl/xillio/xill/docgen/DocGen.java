@@ -19,7 +19,7 @@ public interface DocGen {
 	 * @return the parser
 	 * @throws ParsingException if the parser could not be initialized
 	 */
-	DocumentationParser getParser() throws ParsingException;
+	DocumentationParser getParser();
 
 	/**
 	 * Create a {@link DocumentationGenerator}

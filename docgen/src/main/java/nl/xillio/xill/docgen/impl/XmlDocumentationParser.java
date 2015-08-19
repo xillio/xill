@@ -91,10 +91,6 @@ public class XmlDocumentationParser implements DocumentationParser {
 	}
 
 	DocumentationEntity doParse(final Document doc, final String identity) throws ParsingException {
-		// Create XPathFactory object
-
-		// Create XPath object
-		XPath xpath = xpathFactory.newXPath();
 
 		ConstructDocumentationEntity construct = new ConstructDocumentationEntity(identity);
 
@@ -242,7 +238,7 @@ public class XmlDocumentationParser implements DocumentationParser {
 				searchTags = searchTagNode.getTextContent().replaceAll("\\s", "").split(",");
 			}
 		} catch (XPathExpressionException | NullPointerException e) {
-			throw new ParsingException("Failed to parse searchtags", e);
+			throw new ParsingException("Failed to parse tags", e);
 		}
 
 		return new HashSet<>(Arrays.asList(searchTags));

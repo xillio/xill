@@ -1,12 +1,12 @@
 package nl.xillio.xill.docgen.data;
 
+import nl.xillio.xill.docgen.PropertiesProvider;
+import nl.xillio.xill.docgen.impl.ConstructDocumentationEntity;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import nl.xillio.xill.docgen.PropertiesProvider;
-import nl.xillio.xill.docgen.impl.ConstructDocumentationEntity;
 
 /**
  * Represents an example item of a {@link ConstructDocumentationEntity}.

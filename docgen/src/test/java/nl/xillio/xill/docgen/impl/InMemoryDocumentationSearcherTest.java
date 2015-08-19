@@ -3,14 +3,10 @@ package nl.xillio.xill.docgen.impl;
 import nl.xillio.xill.docgen.DocumentationEntity;
 import org.testng.annotations.Test;
 
-import javax.print.Doc;
-
-import java.util.Arrays;
 import java.util.Collections;
 
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 /**
  * Test the {@link InMemoryDocumentationSearcher}

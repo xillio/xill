@@ -1,19 +1,19 @@
 package nl.xillio.xill.docgen.data;
 
+import nl.xillio.xill.docgen.PropertiesProvider;
+
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.OptionalInt;
-
-import nl.xillio.xill.docgen.PropertiesProvider;
 
 /**
  * Represents a single node in an example tag.
  *
  */
 public class ExampleNode implements PropertiesProvider {
-	private String tagName;
-	private String content;
+	private final String tagName;
+	private final String content;
 	
 	/**
 	 * The constructor for the {@link ExampleNode}
@@ -56,13 +56,13 @@ public class ExampleNode implements PropertiesProvider {
 				}
 
 				return line.substring(indentOffset, line.length()).replaceAll("\\s+$", "");
-			}).toArray(i -> new String[i]);
+			}).toArray(String[]::new);
 	}
 
 	static int getOffset(String[] lines) {
 		OptionalInt offset = Arrays.stream(lines)
 			.filter(line -> !line.replaceAll("\\s", "").isEmpty())
-			.mapToInt(line -> countWhiteSpaces(line))
+			.mapToInt(ExampleNode::countWhiteSpaces)
 			.min();
 
 		if(!offset.isPresent())
@@ -88,7 +88,7 @@ public class ExampleNode implements PropertiesProvider {
 		return Arrays.stream(code.split("\n"))
 			.map(line -> line.replaceAll("\\s", "").isEmpty() ? "" : line)
 			.map(line -> line.replaceAll("\\s*\n", "\n"))
-			.toArray(i -> new String[i]);
+			.toArray(String[]::new);
 	}
 
 	@Override

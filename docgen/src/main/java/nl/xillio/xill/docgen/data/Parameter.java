@@ -4,10 +4,7 @@ import nl.xillio.xill.docgen.PropertiesProvider;
 import nl.xillio.xill.docgen.impl.ConstructDocumentationEntity;
 import org.elasticsearch.common.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This class represents a parameter in a {@link ConstructDocumentationEntity}.
@@ -16,7 +13,7 @@ public class Parameter implements PropertiesProvider {
 	private String name = null;
 	private String defaultValue = null;
 	private String description = null;
-	private List<String> types = new ArrayList<>();
+	private final List<String> types = new ArrayList<>();
 
 	/**
 	 * The constructor for the parameter which sets the types and the name.
@@ -71,9 +68,7 @@ public class Parameter implements PropertiesProvider {
 	public void setType(String types) {
 		if (types != null) {
 			String[] theseTypes = types.split("\\s");
-			for (String type : theseTypes) {
-				this.types.add(type);
-			}
+			Collections.addAll(this.types, theseTypes);
 		} else {
 			this.types.add("ANY");
 		}
@@ -106,7 +101,7 @@ public class Parameter implements PropertiesProvider {
 		if(description != null) {
 			this.description = description.trim();
 		}else{
-			this.description = description;
+			this.description = null;
 		}
 	}
 }

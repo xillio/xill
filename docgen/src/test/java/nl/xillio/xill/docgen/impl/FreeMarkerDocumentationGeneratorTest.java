@@ -5,9 +5,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import nl.xillio.xill.docgen.DocumentationEntity;
 import nl.xillio.xill.docgen.exceptions.ParsingException;
-import org.testng.Assert;
 import org.testng.annotations.Test;
-import org.testng.internal.annotations.ExpectedExceptionsAnnotation;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,11 +14,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
-import static org.testng.Assert.fail;
 
 /**
  * Unit test the {@link FreeMarkerDocumentationGenerator}

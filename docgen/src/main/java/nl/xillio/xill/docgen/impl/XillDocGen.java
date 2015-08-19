@@ -17,7 +17,7 @@ public class XillDocGen implements DocGen {
 	private DocumentationGenerator lastGenerator;
 
 	@Override
-	public DocumentationParser getParser() throws ParsingException {
+	public DocumentationParser getParser() {
 		return new XmlDocumentationParser();
 	}
 

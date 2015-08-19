@@ -89,11 +89,9 @@ public class ConstructDocumentationEntity implements DocumentationEntity {
 	 * 			The name of all parameters.
 	 */
 	public List<String> getParameterNames(){
-		List<String> parameterNames = new ArrayList<>();
-		for (Parameter parameter : parameters) {
-			parameterNames.add(parameter.getName());
-		}
-		return parameterNames;
+		return parameters.stream()
+			.map(Parameter::getName)
+			.collect(Collectors.toList());
 	}
 
 	/**
