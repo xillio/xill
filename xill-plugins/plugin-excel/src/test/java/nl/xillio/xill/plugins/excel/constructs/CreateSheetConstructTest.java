@@ -23,6 +23,16 @@ public class CreateSheetConstructTest {
 		InjectorUtils.getGlobalInjector();
 	}
 
+	@Test(expectedExceptions = RobotRuntimeException.class)
+	public void testProcessNullPointerException2() throws Exception{
+		ExcelService service = mock(ExcelService.class);
+		MetaExpression input = fromValue("workbook");
+		XillWorkbook workbook = mock(XillWorkbook.class);
+		input.storeMeta(XillWorkbook.class, workbook);
+		when(service.createSheet(any(XillWorkbook.class), anyString())).thenThrow(new NullPointerException());
+		CreateSheetConstruct.process(service, input, fromValue("naam"));
+	}
+
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Sheet name contains illegal characters: cannot contain 0x0000, 0x0003")
 	public void testProcessNullPointerException() throws Exception {
 		ExcelService service = mock(ExcelService.class);
