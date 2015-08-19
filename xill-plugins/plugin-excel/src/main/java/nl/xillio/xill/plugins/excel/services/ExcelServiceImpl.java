@@ -62,8 +62,6 @@ public class ExcelServiceImpl implements ExcelService {
 	public void removeSheet(XillWorkbook workbook, String sheetName) {
 		if (workbook.isReadonly())
 			throw new IllegalArgumentException(workbook.getFileString() + " is read-only");
-		if (!workbook.fileExists())
-			throw new IllegalArgumentException(workbook.getFileString() + " does not exist anymore");
 		workbook.removeSheet(sheetName);
 	}
 
@@ -88,11 +86,9 @@ public class ExcelServiceImpl implements ExcelService {
 	public void removeSheets(XillWorkbook workbook, List<String> inputSheetNames) {
 		if (workbook.isReadonly())
 			throw new IllegalArgumentException(workbook.getFileString() + " is read-only");
-		if (!workbook.fileExists())
-			throw new IllegalArgumentException(workbook.getFileString() + " does not exist anymore");
-		String notinworkbook = notInWorkbook(inputSheetNames, workbook);
-		if (!notinworkbook.isEmpty())
-			throw new IllegalArgumentException(notinworkbook);
+		String notInWorkbook = notInWorkbook(inputSheetNames, workbook);
+		if (!notInWorkbook.isEmpty())
+			throw new IllegalArgumentException(notInWorkbook);
 	}
 
 	@Override
@@ -100,7 +96,7 @@ public class ExcelServiceImpl implements ExcelService {
 		if (workbook.isReadonly())
 			throw new IllegalArgumentException("Cannot write to this file: read-only");
 		workbook.save(file);
-		return file.getCanonicalPath();
+		return "Saved [" + file.getCanonicalPath() + "]";
 	}
 
 	@Override
@@ -108,7 +104,7 @@ public class ExcelServiceImpl implements ExcelService {
 		if (workbook.isReadonly())
 			throw new IllegalArgumentException("Cannot write to this file: read-only");
 		workbook.save();
-		return workbook.getLocation();
+		return "Saved [" + workbook.getLocation() + "]";
 	}
 
 }

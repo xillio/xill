@@ -34,10 +34,6 @@ public class XillCellRef implements MetadataExpression {
 		return cellReference != null ? cellReference.hashCode() : 0;
 	}
 
-	public CellReference getCellReference() {
-		return cellReference;
-	}
-
 	public int getColumn() {
 		return cellReference.getCol() - 1;
 	}

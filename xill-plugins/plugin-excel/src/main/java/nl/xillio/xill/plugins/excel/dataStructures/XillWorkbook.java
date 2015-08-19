@@ -29,7 +29,7 @@ public class XillWorkbook implements MetadataExpression {
 
 	public XillSheet getSheet(String sheetName) {
 		if (workbook.getSheetIndex(sheetName) == -1)
-			throw new IllegalArgumentException("Sheet can not be found in the supplied workbook");
+			throw new IllegalArgumentException("Sheet cannot be found in the supplied workbook");
 		return new XillSheet(workbook.getSheet(sheetName), readonly);
 	}
 

@@ -14,32 +14,10 @@ import nl.xillio.xill.plugins.excel.services.ExcelService;
 import java.util.LinkedHashMap;
 
 /**
- * Created by Daan Knoope on 6-8-2015.
+ * Construct to load a XillSheet from a given workbook.
+ * @author Daan Knoope 
  */
 public class LoadSheetConstruct extends Construct {
-
-	@Inject
-	private ExcelService excelService;
-
-	static MetaExpression process(MetaExpression workbookInput, MetaExpression sheetName) {
-		XillWorkbook workbook = assertMeta(workbookInput, "parameter 'workbook'", XillWorkbook.class, "result of loadWorkbook or createWorkbook");
-		XillSheet sheet = null;
-		try {
-			sheet = workbook.getSheet(sheetName.getStringValue());
-		} catch (IllegalArgumentException e) {
-			throw new RobotRuntimeException(e.getMessage(), e);
-		}
-		if (sheet == null)
-			throw new RobotRuntimeException("Sheet can not be found in the supplied workbook");
-
-		LinkedHashMap<String, MetaExpression> properties = new LinkedHashMap<>();
-		properties.put("Sheet name", fromValue(sheet.getName()));
-		properties.put("Rows", fromValue(sheet.getRowLength()));
-		properties.put("Columns", fromValue(sheet.getColumnLength()));
-		MetaExpression result = fromValue(properties);
-		result.storeMeta(XillSheet.class, sheet);
-		return result;
-	}
 
 	@Override
 	public ConstructProcessor prepareProcess(ConstructContext context) {
@@ -47,4 +25,36 @@ public class LoadSheetConstruct extends Construct {
 						LoadSheetConstruct::process,
 						new Argument("workbook", ATOMIC), new Argument("sheetName", ATOMIC));
 	}
+
+	/**
+	 * Processes the xill code to load a XillSheet from a given workbook.
+	 * @param 	workbook	a workbook object including a {@link XillWorkbook} created by
+	 * 										{@link CreateWorkbookConstruct} or {@link LoadWorkbookConstruct}
+	 * @param 	sheetName the name of the sheet that should be returned
+	 *
+	 * @return 	returns a sheet object containing a {@link XillSheet}
+	 *
+	 * @throws	RobotRuntimeException When no valid workbook has been provided (null)
+	 * 					or when the name of the sheet cannot be found in the provided workbook
+	 */
+	static MetaExpression process(MetaExpression workbook, MetaExpression sheetName) {
+		XillWorkbook Workbook = assertMeta(workbook, "parameter 'workbook'", XillWorkbook.class, "result of loadWorkbook or createWorkbook");
+		XillSheet sheet;
+		try {
+			sheet = Workbook.getSheet(sheetName.getStringValue());
+		} catch (IllegalArgumentException e) {
+			throw new RobotRuntimeException(e.getMessage(), e);
+		}
+
+		LinkedHashMap<String, MetaExpression> sheetObject = new LinkedHashMap<>();
+		sheetObject.put("Sheet name", fromValue(sheet.getName()));
+		sheetObject.put("Rows", fromValue(sheet.getRowLength()));
+		sheetObject.put("Columns", fromValue(sheet.getColumnLength()));
+
+		MetaExpression returnValue = fromValue(sheetObject);
+		returnValue.storeMeta(XillSheet.class, sheet);
+
+		return returnValue;
+	}
+	
 }

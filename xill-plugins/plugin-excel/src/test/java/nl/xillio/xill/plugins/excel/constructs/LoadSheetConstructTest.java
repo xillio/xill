@@ -32,15 +32,6 @@ public class LoadSheetConstructTest {
 		LoadSheetConstruct.process(input, fromValue("Sheet"));
 	}
 
-	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Sheet can not be found in the supplied workbook")
-	public void testProcessNoSheet() throws Exception {
-		XillWorkbook workbook = mock(XillWorkbook.class);//mock(XillWorkbook.class);
-		XillSheet sheet = null;
-		when(workbook.getSheet(anyString())).thenReturn(sheet);
-		MetaExpression input = fromValue("workbook object");
-		input.storeMeta(XillWorkbook.class, workbook);
-		LoadSheetConstruct.process(input, fromValue("Sheet"));
-	}
 
 	@Test(expectedExceptions = RobotRuntimeException.class)
 	public void testProcessThrowsRobotRuntime() throws Exception {

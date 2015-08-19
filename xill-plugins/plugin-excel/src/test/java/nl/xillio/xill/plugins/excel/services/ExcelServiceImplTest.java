@@ -135,22 +135,6 @@ public class ExcelServiceImplTest {
 		assertEquals(sheet, service.createSheet(workbook, "bla"));
 	}
 
-	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = ".* is read-only")
-	public void testRemoveSheetReadOnly() throws Exception {
-		XillWorkbook workbook = mock(XillWorkbook.class);
-		ExcelServiceImpl service = new ExcelServiceImpl(null);
-		when(workbook.isReadonly()).thenReturn(true);
-		service.removeSheet(workbook, "sheetname");
-	}
-
-	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = ".* does not exist anymore")
-	public void testRemoveSheetFileDoesNotExist() throws Exception {
-		XillWorkbook workbook = mock(XillWorkbook.class);
-		ExcelServiceImpl service = new ExcelServiceImpl(null);
-		when(workbook.isReadonly()).thenReturn(false);
-		when(workbook.fileExists()).thenReturn(false);
-		service.removeSheet(workbook, "name");
-	}
 
 	@Test
 	public void testRemovesheet() throws Exception {
@@ -194,14 +178,6 @@ public class ExcelServiceImplTest {
 		service.removeSheets(workbook, null);
 	}
 
-	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = ".* does not exist anymore")
-	public void removeSheetsFileDoesNotExist() throws Exception {
-		XillWorkbook workbook = mock(XillWorkbook.class);
-		when(workbook.isReadonly()).thenReturn(false);
-		when(workbook.fileExists()).thenReturn(false);
-		ExcelServiceImpl service = new ExcelServiceImpl(null);
-		service.removeSheets(workbook, null);
-	}
 
 	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp =
 					"Sheet\\(s\\) \\[Apple\\] do not exist in the current workbook\\; they could not be deleted\\.")
@@ -239,7 +215,7 @@ public class ExcelServiceImplTest {
 		when(workbook.isReadonly()).thenReturn(false);
 		File file = mock(File.class);
 		when(file.getCanonicalPath()).thenReturn("thispath");
-		assertEquals(service.save(file, workbook), "thispath");
+		assertEquals(service.save(file, workbook), "Saved [thispath]");
 		verify(workbook, times(1)).save(file);
 	}
 
@@ -257,7 +233,7 @@ public class ExcelServiceImplTest {
 		XillWorkbook workbook = mock(XillWorkbook.class);
 		when(workbook.isReadonly()).thenReturn(false);
 		when(workbook.getLocation()).thenReturn("location");
-		assertEquals(service.save(workbook), "location");
+		assertEquals(service.save(workbook), "Saved [location]");
 		verify(workbook, times(1)).save();
 	}
 

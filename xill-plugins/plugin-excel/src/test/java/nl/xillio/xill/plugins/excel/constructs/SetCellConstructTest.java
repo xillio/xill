@@ -50,7 +50,7 @@ public class SetCellConstructTest {
 		XillSheet sheet = mock(XillSheet.class);
 		XillCellRef cellRef = mock(XillCellRef.class);
 
-		SetCellConstruct.setValue(fromValue(3), sheet, cellRef);
+		SetCellConstruct.setValue(sheet, cellRef, fromValue(3));
 
 		verify(sheet, times(1)).setCellValue(any(XillCellRef.class), captor.capture());
 		assertEquals(captor.getValue(), 3d);
@@ -62,7 +62,7 @@ public class SetCellConstructTest {
 		XillSheet sheet = mock(XillSheet.class);
 		XillCellRef cellRef = mock(XillCellRef.class);
 
-		SetCellConstruct.setValue(fromValue(true), sheet, cellRef);
+		SetCellConstruct.setValue(sheet, cellRef, fromValue(true));
 
 		verify(sheet, times(1)).setCellValue(any(XillCellRef.class), captor.capture());
 		assertTrue(captor.getValue());
@@ -74,7 +74,7 @@ public class SetCellConstructTest {
 		XillSheet sheet = mock(XillSheet.class);
 		XillCellRef cellRef = mock(XillCellRef.class);
 
-		SetCellConstruct.setValue(fromValue("inputString"), sheet, cellRef);
+		SetCellConstruct.setValue(sheet, cellRef, fromValue("inputString"));
 
 		verify(sheet, times(1)).setCellValue(any(XillCellRef.class), captor.capture());
 		assertEquals(captor.getValue(), "inputString");
@@ -99,7 +99,7 @@ public class SetCellConstructTest {
 		SetCellConstruct.process(sheetInput, fromValue("A"), fromValue("B"), fromValue("value"));
 	}
 
-	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Cannot write on sheet: sheet is read-only")
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Cannot write on sheet: sheet is read-only. First save as new file.")
 	public void testProcessReadOnly() throws Exception {
 		MetaExpression sheetInput = fromValue("sheetinput");
 		XillSheet sheet = mock(XillSheet.class);

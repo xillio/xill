@@ -28,7 +28,7 @@ public class XillWorkbookTest {
 	}
 
 	@Test(expectedExceptions = IllegalArgumentException.class,
-					expectedExceptionsMessageRegExp = "Sheet can not be found in the supplied workbook")
+					expectedExceptionsMessageRegExp = "Sheet cannot be found in the supplied workbook")
 	public void testGetSheetThatDoesNotExist() throws Exception {
 		Workbook workbook = mock(Workbook.class);
 		File file = createFile("path", false);
