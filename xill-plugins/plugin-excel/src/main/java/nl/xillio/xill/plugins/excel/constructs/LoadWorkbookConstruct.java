@@ -17,6 +17,7 @@ import java.io.InvalidObjectException;
 
 /**
  * Construct to load a XillWorkbook from an existing file.
+ *
  * @author Daan Knoope
  */
 public class LoadWorkbookConstruct extends Construct {
@@ -24,25 +25,17 @@ public class LoadWorkbookConstruct extends Construct {
 	@Inject
 	private ExcelService excelService;
 
-	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
-		return new ConstructProcessor(
-						a -> process(excelService, context, a),
-						new Argument("filePath", ATOMIC));
-	}
-
 	/**
 	 * Processes the xill code to load a XillWorkook from the given filepath.
-	 * @param 	excelService 	the {@link ExcelService} provided by the construct
-	 * @param 	context 			the {@link ConstructContext} provided by the construct
-	 * @param 	filePath 			a (relative or absolute path) to where the Excel file is located
 	 *
-	 * @return	a {@link XillWorkbook} stored in a string pointing to the absolute path
-	 * 					where it has been loaded from
-	 *
-	 * @throws  RobotRuntimeException the path does not lead to an xls or xlsx file
-	 * @throws 	RobotRuntimeException there is no file at the given path
-	 * @throws  RobotRuntimeException the file could not be opened
+	 * @param excelService the {@link ExcelService} provided by the construct
+	 * @param context      the {@link ConstructContext} provided by the construct
+	 * @param filePath     a (relative or absolute path) to where the Excel file is located
+	 * @throws RobotRuntimeException the path does not lead to an xls or xlsx file
+	 * @throws RobotRuntimeException there is no file at the given path
+	 * @throws RobotRuntimeException the file could not be opened
+	 * @return a {@link XillWorkbook} stored in a string pointing to the absolute path
+	 * where it has been loaded from
 	 */
 	static MetaExpression process(ExcelService excelService, ConstructContext context, MetaExpression filePath) {
 
@@ -69,5 +62,12 @@ public class LoadWorkbookConstruct extends Construct {
 		MetaExpression returnValue = fromValue(workbookText);
 		returnValue.storeMeta(XillWorkbook.class, workbook);
 		return returnValue;
+	}
+
+	@Override
+	public ConstructProcessor prepareProcess(ConstructContext context) {
+		return new ConstructProcessor(
+						a -> process(excelService, context, a),
+						new Argument("filePath", ATOMIC));
 	}
 }

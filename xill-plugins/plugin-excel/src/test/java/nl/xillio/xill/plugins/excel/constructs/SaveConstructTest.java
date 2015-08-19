@@ -58,7 +58,7 @@ public class SaveConstructTest {
 		MetaExpression workbookInput = fromValue("workbook");
 		workbookInput.storeMeta(XillWorkbook.class, workbook);
 		MetaExpression inputPath = fromValue("path");
-		when(service.save(any(File.class), any(XillWorkbook.class))).thenReturn("saved to dir");
+		when(service.save(any(XillWorkbook.class), any(File.class))).thenReturn("saved to dir");
 		assertEquals(SaveConstruct.process(service, context, workbookInput, inputPath).getStringValue(), "saved to dir");
 	}
 
@@ -82,7 +82,7 @@ public class SaveConstructTest {
 	public void testProcessToFolderThrowsException() throws Exception {
 		ExcelService service = mock(ExcelService.class);
 		XillWorkbook workbook = mock(XillWorkbook.class);
-		when(service.save(any(File.class), any(XillWorkbook.class))).thenThrow(new IOException());
+		when(service.save(any(XillWorkbook.class), any(File.class))).thenThrow(new IOException());
 		SaveConstruct.processToFolder(service, workbook, mock(File.class));
 	}
 
@@ -90,7 +90,7 @@ public class SaveConstructTest {
 	public void testProcessToFolder() throws Exception {
 		ExcelService service = mock(ExcelService.class);
 		XillWorkbook workbook = mock(XillWorkbook.class);
-		when(service.save(any(File.class), any(XillWorkbook.class))).thenReturn("correct");
+		when(service.save(any(XillWorkbook.class), any(File.class))).thenReturn("correct");
 		assertEquals(fromValue("correct"), SaveConstruct.processToFolder(service, workbook, mock(File.class)));
 	}
 }

@@ -135,7 +135,6 @@ public class ExcelServiceImplTest {
 		assertEquals(sheet, service.createSheet(workbook, "bla"));
 	}
 
-
 	@Test
 	public void testRemovesheet() throws Exception {
 		XillWorkbook workbook = mock(XillWorkbook.class);
@@ -178,7 +177,6 @@ public class ExcelServiceImplTest {
 		service.removeSheets(workbook, null);
 	}
 
-
 	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp =
 					"Sheet\\(s\\) \\[Apple\\] do not exist in the current workbook\\; they could not be deleted\\.")
 	public void removeSheetsInvalidNames() throws Exception {
@@ -205,7 +203,7 @@ public class ExcelServiceImplTest {
 		XillWorkbook workbook = mock(XillWorkbook.class);
 		ExcelService service = new ExcelServiceImpl(null);
 		when(workbook.isReadonly()).thenReturn(true);
-		service.save(mock(File.class), workbook);
+		service.save(workbook, mock(File.class));
 	}
 
 	@Test
@@ -215,7 +213,7 @@ public class ExcelServiceImplTest {
 		when(workbook.isReadonly()).thenReturn(false);
 		File file = mock(File.class);
 		when(file.getCanonicalPath()).thenReturn("thispath");
-		assertEquals(service.save(file, workbook), "Saved [thispath]");
+		assertEquals(service.save(workbook, file), "Saved [thispath]");
 		verify(workbook, times(1)).save(file);
 	}
 

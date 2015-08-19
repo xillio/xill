@@ -4,16 +4,38 @@ import nl.xillio.xill.api.components.MetadataExpression;
 import org.apache.poi.hssf.util.CellReference;
 
 /**
- * Created by Daan Knoope on 7-8-2015.
+ * Representation of a reference to an Excel cell.
+ * Wrapper for the Apache POI {@link CellReference} class.
+ *
+ * @author Daan Knoope
  */
 public class XillCellRef implements MetadataExpression {
 
 	private CellReference cellReference;
 
+	/**
+	 * Constructs a XillCellRef based on 1-indexed references
+	 *
+	 * @param column a string pointing to the column of the cell
+	 *               in alphabetic notation (e.g. "AB"),
+	 *               1-indexed (Excel notation)
+	 * @param row    an integer pointing to the row of the cell in
+	 *               numeric notation (e.g. 28), 1-indexed
+	 *               (Excel notation)
+	 */
 	public XillCellRef(String column, int row) {
 		cellReference = new CellReference(column + row); //A, 12 => A12
 	}
 
+	/**
+	 * Constructor for the XillCellRef class
+	 *
+	 * @param column an integer pointing to the column of the cell
+	 *               in numeric notation (e.g. 28), 1-indexed
+	 *               (Excel notation)
+	 * @param row    an integer pointing to the row of the cell
+	 *               in numeric notation (e.g. 28), 1-indexed (Excel notation)
+	 */
 	public XillCellRef(int column, int row) {
 		cellReference = new CellReference(row, column);
 	}
@@ -34,10 +56,20 @@ public class XillCellRef implements MetadataExpression {
 		return cellReference != null ? cellReference.hashCode() : 0;
 	}
 
+	/**
+	 * Gets the number of the Excel column, 0-indexed
+	 *
+	 * @return the column of the reference as integer
+	 */
 	public int getColumn() {
 		return cellReference.getCol() - 1;
 	}
 
+	/**
+	 * Gets the number of the Exel row, 0-indexed
+	 *
+	 * @return the row of the reference as integer, 0-indexed
+	 */
 	public int getRow() {
 		return cellReference.getRow() - 1;
 	}

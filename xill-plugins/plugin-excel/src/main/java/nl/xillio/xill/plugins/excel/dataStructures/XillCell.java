@@ -4,13 +4,23 @@ import nl.xillio.xill.api.errors.NotImplementedException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DateUtil;
 
+import java.util.Date;
+
 /**
- * Created by Daan Knoope on 17-8-2015.
+ * Representation of an Excel cell.
+ * Wrapper for the Apache POI {@link Cell} class.
+ *
+ * @author Daan Knoope
  */
 public class XillCell {
 
 	private Cell cell;
 
+	/**
+	 * Constructor for the XillCell class.
+	 *
+	 * @param cell an Apache POI {@link Cell} object
+	 */
 	public XillCell(Cell cell) {
 		this.cell = cell;
 	}
@@ -19,6 +29,12 @@ public class XillCell {
 		return DateUtil.isCellDateFormatted(cell);
 	}
 
+	/**
+	 * Gets the value of this cell.
+	 *
+	 * @return the value of this cell as an object. Can be: {@link String}, {@link Boolean}, {@link Double} or {@link Date}.
+	 * @throws NotImplementedException when this cell has an unsupported formatting
+	 */
 	public Object getValue() {
 		Object toReturn;
 		if (!isNull()) {
@@ -52,6 +68,12 @@ public class XillCell {
 		return cell == null;
 	}
 
+	/**
+	 * Sets this cell's value to the provided String
+	 *
+	 * @param value the string value which should be stored in this cell. Can be made a formula by
+	 *              staring the string off with an equals sign (=).
+	 */
 	public void setCellValue(String value) {
 		if (value.startsWith("="))
 			cell.setCellFormula(value);
@@ -59,10 +81,20 @@ public class XillCell {
 			cell.setCellValue(value);
 	}
 
+	/**
+	 * Sets the cell's value to the provided Double
+	 *
+	 * @param value the double which should be stored in this cell
+	 */
 	public void setCellValue(Double value) {
 		cell.setCellValue(value);
 	}
 
+	/**
+	 * Sets the cell's value to the provided boolean
+	 *
+	 * @param value the boolean which should be stored in this cell
+	 */
 	public void setCellValue(boolean value) {
 		cell.setCellValue(value);
 	}

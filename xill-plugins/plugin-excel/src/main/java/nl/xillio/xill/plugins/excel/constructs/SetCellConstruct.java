@@ -14,29 +14,19 @@ import java.util.regex.Pattern;
 
 /**
  * Construct to change the value of a given cell.
+ *
  * @author Daan Knoope
  */
 public class SetCellConstruct extends Construct {
 
-	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
-		return new ConstructProcessor(
-						SetCellConstruct::process,
-						new Argument("sheet", OBJECT),
-						new Argument("column", ATOMIC),
-						new Argument("row", ATOMIC),
-						new Argument("value", ATOMIC));
-	}
-
 	/**
 	 * Processes xill code to change the value of a given cell
-	 * @param 		sheet 		the sheet which' cell needs to be changed
-	 * @param 		column		the column of the cell which should be changed
-	 * @param 		row				the row of the cell which should be changed
-	 * @param 		value			the value to which the cell should be set
 	 *
+	 * @param sheet  the sheet which' cell needs to be changed
+	 * @param column the column of the cell which should be changed
+	 * @param row    the row of the cell which should be changed
+	 * @param value  the value to which the cell should be set
 	 * @return {@code true} when the operation has succeeded, else an exception is thrown
-	 *
 	 * @throws RobotRuntimeException when the sheet is read-only
 	 * @throws RobotRuntimeException when a wrong notation for the row has been used (should be numeric)
 	 * @throws RobotRuntimeException when a wrong notation for the column has been used (should be numeric or alphabetic)
@@ -56,9 +46,10 @@ public class SetCellConstruct extends Construct {
 
 	/**
 	 * Sets the value of a cell on a XillSheet
-	 * @param    sheet			the {@link XillSheet} which contains the cell which should be changed
-	 * @param    cellRef		a {@link XillCellRef} pointing to the cell which should be changed
-	 * @param    value      a {@link MetaExpression} containing the value which the cell should contain
+	 *
+	 * @param sheet   the {@link XillSheet} which contains the cell which should be changed
+	 * @param cellRef a {@link XillCellRef} pointing to the cell which should be changed
+	 * @param value   a {@link MetaExpression} containing the value which the cell should contain
 	 */
 	static void setValue(XillSheet sheet, XillCellRef cellRef, MetaExpression value) {
 		if (value.getValue() instanceof BooleanBehavior) { // DO NOT REPEAT ANYWHERE ELSE, WAS UNAVOIDABLE :-(
@@ -72,10 +63,11 @@ public class SetCellConstruct extends Construct {
 
 	/**
 	 * Creates a XillCellRef given the raw column and row notation.
-	 * @param 		column		a {@link MetaExpression} pointing to the column of the cell which should be changed,
-	 *                      either in alphabetic or numeric notation (e.g. "AB" or 28)
-	 * @param 		row				a {@link MetaExpression} pointing to the row of the cell which should be changed,
-	 *                      in numeric notation (e.g. 28)
+	 *
+	 * @param column a {@link MetaExpression} pointing to the column of the cell which should be changed,
+	 *               either in alphabetic or numeric notation (e.g. "AB" or 28)
+	 * @param row    a {@link MetaExpression} pointing to the row of the cell which should be changed,
+	 *               in numeric notation (e.g. 28)
 	 * @return a {@link XillCellRef} pointing to the row and column of the cell
 	 */
 	static XillCellRef getCellRef(MetaExpression column, MetaExpression row) {
@@ -86,8 +78,9 @@ public class SetCellConstruct extends Construct {
 
 	/**
 	 * Checks if a MetaExpression is numeric.
-	 * @param 		expression	the {@link MetaExpression} which should be checked
-	 * @return	{@code true} when the input is numeric or {@code false} when it is not numeric
+	 *
+	 * @param expression the {@link MetaExpression} which should be checked
+	 * @return  {@code true} when the input is numeric or {@code false} when it is not numeric
 	 */
 	static boolean isNumeric(MetaExpression expression) {
 		return !Double.isNaN(expression.getNumberValue().doubleValue());
@@ -95,10 +88,21 @@ public class SetCellConstruct extends Construct {
 
 	/**
 	 * Checks if a MetaExpression is either numeric or alphabetic (exclusive or)
-	 * @param 	expression the {@link MetaExpression} which should be checked
+	 *
+	 * @param expression the {@link MetaExpression} which should be checked
 	 * @return {@code true} when the input is numeric or {@code false} when it is not numeric
 	 */
 	static boolean isNumericXORAlphabetic(MetaExpression expression) {
 		return Pattern.matches("[a-zA-Z]*|[0-9]*", expression.getStringValue());
+	}
+
+	@Override
+	public ConstructProcessor prepareProcess(ConstructContext context) {
+		return new ConstructProcessor(
+						SetCellConstruct::process,
+						new Argument("sheet", OBJECT),
+						new Argument("column", ATOMIC),
+						new Argument("row", ATOMIC),
+						new Argument("value", ATOMIC));
 	}
 }

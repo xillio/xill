@@ -15,6 +15,7 @@ import java.io.IOException;
 
 /**
  * Construct to save the current workbook (to another place).
+ *
  * @author Daan Knoope
  */
 public class SaveConstruct extends Construct {
@@ -22,25 +23,16 @@ public class SaveConstruct extends Construct {
 	@Inject
 	private ExcelService service;
 
-	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
-		return new ConstructProcessor(
-						(a, b) -> process(service, context, a, b),
-						new Argument("workbook", ATOMIC),
-						new Argument("path", NULL, ATOMIC)
-		);
-	}
-
 	/**
 	 * Processes the xill code to save the provided workbook at the same or another path.
-	 * @param 	service 				the {@link ExcelService} provided by the construct
-	 * @param 	context 				the {@link ConstructContext} provided by the construct
-	 * @param 	workbookInput 	a workbook object created by {@link CreateWorkbookConstruct} or
-	 * 													{@link LoadWorkbookConstruct} containing a {@link XillWorkbook}
-	 * @param 	path						optional: the path to where the workbook should be saved. If
-	 *                          no path is supplied, the file is saved to the same location
-	 * @return a string to the location where the file has been saved
 	 *
+	 * @param service       the {@link ExcelService} provided by the construct
+	 * @param context       the {@link ConstructContext} provided by the construct
+	 * @param workbookInput a workbook object created by {@link CreateWorkbookConstruct} or
+	 *                      {@link LoadWorkbookConstruct} containing a {@link XillWorkbook}
+	 * @param path          optional: the path to where the workbook should be saved. If
+	 *                      no path is supplied, the file is saved to the same location
+	 * @return a string to the location where the file has been saved
 	 * @throws RobotRuntimeException when the file is read-only or cannot be written to
 	 */
 	static MetaExpression process(ExcelService service, ConstructContext context, MetaExpression workbookInput, MetaExpression path) {
@@ -55,9 +47,9 @@ public class SaveConstruct extends Construct {
 
 	/**
 	 * Saves the workbook by overwriting the current file.
-	 * @param 	service			the {@link ExcelService} provided by the construct
-	 * @param 	workbook		the {@link XillWorkbook} which will be saved
 	 *
+	 * @param service  the {@link ExcelService} provided by the construct
+	 * @param workbook the {@link XillWorkbook} which will be saved
 	 * @return a string pointing to the location where the file has been saved
 	 * @throws RobotRuntimeException when the file is read-only or cannot be written to
 	 */
@@ -73,22 +65,30 @@ public class SaveConstruct extends Construct {
 
 	/**
 	 * Saves the workbook to a new location.
-	 * @param 	service			the {@link ExcelService} provided by the construct
-	 * @param	 	workbook		the {@link XillWorkbook} which will be saved
-	 * @param 	file				a {@link File} object initialized to write to the new path
 	 *
+	 * @param service the {@link ExcelService} provided by the construct
+	 * @param file    a {@link File} object initialized to write to the new path
 	 * @return a string pointing to the location where the file has been saved
-	 *
 	 * @throws RobotRuntimeException when the file is read-only or cannot be written to
+	 * @param   workbook    the {@link XillWorkbook} which will be saved
 	 */
 	static MetaExpression processToFolder(ExcelService service, XillWorkbook workbook, File file) {
 		String returnValue = "";
 		try {
-			returnValue = service.save(file, workbook);
+			returnValue = service.save(workbook, file);
 		} catch (IOException e) {
 			throw new RobotRuntimeException(e.getMessage(), e);
 		}
 		return fromValue(returnValue);
+	}
+
+	@Override
+	public ConstructProcessor prepareProcess(ConstructContext context) {
+		return new ConstructProcessor(
+						(a, b) -> process(service, context, a, b),
+						new Argument("workbook", ATOMIC),
+						new Argument("path", NULL, ATOMIC)
+		);
 	}
 
 }

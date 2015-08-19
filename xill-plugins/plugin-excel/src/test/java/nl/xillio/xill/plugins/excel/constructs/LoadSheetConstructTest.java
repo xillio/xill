@@ -32,7 +32,6 @@ public class LoadSheetConstructTest {
 		LoadSheetConstruct.process(input, fromValue("Sheet"));
 	}
 
-
 	@Test(expectedExceptions = RobotRuntimeException.class)
 	public void testProcessThrowsRobotRuntime() throws Exception {
 		XillWorkbook workbook = mock(XillWorkbook.class);

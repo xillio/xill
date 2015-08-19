@@ -34,13 +34,13 @@ public class CreateSheetConstructTest {
 	}
 
 	@Test(expectedExceptions = RobotRuntimeException.class)
-	public void testProcessIllegalArgumentException2() throws Exception{
+	public void testProcessIllegalArgumentException2() throws Exception {
 		ExcelService service = mock(ExcelService.class);
 		MetaExpression input = fromValue("workbook");
 		XillWorkbook workbook = mock(XillWorkbook.class);
 		input.storeMeta(XillWorkbook.class, workbook);
 		when(service.createSheet(any(XillWorkbook.class), anyString())).thenThrow(new IllegalArgumentException());
-		CreateSheetConstruct.process(service,input,fromValue("name"));
+		CreateSheetConstruct.process(service, input, fromValue("name"));
 	}
 
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "^illegal$")

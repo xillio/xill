@@ -132,6 +132,7 @@ public class XillWorkbookTest {
 		XillWorkbook testWorkbook = spy(new XillWorkbook(workbook, file));
 		FileOutputStream stream = mock(FileOutputStream.class);
 		doReturn(stream).when(testWorkbook).getOuputStream();
+		doReturn(stream).when(testWorkbook).getOutputStream(file);
 		testWorkbook.save();
 		testWorkbook.save(file);
 	}
@@ -152,6 +153,8 @@ public class XillWorkbookTest {
 		Workbook workbook = mock(Workbook.class);
 		File file = createFile("path", false);
 		XillWorkbook testWorkbook = spy(new XillWorkbook(workbook, file));
+		FileOutputStream stream = mock(FileOutputStream.class);
+		doReturn(stream).when(testWorkbook).getOutputStream(file);
 		doThrow(new IOException()).when(workbook).write(any(OutputStream.class));
 		testWorkbook.save(file);
 	}
