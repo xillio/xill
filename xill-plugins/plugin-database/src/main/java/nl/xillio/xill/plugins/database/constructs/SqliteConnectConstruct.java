@@ -17,7 +17,7 @@ public class SqliteConnectConstruct extends BaseDatabaseConstruct {
 	}
 
 	static MetaExpression process(MetaExpression file, DatabaseServiceFactory factory) {
-		MetaExpression[] newArgs = {file, fromValue(Database.SQLITE.getName()), NULL, NULL, NULL};
+		MetaExpression[] newArgs = {file, fromValue(Database.SQLITE.getName()), NULL, NULL, emptyObject()};
 		return ConnectConstruct.process(newArgs, factory);
 	}
 }

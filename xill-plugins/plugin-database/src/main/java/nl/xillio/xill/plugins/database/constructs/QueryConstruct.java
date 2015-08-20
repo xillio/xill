@@ -69,12 +69,17 @@ public class QueryConstruct extends BaseDatabaseConstruct {
 			throw new RobotRuntimeException(e.getMessage(),e);
 		}
 
-		if (result instanceof Integer) {
-			return fromValue((int) result);
+		return returnValue(result,sql);
+		
+	}
+	
+	private static MetaExpression returnValue(Object value,String sql){
+		if (value instanceof Integer) {
+			return fromValue((int) value);
 		}
-		else if (result instanceof Iterator) {
+		else if (value instanceof Iterator) {
 			// Wrap StatementIterator into MetaExpressionIterator
-			MetaExpressionIterator<Object> it = new MetaExpressionIterator<>((Iterator<Object>) result, (o) -> {
+			MetaExpressionIterator<Object> it = new MetaExpressionIterator<>((Iterator<Object>) value, (o) -> {
 				if (o instanceof Integer)
 					return fromValue((int) o);
 				else if (o instanceof Map)

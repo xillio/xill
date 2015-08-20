@@ -20,14 +20,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.StreamSupport;
 
-import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
-import nl.xillio.xill.plugins.database.util.StatementIterator;
-import nl.xillio.xill.plugins.database.util.Tuple;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Iterators;
+
+import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
+import nl.xillio.xill.plugins.database.util.StatementIterator;
+import nl.xillio.xill.plugins.database.util.Tuple;
 
 @SuppressWarnings("unchecked")
 public abstract class BaseDatabaseService implements DatabaseService {
@@ -64,26 +64,23 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	}
 
 	@Override
-	public Object query(final Connection connection, final String query, List<LinkedHashMap<String, Object>> parameters, final int timeout) throws SQLException {
+	public Object query(final Connection connection, final String query, final List<LinkedHashMap<String, Object>> parameters, final int timeout) throws SQLException {
 		PreparedStatement stmt = parseNamedParameters(connection, query);
 		stmt.setQueryTimeout(timeout);
 
 		if (parameters == null || parameters.size() == 0) {
-			if(extractParameterNames(query).size() > 0){
+			if (extractParameterNames(query).size() > 0) {
 				throw new IllegalArgumentException("Parameters is empty for parametrised query.");
 			}
 			stmt.execute();
-		}
-		else if (parameters.size() == 1) {
+		} else if (parameters.size() == 1) {
 			LinkedHashMap<String, Object> parameter = parameters.get(0);
 			fillStatement(parameter, stmt, 1);
 			stmt.execute();
-		}
-		else
-		{
-			//convert int[] to Integer[] to be able to create an iterator.
+		} else {
+			// convert int[] to Integer[] to be able to create an iterator.
 			Integer[] updateCounts = ArrayUtils.toObject(executeBatch(stmt, extractParameterNames(query), parameters));
-			
+
 			return (Arrays.asList(updateCounts)).iterator();
 		}
 
@@ -104,14 +101,14 @@ public abstract class BaseDatabaseService implements DatabaseService {
 
 	/**
 	 * Parse a {@link PreparedStatement} from a query with named parameters
-	 * 
+	 *
 	 * @param connection
 	 * @param query
 	 *        The query to parse
 	 * @return An unused {@link PreparedStatement}.
 	 * @throws SQLException
 	 */
-	private PreparedStatement parseNamedParameters(Connection connection, String query) throws SQLException {
+	private PreparedStatement parseNamedParameters(final Connection connection, final String query) throws SQLException {
 		Matcher m = PARAMETER_PATTERN.matcher(query);
 
 		String preparedQuery = m.replaceAll("?");
@@ -121,11 +118,11 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param query
 	 * @return The names of the parameters in the given query in order of appearance
 	 */
-	private List<String> extractParameterNames(String query) {
+	private List<String> extractParameterNames(final String query) {
 		Matcher m = PARAMETER_PATTERN.matcher(query);
 		List<String> indexedParameters = new ArrayList<>();
 		while (m.find()) {
@@ -135,14 +132,15 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		return indexedParameters;
 	}
 
-	private int[] executeBatch(PreparedStatement stmt, List<String> indexedParameters, List<LinkedHashMap<String, Object>> parameters) throws SQLException {
+	private int[] executeBatch(final PreparedStatement stmt, final List<String> indexedParameters, final List<LinkedHashMap<String, Object>> parameters) throws SQLException {
 		for (LinkedHashMap<String, Object> parameter : parameters) {
 			for (int i = 0; i < indexedParameters.size(); i++) {
 				String indexedParameter = indexedParameters.get(i);
-				//returns null on null value and when key is not contained in map
+				// returns null on null value and when key is not contained in map
 				Object value = parameter.get(indexedParameter);
-				if (!parameter.containsKey(indexedParameter))
-				  throw new IllegalArgumentException("The Parameters argument should contain: \"" + indexedParameter + "\"");
+				if (!parameter.containsKey(indexedParameter)) {
+					throw new IllegalArgumentException("The Parameters argument should contain: \"" + indexedParameter + "\"");
+				}
 				stmt.setObject(i + 1, value);
 			}
 			stmt.addBatch();
@@ -189,12 +187,13 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		}
 		// question mark for url parameters
 		url = url.concat("?");
-		if (user == null ^ pass == null) {
-			throw new IllegalArgumentException("User and pass should be both null or both non-null");
-		}
-		if (user != null && pass != null) {
-			// append username and password options
+		
+		//append user
+		if (user != null){
 			url = String.format("%suser=%s&", url, user);
+		}
+		//append password
+		if(pass != null){
 			url = String.format("%spassword=%s&", url, pass);
 		}
 		// append other options
@@ -232,8 +231,8 @@ public abstract class BaseDatabaseService implements DatabaseService {
 			for (String s : constraints.keySet()) {
 				String here = rs.getColumnName(result.findColumn(s));
 				Object value = result.getObject(s);
-				if(value instanceof Clob){
-					value = clobToString((Clob)value);
+				if (value instanceof Clob) {
+					value = clobToString((Clob) value);
 				}
 				map.put(here, value);
 			}
@@ -269,22 +268,20 @@ public abstract class BaseDatabaseService implements DatabaseService {
 
 	/**
 	 * Create a select query for getting one row from the database
-	 * 
+	 *
 	 * @param constraintsSql
 	 *        Constrainsts for selecting (containing AND, OR, etc.)
 	 * @param table
 	 *        The table to select from
 	 * @return A SQL query that selects one row using the given constraints
 	 */
-	protected String createSelectQuery(String table, String constraintsSql) {
+	protected String createSelectQuery(final String table, final String constraintsSql) {
 		return String.format("SELECT * FROM %1$s WHERE %2$s LIMIT 1", table, constraintsSql);
 	}
 
 	@Override
 	public void storeObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject, final List<String> keys, final boolean overwrite)
 			throws SQLException {
-		PreparedStatement statement;
-
 		if (keys.size() == 0 || !overwrite) {
 			// insert into table
 			insertObject(connection, table, newObject);
@@ -333,14 +330,14 @@ public abstract class BaseDatabaseService implements DatabaseService {
 
 	/**
 	 * Fills a {@link PreparedStatement} from a map
-	 * 
+	 *
 	 * @param newObject
 	 *        The map of which all keys represent columns
 	 * @param statement
 	 *        Prepared statements with as many '?' markers as entries in the newObject map
 	 * @throws SQLException
 	 */
-	private void fillStatement(final LinkedHashMap<String, Object> newObject, PreparedStatement statement, int firstMarkerNumber) throws SQLException {
+	private void fillStatement(final LinkedHashMap<String, Object> newObject, final PreparedStatement statement, final int firstMarkerNumber) throws SQLException {
 		int i = firstMarkerNumber;
 		for (Entry<String, Object> e : newObject.entrySet()) {
 			setValue(statement, e.getKey(), e.getValue(), i++);
@@ -350,31 +347,31 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	/**
 	 * Create a String in this form (where "," is the separator in this case): "key1 = ?,key2 = ?,key3 = ? "
 	 */
-	private String createQueryPart(final Iterable<String> keys, String separator) {
+	private String createQueryPart(final Iterable<String> keys, final String separator) {
 		return StreamSupport.stream(keys.spliterator(), false).map(k -> k + " = ?").reduce((q, k) -> q + separator + k).get();
 	}
-	
-	private static String clobToString(Clob data) {
-    StringBuilder sb = new StringBuilder();
-    try {
-        Reader reader = data.getCharacterStream();
-        BufferedReader br = new BufferedReader(reader);
 
-        String line;
-        while(null != (line = br.readLine())) {
-            sb.append(line);
-        }
-        br.close();
-    } catch (SQLException e) {
-        // handle this exception
-    } catch (IOException e) {
-        // handle this exception
-    }
-    return sb.toString();
-}
-	
+	private static String clobToString(final Clob data) {
+		StringBuilder sb = new StringBuilder();
+		try {
+			Reader reader = data.getCharacterStream();
+			BufferedReader br = new BufferedReader(reader);
 
-	public static void setLastConnection(ConnectionMetadata connection) {
+			String line;
+			while (null != (line = br.readLine())) {
+				sb.append(line);
+			}
+			br.close();
+		} catch (SQLException e) {
+			throw new IllegalArgumentException(e);
+		} catch (IOException e) {
+			throw new IllegalArgumentException(e);
+		}
+		return sb.toString();
+	}
+
+	public static void setLastConnection(final ConnectionMetadata connection) {
+		
 		lastConnection = connection;
 	}
 

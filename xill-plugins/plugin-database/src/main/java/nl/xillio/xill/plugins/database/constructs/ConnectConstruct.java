@@ -37,16 +37,13 @@ public class ConnectConstruct extends BaseDatabaseConstruct {
 	}
 
 	@SuppressWarnings("unchecked")
-	static public MetaExpression process(final MetaExpression[] args, DatabaseServiceFactory factory) {
+	public
+	static MetaExpression process(final MetaExpression[] args, DatabaseServiceFactory factory) {
 		String database = args[0].isNull() ? null : args[0].getStringValue();
 		String type = args[1].getStringValue();
 		String user = args[2].isNull() ? null : args[2].getStringValue();
 		String pass = args[3].isNull() ? null : args[3].getStringValue();
 		Map<String, MetaExpression> options = (Map<String, MetaExpression>) args[4].getValue();
-
-		String url;
-		Properties properties = null;
-
 		Tuple<String, String>[] optionsArray =
 		    (Tuple[]) options.entrySet().stream().map((e) -> new Tuple<String, String>(e.getKey(), e.getValue().getStringValue())).toArray((s) -> new Tuple[s]);
 
