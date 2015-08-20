@@ -24,6 +24,8 @@ public class XillCellRef implements MetadataExpression {
 	 *               (Excel notation)
 	 */
 	public XillCellRef(String column, int row) {
+		if(row <= 0)
+			throw new IllegalArgumentException("The row number must be one or higher (" + row + " was used)");
 		cellReference = new CellReference(column + row); //A, 12 => A12
 	}
 
@@ -37,6 +39,10 @@ public class XillCellRef implements MetadataExpression {
 	 *               in numeric notation (e.g. 28), 1-indexed (Excel notation)
 	 */
 	public XillCellRef(int column, int row) {
+		if(row <= 0)
+			throw new IllegalArgumentException("The row number must be one or higher (" + row + " was used)");
+		if(column <= 0)
+			throw new IllegalArgumentException("The column number must be one or higher (" + column + " was used)");
 		cellReference = new CellReference(row, column);
 	}
 

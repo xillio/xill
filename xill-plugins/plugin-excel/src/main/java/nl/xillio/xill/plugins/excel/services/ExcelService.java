@@ -74,11 +74,11 @@ public interface ExcelService {
 	 *
 	 * @param workbook the {@link XillWorkbook} which should be saved
 	 * @param file     a {@link File} to which the XillWorkbook can be written
-	 * @return a string containing the new location of the workbook
+	 * @return the newly saved workbook
 	 * @throws IOException              when the write did not succeed
 	 * @throws IllegalArgumentException when the file is read-only
 	 */
-	String save(XillWorkbook workbook, File file) throws IOException;
+	XillWorkbook save(XillWorkbook workbook, File file) throws IOException;
 
 	/**
 	 * Saves the provided workbook by overwriting the old one

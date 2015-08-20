@@ -6,6 +6,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.excel.datastructures.XillWorkbook;
 import nl.xillio.xill.plugins.excel.services.ExcelService;
@@ -44,7 +45,9 @@ public class CreateWorkbookConstruct extends Construct {
 			workbook = excelService.createWorkbook(file);
 		} catch (FileAlreadyExistsException e) {
 			throw new RobotRuntimeException(e.getMessage(), e);
-		} catch (IOException e) {
+		} catch(NotImplementedException e) {
+			throw new RobotRuntimeException(e.getMessage(), e);
+		}catch (IOException e) {
 			throw new RobotRuntimeException("Cannot write to the supplied path", e);
 		}
 

@@ -39,8 +39,13 @@ public class SetCellConstruct extends Construct {
 			throw new RobotRuntimeException("Wrong notation for row \"" + row.getStringValue() + "\", should be numeric (e.g. 12)");
 		if (!isNumericXORAlphabetic(column))
 			throw new RobotRuntimeException("Wrong notation for column \"" + column.getStringValue() + "\", should be numerical or alphabetical notation (e.g. AB or 12)");
-
-		setValue(Sheet, getCellRef(column, row), value);
+		XillCellRef cellRef;
+		try {
+			cellRef = getCellRef(column, row);
+		}catch(IllegalArgumentException e){
+			throw new RobotRuntimeException(e.getMessage(), e);
+		}
+		setValue(Sheet, cellRef, value);
 		return fromValue(true);
 	}
 

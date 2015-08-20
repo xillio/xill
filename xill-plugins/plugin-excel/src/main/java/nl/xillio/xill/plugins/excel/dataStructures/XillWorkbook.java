@@ -1,6 +1,7 @@
 package nl.xillio.xill.plugins.excel.datastructures;
 
 import nl.xillio.xill.api.components.MetadataExpression;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -34,7 +35,10 @@ public class XillWorkbook implements MetadataExpression {
 		this.workbook = workbook;
 		this.file = file;
 		location = file.getCanonicalPath();
-		readonly = !file.canWrite();
+		if(file.exists())
+			readonly = !file.canWrite();
+		else
+			readonly = false;
 	}
 
 	/**
@@ -167,7 +171,14 @@ public class XillWorkbook implements MetadataExpression {
 		} catch (IOException e) {
 			throw new IOException("Could not write to this file", e);
 		}
+	}
 
+	public XillWorkbook createCopy(File file) throws IOException {
+		if(!(FilenameUtils.getExtension(file.getName()) == "xls" && workbook instanceof HSSFWorkbook ||
+						FilenameUtils.getExtension(file.getName()) == "xlsx" && workbook instanceof XSSFWorkbook))
+			throw new IllegalArgumentException("New file should have the same extension as the origional");
+		XillWorkbook workbook = new XillWorkbook(this.workbook, file);
+		return workbook;
 	}
 
 }

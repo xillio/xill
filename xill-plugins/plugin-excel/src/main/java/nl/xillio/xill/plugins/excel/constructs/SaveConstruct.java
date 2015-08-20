@@ -73,13 +73,16 @@ public class SaveConstruct extends Construct {
 	 * @param   workbook    the {@link XillWorkbook} which will be saved
 	 */
 	static MetaExpression processToFolder(ExcelService service, XillWorkbook workbook, File file) {
-		String returnValue = "";
+		XillWorkbook returnValue;
 		try {
 			returnValue = service.save(workbook, file);
 		} catch (IOException e) {
 			throw new RobotRuntimeException(e.getMessage(), e);
 		}
-		return fromValue(returnValue);
+		String savedString = "Saved [" + returnValue.getLocation() + "]";
+		MetaExpression toReturn = fromValue(savedString);
+		toReturn.storeMeta(XillWorkbook.class, returnValue);
+		return toReturn;
 	}
 
 	@Override

@@ -78,7 +78,7 @@ public class XillCell {
 	 */
 	public void setCellValue(String value) {
 		if (value.startsWith("="))
-			cell.setCellFormula(value);
+			cell.setCellFormula(value.substring(1));
 		else
 			cell.setCellValue(value);
 	}
