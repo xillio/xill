@@ -53,7 +53,7 @@ public class CreateSheetConstructTest {
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "^illegal$")
 	public void testProcessIllegalArgumentException() throws Exception {
 		//Basic vars
-		ExcelService service = mock(ExcelService.class);
+		ExcelService service = mock(ExcelService.class);;
 
 		//Mocking workbook
 		MetaExpression workbookInput = fromValue("workbook");
@@ -64,7 +64,7 @@ public class CreateSheetConstructTest {
 		when(service.createSheet(workbook, "name")).thenThrow(new IllegalArgumentException("illegal"));
 
 		//Executing method
-		CreateSheetConstruct.process(service, workbookInput, fromValue("naam"));
+		CreateSheetConstruct.process(service, workbookInput, fromValue("name"));
 	}
 
 	/**
