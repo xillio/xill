@@ -23,9 +23,9 @@ public class ReplaceNodeConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(ConstructContext context) {
 		return new ConstructProcessor(
-				(orgnode, replacementxml) -> process(orgnode, replacementxml, nodeService),
-				new Argument("orgnode", ATOMIC),
-				new Argument("replacementxml", ATOMIC)
+				(node, xml) -> process(node, xml, nodeService),
+				new Argument("node", ATOMIC),
+				new Argument("xml", ATOMIC)
 		);
 	}
 

@@ -23,10 +23,10 @@ public class InsertNodeConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(ConstructContext context) {
 		return new ConstructProcessor(
-				(basenode, nodestr, beforeChildNode) -> process(basenode, nodestr, beforeChildNode, nodeService),
+				(basenode, xml, beforenode) -> process(basenode, xml, beforenode, nodeService),
 				new Argument("basenode", ATOMIC),
-				new Argument("nodestr", ATOMIC),
-				new Argument("beforeChildNode", NULL, ATOMIC)
+				new Argument("xml", ATOMIC),
+				new Argument("beforenode", NULL, ATOMIC)
 		);
 	}
 

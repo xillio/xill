@@ -1,12 +1,16 @@
 package nl.xillio.xill.plugins.xml.constructs;
 
+import java.io.File;
+
 import com.google.inject.Inject;
+
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.plugins.xml.services.XsdService;
+
 import org.apache.logging.log4j.Logger;
 
 /**
@@ -22,14 +26,16 @@ public class XsdCheckConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(ConstructContext context) {
 		return new ConstructProcessor(
-				(xmlfile, xsdfile) -> process(xmlfile, xsdfile, xsdService, context.getRootLogger()),
+				(xmlfile, xsdfile) -> process(context, xmlfile, xsdfile, xsdService, context.getRootLogger()),
 				new Argument("xmlfile", ATOMIC),
 				new Argument("xsdfile", ATOMIC)
 		);
 	}
 
-	static MetaExpression process(MetaExpression xmlFileVar, MetaExpression xsdFileVar, XsdService service, Logger logger) {
-		return fromValue(service.xsdCheck(xmlFileVar.getStringValue(), xsdFileVar.getStringValue(), logger));
+	static MetaExpression process(final ConstructContext context, MetaExpression xmlFileNameVar, MetaExpression xsdFileNameVar, XsdService service, Logger logger) {
+		File xmlFile = getFile(context.getRobotID(), xmlFileNameVar.getStringValue());
+		File xsdFile = getFile(context.getRobotID(), xsdFileNameVar.getStringValue());
+		return fromValue(service.xsdCheck(xmlFile, xsdFile, logger));
 	}
 
 }

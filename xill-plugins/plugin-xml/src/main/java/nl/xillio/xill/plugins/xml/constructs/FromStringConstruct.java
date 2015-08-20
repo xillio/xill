@@ -19,8 +19,8 @@ public class FromStringConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(ConstructContext context) {
 		return new ConstructProcessor(
-			xmlstring -> process(xmlstring),
-				new Argument("xmlstring", ATOMIC)
+			source -> process(source),
+				new Argument("source", ATOMIC)
 		);
 	}
 

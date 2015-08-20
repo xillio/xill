@@ -1,7 +1,11 @@
 package nl.xillio.xill.plugins.xml.services;
 
+import java.io.File;
+
 import nl.xillio.xill.plugins.xml.XmlXillPlugin;
+
 import com.google.inject.ImplementedBy;
+
 import org.apache.logging.log4j.Logger;
 
 /**
@@ -15,10 +19,10 @@ public interface XsdService {
 	/**
 	 * Verifies if XML file is valid according to XSD specification
 	 * 
-	 * @param xmlFileName	XML file document
-	 * @param xsdFileName	XSD file
+	 * @param xmlFile			XML file document
+	 * @param xsdFile			XSD file
 	 * @param logger			CT logger			
 	 * @return true if XML file is valid, otherwise false
 	 */
-	boolean xsdCheck(final String xmlFileName, final String xsdFileName, final Logger logger);
+	boolean xsdCheck(final File xmlFile, final File xsdFile, final Logger logger);
 }

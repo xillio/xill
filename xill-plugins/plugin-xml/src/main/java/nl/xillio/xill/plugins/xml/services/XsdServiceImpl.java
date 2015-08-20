@@ -1,13 +1,19 @@
 package nl.xillio.xill.plugins.xml.services;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
+import nl.xillio.xill.api.errors.RobotRuntimeException;
+
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.apache.logging.log4j.Logger;
+
 import com.google.inject.Singleton;
 
 /**
@@ -42,14 +48,16 @@ public class XsdServiceImpl implements XsdService, ErrorHandler {
 	}
 
 	@Override
-	public boolean xsdCheck(final String xmlFileName, final String xsdFileName, final Logger logger) {
+	public boolean xsdCheck(final File xmlFile, final File xsdFile, final Logger logger) {
 		messages.clear();
 
-		dbf.setAttribute(JAXP_SCHEMA_SOURCE, new File(xsdFileName));
+		dbf.setAttribute(JAXP_SCHEMA_SOURCE, xsdFile);
 		try {
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			db.setErrorHandler(this);
-			db.parse(new File(xmlFileName));
+			db.parse(xmlFile);
+		} catch (IOException e) {
+			throw new RobotRuntimeException("XSD check error\n" + e.getMessage());
 		} catch (Exception e) {
 			logger.warn("XSD check failed\n" + e.getMessage() + (e.getCause() != null ? e.getCause().getMessage() : ""));
 			return false;

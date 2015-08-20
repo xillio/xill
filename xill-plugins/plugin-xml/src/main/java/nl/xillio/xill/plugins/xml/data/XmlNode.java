@@ -82,6 +82,18 @@ public class XmlNode implements MetadataExpression {
 
 	@Override public String toString() {
 		if (this.node == null) {
+			return "XML Node[null]";
+		}
+		return String.format("XML Node[root = %1$s]", this.node.getNodeName());
+	}
+	
+	/**
+	 * Returns XML content of this node in string format
+	 * 
+	 * @return XML content in string format
+	 */
+	public String getXmlContent() {
+		if (this.node == null) {
 			return "null";
 		}
 

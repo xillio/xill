@@ -1,9 +1,12 @@
 package nl.xillio.xill.plugins.xml.services;
 
-import com.google.inject.ImplementedBy;
 import nl.xillio.xill.plugins.xml.XmlXillPlugin;
 import nl.xillio.xill.plugins.xml.data.XmlNode;
 import nl.xillio.xill.plugins.xml.exceptions.XmlParseException;
+
+import com.google.inject.ImplementedBy;
+
+import java.io.File;
 
 /**
  * This interface represents some of the operations for the {@link XmlXillPlugin}.
@@ -68,4 +71,12 @@ public interface NodeService {
 	 * @param attrName	name of the attribute that will be removed
 	 */
 	void removeAttribute(final XmlNode xmlNode, final String attrName);
+	
+	/**
+	 * Loads XML document from file, parse it and returns root node (XML document)
+	 * 
+	 * @param xmlSource file that contains valid XMl document
+	 * @return newly created XML node representing root node of the entire document
+	 */
+	XmlNode fromFile(final File xmlSource);
 }

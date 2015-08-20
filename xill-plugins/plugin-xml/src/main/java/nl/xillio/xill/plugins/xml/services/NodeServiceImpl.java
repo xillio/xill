@@ -1,8 +1,13 @@
 package nl.xillio.xill.plugins.xml.services;
 
+import java.io.File;
+import java.io.IOException;
+
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.xml.data.XmlNode;
 import nl.xillio.xill.plugins.xml.exceptions.XmlParseException;
 
+import org.apache.commons.io.FileUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -35,6 +40,7 @@ public class NodeServiceImpl implements NodeService {
 		return newXmlChildNode;
 	}
 
+	@Override
 	public void moveNode(final XmlNode parentXmlNode, final XmlNode subXmlNode, final XmlNode beforeXmlNode) {
 		Node parentNode = parentXmlNode.getNode();
 		Node subNode = subXmlNode.getNode();
@@ -58,6 +64,7 @@ public class NodeServiceImpl implements NodeService {
 		}
 	}
 
+	@Override
 	public XmlNode replaceNode(final XmlNode orgXmlNode, final String replXmlStr)  throws Exception, XmlParseException {
 		XmlNode replXmlNode = new XmlNode(replXmlStr);
 		Node orgNode = orgXmlNode.getNode();
@@ -84,5 +91,28 @@ public class NodeServiceImpl implements NodeService {
 	public void removeAttribute(final XmlNode xmlNode, final String attrName) {
 		xmlNode.getNode().getAttributes().removeNamedItem(attrName);
 	}
+	
+	@Override
+	public XmlNode fromFile(final File xmlSource) {
+		String content = "";
 
+		try {
+			content = FileUtils.readFileToString(xmlSource);
+		} catch (IOException e) {
+			throw new RobotRuntimeException("Read file error.", e);
+		}
+
+		if (content.isEmpty()) {
+			throw new RobotRuntimeException("The file is empty.");
+		}
+
+		try {
+			XmlNode xmlNode = new XmlNode(content);
+			return xmlNode;
+		} catch (XmlParseException e) {
+			throw new RobotRuntimeException("The XML source is invalid.", e);
+		} catch (Exception e) {
+			throw new RobotRuntimeException("Error occured.", e);
+		}
+	}
 }

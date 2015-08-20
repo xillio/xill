@@ -24,7 +24,7 @@ public class ToStringConstruct extends Construct {
 
 	static MetaExpression process(MetaExpression xmlNodeVar) {
 		XmlNode xmlNode = assertMeta(xmlNodeVar, "node", XmlNode.class, "XML node");
-		return fromValue(xmlNode.toString());
+		return fromValue(xmlNode.getXmlContent());
 	}
 
 }
