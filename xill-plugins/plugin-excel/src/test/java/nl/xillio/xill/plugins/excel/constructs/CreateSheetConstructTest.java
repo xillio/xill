@@ -14,7 +14,8 @@ import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 
 /**
- * Created by Daan Knoope on 12-8-2015.
+ * Unit tests for the CreateSheet Construct
+ * @author Daan Knoope
  */
 public class CreateSheetConstructTest {
 
@@ -23,48 +24,73 @@ public class CreateSheetConstructTest {
 		InjectorUtils.getGlobalInjector();
 	}
 
+	/**
+	 * Checks if a new {@link RobotRuntimeException} is thrown when a null pointer has occurred while
+	 * creating a new sheet.
+	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Sheet name contains illegal characters: cannot contain 0x0000, 0x0003")
 	public void testProcessNullPointerException() throws Exception {
+
+		//Basic vars
 		ExcelService service = mock(ExcelService.class);
+
+		//Mocking workbook
 		MetaExpression workbookInput = fromValue("workbook");
 		XillWorkbook workbook = mock(XillWorkbook.class);
 		workbookInput.storeMeta(XillWorkbook.class, workbook);
+
+		//Throw exception
 		when(service.createSheet(any(XillWorkbook.class), anyString())).thenThrow(new NullPointerException("Sheet name contains illegal characters: cannot contain 0x0000, 0x0003"));
+
+		//Executing test
 		CreateSheetConstruct.process(service, workbookInput, fromValue("naam"));
 	}
 
-	@Test(expectedExceptions = RobotRuntimeException.class)
-	public void testProcessIllegalArgumentException2() throws Exception {
-		ExcelService service = mock(ExcelService.class);
-		MetaExpression input = fromValue("workbook");
-		XillWorkbook workbook = mock(XillWorkbook.class);
-		input.storeMeta(XillWorkbook.class, workbook);
-		when(service.createSheet(any(XillWorkbook.class), anyString())).thenThrow(new IllegalArgumentException());
-		CreateSheetConstruct.process(service, input, fromValue("name"));
-	}
-
+	/**
+	 * Checks if a new {@link RobotRuntimeException} is thrown when an
+	 * {@link IllegalArgumentException} is raised during the creation of a sheet
+	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "^illegal$")
 	public void testProcessIllegalArgumentException() throws Exception {
+		//Basic vars
 		ExcelService service = mock(ExcelService.class);
+
+		//Mocking workbook
 		MetaExpression workbookInput = fromValue("workbook");
 		XillWorkbook workbook = mock(XillWorkbook.class);
 		workbookInput.storeMeta(XillWorkbook.class, workbook);
-		when(service.createSheet(any(XillWorkbook.class), anyString())).thenThrow(new IllegalArgumentException("illegal"));
+
+		//Throw Exception
+		when(service.createSheet(workbook, "name")).thenThrow(new IllegalArgumentException("illegal"));
+
+		//Executing method
 		CreateSheetConstruct.process(service, workbookInput, fromValue("naam"));
 	}
 
+	/**
+	 * Checks if, after everything has completed successfully, a correct MetaExpression containing
+	 * a XillSheet is returned.
+	 */
 	@Test
 	public void testProcessReturnsSheetInMeta() throws Exception {
+
+		//Instantiating basic vars
 		ExcelService service = mock(ExcelService.class);
 		MetaExpression workbookInput = fromValue("workbook");
 		XillWorkbook workbook = mock(XillWorkbook.class);
 		workbookInput.storeMeta(XillWorkbook.class, workbook);
+
+		//Mocking the sheet object
 		XillSheet sheet = mock(XillSheet.class);
-		when(service.createSheet(any(XillWorkbook.class), anyString())).thenReturn(sheet);
+		when(service.createSheet(workbook,"name")).thenReturn(sheet);
 		when(sheet.getName()).thenReturn("name");
 		when(sheet.getRowLength()).thenReturn(0);
 		when(sheet.getColumnLength()).thenReturn(0);
+
+		//Result
 		MetaExpression result = CreateSheetConstruct.process(service, workbookInput, fromValue("name"));
+
+		//Assertions
 		assertEquals(result.getStringValue(), "{\"Name\":\"name\",\"Rows\":0,\"Columns\":0}");
 		assertEquals(result.getMeta(XillSheet.class), sheet);
 	}

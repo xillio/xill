@@ -65,13 +65,18 @@ public class ExcelServiceImpl implements ExcelService {
 		workbook.removeSheet(sheetName);
 	}
 
-	String notInWorkbook(List<String> inputSheetNames, XillWorkbook workbook) {
+	/**
+	 * Returns an error message string containing the sheets that are not in the workbook (and thus cannot be deleted)
+	 * @param workbook the {@link XillWorkbook} from which the sheets should be deleted
+	 * @param inputSheetNames a list of sheet names which should be deleted
+	 * @return an error message containing the sheets that are not in the workbook, otherwise an empty string
+	 */
+	String notInWorkbook(XillWorkbook workbook, List<String> inputSheetNames) {
 		List<String> notInWorkbook = new ArrayList<>(inputSheetNames);
 		notInWorkbook.removeAll(workbook.getSheetNames());
 		List<String> inWorkbook = new ArrayList<>(inputSheetNames);
 		inWorkbook.removeAll(notInWorkbook);
-		for (String sheet : inWorkbook)
-			workbook.removeSheet(sheet);
+		inWorkbook.forEach(workbook::removeSheet);
 		if (!notInWorkbook.isEmpty()) {
 			String notRemoved = "Sheet(s) [";
 			for (int i = 0; i < notInWorkbook.size() - 1; i++)
@@ -86,7 +91,7 @@ public class ExcelServiceImpl implements ExcelService {
 	public void removeSheets(XillWorkbook workbook, List<String> inputSheetNames) {
 		if (workbook.isReadonly())
 			throw new IllegalArgumentException(workbook.getFileString() + " is read-only");
-		String notInWorkbook = notInWorkbook(inputSheetNames, workbook);
+		String notInWorkbook = notInWorkbook(workbook, inputSheetNames);
 		if (!notInWorkbook.isEmpty())
 			throw new IllegalArgumentException(notInWorkbook);
 	}

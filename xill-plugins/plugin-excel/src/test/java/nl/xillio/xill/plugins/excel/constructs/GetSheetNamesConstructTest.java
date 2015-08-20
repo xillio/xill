@@ -14,10 +14,16 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 
 /**
- * Created by Daan Knoope on 13-8-2015.
+ * Unit tests for the GetSheetNames construct
+ * @author Daan Knoope
  */
 public class GetSheetNamesConstructTest {
 
+	/**
+	 * Creates a XillWorkbook on which the test operations will be performed
+	 * @param sheetNames a list of names which the sheets have
+	 * @return a mocked XillWorkbook
+	 */
 	private MetaExpression createWorkbookInput(List<String> sheetNames) {
 		XillWorkbook workbook = mock(XillWorkbook.class);
 		MetaExpression workbookInput = fromValue("workbook");
@@ -26,6 +32,9 @@ public class GetSheetNamesConstructTest {
 		return workbookInput;
 	}
 
+	/**
+	 * Checks if an empty list is returned when no sheets exist
+	 */
 	@Test
 	public void testProcessReturnsEmptyList() throws Exception {
 		MetaExpression workbookInput = createWorkbookInput(new ArrayList<>());
@@ -33,6 +42,9 @@ public class GetSheetNamesConstructTest {
 		assertEquals(result, "[]");
 	}
 
+	/**
+	 * Checks if a correct list is returned when there are sheets in the workbook
+	 */
 	@Test
 	public void testProcessReturnsList() throws Exception {
 		MetaExpression workbookInput = createWorkbookInput(Arrays.asList("Sheet1", "Sheet2"));

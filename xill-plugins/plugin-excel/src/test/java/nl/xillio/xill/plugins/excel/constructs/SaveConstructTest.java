@@ -19,7 +19,8 @@ import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 
 /**
- * Created by Daan Knoope on 17-8-2015.
+ * Unit tests for the save construct
+ * @author Daan Knoope
  */
 public class SaveConstructTest {
 
@@ -28,6 +29,9 @@ public class SaveConstructTest {
 		InjectorUtils.getGlobalInjector();
 	}
 
+	/**
+	 * Tests if the correct exception is thrown when there was no workbook in the input MetaExpression
+	 */
 	@Test(expectedExceptions = RobotRuntimeException.class,
 					expectedExceptionsMessageRegExp = "Expected parameter 'workbook' to be a result of loadWorkbook or createWorkbook")
 	public void testProcessNoValidWorkbook() throws Exception {
@@ -36,40 +40,67 @@ public class SaveConstructTest {
 		SaveConstruct.process(service, context, fromValue((String) null), fromValue("path"));
 	}
 
+	/**
+	 * Tests the overwrite method of the save construct returns correctly
+	 */
 	@Test
 	public void testProcessOverrideByDefault() throws Exception {
+
+		//Basic vars
 		ExcelService service = mock(ExcelService.class);
 		ConstructContext context = mock(ConstructContext.class);
 		XillWorkbook workbook = mock(XillWorkbook.class);
+
+		//Mock workbook
 		MetaExpression workbookInput = fromValue("workbook");
 		workbookInput.storeMeta(XillWorkbook.class, workbook);
+
 		when(service.save(any(XillWorkbook.class))).thenReturn("overridden");
 		assertEquals(SaveConstruct.process(service, context, workbookInput, NULL).getStringValue(), "overridden");
 	}
 
+	/**
+	 * Checks if construct returns correctly when a new save location (path)
+	 * is provided
+	 */
 	@Test
 	public void testProcessPath() throws Exception {
+
+		//Basic vars
 		ExcelService service = mock(ExcelService.class);
 		ConstructContext context = mock(ConstructContext.class);
+		MetaExpression inputPath = fromValue("path");
+
+		//Mock robot id
 		RobotID robotID = mock(RobotID.class);
 		when(context.getRobotID()).thenReturn(robotID);
 		when(robotID.getPath()).thenReturn(new File("."));
+
+		//mock workbook
 		XillWorkbook workbook = mock(XillWorkbook.class);
 		MetaExpression workbookInput = fromValue("workbook");
 		workbookInput.storeMeta(XillWorkbook.class, workbook);
-		MetaExpression inputPath = fromValue("path");
+
 		when(service.save(any(XillWorkbook.class), any(File.class))).thenReturn("saved to dir");
 		assertEquals(SaveConstruct.process(service, context, workbookInput, inputPath).getStringValue(), "saved to dir");
 	}
 
+	/**
+	 * Checks if a RobotRuntimeException has been thrown when there was a write problem
+	 */
 	@Test(expectedExceptions = RobotRuntimeException.class)
 	public void testProcessOverwriteThrowsException() throws Exception {
 		ExcelService service = mock(ExcelService.class);
 		XillWorkbook workbook = mock(XillWorkbook.class);
 		doThrow(new IOException()).when(service).save(any(XillWorkbook.class));
+
 		SaveConstruct.processOverwrite(service, workbook);
 	}
 
+	/**
+	 * Checks if the overwrite method returns the right correctly after having written the file
+	 * @throws Exception
+	 */
 	@Test
 	public void testProcessOverwrite() throws Exception {
 		ExcelService service = mock(ExcelService.class);
@@ -78,6 +109,9 @@ public class SaveConstructTest {
 		assertEquals(SaveConstruct.processOverwrite(service, workbook), fromValue("Correctly Saved"));
 	}
 
+	/**
+	 * Checks a RobotRuntimeException is thrown when the file in the new path cannot be written to
+	 */
 	@Test(expectedExceptions = RobotRuntimeException.class)
 	public void testProcessToFolderThrowsException() throws Exception {
 		ExcelService service = mock(ExcelService.class);
@@ -86,6 +120,9 @@ public class SaveConstructTest {
 		SaveConstruct.processToFolder(service, workbook, mock(File.class));
 	}
 
+	/**
+	 * Checks if the method to write the workbook to a new path returns correctly
+	 */
 	@Test
 	public void testProcessToFolder() throws Exception {
 		ExcelService service = mock(ExcelService.class);

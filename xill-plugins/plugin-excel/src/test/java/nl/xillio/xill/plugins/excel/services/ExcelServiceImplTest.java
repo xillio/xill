@@ -16,15 +16,27 @@ import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 
 /**
- * Created by Daan Knoope on 11-8-2015.
+ * Unit tests for the ExcelService implementation
+ * @author Daan Knoope
  */
 public class ExcelServiceImplTest {
 
+	/**
+	 * Creates a new ExcelServiceImplementation
+	 * @param factory the factory which should be passed to the service implementation (can be null)
+	 * @return the (non-mocked, actual) service
+	 */
 	private ExcelService createService(XillWorkbookFactory factory) {
 		ExcelService service = new ExcelServiceImpl(factory);
 		return service;
 	}
 
+	/**
+	 * Creates a mocked {@link File}
+	 * @param exists boolean if the file exists
+	 * @param correctExtension boolean if the file has a correct extension
+	 * @return the mocked {@link File}
+	 */
 	private File createFile(boolean exists, boolean correctExtension) throws IOException {
 		File file = mock(File.class);
 		when(file.exists()).thenReturn(exists);
@@ -37,12 +49,21 @@ public class ExcelServiceImplTest {
 		return file;
 	}
 
+	/**
+	 * Creates a mocked workbook
+	 * @param isReadOnly boolean to describe if the workbook should be read-only
+	 * @return the mocked {@link XillWorkbook}
+	 */
 	private XillWorkbook createWorkbook(boolean isReadOnly) {
 		XillWorkbook workbook = mock(XillWorkbook.class);
 		when(workbook.isReadonly()).thenReturn(isReadOnly);
 		return workbook;
 	}
 
+	/**
+	 * Checks if loadWorkbook throws an exception when there is no file at the given path
+	 * @throws Exception
+	 */
 	@Test(expectedExceptions = FileNotFoundException.class,
 					expectedExceptionsMessageRegExp = "There is no file at the given path")
 	public void testLoadWorkbookNoFileExists() throws Exception {
@@ -50,6 +71,10 @@ public class ExcelServiceImplTest {
 		createService(null).loadWorkbook(file);
 	}
 
+	/**
+	 * Tests if loadWorkbook throws an exception when the extension is incorrect
+	 * @throws Exception
+	 */
 	@Test(expectedExceptions = IllegalArgumentException.class,
 					expectedExceptionsMessageRegExp = "Path does not lead to an xls or xlsx Microsoft Excel file")
 	public void testLoadWorkbookIncorrectExtension() throws Exception {
@@ -58,6 +83,10 @@ public class ExcelServiceImplTest {
 		service.loadWorkbook(file);
 	}
 
+	/**
+	 * Tests if CreateWorkbook throws an exception when a file already exists at the provided path
+	 * @throws Exception
+	 */
 	@Test(expectedExceptions = FileAlreadyExistsException.class,
 					expectedExceptionsMessageRegExp = "File already exists: no new workbook has been created.")
 	public void testCreateWorkbookFileAlreadyExists() throws Exception {
@@ -66,6 +95,10 @@ public class ExcelServiceImplTest {
 		service.createWorkbook(file);
 	}
 
+	/**
+	 * Tests if loadWorkbook returns the workbook correctly
+	 * @throws Exception
+	 */
 	@Test
 	public void loadWorkbookReturnsWorkbook() throws Exception {
 		File file = createFile(true, true);
@@ -79,6 +112,10 @@ public class ExcelServiceImplTest {
 		assertEquals(service.loadWorkbook(file), workbook);
 	}
 
+	/**
+	 * Tests if createWorkbook returns the correct new workbook
+	 * @throws Exception
+	 */
 	@Test
 	public void createWorkbookReturnsWorkbook() throws Exception {
 		File file = createFile(false, true);
@@ -91,6 +128,10 @@ public class ExcelServiceImplTest {
 		assertEquals(service.createWorkbook(file), workbook);
 	}
 
+	/**
+	 * Tests if a null pointer exception is thrown when no valid XillWorkbook was provided to createSheet
+	 * @throws Exception
+	 */
 	@Test(expectedExceptions = NullPointerException.class,
 					expectedExceptionsMessageRegExp = "The provided workbook is invalid.")
 	public void testCreateSheetWorkbookNull() throws Exception {
@@ -98,6 +139,10 @@ public class ExcelServiceImplTest {
 		service.createSheet(null, "");
 	}
 
+	/**
+	 * Tests if an IllegalArgumentException is thrown when an empty string is passed to CreateSheet as name
+	 * @throws Exception
+	 */
 	@Test(expectedExceptions = IllegalArgumentException.class,
 					expectedExceptionsMessageRegExp = "No name was supplied: sheet names must be at least one character long.")
 	public void testCreateSheetNoName() throws Exception {
@@ -105,6 +150,10 @@ public class ExcelServiceImplTest {
 		service.createSheet(createWorkbook(false), "");
 	}
 
+	/**
+	 * Tests if an IllegalArgumentException is thrown when a null value is passed to CreateSheet as name
+	 * @throws Exception
+	 */
 	@Test(expectedExceptions = IllegalArgumentException.class,
 					expectedExceptionsMessageRegExp = "No name was supplied: sheet names must be at least one character long.")
 	public void testCreateSheetNameNull() throws Exception {
@@ -112,6 +161,10 @@ public class ExcelServiceImplTest {
 		service.createSheet(createWorkbook(false), null);
 	}
 
+	/**
+	 * Tests if an IllegalArgument exception is thrown when the name of the sheet consists out of too many characters
+	 * @throws Exception
+	 */
 	@Test(expectedExceptions = IllegalArgumentException.class,
 					expectedExceptionsMessageRegExp = "Sheet name is too long: must be less than 32 characters.")
 	public void testCreateSheetNameTooLong() throws Exception {
@@ -119,6 +172,10 @@ public class ExcelServiceImplTest {
 		service.createSheet(createWorkbook(false), "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"); //Exactly 32 a's
 	}
 
+	/**
+	 * Tests if an IllegalArgumentException is thrown when CreateSheet was used on a read-only workbook
+	 * @throws Exception
+	 */
 	@Test(expectedExceptions = IllegalArgumentException.class,
 					expectedExceptionsMessageRegExp = "Workbook is read-only")
 	public void testCreateSheetReadOnly() throws Exception {
@@ -126,6 +183,10 @@ public class ExcelServiceImplTest {
 		service.createSheet(createWorkbook(true), "a");
 	}
 
+	/**
+	 * Tests if a correct sheet is returned by CreateSheet
+	 * @throws Exception
+	 */
 	@Test
 	public void testCreateSheet() throws Exception {
 		ExcelService service = createService(null);
@@ -135,6 +196,10 @@ public class ExcelServiceImplTest {
 		assertEquals(sheet, service.createSheet(workbook, "bla"));
 	}
 
+	/**
+	 * Tests if the correct method is called to delete a sheet when RemoveSheet is called
+	 * @throws Exception
+	 */
 	@Test
 	public void testRemovesheet() throws Exception {
 		XillWorkbook workbook = mock(XillWorkbook.class);
@@ -145,30 +210,46 @@ public class ExcelServiceImplTest {
 		verify(workbook, times(1)).removeSheet(anyString());
 	}
 
+	/**
+	 * Tests if {@link ExcelServiceImpl#notInWorkbook(XillWorkbook, List)} correctly creates a string
+	 * containing the information about sheets that are in the list to be deleted, but do not exist in the workbook
+	 * (and can thus not be deleted)
+	 * @throws Exception
+	 */
 	@Test
 	public void testNotInWorkbook() throws Exception {
 		ExcelServiceImpl service = new ExcelServiceImpl(null);
 
+		//Creating a workbook, containing the sheets "foo" and "bar
 		List<String> existingSheetNames = Arrays.asList("foo", "bar");
 		XillWorkbook workbook = mock(XillWorkbook.class);
 		when(workbook.getSheetNames()).thenReturn(existingSheetNames);
 
+		//Test lists of sheet names
 		List<String> notInWorkbook = Arrays.asList("Oak", "Willow", "Maple");
 		List<String> partiallyInWorkbook = Arrays.asList("foo", "Oak");
 		List<String> singletonInWorbook = Arrays.asList("foo");
 		List<String> exactlyInWorkbook = Arrays.asList("foo", "bar");
 
-		assertEquals(service.notInWorkbook(notInWorkbook, workbook), "Sheet(s) [Oak,Willow,Maple] do not exist in the current workbook; they could not be deleted.");
-		assertEquals(service.notInWorkbook(partiallyInWorkbook, workbook), "Sheet(s) [Oak] do not exist in the current workbook; they could not be deleted.");
+		//Verify the correct strings are generated
+		assertEquals(service.notInWorkbook(workbook, notInWorkbook), "Sheet(s) [Oak,Willow,Maple] do not exist in the current workbook; they could not be deleted.");
+		assertEquals(service.notInWorkbook(workbook, partiallyInWorkbook), "Sheet(s) [Oak] do not exist in the current workbook; they could not be deleted.");
+
+		//Verify that the sheet names that did exist have been removed
+		//And that correct lists generate an empty string
 		verify(workbook, times(1)).removeSheet("foo");
-		assertEquals(service.notInWorkbook(singletonInWorbook, workbook), "");
+		assertEquals(service.notInWorkbook(workbook, singletonInWorbook), "");
 		verify(workbook, times(2)).removeSheet("foo");
-		assertEquals(service.notInWorkbook(exactlyInWorkbook, workbook), "");
+		assertEquals(service.notInWorkbook(workbook, exactlyInWorkbook), "");
 		verify(workbook, times(3)).removeSheet("foo");
 		verify(workbook, times(1)).removeSheet("bar");
 		verify(workbook, times(4)).removeSheet(anyString());
 	}
 
+	/**
+	 * Tests if an exception is thrown when a read-only sheet is tried to be deleted
+	 * @throws Exception
+	 */
 	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = ".* is read-only")
 	public void removeSheetsReadonly() throws Exception {
 		XillWorkbook workbook = mock(XillWorkbook.class);
@@ -177,6 +258,11 @@ public class ExcelServiceImplTest {
 		service.removeSheets(workbook, null);
 	}
 
+	/**
+	 * Tests if an Illegal Argument Exception is thrown when sheets are tried to be removed while
+	 * they do not exist.
+	 * @throws Exception
+	 */
 	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp =
 					"Sheet\\(s\\) \\[Apple\\] do not exist in the current workbook\\; they could not be deleted\\.")
 	public void removeSheetsInvalidNames() throws Exception {
@@ -188,6 +274,10 @@ public class ExcelServiceImplTest {
 		service.removeSheets(workbook, Arrays.asList("foo", "Apple"));
 	}
 
+	/**
+	 * Test that no exception is thrown when a list of existing sheet names should be removed from a workbook
+	 * @throws Exception
+	 */
 	@Test
 	public void removeSheets() throws Exception {
 		XillWorkbook workbook = mock(XillWorkbook.class);
@@ -198,6 +288,10 @@ public class ExcelServiceImplTest {
 		service.removeSheets(workbook, Arrays.asList("Pear", "Banana"));
 	}
 
+	/**
+	 * Test that an IllegalArgumentException is thrown when it is tried to save a read-only file.
+	 * @throws Exception
+	 */
 	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "Cannot write to this file: read-only")
 	public void saveReadOnly() throws Exception {
 		XillWorkbook workbook = mock(XillWorkbook.class);
@@ -206,6 +300,11 @@ public class ExcelServiceImplTest {
 		service.save(workbook, mock(File.class));
 	}
 
+	/**
+	 * Test that the correct method is called to continue the save operation and that the correct
+	 * result is returned.
+	 * @throws Exception
+	 */
 	@Test
 	public void save() throws Exception {
 		ExcelService service = new ExcelServiceImpl(null);
@@ -217,6 +316,11 @@ public class ExcelServiceImplTest {
 		verify(workbook, times(1)).save(file);
 	}
 
+	/**
+	 * Test that an IllegalArgumentException is thrown when the save function (with a path to save it to) is called on
+	 * a read-only file
+	 * @throws Exception
+	 */
 	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "Cannot write to this file: read-only")
 	public void saveOverrideReadOnly() throws Exception {
 		ExcelService service = new ExcelServiceImpl(null);
@@ -225,6 +329,11 @@ public class ExcelServiceImplTest {
 		service.save(workbook);
 	}
 
+	/**
+	 * Test that the correct result is returned, the correct method is called and no exception is thrown when
+	 * the save operation is given a correct path
+	 * @throws Exception
+	 */
 	@Test
 	public void saveOverride() throws Exception {
 		ExcelService service = new ExcelServiceImpl(null);

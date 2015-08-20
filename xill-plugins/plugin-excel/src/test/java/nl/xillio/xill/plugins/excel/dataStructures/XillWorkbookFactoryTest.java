@@ -11,10 +11,20 @@ import java.io.FileInputStream;
 import static org.mockito.Mockito.*;
 
 /**
- * Created by Daan Knoope on 18-8-2015.
+ * Unit tests for the XillWorkbok Factory
+ * @author Daan Knoope
+ *
+ * NB: not all methods are tested, since this is a factory
  */
 public class XillWorkbookFactoryTest {
 
+	/**
+	 * Tests if loadWorkbook finds the extension of the paths and handles them correctly,
+	 * sending the xls extension to makeLegacyWorkbook,
+	 * the xlsx extension to makeModernWorkbook and
+	 * throwing a NotImplementedException otherwise.
+	 * @throws Exception
+	 */
 	@Test(expectedExceptions = NotImplementedException.class,
 					expectedExceptionsMessageRegExp = "This extension is not supported as Excel workbook\\.")
 	public void testLoadWorkbook() throws Exception {

@@ -15,7 +15,8 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 
 /**
- * Created by Daan Knoope on 11-8-2015.
+ * Unit tests for the LoadSheet construct
+ * @author Daan Knoope
  */
 public class LoadSheetConstructTest {
 
@@ -24,34 +25,59 @@ public class LoadSheetConstructTest {
 		InjectorUtils.getGlobalInjector();
 	}
 
+	/**
+	 * Checks if a RobotRuntimeException is thrown when no valid workbook is supplied.
+	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Expected parameter 'workbook' to be a result of loadWorkbook or createWorkbook")
 	public void testProcessNoWorkbook() throws Exception {
-		XillWorkbook workbook = null;//mock(XillWorkbook.class);
+		XillWorkbook workbook = null;
 		MetaExpression input = fromValue("workbook object");
 		input.storeMeta(XillWorkbook.class, workbook);
+
 		LoadSheetConstruct.process(input, fromValue("Sheet"));
 	}
 
+	/**
+	 * Checks if a RobotRuntimeException is thrown when the name of the sheet cannot be
+	 * found in the provided workbook.
+	 */
 	@Test(expectedExceptions = RobotRuntimeException.class)
 	public void testProcessThrowsRobotRuntime() throws Exception {
 		XillWorkbook workbook = mock(XillWorkbook.class);
-		when(workbook.getSheet(anyString())).thenThrow(new IllegalArgumentException(""));
 		MetaExpression input = fromValue("workbook object");
 		input.storeMeta(XillWorkbook.class, workbook);
+
+		when(workbook.getSheet("sheet")).thenThrow(new IllegalArgumentException(""));
+
 		LoadSheetConstruct.process(input, fromValue("sheet"));
 	}
 
+	/**
+	 * Checks if the LoadSheet construct returns a
+	 * <ul>
+	 *   <li>correctly formatted string, containing the sheet name, amount of rows and amount of columns</li>
+	 *   <li>the same XillSheet in the MetaExpression as the one it created.</li>
+	 * </ul>
+	 */
 	@Test
 	public void testProcessReturnsCorrectly() throws Exception {
-		XillWorkbook workbook = mock(XillWorkbook.class);//mock(XillWorkbook.class);
+
+		//Create basic vars
+		XillWorkbook workbook = mock(XillWorkbook.class);
 		XillSheet sheet = mock(XillSheet.class);
+		MetaExpression input = fromValue("workbook object");
+		input.storeMeta(XillWorkbook.class, workbook);
+
+		//Mock sheet object
 		when(workbook.getSheet(anyString())).thenReturn(sheet);
 		when(sheet.getName()).thenReturn("SheetName");
 		when(sheet.getRowLength()).thenReturn(3);
 		when(sheet.getColumnLength()).thenReturn(5);
-		MetaExpression input = fromValue("workbook object");
-		input.storeMeta(XillWorkbook.class, workbook);
+
+		//Get result
 		MetaExpression result = LoadSheetConstruct.process(input, fromValue("Sheet"));
+
+		//Check results
 		assertEquals(result.getStringValue(), "{\"Sheet name\":\"SheetName\",\"Rows\":3,\"Columns\":5}");
 		XillSheet resultSheet = result.getMeta(XillSheet.class);
 		assertEquals(resultSheet, sheet);
