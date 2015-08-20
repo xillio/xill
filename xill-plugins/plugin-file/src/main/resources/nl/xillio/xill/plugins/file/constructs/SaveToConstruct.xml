@@ -1,25 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
-    <parameters>
-        <param name="uri"/>
-        <param name="content" default="&quot;&quot;"/>
-    </parameters>
     <description>
-        <![CDATA[Saves content in the form of text to a file, creating it if it doesn't exist and overwriting it if it does. Returns the absolute path to the file.]]></description>
+        This field should contain a description on what the construct does an what it generally returns. More information can be provided in the examples.
+    </description>
     <examples>
-        <example description="Saving a string to a file:"><![CDATA[
-        use File;
-        File.saveTo("file.txt", "This is the file content");
-    ]]></example>
-        <example description="Create an empty file:"><![CDATA[
-        use File;
-        File.saveTo("file.txt");
-    ]]></example>
+        <example title="Usage">
+            <header>This is a header in the example</header>
+            <code>
+                use System;
+                System.print("Because this is in a code tag it will be inside a code editor");
+                if(true) {
+                System.print("Indentation is preserved...");
+                }
+            </code>
+            <header>Some more information</header>
+            <p>
+                You can simply add some tags here to add more information to the page
+            </p>
+        </example>
     </examples>
     <references>
-        <reference package="File">appendTo</reference>
+        <!-- Reference a construct inside this package -->
+        <reference>otherConstruct</reference>
+        <!-- Reference a construct in another package -->
+        <reference>Other.construct</reference>
     </references>
-    <searchTags>
+    <!--
+        These tags will be used by the search system.
+        Whenever a user types a word from this list
+        it will be added to the results
+    -->
+    <tags>
         write, text, new, create, append, add
-    </searchTags>
+    </tags>
 </function>

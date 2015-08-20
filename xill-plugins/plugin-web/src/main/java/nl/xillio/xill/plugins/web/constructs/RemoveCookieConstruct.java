@@ -2,71 +2,66 @@ package nl.xillio.xill.plugins.web.constructs;
 
 import java.util.List;
 
-import org.openqa.selenium.WebDriver;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
-import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.PageVariable;
+import nl.xillio.xill.plugins.web.PhantomJSConstruct;
+import nl.xillio.xill.plugins.web.data.WebVariable;
+import nl.xillio.xill.plugins.web.services.web.WebService;
 
 /**
- * Removes cookie from a currently loaded page context 
+ * Removes cookie from a currently loaded page context
  */
-public class RemoveCookieConstruct extends Construct {
+public class RemoveCookieConstruct extends PhantomJSConstruct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(RemoveCookieConstruct::process, new Argument("page"), new Argument("cookie"));
+		return new ConstructProcessor(
+			(page, cookie) -> process(page, cookie, webService),
+			new Argument("page", ATOMIC),
+			new Argument("cookie", ATOMIC, LIST));
 	}
 
 	/**
 	 * @param pageVar
-	 * 				input variable (should be of a PAGE type)
+	 *        input variable (should be of a PAGE type)
 	 * @param cookieVar
-	 * 				input variable - string (cookie name) or  list of strings or boolean
+	 *        input variable - string (cookie name) or list of strings or boolean
+	 * @param webService
+	 *        the webservice we're using.
 	 * @return null variable
 	 */
-	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression cookieVar) {
+	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression cookieVar, final WebService webService) {
 
-		if (cookieVar.isNull()) {
+		if (cookieVar.isNull() || pageVar.isNull()) {
 			return NULL;
 		}
 		// else
 
-		if (!PageVariable.checkType(pageVar)) {
-			throw new RobotRuntimeException("Invalid variable type. PAGE type expected!");
+		if (!checkPageType(pageVar)) {
+			throw new RobotRuntimeException("Invalid variable type. Node PAGE type expected!");
 		}
 		// else
 
-		WebDriver driver = PageVariable.getDriver(pageVar);
-
+		WebVariable driver = getPage(pageVar);
+		String cookieName = "";
 		try {
-
 			if (cookieVar.getType() == LIST) {
 				@SuppressWarnings("unchecked")
 				List<MetaExpression> list = (List<MetaExpression>) cookieVar.getValue();
 				for (MetaExpression cookie : list) {
-					driver.manage().deleteCookieNamed(cookie.getStringValue());
+					cookieName = cookie.getStringValue();
+					webService.deleteCookieNamed(driver, cookieName);
 				}
 			} else {
-				Object value = MetaExpression.extractValue(cookieVar);
-				if (value instanceof Integer) {// boolean type cannot be determined in Xill 3.0 (at least for now)
-					if (cookieVar.getBooleanValue()) {
-						driver.manage().deleteAllCookies();
-					}
-				} else if (value instanceof String) {
-					driver.manage().deleteCookieNamed(value.toString());
-				} else {
-					throw new RobotRuntimeException("Invalid cookie type!");
-				}
+				cookieName = cookieVar.getStringValue();
+				webService.deleteCookieNamed(driver, cookieName);
 			}
 		} catch (Exception e) {
-			throw new RobotRuntimeException(e.getClass().getSimpleName(), e);
+			throw new RobotRuntimeException("Failed to delete cookie: " + cookieName, e);
 		}
-
 		return NULL;
 	}
 }

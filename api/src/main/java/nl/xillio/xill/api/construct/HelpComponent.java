@@ -1,6 +1,6 @@
 package nl.xillio.xill.api.construct;
 
-import java.io.InputStream;
+import java.net.URL;
 
 /**
  * This interface represents an object that holds a stream to a documentation file
@@ -14,5 +14,5 @@ public interface HelpComponent {
 	 * 
 	 * @return The stream
 	 */
-	public InputStream openDocumentationStream();
+	URL getDocumentationResource();
 }
