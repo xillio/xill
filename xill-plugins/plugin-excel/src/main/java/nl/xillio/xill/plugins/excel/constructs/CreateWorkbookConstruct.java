@@ -10,6 +10,7 @@ import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.excel.datastructures.XillWorkbook;
 import nl.xillio.xill.plugins.excel.services.ExcelService;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +40,11 @@ public class CreateWorkbookConstruct extends Construct {
 	 * the workbook cannot be written to the given path
 	 */
 	static MetaExpression process(ExcelService excelService, ConstructContext context, MetaExpression filePath) {
-		File file = getFile(context.getRobotID(), filePath.getStringValue());
+		String path = filePath.getStringValue();
+		if(FilenameUtils.getExtension(path).isEmpty())
+			path = path + ".xlsx";
+
+		File file = getFile(context.getRobotID(), path);
 		XillWorkbook workbook;
 		try {
 			workbook = excelService.createWorkbook(file);
