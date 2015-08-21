@@ -57,6 +57,8 @@ public class SaveConstruct extends Construct {
 		String returnValue = "";
 		try {
 			returnValue = service.save(workbook);
+		}catch(IllegalArgumentException e){
+			throw new RobotRuntimeException(e.getMessage(),e);
 		} catch (IOException e) {
 			throw new RobotRuntimeException(e.getMessage(), e);
 		}
@@ -76,6 +78,8 @@ public class SaveConstruct extends Construct {
 		XillWorkbook returnValue;
 		try {
 			returnValue = service.save(workbook, file);
+		} catch(IllegalArgumentException e){
+			throw new RobotRuntimeException(e.getMessage(),e);
 		} catch (IOException e) {
 			throw new RobotRuntimeException(e.getMessage(), e);
 		}

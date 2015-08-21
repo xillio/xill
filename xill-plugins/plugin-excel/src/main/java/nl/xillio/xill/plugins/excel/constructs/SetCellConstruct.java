@@ -45,7 +45,11 @@ public class SetCellConstruct extends Construct {
 		}catch(IllegalArgumentException e){
 			throw new RobotRuntimeException(e.getMessage(), e);
 		}
-		setValue(Sheet, cellRef, value);
+		try {
+			setValue(Sheet, cellRef, value);
+		}catch(IllegalArgumentException e){
+		throw new RobotRuntimeException(e.getMessage(), e);
+		}
 		return fromValue(true);
 	}
 
@@ -57,13 +61,13 @@ public class SetCellConstruct extends Construct {
 	 * @param value   a {@link MetaExpression} containing the value which the cell should contain
 	 */
 	static void setValue(XillSheet sheet, XillCellRef cellRef, MetaExpression value) {
-		if (value.getValue() instanceof BooleanBehavior) { // DO NOT REPEAT ANYWHERE ELSE, WAS UNAVOIDABLE :-(
-			sheet.setCellValue(cellRef, value.getBooleanValue());
-		} else if (isNumeric(value)) {
-			sheet.setCellValue(cellRef, value.getNumberValue().doubleValue());
-		} else {
-			sheet.setCellValue(cellRef, value.getStringValue());
-		}
+			if (value.getValue() instanceof BooleanBehavior) { // DO NOT REPEAT ANYWHERE ELSE, WAS UNAVOIDABLE :-(
+				sheet.setCellValue(cellRef, value.getBooleanValue());
+			} else if (isNumeric(value)) {
+				sheet.setCellValue(cellRef, value.getNumberValue().doubleValue());
+			} else {
+				sheet.setCellValue(cellRef, value.getStringValue());
+			}
 	}
 
 	/**

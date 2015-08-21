@@ -1,6 +1,7 @@
 package nl.xillio.xill.plugins.excel.datastructures;
 
 import nl.xillio.xill.api.errors.NotImplementedException;
+import org.apache.poi.ss.formula.FormulaParseException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DateUtil;
 
@@ -50,6 +51,7 @@ public class XillCell {
 					break;
 				case Cell.CELL_TYPE_NUMERIC:
 					if (isDateFormatted()) {
+						cell.getDateCellValue();
 						toReturn = cell.getDateCellValue();
 					} else {
 						toReturn = cell.getNumericCellValue();
@@ -78,7 +80,11 @@ public class XillCell {
 	 */
 	public void setCellValue(String value) {
 		if (value.startsWith("="))
-			cell.setCellFormula(value.substring(1));
+			try{
+				cell.setCellFormula(value.substring(1));
+			}catch(FormulaParseException e){
+				throw new IllegalArgumentException(e.getMessage(),e);
+			}
 		else
 			cell.setCellValue(value);
 	}

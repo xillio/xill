@@ -5,8 +5,11 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.excel.datastructures.XillCellRef;
 import nl.xillio.xill.plugins.excel.datastructures.XillSheet;
+
+import java.util.Date;
 
 /**
  * Construct to get the value of a cell from a XillSheet.
@@ -28,13 +31,21 @@ public class GetCellConstruct extends Construct {
 	static MetaExpression process(MetaExpression sheetInput, MetaExpression column, MetaExpression row) {
 		XillSheet sheet = assertMeta(sheetInput, "sheet", XillSheet.class, "Excel Sheet");
 		XillCellRef cell;
-		if (Double.isNaN(column.getNumberValue().doubleValue())) //then alphabetical notation
-			cell = new XillCellRef(column.getStringValue(), row.getNumberValue().intValue());
+		if(!isNumeric(row))
+			throw new RobotRuntimeException("The row number must be in numeric notation (\"" + row.getStringValue() + "\" was used)");
+		if (isNumeric(column))
+			cell = createCellRef(column.getNumberValue().intValue(), row.getNumberValue().intValue());
 		else //numeric notation
-			cell = new XillCellRef((column.getNumberValue().intValue()), row.getNumberValue().intValue());
+			cell = createCellRef(column.getStringValue(), row.getNumberValue().intValue());
 		Object cellValue = sheet.getCellValue(cell);
+		if(cellValue instanceof Date)
+			cellValue = cellValue.toString(); // Because Dates cannot be put in MetaExpression. Should be changed into Date plugin
+																				// when plugins can be used in each other
+
 		return parseObject(cellValue);
 	}
+
+
 
 	@Override
 	public ConstructProcessor prepareProcess(ConstructContext context) {
@@ -45,4 +56,23 @@ public class GetCellConstruct extends Construct {
 						new Argument("row", ATOMIC));
 	}
 
+	static XillCellRef createCellRef(String column, int row){
+		try {
+			return new XillCellRef(column, row);
+		}catch(IllegalArgumentException e){
+			throw new RobotRuntimeException(e.getMessage(), e);
+		}
+	}
+
+	static XillCellRef createCellRef(int column, int row){
+		try{
+			return new XillCellRef(column, row);
+		} catch(IllegalArgumentException e){
+			throw new RobotRuntimeException(e.getMessage(), e);
+		}
+	}
+
+	static boolean isNumeric(MetaExpression expression){
+		return !Double.isNaN(expression.getNumberValue().doubleValue());
+	}
 }

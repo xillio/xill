@@ -27,7 +27,7 @@ public class XillCellRef implements MetadataExpression {
 		if(row <= 0)
 			throw new IllegalArgumentException("The row number must be one or higher (" + row + " was used)");
 		cellReference = new CellReference(column + row); //A, 12 => A12
-	}
+		}
 
 	/**
 	 * Constructor for the XillCellRef class
@@ -43,7 +43,7 @@ public class XillCellRef implements MetadataExpression {
 			throw new IllegalArgumentException("The row number must be one or higher (" + row + " was used)");
 		if(column <= 0)
 			throw new IllegalArgumentException("The column number must be one or higher (" + column + " was used)");
-		cellReference = new CellReference(row, column);
+		cellReference = new CellReference(row - 1, column -1);
 	}
 
 	@Override public boolean equals(Object o) {
@@ -68,7 +68,7 @@ public class XillCellRef implements MetadataExpression {
 	 * @return the column of the reference as integer
 	 */
 	public int getColumn() {
-		return cellReference.getCol() - 1;
+		return cellReference.getCol();
 	}
 
 	/**
@@ -77,6 +77,6 @@ public class XillCellRef implements MetadataExpression {
 	 * @return the row of the reference as integer, 0-indexed
 	 */
 	public int getRow() {
-		return cellReference.getRow() - 1;
+		return cellReference.getRow();
 	}
 }
