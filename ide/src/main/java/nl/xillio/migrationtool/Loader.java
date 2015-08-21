@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import nl.xillio.xill.docgen.DocGen;
+import nl.xillio.xill.docgen.impl.XillDocGen;
+import nl.xillio.xill.services.inject.InjectorUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -167,7 +170,7 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 		Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
 
 		// Start loading plugins
-		initializer = new XillInitializer();
+		initializer = new XillInitializer(new XillDocGen());
 		initializer.start();
 
 		try (InputStream image = this.getClass().getResourceAsStream("/icon.png")) {
