@@ -31,29 +31,14 @@
                 var sheet = Excel.loadSheet(workbook, "firstsheet");
                 System.print(sheet);
             </code>
-            <header>Getting the number of rows</header>
-            <header>Getting the number of columns</header>
-            <code>use Excel;
-                use System;
-
-                var workbook = Excel.loadWorkbook("workbook.xlsx");
-                var sheet = Excel.loadSheet(workbook, "firstsheet");
-                System.print(sheet.Columns);
-            </code>
-            <code>
-                use Excel;
-                use System;
-
-                var workbook = Excel.loadWorkbook("workbook.xlsx");
-                var sheet = Excel.loadSheet(workbook, "firstsheet");
-                System.print(sheet.Rows);
-            </code>
-            <p><bold>NB: this information reflects the state of the sheet at the moment
-            it is loaded and is not changed when a cell is changed after loading.</bold></p>
+            <p>NB: this information reflects the state of the sheet at the moment
+            it is loaded and is not changed when a cell is changed after loading.</p>
         </example>
     </examples>
     <references>
         <reference>loadWorkbook</reference>
+        <reference>columnCount</reference>
+        <reference>rowCount</reference>
         <reference>getSheetNames</reference>
         <reference>System.print</reference>
         <reference>createWorkbook</reference>

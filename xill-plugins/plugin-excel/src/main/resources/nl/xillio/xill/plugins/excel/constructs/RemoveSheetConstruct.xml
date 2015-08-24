@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Removes the specified sheet from the given workbook. NB: a workbook must contain at least one
+        sheet, otherwise it is not valid.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Removing a single sheet</header>
+            <code>
+                use Excel;
+
+                var workbook = Excel.loadWorkbook("workbook.xlsx");
+                Excel.removeSheet(workbook, "firstsheet");
+            </code>
+            <header>Removing multiple sheets</header>
+            <code>
+                use Excel;
+
+                var workbook = Excel.loadWorkbook("workbook.xlsx");
+                Excel.removeSheet(workbook, ["firstsheet", "secondsheet"]);
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>getSheetNames</reference>
+        <reference>loadWorkbook</reference>
+        <reference>loadSheet</reference>
+        <reference>createSheet</reference>
+        <reference>save</reference>
+        <reference>System.print</reference>
+    </references>
+    <tags>
+        Excel, remove, sheet, workbook, spreadsheet, delete
+    </tags>
+</function>
