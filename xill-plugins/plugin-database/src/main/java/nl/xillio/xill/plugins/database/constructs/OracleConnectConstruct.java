@@ -16,12 +16,12 @@ public class OracleConnectConstruct extends BaseDatabaseConstruct {
 	public ConstructProcessor prepareProcess(ConstructContext context) {
 		Argument[] args =
 		{new Argument("host", ATOMIC),
-		    new Argument("port", fromValue(3306), ATOMIC),
-		    new Argument("database", ATOMIC),
-		    new Argument("useSID", fromValue(true), ATOMIC),
-		    new Argument("user", NULL, ATOMIC),
-		    new Argument("pass", NULL, ATOMIC),
-		    new Argument("options", new ObjectExpression(new LinkedHashMap<>()), OBJECT)};
+				new Argument("port", fromValue(3306), ATOMIC),
+				new Argument("database", ATOMIC),
+				new Argument("useSID", fromValue(true), ATOMIC),
+				new Argument("user", NULL, ATOMIC),
+				new Argument("pass", NULL, ATOMIC),
+				new Argument("options", new ObjectExpression(new LinkedHashMap<>()), OBJECT)};
 		return new ConstructProcessor(a -> process(a, factory), args);
 	}
 
@@ -35,7 +35,7 @@ public class OracleConnectConstruct extends BaseDatabaseConstruct {
 		else
 			formatString = "%s:%d/%s";
 		String database = String.format(formatString, args[0].getStringValue(), args[1].getNumberValue().intValue(), args[2].getStringValue());
-		MetaExpression[] newArgs = {fromValue(database), fromValue(Database.MYSQL.getName()), args[3], args[4], args[5]};
+		MetaExpression[] newArgs = {fromValue(database), fromValue(Database.ORACLE.getName()), args[4], args[5], args[6]};
 		return ConnectConstruct.process(newArgs, factory);
 	}
 }
