@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Get the names of all the sheets in a workbook.
+    </description>
+    <examples>
+        <example title="Getting sheet names">
+            <header>Getting all names</header>
+            <code>
+                use Excel;
+
+                var workbook = Excel.loadWorkbook("workbook.xlsx");
+                var names = Excel.getSheetNames(workbook);
+            </code>
+            <header>Getting the name of the first sheet</header>
+            <code>
+                use Excel;
+
+                var workbook = Excel.loadWorkbook("workbook.xlsx");
+                var names = Excel.getSheetNames(workbook);
+                var first = names[0];
+            </code>
+        </example>
+        <example title="Getting the number of sheets">
+            <header>Counting the sheet names</header>
+            <code>
+                use Excel;
+                use List;
+
+                var workbook = Excel.loadWorkbook("workbook.xlsx");
+                var names = Excel.getSheetNames(workbook);
+                var numberOfSheets = List.length(names);
+            </code>
+        </example>
+        <example title="Checking if sheet is in workbook">
+            <code>
+            use Excel;
+            use List;
+
+            var workbook = Excel.loadWorkbook("workbook.xlsx");
+            var names = Excel.getSheetNames(workbook);
+            var nameToCheck = "RobotSheet";
+            var containsSheet = List.containsValue(names, nameToCheck);
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>List.containsValue</reference>
+        <reference>loadWorkbook</reference>
+        <reference>loadSheet</reference>
+        <reference>System.print</reference>
+        <reference>createWorkbook</reference>
+        <reference>createSheet</reference>
+    </references>
+    <tags>
+        Excel, workbook, sheet, spreadsheet, cell, load, get, value, extract
+    </tags>
+</function>

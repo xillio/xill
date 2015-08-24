@@ -33,6 +33,6 @@
         <reference>System.print</reference>
     </references>
     <tags>
-        Excel, workbook, sheet, spreadsheet, cell, load, <get></get>
+        Excel, workbook, sheet, spreadsheet, cell, load, get
     </tags>
 </function>

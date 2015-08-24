@@ -27,10 +27,19 @@ public class XillSheet implements MetadataExpression {
 	public XillSheet(Sheet sheet, boolean readonly) {
 		this.readonly = readonly;
 		this.sheet = sheet;
-		rowLength = sheet.getLastRowNum() + 1; //Added one because POI is zero indexed
+
+		calculateRowLength();
 		columnLength = calculateColumnLength();
 		name = sheet.getSheetName();
 		int i = 0;
+	}
+
+	int calculateRowLength(){
+		if(sheet.getLastRowNum() == 0 && sheet.getPhysicalNumberOfRows() == 0)
+			rowLength = 0;
+		else
+			rowLength = sheet.getLastRowNum() + 1;
+		return rowLength;
 	}
 
 	/**
@@ -50,7 +59,7 @@ public class XillSheet implements MetadataExpression {
 							maxColumnSize < getRow(i).getLastCellNum()) {
 				maxColumnSize = getRow(i).getLastCellNum();
 			}
-		return maxColumnSize == 0 ? 0 : maxColumnSize + 1; //plus one because zero indexed
+		return maxColumnSize;
 	}
 
 	/**
@@ -145,8 +154,10 @@ public class XillSheet implements MetadataExpression {
 	 */
 	public void setCellValue(XillCellRef cellRef, String value) {
 		getCell(cellRef).setCellValue(value);
+		calculateRowLength();
 		if (cellRef.getColumn() > columnLength)
 			columnLength = cellRef.getColumn();
+
 	}
 
 	/**
@@ -157,8 +168,10 @@ public class XillSheet implements MetadataExpression {
 	 */
 	public void setCellValue(XillCellRef cellRef, Double value) {
 		getCell(cellRef).setCellValue(value);
+		calculateRowLength();
 		if (cellRef.getColumn() > columnLength)
 			columnLength = cellRef.getColumn();
+
 	}
 
 	/**
@@ -169,8 +182,10 @@ public class XillSheet implements MetadataExpression {
 	 */
 	public void setCellValue(XillCellRef cellRef, boolean value) {
 		getCell(cellRef).setCellValue(value);
+		calculateRowLength();
 		if (cellRef.getColumn() > columnLength)
 			columnLength = cellRef.getColumn();
+
 	}
 
 	/**
