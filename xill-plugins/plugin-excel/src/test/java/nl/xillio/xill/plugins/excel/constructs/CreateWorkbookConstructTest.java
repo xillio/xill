@@ -20,6 +20,7 @@ import static org.testng.Assert.assertEquals;
 
 /**
  * Unit tests for the CreateWorkbook construct
+ *
  * @author Daan Knoope
  */
 public class CreateWorkbookConstructTest {

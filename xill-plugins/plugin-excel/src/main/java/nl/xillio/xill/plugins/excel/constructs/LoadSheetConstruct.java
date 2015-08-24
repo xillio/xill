@@ -26,7 +26,7 @@ public class LoadSheetConstruct extends Construct {
 	 * @param sheetName the name of the sheet that should be returned
 	 * @return returns a sheet object containing a {@link XillSheet}
 	 * @throws RobotRuntimeException When no valid workbook has been provided (null)
-	 * or when the name of the sheet cannot be found in the provided workbook
+	 *                               or when the name of the sheet cannot be found in the provided workbook
 	 */
 	static MetaExpression process(MetaExpression workbook, MetaExpression sheetName) {
 		XillWorkbook Workbook = assertMeta(workbook, "parameter 'workbook'", XillWorkbook.class, "result of loadWorkbook or createWorkbook");

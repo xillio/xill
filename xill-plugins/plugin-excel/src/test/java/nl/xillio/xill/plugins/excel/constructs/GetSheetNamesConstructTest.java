@@ -15,12 +15,14 @@ import static org.testng.Assert.assertEquals;
 
 /**
  * Unit tests for the GetSheetNames construct
+ *
  * @author Daan Knoope
  */
 public class GetSheetNamesConstructTest {
 
 	/**
 	 * Creates a XillWorkbook on which the test operations will be performed
+	 *
 	 * @param sheetNames a list of names which the sheets have
 	 * @return a mocked XillWorkbook
 	 */

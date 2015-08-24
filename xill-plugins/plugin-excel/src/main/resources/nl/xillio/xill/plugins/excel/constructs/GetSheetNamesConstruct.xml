@@ -34,13 +34,13 @@
         </example>
         <example title="Checking if sheet is in workbook">
             <code>
-            use Excel;
-            use List;
+                use Excel;
+                use List;
 
-            var workbook = Excel.loadWorkbook("workbook.xlsx");
-            var names = Excel.getSheetNames(workbook);
-            var nameToCheck = "RobotSheet";
-            var containsSheet = List.containsValue(names, nameToCheck);
+                var workbook = Excel.loadWorkbook("workbook.xlsx");
+                var names = Excel.getSheetNames(workbook);
+                var nameToCheck = "RobotSheet";
+                var containsSheet = List.containsValue(names, nameToCheck);
             </code>
         </example>
     </examples>

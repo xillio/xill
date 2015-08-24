@@ -1,7 +1,6 @@
 package nl.xillio.xill.plugins.excel.constructs;
 
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.excel.datastructures.XillWorkbook;
@@ -20,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 /**
  * Unit tests for the save construct
+ *
  * @author Daan Knoope
  */
 public class SaveConstructTest {
@@ -58,7 +58,6 @@ public class SaveConstructTest {
 		when(service.save(any(XillWorkbook.class))).thenReturn("overridden");
 		assertEquals(SaveConstruct.process(service, context, workbookInput, NULL).getStringValue(), "overridden");
 	}
-
 
 	/**
 	 * Checks if construct returns correctly when a new save location (path)
@@ -103,6 +102,7 @@ public class SaveConstructTest {
 
 	/**
 	 * Checks if the overwrite method returns the right correctly after having written the file
+	 *
 	 * @throws Exception
 	 */
 	@Test

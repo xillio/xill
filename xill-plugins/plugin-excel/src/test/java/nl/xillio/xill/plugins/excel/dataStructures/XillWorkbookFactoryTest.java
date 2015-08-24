@@ -12,9 +12,10 @@ import static org.mockito.Mockito.*;
 
 /**
  * Unit tests for the XillWorkbok Factory
- * @author Daan Knoope
  *
- * NB: not all methods are tested, since this is a factory
+ * @author Daan Knoope
+ *         <p>
+ *         NB: not all methods are tested, since this is a factory
  */
 public class XillWorkbookFactoryTest {
 
@@ -23,6 +24,7 @@ public class XillWorkbookFactoryTest {
 	 * sending the xls extension to makeLegacyWorkbook,
 	 * the xlsx extension to makeModernWorkbook and
 	 * throwing a NotImplementedException otherwise.
+	 *
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = NotImplementedException.class,

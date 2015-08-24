@@ -17,13 +17,15 @@ import static org.testng.Assert.assertTrue;
 
 /**
  * Unit tests for the XillWorkbook datastructure
+ *
  * @author Daan Knoope
  */
 public class XillWorkbookTest {
 
 	/**
 	 * Creates a mocked File
-	 * @param path the (fake) path the mocked File should point to
+	 *
+	 * @param path     the (fake) path the mocked File should point to
 	 * @param readonly if the path is readonly
 	 * @return the mocked File
 	 */
@@ -69,6 +71,7 @@ public class XillWorkbookTest {
 	/**
 	 * Verifies that when a new sheet is made, the correct method is
 	 * called and the name stays the same throughout the process.
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -134,6 +137,7 @@ public class XillWorkbookTest {
 
 	/**
 	 * Tests that the location of the workbook is correct
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -161,6 +165,7 @@ public class XillWorkbookTest {
 
 	/**
 	 * Tests that when a sheet name does not exist, an IllegalArgumentException is thrown
+	 *
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "Sheet sheet does not exist in this workbook")
@@ -190,6 +195,7 @@ public class XillWorkbookTest {
 	/**
 	 * Tests that an exception is thrown when a workbook tried to save
 	 * (by overwriting), but the I/O operation did not succeed
+	 *
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = IOException.class,
@@ -205,6 +211,7 @@ public class XillWorkbookTest {
 	/**
 	 * Tests that an exception is thrown when a workbook can not be saved to
 	 * the new path specified.
+	 *
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = IOException.class,

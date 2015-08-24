@@ -32,7 +32,8 @@
                 System.print(sheet);
             </code>
             <p>NB: this information reflects the state of the sheet at the moment
-            it is loaded and is not changed when a cell is changed after loading.</p>
+                it is loaded and is not changed when a cell is changed after loading.
+            </p>
         </example>
     </examples>
     <references>

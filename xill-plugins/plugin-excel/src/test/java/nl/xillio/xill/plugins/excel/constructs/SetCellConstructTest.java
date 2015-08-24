@@ -13,6 +13,7 @@ import static org.testng.Assert.*;
 
 /**
  * Unit tests for the SetCell construct
+ *
  * @author Daan Knoope
  */
 public class SetCellConstructTest {
@@ -137,6 +138,7 @@ public class SetCellConstructTest {
 
 	/**
 	 * Tests if an exception is thrown when the input sheet is read-only.
+	 *
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Cannot write on sheet: sheet is read-only. First save as new file.")
@@ -163,6 +165,7 @@ public class SetCellConstructTest {
 
 	/**
 	 * Tests if an exception is thrown for when a wrong notation has been used for the column
+	 *
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Wrong notation for column \"AB2\", should be numerical or alphabetical notation \\(e\\.g\\. AB or 12\\)")

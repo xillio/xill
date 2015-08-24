@@ -9,6 +9,7 @@ import static org.testng.Assert.*;
 
 /**
  * Unit tests for the XillSheet data structure
+ *
  * @author Daan Knoope
  */
 public class XillSheetTest {

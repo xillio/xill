@@ -57,8 +57,8 @@ public class SaveConstruct extends Construct {
 		String returnValue = "";
 		try {
 			returnValue = service.save(workbook);
-		}catch(IllegalArgumentException e){
-			throw new RobotRuntimeException(e.getMessage(),e);
+		} catch (IllegalArgumentException e) {
+			throw new RobotRuntimeException(e.getMessage(), e);
 		} catch (IOException e) {
 			throw new RobotRuntimeException(e.getMessage(), e);
 		}
@@ -68,18 +68,18 @@ public class SaveConstruct extends Construct {
 	/**
 	 * Saves the workbook to a new location.
 	 *
-	 * @param service the {@link ExcelService} provided by the construct
-	 * @param file    a {@link File} object initialized to write to the new path
+	 * @param service  the {@link ExcelService} provided by the construct
+	 * @param file     a {@link File} object initialized to write to the new path
+	 * @param workbook the {@link XillWorkbook} which will be saved
 	 * @return a string pointing to the location where the file has been saved
 	 * @throws RobotRuntimeException when the file is read-only or cannot be written to
-	 * @param   workbook    the {@link XillWorkbook} which will be saved
 	 */
 	static MetaExpression processToFolder(ExcelService service, XillWorkbook workbook, File file) {
 		XillWorkbook returnValue;
 		try {
 			returnValue = service.save(workbook, file);
-		} catch(IllegalArgumentException e){
-			throw new RobotRuntimeException(e.getMessage(),e);
+		} catch (IllegalArgumentException e) {
+			throw new RobotRuntimeException(e.getMessage(), e);
 		} catch (IOException e) {
 			throw new RobotRuntimeException(e.getMessage(), e);
 		}

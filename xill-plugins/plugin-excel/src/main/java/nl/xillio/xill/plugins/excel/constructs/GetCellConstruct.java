@@ -31,21 +31,39 @@ public class GetCellConstruct extends Construct {
 	static MetaExpression process(MetaExpression sheetInput, MetaExpression column, MetaExpression row) {
 		XillSheet sheet = assertMeta(sheetInput, "sheet", XillSheet.class, "Excel Sheet");
 		XillCellRef cell;
-		if(!isNumeric(row))
+		if (!isNumeric(row))
 			throw new RobotRuntimeException("The row number must be in numeric notation (\"" + row.getStringValue() + "\" was used)");
 		if (isNumeric(column))
 			cell = createCellRef(column.getNumberValue().intValue(), row.getNumberValue().intValue());
 		else //numeric notation
 			cell = createCellRef(column.getStringValue(), row.getNumberValue().intValue());
 		Object cellValue = sheet.getCellValue(cell);
-		if(cellValue instanceof Date)
+		if (cellValue instanceof Date)
 			cellValue = cellValue.toString(); // Because Dates cannot be put in MetaExpression. Should be changed into Date plugin
-																				// when plugins can be used in each other
+		// when plugins can be used in each other
 
 		return parseObject(cellValue);
 	}
 
+	static XillCellRef createCellRef(String column, int row) {
+		try {
+			return new XillCellRef(column, row);
+		} catch (IllegalArgumentException e) {
+			throw new RobotRuntimeException(e.getMessage(), e);
+		}
+	}
 
+	static XillCellRef createCellRef(int column, int row) {
+		try {
+			return new XillCellRef(column, row);
+		} catch (IllegalArgumentException e) {
+			throw new RobotRuntimeException(e.getMessage(), e);
+		}
+	}
+
+	static boolean isNumeric(MetaExpression expression) {
+		return !Double.isNaN(expression.getNumberValue().doubleValue());
+	}
 
 	@Override
 	public ConstructProcessor prepareProcess(ConstructContext context) {
@@ -54,25 +72,5 @@ public class GetCellConstruct extends Construct {
 						new Argument("sheet", OBJECT),
 						new Argument("column", ATOMIC),
 						new Argument("row", ATOMIC));
-	}
-
-	static XillCellRef createCellRef(String column, int row){
-		try {
-			return new XillCellRef(column, row);
-		}catch(IllegalArgumentException e){
-			throw new RobotRuntimeException(e.getMessage(), e);
-		}
-	}
-
-	static XillCellRef createCellRef(int column, int row){
-		try{
-			return new XillCellRef(column, row);
-		} catch(IllegalArgumentException e){
-			throw new RobotRuntimeException(e.getMessage(), e);
-		}
-	}
-
-	static boolean isNumeric(MetaExpression expression){
-		return !Double.isNaN(expression.getNumberValue().doubleValue());
 	}
 }

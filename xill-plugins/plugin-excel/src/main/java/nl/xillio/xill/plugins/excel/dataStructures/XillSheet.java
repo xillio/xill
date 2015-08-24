@@ -34,8 +34,8 @@ public class XillSheet implements MetadataExpression {
 		int i = 0;
 	}
 
-	int calculateRowLength(){
-		if(sheet.getLastRowNum() == 0 && sheet.getPhysicalNumberOfRows() == 0)
+	int calculateRowLength() {
+		if (sheet.getLastRowNum() == 0 && sheet.getPhysicalNumberOfRows() == 0)
 			rowLength = 0;
 		else
 			rowLength = sheet.getLastRowNum() + 1;

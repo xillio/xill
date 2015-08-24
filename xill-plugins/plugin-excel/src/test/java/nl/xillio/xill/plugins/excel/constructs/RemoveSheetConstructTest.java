@@ -16,12 +16,14 @@ import static org.testng.Assert.assertTrue;
 
 /**
  * Unit tests for the RemoveSheet construct
+ *
  * @author Daan Knoope
  */
 public class RemoveSheetConstructTest {
 
 	/**
 	 * Creates a mocked XillWorkbook.
+	 *
 	 * @return a mocked {@link XillWorkbook}
 	 */
 	private MetaExpression createWorkbook() {
@@ -61,6 +63,7 @@ public class RemoveSheetConstructTest {
 	/**
 	 * Checks if the correct method (single or multiple) is called from the constructor
 	 * depending on the provided list
+	 *
 	 * @throws Exception
 	 */
 	@Test

@@ -23,6 +23,7 @@ import static org.testng.Assert.assertEquals;
 
 /**
  * Unit tests for the LoadWorkbook construct
+ *
  * @author Daan Knoope
  */
 public class LoadWorkbookConstructTest {
@@ -34,9 +35,10 @@ public class LoadWorkbookConstructTest {
 
 	/**
 	 * Mocks the RobotID
+	 *
 	 * @return a mocked RobotID
 	 */
-	private RobotID createRobotID(){
+	private RobotID createRobotID() {
 		RobotID id = mock(RobotID.class);
 		File file = new File(".");
 		when(id.getPath()).thenReturn(file);
@@ -103,6 +105,7 @@ public class LoadWorkbookConstructTest {
 
 	/**
 	 * Checks if a RobotRuntimeException is thrown when the file cannot be opened as an Excel workbook
+	 *
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "File cannot be opened as Excel Workbook")

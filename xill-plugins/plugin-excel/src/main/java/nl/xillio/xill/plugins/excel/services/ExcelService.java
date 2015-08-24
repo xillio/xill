@@ -43,7 +43,7 @@ public interface ExcelService {
 	 * @param workbook  the {@link XillWorkbook} in which the new sheet should be stored
 	 * @param sheetName the name of the new sheet
 	 * @return the newly created {@link XillSheet}
-	 * @throws NullPointerException when the provided workbook is incorrect
+	 * @throws NullPointerException     when the provided workbook is incorrect
 	 * @throws IllegalArgumentException when the sheet name was invalid
 	 * @throws IllegalArgumentException when the workbook is read-only
 	 */

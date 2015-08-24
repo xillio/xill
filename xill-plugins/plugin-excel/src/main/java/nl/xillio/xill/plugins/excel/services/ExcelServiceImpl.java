@@ -67,7 +67,8 @@ public class ExcelServiceImpl implements ExcelService {
 
 	/**
 	 * Returns an error message string containing the sheets that are not in the workbook (and thus cannot be deleted)
-	 * @param workbook the {@link XillWorkbook} from which the sheets should be deleted
+	 *
+	 * @param workbook        the {@link XillWorkbook} from which the sheets should be deleted
 	 * @param inputSheetNames a list of sheet names which should be deleted
 	 * @return an error message containing the sheets that are not in the workbook, otherwise an empty string
 	 */
@@ -98,7 +99,7 @@ public class ExcelServiceImpl implements ExcelService {
 
 	@Override
 	public XillWorkbook save(XillWorkbook workbook, File file) throws IOException {
-		if(file.exists())
+		if (file.exists())
 			throw new IllegalArgumentException("Cannot write to this file: already exists");
 		XillWorkbook newBook = workbook.createCopy(file);
 		newBook.save();

@@ -42,13 +42,13 @@ public class SetCellConstruct extends Construct {
 		XillCellRef cellRef;
 		try {
 			cellRef = getCellRef(column, row);
-		}catch(IllegalArgumentException e){
+		} catch (IllegalArgumentException e) {
 			throw new RobotRuntimeException(e.getMessage(), e);
 		}
 		try {
 			setValue(Sheet, cellRef, value);
-		}catch(IllegalArgumentException e){
-		throw new RobotRuntimeException(e.getMessage(), e);
+		} catch (IllegalArgumentException e) {
+			throw new RobotRuntimeException(e.getMessage(), e);
 		}
 		return fromValue(true);
 	}
@@ -61,13 +61,13 @@ public class SetCellConstruct extends Construct {
 	 * @param value   a {@link MetaExpression} containing the value which the cell should contain
 	 */
 	static void setValue(XillSheet sheet, XillCellRef cellRef, MetaExpression value) {
-			if (value.getValue() instanceof BooleanBehavior) { // DO NOT REPEAT ANYWHERE ELSE, WAS UNAVOIDABLE :-(
-				sheet.setCellValue(cellRef, value.getBooleanValue());
-			} else if (isNumeric(value)) {
-				sheet.setCellValue(cellRef, value.getNumberValue().doubleValue());
-			} else {
-				sheet.setCellValue(cellRef, value.getStringValue());
-			}
+		if (value.getValue() instanceof BooleanBehavior) { // DO NOT REPEAT ANYWHERE ELSE, WAS UNAVOIDABLE :-(
+			sheet.setCellValue(cellRef, value.getBooleanValue());
+		} else if (isNumeric(value)) {
+			sheet.setCellValue(cellRef, value.getNumberValue().doubleValue());
+		} else {
+			sheet.setCellValue(cellRef, value.getStringValue());
+		}
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class SetCellConstruct extends Construct {
 	 * Checks if a MetaExpression is numeric.
 	 *
 	 * @param expression the {@link MetaExpression} which should be checked
-	 * @return  {@code true} when the input is numeric or {@code false} when it is not numeric
+	 * @return {@code true} when the input is numeric or {@code false} when it is not numeric
 	 */
 	static boolean isNumeric(MetaExpression expression) {
 		return !Double.isNaN(expression.getNumberValue().doubleValue());

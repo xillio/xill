@@ -37,7 +37,7 @@ public class RemoveSheetConstruct extends Construct {
 	 * @throws RobotRuntimeException when no valid (list of) sheet names has been provided
 	 * @throws RobotRuntimeException when the workbook is read-only
 	 * @throws RobotRuntimeException when some or all of the sheet names do not exist in the
-	 * workbook (all the sheets that did exist have been deleted when the exception is thrown)
+	 *                               workbook (all the sheets that did exist have been deleted when the exception is thrown)
 	 */
 	static MetaExpression process(ExcelService service, MetaExpression workbookInput, MetaExpression sheetName) {
 		XillWorkbook workbook = assertMeta(workbookInput, "parameter 'workbook'", XillWorkbook.class, "result of loadWorkbook or createWorkbook");
@@ -54,10 +54,10 @@ public class RemoveSheetConstruct extends Construct {
 	/**
 	 * Deletes a single sheet from a XillWorkbook.
 	 *
-	 * @param service  the {@link ExcelService} provided by the construct
-	 * @param workbook the {@link XillWorkbook} from which the sheet should be deleted
-	 * @param    sheetName the name of the {@link XillSheet} which should be removed
-	 * @return  {@code true} when it has succeeded, else an exception is thrown
+	 * @param service   the {@link ExcelService} provided by the construct
+	 * @param workbook  the {@link XillWorkbook} from which the sheet should be deleted
+	 * @param sheetName the name of the {@link XillSheet} which should be removed
+	 * @return {@code true} when it has succeeded, else an exception is thrown
 	 * @throws RobotRuntimeException when the sheet is not in the provided workbook
 	 * @throws RobotRuntimeException when the workbook is read-only
 	 */

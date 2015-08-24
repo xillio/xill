@@ -37,11 +37,11 @@ public class CreateWorkbookConstruct extends Construct {
 	 * (after having used the {@link SaveConstruct}) including the {@link XillWorkbook}
 	 * that has been created
 	 * @throws RobotRuntimeException when a file already exists at the provided location or when
-	 * the workbook cannot be written to the given path
+	 *                               the workbook cannot be written to the given path
 	 */
 	static MetaExpression process(ExcelService excelService, ConstructContext context, MetaExpression filePath) {
 		String path = filePath.getStringValue();
-		if(FilenameUtils.getExtension(path).isEmpty())
+		if (FilenameUtils.getExtension(path).isEmpty())
 			path = path + ".xlsx";
 
 		File file = getFile(context.getRobotID(), path);
@@ -50,9 +50,9 @@ public class CreateWorkbookConstruct extends Construct {
 			workbook = excelService.createWorkbook(file);
 		} catch (FileAlreadyExistsException e) {
 			throw new RobotRuntimeException(e.getMessage(), e);
-		} catch(NotImplementedException e) {
+		} catch (NotImplementedException e) {
 			throw new RobotRuntimeException(e.getMessage(), e);
-		}catch (IOException e) {
+		} catch (IOException e) {
 			throw new RobotRuntimeException("Cannot write to the supplied path", e);
 		}
 

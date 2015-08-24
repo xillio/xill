@@ -20,9 +20,9 @@ public class GetSheetNamesConstruct extends Construct {
 	 *
 	 * @param workbookInput a workbook object as created by
 	 *                      {@link CreateWorkbookConstruct} or {@link LoadWorkbookConstruct}
+	 * @return a list of the name of all the sheets in the workbook provided
 	 * @throws RobotRuntimeException when a wrong {@link XillWorkbook} (null)
 	 *                               has been provided
-	 * @return a list of the name of all the sheets in the workbook provided
 	 */
 	static MetaExpression process(MetaExpression workbookInput) {
 		XillWorkbook workbook = assertMeta(workbookInput, "parameter 'workbook'",

@@ -15,6 +15,7 @@ import static org.testng.Assert.assertEquals;
 
 /**
  * Unit tests for the CreateSheet Construct
+ *
  * @author Daan Knoope
  */
 public class CreateSheetConstructTest {
@@ -53,7 +54,8 @@ public class CreateSheetConstructTest {
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "^illegal$")
 	public void testProcessIllegalArgumentException() throws Exception {
 		//Basic vars
-		ExcelService service = mock(ExcelService.class);;
+		ExcelService service = mock(ExcelService.class);
+		;
 
 		//Mocking workbook
 		MetaExpression workbookInput = fromValue("workbook");
@@ -82,7 +84,7 @@ public class CreateSheetConstructTest {
 
 		//Mocking the sheet object
 		XillSheet sheet = mock(XillSheet.class);
-		when(service.createSheet(workbook,"name")).thenReturn(sheet);
+		when(service.createSheet(workbook, "name")).thenReturn(sheet);
 		when(sheet.getName()).thenReturn("name");
 		when(sheet.getRowLength()).thenReturn(0);
 		when(sheet.getColumnLength()).thenReturn(0);

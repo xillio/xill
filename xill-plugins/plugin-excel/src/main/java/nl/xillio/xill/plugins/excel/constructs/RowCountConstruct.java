@@ -9,22 +9,24 @@ import nl.xillio.xill.plugins.excel.datastructures.XillSheet;
 
 /**
  * Construct to return the current amount of rows in a sheet.
+ *
  * @author Daan Knoope
  */
 public class RowCountConstruct extends Construct {
 
-	@Override public ConstructProcessor prepareProcess(ConstructContext context) {
-		return new ConstructProcessor(RowCountConstruct::process, new Argument("sheet", OBJECT));
-	}
-
 	/**
 	 * Returns the number of rows in the provided sheet.
+	 *
 	 * @param sheet the {@link XillSheet} which' rows need to be counted
 	 * @return a {@link MetaExpression} containing the number of rows in the sheet
 	 */
-	static MetaExpression process(MetaExpression sheet){
+	static MetaExpression process(MetaExpression sheet) {
 		XillSheet Sheet = assertMeta(sheet, "parameter 'sheet'", XillSheet.class, "result of loadSheet or createSheet");
 		return fromValue(Sheet.getRowLength());
+	}
+
+	@Override public ConstructProcessor prepareProcess(ConstructContext context) {
+		return new ConstructProcessor(RowCountConstruct::process, new Argument("sheet", OBJECT));
 	}
 
 }

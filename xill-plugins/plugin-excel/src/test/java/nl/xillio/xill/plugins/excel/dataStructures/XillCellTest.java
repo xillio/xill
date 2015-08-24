@@ -13,6 +13,7 @@ import static org.testng.Assert.assertTrue;
 
 /**
  * Unit tests for the XillCell Datastructure
+ *
  * @author Daan Knoope
  */
 public class XillCellTest {
@@ -20,14 +21,15 @@ public class XillCellTest {
 	/**
 	 * Tests if the GetValue method reads the correct cell type from the provided cell:
 	 * <ul>
-	 *   <li>for cells containing strings, a string value must be returned</li>
-	 *   <li>for cells containing booleans, a boolean value must be returned</li>
-	 *   <li>for cells containing formulas, a string that is a direct copy of the formula must be returned</li>
-	 *   <li>for cells containing dates, a value must be returned that can be converted to a date</li>
-	 *   <li>for cells containing numeric values, a double must be returned</li>
-	 *   <li>for cells that are {@code null} or {@code CELL_TYPE_BLANK}, [EMPTY] must be returned as string</li>
-	 *   <li>for cells that are formatted in any other way, an exception must be thrown that that format is unsupported</li>
+	 * <li>for cells containing strings, a string value must be returned</li>
+	 * <li>for cells containing booleans, a boolean value must be returned</li>
+	 * <li>for cells containing formulas, a string that is a direct copy of the formula must be returned</li>
+	 * <li>for cells containing dates, a value must be returned that can be converted to a date</li>
+	 * <li>for cells containing numeric values, a double must be returned</li>
+	 * <li>for cells that are {@code null} or {@code CELL_TYPE_BLANK}, [EMPTY] must be returned as string</li>
+	 * <li>for cells that are formatted in any other way, an exception must be thrown that that format is unsupported</li>
 	 * </ul>
+	 *
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = NotImplementedException.class, expectedExceptionsMessageRegExp

@@ -13,6 +13,7 @@ import static org.testng.Assert.assertEquals;
 
 /**
  * Unit tests for the GetCell construct
+ *
  * @author Daan Knoope
  */
 public class GetCellConstructTest {
@@ -24,6 +25,7 @@ public class GetCellConstructTest {
 
 	/**
 	 * Creates a mock for a XillSheet that will return the same for each cell in the sheet
+	 *
 	 * @param cellContent the string which every cell should return
 	 * @return a {@link MetaExpression} containing the mocked {@link XillSheet}
 	 */

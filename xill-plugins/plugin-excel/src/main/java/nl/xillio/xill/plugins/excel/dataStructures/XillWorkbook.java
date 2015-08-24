@@ -36,7 +36,7 @@ public class XillWorkbook implements MetadataExpression {
 		this.workbook = workbook;
 		this.file = file;
 		location = file.getCanonicalPath();
-		if(file.exists())
+		if (file.exists())
 			readonly = !file.canWrite();
 		else
 			readonly = false;
@@ -176,8 +176,8 @@ public class XillWorkbook implements MetadataExpression {
 
 	public XillWorkbook createCopy(File file) throws IOException {
 		String extension = FilenameUtils.getExtension(file.getName());
-		if(!(extension.equals("xls") && workbook instanceof HSSFWorkbook ||
-						extension.equals("xlsx")&& workbook instanceof XSSFWorkbook))
+		if (!(extension.equals("xls") && workbook instanceof HSSFWorkbook ||
+						extension.equals("xlsx") && workbook instanceof XSSFWorkbook))
 			throw new IllegalArgumentException("New file should have the same extension as the original");
 		Files.copy(this.file, file);
 		file.setWritable(true);

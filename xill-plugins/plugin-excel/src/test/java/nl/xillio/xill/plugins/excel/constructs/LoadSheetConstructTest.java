@@ -16,6 +16,7 @@ import static org.testng.Assert.assertEquals;
 
 /**
  * Unit tests for the LoadSheet construct
+ *
  * @author Daan Knoope
  */
 public class LoadSheetConstructTest {
@@ -55,8 +56,8 @@ public class LoadSheetConstructTest {
 	/**
 	 * Checks if the LoadSheet construct returns a
 	 * <ul>
-	 *   <li>correctly formatted string, containing the sheet name, amount of rows and amount of columns</li>
-	 *   <li>the same XillSheet in the MetaExpression as the one it created.</li>
+	 * <li>correctly formatted string, containing the sheet name, amount of rows and amount of columns</li>
+	 * <li>the same XillSheet in the MetaExpression as the one it created.</li>
 	 * </ul>
 	 */
 	@Test

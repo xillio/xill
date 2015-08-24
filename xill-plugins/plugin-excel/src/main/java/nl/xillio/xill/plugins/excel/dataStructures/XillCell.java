@@ -81,10 +81,10 @@ public class XillCell {
 	 */
 	public void setCellValue(String value) {
 		if (value.startsWith("="))
-			try{
+			try {
 				cell.setCellFormula(value.substring(1));
-			}catch(FormulaParseException e){
-				throw new IllegalArgumentException(e.getMessage(),e);
+			} catch (FormulaParseException e) {
+				throw new IllegalArgumentException(e.getMessage(), e);
 			}
 		else
 			cell.setCellValue(value);

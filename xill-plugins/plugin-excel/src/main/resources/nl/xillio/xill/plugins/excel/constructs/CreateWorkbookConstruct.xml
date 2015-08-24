@@ -42,7 +42,8 @@
                 use Excel;
 
                 var workbook = Excel.createWorkbook("helloworldbook");
-                System.print(Excel.save(workbook));</code>
+                System.print(Excel.save(workbook));
+            </code>
         </example>
     </examples>
     <references>

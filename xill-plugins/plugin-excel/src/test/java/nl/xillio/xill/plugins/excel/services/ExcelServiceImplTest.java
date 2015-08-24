@@ -17,12 +17,14 @@ import static org.testng.Assert.assertEquals;
 
 /**
  * Unit tests for the ExcelService implementation
+ *
  * @author Daan Knoope
  */
 public class ExcelServiceImplTest {
 
 	/**
 	 * Creates a new ExcelServiceImplementation
+	 *
 	 * @param factory the factory which should be passed to the service implementation (can be null)
 	 * @return the (non-mocked, actual) service
 	 */
@@ -33,7 +35,8 @@ public class ExcelServiceImplTest {
 
 	/**
 	 * Creates a mocked {@link File}
-	 * @param exists boolean if the file exists
+	 *
+	 * @param exists           boolean if the file exists
 	 * @param correctExtension boolean if the file has a correct extension
 	 * @return the mocked {@link File}
 	 */
@@ -51,6 +54,7 @@ public class ExcelServiceImplTest {
 
 	/**
 	 * Creates a mocked workbook
+	 *
 	 * @param isReadOnly boolean to describe if the workbook should be read-only
 	 * @return the mocked {@link XillWorkbook}
 	 */
@@ -62,6 +66,7 @@ public class ExcelServiceImplTest {
 
 	/**
 	 * Checks if loadWorkbook throws an exception when there is no file at the given path
+	 *
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = FileNotFoundException.class,
@@ -73,6 +78,7 @@ public class ExcelServiceImplTest {
 
 	/**
 	 * Tests if loadWorkbook throws an exception when the extension is incorrect
+	 *
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = IllegalArgumentException.class,
@@ -85,6 +91,7 @@ public class ExcelServiceImplTest {
 
 	/**
 	 * Tests if CreateWorkbook throws an exception when a file already exists at the provided path
+	 *
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = FileAlreadyExistsException.class,
@@ -97,6 +104,7 @@ public class ExcelServiceImplTest {
 
 	/**
 	 * Tests if loadWorkbook returns the workbook correctly
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -114,6 +122,7 @@ public class ExcelServiceImplTest {
 
 	/**
 	 * Tests if createWorkbook returns the correct new workbook
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -130,6 +139,7 @@ public class ExcelServiceImplTest {
 
 	/**
 	 * Tests if a null pointer exception is thrown when no valid XillWorkbook was provided to createSheet
+	 *
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = NullPointerException.class,
@@ -141,6 +151,7 @@ public class ExcelServiceImplTest {
 
 	/**
 	 * Tests if an IllegalArgumentException is thrown when an empty string is passed to CreateSheet as name
+	 *
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = IllegalArgumentException.class,
@@ -152,6 +163,7 @@ public class ExcelServiceImplTest {
 
 	/**
 	 * Tests if an IllegalArgumentException is thrown when a null value is passed to CreateSheet as name
+	 *
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = IllegalArgumentException.class,
@@ -163,6 +175,7 @@ public class ExcelServiceImplTest {
 
 	/**
 	 * Tests if an IllegalArgument exception is thrown when the name of the sheet consists out of too many characters
+	 *
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = IllegalArgumentException.class,
@@ -174,6 +187,7 @@ public class ExcelServiceImplTest {
 
 	/**
 	 * Tests if an IllegalArgumentException is thrown when CreateSheet was used on a read-only workbook
+	 *
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = IllegalArgumentException.class,
@@ -185,6 +199,7 @@ public class ExcelServiceImplTest {
 
 	/**
 	 * Tests if a correct sheet is returned by CreateSheet
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -198,6 +213,7 @@ public class ExcelServiceImplTest {
 
 	/**
 	 * Tests if the correct method is called to delete a sheet when RemoveSheet is called
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -214,6 +230,7 @@ public class ExcelServiceImplTest {
 	 * Tests if {@link ExcelServiceImpl#notInWorkbook(XillWorkbook, List)} correctly creates a string
 	 * containing the information about sheets that are in the list to be deleted, but do not exist in the workbook
 	 * (and can thus not be deleted)
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -248,6 +265,7 @@ public class ExcelServiceImplTest {
 
 	/**
 	 * Tests if an exception is thrown when a read-only sheet is tried to be deleted
+	 *
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = ".* is read-only")
@@ -261,6 +279,7 @@ public class ExcelServiceImplTest {
 	/**
 	 * Tests if an Illegal Argument Exception is thrown when sheets are tried to be removed while
 	 * they do not exist.
+	 *
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp =
@@ -276,6 +295,7 @@ public class ExcelServiceImplTest {
 
 	/**
 	 * Test that no exception is thrown when a list of existing sheet names should be removed from a workbook
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -290,6 +310,7 @@ public class ExcelServiceImplTest {
 
 	/**
 	 * Test that an IllegalArgumentException is thrown when it is tried to save a read-only file.
+	 *
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "Cannot write to this file: read-only")
@@ -307,6 +328,7 @@ public class ExcelServiceImplTest {
 	/**
 	 * Test that the correct method is called to continue the save operation and that the correct
 	 * result is returned.
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -318,13 +340,14 @@ public class ExcelServiceImplTest {
 		when(workbook.createCopy(any(File.class))).thenReturn(clonedBook);
 		File file = mock(File.class);
 		when(file.getCanonicalPath()).thenReturn("thispath");
-		assertEquals(service.save(workbook, file),clonedBook);
+		assertEquals(service.save(workbook, file), clonedBook);
 		verify(clonedBook, times(1)).save();
 	}
 
 	/**
 	 * Test that an IllegalArgumentException is thrown when the save function (with a path to save it to) is called on
 	 * a read-only file
+	 *
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "Cannot write to this file: read-only")
@@ -338,6 +361,7 @@ public class ExcelServiceImplTest {
 	/**
 	 * Test that the correct result is returned, the correct method is called and no exception is thrown when
 	 * the save operation is given a correct path
+	 *
 	 * @throws Exception
 	 */
 	@Test
