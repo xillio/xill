@@ -26,18 +26,14 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Iterators;
 
-import nl.xillio.plugins.XillPlugin;
-import nl.xillio.xill.api.Xill;
-import nl.xillio.xill.api.XillProcessor;
-import nl.xillio.xill.api.components.Robot;
-import nl.xillio.xill.api.components.RobotID;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
 import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
 import nl.xillio.xill.plugins.database.util.StatementIterator;
+import nl.xillio.xill.plugins.database.util.StatementIterator;
 import nl.xillio.xill.plugins.database.util.Tuple;
-import nl.xillio.xill.services.XillService;
-import nl.xillio.xill.services.files.FileResolver;
-import nl.xillio.xill.services.files.FileResolverImpl;
+import nl.xillio.xill.plugins.database.util.Tuple;
+import nl.xillio.xill.plugins.database.util.TypeConvertor;
+
 
 @SuppressWarnings("unchecked")
 public abstract class BaseDatabaseService implements DatabaseService {
@@ -196,13 +192,13 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		}
 		// question mark for url parameters
 		url = url.concat("?");
-		
-		//append user
-		if (user != null){
+
+		// append user
+		if (user != null) {
 			url = String.format("%suser=%s&", url, user);
 		}
-		//append password
-		if(pass != null){
+		// append password
+		if (pass != null) {
 			url = String.format("%spassword=%s&", url, pass);
 		}
 		// append other options
@@ -240,10 +236,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 			for (String s : constraints.keySet()) {
 				String here = rs.getColumnName(result.findColumn(s));
 				Object value = result.getObject(s);
-				if (value instanceof Clob) {
-					value = clobToString((Clob) value);
-				}
-				map.put(here, value);
+				map.put(here, TypeConvertor.convertJDBCType(value));
 			}
 
 			return map;
@@ -364,24 +357,6 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		return StreamSupport.stream(keys.spliterator(), false).map(k -> escapeIdentifier(k,connection) + " = ?").reduce((q, k) -> q + separator + k).get();
 	}
 
-	private static String clobToString(final Clob data) {
-		StringBuilder sb = new StringBuilder();
-		try {
-			Reader reader = data.getCharacterStream();
-			BufferedReader br = new BufferedReader(reader);
-
-			String line;
-			while (null != (line = br.readLine())) {
-				sb.append(line);
-			}
-			br.close();
-		} catch (SQLException e) {
-			throw new IllegalArgumentException(e);
-		} catch (IOException e) {
-			throw new IllegalArgumentException(e);
-		}
-		return sb.toString();
-	}
 	
 	private LinkedHashMap<Connection, String> delimiter = new LinkedHashMap<>();
 

@@ -17,7 +17,7 @@ public class OracleConnectConstruct extends BaseDatabaseConstruct {
 	public ConstructProcessor prepareProcess(ConstructContext context) {
 		Argument[] args =
 		{new Argument("host", ATOMIC),
-		    new Argument("port", fromValue(3306), ATOMIC),
+		    new Argument("port", fromValue(1521), ATOMIC),
 		    new Argument("database", ATOMIC),
 		    new Argument("useSID", fromValue(true), ATOMIC),
 		    new Argument("user", NULL, ATOMIC),
@@ -25,7 +25,6 @@ public class OracleConnectConstruct extends BaseDatabaseConstruct {
 		    new Argument("options", new ObjectExpression(new LinkedHashMap<>()), OBJECT)};
 		return new ConstructProcessor(a -> process(a, factory,context.getRobotID()), args);
 	}
-
 	static MetaExpression process(MetaExpression[] args, DatabaseServiceFactory factory,final RobotID robotID) {
 		// Re-order the arguments and call the generic connect construct
 		boolean useSID = args[3].getBooleanValue();
@@ -36,7 +35,8 @@ public class OracleConnectConstruct extends BaseDatabaseConstruct {
 		else
 			formatString = "%s:%d/%s";
 		String database = String.format(formatString, args[0].getStringValue(), args[1].getNumberValue().intValue(), args[2].getStringValue());
-		MetaExpression[] newArgs = {fromValue(database), fromValue(Database.MYSQL.getName()), args[3], args[4], args[5]};
+		MetaExpression[] newArgs = {fromValue(database), fromValue(Database.MYSQL.getName()), args[4], args[5], args[6]};
 		return ConnectConstruct.process(newArgs, factory,robotID);
+
 	}
 }

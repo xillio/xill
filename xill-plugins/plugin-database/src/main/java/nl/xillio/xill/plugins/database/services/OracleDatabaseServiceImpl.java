@@ -18,13 +18,13 @@ public class OracleDatabaseServiceImpl extends BaseDatabaseService {
 	@Override
 	protected String createConnectionURL(String database, String user, String pass, Tuple<String, String>... options) throws SQLException {
 		if (user == null ^ pass == null)
-		  throw new IllegalArgumentException("User and pass should be both null or both non-null");
+			throw new IllegalArgumentException("User and pass should be both null or both non-null");
 		if (user != null && pass != null)
 			// prepend username and password
-			return String.format("jdbc:oracle:thin:%s/%s@//%s:%s/%s", user, pass, database);
+			return String.format("jdbc:oracle:thin:%s/%s@%s", user, pass, database);
 		else
 			// url without username and password
-			return String.format("jdbc:oracle:thin:@//%s:%s/%s", database);
+			return String.format("jdbc:oracle:thin:@%s", database);
 	}
 
 	public Properties createProperties(Tuple<String, String>... options) {
