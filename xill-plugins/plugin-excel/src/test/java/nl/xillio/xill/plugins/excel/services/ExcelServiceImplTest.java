@@ -296,8 +296,12 @@ public class ExcelServiceImplTest {
 	public void saveReadOnly() throws Exception {
 		XillWorkbook workbook = mock(XillWorkbook.class);
 		ExcelService service = new ExcelServiceImpl(null);
+		File file = mock(File.class);
+
+		XillWorkbook clonedBook = mock(XillWorkbook.class);
 		when(workbook.isReadonly()).thenReturn(true);
-		service.save(workbook, mock(File.class));
+		when(workbook.createCopy(any(File.class))).thenReturn(clonedBook);
+		service.save(workbook);
 	}
 
 	/**
@@ -310,10 +314,12 @@ public class ExcelServiceImplTest {
 		ExcelService service = new ExcelServiceImpl(null);
 		XillWorkbook workbook = mock(XillWorkbook.class);
 		when(workbook.isReadonly()).thenReturn(false);
+		XillWorkbook clonedBook = mock(XillWorkbook.class);
+		when(workbook.createCopy(any(File.class))).thenReturn(clonedBook);
 		File file = mock(File.class);
 		when(file.getCanonicalPath()).thenReturn("thispath");
-		assertEquals(service.save(workbook, file), "Saved [thispath]");
-		verify(workbook, times(1)).save(file);
+		assertEquals(service.save(workbook, file),clonedBook);
+		verify(clonedBook, times(1)).save();
 	}
 
 	/**

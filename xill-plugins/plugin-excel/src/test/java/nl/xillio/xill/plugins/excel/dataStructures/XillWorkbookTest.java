@@ -127,6 +127,7 @@ public class XillWorkbookTest {
 	public void testIsReadonly() throws Exception {
 		Workbook workbook = mock(Workbook.class);
 		File file = createFile("path", true);
+		when(file.exists()).thenReturn(true);
 		XillWorkbook testWorkbook = new XillWorkbook(workbook, file);
 		assertTrue(testWorkbook.isReadonly());
 	}

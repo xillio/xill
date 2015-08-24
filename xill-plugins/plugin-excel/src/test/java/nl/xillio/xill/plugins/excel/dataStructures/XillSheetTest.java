@@ -31,7 +31,7 @@ public class XillSheetTest {
 		when(row2.getLastCellNum()).thenReturn((short) 81);
 
 		XillSheet testSheet = new XillSheet(sheet, false);
-		assertEquals(83, testSheet.getColumnLength());
+		assertEquals(82, testSheet.getColumnLength());
 	}
 
 	/**

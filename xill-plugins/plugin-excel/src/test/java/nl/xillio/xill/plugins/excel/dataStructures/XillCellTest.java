@@ -82,7 +82,7 @@ public class XillCellTest {
 		XillCell testCell = new XillCell(cell);
 
 		testCell.setCellValue("=1");
-		verify(cell, times(1)).setCellFormula("=1");
+		verify(cell, times(1)).setCellFormula("1");
 
 		testCell.setCellValue("a");
 		verify(cell, times(1)).setCellValue("a");
