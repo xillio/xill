@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
@@ -28,21 +29,20 @@ public class GetObjectConstruct extends BaseDatabaseConstruct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-		  (table, object, database) -> process(table, object, database, factory),
+		  (table, object, database) -> process(table, object, database, factory,context.getRobotID()),
 		  new Argument("table", ATOMIC),
 		  new Argument("object", OBJECT),
 		  new Argument("database", NULL, ATOMIC));
 	}
 
-	static MetaExpression process(final MetaExpression table, final MetaExpression object, final MetaExpression database, final DatabaseServiceFactory factory) {
+	static MetaExpression process(final MetaExpression table, final MetaExpression object, final MetaExpression database, final DatabaseServiceFactory factory, final RobotID robotID) {
 		String tblName = table.getStringValue();
 		LinkedHashMap<String, Object> constraints =(LinkedHashMap<String, Object>) extractValue(object);
 		ConnectionMetadata metaData;
 		if (database.equals(NULL)) {
-			metaData = BaseDatabaseService.getLastConnection();
+			metaData = lastConnections.get(robotID);
 		} else {
 			metaData = database.getMeta(ConnectionMetadata.class);
-			BaseDatabaseService.setLastConnection(metaData);
 		}
 		Connection connection = metaData.getConnection();
 		LinkedHashMap<String,Object> result = null;

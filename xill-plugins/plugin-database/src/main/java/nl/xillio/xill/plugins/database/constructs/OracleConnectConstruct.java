@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.ObjectExpression;
+import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
@@ -22,10 +23,10 @@ public class OracleConnectConstruct extends BaseDatabaseConstruct {
 		    new Argument("user", NULL, ATOMIC),
 		    new Argument("pass", NULL, ATOMIC),
 		    new Argument("options", new ObjectExpression(new LinkedHashMap<>()), OBJECT)};
-		return new ConstructProcessor(a -> process(a, factory), args);
+		return new ConstructProcessor(a -> process(a, factory,context.getRobotID()), args);
 	}
 
-	static MetaExpression process(MetaExpression[] args, DatabaseServiceFactory factory) {
+	static MetaExpression process(MetaExpression[] args, DatabaseServiceFactory factory,final RobotID robotID) {
 		// Re-order the arguments and call the generic connect construct
 		boolean useSID = args[3].getBooleanValue();
 		String formatString = null;
@@ -36,6 +37,6 @@ public class OracleConnectConstruct extends BaseDatabaseConstruct {
 			formatString = "%s:%d/%s";
 		String database = String.format(formatString, args[0].getStringValue(), args[1].getNumberValue().intValue(), args[2].getStringValue());
 		MetaExpression[] newArgs = {fromValue(database), fromValue(Database.MYSQL.getName()), args[3], args[4], args[5]};
-		return ConnectConstruct.process(newArgs, factory);
+		return ConnectConstruct.process(newArgs, factory,robotID);
 	}
 }

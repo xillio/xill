@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import nl.xillio.xill.api.components.MetaExpression;
@@ -22,17 +23,23 @@ public class BaseDatabaseServiceTest{
   public void testStoreObjectDoUpdate() throws SQLException {
    
   	//mock
-  	BaseDatabaseService bds = spy(BaseDatabaseService.class);
+  	BaseDatabaseService bds = mock(BaseDatabaseService.class);
   	Connection connection = mock(Connection.class);
   	ArrayList<String> keys = mock(ArrayList.class);
-  	LinkedHashMap<String, Object> obj = mock(LinkedHashMap.class);
+  	
+  	LinkedHashMap<String, Object> obj = new LinkedHashMap<>();
+  	obj.put("testKey", "testObj");
+  	
+  	//doThrow(new RuntimeException()).when(bds).updateObject(connection, "test", obj, keys);
+  	when(keys.size()).thenReturn(1);
   	
   	//run
-  	bds.storeObject(connection, "table", obj, keys, true);
+  	bds.storeObject(connection, "testKey", obj, keys, true);
   	
   	//verify
-  	//sverify(bds.,times(1)).
+  	//verify(bds,times(1)).updateObject(connection, "test", obj, keys);
   	
   	//assert
+  	//Nothing to assert.
   }
 }

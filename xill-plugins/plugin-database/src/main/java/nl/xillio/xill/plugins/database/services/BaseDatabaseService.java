@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -25,16 +26,24 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Iterators;
 
+import nl.xillio.plugins.XillPlugin;
+import nl.xillio.xill.api.Xill;
+import nl.xillio.xill.api.XillProcessor;
+import nl.xillio.xill.api.components.Robot;
+import nl.xillio.xill.api.components.RobotID;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
 import nl.xillio.xill.plugins.database.util.StatementIterator;
 import nl.xillio.xill.plugins.database.util.Tuple;
+import nl.xillio.xill.services.XillService;
+import nl.xillio.xill.services.files.FileResolver;
+import nl.xillio.xill.services.files.FileResolverImpl;
 
 @SuppressWarnings("unchecked")
 public abstract class BaseDatabaseService implements DatabaseService {
 
 	private static final Pattern PARAMETER_PATTERN = Pattern.compile("(?!\\\\):([a-zA-Z]+)");
 
-	private static ConnectionMetadata lastConnection;
 
 	/**
 	 * Create a JDBC {@link Connection} to the database at the given URL
@@ -214,7 +223,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 			}
 		});
 
-		String query = createSelectQuery(table, new ArrayList<String>(notNullConstraints.keySet()));
+		String query = createSelectQuery(connection,table, new ArrayList<String>(notNullConstraints.keySet()));
 		statement = connection.prepareStatement(query);
 
 		// Fill out values
@@ -252,12 +261,12 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		}
 	}
 
-	private String createSelectQuery(final String table, final List<String> keys) {
+	private String createSelectQuery(final Connection connection,final String table, final List<String> keys) {
 
 		// creates WHERE conditions SQL string
 		String constraintsSql;
 		if (keys.size() > 0) {
-			constraintsSql = createQueryPart(keys, " AND ");
+			constraintsSql = createQueryPart(connection,keys, " AND ");
 		} else {
 			constraintsSql = "1";
 		}
@@ -293,6 +302,9 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	}
 
 	private void insertObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject) throws SQLException {
+		for (Map.Entry<String, Object> entry : newObject.entrySet()) {
+			newObject.put(entry.getKey(), escapeIdentifier((String) entry.getValue(),connection));
+		}
 		String ks = StringUtils.join(newObject.keySet(), ',');
 
 		// Create the same number of prepared statement markers as there are keys
@@ -306,11 +318,11 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		fillStatement(newObject, statement, 1);
 		statement.execute();
 	}
-
+	
 	private void updateObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject, final List<String> keys)
 			throws SQLException {
-		String ss = createQueryPart(newObject.keySet(), ",");
-		String ws = createQueryPart(keys, " AND ");
+		String ss = createQueryPart(connection,newObject.keySet(), ",");
+		String ws = createQueryPart(connection,keys, " AND ");
 
 		String sql = "UPDATE " + table + " SET " + ss + " WHERE " + ws;
 
@@ -326,6 +338,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		if (statement.getUpdateCount() == 0) {
 			insertObject(connection, table, newObject);
 		}
+		
 	}
 
 	/**
@@ -347,8 +360,8 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	/**
 	 * Create a String in this form (where "," is the separator in this case): "key1 = ?,key2 = ?,key3 = ? "
 	 */
-	private String createQueryPart(final Iterable<String> keys, final String separator) {
-		return StreamSupport.stream(keys.spliterator(), false).map(k -> k + " = ?").reduce((q, k) -> q + separator + k).get();
+	private String createQueryPart(Connection connection,final Iterable<String> keys, final String separator) {
+		return StreamSupport.stream(keys.spliterator(), false).map(k -> escapeIdentifier(k,connection) + " = ?").reduce((q, k) -> q + separator + k).get();
 	}
 
 	private static String clobToString(final Clob data) {
@@ -369,14 +382,25 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		}
 		return sb.toString();
 	}
+	
+	private LinkedHashMap<Connection, String> delimiter = new LinkedHashMap<>();
 
-	public static void setLastConnection(final ConnectionMetadata connection) {
-		
-		lastConnection = connection;
+	public String escapeIdentifier(final String identifier,Connection connection) {
+		String delimiterString = null;
+		delimiterString = delimiter.get(connection);
+		if (delimiterString == null) {
+			try {
+				delimiter.put(connection, connection.getMetaData().getIdentifierQuoteString());
+			} catch (SQLException e1) {
+				delimiter.put(connection,"");
+			}
+		}
+		if(delimiterString == null){
+			delimiterString = "";
+		}
+
+		return delimiterString + identifier + delimiterString;
 	}
-
-	public static ConnectionMetadata getLastConnection() {
-		return lastConnection;
-	}
-
+	
+	
 }

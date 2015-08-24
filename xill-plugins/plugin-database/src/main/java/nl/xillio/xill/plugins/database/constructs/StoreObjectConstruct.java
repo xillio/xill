@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
@@ -35,19 +36,18 @@ public class StoreObjectConstruct extends BaseDatabaseConstruct {
 		    new Argument("overwrite", TRUE, ATOMIC),
 		    new Argument("database", NULL, ATOMIC),
 		};
-		return new ConstructProcessor((a) -> process(a, factory), args);
+		return new ConstructProcessor((a) -> process(a, factory,context.getRobotID()), args);
 	}
 
 	@SuppressWarnings("unchecked")
-	static MetaExpression process(final MetaExpression[] args, final DatabaseServiceFactory factory) {
+	static MetaExpression process(final MetaExpression[] args, final DatabaseServiceFactory factory, final RobotID robotID) {
 		String tblName = args[0].getStringValue();
 		LinkedHashMap<String, Object> newObject = (LinkedHashMap<String, Object>) extractValue(args[1]);
 		ConnectionMetadata metaData;
 		if (args[4].equals(NULL)) {
-			metaData = BaseDatabaseService.getLastConnection();
+			metaData = lastConnections.get(robotID);
 		} else {
 			metaData = args[4].getMeta(ConnectionMetadata.class);
-			BaseDatabaseService.setLastConnection(metaData);
 		}
 		Connection connection = metaData.getConnection();
 

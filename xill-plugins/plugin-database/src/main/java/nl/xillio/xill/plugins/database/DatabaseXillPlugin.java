@@ -15,4 +15,10 @@ public class DatabaseXillPlugin extends XillPlugin {
 
 		binder.bind(EscapeService.class).to(EscapeServiceImpl.class);
 	}
+	
+	@Override
+	public void loadConstructs() {
+		// TODO Auto-generated method stub
+		super.loadConstructs();
+	}
 }

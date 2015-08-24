@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.MetaExpressionIterator;
+import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
@@ -37,7 +38,7 @@ public class QueryConstruct extends BaseDatabaseConstruct {
 
 	@Override
 	public ConstructProcessor prepareProcess(ConstructContext context) {
-		return new ConstructProcessor((query, parameters, database, timeout) -> process(query, parameters, database, timeout, factory),
+		return new ConstructProcessor((query, parameters, database, timeout) -> process(query, parameters, database, timeout, factory,context.getRobotID()),
 		  new Argument("query", ATOMIC),
 		  new Argument("parameters", NULL, LIST),
 		  new Argument("database", NULL, ATOMIC),
@@ -45,14 +46,13 @@ public class QueryConstruct extends BaseDatabaseConstruct {
 	}
 
 	@SuppressWarnings("unchecked")
-	static MetaExpression process(MetaExpression query, MetaExpression parameters, MetaExpression database, MetaExpression timeout, DatabaseServiceFactory factory) {
+	static MetaExpression process(MetaExpression query, MetaExpression parameters, MetaExpression database, MetaExpression timeout, DatabaseServiceFactory factory, RobotID robotID) {
 		String sql = query.getStringValue();
 		ConnectionMetadata metaData;
 		if (database.equals(NULL)) {
-			metaData = BaseDatabaseService.getLastConnection();
+			metaData = lastConnections.get(robotID);
 		} else {
 			metaData = database.getMeta(ConnectionMetadata.class);
-			BaseDatabaseService.setLastConnection(metaData);
 		}
 		Connection connection = metaData.getConnection();
 
