@@ -184,17 +184,17 @@ public class XillSheetTest {
 		//Testing boolean signature
 		when(cellRef.getColumn()).thenReturn(10);
 		sheet.setCellValue(cellRef, false);
-		assertEquals(10, sheet.getColumnLength());
+		assertEquals(11, sheet.getColumnLength());
 
 		//Testing string signature
 		when(cellRef.getColumn()).thenReturn(11);
 		sheet.setCellValue(cellRef, "string");
-		assertEquals(11, sheet.getColumnLength());
+		assertEquals(12, sheet.getColumnLength());
 
 		//Testing double signature
 		when(cellRef.getColumn()).thenReturn(12);
 		sheet.setCellValue(cellRef, 1.3);
-		assertEquals(12, sheet.getColumnLength());
+		assertEquals(13, sheet.getColumnLength());
 
 		//Verifying that the proper method has been called
 		verify(cellRef, times(6)).getColumn();

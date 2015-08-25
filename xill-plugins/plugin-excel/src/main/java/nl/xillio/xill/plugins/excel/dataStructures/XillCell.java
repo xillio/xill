@@ -47,7 +47,7 @@ public class XillCell {
 					toReturn = cell.getBooleanCellValue();
 					break;
 				case Cell.CELL_TYPE_FORMULA:
-					toReturn = cell.getCellFormula();
+					toReturn = "=" + cell.getCellFormula();
 					break;
 				case Cell.CELL_TYPE_NUMERIC:
 					if (isDateFormatted()) {

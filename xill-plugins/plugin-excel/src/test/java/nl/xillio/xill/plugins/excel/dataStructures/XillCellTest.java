@@ -49,7 +49,7 @@ public class XillCellTest {
 		assertTrue((boolean) testCell.getValue());
 
 		when(cell.getCellType()).thenReturn(cell.CELL_TYPE_FORMULA);
-		when(cell.getCellFormula()).thenReturn("=3+3");
+		when(cell.getCellFormula()).thenReturn("3+3");
 		assertEquals(testCell.getValue(), "=3+3");
 
 		when(cell.getCellType()).thenReturn(cell.CELL_TYPE_NUMERIC);

@@ -31,6 +31,6 @@
         <reference>System.print</reference>
     </references>
     <tags>
-        Excel, remove, sheet, workbook, spreadsheet, delete
+        Excel, delete, remove, sheet, workbook, spreadsheet
     </tags>
 </function>

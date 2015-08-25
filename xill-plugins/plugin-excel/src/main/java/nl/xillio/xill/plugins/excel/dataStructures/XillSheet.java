@@ -155,8 +155,8 @@ public class XillSheet implements MetadataExpression {
 	public void setCellValue(XillCellRef cellRef, String value) {
 		getCell(cellRef).setCellValue(value);
 		calculateRowLength();
-		if (cellRef.getColumn() > columnLength)
-			columnLength = cellRef.getColumn();
+		if (cellRef.getColumn() + 1 > columnLength)
+			columnLength = cellRef.getColumn() + 1;
 
 	}
 
@@ -169,8 +169,8 @@ public class XillSheet implements MetadataExpression {
 	public void setCellValue(XillCellRef cellRef, Double value) {
 		getCell(cellRef).setCellValue(value);
 		calculateRowLength();
-		if (cellRef.getColumn() > columnLength)
-			columnLength = cellRef.getColumn();
+		if (cellRef.getColumn() + 1 > columnLength)
+			columnLength = cellRef.getColumn() + 1;
 
 	}
 
@@ -183,8 +183,8 @@ public class XillSheet implements MetadataExpression {
 	public void setCellValue(XillCellRef cellRef, boolean value) {
 		getCell(cellRef).setCellValue(value);
 		calculateRowLength();
-		if (cellRef.getColumn() > columnLength)
-			columnLength = cellRef.getColumn();
+		if (cellRef.getColumn() + 1 > columnLength)
+			columnLength = cellRef.getColumn() + 1;
 
 	}
 
