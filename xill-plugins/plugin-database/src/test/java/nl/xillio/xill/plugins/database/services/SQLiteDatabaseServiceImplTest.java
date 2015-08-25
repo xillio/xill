@@ -1,9 +1,8 @@
 package nl.xillio.xill.plugins.database.services;
 
-import static org.mockito.Matchers.any;
+import static nl.xillio.xill.plugins.database.services.DatabaseServiceTestUtils.baseDatabaseServiceStubs;
 import static org.mockito.Matchers.isNull;
 import static org.mockito.Matchers.notNull;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -45,8 +44,7 @@ public class SQLiteDatabaseServiceImplTest {
 		String connectionURL = "URL";
 		Tuple[] options = new Tuple[] {};
 		SQLiteDatabaseServiceImpl spyService = spy(service);
-		doReturn(con).when(spyService).connect(any());
-		doReturn(connectionURL).when(spyService).createConnectionURL(notNull(String.class), any(), any());
+		baseDatabaseServiceStubs(spyService, con, connectionURL);
 
 		// Run
 		Connection returnedCon = spyService.createConnection("db", null, null, options);
