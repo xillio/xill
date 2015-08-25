@@ -24,13 +24,20 @@ import com.google.inject.Singleton;
 public class NodeServiceImpl implements NodeService {
 
 	@Override 
-	public XmlNode insertNode(final XmlNode parentXmlNode, final String newChildNodeStr, final XmlNode beforeChildXmlNode) throws Exception, XmlParseException {
-		XmlNode newXmlChildNode = new XmlNode(newChildNodeStr);
-		
+	public XmlNode insertNode(final XmlNode parentXmlNode, final String newChildNodeStr, final XmlNode beforeChildXmlNode) {
+		XmlNode newXmlChildNode = null;
+		try {
+			newXmlChildNode = new XmlNode(newChildNodeStr);
+		} catch (XmlParseException e) {
+			throw new RobotRuntimeException("Function insertNode parse error!\n" + e.getMessage());
+		} catch (Exception e) {
+			throw new RobotRuntimeException("Function insertNode error!\n" + e.getMessage());
+		}
+
 		Node parentNode = parentXmlNode.getNode();
 		Node beforeChildNode = beforeChildXmlNode == null ? null : beforeChildXmlNode.getNode();
 		Node newNode = parentXmlNode.getDocument().importNode(newXmlChildNode.getNode(), true);
-		
+
 		if (beforeChildNode == null || !beforeChildNode.getParentNode().equals(parentNode)) {
 			parentNode.appendChild(newNode);
 		} else {
@@ -45,7 +52,7 @@ public class NodeServiceImpl implements NodeService {
 		Node parentNode = parentXmlNode.getNode();
 		Node subNode = subXmlNode.getNode();
 		Node beforeNode = (beforeXmlNode == null ? null : beforeXmlNode.getNode());
-		
+
 		// If by accident we ended up with a document, get the root child node
 		if (subNode instanceof Document) {
 			subNode = subNode.getFirstChild();
@@ -65,8 +72,15 @@ public class NodeServiceImpl implements NodeService {
 	}
 
 	@Override
-	public XmlNode replaceNode(final XmlNode orgXmlNode, final String replXmlStr)  throws Exception, XmlParseException {
-		XmlNode replXmlNode = new XmlNode(replXmlStr);
+	public XmlNode replaceNode(final XmlNode orgXmlNode, final String replXmlStr) {
+		XmlNode replXmlNode = null;
+		try {
+			replXmlNode = new XmlNode(replXmlStr);
+		} catch (XmlParseException e) {
+			throw new RobotRuntimeException("Function replaceNode parse error!\n" + e.getMessage());
+		} catch (Exception e) {
+			throw new RobotRuntimeException("Function replaceNode error!\n" + e.getMessage());
+		}			
 		Node orgNode = orgXmlNode.getNode();
 		Node newReplNode = orgXmlNode.getDocument().importNode(replXmlNode.getNode(), true);
 		orgNode.getParentNode().replaceChild(newReplNode, orgNode);
@@ -91,7 +105,7 @@ public class NodeServiceImpl implements NodeService {
 	public void removeAttribute(final XmlNode xmlNode, final String attrName) {
 		xmlNode.getNode().getAttributes().removeNamedItem(attrName);
 	}
-	
+
 	@Override
 	public XmlNode fromFile(final File xmlSource) {
 		String content = "";
@@ -111,6 +125,17 @@ public class NodeServiceImpl implements NodeService {
 			return xmlNode;
 		} catch (XmlParseException e) {
 			throw new RobotRuntimeException("The XML source is invalid.", e);
+		} catch (Exception e) {
+			throw new RobotRuntimeException("Error occured.", e);
+		}
+	}
+
+	@Override
+	public XmlNode fromString(final String xmlText) {
+		try {
+			return new XmlNode(xmlText);
+		} catch (XmlParseException e) {
+			throw new RobotRuntimeException("The XML source is invalid." + e.getMessage());
 		} catch (Exception e) {
 			throw new RobotRuntimeException("Error occured.", e);
 		}
