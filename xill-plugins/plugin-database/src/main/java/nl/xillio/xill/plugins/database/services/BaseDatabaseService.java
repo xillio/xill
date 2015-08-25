@@ -1,9 +1,5 @@
 package nl.xillio.xill.plugins.database.services;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -19,27 +15,25 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.StreamSupport;
+
+import nl.xillio.xill.plugins.database.util.StatementIterator;
+import nl.xillio.xill.plugins.database.util.Tuple;
+import nl.xillio.xill.plugins.database.util.TypeConvertor;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Iterators;
 
-import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
-import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
-import nl.xillio.xill.plugins.database.util.StatementIterator;
-import nl.xillio.xill.plugins.database.util.StatementIterator;
-import nl.xillio.xill.plugins.database.util.Tuple;
-import nl.xillio.xill.plugins.database.util.Tuple;
-import nl.xillio.xill.plugins.database.util.TypeConvertor;
-
-
 @SuppressWarnings("unchecked")
 public abstract class BaseDatabaseService implements DatabaseService {
 
 	private static final Pattern PARAMETER_PATTERN = Pattern.compile("(?!\\\\):([a-zA-Z]+)");
 
+	/**
+	 * Cache for delimiters, prevents from constantly getrting the metadata
+	 */
+	private LinkedHashMap<Connection, String> delimiter = new LinkedHashMap<>();
 
 	/**
 	 * Create a JDBC {@link Connection} to the database at the given URL
@@ -219,7 +213,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 			}
 		});
 
-		String query = createSelectQuery(connection,table, new ArrayList<String>(notNullConstraints.keySet()));
+		String query = createSelectQuery(connection, table, new ArrayList<String>(notNullConstraints.keySet()));
 		statement = connection.prepareStatement(query);
 
 		// Fill out values
@@ -254,12 +248,12 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		}
 	}
 
-	private String createSelectQuery(final Connection connection,final String table, final List<String> keys) {
+	private String createSelectQuery(final Connection connection, final String table, final List<String> keys) throws SQLException {
 
 		// creates WHERE conditions SQL string
 		String constraintsSql;
 		if (keys.size() > 0) {
-			constraintsSql = createQueryPart(connection,keys, " AND ");
+			constraintsSql = createQueryPart(connection, keys, " AND ");
 		} else {
 			constraintsSql = "1";
 		}
@@ -296,7 +290,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 
 	private void insertObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject) throws SQLException {
 		for (Map.Entry<String, Object> entry : newObject.entrySet()) {
-			newObject.put(entry.getKey(), escapeIdentifier((String) entry.getValue(),connection));
+			newObject.put(entry.getKey(), escapeIdentifier((String) entry.getValue(), connection));
 		}
 		String ks = StringUtils.join(newObject.keySet(), ',');
 
@@ -311,11 +305,11 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		fillStatement(newObject, statement, 1);
 		statement.execute();
 	}
-	
+
 	private void updateObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject, final List<String> keys)
 			throws SQLException {
-		String ss = createQueryPart(connection,newObject.keySet(), ",");
-		String ws = createQueryPart(connection,keys, " AND ");
+		String ss = createQueryPart(connection, newObject.keySet(), ",");
+		String ws = createQueryPart(connection, keys, " AND ");
 
 		String sql = "UPDATE " + table + " SET " + ss + " WHERE " + ws;
 
@@ -331,7 +325,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		if (statement.getUpdateCount() == 0) {
 			insertObject(connection, table, newObject);
 		}
-		
+
 	}
 
 	/**
@@ -341,6 +335,8 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 *        The map of which all keys represent columns
 	 * @param statement
 	 *        Prepared statements with as many '?' markers as entries in the newObject map
+	 * @param firstMarkerNumber
+	 *        The index of the '?' to start setting values
 	 * @throws SQLException
 	 */
 	private void fillStatement(final LinkedHashMap<String, Object> newObject, final PreparedStatement statement, final int firstMarkerNumber) throws SQLException {
@@ -353,29 +349,25 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	/**
 	 * Create a String in this form (where "," is the separator in this case): "key1 = ?,key2 = ?,key3 = ? "
 	 */
-	private String createQueryPart(Connection connection,final Iterable<String> keys, final String separator) {
-		return StreamSupport.stream(keys.spliterator(), false).map(k -> escapeIdentifier(k,connection) + " = ?").reduce((q, k) -> q + separator + k).get();
+	private String createQueryPart(Connection connection, final Iterable<String> keys, final String separator) throws SQLException {
+		List<String> escaped = new ArrayList<String>();
+		for (String identifier : keys) {
+			escaped.add(escapeIdentifier(identifier, connection));
+		}
+		return escaped.stream()
+			.map(k -> k + " = ?")
+			.reduce((q, k) -> q + separator + k).get();
 	}
 
-	
-	private LinkedHashMap<Connection, String> delimiter = new LinkedHashMap<>();
-
-	public String escapeIdentifier(final String identifier,Connection connection) {
+	private String escapeIdentifier(final String identifier, Connection connection) throws SQLException {
 		String delimiterString = null;
+
+		if (!delimiter.containsKey(connection)) {
+			delimiter.put(connection, connection.getMetaData().getIdentifierQuoteString());
+		}
 		delimiterString = delimiter.get(connection);
-		if (delimiterString == null) {
-			try {
-				delimiter.put(connection, connection.getMetaData().getIdentifierQuoteString());
-			} catch (SQLException e1) {
-				delimiter.put(connection,"");
-			}
-		}
-		if(delimiterString == null){
-			delimiterString = "";
-		}
 
 		return delimiterString + identifier + delimiterString;
 	}
-	
-	
+
 }
