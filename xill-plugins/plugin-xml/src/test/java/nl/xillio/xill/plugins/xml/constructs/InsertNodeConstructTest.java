@@ -26,7 +26,7 @@ public class InsertNodeConstructTest {
 		XmlNode returnXmlNode = mock(XmlNode.class);
 
 		NodeService nodeService = mock(NodeService.class);
-		when(nodeService.replaceNode(any(), any())).thenReturn(returnXmlNode);
+		when(nodeService.insertNode(any(), anyString(), any())).thenReturn(returnXmlNode);
 
 		XmlNode xmlNode = mock(XmlNode.class);
 		MetaExpression xmlNodeVar = mock(MetaExpression.class);
@@ -36,10 +36,10 @@ public class InsertNodeConstructTest {
 		MetaExpression textVar = MockUtils.mockStringExpression(text);
 
 		// Run
-		MetaExpression result = ReplaceNodeConstruct.process(xmlNodeVar, textVar, nodeService);
+		MetaExpression result = InsertNodeConstruct.process(xmlNodeVar, textVar, MockUtils.mockNullExpression(), nodeService);
 
 		// Verify
-		verify(nodeService).replaceNode(any(), anyString());
+		verify(nodeService).insertNode(any(), anyString(), any());
 
 		// Assert
 		assertSame(result.getMeta(XmlNode.class), returnXmlNode);
@@ -55,14 +55,14 @@ public class InsertNodeConstructTest {
 		MetaExpression textVar = MockUtils.mockStringExpression(text);
 
 		NodeService nodeService = mock(NodeService.class);
-		when(nodeService.replaceNode(any(), anyString())).thenThrow(new RobotRuntimeException("Function insertNode parse error!\n This mocking is really odd.."));
+		when(nodeService.insertNode(any(), anyString(), any())).thenThrow(new RobotRuntimeException("Function insertNode parse error!\n This mocking is really odd.."));
 
 		XmlNode xmlNode = mock(XmlNode.class);
 		MetaExpression xmlNodeVar = mock(MetaExpression.class);
 		when(xmlNodeVar.getMeta(XmlNode.class)).thenReturn(xmlNode);
 
 		// Run
-		ReplaceNodeConstruct.process(xmlNodeVar, textVar, nodeService);
+		InsertNodeConstruct.process(xmlNodeVar, textVar, MockUtils.mockNullExpression(), nodeService);
 	}
 
 	/**
@@ -81,6 +81,6 @@ public class InsertNodeConstructTest {
 		when(xmlNodeVar.isNull()).thenReturn(true);
 
 		// Run
-		ReplaceNodeConstruct.process(xmlNodeVar, textVar, nodeService);
+		InsertNodeConstruct.process(xmlNodeVar, textVar, MockUtils.mockNullExpression(), nodeService);
 	}
 }
