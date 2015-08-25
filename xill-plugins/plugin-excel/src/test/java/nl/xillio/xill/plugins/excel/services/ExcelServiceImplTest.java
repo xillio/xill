@@ -95,7 +95,7 @@ public class ExcelServiceImplTest {
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = FileAlreadyExistsException.class,
-					expectedExceptionsMessageRegExp = "File already exists: no new workbook has been created.")
+					expectedExceptionsMessageRegExp = "File already exists: no new workbook has been created")
 	public void testCreateWorkbookFileAlreadyExists() throws Exception {
 		File file = createFile(true, true);
 		ExcelService service = createService(null);
@@ -143,7 +143,7 @@ public class ExcelServiceImplTest {
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = NullPointerException.class,
-					expectedExceptionsMessageRegExp = "The provided workbook is invalid.")
+					expectedExceptionsMessageRegExp = "The provided workbook is invalid")
 	public void testCreateSheetWorkbookNull() throws Exception {
 		ExcelService service = createService(null);
 		service.createSheet(null, "");
@@ -155,7 +155,7 @@ public class ExcelServiceImplTest {
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = IllegalArgumentException.class,
-					expectedExceptionsMessageRegExp = "No name was supplied: sheet names must be at least one character long.")
+					expectedExceptionsMessageRegExp = "No name was supplied: sheet names must be at least one character long")
 	public void testCreateSheetNoName() throws Exception {
 		ExcelService service = createService(null);
 		service.createSheet(createWorkbook(false), "");
@@ -167,7 +167,7 @@ public class ExcelServiceImplTest {
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = IllegalArgumentException.class,
-					expectedExceptionsMessageRegExp = "No name was supplied: sheet names must be at least one character long.")
+					expectedExceptionsMessageRegExp = "No name was supplied: sheet names must be at least one character long")
 	public void testCreateSheetNameNull() throws Exception {
 		ExcelService service = createService(null);
 		service.createSheet(createWorkbook(false), null);
@@ -179,7 +179,7 @@ public class ExcelServiceImplTest {
 	 * @throws Exception
 	 */
 	@Test(expectedExceptions = IllegalArgumentException.class,
-					expectedExceptionsMessageRegExp = "Sheet name is too long: must be less than 32 characters.")
+					expectedExceptionsMessageRegExp = "Sheet name is too long: must be less than 32 characters")
 	public void testCreateSheetNameTooLong() throws Exception {
 		ExcelService service = createService(null);
 		service.createSheet(createWorkbook(false), "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"); //Exactly 32 a's
