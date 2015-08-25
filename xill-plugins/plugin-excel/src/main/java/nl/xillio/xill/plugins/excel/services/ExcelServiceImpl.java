@@ -42,7 +42,7 @@ public class ExcelServiceImpl implements ExcelService {
 	@Override
 	public XillWorkbook createWorkbook(File file) throws IOException {
 		if (file.exists())
-			throw new FileAlreadyExistsException("File already exists: no new workbook has been created.");
+			throw new FileAlreadyExistsException("File already exists: no new workbook has been created");
 
 		return factory.createWorkbook(file);
 	}
@@ -50,11 +50,11 @@ public class ExcelServiceImpl implements ExcelService {
 	@Override
 	public XillSheet createSheet(XillWorkbook workbook, String sheetName) {
 		if (workbook == null)
-			throw new NullPointerException("The provided workbook is invalid.");
+			throw new NullPointerException("The provided workbook is invalid");
 		if (sheetName == null || sheetName.isEmpty())
-			throw new IllegalArgumentException("No name was supplied: sheet names must be at least one character long.");
+			throw new IllegalArgumentException("No name was supplied: sheet names must be at least one character long");
 		if (sheetName.length() > 31)
-			throw new IllegalArgumentException("Sheet name is too long: must be less than 32 characters.");
+			throw new IllegalArgumentException("Sheet name is too long: must be less than 32 characters");
 		if (workbook.isReadonly())
 			throw new IllegalArgumentException("Workbook is read-only");
 		return workbook.makeSheet(sheetName);

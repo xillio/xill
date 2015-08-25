@@ -97,7 +97,7 @@ public class XillWorkbookFactory {
 				workbook = new XSSFWorkbook();
 				break;
 			default:
-				throw new NotImplementedException("This extension is not supported as Excel workbook.");
+				throw new NotImplementedException("This extension is not supported as Excel workbook");
 		}
 		return new XillWorkbook(workbook, file);
 	}

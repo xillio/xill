@@ -47,7 +47,7 @@ public class LoadWorkbookConstruct extends Construct {
 			workbook = excelService.loadWorkbook(file);
 			workbookText = workbook.getFileString();
 		} catch (IllegalArgumentException e) {
-			throw new RobotRuntimeException("Path does not lead to an xls or xlsx Microsoft Excel file");
+			throw new RobotRuntimeException("Path does not lead to an xls or xlsx Microsoft Excel file", e);
 		} catch (FileNotFoundException e) {
 			throw new RobotRuntimeException("There is no file at the given path", e);
 		} catch (InvalidObjectException e) {
