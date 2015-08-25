@@ -14,7 +14,6 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.database.BaseDatabaseConstruct;
-import nl.xillio.xill.plugins.database.services.BaseDatabaseService;
 import nl.xillio.xill.plugins.database.services.DatabaseServiceFactory;
 import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
 
@@ -30,13 +29,13 @@ public class StoreObjectConstruct extends BaseDatabaseConstruct {
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		Argument[] args =
 		{
-		    new Argument("table", ATOMIC),
-		    new Argument("object", OBJECT),
-		    new Argument("keys", LIST),
-		    new Argument("overwrite", TRUE, ATOMIC),
-		    new Argument("database", NULL, ATOMIC),
+				new Argument("table", ATOMIC),
+				new Argument("object", OBJECT),
+				new Argument("keys", LIST),
+				new Argument("overwrite", TRUE, ATOMIC),
+				new Argument("database", NULL, ATOMIC),
 		};
-		return new ConstructProcessor((a) -> process(a, factory,context.getRobotID()), args);
+		return new ConstructProcessor((a) -> process(a, factory, context.getRobotID()), args);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -53,13 +52,13 @@ public class StoreObjectConstruct extends BaseDatabaseConstruct {
 
 		List<MetaExpression> keysMeta = (ArrayList<MetaExpression>) args[2].getValue();
 		List<String> keys = keysMeta.stream().map(m -> m.getStringValue()).collect(Collectors.toList());
-		
+
 		boolean overwrite = args[3].getBooleanValue();
 
 		try {
 			factory.getService(metaData.getDatabaseName()).storeObject(connection, tblName, newObject, keys, overwrite);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
-			throw new RobotRuntimeException("SQL Exception, " + e.getMessage());
+			throw new RobotRuntimeException("SQL Exception, " + e.getMessage(), e);
 		}
 
 		return NULL;
