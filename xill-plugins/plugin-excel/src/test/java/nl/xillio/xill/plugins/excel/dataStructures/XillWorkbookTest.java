@@ -1,7 +1,9 @@
 package nl.xillio.xill.plugins.excel.datastructures;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -225,4 +227,42 @@ public class XillWorkbookTest {
 		doThrow(new IOException()).when(workbook).write(any(OutputStream.class));
 		testWorkbook.save(file);
 	}
+
+	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "New file should have the same extension as original \\(xls, not xlsx\\)")
+	public void testCreateCopyExtensionMismatch() throws Exception {
+		File file = mock(File.class);
+		XillWorkbook workbook = new XillWorkbook(new HSSFWorkbook(), mock(File.class));
+		when(file.getName()).thenReturn("name.xlsx");
+		workbook.createCopy(file);
+	}
+
+	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "New file should have the same extension as original \\(xlsx, not xls\\)")
+	public void testCreateCopyExtensionMismatch2() throws Exception {
+		File file = mock(File.class);
+		XillWorkbook workbook = new XillWorkbook(new XSSFWorkbook(), mock(File.class));
+		when(file.getName()).thenReturn("name.xls");
+		workbook.createCopy(file);
+	}
+
+	@Test
+	public void testCreateCopy() throws Exception {
+		File file = mock(File.class);
+		XillWorkbook workbook = spy(new XillWorkbook(new XSSFWorkbook(), file));
+
+		File returnFile = mock(File.class);
+		when(returnFile.getName()).thenReturn("name2.xlsx");
+
+		doNothing().when(workbook).copy(file, returnFile);
+
+		XillWorkbookFactory factory = mock(XillWorkbookFactory.class);
+		XillWorkbook returnbook = mock(XillWorkbook.class);
+		when(factory.loadWorkbook(returnFile)).thenReturn(returnbook);
+
+		doReturn(factory).when(workbook).getFactory();
+
+		XillWorkbook result = workbook.createCopy(returnFile);
+		verify(returnFile, times(1)).setWritable(true);
+		assertEquals(result, returnbook);
+	}
+
 }

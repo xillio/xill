@@ -1,6 +1,7 @@
 package nl.xillio.xill.plugins.excel.constructs;
 
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.excel.datastructures.XillWorkbook;
@@ -63,7 +64,6 @@ public class SaveConstructTest {
 	 * Checks if construct returns correctly when a new save location (path)
 	 * is provided
 	 */
-	/*
 	@Test
 	public void testProcessPath() throws Exception {
 
@@ -82,11 +82,12 @@ public class SaveConstructTest {
 		MetaExpression workbookInput = fromValue("workbook");
 		workbookInput.storeMeta(XillWorkbook.class, workbook);
 
-		when(service.save(any(XillWorkbook.class), any(File.class))).thenReturn("saved to dir");
-		assertEquals(SaveConstruct.process(service, context, workbookInput, inputPath).getStringValue(), "saved to dir");
-	}
+		XillWorkbook returnbook = mock(XillWorkbook.class);
+		when(returnbook.getLocation()).thenReturn("path");
 
-	*/
+		when(service.save(any(XillWorkbook.class), any(File.class))).thenReturn(returnbook);
+		assertEquals(SaveConstruct.process(service, context, workbookInput, inputPath).getStringValue(), "Saved [path]");
+	}
 
 	/**
 	 * Checks if a RobotRuntimeException has been thrown when there was a write problem
@@ -124,15 +125,20 @@ public class SaveConstructTest {
 		SaveConstruct.processToFolder(service, workbook, mock(File.class));
 	}
 
-	/**
-	 * Checks if the method to write the workbook to a new path returns correctly
-	 */
-	/*
-	@Test
-	public void testProcessToFolder() throws Exception {
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Cannot write to this file: read-only")
+	public void testProcessOverwriteThrowsIllegalArgumentException() throws Exception {
 		ExcelService service = mock(ExcelService.class);
 		XillWorkbook workbook = mock(XillWorkbook.class);
-		when(service.save(any(XillWorkbook.class), any(File.class))).thenReturn("correct");
-		assertEquals(fromValue("correct"), SaveConstruct.processToFolder(service, workbook, mock(File.class)));
-	}*/
+		when(service.save(workbook)).thenThrow(new IllegalArgumentException("Cannot write to this file: read-only"));
+		SaveConstruct.processOverwrite(service, workbook);
+	}
+
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Cannot write to this file: read-only")
+	public void testProcessToFolderThrowsIllegalArgumentException() throws Exception {
+		ExcelService service = mock(ExcelService.class);
+		XillWorkbook workbook = mock(XillWorkbook.class);
+		File file = mock(File.class);
+		when(service.save(workbook, file)).thenThrow(new IllegalArgumentException("Cannot write to this file: read-only"));
+		SaveConstruct.processToFolder(service, workbook, file);
+	}
 }

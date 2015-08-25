@@ -164,4 +164,40 @@ public class XillSheetTest {
 		testSheet = new XillSheet(sheet, false);
 		assertFalse(testSheet.isReadonly());
 	}
+
+	/**
+	 * Tests if setCellValue enlarges the sheet when a cell outside its bounds
+	 * has been created.
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void testSetCellValueEnlargesColumn() throws Exception {
+		//Creating setup
+		Sheet oldsheet = mock(Sheet.class);
+		when(oldsheet.getLastRowNum()).thenReturn(4);
+		XillSheet sheet = spy(new XillSheet(oldsheet, false));
+		XillCellRef cellRef = mock(XillCellRef.class);
+		doReturn(mock(XillCell.class)).when(sheet).getCell(cellRef);
+		doReturn(3).when(sheet).calculateColumnLength();
+
+		//Testing boolean signature
+		when(cellRef.getColumn()).thenReturn(10);
+		sheet.setCellValue(cellRef, false);
+		assertEquals(10, sheet.getColumnLength());
+
+		//Testing string signature
+		when(cellRef.getColumn()).thenReturn(11);
+		sheet.setCellValue(cellRef, "string");
+		assertEquals(11, sheet.getColumnLength());
+
+		//Testing double signature
+		when(cellRef.getColumn()).thenReturn(12);
+		sheet.setCellValue(cellRef, 1.3);
+		assertEquals(12, sheet.getColumnLength());
+
+		//Verifying that the proper method has been called
+		verify(cellRef, times(6)).getColumn();
+	}
+
 }

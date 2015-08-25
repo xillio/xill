@@ -174,15 +174,37 @@ public class XillWorkbook implements MetadataExpression {
 		}
 	}
 
+	/**
+	 * Creates a copy of the current workbook at a new location on the file system.
+	 *
+	 * @param file a {@link File} object pointing to the new location of the file
+	 * @return a clone of this workbook, but written to the new location
+	 * @throws IllegalArgumentException when there is a mismatch between the new extension
+	 *                                  and the current extension of the workbook
+	 * @throws IOException              when a file is being written to itself
+	 * @throws IOException              when the IO operation could not succeed
+	 */
 	public XillWorkbook createCopy(File file) throws IOException {
 		String extension = FilenameUtils.getExtension(file.getName());
-		if (!(extension.equals("xls") && workbook instanceof HSSFWorkbook ||
-						extension.equals("xlsx") && workbook instanceof XSSFWorkbook))
-			throw new IllegalArgumentException("New file should have the same extension as the original");
-		Files.copy(this.file, file);
+		String currentExtension = workbook instanceof HSSFWorkbook ? "xls" : "xlsx";
+		if (!(currentExtension.equals(extension)))
+			throw new IllegalArgumentException("New file should have the same extension as original (" + currentExtension + ", not " + extension + ")");
+
+		copy(this.file, file);
 		file.setWritable(true);
-		XillWorkbookFactory factory = new XillWorkbookFactory();
+		XillWorkbookFactory factory = getFactory();
 		return factory.loadWorkbook(file);
+	}
+
+	//Wrappers for unit testing
+	//Classes underneath are only called to make the code testable
+
+	void copy(File origin, File destination) throws IOException {
+		Files.copy(origin, destination);
+	}
+
+	XillWorkbookFactory getFactory() {
+		return new XillWorkbookFactory();
 	}
 
 }

@@ -39,9 +39,9 @@ public class XillCellRef implements MetadataExpression {
 	 *               in numeric notation (e.g. 28), 1-indexed (Excel notation)
 	 */
 	public XillCellRef(int column, int row) {
-		if (row <= 0)
+		if (row < 1)
 			throw new IllegalArgumentException("The row number must be one or higher (" + row + " was used)");
-		if (column <= 0)
+		if (column < 1)
 			throw new IllegalArgumentException("The column number must be one or higher (" + column + " was used)");
 		cellReference = new CellReference(row - 1, column - 1);
 	}

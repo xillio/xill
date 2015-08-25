@@ -374,4 +374,31 @@ public class ExcelServiceImplTest {
 		verify(workbook, times(1)).save();
 	}
 
+	/**
+	 * Checks if an exception is thrown when trying to save to an existing file
+	 *
+	 * @throws Exception
+	 */
+	@Test(expectedExceptions = IllegalArgumentException.class,
+					expectedExceptionsMessageRegExp = "Cannot write to this file: already exists")
+	public void saveAlreadyExists() throws Exception {
+		ExcelServiceImpl service = new ExcelServiceImpl(null);
+		File file = mock(File.class);
+		when(file.exists()).thenReturn(true);
+		service.save(mock(XillWorkbook.class), file);
+	}
+
+	/**
+	 * Checks if an exception is thrown when trying to remove a sheet form a readonly workbook
+	 */
+	@Test(expectedExceptions = IllegalArgumentException.class,
+					expectedExceptionsMessageRegExp = "workbook is read-only")
+	public void removeReadOnlySheet() {
+		ExcelServiceImpl service = new ExcelServiceImpl(null);
+		XillWorkbook workbook = mock(XillWorkbook.class);
+		when(workbook.isReadonly()).thenReturn(true);
+		when(workbook.getFileString()).thenReturn("workbook");
+		service.removeSheet(workbook, "");
+	}
+
 }

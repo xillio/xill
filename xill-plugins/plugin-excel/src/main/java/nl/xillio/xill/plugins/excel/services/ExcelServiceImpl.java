@@ -14,7 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Daan Knoope on 4-8-2015.
+ * Implementation for the ExcelService interface
+ *
+ * @author Daan Knoope
  */
 @Singleton
 public class ExcelServiceImpl implements ExcelService {

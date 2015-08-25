@@ -96,4 +96,8 @@ public class XillCellTest {
 		verify(cell, times(1)).setCellValue(true);
 	}
 
+	//It is not possible to test what happens when a FormulaParseException is thrown in
+	//setCellValue(String value) since that exception (and everything that raises it) is
+	//protected.
+
 }
