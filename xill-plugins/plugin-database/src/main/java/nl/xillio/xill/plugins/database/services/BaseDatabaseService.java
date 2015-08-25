@@ -159,9 +159,16 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 * @param options
 	 *        JDBC specific options
 	 * @return Connection String
+	 * @throws SQLException
+	 *         When a database error occurs
 	 */
 	protected abstract String createConnectionURL(String database, String user, String pass, Tuple<String, String>... options) throws SQLException;
 
+	/**
+	 * Loads the JDBC driver needed for this service to function. Should use {@link Class#forName(String)} in most cases.
+	 * 
+	 * @throws ClassNotFoundException
+	 */
 	public abstract void loadDriver() throws ClassNotFoundException;
 
 	/**
@@ -176,7 +183,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 *        can be null
 	 * @param options
 	 *        Driver specific options
-	 * @return
+	 * @return A URL to connect to the database
 	 */
 	protected String createJDBCURL(final String type, final String database, final String user, final String pass, String optionsMarker, String optionsSeparator,final Tuple<String, String>... options) {
 		String url = String.format("jdbc:%s://%s", type, database);
@@ -205,7 +212,6 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	@Override
 	public LinkedHashMap<String, Object> getObject(final Connection connection, final String table, final LinkedHashMap<String, Object> constraints) throws SQLException {
 		// prepare statement
-		PreparedStatement statement = null;
 		final LinkedHashMap<String, Object> notNullConstraints = new LinkedHashMap<>();
 		constraints.forEach((k, v) -> {
 			if (v != null) {
@@ -214,7 +220,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		});
 
 		String query = createSelectQuery(connection, table, new ArrayList<String>(notNullConstraints.keySet()));
-		statement = connection.prepareStatement(query);
+		PreparedStatement statement = connection.prepareStatement(query);
 
 		// Fill out values
 		fillStatement(notNullConstraints, statement, 1);
@@ -232,9 +238,10 @@ public abstract class BaseDatabaseService implements DatabaseService {
 				Object value = result.getObject(s);
 				map.put(here, TypeConvertor.convertJDBCType(value));
 			}
-
+			statement.close();
 			return map;
 		} else {
+			statement.close();
 			throw new IllegalArgumentException("No objects found with given constraints.");
 		}
 	}
@@ -307,6 +314,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		fillStatement(newObject, statement, 1);
 		statement.execute();
+		statement.close();
 	}
 
 	private void updateObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject, final List<String> keys)
@@ -328,6 +336,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		if (statement.getUpdateCount() == 0) {
 			insertObject(connection, table, newObject);
 		}
+		statement.close();
 
 	}
 

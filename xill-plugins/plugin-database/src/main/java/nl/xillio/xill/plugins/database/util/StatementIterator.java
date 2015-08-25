@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  * 
@@ -32,7 +33,7 @@ public class StatementIterator implements Iterator<Object> {
 	private boolean hasNext;
 
 	/**
-	 * Create an iterator over all results of a {@link Statement}.
+	 * Create an iterator over all results of a {@link Statement}. When iterating is finished the statement is closed.
 	 * 
 	 * @param stmt
 	 *        The statement to iterate over
@@ -67,6 +68,8 @@ public class StatementIterator implements Iterator<Object> {
 	 * Moves to the statement's next result and retrieves it
 	 */
 	private void nextResult() {
+		if (!hasNext)
+			throw new NoSuchElementException("Iterator is empty");
 		currentSet = null;
 		currentUpdateCount = -1;
 		try {
@@ -74,6 +77,8 @@ public class StatementIterator implements Iterator<Object> {
 			retrieveNextResult(resultSet);
 			// If the next result is no result and no update count, iterating has finished
 			hasNext = currentSet != null || currentUpdateCount != -1;
+			if (!hasNext)
+				stmt.close();
 		} catch (SQLException e) {
 			throw new StatementIterationException(e);
 		}

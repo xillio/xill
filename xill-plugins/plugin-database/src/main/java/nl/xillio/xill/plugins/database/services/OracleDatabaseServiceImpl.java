@@ -7,12 +7,16 @@ import java.util.Properties;
 
 import nl.xillio.xill.plugins.database.util.Database;
 import nl.xillio.xill.plugins.database.util.Tuple;
+import oracle.jdbc.driver.OracleConnection;
 
 public class OracleDatabaseServiceImpl extends BaseDatabaseService {
 
 	@Override
 	public Connection createConnection(String database, String user, String pass, Tuple<String, String>... options) throws SQLException {
-		return connect(createConnectionURL(database, user, pass, options), createProperties(options));
+		Connection connection = connect(createConnectionURL(database, user, pass, options), createProperties(options));
+		// Enable prepared statement caching
+		((OracleConnection) connection).setImplicitCachingEnabled(true);
+		return connection;
 	}
 
 	@Override
