@@ -1,0 +1,10 @@
+description = 'this project contains utility code for unit testing'
+
+
+
+dependencies {
+    compile project(':api')
+    
+    compile 'org.testng:testng:6.9.4'
+    compile "org.mockito:mockito-core:1.+"
+}

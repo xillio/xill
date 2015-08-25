@@ -9,15 +9,15 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 
+import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.services.json.JsonParser;
+import nl.xillio.xill.testutils.ConstructTest;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.google.gson.JsonSyntaxException;
-
-import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.system.util.ConstructTest;
-import nl.xillio.xill.services.json.JsonParser;
 
 /**
  * Test the {@link ParseJSONConstruct}
@@ -63,7 +63,7 @@ public class ParseJSONConstructTest extends ConstructTest {
 	 * @throws Throwable
 	 *         while testing
 	 */
-	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp="Invalid JSON input: (.+)")
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid JSON input: (.+)")
 	public void testProcessInvalid() throws Throwable {
 		// Mock context
 		MetaExpression expression = mockExpression(ATOMIC);

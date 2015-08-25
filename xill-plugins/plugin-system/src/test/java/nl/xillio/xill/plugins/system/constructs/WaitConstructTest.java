@@ -1,12 +1,13 @@
 package nl.xillio.xill.plugins.system.constructs;
 
-import static org.mockito.Mockito.*;
-
-import org.testng.annotations.Test;
-
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.plugins.system.services.wait.WaitService;
-import nl.xillio.xill.plugins.system.util.ConstructTest;
+import nl.xillio.xill.testutils.ConstructTest;
+
+import org.testng.annotations.Test;
 
 /**
  * Test the {@link WaitConstruct}
@@ -28,7 +29,7 @@ public class WaitConstructTest extends ConstructTest {
 		// Run
 		WaitConstruct.process(delayVar, service);
 
-		//Verify
+		// Verify
 		verify(service).wait(delay.intValue());
 	}
 }
