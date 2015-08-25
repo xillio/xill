@@ -289,11 +289,14 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	}
 
 	private void insertObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject) throws SQLException {
-		for (Map.Entry<String, Object> entry : newObject.entrySet()) {
-			newObject.put(entry.getKey(), escapeIdentifier((String) entry.getValue(), connection));
+		
+		List<String> escaped = new ArrayList<>();
+		for (String key : newObject.keySet()){
+			escaped.add(escapeIdentifier(key, connection));
 		}
-		String ks = StringUtils.join(newObject.keySet(), ',');
-
+		
+		String ks = StringUtils.join(escaped, ",");
+		
 		// Create the same number of prepared statement markers as there are keys
 		char[] markers = new char[newObject.size()];
 		Arrays.fill(markers, '?');
