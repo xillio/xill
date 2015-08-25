@@ -23,7 +23,7 @@ public class MysqlDatabaseServiceImpl extends BaseDatabaseService {
 
 	@Override
 	protected String createConnectionURL(String database, String user, String pass, Tuple<String, String>... options) {
-		return createJDBCURL("mysql", database, user, pass, options);
+		return createJDBCURL("mysql", database, user, pass, "?", "&", options);
 	}
 
 	@Override

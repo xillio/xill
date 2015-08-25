@@ -184,26 +184,26 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 *        Driver specific options
 	 * @return
 	 */
-	protected String createJDBCURL(final String type, final String database, final String user, final String pass, final Tuple<String, String>... options) {
+	protected String createJDBCURL(final String type, final String database, final String user, final String pass, String optionsMarker, String optionsSeparator,final Tuple<String, String>... options) {
 		String url = String.format("jdbc:%s://%s", type, database);
 		// no other parameters, so return
 		if (user == null && pass == null && options.length == 0) {
 			return url;
 		}
 		// question mark for url parameters
-		url = url.concat("?");
+		url = url+optionsMarker;
 
 		// append user
 		if (user != null) {
-			url = String.format("%suser=%s&", url, user);
+			url = String.format("%suser=%s%s", url, user, optionsSeparator);
 		}
 		// append password
 		if (pass != null) {
-			url = String.format("%spassword=%s&", url, pass);
+			url = String.format("%spassword=%s%s", url, pass, optionsSeparator);
 		}
 		// append other options
 		for (Tuple<String, String> option : options) {
-			url = String.format("%s%s=%s&", url, option.getKey(), option.getValue());
+			url = String.format("%s%s=%s%s", url, option.getKey(), option.getValue(), optionsSeparator);
 		}
 		return url;
 	}

@@ -94,6 +94,8 @@ public enum TypeConvertor {
 	 * @return An object that can be passed to {@link MetaExpression#parseObject(Object)}
 	 */
 	public static Object convertJDBCType(Object o) throws SQLException {
+		if(o == null)
+			return o;
 		// Search for a suitable convertor
 		for (TypeConvertor convertor : values()) {
 			// Convert if the given object is the same type or a super type of the object that is accepted

@@ -22,7 +22,7 @@ public class MssqlDatabaseServiceImpl extends BaseDatabaseService {
 
 	@Override
 	protected String createConnectionURL(String database, String user, String pass, Tuple<String, String>... options) throws SQLException {
-		return createJDBCURL("jtds:sqlserver", database, user, pass, options);
+		return createJDBCURL("jtds:sqlserver", database, user, pass, ";", ";", options);
 	}
 
 	@Override
