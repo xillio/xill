@@ -59,7 +59,8 @@ public class ConnectConstruct extends BaseDatabaseConstruct {
 		} catch (SQLException e1) {
 			throw new RobotRuntimeException(e1.getMessage(), e1);
 		}
-		MetaExpression metaExpression = new AtomicExpression(database);
+		
+		MetaExpression metaExpression = fromValue(database);
 		ConnectionMetadata newConnection = new ConnectionMetadata(type, connection);
 		lastConnections.put(robotID, newConnection);
 		metaExpression.storeMeta(newConnection);

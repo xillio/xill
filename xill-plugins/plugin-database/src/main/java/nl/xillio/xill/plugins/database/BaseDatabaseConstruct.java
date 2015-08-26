@@ -16,4 +16,10 @@ public abstract class BaseDatabaseConstruct extends Construct {
 	@Inject
 	protected DatabaseServiceFactory factory;
 
+	public static void setLastConnections(LinkedHashMap<RobotID, ConnectionMetadata> lastConnections) {
+		BaseDatabaseConstruct.lastConnections = lastConnections;
+	}
+
+	
+	
 }
