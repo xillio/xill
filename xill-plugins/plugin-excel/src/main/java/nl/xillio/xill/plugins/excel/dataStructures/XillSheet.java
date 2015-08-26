@@ -73,8 +73,7 @@ public class XillSheet implements MetadataExpression {
 
 	/**
 	 * Gets the height of the spreadsheet.
-	 *
-	 * @return
+	 * @return the amount of rows of the spreadsheet
 	 */
 	public int getRowLength() {
 		return rowLength;

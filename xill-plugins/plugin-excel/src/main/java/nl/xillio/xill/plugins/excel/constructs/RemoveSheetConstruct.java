@@ -80,7 +80,10 @@ public class RemoveSheetConstruct extends Construct {
 	 * @throws RobotRuntimeException when one or more of the sheets is not in the provided workbook
 	 * @throws RobotRuntimeException when the workbook is read-only
 	 */
+	@SuppressWarnings("unchecked")
 	static MetaExpression processMultiple(ExcelService service, XillWorkbook workbook, MetaExpression sheetNamesInput) {
+		//Unchecked cast warning is here suppressed because cast is actually checked in the constructprocessor
+		//And process method, but compiler does not see this.
 		List<String> sheetNames = ((List<MetaExpression>) (sheetNamesInput.getValue())).stream().
 						map(MetaExpression::getStringValue).collect(Collectors.toList());
 		try {

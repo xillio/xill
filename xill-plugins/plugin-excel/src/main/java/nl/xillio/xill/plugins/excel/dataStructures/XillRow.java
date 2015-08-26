@@ -40,7 +40,7 @@ public class XillRow {
 	 *
 	 * @param columnNr the number of the column where the new cell should be located
 	 * @return the newly created {@link XillCell}
-	 * @throws IllegalArgumentException if columnIndex < 0 or greater
+	 * @throws IllegalArgumentException if columnIndex &lt; 0 or greater
 	 *                                  than the maximum number of supported columns (255 for *.xls, 1048576
 	 *                                  for *.xlsx)
 	 */

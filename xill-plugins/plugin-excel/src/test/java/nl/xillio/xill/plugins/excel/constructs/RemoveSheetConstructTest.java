@@ -5,6 +5,7 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.excel.datastructures.XillWorkbook;
 import nl.xillio.xill.plugins.excel.services.ExcelService;
+import org.mockito.Matchers;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
@@ -109,7 +110,7 @@ public class RemoveSheetConstructTest {
 	public void testProcessMultipleThrowsException() throws Exception {
 		ExcelService service = mock(ExcelService.class);
 		List<MetaExpression> inputSheets = Arrays.asList(fromValue("sheet1"), fromValue("sheet2"));
-		doThrow(new IllegalArgumentException()).when(service).removeSheets(any(XillWorkbook.class), anyList());
+		doThrow(new IllegalArgumentException()).when(service).removeSheets(any(XillWorkbook.class), Matchers.anyListOf(String.class));
 		RemoveSheetConstruct.processMultiple(service, mock(XillWorkbook.class), fromValue(inputSheets));
 	}
 
