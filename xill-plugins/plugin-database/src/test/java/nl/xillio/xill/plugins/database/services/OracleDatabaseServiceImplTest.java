@@ -13,11 +13,14 @@ import static org.testng.Assert.assertSame;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 import nl.xillio.xill.plugins.database.util.Tuple;
 import oracle.jdbc.driver.OracleConnection;
 
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -75,7 +78,7 @@ public class OracleDatabaseServiceImplTest {
 		// Mock
 
 		// Run
-		String URL = service.createConnectionURL("db", null, "pass");
+		service.createConnectionURL("db", null, "pass");
 
 		// Verify
 
@@ -105,18 +108,51 @@ public class OracleDatabaseServiceImplTest {
 	 * 
 	 * @throws SQLException
 	 */
+	@Test
 	public void testCreateConnectionURLNoLogin() throws SQLException {
 		// Mock
 
 		// Run
 		String URL = service.createConnectionURL("db", null, null);
+		String key = "key";
 
 		// Verify
 
 		// Assert
-		assertEquals(URL, "jdbc:oracle:thin:db", "Incorrect URL created");
+		assertEquals(URL, "jdbc:oracle:thin:@db", "Incorrect URL created");
 	}
-
-	// TODO: createProperties and createSelectQuery
-
+	
+	/**
+	 * <p>Test the create properties method.</p>
+	 * <p> We check wheter the method runs correctly on normal input and verify it overwrites properties. </p>
+	 */
+	@Test
+	public void testCreateProperties(){
+		// Mock
+		List<Tuple<String, String>> options = Arrays.asList(new Tuple<String, String>("name", "a name"),
+																											new Tuple<String, String>("tag", "a tag"),
+																											new Tuple<String, String>("name", "another name"));
+		
+		// Run
+		@SuppressWarnings("unchecked")
+		Properties properties = service.createProperties((Tuple<String, String>[]) options.toArray()); 
+		// verify
+		
+		//Assert
+		Assert.assertEquals(properties.getProperty("name"), "another name");
+		Assert.assertEquals(properties.get("tag"), "a tag");
+	}
+	
+	/**
+	 * Test creating a select query 
+	 */
+	@Test
+	public void testCreateSelectQuery(){
+		
+		// Run
+		String query = service.createSelectQuery("TABLE", "colnum > 3");
+		
+		// Assert
+		Assert.assertEquals(query, "SELECT * FROM TABLE WHERE colnum > 3 AND rownum <= 1");
+	}
 }

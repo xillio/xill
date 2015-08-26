@@ -107,7 +107,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 * @return An unused {@link PreparedStatement}.
 	 * @throws SQLException
 	 */
-	private PreparedStatement parseNamedParameters(final Connection connection, final String query) throws SQLException {
+	PreparedStatement parseNamedParameters(final Connection connection, final String query) throws SQLException {
 		Matcher m = PARAMETER_PATTERN.matcher(query);
 
 		String preparedQuery = m.replaceAll("?");
@@ -121,7 +121,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 * @param query
 	 * @return The names of the parameters in the given query in order of appearance
 	 */
-	private List<String> extractParameterNames(final String query) {
+	List<String> extractParameterNames(final String query) {
 		Matcher m = PARAMETER_PATTERN.matcher(query);
 		List<String> indexedParameters = new ArrayList<>();
 		while (m.find()) {
@@ -131,15 +131,16 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		return indexedParameters;
 	}
 
-	private int[] executeBatch(final PreparedStatement stmt, final List<String> indexedParameters, final List<LinkedHashMap<String, Object>> parameters) throws SQLException {
+	int[] executeBatch(final PreparedStatement stmt, final List<String> indexedParameters, final List<LinkedHashMap<String, Object>> parameters) throws SQLException {
 		for (LinkedHashMap<String, Object> parameter : parameters) {
 			for (int i = 0; i < indexedParameters.size(); i++) {
 				String indexedParameter = indexedParameters.get(i);
 				// returns null on null value and when key is not contained in map
-				Object value = parameter.get(indexedParameter);
 				if (!parameter.containsKey(indexedParameter)) {
 					throw new IllegalArgumentException("The Parameters argument should contain: \"" + indexedParameter + "\"");
 				}
+				
+				Object value = parameter.get(indexedParameter);
 				stmt.setObject(i + 1, value);
 			}
 			stmt.addBatch();
@@ -185,12 +186,9 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 *        Driver specific options
 	 * @return A URL to connect to the database
 	 */
-	protected String createJDBCURL(final String type, final String database, final String user, final String pass, String optionsMarker, String optionsSeparator,final Tuple<String, String>... options) {
+	String createJDBCURL(final String type, final String database, final String user, final String pass, String optionsMarker, String optionsSeparator,final Tuple<String, String>... options) {
 		String url = String.format("jdbc:%s://%s", type, database);
-		// no other parameters, so return
-		if (user == null && pass == null && options.length == 0) {
-			return url;
-		}
+		
 		// question mark for url parameters
 		url = url+optionsMarker;
 
@@ -246,16 +244,16 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		}
 	}
 
-	private void setValue(final PreparedStatement statement, final String key, final Object value, final int i) throws SQLException {
+	void setValue(final PreparedStatement statement, final String key, final Object value, final int i) throws SQLException {
 		try {
 			// All supported databases allow setObject(i, null), so no setNull needed
 			statement.setObject(i, value);
-		} catch (Exception e1) {
-			throw new SQLException("Failed to set value '" + value + "' for column '" + key + "'.");
+		} catch (Exception e) {
+			throw new SQLException("Failed to set value '" + value + "' for column '" + key + "'.", e);
 		}
 	}
 
-	private String createSelectQuery(final Connection connection, final String table, final List<String> keys) throws SQLException {
+	String createSelectQuery(final Connection connection, final String table, final List<String> keys) throws SQLException {
 
 		// creates WHERE conditions SQL string
 		String constraintsSql;
@@ -351,7 +349,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 *        The index of the '?' to start setting values
 	 * @throws SQLException
 	 */
-	private void fillStatement(final LinkedHashMap<String, Object> newObject, final PreparedStatement statement, final int firstMarkerNumber) throws SQLException {
+	void fillStatement(final LinkedHashMap<String, Object> newObject, final PreparedStatement statement, final int firstMarkerNumber) throws SQLException {
 		int i = firstMarkerNumber;
 		for (Entry<String, Object> e : newObject.entrySet()) {
 			setValue(statement, e.getKey(), e.getValue(), i++);
@@ -361,7 +359,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	/**
 	 * Create a String in this form (where "," is the separator in this case): "key1 = ?,key2 = ?,key3 = ? "
 	 */
-	private String createQueryPart(Connection connection, final Iterable<String> keys, final String separator) throws SQLException {
+	String createQueryPart(Connection connection, final Iterable<String> keys, final String separator) throws SQLException {
 		List<String> escaped = new ArrayList<String>();
 		for (String identifier : keys) {
 			escaped.add(escapeIdentifier(identifier, connection));
@@ -371,7 +369,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 			.reduce((q, k) -> q + separator + k).get();
 	}
 
-	private String escapeIdentifier(final String identifier, Connection connection) throws SQLException {
+	String escapeIdentifier(final String identifier, Connection connection) throws SQLException {
 		String delimiterString = null;
 
 		if (!delimiter.containsKey(connection)) {

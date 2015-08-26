@@ -3,6 +3,7 @@ package nl.xillio.xill.plugins.database.services;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 import nl.xillio.xill.plugins.database.util.Database;
@@ -21,9 +22,9 @@ public class OracleDatabaseServiceImpl extends BaseDatabaseService {
 
 	@Override
 	protected String createConnectionURL(String database, String user, String pass, Tuple<String, String>... options) throws SQLException {
-		if (user == null ^ pass == null)
+		if ((user == null) != (pass == null))
 			throw new IllegalArgumentException("User and pass should be both null or both non-null");
-		if (user != null && pass != null)
+		else if (user != null && pass != null)
 			// prepend username and password
 			return String.format("jdbc:oracle:thin:%s/%s@%s", user, pass, database);
 		else
@@ -31,7 +32,13 @@ public class OracleDatabaseServiceImpl extends BaseDatabaseService {
 			return String.format("jdbc:oracle:thin:@%s", database);
 	}
 
-	public Properties createProperties(Tuple<String, String>... options) {
+	/**
+	 * Creates a new {@link Properties} given a 
+	 * @param options
+	 * @return
+	 * @throws NullPointerException
+	 */
+	public Properties createProperties(Tuple<String, String>... options) throws NullPointerException {
 		Properties properties = new Properties();
 		Arrays.stream(options).forEach(p -> properties.put(p.getKey(), p.getValue()));
 		return properties;
