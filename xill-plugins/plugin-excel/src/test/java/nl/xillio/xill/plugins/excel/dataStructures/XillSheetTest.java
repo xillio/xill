@@ -88,7 +88,7 @@ public class XillSheetTest {
 		doReturn(row).when(xillSheet).getRow(any(Integer.class));
 		when(row.isNull()).thenReturn(true);
 
-		assertEquals("[EMPTY]", xillSheet.getCellValue(new XillCellRef(1, 1)));
+		assertEquals(null, xillSheet.getCellValue(new XillCellRef(1, 1)));
 	}
 
 	/**

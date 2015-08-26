@@ -64,11 +64,11 @@ public class XillCellTest {
 		assertEquals(testCell.getValue(), num);
 
 		doReturn(true).when(testCell).isNull();
-		assertEquals(testCell.getValue(), "[EMPTY]");
+		assertEquals(testCell.getValue(), null);
 
 		when(cell.getCellType()).thenReturn(cell.CELL_TYPE_BLANK);
 		doReturn(false).when(testCell).isNull();
-		assertEquals(testCell.getValue(), "[EMPTY]");
+		assertEquals(testCell.getValue(), null);
 
 		doReturn(false).when(testCell).isNull();
 		when(cell.getCellType()).thenReturn(Cell.CELL_TYPE_ERROR);

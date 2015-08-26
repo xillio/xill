@@ -58,13 +58,13 @@ public class XillCell {
 					}
 					break;
 				case Cell.CELL_TYPE_BLANK:
-					toReturn = "[EMPTY]";
+					toReturn = null;
 					break;
 				default:
 					throw new NotImplementedException("A cell format that has been used in the Excel file is currently unsupported.");
 			}
 		} else {
-			toReturn = "[EMPTY]";
+			toReturn = null;
 		}
 		return toReturn;
 	}
