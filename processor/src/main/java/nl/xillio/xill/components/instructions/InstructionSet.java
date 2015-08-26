@@ -30,7 +30,7 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
 	}
 
 	/**
-	 * Add an instruction to the instructionset
+	 * Add an instruction to the instructionSet
 	 *
 	 * @param instruction
 	 */
@@ -49,7 +49,7 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
 				debugger.startInstruction(instruction);
 			}
 
-			InstructionFlow<MetaExpression> result = instruction.process(debugger);
+			InstructionFlow<MetaExpression> result = processInstruction(instruction, debugger);
 			processedInstructions.add(instruction);
 
 			if (!instruction.preventDebugging()) {
@@ -84,6 +84,16 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
 		}
 
 		return InstructionFlow.doResume();
+	}
+
+	private InstructionFlow<MetaExpression> processInstruction(Instruction instruction, Debugger debugger) {
+		try {
+			return instruction.process(debugger);
+		}catch(RobotRuntimeException e) {
+			debugger.handle(e);
+		}
+
+		return InstructionFlow.doResume(ExpressionBuilderHelper.NULL);
 	}
 
 	/**
