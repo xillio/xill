@@ -51,11 +51,11 @@ public class ConnectConstructTest extends ConstructTest{
    
    when((dbService).createConnection(eq("databaseName"),eq("user"),eq("pass"),any())).thenReturn(connection);
    when((factory).getService("databaseType")).thenReturn(dbService);
-   LinkedHashMap connectionsMap = mock(LinkedHashMap.class);
-	 BaseDatabaseConstruct.setLastConnections(connectionsMap);
 	 ConnectionMetadata metadata = mock(ConnectionMetadata.class);
 	 
-   BaseDatabaseConstruct bdbc = spy(BaseDatabaseConstruct.class);
+	 BaseDatabaseConstruct.setLastConnections(robotID,metadata);
+	 
+   BaseDatabaseConstruct bdbc = mock(BaseDatabaseConstruct.class);
    
    //run
    MetaExpression result = ConnectConstruct.process(args, factory, robotID);
@@ -63,7 +63,7 @@ public class ConnectConstructTest extends ConstructTest{
    
    //verify
    verify(dbService,times(1)).createConnection(eq("databaseName"), eq("user"), eq("pass"));
-   verify(connectionsMap,times(1)).put(eq(robotID), any());
+  // verify(bdbc,times(1)).setLastConnections(eq(robotID), any());
    verify(factory,times(1)).getService("databaseType");
    
    //assert
@@ -93,7 +93,7 @@ public class ConnectConstructTest extends ConstructTest{
     when((factory).getService("databaseType")).thenReturn(dbService);
     
     
-    when((dbService).createConnection(eq("databaseName"),eq("user"),eq("pass"))).thenThrow(new RobotRuntimeException("..."));
+    when((dbService).createConnection(eq("databaseName"),eq("user"),eq("pass"))).thenThrow(new SQLException("..."));
 
     //run
     MetaExpression result = ConnectConstruct.process(args, factory, robotID);
@@ -105,7 +105,7 @@ public class ConnectConstructTest extends ConstructTest{
    * This test checks whether the method throws an exception when factory.getService goes wrong.
    * @throws RobotRuntimeException
    */
-  @Test (expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "...")
+  @Test (expectedExceptions = RobotRuntimeException.class)
   public void testProcessGetServiceException() throws Throwable {
   	MetaExpression database = mockExpression(ATOMIC, true, 0, "databaseName");
     MetaExpression type = mockExpression(ATOMIC, true, 0, "databaseType");
@@ -120,7 +120,7 @@ public class ConnectConstructTest extends ConstructTest{
     
     Connection connection = mock(Connection.class);
     DatabaseService dbService = mock(DatabaseService.class);
-    when((factory).getService("databaseType")).thenThrow(new RobotRuntimeException("..."));
+    when((factory).getService("databaseType")).thenThrow(new InstantiationException());
     
 
 

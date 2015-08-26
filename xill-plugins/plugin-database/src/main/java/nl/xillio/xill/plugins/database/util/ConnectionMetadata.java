@@ -27,6 +27,9 @@ public class ConnectionMetadata implements MetadataExpression {
 	public Connection getConnection() {
 		return connection;
 	}
+	public void setConnection(Connection newConnection){
+		connection = newConnection;
+	}
 
 	public String getDatabaseName() {
 		return databaseName;
