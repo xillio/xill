@@ -17,6 +17,7 @@ import nl.xillio.xill.plugins.database.BaseDatabaseConstruct;
 import nl.xillio.xill.plugins.database.services.BaseDatabaseService;
 import nl.xillio.xill.plugins.database.services.DatabaseServiceFactory;
 import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
+import nl.xillio.xill.plugins.database.util.Tuple;
 
 /**
  * 
@@ -44,11 +45,12 @@ public class GetObjectConstruct extends BaseDatabaseConstruct {
 		} else {
 			metaData = database.getMeta(ConnectionMetadata.class);
 		}
+		
 		Connection connection = metaData.getConnection();
 		LinkedHashMap<String,Object> result = null;
 		try {
 			result = factory.getService(metaData.getDatabaseName()).getObject(connection, tblName, constraints);
-		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException | IllegalArgumentException e) {
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
 			throw new RobotRuntimeException(e.getMessage(),e);
 		}
 		LinkedHashMap<String, MetaExpression> value = (LinkedHashMap<String, MetaExpression>)object.getValue();
