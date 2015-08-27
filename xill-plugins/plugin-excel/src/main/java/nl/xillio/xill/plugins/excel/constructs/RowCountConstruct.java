@@ -5,7 +5,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.plugins.excel.datastructurez.XillSheet;
+import nl.xillio.xill.plugins.excel.datastructures.XillSheet;
 
 /**
  * Construct to return the current amount of rows in a sheet.
