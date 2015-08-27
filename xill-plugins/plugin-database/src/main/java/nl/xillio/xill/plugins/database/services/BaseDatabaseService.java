@@ -67,8 +67,8 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		PreparedStatement stmt = parseNamedParameters(connection, query);
 		stmt.setQueryTimeout(timeout);
 
-		if (parameters == null || parameters.size() == 0) {
-			if (extractParameterNames(query).size() > 0) {
+		if (parameters == null || parameters.isEmpty()) {
+			if (!extractParameterNames(query).isEmpty()) {
 				throw new IllegalArgumentException("Parameters is empty for parametrised query.");
 			}
 			stmt.execute();
@@ -111,9 +111,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		Matcher m = PARAMETER_PATTERN.matcher(query);
 
 		String preparedQuery = m.replaceAll("?");
-		PreparedStatement stmt = connection.prepareStatement(preparedQuery);
-
-		return stmt;
+		return connection.prepareStatement(preparedQuery);
 	}
 
 	/**
@@ -208,7 +206,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	}
 
 	@Override
-	public LinkedHashMap<String, Object> getObject(final Connection connection, final String table, final LinkedHashMap<String, Object> constraints) throws SQLException {
+	public LinkedHashMap<String, Object> getObject(final Connection connection, final String table, final Map<String, Object> constraints) throws SQLException {
 		// prepare statement
 		final LinkedHashMap<String, Object> notNullConstraints = new LinkedHashMap<>();
 		constraints.forEach((k, v) -> {
@@ -257,7 +255,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 
 		// creates WHERE conditions SQL string
 		String constraintsSql;
-		if (keys.size() > 0) {
+		if (!keys.isEmpty()) {
 			constraintsSql = createQueryPart(connection, keys, " AND ");
 		} else {
 			constraintsSql = "1";
@@ -281,9 +279,9 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	}
 
 	@Override
-	public void storeObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject, final List<String> keys, final boolean overwrite)
+	public void storeObject(final Connection connection, final String table, final Map<String, Object> newObject, final List<String> keys, final boolean overwrite)
 			throws SQLException {
-		if (keys.size() == 0 || !overwrite) {
+		if (keys.isEmpty()|| !overwrite) {
 			// insert into table
 			insertObject(connection, table, newObject);
 		} else {
@@ -293,21 +291,21 @@ public abstract class BaseDatabaseService implements DatabaseService {
 
 	}
 
-	private void insertObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject) throws SQLException {
+	void insertObject(final Connection connection, final String table, final Map<String, Object> newObject) throws SQLException {
 		
 		List<String> escaped = new ArrayList<>();
 		for (String key : newObject.keySet()){
 			escaped.add(escapeIdentifier(key, connection));
 		}
 		
-		String ks = StringUtils.join(escaped, ",");
+		String keyString = StringUtils.join(escaped, ",");
 		
 		// Create the same number of prepared statement markers as there are keys
 		char[] markers = new char[newObject.size()];
 		Arrays.fill(markers, '?');
-		String vs = StringUtils.join(markers, ',');
+		String valueString = StringUtils.join(markers, ',');
 
-		String sql = "INSERT INTO " + table + " (" + ks + ") VALUES (" + vs + ")";
+		String sql = "INSERT INTO " + table + " (" + keyString + ") VALUES (" + valueString + ")";
 
 		PreparedStatement statement = connection.prepareStatement(sql);
 		fillStatement(newObject, statement, 1);
@@ -315,12 +313,12 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		statement.close();
 	}
 
-	private void updateObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject, final List<String> keys)
+	void updateObject(final Connection connection, final String table, final Map<String, Object> newObject, final List<String> keys)
 			throws SQLException {
-		String ss = createQueryPart(connection, newObject.keySet(), ",");
-		String ws = createQueryPart(connection, keys, " AND ");
+		String setString = createQueryPart(connection, newObject.keySet(), ",");
+		String whereString = createQueryPart(connection, keys, " AND ");
 
-		String sql = "UPDATE " + table + " SET " + ss + " WHERE " + ws;
+		String sql = "UPDATE " + table + " SET " + setString + " WHERE " + whereString;
 
 		PreparedStatement statement = connection.prepareStatement(sql);
 
@@ -335,7 +333,6 @@ public abstract class BaseDatabaseService implements DatabaseService {
 			insertObject(connection, table, newObject);
 		}
 		statement.close();
-
 	}
 
 	/**
@@ -349,7 +346,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 *        The index of the '?' to start setting values
 	 * @throws SQLException
 	 */
-	void fillStatement(final LinkedHashMap<String, Object> newObject, final PreparedStatement statement, final int firstMarkerNumber) throws SQLException {
+	void fillStatement(final Map<String, Object> newObject, final PreparedStatement statement, final int firstMarkerNumber) throws SQLException {
 		int i = firstMarkerNumber;
 		for (Entry<String, Object> e : newObject.entrySet()) {
 			setValue(statement, e.getKey(), e.getValue(), i++);

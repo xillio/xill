@@ -1,4 +1,9 @@
-package nl.xillio.xill.plugins.excel.datastructures;
+package nl.xillio.xill.plugins.excel.dataStructures;
+
+import nl.xillio.xill.plugins.excel.dataStructures.XillCell;
+import nl.xillio.xill.plugins.excel.dataStructures.XillCellRef;
+import nl.xillio.xill.plugins.excel.dataStructures.XillRow;
+import nl.xillio.xill.plugins.excel.dataStructures.XillSheet;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;

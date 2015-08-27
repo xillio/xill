@@ -1,13 +1,14 @@
 package nl.xillio.xill.plugins.excel.constructs;
 
 import com.google.inject.Inject;
+
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.excel.datastructures.XillWorkbook;
+import nl.xillio.xill.plugins.excel.dataStructures.XillWorkbook;
 import nl.xillio.xill.plugins.excel.services.ExcelService;
 
 import java.io.File;

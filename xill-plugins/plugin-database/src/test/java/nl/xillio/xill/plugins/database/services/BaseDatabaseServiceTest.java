@@ -5,6 +5,7 @@ import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -39,7 +40,7 @@ public class BaseDatabaseServiceTest {
 
 	/**
 	 * method to check whether updateObject() is called when keys.size != 0 and overwrite is true
-	 * 
+	 *
 	 * @throws SQLException
 	 */
 	@Test
@@ -75,7 +76,7 @@ public class BaseDatabaseServiceTest {
 	 * <li>There is only one parameter</li>
 	 * <li>This parameter creates a result where the first getUpdateCount returns -1</li>
 	 * </ul>
-	 * 
+	 *
 	 * @throws SQLException
 	 */
 	@Test
@@ -111,7 +112,7 @@ public class BaseDatabaseServiceTest {
 	 * <li>The parameters are null</li>
 	 * <li>This parameter creates a result where first and second UpdateCount exist.</li>
 	 * </ul>
-	 * 
+	 *
 	 * @throws SQLException
 	 */
 	@Test
@@ -143,7 +144,7 @@ public class BaseDatabaseServiceTest {
 	 * <li>The parameters are null</li>
 	 * <li>This parameter creates a result where first and second UpdateCount exist.</li>
 	 * </ul>
-	 * 
+	 *
 	 * @throws SQLException
 	 */
 	@Test(expectedExceptions = IllegalArgumentException.class)
@@ -162,7 +163,7 @@ public class BaseDatabaseServiceTest {
 
 	/**
 	 * Test the parseNamedParameters function with normal usage
-	 * 
+	 *
 	 * @throws SQLException
 	 */
 	@Test
@@ -209,7 +210,7 @@ public class BaseDatabaseServiceTest {
 	 * <p>
 	 * We verify whether we actually set an object four times and add a batch twice
 	 * </p>
-	 * 
+	 *
 	 * @throws SQLException
 	 */
 	@Test
@@ -235,7 +236,7 @@ public class BaseDatabaseServiceTest {
 
 	/**
 	 * We test whether the executeBatch method throws a correct error when it receives a parameter which does not contain a field it should contain</p>
-	 * 
+	 *
 	 * @throws SQLException
 	 */
 	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "The Parameters argument should contain: \"first\"")
@@ -316,7 +317,8 @@ public class BaseDatabaseServiceTest {
 	 * <p>
 	 * we hand a hashmap of constaints, one having a not null value and one having an actual value
 	 * <p>
-	 * @throws SQLException 
+	 * 
+	 * @throws SQLException
 	 */
 	@SuppressWarnings("unchecked")
 	@Test
@@ -353,7 +355,7 @@ public class BaseDatabaseServiceTest {
 
 	/**
 	 * Test whether an exception is thrown in the getObject method when no object could be found.
-	 * 
+	 *
 	 * @throws SQLException
 	 */
 	@SuppressWarnings("unchecked")
@@ -377,7 +379,7 @@ public class BaseDatabaseServiceTest {
 
 	/**
 	 * Test whether the setValue method throws an exception when it fails to set a value in a column.
-	 * 
+	 *
 	 * @throws SQLException
 	 */
 	@Test(expectedExceptions = SQLException.class, expectedExceptionsMessageRegExp = "Failed to set value 'value' for column 'key'.")
@@ -393,7 +395,7 @@ public class BaseDatabaseServiceTest {
 
 	/**
 	 * Test the create select query method when the keys are not empty
-	 * 
+	 *
 	 * @throws SQLException
 	 */
 	@Test
@@ -418,7 +420,7 @@ public class BaseDatabaseServiceTest {
 
 	/**
 	 * Test the create select query method when the keys are empty
-	 * 
+	 *
 	 * @throws SQLException
 	 */
 	@SuppressWarnings("unchecked")
@@ -443,7 +445,7 @@ public class BaseDatabaseServiceTest {
 
 	/**
 	 * Test the create query part when the keys are not empty.
-	 * 
+	 *
 	 * @throws SQLException
 	 */
 	@Test
@@ -465,7 +467,7 @@ public class BaseDatabaseServiceTest {
 
 	/**
 	 * Test the escape identifier method with ? as escape symbol and "identifier" as the value we want to escape.
-	 * 
+	 *
 	 * @throws SQLException
 	 */
 	@Test
@@ -480,6 +482,121 @@ public class BaseDatabaseServiceTest {
 		String output = service.escapeIdentifier("identifier", connection);
 
 		Assert.assertEquals(output, "?identifier?");
+	}
+
+	/**
+	 * <p>
+	 * Test the storeObject method with no keys
+	 * </p>
+	 * <p>
+	 * It should call insertObject
+	 * </p>
+	 * 
+	 * @throws SQLException
+	 */
+	@Test
+	public void testStoreObjectWithEmptyKeys() throws SQLException {
+		// mock
+		BaseDatabaseService service = spy(new SQLiteDatabaseServiceImpl());
+		Connection connection = mock(Connection.class);
+		Map<String, Object> newObject = new LinkedHashMap<String, Object>();
+		List<String> keys = new ArrayList<String>();
+
+		doNothing().when(service).insertObject(connection, "table", newObject);
+
+		// run
+		service.storeObject(connection, "table", newObject, keys, false);
+
+		// verify
+		verify(service, times(1)).insertObject(connection, "table", newObject);
+	}
+
+	/**
+	 * <p>
+	 * Test the storeObject method with keys and overwrite set to true
+	 * </p>
+	 * <p>
+	 * It should call insertObject
+	 * </p>
+	 * 
+	 * @throws SQLException
+	 */
+	@Test
+	public void testStoreObjectWithOverwrite() throws SQLException {
+		// mock
+		BaseDatabaseService service = spy(new SQLiteDatabaseServiceImpl());
+		Connection connection = mock(Connection.class);
+		Map<String, Object> newObject = new LinkedHashMap<String, Object>();
+		List<String> keys = new ArrayList<String>();
+		keys.add("key");
+
+		doNothing().when(service).insertObject(connection, "table", newObject);
+
+		// run
+		service.storeObject(connection, "table", newObject, keys, false);
+
+		// verify
+		verify(service, times(1)).insertObject(connection, "table", newObject);
+	}
+
+	/**
+	 * <p>
+	 * Test the storeObject method with keys and overwrite set to false
+	 * </p>
+	 * <p>
+	 * It should call updateObject
+	 * </p>
+	 * 
+	 * @throws SQLException
+	 */
+	@Test
+	public void testStoreObjectWithKeysAndNoOverwrite() throws SQLException {
+		// mock
+		BaseDatabaseService service = spy(new SQLiteDatabaseServiceImpl());
+		Connection connection = mock(Connection.class);
+		Map<String, Object> newObject = new LinkedHashMap<String, Object>();
+		List<String> keys = new ArrayList<String>();
+		keys.add("key");
+
+		doNothing().when(service).updateObject(connection, "table", newObject, keys);
+
+		// run
+		service.storeObject(connection, "table", newObject, keys, true);
+
+		// verify
+		verify(service, times(1)).updateObject(connection, "table", newObject, keys);
+	}
+
+	/**
+	 * <p>
+	 * Test the insertObject method
+	 * </p>
+	 * 
+	 * @throws SQLException
+	 */
+	@Test
+	public void testInsertObject() throws SQLException {
+		// mock
+		BaseDatabaseService service = spy(new SQLiteDatabaseServiceImpl());
+		
+		Connection connection = mock(Connection.class);
+		PreparedStatement statement = mock(PreparedStatement.class);
+		when(connection.prepareStatement(anyString())).thenReturn(statement);
+
+		Map<String, Object> newObject = new LinkedHashMap<String, Object>();
+		newObject.put("firstValue", "key");
+		newObject.put("secondValue", "lock");
+
+		doReturn("key").when(service).escapeIdentifier(anyString(), eq(connection));
+		doNothing().when(service).fillStatement(eq(newObject), any(), eq(1));
+
+		// run
+		service.insertObject(connection, "table", newObject);
+
+		// verify
+		verify(service, times(2)).escapeIdentifier(anyString(), eq(connection));
+		verify(service, times(1)).fillStatement(eq(newObject), any(), eq(1));
+		verify(connection, times(1)).prepareStatement(anyString());
 	}
 
 }

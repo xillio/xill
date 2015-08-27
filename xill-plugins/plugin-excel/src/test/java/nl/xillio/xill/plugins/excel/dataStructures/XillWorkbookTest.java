@@ -1,4 +1,8 @@
-package nl.xillio.xill.plugins.excel.datastructures;
+package nl.xillio.xill.plugins.excel.dataStructures;
+
+import nl.xillio.xill.plugins.excel.dataStructures.XillSheet;
+import nl.xillio.xill.plugins.excel.dataStructures.XillWorkbook;
+import nl.xillio.xill.plugins.excel.dataStructures.XillWorkbookFactory;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Sheet;

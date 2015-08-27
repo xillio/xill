@@ -1,7 +1,8 @@
 package nl.xillio.xill.plugins.excel.constructs;
 
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.plugins.excel.datastructures.XillWorkbook;
+import nl.xillio.xill.plugins.excel.dataStructures.XillWorkbook;
+
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;

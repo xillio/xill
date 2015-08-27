@@ -1,6 +1,8 @@
-package nl.xillio.xill.plugins.excel.datastructures;
+package nl.xillio.xill.plugins.excel.dataStructures;
 
 import nl.xillio.xill.api.errors.NotImplementedException;
+import nl.xillio.xill.plugins.excel.dataStructures.XillWorkbookFactory;
+
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.testng.annotations.Test;

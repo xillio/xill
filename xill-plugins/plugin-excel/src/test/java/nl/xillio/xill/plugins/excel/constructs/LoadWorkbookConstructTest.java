@@ -4,9 +4,10 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.excel.datastructures.XillWorkbook;
+import nl.xillio.xill.plugins.excel.dataStructures.XillWorkbook;
 import nl.xillio.xill.plugins.excel.services.ExcelService;
 import nl.xillio.xill.services.inject.InjectorUtils;
+
 import org.apache.logging.log4j.Logger;
 import org.mockito.ArgumentCaptor;
 import org.testng.annotations.BeforeClass;

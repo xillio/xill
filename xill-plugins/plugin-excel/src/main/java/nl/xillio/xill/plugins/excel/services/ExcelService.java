@@ -1,8 +1,9 @@
 package nl.xillio.xill.plugins.excel.services;
 
 import com.google.inject.ImplementedBy;
-import nl.xillio.xill.plugins.excel.datastructures.XillSheet;
-import nl.xillio.xill.plugins.excel.datastructures.XillWorkbook;
+
+import nl.xillio.xill.plugins.excel.dataStructures.XillSheet;
+import nl.xillio.xill.plugins.excel.dataStructures.XillWorkbook;
 
 import java.io.File;
 import java.io.FileNotFoundException;
