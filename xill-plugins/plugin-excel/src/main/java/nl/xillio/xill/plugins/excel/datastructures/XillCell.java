@@ -20,6 +20,7 @@ public class XillCell {
 	/**
 	 * Constructor for the XillCell class.
 	 *
+	 *
 	 * @param cell an Apache POI {@link Cell} object
 	 */
 	public XillCell(Cell cell) {
