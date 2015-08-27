@@ -49,10 +49,11 @@ public class QueryConstruct extends BaseDatabaseConstruct {
 	static MetaExpression process(MetaExpression query, MetaExpression parameters, MetaExpression database, MetaExpression timeout, DatabaseServiceFactory factory, RobotID robotID) {
 		String sql = query.getStringValue();
 		ConnectionMetadata metaData;
-		if (database.equals(NULL)) {
+
+		if (database.isNull()) {
 			metaData = lastConnections.get(robotID);
 		} else {
-			metaData = database.getMeta(ConnectionMetadata.class);
+			metaData = assertMeta(database,"database", ConnectionMetadata.class, "contain a database");
 		}
 		Connection connection = metaData.getConnection();
 
@@ -60,7 +61,7 @@ public class QueryConstruct extends BaseDatabaseConstruct {
 
 		List<LinkedHashMap<String, Object>> objectParams = (List<LinkedHashMap<String, Object>>) extractValue(parameters);
 
-		Object result = null;
+		Object result;
 		try {
 			result = factory.getService(metaData.getDatabaseName()).query(connection, sql, objectParams, to);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {

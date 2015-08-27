@@ -19,7 +19,7 @@ public enum Database {
 	private String driverClass;
 	private Class<? extends BaseDatabaseService> serviceClass;
 
-	private Database(String name, String driverClass, Class<? extends BaseDatabaseService> serviceClass) {
+	Database(String name, String driverClass, Class<? extends BaseDatabaseService> serviceClass) {
 		this.name = name;
 		this.driverClass = driverClass;
 		this.serviceClass = serviceClass;
