@@ -22,14 +22,14 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * This class represents calling another robot
  */
 public class CallbotExpression implements Processable {
-	private static final Logger log = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	private final Logger robotLogger;
 	private final Processable path;
 	private final RobotID robotID;
@@ -60,8 +60,11 @@ public class CallbotExpression implements Processable {
 
 		File otherRobot = resolver.buildFile(new ConstructContext(robotID, robotID,null), pathExpression.getStringValue());
 
-		log.debug("Evaluating callbot for " + otherRobot.getAbsolutePath());
+		LOGGER.debug("Evaluating callbot for " + otherRobot.getAbsolutePath());
 
+		if (debugger.getStackTrace().size() > Xill.MAX_STACK_SIZE) {
+			throw new RobotRuntimeException("Callbot went into too many recursions.");
+		}
 		if (!otherRobot.exists()) {
 			throw new RobotRuntimeException("Called robot " + otherRobot.getAbsolutePath() + " does not exist.");
 		}
@@ -95,7 +98,7 @@ public class CallbotExpression implements Processable {
 				if (e instanceof RobotRuntimeException) {
 					throw (RobotRuntimeException) e;
 				}
-				throw new RobotRuntimeException("An exception occured while evaluating " + otherRobot.getAbsolutePath(), e);
+				throw new RobotRuntimeException("An exception occurred while evaluating " + otherRobot.getAbsolutePath(), e);
 			}
 
 		} catch (IOException e) {
@@ -111,7 +114,7 @@ public class CallbotExpression implements Processable {
 
 	@Override
 	public Collection<Processable> getChildren() {
-		return Arrays.asList(path);
+		return Collections.singletonList(path);
 	}
 
 	/**

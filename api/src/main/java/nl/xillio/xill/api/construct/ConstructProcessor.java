@@ -6,6 +6,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import nl.xillio.util.PentaFunction;
 import org.apache.commons.lang3.StringUtils;
 
 import nl.xillio.util.QuadFunction;
@@ -94,6 +95,27 @@ public class ConstructProcessor {
 	public ConstructProcessor(final QuadFunction<MetaExpression, MetaExpression, MetaExpression, MetaExpression, MetaExpression> processor, final Argument firstArgument, final Argument secondArgument,
 					final Argument thirdArgument, final Argument forthArgument) {
 		this(args -> processor.apply(args[0], args[1], args[2], args[3]), new Argument[] {firstArgument, secondArgument, thirdArgument, forthArgument});
+	}
+
+	/**
+	 * Create a five-argument processor from input and operation
+	 *
+	 * @param processor
+	 *        The function used to process the input
+	 * @param firstArgument
+	 *        The first parameter
+	 * @param secondArgument
+	 *        The second parameter
+	 * @param thirdArgument
+	 *        The third parameter
+	 * @param forthArgument
+	 *        The forth parameter
+	 * @param fifthArgument
+	 * 				The fifth parameter
+	 */
+	public ConstructProcessor(final PentaFunction<MetaExpression, MetaExpression, MetaExpression, MetaExpression, MetaExpression, MetaExpression> processor, final Argument firstArgument,
+					final Argument secondArgument, final Argument thirdArgument, final Argument forthArgument, final Argument fifthArgument) {
+		this(args -> processor.apply(args[0], args[1], args[2], args[3], args[4]), new Argument[] {firstArgument, secondArgument, thirdArgument, forthArgument, fifthArgument});
 	}
 
 	/**
