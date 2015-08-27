@@ -31,7 +31,9 @@ public class GetObjectConstructTest extends ConstructTest{
     MetaExpression database = mockExpression(ATOMIC, true, 0, "database");
     DatabaseServiceFactory factory = mock(DatabaseServiceFactory.class);
     RobotID id = mock(RobotID.class);
+    
     ConnectionMetadata conMetadata = mock(ConnectionMetadata.class);
+    
     //so we get the lastConnections
     when(database.equals(NULL)).thenReturn(true);
     LinkedHashMap connectionMap = mock(LinkedHashMap.class);
