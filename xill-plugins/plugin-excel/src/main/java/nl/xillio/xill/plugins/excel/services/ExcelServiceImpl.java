@@ -2,9 +2,9 @@ package nl.xillio.xill.plugins.excel.services;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import nl.xillio.xill.plugins.excel.datastructures.XillSheet;
-import nl.xillio.xill.plugins.excel.datastructures.XillWorkbook;
-import nl.xillio.xill.plugins.excel.datastructures.XillWorkbookFactory;
+import nl.xillio.xill.plugins.excel.datastructurez.XillSheet;
+import nl.xillio.xill.plugins.excel.datastructurez.XillWorkbook;
+import nl.xillio.xill.plugins.excel.datastructurez.XillWorkbookFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;

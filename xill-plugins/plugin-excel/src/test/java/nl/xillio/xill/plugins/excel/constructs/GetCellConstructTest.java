@@ -1,8 +1,8 @@
 package nl.xillio.xill.plugins.excel.constructs;
 
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.plugins.excel.datastructures.XillCellRef;
-import nl.xillio.xill.plugins.excel.datastructures.XillSheet;
+import nl.xillio.xill.plugins.excel.datastructurez.XillCellRef;
+import nl.xillio.xill.plugins.excel.datastructurez.XillSheet;
 import nl.xillio.xill.services.inject.InjectorUtils;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

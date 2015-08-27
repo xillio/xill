@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.excel.datastructures;
+package nl.xillio.xill.plugins.excel.datastructurez;
 
 import org.apache.poi.ss.usermodel.Row;
 

@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.excel.datastructures;
+package nl.xillio.xill.plugins.excel.datastructurez;
 
 import nl.xillio.xill.api.errors.NotImplementedException;
 import org.apache.commons.io.FilenameUtils;

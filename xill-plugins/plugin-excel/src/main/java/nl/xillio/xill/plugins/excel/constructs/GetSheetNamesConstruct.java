@@ -3,7 +3,7 @@ package nl.xillio.xill.plugins.excel.constructs;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.*;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.excel.datastructures.XillWorkbook;
+import nl.xillio.xill.plugins.excel.datastructurez.XillWorkbook;
 
 import java.util.List;
 import java.util.stream.Collectors;

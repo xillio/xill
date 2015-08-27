@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.excel.datastructures;
+package nl.xillio.xill.plugins.excel.datastructurez;
 
 import com.google.common.io.Files;
 import nl.xillio.xill.api.components.MetadataExpression;

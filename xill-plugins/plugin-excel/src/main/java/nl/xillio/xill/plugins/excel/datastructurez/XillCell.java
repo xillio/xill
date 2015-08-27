@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.excel.datastructures;
+package nl.xillio.xill.plugins.excel.datastructurez;
 
 import nl.xillio.xill.api.errors.NotImplementedException;
 import org.apache.poi.ss.formula.FormulaParseException;
@@ -19,6 +19,7 @@ public class XillCell {
 
 	/**
 	 * Constructor for the XillCell class.
+	 *
 	 *
 	 * @param cell an Apache POI {@link Cell} object
 	 */
