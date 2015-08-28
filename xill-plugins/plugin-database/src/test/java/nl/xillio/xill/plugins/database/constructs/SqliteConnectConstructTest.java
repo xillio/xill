@@ -15,6 +15,9 @@ import nl.xillio.xill.testutils.ConstructTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+/**
+ * Test the (@link SqliteConnectConstruct}.
+ */
 public class SqliteConnectConstructTest extends ConstructTest {
 	
 	/**
