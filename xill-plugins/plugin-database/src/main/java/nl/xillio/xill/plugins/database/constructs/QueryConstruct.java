@@ -73,7 +73,7 @@ public class QueryConstruct extends BaseDatabaseConstruct {
 	}
 
 	@SuppressWarnings("unchecked")
-	static MetaExpression returnValue(final Object value, final String sql) throws IllegalArgumentException {
+	static MetaExpression returnValue(final Object value, final String sql) {
 		if (value instanceof Integer) {
 			return extractValue((int) value);
 		}
@@ -91,9 +91,9 @@ public class QueryConstruct extends BaseDatabaseConstruct {
 
 	static MetaExpression extractValue(final Iterator<Object> iterator, final String sql) {
 
-		MetaExpressionIterator<Object> iterationResult = new MetaExpressionIterator<>(iterator, (o) -> {
-			return transformIteratorElement(o);
-		});
+		MetaExpressionIterator<Object> iterationResult = new MetaExpressionIterator<>(iterator, o -> 
+			transformIteratorElement(o)
+		);
 
 		MetaExpression metaIterator = fromValue("Results[" + sql + "]");
 		metaIterator.storeMeta(iterationResult);

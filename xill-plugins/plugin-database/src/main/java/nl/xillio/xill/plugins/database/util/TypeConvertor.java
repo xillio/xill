@@ -17,7 +17,7 @@ import nl.xillio.xill.api.components.MetaExpression;
  * 
  * 
  * @author Geert Konijnendijk
- *TODO: add javadoc
+ *TODO: add javadoc, add unit tests
  */
 public enum TypeConvertor {
 
