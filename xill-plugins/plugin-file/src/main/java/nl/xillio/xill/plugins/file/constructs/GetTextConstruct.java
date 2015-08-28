@@ -40,7 +40,7 @@ public class GetTextConstruct extends Construct {
 			throw new RobotRuntimeException("Expected a valid number for timeout.");
 		}
 
-		File target = getFile(context.getRobotID(), file.getStringValue());
+		File target = getFile(context, file.getStringValue());
 		try {
 			String text = extractor.extractText(target, (int) timeoutValue);
 

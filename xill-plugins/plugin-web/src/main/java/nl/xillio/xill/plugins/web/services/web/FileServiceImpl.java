@@ -19,11 +19,6 @@ public class FileServiceImpl implements FileService {
 	}
 
 	@Override
-	public File makeFile(final String fileName) {
-		return new File(fileName);
-	}
-
-	@Override
 	public String getAbsolutePath(final File file) {
 		return file.getAbsolutePath();
 	}

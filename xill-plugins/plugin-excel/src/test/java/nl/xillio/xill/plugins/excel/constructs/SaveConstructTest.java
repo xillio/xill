@@ -72,10 +72,11 @@ public class SaveConstructTest {
 		ConstructContext context = mock(ConstructContext.class);
 		MetaExpression inputPath = fromValue("path");
 
-		//Mock robot id
-		RobotID robotID = mock(RobotID.class);
-		when(context.getRobotID()).thenReturn(robotID);
-		when(robotID.getPath()).thenReturn(new File("."));
+		//Mock RobotID
+		RobotID id = mock(RobotID.class);
+		when(id.getPath()).thenReturn(new File("."));
+		when(context.getRobotID()).thenReturn(id);
+		when(context.getRootRobot()).thenReturn(id);
 
 		//mock workbook
 		XillWorkbook workbook = mock(XillWorkbook.class);

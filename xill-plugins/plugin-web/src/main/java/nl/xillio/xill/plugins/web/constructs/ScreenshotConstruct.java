@@ -25,7 +25,7 @@ public class ScreenshotConstruct extends PhantomJSConstruct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(page, fileName) -> process(page, fileName, fileService, webService),
+			(page, fileName) -> process(page, fileName, fileService, webService, context),
 			new Argument("page", ATOMIC),
 			new Argument("filename", ATOMIC));
 	}
@@ -39,9 +39,11 @@ public class ScreenshotConstruct extends PhantomJSConstruct {
 	 *        The service we're using for accessing the web.
 	 * @param fileNameVar
 	 *        input string variable - output .png filepath
+	 * @param context
+	 * 				the context of this construct
 	 * @return null variable
 	 */
-	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression fileNameVar, final FileService fileService, final WebService webService) {
+	public static MetaExpression process(final MetaExpression pageVar, final MetaExpression fileNameVar, final FileService fileService, final WebService webService, final ConstructContext context) {
 		
 		if(pageVar.isNull()){
 			return NULL;
@@ -60,7 +62,7 @@ public class ScreenshotConstruct extends PhantomJSConstruct {
 
 			try {
 				File srcFile = webService.getScreenshotAsFile(driver);
-				File desFile = fileService.makeFile(fileName);
+				File desFile = getFile(context, fileName);
 				fileService.copyFile(srcFile, desFile);
 			} catch (IOException e) {
 				throw new RobotRuntimeException("Failed to copy to: " + fileName, e);

@@ -44,6 +44,7 @@ public class CreateWorkbookConstructTest {
 		RobotID id = mock(RobotID.class);
 		when(id.getPath()).thenReturn(new File("."));
 		when(context.getRobotID()).thenReturn(id);
+		when(context.getRootRobot()).thenReturn(id);
 
 		//Throw exception
 		when(service.createWorkbook(any(File.class))).thenThrow(new FileAlreadyExistsException("File already exists: no new workbook has been created."));
@@ -62,10 +63,12 @@ public class CreateWorkbookConstructTest {
 		ExcelService service = mock(ExcelService.class);
 		ConstructContext context = mock(ConstructContext.class);
 
+
 		//Mocking file
 		RobotID id = mock(RobotID.class);
 		when(id.getPath()).thenReturn(new File("."));
 		when(context.getRobotID()).thenReturn(id);
+		when(context.getRootRobot()).thenReturn(id);
 
 		//Throw exception
 		when(service.createWorkbook(any(File.class))).thenThrow(new IOException());
@@ -89,6 +92,7 @@ public class CreateWorkbookConstructTest {
 		RobotID id = mock(RobotID.class);
 		when(id.getPath()).thenReturn(new File("."));
 		when(context.getRobotID()).thenReturn(id);
+		when(context.getRootRobot()).thenReturn(id);
 		when(service.createWorkbook(any(File.class))).thenReturn(workbook);
 		when(workbook.getFileString()).thenReturn("string");
 
