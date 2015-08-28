@@ -56,7 +56,10 @@ public class LoadWorkbookConstructTest {
 		ConstructContext context = mock(ConstructContext.class);
 
 		//Mock RobotID
-		doReturn(createRobotID()).when(context).getRobotID();
+		RobotID id = mock(RobotID.class);
+		when(id.getPath()).thenReturn(new File("."));
+		when(context.getRobotID()).thenReturn(id);
+		when(context.getRootRobot()).thenReturn(id);
 
 		//Throw exception
 		when(service.loadWorkbook(any(File.class))).thenThrow(new IllegalArgumentException());
@@ -74,8 +77,12 @@ public class LoadWorkbookConstructTest {
 		ExcelService service = mock(ExcelService.class);
 		ConstructContext context = mock(ConstructContext.class);
 
-		//Mock filesystem
-		doReturn(createRobotID()).when(context).getRobotID();
+
+		//Mock RobotID
+		RobotID id = mock(RobotID.class);
+		when(id.getPath()).thenReturn(new File("."));
+		when(context.getRobotID()).thenReturn(id);
+		when(context.getRootRobot()).thenReturn(id);
 
 		//Throw exception
 		when(service.loadWorkbook(any(File.class))).thenThrow(new IOException());
@@ -93,9 +100,11 @@ public class LoadWorkbookConstructTest {
 		ExcelService service = mock(ExcelService.class);
 		ConstructContext context = mock(ConstructContext.class);
 
-		//Create RobotID
-		RobotID id = createRobotID();
+		//Mock RobotID
+		RobotID id = mock(RobotID.class);
+		when(id.getPath()).thenReturn(new File("."));
 		when(context.getRobotID()).thenReturn(id);
+		when(context.getRootRobot()).thenReturn(id);
 
 		//Throw exception
 		when(service.loadWorkbook(any(File.class))).thenThrow(new FileNotFoundException());
@@ -114,7 +123,12 @@ public class LoadWorkbookConstructTest {
 		//Basic vars
 		ExcelService service = mock(ExcelService.class);
 		ConstructContext context = mock(ConstructContext.class);
-		doReturn(createRobotID()).when(context).getRobotID();
+
+		//Mock RobotID
+		RobotID id = mock(RobotID.class);
+		when(id.getPath()).thenReturn(new File("."));
+		when(context.getRobotID()).thenReturn(id);
+		when(context.getRootRobot()).thenReturn(id);
 
 		//Throw exception
 		when(service.loadWorkbook(any(File.class))).thenThrow(new InvalidObjectException("File cannot be opened as Excel Workbook"));
@@ -142,8 +156,11 @@ public class LoadWorkbookConstructTest {
 		Logger logger = mock(Logger.class);
 		when(context.getRootLogger()).thenReturn(logger);
 
-		//mock robot id
-		doReturn(createRobotID()).when(context).getRobotID();
+		//Mock RobotID
+		RobotID id = mock(RobotID.class);
+		when(id.getPath()).thenReturn(new File("."));
+		when(context.getRobotID()).thenReturn(id);
+		when(context.getRootRobot()).thenReturn(id);
 
 		//Executing test
 		LoadWorkbookConstruct.process(service, context, fromValue("."));
@@ -176,8 +193,11 @@ public class LoadWorkbookConstructTest {
 		when(service.loadWorkbook(any(File.class))).thenReturn(workbook);
 		when(workbook.isReadonly()).thenReturn(false);
 
-		//Mock robot id
-		doReturn(createRobotID()).when(context).getRobotID();
+		//Mock RobotID
+		RobotID id = mock(RobotID.class);
+		when(id.getPath()).thenReturn(new File("."));
+		when(context.getRobotID()).thenReturn(id);
+		when(context.getRootRobot()).thenReturn(id);
 
 		//Execute
 		LoadWorkbookConstruct.process(service, context, fromValue("."));
@@ -200,7 +220,10 @@ public class LoadWorkbookConstructTest {
 		when(service.loadWorkbook(any(File.class))).thenReturn(workbook);
 
 		//Mock RobotID
-		doReturn(createRobotID()).when(context).getRobotID();
+		RobotID id = mock(RobotID.class);
+		when(id.getPath()).thenReturn(new File("."));
+		when(context.getRobotID()).thenReturn(id);
+		when(context.getRootRobot()).thenReturn(id);
 
 		//Get the result
 		MetaExpression result = LoadWorkbookConstruct.process(service, context, fromValue("."));
