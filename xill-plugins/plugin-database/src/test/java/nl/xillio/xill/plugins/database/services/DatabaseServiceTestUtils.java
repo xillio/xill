@@ -26,6 +26,7 @@ public class DatabaseServiceTestUtils {
 	 *        URL to let {@link BaseDatabaseService#createConnectionURL(String, String, String, nl.xillio.xill.plugins.database.util.Tuple...)} return
 	 * @throws SQLException
 	 */
+	@SuppressWarnings("unchecked")
 	public static void baseDatabaseServiceStubs(BaseDatabaseService spyService, Connection con, String connectionURL) throws SQLException {
 		doReturn(con).when(spyService).connect(any());
 		doReturn(con).when(spyService).connect(any(), any());

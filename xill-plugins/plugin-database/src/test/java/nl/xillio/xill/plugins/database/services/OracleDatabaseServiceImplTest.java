@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
 
 /**
  * Tests the Oracle specific database service
- * 
+ *
  * @author Geert Konijnendijk
  *
  */
@@ -34,6 +34,9 @@ public class OracleDatabaseServiceImplTest {
 
 	private OracleDatabaseServiceImpl service;
 
+	/**
+	 * Sets up the service.
+	 */
 	@BeforeClass
 	public void setup() {
 		service = new OracleDatabaseServiceImpl();
@@ -41,9 +44,10 @@ public class OracleDatabaseServiceImplTest {
 
 	/**
 	 * Test the createConnection method
-	 * 
+	 *
 	 * @throws SQLException
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testCreateConnection() throws SQLException {
 		// Mock
@@ -70,9 +74,10 @@ public class OracleDatabaseServiceImplTest {
 
 	/**
 	 * Test the createConnectionURL method with a password but without a user
-	 * 
+	 *
 	 * @throws SQLException
 	 */
+	@SuppressWarnings("unchecked")
 	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "User and pass should be both null or both non-null")
 	public void testCreateConnectionURLHalfLogin() throws SQLException {
 		// Mock
@@ -87,9 +92,10 @@ public class OracleDatabaseServiceImplTest {
 
 	/**
 	 * Test the createConnectionURL method with login
-	 * 
+	 *
 	 * @throws SQLException
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testCreateConnectionURLLogin() throws SQLException {
 		// Mock
@@ -105,53 +111,57 @@ public class OracleDatabaseServiceImplTest {
 
 	/**
 	 * Test the createConnectionURL method without login
-	 * 
+	 *
 	 * @throws SQLException
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testCreateConnectionURLNoLogin() throws SQLException {
 		// Mock
 
 		// Run
 		String URL = service.createConnectionURL("db", null, null);
-		String key = "key";
 
 		// Verify
 
 		// Assert
 		assertEquals(URL, "jdbc:oracle:thin:@db", "Incorrect URL created");
 	}
-	
+
 	/**
-	 * <p>Test the create properties method.</p>
-	 * <p> We check wheter the method runs correctly on normal input and verify it overwrites properties. </p>
+	 * <p>
+	 * Test the create properties method.
+	 * </p>
+	 * <p>
+	 * We check whether the method runs correctly on normal input and verify it overwrites properties.
+	 * </p>
 	 */
 	@Test
-	public void testCreateProperties(){
+	public void testCreateProperties() {
 		// Mock
 		List<Tuple<String, String>> options = Arrays.asList(new Tuple<String, String>("name", "a name"),
-																											new Tuple<String, String>("tag", "a tag"),
-																											new Tuple<String, String>("name", "another name"));
-		
+			new Tuple<String, String>("tag", "a tag"),
+			new Tuple<String, String>("name", "another name"));
+
 		// Run
 		@SuppressWarnings("unchecked")
-		Properties properties = service.createProperties((Tuple<String, String>[]) options.toArray()); 
+		Properties properties = service.createProperties((Tuple<String, String>[]) options.toArray());
 		// verify
-		
-		//Assert
+
+		// Assert
 		Assert.assertEquals(properties.getProperty("name"), "another name");
 		Assert.assertEquals(properties.get("tag"), "a tag");
 	}
-	
+
 	/**
-	 * Test creating a select query 
+	 * Test creating a select query
 	 */
 	@Test
-	public void testCreateSelectQuery(){
-		
+	public void testCreateSelectQuery() {
+
 		// Run
 		String query = service.createSelectQuery("TABLE", "colnum > 3");
-		
+
 		// Assert
 		Assert.assertEquals(query, "SELECT * FROM TABLE WHERE colnum > 3 AND rownum <= 1");
 	}
