@@ -19,7 +19,8 @@ public class OracleConnectConstruct extends BaseDatabaseConstruct {
 	@Override
 	public ConstructProcessor prepareProcess(ConstructContext context) {
 		Argument[] args =
-		{new Argument("host", ATOMIC),
+		{
+				new Argument("host", ATOMIC),
 				new Argument("port", fromValue(1521), ATOMIC),
 				new Argument("database", ATOMIC),
 				new Argument("useSID", fromValue(true), ATOMIC),
