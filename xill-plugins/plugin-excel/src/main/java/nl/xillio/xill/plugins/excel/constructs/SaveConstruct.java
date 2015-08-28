@@ -41,7 +41,7 @@ public class SaveConstruct extends Construct {
 		if (path == NULL) //default
 			return processOverwrite(service, workbook);
 		else {
-			File file = getFile(context.getRobotID(), path.getStringValue());
+			File file = getFile(context, path.getStringValue());
 			return processToFolder(service, workbook, file);
 		}
 	}

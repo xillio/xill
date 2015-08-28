@@ -41,7 +41,7 @@ public class LoadWorkbookConstruct extends Construct {
 	static MetaExpression process(ExcelService excelService, ConstructContext context, MetaExpression filePath) {
 
 		String path = filePath.getStringValue();
-		File file = getFile(context.getRobotID(), path);
+		File file = getFile(context, path);
 		String workbookText;
 		XillWorkbook workbook;
 		try {
