@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedHashMap;
 
 import nl.xillio.xill.plugins.database.util.StatementIterator.StatementIterationException;
 
@@ -107,14 +108,19 @@ public class StatementIteratorTest {
 		// the iterator
 		StatementIterator iterator = spy(new StatementIterator(statement));
 		ResultSetMetaData metadata = mock(ResultSetMetaData.class);
+		ResultSet resultSet = mock(ResultSet.class);
 		when(metadata.getColumnCount()).thenReturn(1);
-		when(metadata.getColumnName(1)).thenReturn("ColumnName");
+		when(metadata.getColumnLabel(1)).thenReturn("ColumnName");
 		iterator.setCurrentMeta(metadata);
 		iterator.setCurrentUpdateCount(-1);
+		iterator.setCurrentSet(resultSet);
 
 		Object output = iterator.next();
+		
+		LinkedHashMap<String, Object> expectedResult = new LinkedHashMap<String, Object>();
+		expectedResult.put("ColumnName", null);
 
-		Assert.assertEquals(output, 0);
+		Assert.assertEquals(output, expectedResult);
 	}
 
 	/**

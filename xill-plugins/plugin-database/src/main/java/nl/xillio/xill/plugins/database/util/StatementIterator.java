@@ -101,6 +101,15 @@ public class StatementIterator implements Iterator<Object> {
 	void setCurrentMeta(ResultSetMetaData metadata){
 		currentMeta = metadata;
 	}
+	
+	/**
+	 * Sets the currentSet, needed for testing purposes.
+	 * @param resultSet
+	 * 					The value we want currentSet to have.
+	 */
+	void setCurrentSet(ResultSet resultSet){
+		currentSet = resultSet;
+	}
 
 	@Override
 	public boolean hasNext() {
