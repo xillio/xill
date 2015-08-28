@@ -17,34 +17,49 @@ import nl.xillio.xill.api.components.MetaExpression;
  * 
  * 
  * @author Geert Konijnendijk
- *
+ *TODO: add javadoc
  */
 public enum TypeConvertor {
 
+	/**
+	 * 
+	 */
 	BYTE(Byte.class) {
 		@Override
 		protected Object convert(Object o) throws SQLException {
-			return (int) ((Byte) o).intValue();
+			return ((Byte) o).intValue();
 		}
 	},
+	/**
+	 * 
+	 */
 	SHORT(Short.class) {
 		@Override
 		protected Object convert(Object o) throws SQLException {
 			return ((Short) o).intValue();
 		}
 	},
+	/**
+	 * 
+	 */
 	FLOAT(Float.class) {
 		@Override
 		protected Object convert(Object o) throws SQLException {
 			return ((Float) o).doubleValue();
 		}
 	},
+	/**
+	 * 
+	 */
 	BIG_DECIMAL(BigDecimal.class) {
 		@Override
 		public Object convert(Object o) {
 			return ((BigDecimal) o).doubleValue();
 		}
 	},
+	/**
+	 * 
+	 */
 	CLOB(Clob.class) {
 		@Override
 		protected Object convert(Object o) throws SQLException {
@@ -52,12 +67,20 @@ public enum TypeConvertor {
 			return clob.getSubString(1, (int) clob.length());
 		}
 	},
+	/**
+	 * 
+	 *
+	 */
 	DATE(Date.class) {
 		@Override
 		protected Object convert(Object o) {
 			return DATE_FORMAT.format((Date) o);
 		}
 	},
+	/**
+	 * 
+	 *
+	 */
 	ARRAY(Array.class) {
 		@Override
 		protected Object convert(Object o) throws SQLException {
@@ -92,6 +115,7 @@ public enum TypeConvertor {
 	 * 
 	 * @param o
 	 * @return An object that can be passed to {@link MetaExpression#parseObject(Object)}
+	 * @throws SQLException 
 	 */
 	public static Object convertJDBCType(Object o) throws SQLException {
 		if(o == null)

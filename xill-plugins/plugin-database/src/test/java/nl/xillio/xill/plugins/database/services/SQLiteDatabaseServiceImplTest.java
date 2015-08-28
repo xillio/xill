@@ -27,6 +27,9 @@ public class SQLiteDatabaseServiceImplTest {
 
 	private SQLiteDatabaseServiceImpl service;
 
+	/**
+	 * Setup the service
+	 */
 	@BeforeClass
 	public void setup() {
 		service = new SQLiteDatabaseServiceImpl();
@@ -37,6 +40,7 @@ public class SQLiteDatabaseServiceImplTest {
 	 * 
 	 * @throws SQLException
 	 */
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	public void testCreateConnection() throws SQLException {
 		// Mock
@@ -81,7 +85,8 @@ public class SQLiteDatabaseServiceImplTest {
 
 	private void testCreateConnectionURL(String database, String expectedURL) throws SQLException {
 		// Run
-		String URL = service.createConnectionURL(database, null, null, null);
+		@SuppressWarnings("unchecked")
+		String URL = service.createConnectionURL(database, null, null);
 
 		// Verify
 

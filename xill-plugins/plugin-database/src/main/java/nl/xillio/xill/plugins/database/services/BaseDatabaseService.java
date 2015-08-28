@@ -25,6 +25,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Iterators;
 
+/**
+ * The base service for any databaseService.
+ */
 @SuppressWarnings("unchecked")
 public abstract class BaseDatabaseService implements DatabaseService {
 
@@ -274,7 +277,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 *        The table to select from
 	 * @return A SQL query that selects one row using the given constraints
 	 */
-	protected String createSelectQuery(final String table, final String constraintsSql) {
+	String createSelectQuery(final String table, final String constraintsSql) {
 		return String.format("SELECT * FROM %1$s WHERE %2$s LIMIT 1", table, constraintsSql);
 	}
 

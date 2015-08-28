@@ -41,6 +41,10 @@ public class DatabaseTest {
 		assertEquals(returnedResults, expectedResults);
 	}
 
+	/**
+	 * Test the findService method when the DMBS type is not supported
+	 * @throws Exception
+	 */
 	@Test (expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "DBMS type is not supported")
 	public void testFindServiceClassUnsupportedType() throws Exception{
 		Database.findServiceClass("googledatabase");

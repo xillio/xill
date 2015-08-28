@@ -12,6 +12,9 @@ import nl.xillio.xill.plugins.database.BaseDatabaseConstruct;
 import nl.xillio.xill.plugins.database.services.DatabaseServiceFactory;
 import nl.xillio.xill.plugins.database.util.Database;
 
+/**
+ * The connect construct for the Oracle database.
+ */
 public class OracleConnectConstruct extends BaseDatabaseConstruct {
 	@Override
 	public ConstructProcessor prepareProcess(ConstructContext context) {

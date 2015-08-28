@@ -15,11 +15,13 @@ import nl.xillio.xill.plugins.database.util.Tuple;
  */
 public class SQLiteDatabaseServiceImpl extends BaseDatabaseService {
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Connection createConnection(String database, String user, String pass, Tuple<String, String>... options) throws SQLException {
 		return connect(createConnectionURL(database, user, pass, options));
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected String createConnectionURL(String database, String user, String pass, Tuple<String, String>... options)  throws SQLException{
 		String path = database == null ? ":memory:" : database;

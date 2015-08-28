@@ -47,7 +47,7 @@ public class StatementIterator implements Iterator<Object> {
 	/**
 	 * Sets the currentUpdateCount or the currentSet depending on the current result of the statement.
 	 */
-	private void retrieveNextResult(boolean resultSetPossible) {
+	void retrieveNextResult(boolean resultSetPossible) {
 		try {
 			if (resultSetPossible)
 				currentSet = stmt.getResultSet();
@@ -67,8 +67,8 @@ public class StatementIterator implements Iterator<Object> {
 	/**
 	 * Moves to the statement's next result and retrieves it
 	 */
-	private void nextResult() {
-		if (!hasNext)
+	void nextResult() {
+		if (!hasNext())
 			throw new NoSuchElementException("Iterator is empty");
 		currentSet = null;
 		currentUpdateCount = -1;
@@ -82,6 +82,24 @@ public class StatementIterator implements Iterator<Object> {
 		} catch (SQLException e) {
 			throw new StatementIterationException(e);
 		}
+	}
+	
+	/**
+	 * Sets the update count, needed for testing purposes.
+	 * @param value
+	 * 					The value we want the currentUpdateCount to have
+	 */
+	void setCurrentUpdateCount(int value){
+		currentUpdateCount = value;
+	}
+	
+	/**
+	 * Sets the currentMeta variable, needed for testing purposes.
+	 * @param metadata
+	 * 					The value we want to currentMeta to have.
+	 */
+	void setCurrentMeta(ResultSetMetaData metadata){
+		currentMeta = metadata;
 	}
 
 	@Override

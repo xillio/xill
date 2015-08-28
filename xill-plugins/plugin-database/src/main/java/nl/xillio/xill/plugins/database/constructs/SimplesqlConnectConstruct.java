@@ -11,10 +11,19 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.plugins.database.BaseDatabaseConstruct;
 import nl.xillio.xill.plugins.database.services.DatabaseServiceFactory;
 
+/**
+ * TODO: jdoc
+ *
+ */
 public abstract class SimplesqlConnectConstruct extends BaseDatabaseConstruct {
 
 	private String databaseName;
 
+	/**
+	 * The constructor for the {@link SimplesqlConnectConstruct}.
+	 * @param databaseName
+	 * 						The name of the database.
+	 */
 	public SimplesqlConnectConstruct(String databaseName) {
 		this.databaseName = databaseName;
 	}
