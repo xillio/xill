@@ -1,7 +1,7 @@
-package nl.xillio.xill.plugins.excel.dataStructures;
+package nl.xillio.xill.plugins.excel.datastructures;
 
 import nl.xillio.xill.api.errors.NotImplementedException;
-import nl.xillio.xill.plugins.excel.dataStructures.XillCell;
+import nl.xillio.xill.plugins.excel.datastructures.XillCell;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.RichTextString;

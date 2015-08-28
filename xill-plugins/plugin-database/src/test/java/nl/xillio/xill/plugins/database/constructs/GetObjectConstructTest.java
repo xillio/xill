@@ -11,10 +11,6 @@ import static org.mockito.Mockito.when;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
@@ -24,11 +20,24 @@ import nl.xillio.xill.plugins.database.services.DatabaseServiceFactory;
 import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
 import nl.xillio.xill.testutils.ConstructTest;
 
+import org.testng.Assert;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
+/**
+ * Test the {@link GetObjectConstruct}.
+ *
+ */
 public class GetObjectConstructTest extends ConstructTest {
 
 	/**
 	 * test the method with normal input, with no database given.
 	 * Should never use database.getMeta because lastConnections.get is called.
+	 * 
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
 	 */
 	@Test
 	public void testProcessDatabaseNull() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
@@ -49,7 +58,7 @@ public class GetObjectConstructTest extends ConstructTest {
 
 		when((conMetadata).getDatabaseName()).thenReturn("databaseName");
 
-		LinkedHashMap resultMap = mock(LinkedHashMap.class);
+		LinkedHashMap<String, Object> resultMap = new LinkedHashMap<String, Object>();
 		when((dbService).getObject(any(), eq("table"), any())).thenReturn(resultMap);
 		mock(BaseDatabaseConstruct.class);
 
@@ -65,6 +74,11 @@ public class GetObjectConstructTest extends ConstructTest {
 
 	/**
 	 * test the method database.getMetadata should be called once.
+	 * 
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
 	 */
 	@Test
 	public void testProcessDatabaseNotNull() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
@@ -86,7 +100,7 @@ public class GetObjectConstructTest extends ConstructTest {
 
 		when((conMetadata).getDatabaseName()).thenReturn("databaseName");
 
-		LinkedHashMap resultMap = mock(LinkedHashMap.class);
+		LinkedHashMap<String, Object> resultMap = new LinkedHashMap<String, Object>();
 		when((dbService).getObject(any(), eq("table"), any())).thenReturn(resultMap);
 		mock(BaseDatabaseConstruct.class);
 		when((database).getMeta(ConnectionMetadata.class)).thenReturn(conMetadata);
@@ -113,6 +127,15 @@ public class GetObjectConstructTest extends ConstructTest {
 
 	/**
 	 * Should throw RobotRuntimeExceptions when InstantiationException/IllegalAccesException or ClassnotFoundException occurs in getService.
+	 * 
+	 * @param o
+	 *        Fodder object needed for testNG.
+	 * @param e
+	 *        The exception the getService method throws.
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
 	 */
 	@Test(dataProvider = "exceptions", expectedExceptions = RobotRuntimeException.class)
 	public void testProcessGetServiceExceptions(final Object o, final Exception e) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
@@ -122,7 +145,7 @@ public class GetObjectConstructTest extends ConstructTest {
 		DatabaseServiceFactory factory = mock(DatabaseServiceFactory.class);
 		RobotID id = mock(RobotID.class);
 		ConnectionMetadata conMetadata = mock(ConnectionMetadata.class);
-		LinkedHashMap resultMap = mock(LinkedHashMap.class);
+		LinkedHashMap<String, Object> resultMap = new LinkedHashMap<String, Object>();
 		DatabaseService dbService = mock(DatabaseService.class);
 
 		BaseDatabaseConstruct.setLastConnections(id, conMetadata);
@@ -146,6 +169,11 @@ public class GetObjectConstructTest extends ConstructTest {
 
 	/**
 	 * This method should throw an robotrunTimeException when an SQLException occurs in service.getObject
+	 * 
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class)
 	public void testProcessSQLException() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
@@ -176,5 +204,4 @@ public class GetObjectConstructTest extends ConstructTest {
 
 		Assert.assertEquals(result, NULL);
 	}
-
 }

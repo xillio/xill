@@ -15,7 +15,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
@@ -40,7 +39,7 @@ public class QueryConstructTest extends ConstructTest {
 	 * <p>
 	 * Tests the process with a database and two parameters handed
 	 * </p>
-	 * 
+	 *
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 * @throws ClassNotFoundException
@@ -94,7 +93,7 @@ public class QueryConstructTest extends ConstructTest {
 	 * <p>
 	 * Test the process when no database is handed and it has to be retrieved from the static storage
 	 * </p>
-	 * 
+	 *
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 * @throws ClassNotFoundException
@@ -165,7 +164,7 @@ public class QueryConstructTest extends ConstructTest {
 	 * <p>
 	 * Note that we hand every possible exception with a {@link DataProvider}
 	 * </p>
-	 * 
+	 *
 	 * @param o
 	 *        A random fodder object.
 	 * @param e
@@ -231,7 +230,7 @@ public class QueryConstructTest extends ConstructTest {
 	 * <p>
 	 * Note that we try every possible exception with a {@link DataProvider}.
 	 * </p>
-	 * 
+	 *
 	 * @param o
 	 *        A fodder object.
 	 * @param e
@@ -316,28 +315,26 @@ public class QueryConstructTest extends ConstructTest {
 	}
 
 	/**
-	 * Test the returnValue method with an iterator with objects (hashmaps) handed.
+	 * Test the transformIteratorElement method when it receives an integer.
 	 */
 	@Test
-	public void testReturnValueWithObjectIterator() {
-		Map<String, Object> map = new LinkedHashMap<String, Object>();
+	public void testTransformIteratorElementWithInteger() {
 
-		Iterator<Map<String, Object>> iterator = Arrays.asList(map).iterator();
+		MetaExpression output = QueryConstruct.transformIteratorElement(42);
 
-		MetaExpression output = QueryConstruct.returnValue(iterator, "sql");
-
-		Assert.assertEquals(output.getStringValue(), "Results[sql]");
+		Assert.assertEquals(output, fromValue(42));
 	}
 
 	/**
-	 * Test the returnValue method with an iterator with invalid iterators handed. It should not crash.
+	 * Test the transformIteratorElement method when it receives a HashMap.
 	 */
 	@Test
-	public void testReturnValueWithInvalidIterator() {
-		Iterator<String> iterator = Arrays.asList("string").iterator();
+	public void testTransformIteratorElementWithHashMap() {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+		map.put("key", "value");
 
-		MetaExpression output = QueryConstruct.returnValue(iterator, "sql");
+		MetaExpression output = QueryConstruct.transformIteratorElement(map);
 
-		Assert.assertEquals(output.getStringValue(), "Results[sql]");
+		Assert.assertEquals(output.getValue().toString(), "{key=\"value\"}");
 	}
 }

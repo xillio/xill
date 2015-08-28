@@ -1,6 +1,6 @@
-package nl.xillio.xill.plugins.excel.dataStructures;
+package nl.xillio.xill.plugins.excel.datastructures;
 
-import nl.xillio.xill.plugins.excel.dataStructures.XillCellRef;
+import nl.xillio.xill.plugins.excel.datastructures.XillCellRef;
 
 import org.testng.annotations.Test;
 

@@ -3,21 +3,12 @@ package nl.xillio.xill.plugins.database.constructs;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
-
-import com.mysql.jdbc.Connection;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
@@ -28,12 +19,26 @@ import nl.xillio.xill.plugins.database.services.DatabaseServiceFactory;
 import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
 import nl.xillio.xill.testutils.ConstructTest;
 
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
+import com.mysql.jdbc.Connection;
+
+/**
+ * Test the {@link StoreObjectConstruct}.
+ *
+ */
 public class StoreObjectConstructTest extends ConstructTest {
 
 	/**
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
 	 * @test process with normal input and no database given
-	 * 
+	 *
 	 */
+	@SuppressWarnings("unchecked")
 	@Test(expectedExceptions = RobotRuntimeException.class)
 	public void testProcessDatabaseNull() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
 		// mock
@@ -43,7 +48,6 @@ public class StoreObjectConstructTest extends ConstructTest {
 		MetaExpression overwrite = mockExpression(ATOMIC, true, 0, "empty");
 		MetaExpression database = mockExpression(ATOMIC, true, 0, "databaseName");
 		MetaExpression[] args = {table, object, keys, overwrite, database};
-		Connection connection = spy(Connection.class);
 		DatabaseServiceFactory factory = mock(DatabaseServiceFactory.class);
 		RobotID id = mock(RobotID.class);
 
@@ -60,21 +64,18 @@ public class StoreObjectConstructTest extends ConstructTest {
 		doThrow(RobotRuntimeException.class).when(dbService).storeObject(null, "table", (LinkedHashMap<String, Object>) extractValue(object), (java.util.List<String>) keys.getValue(), true);
 
 		// run
-		MetaExpression result = StoreObjectConstruct.process(args, factory, id);
-
-		// verify
-		verify(conMetadata, times(1)).getConnection();
-		verify(dbService, times(1)).storeObject(connection, "table", (LinkedHashMap<String, Object>) extractValue(object), (java.util.List<String>) keys.getValue(), true);
-		verify(database, never()).getMeta(ConnectionMetadata.class);
-
-		// assert
-		Assert.assertEquals(result, NULL);
+		StoreObjectConstruct.process(args, factory, id);
 	}
 
 	/**
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
 	 * @test process with normal input and a database given.
-	 * 
+	 *
 	 */
+	@SuppressWarnings("unchecked")
 	@Test(expectedExceptions = RobotRuntimeException.class)
 	public void testProcessDatabaseNotNull() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
 		// mock
@@ -84,7 +85,6 @@ public class StoreObjectConstructTest extends ConstructTest {
 		MetaExpression overwrite = mockExpression(ATOMIC, true, 0, "empty");
 		MetaExpression database = mockExpression(ATOMIC, true, 0, "databaseName");
 		MetaExpression[] args = {table, object, keys, overwrite, database};
-		Connection connection = spy(Connection.class);
 		DatabaseServiceFactory factory = mock(DatabaseServiceFactory.class);
 		RobotID id = mock(RobotID.class);
 
@@ -101,18 +101,9 @@ public class StoreObjectConstructTest extends ConstructTest {
 		doThrow(RobotRuntimeException.class).when(dbService).storeObject(null, "table", (LinkedHashMap<String, Object>) extractValue(object), (java.util.List<String>) keys.getValue(), true);
 
 		// run
-		MetaExpression result = StoreObjectConstruct.process(args, factory, id);
-
-		// verify
-		verify(conMetadata, times(1)).getConnection();
-		verify(dbService, times(1)).storeObject(connection, "table", (LinkedHashMap<String, Object>) extractValue(object), (java.util.List<String>) keys.getValue(), true);
-		verify(database, times(1)).getMeta(ConnectionMetadata.class);
-
-		// assert
-		Assert.assertEquals(result, NULL);
+		StoreObjectConstruct.process(args, factory, id);
 	}
-	
-	
+
 	@DataProvider(name = "exceptions")
 	private Object[][] allExceptions() {
 		return new Object[][] {
@@ -121,11 +112,26 @@ public class StoreObjectConstructTest extends ConstructTest {
 				{null, new ClassNotFoundException()}
 		};
 	}
-	
+
 	/**
-	 * process should throw a robotruntimeException when getService throws 
-	 * 	InstantiationException, IllegalACcesException and ClassnotFoundexception.
+	 * <p>
+	 * process should throw a robotruntimeException when getService throws:
+	 * </p>
+	 * <ul>
+	 * <li>InstantiationException</li>
+	 * <li>IllegalACcesException</li>
+	 * <li>ClassnotFoundexception.</li>
+	 * 
+	 * @param o
+	 *        Fodder object for testNG.
+	 * @param e
+	 *        The exception we throw.
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
 	 */
+	@SuppressWarnings("unchecked")
 	@Test(dataProvider = "exceptions", expectedExceptions = RobotRuntimeException.class)
 	public void testProcessGetServiceExceptions(final Object o, final Exception e) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
 		// mock
@@ -151,12 +157,19 @@ public class StoreObjectConstructTest extends ConstructTest {
 
 		doThrow(RobotRuntimeException.class).when(dbService).storeObject(null, "table", (LinkedHashMap<String, Object>) extractValue(object), (java.util.List<String>) keys.getValue(), true);
 
+		// run
 		StoreObjectConstruct.process(args, factory, id);
 	}
 
 	/**
 	 * This method should throw an robotrunTimeException when an SQLException occurs in service.getObject
+	 * 
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
 	 */
+	@SuppressWarnings("unchecked")
 	@Test(expectedExceptions = RobotRuntimeException.class)
 	public void testProcessSQLException() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
 		// mock
@@ -166,7 +179,7 @@ public class StoreObjectConstructTest extends ConstructTest {
 		MetaExpression overwrite = mockExpression(ATOMIC, true, 0, "empty");
 		MetaExpression database = mockExpression(ATOMIC, true, 0, "databaseName");
 		MetaExpression[] args = {table, object, keys, overwrite, database};
-		
+
 		DatabaseServiceFactory factory = mock(DatabaseServiceFactory.class);
 		RobotID id = mock(RobotID.class);
 

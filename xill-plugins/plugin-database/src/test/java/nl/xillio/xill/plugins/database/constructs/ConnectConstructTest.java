@@ -26,11 +26,20 @@ import nl.xillio.xill.plugins.database.services.DatabaseServiceFactory;
 import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
 import nl.xillio.xill.testutils.ConstructTest;
 
+/**
+ *	Test the {@link ConnectConstruct}
+ *
+ */
 public class ConnectConstructTest extends ConstructTest {
 
 	/**
 	 * test the method when all given input is valid. does not throw any exceptions
+	 * @throws SQLException 
+	 * @throws InstantiationException 
+	 * @throws IllegalAccessException 
+	 * @throws ClassNotFoundException 
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testProcessNormal() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		// mock
@@ -73,11 +82,14 @@ public class ConnectConstructTest extends ConstructTest {
 
 	/**
 	 * This test checks whether the method throws an exception when service.createconnection goes wrong.
+	 * @throws Throwable 
 	 * 
 	 * @throws RobotRuntimeException
 	 */
+	@SuppressWarnings("unchecked")
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "...")
 	public void testProcessSQLException() throws Throwable {
+		// the args
 		MetaExpression database = mockExpression(ATOMIC, true, 0, "databaseName");
 		MetaExpression type = mockExpression(ATOMIC, true, 0, "databaseType");
 		MetaExpression user = mockExpression(ATOMIC, true, 0, "user");
@@ -86,20 +98,24 @@ public class ConnectConstructTest extends ConstructTest {
 		when(options.getValue()).thenReturn(new LinkedHashMap<>());
 
 		MetaExpression[] args = {database, type, user, pass, options};
+		
+		// the factory and its settings
 		DatabaseServiceFactory factory = mock(DatabaseServiceFactory.class);
-		RobotID robotID = mock(RobotID.class);
-
-		mock(Connection.class);
 		DatabaseService dbService = mock(DatabaseService.class);
 		when((factory).getService("databaseType")).thenReturn(dbService);
-
 		when((dbService).createConnection(eq("databaseName"), eq("user"), eq("pass"))).thenThrow(new SQLException("..."));
-
+		
+		// the robotID
+		RobotID robotID = mock(RobotID.class);
+		
+		// run
 		ConnectConstruct.process(args, factory, robotID);
-
-		verify(dbService, times(1)).createConnection(eq("databaseName"), eq("user"), eq("pass"));
 	}
 
+	/**
+	 * @return
+	 * 				Returns an array containing all exceptions we throw
+	 */
 	@DataProvider(name = "exceptions")
 	private Object[][] allExceptions() {
 		return new Object[][] {
@@ -111,11 +127,19 @@ public class ConnectConstructTest extends ConstructTest {
 
 	/**
 	 * This test checks whether the method throws an exception when factory.getService goes wrong.
+	 * @param o 
+	 * 				Fodder object needed by testNG.
+	 * @param e 
+	 * 				The exception we throw when getting a service.
+	 * @throws Throwable 
 	 * 
 	 * @throws RobotRuntimeException
 	 */
 	@Test(dataProvider = "exceptions", expectedExceptions = RobotRuntimeException.class)
 	public void testProcessGetServiceException(final Object o, final Exception e) throws Throwable {
+		// mock
+		
+		// the arguments
 		MetaExpression database = mockExpression(ATOMIC, true, 0, "databaseName");
 		MetaExpression type = mockExpression(ATOMIC, true, 0, "databaseType");
 		MetaExpression user = mockExpression(ATOMIC, true, 0, "user");
@@ -124,15 +148,17 @@ public class ConnectConstructTest extends ConstructTest {
 		when(options.getValue()).thenReturn(new LinkedHashMap<>());
 
 		MetaExpression[] args = {database, type, user, pass, options};
-		DatabaseServiceFactory factory = mock(DatabaseServiceFactory.class);
-		RobotID robotID = mock(RobotID.class);
-
+		
+		// the factory and its settings
+		DatabaseServiceFactory factory = mock(DatabaseServiceFactory.class);		
 		mock(Connection.class);
 		mock(DatabaseService.class);
 		when((factory).getService("databaseType")).thenThrow(e);
-
+		
+		// the robotID
+		RobotID robotID = mock(RobotID.class);
+		
+		// run
 		ConnectConstruct.process(args, factory, robotID);
-
-		verify(factory, times(1)).getService("databaseType");
 	}
 }

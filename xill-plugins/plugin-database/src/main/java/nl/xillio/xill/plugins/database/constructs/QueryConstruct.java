@@ -89,19 +89,23 @@ public class QueryConstruct extends BaseDatabaseConstruct {
 		return fromValue(integer);
 	}
 
-	private static MetaExpression extractValue(final Iterator<Object> iterator, final String sql) {
+	static MetaExpression extractValue(final Iterator<Object> iterator, final String sql) {
 
 		MetaExpressionIterator<Object> iterationResult = new MetaExpressionIterator<>(iterator, (o) -> {
-			if (o instanceof Integer) {
-				return fromValue((int) o);
-			} else if (o instanceof Map) {
-				return parseObject(o);
-			}
-			return NULL;
+			return transformIteratorElement(o);
 		});
 
 		MetaExpression metaIterator = fromValue("Results[" + sql + "]");
 		metaIterator.storeMeta(iterationResult);
 		return metaIterator;
+	}
+	
+	 static MetaExpression transformIteratorElement(Object o){
+		if (o instanceof Integer) {
+			return fromValue((int) o);
+		} else if (o instanceof Map) {
+			return parseObject(o);
+		}
+		return NULL;
 	}
 }

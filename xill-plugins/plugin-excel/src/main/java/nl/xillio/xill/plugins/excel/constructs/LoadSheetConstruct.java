@@ -6,8 +6,8 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.excel.dataStructures.XillSheet;
-import nl.xillio.xill.plugins.excel.dataStructures.XillWorkbook;
+import nl.xillio.xill.plugins.excel.datastructures.XillSheet;
+import nl.xillio.xill.plugins.excel.datastructures.XillWorkbook;
 
 import java.util.LinkedHashMap;
 
