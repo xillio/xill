@@ -70,8 +70,6 @@ public class StatementIterator implements Iterator<Object> {
 	 * Moves to the statement's next result and retrieves it
 	 */
 	void nextResult() {
-		if (!hasNext())
-			throw new NoSuchElementException("Iterator is empty");
 		currentSet = null;
 		currentUpdateCount = -1;
 		try {
@@ -123,6 +121,8 @@ public class StatementIterator implements Iterator<Object> {
 
 	@Override
 	public Object next() {
+		if (!hasNext())
+			throw new NoSuchElementException("Iterator is empty");
 		if (currentUpdateCount != -1) {
 			int result = currentUpdateCount;
 			// Immediately move to the next result since there's only one update count per result

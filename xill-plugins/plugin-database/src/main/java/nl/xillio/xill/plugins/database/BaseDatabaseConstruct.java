@@ -26,8 +26,10 @@ public abstract class BaseDatabaseConstruct extends Construct {
 	@Inject
 	protected DatabaseServiceFactory factory;
 
-	// Add hook to close all connections when runtime terminates
-	static {
+	/**
+	 * Add hook to close all connections when runtime terminates
+	 */
+	public static void registerShutdownHook() {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> lastConnections.forEach((k, v) -> closeConnection(v.getConnection()))));
 	}
 

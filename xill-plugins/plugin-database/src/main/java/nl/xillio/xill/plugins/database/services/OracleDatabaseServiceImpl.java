@@ -48,7 +48,7 @@ public class OracleDatabaseServiceImpl extends BaseDatabaseService {
 	 * @throws NullPointerException
 	 */
 	@SuppressWarnings("unchecked")
-	public Properties createProperties(final Tuple<String, String>... options) throws NullPointerException {
+	public Properties createProperties(final Tuple<String, String>... options) {
 		Properties properties = new Properties();
 		Arrays.stream(options).forEach(p -> properties.put(p.getKey(), p.getValue()));
 		return properties;

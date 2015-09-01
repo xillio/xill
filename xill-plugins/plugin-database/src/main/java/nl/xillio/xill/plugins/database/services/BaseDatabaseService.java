@@ -35,7 +35,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	private static final Pattern PARAMETER_PATTERN = Pattern.compile("(?!\\\\):([a-zA-Z]+)");
 
 	/**
-	 * Cache for delimiters, prevents from constantly getrting the metadata
+	 * Cache for delimiters, prevents from constantly getting the metadata
 	 */
 	private LinkedHashMap<Connection, String> delimiter = new LinkedHashMap<>();
 
@@ -87,6 +87,18 @@ public abstract class BaseDatabaseService implements DatabaseService {
 			return (Arrays.asList(updateCounts)).iterator();
 		}
 
+		return createQueryResult(stmt);
+	}
+
+	/**
+	 * Create an Object representing the result of a query.
+	 * 
+	 * @param stmt
+	 *        Statement on which a query has been executed
+	 * @return An Integer if the query represents one insert or update, an iterator otherwise
+	 * @throws SQLException
+	 */
+	private Object createQueryResult(PreparedStatement stmt) throws SQLException {
 		// If the first result is the only result and an update count simply return that count, otherwise create an iterator over the statement
 		int firstCount = stmt.getUpdateCount();
 		if (firstCount != -1) {

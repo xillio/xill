@@ -25,7 +25,7 @@ public enum TypeConverter {
 	 */
 	BYTE(Byte.class) {
 		@Override
-		protected Object convert(Object o) throws SQLException {
+		protected Object convert(Object o) {
 			return ((Byte) o).intValue();
 		}
 	},
@@ -34,7 +34,7 @@ public enum TypeConverter {
 	 */
 	SHORT(Short.class) {
 		@Override
-		protected Object convert(Object o) throws SQLException {
+		protected Object convert(Object o) {
 			return ((Short) o).intValue();
 		}
 	},
@@ -43,7 +43,7 @@ public enum TypeConverter {
 	 */
 	FLOAT(Float.class) {
 		@Override
-		protected Object convert(Object o) throws SQLException {
+		protected Object convert(Object o) {
 			return ((Float) o).doubleValue();
 		}
 	},
@@ -61,12 +61,23 @@ public enum TypeConverter {
 	 */
 	CLOB(Clob.class) {
 		@Override
-		protected Object convert(Object o) throws SQLException, ConversionException {
+		protected Object convert(Object o) throws ConversionException {
 			Clob clob = (Clob) o;
-			long length = clob.length();
+			long length;
+			try {
+				length = clob.length();
+			}
+			catch (SQLException e) {
+				throw new ConversionException(e);
+			}
 			if (length > Integer.MAX_VALUE)
 				throw new ConversionException("Clob is too long");
-			return clob.getSubString(1, (int) length);
+			try {
+				return clob.getSubString(1, (int) length);
+			}
+			catch (SQLException e) {
+				throw new ConversionException(e);
+			}
 		}
 	},
 	/**
@@ -83,11 +94,17 @@ public enum TypeConverter {
 	 */
 	ARRAY(Array.class) {
 		@Override
-		protected Object convert(Object o) throws SQLException, ConversionException {
+		protected Object convert(Object o) throws ConversionException {
 			List<Object> result = new ArrayList<>();
-			ResultSet array = ((Array) o).getResultSet();
-			while (array.next()) {
-				result.add(convertJDBCType(array.getObject(ARRAY_RESULTSET_VALUE)));
+			try {
+				ResultSet array = ((Array) o).getResultSet();
+				while (array.next()) {
+					result.add(convertJDBCType(array.getObject(ARRAY_RESULTSET_VALUE)));
+				}
+			}
+			catch (SQLException e)
+			{
+				throw new ConversionException(e);
 			}
 			return result;
 		}
@@ -116,7 +133,7 @@ public enum TypeConverter {
 	 * @throws ConversionException
 	 *         When a type cannot be converted
 	 */
-	protected abstract Object convert(Object o) throws SQLException, ConversionException;
+	protected abstract Object convert(Object o) throws ConversionException;
 
 	/**
 	 * Convert a JDBC type to a MetaExpression suited type.
@@ -126,7 +143,7 @@ public enum TypeConverter {
 	 * @throws SQLException
 	 * @throws ConversionException
 	 */
-	public static Object convertJDBCType(Object o) throws SQLException, ConversionException {
+	public static Object convertJDBCType(Object o) throws ConversionException {
 		if (o == null)
 			return o;
 		// Search for a suitable convertor
