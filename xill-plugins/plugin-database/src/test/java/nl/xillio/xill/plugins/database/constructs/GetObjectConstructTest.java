@@ -35,14 +35,12 @@ public class GetObjectConstructTest extends ConstructTest {
 	 * test the method with normal input, with no database given.
 	 * Should never use database.getMeta because lastConnections.get is called.
 	 * 
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws ClassNotFoundException
+	 * @throws ReflectiveOperationException
 	 * @throws SQLException
 	 * @throws ConversionException
 	 */
 	@Test
-	public void testProcessDatabaseNull() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, ConversionException {
+	public void testProcessDatabaseNull() throws ReflectiveOperationException, ConversionException, SQLException {
 		MetaExpression table = mockExpression(ATOMIC, true, 0, "table");
 		MetaExpression object = fromValue(new LinkedHashMap<>());
 		MetaExpression database = mockExpression(ATOMIC, true, 0, "database");
@@ -77,14 +75,12 @@ public class GetObjectConstructTest extends ConstructTest {
 	/**
 	 * test the method database.getMetadata should be called once.
 	 * 
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws ClassNotFoundException
+	 * @throws ReflectiveOperationException
 	 * @throws SQLException
 	 * @throws ConversionException
 	 */
 	@Test
-	public void testProcessDatabaseNotNull() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, ConversionException {
+	public void testProcessDatabaseNotNull() throws ReflectiveOperationException, SQLException, ConversionException {
 		MetaExpression table = mockExpression(ATOMIC, true, 0, "table");
 		MetaExpression object = fromValue(new LinkedHashMap<>());
 		MetaExpression database = mockExpression(ATOMIC, true, 0, "database");
@@ -135,14 +131,12 @@ public class GetObjectConstructTest extends ConstructTest {
 	 *        Fodder object needed for testNG.
 	 * @param e
 	 *        The exception the getService method throws.
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws ClassNotFoundException
+	 * @throws ReflectiveOperationException
 	 * @throws SQLException
 	 * @throws ConversionException
 	 */
 	@Test(dataProvider = "exceptions", expectedExceptions = RobotRuntimeException.class)
-	public void testProcessGetServiceExceptions(final Object o, final Exception e) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, ConversionException {
+	public void testProcessGetServiceExceptions(final Object o, final Exception e) throws ReflectiveOperationException, SQLException, ConversionException {
 		MetaExpression table = mockExpression(ATOMIC, true, 0, "table");
 		MetaExpression object = fromValue(new LinkedHashMap<>());
 		MetaExpression database = mockExpression(ATOMIC, true, 0, "database");
@@ -174,14 +168,12 @@ public class GetObjectConstructTest extends ConstructTest {
 	/**
 	 * This method should throw an robotrunTimeException when an SQLException occurs in service.getObject
 	 * 
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws ClassNotFoundException
+	 * @throws ReflectiveOperationException
 	 * @throws SQLException
 	 * @throws ConversionException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class)
-	public void testProcessSQLException() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, ConversionException {
+	public void testProcessSQLException() throws ReflectiveOperationException, SQLException, ConversionException {
 		MetaExpression table = mockExpression(ATOMIC, true, 0, "table");
 		MetaExpression object = fromValue(new LinkedHashMap<>());
 		MetaExpression database = mockExpression(ATOMIC, true, 0, "database");

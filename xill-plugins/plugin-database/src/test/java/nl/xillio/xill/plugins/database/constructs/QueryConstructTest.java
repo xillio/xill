@@ -39,15 +39,14 @@ public class QueryConstructTest extends ConstructTest {
 	 * <p>
 	 * Tests the process with a database and two parameters handed
 	 * </p>
+	 * 
+	 * @throws ReflectiveOperationException
 	 *
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws ClassNotFoundException
 	 * @throws SQLException
 	 */
 	@SuppressWarnings("unchecked")
 	@Test
-	public void testProcessWithDatabaseAndNormalUsage() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+	public void testProcessWithDatabaseAndNormalUsage() throws ReflectiveOperationException, SQLException {
 		// mock
 
 		// the query
@@ -93,15 +92,14 @@ public class QueryConstructTest extends ConstructTest {
 	 * <p>
 	 * Test the process when no database is handed and it has to be retrieved from the static storage
 	 * </p>
+	 * 
+	 * @throws ReflectiveOperationException
 	 *
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws ClassNotFoundException
 	 * @throws SQLException
 	 */
 	@SuppressWarnings("unchecked")
 	@Test
-	public void testProcessWithNoDatabaseAndNormalUsage() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+	public void testProcessWithNoDatabaseAndNormalUsage() throws ReflectiveOperationException, SQLException {
 		// mock
 
 		// the query
@@ -169,13 +167,11 @@ public class QueryConstructTest extends ConstructTest {
 	 *        A random fodder object.
 	 * @param e
 	 *        The exception we throw.
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws ClassNotFoundException
+	 * @throws ReflectiveOperationException
 	 * @throws SQLException
 	 */
 	@Test(dataProvider = "serviceExceptions", expectedExceptions = RobotRuntimeException.class)
-	public void testProcessWithDatabaseWithFailingToGetService(final Object o, final Exception e) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+	public void testProcessWithDatabaseWithFailingToGetService(final Object o, final Exception e) throws ReflectiveOperationException, SQLException {
 		// mock
 
 		// the query
@@ -235,14 +231,12 @@ public class QueryConstructTest extends ConstructTest {
 	 *        A fodder object.
 	 * @param e
 	 *        The exception we throw.
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws ClassNotFoundException
+	 * @throws ReflectiveOperationException
 	 * @throws SQLException
 	 */
 	@SuppressWarnings({"unchecked"})
 	@Test(dataProvider = "queryExceptions", expectedExceptions = RobotRuntimeException.class)
-	public void testProcessWithDatabaseAndQueryFailure(final Object o, final Exception e) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+	public void testProcessWithDatabaseAndQueryFailure(final Object o, final Exception e) throws ReflectiveOperationException, SQLException {
 		// mock
 
 		// the query

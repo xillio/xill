@@ -47,7 +47,7 @@ public class GetObjectConstruct extends BaseDatabaseConstruct {
 		LinkedHashMap<String, Object> result = null;
 		try {
 			result = factory.getService(metaData.getDatabaseName()).getObject(connection, tblName, constraints);
-		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException | ConversionException e) {
+		} catch (ReflectiveOperationException | SQLException | ConversionException e) {
 			throw new RobotRuntimeException(e.getMessage(), e);
 		}
 		LinkedHashMap<String, MetaExpression> value = (LinkedHashMap<String, MetaExpression>) object.getValue();

@@ -28,12 +28,10 @@ public class OracleConnectConstructTest extends ConstructTest {
 	 * Note that we also run connect
 	 * </p>
 	 * 
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws ClassNotFoundException
+	 * @throws ReflectiveOperationException
 	 */
 	@Test
-	public void testProcessNormalUsageUseSID() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public void testProcessNormalUsageUseSID() throws ReflectiveOperationException {
 		// mock
 
 		// the factory
@@ -71,12 +69,10 @@ public class OracleConnectConstructTest extends ConstructTest {
 	 * Note that we also run connect
 	 * </p>
 	 * 
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws ClassNotFoundException
+	 * @throws ReflectiveOperationException
 	 */
 	@Test
-	public void testProcessNormalUsageNoSID() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public void testProcessNormalUsageNoSID() throws ReflectiveOperationException {
 		// mock
 
 		// the factory

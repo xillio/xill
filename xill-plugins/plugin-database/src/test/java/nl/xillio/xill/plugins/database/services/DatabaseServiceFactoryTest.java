@@ -12,12 +12,10 @@ public class DatabaseServiceFactoryTest {
 	/**
 	 * Test whether the getService can return an SQLite database.
 	 * 
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws ClassNotFoundException
+	 * @throws ReflectiveOperationException
 	 */
 	@Test
-	public void testGetSQLiteService() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public void testGetSQLiteService() throws ReflectiveOperationException {
 		DatabaseServiceFactory factory = new DatabaseServiceFactory();
 
 		DatabaseService service = factory.getService("sqlite");
@@ -28,12 +26,11 @@ public class DatabaseServiceFactoryTest {
 	/**
 	 * Test whether the getService can return an MSsql database.
 	 * 
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws ClassNotFoundException
+	 * @throws ReflectiveOperationException
+	 * 
 	 */
 	@Test
-	public void testGetMssqlService() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public void testGetMssqlService() throws ReflectiveOperationException {
 		DatabaseServiceFactory factory = new DatabaseServiceFactory();
 
 		DatabaseService service = factory.getService("mssql");
@@ -44,12 +41,11 @@ public class DatabaseServiceFactoryTest {
 	/**
 	 * Test whether the getService can return an Mysql database.
 	 * 
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws ClassNotFoundException
+	 * @throws ReflectiveOperationException
+	 * 
 	 */
 	@Test
-	public void testGetMysqlService() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public void testGetMysqlService() throws ReflectiveOperationException {
 		DatabaseServiceFactory factory = new DatabaseServiceFactory();
 
 		DatabaseService service = factory.getService("mysql");
@@ -60,12 +56,10 @@ public class DatabaseServiceFactoryTest {
 	/**
 	 * Test whether the getService can return an Oracle database.
 	 * 
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws ClassNotFoundException
+	 * @throws ReflectiveOperationException
 	 */
 	@Test
-	public void testGetOracleService() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public void testGetOracleService() throws ReflectiveOperationException {
 		DatabaseServiceFactory factory = new DatabaseServiceFactory();
 
 		DatabaseService service = factory.getService("oracle");

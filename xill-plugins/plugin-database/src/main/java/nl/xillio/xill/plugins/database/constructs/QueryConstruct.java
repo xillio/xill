@@ -55,17 +55,19 @@ public class QueryConstruct extends BaseDatabaseConstruct {
 		int timeoutValue = timeout.getNumberValue().intValue();
 
 		// Parse the content of the parameter MetaExpression
-		List<MetaExpression> parameterContent = (List<MetaExpression>) parameters.getValue();
-		List<LinkedHashMap<String, Object>> parameterObjects = new ArrayList<LinkedHashMap<String, Object>>(parameterContent.size());
-		for (MetaExpression meta : parameterContent) {
-			parameterObjects.add((LinkedHashMap<String, Object>) meta.getValue());
+		List<LinkedHashMap<String, Object>> parameterObjects = new ArrayList<LinkedHashMap<String, Object>>();
+		if (!parameters.isNull()) {
+			List<MetaExpression> parameterContent = (List<MetaExpression>) parameters.getValue();
+			for (MetaExpression meta : parameterContent) {
+				parameterObjects.add((LinkedHashMap<String, Object>) meta.getValue());
+			}
 		}
 
 		Object result;
 		try {
 			result = factory.getService(metaData.getDatabaseName()).query(connection, sql, parameterObjects, timeoutValue);
 			return returnValue(result, sql);
-		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | ClassCastException e) {
+		} catch (ReflectiveOperationException | ClassCastException e) {
 			throw new RobotRuntimeException("Illegal DBMS type", e);
 		} catch (SQLException | IllegalArgumentException e) {
 			throw new RobotRuntimeException(e.getMessage(), e);
@@ -91,16 +93,16 @@ public class QueryConstruct extends BaseDatabaseConstruct {
 
 	static MetaExpression extractValue(final Iterator<Object> iterator, final String sql) {
 
-		MetaExpressionIterator<Object> iterationResult = new MetaExpressionIterator<>(iterator, o -> 
+		MetaExpressionIterator<Object> iterationResult = new MetaExpressionIterator<>(iterator, o ->
 			transformIteratorElement(o)
-		);
+				);
 
 		MetaExpression metaIterator = fromValue("Results[" + sql + "]");
 		metaIterator.storeMeta(iterationResult);
 		return metaIterator;
 	}
-	
-	 static MetaExpression transformIteratorElement(Object o){
+
+	static MetaExpression transformIteratorElement(Object o) {
 		if (o instanceof Integer) {
 			return fromValue((int) o);
 		} else if (o instanceof Map) {

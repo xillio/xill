@@ -19,17 +19,17 @@ import org.testng.annotations.Test;
  * Test the (@link SqliteConnectConstruct}.
  */
 public class SqliteConnectConstructTest extends ConstructTest {
-	
+
 	/**
 	 * <p>
-	 * Test the process's normal usage </p>s
+	 * Test the process's normal usage
+	 * </p>
 	 * 
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws ClassNotFoundException
+	 * @throws ReflectiveOperationException
+	 * 
 	 */
 	@Test
-	public void testProcessNormalUsage() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public void testProcessNormalUsage() throws ReflectiveOperationException {
 		// mock
 
 		// the factory

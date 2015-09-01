@@ -26,14 +26,10 @@ public class DatabaseServiceFactory {
 	 * @param name
 	 *        The name from a {@link Database} value
 	 * @return A {@link DatabaseService} suited for the given DBMS
-	 * @throws InstantiationException
-	 *         When the driver for the service can not be loaded
-	 * @throws IllegalAccessException
-	 *         When the driver for the service can not be loaded
-	 * @throws ClassNotFoundException
+	 * @throws ReflectiveOperationException
 	 *         When the driver for the service can not be loaded
 	 */
-	public DatabaseService getService(String name) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public DatabaseService getService(String name) throws ReflectiveOperationException {
 		if (!services.containsKey(name)) {
 			BaseDatabaseService service = Database.findServiceClass(name).newInstance();
 			services.put(name, service);

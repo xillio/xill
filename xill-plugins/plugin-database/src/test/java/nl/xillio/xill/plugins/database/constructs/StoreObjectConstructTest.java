@@ -31,16 +31,14 @@ import com.mysql.jdbc.Connection;
 public class StoreObjectConstructTest extends ConstructTest {
 
 	/**
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws ClassNotFoundException
+	 * @throws ReflectiveOperationException
 	 * @throws SQLException
 	 * @test process with normal input and no database given
 	 *
 	 */
 	@SuppressWarnings("unchecked")
 	@Test(expectedExceptions = RobotRuntimeException.class)
-	public void testProcessDatabaseNull() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+	public void testProcessDatabaseNull() throws ReflectiveOperationException, SQLException {
 		// mock
 		MetaExpression table = mockExpression(ATOMIC, true, 0, "table");
 		MetaExpression object = fromValue(new LinkedHashMap<>());
@@ -68,16 +66,14 @@ public class StoreObjectConstructTest extends ConstructTest {
 	}
 
 	/**
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws ClassNotFoundException
+	 * @throws ReflectiveOperationException
 	 * @throws SQLException
 	 * @test process with normal input and a database given.
 	 *
 	 */
 	@SuppressWarnings("unchecked")
 	@Test(expectedExceptions = RobotRuntimeException.class)
-	public void testProcessDatabaseNotNull() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+	public void testProcessDatabaseNotNull() throws ReflectiveOperationException, SQLException {
 		// mock
 		MetaExpression table = mockExpression(ATOMIC, true, 0, "table");
 		MetaExpression object = fromValue(new LinkedHashMap<>());
@@ -126,14 +122,12 @@ public class StoreObjectConstructTest extends ConstructTest {
 	 *        Fodder object for testNG.
 	 * @param e
 	 *        The exception we throw.
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws ClassNotFoundException
+	 * @throws ReflectiveOperationException
 	 * @throws SQLException
 	 */
 	@SuppressWarnings("unchecked")
 	@Test(dataProvider = "exceptions", expectedExceptions = RobotRuntimeException.class)
-	public void testProcessGetServiceExceptions(final Object o, final Exception e) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+	public void testProcessGetServiceExceptions(final Object o, final Exception e) throws ReflectiveOperationException, SQLException {
 		// mock
 		MetaExpression table = mockExpression(ATOMIC, true, 0, "table");
 		MetaExpression object = fromValue(new LinkedHashMap<>());
@@ -164,14 +158,12 @@ public class StoreObjectConstructTest extends ConstructTest {
 	/**
 	 * This method should throw an robotrunTimeException when an SQLException occurs in service.getObject
 	 * 
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws ClassNotFoundException
+	 * @throws ReflectiveOperationException
 	 * @throws SQLException
 	 */
 	@SuppressWarnings("unchecked")
 	@Test(expectedExceptions = RobotRuntimeException.class)
-	public void testProcessSQLException() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+	public void testProcessSQLException() throws ReflectiveOperationException, SQLException {
 		// mock
 		MetaExpression table = mockExpression(ATOMIC, true, 0, "table");
 		MetaExpression object = fromValue(new LinkedHashMap<>());

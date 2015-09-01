@@ -21,8 +21,9 @@ public abstract class SimplesqlConnectConstruct extends BaseDatabaseConstruct {
 
 	/**
 	 * The constructor for the {@link SimplesqlConnectConstruct}.
+	 * 
 	 * @param databaseName
-	 * 						The name of the database.
+	 *        The name of the database.
 	 */
 	public SimplesqlConnectConstruct(String databaseName) {
 		this.databaseName = databaseName;
@@ -43,7 +44,7 @@ public abstract class SimplesqlConnectConstruct extends BaseDatabaseConstruct {
 	static MetaExpression process(MetaExpression[] args, String databaseName, DatabaseServiceFactory factory, RobotID robotID) {
 		// Re-order the arguments and call the generic connect construct
 		String database = String.format("%s:%d/%s", args[0].getStringValue(), args[1].getNumberValue().intValue(), args[2].getStringValue());
-		MetaExpression[] newArgs = {fromValue(database), fromValue(databaseName), args[4], args[5], args[6]};
+		MetaExpression[] newArgs = {fromValue(database), fromValue(databaseName), args[3], args[4], args[5]};
 		return ConnectConstruct.process(newArgs, factory, robotID);
 	}
 }

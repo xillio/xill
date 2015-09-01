@@ -29,12 +29,10 @@ public class SimplesqlConnectConstructTest extends ConstructTest {
 	 * Note that we also run connect
 	 * </p>
 	 * 
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws ClassNotFoundException
+	 * @throws ReflectiveOperationException
 	 */
 	@Test
-	public void testProcessNormalUsage() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public void testProcessNormalUsage() throws ReflectiveOperationException {
 		// mock
 
 		// the factory

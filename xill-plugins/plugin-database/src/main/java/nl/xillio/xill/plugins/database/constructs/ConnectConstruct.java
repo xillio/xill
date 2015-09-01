@@ -47,7 +47,7 @@ public class ConnectConstruct extends BaseDatabaseConstruct {
 		DatabaseService service;
 		try {
 			service = factory.getService(type);
-		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e1) {
+		} catch (ReflectiveOperationException e1) {
 			throw new RobotRuntimeException("DBMS type is not supported", e1);
 		}
 
