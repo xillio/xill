@@ -18,6 +18,7 @@ import nl.xillio.xill.plugins.database.BaseDatabaseConstruct;
 import nl.xillio.xill.plugins.database.services.DatabaseService;
 import nl.xillio.xill.plugins.database.services.DatabaseServiceFactory;
 import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
+import nl.xillio.xill.plugins.database.util.TypeConverter.ConversionException;
 import nl.xillio.xill.testutils.ConstructTest;
 
 import org.testng.Assert;
@@ -38,9 +39,10 @@ public class GetObjectConstructTest extends ConstructTest {
 	 * @throws IllegalAccessException
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
+	 * @throws ConversionException
 	 */
 	@Test
-	public void testProcessDatabaseNull() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+	public void testProcessDatabaseNull() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, ConversionException {
 		MetaExpression table = mockExpression(ATOMIC, true, 0, "table");
 		MetaExpression object = fromValue(new LinkedHashMap<>());
 		MetaExpression database = mockExpression(ATOMIC, true, 0, "database");
@@ -79,9 +81,10 @@ public class GetObjectConstructTest extends ConstructTest {
 	 * @throws IllegalAccessException
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
+	 * @throws ConversionException
 	 */
 	@Test
-	public void testProcessDatabaseNotNull() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+	public void testProcessDatabaseNotNull() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, ConversionException {
 		MetaExpression table = mockExpression(ATOMIC, true, 0, "table");
 		MetaExpression object = fromValue(new LinkedHashMap<>());
 		MetaExpression database = mockExpression(ATOMIC, true, 0, "database");
@@ -136,9 +139,10 @@ public class GetObjectConstructTest extends ConstructTest {
 	 * @throws IllegalAccessException
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
+	 * @throws ConversionException
 	 */
 	@Test(dataProvider = "exceptions", expectedExceptions = RobotRuntimeException.class)
-	public void testProcessGetServiceExceptions(final Object o, final Exception e) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+	public void testProcessGetServiceExceptions(final Object o, final Exception e) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, ConversionException {
 		MetaExpression table = mockExpression(ATOMIC, true, 0, "table");
 		MetaExpression object = fromValue(new LinkedHashMap<>());
 		MetaExpression database = mockExpression(ATOMIC, true, 0, "database");
@@ -174,9 +178,10 @@ public class GetObjectConstructTest extends ConstructTest {
 	 * @throws IllegalAccessException
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
+	 * @throws ConversionException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class)
-	public void testProcessSQLException() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+	public void testProcessSQLException() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, ConversionException {
 		MetaExpression table = mockExpression(ATOMIC, true, 0, "table");
 		MetaExpression object = fromValue(new LinkedHashMap<>());
 		MetaExpression database = mockExpression(ATOMIC, true, 0, "database");

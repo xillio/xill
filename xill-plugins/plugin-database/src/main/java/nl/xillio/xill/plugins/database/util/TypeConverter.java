@@ -17,12 +17,11 @@ import nl.xillio.xill.api.components.MetaExpression;
  * 
  * 
  * @author Geert Konijnendijk
- *TODO: add javadoc, add unit tests
  */
-public enum TypeConvertor {
+public enum TypeConverter {
 
 	/**
-	 * 
+	 * Converts a {@link Byte} to an int
 	 */
 	BYTE(Byte.class) {
 		@Override
@@ -31,7 +30,7 @@ public enum TypeConvertor {
 		}
 	},
 	/**
-	 * 
+	 * Converts a {@link Short} to a int
 	 */
 	SHORT(Short.class) {
 		@Override
@@ -40,7 +39,7 @@ public enum TypeConvertor {
 		}
 	},
 	/**
-	 * 
+	 * Converts a {@link Float} to a double
 	 */
 	FLOAT(Float.class) {
 		@Override
@@ -49,7 +48,7 @@ public enum TypeConvertor {
 		}
 	},
 	/**
-	 * 
+	 * Converts a {@link BigDecimal} to a double. A double is the largest a {@link MetaExpression} can handle, this might return {@link Double#POSITIVE_INFINITY} or {@link Double#NEGATIVE_INFINITY}.
 	 */
 	BIG_DECIMAL(BigDecimal.class) {
 		@Override
@@ -58,18 +57,20 @@ public enum TypeConvertor {
 		}
 	},
 	/**
-	 * 
+	 * Convert a {@link Clob} (Character Large Object) to String.
 	 */
 	CLOB(Clob.class) {
 		@Override
-		protected Object convert(Object o) throws SQLException {
+		protected Object convert(Object o) throws SQLException, ConversionException {
 			Clob clob = (Clob) o;
-			return clob.getSubString(1, (int) clob.length());
+			long length = clob.length();
+			if (length > Integer.MAX_VALUE)
+				throw new ConversionException("Clob is too long");
+			return clob.getSubString(1, (int) length);
 		}
 	},
 	/**
-	 * 
-	 *
+	 * Converts a {@link Date} to a String representation
 	 */
 	DATE(Date.class) {
 		@Override
@@ -78,27 +79,30 @@ public enum TypeConvertor {
 		}
 	},
 	/**
-	 * 
-	 *
+	 * Recursively converts an {@link Array} to a {@link List}
 	 */
 	ARRAY(Array.class) {
 		@Override
-		protected Object convert(Object o) throws SQLException {
+		protected Object convert(Object o) throws SQLException, ConversionException {
 			List<Object> result = new ArrayList<>();
 			ResultSet array = ((Array) o).getResultSet();
-			while (!array.isAfterLast()) {
+			while (array.next()) {
 				result.add(convertJDBCType(array.getObject(ARRAY_RESULTSET_VALUE)));
 			}
 			return result;
 		}
 	};
 
+	// The index of the value in an Array ResultSet
 	private static final int ARRAY_RESULTSET_VALUE = 2;
+
+	// Formatter to use when formatting Dates
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat();
 
+	// A convertor should be able to convert this class and all extending classes
 	private Class<?> accepts;
 
-	private TypeConvertor(Class<?> accepts) {
+	private TypeConverter(Class<?> accepts) {
 		this.accepts = accepts;
 	}
 
@@ -107,21 +111,26 @@ public enum TypeConvertor {
 	 * 
 	 * @param o
 	 * @return
+	 * @throws SQLException
+	 *         When a database error occurs
+	 * @throws ConversionException
+	 *         When a type cannot be converted
 	 */
-	protected abstract Object convert(Object o) throws SQLException;
+	protected abstract Object convert(Object o) throws SQLException, ConversionException;
 
 	/**
 	 * Convert a JDBC type to a MetaExpression suited type.
 	 * 
 	 * @param o
 	 * @return An object that can be passed to {@link MetaExpression#parseObject(Object)}
-	 * @throws SQLException 
+	 * @throws SQLException
+	 * @throws ConversionException
 	 */
-	public static Object convertJDBCType(Object o) throws SQLException {
-		if(o == null)
+	public static Object convertJDBCType(Object o) throws SQLException, ConversionException {
+		if (o == null)
 			return o;
 		// Search for a suitable convertor
-		for (TypeConvertor convertor : values()) {
+		for (TypeConverter convertor : values()) {
 			// Convert if the given object is the same type or a super type of the object that is accepted
 			if (convertor.accepts.isAssignableFrom(o.getClass())) {
 				return convertor.convert(o);
@@ -129,6 +138,36 @@ public enum TypeConvertor {
 		}
 		// No conversion necessary
 		return o;
+	}
+
+	/**
+	 * Thrown when a value cannot be converted by the {@link TypeConverter}
+	 * 
+	 * @author Geert Konijnendijk
+	 *
+	 */
+	@SuppressWarnings("javadoc")
+	public static class ConversionException extends Exception {
+
+		public ConversionException() {
+			super();
+		}
+
+		public ConversionException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+			super(message, cause, enableSuppression, writableStackTrace);
+		}
+
+		public ConversionException(String message, Throwable cause) {
+			super(message, cause);
+		}
+
+		public ConversionException(String message) {
+			super(message);
+		}
+
+		public ConversionException(Throwable cause) {
+			super(cause);
+		}
 	}
 
 }

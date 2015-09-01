@@ -8,6 +8,7 @@ import java.util.Map;
 
 import nl.xillio.xill.plugins.database.util.StatementIterator;
 import nl.xillio.xill.plugins.database.util.Tuple;
+import nl.xillio.xill.plugins.database.util.TypeConverter.ConversionException;
 import nl.xillio.xill.services.XillService;
 
 /**
@@ -17,16 +18,17 @@ public interface DatabaseService extends XillService {
 
 	/**
 	 * Creates a connection.
+	 * 
 	 * @param database
-	 * 					The database type we want to connect with.
+	 *        The database type we want to connect with.
 	 * @param user
-	 * 					The user of the database.
+	 *        The user of the database.
 	 * @param pass
-	 * 					The pass of the database.
+	 *        The pass of the database.
 	 * @param options
-	 * 					Possible handed options.
+	 *        Possible handed options.
 	 * @return
-	 * 				Returns a {@link Connection}.
+	 *         Returns a {@link Connection}.
 	 * @throws SQLException
 	 */
 	@SuppressWarnings("unchecked")
@@ -34,6 +36,7 @@ public interface DatabaseService extends XillService {
 
 	/**
 	 * Executes a query and returns an object.
+	 * 
 	 * @param connection
 	 *        The JDBC connection
 	 * @param query
@@ -51,31 +54,38 @@ public interface DatabaseService extends XillService {
 
 	/**
 	 * Gets an object from a database.
+	 * 
 	 * @param connection
-	 * 				The JDBC connection.
+	 *        The JDBC connection.
 	 * @param tableName
-	 * 				The name of the table.
+	 *        The name of the table.
 	 * @param constraints
-	 * 				The constraints of the query.
+	 *        The constraints of the query.
 	 * @return
-	 * 				Returns  an object from a table given a few constraints.
+	 *         Returns an object from a table given a few constraints.
 	 * @throws SQLException
+	 * @throws ConversionException
 	 */
-	LinkedHashMap<String, Object> getObject(Connection connection, String tableName, Map<String, Object> constraints) throws SQLException;
+	LinkedHashMap<String, Object> getObject(Connection connection, String tableName, Map<String, Object> constraints) throws SQLException, ConversionException;
 
 	/**
-	 * <p> Stores an object in a table. </p>
-	 * <p> May or may not overwrite an existing object <p>
+	 * <p>
+	 * Stores an object in a table.
+	 * </p>
+	 * <p>
+	 * May or may not overwrite an existing object
+	 * <p>
+	 * 
 	 * @param connection
-	 * 				The JDBC connection.
+	 *        The JDBC connection.
 	 * @param table
-	 * 				The name of the table.
+	 *        The name of the table.
 	 * @param newObject
-	 * 				The object we want to store.
+	 *        The object we want to store.
 	 * @param keys
-	 * 				The keys we hand the object.
+	 *        The keys we hand the object.
 	 * @param overwrite
-	 * 				A boolean whether we allow an overwrite.
+	 *        A boolean whether we allow an overwrite.
 	 * @throws SQLException
 	 */
 	void storeObject(Connection connection, String table, Map<String, Object> newObject, List<String> keys, boolean overwrite) throws SQLException;

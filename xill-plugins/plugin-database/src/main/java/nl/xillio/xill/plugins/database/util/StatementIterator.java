@@ -9,6 +9,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import nl.xillio.xill.plugins.database.util.TypeConverter.ConversionException;
+
 /**
  * 
  * Iterates over a {@link Statement}. When the current result of the Statement is a {@link ResultSet},
@@ -83,31 +85,34 @@ public class StatementIterator implements Iterator<Object> {
 			throw new StatementIterationException(e);
 		}
 	}
-	
+
 	/**
 	 * Sets the update count, needed for testing purposes.
+	 * 
 	 * @param value
-	 * 					The value we want the currentUpdateCount to have
+	 *        The value we want the currentUpdateCount to have
 	 */
-	void setCurrentUpdateCount(int value){
+	void setCurrentUpdateCount(int value) {
 		currentUpdateCount = value;
 	}
-	
+
 	/**
 	 * Sets the currentMeta variable, needed for testing purposes.
+	 * 
 	 * @param metadata
-	 * 					The value we want to currentMeta to have.
+	 *        The value we want to currentMeta to have.
 	 */
-	void setCurrentMeta(ResultSetMetaData metadata){
+	void setCurrentMeta(ResultSetMetaData metadata) {
 		currentMeta = metadata;
 	}
-	
+
 	/**
 	 * Sets the currentSet, needed for testing purposes.
+	 * 
 	 * @param resultSet
-	 * 					The value we want currentSet to have.
+	 *        The value we want currentSet to have.
 	 */
-	void setCurrentSet(ResultSet resultSet){
+	void setCurrentSet(ResultSet resultSet) {
 		currentSet = resultSet;
 	}
 
@@ -133,22 +138,33 @@ public class StatementIterator implements Iterator<Object> {
 				for (int i = 1; i <= currentMeta.getColumnCount(); i++) {
 					String columnLabel = currentMeta.getColumnLabel(i);
 					Object obj = currentSet.getObject(columnLabel);
-					result.put(columnLabel, TypeConvertor.convertJDBCType(obj));
+					Object converted = null;
+					converted = TypeConverter.convertJDBCType(obj);
+					result.put(columnLabel, converted);
 				}
 
-				// Advance the ResultSet
-				currentSet.next();
-
-				// Move to the next result when the set is empty
-				if (currentSet.isAfterLast())
-					nextResult();
+				advance();
 
 				return result;
-			} catch (SQLException e) {
+			} catch (SQLException | ConversionException e) {
 				throw new StatementIterationException(e);
 			}
 
 		}
+	}
+
+	/**
+	 * Move to the next result in the current {@link ResultSet} or to the next {@link ResultSet} if the current one is finished.
+	 * 
+	 * @throws SQLException
+	 */
+	private void advance() throws SQLException {
+		// Advance the ResultSet
+		currentSet.next();
+
+		// Move to the next result when the set is empty
+		if (currentSet.isAfterLast())
+			nextResult();
 	}
 
 	/**

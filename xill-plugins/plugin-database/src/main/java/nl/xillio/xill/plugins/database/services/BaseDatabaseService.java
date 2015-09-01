@@ -18,7 +18,8 @@ import java.util.regex.Pattern;
 
 import nl.xillio.xill.plugins.database.util.StatementIterator;
 import nl.xillio.xill.plugins.database.util.Tuple;
-import nl.xillio.xill.plugins.database.util.TypeConvertor;
+import nl.xillio.xill.plugins.database.util.TypeConverter;
+import nl.xillio.xill.plugins.database.util.TypeConverter.ConversionException;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -140,7 +141,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 				if (!parameter.containsKey(indexedParameter)) {
 					throw new IllegalArgumentException("The Parameters argument should contain: \"" + indexedParameter + "\"");
 				}
-				
+
 				Object value = parameter.get(indexedParameter);
 				stmt.setObject(i + 1, value);
 			}
@@ -187,11 +188,11 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 *        Driver specific options
 	 * @return A URL to connect to the database
 	 */
-	String createJDBCURL(final String type, final String database, final String user, final String pass, String optionsMarker, String optionsSeparator,final Tuple<String, String>... options) {
+	String createJDBCURL(final String type, final String database, final String user, final String pass, String optionsMarker, String optionsSeparator, final Tuple<String, String>... options) {
 		String url = String.format("jdbc:%s://%s", type, database);
-		
+
 		// question mark for url parameters
-		url = url+optionsMarker;
+		url = url + optionsMarker;
 
 		// append user
 		if (user != null) {
@@ -209,7 +210,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	}
 
 	@Override
-	public LinkedHashMap<String, Object> getObject(final Connection connection, final String table, final Map<String, Object> constraints) throws SQLException {
+	public LinkedHashMap<String, Object> getObject(final Connection connection, final String table, final Map<String, Object> constraints) throws SQLException, ConversionException {
 		// prepare statement
 		final LinkedHashMap<String, Object> notNullConstraints = new LinkedHashMap<>();
 		constraints.forEach((k, v) -> {
@@ -235,7 +236,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 			for (String s : constraints.keySet()) {
 				String here = rs.getColumnName(result.findColumn(s));
 				Object value = result.getObject(s);
-				map.put(here, TypeConvertor.convertJDBCType(value));
+				map.put(here, TypeConverter.convertJDBCType(value));
 			}
 			statement.close();
 			return map;
@@ -284,7 +285,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	@Override
 	public void storeObject(final Connection connection, final String table, final Map<String, Object> newObject, final List<String> keys, final boolean overwrite)
 			throws SQLException {
-		if (keys.isEmpty()|| !overwrite) {
+		if (keys.isEmpty() || !overwrite) {
 			// insert into table
 			insertObject(connection, table, newObject);
 		} else {
@@ -295,14 +296,14 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	}
 
 	void insertObject(final Connection connection, final String table, final Map<String, Object> newObject) throws SQLException {
-		
+
 		List<String> escaped = new ArrayList<>();
-		for (String key : newObject.keySet()){
+		for (String key : newObject.keySet()) {
 			escaped.add(escapeIdentifier(key, connection));
 		}
-		
+
 		String keyString = StringUtils.join(escaped, ",");
-		
+
 		// Create the same number of prepared statement markers as there are keys
 		char[] markers = new char[newObject.size()];
 		Arrays.fill(markers, '?');

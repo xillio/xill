@@ -28,6 +28,7 @@ import java.util.Map;
 
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.database.util.Tuple;
+import nl.xillio.xill.plugins.database.util.TypeConverter.ConversionException;
 
 import org.mockito.Matchers;
 import org.testng.Assert;
@@ -319,10 +320,11 @@ public class BaseDatabaseServiceTest {
 	 * <p>
 	 * 
 	 * @throws SQLException
+	 * @throws ConversionException
 	 */
 	@SuppressWarnings("unchecked")
 	@Test
-	public void testGetObject() throws SQLException {
+	public void testGetObject() throws SQLException, ConversionException {
 
 		// mock
 		BaseDatabaseService service = spy(new SQLiteDatabaseServiceImpl());
@@ -357,10 +359,11 @@ public class BaseDatabaseServiceTest {
 	 * Test whether an exception is thrown in the getObject method when no object could be found.
 	 *
 	 * @throws SQLException
+	 * @throws ConversionException
 	 */
 	@SuppressWarnings("unchecked")
 	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "No objects found with given constraints.")
-	public void testGetObjectWithNoObjectsFound() throws SQLException {
+	public void testGetObjectWithNoObjectsFound() throws SQLException, ConversionException {
 		// mock
 		BaseDatabaseService service = spy(new SQLiteDatabaseServiceImpl());
 		Connection connection = mock(Connection.class);
@@ -578,7 +581,7 @@ public class BaseDatabaseServiceTest {
 	public void testInsertObject() throws SQLException {
 		// mock
 		BaseDatabaseService service = spy(new SQLiteDatabaseServiceImpl());
-		
+
 		Connection connection = mock(Connection.class);
 		PreparedStatement statement = mock(PreparedStatement.class);
 		when(connection.prepareStatement(anyString())).thenReturn(statement);
