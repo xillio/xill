@@ -161,7 +161,7 @@ public class TypeConverterTest {
 		Object result = DATE.convert(d);
 
 		// Assert
-		assertEquals(result, "01/09/15 09:32");
+		assertEquals(result, "2015-09-01 09:32:38");
 
 	}
 

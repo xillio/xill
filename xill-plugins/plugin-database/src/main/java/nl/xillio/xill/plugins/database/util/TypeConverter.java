@@ -97,7 +97,7 @@ public enum TypeConverter {
 	private static final int ARRAY_RESULTSET_VALUE = 2;
 
 	// Formatter to use when formatting Dates
-	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat();
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	// A convertor should be able to convert this class and all extending classes
 	private Class<?> accepts;
