@@ -12,7 +12,7 @@ import nl.xillio.xill.plugins.database.BaseDatabaseConstruct;
 import nl.xillio.xill.plugins.database.services.DatabaseServiceFactory;
 
 /**
- * TODO: jdoc
+ * Base implementation for connect constructs. Individual implementations can override this if they have different needs.
  *
  */
 public abstract class SimplesqlConnectConstruct extends BaseDatabaseConstruct {

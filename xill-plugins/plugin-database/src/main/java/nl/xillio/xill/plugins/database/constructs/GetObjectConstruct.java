@@ -16,7 +16,7 @@ import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
 import nl.xillio.xill.plugins.database.util.TypeConverter.ConversionException;
 
 /**
- *
+ * Get an object from the database. Object can already have values set, these will be used to filter.
  *
  * @author Sander Visser
  *
