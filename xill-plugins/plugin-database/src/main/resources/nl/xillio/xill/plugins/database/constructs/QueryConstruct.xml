@@ -1,0 +1,57 @@
+ 
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+  <description>
+    Query a database. Queries can be parametrized using this format: "SELECT * from table WHERE column=:name". In this case the parameter "name" can be set. 
+    When a query is parametrized, a list of objects can be passed in the paremeters argument and a batch query will be executed. All objects in the list should at least contain the query parameters as keys.         
+    
+    The connection parameter is optional, if not given the lat created connection will be used. 
+  </description>
+  <examples>
+    <example>
+      <header>Select all rows from the table "test" in a SQLite database and display the results</header>
+      <code>
+	use Database;
+	use System;
+	
+	var con = Database.connect("database.sqlite", "sqlite");
+	var result = Database.query("SELECT * FROM test");
+	
+	foreach (r in result){
+	 System.print(r); 
+	}
+      </code>
+    </example>
+    <example>
+      <header>Insert a single rows into an Oracle database</header>
+      <code>
+	use Database;
+	
+	var con = Database.connect("localhost:1521:orcl", "user", "pass");
+	var result = Database.query("INSERT INTO table VALUES(1,2)");
+      </code>
+    </example>  
+    <example>
+      <header>Insert multiple rows into a MySQL database</header>
+      <code>
+	use Database;
+	
+	var con = Database.connect("localhost:3306/testdb", "user", "pass");
+	var result = Database.query("INSERT INTO table VALUES(:value1, :value2)", [{1,2}, {2,3}, {3,4}]);
+      </code>
+    </example>  
+  </examples>
+  <references>
+    <reference>mysqlConnect</reference>
+    <reference>mssqlConnect</reference>
+    <reference>oracleConnect</reference>
+    <reference>sqliteConnect</reference>
+    <reference>query</reference>
+    <reference>getObject</reference>
+    <reference>storeObject</reference>
+    <reference>System.print</reference>
+  </references>
+  <tags>
+    MySQL, MSSQL, SQL Server, Oracle, SQLite, query, connect, SQL, insert, select, update
+  </tags>
+</function>

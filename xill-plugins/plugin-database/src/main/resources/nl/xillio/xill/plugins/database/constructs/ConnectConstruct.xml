@@ -1,13 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
-  <parameters>
-    <param name="database" />
-    <param name="type" />
-    <param name="user" />
-    <param name="pass" />
-    <param name="options" />
-  </parameters>
   <description>
-    <![CDATA[]]>
+    Connect to a database. Returns a connection object. Valid database types are: "mysql", "mssql", "oracle" and "sqlite".
   </description>
+  <examples>
+    <example>
+      <header>Connect to a SQLite database and select from the "test" table</header>
+      <code>
+	use Database;
+	
+	var con = Database.connect("database.sqlite", "sqlite");
+	var result = Database.query("SELECT * FROM test", con);
+      </code>
+    </example>
+    <example>
+      <header>Connect to the MySQL database "testdb" with user "user" and password "pass" and allow multi-queries</header>
+      <code>
+	use Database;
+	
+	var con = Database.connect("localhost:3306/testdb", "user", "pass", {"allowMultiQueries":true});
+      </code>
+    </example>  
+  </examples>
+  <references>
+    <reference>mysqlConnect</reference>
+    <reference>mssqlConnect</reference>
+    <reference>oracleConnect</reference>
+    <reference>sqliteConnect</reference>
+    <reference>query</reference>
+    <reference>getObject</reference>
+    <reference>storeObject</reference>
+  </references>
+  <tags>
+    MySQL, MSSQL, SQL Server, Oracle, SQLite, query, connect, SQL
+  </tags>
 </function>
