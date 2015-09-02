@@ -1,4 +1,4 @@
-package nl.xillio.xill.testutils;
+package nl.xillio.xill;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

@@ -30,7 +30,7 @@ public class DeleteConstruct extends Construct {
 
 	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri) {
 
-		File file = getFile(context.getRobotID(), uri.getStringValue());
+		File file = getFile(context, uri.getStringValue());
 		try {
 			fileUtils.delete(file);
 		} catch (IOException e) {

@@ -1,13 +1,14 @@
 package nl.xillio.xill.plugins.file.constructs;
 
+import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.file.TestInjectorModule;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 import org.testng.annotations.Test;
 
+import java.io.File;
 import java.io.IOException;
 
 import static org.mockito.Matchers.any;
@@ -17,7 +18,7 @@ import static org.testng.Assert.assertEquals;
 /**
  * Test the GetSizeConstruct
  */
-public class GetSizeConstructTest extends TestInjectorModule {
+public class GetSizeConstructTest {
 
 	@Test
 	public void testProcessNormal() throws IOException {
@@ -31,16 +32,20 @@ public class GetSizeConstructTest extends TestInjectorModule {
 		ConstructContext context = mock(ConstructContext.class);
 		when(context.getRobotID()).thenReturn(robotID);
 
+		// File
+		File file = mock(File.class);
+		when(TestUtils.CONSTRUCT_FILE_RESOLVER.buildFile(any(), anyString())).thenReturn(file);
+
 		// FileUtilities
 		long size = 10;
 		FileUtilities fileUtils = mock(FileUtilities.class);
-		when(fileUtils.getByteSize(FILE)).thenReturn(size);
+		when(fileUtils.getByteSize(file)).thenReturn(size);
 
 		// Run the Method
 		MetaExpression result = GetSizeConstruct.process(context, fileUtils, uri);
 
 		// Verify
-		verify(fileUtils, times(1)).getByteSize(FILE);
+		verify(fileUtils, times(1)).getByteSize(file);
 
 		// Assert
 		assertEquals(result.getNumberValue().longValue(), size);

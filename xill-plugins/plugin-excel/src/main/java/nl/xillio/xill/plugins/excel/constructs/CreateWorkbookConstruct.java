@@ -46,7 +46,7 @@ public class CreateWorkbookConstruct extends Construct {
 		if (FilenameUtils.getExtension(path).isEmpty())
 			path = path + ".xlsx";
 
-		File file = getFile(context.getRobotID(), path);
+		File file = getFile(context, path);
 		XillWorkbook workbook;
 		try {
 			workbook = excelService.createWorkbook(file);

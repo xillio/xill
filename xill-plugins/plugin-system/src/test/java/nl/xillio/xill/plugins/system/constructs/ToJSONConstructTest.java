@@ -3,12 +3,13 @@ package nl.xillio.xill.plugins.system.constructs;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.services.json.JsonParser;
-import nl.xillio.xill.testutils.ConstructTest;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import nl.xillio.xill.ConstructTest;
+import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.services.json.JsonParser;
 
 /**
  * Test the {@link ToJSONConstruct}
