@@ -49,7 +49,6 @@ public class SimplesqlConnectConstructTest extends ConstructTest {
 				mockExpression(ATOMIC, false, 0, "host"),
 				mockExpression(ATOMIC, false, 1531, "port"),
 				mockExpression(ATOMIC, false, 0, "database"),
-				mockExpression(ATOMIC, true, 0, "useSID"),
 				mockExpression(ATOMIC, false, 0, "user"),
 				mockExpression(ATOMIC, false, 0, "pass"),
 				options
