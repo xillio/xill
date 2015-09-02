@@ -58,8 +58,10 @@ public class StatementIterator implements Iterator<Object> {
 				currentUpdateCount = stmt.getUpdateCount();
 			else {
 				// Initialise the ResultSet
-				currentSet.next();
+				advance();
+				if (currentSet!=null){
 				currentMeta = currentSet.getMetaData();
+				}
 			}
 		} catch (SQLException e) {
 			throw new StatementIterationException(e);
@@ -133,7 +135,7 @@ public class StatementIterator implements Iterator<Object> {
 			try {
 
 				Map<String, Object> result = new LinkedHashMap<>();
-
+				
 				// Build the resulting map using all column labels
 				for (int i = 1; i <= currentMeta.getColumnCount(); i++) {
 					String columnLabel = currentMeta.getColumnLabel(i);
@@ -163,7 +165,7 @@ public class StatementIterator implements Iterator<Object> {
 		currentSet.next();
 
 		// Move to the next result when the set is empty
-		if (currentSet.isAfterLast())
+		if (currentSet.isAfterLast() || currentSet.getRow() == 0)
 			nextResult();
 	}
 

@@ -66,6 +66,7 @@ public class QueryConstruct extends BaseDatabaseConstruct {
 		Object result;
 		try {
 			result = factory.getService(metaData.getDatabaseName()).query(connection, sql, parameterObjects, timeoutValue);
+			
 			return returnValue(result, sql);
 		} catch (ReflectiveOperationException | ClassCastException e) {
 			throw new RobotRuntimeException("Illegal DBMS type", e);
@@ -98,6 +99,7 @@ public class QueryConstruct extends BaseDatabaseConstruct {
 				);
 
 		MetaExpression metaIterator = fromValue("Results[" + sql + "]");
+		
 		metaIterator.storeMeta(iterationResult);
 		return metaIterator;
 	}
