@@ -18,7 +18,7 @@
       <code>
 	use Database;
 	
-	var con = Database.connect("localhost:3306/testdb", "user", "pass", {"allowMultiQueries":true});
+	var con = Database.connect("localhost:3306/testdb","mysql", "user", "pass", {"allowMultiQueries":true});
       </code>
     </example>  
   </examples>
