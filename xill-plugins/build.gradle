@@ -8,8 +8,7 @@ subprojects{
 	
 	dependencies{
 		compile project(':api');
-		
-		testCompile project(':test-utils')
+		testCompile project(':testutils')
 	}
 	
 	/*

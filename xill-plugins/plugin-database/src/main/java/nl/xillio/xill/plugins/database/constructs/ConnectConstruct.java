@@ -42,7 +42,9 @@ public class ConnectConstruct extends BaseDatabaseConstruct {
 		String pass = args[3].isNull() ? null : args[3].getStringValue();
 		Map<String, MetaExpression> options = (Map<String, MetaExpression>) args[4].getValue();
 		Tuple<String, String>[] optionsArray =
-				options.entrySet().stream().map(e -> new Tuple<String, String>(e.getKey(), e.getValue().getStringValue())).toArray(s -> new Tuple[s]);
+				options.entrySet().stream()
+					.map(e -> new Tuple<String, String>(e.getKey(), e.getValue().getStringValue()))
+					.toArray(s -> new Tuple[s]);
 
 		DatabaseService service;
 		try {

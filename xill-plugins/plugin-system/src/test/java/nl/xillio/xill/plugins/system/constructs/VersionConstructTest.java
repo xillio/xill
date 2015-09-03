@@ -6,13 +6,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.plugins.system.services.version.VersionProvider;
-import nl.xillio.xill.testutils.ConstructTest;
 
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import nl.xillio.xill.ConstructTest;
+import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.plugins.system.services.version.VersionProvider;
 
 /**
  * Test {@link VersionConstruct}

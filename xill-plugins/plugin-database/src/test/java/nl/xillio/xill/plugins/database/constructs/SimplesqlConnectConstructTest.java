@@ -6,14 +6,14 @@ import static org.mockito.Mockito.when;
 
 import java.util.LinkedHashMap;
 
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import nl.xillio.xill.ConstructTest;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.plugins.database.services.DatabaseService;
 import nl.xillio.xill.plugins.database.services.DatabaseServiceFactory;
-import nl.xillio.xill.testutils.ConstructTest;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 /**
  * Test the {@link SimplesqlConnectConstruct}.
@@ -49,7 +49,6 @@ public class SimplesqlConnectConstructTest extends ConstructTest {
 				mockExpression(ATOMIC, false, 0, "host"),
 				mockExpression(ATOMIC, false, 1531, "port"),
 				mockExpression(ATOMIC, false, 0, "database"),
-				mockExpression(ATOMIC, true, 0, "useSID"),
 				mockExpression(ATOMIC, false, 0, "user"),
 				mockExpression(ATOMIC, false, 0, "pass"),
 				options
