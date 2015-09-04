@@ -6,11 +6,11 @@ test-output/
 /target/
 /plugins/
 /helpfiles
-*.jar
 
 # Gradle
 build/
 .gradle/
+!gradle-wrapper.jar
 
 # Eclipse
 .settings/
