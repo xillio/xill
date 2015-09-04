@@ -222,6 +222,17 @@ public class FXController implements Initializable, EventHandler<Event> {
 		apnRoot.addEventHandler(KeyEvent.KEY_PRESSED, this);
 
 		// Add listener for window shown
+		loadWorkSpace();
+
+		Platform.runLater(() -> {
+            //TODO Enable License Check
+			//verifyLicense();
+			showReleaseNotes();
+		});
+
+	}
+
+	private void loadWorkSpace() {
 		Platform.runLater(() -> {
 			String workspace = settings.getSimpleSetting(Id.WORKSPACE);
 			if (workspace == null) {
@@ -233,20 +244,16 @@ public class FXController implements Initializable, EventHandler<Event> {
 					openFile(new File(filename));
 				}
 			}
+		});
+
+		Platform.runLater(() -> {
 			String activeTab = settings.getSimpleSetting(Id.ACTIVETAB);
 			if (activeTab != null && !"".equals(activeTab)) {
 				getTabs().stream()
 					.filter(tab -> tab.getDocument().getAbsolutePath().equals(activeTab))
-					.forEach(tab -> tab.requestFocus());
+					.forEach(tab -> tpnBots.getSelectionModel().select(tab));
 			}
 		});
-
-		Platform.runLater(() -> {
-            //TODO Enable License Check
-			//verifyLicense();
-			showReleaseNotes();
-		});
-
 	}
 
 	/**
@@ -446,8 +453,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 	}
 
 	private void closeApplication() {
-		String openTabs = String.join(";",
-			getTabs().stream().map(tab -> tab.getDocument().getAbsolutePath()).collect(Collectors.toList()));
+		String openTabs = String.join(";", getTabs().stream().map(tab -> tab.getDocument().getAbsolutePath()).collect(Collectors.toList()));
 		// Save all tabs
 		settings.saveSimpleSetting(Id.WORKSPACE, openTabs);
 		
