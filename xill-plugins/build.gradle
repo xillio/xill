@@ -17,8 +17,8 @@ subprojects{
 	 */
 	task copyToLib(type:Sync) {
 		description 'Copy dependencies to libs folder'
-        def apiRuntime = project(':api').configurations.runtime.files
         from configurations.runtime
+		def apiRuntime = project(':api').configurations.runtime.files
         exclude { details -> apiRuntime.contains(details.file) || details.name.equals(project(':api').jar.archiveName) }
 		into libsDir
 	}

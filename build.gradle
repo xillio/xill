@@ -182,6 +182,7 @@ apply from: 'http://dl.bintray.com/content/shemnon/javafx-gradle/8.1.1/javafx.pl
 assemble.dependsOn.remove(jfxDeploy)
 
 jfxDeploy {
+    dependsOn assembleContenttools
     doFirst {
         copy{
             from pluginsDir
@@ -199,7 +200,10 @@ javafx {
     vendor = company
     menu = true
     shortcut = true
-    embedJNLP = false
+    bundleArguments {
+        licenseFile = 'LICENSE'
+        userJvmOptions = [ '-Xmx' : '256m',  '-Xms' : '256m'] // A mechanism to allow programs to adjust JVM Options
+    }
 }
 
 /**
