@@ -20,6 +20,21 @@ public class SettingsHandler {
 	private static String DBNAME = "xilliosettings.db";
 	public static String SETTINGSDATABASE = "xilliodefaultsettings";
 
+	/**
+	 * Enum contain settings identificators
+	 *
+	 */
+	public static enum Id {
+		/**
+		 * Id of list of last opened tabs
+		 */
+		WORKSPACE, 
+		/**
+		 * Id of last active tab
+		 */
+		ACTIVETAB
+	}
+	
 	private static SettingsHandler settingsHandler;
 
 	public static SettingsHandler getSettingsHandler() {
@@ -48,6 +63,17 @@ public class SettingsHandler {
 		log = logger;
 	}
 
+	/**
+	 * Shorthand version to return the simple setting
+	 *
+	 * @param key
+	 *        Identificator of the setting to be returned
+	 * @return The value of the setting
+	 */
+	public String getSimpleSetting(final Id key) {
+		return getSimpleSetting(getKeyString(key));
+	}
+	
 	/**
 	 * Shorthand version to return the simple setting
 	 *
@@ -153,6 +179,18 @@ public class SettingsHandler {
 		return setting;
 	}
 
+	/**
+	 * Shorthand function to directly update a simple setting
+	 *
+	 * @param key
+	 *        Identificator of the setting
+	 * @param value
+	 *        Value of the setting
+	 */
+	public void saveSimpleSetting(final Id key, final String value) {
+		saveSimpleSetting(getKeyString(key), value);
+	}
+	
 	/**
 	 * Shorthand function to directly update a simple setting
 	 *
@@ -376,6 +414,17 @@ public class SettingsHandler {
 				return column;
 			}
 		}
+		return null;
+	}
+	
+	private static String getKeyString(Id key) {
+		switch (key) {
+			case WORKSPACE:
+				return "Workspace";
+			case ACTIVETAB:
+				return "ActiveTab";
+		}
+		
 		return null;
 	}
 }
