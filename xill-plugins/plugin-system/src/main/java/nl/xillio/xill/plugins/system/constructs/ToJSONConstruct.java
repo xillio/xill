@@ -26,7 +26,6 @@ public class ToJSONConstruct extends Construct {
 	}
 
 	static MetaExpression process(final MetaExpression expression, final MetaExpression pretty, final JsonParser parser, final JsonParser prettyParser) {
-		assertNotNull(expression, "input");
 		if (pretty.getBooleanValue()) {
 			return fromValue(prettyParser.toJson(expression));
 		}
