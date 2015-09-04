@@ -1,5 +1,5 @@
 /*
-* Please do not change this file unless explicitely instructed to. The values you can change are found in gradle.properties
+* Please do not change this file unless explicitly instructed to. The values you can change are found in gradle.properties
 */
 plugins {
     id "org.sonarqube" version "1.0"
@@ -22,9 +22,16 @@ if (testConnection(mavenRepositoryHost)) {
 }
 
 allprojects {
-    apply plugin: 'java'
-    apply plugin: 'eclipse'
     apply plugin: 'jacoco'
+
+
+    /**
+     * JAVA
+     */
+    apply plugin: 'eclipse'
+    apply plugin: 'java'
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
 
     group = 'nl.xillio'
     version = version
@@ -34,15 +41,15 @@ allprojects {
         mavenCentral()
     }
 
-    javadoc {
-        failOnError = !Boolean.parseBoolean(javadocIgnoreErrors)
-    }
-
     task sourceJar(type: Jar) {
         from sourceSets.main.allJava
     }
 
-    /*
+    build.dependsOn javadoc
+    javadoc.failOnError = !Boolean.parseBoolean(javadocIgnoreErrors)
+
+
+    /**
      * MAVEN PUBLISH
      */
     if (project.name != 'xill-plugins') {
@@ -75,23 +82,24 @@ allprojects {
 
     }
 
-    test {
-        useTestNG {
+    /**
+     * TESTING
+     */
+    test.useTestNG {
             useDefaultListeners = true
-        };
-    }
+        }
+
 
     dependencies {
         testCompile 'org.testng:testng:6.9.4'
         testCompile "org.mockito:mockito-core:1.+"
     }
 
-    build {
-        dependsOn javadoc
-    }
-
     jar.manifest {
         attributes "Implementation-Version": version
+        attributes "Build-Date": new Date().format("dd-MM-yyyy")
+        attributes "Build-Java-Version": System.properties["java.version"]
+
         if (project.hasProperty(project.name + "ProjectName")) {
             attributes "Implementation-Title": project.getProperties().get(project.name + "ProjectName")
         }
@@ -104,39 +112,70 @@ allprojects {
 }
 
 
-evaluationDependsOnChildren()
-
-description = 'this root project contains the overview of the contenttools application'
-
-/*
+/**
  * APPLICATION
  */
+evaluationDependsOnChildren()
+description = 'this root project contains the overview of the contenttools application'
 def mainClassName = "nl.xillio.contenttools.Application"
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
 def pluginsDir = new File(buildDir, '../plugins')
 def esConsoleDir = new File(buildDir, '../ESConsole')
-def xilliosettingsFile = new File(buildDir, '../xilliosettings.db')
-def helpfilesDir = new File(buildDir, '../helpfiles')
-
-/*
- * JAVA
- */
-
-configurations {
-    plugin
-}
+def helpFilesDir = new File(buildDir, '../helpfiles')
 
 dependencies {
-    compile 'nl.xillio:commons-plugins:1.0'
     compile project(':api')
-    plugin project(':processor')
-    plugin project(':ide')
-    plugin project(':xill-plugins')
 }
 
-/*
- * JavaFX
+/**
+ * PLUGINS
+ */
+task assemblePlugins {
+    description 'Assemble and collect all plugins'
+    group 'build'
+    outputs.dir pluginsDir
+
+    // Iterate over all plugins
+    project(':xill-plugins').subprojects {
+        def plugin = it
+        assemblePlugins.inputs.dir plugin.libsDir
+        assemblePlugins.dependsOn plugin.assemble
+        doLast{
+            copy{
+                from plugin.libsDir
+                // We move every plugin to its own folder
+                into new File(pluginsDir, plugin.name)
+            }
+        }
+    }
+}
+task assembleContenttools {
+    description 'Assamble and collect the IDE, Processor and plugins'
+    group 'build'
+    def ide = project(':ide')
+    def processor = project(':processor')
+
+    dependsOn ide.assemble
+    dependsOn processor.assemble
+    dependsOn assemblePlugins
+
+    inputs.dir pluginsDir
+    inputs.dir ide.libsDir
+    inputs.dir processor.libsDir
+
+    doLast {
+        copy {
+            from ide.configurations.runtime.files
+            from ide.libsDir
+            from processor.configurations.runtime.files
+            from processor.libsDir
+            into pluginsDir
+        }
+    }
+}
+build.dependsOn assembleContenttools
+
+/**
+ * DEPLOYMENT
  */
 apply from: 'http://dl.bintray.com/content/shemnon/javafx-gradle/8.1.1/javafx.plugin'
 
@@ -149,59 +188,7 @@ jfxDeploy {
             into new File(libsDir, "plugins")
         }
     }
-    inputFiles = files(libsDir)
-}
-
-//Plugin collect tasks
-project(':xill-plugins').subprojects {
-    def plugin = it
-    rootProject.tasks.create(name: 'collect' + project.name.capitalize(), type: Copy, group: 'plugins') {
-        dependsOn plugin.jar
-        from plugin.configurations.runtime.files
-        from plugin.jar
-        into new File(pluginsDir, plugin.name)
-    }
-}
-
-task collectIde(type: Copy) {
-    dependsOn project(':ide').jar
-    from project(':ide').configurations.runtime
-    from project(':ide').jar
-    into new File(pluginsDir, 'ide')
-}
-
-task collectProcessor(type: Copy) {
-    dependsOn project(':processor').jar
-    from project(':processor').configurations.runtime
-    from project(':processor').jar
-    into new File(pluginsDir, 'processor')
-}
-
-task assembleContenttools {
-    description 'Copies output from the processor and the ide to a plugins directory so eclipse will be able to load the plugins.'
-    dependsOn collectProcessor
-    dependsOn collectIde
-
-    //Add all plugins
-    tasks.each {
-        if (it.group == 'plugins') {
-            assembleContenttools.dependsOn it
-        }
-    }
-}
-
-jar {
-    dependsOn assembleContenttools
-    dependsOn project(':processor').jar
-    dependsOn project(':ide').jar
-
-    //We need to do this so we can have the plugins folder in the package too
-    doLast {
-        copy {
-            from assembleContenttools
-            into new File(libsDir, 'plugins')
-        }
-    }
+    inputFiles = files libsDir
 }
 
 javafx {
@@ -214,15 +201,21 @@ javafx {
     shortcut = true
     embedJNLP = false
 }
+
+/**
+ * CLEAN
+ */
 task cleanRuntime(type: Delete) {
     description 'Deletes all the folders generated and used by contenttools running in eclipse'
 
-    delete pluginsDir, esConsoleDir, helpfilesDir
+    delete pluginsDir, esConsoleDir, helpFilesDir
 }
 
-clean {
-    dependsOn cleanRuntime
-}
+clean.dependsOn cleanRuntime
+
+/**
+ * VPN/SSH CONNECTION
+ */
 
 def testConnection(host) {
     try {
@@ -257,4 +250,4 @@ def addRepositories(host) {
     }
 }
 
-run.dependsOn(assembleContenttools)
+run.dependsOn(assemblePlugins)
