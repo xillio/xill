@@ -24,7 +24,6 @@ if (testConnection(mavenRepositoryHost)) {
 allprojects {
     apply plugin: 'jacoco'
 
-
     /**
      * JAVA
      */
@@ -47,7 +46,6 @@ allprojects {
 
     build.dependsOn javadoc
     javadoc.failOnError = !Boolean.parseBoolean(javadocIgnoreErrors)
-
 
     /**
      * MAVEN PUBLISH
@@ -86,8 +84,8 @@ allprojects {
      * TESTING
      */
     test.useTestNG {
-            useDefaultListeners = true
-        }
+        useDefaultListeners = true
+    }
 
 
     dependencies {
@@ -110,7 +108,6 @@ allprojects {
     }
 
 }
-
 
 /**
  * APPLICATION
@@ -139,8 +136,8 @@ task assemblePlugins {
         def plugin = it
         assemblePlugins.inputs.dir plugin.libsDir
         assemblePlugins.dependsOn plugin.assemble
-        doLast{
-            copy{
+        doLast {
+            copy {
                 from plugin.libsDir
                 // We move every plugin to its own folder
                 into new File(pluginsDir, plugin.name)
@@ -184,12 +181,17 @@ assemble.dependsOn.remove(jfxDeploy)
 jfxDeploy {
     dependsOn assembleContenttools
     doFirst {
-        copy{
+        copy {
             from pluginsDir
             into new File(libsDir, "plugins")
         }
     }
     inputFiles = files libsDir
+}
+
+task deploy(dependsOn: "jfxDeploy") {
+    group 'build'
+    description "Deploy the application"
 }
 
 /**
@@ -207,7 +209,7 @@ javafx {
     embedLauncher = false
     embedJNLP = false
     // Allow the user to set the heap size
-    bundleArguments.userJvmOptions = [ '-Xmx' : '256m',  '-Xms' : '256m']
+    bundleArguments.userJvmOptions = ['-Xmx': '256m', '-Xms': '256m']
 }
 
 /**

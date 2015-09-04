@@ -148,7 +148,7 @@ public class XillWorkbook implements MetadataExpression {
 	 * @throws IOException when the write operation could not succeed
 	 */
 	public void save() throws IOException {
-		save(new File(location));
+		save(file);
 	}
 
 	/**
