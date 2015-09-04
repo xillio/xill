@@ -192,6 +192,10 @@ jfxDeploy {
     inputFiles = files libsDir
 }
 
+/**
+ * JavaFX Configuration
+ * Note that INNO_HOME env variable needs to be set to the INNO SETUP installation directory
+ */
 javafx {
     appID = appID
     appName = friendlyName
@@ -200,10 +204,10 @@ javafx {
     vendor = company
     menu = true
     shortcut = true
-    bundleArguments {
-        licenseFile = 'LICENSE'
-        userJvmOptions = [ '-Xmx' : '256m',  '-Xms' : '256m'] // A mechanism to allow programs to adjust JVM Options
-    }
+    embedLauncher = false
+    embedJNLP = false
+    // Allow the user to set the heap size
+    bundleArguments.userJvmOptions = [ '-Xmx' : '256m',  '-Xms' : '256m']
 }
 
 /**
