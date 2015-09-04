@@ -50,7 +50,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 	private static final Logger log = LogManager.getLogger(FXController.class);
 	private static final SettingsHandler settings = SettingsHandler.getSettingsHandler();
 
-	private static final File DEFAULT_OPEN_BOT = new File("scripts/Hello-Xillio." + Xill.FILE_EXTENSION);
+	private static final File DEFAULT_OPEN_BOT = new File("samples/Hello-Xillio." + Xill.FILE_EXTENSION);
 
 	// Shortcut is Ctrl on Windows and Meta on Mac.
 	@SuppressWarnings("javadoc")
