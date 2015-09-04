@@ -6,6 +6,7 @@ test-output/
 /target/
 /plugins/
 /helpfiles
+*.jar
 
 # Gradle
 build/
