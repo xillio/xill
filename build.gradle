@@ -22,6 +22,7 @@ if (testConnection(mavenRepositoryHost)) {
             "link: $mavenRepositoryConnectionGuide"
 }
 
+checkVersion();
 allprojects {
     apply plugin: 'jacoco'
 
@@ -34,7 +35,7 @@ allprojects {
     targetCompatibility = 1.8
 
     group = 'nl.xillio'
-    version = version
+    version = rootProject.version
 
     repositories {
         mavenLocal()
@@ -295,6 +296,24 @@ def getLinuxReleaseSuffix() {
         return 'redhat'
     } else {
         return 'other'
+    }
+}
+
+def checkVersion() {
+    def buildNo = System.env.BUILD_NUMBER
+    def branchName = System.env.GIT_BRANCH
+
+    if ("origin/master" == branchName) {
+        println "Building release on master branch"
+        project.version = version;
+    } else if(buildNo == null || branchName == null) {
+        println "Building application locally"
+        project.version = version;
+    } else {
+
+        def result = version + "_" + branchName + "_" + buildNo;
+        println "This is not the master branch, version is " + result;
+        project.version = result;
     }
 }
 
