@@ -186,7 +186,10 @@ jfxDeploy {
             into new File(libsDir, "plugins")
         }
     }
-    inputFiles = files libsDir
+    inputFiles = files(
+            libsDir,
+            new File(projectDir, "CHANGELOG.md"),
+            new File(projectDir, "LICENSE"))
 }
 
 task deploy(dependsOn: "jfxDeploy") {

@@ -497,7 +497,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 			validLicense.showAndWait();
 			Stage stage = (Stage) apnRoot.getScene().getWindow();
 			stage.setTitle(
-				"xillio content tools - " + Loader.LONGVERSION + " - Licensed to: " + license.getLicenseName());
+				"xillio content tools - " + Loader.LONG_VERSION + " - Licensed to: " + license.getLicenseName());
 		}
 	}
 
@@ -507,7 +507,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 	public void showReleaseNotes() {
 		String lastVersion = settings.getSimpleSetting("LastVersion");
 
-		if (lastVersion.compareTo(Loader.SHORTVERSION) < 0) {
+		if (lastVersion.compareTo(Loader.SHORT_VERSION) < 0) {
 			String notes = "";
 			for (String[] element : Loader.HISTORY) {
 				String v = element[0];
@@ -523,10 +523,10 @@ public class FXController implements Initializable, EventHandler<Event> {
 				}
 			}
 
-			settings.saveSimpleSetting("LastVersion", Loader.SHORTVERSION);
+			settings.saveSimpleSetting("LastVersion", Loader.SHORT_VERSION);
 
 			Alert releaseNotes = new Alert(AlertType.INFORMATION);
-			releaseNotes.setHeaderText("Current version: " + Loader.SHORTVERSION);
+			releaseNotes.setHeaderText("Current version: " + Loader.SHORT_VERSION);
 			releaseNotes.setContentText(notes);
 			releaseNotes.setTitle("Release notes");
 			releaseNotes.show();
