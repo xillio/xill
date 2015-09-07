@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -89,6 +90,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 	public static final String HOTKEY_RESET_ZOOM = "Shortcut+0";
 	@SuppressWarnings("javadoc")
 	public static final String HOTKEY_FIND = "Shortcut+F";
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/*
 	 * ******************************************************* Buttons, fields,
@@ -237,9 +239,12 @@ public class FXController implements Initializable, EventHandler<Event> {
 		});
 
 		Platform.runLater(() -> {
-            //TODO Enable License Check
-			//verifyLicense();
-			showReleaseNotes();
+			verifyLicense();
+			try {
+				showReleaseNotes();
+			} catch (IOException e) {
+				LOGGER.error("Failed to show release notes", e);
+			}
 		});
 
 	}
@@ -462,7 +467,8 @@ public class FXController implements Initializable, EventHandler<Event> {
 	}
 
 	private void verifyLicense() {
-		License license = new License(settings.getSimpleSetting("license"));
+		//TODO Enable License Check
+		/*License license = new License(settings.getSimpleSetting("license"));
 		while (!license.isValid(SoftwareModule.IDE)) {
 			TextInputDialog enterLicence = new TextInputDialog();
 			enterLicence.setContentText("Copy the contents of the licensefile you received into the textfield.");
@@ -498,30 +504,18 @@ public class FXController implements Initializable, EventHandler<Event> {
 			Stage stage = (Stage) apnRoot.getScene().getWindow();
 			stage.setTitle(
 				"xillio content tools - " + Loader.LONG_VERSION + " - Licensed to: " + license.getLicenseName());
-		}
+		}*/
 	}
 
 	/**
 	 * Display the release notes
 	 */
-	public void showReleaseNotes() {
+	public void showReleaseNotes() throws IOException {
 		String lastVersion = settings.getSimpleSetting("LastVersion");
 
 		if (lastVersion.compareTo(Loader.SHORT_VERSION) < 0) {
-			String notes = "";
-			for (String[] element : Loader.HISTORY) {
-				String v = element[0];
-				if (lastVersion.compareTo(v) < 0) {
-					notes += element[0] + " - " + element[1] + ": " + element[2] + "\n";
-				} else {
-					break;
-				}
-
-				if (notes.length() > 1000) {
-					notes += "[...]";
-					break;
-				}
-			}
+			String[] changeLog = FileUtils.readFileToString(new File("CHANGELOG.md")).split("\n\\#\\# ");
+			String notes = changeLog[1];
 
 			settings.saveSimpleSetting("LastVersion", Loader.SHORT_VERSION);
 
