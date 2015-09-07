@@ -198,7 +198,7 @@ task deployZip(type: Zip, dependsOn: 'jfxDeploy') {
     description "Deploy the application into a zip archive"
 
     from new File(jfxDeploy.distsDir, friendlyName)
-    baseName friendlyName
+    baseName appID
     classifier osdetector.classifier
 }
 
