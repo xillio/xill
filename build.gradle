@@ -197,9 +197,21 @@ task deployZip(type: Zip, dependsOn: 'jfxDeploy') {
     group 'build'
     description "Deploy the application into a zip archive"
 
-    from new File(jfxDeploy.distsDir, friendlyName)
+    // Only add the subdirectories (not the setup)
+    distsDir.eachDir() {
+        dir -> from dir
+    }
+
+    // Set the base name
     baseName appID
-    classifier osdetector.classifier
+
+    // Set the classifier
+    def osName = osdetector.classifier
+    if("linux" == osdetector.os) {
+        osName += "-" + osdetector.release
+    }
+
+    classifier osName
 }
 
 task deploy(dependsOn: "deployZip") {
@@ -226,6 +238,8 @@ javafx {
     // Allow the user to set the heap size
     bundleArguments.userJvmOptions = ['-Xmx': '256m', '-Xms': '256m']
 }
+
+println jfxDeploy.packaging
 
 /**
  * CLEAN
