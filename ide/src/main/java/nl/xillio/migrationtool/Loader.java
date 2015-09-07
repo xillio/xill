@@ -60,6 +60,7 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 	 * Just the version number + date.
 	 */
 	public static final String LONG_VERSION;
+	public static final String APP_TITLE = Loader.class.getPackage().getImplementationTitle();
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private static Xill xill;
@@ -115,7 +116,7 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 			System.exit(1);
 		}
 
-		primaryStage.setTitle("xillio content tools - " + LONG_VERSION);
+		primaryStage.setTitle(APP_TITLE + " - " + LONG_VERSION);
 		primaryStage.getScene().lookup("#apnRoot").setVisible(false);
 		primaryStage.show();
 
