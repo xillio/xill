@@ -208,7 +208,7 @@ task deployZip(type: Zip, dependsOn: 'jfxDeploy') {
     // Set the classifier
     def osName = osdetector.classifier
     if("linux" == osdetector.os) {
-        osName += "-" + osdetector.release
+        osName += "-" + getLinuxReleaseSuffix()
     }
 
     classifier osName
@@ -286,6 +286,16 @@ def addRepositories(host) {
                 }
             }
         }
+    }
+}
+
+def getLinuxReleaseSuffix() {
+    if (osdetector.release.isLike('debian')) {
+        return 'debian'
+    } else if (osdetector.release.isLike('redhat')) {
+        return 'redhat'
+    } else {
+        return 'other'
     }
 }
 
