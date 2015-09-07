@@ -205,6 +205,8 @@ javafx {
     appID = appID
     appName = friendlyName
     copyright = copyrightInformation
+    description = description
+    licenseType = licenseType
     mainClass mainClassName
     vendor = company
     menu = true
