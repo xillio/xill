@@ -191,16 +191,17 @@ jfxDeploy {
             libsDir,
             new File(projectDir, "CHANGELOG.md"),
             new File(projectDir, "LICENSE"))
+
+    doLast {
+        distsDir.eachDir() {
+            dir -> deployZip.from dir
+        }
+    }
 }
 
 task deployZip(type: Zip, dependsOn: 'jfxDeploy') {
     group 'build'
     description "Deploy the application into a zip archive"
-
-    // Only add the subdirectories (not the setup)
-    distsDir.eachDir() {
-        dir -> from dir
-    }
 
     // Set the base name
     baseName appID
@@ -238,8 +239,6 @@ javafx {
     // Allow the user to set the heap size
     bundleArguments.userJvmOptions = ['-Xmx': '256m', '-Xms': '256m']
 }
-
-println jfxDeploy.packaging
 
 /**
  * CLEAN
