@@ -11,6 +11,7 @@ import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.components.RobotID;
+import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.errors.XillParsingException;
@@ -21,14 +22,14 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * This class represents calling another robot
  */
 public class CallbotExpression implements Processable {
-	private static final Logger log = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	private final Logger robotLogger;
 	private final Processable path;
 	private final RobotID robotID;
@@ -57,10 +58,13 @@ public class CallbotExpression implements Processable {
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		MetaExpression pathExpression = path.process(debugger).get();
 
-		File otherRobot = resolver.buildFile(robotID, pathExpression.getStringValue());
+		File otherRobot = resolver.buildFile(new ConstructContext(robotID, robotID,null), pathExpression.getStringValue());
 
-		log.debug("Evaluating callbot for " + otherRobot.getAbsolutePath());
+		LOGGER.debug("Evaluating callbot for " + otherRobot.getAbsolutePath());
 
+		if (debugger.getStackTrace().size() > Xill.MAX_STACK_SIZE) {
+			throw new RobotRuntimeException("Callbot went into too many recursions.");
+		}
 		if (!otherRobot.exists()) {
 			throw new RobotRuntimeException("Called robot " + otherRobot.getAbsolutePath() + " does not exist.");
 		}
@@ -94,7 +98,7 @@ public class CallbotExpression implements Processable {
 				if (e instanceof RobotRuntimeException) {
 					throw (RobotRuntimeException) e;
 				}
-				throw new RobotRuntimeException("An exception occured while evaluating " + otherRobot.getAbsolutePath(), e);
+				throw new RobotRuntimeException("An exception occurred while evaluating " + otherRobot.getAbsolutePath(), e);
 			}
 
 		} catch (IOException e) {
@@ -110,7 +114,7 @@ public class CallbotExpression implements Processable {
 
 	@Override
 	public Collection<Processable> getChildren() {
-		return Arrays.asList(path);
+		return Collections.singletonList(path);
 	}
 
 	/**

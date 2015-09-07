@@ -4,7 +4,6 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.file.TestInjectorModule;
 import nl.xillio.xill.plugins.file.services.extraction.TextExtractor;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 import org.testng.annotations.Test;
@@ -15,7 +14,7 @@ import static org.testng.Assert.assertEquals;
 /**
  * Test the GetTextConstruct
  */
-public class GetTextConstructTest extends TestInjectorModule {
+public class GetTextConstructTest {
 
 	@Test
 	public void testProcessNormal() throws Exception {
@@ -40,13 +39,13 @@ public class GetTextConstructTest extends TestInjectorModule {
 		// Extractor
 		String resultText = "This is the result";
 		TextExtractor extractor = mock(TextExtractor.class);
-		when(extractor.extractText(FILE, timeoutValue.intValue())).thenReturn(resultText);
+		when(extractor.extractText(any(), eq(timeoutValue.intValue()))).thenReturn(resultText);
 
 		// Run the Method
 		MetaExpression result = GetTextConstruct.process(context, extractor, fileUtils, file, timeout);
 
 		// Verify
-		verify(extractor, times(1)).extractText(FILE, timeoutValue.intValue());
+		verify(extractor, times(1)).extractText(any(), eq(timeoutValue.intValue()));
 
 		// Assert
 		assertEquals(result.getStringValue(), resultText);

@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.xml.constructs;
 
+import nl.xillio.xill.TestUtils;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeClass;
 
@@ -20,12 +21,7 @@ import static org.testng.Assert.*;
  *
  * @author Zbynek Hochmann
  */
-public class FromFileConstructTest {
-
-	@BeforeClass
-	private void initializeInjector() {
-		InjectorUtils.getGlobalInjector();
-	}
+public class FromFileConstructTest extends TestUtils {
 
 	/**
 	 * Test the process method under normal circumstances

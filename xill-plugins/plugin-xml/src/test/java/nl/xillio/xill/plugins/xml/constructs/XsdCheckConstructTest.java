@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.xml.constructs;
 
+import nl.xillio.xill.TestUtils;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -21,12 +22,7 @@ import static org.testng.Assert.*;
  *
  * @author Zbynek Hochmann
  */
-public class XsdCheckConstructTest {
-
-	@BeforeClass
-	private void initializeInjector() {
-		InjectorUtils.getGlobalInjector();
-	}
+public class XsdCheckConstructTest extends TestUtils {
 
 	/**
 	 * Test the process method under normal circumstances

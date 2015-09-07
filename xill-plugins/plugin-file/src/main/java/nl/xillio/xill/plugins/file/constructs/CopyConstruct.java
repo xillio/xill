@@ -32,8 +32,8 @@ public class CopyConstruct extends Construct {
 
 	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression source, final MetaExpression target) {
 
-		File sourceFile = getFile(context.getRobotID(), source.getStringValue());
-		File targetFile = getFile(context.getRobotID(), target.getStringValue());
+		File sourceFile = getFile(context, source.getStringValue());
+		File targetFile = getFile(context, target.getStringValue());
 		boolean success = true;
 		try {
 			fileUtils.copy(sourceFile, targetFile);

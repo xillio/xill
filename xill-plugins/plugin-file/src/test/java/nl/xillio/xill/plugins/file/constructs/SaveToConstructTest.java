@@ -1,9 +1,9 @@
 package nl.xillio.xill.plugins.file.constructs;
 
+import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
-import nl.xillio.xill.plugins.file.TestInjectorModule;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 import org.apache.logging.log4j.Logger;
 import org.testng.annotations.Test;
@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 /**
  * Test the SaveToConstruct
  */
-public class SaveToConstructTest extends TestInjectorModule {
+public class SaveToConstructTest {
 
 	@Test
 	public void testProcessNormal() throws IOException {
@@ -37,6 +37,11 @@ public class SaveToConstructTest extends TestInjectorModule {
 		ConstructContext context = mock(ConstructContext.class);
 		when(context.getRobotID()).thenReturn(robotID);
 
+		// File
+		File file = mock(File.class);
+		when(file.getAbsolutePath()).thenReturn("ABSPATH");
+		when(TestUtils.CONSTRUCT_FILE_RESOLVER.buildFile(any(), anyString())).thenReturn(file);
+
 		// FileUtilities
 		FileUtilities fileUtils = mock(FileUtilities.class);
 
@@ -44,10 +49,10 @@ public class SaveToConstructTest extends TestInjectorModule {
 		MetaExpression result = SaveToConstruct.process(context, fileUtils, uri, content);
 
 		// Verify
-		verify(fileUtils, times(1)).saveStringToFile(contentString, FILE);
+		verify(fileUtils, times(1)).saveStringToFile(contentString, file);
 
 		// Assert
-		assertEquals(result.getStringValue(), ABS_PATH);
+		assertEquals(result.getStringValue(), file.getAbsolutePath());
 
 	}
 

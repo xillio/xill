@@ -12,7 +12,8 @@ public interface Xill {
 	/**
 	 * The file extension used by scripts. This extension does not include the `.`
 	 */
-	public static String FILE_EXTENSION = "xill";
+	String FILE_EXTENSION = "xill";
+	int MAX_STACK_SIZE = 900;
 
 	/**
 	 * Create a new processor from this API entry point and pick a default debugger.
@@ -27,7 +28,7 @@ public interface Xill {
 	 * @see PluginLoader
 	 * @see XillPlugin
 	 */
-	public XillProcessor createProcessor(final File robotFile, final File projectFolder, final PluginLoader<XillPlugin> pluginLoader);
+	XillProcessor createProcessor(final File robotFile, final File projectFolder, final PluginLoader<XillPlugin> pluginLoader);
 
 	/**
 	 * Create a new processor from this API entry point.
@@ -44,5 +45,5 @@ public interface Xill {
 	 * @see PluginLoader
 	 * @see XillPlugin
 	 */
-	public XillProcessor createProcessor(final File robotFile, final File projectFolder, final PluginLoader<XillPlugin> pluginLoader, final Debugger debugger);
+	XillProcessor createProcessor(final File robotFile, final File projectFolder, final PluginLoader<XillPlugin> pluginLoader, final Debugger debugger);
 }
