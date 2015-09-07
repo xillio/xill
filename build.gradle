@@ -192,7 +192,15 @@ jfxDeploy {
             new File(projectDir, "LICENSE"))
 }
 
-task deploy(dependsOn: "jfxDeploy") {
+task deployZip(type: Zip) {
+    group 'build'
+    description "Deploy the application into a zip archive"
+
+    from new File(jfxDeploy.distsDir, friendlyName)
+    baseName friendlyName
+}
+
+task deploy(dependsOn: "deployZip") {
     group 'build'
     description "Deploy the application"
 }
