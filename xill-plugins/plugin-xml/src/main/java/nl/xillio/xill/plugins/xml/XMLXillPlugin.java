@@ -5,6 +5,6 @@ import nl.xillio.plugins.XillPlugin;
 /**
  * This package includes all Xml constructs
  */
-public class XmlXillPlugin extends XillPlugin {
+public class XMLXillPlugin extends XillPlugin {
 
 }

@@ -2,14 +2,14 @@ package nl.xillio.xill.plugins.xml.services;
 
 import java.io.File;
 
-import nl.xillio.xill.plugins.xml.XmlXillPlugin;
+import nl.xillio.xill.plugins.xml.XMLXillPlugin;
 
 import com.google.inject.ImplementedBy;
 
 import org.apache.logging.log4j.Logger;
 
 /**
- * This interface represents some of the operations for the {@link XmlXillPlugin}.
+ * This interface represents some of the operations for the {@link XMLXillPlugin}.
  *
  * @author Zbynek Hochmann
  */

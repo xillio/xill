@@ -2,13 +2,13 @@ package nl.xillio.xill.plugins.xml.services;
 
 import com.google.inject.ImplementedBy;
 
-import nl.xillio.xill.plugins.xml.XmlXillPlugin;
+import nl.xillio.xill.plugins.xml.XMLXillPlugin;
 import nl.xillio.xill.plugins.xml.data.XmlNode;
 
 import java.io.File;
 
 /**
- * This interface represents some of the operations for the {@link XmlXillPlugin}.
+ * This interface represents some of the operations for the {@link XMLXillPlugin}.
  *
  * @author Zbynek Hochmann
  */
