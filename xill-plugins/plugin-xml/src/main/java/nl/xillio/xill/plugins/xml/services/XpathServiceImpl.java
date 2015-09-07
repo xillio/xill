@@ -15,6 +15,9 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import javax.xml.xpath.XPathFactoryConfigurationException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -31,12 +34,15 @@ public class XpathServiceImpl implements XpathService {
 
 	private static XPathFactory xpf = null;
 
+
+	private static final Logger LOGGER = LogManager.getLogger();
+
 	static {
 		System.setProperty("javax.xml.xpath.XPathFactory:" + NamespaceConstant.OBJECT_MODEL_SAXON, "net.sf.saxon.xpath.XPathFactoryImpl");
 		try {
 			xpf = XPathFactory.newInstance(NamespaceConstant.OBJECT_MODEL_SAXON);
 		} catch (XPathFactoryConfigurationException e) {
-			System.err.println("Could not initialise XPath: " + e.getMessage());
+			LOGGER.error("Could not initialise XPath", e);
 		}
 	}
 
@@ -46,12 +52,12 @@ public class XpathServiceImpl implements XpathService {
 		XPath xpath = xpf.newXPath();
 		ArrayList<Object> output = new ArrayList<Object>(); 
 		
-		boolean fetchtext = xpathQuery.endsWith("/text()");
+		boolean fetchText = xpathQuery.endsWith("/text()");
 
 		// More hacking... the java implementation bugs out on selecting a CDATA textnode.
 		// We will need to first query the node, then do another query to fetch the textual content.
 		String query = xpathQuery;
-		if (fetchtext) {
+		if (fetchText) {
 			query = xpathQuery.substring(0, xpathQuery.length() - "/text()".length());
 		}
 
@@ -66,7 +72,7 @@ public class XpathServiceImpl implements XpathService {
 
 				for (int i = 0; i < results.getLength(); i++) {
 					Node n = results.item(i);
-					output.add(fetchtext ? xPathText(xpath, n, "./text()") : parseVariable(n));
+					output.add(fetchText ? xPathText(xpath, n, "./text()") : parseVariable(n));
 				}
 			} else {
 				output.add(result.toString());

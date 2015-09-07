@@ -14,6 +14,13 @@ public class XmlParseException extends Exception {
 	public XmlParseException(String message) {
     super(message);
 	}
+	/**
+	 * @param message	error message
+	 * @param cause the cause
+	 */
+	public XmlParseException(String message, Exception cause) {
+		super(message, cause);
+	}
 }
 
 

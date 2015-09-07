@@ -29,9 +29,9 @@ public class NodeServiceImpl implements NodeService {
 		try {
 			newXmlChildNode = new XmlNode(newChildNodeStr);
 		} catch (XmlParseException e) {
-			throw new RobotRuntimeException("Function insertNode parse error!\n" + e.getMessage());
+			throw new RobotRuntimeException("Function insertNode parse error!\n" + e.getMessage(), e);
 		} catch (Exception e) {
-			throw new RobotRuntimeException("Function insertNode error!\n" + e.getMessage());
+			throw new RobotRuntimeException("Function insertNode error!\n" + e.getMessage(), e);
 		}
 
 		Node parentNode = parentXmlNode.getNode();
@@ -51,7 +51,7 @@ public class NodeServiceImpl implements NodeService {
 	public void moveNode(final XmlNode parentXmlNode, final XmlNode subXmlNode, final XmlNode beforeXmlNode) {
 		Node parentNode = parentXmlNode.getNode();
 		Node subNode = subXmlNode.getNode();
-		Node beforeNode = (beforeXmlNode == null ? null : beforeXmlNode.getNode());
+		Node beforeNode = beforeXmlNode == null ? null : beforeXmlNode.getNode();
 
 		// If by accident we ended up with a document, get the root child node
 		if (subNode instanceof Document) {
@@ -77,9 +77,9 @@ public class NodeServiceImpl implements NodeService {
 		try {
 			replXmlNode = new XmlNode(replXmlStr);
 		} catch (XmlParseException e) {
-			throw new RobotRuntimeException("Function replaceNode parse error!\n" + e.getMessage());
+			throw new RobotRuntimeException("Function replaceNode parse error!\n" + e.getMessage(), e);
 		} catch (Exception e) {
-			throw new RobotRuntimeException("Function replaceNode error!\n" + e.getMessage());
+			throw new RobotRuntimeException("Function replaceNode error!\n" + e.getMessage(), e);
 		}			
 		Node orgNode = orgXmlNode.getNode();
 		Node newReplNode = orgXmlNode.getDocument().importNode(replXmlNode.getNode(), true);
@@ -121,8 +121,7 @@ public class NodeServiceImpl implements NodeService {
 		}
 
 		try {
-			XmlNode xmlNode = new XmlNode(content);
-			return xmlNode;
+			return new XmlNode(content);
 		} catch (XmlParseException e) {
 			throw new RobotRuntimeException("The XML source is invalid.", e);
 		} catch (Exception e) {
@@ -135,7 +134,7 @@ public class NodeServiceImpl implements NodeService {
 		try {
 			return new XmlNode(xmlText);
 		} catch (XmlParseException e) {
-			throw new RobotRuntimeException("The XML source is invalid." + e.getMessage());
+			throw new RobotRuntimeException("The XML source is invalid." + e.getMessage(), e);
 		} catch (Exception e) {
 			throw new RobotRuntimeException("Error occured.", e);
 		}
