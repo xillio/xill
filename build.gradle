@@ -309,7 +309,7 @@ def checkVersion() {
         println "Building application locally"
         project.version = version;
     } else {
-        def result = version + + "_" + buildNo;
+        def result = version + "_" + buildNo;
         println "This is not the master branch, version is " + result;
         project.version = result;
     }
