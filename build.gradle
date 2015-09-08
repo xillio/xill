@@ -58,7 +58,7 @@ allprojects {
         publishing {
             publications {
                 main(MavenPublication) {
-                    artifactId 'xill-' + project.name
+                    artifactId project.name
 
                     from components.java
 
