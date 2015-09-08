@@ -1,31 +1,12 @@
 package nl.xillio.migrationtool.gui;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TextInputDialog;
-import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -33,16 +14,23 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.util.Pair;
 import nl.xillio.migrationtool.Loader;
 import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
 import nl.xillio.plugins.XillPlugin;
-import nl.xillio.sharedlibrary.license.License;
-import nl.xillio.sharedlibrary.license.License.LicenseType;
-import nl.xillio.sharedlibrary.license.License.SoftwareModule;
 import nl.xillio.sharedlibrary.settings.SettingsHandler;
+import nl.xillio.sharedlibrary.settings.SettingsHandler.Id;
 import nl.xillio.xill.api.Xill;
+import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 /**
  * This class is the global controller for the application
@@ -223,15 +211,19 @@ public class FXController implements Initializable, EventHandler<Event> {
 		apnRoot.addEventHandler(KeyEvent.KEY_PRESSED, this);
 
 		// Add listener for window shown
+		loadWorkSpace();
+
+	}
+
+	private void loadWorkSpace() {
 		Platform.runLater(() -> {
-			String workspace = settings.getSimpleSetting("Workspace");
+			String workspace = settings.getSimpleSetting(Id.WORKSPACE);
 			if (workspace == null) {
 				workspace = DEFAULT_OPEN_BOT.getAbsolutePath();
 			}
+
 			if (workspace != null && !"".equals(workspace)) {
 				String[] files = workspace.split(";");
-				ArrayUtils.reverse(files); // Reverse the list to ensure same
-				// tab order as original.
 				for (final String filename : files) {
 					openFile(new File(filename));
 				}
@@ -244,9 +236,15 @@ public class FXController implements Initializable, EventHandler<Event> {
 				showReleaseNotes();
 			} catch (IOException e) {
 				LOGGER.error("Failed to show release notes", e);
+
+				String activeTab = settings.getSimpleSetting(Id.ACTIVETAB);
+				if (activeTab != null && !"".equals(activeTab)) {
+					getTabs().stream()
+						.filter(tab -> tab.getDocument().getAbsolutePath().equals(activeTab))
+						.forEach(tab -> tpnBots.getSelectionModel().select(tab));
+				}
 			}
 		});
-
 	}
 
 	/**
@@ -335,7 +333,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 			RobotTab editor = (RobotTab) tab;
 			try {
 				if (editor.getDocument() != null
-								&& editor.getDocument().getCanonicalPath().equals(newfile.getCanonicalPath())) {
+					&& editor.getDocument().getCanonicalPath().equals(newfile.getCanonicalPath())) {
 					tpnBots.getSelectionModel().select(editor);
 					showTab(editor);
 					return editor;
@@ -446,10 +444,19 @@ public class FXController implements Initializable, EventHandler<Event> {
 	}
 
 	private void closeApplication() {
-		String openTabs = String.join(";",
-			getTabs().stream().map(tab -> tab.getDocument().getAbsolutePath()).collect(Collectors.toList()));
+		String openTabs = String.join(";", getTabs().stream().map(tab -> tab.getDocument().getAbsolutePath()).collect(Collectors.toList()));
 		// Save all tabs
-		settings.saveSimpleSetting("Workspace", openTabs);
+		settings.saveSimpleSetting(Id.WORKSPACE, openTabs);
+
+		// Save active tab
+		final String activeTab[] = {null};
+		getTabs().stream().filter(tab -> tab.isSelected()).forEach(tab -> activeTab[0] = tab.getDocument().getAbsolutePath());
+		if (activeTab[0] != null) {
+			settings.saveSimpleSetting(Id.ACTIVETAB, activeTab[0]);
+		} else {
+			settings.saveSimpleSetting(Id.ACTIVETAB, "");
+		}
+
 		// Close all tabs
 		tpnBots.getTabs().forEach(tab -> closeTab(tab, false));
 
@@ -606,8 +613,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 	/**
 	 * Opens a tab if it can be found.
 	 *
-	 * @param tab
-	 *        a tab to open
+	 * @param tab a tab to open
 	 */
 	public void showTab(final RobotTab tab) {
 		int index = tpnBots.getTabs().indexOf(tab);
@@ -627,8 +633,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 	/**
 	 * Finds the tab according to filePath (~RobotID.path)
 	 *
-	 * @param filePath
-	 *        filepath to robot (.xill) file
+	 * @param filePath filepath to robot (.xill) file
 	 * @return RobotTab if found, otherwise null
 	 */
 	public Tab findTab(final File filePath) {

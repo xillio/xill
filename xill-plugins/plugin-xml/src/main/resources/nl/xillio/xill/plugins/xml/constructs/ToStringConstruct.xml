@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Outputs the string representation of an xml node.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Assuming we have an XML file note.xml which contains the following:</header>
+            <code>
+&lt; note id="1"&gt;
+  &lt; to&gt;Tove&lt; /to&gt;
+  &lt; from&gt;Jani&lt; /from&gt;
+  &lt; heading&gt;Reminder&lt; /heading&gt;
+  &lt; comment&gt;This was sent to James as well&lt; /comment&gt;
+  &lt; comment&gt;John has not responded to the invitation&lt; /comment&gt;
+  &lt; body&gt;Don't forget me this weekend!&lt; /body&gt;
+&lt; /note&gt;
+            </code>
+            <header>Then executing the following code:</header>
+            <code>
+use System;
+use Xml;
+
+var note = Xml.fromFile("C:/tmp/note.xml");
+var from = Xml.xpath(note, "//note/from");
+System.print(Xml.toString(from));
+            </code>
+            <header>
+will print:
+            </header>
+
+            <code>
+&lt; ?xml version="1.0" encoding="UTF-8"?&gt;&lt; from&gt;Jani&lt; /from&gt;
+           </code>
+        </example>
+    </examples>
+    <references>
+        <reference>fromString</reference>
+    </references>
+	    <tags>
+        string, XML, text, conversion
+    </tags>
+</function>
