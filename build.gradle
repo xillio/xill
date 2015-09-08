@@ -34,7 +34,7 @@ allprojects {
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
-    group = 'nl.xillio'
+    group = mavenPublicationGroup
     version = rootProject.version
 
     repositories {
@@ -52,13 +52,13 @@ allprojects {
     /**
      * MAVEN PUBLISH
      */
-    if (project.name != 'xill-plugins' && System.env.BUILD_NUMBER != null) {
+    if (project.name != 'xill-plugins' && System.env.BUILD_NUMBER) {
         apply plugin: 'maven-publish'
 
         publishing {
             publications {
                 main(MavenPublication) {
-                    artifactId project.name
+                    artifactId 'xill-' + project.name
 
                     from components.java
 
