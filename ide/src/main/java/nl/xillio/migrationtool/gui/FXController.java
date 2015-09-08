@@ -41,6 +41,7 @@ import nl.xillio.sharedlibrary.license.License;
 import nl.xillio.sharedlibrary.license.License.LicenseType;
 import nl.xillio.sharedlibrary.license.License.SoftwareModule;
 import nl.xillio.sharedlibrary.settings.SettingsHandler;
+import nl.xillio.sharedlibrary.settings.SettingsHandler.Id;
 import nl.xillio.xill.api.Xill;
 
 /**
@@ -221,20 +222,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 		apnRoot.addEventHandler(KeyEvent.KEY_PRESSED, this);
 
 		// Add listener for window shown
-		Platform.runLater(() -> {
-			String workspace = settings.getSimpleSetting("Workspace");
-			if (workspace == null) {
-				workspace = DEFAULT_OPEN_BOT.getAbsolutePath();
-			}
-			if (workspace != null && !"".equals(workspace)) {
-				String[] files = workspace.split(";");
-				ArrayUtils.reverse(files); // Reverse the list to ensure same
-				// tab order as original.
-				for (final String filename : files) {
-					openFile(new File(filename));
-				}
-			}
-		});
+		loadWorkSpace();
 
 		Platform.runLater(() -> {
             //TODO Enable License Check
@@ -242,6 +230,30 @@ public class FXController implements Initializable, EventHandler<Event> {
 			showReleaseNotes();
 		});
 
+	}
+
+	private void loadWorkSpace() {
+		Platform.runLater(() -> {
+			String workspace = settings.getSimpleSetting(Id.WORKSPACE);
+			if (workspace == null) {
+				workspace = DEFAULT_OPEN_BOT.getAbsolutePath();
+			}
+			if (workspace != null && !"".equals(workspace)) {
+				String[] files = workspace.split(";");
+				for (final String filename : files) {
+					openFile(new File(filename));
+				}
+			}
+		});
+
+		Platform.runLater(() -> {
+			String activeTab = settings.getSimpleSetting(Id.ACTIVETAB);
+			if (activeTab != null && !"".equals(activeTab)) {
+				getTabs().stream()
+					.filter(tab -> tab.getDocument().getAbsolutePath().equals(activeTab))
+					.forEach(tab -> tpnBots.getSelectionModel().select(tab));
+			}
+		});
 	}
 
 	/**
@@ -441,10 +453,19 @@ public class FXController implements Initializable, EventHandler<Event> {
 	}
 
 	private void closeApplication() {
-		String openTabs = String.join(";",
-			getTabs().stream().map(tab -> tab.getDocument().getAbsolutePath()).collect(Collectors.toList()));
+		String openTabs = String.join(";", getTabs().stream().map(tab -> tab.getDocument().getAbsolutePath()).collect(Collectors.toList()));
 		// Save all tabs
-		settings.saveSimpleSetting("Workspace", openTabs);
+		settings.saveSimpleSetting(Id.WORKSPACE, openTabs);
+		
+		// Save active tab
+		final String activeTab[] = {null};
+		getTabs().stream().filter(tab -> tab.isSelected()).forEach(tab -> activeTab[0] = tab.getDocument().getAbsolutePath());
+		if (activeTab[0] != null) {
+			settings.saveSimpleSetting(Id.ACTIVETAB, activeTab[0]);
+		} else {
+			settings.saveSimpleSetting(Id.ACTIVETAB, "");
+		}
+
 		// Close all tabs
 		tpnBots.getTabs().forEach(tab -> closeTab(tab, false));
 
