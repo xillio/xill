@@ -1,12 +1,17 @@
 package nl.xillio.migrationtool.gui.editor;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,10 +46,11 @@ import nl.xillio.xill.api.preview.Replaceable;
  * It *should* extend {@link WebView}, but this class is final...
  */
 public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable {
+	private static String EDITOR_URL;
 	private static final SettingsHandler settings = SettingsHandler.getSettingsHandler();
 	private static final double ZOOM_SENSITIVITY = 100;
 	private static final Clipboard clipboard = Clipboard.getSystemClipboard();
-	private static final Logger log = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	private final StringProperty code = new SimpleStringProperty();
 	private final WebView editor;
 	private final SimpleBooleanProperty documentLoaded = new SimpleBooleanProperty(false);
@@ -52,6 +58,36 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	private HelpPane helppane;
 	private XillProcessor processor;
 	private RobotTab tab;
+
+	static {
+		try {
+			deployEditor();
+		} catch (IOException | TemplateException e) {
+			throw new RuntimeException("Failed to deploy editor", e);
+		}
+	}
+
+	/**
+	 * Deploy the editor file.
+	 * <p>
+	 *   This is a workaround for a bug introduced in jdk1.8.0_60 where internal resources cannot reference other
+	 *   internal resources. This method should be removed as soon as this bug is fixed.
+	 * </p>
+	 * @deprecated This is a workaround
+	 * @see <a href="https://bugs.openjdk.java.net/browse/JDK-8134975?page=com.atlassian.streams.streams-jira-plugin:activity-stream-issue-tab">Bug Report</a>
+	 */
+	@Deprecated
+	private static void deployEditor() throws IOException, TemplateException {
+		File editorFile = File.createTempFile("xill_editor", ".html");
+		Configuration config = new Configuration(Configuration.VERSION_2_3_23);
+		config.setClassForTemplateLoading(AceEditor.class, "/");
+		Template template = config.getTemplate("editor.html");
+		Map<String, Object> model = new HashMap<>();
+		model.put("jarFile", AceEditor.class.getResource("/editor.html").toExternalForm().replaceAll("editor\\.html", ""));
+		template.process(model, new FileWriter(editorFile));
+		LOGGER.info("Deployed editor as JavaFX workaround");
+		EDITOR_URL = editorFile.toURI().toURL().toExternalForm();
+	}
 
 	/**
 	 * Default constructor. Takes a {@link WebView} since we can't extend it.
@@ -62,7 +98,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	public AceEditor(final WebView editor) {
 		this.editor = editor;
 
-		load("/editor.html");
+		load(EDITOR_URL);
 
 		editor.addEventHandler(KeyEvent.KEY_PRESSED, this);
 		editor.addEventHandler(ScrollEvent.SCROLL, this);
@@ -350,7 +386,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 		executeJS("window", result -> {
 			JSObject jsobj = (JSObject) result;
 			jsobj.setMember("contenttools", this);
-			jsobj.setMember("log", log);
+			jsobj.setMember("LOGGER", LOGGER);
 		});
 	}
 
@@ -408,8 +444,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	}
 
 	private void load(final String path) {
-		URL resource = getClass().getResource(path);
-		editor.getEngine().load(resource.toString());
+		editor.getEngine().load(path);
 		editor.getEngine().documentProperty().addListener(
 			(obs, oldDoc, newDoc) -> {
 				documentLoaded.setValue(true);
