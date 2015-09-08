@@ -201,8 +201,7 @@ public class XillWorkbookTest {
 	 *
 	 * @throws Exception
 	 */
-	@Test(expectedExceptions = IOException.class,
-					expectedExceptionsMessageRegExp = "Could not write to this file: .*")
+	@Test(expectedExceptions = IOException.class)
 	public void testSaveException() throws Exception {
 		Workbook workbook = mock(Workbook.class);
 		File file = createFile("path", false);
@@ -218,8 +217,7 @@ public class XillWorkbookTest {
 	 *
 	 * @throws Exception
 	 */
-	@Test(expectedExceptions = IOException.class,
-					expectedExceptionsMessageRegExp = "Could not write to this file: .*")
+	@Test(expectedExceptions = IOException.class)
 	public void testSaveWithFileException() throws Exception {
 		Workbook workbook = mock(Workbook.class);
 		File file = createFile("path", false);

@@ -161,13 +161,9 @@ public class XillWorkbook implements MetadataExpression {
 	 */
 	public void save(File file) throws IOException {
 		file.getParentFile().mkdirs();
-		try {
-			OutputStream outputStream = getOutputStream(file);
-			workbook.write(outputStream);
-			outputStream.close();
-		} catch (IOException e) {
-			throw new IOException("Could not write to this file: " + e.getLocalizedMessage(), e);
-		}
+		OutputStream outputStream = getOutputStream(file);
+		workbook.write(outputStream);
+		outputStream.close();
 	}
 
 	/**
