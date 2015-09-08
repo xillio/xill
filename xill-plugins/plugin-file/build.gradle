@@ -9,12 +9,6 @@
   */
 description 'This plugin contains all file constructs.'
 
-
-/*
- * Uncomment this to package the plugin with the ide by default
- */
-includeInBuild project
-
 dependencies {
 	compile 'org.apache.tika:tika-parsers:1.9'
 }

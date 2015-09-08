@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.excel.datastructures;
 
 import com.google.common.io.Files;
 import nl.xillio.xill.api.components.MetadataExpression;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -147,13 +148,7 @@ public class XillWorkbook implements MetadataExpression {
 	 * @throws IOException when the write operation could not succeed
 	 */
 	public void save() throws IOException {
-		try {
-			OutputStream outputStream = getOuputStream();
-			workbook.write(outputStream);
-			outputStream.close();
-		} catch (IOException e) {
-			throw new IOException("Could not write to this file", e);
-		}
+		save(file);
 	}
 
 	/**
@@ -165,13 +160,10 @@ public class XillWorkbook implements MetadataExpression {
 	 * @throws IOException when the write operation could not succeed
 	 */
 	public void save(File file) throws IOException {
-		try {
-			OutputStream outputStream = getOutputStream(file);
-			workbook.write(outputStream);
-			outputStream.close();
-		} catch (IOException e) {
-			throw new IOException("Could not write to this file", e);
-		}
+		file.getParentFile().mkdirs();
+		OutputStream outputStream = getOutputStream(file);
+		workbook.write(outputStream);
+		outputStream.close();
 	}
 
 	/**
