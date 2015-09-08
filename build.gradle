@@ -250,6 +250,8 @@ task cleanRuntime(type: Delete) {
     delete pluginsDir, esConsoleDir, helpFilesDir
 }
 
+//cssToBin.enabled = true
+
 clean.dependsOn cleanRuntime
 
 /**
