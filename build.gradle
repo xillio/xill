@@ -52,7 +52,7 @@ allprojects {
     /**
      * MAVEN PUBLISH
      */
-    if (project.name != 'xill-plugins') {
+    if (project.name != 'xill-plugins' && System.env.BUILD_NUMBER != null) {
         apply plugin: 'maven-publish'
 
         publishing {
@@ -70,7 +70,7 @@ allprojects {
 
             repositories {
                 maven {
-                    url 'http://$mavenRepositoryHost:$mavenRespoitoryPort/nexus/content/repositories/releases'
+                    url "http://$mavenRepositoryHost:$mavenRespoitoryPort/nexus/content/repositories/releases"
                     name 'release'
                     credentials {
                         username = mavenUsername
