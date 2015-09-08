@@ -52,14 +52,12 @@ public class XpathConstruct extends Construct {
 		List<MetaExpression> output = new ArrayList<>();
 
 		List<Object> result = service.xpath(node, xpathVar.getStringValue(), namespaces);
-		if (result.size() == 0) {
+		if (result.isEmpty()) {
 			return NULL;
 		} else if (result.size() == 1) {
 			return getOutput(result.get(0));
 		} else {
-			result.forEach(v -> {
-				output.add(getOutput(v));
-			});
+			result.forEach(v -> output.add(getOutput(v)));
 			return fromValue(output);
 		}
 	}

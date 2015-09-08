@@ -89,12 +89,15 @@ public class XpathServiceImpl implements XpathService {
 		try {
 			expr = xpath.compile(expression);
 		} catch (Exception e) { // Sometimes, an unexpected net.sf.saxon.trans.XPathException can be thrown...
+			LOGGER.error("Failed to run xpath expression", e);
 			throw new XPathExpressionException(e.getMessage());
 		}
 
 		try {
 			return expr.evaluate(node, XPathConstants.NODESET);
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			LOGGER.warn("Exception while evaluating xpath expression", e);
+		}
 
 		return expr.evaluate(node, XPathConstants.STRING);
 	}
