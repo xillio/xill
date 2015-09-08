@@ -44,7 +44,7 @@ public class NodeServiceImpl implements NodeService {
 			parentNode.insertBefore(newNode, beforeChildNode);
 		}
 
-		return newXmlChildNode;
+		return new XmlNode(newNode);
 	}
 
 	@Override
