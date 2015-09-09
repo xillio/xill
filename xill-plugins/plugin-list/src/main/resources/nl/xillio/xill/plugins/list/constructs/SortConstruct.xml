@@ -1,55 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<function Tag="sort">
-  <name>sort</name>
-  <parameters>
-    <param name="list"/>
-  	<param name="recursive" default="false"/>
-    <param name="onkeys" default="false"/>
-    <param name="reverse" default="false"/>
-  
-  </parameters>
-  <description><![CDATA[
-	returns the sorted list or object.
-	If recursive is true it will also sort the lists and object inside the given list or object.
-	If onKeys is true it will sort object by key instead of by value.
-	If reverse is true it will sort highest first.
-  ]]></description>
-  <examples>
-    <example description="Executing:"><![CDATA[
-    	
-	var list1 = [1,"a","c",2,3,"b",[1,3,2],[3,2],4,"d",{"a":2,"b":1}];
-	System.print(List.sort(list1,false,false,false)); //sort normal
-	System.print(List.sort(list1,true,false,false)); //sort recursive
-	
-	var list2 = [3,"b","c",1,2,"a"];
-	System.print(List.sort(list2,false,false,false)); //sort normal
-	System.print(List.sort(list2,false,false,true)); //sort reverse
-	
-	var obj1 = {"b":2,"c":1,"a":3};
-	System.print(List.sort(obj1,false,false,false)); //sorted by value
-	System.print(List.sort(obj1,false,true,false)); //sorted by key
+<function>
+    <description>
+        returns the sorted list or object.
+        If recursive is true it will also sort the lists and object inside the given list or object.
+        If onKeys is true it will sort object by key instead of by value.
+        If reverse is true it will sort highest first.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Running</header>
+            <code>
+                var list1 = [1,"a","c",2,3,"b",[1,3,2],[3,2],4,"d",{"a":2,"b":1}];
+                System.print(List.sort(list1,false,false,false)); //sort normal
+                System.print(List.sort(list1,true,false,false)); //sort recursive
 
-    ]]></example>
-    <example description="Will return:"><![CDATA[
-    
-		[[3,2],[1,3,2],{"a":2,"b":1},1,2,3,4,"a","b","c","d"]
-		[[2,3],[1,2,3],{"b":1,"a":2},1,2,3,4,"a","b","c","d"]
- 
-		[1,2,3,"a","b","c"]
-		[3,2,1,"c","b","a"]
-		
-		{"c":1,"b":2,"a":3}
-		{"a":3,"b":2,"c":1}
-		
+                var list2 = [3,"b","c",1,2,"a"];
+                System.print(List.sort(list2,false,false,false)); //sort normal
+                System.print(List.sort(list2,false,false,true)); //sort reverse
 
-    	]]>
-    </example>
-  </examples>
-  <references>
-  </references>
-  <searchTags>
-  	<searchTag>
-  		sort
-  	</searchTag>
-  </searchTags>
+                var obj1 = {"b":2,"c":1,"a":3};
+                System.print(List.sort(obj1,false,false,false)); //sorted by value
+                System.print(List.sort(obj1,false,true,false)); //sorted by key
+            </code>
+            <header>Will print</header>
+            <code>
+                [[3,2],[1,3,2],{"a":2,"b":1},1,2,3,4,"a","b","c","d"]
+                [[2,3],[1,2,3],{"b":1,"a":2},1,2,3,4,"a","b","c","d"]
+
+                [1,2,3,"a","b","c"]
+                [3,2,1,"c","b","a"]
+
+                {"c":1,"b":2,"a":3}
+                {"a":3,"b":2,"c":1}
+            </code>
+        </example>
+    </examples>
 </function>
