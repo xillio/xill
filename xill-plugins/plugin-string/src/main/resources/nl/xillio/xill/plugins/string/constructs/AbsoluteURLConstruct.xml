@@ -22,11 +22,8 @@
   </examples>
   
    <searchTags>
-	<searchTag>
-	absolute
-	</searchTag>
-	<searchTag>
-	relative
-	</searchTag>
+	
+	absolute, relative
+	
   </searchTags>
 </function>

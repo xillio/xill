@@ -17,17 +17,8 @@
   <references>
   </references>
   <searchTags>
-	<searchTag>
-		MD5
-	</searchTag>
-	<searchTag>
-		md5
-	</searchTag>
-	<searchTag>
-		hash
-	</searchTag>
-	<searchTag>
-		encode
-	</searchTag>
+	
+		MD5, md5, hash, encode
+	
   </searchTags>
 </function>

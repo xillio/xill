@@ -26,14 +26,8 @@
   <references>
   </references>
   <searchTags>
-  	<searchTag>
-  		distance
-  	</searchTag>
-  	<searchTag>
-  		hamming
-  	</searchTag>
-  	<searchTag>
-  		compare
-  	</searchTag>
+  	
+  		distance, hamming, compare
+  	
   </searchTags>
 </function>

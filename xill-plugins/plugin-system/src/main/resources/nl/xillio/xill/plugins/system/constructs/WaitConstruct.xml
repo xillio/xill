@@ -13,9 +13,9 @@
 	<references>
 	</references>
 	<searchTags>
-		<searchTag>pause</searchTag>
+		pause</searchTag>
 		<searchTag>wait</searchTag>
 		<searchTag>sleep</searchTag>
-		<searchTag>delay</searchTag>
+		<searchTag>delay
 	</searchTags>
 </function>

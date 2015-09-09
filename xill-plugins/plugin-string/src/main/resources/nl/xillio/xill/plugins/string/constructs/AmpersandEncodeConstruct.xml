@@ -19,14 +19,8 @@
   	</reference>
   </references>
   <searchTags>
-	<searchTag>
-		ampersand
-	</searchTag>
-	<searchTag>
-		encode
-	</searchTag>
-	<searchTag>
-		encrypt
-	</searchTag>
+	
+		ampersand, encode, encrypt
+	
   </searchTags>
 </function>

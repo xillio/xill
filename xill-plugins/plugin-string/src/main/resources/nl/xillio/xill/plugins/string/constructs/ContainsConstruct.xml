@@ -28,11 +28,8 @@
   <references>
   </references>
   <searchTags>
-	<searchTag>
-		search
-	</searchTag>
-	<searchTag>
-		list
-	</searchTag>
+	
+		search, list
+	
   </searchTags>
 </function>

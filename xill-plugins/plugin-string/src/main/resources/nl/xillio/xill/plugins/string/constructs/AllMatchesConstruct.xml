@@ -26,14 +26,8 @@
   </examples>
   
    <searchTags>
-	<searchTag>
-	regex
-	</searchTag>
-	<searchTag>
-	match
-	</searchTag>
-	<searchTag>
-	relative
-	</searchTag>
+	
+	regex, match, relative
+	
   </searchTags>
 </function>

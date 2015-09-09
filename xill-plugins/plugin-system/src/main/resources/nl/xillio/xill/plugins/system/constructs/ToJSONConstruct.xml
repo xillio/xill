@@ -30,9 +30,9 @@
 	<references>
 	</references>
 	<searchTags>
-		<searchTag>json</searchTag>
+		json</searchTag>
 		<searchTag>string</searchTag>
 		<searchTag>convert</searchTag>
-		<searchTag>pretty</searchTag>
+		<searchTag>pretty
 	</searchTags>
 </function>

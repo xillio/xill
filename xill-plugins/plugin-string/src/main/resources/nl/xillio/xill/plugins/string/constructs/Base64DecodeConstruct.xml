@@ -26,11 +26,8 @@
   	<reference package="String">base64Encode</reference>
   </references>
   <searchTags>
-	<searchTag>
-		Base64
-	</searchTag>
-	<searchTag>
-		encode
-	</searchTag>
+	
+		Base64, encode
+	
   </searchTags>
 </function>

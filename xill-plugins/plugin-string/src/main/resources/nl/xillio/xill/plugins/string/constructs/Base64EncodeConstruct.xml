@@ -26,11 +26,8 @@
   	<reference package="String">base64Decode</reference>
   </references>
   <searchTags>
-	<searchTag>
-		Base64
-	</searchTag>
-	<searchTag>
-		decode
-	</searchTag>
+	
+		Base64, decode
+	
   </searchTags>
 </function>

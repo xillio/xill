@@ -23,11 +23,11 @@
 	<references>
 	</references>
 	<searchTags>
-		<searchTag>log</searchTag>
+		log</searchTag>
 		<searchTag>println</searchTag>
 		<searchTag>line</searchTag>
 		<searchTag>write</searchTag>
 		<searchTag>console</searchTag>
-		<searchTag>terminal</searchTag>
+		<searchTag>terminal
 	</searchTags>
 </function>

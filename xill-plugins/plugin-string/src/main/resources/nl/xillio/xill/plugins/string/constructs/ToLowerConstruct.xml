@@ -17,11 +17,8 @@
   <reference package="String">toUpper</reference>
   </references>
   <searchTags>
-  	<searchTag>
-  		case
-  	</searchTag>
-  	<searchTag>
-  		lower
-  	</searchTag>
+  	
+  		case, lower
+  	
   </searchTags>
 </function>
