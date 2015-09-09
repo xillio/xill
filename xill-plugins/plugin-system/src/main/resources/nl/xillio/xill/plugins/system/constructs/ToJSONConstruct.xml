@@ -1,34 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <function>
-	<description>
- 	Converts an expression to a JSON string. Note that circular references cannot be parsed and will be substituted.
- 	To pretty print the JSON string set pretty to true</description>
-	<examples>
-		<example description="Running:"><![CDATA[
-	    use System;
-		var json = System.toJSON([1,2,3, "Hello Xillio"]);
-		System.print(json);]]></example>
-		<example description="This will print:">
-		<![CDATA[Info: [1,2,3,\"Hello Xillio\"]]]>
-	</example>
-		<example description="Running:"><![CDATA[
-	    use System;
-	    var list = [1];
-	    list[] = list;
-		var json = System.toJSON(list, true);
-		System.print(json, true);]]>
-		</example>
-		<example description="This will print:"><![CDATA[
-		 [
-		  1,
-		  "<<CIRCULAR REFERENCE>>"
-		]
-		]]>
-		</example>
-	</examples>
-	<references>
-	</references>
-	<searchTags>
-		json, string, convert, pretty
-	</searchTags>
+    <description>
+        Converts an expression to a JSON string. Note that circular references cannot be parsed and will be substituted.
+        To pretty print the JSON string set pretty to true
+    </description>
+    <examples>
+        <example title="Usage">
+            <code>
+                System.toJSON([1,2,3, "Hello Xillio"]);
+                // Outputs: "[1,2,3,\"Hello Xillio\"]"
+
+                var list = [1];
+                list[] = list;
+                System.toJSON(list, true);
+                // Outputs: "[1,\"&lt;&lt;CIRCULAR REFERENCE&gt;&gt;\"]"
+            </code>
+        </example>
+    </examples>
+    <searchTags>
+        json, string, convert, pretty
+    </searchTags>
 </function>

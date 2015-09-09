@@ -1,26 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <function>
-	<description>
- 	Check the value of a type. It will evaluate to either ATOMIC, LIST or OBJECT</description>
-	<examples>
-		<example description="Running:"><![CDATA[
-	    use System;
-		var type = System.TypeOf([1,2,3, "Hello Xillio"]);
-		System.print(type);]]></example>
-		<example description="This will print:">
-		<![CDATA[Info: LIST]]>
-	</example>
-		<example description="Running:"><![CDATA[
-	    use System;
-		var type = System.TypeOf(null);
-		System.print(type);]]></example>
-		<example description="This will print:">
-		<![CDATA[Info: ATOMIC]]>
-	</example>
-	</examples>
-	<references>
-	</references>
-	<searchTags>
-		type, list, atomic, object
-	</searchTags>
+    <description>
+        Check the value of a type. It will evaluate to either ATOMIC, LIST or OBJECT
+    </description>
+    <examples>
+        <example title="Usage">
+            <code>
+                System.TypeOf([1,2,3, "Hello Xillio"]);
+                // Outputs: LIST
+
+                System.TypeOf(null);
+                // Outputs: ATOMIC
+            </code>
+        </example>
+    </examples>
+    <searchTags>
+        type, list, atomic, object
+    </searchTags>
 </function>

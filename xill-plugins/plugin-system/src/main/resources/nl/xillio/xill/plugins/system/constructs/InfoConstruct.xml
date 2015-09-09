@@ -1,50 +1,51 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <function>
-	<description>
-  Get a list with various pieces of information about your system.
-  This list contains information about the file system, the running robot and the current runtime.</description>
-	<examples>
-		<example description="Running:"><![CDATA[
-    use System;
-	var info = System.info();
-	System.print(info);]]></example>
-		<example description="This will print:"><![CDATA[
-		 {  
-		   "robotpath":"D:\\Code\\CT\\Xill 3.0\\projects\\tmp.xill",
-		   "rootrobotpath":"D:\\Code\\CT\\Xill 3.0\\projects\\tmp.xill",
-		   "projectpath":"D:\\Code\\CT\\Xill 3.0",
-		   "availableprocessors":8,
-		   "memory":{  
-		      "free":281276656,
-		      "total":468713472,
-		      "max":3.799515136E9,
-		      "used":187436816
-		   },
-		   "filesystem":[  
-		      {  
-		         "path":"C:\\",
-		         "storage":{  
-		            "total":1.26956335104E11,
-		            "free":3.1427985408E10,
-		            "used":9.5528349696E10
-		         }
-		      },
-		      {  
-		         "path":"D:\\",
-		         "storage":{  
-		            "total":9.80801286144E11,
-		            "free":7.85992876032E11,
-		            "used":1.94808410112E11
-		         }
-		      }
-		   ]
-		}
-		]]>
-		</example>
-	</examples>
-	<references>
-	</references>
-	<searchTags>
-		info, ram, memory, space, drive, project, path
-	</searchTags>
+    <description>
+        Get a list with various pieces of information about your system.
+        This list contains information about the file system, the running robot and the current runtime.
+    </description>
+    <examples>
+        <example title="Usage">
+            <code>
+                System.info();
+
+                /*
+                    Outputs:
+                        {
+                            "robotpath":"D:\\Code\\CT\\Xill 3.0\\projects\\tmp.xill",
+                            "rootrobotpath":"D:\\Code\\CT\\Xill 3.0\\projects\\tmp.xill",
+                            "projectpath":"D:\\Code\\CT\\Xill 3.0",
+                            "availableprocessors":8,
+                            "memory":{
+                                "free":281276656,
+                                "total":468713472,
+                                "max":3.799515136E9,
+                                "used":187436816
+                            },
+                            "filesystem":[
+                                {
+                                    "path":"C:\\",
+                                    "storage":{
+                                        "total":1.26956335104E11,
+                                        "free":3.1427985408E10,
+                                        "used":9.5528349696E10
+                                    }
+                                },
+                                {
+                                    "path":"D:\\",
+                                    "storage":{
+                                        "total":9.80801286144E11,
+                                        "free":7.85992876032E11,
+                                        "used":1.94808410112E11
+                                    }
+                                }
+                            ]
+                        }
+                */
+            </code>
+        </example>
+    </examples>
+    <searchTags>
+        info, ram, memory, space, drive, project, path
+    </searchTags>
 </function>

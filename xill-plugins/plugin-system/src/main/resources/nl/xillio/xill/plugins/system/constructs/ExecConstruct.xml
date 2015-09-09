@@ -1,20 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <function>
-	<description>
-  Runs an application and returns the output. 
-  The result will contain a list of errors, a list of output and the runtime in milliseconds.
-  All errors will also be logged in the console while running.</description>
-	<examples>
-		<example description="Running on windows:"><![CDATA[
-    use System;
-	var result = System.exec(["cmd.exe", "/C", "echo test"]);
-	System.print(result);]]></example>
-		<example description="This will print:"><![CDATA[{"errors":[],"output":["test"],"runtime":14}]]>
-		</example>
-	</examples>
-	<references>
-	</references>
-	<searchTags>
-		run, program, cmd, terminal, execute
-	</searchTags>
+    <description>
+        Runs an application and returns the output.
+        The result will contain a list of errors, a list of output and the runtime in milliseconds.
+        All errors will also be logged in the console while running.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Running on windows</header>
+            <code>
+                System.exec(["cmd.exe", "/C", "echo test"]);
+
+                // Outputs: {"errors":[],"output":["test"],"runtime":14}
+            </code>
+        </example>
+    </examples>
+    <searchTags>
+        run, program, cmd, terminal, execute
+    </searchTags>
 </function>

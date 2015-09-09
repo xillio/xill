@@ -1,20 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <function>
-	<description>
- 	Parse a json string to an expression.</description>
-	<examples>
-		<example description="Running:"><![CDATA[
-    use System;
-	var result = System.parseJSON("[1,2,3, { \"Title\": \"Hello Xillio\" }]");
-	System.print(result[3].Title);]]></example>
-		<example description="This will print:"><![CDATA[
-		 Info: Hello Xillio
-		]]>
-		</example>
-	</examples>
-	<references>
-	</references>
-	<searchTags>
-		json, parse, convert, read, api, rest
-	</searchTags>
+    <description>
+        Parse a json string to an expression.
+    </description>
+    <examples>
+        <example title="Usage">
+            <code>
+                System.parseJSON("[1,2,3, { \"Title\": \"Hello Xillio\" }]");
+                System.print(result[3].Title);
+
+                // Prints: Hello Xillio
+            </code>
+        </example>
+    </examples>
+    <searchTags>
+        json, parse, convert, read, api, rest
+    </searchTags>
 </function>
