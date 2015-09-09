@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<function Tag="createMD5">
-  <name>createMD5</name>
+<function>
   
   <description><![CDATA[
 	Returns a string containing the MD5 hash over the passed variable value. 

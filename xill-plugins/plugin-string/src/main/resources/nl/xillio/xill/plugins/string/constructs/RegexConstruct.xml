@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<function Tag="regex">
-  <name>regex</name>
+<function>
   
   <description><![CDATA[
 	 Returns a list of regular expression matches of string regex on the string value. 

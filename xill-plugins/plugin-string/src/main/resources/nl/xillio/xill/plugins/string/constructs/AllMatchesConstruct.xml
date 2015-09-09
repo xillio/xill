@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<function Tag="allMatches">
-  <name>allMatches</name>
+<function>
   
   <description><![CDATA[
 	 Returns a list with all substrings matching regex.

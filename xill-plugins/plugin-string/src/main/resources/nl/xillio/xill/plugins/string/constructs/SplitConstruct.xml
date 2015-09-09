@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<function Tag="split">
-  <name>split</name>
+<function>
   
   <description><![CDATA[
 	Splits the string value into a list of strings, based on the provided string delimiter and returns that list. 

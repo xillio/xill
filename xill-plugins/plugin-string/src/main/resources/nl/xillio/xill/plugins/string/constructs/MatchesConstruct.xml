@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<function Tag="matches">
-  <name>matches</name>
+<function>
   
   <description><![CDATA[
 	 Returns a boolean if the string text matches the pattern specified by the regex.

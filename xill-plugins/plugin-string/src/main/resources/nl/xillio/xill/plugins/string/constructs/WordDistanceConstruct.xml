@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<function Tag="wordDistance">
-  <name>wordDistance</name>
+<function>
   
   <description><![CDATA[
 	Returns a floating point number between 0 (no likeness) and 1 (identical), indicating how similar the source and target strings are. 

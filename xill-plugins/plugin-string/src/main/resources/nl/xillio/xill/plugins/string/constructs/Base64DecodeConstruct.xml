@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<function Tag="base64Decode">
-  <name>base64Decode</name>
+<function>
   
   <description><![CDATA[
 	 Base-64 decode the string content, and store it in the file fileName. 
