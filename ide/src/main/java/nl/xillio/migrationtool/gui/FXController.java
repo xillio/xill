@@ -41,6 +41,8 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 	private static final File DEFAULT_OPEN_BOT = new File("samples/Hello-Xillio." + Xill.FILE_EXTENSION);
 
+	private boolean cancelClose = false; // should be the closing of application interrupted?
+
 	// Shortcut is Ctrl on Windows and Meta on Mac.
 	@SuppressWarnings("javadoc")
 	public static final String HOTKEY_SAVE = "Shortcut+S";
@@ -204,8 +206,11 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 		// Add window handler
 		Platform.runLater(() -> apnRoot.getScene().getWindow().setOnCloseRequest(event -> {
+			this.cancelClose = false;
 			System.out.println("Shutting down application");
-			closeApplication();
+			if (!closeApplication()) {
+				event.consume(); // this cancel the process of the application closing     
+			}
 		}));
 
 		apnRoot.addEventHandler(KeyEvent.KEY_PRESSED, this);
@@ -443,8 +448,11 @@ public class FXController implements Initializable, EventHandler<Event> {
 		}
 	}
 
-	private void closeApplication() {
-		String openTabs = String.join(";", getTabs().stream().map(tab -> tab.getDocument().getAbsolutePath()).collect(Collectors.toList()));
+
+	private boolean closeApplication() {
+		String openTabs = String.join(";",
+			getTabs().stream().map(tab -> tab.getDocument().getAbsolutePath()).collect(Collectors.toList()));
+
 		// Save all tabs
 		settings.saveSimpleSetting(Id.WORKSPACE, openTabs);
 
@@ -458,7 +466,14 @@ public class FXController implements Initializable, EventHandler<Event> {
 		}
 
 		// Close all tabs
-		tpnBots.getTabs().forEach(tab -> closeTab(tab, false));
+		tpnBots.getTabs().forEach(tab -> {
+			if (!this.cancelClose) {
+				closeTab(tab, false);
+			}
+		});
+		if (this.cancelClose) {
+			return false; // cancel the application closing
+		}
 
 		// Purge plugins
 		for (XillPlugin plugin : Loader.getInitializer().getPlugins()) {
@@ -468,9 +483,12 @@ public class FXController implements Initializable, EventHandler<Event> {
 				e.printStackTrace();
 			}
 		}
+
+		// Finish app closing
 		ProjectPane.stop();
 		Platform.exit();
 		System.exit(0);
+		return false;
 	}
 
 	private void verifyLicense() {
@@ -645,5 +663,12 @@ public class FXController implements Initializable, EventHandler<Event> {
 			}
 		});
 		return robotTabs[0];
+	}
+	
+	/**
+	 * @param cancelClose should be the closing of application interrupted?
+	 */
+	public void setCancelClose(boolean cancelClose) {
+		this.cancelClose = cancelClose;
 	}
 }

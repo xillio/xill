@@ -346,7 +346,11 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	 */
 	private void onClose(final Event event) {
 		if (editorPane.getDocumentState().getValue() == DocumentState.CHANGED) {
-			new SaveBeforeClosingDialog(this, event).showAndWait();
+			SaveBeforeClosingDialog dlg = new SaveBeforeClosingDialog(this, event); 
+			dlg.showAndWait();
+			if (dlg.isCancelPressed()) {
+				globalController.setCancelClose(true);
+			}
 		}
 	}
 

@@ -131,7 +131,7 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 		String actualVersion = System.getProperty("java.version");
 
 		if(!actualVersion.equals(expectedVersion)) {
-			throw new IOException("The application was built with java version " + actualVersion + " but is running with " + expectedVersion + ".");
+			throw new IOException("The application was built with java version " + expectedVersion + " but is running with " + actualVersion + ".");
 		}
 	}
 
