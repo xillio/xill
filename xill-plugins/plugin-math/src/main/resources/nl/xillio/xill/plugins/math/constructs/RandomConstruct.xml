@@ -1,42 +1,36 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <function>
-    <parameters>
-        <param name="value"/>
-    </parameters>
-    <description><![CDATA[
-  Returns a randomized value based on the optional parameter value. 
-  If an integer argument N is provided the return value is a random integer between 0 and N. 
-  If a list argument L is provided it is a random entry from the list. 
-  If no parameter is provided, a random floating point number between 0 and 1 will be generated.
-  ]]>
+    <description>
+        Returns a randomized value based on the optional parameter value.
+        If an integer argument N is provided the return value is a random integer between 0 and N.
+        If a list argument L is provided it is a random entry from the list.
+        If no parameter is provided, a random floating point number between 0 and 1 will be generated.
     </description>
     <examples>
-        <example description="Roll a 6-sided die three times and print the results:"><![CDATA[
-    System.print(Math.random(6)+1);
-    System.print(Math.random(6)+1);
-    System.print(Math.random(6)+1);
-    
-	Note: the + 1 is needed, because the result of random is 0 to 6, but not including 6.
-	]]>
+        <example title="Roll a 6-sided die:">
+            <code>
+                System.print(Math.random(6)+1);
+            </code>
+            <p>
+                Note: the + 1 is needed, because the result of random is 0 to 6, but not including 6.
+            </p>
         </example>
-        <example description="Determine a random work day and print it:"><![CDATA[
-    var list = {"monday", "tuesday", "wednesday", "thursday", "friday"};
-	System.print(Math.random((list));
-	]]>
+        <example title="Determine a random work day:">
+            <code>
+                var list = {"monday", "tuesday", "wednesday", "thursday", "friday"};
+                System.print(Math.random((list));
+            </code>
         </example>
-        <example description="Usage without parameter:"><![CDATA[
-    log (random());
-	]]>
-        </example>
-        <example description="prints a number like:"><![CDATA[
-    0.11632623660157837
-	]]>
+        <example description="Random number between 0 and 1:">
+            <code>
+                log (random());
+            </code>
+            <p>
+                Note: This excludes 1 but includes 0
+            </p>
         </example>
     </examples>
-    <references/>
     <searchTags>
-        <searchTag>
-            seed
-        </searchTag>
+        random, dice
     </searchTags>
 </function>

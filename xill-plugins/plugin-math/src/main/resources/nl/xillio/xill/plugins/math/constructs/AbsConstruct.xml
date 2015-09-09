@@ -1,26 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <function>
-    <parameters>
-        <param name="value"/>
-    </parameters>
-    <description><![CDATA[Returns the absolute value of the provided value.
-    we randomly put a sentence here]]></description>
+    <description>
+        Returns the absolute value of the provided value.
+    </description>
     <examples>
-        <example description="Perform abs on three different inputs:"><![CDATA[
-    System.print(Math.abs(6))
-    System.print(Math.abs(-5))
-    System.print(Math.abs(-3.14))]]></example>
-        <example description="This will print:"><![CDATA[
-    6
-    5
-    3.14]]>
+        <example title="Usage">
+            <header>Running</header>
+            <code>
+                System.print(Math.abs(6))
+                System.print(Math.abs(-5))
+                System.print(Math.abs(-3.14))
+            </code>
+            <header>Will print</header>
+            <code>
+                6
+                5
+                3.14
+            </code>
         </example>
     </examples>
-    <references>
-    </references>
-    <searchTags>
-        <searchTag>
-            absolute
-        </searchTag>
-    </searchTags>
 </function>

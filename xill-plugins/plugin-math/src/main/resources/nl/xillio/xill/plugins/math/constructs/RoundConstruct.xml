@@ -1,22 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <function>
-    <parameters>
-        <param name="value"/>
-    </parameters>
-    <description><![CDATA[Rounds the provided value to the nearest whole number.]]></description>
+    <description>
+        Rounds the provided value to the nearest whole number.
+    </description>
     <examples>
-        <example description="Perform round on three different inputs:"><![CDATA[
-    System.print(Math.round(6))
-    System.print(Math.round(3.14))
-    System.print(Math.round(-3.78))
-	]]>
-        </example>
-        <example description="This will print:">
-            6
-            3
-            -4
+        <example title="Usage">
+            <header>Running</header>
+            <code>
+                System.print(Math.round(6))
+                System.print(Math.round(3.14))
+                System.print(Math.round(-3.78))
+            </code>
+            <header>Will print</header>
+            <code>
+                6
+                3
+                -4
+            </code>
         </example>
     </examples>
-    <references/>
-    <searchTags/>
 </function>
