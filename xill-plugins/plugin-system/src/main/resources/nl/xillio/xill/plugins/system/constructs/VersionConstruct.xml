@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <function>
-	
 	<description>
  	Returns the current version of the language. If a required version is provided it will throw an error when an older version is used.</description>
 	<examples>
@@ -22,8 +21,6 @@
 	<references>
 	</references>
 	<searchTags>
-		version</searchTag>
-		<searchTag>check</searchTag>
-		<searchTag>error
+		version, check, error
 	</searchTags>
 </function>

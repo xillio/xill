@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <function>
-	
 	<description>
 	Pause the robot for a period of time in milliseconds.</description>
 	<examples>
@@ -13,9 +12,6 @@
 	<references>
 	</references>
 	<searchTags>
-		pause</searchTag>
-		<searchTag>wait</searchTag>
-		<searchTag>sleep</searchTag>
-		<searchTag>delay
+		pause, wait, sleep, delay
 	</searchTags>
 </function>

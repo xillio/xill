@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
-  
   <description>
 	  Converts the relative URL string relativeUrl to an absolute URL using the string pageUrl as base URL. Returns the resulting URL as a string.
   </description>
@@ -20,10 +19,7 @@
     ]]>
     </example>
   </examples>
-  
    <searchTags>
-	
 	absolute, relative
-	
   </searchTags>
 </function>

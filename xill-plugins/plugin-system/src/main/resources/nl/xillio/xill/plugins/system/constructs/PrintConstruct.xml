@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <function>
-	
 	<description>
  	Prints a message to the console.
  	When printing an object or list it will print the JSON representation. If you print an atomic value it will print the string value.</description>
@@ -23,11 +22,6 @@
 	<references>
 	</references>
 	<searchTags>
-		log</searchTag>
-		<searchTag>println</searchTag>
-		<searchTag>line</searchTag>
-		<searchTag>write</searchTag>
-		<searchTag>console</searchTag>
-		<searchTag>terminal
+		log, println, line, write, console, terminal
 	</searchTags>
 </function>

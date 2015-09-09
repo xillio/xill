@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
-  
   <description>
 	Returns a boolean whether the string1 starts with string2.
   </description>

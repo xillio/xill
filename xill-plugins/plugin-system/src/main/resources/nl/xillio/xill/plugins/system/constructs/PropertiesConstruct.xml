@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <function>
-	
 	<description>
  	Get system or envirionmental properties.
  	When a property key is provided only that specific property will be fetched.</description>
@@ -130,10 +129,6 @@
 	<references>
 	</references>
 	<searchTags>
-		system</searchTag>
-		<searchTag>info</searchTag>
-		<searchTag>path</searchTag>
-		<searchTag>envirionment</searchTag>
-		<searchTag>property
+		system, info, path, envirionment, property
 	</searchTags>
 </function>

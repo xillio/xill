@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
-  
   <description>
 	The first parameter, text, is a format string specifying how the objects in the second parameter, values, are to be formatted. The format string contains plain text as well as format specifiers, which are special characters that format the arguments of values.
 values accepts a single parameter. The format string expects parameters supplied as a list surrounded by "[]".
@@ -15,7 +14,6 @@ Format specifiers begin with a percent sign (%) and end with a converter. The co
  A float. Eg: 0.3f is a float with 3 decimals. It rounds.
   	n 
  A newline character appropriate for the platform. Note to always use %n.
-  	
   	Flags:
   	8  
  (or any other integer). Set the width to that integer. Defaults right-justified.
@@ -27,12 +25,10 @@ Format specifiers begin with a percent sign (%) and end with a converter. The co
  Print the sign, with both positive and negative numbers. (Note that negative numbers always have their sign printed).
   	,  
  Include locale specific grouping characters. (change 100000 to 100,000).
-  	
   	</example>
     <example description="Executing:"><![CDATA[
     	//An example of argument indices to re-order input
     	String.format("%3$2s %1$2s %1$2s %2$2s" , ["a", "b", "c"] );
-    	
     	//An example of setting the width and precision of an argument.
     	var v = 0.1234567891;
     	String.format("value = %+10.4f or value = %010.7f or value = %-8.1f or  value= %+.3f" , [v, v , v, -v]);
@@ -40,7 +36,6 @@ Format specifiers begin with a percent sign (%) and end with a converter. The co
     <example description="Will return:"><![CDATA[
     	//The example of argument indices to re-order input:
 		"c a a b"
-		
 		//The example of setting the width and precision of an argument.
 		"value =        +0.1235 or value =  00.1234568 or value = 0.1          value = -0.123'
     	]]>

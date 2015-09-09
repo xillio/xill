@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <function>
-	
 	<description>
   Get a list with various pieces of information about your system.
   This list contains information about the file system, the running robot and the current runtime.</description>
@@ -46,12 +45,6 @@
 	<references>
 	</references>
 	<searchTags>
-		info</searchTag>
-		<searchTag>ram</searchTag>
-		<searchTag>memory</searchTag>
-		<searchTag>space</searchTag>
-		<searchTag>drive</searchTag>
-		<searchTag>project</searchTag>
-		<searchTag>path
+		info, ram, memory, space, drive, project, path
 	</searchTags>
 </function>

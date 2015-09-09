@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
-  
   <description>
 	Returns a floating point number between 0 (no likeness) and 1 (identical), indicating how similar the source and target strings are. 
 	This routine uses the Damereau Levenshtein distance to calculate the similarity. 
@@ -26,8 +25,6 @@
   <references>
   </references>
   <searchTags>
-  	
   		distance, hamming, compare
-  	
   </searchTags>
 </function>

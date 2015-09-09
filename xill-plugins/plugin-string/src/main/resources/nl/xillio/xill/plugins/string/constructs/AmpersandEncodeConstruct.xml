@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
-  
-  <description>
-	 Encodes all special XML characters (,>,&,”,’) to their respective XML entities.
-  </description>
+  <description><![CDATA[
+    Encodes all special XML characters (,>,&,”,’) to their respective XML entities.
+  ]]></description>
   <examples>
     <example description="Executing:"><![CDATA[
     	String.ampersandEncode("<p><a href=\"default.asp\">HTML Tutorial</a> This is a link to a page on this website.</p>");
@@ -19,8 +18,6 @@
   	</reference>
   </references>
   <searchTags>
-	
 		ampersand, encode, encrypt
-	
   </searchTags>
 </function>

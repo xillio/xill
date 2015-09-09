@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
-  
   <description>
 	 Decodes all ampersand-encoded characters in the provided string. Mainly used to decode XML characters to their original characters. "
 	 Optionally you can provide the number of passes the decoder should run (defaults to 1).
@@ -10,7 +9,7 @@
     	String.ampersandDecode("Jack &amp; Jill");
     ]]></example>
     <example description="Will return:"><![CDATA[
-    	"Jack & Jill"
+    	"Jack &amp; Jill"
     	]]>
     </example>
     <example description="Executing:"><![CDATA[
@@ -27,8 +26,6 @@
   	</reference>
   </references>
   <searchTags>
-	
 		ampersand, decode, encrypt
-	
   </searchTags>
 </function>

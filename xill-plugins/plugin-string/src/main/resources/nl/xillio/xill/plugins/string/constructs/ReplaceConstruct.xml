@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
-  
   <description>
 Returns a new string based on the string text in which occurrences of the string needle have been replaced by the string replacement. If the optional parameter replaceall is set to false, the routine will only replace the first occurrence of needle (defaults to true).
 Note that needle is by default interpreted as a regex pattern, so all special regex characters have to be escaped when used as a literal. 
@@ -13,26 +12,19 @@ See the Regular Expressions page for more about Regular Expression support in Co
   <examples>
     <example description="Executing:"><![CDATA[
     	String.replace("The quick brown fox.", "fox", "dog");
-    	
     	String.replace("The quick brown fox, The quick brown fox.", "fox", "dog");
-    	
     	String.replace("The quick brown fox, The quick brown ladyfox.", "fox", "dog", false);
-    	
     	String.replace("The quick brown fox, The quick brown fox.", "fox", "dog", false, false);	
     ]]></example>
     <example description="Will return:"><![CDATA[
     	"The quick brown dog."
-    	
     	"The quick brown dog, the quick brown dog."
-    	
     	"The quick brown dog, the quick brown ladyfox."
-    	
     	"The quick brown dog, the quick brown fox."
 		]]>
     </example>
     <example description="One could use it to:"><![CDATA[
     	//Repair misspelled URL’s (with one slash):
-    
     	var url = "http:/www.xillio.com/";
 		url = replace(url, "(^http:/)([^/].*)", "http://$2");
 		System.print(url);
@@ -43,10 +35,7 @@ See the Regular Expressions page for more about Regular Expression support in Co
     ]]>
     </example>
   </examples>
-  
    <searchTags>
-	
 	regex
-	
   </searchTags>
 </function>

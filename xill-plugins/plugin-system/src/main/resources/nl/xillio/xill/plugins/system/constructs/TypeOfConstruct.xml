@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <function>
-	
 	<description>
  	Check the value of a type. It will evaluate to either ATOMIC, LIST or OBJECT</description>
 	<examples>
@@ -22,9 +21,6 @@
 	<references>
 	</references>
 	<searchTags>
-		type</searchTag>
-		<searchTag>list</searchTag>
-		<searchTag>atomic</searchTag>
-		<searchTag>object
+		type, list, atomic, object
 	</searchTags>
 </function>

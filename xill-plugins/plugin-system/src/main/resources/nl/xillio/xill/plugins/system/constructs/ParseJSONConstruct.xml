@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <function>
-	
 	<description>
  	Parse a json string to an expression.</description>
 	<examples>
@@ -16,11 +15,6 @@
 	<references>
 	</references>
 	<searchTags>
-		json</searchTag>
-		<searchTag>parse</searchTag>
-		<searchTag>convert</searchTag>
-		<searchTag>read</searchTag>
-		<searchTag>api</searchTag>
-		<searchTag>rest
+		json, parse, convert, read, api, rest
 	</searchTags>
 </function>

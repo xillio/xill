@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
-  
   <description>
 	Returns an integer higher or equal to startPos of the index of string2 in string1.
 	startPos defaults to 0.

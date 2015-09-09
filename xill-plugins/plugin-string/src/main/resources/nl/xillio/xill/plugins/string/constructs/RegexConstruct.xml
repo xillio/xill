@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
-  
   <description>
 	 Returns a list of regular expression matches of string regex on the string value. 
 	 Note that the result will be a list which contains the entire string value as the first entry and after that one or more matching groups. regex must always match the entire string value.
@@ -24,10 +23,7 @@
 		]]>
     </example>
   </examples>
-  
    <searchTags>
-	
 	regex, match
-	
   </searchTags>
 </function>

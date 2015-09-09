@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
-  
   <description>
 	 Base-64 decode the string content, and store it in the file fileName. 
 	 Commonly used to decode binary data transferred over a text channel (such as attachments in e-mails).
@@ -26,8 +25,6 @@
   	<reference package="String">base64Encode</reference>
   </references>
   <searchTags>
-	
 		Base64, encode
-	
   </searchTags>
 </function>

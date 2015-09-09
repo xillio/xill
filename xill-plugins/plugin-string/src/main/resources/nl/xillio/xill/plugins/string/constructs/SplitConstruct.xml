@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
-  
   <description>
 	Splits the string value into a list of strings, based on the provided string delimiter and returns that list. 
 	delimiter is interpreted as a Java Regular expression, but since all backslash "\" characters will be interpreted as an escape character for the next one by the XMT all forward slashes you want to be evaluated by the regex have to be doubled. This means that "\\\\" would denote a single literal backslash "\" and "\\*" would denote a literal asterisk "*". However, since Java is very smart in escaping, you will get away with using some single backslashes, for example for newline characters you can simply write "\n".

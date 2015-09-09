@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
-  
   <description>
 	Returns the string lowercased.
   </description>
@@ -17,8 +16,6 @@
   <reference package="String">toUpper</reference>
   </references>
   <searchTags>
-  	
   		case, lower
-  	
   </searchTags>
 </function>
