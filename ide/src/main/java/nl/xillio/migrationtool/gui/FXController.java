@@ -247,7 +247,6 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 		Platform.runLater(() -> {
 			verifyLicense();
-			applyPatches();
 			try {
 				showReleaseNotes();
 			} catch (IOException e) {
@@ -541,14 +540,6 @@ public class FXController implements Initializable, EventHandler<Event> {
 			stage.setTitle(
 				"xillio content tools - " + Loader.LONG_VERSION + " - Licensed to: " + license.getLicenseName());
 		}*/
-	}
-
-	private void applyPatches() {
-		// Patch for CTC-833
-		// Issue: Username and password for a server are not encrypted
-		// Fix: Encrypt username and password when still in plain text
-		encryptSetting("ServerUsername");
-		encryptSetting("ServerPassword");
 	}
 
 	private void encryptSetting(String name) {
