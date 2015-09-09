@@ -10,7 +10,7 @@
             <code>
                 String.createMD5("string");
 
-                // Outputs: b45cffe084dd3d20d928bee85e7b0f21
+                // Result: b45cffe084dd3d20d928bee85e7b0f21
             </code>
         </example>
     </examples>

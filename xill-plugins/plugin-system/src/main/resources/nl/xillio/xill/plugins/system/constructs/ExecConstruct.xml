@@ -11,7 +11,7 @@
             <code>
                 System.exec(["cmd.exe", "/C", "echo test"]);
 
-                // Outputs: {"errors":[],"output":["test"],"runtime":14}
+                // Result: {"errors":[],"output":["test"],"runtime":14}
             </code>
         </example>
     </examples>

@@ -7,8 +7,8 @@
     <examples>
         <example title="Usage">
             <code>
-                String.join(["a", "b", "c"]);       // Output: abc
-                String.join(["a", "b", "c"], "_");  // Output: a_b_c
+                String.join(["a", "b", "c"]);       // Result: abc
+                String.join(["a", "b", "c"], "_");  // Result: a_b_c
             </code>
         </example>
     </examples>

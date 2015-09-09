@@ -14,7 +14,7 @@
                 var s = "abc def ghi jkl. Mno";
                 String.allMatches(s, "\\w+");
 
-                // Outputs: ["abc", "def", "ghi", "jkl", "Mno" ]
+                // Result: ["abc", "def", "ghi", "jkl", "Mno" ]
             </code>
         </example>
     </examples>

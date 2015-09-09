@@ -5,7 +5,7 @@
     </description>
     <examples>
         <example title="Usage">
-            String.length("four"); // Outputs: 4
+            String.length("four"); // Result: 4
         </example>
     </examples>
     <searchTags>

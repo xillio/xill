@@ -9,10 +9,10 @@
         <example title="Usage">
             <code>
                 String.substring("Welcome to our site!", 0, 7);
-                // Outputs: Welcome
+                // Result: Welcome
 
                 String.substring("Welcome to our site!", 0);
-                // Outputs: Welcome to our site!
+                // Result: Welcome to our site!
             </code>
         </example>
     </examples>

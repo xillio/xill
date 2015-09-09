@@ -14,10 +14,10 @@
     <examples>
         <example title="Usage">
             String.split("a--b---c", "-");
-            // Outputs: ["a", "b", "c"]
+            // Result: ["a", "b", "c"]
 
             String.split("a--b---c", "-", true);
-            // Outputs: ["a", "", "b", "", "", "c"]
+            // Result: ["a", "", "b", "", "", "c"]
         </example>
     </examples>
 </function>

@@ -10,7 +10,7 @@
             <code>
                 String.base64Encode("C:/tmp/note.xml");
 
-                // Outputs: SGVsbG8gV29ybGQ=
+                // Result: SGVsbG8gV29ybGQ=
             </code>
         </example>
     </examples>

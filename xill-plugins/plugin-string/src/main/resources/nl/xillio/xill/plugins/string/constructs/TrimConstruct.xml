@@ -9,10 +9,10 @@
         <example title="Usage">
             <code>
                 String.trim(" Xillio Xillio Xillio Xillio Xillio ");
-                // Outputs: Xillio Xillio Xillio Xillio Xillio
+                // Result: Xillio Xillio Xillio Xillio Xillio
 
                 String.trim(" Xillio Xillio Xillio Xillio Xillio ", true);
-                // Outputs: Xillio Xillio Xillio Xillio Xillio
+                // Result: Xillio Xillio Xillio Xillio Xillio
             </code>
         </example>
     </examples>

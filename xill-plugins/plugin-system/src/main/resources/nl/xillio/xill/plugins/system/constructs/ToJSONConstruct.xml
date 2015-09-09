@@ -8,12 +8,12 @@
         <example title="Usage">
             <code>
                 System.toJSON([1,2,3, "Hello Xillio"]);
-                // Outputs: "[1,2,3,\"Hello Xillio\"]"
+                // Result: "[1,2,3,\"Hello Xillio\"]"
 
                 var list = [1];
                 list[] = list;
                 System.toJSON(list, true);
-                // Outputs: "[1,\"&lt;&lt;CIRCULAR REFERENCE&gt;&gt;\"]"
+                // Result: "[1,\"&lt;&lt;CIRCULAR REFERENCE&gt;&gt;\"]"
             </code>
         </example>
     </examples>

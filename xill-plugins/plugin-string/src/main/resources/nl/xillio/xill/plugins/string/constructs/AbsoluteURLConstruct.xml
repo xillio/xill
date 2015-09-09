@@ -9,12 +9,12 @@
             <header>Child page</header>
             <code>
                 String.absoluteURL("http://www.xillio.nl/calendar/", "movies");
-                // Outputs: http://www.xillio.nl/calendar/movies
+                // Result: http://www.xillio.nl/calendar/movies
             </code>
             <header>One page up</header>
             <code>
                 String.absoluteURL("http://www.xillio.nl/calendar/", "../");
-                // Output: http://www.xillio.nl/
+                // Result: http://www.xillio.nl/
             </code>
         </example>
     </examples>

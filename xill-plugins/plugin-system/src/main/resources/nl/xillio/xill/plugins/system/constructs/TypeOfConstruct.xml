@@ -7,10 +7,10 @@
         <example title="Usage">
             <code>
                 System.TypeOf([1,2,3, "Hello Xillio"]);
-                // Outputs: LIST
+                // Result: LIST
 
                 System.TypeOf(null);
-                // Outputs: ATOMIC
+                // Result: ATOMIC
             </code>
         </example>
     </examples>

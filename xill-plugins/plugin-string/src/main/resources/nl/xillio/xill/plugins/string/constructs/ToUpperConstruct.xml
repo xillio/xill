@@ -7,7 +7,7 @@
         <example title="Usage">
             <code>
                 String.toUpper("LoWer");
-                // Output: LOWER
+                // Result: LOWER
             </code>
         </example>
     </examples>

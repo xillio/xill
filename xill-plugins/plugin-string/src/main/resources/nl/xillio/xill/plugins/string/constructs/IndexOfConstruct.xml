@@ -7,10 +7,10 @@
     </description>
     <examples>
         <example description="Executing:">
-            String.indexOf("maxTestTest", "Test");      // Outputs: 3
-            String.indexOf("maxTestTest", "Test", 3);   // Outputs: 3
-            String.indexOf("maxTestTest", "Test", 5);   // Outputs: 7
-            String.indexOf("maxTestTest", "test");      // Outputs: -1
+            String.indexOf("maxTestTest", "Test");      // Result: 3
+            String.indexOf("maxTestTest", "Test", 3);   // Result: 3
+            String.indexOf("maxTestTest", "Test", 5);   // Result: 7
+            String.indexOf("maxTestTest", "test");      // Result: -1
         </example>
     </examples>
 </function>

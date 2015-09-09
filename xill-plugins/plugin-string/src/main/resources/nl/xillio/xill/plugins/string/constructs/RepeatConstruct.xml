@@ -7,7 +7,7 @@
         <example title="Usage">
             <code>
                 String.repeat("thisIsAString", 3);
-                // Outputs: thisIsAStringthisIsAStringthisIsAString
+                // Result: thisIsAStringthisIsAStringthisIsAString
             </code>
         </example>
     </examples>
