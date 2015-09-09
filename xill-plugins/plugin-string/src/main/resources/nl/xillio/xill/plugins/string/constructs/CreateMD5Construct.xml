@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function Tag="createMD5">
   <name>createMD5</name>
-  <parameters>
-    <param name="value">
-    </param>
-  </parameters>
+  
   <description><![CDATA[
 	Returns a string containing the MD5 hash over the passed variable value. 
 	This is commonly used to check if files have changed, since any slight change will cause the MD5 hash to be completely different.

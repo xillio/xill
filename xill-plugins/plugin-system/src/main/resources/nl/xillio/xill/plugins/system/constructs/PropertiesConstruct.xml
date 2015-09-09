@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE xilldoc>
 <function>
-	<parameters>
-		<param name="name" default="null" />
-	</parameters>
+	
 	<description><![CDATA[
  	Get system or envirionmental properties.
  	When a property key is provided only that specific property will be fetched.]]></description>

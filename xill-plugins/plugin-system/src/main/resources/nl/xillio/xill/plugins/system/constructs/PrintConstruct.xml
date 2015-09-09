@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE xilldoc>
 <function>
-	<parameters>
-		<param name="text" default="null" />
-		<param name="level" default="info" />
-	</parameters>
+	
 	<description><![CDATA[
  	Prints a message to the console.
  	When printing an object or list it will print the JSON representation. If you print an atomic value it will print the string value.]]></description>

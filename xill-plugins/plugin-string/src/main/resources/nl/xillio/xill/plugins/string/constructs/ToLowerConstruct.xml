@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function Tag="toLower">
   <name>toLower</name>
-  <parameters>
-    <param name="string">
-    </param>
-  </parameters>
+  
   <description><![CDATA[
 	Returns the string lowercased.
   ]]></description>

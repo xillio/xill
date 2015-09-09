@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function Tag="substring">
   <name>substring</name>
-  <parameters>
-    <param name="string">
-    </param>
-    <param name="start">
-    </param>
-    <param name="end" default="0">
-    </param>
-  </parameters>
+  
   <description><![CDATA[
 	Returns the substring of string text between integer positions start and position end. The first character in the string is numbered 0. The last character returned by substring is the character before position end. 
 	Optionally end can be left out or made 0, which means the returned string will end at the last position of text.

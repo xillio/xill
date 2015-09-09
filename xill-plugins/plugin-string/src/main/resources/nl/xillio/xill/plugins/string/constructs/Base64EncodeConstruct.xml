@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function Tag="base64Encode">
   <name>base64Encode</name>
-  <parameters>
-    <param name="file">
-    </param>
-  </parameters>
+  
   <description><![CDATA[
   Returns the base-64 encoded string of file file. 
   Commonly used to encode binary data for transfer over a text channel (such as attachments in e-mails). 

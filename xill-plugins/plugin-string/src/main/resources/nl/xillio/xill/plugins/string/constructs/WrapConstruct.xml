@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function Tag="wrap">
   <name>wrap</name>
-  <parameters>
-    <param name="text">
-    </param>
-    <param name="width">
-    </param>
-    <param name="wrapLongWords">
-    </param>
-  </parameters>
+  
   <description><![CDATA[
   		Wraps a single line of text, identifying words by ' '.
   		If wrapLongWords is true then words are split aswell.

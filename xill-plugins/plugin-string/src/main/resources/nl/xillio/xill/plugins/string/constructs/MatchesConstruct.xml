@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function Tag="matches">
   <name>matches</name>
-  <parameters>
-    <param name="text">
-    </param>
-    <param name="regex">
-    </param>
-    <param name="timeOut" default="5">
-    </param>
-  </parameters>
+  
   <description><![CDATA[
 	 Returns a boolean if the string text matches the pattern specified by the regex.
 	 Optionally a timeout can be provided in seconds, the default value is 5 seconds. 

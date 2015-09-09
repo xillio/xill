@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function Tag="contains">
   <name>contains</name>
-  <parameters>
-    <param name="haystack">
-    </param>
-    <param name="needle">
-    </param>
-  </parameters>
+  
   <description><![CDATA[
 	Returns a boolean whether the string or list haystack contains the element needle.
   ]]></description>

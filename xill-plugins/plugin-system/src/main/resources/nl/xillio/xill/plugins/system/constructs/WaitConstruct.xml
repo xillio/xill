@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE xilldoc>
 <function>
-	<parameters>
-		<param name="time" default="100" />
-	</parameters>
+	
 	<description><![CDATA[
 	Pause the robot for a period of time in milliseconds.]]></description>
 	<examples>

@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function Tag="absoluteURL">
   <name>absoluteURL</name>
-  <parameters>
-    <param name="pageUrl">
-    </param>
-    <param name="relativeUrl">
-    </param>
-  </parameters>
+  
   <description><![CDATA[
 	  Converts the relative URL string relativeUrl to an absolute URL using the string pageUrl as base URL. Returns the resulting URL as a string.
   ]]></description>

@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function Tag="ampersandEncode">
   <name>ampersandEncode</name>
-  <parameters>
-    <param name="text">
-    </param>
-  </parameters>
+  
   <description><![CDATA[
 	 Encodes all special XML characters (,>,&,”,’) to their respective XML entities.
   ]]></description>

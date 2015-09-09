@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function Tag="format">
   <name>format</name>
-  <parameters>
-    <param name="string1">
-    </param>
-    <param name="values">
-    </param>
-  </parameters>
+  
   <description><![CDATA[
 	The first parameter, text, is a format string specifying how the objects in the second parameter, values, are to be formatted. The format string contains plain text as well as format specifiers, which are special characters that format the arguments of values.
 

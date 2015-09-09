@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE xilldoc>
 <function>
-	<parameters>
-		<param name="requiredVersion" default="null" />
-	</parameters>
+	
 	<description><![CDATA[
  	Returns the current version of the language. If a required version is provided it will throw an error when an older version is used.]]></description>
 	<examples>

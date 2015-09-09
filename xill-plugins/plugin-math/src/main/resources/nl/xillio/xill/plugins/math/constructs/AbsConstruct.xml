@@ -6,10 +6,11 @@
     <examples>
         <example title="Usage">
             <header>Running</header>
-            <code>
+            <code><![CDATA[
                 System.print(Math.abs(6))
                 System.print(Math.abs(-5))
                 System.print(Math.abs(-3.14))
+            ]]>
             </code>
             <header>Will print</header>
             <code>

@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function Tag="startsWith">
   <name>startsWith</name>
-  <parameters>
-    <param name="string1">
-    </param>
-    <param name="string2">
-    </param>
-  </parameters>
+  
   <description><![CDATA[
 	Returns a boolean whether the string1 starts with string2.
   ]]></description>

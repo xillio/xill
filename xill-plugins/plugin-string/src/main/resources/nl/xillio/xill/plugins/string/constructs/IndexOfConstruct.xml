@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function Tag="indexOf">
   <name>indexOf</name>
-  <parameters>
-    <param name="string1">
-    </param>
-    <param name="string2">
-    </param>
-    <param name="startPos" default="0">
-    </param>
-  </parameters>
+  
   <description><![CDATA[
 	Returns an integer higher or equal to startPos of the index of string2 in string1.
 	startPos defaults to 0.
