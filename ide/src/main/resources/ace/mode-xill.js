@@ -554,11 +554,11 @@ ace.define('ace/mode/xill_highlight_rules', function(require, exports, module) {
 				next : "comment"
 			}, {
 				token : "string",
-				regex : "'(?=.)",
+				regex : "'",
 				next : "qstring"
 			}, {
 				token : "string",
-				regex : '"(?=.)',
+				regex : '"',
 				next : "qqstring"
 			}, {
 				token : "constant.numeric", // hex

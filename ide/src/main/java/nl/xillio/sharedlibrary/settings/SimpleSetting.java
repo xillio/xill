@@ -123,6 +123,8 @@ public class SimpleSetting extends Setting {
 	}
 
 	public static synchronized String decrypt(final String value) {
+		if (value == null || value.equals(""))
+			return value;
 		return encryptor.decrypt(value);
 	}
 

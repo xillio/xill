@@ -39,6 +39,7 @@ public class XillWorkbookTest {
 		File file = mock(File.class);
 		when(file.getCanonicalPath()).thenReturn(path);
 		when(file.canWrite()).thenReturn(!readonly);
+		when(file.getParentFile()).thenReturn(file);
 		return file;
 	}
 
@@ -204,12 +205,12 @@ public class XillWorkbookTest {
 	 *
 	 * @throws Exception
 	 */
-	@Test(expectedExceptions = IOException.class,
-					expectedExceptionsMessageRegExp = "Could not write to this file")
+	@Test(expectedExceptions = IOException.class)
 	public void testSaveException() throws Exception {
 		Workbook workbook = mock(Workbook.class);
 		File file = createFile("path", false);
 		XillWorkbook testWorkbook = spy(new XillWorkbook(workbook, file));
+		doReturn(mock(FileOutputStream.class)).when(testWorkbook).getOutputStream(any(File.class));
 		doThrow(new IOException()).when(workbook).write(any(OutputStream.class));
 		testWorkbook.save();
 	}
@@ -220,8 +221,7 @@ public class XillWorkbookTest {
 	 *
 	 * @throws Exception
 	 */
-	@Test(expectedExceptions = IOException.class,
-					expectedExceptionsMessageRegExp = "Could not write to this file")
+	@Test(expectedExceptions = IOException.class)
 	public void testSaveWithFileException() throws Exception {
 		Workbook workbook = mock(Workbook.class);
 		File file = createFile("path", false);

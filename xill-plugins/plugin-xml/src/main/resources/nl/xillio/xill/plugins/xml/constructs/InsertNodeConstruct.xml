@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Add the provided XML string as a child to node, optionally at a provided position. Returns the newly created node.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Assuming we have an XML file note.xml which contains the following:</header>
+            <code>
+&lt; note id="1"&gt;
+  &lt; to&gt;Tove&lt; /to&gt;
+  &lt; from&gt;Jani&lt; /from&gt;
+  &lt; heading&gt;Reminder&lt; /heading&gt;
+  &lt; body&gt;Don't forget me this weekend!&lt; /body&gt;
+&lt; /note&gt;
+            </code>
+            <header>After executing the following code:</header>
+            <code>
+use System;
+use Xml;
+
+var note = Xml.fromFile("C:/tmp/note.xml");
+var parent = Xml.xpath(note, "//note");
+Xml.insertNode(parent, "&lt; comment&gt;Comments are welcome.&lt; /comment&gt;");
+System.print(Xml.toString(note));
+            </code>
+            <header>
+Xml contains:
+            </header>
+
+            <code>
+&lt; note id="1"&gt;
+  &lt; to&gt;Tove&lt; /to&gt;
+  &lt; from&gt;Jani&lt; /from&gt;
+  &lt; heading&gt;Reminder&lt; /heading&gt;
+  &lt; body&gt;Don't forget me this weekend!&lt; /body&gt;
+  &lt; comment&gt;Comments are welcome.&lt; /comment&gt;  
+&lt; /note&gt;
+           </code>
+        </example>
+    </examples>
+    <references>
+        <reference>removeNode</reference>
+        <reference>replaceNode</reference>
+        <reference>moveNode</reference>
+    </references>
+	    <tags>
+        insert, node, text, XML, string
+    </tags>
+</function>

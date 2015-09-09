@@ -276,6 +276,14 @@ public abstract class MetaExpression implements Expression, Processable {
 		return super.equals(obj);
 	}
 
+	@Override
+	public int hashCode() {
+		if(getType().equals(ExpressionDataType.ATOMIC)) {
+			return getStringValue().hashCode();
+		}
+		return getValue().hashCode();
+	}
+
 	/**
 	 * Check equality to other {@link MetaExpression}
 	 *

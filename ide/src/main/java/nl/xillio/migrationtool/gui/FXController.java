@@ -1,14 +1,15 @@
 package nl.xillio.migrationtool.gui;
 
+import static nl.xillio.sharedlibrary.settings.SimpleSetting.SIMPLE_SETTINGTYPE;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,7 +24,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
@@ -32,15 +32,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.util.Pair;
 import nl.xillio.migrationtool.Loader;
 import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
 import nl.xillio.plugins.XillPlugin;
-import nl.xillio.sharedlibrary.license.License;
-import nl.xillio.sharedlibrary.license.License.LicenseType;
-import nl.xillio.sharedlibrary.license.License.SoftwareModule;
+import nl.xillio.sharedlibrary.settings.Setting;
 import nl.xillio.sharedlibrary.settings.SettingsHandler;
+import nl.xillio.sharedlibrary.settings.SettingsHandler.Id;
+import nl.xillio.sharedlibrary.settings.SimpleSetting;
 import nl.xillio.xill.api.Xill;
 
 /**
@@ -50,7 +49,9 @@ public class FXController implements Initializable, EventHandler<Event> {
 	private static final Logger log = LogManager.getLogger(FXController.class);
 	private static final SettingsHandler settings = SettingsHandler.getSettingsHandler();
 
-	private static final File DEFAULT_OPEN_BOT = new File("scripts/Hello-Xillio." + Xill.FILE_EXTENSION);
+	private static final File DEFAULT_OPEN_BOT = new File("samples/Hello-Xillio." + Xill.FILE_EXTENSION);
+
+	private boolean cancelClose = false; // should be the closing of application interrupted?
 
 	// Shortcut is Ctrl on Windows and Meta on Mac.
 	@SuppressWarnings("javadoc")
@@ -89,6 +90,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 	public static final String HOTKEY_RESET_ZOOM = "Shortcut+0";
 	@SuppressWarnings("javadoc")
 	public static final String HOTKEY_FIND = "Shortcut+F";
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/*
 	 * ******************************************************* Buttons, fields,
@@ -173,8 +175,8 @@ public class FXController implements Initializable, EventHandler<Event> {
 		settings.registerSimpleSetting("Warning", "DialogError", "true", "Show warning dialogs for error messages.");
 		settings.registerSimpleSetting("Server", "ServerHost", "http://localhost:10000",
 			"Location XMTS is running on.");
-		settings.registerSimpleSetting("Server", "ServerUsername", "", "Optional username to access XMTS.");
-		settings.registerSimpleSetting("Server", "ServerPassword", "", "Optional password to access XMTS.");
+		settings.registerSimpleSetting("Server", "ServerUsername", "", "Optional username to access XMTS.", true);
+		settings.registerSimpleSetting("Server", "ServerPassword", "", "Optional password to access XMTS.", true);
 		settings.registerSimpleSetting("Info", "LastVersion", "0.0.0", "Last version that was run.");
 		settings.registerSimpleSetting("Layout", "LeftPanelWidth", "0.2", "Width of the left panel");
 		settings.registerSimpleSetting("Layout", "LeftPanelCollapsed", "false",
@@ -214,22 +216,29 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 		// Add window handler
 		Platform.runLater(() -> apnRoot.getScene().getWindow().setOnCloseRequest(event -> {
+			this.cancelClose = false;
 			System.out.println("Shutting down application");
-			closeApplication();
+			if (!closeApplication()) {
+				event.consume(); // this cancel the process of the application closing     
+			}
 		}));
 
 		apnRoot.addEventHandler(KeyEvent.KEY_PRESSED, this);
 
 		// Add listener for window shown
+		loadWorkSpace();
+
+	}
+
+	private void loadWorkSpace() {
 		Platform.runLater(() -> {
-			String workspace = settings.getSimpleSetting("Workspace");
+			String workspace = settings.getSimpleSetting(Id.WORKSPACE);
 			if (workspace == null) {
 				workspace = DEFAULT_OPEN_BOT.getAbsolutePath();
 			}
+
 			if (workspace != null && !"".equals(workspace)) {
 				String[] files = workspace.split(";");
-				ArrayUtils.reverse(files); // Reverse the list to ensure same
-				// tab order as original.
 				for (final String filename : files) {
 					openFile(new File(filename));
 				}
@@ -237,11 +246,20 @@ public class FXController implements Initializable, EventHandler<Event> {
 		});
 
 		Platform.runLater(() -> {
-            //TODO Enable License Check
-			//verifyLicense();
-			showReleaseNotes();
-		});
+			verifyLicense();
+			try {
+				showReleaseNotes();
+			} catch (IOException e) {
+				LOGGER.error("Failed to show release notes", e);
 
+				String activeTab = settings.getSimpleSetting(Id.ACTIVETAB);
+				if (activeTab != null && !"".equals(activeTab)) {
+					getTabs().stream()
+						.filter(tab -> tab.getDocument().getAbsolutePath().equals(activeTab))
+						.forEach(tab -> tpnBots.getSelectionModel().select(tab));
+				}
+			}
+		});
 	}
 
 	/**
@@ -330,7 +348,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 			RobotTab editor = (RobotTab) tab;
 			try {
 				if (editor.getDocument() != null
-								&& editor.getDocument().getCanonicalPath().equals(newfile.getCanonicalPath())) {
+					&& editor.getDocument().getCanonicalPath().equals(newfile.getCanonicalPath())) {
 					tpnBots.getSelectionModel().select(editor);
 					showTab(editor);
 					return editor;
@@ -440,13 +458,32 @@ public class FXController implements Initializable, EventHandler<Event> {
 		}
 	}
 
-	private void closeApplication() {
+
+	private boolean closeApplication() {
 		String openTabs = String.join(";",
 			getTabs().stream().map(tab -> tab.getDocument().getAbsolutePath()).collect(Collectors.toList()));
+
 		// Save all tabs
-		settings.saveSimpleSetting("Workspace", openTabs);
+		settings.saveSimpleSetting(Id.WORKSPACE, openTabs);
+
+		// Save active tab
+		final String activeTab[] = {null};
+		getTabs().stream().filter(tab -> tab.isSelected()).forEach(tab -> activeTab[0] = tab.getDocument().getAbsolutePath());
+		if (activeTab[0] != null) {
+			settings.saveSimpleSetting(Id.ACTIVETAB, activeTab[0]);
+		} else {
+			settings.saveSimpleSetting(Id.ACTIVETAB, "");
+		}
+
 		// Close all tabs
-		tpnBots.getTabs().forEach(tab -> closeTab(tab, false));
+		tpnBots.getTabs().forEach(tab -> {
+			if (!this.cancelClose) {
+				closeTab(tab, false);
+			}
+		});
+		if (this.cancelClose) {
+			return false; // cancel the application closing
+		}
 
 		// Purge plugins
 		for (XillPlugin plugin : Loader.getInitializer().getPlugins()) {
@@ -456,13 +493,17 @@ public class FXController implements Initializable, EventHandler<Event> {
 				e.printStackTrace();
 			}
 		}
+
+		// Finish app closing
 		ProjectPane.stop();
 		Platform.exit();
 		System.exit(0);
+		return false;
 	}
 
 	private void verifyLicense() {
-		License license = new License(settings.getSimpleSetting("license"));
+		//TODO Enable License Check
+		/*License license = new License(settings.getSimpleSetting("license"));
 		while (!license.isValid(SoftwareModule.IDE)) {
 			TextInputDialog enterLicence = new TextInputDialog();
 			enterLicence.setContentText("Copy the contents of the licensefile you received into the textfield.");
@@ -497,36 +538,34 @@ public class FXController implements Initializable, EventHandler<Event> {
 			validLicense.showAndWait();
 			Stage stage = (Stage) apnRoot.getScene().getWindow();
 			stage.setTitle(
-				"xillio content tools - " + Loader.LONGVERSION + " - Licensed to: " + license.getLicenseName());
+				"xillio content tools - " + Loader.LONG_VERSION + " - Licensed to: " + license.getLicenseName());
+		}*/
+	}
+
+	private void encryptSetting(String name) {
+		Setting<?> setting = settings.getSetting(SIMPLE_SETTINGTYPE, name);
+
+		if (setting.getValue("encrypted").equals(0)) {
+			setting.setValue("value", SimpleSetting.encrypt((String) setting.getValue("value")));
+			setting.setValue("encrypted", 1);
+			settings.saveSetting(setting, true, true);
 		}
 	}
 
 	/**
 	 * Display the release notes
 	 */
-	public void showReleaseNotes() {
+	public void showReleaseNotes() throws IOException {
 		String lastVersion = settings.getSimpleSetting("LastVersion");
 
-		if (lastVersion.compareTo(Loader.SHORTVERSION) < 0) {
-			String notes = "";
-			for (String[] element : Loader.HISTORY) {
-				String v = element[0];
-				if (lastVersion.compareTo(v) < 0) {
-					notes += element[0] + " - " + element[1] + ": " + element[2] + "\n";
-				} else {
-					break;
-				}
+		if (lastVersion.compareTo(Loader.SHORT_VERSION) < 0) {
+			String[] changeLog = FileUtils.readFileToString(new File("CHANGELOG.md")).split("\n\\#\\# ");
+			String notes = changeLog[1];
 
-				if (notes.length() > 1000) {
-					notes += "[...]";
-					break;
-				}
-			}
-
-			settings.saveSimpleSetting("LastVersion", Loader.SHORTVERSION);
+			settings.saveSimpleSetting("LastVersion", Loader.SHORT_VERSION);
 
 			Alert releaseNotes = new Alert(AlertType.INFORMATION);
-			releaseNotes.setHeaderText("Current version: " + Loader.SHORTVERSION);
+			releaseNotes.setHeaderText("Current version: " + Loader.SHORT_VERSION);
 			releaseNotes.setContentText(notes);
 			releaseNotes.setTitle("Release notes");
 			releaseNotes.show();
@@ -612,8 +651,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 	/**
 	 * Opens a tab if it can be found.
 	 *
-	 * @param tab
-	 *        a tab to open
+	 * @param tab a tab to open
 	 */
 	public void showTab(final RobotTab tab) {
 		int index = tpnBots.getTabs().indexOf(tab);
@@ -633,8 +671,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 	/**
 	 * Finds the tab according to filePath (~RobotID.path)
 	 *
-	 * @param filePath
-	 *        filepath to robot (.xill) file
+	 * @param filePath filepath to robot (.xill) file
 	 * @return RobotTab if found, otherwise null
 	 */
 	public Tab findTab(final File filePath) {
@@ -646,5 +683,12 @@ public class FXController implements Initializable, EventHandler<Event> {
 			}
 		});
 		return robotTabs[0];
+	}
+	
+	/**
+	 * @param cancelClose should be the closing of application interrupted?
+	 */
+	public void setCancelClose(boolean cancelClose) {
+		this.cancelClose = cancelClose;
 	}
 }

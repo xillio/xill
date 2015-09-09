@@ -93,6 +93,11 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 	private RobotControls controls;
 
 	private RobotTab tab;
+	
+	/**
+	 * Contains the editor's content (Xill source code) that was saved to disc (or whatever medium) last time.
+	 */
+	private String lastSavedCode = "";
 
 	/**
 	 * Default constructor. Just sets up the UI and the listener.
@@ -132,7 +137,6 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 	private void buttonUndo() {
 		if (!btnUndo.isDisabled()) {
 			editor.undo();
-			getDocumentState().setValue(DocumentState.CHANGED);
 		}
 	}
 
@@ -140,7 +144,6 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 	private void buttonRedo() {
 		if (!btnRedo.isDisabled()) {
 			editor.redo();
-			getDocumentState().setValue(DocumentState.CHANGED);
 		}
 	}
 
@@ -223,8 +226,30 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 			return;
 		}
 
-		if (!oldValue.equals(newValue)) {
-			getDocumentState().setValue(DocumentState.CHANGED);
+		this.updateDocumentState(newValue);
+	}
+	
+	/**
+	 * Checks if the @newCode means that document is changed or not.
+	 * It compares the @newCode with the last saved editor's content.
+	 *  
+	 * @param newCode the Xill source code
+	 */
+	private void updateDocumentState(final String newCode) {
+		if (newCode.equals(this.lastSavedCode)) {
+			this.getDocumentState().setValue(DocumentState.SAVED);
+		} else {
+			this.getDocumentState().setValue(DocumentState.CHANGED);
 		}
+	}
+	
+	/**
+	 * It saves the last saved editor's content - for the later usage when determining the state of the document
+	 *  
+	 * @param newCode the last saved editor's content
+	 */
+	public void setLastSavedCode(final String newCode) {
+		this.lastSavedCode = newCode;
+		this.getDocumentState().setValue(DocumentState.SAVED);
 	}
 }

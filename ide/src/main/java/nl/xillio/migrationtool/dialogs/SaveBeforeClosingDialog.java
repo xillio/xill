@@ -11,6 +11,7 @@ import nl.xillio.migrationtool.gui.RobotTab;
 public class SaveBeforeClosingDialog extends FXMLDialog {
 	private final RobotTab tab;
 	private final Event closeEvent;
+	private boolean cancelPressed = false;
 
 	/**
 	 * Default constructor.
@@ -45,6 +46,14 @@ public class SaveBeforeClosingDialog extends FXMLDialog {
 	@FXML
 	private void cancelBtnPressed(@SuppressWarnings("unused") final ActionEvent event) {
 		closeEvent.consume();
+		cancelPressed = true;
 		close();
+	}
+
+	/**
+	 * @return if the Cancel button has been pressed
+	 */
+	public boolean isCancelPressed() {
+		return cancelPressed;
 	}
 }

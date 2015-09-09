@@ -169,8 +169,8 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 		if (document.exists()) {
 			try {
 				String code = FileUtils.readFileToString(document);
+				editorPane.setLastSavedCode(code);
 				editorPane.getEditor().setCode(code);
-				editorPane.getDocumentState().setValue(DocumentState.SAVED);
 			} catch (IOException e) {
 				log.info("Could not open " + document.getAbsolutePath());
 			}
@@ -286,8 +286,9 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
 		// Actually save
 		try {
-			FileUtils.write(document, editorPane.getEditor().getCodeProperty().get());
-			editorPane.getDocumentState().setValue(DocumentState.SAVED);
+			String code = editorPane.getEditor().getCodeProperty().get();
+			FileUtils.write(document, code);
+			editorPane.setLastSavedCode(code);
 			log.info("Saved currentRobot to " + document.getAbsolutePath());
 
 		} catch (IOException e) {
@@ -345,7 +346,11 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	 */
 	private void onClose(final Event event) {
 		if (editorPane.getDocumentState().getValue() == DocumentState.CHANGED) {
-			new SaveBeforeClosingDialog(this, event).showAndWait();
+			SaveBeforeClosingDialog dlg = new SaveBeforeClosingDialog(this, event); 
+			dlg.showAndWait();
+			if (dlg.isCancelPressed()) {
+				globalController.setCancelClose(true);
+			}
 		}
 	}
 
