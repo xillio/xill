@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Adds the attribute to the XML-node and assigns it the value.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Assuming we have an XML file note.xml which contains the following:</header>
+            <code>
+&lt; note id="1"&gt;
+  &lt; to&gt;Tove&lt; /to&gt;
+  &lt; from&gt;Jani&lt; /from&gt;
+  &lt; heading&gt;Reminder&lt; /heading&gt;
+  &lt; comment&gt;This was sent to James as well&lt; /comment&gt;
+  &lt; comment&gt;John has not responded to the invitation&lt; /comment&gt;
+  &lt; body&gt;Don't forget me this weekend!&lt; /body&gt;
+&lt; /note&gt;
+            </code>
+            <header>After executing the following code:</header>
+            <code>
+var note = Xml.fromFile("C:/tmp/note.xml");
+var comments = Xml.xpath(note, "//comment");
+var value = 0;
+foreach (comment in comments) {
+    Xml.setAttribute(comment, "id", value); 
+    value++;
+}
+System.print(Xml.toString(note));
+            </code>
+            <header>
+Xml contains:
+            </header>
+
+            <code>
+&lt; note id="1"&gt;
+  &lt; to&gt;Tove&lt; /to&gt;
+  &lt; from&gt;Jani&lt; /from&gt;
+  &lt; heading&gt;Reminder&lt; /heading&gt;
+  &lt; comment id="0"&gt;This was sent to James as well&lt; /comment&gt;
+  &lt; comment id="1"&gt;John has not responded to the invitation&lt; /comment&gt;
+  &lt; body&gt;Don't forget me this weekend!&lt; /body&gt;
+&lt; /note&gt;
+           </code>
+        </example>
+    </examples>
+    <references>
+        <reference>removeAttribute</reference>
+    </references>
+	    <tags>
+        set, add, change, attribute, XML, string, node
+    </tags>
+</function>

@@ -9,10 +9,3 @@
   */
 description 'This plugin is to illustrate how to create plugins for the Xill 3.0 language using gradle'
 
-
-/*
- * Uncomment this to package the plugin with the ide by default
- */
-includeInBuild project
-
-

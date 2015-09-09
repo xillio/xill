@@ -43,10 +43,8 @@ import nl.xillio.xill.api.Xill;
 
 public class ProjectPane extends AnchorPane implements FolderListener, ChangeListener<TreeItem<Pair<File, String>>> {
 	private static final SettingsHandler settings = SettingsHandler.getSettingsHandler();
-	// FIXME
-	// Commented out temporarily for release purposes...
-	// private static final String DEFAULT_PROJECT_NAME = "Samples";
-	// private static final String DEFAULT_PROJECT_PATH = "./scripts";
+	private static final String DEFAULT_PROJECT_NAME = "Samples";
+	private static final String DEFAULT_PROJECT_PATH = "./samples";
 	private final BotFileFilter robotFileFilter = new BotFileFilter();
 
 	@FXML
@@ -171,11 +169,9 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 	private void loadProjects() {
 		Platform.runLater(() -> {
 			getProjects().forEach(this::addProject);
-			// FIXME
-			// Commented out for release purpose...
-			// if (settings.getSimpleSetting("license") == null) {
-			// newProject(DEFAULT_PROJECT_NAME, DEFAULT_PROJECT_PATH, "");
-			// }
+			if (settings.getSimpleSetting("license") == null && new File(DEFAULT_PROJECT_PATH).exists()) {
+				newProject(DEFAULT_PROJECT_NAME, DEFAULT_PROJECT_PATH, "");
+			}
 
 			root.getChildren().forEach(node -> node.setExpanded(false));
 			root.setExpanded(true);
