@@ -12,7 +12,6 @@
                 var list = ["a","b","c"];
                 System.print(List.containsValue(list, "b"));
                 System.print(List.containsValue(list, "e"));
-
                 var object ={1:"a",2:"b",3:"c"};
                 System.print(List.containsValue(object,"b"));
                 System.print(List.containsValue(object,"e"));

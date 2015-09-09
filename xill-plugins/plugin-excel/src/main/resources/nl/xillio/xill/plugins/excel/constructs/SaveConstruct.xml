@@ -8,7 +8,6 @@
             <header>Saving the current workbook to the same file</header>
             <code>
                 use Excel;
-
                 var workbook = Excel.loadWorkbook("workbook.xlsx");
                 var sheet = Excel.loadSheet(workbook, "firstsheet");
                 Excel.setCell(sheet, "A", 9, 42);
@@ -17,7 +16,6 @@
             <header>Saving the current workbook as a new file</header>
             <code>
                 use Excel;
-
                 var workbook = Excel.loadWorkbook("workbook.xlsx");
                 var sheet = Excel.loadSheet(workbook, "firstsheet");
                 Excel.setCell(sheet, "A", 9, 42);
@@ -28,7 +26,6 @@
             <header>Creating a new, not read-only copy of the workbook</header>
             <code>
                 use Excel;
-
                 var readonly = Excel.loadWorkbook("workbook.xlsx");
                 var writable = Excel.save(readonly, "newworkbook.xlsx");
             </code>

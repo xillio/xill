@@ -8,7 +8,6 @@
             <header>Getting the number of columns in a sheet</header>
             <code><![CDATA[
                 use Excel;
-
                 var workbook = Excel.loadWorkbook("workbook.xlsx");
                 var sheet = Excel.loadSheet(workbook, "firstsheet");
                 var numberOfColumns = Excel.columnCount(sheet);
@@ -19,11 +18,9 @@
             <code>
                 use Excel;
                 use System;
-
                 var workbook = Excel.loadWorkbook("workbook.xlsx");
                 var sheet = Excel.loadSheet(workbook, "firstsheet");
                 var numberOfColumns = Excel.columnCount(sheet);
-
                 var i = 1;
                 while(i &#60;&#61; numberOfColumns){
                 var cellContent = Excel.getCell(sheet,i,1);

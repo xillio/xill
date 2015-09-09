@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
   
-  <description><![CDATA[
+  <description>
 	Returns the string lowercased.
-  ]]></description>
+  </description>
   <examples>
     <example description="Executing:"><![CDATA[
     	String.toLower("HiGher");

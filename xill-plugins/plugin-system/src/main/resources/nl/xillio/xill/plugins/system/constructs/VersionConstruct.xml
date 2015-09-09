@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <function>
 	
-	<description><![CDATA[
- 	Returns the current version of the language. If a required version is provided it will throw an error when an older version is used.]]></description>
+	<description>
+ 	Returns the current version of the language. If a required version is provided it will throw an error when an older version is used.</description>
 	<examples>
 		<example description="Running:"><![CDATA[
 	    use System;

@@ -10,7 +10,6 @@
             <code>
                 var list1 = [1,2,3,4,5];
                 var list2 = [1,[1,2,3],2,3];
-
                 System.print(List.reverse(list1));
                 System.print(List.reverse(list2,false));
                 System.print(List.reverse(list2,true));

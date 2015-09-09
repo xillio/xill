@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
   
-  <description><![CDATA[
+  <description>
 	Returns an integer higher or equal to startPos of the index of string2 in string1.
 	startPos defaults to 0.
 	Returns -1 if the index could not be found.
-  ]]></description>
+  </description>
   <examples>
     <example description="Executing:"><![CDATA[
     	String.indexOf("maxTestTest", "Test");

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
   
-  <description><![CDATA[
+  <description>
 	Returns a string containing the MD5 hash over the passed variable value. 
 	This is commonly used to check if files have changed, since any slight change will cause the MD5 hash to be completely different.
-  ]]></description>
+  </description>
   <examples>
     <example description="Executing:"><![CDATA[
     	String.createMD5("string");

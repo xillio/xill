@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
   
-  <description><![CDATA[
+  <description>
 	  Converts the relative URL string relativeUrl to an absolute URL using the string pageUrl as base URL. Returns the resulting URL as a string.
-  ]]></description>
+  </description>
   <examples>
     <example description="Executing:"><![CDATA[
     	String.absoluteURL("http://www.xillio.nl/calendar/", "movies");

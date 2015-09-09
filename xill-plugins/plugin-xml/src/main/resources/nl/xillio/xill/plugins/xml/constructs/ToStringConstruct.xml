@@ -20,7 +20,6 @@
             <code>
 use System;
 use Xml;
-
 var note = Xml.fromFile("C:/tmp/note.xml");
 var from = Xml.xpath(note, "//note/from");
 System.print(Xml.toString(from));
@@ -28,7 +27,6 @@ System.print(Xml.toString(from));
             <header>
 will print:
             </header>
-
             <code>
 &lt; ?xml version="1.0" encoding="UTF-8"?&gt;&lt; from&gt;Jani&lt; /from&gt;
            </code>

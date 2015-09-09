@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
   
-  <description><![CDATA[
+  <description>
 	Returns the trimmed version of the string. 
 	If the optional boolean parameter internal is set to true, the routine will also replace slack white space inside the string with a single space.
-  ]]></description>
+  </description>
   <examples>
     <example description="Executing:"><![CDATA[
     	String.trim("   Xillio Xillio    Xillio Xillio Xillio    ");

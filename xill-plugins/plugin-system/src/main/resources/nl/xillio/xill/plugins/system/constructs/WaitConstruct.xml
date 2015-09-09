@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <function>
 	
-	<description><![CDATA[
-	Pause the robot for a period of time in milliseconds.]]></description>
+	<description>
+	Pause the robot for a period of time in milliseconds.</description>
 	<examples>
 		<example description="Waiting for one second:"><![CDATA[
 		use System;

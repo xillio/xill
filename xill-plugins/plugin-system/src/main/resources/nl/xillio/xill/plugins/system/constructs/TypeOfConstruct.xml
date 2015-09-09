@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <function>
 	
-	<description><![CDATA[
- 	Check the value of a type. It will evaluate to either ATOMIC, LIST or OBJECT]]></description>
+	<description>
+ 	Check the value of a type. It will evaluate to either ATOMIC, LIST or OBJECT</description>
 	<examples>
 		<example description="Running:"><![CDATA[
 	    use System;

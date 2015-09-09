@@ -8,7 +8,6 @@
             <header>Changing a cell value</header>
             <code>
                 use Excel;
-
                 var workbook = Excel.loadWorkbook("workbook.xlsx");
                 var sheet = Excel.loadSheet(workbook, "firstsheet");
                 Excel.setCell(sheet, "A", 9, 32);

@@ -9,7 +9,6 @@
             <code>
                 var list = ["a","b","c","d","e"]; //list with five elements
                 System.print(List.length(list));
-
                 var object = {1:"a",2:"b",3:"c"}; //object with three elements
                 System.print(List.length(object));
             </code>

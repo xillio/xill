@@ -9,14 +9,12 @@
             <header>Removing a single sheet</header>
             <code>
                 use Excel;
-
                 var workbook = Excel.loadWorkbook("workbook.xlsx");
                 Excel.removeSheet(workbook, "firstsheet");
             </code>
             <header>Removing multiple sheets</header>
             <code>
                 use Excel;
-
                 var workbook = Excel.loadWorkbook("workbook.xlsx");
                 Excel.removeSheet(workbook, ["firstsheet", "secondsheet"]);
             </code>

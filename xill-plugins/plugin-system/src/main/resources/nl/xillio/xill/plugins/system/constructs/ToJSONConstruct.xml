@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <function>
 	
-	<description><![CDATA[
+	<description>
  	Converts an expression to a JSON string. Note that circular references cannot be parsed and will be substituted.
- 	To pretty print the JSON string set pretty to true]]></description>
+ 	To pretty print the JSON string set pretty to true</description>
 	<examples>
 		<example description="Running:"><![CDATA[
 	    use System;

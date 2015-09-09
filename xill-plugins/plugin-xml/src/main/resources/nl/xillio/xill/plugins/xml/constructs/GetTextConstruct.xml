@@ -20,7 +20,6 @@
             <code>
 use System;
 use Xml;
-
 var note = Xml.fromFile("C:/tmp/note.xml");
 var from = Xml.xpath(note, "//note/from");
 System.print(Xml.getText(from));
@@ -28,7 +27,6 @@ System.print(Xml.getText(from));
             <header>
 will print:
             </header>
-
             <code>
 Jani
            </code>

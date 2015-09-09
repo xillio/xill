@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <function>
 	
-	<description><![CDATA[
+	<description>
  	Prints a message to the console.
- 	When printing an object or list it will print the JSON representation. If you print an atomic value it will print the string value.]]></description>
+ 	When printing an object or list it will print the JSON representation. If you print an atomic value it will print the string value.</description>
 	<examples>
 		<example description="Running:"><![CDATA[
     use System;

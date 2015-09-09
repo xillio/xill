@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
   
-  <description><![CDATA[
+  <description>
 	Returns a boolean whether the string1 ends with string2.
-  ]]></description>
+  </description>
   <examples>
     <example description="Executing:"><![CDATA[
     	String.endsWith("testing", "ing");	

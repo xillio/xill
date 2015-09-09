@@ -11,7 +11,6 @@
                 var list = ["a","b","c","d"];
                 List.remove(list,2);
                 System.print(list);
-
                 var object = {"a":"first","b":"second","c":"third"};
                 List.remove(object,"b");
                 System.print(object);

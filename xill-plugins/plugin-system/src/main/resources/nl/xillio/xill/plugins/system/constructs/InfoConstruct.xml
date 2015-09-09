@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <function>
 	
-	<description><![CDATA[
+	<description>
   Get a list with various pieces of information about your system.
-  This list contains information about the file system, the running robot and the current runtime.]]></description>
+  This list contains information about the file system, the running robot and the current runtime.</description>
 	<examples>
 		<example description="Running:"><![CDATA[
     use System;

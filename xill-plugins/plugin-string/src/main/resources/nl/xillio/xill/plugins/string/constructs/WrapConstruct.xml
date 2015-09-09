@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
   
-  <description><![CDATA[
+  <description>
   		Wraps a single line of text, identifying words by ' '.
   		If wrapLongWords is true then words are split aswell.
 		Leading spaces on a new line are stripped. Trailing spaces are not stripped.
-  ]]></description>
+  </description>
   <examples>
     <example description="Executing:"><![CDATA[
     	String.wrap("     \n      Time is an illusion. Lunchtime doubly so.                           \n    ", 10, false);

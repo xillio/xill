@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <function>
 	
-	<description><![CDATA[
- 	Parse a json string to an expression.]]></description>
+	<description>
+ 	Parse a json string to an expression.</description>
 	<examples>
 		<example description="Running:"><![CDATA[
     use System;
