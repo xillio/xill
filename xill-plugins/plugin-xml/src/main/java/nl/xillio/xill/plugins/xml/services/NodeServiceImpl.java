@@ -108,10 +108,10 @@ public class NodeServiceImpl implements NodeService {
 
 	@Override
 	public XmlNode fromFile(final File xmlSource) {
-		String content = "";
+		String content;
 
 		try {
-			content = FileUtils.readFileToString(xmlSource);
+			content = FileUtils.readFileToString(xmlSource).replaceAll("[^\\x20-\\x7e]", "");
 		} catch (IOException e) {
 			throw new RobotRuntimeException("Read file error.", e);
 		}

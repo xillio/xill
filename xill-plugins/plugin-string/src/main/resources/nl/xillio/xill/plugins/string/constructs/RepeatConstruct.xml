@@ -1,26 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<function Tag="repeat">
-  <name>repeat</name>
-  <parameters>
-    <param name="string">
-    </param>
-    <param name="count">
-    </param>
-  </parameters>
-  <description><![CDATA[
-	Recieves a string and repeats it count times concatenated.
-  ]]></description>
-  <examples>
-    <example description="Executing:"><![CDATA[
-    	String.repeat("thisIsAString", 3);
-    ]]></example>
-    <example description="Will return:"><![CDATA[
-		"thisIsAStringthisIsAStringthisIsAString"
-    	]]>
-    </example>
-  </examples>
-  <references>
-  </references>
-  <searchTags>
-  </searchTags>
+<function>
+    <description>
+        Receives a string and repeats it count times concatenated.
+    </description>
+    <examples>
+        <example title="Usage">
+            <code>
+                String.repeat("thisIsAString", 3);
+                // Result: thisIsAStringthisIsAStringthisIsAString
+            </code>
+        </example>
+    </examples>
 </function>

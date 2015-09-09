@@ -8,14 +8,12 @@
             <header>Getting all names</header>
             <code>
                 use Excel;
-
                 var workbook = Excel.loadWorkbook("workbook.xlsx");
                 var names = Excel.getSheetNames(workbook);
             </code>
             <header>Getting the name of the first sheet</header>
             <code>
                 use Excel;
-
                 var workbook = Excel.loadWorkbook("workbook.xlsx");
                 var names = Excel.getSheetNames(workbook);
                 var first = names[0];
@@ -26,7 +24,6 @@
             <code>
                 use Excel;
                 use List;
-
                 var workbook = Excel.loadWorkbook("workbook.xlsx");
                 var names = Excel.getSheetNames(workbook);
                 var numberOfSheets = List.length(names);
@@ -36,7 +33,6 @@
             <code>
                 use Excel;
                 use List;
-
                 var workbook = Excel.loadWorkbook("workbook.xlsx");
                 var names = Excel.getSheetNames(workbook);
                 var nameToCheck = "RobotSheet";

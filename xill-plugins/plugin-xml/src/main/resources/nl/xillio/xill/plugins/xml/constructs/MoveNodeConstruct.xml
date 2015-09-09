@@ -28,12 +28,10 @@ System.print(Xml.toString(note));
             <header>
 Xml contains:
             </header>
-
             <code>
 &lt; note id="1"&gt;
   &lt; to&gt;Tove&lt; /to&gt;
   &lt; from&gt;Jani&lt; /from&gt;
-
   &lt; comment&gt;This was sent to James as well&lt; /comment&gt;
   &lt; comment&gt;John has not responded to the invitation&lt; /comment&gt;
   &lt; body&gt;Don't forget me this weekend!&gt;&lt; heading&gt;Reminder&lt; /heading&gt;&lt; /body&gt;

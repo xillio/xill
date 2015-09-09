@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
-    <parameters>
-        <param name="uri"/>
-    </parameters>
     <description>Returns the size of a file or folder in bytes</description>
     <examples>
         <example title="Usage">

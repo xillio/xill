@@ -1,31 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<function Tag="length">
-  <name>length</name>
-  <parameters>
-    <param name="list"/>
-  </parameters>
-  <description><![CDATA[
-		 Returns the length of the given list or object.
-  ]]></description>
-  <examples>
-    <example description="Executing:"><![CDATA[
-    var list = ["a","b","c","d","e"]; //list with five elements
-    System.print(List.length(list));
-    
-    var object = {1:"a",2:"b",3:"c"}; //object with three elements
-    System.print(List.length(object));
-    ]]></example>
-    <example description="Will return:"><![CDATA[
-		5
-		3
-    	]]>
-    </example>
-  </examples>
-  <references>
-  </references>
-  <searchTags>
-  	<searchTag>
-  		length
-  	</searchTag>
-  </searchTags>
+<function>
+    <description>
+        Returns the length of the given list or object.
+    </description>
+    <examples>
+        <example title="Usage">
+            <code>
+                var list = ["a","b","c","d","e"]; //list with five elements
+                List.length(list); // 5
+                var object = {1:"a",2:"b",3:"c"}; //object with three elements
+                List.length(object); // 3
+            </code>
+        </example>
+    </examples>
 </function>

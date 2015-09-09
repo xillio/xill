@@ -8,7 +8,6 @@
             <header>Creating a new sheet</header>
             <code>
                 use Excel;
-
                 var workbook = Excel.createWorkbook("helloworldbook");
                 var sheet = Excel.createSheet(workbook, "hellosheet");
             </code>
@@ -18,7 +17,6 @@
             <code>
                 use System;
                 use Excel;
-
                 var workbook = Excel.createWorkbook("helloworldbook");
                 var sheet = Excel.createSheet(workbook, "hellosheet");
                 System.print(sheet);

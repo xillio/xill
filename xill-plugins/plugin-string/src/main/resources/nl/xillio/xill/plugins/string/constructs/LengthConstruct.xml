@@ -1,27 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<function Tag="length">
-  <name>length</name>
-  <parameters>
-    <param name="string">
-    </param>
-  </parameters>
-  <description><![CDATA[
-	Returns the length of a string. 
-  ]]></description>
-  <examples>
-    <example description="Executing:"><![CDATA[
-    	String.length("four");
-    ]]></example>
-    <example description="Will return:"><![CDATA[
-		4
-    	]]>
-    </example>
-  </examples>
-  <references>
-  </references>
-  <searchTags>
-  	<searchTag>
-  		size
-  	</searchTag>
-  </searchTags>
+<function>
+    <description>
+        Returns the length of a string.
+    </description>
+    <examples>
+        <example title="Usage">
+            String.length("four"); // Result: 4
+        </example>
+    </examples>
+    <searchTags>
+        size
+    </searchTags>
 </function>

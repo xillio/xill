@@ -15,11 +15,8 @@ var content = "&lt; note id="1"&gt;
   &lt; comment&gt;John has not responded to the invitation&lt; /comment&gt;
   &lt; body&gt;Don't forget me this weekend!&lt; /body&gt;
 &lt; /note&gt;";
-
 var xml = Xml.fromString(content);
-
 var comments = Xml.xpath (xml, "//comment");
-
 System.print(comments);
             </code>
             <header>Will execute just fine and will print:</header>

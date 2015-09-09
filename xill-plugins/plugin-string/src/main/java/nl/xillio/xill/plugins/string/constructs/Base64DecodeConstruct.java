@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.string.constructs;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -32,25 +33,25 @@ public class Base64DecodeConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(content, filename) -> process(content, filename, stringService, urlUtilityService),
+			(content, filename) -> process(content, filename, stringService, urlUtilityService, context),
 			new Argument("content", ATOMIC),
 			new Argument("filename", ATOMIC));
 	}
 
-	static MetaExpression process(final MetaExpression contentVar, final MetaExpression filenameVar, final StringUtilityService stringService, final UrlUtilityService urlUtilityService) {
+	static MetaExpression process(final MetaExpression contentVar, final MetaExpression filenameVar, final StringUtilityService stringService, final UrlUtilityService urlUtilityService, final ConstructContext context) {
 
 		assertNotNull(contentVar, "content");
 		assertNotNull(filenameVar, "filename");
 
 		String content = contentVar.getStringValue();
-		String filename = filenameVar.getStringValue();
+		File file = getFile(context, filenameVar.getStringValue());
 
 		byte[] data = stringService.parseBase64Binary(content);
 
 		try {
-			urlUtilityService.write(filename, data);
+			urlUtilityService.write(file, data);
 		} catch (FileNotFoundException e) {
-			throw new RobotRuntimeException("The file could not be found or the filename is invalid: '" + filename + "'");
+			throw new RobotRuntimeException("The file could not be found or the filename is invalid");
 		} catch (IOException e) {
 			throw new RobotRuntimeException("IO Exception");
 		}

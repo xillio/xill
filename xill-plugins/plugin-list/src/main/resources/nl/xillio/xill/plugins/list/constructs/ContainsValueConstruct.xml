@@ -1,37 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<function Tag="containsValue">
-  <name>containsValue</name>
-  <parameters>
-    <param name="list"/>
-    <param name="value"/>
-  </parameters>
-  <description><![CDATA[
-	Returns true if the value is contained in the given list or object. Otherwise false.
-  ]]></description>
-  <examples>
-    <example description="Executing:"><![CDATA[
-    	var list = ["a","b","c"];
-    	System.print(List.containsValue(list, "b"));
-    	System.print(List.containsValue(list, "e"));
-    	
-    	var object ={1:"a",2:"b",3:"c"};
-    	System.print(List.containsValue(object,"b"));
-    	System.print(List.containsValue(object,"e"));
-    	
-    ]]></example>
-    <example description="Will return:"><![CDATA[
-		true
-		false
-		true
-		false
-    	]]>
-    </example>
-  </examples>
-  <references>
-  </references>
-  <searchTags>
-  	<searchTag>
-  		contains
-  	</searchTag>
-  </searchTags>
+<function>
+    <description>
+        Returns true if the value is contained in the given list or object. Otherwise false.
+    </description>
+    <examples>
+        <example title="Usage:">
+            <code>
+                use List;
+                use System
+                var list = ["a","b","c"];
+                List.containsValue(list, "b"); // TRUE
+                List.containsValue(list, "e"); // FALSE
+                var object ={1:"a",2:"b",3:"c"};
+                List.containsValue(object,"b"); // TRUE
+                List.containsValue(object,"e"); // FALSE
+            </code>
+        </example>
+    </examples>
+    <searchTags>
+        contains, value, filter
+    </searchTags>
 </function>

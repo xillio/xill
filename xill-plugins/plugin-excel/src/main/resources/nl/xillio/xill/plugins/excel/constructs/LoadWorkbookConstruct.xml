@@ -8,20 +8,17 @@
             <header>Loading a workbook from the current workspace</header>
             <code>
                 use Excel;
-
                 var workbook = Excel.loadWorkbook("workbook.xlsx");
             </code>
             <header>Loading a workbook from the disk using a full path</header>
             <code>
                 use Excel;
-
                 var workbook = Excel.loadWorkbook("C:\\Users\\Xillio\\workbook.xlsx");
             </code>
             <header>Loading a workbook from the disk with confirmation</header>
             <code>
                 use Excel;
                 use System;
-
                 var workbook = Excel.loadWorkbook("workbook.xlsx");
                 System.print(workbook);
             </code>
