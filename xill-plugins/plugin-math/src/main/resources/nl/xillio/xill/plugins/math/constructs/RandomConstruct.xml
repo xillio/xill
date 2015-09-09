@@ -9,7 +9,7 @@
     <examples>
         <example title="Roll a 6-sided die:">
             <code>
-                System.print(Math.random(6)+1);
+                Math.random(6)+1;
             </code>
             <p>
                 Note: the + 1 is needed, because the result of random is 0 to 6, but not including 6.
@@ -18,12 +18,12 @@
         <example title="Determine a random work day:">
             <code>
                 var list = {"monday", "tuesday", "wednesday", "thursday", "friday"};
-                System.print(Math.random((list));
+                Math.random(list);
             </code>
         </example>
         <example description="Random number between 0 and 1:">
             <code>
-                log (random());
+                random();
             </code>
             <p>
                 Note: This excludes 1 but includes 0

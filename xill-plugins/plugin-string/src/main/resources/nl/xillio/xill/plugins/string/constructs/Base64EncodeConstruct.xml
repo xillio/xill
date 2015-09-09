@@ -7,11 +7,12 @@
     </description>
     <examples>
         <example title="Usage">
-            <header>Create a file at C:/tmp/test.txt</header>
+            <p>Assuming we have a file 'note.xml' containing 'Hello World'</p>
             <code>
-                String.base64Decode("SGVsbG8gV29ybGQ=", "C:/tmp/test.txt");
+                String.base64Encode("C:/tmp/note.xml");
+
+                // Result: SGVsbG8gV29ybGQ=
             </code>
-            <p>Will create a file containing the string 'Hello World'</p>
         </example>
     </examples>
     <references>

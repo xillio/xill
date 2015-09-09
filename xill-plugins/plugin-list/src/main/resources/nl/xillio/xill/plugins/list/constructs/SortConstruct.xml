@@ -11,23 +11,31 @@
             <header>Running</header>
             <code>
                 var list1 = [1,"a","c",2,3,"b",[1,3,2],[3,2],4,"d",{"a":2,"b":1}];
-                System.print(List.sort(list1,false,false,false)); //sort normal
-                System.print(List.sort(list1,true,false,false)); //sort recursive
+                List.sort(list1,false,false,false); //sort normal
+                
+                // Result: [[3,2],[1,3,2],{"a":2,"b":1},1,2,3,4,"a","b","c","d"]
+                
+                List.sort(list1,true,false,false); //sort recursive
+                
+                // Result: [[2,3],[1,2,3],{"b":1,"a":2},1,2,3,4,"a","b","c","d"]
+                
                 var list2 = [3,"b","c",1,2,"a"];
-                System.print(List.sort(list2,false,false,false)); //sort normal
-                System.print(List.sort(list2,false,false,true)); //sort reverse
+                List.sort(list2,false,false,false); //sort normal
+                
+                // Result: [1,2,3,"a","b","c"]
+                
+                List.sort(list2,false,false,true); //sort reverse
+                
+                // Result: [3,2,1,"c","b","a"]
+                
                 var obj1 = {"b":2,"c":1,"a":3};
-                System.print(List.sort(obj1,false,false,false)); //sorted by value
-                System.print(List.sort(obj1,false,true,false)); //sorted by key
-            </code>
-            <header>Will print</header>
-            <code>
-                [[3,2],[1,3,2],{"a":2,"b":1},1,2,3,4,"a","b","c","d"]
-                [[2,3],[1,2,3],{"b":1,"a":2},1,2,3,4,"a","b","c","d"]
-                [1,2,3,"a","b","c"]
-                [3,2,1,"c","b","a"]
-                {"c":1,"b":2,"a":3}
-                {"a":3,"b":2,"c":1}
+                List.sort(obj1,false,false,false); //sorted by value
+                
+                // Result: {"c":1,"b":2,"a":3}
+                
+                List.sort(obj1,false,true,false); //sorted by key
+                
+                // Result: {"a":3,"b":2,"c":1}
             </code>
         </example>
     </examples>

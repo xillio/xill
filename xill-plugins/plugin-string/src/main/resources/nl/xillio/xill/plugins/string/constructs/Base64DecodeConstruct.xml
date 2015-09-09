@@ -6,12 +6,11 @@
     </description>
     <examples>
         <example title="Usage">
-            <p>Assuming we have a file 'node.xml' containing 'Hello World'</p>
+            <header>Create a file at C:/tmp/test.txt</header>
             <code>
-                String.base64Encode("C:/tmp/note.xml");
-
-                // Result: SGVsbG8gV29ybGQ=
+                String.base64Decode("SGVsbG8gV29ybGQ=", "C:/tmp/test.txt");
             </code>
+            <p>Will create a file containing the string 'Hello World'</p>
         </example>
     </examples>
     <references>

@@ -6,19 +6,17 @@
     </description>
     <examples>
         <example title="Usage">
-            <header>Running</header>
             <code>
                 var list = ["a","b","c","d"];
                 List.remove(list,2);
-                System.print(list);
+                
+                // Result: ["a","b","d"] 
+                
                 var object = {"a":"first","b":"second","c":"third"};
                 List.remove(object,"b");
-                System.print(object);
-            </code>
-            <header>Will Print</header>
-            <code>
-                ["a","b","d"]
-                {"a":"first,"c":"third"}
+                
+                // Result: {"a":"first,"c":"third"}
+                
             </code>
         </example>
     </examples>

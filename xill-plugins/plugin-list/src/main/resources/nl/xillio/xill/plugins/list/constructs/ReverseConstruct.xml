@@ -6,19 +6,20 @@
     </description>
     <examples>
         <example title="Usage">
-            <header>Running</header>
             <code>
                 var list1 = [1,2,3,4,5];
                 var list2 = [1,[1,2,3],2,3];
-                System.print(List.reverse(list1));
-                System.print(List.reverse(list2,false));
-                System.print(List.reverse(list2,true));
-            </code>
-            <header>Will print</header>
-            <code>
-                [5,4,3,2,1]
-                [3,2,[1,2,3],1]
-                [3,2,[3,2,1],1]
+                List.reverse(list1);
+                
+                // Result: [5,4,3,2,1] 
+                 
+                List.reverse(list2,false);
+                
+                // Result: [3,2,[1,2,3],1]
+                
+                List.reverse(list2,true);
+                
+                // Result: [3,2,[3,2,1],1]
             </code>
         </example>
     </examples>

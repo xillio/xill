@@ -5,17 +5,10 @@
     </description>
     <examples>
         <example title="Usage">
-            <header>Running</header>
             <code>
-                System.print(Math.round(6))
-                System.print(Math.round(3.14))
-                System.print(Math.round(-3.78))
-            </code>
-            <header>Will print</header>
-            <code>
-                6
-                3
-                -4
+                Math.round(6) // 6
+                Math.round(3.14) // 3
+                Math.round(-3.78) // -4
             </code>
         </example>
     </examples>

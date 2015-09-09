@@ -5,17 +5,11 @@
     </description>
     <examples>
         <example title="Usage">
-            <header>Running</header>
             <code>
                 var list = ["a","b","c","d","e"]; //list with five elements
-                System.print(List.length(list));
+                List.length(list); // 5
                 var object = {1:"a",2:"b",3:"c"}; //object with three elements
-                System.print(List.length(object));
-            </code>
-            <header>Will Print</header>
-            <code>
-                5
-                3
+                List.length(object); // 3
             </code>
         </example>
     </examples>
