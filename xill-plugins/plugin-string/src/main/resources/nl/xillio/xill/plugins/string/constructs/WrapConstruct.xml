@@ -1,36 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
-  <description>
-  		Wraps a single line of text, identifying words by ' '.
-  		If wrapLongWords is true then words are split aswell.
-		Leading spaces on a new line are stripped. Trailing spaces are not stripped.
-  </description>
-  <examples>
-    <example description="Executing:"><![CDATA[
-    	String.wrap("     \n      Time is an illusion. Lunchtime doubly so.                           \n    ", 10, false);
-    ]]></example>
-    <example description="Will return:"><![CDATA[
-    	"\n  \nTime is an\nillusion.\nLunchtime\ndoubly\nso.\n\n"
-    	]]>
-    </example>
-    <example description="Executing:"><![CDATA[
-    	String.wrap("		Time is an illusion. Lunchtime doubly so.", 10, false);
-    ]]></example>
-    <example description="Will return:"><![CDATA[
-    	"Time is an\nillusion.\nLunchtime\ndoubly\nso."
-    	]]>
-    </example>
-    <example description="Executing:"><![CDATA[
-    	String.wrap("Time is an illusion. Lunchtime doubly so.", 5, true);
-    ]]></example>
-    <example description="Will return:"><![CDATA[
-    	"Time\nis an\n illus\nsion.\nLunch\ntime\ndoubl\ny\nso."
-    	]]>
-    </example>
-  </examples>
-  <references>
-  </references>
-  <searchTags>
-  		format
-  </searchTags>
+    <description>
+        Wraps a single line of text, identifying words by ' '.
+        If wrapLongWords is true then words are split aswell.
+        Leading spaces on a new line are stripped. Trailing spaces are not stripped.
+    </description>
+    <examples>
+        <example description="Usage">
+            <code>
+                var test = "     \n      Time is an illusion. Lunchtime doubly so.                           \n    ";
+                String.wrap(test, 10, false);
+                /*
+                    Outputs:
+
+                        Time is an
+                        illusion.
+                        Lunchtime
+                        doubly
+                        so.
+
+
+                */
+            </code>
+        </example>
+    </examples>
+    <searchTags>
+        format
+    </searchTags>
 </function>

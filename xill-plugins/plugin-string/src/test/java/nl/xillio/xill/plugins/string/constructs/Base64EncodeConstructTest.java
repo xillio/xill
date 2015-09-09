@@ -1,25 +1,21 @@
 package nl.xillio.xill.plugins.string.constructs;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
+import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 import nl.xillio.xill.plugins.string.services.string.UrlUtilityService;
-
 import org.testng.annotations.Test;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import static org.mockito.Mockito.*;
 
 /**
  * Test the {@link Base64EncodeConstruct}.
  */
-public class Base64EncodeConstructTest {
+public class Base64EncodeConstructTest extends TestUtils {
 
 	/**
 	 * Test the process method under normal circumstances.
@@ -40,14 +36,14 @@ public class Base64EncodeConstructTest {
 		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(stringService.printBase64Binary(bytes)).thenReturn(resultValue);
 		UrlUtilityService urlUtilityService = mock(UrlUtilityService.class);
-		when(urlUtilityService.readFileToByteArray(fileNameValue)).thenReturn(bytes);
+		when(urlUtilityService.readFileToByteArray(null)).thenReturn(bytes);
 
 		// Run
-		Base64EncodeConstruct.process(fileName, stringService, urlUtilityService);
+		Base64EncodeConstruct.process(fileName, stringService, urlUtilityService, null);
 
 		// Verify
 		verify(stringService, times(1)).printBase64Binary(bytes);
-		verify(urlUtilityService, times(1)).readFileToByteArray(fileNameValue);
+		verify(urlUtilityService, times(1)).readFileToByteArray(null);
 
 		// Assert
 		// We return NULL, nothing to assert.
@@ -70,14 +66,10 @@ public class Base64EncodeConstructTest {
 		Exception exception = new IOException();
 		StringUtilityService stringService = mock(StringUtilityService.class);
 		UrlUtilityService urlUtilityService = mock(UrlUtilityService.class);
-		when(urlUtilityService.readFileToByteArray(fileNameValue)).thenThrow(exception);
+		when(urlUtilityService.readFileToByteArray(null)).thenThrow(exception);
 
 		// Run
-		Base64EncodeConstruct.process(fileName, stringService, urlUtilityService);
-
-		// Verify
-		verify(stringService, times(0)).printBase64Binary(any());
-		verify(urlUtilityService, times(1)).readFileToByteArray(fileNameValue);
+		Base64EncodeConstruct.process(fileName, stringService, urlUtilityService, null);
 	}
 
 	/**
@@ -86,8 +78,7 @@ public class Base64EncodeConstructTest {
 	 * @throws IOException
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class)
-	public void processFailureToConvert() throws IOException
-	{
+	public void processFailureToConvert() throws IOException {
 		// Mock
 		String fileNameValue = "C:/tmp/test.txt";
 		MetaExpression fileName = mock(MetaExpression.class);
@@ -99,14 +90,14 @@ public class Base64EncodeConstructTest {
 		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(stringService.printBase64Binary(bytes)).thenReturn(resultValue);
 		UrlUtilityService urlUtilityService = mock(UrlUtilityService.class);
-		when(urlUtilityService.readFileToByteArray(fileNameValue)).thenReturn(bytes);
+		when(urlUtilityService.readFileToByteArray(null)).thenReturn(bytes);
 
 		// Run
-		Base64EncodeConstruct.process(fileName, stringService, urlUtilityService);
+		Base64EncodeConstruct.process(fileName, stringService, urlUtilityService, null);
 
 		// Verify
 		verify(stringService, times(0)).printBase64Binary(bytes);
-		verify(urlUtilityService, times(0)).readFileToByteArray(fileNameValue);
+		verify(urlUtilityService, times(0)).readFileToByteArray(null);
 	}
 
 }

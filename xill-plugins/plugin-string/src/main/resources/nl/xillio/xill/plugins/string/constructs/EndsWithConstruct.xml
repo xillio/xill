@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
-  <description>
-	Returns a boolean whether the string1 ends with string2.
-  </description>
-  <examples>
-    <example description="Executing:"><![CDATA[
-    	String.endsWith("testing", "ing");	
-    	String.endsWith("testing", "test");
-    ]]></example>
-    <example description="Will return:"><![CDATA[
-		true
-		false
-    	]]>
-    </example>
-  </examples>
-  <references>
-  <reference package="String">startsWith</reference></references>
-  <searchTags>
-  </searchTags>
+    <description>
+        Returns a boolean whether the string1 ends with string2.
+    </description>
+    <examples>
+        <example title="Usage">
+            <code>
+                String.endsWith("testing", "ing"); // TRUE
+                String.endsWith("testing", "test"); // FALSE
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>startsWith</reference>
+    </references>
 </function>

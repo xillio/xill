@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.string.services.string;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.regex.PatternSyntaxException;
@@ -33,7 +34,7 @@ public interface UrlUtilityService {
 	 *         A bytearray with content.
 	 * @throws IOException
 	 */
-	byte[] readFileToByteArray(String fileName) throws IOException;
+	byte[] readFileToByteArray(File fileName) throws IOException;
 
 	/**
 	 * Tries to convert the relativeUrl using the pageUrl
@@ -59,6 +60,6 @@ public interface UrlUtilityService {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	void write(String fileName, byte[] output) throws IOException;
+	void write(File fileName, byte[] output) throws IOException;
 
 }

@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.string.constructs;
 
+import java.io.File;
 import java.io.IOException;
 
 import nl.xillio.xill.api.components.MetaExpression;
@@ -31,17 +32,17 @@ public class Base64EncodeConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(file) -> process(file, stringService, urlUtilityService),
+			(file) -> process(file, stringService, urlUtilityService, context),
 			new Argument("file", ATOMIC));
 	}
 
-	static MetaExpression process(final MetaExpression file, final StringUtilityService stringService, final UrlUtilityService urlUtilityService) {
+	static MetaExpression process(final MetaExpression file, final StringUtilityService stringService, final UrlUtilityService urlUtilityService, final ConstructContext context) {
 		assertNotNull(file, "file");
 
-		byte[] data = null;
+		byte[] data;
 
 		try {
-			String filename = file.getStringValue();
+			File filename = getFile(context, file.getStringValue());
 			data = urlUtilityService.readFileToByteArray(filename);
 		} catch (IOException e) {
 			throw new RobotRuntimeException("IO Exception");

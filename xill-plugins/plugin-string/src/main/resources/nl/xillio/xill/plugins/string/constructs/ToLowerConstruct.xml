@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
-  <description>
-	Returns the string lowercased.
-  </description>
-  <examples>
-    <example description="Executing:"><![CDATA[
-    	String.toLower("HiGher");
-    ]]></example>
-    <example description="Will return:"><![CDATA[
-		"higher"
-    	]]>
-    </example>
-  </examples>
-  <references>
-  <reference package="String">toUpper</reference>
-  </references>
-  <searchTags>
-  		case, lower
-  </searchTags>
+    <description>
+        Returns the string lowercased.
+    </description>
+    <examples>
+        <example title="Usage">
+            <code>
+                String.toLower("HiGher");
+                // Outputs: higher
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>toUpper</reference>
+    </references>
+    <searchTags>
+        case, lower
+    </searchTags>
 </function>

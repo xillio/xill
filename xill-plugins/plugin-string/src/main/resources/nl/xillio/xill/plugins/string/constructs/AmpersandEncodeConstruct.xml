@@ -4,16 +4,17 @@
     Encodes all special XML characters (,>,&,”,’) to their respective XML entities.
   ]]></description>
   <examples>
-    <example description="Executing:"><![CDATA[
-    	String.ampersandEncode("<p><a href=\"default.asp\">HTML Tutorial</a> This is a link to a page on this website.</p>");
-    ]]></example>
-    <example description="Will return:"><![CDATA[
-    	"&lt;p&gt;&lt;a href=&quot;default.asp&quot;&gt;HTML Tutorial&lt;/a&gt; This is a link to a page on this website.&lt;/p&gt"
-    	]]>
+    <example title="Usage">
+        <code>
+            var text = "&lt;p&gt;&lt;a href=\&quot;default.asp\&quot;&gt;HTML Tutorial&lt;/a&gt; This is a link to a page on this website.&lt;/p&gt;";
+            String.ampersandEncode(text);
+
+            // Outputs: &amp;lt;p&amp;gt;&amp;lt;a href=\&amp;quot;default.asp\&amp;quot;&amp;gt;HTML Tutorial&amp;lt;/a&amp;gt; This is a link to a page on this website.&amp;lt;/p&amp;gt;
+        </code>
     </example>
   </examples>
   <references>
-  	<reference package = "String">
+  	<reference>
   		ampersandDecode
   	</reference>
   </references>

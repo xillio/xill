@@ -1,29 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
-  <description>
-	 Returns a list with all substrings matching regex.
-	 Optionally a timeout can be provided in seconds, the default value is 5 seconds. 
-	 Set timeout to zero to let the function run without timeout. This should only be altered when dealing with large source documents. 
-	 The timeout is there to protect the system from hanging on invalid expressions.
-	 See the Regular Expressions page for more about Regular Expression support in Xillio Content Tools.
-  </description>
-  <examples>
-    <example description="Executing:"><![CDATA[
-    	var s = "abc def ghi jkl. Mno";
-		String.allMatches(s, "\\w+");
-    ]]></example>
-    <example description="Will return:"><![CDATA[
-    	[
-    		"abc",
-    		"def",
-    		"ghi",
-    		"jkl",
-   		 	"Mno"
-		]
-		]]>
-    </example>
-  </examples>
-   <searchTags>
-	regex, match, relative
-  </searchTags>
+    <description>
+        Returns a list with all substrings matching regex.
+        Optionally a timeout can be provided in seconds, the default value is 5 seconds.
+        Set timeout to zero to let the function run without timeout. This should only be altered when dealing with large
+        source documents.
+        The timeout is there to protect the system from hanging on invalid expressions.
+        See the Regular Expressions page for more about Regular Expression support in Xillio Content Tools.
+    </description>
+    <examples>
+        <example title="Usage">
+            <code>
+                var s = "abc def ghi jkl. Mno";
+                String.allMatches(s, "\\w+");
+
+                // Outputs: ["abc", "def", "ghi", "jkl", "Mno" ]
+            </code>
+        </example>
+    </examples>
+    <searchTags>
+        regex, match, relative
+    </searchTags>
 </function>

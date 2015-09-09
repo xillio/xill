@@ -1,27 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
-  <description>
-	Returns an integer higher or equal to startPos of the index of string2 in string1.
-	startPos defaults to 0.
-	Returns -1 if the index could not be found.
-  </description>
-  <examples>
-    <example description="Executing:"><![CDATA[
-    	String.indexOf("maxTestTest", "Test");
-    	String.indexOf("maxTestTest", "Test", 3);
-    	String.indexOf("maxTestTest", "Test", 5);
-    	String.indexOf("maxTestTest", "test");
-    ]]></example>
-    <example description="Will return:"><![CDATA[
-		3
-		3
-		7
-		-1
-    	]]>
-    </example>
-  </examples>
-  <references>
-  </references>
-  <searchTags>
-  </searchTags>
+    <description>
+        Returns an integer higher or equal to startPos of the index of string2 in string1.
+        startPos defaults to 0.
+        Returns -1 if the index could not be found.
+    </description>
+    <examples>
+        <example description="Executing:">
+            String.indexOf("maxTestTest", "Test");      // Outputs: 3
+            String.indexOf("maxTestTest", "Test", 3);   // Outputs: 3
+            String.indexOf("maxTestTest", "Test", 5);   // Outputs: 7
+            String.indexOf("maxTestTest", "test");      // Outputs: -1
+        </example>
+    </examples>
 </function>
