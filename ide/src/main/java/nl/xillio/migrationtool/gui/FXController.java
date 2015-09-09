@@ -1,12 +1,30 @@
 package nl.xillio.migrationtool.gui;
 
+import static nl.xillio.sharedlibrary.settings.SimpleSetting.SIMPLE_SETTINGTYPE;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -18,19 +36,11 @@ import javafx.util.Pair;
 import nl.xillio.migrationtool.Loader;
 import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
 import nl.xillio.plugins.XillPlugin;
+import nl.xillio.sharedlibrary.settings.Setting;
 import nl.xillio.sharedlibrary.settings.SettingsHandler;
 import nl.xillio.sharedlibrary.settings.SettingsHandler.Id;
+import nl.xillio.sharedlibrary.settings.SimpleSetting;
 import nl.xillio.xill.api.Xill;
-import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 /**
  * This class is the global controller for the application
@@ -165,8 +175,8 @@ public class FXController implements Initializable, EventHandler<Event> {
 		settings.registerSimpleSetting("Warning", "DialogError", "true", "Show warning dialogs for error messages.");
 		settings.registerSimpleSetting("Server", "ServerHost", "http://localhost:10000",
 			"Location XMTS is running on.");
-		settings.registerSimpleSetting("Server", "ServerUsername", "", "Optional username to access XMTS.");
-		settings.registerSimpleSetting("Server", "ServerPassword", "", "Optional password to access XMTS.");
+		settings.registerSimpleSetting("Server", "ServerUsername", "", "Optional username to access XMTS.", true);
+		settings.registerSimpleSetting("Server", "ServerPassword", "", "Optional password to access XMTS.", true);
 		settings.registerSimpleSetting("Info", "LastVersion", "0.0.0", "Last version that was run.");
 		settings.registerSimpleSetting("Layout", "LeftPanelWidth", "0.2", "Width of the left panel");
 		settings.registerSimpleSetting("Layout", "LeftPanelCollapsed", "false",
@@ -530,6 +540,16 @@ public class FXController implements Initializable, EventHandler<Event> {
 			stage.setTitle(
 				"xillio content tools - " + Loader.LONG_VERSION + " - Licensed to: " + license.getLicenseName());
 		}*/
+	}
+
+	private void encryptSetting(String name) {
+		Setting<?> setting = settings.getSetting(SIMPLE_SETTINGTYPE, name);
+
+		if (setting.getValue("encrypted").equals(0)) {
+			setting.setValue("value", SimpleSetting.encrypt((String) setting.getValue("value")));
+			setting.setValue("encrypted", 1);
+			settings.saveSetting(setting, true, true);
+		}
 	}
 
 	/**
