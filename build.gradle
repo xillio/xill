@@ -178,7 +178,7 @@ build.dependsOn assembleContenttools
  */
 
 /* Download the JavaFX plugin if it doesn't exist */
-def javaFXPluginFile = new File("gradle/javafx.plugin")
+def javaFXPluginFile = new File(projectDir, "gradle/javafx.plugin")
 if (!javaFXPluginFile.exists()) {
     new URL(javaFXPluginUrl).withInputStream{ i -> javaFXPluginFile.withOutputStream{ it << i }}
 }
