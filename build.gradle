@@ -176,7 +176,13 @@ build.dependsOn assembleContenttools
 /**
  * DEPLOYMENT
  */
-apply from: 'http://dl.bintray.com/content/shemnon/javafx-gradle/8.1.1/javafx.plugin'
+
+/* Download the JavaFX plugin if it doesn't exist */
+def javaFXPluginFile = new File(projectDir, "gradle/javafx.plugin")
+if (!javaFXPluginFile.exists()) {
+    new URL(javaFXPluginUrl).withInputStream{ i -> javaFXPluginFile.withOutputStream{ it << i }}
+}
+apply from: javaFXPluginFile.absolutePath
 
 assemble.dependsOn.remove(jfxDeploy)
 

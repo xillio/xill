@@ -1,42 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE xilldoc>
 <function>
-	<parameters>
-		<param name="expression"/>
-		<param name="pretty" default="false" />
-	</parameters>
-	<description><![CDATA[
- 	Converts an expression to a JSON string. Note that circular references cannot be parsed and will be substituted.
- 	To pretty print the JSON string set pretty to true]]></description>
-	<examples>
-		<example description="Running:"><![CDATA[
-	    use System;
-		var json = System.toJSON([1,2,3, "Hello Xillio"]);
-		System.print(json);]]></example>
-		<example description="This will print:">
-		<![CDATA[Info: [1,2,3,\"Hello Xillio\"]]]>
-	</example>
-		<example description="Running:"><![CDATA[
-	    use System;
-	    var list = [1];
-	    list[] = list;
-		var json = System.toJSON(list, true);
-		System.print(json, true);]]>
-		</example>
-		<example description="This will print:"><![CDATA[
-		 [
-		  1,
-		  "<<CIRCULAR REFERENCE>>"
-		]
-		]]>
-		</example>
-	</examples>
-	<references>
-	</references>
-	<searchTags>
-		<searchTag>json</searchTag>
-		<searchTag>string</searchTag>
-		<searchTag>convert</searchTag>
-		<searchTag>pretty</searchTag>
-	</searchTags>
+    <description>
+        Converts an expression to a JSON string. Note that circular references cannot be parsed and will be substituted.
+        To pretty print the JSON string set pretty to true
+    </description>
+    <examples>
+        <example title="Usage">
+            <code>
+                System.toJSON([1,2,3, "Hello Xillio"]);
+                // Result: "[1,2,3,\"Hello Xillio\"]"
+
+                var list = [1];
+                list[] = list;
+                System.toJSON(list, true);
+                // Result: "[1,\"&lt;&lt;CIRCULAR REFERENCE&gt;&gt;\"]"
+            </code>
+        </example>
+    </examples>
+    <searchTags>
+        json, string, convert, pretty
+    </searchTags>
 </function>

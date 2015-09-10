@@ -8,14 +8,12 @@
             <header>Getting a sheet by name from a workbook</header>
             <code>
                 use Excel;
-
                 var workbook = Excel.loadWorkbook("workbook.xlsx");
                 var sheet = Excel.loadSheet(workbook, "firstsheet");
             </code>
             <header>Getting a sheet by index from a workbook</header>
             <code>
                 use Excel;
-
                 var workbook = Excel.loadWorkbook("workbook.xlsx");
                 var sheetNames = Excel.getSheetNames(workbook);
                 var sheet = Excel.loadSheet(workbook, sheetNames[0]);
@@ -26,7 +24,6 @@
             <code>
                 use Excel;
                 use System;
-
                 var workbook = Excel.loadWorkbook("workbook.xlsx");
                 var sheet = Excel.loadSheet(workbook, "firstsheet");
                 System.print(sheet);

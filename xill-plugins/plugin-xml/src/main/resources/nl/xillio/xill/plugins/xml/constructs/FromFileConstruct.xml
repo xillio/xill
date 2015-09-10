@@ -20,7 +20,6 @@
             <code>
 use System;
 use Xml;
-
 var note = Xml.fromFile("C:/tmp/note.xml");
 var comments = Xml.xpath(note, "//comment/text()");
 foreach (comment in comments) {
@@ -30,7 +29,6 @@ foreach (comment in comments) {
             <header>
 will print:
             </header>
-
             <code>
 This was sent to James as well
 John has not responded to the invitation

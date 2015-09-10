@@ -1,29 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<function Tag="startsWith">
-  <name>startsWith</name>
-  <parameters>
-    <param name="string1">
-    </param>
-    <param name="string2">
-    </param>
-  </parameters>
-  <description><![CDATA[
-	Returns a boolean whether the string1 starts with string2.
-  ]]></description>
-  <examples>
-    <example description="Executing:"><![CDATA[
-    	String.startsWith("testing", "ing");	
-    	String.startsWith("testing", "test");
-    ]]></example>
-    <example description="Will return:"><![CDATA[
-		false
-		true
-    	]]>
-    </example>
-  </examples>
-  <references>
-  <reference package="String">endsWith</reference>
-  </references>
-  <searchTags>
-  </searchTags>
+<function>
+    <description>
+        Returns a boolean whether the string1 starts with string2.
+    </description>
+    <examples>
+        <example title="Usage">
+            <code>
+                String.startsWith("testing", "ing"); // FALSE
+                String.startsWith("testing", "test"); // TRUE
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>endsWith</reference>
+    </references>
 </function>

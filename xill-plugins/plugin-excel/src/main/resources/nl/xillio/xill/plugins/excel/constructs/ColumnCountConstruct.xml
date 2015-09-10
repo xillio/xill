@@ -6,23 +6,21 @@
     <examples>
         <example title="Usage">
             <header>Getting the number of columns in a sheet</header>
-            <code>
+            <code><![CDATA[
                 use Excel;
-
                 var workbook = Excel.loadWorkbook("workbook.xlsx");
                 var sheet = Excel.loadSheet(workbook, "firstsheet");
                 var numberOfColumns = Excel.columnCount(sheet);
+            ]]>
             </code>
             <header>Looping through all columns of a sheet</header>
             <p>This robot prints all values on the first row of "firstsheet". Note that Excel cells are 1-indexed.</p>
             <code>
                 use Excel;
                 use System;
-
                 var workbook = Excel.loadWorkbook("workbook.xlsx");
                 var sheet = Excel.loadSheet(workbook, "firstsheet");
                 var numberOfColumns = Excel.columnCount(sheet);
-
                 var i = 1;
                 while(i &#60;&#61; numberOfColumns){
                 var cellContent = Excel.getCell(sheet,i,1);

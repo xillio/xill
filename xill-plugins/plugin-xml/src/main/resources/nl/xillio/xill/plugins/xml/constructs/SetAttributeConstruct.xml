@@ -30,7 +30,6 @@ System.print(Xml.toString(note));
             <header>
 Xml contains:
             </header>
-
             <code>
 &lt; note id="1"&gt;
   &lt; to&gt;Tove&lt; /to&gt;

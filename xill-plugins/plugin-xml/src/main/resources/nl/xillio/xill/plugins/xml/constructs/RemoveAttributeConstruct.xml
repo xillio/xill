@@ -26,7 +26,6 @@ System.print(Xml.toString(note));
             <header>
 Xml contains:
             </header>
-
             <code>
 &lt; note&gt;
   &lt; to&gt;Tove&lt; /to&gt;

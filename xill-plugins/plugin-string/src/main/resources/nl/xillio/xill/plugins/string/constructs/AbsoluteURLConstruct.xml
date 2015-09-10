@@ -1,38 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<function Tag="absoluteURL">
-  <name>absoluteURL</name>
-  <parameters>
-    <param name="pageUrl">
-    </param>
-    <param name="relativeUrl">
-    </param>
-  </parameters>
-  <description><![CDATA[
-	  Converts the relative URL string relativeUrl to an absolute URL using the string pageUrl as base URL. Returns the resulting URL as a string.
-  ]]></description>
-  <examples>
-    <example description="Executing:"><![CDATA[
-    	String.absoluteURL("http://www.xillio.nl/calendar/", "movies");
-    ]]></example>
-    <example description="Will return:"><![CDATA[
-    	"http://www.xillio.nl/calendar/movies"]]>
-    </example>
-    <example description="Executing:"><![CDATA[
-    	String.absoluteURL("http://www.xillio.nl/calendar/", "../");
-    ]]>
-    </example>
-    <example description="returns:"><![CDATA[
-   		"http://www.xillio.nl/"
-    ]]>
-    </example>
-  </examples>
-  <references />
-   <searchTags>
-	<searchTag>
-	absolute
-	</searchTag>
-	<searchTag>
-	relative
-	</searchTag>
-  </searchTags>
+<function>
+    <description>
+        Converts the relative URL string relativeUrl to an absolute URL using the string pageUrl as base URL. Returns
+        the resulting URL as a string.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Child page</header>
+            <code>
+                String.absoluteURL("http://www.xillio.nl/calendar/", "movies");
+                // Result: http://www.xillio.nl/calendar/movies
+            </code>
+            <header>One page up</header>
+            <code>
+                String.absoluteURL("http://www.xillio.nl/calendar/", "../");
+                // Result: http://www.xillio.nl/
+            </code>
+        </example>
+    </examples>
+    <searchTags>
+        absolute, relative
+    </searchTags>
 </function>

@@ -21,3 +21,4 @@ build/
 # IntelliJ
 *.iml
 .idea/
+gradle/javafx.plugin

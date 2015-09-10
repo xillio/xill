@@ -39,8 +39,8 @@ public class UrlUtilityServiceImpl implements UrlUtilityService {
 	}
 
 	@Override
-	public byte[] readFileToByteArray(final String fileName) throws IOException {
-		return FileUtils.readFileToByteArray(new File(fileName));
+	public byte[] readFileToByteArray(final File file) throws IOException {
+		return FileUtils.readFileToByteArray(file);
 	}
 
 	@Override
@@ -91,8 +91,8 @@ public class UrlUtilityServiceImpl implements UrlUtilityService {
 	}
 
 	@Override
-	public void write(final String fileName, final byte[] output) throws IOException {
-		OutputStream out = new FileOutputStream(fileName);
+	public void write(final File file, final byte[] output) throws IOException {
+		OutputStream out = new FileOutputStream(file);
 		out.write(output);
 		out.close();
 	}

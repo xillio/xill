@@ -2,15 +2,18 @@ package nl.xillio.xill.plugins.string.constructs;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
@@ -21,7 +24,7 @@ import org.testng.annotations.Test;
 /**
  * Test the {@link Base64DecodeConstruct}.
  */
-public class Base64DecodeConstructTest {
+public class Base64DecodeConstructTest extends TestUtils {
 
 	/**
 	 * Test the process method under normal circumstances.
@@ -48,11 +51,11 @@ public class Base64DecodeConstructTest {
 		UrlUtilityService urlUtilityService = mock(UrlUtilityService.class);
 
 		// Run
-		Base64DecodeConstruct.process(content, fileName, stringService, urlUtilityService);
+		Base64DecodeConstruct.process(content, fileName, stringService, urlUtilityService, null);
 
 		// Verify
 		verify(stringService, times(1)).parseBase64Binary(contentValue);
-		verify(urlUtilityService, times(1)).write(fileNameValue, data);
+		verify(urlUtilityService, times(1)).write(null, data);
 
 		// Assert
 		// We return NULL, nothing to assert.
@@ -82,14 +85,14 @@ public class Base64DecodeConstructTest {
 		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(stringService.parseBase64Binary(contentValue)).thenReturn(data);
 		UrlUtilityService urlUtilityService = mock(UrlUtilityService.class);
-		doThrow(exception).when(urlUtilityService).write(fileNameValue, data);
+		doThrow(exception).when(urlUtilityService).write(null, data);
 
 		// Run
-		Base64DecodeConstruct.process(content, fileName, stringService, urlUtilityService);
+		Base64DecodeConstruct.process(content, fileName, stringService, urlUtilityService, null);
 
 		// Verify
 		verify(stringService, times(1)).parseBase64Binary(contentValue);
-		verify(urlUtilityService, times(1)).write(fileNameValue, data);
+		verify(urlUtilityService, times(1)).write(null, data);
 	}
 
 	/**
@@ -116,14 +119,14 @@ public class Base64DecodeConstructTest {
 		StringUtilityService stringService = mock(StringUtilityService.class);
 		when(stringService.parseBase64Binary(contentValue)).thenReturn(data);
 		UrlUtilityService urlUtilityService = mock(UrlUtilityService.class);
-		doThrow(exception).when(urlUtilityService).write(fileNameValue, data);
+		doThrow(exception).when(urlUtilityService).write(null, data);
 
 		// Run
-		Base64DecodeConstruct.process(content, fileName, stringService, urlUtilityService);
+		Base64DecodeConstruct.process(content, fileName, stringService, urlUtilityService, null);
 
 		// Verify
 		verify(stringService, times(1)).parseBase64Binary(contentValue);
-		verify(urlUtilityService, times(1)).write(fileNameValue, data);
+		verify(urlUtilityService, times(1)).write(null, data);
 
 		// Assert
 		// We return NULL, nothing to assert.
@@ -153,11 +156,11 @@ public class Base64DecodeConstructTest {
 		UrlUtilityService urlUtilityService = mock(UrlUtilityService.class);
 
 		// Run
-		Base64DecodeConstruct.process(content, fileName, stringService, urlUtilityService);
+		Base64DecodeConstruct.process(content, fileName, stringService, urlUtilityService, null);
 
 		// Verify
 		verify(stringService, times(0)).parseBase64Binary(anyString());
-		verify(urlUtilityService, times(0)).write(anyString(), any());
+		verify(urlUtilityService, times(0)).write(any(File.class), any());
 	}
 
 }

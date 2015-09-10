@@ -18,7 +18,6 @@
             <code>
 use System;
 use Xml;
-
 var note = Xml.fromFile("C:/tmp/note.xml");
 var parent = Xml.xpath(note, "//note");
 Xml.insertNode(parent, "&lt; comment&gt;Comments are welcome.&lt; /comment&gt;");
@@ -27,7 +26,6 @@ System.print(Xml.toString(note));
             <header>
 Xml contains:
             </header>
-
             <code>
 &lt; note id="1"&gt;
   &lt; to&gt;Tove&lt; /to&gt;

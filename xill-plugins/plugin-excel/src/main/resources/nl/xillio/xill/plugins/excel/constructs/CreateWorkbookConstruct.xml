@@ -8,19 +8,16 @@
             <header>Default - in IDE workspace</header>
             <code>
                 use Excel;
-
                 var workbook = Excel.createWorkbook("helloworldbook");
             </code>
             <header>In IDE workspace, different extension</header>
             <code>
                 use Excel;
-
                 var workbook = Excel.createWorkbook("helloworldbook.xls");
             </code>
             <header>Different location, different extension</header>
             <code>
                 use Excel;
-
                 var workbook = Excel.createWorkbook("C:\\Users\\Xillio\\Documents\\helloworldbook.xlsx");
             </code>
             <p>
@@ -32,7 +29,6 @@
             <header>Saving a workbook</header>
             <code>
                 use Excel;
-
                 var workbook = Excel.createWorkbook("helloworldbook");
                 Excel.save(workbook);
             </code>
@@ -40,7 +36,6 @@
             <code>
                 use System;
                 use Excel;
-
                 var workbook = Excel.createWorkbook("helloworldbook");
                 System.print(Excel.save(workbook));
             </code>

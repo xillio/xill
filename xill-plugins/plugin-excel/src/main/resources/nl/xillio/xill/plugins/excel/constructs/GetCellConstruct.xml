@@ -8,7 +8,6 @@
             <header>Alphabetic Column Notation</header>
             <code>
                 use Excel;
-
                 var workbook = Excel.loadWorkbook("workbook.xlsx");
                 var sheet = Excel.loadSheet(workbook, "firstsheet");
                 var cell = Excel.getCell(sheet, "A", 1);
@@ -16,7 +15,6 @@
             <header>Numeric Column Notation</header>
             <code>
                 use Excel;
-
                 var workbook = Excel.loadWorkbook("workbook.xlsx");
                 var sheet = Excel.loadSheet(workbook, "firstsheet");
                 var cell = Excel.getCell(sheet, 1, 1);

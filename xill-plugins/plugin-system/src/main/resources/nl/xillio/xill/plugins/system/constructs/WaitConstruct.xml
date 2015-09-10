@@ -1,24 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE xilldoc>
 <function>
-	<parameters>
-		<param name="time" default="100" />
-	</parameters>
-	<description><![CDATA[
-	Pause the robot for a period of time in milliseconds.]]></description>
-	<examples>
-		<example description="Waiting for one second:"><![CDATA[
-		use System;
-		System.wait(1000);
-		]]>
-		</example>
-	</examples>
-	<references>
-	</references>
-	<searchTags>
-		<searchTag>pause</searchTag>
-		<searchTag>wait</searchTag>
-		<searchTag>sleep</searchTag>
-		<searchTag>delay</searchTag>
-	</searchTags>
+    <description>
+        Pause the robot for a period of time in milliseconds.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Wait 1 second</header>
+            <code>
+                System.wait(1000);
+            </code>
+        </example>
+    </examples>
+    <searchTags>
+        pause, wait, sleep, delay
+    </searchTags>
 </function>
