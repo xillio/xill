@@ -1,0 +1,88 @@
+/**
+ * This file represents the base configuration for all projects in this repository. These will be applied first
+ */
+
+apply plugin: 'jacoco'
+
+/**
+ * JAVA
+ */
+apply plugin: 'eclipse'
+apply plugin: 'java'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+group = mavenPublicationGroup
+version = rootProject.version
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}
+
+build.dependsOn javadoc
+javadoc.failOnError = !Boolean.parseBoolean(javadocIgnoreErrors)
+
+/**
+ * MAVEN PUBLISH
+ */
+if (project.name != 'xill-plugins' && System.env.BUILD_NUMBER) {
+    apply plugin: 'maven-publish'
+
+    publishing {
+        publications {
+            main(MavenPublication) {
+                artifactId 'xill-' + project.name
+
+                from components.java
+
+                artifact sourceJar {
+                    classifier "sources"
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                url "http://$mavenRepositoryHost:$mavenRespoitoryPort/nexus/content/repositories/releases"
+                name 'release'
+                credentials {
+                    username = mavenUsername
+                    password = mavenPassword
+                }
+            }
+        }
+    }
+
+}
+
+/**
+ * TESTING
+ */
+test.useTestNG {
+    useDefaultListeners = true
+}
+
+
+dependencies {
+    testCompile 'org.testng:testng:6.9.4'
+    testCompile "org.mockito:mockito-core:1.+"
+}
+
+jar.manifest {
+    attributes "Implementation-Version": version
+    attributes "Build-Date": new Date().format("dd-MM-yyyy")
+    attributes "Build-Java-Version": System.properties["java.version"]
+
+    if (project.hasProperty(project.name + "ProjectName")) {
+        attributes "Implementation-Title": project.getProperties().get(project.name + "ProjectName")
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+}
