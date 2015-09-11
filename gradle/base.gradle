@@ -36,7 +36,7 @@ if (project.name != 'xill-plugins' && System.env.BUILD_NUMBER) {
     publishing {
         publications {
             main(MavenPublication) {
-                artifactId 'xill-' + project.name
+                artifactId project.name
 
                 from components.java
 
