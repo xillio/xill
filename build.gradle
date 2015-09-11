@@ -144,7 +144,11 @@ task deploy(dependsOn: "deployZip") {
 
     if("linux" == osdetector.os && System.env.BUILD_NUMBER != null) {
         println "Running on linux on jenkins, deploy task also publishes to maven"
-        dependsOn publish
+        allprojects {
+            if (tasks.findByPath("publish") != null) {
+                rootProject.deploy.dependsOn publish
+            }
+        }
     }
 }
 
