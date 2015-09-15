@@ -72,6 +72,9 @@ public class QueryConstructTest extends ConstructTest {
 		when(parameters.getValue()).thenReturn(parameterValue);
 		when(firstParameter.getValue()).thenReturn(value);
 		when(secondParameter.getValue()).thenReturn(value);
+		when(firstParameter.getType()).thenReturn(OBJECT);
+		when(secondParameter.getType()).thenReturn(OBJECT);
+		when(parameters.getType()).thenReturn(LIST);
 
 		// the databaseFactory
 		DatabaseServiceFactory factory = mock(DatabaseServiceFactory.class);
@@ -125,6 +128,9 @@ public class QueryConstructTest extends ConstructTest {
 		when(parameters.getValue()).thenReturn(parameterValue);
 		when(firstParameter.getValue()).thenReturn(value);
 		when(secondParameter.getValue()).thenReturn(value);
+		when(firstParameter.getType()).thenReturn(OBJECT);
+		when(secondParameter.getType()).thenReturn(OBJECT);
+		when(parameters.getType()).thenReturn(LIST);
 
 		// the databaseFactory
 		DatabaseServiceFactory factory = mock(DatabaseServiceFactory.class);
@@ -194,6 +200,8 @@ public class QueryConstructTest extends ConstructTest {
 		parameterValue.add(firstParameter);
 		when(parameters.getValue()).thenReturn(parameterValue);
 		when(firstParameter.getValue()).thenReturn(value);
+		when(firstParameter.getType()).thenReturn(OBJECT);
+		when(parameters.getType()).thenReturn(LIST);
 
 		// the databaseFactory
 		DatabaseServiceFactory factory = mock(DatabaseServiceFactory.class);
@@ -262,6 +270,9 @@ public class QueryConstructTest extends ConstructTest {
 		when(parameters.getValue()).thenReturn(parameterValue);
 		when(firstParameter.getValue()).thenReturn(value);
 		when(secondParameter.getValue()).thenReturn(value);
+		when(firstParameter.getType()).thenReturn(OBJECT);
+		when(secondParameter.getType()).thenReturn(OBJECT);
+		when(parameters.getType()).thenReturn(LIST);
 
 		// the databaseFactory
 		DatabaseServiceFactory factory = mock(DatabaseServiceFactory.class);
