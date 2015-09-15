@@ -32,7 +32,7 @@ import com.google.common.collect.Iterators;
 @SuppressWarnings("unchecked")
 public abstract class BaseDatabaseService implements DatabaseService {
 
-	private static final Pattern PARAMETER_PATTERN = Pattern.compile("(?!\\\\):([a-zA-Z_\\d]+)");
+	private static final Pattern PARAMETER_PATTERN = Pattern.compile("(?<!\\\\):([a-zA-Z_\\d]+)");
 
 	/**
 	 * Cache for delimiters, prevents from constantly getting the metadata
