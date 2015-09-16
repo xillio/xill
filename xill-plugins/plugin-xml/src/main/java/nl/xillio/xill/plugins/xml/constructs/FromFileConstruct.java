@@ -29,7 +29,7 @@ public class FromFileConstruct extends Construct {
 	}
 
 	static MetaExpression process(final ConstructContext context, MetaExpression fileNameVar, NodeService service) {
-		File xmlSource = getFile(context, fileNameVar.getStringValue());
+		File xmlSource = getFile(context.getRobotID(), fileNameVar.getStringValue());
 		XmlNode xmlNode = service.fromFile(xmlSource);
 		MetaExpression result = fromValue(xmlNode.toString());
 		result.storeMeta(XmlNode.class, xmlNode);

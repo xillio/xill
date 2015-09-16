@@ -33,8 +33,8 @@ public class XsdCheckConstruct extends Construct {
 	}
 
 	static MetaExpression process(final ConstructContext context, MetaExpression xmlFileNameVar, MetaExpression xsdFileNameVar, XsdService service, Logger logger) {
-		File xmlFile = getFile(context, xmlFileNameVar.getStringValue());
-		File xsdFile = getFile(context, xsdFileNameVar.getStringValue());
+		File xmlFile = getFile(context.getRobotID(), xmlFileNameVar.getStringValue());
+		File xsdFile = getFile(context.getRobotID(), xsdFileNameVar.getStringValue());
 		return fromValue(service.xsdCheck(xmlFile, xsdFile, logger));
 	}
 

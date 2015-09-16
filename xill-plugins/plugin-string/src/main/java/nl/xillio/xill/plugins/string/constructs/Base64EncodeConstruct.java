@@ -42,7 +42,7 @@ public class Base64EncodeConstruct extends Construct {
 		byte[] data;
 
 		try {
-			File filename = getFile(context, file.getStringValue());
+			File filename = getFile(context.getRobotID(), file.getStringValue());
 			data = urlUtilityService.readFileToByteArray(filename);
 		} catch (IOException e) {
 			throw new RobotRuntimeException("IO Exception");
