@@ -6,6 +6,8 @@ import com.mongodb.client.model.UpdateOptions;
 import nl.xillio.xill.plugins.document.exceptions.PersistenceException;
 import org.bson.Document;
 
+import java.util.Objects;
+
 /**
  * This implementation of the PersistenceService stores its objects in MongoDB.
  */
@@ -15,6 +17,7 @@ public class MongoPersistenceService implements PersistenceService {
 	private final MongoPersistenceConnection connection;
 
 	MongoPersistenceService(MongoPersistenceConnection connection) {
+		Objects.requireNonNull(connection);
 		this.connection = connection;
 	}
 
