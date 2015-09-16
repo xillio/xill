@@ -21,6 +21,18 @@ public interface PersistenceService extends AutoCloseable {
 	void save(Document document, String type, String id) throws PersistenceException;
 
 	/**
+	 * Forwarder to {@link PersistenceService#save(Document, String, String)}
+	 *
+	 * @param provider The object to store
+	 * @param type     The document category
+	 * @param id       The document id
+	 * @throws PersistenceException when saving the document failed
+	 */
+	default void save(DocumentProvider provider, String type, String id) throws PersistenceException {
+		save(provider.buildDocument(), type, id);
+	}
+
+	/**
 	 * Persist a document.
 	 *
 	 * @param document the document
@@ -29,6 +41,18 @@ public interface PersistenceService extends AutoCloseable {
 	 * @throws PersistenceException when saving the document failed
 	 */
 	String save(Document document, String type) throws PersistenceException;
+
+	/**
+	 * Forwarder to {@link PersistenceService#save(Document, String)}
+	 *
+	 * @param provider The object to store
+	 * @param type     the document category
+	 * @return the id of the saved document
+	 * @throws PersistenceException when saving the document failed
+	 */
+	default String save(DocumentProvider provider, String type) throws PersistenceException {
+		return save(provider.buildDocument(), type);
+	}
 
 	/**
 	 * Get a document from the persistence.
