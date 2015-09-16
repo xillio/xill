@@ -1,56 +1,47 @@
 package nl.xillio.xill.plugins.document.services;
 
-import com.mongodb.MongoException;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import nl.xillio.xill.plugins.document.exceptions.PersistenceException;
+import org.bson.Document;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Test the MongoPersistenceService
+ * Test the public api of the MongoPersistenceService
  */
 public class MongoPersistenceServiceTest {
-	private static final String HOST = "host";
-	private static final int PORT = 1337;
-	private static final String DATABASE = "db";
+
 	/**
-	 * Test that the service starts if the connect is successful
+	 * Test if save calls the database
 	 */
 	@Test
-	public void testStartConnectSuccess() throws PersistenceException {
-		// Persistence
-		MongoPersistenceService persistence = mockPersistence();
+	public void testSaveCallsDatabaseWithDocument() throws PersistenceException {
+		// Document
+		Document doc = new Document();
 
-		// Don't start yet
-		assertFalse(persistence.isRunning());
+		// Collection
+		MongoCollection collection = mock(MongoCollection.class);
+		doAnswer(inv ->
+				((Document) inv.getArguments()[0]).put("_id", "_SOME ID_")
+		).when(collection).insertOne(doc);
+
+		// Database
+		MongoDatabase db = mock(MongoDatabase.class);
+		when(db.getCollection(eq("_CAT_"))).thenReturn(collection);
+
+		// Connection
+		MongoPersistenceConnection conn = mock(MongoPersistenceConnection.class);
+		when(conn.getDatabase()).thenReturn(db);
+
+		// Persistence
+		PersistenceService persistence = new MongoPersistenceService(conn);
 
 		// Call the method
-		persistence.start();
+		persistence.save(doc, "_CAT_");
 
-		// Check if started
-		assertTrue(persistence.isRunning());
+		// Verify calls
+		verify(collection).insertOne(doc);
 	}
-
-	/**
-	 * Test that the service throws an exception if connecting fails
-	 */
-	@Test(expectedExceptions = PersistenceException.class)
-	public void testStartConnectFails() throws PersistenceException {
-		// Persistence
-		MongoPersistenceService persistence = mockPersistence();
-		doThrow(new MongoException("ERROR")).when(persistence).connect(HOST, PORT, DATABASE);
-
-		// Call the method
-		persistence.start();
-	}
-
-	private MongoPersistenceService mockPersistence() {
-		MongoPersistenceService persistence = spy(new MongoPersistenceService(HOST, PORT, DATABASE));
-		doNothing().when(persistence).connect(HOST, PORT, DATABASE);
-
-		return persistence;
-	}
-
-
 }
