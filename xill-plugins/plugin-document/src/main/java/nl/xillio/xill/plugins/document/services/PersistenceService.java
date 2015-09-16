@@ -1,6 +1,7 @@
 package nl.xillio.xill.plugins.document.services;
 
 import nl.xillio.xill.plugins.document.exceptions.PersistenceException;
+import org.apache.logging.log4j.LogManager;
 import org.bson.Document;
 
 import java.io.IOException;
@@ -125,7 +126,7 @@ public interface PersistenceService extends AutoCloseable {
 		try (InputStream stream = PersistenceService.class.getResourceAsStream("/mongo_defaults.properties")) {
 			props.load(stream);
 		} catch (IOException e) {
-			throw new RuntimeException("Failed to load defaults", e);
+			LogManager.getLogger().error("Failed to load mongo defaults", e);
 		}
 
 		return mongo(
