@@ -3,6 +3,10 @@ package nl.xillio.xill.plugins.document.services;
 import nl.xillio.xill.plugins.document.exceptions.PersistenceException;
 import org.bson.Document;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 /**
  * This interface is responsible for the persistence of the UDM.
  *
@@ -10,6 +14,7 @@ import org.bson.Document;
  * @since 3.0.0
  */
 public interface PersistenceService extends AutoCloseable {
+
 	/**
 	 * Set the id on a document and persist it.
 	 *
@@ -86,7 +91,7 @@ public interface PersistenceService extends AutoCloseable {
 	 * @param password the password
 	 * @return the PersistenceService
 	 */
-	static MongoPersistenceService mongo(String host, int port, String database, String username, String password) {
+	static PersistenceService mongo(String host, int port, String database, String username, String password) {
 		return new MongoPersistenceService(
 			new MongoPersistenceConnection(host, port, database,
 				new MongoPersistenceConnection.Credentials(username, password)
@@ -104,9 +109,32 @@ public interface PersistenceService extends AutoCloseable {
 	 * @param database the host database name
 	 * @return the PersistenceService
 	 */
-	static MongoPersistenceService mongo(String host, int port, String database) {
+	static PersistenceService mongo(String host, int port, String database) {
 		return new MongoPersistenceService(
 			new MongoPersistenceConnection(host, port, database)
 		);
 	}
+
+	/**
+	 * Load defaults from the properties file and build a persistence around it.
+	 *
+	 * @return the PersistenceService
+	 */
+	static PersistenceService mongo() {
+		Properties props = new Properties();
+		try (InputStream stream = PersistenceService.class.getResourceAsStream("/mongo_defaults.properties")) {
+			props.load(stream);
+		} catch (IOException e) {
+			throw new RuntimeException("Failed to load defaults", e);
+		}
+
+		return mongo(
+			props.get("host").toString(),
+			Integer.parseInt(props.get("port").toString()),
+			props.get("database").toString(),
+			props.get("username").toString(),
+			props.get("password").toString());
+	}
+
+
 }
