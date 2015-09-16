@@ -123,7 +123,7 @@ public interface PersistenceService extends AutoCloseable {
 	 */
 	static PersistenceService mongo() {
 		Properties props = new Properties();
-		try (InputStream stream = PersistenceService.class.getResourceAsStream("/mongo_defaults.properties")) {
+		try (InputStream stream = PersistenceService.class.getResourceAsStream("/document-plugin/mongo_defaults.properties")) {
 			props.load(stream);
 		} catch (IOException e) {
 			LogManager.getLogger().error("Failed to load mongo defaults", e);
