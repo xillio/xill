@@ -40,20 +40,19 @@ public class GetObjectConstruct extends BaseDatabaseConstruct {
 		if (database.equals(NULL)) {
 			metaData = lastConnections.get(robotID);
 		} else {
-			metaData = database.getMeta(ConnectionMetadata.class);
+			metaData = assertMeta(database, "database", ConnectionMetadata.class, "variable with a connection");
 		}
 
 		Connection connection = metaData.getConnection();
 		LinkedHashMap<String, Object> result = null;
 		try {
 			result = factory.getService(metaData.getDatabaseName()).getObject(connection, tblName, constraints);
-		} catch (ReflectiveOperationException | SQLException | ConversionException e) {
+		} catch (ReflectiveOperationException | SQLException | ConversionException | IllegalArgumentException e) {
 			throw new RobotRuntimeException(e.getMessage(), e);
 		}
-		LinkedHashMap<String, MetaExpression> value = (LinkedHashMap<String, MetaExpression>) object.getValue();
-		value.clear();
+		LinkedHashMap<String, MetaExpression> value = new LinkedHashMap<String, MetaExpression>();
 		result.forEach((k, v) -> value.put(k, parseObject(v)));
-		return NULL;
+		return fromValue(value);
 
 	}
 }

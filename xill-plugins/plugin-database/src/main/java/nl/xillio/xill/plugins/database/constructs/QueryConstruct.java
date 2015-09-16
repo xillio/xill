@@ -32,91 +32,9 @@ public class QueryConstruct extends BaseDatabaseConstruct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor((query, parameters, database, timeout) -> process(query, parameters, database, timeout, factory, context.getRobotID()),
+		return new ConstructProcessor((query, database, timeout) -> PreparedStatementConstruct.process(query, NULL, database, timeout, factory, context.getRobotID()),
 			new Argument("query", ATOMIC),
-			new Argument("parameters", NULL, LIST, OBJECT),
 			new Argument("database", NULL, ATOMIC),
 			new Argument("timeout", fromValue(30), ATOMIC));
-	}
-
-	@SuppressWarnings("unchecked")
-	static MetaExpression process(final MetaExpression query, final MetaExpression parameters, final MetaExpression database, final MetaExpression timeout, final DatabaseServiceFactory factory,
-			final RobotID robotID) {
-		String sql = query.getStringValue();
-		ConnectionMetadata metaData;
-
-		if (database.isNull()) {
-			metaData = lastConnections.get(robotID);
-		} else {
-			metaData = assertMeta(database, "database", ConnectionMetadata.class, "contain a database");
-		}
-		Connection connection = metaData.getConnection();
-
-		int timeoutValue = timeout.getNumberValue().intValue();
-
-		// Parse the content of the parameter MetaExpression
-		List<LinkedHashMap<String, Object>> parameterObjects = new ArrayList<LinkedHashMap<String, Object>>();
-		if (!parameters.isNull()) {
-			// Multiple parameters
-			if (parameters.getType() == LIST) {
-				List<Object> parameterContent = (List<Object>) extractValue(parameters);
-				for (Object param : parameterContent) {
-					parameterObjects.add((LinkedHashMap<String, Object>) param);
-				}
-			}
-			// Single parameter
-			else {
-				parameterObjects.add((LinkedHashMap<String, Object>) extractValue(parameters));
-			}
-		}
-
-		Object result;
-		try {
-			result = factory.getService(metaData.getDatabaseName()).query(connection, sql, parameterObjects, timeoutValue);
-
-			return returnValue(result, sql);
-		} catch (ReflectiveOperationException | ClassCastException e) {
-			throw new RobotRuntimeException("Illegal DBMS type", e);
-		} catch (SQLException | IllegalArgumentException e) {
-			throw new RobotRuntimeException(e.getMessage(), e);
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	static MetaExpression returnValue(final Object value, final String sql) {
-		if (value instanceof Integer) {
-			return extractValue((int) value);
-		}
-		else if (value instanceof Iterator) {
-			return extractValue((Iterator<Object>) value, sql);
-		}
-		else {
-			return NULL;
-		}
-	}
-
-	static MetaExpression extractValue(final Integer integer) {
-		return fromValue(integer);
-	}
-
-	static MetaExpression extractValue(final Iterator<Object> iterator, final String sql) {
-
-		MetaExpressionIterator<Object> iterationResult = new MetaExpressionIterator<>(iterator, o ->
-		transformIteratorElement(o)
-				);
-
-		MetaExpression metaIterator = fromValue("Results[" + sql + "]");
-
-		metaIterator.storeMeta(iterationResult);
-		return metaIterator;
-	}
-
-	static MetaExpression transformIteratorElement(final Object o) {
-		if (o instanceof Integer) {
-			return fromValue((int) o);
-		} else if (o instanceof Map) {
-			return parseObject(o);
-		}
-		return NULL;
 	}
 }

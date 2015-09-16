@@ -222,7 +222,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	}
 
 	@Override
-	public LinkedHashMap<String, Object> getObject(final Connection connection, final String table, final Map<String, Object> constraints) throws SQLException, ConversionException {
+	public LinkedHashMap<String, Object> getObject(final Connection connection, final String table, final Map<String, Object> constraints) throws SQLException, ConversionException, IllegalArgumentException {
 		// prepare statement
 		final LinkedHashMap<String, Object> notNullConstraints = new LinkedHashMap<>();
 		constraints.forEach((k, v) -> {
@@ -297,16 +297,40 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	@Override
 	public void storeObject(final Connection connection, final String table, final Map<String, Object> newObject, final List<String> keys, final boolean overwrite)
 			throws SQLException {
-		if (keys.isEmpty() || !overwrite) {
-			// insert into table
-			insertObject(connection, table, newObject);
-		} else {
-			// update the table
-			updateObject(connection, table, newObject, keys);
+	
+		boolean exists;
+		try {
+			exists = checkIfExists(connection,table,newObject,keys);
+		} catch (ConversionException e) {
+			throw new SQLException(e);
 		}
-
+		if(exists){
+			if(overwrite){
+				updateObject(connection,table,newObject,keys);
+			}
+			else{
+				return;
+			}
+		}else{
+			insertObject(connection,table,newObject);
+			}
 	}
 
+	boolean checkIfExists(final Connection connection, final String table, final Map<String, Object> newObject, final List<String> keys) throws SQLException, ConversionException{
+		Map<String,Object> constraints = new LinkedHashMap<>();
+		for (String key : keys) {
+			if(newObject.containsKey(key)){
+				constraints.put(key, newObject.get(key));
+			}
+		}
+		try{
+			getObject(connection, table, constraints);
+			return true;
+		}catch(IllegalArgumentException e){
+			return false;
+		}
+	}
+	
 	void insertObject(final Connection connection, final String table, final Map<String, Object> newObject) throws SQLException {
 
 		List<String> escaped = new ArrayList<>();
@@ -344,10 +368,6 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		fillStatement(constraintsValues, statement, newObject.size() + 1);
 
 		statement.execute();
-		// if no rows were affected by an update, insert a new row
-		if (statement.getUpdateCount() == 0) {
-			insertObject(connection, table, newObject);
-		}
 		statement.close();
 	}
 

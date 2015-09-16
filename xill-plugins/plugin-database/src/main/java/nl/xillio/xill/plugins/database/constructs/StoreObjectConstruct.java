@@ -46,7 +46,7 @@ public class StoreObjectConstruct extends BaseDatabaseConstruct {
 		if (args[4].equals(NULL)) {
 			metaData = lastConnections.get(robotID);
 		} else {
-			metaData = args[4].getMeta(ConnectionMetadata.class);
+			metaData = assertMeta(args[4], "database", ConnectionMetadata.class, "variable with a connection");
 		}
 		Connection connection = metaData.getConnection();
 
