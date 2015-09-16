@@ -44,7 +44,7 @@ public class Base64DecodeConstruct extends Construct {
 		assertNotNull(filenameVar, "filename");
 
 		String content = contentVar.getStringValue();
-		File file = getFile(context.getRobotID(), filenameVar.getStringValue());
+		File file = getFile(context, filenameVar.getStringValue());
 
 		byte[] data = stringService.parseBase64Binary(content);
 
