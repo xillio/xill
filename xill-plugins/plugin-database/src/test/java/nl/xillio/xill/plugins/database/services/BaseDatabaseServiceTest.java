@@ -343,6 +343,7 @@ public class BaseDatabaseServiceTest {
 		when(statement.executeQuery()).thenReturn(resultSet);
 		when(resultSet.getMetaData()).thenReturn(resultMetaData);
 		when(resultSet.next()).thenReturn(true);
+		when(resultMetaData.getColumnCount()).thenReturn(2);
 		when(resultMetaData.getColumnName(anyInt())).thenReturn("name");
 
 		// run
