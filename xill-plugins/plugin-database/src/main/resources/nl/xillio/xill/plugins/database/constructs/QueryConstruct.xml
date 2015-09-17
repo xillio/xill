@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
   <description>
-    Query a database. Queries can be parametrized using this format: "SELECT * from table WHERE column=:name". In this case the parameter "name" can be set by passing query an object containing the key "name". 
-    When a query is parametrized, a list of objects can be passed in the parameters argument and a batch query will be executed. All objects in the list should at least contain the query parameters as keys.         
+    Query a database.         
     
     The connection parameter is optional, if not given the last created connection will be used. 
+    
+    Returns an iterator containing an update count for each insert/update/delete and an object for each selected row in the case of a select.
   </description>
   <examples>
     <example>
@@ -28,15 +29,6 @@
 	
 	var con = Database.connect("localhost:1521:orcl", "user", "pass");
 	var result = Database.query("INSERT INTO table VALUES(1,2)");
-      </code>
-    </example>  
-    <example>
-      <header>Insert multiple rows into a MySQL database</header>
-      <code>
-	use Database;
-	
-	var con = Database.connect("localhost:3306/testdb", "user", "pass");
-	var result = Database.query("INSERT INTO table VALUES(:value1, :value2)", [{"value1":1,"value2":2}, {"value1":2,"value2":3}, {"value1":3,"value2":4}]);
       </code>
     </example>  
   </examples>

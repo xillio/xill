@@ -240,14 +240,13 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		// perform query
 
 		ResultSet result = statement.executeQuery();
-		ResultSetMetaData rs = result.getMetaData();
+		ResultSetMetaData metadata = result.getMetaData();
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		if (result.next()) {
-
-			for (String s : constraints.keySet()) {
-				String here = rs.getColumnName(result.findColumn(s));
-				Object value = result.getObject(s);
+			for (int i = 1; i <= metadata.getColumnCount(); i++) {
+				String here = metadata.getColumnName(i);
+				Object value = result.getObject(i);
 				map.put(here, TypeConverter.convertJDBCType(value));
 			}
 			statement.close();
