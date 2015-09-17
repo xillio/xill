@@ -504,8 +504,13 @@ public class BaseDatabaseServiceTest {
 		Connection connection = mock(Connection.class);
 		Map<String, Object> newObject = new LinkedHashMap<String, Object>();
 		List<String> keys = new ArrayList<String>();
+        PreparedStatement statement = mock(PreparedStatement.class);
+        ResultSet resultSet = mock(ResultSet.class);
 
 		doNothing().when(service).insertObject(connection, "table", newObject);
+
+        when(connection.prepareStatement(any())).thenReturn(statement);
+        when(statement.executeQuery()).thenReturn(resultSet);
 
 		// run
 		service.storeObject(connection, "table", newObject, keys, false);
@@ -532,8 +537,13 @@ public class BaseDatabaseServiceTest {
 		Map<String, Object> newObject = new LinkedHashMap<String, Object>();
 		List<String> keys = new ArrayList<String>();
 		keys.add("key");
-
+		PreparedStatement statement = mock(PreparedStatement.class);
+		ResultSet resultSet = mock(ResultSet.class);
+		
 		doNothing().when(service).insertObject(connection, "table", newObject);
+		
+		when(connection.prepareStatement(any())).thenReturn(statement);
+		when(statement.executeQuery()).thenReturn(resultSet);
 
 		// run
 		service.storeObject(connection, "table", newObject, keys, false);
@@ -560,9 +570,9 @@ public class BaseDatabaseServiceTest {
 		Map<String, Object> newObject = new LinkedHashMap<String, Object>();
 		List<String> keys = new ArrayList<String>();
 		keys.add("key");
-
+		
 		doNothing().when(service).updateObject(connection, "table", newObject, keys);
-
+		
 		// run
 		service.storeObject(connection, "table", newObject, keys, true);
 

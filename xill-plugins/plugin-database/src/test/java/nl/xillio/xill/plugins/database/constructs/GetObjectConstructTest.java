@@ -69,7 +69,7 @@ public class GetObjectConstructTest extends ConstructTest {
 		verify(dbService, times(1)).getObject(any(), any(), any());
 		verify(database, never()).getMeta(ConnectionMetadata.class);
 
-		Assert.assertEquals(result, NULL);
+		Assert.assertEquals(result, emptyObject());
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class GetObjectConstructTest extends ConstructTest {
 		verify(dbService, times(1)).getObject(any(), any(), any());
 		verify(database, times(1)).getMeta(ConnectionMetadata.class);
 
-		Assert.assertEquals(result, NULL);
+		Assert.assertEquals(result, emptyObject());
 	}
 
 	@DataProvider(name = "exceptions")
