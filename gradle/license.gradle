@@ -10,6 +10,7 @@ downloadLicenses {
     ext.lgpl = license("LGPL, Version 2.1", "http://www.gnu.org/licenses/licenses.html")
     ext.eclipse = license("Eclipse Public License, Version 1.0", "http://www.eclipse.org/legal/epl-v10.html")
     ext.mozilla = license("Mozilla Public License, Version 2.0", "http://www.mozilla.org/MPL/2.0/")
+    ext.cddl = license("CDDL, Version 1.0", "http://opensource.org/licenses/cddl1.php")
 
     includeProjectDependencies = true
 
@@ -47,6 +48,10 @@ downloadLicenses {
             (mozilla) : [
                     'Mozilla Public License Version 2.0',
                     'Mozilla Public License version 2.0'
+            ],
+            (cddl)  :   [
+                    'CDDL, v1.0',
+                    'CDDL 1.0'
             ]
     ]
 }
