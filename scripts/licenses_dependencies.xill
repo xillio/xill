@@ -1,0 +1,189 @@
+/*
+Author:     Thomas Biesaart
+Modified:   18-9-2015
+
+Description:
+        This robot will list the gradle dependencies. 
+        Note: This only uses the gradle wrapper [gradlew].
+        Note: This only works on windows
+        
+*/
+use System;
+use String;
+use File;
+use Date;
+use Web;
+use List;
+
+var gradleProject = File.createFolder("..");
+var reportFile = File.saveTo("licenses_dependencies.md");
+var knownLicenses = {
+    "com.google.inject:guice:4.0":              "Apache License, Version 2.0",
+    "org.apache":                               "Apache License, Version 2.0",
+    "commons-io":                               "Apache License, Version 2.0",
+    "org.seleniumhq.selenium:selenium-server":  "Apache License, Version 2.0"
+};
+
+/*
+ In this first section we will query gradle to find all projects
+ */
+System.print("Listing projects...");
+var projectOutput = System.exec([gradleProject::"/gradlew.bat", "projects"], gradleProject);
+var projects = {};
+foreach(line in projectOutput.output) {
+    var result = String.regex(line, ".*Project '(.*)'.*");
+    
+    if(result == null) {
+        continue;
+    }
+    
+    projects[result[1]] = project(result[1]);
+}
+
+/*
+ In this second section we will query gradle for all dependencies
+ */
+System.print("Getting dependencies...");
+var args = [gradleProject::"/gradlew.bat"];
+foreach(project in projects) {
+    args[] = project.name :: ":dependencies";
+}
+var dependencyOutput = System.exec(args, gradleProject);
+var currentProject = null;
+var isRuntime = false;
+var dependencies = {};
+// And parse the output into something usable
+foreach(line in dependencyOutput.output) {
+    // Check if this is new project
+    var projectRegex = String.regex(line, "Project ([\\w\\:_-]+) - .*");
+    if(projectRegex != null) {
+        currentProject = projects[projectRegex[1]];
+        isRuntime = false;
+        //System.print("Processing "::currentProject);
+    }
+    
+    // Check if runtime is starting
+    if(String.regex(line, "runtime - .*") != null) {
+        isRuntime = true;
+    }else if(!isRuntime) {
+        continue;
+    }else if(String.regex(line, "testCompile - .*") != null) {
+        // Runtime is over
+        isRuntime = false;
+        continue;
+    }
+    
+    // Skip weird lines
+    if(currentProject == null) {
+        continue;
+    }
+    
+    // Check if is dependency
+    var dependencyRegex = String.regex(line, "[\\+\\\\]--- (.*)( \\(\\*\\))?");
+    if(dependencyRegex != null) {
+        var dependencyName = dependencyRegex[1];
+        // Remove arrow notation
+        if(String.contains(dependencyName, "->")) {
+            dependencyName = String.replace(dependencyName, "[\\w\\.\\+]+ -> ", "");
+        }
+        
+        if(String.contains(dependencyName, "project ") || String.contains(dependencyName, "nl.xillio")) {
+            // This is an internal project, skip it
+            continue;
+        }
+        currentProject.dependencies[] = dependency(dependencyName);
+    }
+}
+
+/*
+ Then we query maven central for licenses
+ */
+ System.print("Searching for licenses...");
+foreach(dependency in dependencies) {
+    var nameParts = String.split(dependency.artifact, ":");
+    var mavenCentralPage = null;
+    
+    if(List.length(nameParts) == 3) {
+        var url = "http://mvnrepository.com/artifact/"::nameParts[0]::"/"::nameParts[1]::"/"::nameParts[2];
+        if(!String.contains(url, "xillio")) {
+            mavenCentralPage = Web.loadPage(url);
+        }
+    }
+    
+    if(mavenCentralPage == null) {
+        System.print("Failed to find  "::dependency.artifact :: " on maven central", "warn");
+        continue;
+    }
+    
+    if(dependency.license == null) {
+        var sections = Web.cssPath(mavenCentralPage, ".version-section");
+        // Find the license section
+        foreach(section in sections) {
+            var licenseHeader = Web.cssPath(section, "h2");
+            if(Web.getText(licenseHeader) == "Licenses") {
+                var licenseTD = Web.cssPath(section, "td");
+                var licenseName = String.replace(Web.getText(licenseTD[0]), "\n", "");
+                dependency.license = licenseName;
+            }
+        }
+    }
+    
+}
+
+// Find all used Licenses
+var licenses = [];
+foreach(dependency in dependencies) {
+    if(!List.containsValue(licenses, dependency.license)) {
+        licenses[] = dependency.license;
+    }
+}
+
+/*
+ And finally we render output from the results
+ */
+var output = "# Xill 3.0 dependencies ["::Date.format(Date.now(), "dd MMMM yyyy") :: "]\n\n## Used Licences\n";
+
+foreach(license in licenses) {
+    output ::= "- " :: license :: "\n";
+}
+foreach(project in projects) {
+    output ::= "\n\n## " :: project.name :: "\n";
+    foreach(dependency in project.dependencies) {
+         output ::= "- "::dependency.artifact :: "\n";
+         output ::= "  - License: " :: dependency.license :: "\n";
+    }
+}
+
+System.print("Saving...");
+File.saveTo(reportFile, output);
+System.print("Done!");
+
+/**
+ * Create a new project
+ */
+function project(name) {
+    return {
+        "name": name,
+        "dependencies": []
+    };
+}
+
+/**
+ * Build a dependency if it doesn't exist. Otherwise make it.
+ */
+function dependency(name) {
+    if(dependencies[name] == null) {
+        var license = null;
+        foreach(prefix, candidate in knownLicenses) {
+            if(String.startsWith(name, prefix)) {
+                license = candidate;
+                break;
+            }
+        }
+        dependencies[name] = {
+            "artifact": name,
+            "license": license
+        };
+    }
+    return dependencies[name];
+}
