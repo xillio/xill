@@ -20,7 +20,8 @@ downloadLicenses {
                     'Apache 2',
                     'Apache License Version 2.0',
                     'Apache License 2.0',
-                    'Apache Software License - Version 2.0'
+                    'Apache Software License - Version 2.0',
+                    'Apache License'
             ],
             (bsd)      : [
                     'BSD',
