@@ -293,6 +293,25 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		return String.format("SELECT * FROM %1$s WHERE %2$s LIMIT 1", table, constraintsSql);
 	}
 
+	/**
+	 * Store an object in the database.
+	 * Update the database when a row already exists and overwrite is true.
+	 * Do nothing when a row already exists and overwrite is false
+	 * Insert into the database when a row does not exist
+	 *
+	 * @param connection
+	 *        The JDBC connection.
+	 * @param table
+	 *        The name of the table.
+	 * @param newObject
+	 *        The object we want to store.
+	 * @param keys
+	 *        The keys we hand the object.
+	 * @param overwrite
+	 *        A boolean whether we allow an overwrite.
+	 * @throws SQLException
+	 */
+	@SuppressWarnings("squid:S1319") // We need a map with guaranteed insertion order, there is no interface available, only the LinkedHashMap implementation is available
 	@Override
 	public void storeObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject, final List<String> keys, final boolean overwrite)
 			throws SQLException {
@@ -315,6 +334,17 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		}
 	}
 
+	/**
+	 * Return true if the provided table has a row with the provided properties. In all other cases: return false.
+	 * @param connection
+	 * @param table
+	 * @param newObject
+	 * @param keys
+	 * @return True when the row exists, false otherwise
+	 * @throws SQLException
+	 * @throws ConversionException
+	 */
+	@SuppressWarnings("squid:S1166") // The illegal argument exception is expected and should always result in "false" being returned as the row does not exist in the database yet
 	boolean checkIfExists(final Connection connection, final String table, final Map<String, Object> newObject, final List<String> keys) throws SQLException, ConversionException{
 		Map<String,Object> constraints = new LinkedHashMap<>();
 		for (String key : keys) {
@@ -329,7 +359,14 @@ public abstract class BaseDatabaseService implements DatabaseService {
 			return false;
 		}
 	}
-	
+
+	/**
+	 * Insert the provided object into the database
+	 * @param connection
+	 * @param table
+	 * @param newObject
+	 * @throws SQLException
+	 */
 	void insertObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject) throws SQLException {
 
 		List<String> escaped = new ArrayList<>();
@@ -352,6 +389,14 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		statement.close();
 	}
 
+	/**
+	 * Update the provided object in the database
+	 * @param connection
+	 * @param table
+	 * @param newObject
+	 * @param keys
+	 * @throws SQLException
+	 */
 	void updateObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject, final List<String> keys)
 			throws SQLException {
 		String setString = createQueryPart(connection, newObject.keySet(), ",");
