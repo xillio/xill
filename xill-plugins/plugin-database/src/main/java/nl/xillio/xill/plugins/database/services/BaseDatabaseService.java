@@ -294,7 +294,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	}
 
 	@Override
-	public void storeObject(final Connection connection, final String table, final Map<String, Object> newObject, final List<String> keys, final boolean overwrite)
+	public void storeObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject, final List<String> keys, final boolean overwrite)
 			throws SQLException {
 	
 		boolean exists;
@@ -312,7 +312,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 			}
 		}else{
 			insertObject(connection,table,newObject);
-			}
+		}
 	}
 
 	boolean checkIfExists(final Connection connection, final String table, final Map<String, Object> newObject, final List<String> keys) throws SQLException, ConversionException{
@@ -330,7 +330,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		}
 	}
 	
-	void insertObject(final Connection connection, final String table, final Map<String, Object> newObject) throws SQLException {
+	void insertObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject) throws SQLException {
 
 		List<String> escaped = new ArrayList<>();
 		for (String key : newObject.keySet()) {
@@ -352,7 +352,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		statement.close();
 	}
 
-	void updateObject(final Connection connection, final String table, final Map<String, Object> newObject, final List<String> keys)
+	void updateObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject, final List<String> keys)
 			throws SQLException {
 		String setString = createQueryPart(connection, newObject.keySet(), ",");
 		String whereString = createQueryPart(connection, keys, " AND ");
@@ -360,8 +360,8 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		String sql = "UPDATE " + table + " SET " + setString + " WHERE " + whereString;
 
 		PreparedStatement statement = connection.prepareStatement(sql);
-
 		fillStatement(newObject, statement, 1);
+
 		LinkedHashMap<String, Object> constraintsValues = new LinkedHashMap<>();
 		keys.forEach(e -> constraintsValues.put(e, newObject.get(e)));
 		fillStatement(constraintsValues, statement, newObject.size() + 1);
@@ -374,14 +374,14 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 * Fills a {@link PreparedStatement} from a map
 	 *
 	 * @param newObject
-	 *        The map of which all keys represent columns
+	 *        An ordered map of which keys represent columns and values represent the values for the row in the database
 	 * @param statement
 	 *        Prepared statements with as many '?' markers as entries in the newObject map
 	 * @param firstMarkerNumber
 	 *        The index of the '?' to start setting values
 	 * @throws SQLException
 	 */
-	void fillStatement(final Map<String, Object> newObject, final PreparedStatement statement, final int firstMarkerNumber) throws SQLException {
+	void fillStatement(final LinkedHashMap<String, Object> newObject, final PreparedStatement statement, final int firstMarkerNumber) throws SQLException {
 		int i = firstMarkerNumber;
 		for (Entry<String, Object> e : newObject.entrySet()) {
 			setValue(statement, e.getKey(), e.getValue(), i++);

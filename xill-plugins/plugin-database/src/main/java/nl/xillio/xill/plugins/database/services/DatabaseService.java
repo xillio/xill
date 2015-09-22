@@ -88,6 +88,6 @@ public interface DatabaseService extends XillService {
 	 *        A boolean whether we allow an overwrite.
 	 * @throws SQLException
 	 */
-	void storeObject(Connection connection, String table, Map<String, Object> newObject, List<String> keys, boolean overwrite) throws SQLException;
+	void storeObject(Connection connection, String table, LinkedHashMap<String, Object> newObject, List<String> keys, boolean overwrite) throws SQLException;
 
 }
