@@ -43,6 +43,8 @@ public class ConstructCall implements Processable {
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		ConstructProcessor processor = construct.prepareProcess(context);
 
+		MetaExpression[] argumentResults = new MetaExpression[arguments.length];
+
 		// Process arguments
 		for (int i = 0; i < arguments.length; i++) {
 			MetaExpression result = ExpressionBuilderHelper.NULL;
@@ -52,6 +54,10 @@ public class ConstructCall implements Processable {
 				debugger.handle(e);
 			}
 
+			// Reference for unnamed variable
+			result.registerReference();
+			argumentResults[i] = result;
+
 			if (!processor.setArgument(i, result)) {
 				throw new RobotRuntimeException("Wrong type for argument `" + processor.getArgumentName(i) + "` in " + processor.toString(construct.getName()) + " expected [" + processor.getArgumentType(i) + "] but received [" + result.getType() + "]");
 			}
@@ -60,7 +66,14 @@ public class ConstructCall implements Processable {
 		try {
 
 			// Process
-			return InstructionFlow.doResume(processor.process());
+			InstructionFlow<MetaExpression> result = InstructionFlow.doResume(processor.process());
+
+			// Release all argument references
+			for (MetaExpression argumentResult : argumentResults) {
+				argumentResult.releaseReference();
+			}
+
+			return result;
 
 
 		} catch (Throwable e) {
