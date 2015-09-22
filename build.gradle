@@ -169,7 +169,7 @@ javafx {
     embedLauncher = false
     embedJNLP = false
     // Allow the user to set the heap size
-    bundleArguments.userJvmOptions = ['-Xmx': '256m', '-Xms': '256m']
+    bundleArguments.userJvmOptions = ['-Xmx': '1024m', '-Xms': '1024m']
 }
 
 /**
