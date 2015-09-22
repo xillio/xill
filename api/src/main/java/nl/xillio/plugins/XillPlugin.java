@@ -1,6 +1,7 @@
 package nl.xillio.plugins;
 
 import java.io.IOException;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -179,7 +180,7 @@ public abstract class XillPlugin implements Loadable<XillPlugin>, AutoCloseable 
 			ClassPath classPath = ClassPath.from(getClass().getClassLoader());
 			for(ClassPath.ClassInfo classInfo : classPath.getTopLevelClasses(getClass().getPackage().getName() + ".constructs")) {
 				Class<?> constructClass = classInfo.load();
-				if(Construct.class.isAssignableFrom(constructClass)) {
+				if(Construct.class.isAssignableFrom(constructClass) && !Modifier.isAbstract(constructClass.getModifiers())) {
 					//This is a construct
 					add((Construct) InjectorUtils.get(constructClass));
 				}

@@ -14,9 +14,9 @@ import org.testng.annotations.Test;
 
 import com.google.gson.JsonSyntaxException;
 
+import nl.xillio.xill.ConstructTest;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.system.util.ConstructTest;
 import nl.xillio.xill.services.json.JsonParser;
 
 /**
@@ -63,7 +63,7 @@ public class ParseJSONConstructTest extends ConstructTest {
 	 * @throws Throwable
 	 *         while testing
 	 */
-	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp="Invalid JSON input: (.+)")
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid JSON input: (.+)")
 	public void testProcessInvalid() throws Throwable {
 		// Mock context
 		MetaExpression expression = mockExpression(ATOMIC);

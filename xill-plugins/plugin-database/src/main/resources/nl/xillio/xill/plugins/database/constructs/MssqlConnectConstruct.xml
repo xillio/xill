@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<function>
+  <description>
+    Connect to a Mssql database. Returns a connection object.
+  </description>
+  <examples>
+    <example>
+      <header>Connect to the MsSQL database "testdb" with user "user" and password "pass".
+      All possible options can be found here: https://msdn.microsoft.com/en-us/library/ms378988(v=sql.110).aspx
+      </header>
+      <code>
+	
+	var connection = Database.mssqlConnect("localhost",3306,"testdb","user","pass");
+	
+      </code>
+    </example> 
+  </examples>
+  <references>
+    <reference>connect</reference>
+    <reference>mysqlConnect</reference>
+    <reference>oracleConnect</reference>
+    <reference>sqliteConnect</reference>
+  </references>
+  <tags>
+    mssql, connect
+  </tags>
+</function>

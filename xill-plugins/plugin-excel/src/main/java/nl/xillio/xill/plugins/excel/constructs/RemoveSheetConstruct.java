@@ -1,6 +1,7 @@
 package nl.xillio.xill.plugins.excel.constructs;
 
 import com.google.inject.Inject;
+
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;

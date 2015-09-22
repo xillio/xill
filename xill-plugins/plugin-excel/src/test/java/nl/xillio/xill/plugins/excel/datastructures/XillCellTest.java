@@ -1,6 +1,8 @@
 package nl.xillio.xill.plugins.excel.datastructures;
 
 import nl.xillio.xill.api.errors.NotImplementedException;
+import nl.xillio.xill.plugins.excel.datastructures.XillCell;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.testng.annotations.Test;

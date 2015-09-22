@@ -75,7 +75,9 @@ public class ConstructCall implements Processable {
 
 			return result;
 
+
 		} catch (Throwable e) {
+
 			// Catch all exceptions that happen in constructs. (Unsafe environment)
 			debugger.handle(e);
 		}
