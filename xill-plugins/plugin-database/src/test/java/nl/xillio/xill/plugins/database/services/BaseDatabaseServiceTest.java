@@ -81,7 +81,7 @@ public class BaseDatabaseServiceTest {
 		// Mock the input
 		Connection connection = mock(Connection.class);
 		PreparedStatement statement = mock(PreparedStatement.class);
-		BaseDatabaseService service = spy(new SQLiteDatabaseServiceImpl());
+		BaseDatabaseService service = spy(new BaseDatabaseServiceImpl());
 
 		LinkedHashMap<String, Object> parameters = new LinkedHashMap<String, Object>();
 		parameters.put("param", "parameterValue");
@@ -117,7 +117,7 @@ public class BaseDatabaseServiceTest {
 		// Mock the input
 		Connection connection = mock(Connection.class);
 		PreparedStatement statement = mock(PreparedStatement.class);
-		BaseDatabaseService service = spy(new SQLiteDatabaseServiceImpl());
+		BaseDatabaseService service = spy(new BaseDatabaseServiceImpl());
 
 		// Mock the process
 		when(service.parseNamedParameters(connection, "query")).thenReturn(statement);
@@ -149,7 +149,7 @@ public class BaseDatabaseServiceTest {
 		// Mock the input
 		Connection connection = mock(Connection.class);
 		PreparedStatement statement = mock(PreparedStatement.class);
-		BaseDatabaseService service = spy(new SQLiteDatabaseServiceImpl());
+		BaseDatabaseService service = spy(new BaseDatabaseServiceImpl());
 
 		// Mock the process
 		when(service.parseNamedParameters(connection, "query")).thenReturn(statement);
@@ -169,7 +169,7 @@ public class BaseDatabaseServiceTest {
 		Connection connection = mock(Connection.class);
 		PreparedStatement statement = mock(PreparedStatement.class);
 
-		BaseDatabaseService service = spy(new SQLiteDatabaseServiceImpl());
+		BaseDatabaseService service = spy(new BaseDatabaseServiceImpl());
 		when(connection.prepareStatement("SELECT * FROM ?")).thenReturn(statement);
 
 		// Run
@@ -186,7 +186,7 @@ public class BaseDatabaseServiceTest {
 	public void testExtractParameterNames() {
 		// mock
 		String query = ":first :second :third";
-		BaseDatabaseService service = spy(new SQLiteDatabaseServiceImpl());
+		BaseDatabaseService service = spy(new BaseDatabaseServiceImpl());
 
 		// run
 		List<String> output = service.extractParameterNames(query);
@@ -213,7 +213,7 @@ public class BaseDatabaseServiceTest {
 	@Test
 	public void testExecuteBatch() throws SQLException {
 		// mock
-		BaseDatabaseService service = new SQLiteDatabaseServiceImpl();
+		BaseDatabaseService service = new BaseDatabaseServiceImpl();
 		PreparedStatement statement = mock(PreparedStatement.class);
 
 		LinkedHashMap<String, Object> parameterBatch = new LinkedHashMap<String, Object>();
@@ -239,7 +239,7 @@ public class BaseDatabaseServiceTest {
 	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "The Parameters argument should contain: \"first\"")
 	public void testExecuteBatchWithInvalidParameters() throws SQLException {
 		// mock
-		BaseDatabaseService service = new SQLiteDatabaseServiceImpl();
+		BaseDatabaseService service = new BaseDatabaseServiceImpl();
 		PreparedStatement statement = mock(PreparedStatement.class);
 
 		LinkedHashMap<String, Object> parameterBatch = new LinkedHashMap<String, Object>();
@@ -275,7 +275,7 @@ public class BaseDatabaseServiceTest {
 	@Test
 	public void testCreateJDBCURLWithNoNameNoPassNoOptions() {
 		// run
-		BaseDatabaseService service = new SQLiteDatabaseServiceImpl();
+		BaseDatabaseService service = new BaseDatabaseServiceImpl();
 		String output = service.createJDBCURL("type", "database", null, null, "%", "?");
 
 		// assert
@@ -299,7 +299,7 @@ public class BaseDatabaseServiceTest {
 	@Test
 	public void testCreateJDBCURLWithNameAndPassAndOptions() {
 		// run
-		BaseDatabaseService service = new SQLiteDatabaseServiceImpl();
+		BaseDatabaseService service = new BaseDatabaseServiceImpl();
 		@SuppressWarnings("unchecked")
 		String output = service.createJDBCURL("type", "database", "Name", "Pass", "%", "?", new Tuple<String, String>("option1", "firstOption"));
 
@@ -323,7 +323,7 @@ public class BaseDatabaseServiceTest {
 	public void testGetObject() throws SQLException, ConversionException {
 
 		// mock
-		BaseDatabaseService service = spy(new SQLiteDatabaseServiceImpl());
+		BaseDatabaseService service = spy(new BaseDatabaseServiceImpl());
 		Connection connection = mock(Connection.class);
 		PreparedStatement statement = mock(PreparedStatement.class);
 		ResultSet resultSet = mock(ResultSet.class);
@@ -362,7 +362,7 @@ public class BaseDatabaseServiceTest {
 	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "No objects found with given constraints.")
 	public void testGetObjectWithNoObjectsFound() throws SQLException, ConversionException {
 		// mock
-		BaseDatabaseService service = spy(new SQLiteDatabaseServiceImpl());
+		BaseDatabaseService service = spy(new BaseDatabaseServiceImpl());
 		Connection connection = mock(Connection.class);
 		PreparedStatement statement = mock(PreparedStatement.class);
 		ResultSet resultSet = mock(ResultSet.class);
@@ -384,7 +384,7 @@ public class BaseDatabaseServiceTest {
 	 */
 	@Test(expectedExceptions = SQLException.class, expectedExceptionsMessageRegExp = "Failed to set value 'value' for column 'key'.")
 	public void testSetValueFailure() throws SQLException {
-		BaseDatabaseService service = new SQLiteDatabaseServiceImpl();
+		BaseDatabaseService service = new BaseDatabaseServiceImpl();
 		PreparedStatement statement = mock(PreparedStatement.class);
 
 		doThrow(new RobotRuntimeException("I failed")).when(statement).setObject(anyInt(), any());
@@ -401,7 +401,7 @@ public class BaseDatabaseServiceTest {
 	@Test
 	public void testCreateSelectQueryWithKeys() throws SQLException {
 		// mock
-		BaseDatabaseService service = spy(new SQLiteDatabaseServiceImpl());
+		BaseDatabaseService service = spy(new BaseDatabaseServiceImpl());
 		Connection connection = mock(Connection.class);
 		List<String> keys = Arrays.asList("key1", "key2");
 
@@ -427,7 +427,7 @@ public class BaseDatabaseServiceTest {
 	@Test
 	public void testCreateSelectQueryWithoutKeys() throws SQLException {
 		// mock
-		BaseDatabaseService service = spy(new SQLiteDatabaseServiceImpl());
+		BaseDatabaseService service = spy(new BaseDatabaseServiceImpl());
 		Connection connection = mock(Connection.class);
 		List<String> keys = Arrays.asList();
 
@@ -451,7 +451,7 @@ public class BaseDatabaseServiceTest {
 	@Test
 	public void testCreateQueryPart() throws SQLException {
 		// mock
-		BaseDatabaseService service = spy(new SQLiteDatabaseServiceImpl());
+		BaseDatabaseService service = spy(new BaseDatabaseServiceImpl());
 		Connection connection = mock(Connection.class);
 		List<String> keys = Arrays.asList("key1", "key2");
 
@@ -472,7 +472,7 @@ public class BaseDatabaseServiceTest {
 	 */
 	@Test
 	public void testEscapeIdentifier() throws SQLException {
-		BaseDatabaseService service = new SQLiteDatabaseServiceImpl();
+		BaseDatabaseService service = new BaseDatabaseServiceImpl();
 		Connection connection = mock(Connection.class);
 		DatabaseMetaData metaData = mock(DatabaseMetaData.class);
 
@@ -497,7 +497,7 @@ public class BaseDatabaseServiceTest {
 	@Test
 	public void testStoreObjectWithEmptyKeys() throws SQLException {
 		// mock
-		BaseDatabaseService service = spy(new SQLiteDatabaseServiceImpl());
+		BaseDatabaseService service = spy(new BaseDatabaseServiceImpl());
 		Connection connection = mock(Connection.class);
 		LinkedHashMap<String, Object> newObject = new LinkedHashMap<>();
 		List<String> keys = new ArrayList<>();
@@ -625,7 +625,7 @@ public class BaseDatabaseServiceTest {
 	@Test
 	public void testInsertObject() throws SQLException {
 		// mock
-		BaseDatabaseService service = spy(new SQLiteDatabaseServiceImpl());
+		BaseDatabaseService service = spy(new BaseDatabaseServiceImpl());
 
 		Connection connection = mock(Connection.class);
 		PreparedStatement statement = mock(PreparedStatement.class);
