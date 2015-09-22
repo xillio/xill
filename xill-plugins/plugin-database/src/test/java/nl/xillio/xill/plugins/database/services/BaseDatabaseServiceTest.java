@@ -1,10 +1,6 @@
 package nl.xillio.xill.plugins.database.services;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyList;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -503,8 +499,8 @@ public class BaseDatabaseServiceTest {
 		// mock
 		BaseDatabaseService service = spy(new SQLiteDatabaseServiceImpl());
 		Connection connection = mock(Connection.class);
-		Map<String, Object> newObject = new LinkedHashMap<String, Object>();
-		List<String> keys = new ArrayList<String>();
+		LinkedHashMap<String, Object> newObject = new LinkedHashMap<>();
+		List<String> keys = new ArrayList<>();
         PreparedStatement statement = mock(PreparedStatement.class);
         ResultSet resultSet = mock(ResultSet.class);
 
@@ -531,26 +527,59 @@ public class BaseDatabaseServiceTest {
 	 * @throws SQLException
 	 */
 	@Test
-	public void testStoreObjectWithOverwrite() throws SQLException {
-		// mock
-		BaseDatabaseService service = spy(new SQLiteDatabaseServiceImpl());
-		Connection connection = mock(Connection.class);
-		Map<String, Object> newObject = new LinkedHashMap<String, Object>();
-		List<String> keys = new ArrayList<String>();
+	public void testStoreObjectWithOverwrite() throws SQLException, ConversionException {
+		// Setup input objects
+		LinkedHashMap<String, Object> newObject = new LinkedHashMap<>();
+		List<String> keys = new ArrayList<>();
 		keys.add("key");
-		PreparedStatement statement = mock(PreparedStatement.class);
-		ResultSet resultSet = mock(ResultSet.class);
+
+		// mock
+		BaseDatabaseService service = spy(new BaseDatabaseServiceImpl());
+		Connection connection = mock(Connection.class);
+		doReturn(true).when(service).checkIfExists(connection, "table", newObject, keys);
+
+		doNothing().when(service).updateObject(connection, "table", newObject, keys);
 		
+
+		// run
+		service.storeObject(connection, "table", newObject, keys, true);
+
+		// verify
+		verify(service, times(1)).updateObject(connection, "table", newObject, keys);
+		verify(service, times(0)).insertObject(connection, "table", newObject);
+	}
+
+	/**
+	 * <p>
+	 * Test the storeObject method with keys and overwrite set to true
+	 * </p>
+	 * <p>
+	 * It should call insertObject
+	 * </p>
+	 *
+	 * @throws SQLException
+	 */
+	@Test
+	public void testStoreObjectWithInsert() throws SQLException, ConversionException {
+		// Setup input objects
+		LinkedHashMap<String, Object> newObject = new LinkedHashMap<>();
+		List<String> keys = new ArrayList<>();
+		keys.add("key");
+
+		// mock
+		BaseDatabaseService service = spy(new BaseDatabaseServiceImpl());
+		Connection connection = mock(Connection.class);
+		doReturn(false).when(service).checkIfExists(connection, "table", newObject, keys);
+
 		doNothing().when(service).insertObject(connection, "table", newObject);
-		
-		when(connection.prepareStatement(any())).thenReturn(statement);
-		when(statement.executeQuery()).thenReturn(resultSet);
+
 
 		// run
 		service.storeObject(connection, "table", newObject, keys, false);
 
 		// verify
 		verify(service, times(1)).insertObject(connection, "table", newObject);
+		verify(service, times(0)).updateObject(connection, "table", newObject, keys);
 	}
 
 	/**
@@ -564,21 +593,26 @@ public class BaseDatabaseServiceTest {
 	 * @throws SQLException
 	 */
 	@Test
-	public void testStoreObjectWithKeysAndNoOverwrite() throws SQLException {
-		// mock
-		BaseDatabaseService service = spy(new SQLiteDatabaseServiceImpl());
-		Connection connection = mock(Connection.class);
-		Map<String, Object> newObject = new LinkedHashMap<String, Object>();
-		List<String> keys = new ArrayList<String>();
-		keys.add("key");
-		
-		doNothing().when(service).updateObject(connection, "table", newObject, keys);
-		
-		// run
-		service.storeObject(connection, "table", newObject, keys, true);
+	public void testStoreObjectWithKeysAndNoOverwrite() throws SQLException, ConversionException {
+		// Setup input objects
+		LinkedHashMap<String, Object> newObject = new LinkedHashMap<>();
+		newObject.put("key", "keyValue");
 
-		// verify
-		verify(service, times(1)).updateObject(connection, "table", newObject, keys);
+		List<String> keys = new ArrayList<>();
+		keys.add("key");
+
+		// mock
+		BaseDatabaseService service = spy(new BaseDatabaseServiceImpl());
+		Connection connection = mock(Connection.class);
+
+		doReturn(true).when(service).checkIfExists(connection, "table", newObject, keys);
+
+		// run
+		service.storeObject(connection, "table", newObject, keys, false);
+
+		// verify object is set
+		verify(service, times(0)).updateObject(connection, "table", newObject, keys);
+		verify(service, times(0)).insertObject(connection, "table", newObject);
 	}
 
 	/**
@@ -597,7 +631,7 @@ public class BaseDatabaseServiceTest {
 		PreparedStatement statement = mock(PreparedStatement.class);
 		when(connection.prepareStatement(anyString())).thenReturn(statement);
 
-		Map<String, Object> newObject = new LinkedHashMap<String, Object>();
+		LinkedHashMap<String, Object> newObject = new LinkedHashMap<>();
 		newObject.put("firstValue", "key");
 		newObject.put("secondValue", "lock");
 
@@ -613,4 +647,27 @@ public class BaseDatabaseServiceTest {
 		verify(connection, times(1)).prepareStatement(anyString());
 	}
 
+
+	/**
+	 * Basic implementation of a BaseDatabaseService class
+	 */
+	private class BaseDatabaseServiceImpl extends BaseDatabaseService {
+		public String MOCKED_CONNECTION_URL = "MOCKED_CONNECTION";
+
+
+		@SafeVarargs
+		@Override
+		public final Connection createConnection(String database, String user, String pass, Tuple<String, String>... options) throws SQLException {
+			return mock(Connection.class);
+		}
+
+		@SafeVarargs
+		@Override
+		protected final String createConnectionURL(String database, String user, String pass, Tuple<String, String>... options) throws SQLException {
+			return MOCKED_CONNECTION_URL;
+		}
+
+		@Override
+		public void loadDriver() throws ClassNotFoundException {}
+	}
 }
