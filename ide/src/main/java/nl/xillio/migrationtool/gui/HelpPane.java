@@ -2,7 +2,6 @@ package nl.xillio.migrationtool.gui;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.CookieHandler;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -47,6 +46,10 @@ public class HelpPane extends AnchorPane {
 			webFunctionDoc.getEngine().getHistory().setMaxSize(0);
 			webFunctionDoc.getEngine().getHistory().setMaxSize(100);
 			helpSearchBar.setSearcher(init.getSearcher());
+		});
+
+		webFunctionDoc.getEngine().getLoadWorker().stateProperty().addListener((observable, o, n) -> {
+			Loader.getInitializer().getPlugins().stream().forEach(p -> webFunctionDoc.getEngine().executeScript("highlightSettings.addKeyword(" + p.getName() + ");"));
 		});
 
 		//Load splash page

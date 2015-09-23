@@ -6,14 +6,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.xillio.xill.api.components.RobotID;
-import nl.xillio.xill.api.construct.Construct;
-import nl.xillio.xill.api.construct.ConstructContext;
-import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.docgen.*;
-import nl.xillio.xill.docgen.data.Parameter;
-import nl.xillio.xill.docgen.exceptions.ParsingException;
-import nl.xillio.xill.docgen.impl.ConstructDocumentationEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,6 +16,18 @@ import nl.xillio.events.EventHost;
 import nl.xillio.plugins.CircularReferenceException;
 import nl.xillio.plugins.PluginLoader;
 import nl.xillio.plugins.XillPlugin;
+import nl.xillio.xill.api.components.RobotID;
+import nl.xillio.xill.api.construct.Construct;
+import nl.xillio.xill.api.construct.ConstructContext;
+import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.docgen.DocGen;
+import nl.xillio.xill.docgen.DocumentationEntity;
+import nl.xillio.xill.docgen.DocumentationGenerator;
+import nl.xillio.xill.docgen.DocumentationParser;
+import nl.xillio.xill.docgen.DocumentationSearcher;
+import nl.xillio.xill.docgen.data.Parameter;
+import nl.xillio.xill.docgen.exceptions.ParsingException;
+import nl.xillio.xill.docgen.impl.ConstructDocumentationEntity;
 import nl.xillio.xill.services.inject.InjectorUtils;
 import nl.xillio.xill.services.inject.PluginInjectorModule;
 
@@ -40,6 +44,7 @@ public class XillInitializer extends Thread {
 	private final EventHost<InitializationResult> onLoadComplete = new EventHost<>();
 	private final String cssFile;
 	private final String aceJSFile;
+	private final String highlightSettingsJSFile;
 	private final String aceLoader;
 	private final String editorCss;
 	private DocumentationSearcher searcher;
@@ -52,6 +57,7 @@ public class XillInitializer extends Thread {
 		this.docGen = docGen;
 		cssFile = getClass().getResource(docGen.getConfig().getResourceUrl() + "/_assets/css/style.css").toExternalForm();
 		aceJSFile = getClass().getResource("/ace/ace.js").toExternalForm();
+		highlightSettingsJSFile = getClass().getResource("/ace/highlight-settings.js").toExternalForm();
 		aceLoader = getClass().getResource("/ace/load-doc.js").toExternalForm();
 		editorCss = getClass().getResource("/editor.css").toExternalForm();
 	}
@@ -137,6 +143,7 @@ public class XillInitializer extends Thread {
 		DocumentationGenerator generator = docGen.getGenerator(name);
 		generator.setProperty("cssFile", cssFile);
 		generator.setProperty("aceFile", aceJSFile);
+		generator.setProperty("highlightSettingsFile", highlightSettingsJSFile);
 		generator.setProperty("aceLoader", aceLoader);
 		generator.setProperty("aceCssFile", editorCss);
 

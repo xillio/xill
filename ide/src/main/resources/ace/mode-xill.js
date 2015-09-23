@@ -538,8 +538,8 @@ ace.define('ace/mode/xill_highlight_rules', function(require, exports, module) {
 
 	var XillHighlightRules = function() {
 		var keywordMapper = this.createKeywordMapper({
-			"keyword" : editor.xillKeywords,
-			"buildin" : editor.xillBuildin,
+			"keyword" : highlightSettings.xillKeywords,
+			"buildin" : highlightSettings.xillBuildin,
 			"language.constant": "true|false|null|ATOMIC|LIST|OBJECT"
 		}, "identifier");
 

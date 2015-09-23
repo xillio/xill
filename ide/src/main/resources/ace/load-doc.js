@@ -5,8 +5,6 @@ ace.require("ace/ext/language_tools");
 var counter = 0;
 var nodes = document.getElementsByClassName("code");
 
-var editor;
-
 for (var i = 0; i < nodes.length; i++) {
     var node = nodes.item(i);
     if (!node.id) {
@@ -19,7 +17,7 @@ for (var i = 0; i < nodes.length; i++) {
 function loadEditor(id) {
     console.log("Loading editor: " + id);
     // Create editor
-    editor = ace.edit(id);
+    var editor = ace.edit(id);
 
     // Load syntax
     editor.setTheme("ace/theme/chrome");

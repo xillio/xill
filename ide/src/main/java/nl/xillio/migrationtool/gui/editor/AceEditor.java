@@ -3,19 +3,21 @@ package nl.xillio.migrationtool.gui.editor;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -135,7 +137,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	 *        the built-in keyword
 	 */
 	public void addBuiltIn(final String keyword) {
-		executeJS("editor.addBuildin('" + keyword + "');");
+		executeJS("highlightSettings.addBuildin('" + keyword + "');");
 	}
 
 	/**
@@ -145,7 +147,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	 *        the keyword to add
 	 */
 	public void addKeyword(final String keyword) {
-		executeJS("editor.addKeyword('" + keyword + "');");
+		executeJS("highlightSettings.addKeyword('" + keyword + "');");
 	}
 
 	/**
