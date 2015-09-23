@@ -252,4 +252,11 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 		this.lastSavedCode = newCode;
 		this.getDocumentState().setValue(DocumentState.SAVED);
 	}
+
+	/**
+	 * @return the robot controls which allows to control the active robot
+	 */
+	public RobotControls getControls() {
+		return controls;
+	}
 }
