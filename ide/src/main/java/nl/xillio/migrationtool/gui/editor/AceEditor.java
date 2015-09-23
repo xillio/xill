@@ -456,19 +456,25 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	}
 
 	// ///////// SEARCH BAR //////////////////
-	private int currenthighlight = 0;
 	private int occurrences = 0;
 
+	private String needle;
+	private boolean regex;
+	private boolean caseSensitive;
 	@Override
 	public void searchPattern(final String pattern, final boolean caseSensitive) {
-		currenthighlight = 0;
-		searchJS(pattern, true, caseSensitive);
+		this.needle = pattern;
+		this.caseSensitive = caseSensitive;
+		this.regex = true;
+		searchJS(pattern, true, caseSensitive, 0);
 	}
 
 	@Override
 	public void search(final String needle, final boolean caseSensitive) {
-		currenthighlight = 0;
-		searchJS(needle, false, caseSensitive);
+		this.needle = needle;
+		this.caseSensitive = caseSensitive;
+		this.regex = false;	
+		searchJS(needle, false, caseSensitive, 0);
 	}
 
 	@Override
@@ -478,19 +484,12 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 
 	@Override
 	public void highlight(final int occurrence) {
-		while (currenthighlight != occurrence) {
-			if (currenthighlight < occurrence) {
-				highlightNext();
-			} else {
-				highlightPrevious();
-			}
-		}
+		this.searchJS(needle, regex, caseSensitive,occurrence);
 	}
 
 	@Override
 	public void highlightAll() {
-		// Is already done automatically (in javascript) when searchJS is called
-		highlight(0);
+		//nothing to do
 	}
 
 	@Override
@@ -504,42 +503,33 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 		executeJS("editor.replace('" + escape(replacement) + "');");
 	}
 
-	private void searchJS(final String needle, final boolean regex, final boolean caseSensitive) {
+	private void searchJS(final String needle, final boolean regex, final boolean caseSensitive,final int occurence) {
 		String arguments = "'" + escape(needle) + "',"
 						+ "{ "
-						+ "backwards: true,"
+						+ "backwards: false,"
 						+ "wrap: true,"
 						+ "caseSensitive: " + caseSensitive + ","
 						+ "regExp: " + regex + ","
-						+ "start: 1"
-						+ "},"
-						+ "false";
+						+ "occurence: " + occurence
+									+ "}";
 
 		// Count
-		executeJS("editor.findAll(" + arguments + ");",
+		executeJS("editor.findOccurences(" + arguments + ");",
 			result -> {
 				occurrences = (Integer) result;
 
 				// If there are no results, clear the search
 				if (occurrences == 0) {
-					executeJS("editor.clearSearch();");
+					executeJS("editor.clearOccurences;");
 				}
 			});
 	}
 
-	private void highlightNext() {
-		executeJS("editor.findNext();");
-		currenthighlight++;
-	}
 
-	private void highlightPrevious() {
-		executeJS("editor.findPrevious();");
-		currenthighlight--;
-	}
 
 	@Override
 	public void clearSearch() {
-		executeJS("editor.clearSearch();");
+		executeJS("editor.clearOccurences();");
 	}
 
 	/**

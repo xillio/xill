@@ -46,6 +46,54 @@ editor.clearSearch = function() {
 	}
 }
 
+editor.$occurences = [];
+editor.clearOccurences = function() {
+  if (editor.$occurences) {
+    editor.$occurences.forEach(function(entry) {
+    		editor.getSession().removeMarker(entry);
+   	});
+  }
+  editor.$occurences = [];
+} 
+editor.findOccurences = function(needle, options) {
+  options = options || {};
+  options.needle = needle || options.needle;
+  if (options.needle == undefined) {
+      var range = editor.selection.isEmpty()
+          ? editor.selection.getWordRange()
+          : editor.selection.getRange();
+      options.needle = editor.session.getTextRange(range);
+  }    
+  editor.$search.set(options);
+  var occurence = (options.occurence == undefined ? 0 : options.occurence);
+  
+  var ranges = editor.$search.findAll(editor.session);
+  if (!ranges.length)
+      return 0;
+  
+  editor.$blockScrolling += 1;
+  
+  editor.clearOccurences();
+  
+  var scrollRange = null;
+  for (var i = 0; i<ranges.length; i++ ) {
+    if (i == occurence) {
+      scrollRange = ranges[i];
+    }
+    hl = editor.getSession().addMarker(ranges[i],"ace_highlight","text");
+    editor.$occurences.push(hl);
+  }
+  editor.$blockScrolling -= 1;
+  
+  if (scrollRange) {
+    editor.navigateTo(scrollRange.end.row, scrollRange.end.column);
+    editor.navigateTo(scrollRange.start.row, scrollRange.start.column);
+  }
+  
+  return ranges.length;
+}
+
+
 editor.getCurrentWord = function() { 
 	editor.selection.selectWord();
 	return editor.getSelectedText();
