@@ -2,7 +2,7 @@
 <Configuration packages="nl.xillio.xill.api">
   <Appenders>
     <Console name="stdout" target="SYSTEM_OUT">
-      <PatternLayout pattern="%d{HH:mm:ss} %p\t- (%F:%L) %m%n"/>
+      <PatternLayout pattern="%d{ISO8601} %p\t- (%F:%L) %m%n"/>
       <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="ACCEPT"/>
       
     </Console>
@@ -10,7 +10,7 @@
       <PatternLayout pattern="%d{HH:mm:ss} %p\t- (%F:%L) %m%n"/>
     </Console>
     <RobotAppender name="ctConsole">
-      <PatternLayout pattern="%d{HH:mm:ss}  %p\t- (%F:%L) %m%n"/>
+      <PatternLayout pattern="%d{ISO8601}  %p\t- (%F:%L) %m%n"/>
     </RobotAppender>
   </Appenders>
   <Loggers>
