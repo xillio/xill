@@ -129,7 +129,12 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 		controls = new RobotControls(tab, btnRun, btnPause, btnStop, btnStepIn, btnStepOver, cmiError);
 		editor.setTab(tab);
 		editor.addKeywords(tab.getProcessor());
-
+		editorReplaceBar.getOnClose().addListener(clear -> {
+			if (clear){
+				this.requestFocus();
+			}
+		});
+		
 		ESConsoleClient.getLogEvent(tab.getProcessor().getRobotID()).addListener(this::onLogMessage);
 	}
 
