@@ -104,7 +104,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 	private boolean sliderChanged = false; // if slider value has changed from outside - because of some user activity
 
 	// Time format
-	private final DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+	private final DateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	// Filters
 	private final Map<LogType, Boolean> filters = new HashMap<>(LogType.values().length);

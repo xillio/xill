@@ -65,7 +65,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	@FXML
 	private VBox vbxDebugHidden, vbxDebugpane;
 	@FXML
-	private ConsolePane consolepane;
+	private ConsolePane consolePane;
 
 	private XillProcessor processor;
 
@@ -494,4 +494,12 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	public RobotID getCurrentRobot() {
 		return currentRobot;
 	}
+	
+  /**
+   * Clear the console content related to this robot
+   */
+  public void clearConsolePane() {
+    this.consolePane.clear();
+  }
+
 }

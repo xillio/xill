@@ -168,7 +168,12 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 
 	private void loadProjects() {
 		Platform.runLater(() -> {
-			getProjects().forEach(this::addProject);
+			List<ProjectSetting> projects = getProjects();
+			if (projects.isEmpty()) {
+				disableAllButtons();
+				return;
+			};
+			projects.forEach(this::addProject);
 			if (settings.getSimpleSetting("license") == null && new File(DEFAULT_PROJECT_PATH).exists()) {
 				newProject(DEFAULT_PROJECT_NAME, DEFAULT_PROJECT_PATH, "");
 			}
@@ -508,15 +513,18 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 
 		if (newObject == null || newObject == trvProjects.getRoot()) {
 			// Disable all
-			btnAddFolder.setDisable(true);
-			btnDelete.setDisable(true);
-			btnRename.setDisable(true);
-			btnUpload.setDisable(true);
+			disableAllButtons();
 
 		} else if (newObject == getProject(newObject)) {
 			// This is a project
 			btnRename.setDisable(true);
 		}
+	}
 
+	private void disableAllButtons() {
+		btnAddFolder.setDisable(true);
+		btnDelete.setDisable(true);
+		btnRename.setDisable(true);
+		btnUpload.setDisable(true);
 	}
 }

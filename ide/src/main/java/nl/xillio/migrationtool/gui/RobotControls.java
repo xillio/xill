@@ -166,13 +166,13 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 		tab.display(action.getRobotID(), action.getLineNumber());
 	}
 
-	private void stepIn() {
+	public void stepIn() {
 		onPause();
 
 		getDebugger().stepIn();
 	}
 
-	private void stepOver() {
+	public void stepOver() {
 		onPause();
 
 		getDebugger().stepOver();
