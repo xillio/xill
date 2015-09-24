@@ -146,24 +146,22 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	private void addContextMenu(FXController controller) {
 		// Close this tab.
 		MenuItem closeThis = new MenuItem("Close");
-		closeThis.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				controller.closeTab(RobotTab.this);
-			}
-		});
+		closeThis.setOnAction(e -> controller.closeTab(this));
 		
 		// Close all other tabs.
 		MenuItem closeOther = new MenuItem("Close all other tabs");
-		closeOther.setOnAction(new EventHandler<ActionEvent>() {
-		        @Override
-		        public void handle(ActionEvent event) {
-		        	controller.closeAllTabsExcept(RobotTab.this);
-		        }
-		});
+		closeOther.setOnAction(e -> controller.closeAllTabsExcept(this));
+		
+		// Save
+		MenuItem saveTab = new MenuItem("Save");
+		saveTab.setOnAction(e -> save());
+		
+		// Save
+		MenuItem saveAs = new MenuItem("Save as...");
+		saveAs.setOnAction(e -> save(true));
 		
 		// Create the context menu.
-		ContextMenu menu = new ContextMenu(closeThis, closeOther);
+		ContextMenu menu = new ContextMenu(closeThis, closeOther, saveTab, saveAs);
 		this.setContextMenu(menu);
 	}
 
