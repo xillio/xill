@@ -2,9 +2,6 @@ package nl.xillio.migrationtool.gui;
 
 import java.io.IOException;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -24,6 +21,9 @@ import nl.xillio.migrationtool.Loader;
 import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
 import nl.xillio.migrationtool.elasticconsole.RobotLogMessage;
 import nl.xillio.migrationtool.gui.editor.AceEditor;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * The editor pane. Contains most of the UI, apart from the left panel.
@@ -129,6 +129,7 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 		controls = new RobotControls(tab, btnRun, btnPause, btnStop, btnStepIn, btnStepOver, cmiError);
 		editor.setTab(tab);
 		editor.addKeywords(tab.getProcessor());
+		editor.loadEditor();
 
 		ESConsoleClient.getLogEvent(tab.getProcessor().getRobotID()).addListener(this::onLogMessage);
 	}

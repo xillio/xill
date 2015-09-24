@@ -6,11 +6,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.google.inject.Module;
-
 import nl.xillio.events.Event;
 import nl.xillio.events.EventHost;
 import nl.xillio.plugins.CircularReferenceException;
@@ -31,6 +26,11 @@ import nl.xillio.xill.docgen.impl.ConstructDocumentationEntity;
 import nl.xillio.xill.services.inject.InjectorUtils;
 import nl.xillio.xill.services.inject.PluginInjectorModule;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.google.inject.Module;
+
 /**
  * This {@link Thread} is responsible for loading the plugins an and initializing the language.
  * @author Thomas Biesaart
@@ -44,7 +44,6 @@ public class XillInitializer extends Thread {
 	private final EventHost<InitializationResult> onLoadComplete = new EventHost<>();
 	private final String cssFile;
 	private final String aceJSFile;
-	private final String highlightSettingsJSFile;
 	private final String aceLoader;
 	private final String editorCss;
 	private DocumentationSearcher searcher;
@@ -57,7 +56,6 @@ public class XillInitializer extends Thread {
 		this.docGen = docGen;
 		cssFile = getClass().getResource(docGen.getConfig().getResourceUrl() + "/_assets/css/style.css").toExternalForm();
 		aceJSFile = getClass().getResource("/ace/ace.js").toExternalForm();
-		highlightSettingsJSFile = getClass().getResource("/ace/highlight-settings.js").toExternalForm();
 		aceLoader = getClass().getResource("/ace/load-doc.js").toExternalForm();
 		editorCss = getClass().getResource("/editor.css").toExternalForm();
 	}
@@ -143,7 +141,6 @@ public class XillInitializer extends Thread {
 		DocumentationGenerator generator = docGen.getGenerator(name);
 		generator.setProperty("cssFile", cssFile);
 		generator.setProperty("aceFile", aceJSFile);
-		generator.setProperty("highlightSettingsFile", highlightSettingsJSFile);
 		generator.setProperty("aceLoader", aceLoader);
 		generator.setProperty("aceCssFile", editorCss);
 

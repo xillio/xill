@@ -4,20 +4,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -42,6 +34,14 @@ import nl.xillio.sharedlibrary.settings.SettingsHandler;
 import nl.xillio.xill.api.XillProcessor;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.preview.Replaceable;
+import nl.xillio.xill.util.HighlightSettings;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 /**
  * This class wraps around a webview object containing an ace editor in Xill mode.
@@ -58,8 +58,10 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	private final SimpleBooleanProperty documentLoaded = new SimpleBooleanProperty(false);
 	private final EventHost<Boolean> onDocumentLoaded = new EventHost<>();
 	private HelpPane helppane;
+	private JSObject ace;
 	private XillProcessor processor;
 	private RobotTab tab;
+	private HighlightSettings highlightSettings;
 
 	static {
 		try {
@@ -72,9 +74,9 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	/**
 	 * Deploy the editor file.
 	 * <p>
-	 *   This is a workaround for a bug introduced in jdk1.8.0_60 where internal resources cannot reference other
-	 *   internal resources. This method should be removed as soon as this bug is fixed.
+	 * This is a workaround for a bug introduced in jdk1.8.0_60 where internal resources cannot reference other internal resources. This method should be removed as soon as this bug is fixed.
 	 * </p>
+	 * 
 	 * @deprecated This is a workaround
 	 * @see <a href="https://bugs.openjdk.java.net/browse/JDK-8134975?page=com.atlassian.streams.streams-jira-plugin:activity-stream-issue-tab">Bug Report</a>
 	 */
@@ -99,8 +101,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	 */
 	public AceEditor(final WebView editor) {
 		this.editor = editor;
-
-		load(EDITOR_URL);
+		this.highlightSettings = new HighlightSettings();
 
 		editor.addEventHandler(KeyEvent.KEY_PRESSED, this);
 		editor.addEventHandler(ScrollEvent.SCROLL, this);
@@ -126,28 +127,17 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	}
 
 	private void onDocumentLoad() {
+		// Set members
 		bindToWindow();
-		executeJS("editor.focus()");
-	}
-
-	/**
-	 * Adds a keyword to the highlighter which should be highlighted as a built-in.
-	 *
-	 * @param keyword
-	 *        the built-in keyword
-	 */
-	public void addBuiltIn(final String keyword) {
-		executeJS("highlightSettings.addBuildin('" + keyword + "');");
-	}
-
-	/**
-	 * Adds a keyword to the highlighter which should be highlighted as a normal keyword.
-	 *
-	 * @param keyword
-	 *        the keyword to add
-	 */
-	public void addKeyword(final String keyword) {
-		executeJS("highlightSettings.addKeyword('" + keyword + "');");
+		// Actually load Ace editor
+		executeJSBlocking("loadEditor();");
+		// Set code, if it was set before editor loads
+		String codeString = code.get();
+		if (codeString != null) {
+			setCode(codeString);
+		}
+		// get focus
+		callOnAce("focus");
 	}
 
 	/**
@@ -178,22 +168,24 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 			return;
 		}
 
-		processor.listPackages().forEach(this::addKeyword);
-		Arrays.stream(processor.getReservedKeywords()).forEach(this::addBuiltIn);
+		highlightSettings.addKeywords(processor.listPackages());
+		highlightSettings.addBuiltins(processor.getReservedKeywords());
 	}
 
 	/**
 	 * Clears all highlighted lines
 	 */
 	public void clearHighlight() {
-		executeJS("editor.clearHighlight();");
+		callOnAce("clearHighlight");
 	}
 
 	/**
 	 * Clears the history by loading a new UndoManager
 	 */
 	public void clearHistory() {
-		executeJS("editor.getSession().setUndoManager(new UndoManager());");
+		executeJS("new UndoManager();", (u) ->
+			((JSObject) callOnAceBlocking("getSession"))
+				.call("setUndoManager", u));
 	}
 
 	/**
@@ -224,10 +216,18 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	}
 
 	/**
+	 * @param ace
+	 *        The ace editor Javascript object
+	 */
+	public void setAce(JSObject ace) {
+		this.ace = ace;
+	}
+
+	/**
 	 * Clears all breakpoints.
 	 */
 	public void clearBreakpoints() {
-		executeJS("editor.getSession().clearBreakpoints();");
+		callOnAce((session) -> ((JSObject) session).call("clearBreakpoints"), "getSession");
 	}
 
 	/**
@@ -253,10 +253,10 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 			} else if (KeyCombination.valueOf(FXController.HOTKEY_RESET_ZOOM).match(ke)) {
 				zoomTo(1);
 			} else if (helppane != null && KeyCombination.valueOf(FXController.HOTKEY_HELP).match(ke)) {
-				executeJS("editor.getCurrentWord();",
+				callOnAce(
 					result -> {
 						// helppane.display((String)result);
-					});
+				}, "getCurrentWord");
 			}
 		}
 
@@ -286,7 +286,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	 *        type of highlighting to be used( "error" or "highlight" )
 	 */
 	public void highlightLine(final int line, final String type) {
-		executeJS("editor.highlight(" + (line - 1) + ", \"" + type + "\");");
+		callOnAce("highlight", line - 1, type);
 	}
 
 	/**
@@ -295,8 +295,15 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	public void paste() {
 		String code = (String) clipboard.getContent(DataFormat.PLAIN_TEXT);
 		if (code != null) {
-			executeJS("var r = editor.session.replace(editor.selection.getRange(), \"" + escape(code) + "\");"
-							+ " editor.selection.setSelectionRange(new Range(r.row, r.column, r.row, r.column));");
+			Platform.runLater(() -> {
+				JSObject session = (JSObject) callOnAceBlocking("getSession");
+				JSObject selection = (JSObject) callOnAceBlocking("getSelection");
+				JSObject r = (JSObject)session.call("replace", selection.call("getRange"), code);
+				Object row = r.getMember("row");
+				Object column = r.getMember("column");
+				JSObject range = (JSObject) executeJSBlocking(String.format("new Range(%d, %d, %d, %d)", row, column, row, column));
+				selection.call("setSelectionRange", range);
+			});
 		}
 
 		/*
@@ -310,14 +317,14 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	 * Steps forward in the edit history.
 	 */
 	public void redo() {
-		executeJS("editor.redo();");
+		callOnAce("redo");
 	}
 
 	/**
 	 * Clears the selected text.
 	 */
 	public void clearSelection() {
-		executeJS("editor.clearSelection();");
+		callOnAce("clearSelection");
 	}
 
 	/**
@@ -340,10 +347,11 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	 */
 	public void setCode(final String code) {
 		if (documentLoaded.get()) {
-			executeJS("editor.setValue('" + escape(code) + "',1);");
+			if (ace != null) {
+				callOnAce("setValue", code, 1);
+				clearHistory();
+			}
 			this.code.setValue(code);
-			clearHistory();
-
 		} else {
 
 			// Run this later
@@ -363,8 +371,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	 */
 	public void refreshBreakpoints(final RobotID robot) {
 		List<Integer> bps = BreakpointPool.INSTANCE.get(robot).stream().map(bp -> bp - 1).collect(Collectors.toList());
-		executeJS("editor.session.setBreakpointsAtRows([" +
-						StringUtils.join(bps, ",") + "]);");
+		callOnAce((s) -> ((JSObject) s).call("setBreakpointAtRows", bps), "getSession");
 	}
 
 	/**
@@ -374,22 +381,22 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	 *        whether to display invisible characters
 	 */
 	public void setShowInvisibles(final boolean show) {
-		executeJS("editor.setShowInvisibles(" + show + ");");
+		callOnAce("setShowInvisibles", show);
 	}
 
 	/**
 	 * Steps back in edit history.
 	 */
 	public void undo() {
-		executeJS("editor.undo();");
+		callOnAce("undo");
 	}
 
 	private void bindToWindow() {
-		executeJS("window", result -> {
-			JSObject jsobj = (JSObject) result;
-			jsobj.setMember("contenttools", this);
-			jsobj.setMember("LOGGER", LOGGER);
-		});
+		// Do not use executeJS here, it needs to be done immediately
+		JSObject jsobj = (JSObject) executeJSBlocking("window");
+		jsobj.setMember("highlightSettings", highlightSettings);
+		jsobj.setMember("contenttools", this);
+		jsobj.setMember("LOGGER", LOGGER);
 	}
 
 	/**
@@ -427,6 +434,8 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	 * Fail-safe way to execute a javascript code on a document that may not have been fully loaded yet.
 	 * Wrapper around {@link WebEngine#executeScript(String)}, that returns null in case of an error not caused by the document not being loaded.
 	 *
+	 * Defers execution of code using {@link Platform#runLater(Runnable)}.
+	 * 
 	 * @param js
 	 *        the script to execute.
 	 *
@@ -438,11 +447,81 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 
 	private void executeJS(final String js, final Consumer<Object> callback) {
 		Platform.runLater(() -> {
-			if (!documentLoaded.get()) {
-				throw new IllegalStateException("Cannot run javascript because the editor has not been loaded yet: " + js);
-			}
-			callback.accept(editor.getEngine().executeScript(js));
+			callback.accept(executeJSBlocking(js));
 		});
+	}
+
+
+	/**
+	 * Fail-safe way to execute a javascript code on a document that may not have been fully loaded yet.
+	 * Wrapper around {@link WebEngine#executeScript(String)}, that returns null in case of an error not caused by the document not being loaded.
+	 *
+	 * Runs code immediately.
+	 *
+	 * @param js
+	 *        the script to execute.
+	 *
+	 * @see WebEngine#executeScript(String)
+	 */
+	private Object executeJSBlocking(final String js) {
+		if (!documentLoaded.get()) {
+			throw new IllegalStateException("Cannot run javascript because the editor has not been loaded yet: " + js);
+		}
+		return editor.getEngine().executeScript(js);
+	}
+
+	/**
+	 * Call a method on the javascript ace editor object
+	 * 
+	 * Defers execution using {@link Platform#runLater(Runnable)}.
+	 * 
+	 * @param callback
+	 *        Callback that is called with the return value of the call
+	 * @param method
+	 *        Method name
+	 * @param args
+	 *        Arguments to pass to the method
+	 * @see JSObject#call(String, Object...)
+	 */
+	private void callOnAce(String method, Object... args) {
+		callOnAce((o) -> {}, method, args);
+	}
+
+	/**
+	 * Call a method on the javascript ace editor object
+	 * 
+	 * Defers execution using {@link Platform#runLater(Runnable)}.
+	 * 
+	 * @param callback
+	 *        Callback that is called with the return value of the call
+	 * @param method
+	 *        Method name
+	 * @param args
+	 *        Arguments to pass to the method
+	 * @see JSObject#call(String, Object...)
+	 */
+	private void callOnAce(final Consumer<Object> callback, String method, Object... args) {
+		Platform.runLater(() -> callback.accept(ace.call(method, args)));
+	}
+	
+	/**
+	 * Call a method on the javascript ace editor object
+	 *
+	 * @param method
+	 *        Method name
+	 * @param args
+	 *        Arguments to pass to the method
+	 * @see JSObject#call(String, Object...)
+	 */
+	private Object callOnAceBlocking(String method, Object... args){
+		return ace.call(method, args);
+	}
+
+	/**
+	 * Load Ace editor in the {@link WebView}
+	 */
+	public void loadEditor() {
+		load(EDITOR_URL);
 	}
 
 	private void load(final String path) {
@@ -497,51 +576,50 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 
 	@Override
 	public void replaceAll(final String replacement) {
-		executeJS("editor.replaceAll('" + escape(replacement) + "');");
+		callOnAce("replaceAll", replacement);
 	}
 
 	@Override
 	public void replaceOne(final int occurrence, final String replacement) {
 		highlight(occurrence);
-		executeJS("editor.replace('" + escape(replacement) + "');");
+		callOnAce("replace", replacement);
 	}
 
 	private void searchJS(final String needle, final boolean regex, final boolean caseSensitive) {
 		String arguments = "'" + escape(needle) + "',"
-						+ "{ "
-						+ "backwards: true,"
-						+ "wrap: true,"
-						+ "caseSensitive: " + caseSensitive + ","
-						+ "regExp: " + regex + ","
-						+ "start: 1"
-						+ "},"
-						+ "false";
+				+ "{ "
+				+ "backwards: true,"
+				+ "wrap: true,"
+				+ "caseSensitive: " + caseSensitive + ","
+				+ "regExp: " + regex + ","
+				+ "start: 1"
+				+ "},"
+				+ "false";
 
 		// Count
-		executeJS("editor.findAll(" + arguments + ");",
-			result -> {
-				occurrences = (Integer) result;
+		callOnAce(result -> {
+			occurrences = (Integer) result;
 
-				// If there are no results, clear the search
-				if (occurrences == 0) {
-					executeJS("editor.clearSearch();");
-				}
-			});
+			// If there are no results, clear the search
+			if (occurrences == 0) {
+				callOnAce("clearSearch");
+			}
+		}, "findAll", arguments);
 	}
 
 	private void highlightNext() {
-		executeJS("editor.findNext();");
+		callOnAce("findNext");
 		currenthighlight++;
 	}
 
 	private void highlightPrevious() {
-		executeJS("editor.findPrevious();");
+		callOnAce("findPrevious");
 		currenthighlight--;
 	}
 
 	@Override
 	public void clearSearch() {
-		executeJS("editor.clearSearch();");
+		callOnAce("clearSearch");
 	}
 
 	/**
@@ -555,6 +633,6 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	 * @param editable
 	 */
 	public void setEditable(final boolean editable) {
-		executeJS("editor.setReadOnly(" + Boolean.toString(!editable) + ");");
+		callOnAce("setReadOnly", !editable);
 	}
 }
