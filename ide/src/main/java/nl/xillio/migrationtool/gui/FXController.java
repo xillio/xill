@@ -310,6 +310,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 			tab = new RobotTab(projectfile.getAbsoluteFile(), chosen, this);
 			tpnBots.getTabs().add(tab);
+			tab.requestFocus();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
