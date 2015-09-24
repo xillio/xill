@@ -25,7 +25,6 @@ import javafx.scene.Cursor;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
-import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
@@ -115,11 +114,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 		
 		// Disable drag-and-drop, set the cursor graphic when dragging.
 		editor.setOnDragDropped(null);
-		editor.setOnDragOver(new EventHandler<DragEvent>() {
-			public void handle(DragEvent event) {
-				editor.sceneProperty().get().setCursor(Cursor.DISAPPEAR);
-			};
-		});
+		editor.setOnDragOver(e -> editor.sceneProperty().get().setCursor(Cursor.DISAPPEAR));
 	}
 
 	/**

@@ -6,12 +6,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.input.DragEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebView;
 import nl.xillio.migrationtool.Loader;
@@ -56,11 +54,7 @@ public class HelpPane extends AnchorPane {
 		
 		// Disable drag-and-drop, set the cursor graphic when dragging.
 		webFunctionDoc.setOnDragDropped(null);
-		webFunctionDoc.setOnDragOver(new EventHandler<DragEvent>() {
-			public void handle(DragEvent event) {
-				getScene().setCursor(Cursor.DISAPPEAR);
-			};
-		});
+		webFunctionDoc.setOnDragOver(e -> getScene().setCursor(Cursor.DISAPPEAR));
 	}
 
 	private void home() {
