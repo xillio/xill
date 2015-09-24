@@ -28,7 +28,7 @@ public class RestServiceImpl implements RestService {
 			options.doAuth(executor);
 
 			// set body
-			if (!body.isEmpty()) {
+			if ((body != null) && (!body.isEmpty())) {
 				request.bodyString(body.getContent(), body.getType());
 			}
 
@@ -45,9 +45,9 @@ public class RestServiceImpl implements RestService {
 	}
 
 	@Override 
-	public Content get(final String url, final Options options, final Content body) {
+	public Content get(final String url, final Options options) {
 		Request request = Request.Get(url);
-		return this.processRequest(request, options, body);
+		return this.processRequest(request, options, null);
 	}
 
 	@Override 
@@ -63,14 +63,14 @@ public class RestServiceImpl implements RestService {
 	}
 
 	@Override 
-	public Content delete(final String url, final Options options, final Content body) {
+	public Content delete(final String url, final Options options) {
 		Request request = Request.Delete(url);
-		return this.processRequest(request, options, body);
+		return this.processRequest(request, options, null);
 	}
 
 	@Override 
-	public Content head(final String url, final Options options, final Content body) {
+	public Content head(final String url, final Options options) {
 		Request request = Request.Head(url);
-		return this.processRequest(request, options, body);
+		return this.processRequest(request, options, null);
 	}
 }

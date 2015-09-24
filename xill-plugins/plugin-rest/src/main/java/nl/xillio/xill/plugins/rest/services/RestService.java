@@ -1,12 +1,12 @@
 package nl.xillio.xill.plugins.rest.services;
 
 import com.google.inject.ImplementedBy;
-import nl.xillio.xill.plugins.rest.RestXillPlugin;
+import nl.xillio.xill.plugins.rest.RESTXillPlugin;
 import nl.xillio.xill.plugins.rest.data.Content;
 import nl.xillio.xill.plugins.rest.data.Options;
 
 /**
- * This interface represents some of the operations for the {@link RestXillPlugin}.
+ * This interface represents some of the operations for the {@link RESTXillPlugin}.
  *
  * @author Zbynek Hochmann
  */
@@ -19,10 +19,9 @@ public interface RestService {
 	 * 
 	 * @param url 			URL address for Rest service
 	 * @param options 	request options
-	 * @param body			optional body content
 	 * @return					response content
 	 */
-	Content get(final String url, final Options options, final Content body);
+	Content get(final String url, final Options options);
 
 	/**
 	 * Do PUT Rest command
@@ -49,18 +48,16 @@ public interface RestService {
 	 * 
 	 * @param url 			URL address for Rest service
 	 * @param options 	request options
-	 * @param body			optional body content
 	 * @return					response content
 	 */	
-	Content delete(final String url, final Options options, final Content body);
+	Content delete(final String url, final Options options);
 
 	/**
 	 * Do HEAD Rest command
 	 * 
 	 * @param url 			URL address for Rest service
 	 * @param options 	request options
-	 * @param body			optional body content
 	 * @return					response content
 	 */	
-	Content head(final String url, final Options options, final Content body);
+	Content head(final String url, final Options options);
 }

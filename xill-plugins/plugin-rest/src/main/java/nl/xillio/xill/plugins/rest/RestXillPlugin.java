@@ -5,6 +5,6 @@ import nl.xillio.plugins.XillPlugin;
 /**
  * This package includes all Rest constructs
  */
-public class RestXillPlugin extends XillPlugin {
+public class RESTXillPlugin extends XillPlugin {
 
 }
