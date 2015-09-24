@@ -11,6 +11,7 @@ import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.api.XillProcessor;
 import nl.xillio.xill.debugging.XillDebugger;
+import xill.lang.validation.XillValidator;
 
 /**
  * This class is responsible for creating the {@link XillProcessor}
@@ -43,6 +44,11 @@ public class XillLoader implements Xill, ContenttoolsPlugin {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	public String[] getReservedKeywords() {
+		return XillValidator.RESERVED_KEYWORDS;
 	}
 
 }

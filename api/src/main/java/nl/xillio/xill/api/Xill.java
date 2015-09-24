@@ -46,4 +46,10 @@ public interface Xill {
 	 * @see XillPlugin
 	 */
 	XillProcessor createProcessor(final File robotFile, final File projectFolder, final PluginLoader<XillPlugin> pluginLoader, final Debugger debugger);
+
+	/**
+	 * 
+	 * @return The reserved keywords defined in Xill
+	 */
+	String[] getReservedKeywords();
 }

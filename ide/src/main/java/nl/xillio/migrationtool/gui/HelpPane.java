@@ -2,9 +2,9 @@ package nl.xillio.migrationtool.gui;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.CookieHandler;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.stream.Collectors;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -12,10 +12,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebView;
+import netscape.javascript.JSObject;
 import nl.xillio.migrationtool.Loader;
+import nl.xillio.xill.util.HighlightSettings;
 
 /**
  * This pane contains the documentation information.
+ * 
  * @author Thomas Biesaart
  */
 public class HelpPane extends AnchorPane {
@@ -24,6 +27,8 @@ public class HelpPane extends AnchorPane {
 
 	@FXML
 	private HelpSearchBar helpSearchBar;
+
+	private HighlightSettings highlightSettings;
 
 	/**
 	 * Instantiate the HelpPane and load the home page.
@@ -49,7 +54,23 @@ public class HelpPane extends AnchorPane {
 			helpSearchBar.setSearcher(init.getSearcher());
 		});
 
-		//Load splash page
+		// Fill the highlight settings with keywords and builtins
+		highlightSettings = new HighlightSettings();
+		highlightSettings.addKeywords(Loader.getXill().getReservedKeywords());
+		highlightSettings.addBuiltins(Loader.getInitializer().getPlugins().stream()
+			.map((p -> p.getName()))
+			.collect(Collectors.toList()));
+
+		webFunctionDoc.getEngine().documentProperty().addListener((observable, o, n) -> {
+			// Set the highlight settings
+			JSObject window = (JSObject) webFunctionDoc.getEngine().executeScript("window");
+			window.setMember("highlightSettings", highlightSettings);
+			// Load the Ace editors if present
+			webFunctionDoc.getEngine().executeScript("if (typeof loadEditors !== 'undefined') {loadEditors()}");
+
+		});
+
+		// Load splash page
 		webFunctionDoc.getEngine().load(getClass().getResource("/docgen/resources/splash.html").toExternalForm());
 	}
 
@@ -64,8 +85,10 @@ public class HelpPane extends AnchorPane {
 	/**
 	 * Display the page corresponding to a keyword.
 	 *
-	 * @param pluginPackage The package the function we want to display comes from
-	 * @param keyword       The name of the function in the package
+	 * @param pluginPackage
+	 *        The package the function we want to display comes from
+	 * @param keyword
+	 *        The name of the function in the package
 	 */
 	public void display(final String pluginPackage, final String keyword) {
 		File file = new File("helpfiles/" + pluginPackage + "/" + keyword + ".html");
@@ -76,7 +99,8 @@ public class HelpPane extends AnchorPane {
 	/**
 	 * Load the passed resource.
 	 *
-	 * @param resource the resource to display
+	 * @param resource
+	 *        the resource to display
 	 */
 	public void display(final URL resource) {
 		Platform.runLater(() -> webFunctionDoc.getEngine().load(resource.toExternalForm()));
@@ -106,8 +130,7 @@ public class HelpPane extends AnchorPane {
 	}
 
 	@FXML
-	private void buttonHelpInfo() {
-	}
+	private void buttonHelpInfo() {}
 
 	@Override
 	public void requestFocus() {
