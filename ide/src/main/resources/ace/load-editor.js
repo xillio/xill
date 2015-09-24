@@ -52,7 +52,7 @@ function loadEditor(){
 				editor.getSession().removeMarker(key);
 		}
 	}
-	
+
 	editor.$occurences = [];
 	editor.clearOccurences = function() {
 	  var editor = contenttools.getAce();
@@ -134,5 +134,3 @@ function loadEditor(){
 	editor.on('cut', toClipboard);
 	editor.on('copy', toClipboard);
 }
-
-
