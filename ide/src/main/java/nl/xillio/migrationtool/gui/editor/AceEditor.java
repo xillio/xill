@@ -18,7 +18,6 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -129,30 +128,15 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	private void createContextMenu() {
 		// Cut menu item.
 		MenuItem cut = new MenuItem("Cut");
-		cut.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				executeJS("editor.onCut();");
-			}
-		});
+		cut.setOnAction(e -> executeJS("editor.onCut();"));
 		
 		// Copy menu item.
 		MenuItem copy = new MenuItem("Copy");
-		copy.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				executeJS("editor.getCopyText();", r -> copyToClipboard((String)r));
-			}
-		});
+		copy.setOnAction(e -> executeJS("editor.getCopyText();", r -> copyToClipboard((String)r)));
 		
 		// Paste menu item.
 		MenuItem paste = new MenuItem("Paste");
-		paste.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				paste();
-			}
-		});
+		paste.setOnAction(e -> paste());
 		
 		// Create the menu with all items.
 		rightClickMenu = new ContextMenu(cut, copy, paste);
