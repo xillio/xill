@@ -1,7 +1,12 @@
 apply plugin: 'license'
 license {
     header = rootProject.file("LICENSE")
+
+    // Don't do the license check yet
+    ignoreFailures true
+    exclude '**'
 }
+
 
 downloadLicenses {
     ext.apacheTwo = license('Apache License, Version 2.0', 'http://opensource.org/licenses/Apache-2.0')
