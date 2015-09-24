@@ -14,7 +14,9 @@ import org.apache.logging.log4j.Logger;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
@@ -22,6 +24,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.HBox;
@@ -105,6 +109,9 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
 		initializeSettings(documentPath);
 		initializeTab(documentPath);
+		
+		// Add the context menu.
+		addContextMenu(globalController);
 	}
 
 	private static void initializeSettings(final File documentPath) {
@@ -114,7 +121,6 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	}
 
 	private void initializeTab(final File documentPath) {
-
 		// First we set the tab name
 		setText(getName());
 
@@ -135,6 +141,30 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 		processor.getDebugger().getOnRobotStop().addListener(e -> Platform.runLater(() -> setGraphic(null)));
 		processor.getDebugger().getOnRobotPause().addListener(e -> Platform.runLater(() -> setGraphic(STATUSICON_PAUSED)));
 		processor.getDebugger().getOnRobotContinue().addListener(e -> Platform.runLater(() -> setGraphic(STATUSICON_RUNNING)));
+	}
+	
+	private void addContextMenu(FXController controller) {
+		// Close this tab.
+		MenuItem closeThis = new MenuItem("Close");
+		closeThis.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				controller.closeTab(RobotTab.this);
+			}
+		});
+		
+		// Close all other tabs.
+		MenuItem closeOther = new MenuItem("Close all other tabs");
+		closeOther.setOnAction(new EventHandler<ActionEvent>() {
+		        @Override
+		        public void handle(ActionEvent event) {
+		        	controller.closeAllTabsExcept(RobotTab.this);
+		        }
+		});
+		
+		// Create the context menu.
+		ContextMenu menu = new ContextMenu(closeThis, closeOther);
+		this.setContextMenu(menu);
 	}
 
 	private void loadProcessor(final File document, final File projectPath) {
