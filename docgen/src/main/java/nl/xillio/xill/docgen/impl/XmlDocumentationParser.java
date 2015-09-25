@@ -9,6 +9,7 @@ import nl.xillio.xill.docgen.exceptions.ParsingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
+import org.w3c.dom.CharacterData;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -142,8 +143,12 @@ public class XmlDocumentationParser implements DocumentationParser {
 		for (int t = 0; t < exampleContent.getLength(); ++t) {
 			Node item = exampleContent.item(t);
 			if (item.getNodeName() != null && !item.getNodeName().startsWith("#")) {
-				example.addContent(new ExampleNode(exampleContent.item(t).getNodeName(),
-					exampleContent.item(t).getTextContent()));
+				try{
+					CharacterData data = (CharacterData) exampleContent.item(t).getFirstChild();
+					example.addContent(new ExampleNode(exampleContent.item(t).getNodeName(), data.getData()));
+				}
+				catch(ClassCastException e){	
+				}
 			}
 		}
 		return example;
