@@ -128,8 +128,7 @@ function loadEditor(){
 	// Add listeners for copy and cut
 	var toClipboard = function(range) {
 		var editor = contenttools.getAce();
-		if (typeof contenttools !== 'undefined')
-			contenttools.copyToClipboard(editor.getSelectedText());
+		contenttools.copyToClipboard(editor.getSelectedText());
 	}
 	editor.on('cut', toClipboard);
 	editor.on('copy', toClipboard);
