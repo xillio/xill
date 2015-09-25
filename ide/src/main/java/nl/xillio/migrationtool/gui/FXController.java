@@ -678,6 +678,17 @@ public class FXController implements Initializable, EventHandler<Event> {
 	}
 
 	/**
+	 * Close all tabs except one.
+	 * @param tab The tab to keep open.
+	 */
+	public void closeAllTabsExcept(final Tab tab) {
+		List<RobotTab> tabs = getTabs();
+		for(RobotTab t : tabs)
+			if (t != tab)
+				closeTab(t);
+	}
+	
+	/**
 	 * @return A list of active tabs
 	 */
 	public List<RobotTab> getTabs() {
