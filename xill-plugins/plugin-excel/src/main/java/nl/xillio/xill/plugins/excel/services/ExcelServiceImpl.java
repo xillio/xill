@@ -101,13 +101,9 @@ public class ExcelServiceImpl implements ExcelService {
 
 	@Override
 	public XillWorkbook save(XillWorkbook workbook, File file) throws IOException {
-		XillWorkbook newBook;
-		if(workbook.fileExists()){
-			newBook = workbook.createCopy(file);
-		}else{
-			newBook = workbook;
-		}
-		newBook.save(file);
+		XillWorkbook newBook = workbook.createCopy(file);
+	
+		//newBook.save(file);
 		return newBook;
 	}
 
