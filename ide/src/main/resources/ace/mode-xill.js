@@ -776,9 +776,7 @@ function SmartBreakpoints() {
 
 	this.updateDataOnDocChange = function(e) {
 		//Push change to contenttools
-		if (typeof contenttools !== 'undefined') {
-			contenttools.codeChanged(editor.getValue());
-		}
+		contenttools.codeChanged(contenttools.getAce().getValue());
 		
 		var delta = e.data;
 		var range = delta.range;
@@ -828,7 +826,7 @@ function SmartBreakpoints() {
 	this.onGutterClick = function(e) {
 		var className = e.domEvent.target.className
 		if (className.indexOf('ace_fold-widget') < 0) {
-			if (className.indexOf("ace_gutter-cell") != -1 && editor.isFocused()) {
+			if (className.indexOf("ace_gutter-cell") != -1 && contenttools.getAce().isFocused()) {
 				var row = e.getDocumentPosition().row;
 				if (this.$breakpoints[row])
 					this.clearBreakpoint(row, true);
@@ -847,11 +845,11 @@ function SmartBreakpoints() {
 		
 		this._dispatchEvent("changeBreakpoint", {});
 	}
-	
-	editor.on('change', this.updateDataOnDocChange.bind(this));
-	editor.on('gutterclick', this.onGutterClick.bind(this));
+
+	contenttools.getAce().on('change', this.updateDataOnDocChange.bind(this));
+	contenttools.getAce().on('gutterclick', this.onGutterClick.bind(this));
 	this.clearBreakpoints();
 };
 
 EditSession = ace.require("ace/edit_session").EditSession;
-SmartBreakpoints.call(editor.getSession());
+SmartBreakpoints.call(contenttools.getAce().getSession());
