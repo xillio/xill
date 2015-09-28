@@ -183,9 +183,9 @@ public class XillWorkbook implements MetadataExpression {
 			throw new IllegalArgumentException("New file should have the same extension as original (" + currentExtension + ", not " + extension + ")");
 
 		if(this.fileExists()){
-		copy(this.file, file);
+			copy(this.file, file); // Overwrite existing file
 		}else{
-			this.save(file);
+			this.save(file); // Create new file
 		}
 		file.setWritable(true);
 		XillWorkbookFactory factory = getFactory();

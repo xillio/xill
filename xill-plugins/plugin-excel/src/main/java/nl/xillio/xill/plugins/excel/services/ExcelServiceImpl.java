@@ -42,8 +42,6 @@ public class ExcelServiceImpl implements ExcelService {
 
 	@Override
 	public XillWorkbook createWorkbook(File file) throws IOException {
-    if (file.exists())
-      throw new FileAlreadyExistsException("File already exists: no new workbook has been created");
 		return factory.createWorkbook(file);
 	}
 
