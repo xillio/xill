@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebView;
@@ -72,6 +73,10 @@ public class HelpPane extends AnchorPane {
 
 		// Load splash page
 		webFunctionDoc.getEngine().load(getClass().getResource("/docgen/resources/splash.html").toExternalForm());
+		
+		// Disable drag-and-drop, set the cursor graphic when dragging.
+		webFunctionDoc.setOnDragDropped(null);
+		webFunctionDoc.setOnDragOver(e -> getScene().setCursor(Cursor.DISAPPEAR));
 	}
 
 	private void home() {

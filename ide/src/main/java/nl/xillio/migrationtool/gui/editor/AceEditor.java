@@ -15,6 +15,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.EventHandler;
+import javafx.scene.Cursor;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
@@ -113,7 +114,10 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 					onDocumentLoaded.invoke(newDoc);
 				}
 			});
-
+		
+		// Disable drag-and-drop, set the cursor graphic when dragging.
+		editor.setOnDragDropped(null);
+		editor.setOnDragOver(e -> editor.sceneProperty().get().setCursor(Cursor.DISAPPEAR));
 	}
 
 	/**
