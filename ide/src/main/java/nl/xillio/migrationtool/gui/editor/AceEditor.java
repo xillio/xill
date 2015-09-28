@@ -15,11 +15,16 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.EventHandler;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.Cursor;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -61,6 +66,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	private JSObject ace;
 	private XillProcessor processor;
 	private RobotTab tab;
+	private ContextMenu rightClickMenu;
 	private HighlightSettings highlightSettings;
 
 	static {
@@ -102,9 +108,16 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	public AceEditor(final WebView editor) {
 		this.editor = editor;
 		this.highlightSettings = new HighlightSettings();
+		// Add our own context menu.
+		editor.setContextMenuEnabled(false);
+		createContextMenu();
 
+
+		// Add event handlers.
 		editor.addEventHandler(KeyEvent.KEY_PRESSED, this);
 		editor.addEventHandler(ScrollEvent.SCROLL, this);
+		editor.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, this);
+		editor.addEventHandler(MouseEvent.MOUSE_PRESSED, this);
 
 		documentLoaded.addListener(
 			(obs, oldDoc, newDoc) -> {
@@ -113,9 +126,33 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 					onDocumentLoaded.invoke(newDoc);
 				}
 			});
-
+		
+		// Disable drag-and-drop, set the cursor graphic when dragging.
+		editor.setOnDragDropped(null);
+		editor.setOnDragOver(e -> editor.sceneProperty().get().setCursor(Cursor.DISAPPEAR));
+			
 	}
-
+	
+	/**
+	 * Build the right-click context menu. 
+	 */
+	private void createContextMenu() {
+		// Cut menu item.
+		MenuItem cut = new MenuItem("Cut");
+		cut.setOnAction(e -> executeJS("editor.onCut();"));
+		
+		// Copy menu item.
+		MenuItem copy = new MenuItem("Copy");
+		copy.setOnAction(e -> executeJS("editor.getCopyText();", r -> copyToClipboard((String)r)));
+		
+		// Paste menu item.
+		MenuItem paste = new MenuItem("Paste");
+		paste.setOnAction(e -> paste());
+		
+		// Create the menu with all items.
+		rightClickMenu = new ContextMenu(cut, copy, paste);
+	}
+	
 	/**
 	 * Set the {@link RobotTab}
 	 * 
@@ -274,6 +311,18 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 			if (se.isMetaDown() || se.isControlDown()) {
 				zoomTo(editor.getZoom() * (1 + Math.signum(se.getDeltaY()) * ZOOM_SENSITIVITY / 1000.f));
 			}
+		}
+		
+		// Context menu
+		if (event instanceof ContextMenuEvent) {
+			ContextMenuEvent ce = (ContextMenuEvent) event;
+			rightClickMenu.show(editor, ce.getScreenX(), ce.getScreenY());
+			event.consume();
+		}
+		
+		// Mouse click, close context menu.
+		if (event instanceof MouseEvent) {
+			rightClickMenu.hide();
 		}
 	}
 
