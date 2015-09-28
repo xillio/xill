@@ -77,10 +77,10 @@ public class ForeachInstruction extends Instruction {
 					}
 				} else {
 					//We have a MetaExpressionIterator in this value, this means we should iterate over that
-					MetaExpressionIterator itterator = result.getMeta(MetaExpressionIterator.class);
+					MetaExpressionIterator iterator = result.getMeta(MetaExpressionIterator.class);
 					int i = 0;
-					while (itterator.hasNext()) {
-						MetaExpression value = itterator.next();
+					while (iterator.hasNext()) {
+						MetaExpression value = iterator.next();
 
 						valueVar.pushVariable(value);
 						if (keyVar != null) {

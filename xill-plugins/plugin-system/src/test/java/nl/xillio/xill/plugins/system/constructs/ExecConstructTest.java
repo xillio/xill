@@ -1,8 +1,12 @@
 package nl.xillio.xill.plugins.system.constructs;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,10 +17,10 @@ import org.apache.logging.log4j.Logger;
 import org.mockito.ArgumentCaptor;
 import org.testng.annotations.Test;
 
+import nl.xillio.xill.ConstructTest;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.plugins.system.exec.ProcessDescription;
 import nl.xillio.xill.plugins.system.exec.ProcessFactory;
-import nl.xillio.xill.plugins.system.util.ConstructTest;
 
 /**
  * Test the {@link ExecConstruct}

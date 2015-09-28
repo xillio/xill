@@ -1,15 +1,19 @@
 package nl.xillio.xill.plugins.system.constructs;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import nl.xillio.xill.ConstructTest;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.plugins.system.services.version.VersionProvider;
-import nl.xillio.xill.plugins.system.util.ConstructTest;
 
 /**
  * Test {@link VersionConstruct}
@@ -59,7 +63,7 @@ public class VersionConstructTest extends ConstructTest {
 		// Assert
 		Assert.assertSame(result.getStringValue(), version);
 	}
-	
+
 	/**
 	 * Test required version under normal conditions with a not supported version number
 	 */
@@ -84,7 +88,7 @@ public class VersionConstructTest extends ConstructTest {
 		// Assert
 		Assert.assertSame(result.getStringValue(), version);
 	}
-	
+
 	/**
 	 * Test required version with invalid version string
 	 */
@@ -109,7 +113,7 @@ public class VersionConstructTest extends ConstructTest {
 		// Assert
 		Assert.assertSame(result.getStringValue(), version);
 	}
-	
+
 	/**
 	 * Test required version with invalid version string
 	 */

@@ -1,5 +1,10 @@
 package nl.xillio.xill.plugins.excel.datastructures;
 
+import nl.xillio.xill.plugins.excel.datastructures.XillCell;
+import nl.xillio.xill.plugins.excel.datastructures.XillCellRef;
+import nl.xillio.xill.plugins.excel.datastructures.XillRow;
+import nl.xillio.xill.plugins.excel.datastructures.XillSheet;
+
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.testng.annotations.Test;

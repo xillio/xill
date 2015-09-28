@@ -1,16 +1,21 @@
 package nl.xillio.xill.api.components;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import java.util.ArrayList;
+import java.util.IdentityHashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
 import nl.xillio.util.IdentityArrayList;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.behavior.BooleanBehavior;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.NotImplementedException;
 
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * This class represents a general expression in the Xill language.
@@ -401,6 +406,8 @@ public abstract class MetaExpression implements Expression, Processable {
 	 * This generally only happens during assignment
 	 */
 	public final void registerReference() {
+		// When this variable is assigned, take over ownership
+		preventDispose = false;
 		referenceCount++;
 	}
 

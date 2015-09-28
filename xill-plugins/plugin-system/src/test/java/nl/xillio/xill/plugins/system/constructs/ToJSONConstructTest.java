@@ -1,12 +1,14 @@
 package nl.xillio.xill.plugins.system.constructs;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import nl.xillio.xill.ConstructTest;
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.plugins.system.util.ConstructTest;
 import nl.xillio.xill.services.json.JsonParser;
 
 /**

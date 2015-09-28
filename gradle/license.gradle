@@ -1,0 +1,63 @@
+apply plugin: 'license'
+license {
+    header = rootProject.file("LICENSE")
+
+    // Don't do the license check yet
+    ignoreFailures true
+    exclude '**'
+}
+
+
+downloadLicenses {
+    ext.apacheTwo = license('Apache License, Version 2.0', 'http://opensource.org/licenses/Apache-2.0')
+    ext.bsd = license('BSD License', 'http://www.opensource.org/licenses/bsd-license.php')
+    ext.mit = license('MIT License', 'http://opensource.org/licenses/mit-license.php')
+    ext.lgpl = license("LGPL, Version 2.1", "http://www.gnu.org/licenses/licenses.html")
+    ext.eclipse = license("Eclipse Public License, Version 1.0", "http://www.eclipse.org/legal/epl-v10.html")
+    ext.mozilla = license("Mozilla Public License, Version 2.0", "http://www.mozilla.org/MPL/2.0/")
+    ext.cddl = license("CDDL, Version 1.0", "http://opensource.org/licenses/cddl1.php")
+
+    includeProjectDependencies = true
+
+    aliases = [
+            (apacheTwo): [
+                    'The Apache Software License, Version 2.0',
+                    'Apache 2',
+                    'Apache License Version 2.0',
+                    'Apache License 2.0',
+                    'Apache Software License - Version 2.0',
+                    'Apache License'
+            ],
+            (bsd)      : [
+                    'BSD',
+                    'BSD style',
+                    'BSD licence',
+                    'The BSD License',
+                    'New BSD license'
+            ],
+            (mit)      : [
+                    'MIT License (MIT)',
+                    'The MIT License'
+            ],
+            (lgpl)     : [
+                    'LGPL, v2.1 or later',
+                    'LGPL-2.1',
+                    'LGPL, version 2.1',
+                    'GNU LESSER GENERAL PUBLIC LICENSE',
+                    'GNU Lesser General Public License'
+            ],
+            (eclipse)  : [
+                    'Eclipse Public License - v 1.0',
+                    'The Eclipse Public License Version 1.0',
+                    'Eclipse Public License - Version 1.0'
+            ],
+            (mozilla) : [
+                    'Mozilla Public License Version 2.0',
+                    'Mozilla Public License version 2.0'
+            ],
+            (cddl)  :   [
+                    'CDDL, v1.0',
+                    'CDDL 1.0'
+            ]
+    ]
+}

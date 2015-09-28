@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<function>
+  <description>
+    Connect to a sqlite database. Returns a connection object.
+  </description>
+  <examples>
+    <example>
+      <header>Connect to an in memory sqlite database
+      </header>
+      <code>
+	
+	var connection = Database.sqliteConnect();
+	
+      </code>
+    </example> 
+     <example>
+      <header>Connect to a sqlite database
+      </header>
+      <code>
+	
+	var connection = Database.sqliteConnect("name");
+	
+      </code>
+    </example> 
+  </examples>
+  <references>
+    <reference>connect</reference>
+    <reference>mysqlConnect</reference>
+    <reference>oracleConnect</reference>
+    <reference>mssqlConnect</reference>
+  </references>
+  <tags>
+    sqlite,lite, connect
+  </tags>
+</function>
