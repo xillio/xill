@@ -1,16 +1,19 @@
-//Needed libraries
-var Range = ace.require('ace/range').Range;
-ace.require("ace/ext/language_tools");
 
-var counter = 0;
-var nodes = document.getElementsByClassName("code");
-
-for (var i = 0; i < nodes.length; i++) {
-    var node = nodes.item(i);
-    if (!node.id) {
-        node.id = "editor" + counter++;
-    }
-    loadEditor(node.id);
+function loadEditors() {
+	//Needed libraries
+	var Range = ace.require('ace/range').Range;
+	ace.require("ace/ext/language_tools");
+	
+	var counter = 0;
+	var nodes = document.getElementsByClassName("code");
+	
+	for (var i = 0; i < nodes.length; i++) {
+	    var node = nodes.item(i);
+	    if (!node.id) {
+	        node.id = "editor" + counter++;
+	    }
+	    loadEditor(node.id);
+	}
 }
 
 

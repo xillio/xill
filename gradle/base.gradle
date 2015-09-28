@@ -1,7 +1,7 @@
 /**
  * This file represents the base configuration for all projects in this repository. These will be applied first
  */
-
+apply from: rootProject.file('gradle/license.gradle')
 apply plugin: 'jacoco'
 
 /**
