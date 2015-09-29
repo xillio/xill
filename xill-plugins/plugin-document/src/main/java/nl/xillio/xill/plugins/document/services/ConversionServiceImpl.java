@@ -1,7 +1,9 @@
 package nl.xillio.xill.plugins.document.services;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import nl.xillio.udm.builders.DecoratorBuilder;
 import nl.xillio.udm.builders.DocumentRevisionBuilder;
 
 public class ConversionServiceImpl implements ConversionService {
@@ -48,8 +50,21 @@ public class ConversionServiceImpl implements ConversionService {
 
 	@Override
 	public Map<String, Map<String, Object>> udmToMap(DocumentRevisionBuilder builder) {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, Map<String, Object>> result = new HashMap<>();
+		
+		// Get all decorators from the document.
+		for (String decName : builder.decorators()) {
+			DecoratorBuilder decorator = builder.decorator(decName);
+			
+			// Get all fields from the decorator.
+			Map<String, Object> fields = new HashMap<>();
+			for (String fieldName : decorator.fields()) {
+				fields.put(fieldName, decorator.field(fieldName));
+			}
+			
+			result.put(decName, fields);
 		}
-
+		
+		return result;
+	}
 }
