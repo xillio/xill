@@ -12,7 +12,7 @@ import nl.xillio.xill.api.components.MetaExpression;
  * @author Luca Scalzotto
  *
  */
-public interface ConversionService {
+public interface ConversionService extends XillService {
 
 	/**
 	 * Convert all decorators from a {@link DocumentRevisionBuilder} to a map suitable for parsing to a Xill object.
