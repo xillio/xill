@@ -65,6 +65,9 @@ public class Options {
 			case "proxypass":
 				this.proxyPass = value.getStringValue();
 				break;
+
+			default:
+				throw new RobotRuntimeException(String.format("Option [%1$s] is invalid!", option));
 		}
 	}
 

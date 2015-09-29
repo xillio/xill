@@ -1,11 +1,13 @@
 package nl.xillio.xill.plugins.rest.constructs;
 
 import com.google.inject.Inject;
+
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.rest.data.Content;
 import nl.xillio.xill.plugins.rest.data.Options;
 import nl.xillio.xill.plugins.rest.services.RestService;
@@ -32,6 +34,9 @@ public class PostConstruct extends Construct {
 
 	static MetaExpression process(final MetaExpression urlVar, final MetaExpression optionsVar, final MetaExpression bodyVar, final RestService service) {
 		String url = urlVar.getStringValue();
+		if (url.isEmpty()) {
+			throw new RobotRuntimeException("URL is empty!");
+		}
 		Options options = new Options(optionsVar);
 		Content body = new Content(bodyVar);
 		return service.post(url, options, body).getMeta();
