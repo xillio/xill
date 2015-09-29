@@ -1,11 +1,16 @@
 package nl.xillio.xill.plugins.document.services;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import nl.xillio.udm.builders.DecoratorBuilder;
 import nl.xillio.udm.builders.DocumentRevisionBuilder;
+import nl.xillio.xill.api.components.MetaExpression;
+
+import static nl.xillio.xill.api.components.MetaExpression.parseObject;
+import static nl.xillio.xill.api.construct.ExpressionBuilderHelper.fromValue;
 
 public class ConversionServiceImpl implements ConversionService {
 	@Override
@@ -22,20 +27,20 @@ public class ConversionServiceImpl implements ConversionService {
 	}
 
 	@Override
-	public Map<String, Map<String, Object>> udmToMap(DocumentRevisionBuilder builder) {
-		Map<String, Map<String, Object>> result = new HashMap<>();
+	public Map<String, MetaExpression> udmToMap(DocumentRevisionBuilder builder) {
+		Map<String, MetaExpression> result = new HashMap<>();
 		
 		// Get all decorators from the document.
 		for (String decName : builder.decorators()) {
 			DecoratorBuilder decorator = builder.decorator(decName);
 			
-			// Get all fields from the decorator.
-			Map<String, Object> fields = new HashMap<>();
+			// Parse all fields from the decorator into MetaExpressions.
+			LinkedHashMap<String, MetaExpression> fields = new LinkedHashMap<>();
 			for (String fieldName : decorator.fields()) {
-				fields.put(fieldName, decorator.field(fieldName));
+				fields.put(fieldName, parseObject(decorator.field(fieldName)));
 			}
 			
-			result.put(decName, fields);
+			result.put(decName, fromValue(fields));
 		}
 		
 		return result;
