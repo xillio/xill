@@ -4,6 +4,7 @@ import java.util.Map;
 
 import nl.xillio.udm.builders.DocumentRevisionBuilder;
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.services.XillService;
 
 /**
  * Service for conversion from Xill objects to the UDM layer and back.
