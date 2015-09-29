@@ -2,50 +2,23 @@ package nl.xillio.xill.plugins.document.services;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import nl.xillio.udm.builders.DecoratorBuilder;
 import nl.xillio.udm.builders.DocumentRevisionBuilder;
 
 public class ConversionServiceImpl implements ConversionService {
-
-	// @Override
-	// public Map<String, Map<String, Object>> udmToMap(List<Decorator> decorators) {
-	// Map<String, Map<String, Object>> result = new HashMap<>();
-	//
-	// for (Decorator decorator : decorators){
-	// Map<String, Object> fields = new HashMap<>();
-	// for (Field field : decorator.getFields()){
-	// fields.put(field.getName(), field.getValue());
-	// }
-	// result.put(decorator.getName(), fields);
-	// }
-	//
-	// return result;
-	// }
-	//
-	// @Override
-	// public List<Decorator> mapToUdm(Map<String, Map<String, Object>> object) {
-	// List<Decorator> decorators = new ArrayList<>();
-	// for (Entry<String, Map<String, Object>> decoratorEntry : object.entrySet()) {
-	// Decorator decorator = new Decorator();
-	// decorator.setName(decoratorEntry.getKey());
-	// List<Field> fields = decorator.getFields();
-	// for (Entry<String, Object> fieldEntry : decoratorEntry.getValue().entrySet()) {
-	// Field field = new Field();
-	// field.setName(fieldEntry.getKey());
-	// field.setValue(fieldEntry.getValue());
-	// fields.add(field);
-	// }
-	// decorators.add(decorator);
-	// }
-	//
-	// return decorators;
-	// }
-
 	@Override
 	public void mapToUdm(Map<String, Map<String, Object>> object, DocumentRevisionBuilder builder) {
-		// TODO Auto-generated method stub
-		
+		// Get all decorators from the map.
+		for (Entry<String, Map<String, Object>> entry : object.entrySet()) {
+			DecoratorBuilder decorator = builder.decorator(entry.getKey());
+			
+			// Get all fields from the decorator.
+			for (Entry<String, Object> field : entry.getValue().entrySet()) {
+				decorator.field(field.getKey(), field.getValue()).commit();
+			}
+		}
 	}
 
 	@Override
