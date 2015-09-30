@@ -49,6 +49,11 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
 				debugger.startInstruction(instruction);
 			}
 
+			if (debugger.shouldStop()) {
+				processResult = InstructionFlow.doReturn(ExpressionBuilderHelper.NULL);
+				break;
+			}
+
 			InstructionFlow<MetaExpression> result = processInstruction(instruction, debugger);
 			processedInstructions.add(instruction);
 
@@ -59,11 +64,6 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
 			if (!result.resumes()) {
 				debugger.returning(this, result);
 				processResult = result;
-				break;
-			}
-
-			if (debugger.shouldStop()) {
-				processResult = InstructionFlow.doReturn(ExpressionBuilderHelper.NULL);
 				break;
 			}
 		}
