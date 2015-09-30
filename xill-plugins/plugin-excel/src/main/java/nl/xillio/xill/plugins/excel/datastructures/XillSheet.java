@@ -1,6 +1,6 @@
 package nl.xillio.xill.plugins.excel.datastructures;
 
-import nl.xillio.xill.api.components.MetadataExpression;
+import nl.xillio.xill.api.data.MetadataExpression;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import java.util.Date;
@@ -56,7 +56,7 @@ public class XillSheet implements MetadataExpression {
 		int maxColumnSize = 0;
 		for (int i = 0; i < rowLength; i++)
 			if (sheet.getRow(i) != null &&
-							maxColumnSize < getRow(i).getLastCellNum()) {
+				maxColumnSize < getRow(i).getLastCellNum()) {
 				maxColumnSize = getRow(i).getLastCellNum();
 			}
 		return maxColumnSize;
@@ -73,6 +73,7 @@ public class XillSheet implements MetadataExpression {
 
 	/**
 	 * Gets the height of the spreadsheet.
+	 *
 	 * @return the amount of rows of the spreadsheet
 	 */
 	public int getRowLength() {

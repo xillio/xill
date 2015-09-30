@@ -1,7 +1,7 @@
 package nl.xillio.xill.plugins.web.data;
 
-import nl.xillio.xill.api.components.MetadataExpression;
 
+import nl.xillio.xill.api.data.MetadataExpression;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 

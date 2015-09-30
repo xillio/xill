@@ -1,46 +1,42 @@
 /*
  * This build file contains the default things you need to do to build a plugin
  */
-subprojects{
-	
-	sourceCompatibility = 1.8
-	targetCompatibility = 1.8
-	
-	dependencies{
-		compile project(':api');
-		testCompile project(':testutils')
-	}
-	
-	/*
-	 * Copy all dependencies to the libs folder. An alternative to this would be to build as an application (InstallApp task)
-	 * We need all dependencies to be there so we can easily copy them over as a plugin
-	 */
-	task copyToLib(type:Sync) {
-		description 'Copy dependencies to libs folder'
+subprojects {
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    dependencies {
+        compile project(':api');
+        testCompile project(':testutils')
+    }
+
+    /*
+     * Copy all dependencies to the libs folder. An alternative to this would be to build as an application (InstallApp task)
+     * We need all dependencies to be there so we can easily copy them over as a plugin
+     */
+    task copyToLib(type: Sync) {
+        description 'Copy dependencies to libs folder'
         from configurations.runtime
-		def apiRuntime = project(':api').configurations.runtime.files
+        def apiRuntime = project(':api').configurations.runtime.files
         exclude { details -> apiRuntime.contains(details.file) || details.name.equals(project(':api').jar.archiveName) }
-		into libsDir
-	}
+        into libsDir
+    }
 
+    task copyToPluginDir(type: Copy) {
+        dependsOn assemble
+        from libsDir
+        into new File(pluginsDir, project.name)
+    }
+
+    tasks.withType(Jar) {
+        doFirst {
+            manifest {
+                attributes "Class-Path": project.configurations.runtime.files.collect {File file-> file.name }.join(" ")
+            }
+        }
+    }
+
+    rootProject.assembleContentTools.dependsOn copyToPluginDir
     assemble.dependsOn copyToLib
-
-	/*
-	 * Before making a jar we should be sure that all runtime dependencies are in the libs folder.
-	 * These files will be added to the classpath during this step.
-	 */
-	tasks.withType(Jar) {
-		doFirst {
-			manifest {
-				attributes "Class-Path": project.configurations.runtime.files.collect {File file-> file.name }.join(" ")
-			}
-		}
-	}
-}
-evaluationDependsOnChildren()
-	
-description 'This project is the parent project to all xill plugins. It will provide the build file for all plugins'
-
-jar {
-	enabled false
 }

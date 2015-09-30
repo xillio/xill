@@ -1,68 +1,43 @@
 /**
- * This file represents the base configuration for all projects in this repository. These will be applied first
+ * This file represents the base for every project
  */
-apply from: rootProject.file('gradle/license.gradle')
+ext {
+    pluginsDir = rootProject.file('plugins')
+}
+apply plugin: 'java'
 apply plugin: 'jacoco'
 
-/**
- * JAVA
- */
-apply plugin: 'eclipse'
-apply plugin: 'java'
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-group = mavenPublicationGroup
-version = rootProject.version
-
-repositories {
-    mavenLocal()
-    mavenCentral()
-}
-
 task sourceJar(type: Jar) {
+    group 'build'
+    description 'Build a jar containing java sources'
+
     from sourceSets.main.allJava
 }
 
-build.dependsOn javadoc
-javadoc.failOnError = !Boolean.parseBoolean(javadocIgnoreErrors)
+version rootProject.version
+group mavenGroup
 
-/**
- * MAVEN PUBLISH
- */
-if (project.name != 'xill-plugins' && System.env.BUILD_NUMBER) {
-    apply plugin: 'maven-publish'
+apply from: rootProject.file('gradle/publish.gradle')
+apply from: rootProject.file('gradle/deploy.gradle')
+apply from: rootProject.file('gradle/license.gradle')
 
-    publishing {
-        publications {
-            main(MavenPublication) {
-                artifactId project.name
-
-                from components.java
-
-                artifact sourceJar {
-                    classifier "sources"
-                }
-            }
-        }
-
-        repositories {
-            maven {
-                url "http://$mavenRepositoryHost:$mavenRespoitoryPort/nexus/content/repositories/releases"
-                name 'release'
-                credentials {
-                    username = mavenUsername
-                    password = mavenPassword
-                }
+tasks.withType(Jar) {
+    doFirst {
+        manifest {
+            attributes "Implementation-Version": version
+            attributes "Build-Date": new Date().format("dd-MM-yyyy")
+            attributes "Build-Java-Version": System.properties["java.version"]
+            if (project.hasProperty(project.name + "ProjectName")) {
+                attributes "Implementation-Title": project.getProperties().get(project.name + "ProjectName")
             }
         }
     }
-
 }
 
-/**
- * TESTING
- */
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:deprecation"
+}
+
 test.useTestNG {
     useDefaultListeners = true
 }
@@ -71,18 +46,4 @@ test.useTestNG {
 dependencies {
     testCompile 'org.testng:testng:6.9.4'
     testCompile "org.mockito:mockito-core:1.+"
-}
-
-jar.manifest {
-    attributes "Implementation-Version": version
-    attributes "Build-Date": new Date().format("dd-MM-yyyy")
-    attributes "Build-Java-Version": System.properties["java.version"]
-
-    if (project.hasProperty(project.name + "ProjectName")) {
-        attributes "Implementation-Title": project.getProperties().get(project.name + "ProjectName")
-    }
-}
-
-tasks.withType(JavaCompile) {
-    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
 }
