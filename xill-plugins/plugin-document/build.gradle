@@ -4,7 +4,11 @@
  */
 description 'This plugin is responsible for operations regarding the UDM'
 
+repositories{
+	mavenLocal()
+}
+
 dependencies{
     compile 'org.mongodb:mongo-java-driver:3.0.3'
-    compile(group: 'nl.xillio', name: 'udm', version: 'ALPHA+')
+    compile(group: 'nl.xillio', name: 'udm', version: 'ALPHA-2+')
 }
