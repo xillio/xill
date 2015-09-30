@@ -1,6 +1,5 @@
 package nl.xillio.xill.plugins.xml.data;
 
-import nl.xillio.xill.api.components.MetadataExpression;
 import nl.xillio.xill.plugins.xml.exceptions.XmlParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,7 +23,7 @@ import java.io.StringWriter;
  *
  * @author Zbynek Hochmann
  */
-public class XmlNode implements MetadataExpression {
+public class XmlNode implements nl.xillio.util.xill.api.data.XmlNode {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	private Node node = null;
