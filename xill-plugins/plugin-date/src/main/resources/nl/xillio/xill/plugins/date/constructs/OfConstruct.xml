@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Creates a date variable from provided date and time inputs. Returns new date variable.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Getting date and time from provided values.</header>
+            <code>
+use System;
+use Date;
+var date = Date.of(2015, 12, 31, 10, 5, 0);
+System.print(date);
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>now</reference>
+        <reference>parse</reference>
+    </references>
+	    <tags>
+        date, time, datetime, nanosecond, timezone
+    </tags>
+</function>
