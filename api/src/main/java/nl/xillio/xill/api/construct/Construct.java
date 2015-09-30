@@ -2,8 +2,8 @@ package nl.xillio.xill.api.construct;
 
 import com.google.inject.Inject;
 import nl.xillio.plugins.XillPlugin;
-import nl.xillio.util.xill.api.data.MetadataExpression;
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.data.MetadataExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.services.files.FileResolver;
 import nl.xillio.xill.services.inject.InjectorUtils;

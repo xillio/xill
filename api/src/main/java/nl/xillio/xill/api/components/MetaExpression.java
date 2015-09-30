@@ -3,10 +3,10 @@ package nl.xillio.xill.api.components;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import nl.xillio.util.IdentityArrayList;
-import nl.xillio.util.xill.api.data.MetadataExpression;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.behavior.BooleanBehavior;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
+import nl.xillio.xill.api.data.MetadataExpression;
 import nl.xillio.xill.api.errors.NotImplementedException;
 
 import java.util.*;

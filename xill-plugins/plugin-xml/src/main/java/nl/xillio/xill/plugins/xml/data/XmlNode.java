@@ -23,7 +23,7 @@ import java.io.StringWriter;
  *
  * @author Zbynek Hochmann
  */
-public class XmlNode implements nl.xillio.util.xill.api.data.XmlNode {
+public class XmlNode implements nl.xillio.xill.api.data.XmlNode {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	private Node node = null;
