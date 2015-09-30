@@ -5,6 +5,8 @@ import com.google.inject.Binder;
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.plugins.document.services.ConversionService;
 import nl.xillio.xill.plugins.document.services.ConversionServiceImpl;
+import nl.xillio.xill.plugins.document.services.XillUDMService;
+import nl.xillio.xill.plugins.document.services.XillUDMServiceImpl;
 
 /**
  * This plugin package is responsible for operations regarding the Unified Data Model.
@@ -18,5 +20,6 @@ public class DocumentXillPlugin extends XillPlugin {
 		super.configure(binder);
 		
 		binder.bind(ConversionService.class).to(ConversionServiceImpl.class);
+		binder.bind(XillUDMService.class).to(XillUDMServiceImpl.class);
 	}
 }

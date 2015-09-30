@@ -38,14 +38,13 @@ public class GetConstruct extends Construct {
 		try {
 			result = udmService.get(documentId, versionId, section);
 		} catch (VersionNotFoundException e) {
-			throw new RobotRuntimeException("The version of the document could not be found", e);
+			throw new RobotRuntimeException(e.getMessage(), e);
 		} catch (DocumentNotFoundException e) {
-			throw new RobotRuntimeException("The document could not be found", e);
+			throw new RobotRuntimeException(e.getMessage(), e);
 		} catch (IllegalArgumentException e) {
-			throw new RobotRuntimeException("The section shoud be either \"target\" or \"source\"", e);
+			throw new RobotRuntimeException(e.getMessage(), e);
 		}
 
 		return parseObject(result);
 	}
-
 }
