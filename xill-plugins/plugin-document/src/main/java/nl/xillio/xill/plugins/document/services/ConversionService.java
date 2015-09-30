@@ -23,7 +23,7 @@ public interface ConversionService extends XillService {
 	 * @return A Map suited for conversion to a Xill object
 	 * @see MetaExpression#parseObject(Object)
 	 */
-	Map<String, MetaExpression> udmToMap(DocumentRevisionBuilder builder);
+	Map<String, Map<String, Object>> udmToMap(DocumentRevisionBuilder builder);
 
 	/**
 	 * Convert a map parsed from a Xill object and input all converted decorators into a {@link DocumentRevisionBuilder}
