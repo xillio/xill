@@ -7,6 +7,13 @@ import java.util.Map.Entry;
 import nl.xillio.udm.builders.DecoratorBuilder;
 import nl.xillio.udm.builders.DocumentRevisionBuilder;
 
+/**
+ * Implementation of the {@link ConversionService}.
+ * 
+ * @author Geert Konijnendijk
+ * @author Luca Scalzotto
+ *
+ */
 public class ConversionServiceImpl implements ConversionService {
 	@Override
 	public void mapToUdm(Map<String, Map<String, Object>> object, DocumentRevisionBuilder builder) {

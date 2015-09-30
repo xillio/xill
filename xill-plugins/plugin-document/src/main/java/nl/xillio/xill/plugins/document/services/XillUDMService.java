@@ -2,7 +2,6 @@ package nl.xillio.xill.plugins.document.services;
 
 import java.util.Map;
 
-import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
 import nl.xillio.xill.services.XillService;
 
 /**
@@ -15,6 +14,17 @@ import nl.xillio.xill.services.XillService;
  */
 public interface XillUDMService extends XillService {
 
-	public Map<String, Map<String, Object>> get(String documentId, String versionId, String section) throws VersionNotFoundException;
+	/**
+	 * Get all decorators of a specific document version.
+	 * 
+	 * @param documentId
+	 *        ID of the document
+	 * @param versionId
+	 *        ID of the version
+	 * @param section
+	 *        "target" or "source"
+	 * @return A map with the keys being decorator names and the values being a map mapping from field names to field values
+	 */
+	public Map<String, Map<String, Object>> get(String documentId, String versionId, String section);
 
 }

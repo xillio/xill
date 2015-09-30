@@ -14,6 +14,13 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
 import nl.xillio.xill.plugins.document.services.XillUDMService;
 
+/**
+ * Construct for getting all decorators of a specific document version as one object.
+ * 
+ * @author Geert Konijnendijk
+ * @author Luca Scalzotto
+ *
+ */
 public class GetConstruct extends Construct {
 
 	@Inject
