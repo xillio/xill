@@ -1,14 +1,12 @@
 package nl.xillio.xill.plugins.web.data;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
-
-import nl.xillio.xill.api.components.MetadataExpression;
+import nl.xillio.xill.api.data.MetadataExpression;
 import nl.xillio.xill.plugins.web.services.web.WebService;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class encapsulates the pooling mechanism for Selenium's PhantomJS processes used in Web.loadpage() Xill
@@ -27,9 +25,8 @@ public class PhantomJSPool {
 	/**
 	 * Creates PJS pool
 	 *
-	 * @param maxPoolSize
-	 *        Maximum amount of entities (PhantomJS processes) that can
-	 *        be in the pool at one time
+	 * @param maxPoolSize Maximum amount of entities (PhantomJS processes) that can
+	 *                    be in the pool at one time
 	 */
 	public PhantomJSPool(final int maxPoolSize) {
 		this.maxPoolSize = maxPoolSize;
@@ -41,11 +38,8 @@ public class PhantomJSPool {
 	 * It looks if the PhantomJS process with required CLI options exists in a pool and it's free
 	 * to use - then it will return it and reuse, otherwise it creates new one
 	 *
-	 * @param id
-	 *        in fact it is PJS process CLI options
-	 * @param webService
-	 *        the webService we're using.
-	 *
+	 * @param id         in fact it is PJS process CLI options
+	 * @param webService the webService we're using.
 	 * @return Entity containing a page (i.e. PhantomJS process) with provided options that can be used for web operations
 	 */
 	public Entity get(final Identifier id, final WebService webService) {
@@ -80,7 +74,7 @@ public class PhantomJSPool {
 	 * the pool and removes the entity from the pool
 	 *
 	 * @return true if entity has been freed or false if there is no any not
-	 *         used entity in the pool
+	 * used entity in the pool
 	 */
 	private boolean freeUnusedEntity() {
 		for (Entity item : poolEntities) {
@@ -95,9 +89,7 @@ public class PhantomJSPool {
 	/**
 	 * Creates new Identifier object from Options object
 	 *
-	 * @param options
-	 *        PJS CLI options
-	 *
+	 * @param options PJS CLI options
 	 * @return created Identifier
 	 */
 	public Identifier createIdentifier(final Options options) {
@@ -122,9 +114,7 @@ public class PhantomJSPool {
 	 * CLI options given by 'id' parameter and it's currently not in use.
 	 * It sets 'used' flag to true immediately on the found item.
 	 *
-	 * @param id
-	 *        in fact it is PJS process CLI options
-	 *
+	 * @param id in fact it is PJS process CLI options
 	 * @return Found entity or null if not found convenient process
 	 */
 	private Entity findFirstFreeEntityAndReuse(final Identifier id) {
@@ -154,9 +144,8 @@ public class PhantomJSPool {
 
 		/**
 		 * The constructor for the Entity class.
-		 * 
-		 * @param webService
-		 *        The webService the class will be using.
+		 *
+		 * @param webService The webService the class will be using.
 		 */
 		public Entity(final WebService webService) {
 			this.webService = webService;
@@ -165,7 +154,7 @@ public class PhantomJSPool {
 
 		/**
 		 * @return true if this PJS process is currently in use; otherwise false which means that this PJS process is
-		 *         free to re/use
+		 * free to re/use
 		 */
 		public boolean isUsed() {
 			return used;
@@ -176,9 +165,7 @@ public class PhantomJSPool {
 		 * It starts new PJS process with CLI options given by Identifier
 		 * It sets this PJS process as used automatically
 		 *
-		 * @param id
-		 *        in fact it is PJS process CLI options
-		 *
+		 * @param id in fact it is PJS process CLI options
 		 * @return Newly created WebDriver instance (i.e. PhantomJS)
 		 */
 		private WebVariable create(final Identifier id) {
@@ -194,9 +181,7 @@ public class PhantomJSPool {
 		 * It compares all CLI options if this particular existing PJS process
 		 * in the pool has been started with same CLI options as we are looking for
 		 *
-		 * @param id
-		 *        in fact it is PJS process CLI options
-		 *
+		 * @param id in fact it is PJS process CLI options
 		 * @return true if CLI options matches
 		 */
 		public boolean compare(final Identifier id) {
@@ -208,9 +193,8 @@ public class PhantomJSPool {
 		 * It takes this PJS process (free to use check must be done before this call)
 		 * and set non-CLI options for this PJS process (CLI options must match) and set as currently in use
 		 *
-		 * @param id
-		 *        It is used for passing the options that are to be set
-		 *        after driver is created (not CLI options)
+		 * @param id It is used for passing the options that are to be set
+		 *           after driver is created (not CLI options)
 		 */
 		private void reuse(final Identifier id) {
 			used = true; // set to be used
@@ -262,10 +246,8 @@ public class PhantomJSPool {
 		/**
 		 * Constructor of Identifier class
 		 *
-		 * @param options
-		 *        The CLI options that has been used when given PJS process has been started
-		 * @throws NullPointerException
-		 *         Throws a NullPointerException when the options were null.
+		 * @param options The CLI options that has been used when given PJS process has been started
+		 * @throws NullPointerException Throws a NullPointerException when the options were null.
 		 */
 		public Identifier(final Options options) {
 			if (options == null) {
