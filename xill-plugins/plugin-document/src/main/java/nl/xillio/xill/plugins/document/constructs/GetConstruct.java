@@ -44,11 +44,7 @@ public class GetConstruct extends Construct {
 		Map<String, Map<String, Object>> result = null;
 		try {
 			result = udmService.get(documentId, versionId, section);
-		} catch (VersionNotFoundException e) {
-			throw new RobotRuntimeException(e.getMessage(), e);
-		} catch (DocumentNotFoundException e) {
-			throw new RobotRuntimeException(e.getMessage(), e);
-		} catch (IllegalArgumentException e) {
+		} catch (VersionNotFoundException | DocumentNotFoundException | IllegalArgumentException e) {
 			throw new RobotRuntimeException(e.getMessage(), e);
 		}
 
