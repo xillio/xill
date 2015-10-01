@@ -2,8 +2,6 @@ package nl.xillio.xill.plugins.document.services;
 
 import java.util.Map;
 
-import com.google.inject.Inject;
-
 import nl.xillio.udm.DocumentID;
 import nl.xillio.udm.UDM;
 import nl.xillio.udm.builders.DocumentBuilder;
@@ -11,6 +9,8 @@ import nl.xillio.udm.builders.DocumentHistoryBuilder;
 import nl.xillio.udm.builders.DocumentRevisionBuilder;
 import nl.xillio.udm.services.UDMService;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
+
+import com.google.inject.Inject;
 
 public class XillUDMServiceImpl implements XillUDMService {
 
@@ -49,9 +49,9 @@ public class XillUDMServiceImpl implements XillUDMService {
 	 */
 	private DocumentHistoryBuilder getSourceOrTarget(DocumentBuilder builder, String section) {
 		// Check if the section is source or target, else throw an exception.
-		if (section.equalsIgnoreCase("source"))
+		if ("source".equalsIgnoreCase(section))
 			return builder.source();
-		else if (section.equalsIgnoreCase("target"))
+		else if ("target".equalsIgnoreCase(section))
 			return builder.target();
 		else
 			throw new IllegalArgumentException("The \"section\" argument is not in a valid format."
@@ -69,7 +69,7 @@ public class XillUDMServiceImpl implements XillUDMService {
 	 */
 	private DocumentRevisionBuilder getVersion(DocumentHistoryBuilder builder, String version) {
 		// Check if the version is current or the version exists, else throw an exception.
-		if (version.equalsIgnoreCase("current"))
+		if ("current".equalsIgnoreCase(version))
 			return builder.current();
 		else if (builder.versions().contains(version))
 			return builder.revision(version);
