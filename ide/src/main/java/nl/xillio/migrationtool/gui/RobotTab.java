@@ -524,8 +524,15 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
   /**
    * Clear the console content related to this robot
    */
-  public void clearConsolePane() {
-    this.consolePane.clear();
-  }
+	public void clearConsolePane() {
+		this.consolePane.clear();
+	}
+
+	/**
+	 * Set up ConsolePane for this RobotTab
+	 */
+	public void initConsolePane() {
+		this.consolePane.initialize(this);
+	}
 
 }

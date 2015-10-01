@@ -302,6 +302,13 @@ public class FXController implements Initializable, EventHandler<Event> {
 			return;
 		}
 
+		// This code is because of different behaviour of FileChooser in Linux and Windows
+		// On Linux the FileChooser does not automatically add xill extension
+		String xillExt = "." + Xill.FILE_EXTENSION;
+		if (!chosen.getName().endsWith(xillExt)) {
+			chosen = new File(chosen.getPath() + xillExt);
+		}
+
 		RobotTab tab;
 		try {
 			if (!chosen.exists()) {
@@ -310,6 +317,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 			tab = new RobotTab(projectfile.getAbsoluteFile(), chosen, this);
 			tpnBots.getTabs().add(tab);
+			tab.initConsolePane(); // This line is because of ConsolePane.initialize is not called in Linux after adding tab (unlike the Windows)! CTC-713			
 			tab.requestFocus();
 		} catch (IOException e) {
 			e.printStackTrace();

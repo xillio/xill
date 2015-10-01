@@ -565,11 +565,13 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 	}
 
 	@Override
-	public void initialize(final RobotTab tab) {
-		this.tab = tab;
+	public void initialize(final RobotTab tab) {		
+		if (this.tab == null) {	// Prevent double initialization	
+			this.tab = tab;
 
-		this.tab.getProcessor().getDebugger().getOnRobotStart().addListener(start -> updateLog(Scroll.TOTALEND, false));
-		ESConsoleClient.getLogEvent(tab.getProcessor().getRobotID()).addListener(msg -> updateTimeline.play());
+			this.tab.getProcessor().getDebugger().getOnRobotStart().addListener(start -> updateLog(Scroll.TOTALEND, false));
+			ESConsoleClient.getLogEvent(tab.getProcessor().getRobotID()).addListener(msg -> updateTimeline.play());
+		}
 	}
 
 	private RobotID getRobotID() {
