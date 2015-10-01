@@ -7,6 +7,7 @@ import nl.xillio.udm.UDM;
 import nl.xillio.udm.builders.DocumentBuilder;
 import nl.xillio.udm.builders.DocumentHistoryBuilder;
 import nl.xillio.udm.builders.DocumentRevisionBuilder;
+import nl.xillio.udm.exceptions.PersistenceException;
 import nl.xillio.udm.services.UDMService;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
 
@@ -38,6 +39,21 @@ public class XillUDMServiceImpl implements XillUDMService {
 		return result;
 	}
 
+	@Override
+	public DocumentID create(String contentType, Map<String, Map<String, Object>> body)
+			throws PersistenceException {
+		// Build the document.
+		DocumentBuilder builder = udmService.create();
+		builder.contentType().name(contentType);
+		conversionService.mapToUdm(body, builder.source().current());
+		conversionService.mapToUdm(body, builder.target().current());
+		
+		// Save to the database and return the id.
+		DocumentID id = builder.commit();
+		udmService.persist(id);
+		return id;
+	}
+	
 	/**
 	 * Get the source or target from a {@link DocumentBuilder}.
 	 * 
@@ -76,5 +92,4 @@ public class XillUDMServiceImpl implements XillUDMService {
 		else
 			throw new VersionNotFoundException("The document does not contain a version [" + version + "].");
 	}
-
 }
