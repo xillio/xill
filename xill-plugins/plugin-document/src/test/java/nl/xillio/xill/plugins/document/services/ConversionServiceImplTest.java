@@ -16,6 +16,7 @@ import nl.xillio.udm.builders.DocumentRevisionBuilder;
 
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
 /**
  * Tests the methods in the {@link ConversionServiceImpl}.
  * 
@@ -45,7 +46,7 @@ public class ConversionServiceImplTest {
 		DocumentRevisionBuilder builder = mock(DocumentRevisionBuilder.class);
 
 		Map<String, DecoratorBuilder> decoratorBuilders = new HashMap<>();
-		
+
 		for (String decoratorName : object.keySet()) {
 			DecoratorBuilder decoratorBuilder = mockDecoratorBuilder();
 			decoratorBuilders.put(decoratorName, decoratorBuilder);
@@ -57,7 +58,7 @@ public class ConversionServiceImplTest {
 
 		// Verify
 		verify(builder).commit();
-		for (String decoratorName : object.keySet()){
+		for (String decoratorName : object.keySet()) {
 			verify(builder).decorator(decoratorName);
 			DecoratorBuilder decoratorBuilder = decoratorBuilders.get(decoratorName);
 			Map<String, Object> decorator = object.get(decoratorName);
@@ -74,29 +75,29 @@ public class ConversionServiceImplTest {
 	 */
 	@Test
 	public void testUdmToMap() {
-		// Mock		
+		// Mock
 		Map<String, Map<String, Object>> object = createDecoratorMap();
-		
+
 		DocumentRevisionBuilder builder = mock(DocumentRevisionBuilder.class);
 		when(builder.decorators()).thenReturn(new ArrayList<>(object.keySet()));
-		
-		Map<String, DecoratorBuilder> decorators=new HashMap<>();
+
+		Map<String, DecoratorBuilder> decorators = new HashMap<>();
 		for (String decoratorName : object.keySet()) {
 			DecoratorBuilder decoratorBuilder = mockReadableDecoratorBuilder(object.get(decoratorName));
 			when(builder.decorator(decoratorName)).thenReturn(decoratorBuilder);
 			decorators.put(decoratorName, decoratorBuilder);
 		}
-		
+
 		// Run
 		Map<String, Map<String, Object>> result = service.udmToMap(builder);
 
 		// Verify
 		verify(builder).decorators();
-		for (String decoratorName : object.keySet()){
+		for (String decoratorName : object.keySet()) {
 			verify(builder).decorator(decoratorName);
 			DecoratorBuilder decoratorBuilder = decorators.get(decoratorName);
 			verify(decoratorBuilder).fields();
-			for (String fieldName : object.get(decoratorName).keySet()){
+			for (String fieldName : object.get(decoratorName).keySet()) {
 				verify(decoratorBuilder).field(fieldName);
 			}
 		}

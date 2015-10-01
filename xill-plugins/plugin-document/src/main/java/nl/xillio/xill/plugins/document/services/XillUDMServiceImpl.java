@@ -25,6 +25,19 @@ public class XillUDMServiceImpl implements XillUDMService {
 		udmService = UDM.connect();
 	}
 
+	/**
+	 * Create a new XillUDMService and set the services it depends on manually
+	 * 
+	 * @param conversionService
+	 *        The {@link ConversionService}
+	 * @param udmService
+	 *        The {@link UDMService}
+	 */
+	XillUDMServiceImpl(ConversionService conversionService, UDMService udmService) {
+		this.conversionService = conversionService;
+		this.udmService = udmService;
+	}
+
 	@Override
 	public Map<String, Map<String, Object>> get(String documentId, String versionId, String section) {
 		// Get the document and convert it to a map.
