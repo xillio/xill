@@ -25,48 +25,35 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  *
  */
 public class RemoveConstruct extends Construct {
-
+	
+	@Inject
+	XillUDMService udmService;
+	
 	@Override
 	public ConstructProcessor prepareProcess(ConstructContext context) {
 		return new ConstructProcessor(
-				(documentid, versionid, section) -> process(documentid, versionid, section),
+				(documentid, versionid, section) -> process(documentid, versionid, section,udmService),
 				new Argument("documentid", ATOMIC),
 				new Argument("versionid",fromValue("current"), ATOMIC),
 				new Argument("source", fromValue("target"), ATOMIC)
 		);
 	}
 
-	static MetaExpression process(MetaExpression documentid, MetaExpression versionid, MetaExpression section) {
+	static MetaExpression process(final MetaExpression documentid,
+			final MetaExpression versionid,final MetaExpression section,
+			final XillUDMService udmService) {
 		//get string values of arguments
 		String docid = documentid.getStringValue();
 		String versid = versionid.getStringValue();
 		String sect = section.getStringValue();
 		
-		if(sect.equals("temp")){
-			UDMService udm = UDM.connect();
-			DocumentID doc = udm.create()
-					.contentType().name("name")
-					.source().current().version("2")
-					.source().current().action(2)
-					.target().current().action(3)
-					.target().current().version("testing")
-					.target().revision("whut")
-					.revision("whut").version("deze").action(5)
-					.revision("aarde").version("nieuwe").action(6)
-					.modifiedBy("ugh")
-					.commit();
-			
-			
-			try {
-				udm.persist(doc);
-			} catch (PersistenceException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return NULL;
+		try{
+			udmService.remove(docid,versid,sect);
+		}catch(Exception e){
+			throw new RobotRuntimeException(e.getMessage());
 		}
 		
-		//connect to UDM service
+		
 		try(UDMService udm = UDM.connect()){
 			DocumentID doc = udm.get(docid);
 			if(versid.equals("current")){
@@ -87,3 +74,30 @@ public class RemoveConstruct extends Construct {
 		return NULL;
 	}
 }
+
+/*
+if(sect.equals("temp")){
+	UDMService udm = UDM.connect();
+	DocumentID doc = udm.create()
+			.contentType().name("name")
+			.source().current().version("2")
+			.source().current().action(2)
+			.target().current().action(3)
+			.target().current().version("testing")
+			.target().revision("whut")
+			.revision("whut").version("deze").action(5)
+			.revision("aarde").version("nieuwe").action(6)
+			.modifiedBy("ugh")
+			.commit();
+	
+	
+	try {
+		udm.persist(doc);
+	} catch (PersistenceException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	return NULL;
+}
+*/
+//connect to UDM service
