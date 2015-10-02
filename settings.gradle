@@ -1,6 +1,6 @@
 include 'api', 'ide', 'processor', 'xill-plugins', 'docgen', 'testutils'
 
-// Set the rootname of the project (do not use the name of the current directory. Jenkins needs this)
+// Set the root name of the project (do not use the name of the current directory. Jenkins needs this)
 rootProject.name = 'xill'
 
 //Plugins
@@ -14,3 +14,4 @@ include 'xill-plugins:plugin-file'
 include 'xill-plugins:plugin-database'
 include 'xill-plugins:plugin-xml'
 include 'xill-plugins:plugin-excel'
+include 'xill-plugins:plugin-document'

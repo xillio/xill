@@ -1,13 +1,8 @@
 package nl.xillio.xill.plugins.web.data;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-
-import nl.xillio.xill.api.components.MetadataExpression;
+import nl.xillio.xill.api.data.MetadataExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.WebXillPlugin;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -17,6 +12,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Class encapsulate PhantomJS options handling (parsing, validating, creating new PhantomJS process, etc.)
@@ -50,9 +49,8 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Set the proxy host.
-	 * 
-	 * @param name
-	 *        The name of the host.
+	 *
+	 * @param name The name of the host.
 	 */
 	public void setProxyHost(final String name) {
 		proxyHost = name;
@@ -60,9 +58,8 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Set the proxy port.
-	 * 
-	 * @param value
-	 *        The name of the port.
+	 *
+	 * @param value The name of the port.
 	 */
 	public void setProxyPort(final int value) {
 		proxyPort = value;
@@ -70,9 +67,8 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Set the timeout value.
-	 * 
-	 * @param value
-	 *        The value of the timeout in ms.
+	 *
+	 * @param value The value of the timeout in ms.
 	 */
 	public void setTimeout(final int value) {
 		timeout = value;
@@ -80,9 +76,8 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Set the proxy user.
-	 * 
-	 * @param name
-	 *        The username.
+	 *
+	 * @param name The username.
 	 */
 	public void setProxyUser(final String name) {
 		proxyUser = name;
@@ -90,9 +85,8 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Set the proxy pass.
-	 * 
-	 * @param name
-	 *        The name of the pass.
+	 *
+	 * @param name The name of the pass.
 	 */
 	public void setProxyPass(final String name) {
 		proxyPass = name;
@@ -100,9 +94,8 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Set proxy type.
-	 * 
-	 * @param name
-	 *        The name of the proxyType. (Supported: http, socks5)
+	 *
+	 * @param name The name of the proxyType. (Supported: http, socks5)
 	 */
 	public void setProxyType(final String name) {
 		proxyType = name;
@@ -110,9 +103,8 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Set the httpAuthUser.
-	 * 
-	 * @param name
-	 *        The name of the user.
+	 *
+	 * @param name The name of the user.
 	 */
 	public void setHttpAuthUser(final String name) {
 		httpAuthUser = name;
@@ -120,9 +112,8 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Set a pass for the httpAuthUser.
-	 * 
-	 * @param name
-	 *        The name of the pass.
+	 *
+	 * @param name The name of the pass.
 	 */
 	public void setHttpAuthPass(final String name) {
 		httpAuthPass = name;
@@ -130,9 +121,8 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Set the browser.
-	 * 
-	 * @param name
-	 *        The name of the browser. (currently supported: PHANTOMJS)
+	 *
+	 * @param name The name of the browser. (currently supported: PHANTOMJS)
 	 */
 	public void setBrowser(final String name) {
 		browser = name;
@@ -140,9 +130,8 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Set the sslProtocol.
-	 * 
-	 * @param name
-	 *        The name of the protocol. (supported: sslv3, sslv2, tlsv1, any).
+	 *
+	 * @param name The name of the protocol. (supported: sslv3, sslv2, tlsv1, any).
 	 */
 	public void setSslProtocol(final String name) {
 		sslProtocol = name;
@@ -150,9 +139,8 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Enable or disable JavaScript.
-	 * 
-	 * @param enabled
-	 *        Whether or not we want JS enabled.
+	 *
+	 * @param enabled Whether or not we want JS enabled.
 	 */
 	public void enableJS(final boolean enabled) {
 		enableJS = enabled;
@@ -160,9 +148,8 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Enable of disable WebSecurity.
-	 * 
-	 * @param enabled
-	 *        Whether or not we want security enabled.
+	 *
+	 * @param enabled Whether or not we want security enabled.
 	 */
 	public void enableWebSecurity(final boolean enabled) {
 		enableWebSecurity = enabled;
@@ -170,9 +157,8 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Enable or disable insecure SSL.
-	 * 
-	 * @param enabled
-	 *        Whether or not we want insecure SSL enabled.
+	 *
+	 * @param enabled Whether or not we want insecure SSL enabled.
 	 */
 	public void enableInsecureSSL(final boolean enabled) {
 		insecureSSL = enabled;
@@ -180,9 +166,8 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Enable or disable load images.
-	 * 
-	 * @param enabled
-	 *        Whether or not we want load images enabled.
+	 *
+	 * @param enabled Whether or not we want load images enabled.
 	 */
 	public void enableLoadImages(final boolean enabled) {
 		loadImages = enabled;
@@ -190,9 +175,8 @@ public class Options implements MetadataExpression {
 
 	/**
 	 * Enable or disable ltr URL access.
-	 * 
-	 * @param enabled
-	 *        Whether or not we want this access enabled.
+	 *
+	 * @param enabled Whether or not we want this access enabled.
 	 */
 	public void enableLtrUrlAccess(final boolean enabled) {
 		ltrUrlAccess = enabled;
@@ -238,8 +222,7 @@ public class Options implements MetadataExpression {
 	/**
 	 * It sets the non-CLI options (i.e. the option that can be set after the process is created)
 	 *
-	 * @param driver
-	 *        Existing WebDriver
+	 * @param driver Existing WebDriver
 	 */
 	public void setDriverOptions(final WebDriver driver) {
 		// setting up bigger size of viewport (default is 400x300)
@@ -297,10 +280,8 @@ public class Options implements MetadataExpression {
 	}
 
 	/**
-	 * @param s1
-	 *        first string value
-	 * @param s2
-	 *        second string value
+	 * @param s1 first string value
+	 * @param s2 second string value
 	 * @return if provided string are equal or not (including null strings)
 	 */
 	private static boolean strEq(final String s1, final String s2) {
@@ -313,21 +294,20 @@ public class Options implements MetadataExpression {
 	/**
 	 * It compares provided CLI options with current CLI options
 	 *
-	 * @param options
-	 *        contains actual LoadPage CLI settings
+	 * @param options contains actual LoadPage CLI settings
 	 * @return true if matches otherwise false
 	 */
 	public boolean compareDCap(final Options options) {
-		return 	strEq(dCapString(), options.dCapString());
+		return strEq(dCapString(), options.dCapString());
 	}
 
 	private String dCapString() {
 		return StringUtils.join(
-				browser,		enableJS, 		enableWebSecurity,
-				insecureSSL, 	loadImages, 	sslProtocol,
-				ltrUrlAccess, 	proxyHost,		proxyPort,
-				proxyUser, 		proxyPass, 		proxyType,
-				httpAuthUser, 	httpAuthPass);
+			browser, enableJS, enableWebSecurity,
+			insecureSSL, loadImages, sslProtocol,
+			ltrUrlAccess, proxyHost, proxyPort,
+			proxyUser, proxyPass, proxyType,
+			httpAuthUser, httpAuthPass);
 	}
 
 	private WebDriver createPhantomJSDriver() {
@@ -423,8 +403,7 @@ public class Options implements MetadataExpression {
 	}
 
 	/**
-	 * @return
-	 *         Returns the timeOut value in the options.
+	 * @return Returns the timeOut value in the options.
 	 */
 	public int getTimeOut() {
 		return timeout;

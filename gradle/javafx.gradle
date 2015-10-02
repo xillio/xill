@@ -1,0 +1,51 @@
+/**
+ * This file contains the javafx plugin configuration
+ */
+/* Download the JavaFX plugin if it doesn't exist */
+def javaFXPluginFile = new File(projectDir, "gradle/javafx.plugin")
+if (!javaFXPluginFile.exists()) {
+    new URL(javaFXPluginUrl).withInputStream{ i -> javaFXPluginFile.withOutputStream{ it << i }}
+}
+apply from: javaFXPluginFile.absolutePath
+
+
+javafx {
+    appID = appID
+    appName = friendlyName
+    copyright = copyrightInformation
+    description = description
+    licenseType = licenseType
+    mainClass 'nl.xillio.contenttools.Application'
+    vendor = company
+    menu = true
+    shortcut = true
+    embedLauncher = false
+    embedJNLP = false
+    // Allow the user to set the heap size
+    bundleArguments.userJvmOptions = ['-Xmx': '1024m', '-Xms': '1024m']
+}
+
+jfxDeploy {
+    dependsOn assembleContentTools
+    doFirst {
+        copy {
+            from pluginsDir
+            into new File(libsDir, "plugins")
+        }
+    }
+    inputFiles = files(
+            libsDir,
+            new File(projectDir, "CHANGELOG.md"),
+            new File(projectDir, "LICENSE"))
+
+    doLast {
+        distsDir.eachDir() {
+            dir ->
+                distributeZip.from dir
+        }
+    }
+}
+
+deploy.dependsOn jfxDeploy
+
+run.dependsOn assembleContentTools
