@@ -317,7 +317,6 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 			tab = new RobotTab(projectfile.getAbsoluteFile(), chosen, this);
 			tpnBots.getTabs().add(tab);
-			tab.initConsolePane(); // This line is because of ConsolePane.initialize is not called in Linux after adding tab (unlike the Windows)! CTC-713			
 			tab.requestFocus();
 		} catch (IOException e) {
 			e.printStackTrace();

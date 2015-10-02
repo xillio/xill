@@ -175,7 +175,10 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	public void initialize(final URL arg0, final ResourceBundle arg1) {
 
 		Platform.runLater(() -> {
-			initializeChildren(getContent());
+			// FX graphical child items initialization (CTC-713)
+			editorPane.initialize(this);
+			consolePane.initialize(this);
+			vbxDebugpane.getChildrenUnmodifiable().filtered(node -> (node instanceof DebugPane)).forEach(node -> ((DebugPane)node).initialize(this)); 
 
 			// Remove the left hidden bar from dom
 			// This must be done after initialization otherwise the debugpane won't receive the tab
@@ -204,16 +207,6 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
 		// Subscribe to events
 		editorPane.getDocumentState().addListener(this);
-	}
-
-	private void initializeChildren(final Node node) {
-		if (node instanceof RobotTabComponent) {
-			((RobotTabComponent) node).initialize(this);
-		}
-
-		if (node instanceof Parent) {
-			((Parent) node).getChildrenUnmodifiable().forEach(this::initializeChildren);
-		}
 	}
 
 	/**
@@ -520,19 +513,12 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	public RobotID getCurrentRobot() {
 		return currentRobot;
 	}
-	
-  /**
-   * Clear the console content related to this robot
-   */
-	public void clearConsolePane() {
-		this.consolePane.clear();
-	}
 
 	/**
-	 * Set up ConsolePane for this RobotTab
+	 * Clear the console content related to this robot
 	 */
-	public void initConsolePane() {
-		this.consolePane.initialize(this);
+	public void clearConsolePane() {
+		this.consolePane.clear();
 	}
 
 }
