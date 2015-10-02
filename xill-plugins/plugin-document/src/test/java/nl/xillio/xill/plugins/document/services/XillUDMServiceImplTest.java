@@ -1,15 +1,5 @@
 package nl.xillio.xill.plugins.document.services;
 
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertSame;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 import nl.xillio.udm.DocumentID;
 import nl.xillio.udm.builders.DocumentBuilder;
 import nl.xillio.udm.builders.DocumentHistoryBuilder;
@@ -17,16 +7,22 @@ import nl.xillio.udm.builders.DocumentRevisionBuilder;
 import nl.xillio.udm.exceptions.DocumentNotFoundException;
 import nl.xillio.udm.services.UDMService;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
-
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertSame;
+
 /**
  * Test the methods in the {@link XillUDMServiceImpl}
- * 
- * @author Geert Konijnendijk
  *
+ * @author Geert Konijnendijk
  */
 public class XillUDMServiceImplTest {
 
@@ -41,28 +37,29 @@ public class XillUDMServiceImplTest {
 	public void initialize() {
 		conversionService = mock(ConversionService.class);
 		udmService = mock(UDMService.class);
-		xillUdmService = new XillUDMServiceImpl(conversionService, udmService);
+		xillUdmService = spy(new XillUDMServiceImpl(conversionService));
+		doReturn(udmService).when(xillUdmService).connect();
 	}
 
 	/**
 	 * Generate combinations of versionIds and sections for use in {@link XillUDMServiceImplTest#testGetNormal(String, String)}.
-	 * 
+	 *
 	 * @return Combinations of versionId and sections test data
 	 */
 	@DataProvider(name = "versionIdSection")
 	public Object[][] generateVersionIdSection() {
-		return new Object[][] {
-				{"current", "source"},
-				{"current", "target"},
-				{"v1", "source"},
-				{"v1", "target"}};
+		return new Object[][]{
+			{"current", "source"},
+			{"current", "target"},
+			{"v1", "source"},
+			{"v1", "target"}};
 	}
 
 	/**
 	 * Test {@link XillUDMServiceImpl#get(String, String, String)} under normal usage
-	 * 
+	 *
 	 * @param versionId version ID to test for
-	 * @param section "source" or "target"
+	 * @param section   "source" or "target"
 	 */
 	@Test(dataProvider = "versionIdSection")
 	public void testGetNormal(String versionId, String section) {
@@ -88,15 +85,13 @@ public class XillUDMServiceImplTest {
 		verify(udmService).get(documentId);
 		if ("current".equals(versionId)) {
 			verify(documentHistoryBuilder).current();
-		}
-		else {
+		} else {
 			verify(documentHistoryBuilder).versions();
 			verify(documentHistoryBuilder).revision(versionId);
 		}
 		if ("source".equals(section)) {
 			verify(documentBuilder).source();
-		}
-		else {
+		} else {
 			verify(documentBuilder).target();
 		}
 		verify(conversionService).udmToMap(documentRevisionBuilder);
@@ -137,7 +132,7 @@ public class XillUDMServiceImplTest {
 		// Run
 		xillUdmService.get(documentId, versionId, section);
 	}
-	
+
 	/**
 	 * Test that {@link XillUDMServiceImpl#get(String, String, String)} throws a {@link VersionNotFoundException} when a non-existent version is requested.
 	 */
@@ -164,7 +159,7 @@ public class XillUDMServiceImplTest {
 
 	/**
 	 * Mock a {@link DocumentHistoryBuilder} with {@link DocumentHistoryBuilder#current()}, {@link DocumentHistoryBuilder#versions()} and {@link DocumentHistoryBuilder#revision(String)}.
-	 * 
+	 *
 	 * @param versionId
 	 * @param documentRevisionBuilder
 	 * @return
@@ -176,8 +171,7 @@ public class XillUDMServiceImplTest {
 			ArrayList<String> versions = new ArrayList<String>();
 			versions.add(versionId);
 			when(documentHistoryBuilder.versions()).thenReturn(versions);
-		}
-		else {
+		} else {
 			when(documentHistoryBuilder.versions()).thenReturn(new ArrayList<>());
 		}
 		when(documentHistoryBuilder.revision(anyString())).thenReturn(documentRevisionBuilder);
@@ -186,9 +180,8 @@ public class XillUDMServiceImplTest {
 
 	/**
 	 * Mock a {@link DocumentBuilder} with {@link DocumentBuilder#source()} and {@link DocumentBuilder#target()}
-	 * 
-	 * @param documentHistoryBuilder
-	 *        {@link DocumentHistoryBuilder} returned as source and target
+	 *
+	 * @param documentHistoryBuilder {@link DocumentHistoryBuilder} returned as source and target
 	 * @return A mocked {@link DocumentBuilder}
 	 */
 	private DocumentBuilder mockDocumentBuilder(DocumentHistoryBuilder documentHistoryBuilder) {
