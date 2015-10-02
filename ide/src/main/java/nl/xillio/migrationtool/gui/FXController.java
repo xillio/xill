@@ -217,7 +217,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 		// Add window handler
 		Platform.runLater(() -> apnRoot.getScene().getWindow().setOnCloseRequest(event -> {
 			this.cancelClose = false;
-			System.out.println("Shutting down application");
+			LOGGER.info("Shutting down application");
 			if (!closeApplication()) {
 				event.consume(); // this cancel the process of the application closing     
 			}
@@ -498,7 +498,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 		// Finish app closing
 		ProjectPane.stop();
 		Platform.exit();
-		System.exit(0);
+		ESConsoleClient.getInstance().close();
 		return false;
 	}
 
