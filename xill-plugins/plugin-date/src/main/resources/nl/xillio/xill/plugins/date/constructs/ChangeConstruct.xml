@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Creates a date variable from provided date and list of changes. The function changes input date according to changes in list and returns new date variable.
+Change identificators can be: zone, timezone, YEARS, MONTHS, DAYS, HOURS, MINUTES, SECONDS, etc. 
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Changing current date and time.</header>
+            <code>
+use System;
+use Date;
+var date = Date.now();
+var date2 = Date.change(date, {"DAYS" : 3, "HOURS" : -5});
+System.print(date);
+System.print(date2);
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>diff</reference>
+    </references>
+	    <tags>
+        date, time, datetime, change, timezone
+    </tags>
+</function>
