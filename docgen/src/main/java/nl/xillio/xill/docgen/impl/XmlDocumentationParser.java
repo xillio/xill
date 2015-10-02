@@ -1,28 +1,38 @@
 package nl.xillio.xill.docgen.impl;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
 import nl.xillio.xill.docgen.DocumentationEntity;
 import nl.xillio.xill.docgen.DocumentationParser;
 import nl.xillio.xill.docgen.data.Example;
 import nl.xillio.xill.docgen.data.ExampleNode;
 import nl.xillio.xill.docgen.data.Reference;
 import nl.xillio.xill.docgen.exceptions.ParsingException;
+
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
-import org.w3c.dom.CharacterData;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.*;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.*;
 
 /**
  * The class represents a parser that will parse xml files into {@link DocumentationEntity}
@@ -43,12 +53,14 @@ public class XmlDocumentationParser implements DocumentationParser {
 	/**
 	 * The constructor for the parser when we hand it a factory.
 	 *
-	 * @param xpathFactory           The {@link XPathFactory} we want the parser to use.
+	 * @param xpathFactory
+	 *        The {@link XPathFactory} we want the parser to use.
 	 * @param documentBuilderFactory
 	 */
-	public XmlDocumentationParser(final XPathFactory xpathFactory, DocumentBuilderFactory documentBuilderFactory) {
+	public XmlDocumentationParser(final XPathFactory xpathFactory, final DocumentBuilderFactory documentBuilderFactory) {
 		this.xpathFactory = xpathFactory;
 		this.documentBuilderFactory = documentBuilderFactory;
+		this.documentBuilderFactory.setCoalescing(true);
 		try {
 			buildQueries();
 		} catch (XPathExpressionException e) {
@@ -71,7 +83,6 @@ public class XmlDocumentationParser implements DocumentationParser {
 		referenceXPathQuery = xPath.compile("/function/references/reference");
 	}
 
-
 	@Override
 	public DocumentationEntity parse(final URL resource, final String identity) throws ParsingException {
 		try {
@@ -86,7 +97,7 @@ public class XmlDocumentationParser implements DocumentationParser {
 		}
 	}
 
-	InputStream openStream(URL url) throws IOException {
+	InputStream openStream(final URL url) throws IOException {
 		return url.openStream();
 	}
 
@@ -104,7 +115,7 @@ public class XmlDocumentationParser implements DocumentationParser {
 
 	String parseDescription(final Document doc) throws ParsingException {
 		try {
-			return (String) descriptionXPathQuery.evaluate(doc, XPathConstants.STRING);
+			return StringEscapeUtils.escapeHtml3((String) descriptionXPathQuery.evaluate(doc, XPathConstants.STRING));
 		} catch (XPathExpressionException e) {
 			throw new ParsingException("Failed to parse description", e);
 		}
@@ -143,12 +154,9 @@ public class XmlDocumentationParser implements DocumentationParser {
 		for (int t = 0; t < exampleContent.getLength(); ++t) {
 			Node item = exampleContent.item(t);
 			if (item.getNodeName() != null && !item.getNodeName().startsWith("#")) {
-				try{
-					CharacterData data = (CharacterData) exampleContent.item(t).getFirstChild();
-					example.addContent(new ExampleNode(exampleContent.item(t).getNodeName(), data.getData()));
-				}
-				catch(ClassCastException e){	
-				}
+				example.addContent(
+					new ExampleNode(exampleContent.item(t).getNodeName(),
+						StringEscapeUtils.escapeHtml3(exampleContent.item(t).getTextContent())));
 			}
 		}
 		return example;
