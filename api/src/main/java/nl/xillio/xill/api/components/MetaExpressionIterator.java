@@ -1,5 +1,8 @@
 package nl.xillio.xill.api.components;
 
+
+import nl.xillio.xill.api.data.MetadataExpression;
+
 import java.util.Iterator;
 import java.util.function.Function;
 

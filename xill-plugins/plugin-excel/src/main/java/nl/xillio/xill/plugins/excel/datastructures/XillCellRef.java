@@ -1,6 +1,6 @@
 package nl.xillio.xill.plugins.excel.datastructures;
 
-import nl.xillio.xill.api.components.MetadataExpression;
+import nl.xillio.xill.api.data.MetadataExpression;
 import org.apache.poi.hssf.util.CellReference;
 
 /**
