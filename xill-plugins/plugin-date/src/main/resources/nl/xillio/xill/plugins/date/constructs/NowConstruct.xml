@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Gets the current date and time and returns it as a new date variable.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Getting current date and time.</header>
+            <code>
+use System;
+use Date;
+var now = Date.now();
+System.print(now);
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>of</reference>
+        <reference>parse</reference>
+    </references>
+	    <tags>
+        date, time, datetime, now, current
+    </tags>
+</function>

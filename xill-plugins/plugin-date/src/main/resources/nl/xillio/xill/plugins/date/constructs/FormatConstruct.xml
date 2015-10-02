@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Converts the date to a string using the provided format. 
+If no format is given the pattern "yyyy-MM-dd HH:mm:ss" is used.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Showing formated current datetime.</header>
+            <code>
+use System;
+use Date;
+var date = Date.now();
+System.print(Date.format(date));
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>info</reference>
+    </references>
+	    <tags>
+        date, time, datetime, format
+    </tags>
+</function>
