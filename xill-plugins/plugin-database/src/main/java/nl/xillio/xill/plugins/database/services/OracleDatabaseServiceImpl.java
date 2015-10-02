@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Properties;
 
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.database.util.Database;
 import nl.xillio.xill.plugins.database.util.Tuple;
 import oracle.jdbc.driver.OracleConnection;
@@ -17,18 +18,23 @@ public class OracleDatabaseServiceImpl extends BaseDatabaseService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Connection createConnection(final String database, final String user, final String pass, final Tuple<String, String>... options) throws SQLException {
-		Connection connection = connect(createConnectionURL(database, user, pass, options), createProperties(options));
-		// Enable prepared statement caching
-		((OracleConnection) connection).setImplicitCachingEnabled(true);
-		return connection;
+	public Connection createConnection(final String database, final String user, final String pass, final Tuple<String, String>... options) {
+		try {
+			Connection connection = connect(createConnectionURL(database, user, pass, options), createProperties(options));
+
+			// Enable prepared statement caching
+			((OracleConnection) connection).setImplicitCachingEnabled(true);
+			return connection;
+		} catch (Exception e) {
+			throw new RobotRuntimeException(e.getMessage(), e);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	protected String createConnectionURL(final String database, final String user, final String pass, final Tuple<String, String>... options) throws SQLException {
 		if ((user == null) != (pass == null)) {
-			throw new IllegalArgumentException("User and pass should be both null or both non-null");
+			throw new RobotRuntimeException("User and pass should be both null or both non-null");
 		} else if (user != null && pass != null) {
 			// prepend username and password
 			return String.format("jdbc:oracle:thin:%s/%s@%s", user, pass, database);
@@ -40,7 +46,7 @@ public class OracleDatabaseServiceImpl extends BaseDatabaseService {
 
 	/**
 	 * Creates a new {@link Properties} given a set of options.
-	 * 
+	 *
 	 * @param options
 	 *        The options we get.
 	 * @return

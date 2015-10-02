@@ -64,7 +64,7 @@ public class ConnectConstruct extends BaseDatabaseConstruct {
 				throw new RobotRuntimeException("Unknown host given", e1);
 			}
 			else if(cause!= null && cause instanceof IOException){
-				throw new RobotRuntimeException("Database given does not exist", e1);
+				throw new RobotRuntimeException("Wrong databaseType used", e1);
 			}
 			else{
 				throw new RobotRuntimeException(e1.getMessage(), e1);
