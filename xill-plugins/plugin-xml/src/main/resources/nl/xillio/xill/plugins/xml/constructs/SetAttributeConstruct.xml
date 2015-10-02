@@ -7,7 +7,7 @@
         <example title="Usage">
             <header>Assuming we have an XML file note.xml which contains the following:</header>
             <code>
-<!CDATA[
+<![CDATA[
 < note id="1">
   < to>Tove< /to>
   < from>Jani< /from>
@@ -33,7 +33,7 @@ System.print(Xml.toString(note));
 Xml contains:
             </header>
             <code>
-<!CDATA[
+<![CDATA[
 < note id="1">
   < to>Tove< /to>
   < from>Jani< /from>
