@@ -101,7 +101,7 @@ public class XillInitializer extends Thread {
 
 	private void cleanUpTemporaryFiles() {
 		for (File file : FileUtils.getTempDirectory().listFiles()) {
-			if(file.getName().startsWith("+JXF") || file.getName().startsWith("sqlite")) {
+			if(file.getName().startsWith("+JXF") || file.getName().startsWith("sqlite") || file.getName().startsWith("xill_editor")) {
 				file.delete();
 			}
 		}
