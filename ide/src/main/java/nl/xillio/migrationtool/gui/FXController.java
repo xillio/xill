@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+import com.sun.javafx.application.PlatformImpl;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -227,7 +228,6 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 		// Add listener for window shown
 		loadWorkSpace();
-
 	}
 
 	private void loadWorkSpace() {

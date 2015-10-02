@@ -1,6 +1,7 @@
 package nl.xillio.migrationtool;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import nl.xillio.xill.docgen.impl.ConstructDocumentationEntity;
 import nl.xillio.xill.services.inject.InjectorUtils;
 import nl.xillio.xill.services.inject.PluginInjectorModule;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -64,6 +66,9 @@ public class XillInitializer extends Thread {
 	public void run() {
 		parser = docGen.getParser();
 
+		LOGGER.info("Cleaning up old files...");
+		cleanUpTemporaryFiles();
+
 		LOGGER.info("Loading Xill language plugins...");
 
 		LOGGER.debug("Initializing loader...");
@@ -91,6 +96,14 @@ public class XillInitializer extends Thread {
 			onLoadComplete.invoke(new InitializationResult(docUrl, getSearcher()));
 		} catch (MalformedURLException e) {
 			LOGGER.error("Failed to call onLoadComplete event!", e);
+		}
+	}
+
+	private void cleanUpTemporaryFiles() {
+		for (File file : FileUtils.getTempDirectory().listFiles()) {
+			if(file.getName().startsWith("+JXF") || file.getName().startsWith("sqlite")) {
+				file.delete();
+			}
 		}
 	}
 
