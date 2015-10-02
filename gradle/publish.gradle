@@ -1,0 +1,19 @@
+/**
+ * This file will enable publication to the project
+ */
+apply plugin: 'maven-publish'
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            artifact sourceJar {
+                classifier "sources"
+            }
+        }
+    }
+}
+
+artifactoryPublish.publications 'mavenJava'
+publish.dependsOn artifactoryPublish

@@ -1,0 +1,9 @@
+
+/*
+ * Plugin description
+ */
+description 'This plugin is responsible for operations regarding the UDM'
+
+dependencies{
+    compile 'org.mongodb:mongo-java-driver:3.0.3'
+}
