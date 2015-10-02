@@ -13,13 +13,16 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
+import nl.xillio.xill.plugins.document.services.XillUDMService;
 
 
 
 /**
  * 
  * Construct for removing documents or removing a version of a document.
- * if versionid is left empty the whole document will be removed otherwise only the given version.
+ * if versionid is left empty the whole document will be removed otherwise only the given version is removed.
+ * default value for section is "target" but can be set to "source".
  * 
  * @author Sander Visser
  *
@@ -34,8 +37,8 @@ public class RemoveConstruct extends Construct {
 		return new ConstructProcessor(
 				(documentid, versionid, section) -> process(documentid, versionid, section,udmService),
 				new Argument("documentid", ATOMIC),
-				new Argument("versionid",fromValue("current"), ATOMIC),
-				new Argument("source", fromValue("target"), ATOMIC)
+				new Argument("versionid",fromValue("all"), ATOMIC),
+				new Argument("section", fromValue("target"), ATOMIC)
 		);
 	}
 
@@ -49,55 +52,9 @@ public class RemoveConstruct extends Construct {
 		
 		try{
 			udmService.remove(docid,versid,sect);
-		}catch(Exception e){
+		}catch(DocumentNotFoundException | PersistenceException | IllegalArgumentException | VersionNotFoundException e){
 			throw new RobotRuntimeException(e.getMessage());
-		}
-		
-		
-		try(UDMService udm = UDM.connect()){
-			DocumentID doc = udm.get(docid);
-			if(versid.equals("current")){
-				udm.delete(doc);
-			}else{
-				if(sect.equals("source")){
-					udm.document(doc).source().removeRevision(versid).commit();
-				}else if (sect.equals("target")){
-					udm.document(doc).target().removeRevision(versid).commit();
-				}
-				udm.persist(doc);
-			}
-			
-		}catch(PersistenceException | DocumentNotFoundException e){
-			throw new RobotRuntimeException(e.getMessage());
-			
 		}
 		return NULL;
 	}
 }
-
-/*
-if(sect.equals("temp")){
-	UDMService udm = UDM.connect();
-	DocumentID doc = udm.create()
-			.contentType().name("name")
-			.source().current().version("2")
-			.source().current().action(2)
-			.target().current().action(3)
-			.target().current().version("testing")
-			.target().revision("whut")
-			.revision("whut").version("deze").action(5)
-			.revision("aarde").version("nieuwe").action(6)
-			.modifiedBy("ugh")
-			.commit();
-	
-	
-	try {
-		udm.persist(doc);
-	} catch (PersistenceException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	return NULL;
-}
-*/
-//connect to UDM service

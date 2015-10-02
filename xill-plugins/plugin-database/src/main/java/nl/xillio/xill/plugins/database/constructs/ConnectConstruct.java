@@ -57,7 +57,7 @@ public class ConnectConstruct extends BaseDatabaseConstruct {
 		try {
 			connection = service.createConnection(database, user, pass, optionsArray);
 		} catch (SQLException e1) {
-			throw new RobotRuntimeException(e1.getMessage(), e1);
+			throw new RobotRuntimeException(e1.getCause().getMessage(), e1);
 		}
 
 		MetaExpression metaExpression = fromValue(database);
