@@ -1,0 +1,168 @@
+/*
+Author:     Thomas Biesaart
+Modified:   21-9-2015
+
+Description:
+        This robot will run the gradle license report and gather output.
+*/
+use File;
+use System;
+use String;
+use XML;
+use List;
+use Web;
+
+// The gradle wrapper file. For linux: gradlew (no .bat)
+var gradleExec = "gradlew.bat";
+// The file seperator. Linux: /
+var pathSeperator = "\\";
+
+// Read all the files to ensure permissions
+var rootFolder = File.createFolder("../..");
+var jsonReportFile = File.saveTo("report/license-dependency-report.json", "Building JSON report...");
+var reverseJsonReportFile = File.saveTo("report/dependency-license-report.json", "Building JSON report...");
+var htmlReportFile = File.saveTo("report/license-dependency-report.html", "Building HTML report...");
+
+
+// Run the gradle task
+System.print("gradle >> task downloadLicenses...");
+var licenseResult = System.exec([rootFolder::"/"::gradleExec, "downloadLicenses"], rootFolder);
+
+// Search for results
+System.print("xml >> search...");
+var licenseXML = [];
+foreach (folder in File.iterateFolders(rootFolder, true)) {
+    if (String.contains(folder.path, "build"::pathSeperator::"reports"::pathSeperator::"license")) {
+        // This is a license folder
+        var path = folder.path :: "/license-dependency.xml";
+        if (File.exists(path)) {
+            licenseXML[] = path;
+        }
+    }
+}
+
+// Parse the license results
+System.print("xml >> parse...");
+var licenses = {};
+foreach (file in licenseXML) {
+    var xml = XML.fromFile(file);
+    
+    var licenseNodes = XML.xpath(xml, "//license");
+    
+    // Skip if no license was found
+    if(licenseNodes == null) {
+        continue;
+    }
+    
+    foreach (licenseNode in licenseNodes) {
+        var licenseName = XML.xpath(licenseNode, "@name");
+        var licenseUrl = XML.xpath(licenseNode, "@url");
+        // List dependencies
+        var dependencies = XML.xpath(licenseNode, "dependency/text()");
+        foreach(dependency in dependencies) {
+            addLicense(licenseName, licenseUrl, dependency);
+        }
+    }
+}
+
+// Revert the list for inverse report
+System.print("report >> parse...");
+var dependencyReport = {};
+foreach (name, license in licenses) {
+    foreach (dependency in license.dependencies) {
+        if(dependencyReport[dependency] == null) {
+            dependencyReport[dependency] = [];
+        }
+        dependencyReport[dependency][] = name;
+    }
+}
+
+// Print json report
+System.print("report >> json...");
+File.saveTo(jsonReportFile, System.toJSON(licenses, true));
+File.saveTo(reverseJsonReportFile, System.toJSON(dependencyReport, true));
+
+// Generate html output
+System.print("report >> html");
+var output = getHtmlHeader();
+foreach(license in licenses) {
+    output ::= "<tr><td>" :: license.name :: "</td><td>";
+    if(license.url != null) {
+        output ::= "<a href=\"" :: license.url :: "\">link</a>";
+    }
+    output ::= "</td><td><ul>";
+    
+    foreach(dependency in license.dependencies) {
+        output ::= "<li>" :: dependency :: "</li>";
+    }
+    
+    output ::= "</ul></td>";
+}
+output ::= "</table></body></html>";
+File.saveTo(htmlReportFile, output);
+
+System.print("DONE!");
+
+// Functions {
+function addLicense(name, url, dependency) {
+    if(licenses[name] == null) {
+        licenses[name] = license(url, name);
+    }
+    var license = licenses[name];
+    if(!List.containsValue(license.dependencies, dependency)) {
+        license.dependencies[] = dependency;
+    }
+}
+
+function license(url, name) {
+    return {
+        "name": name,
+        "url": url,
+        "dependencies": []
+    };
+}
+
+function getHtmlHeader() {
+    return 
+"<html>
+	<head>
+		<title>Xill 3 License Report</title>
+		<style>
+		    ul {
+              columns: 3;
+              -webkit-columns: 3;
+              -moz-columns: 3;
+              list-style-type:none;
+            }
+            table {
+              width: 85%;
+              border-collapse: collapse;
+              text-align: center;
+            }
+
+            tr {
+              border: 1px solid black;
+            }
+
+            td {
+              border: 1px solid black;
+              font-weight: bold;
+              color: #2E2E2E
+            }
+
+            th {
+              border: 1px solid black;
+            }
+            
+            h1 {
+                text-align: center;
+            }
+		</style>
+	</head>
+	<body>
+		<h1>Xill 3 License Report</h1>
+		<table align=\"center\">
+			<tr><th>License</th><th>Agreement</th><th>depdendencies</th></tr>
+			";
+}
+//}

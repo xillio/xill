@@ -16,6 +16,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import nl.xillio.events.Event;
+import nl.xillio.events.EventHost;
 import nl.xillio.xill.api.preview.Searchable;
 
 /**
@@ -25,7 +27,8 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 
 	private Searchable searchable;
 	private String currentSearch = "";
-
+	private final EventHost<Boolean> closeEvent = new EventHost<>();
+	private boolean isOpen = false;
 	/**
 	 * The current highlighted occurrence
 	 */
@@ -250,6 +253,11 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 		// Unselect the toggle button
 		if (toggleButton != null) {
 			toggleButton.setSelected(false);
+			
+		if(this.isOpen){
+						closeEvent.invoke(new Boolean(true));
+						this.isOpen = false;
+		}
 		}
 	}
 
@@ -277,6 +285,7 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 			}
 
 			requestFocus();
+			this.isOpen = true;
 		}
 
 		// Select the toggle button
@@ -298,5 +307,9 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 			runSearch(currentSearch);
 			k.consume();
 		}
+	}
+	
+	public Event<Boolean> getOnClose(){
+				return closeEvent.getEvent();
 	}
 }
