@@ -1,5 +1,7 @@
 package nl.xillio.xill.plugins.database.constructs;
 
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
@@ -57,7 +59,16 @@ public class ConnectConstruct extends BaseDatabaseConstruct {
 		try {
 			connection = service.createConnection(database, user, pass, optionsArray);
 		} catch (SQLException e1) {
-			throw new RobotRuntimeException(e1.getMessage(), e1);
+			Throwable cause = e1.getCause();
+			if(cause != null && cause instanceof UnknownHostException){
+				throw new RobotRuntimeException("Unknown host given", e1);
+			}
+			else if(cause!= null && cause instanceof IOException){
+				throw new RobotRuntimeException("Database given does not exist", e1);
+			}
+			else{
+				throw new RobotRuntimeException(e1.getMessage(), e1);
+			}
 		}
 
 		MetaExpression metaExpression = fromValue(database);
