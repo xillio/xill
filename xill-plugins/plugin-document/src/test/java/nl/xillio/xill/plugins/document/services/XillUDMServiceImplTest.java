@@ -11,12 +11,11 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
 /**
@@ -168,7 +167,7 @@ public class XillUDMServiceImplTest {
 		DocumentHistoryBuilder documentHistoryBuilder = mock(DocumentHistoryBuilder.class);
 		when(documentHistoryBuilder.current()).thenReturn(documentRevisionBuilder);
 		if (!"current".equals(versionId)) {
-			ArrayList<String> versions = new ArrayList<String>();
+			ArrayList<String> versions = new ArrayList<>();
 			versions.add(versionId);
 			when(documentHistoryBuilder.versions()).thenReturn(versions);
 		} else {

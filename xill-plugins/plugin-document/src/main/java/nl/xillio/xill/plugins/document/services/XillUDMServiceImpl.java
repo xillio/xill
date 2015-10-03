@@ -9,6 +9,8 @@ import nl.xillio.udm.builders.DocumentRevisionBuilder;
 import nl.xillio.udm.services.UDMService;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class XillUDMServiceImpl implements XillUDMService {
@@ -41,6 +43,21 @@ public class XillUDMServiceImpl implements XillUDMService {
 			udmService.release(docId);
 
 			return result;
+		}
+	}
+
+	@Override
+	public List<String> getVersions(String documentID) {
+		return getVersions(documentID, "target");
+	}
+
+	@Override
+	public List<String> getVersions(String documentID, String section) {
+		try (UDMService udmService = connect()) {
+			DocumentID doc = udmService.get(documentID);
+			List<String> result = getSourceOrTarget(udmService.document(doc), section).versions();
+			udmService.release(doc);
+			return new ArrayList<>(result);
 		}
 	}
 
@@ -78,5 +95,6 @@ public class XillUDMServiceImpl implements XillUDMService {
 		else
 			throw new VersionNotFoundException("The document does not contain a version [" + version + "].");
 	}
+
 
 }
