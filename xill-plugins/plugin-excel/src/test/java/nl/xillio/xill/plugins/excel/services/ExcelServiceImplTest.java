@@ -91,19 +91,6 @@ public class ExcelServiceImplTest {
 	}
 
 	/**
-	 * Tests if CreateWorkbook throws an exception when a file already exists at the provided path
-	 *
-	 * @throws Exception
-	 */
-	@Test(expectedExceptions = FileAlreadyExistsException.class,
-					expectedExceptionsMessageRegExp = "File already exists: no new workbook has been created")
-	public void testCreateWorkbookFileAlreadyExists() throws Exception {
-		File file = createFile(true, true);
-		ExcelService service = createService(null);
-		service.createWorkbook(file);
-	}
-
-	/**
 	 * Tests if loadWorkbook returns the workbook correctly
 	 *
 	 * @throws Exception
@@ -334,6 +321,7 @@ public class ExcelServiceImplTest {
 	 */
 	@Test
 	public void save() throws Exception {
+		// Mock
 		ExcelService service = new ExcelServiceImpl(null);
 		XillWorkbook workbook = mock(XillWorkbook.class);
 		when(workbook.isReadonly()).thenReturn(false);
@@ -341,8 +329,13 @@ public class ExcelServiceImplTest {
 		when(workbook.createCopy(any(File.class))).thenReturn(clonedBook);
 		File file = mock(File.class);
 		when(file.getCanonicalPath()).thenReturn("thispath");
-		assertEquals(service.save(workbook, file), clonedBook);
-		verify(clonedBook, times(1)).save();
+
+		// Run
+		XillWorkbook newBook = service.save(workbook, file);
+
+		// Verify
+		assertEquals(newBook, clonedBook);
+		verify(workbook, times(1)).createCopy(file);
 	}
 
 	/**
@@ -373,20 +366,6 @@ public class ExcelServiceImplTest {
 		when(workbook.getLocation()).thenReturn("location");
 		assertEquals(service.save(workbook), "Saved [location]");
 		verify(workbook, times(1)).save();
-	}
-
-	/**
-	 * Checks if an exception is thrown when trying to save to an existing file
-	 *
-	 * @throws Exception
-	 */
-	@Test(expectedExceptions = IllegalArgumentException.class,
-					expectedExceptionsMessageRegExp = "Cannot write to this file: already exists")
-	public void saveAlreadyExists() throws Exception {
-		ExcelServiceImpl service = new ExcelServiceImpl(null);
-		File file = mock(File.class);
-		when(file.exists()).thenReturn(true);
-		service.save(mock(XillWorkbook.class), file);
 	}
 
 	/**

@@ -250,13 +250,16 @@ public class XillWorkbookTest {
 
 	@Test
 	public void testCreateCopy() throws Exception {
+		// Mock
 		File file = mock(File.class);
 		XillWorkbook workbook = spy(new XillWorkbook(new XSSFWorkbook(), file));
 
 		File returnFile = mock(File.class);
 		when(returnFile.getName()).thenReturn("name2.xlsx");
+		when(returnFile.getParentFile()).thenReturn(mock(File.class));
 
 		doNothing().when(workbook).copy(file, returnFile);
+		doNothing().when(workbook).save(returnFile);
 
 		XillWorkbookFactory factory = mock(XillWorkbookFactory.class);
 		XillWorkbook returnbook = mock(XillWorkbook.class);
@@ -264,8 +267,12 @@ public class XillWorkbookTest {
 
 		doReturn(factory).when(workbook).getFactory();
 
+		// Run
 		XillWorkbook result = workbook.createCopy(returnFile);
+
+		// Verify
 		verify(returnFile, times(1)).setWritable(true);
+		verify(workbook).save(returnFile);
 		assertEquals(result, returnbook);
 	}
 

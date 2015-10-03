@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+import com.sun.javafx.application.PlatformImpl;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -217,17 +218,16 @@ public class FXController implements Initializable, EventHandler<Event> {
 		// Add window handler
 		Platform.runLater(() -> apnRoot.getScene().getWindow().setOnCloseRequest(event -> {
 			this.cancelClose = false;
-			System.out.println("Shutting down application");
+			LOGGER.info("Shutting down application");
 			if (!closeApplication()) {
 				event.consume(); // this cancel the process of the application closing     
 			}
 		}));
 
-		apnRoot.addEventHandler(KeyEvent.KEY_PRESSED, this);
+		apnRoot.addEventFilter(KeyEvent.KEY_PRESSED, this);
 
 		// Add listener for window shown
 		loadWorkSpace();
-
 	}
 
 	private void loadWorkSpace() {
@@ -310,6 +310,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 			tab = new RobotTab(projectfile.getAbsoluteFile(), chosen, this);
 			tpnBots.getTabs().add(tab);
+			tab.requestFocus();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -497,7 +498,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 		// Finish app closing
 		ProjectPane.stop();
 		Platform.exit();
-		System.exit(0);
+		ESConsoleClient.getInstance().close();
 		return false;
 	}
 
@@ -598,6 +599,41 @@ public class FXController implements Initializable, EventHandler<Event> {
 				});
 			} else if (KeyCombination.valueOf(HOTKEY_OPEN).match(keyEvent)) {
 				buttonOpenFile();
+			} else if (KeyCombination.valueOf(HOTKEY_CLEARCONSOLE).match(keyEvent)) {
+        tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> { 
+          ((RobotTab) tab).clearConsolePane();
+          keyEvent.consume();
+        });
+			}
+      else if (KeyCombination.valueOf(FXController.HOTKEY_RUN).match((KeyEvent) keyEvent)) {
+          tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> { 
+              ((RobotTab) tab).getEditorPane().getControls().start();
+              keyEvent.consume();
+          });
+      }
+      else if (KeyCombination.valueOf(FXController.HOTKEY_STEPIN).match((KeyEvent) keyEvent)) {
+          tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> { 
+              ((RobotTab) tab).getEditorPane().getControls().stepIn();
+              keyEvent.consume();
+          });
+      }
+      else if (KeyCombination.valueOf(FXController.HOTKEY_STEPOVER).match((KeyEvent) keyEvent)) {
+          tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> { 
+              ((RobotTab) tab).getEditorPane().getControls().stepOver();
+              keyEvent.consume();
+          });
+      }
+      else if (KeyCombination.valueOf(FXController.HOTKEY_PAUSE).match((KeyEvent) keyEvent)) {
+          tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> { 
+              ((RobotTab) tab).getEditorPane().getControls().pause();
+              keyEvent.consume();
+          });
+      }
+      else if (KeyCombination.valueOf(FXController.HOTKEY_STOP).match((KeyEvent) keyEvent)) {
+          tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> { 
+              ((RobotTab) tab).getEditorPane().getControls().stop();
+              keyEvent.consume();
+          });
 			} else if (keyEvent.isControlDown() || keyEvent.isMetaDown()) {
 				// Check if other key is an integer, if so open that tab
 				try {
@@ -641,6 +677,17 @@ public class FXController implements Initializable, EventHandler<Event> {
 		}
 	}
 
+	/**
+	 * Close all tabs except one.
+	 * @param tab The tab to keep open.
+	 */
+	public void closeAllTabsExcept(final Tab tab) {
+		List<RobotTab> tabs = getTabs();
+		for(RobotTab t : tabs)
+			if (t != tab)
+				closeTab(t);
+	}
+	
 	/**
 	 * @return A list of active tabs
 	 */
