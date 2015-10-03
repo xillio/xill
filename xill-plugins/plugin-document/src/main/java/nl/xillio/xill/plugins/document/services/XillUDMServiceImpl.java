@@ -6,8 +6,12 @@ import nl.xillio.udm.UDM;
 import nl.xillio.udm.builders.DocumentBuilder;
 import nl.xillio.udm.builders.DocumentHistoryBuilder;
 import nl.xillio.udm.builders.DocumentRevisionBuilder;
+import nl.xillio.udm.exceptions.PersistenceException;
+import nl.xillio.udm.interfaces.FindResult;
 import nl.xillio.udm.services.UDMService;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
+import nl.xillio.xill.plugins.document.util.UDMFindResultIterator;
+import org.bson.Document;
 
 import java.util.Map;
 
@@ -42,6 +46,14 @@ public class XillUDMServiceImpl implements XillUDMService {
 
 			return result;
 		}
+	}
+
+	@Override
+	public Iterable<Map<String, Map<String, Object>>> findWhere(Document filter, String version, String section) throws PersistenceException {
+		// Open a UDMService and don't close it yet. The result should be available later. The language framework should close this for us.
+		UDMService udmService = connect();
+		FindResult result = udmService.find(filter);
+		return new UDMFindResultIterator(result, udmService, conversionService, version, section);
 	}
 
 	/**
