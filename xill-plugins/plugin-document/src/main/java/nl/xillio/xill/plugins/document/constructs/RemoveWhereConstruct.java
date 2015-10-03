@@ -51,7 +51,7 @@ public class RemoveWhereConstruct extends Construct {
 		} catch (VersionNotFoundException | DocumentNotFoundException | IllegalArgumentException e) {
 			throw new RobotRuntimeException(e.getMessage(), e);
 		} catch (PersistenceException e) {
-			throw new RobotRuntimeException("Failed to run query: " + e.getMessage(), e);
+			throw new RobotRuntimeException(e.getMessage() + ": " + e.getCause().getMessage(), e);
 		}
 
 		return fromValue(result);
