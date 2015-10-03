@@ -54,11 +54,6 @@ public class XillUDMServiceImpl implements XillUDMService {
 	}
 
 	@Override
-	public long removeWhere(Document filter, String version) throws PersistenceException {
-		return removeWhere(filter, version, Section.TARGET);
-	}
-
-	@Override
 	public long removeWhere(Document filter, String version, Section section) throws PersistenceException {
 		try (UDMService udmService = connect()) {
 			return udmService.update(filter,

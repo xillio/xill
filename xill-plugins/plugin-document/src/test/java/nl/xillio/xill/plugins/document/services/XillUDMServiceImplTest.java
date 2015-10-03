@@ -5,8 +5,10 @@ import nl.xillio.udm.builders.DocumentBuilder;
 import nl.xillio.udm.builders.DocumentHistoryBuilder;
 import nl.xillio.udm.builders.DocumentRevisionBuilder;
 import nl.xillio.udm.exceptions.DocumentNotFoundException;
+import nl.xillio.udm.exceptions.PersistenceException;
 import nl.xillio.udm.services.UDMService;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
+import org.bson.Document;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -17,6 +19,7 @@ import java.util.Map;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
 /**
@@ -189,6 +192,48 @@ public class XillUDMServiceImplTest {
 		when(documentBuilder.source()).thenReturn(documentHistoryBuilder);
 		when(documentBuilder.target()).thenReturn(documentHistoryBuilder);
 		return documentBuilder;
+	}
+
+	/**
+	 * Test removing entire entries from the database.
+	 *
+	 * @throws PersistenceException
+	 */
+	@Test
+	public void testRemoveWhereNormalCircumstances() throws PersistenceException {
+		Document filter = mock(Document.class);
+		UDMService udmService = mock(UDMService.class);
+		XillUDMServiceImpl service = spy(new XillUDMServiceImpl(null));
+		doReturn(udmService).when(service).connect();
+		when(udmService.delete(filter)).thenReturn(112L);
+
+		long result = service.removeWhere(filter);
+		assertEquals(result, 112L);
+	}
+
+	/**
+	 * Test removing single versions from the database.
+	 *
+	 * @throws PersistenceException
+	 */
+	@Test
+	public void testRemoveWhereNormalVersionCircumstances() throws PersistenceException {
+		Document filter = mock(Document.class);
+		UDMService udmService = mock(UDMService.class);
+		XillUDMServiceImpl service = spy(new XillUDMServiceImpl(null));
+		doReturn(udmService).when(service).connect();
+
+		Document expectedQuery = new Document("$pull",
+			new Document("source.versions",
+				new Document("version", "1.2")
+			)
+		);
+
+		when(udmService.update(same(filter), eq(expectedQuery))).thenReturn(1337L);
+
+		long result = service.removeWhere(filter, "1.2", XillUDMService.Section.SOURCE);
+
+		assertEquals(result, 1337L);
 	}
 
 }

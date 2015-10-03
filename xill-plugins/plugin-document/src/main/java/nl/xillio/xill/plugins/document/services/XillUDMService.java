@@ -56,7 +56,14 @@ public interface XillUDMService extends XillService {
 	 */
 	long removeWhere(Document filter) throws PersistenceException;
 
-	long removeWhere(Document filter, String version) throws PersistenceException;
-
+	/**
+	 * Remove all versions with id in section of entry that matches a certain filter.
+	 *
+	 * @param filter  the filter
+	 * @param version the version
+	 * @param section the section
+	 * @return the number of edited entries
+	 * @throws PersistenceException if the query fails
+	 */
 	long removeWhere(Document filter, String version, Section section) throws PersistenceException;
 }
