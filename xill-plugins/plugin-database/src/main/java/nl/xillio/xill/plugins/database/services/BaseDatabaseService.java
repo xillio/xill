@@ -253,7 +253,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 			return map;
 		} else {
 			statement.close();
-			throw new IllegalArgumentException("No objects found with given constraints.");
+			return null;
 		}
 	}
 
