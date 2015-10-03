@@ -42,27 +42,27 @@ public class XillUDMServiceImplTest {
 	}
 
 	/**
-	 * Generate combinations of versionIds and sections for use in {@link XillUDMServiceImplTest#testGetNormal(String, String)}.
+	 * Generate combinations of versionIds and sections for use in {@link XillUDMServiceImplTest#testGetNormal(String, nl.xillio.xill.plugins.document.services.XillUDMService.Section)}.
 	 *
 	 * @return Combinations of versionId and sections test data
 	 */
 	@DataProvider(name = "versionIdSection")
 	public Object[][] generateVersionIdSection() {
 		return new Object[][]{
-			{"current", "source"},
-			{"current", "target"},
-			{"v1", "source"},
-			{"v1", "target"}};
+			{"current", XillUDMService.Section.SOURCE},
+			{"current", XillUDMService.Section.TARGET},
+			{"v1", XillUDMService.Section.SOURCE},
+			{"v1", XillUDMService.Section.TARGET}};
 	}
 
 	/**
-	 * Test {@link XillUDMServiceImpl#get(String, String, String)} under normal usage
+	 * Test {@link XillUDMServiceImpl#get(String, String, nl.xillio.xill.plugins.document.services.XillUDMService.Section)} under normal usage
 	 *
 	 * @param versionId version ID to test for
 	 * @param section   "source" or "target"
 	 */
 	@Test(dataProvider = "versionIdSection")
-	public void testGetNormal(String versionId, String section) {
+	public void testGetNormal(String versionId, XillUDMService.Section section) {
 		// Mock
 		String documentId = "docid";
 		DocumentID docId = mock(DocumentID.class);
@@ -89,7 +89,7 @@ public class XillUDMServiceImplTest {
 			verify(documentHistoryBuilder).versions();
 			verify(documentHistoryBuilder).revision(versionId);
 		}
-		if ("source".equals(section)) {
+		if (XillUDMService.Section.SOURCE.equals(section)) {
 			verify(documentBuilder).source();
 		} else {
 			verify(documentBuilder).target();
@@ -102,7 +102,7 @@ public class XillUDMServiceImplTest {
 	}
 
 	/**
-	 * Test that {@link XillUDMServiceImpl#get(String, String, String)} does not eat exceptions of type {@link DocumentNotFoundException}.
+	 * Test that {@link XillUDMServiceImpl#get(String, String, nl.xillio.xill.plugins.document.services.XillUDMService.Section)} does not eat exceptions of type {@link DocumentNotFoundException}.
 	 */
 	@Test(expectedExceptions = DocumentNotFoundException.class)
 	public void testGetNonExistentDocument() {
@@ -110,18 +110,18 @@ public class XillUDMServiceImplTest {
 		when(udmService.get(anyString())).thenThrow(DocumentNotFoundException.class);
 
 		// Run
-		xillUdmService.get("docId", "versionId", "section");
+		xillUdmService.get("docId", "versionId", XillUDMService.Section.SOURCE);
 	}
 
 	/**
-	 * Test that {@link XillUDMServiceImpl#get(String, String, String)} throws a {@link IllegalArgumentException} when section is something else than "source" or "target".
+	 * Test that {@link XillUDMServiceImpl#get(String, String, nl.xillio.xill.plugins.document.services.XillUDMService.Section)} throws a {@link IllegalArgumentException} when section is something else than "source" or "target".
 	 */
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void testGetNonExistentSection() {
 		// Mock
 		String documentId = "docId";
 		String versionId = "current";
-		String section = "nonExistent";
+		XillUDMService.Section section = null;
 		DocumentID docId = mock(DocumentID.class);
 
 		DocumentBuilder documentBuilder = mock(DocumentBuilder.class);
@@ -134,14 +134,14 @@ public class XillUDMServiceImplTest {
 	}
 
 	/**
-	 * Test that {@link XillUDMServiceImpl#get(String, String, String)} throws a {@link VersionNotFoundException} when a non-existent version is requested.
+	 * Test that {@link XillUDMServiceImpl#get(String, String, nl.xillio.xill.plugins.document.services.XillUDMService.Section)} throws a {@link VersionNotFoundException} when a non-existent version is requested.
 	 */
 	@Test(expectedExceptions = VersionNotFoundException.class)
 	public void testGetNonExistentRevision() {
 		// Mock
 		String documentId = "docId";
 		String versionId = "nonExistent";
-		String section = "source";
+		XillUDMService.Section section = XillUDMService.Section.SOURCE;
 		DocumentID docId = mock(DocumentID.class);
 
 		DocumentHistoryBuilder documentHistoryBuilder = mock(DocumentHistoryBuilder.class);

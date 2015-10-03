@@ -41,9 +41,9 @@ public class GetConstruct extends Construct {
 		String versionId = verId.getStringValue();
 		String section = sec.getStringValue();
 
-		Map<String, Map<String, Object>> result = null;
+		Map<String, Map<String, Object>> result;
 		try {
-			result = udmService.get(documentId, versionId, section);
+			result = udmService.get(documentId, versionId, XillUDMService.Section.of(section));
 		} catch (VersionNotFoundException | DocumentNotFoundException | IllegalArgumentException e) {
 			throw new RobotRuntimeException(e.getMessage(), e);
 		}

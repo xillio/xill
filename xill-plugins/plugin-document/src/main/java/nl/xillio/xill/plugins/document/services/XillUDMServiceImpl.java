@@ -6,8 +6,10 @@ import nl.xillio.udm.UDM;
 import nl.xillio.udm.builders.DocumentBuilder;
 import nl.xillio.udm.builders.DocumentHistoryBuilder;
 import nl.xillio.udm.builders.DocumentRevisionBuilder;
+import nl.xillio.udm.exceptions.PersistenceException;
 import nl.xillio.udm.services.UDMService;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
+import org.bson.Document;
 
 import java.util.Map;
 
@@ -30,7 +32,7 @@ public class XillUDMServiceImpl implements XillUDMService {
 	}
 
 	@Override
-	public Map<String, Map<String, Object>> get(String documentId, String versionId, String section) {
+	public Map<String, Map<String, Object>> get(String documentId, String versionId, Section section) {
 		// Get the document and convert it to a map.
 		try (UDMService udmService = connect()) {
 			DocumentID docId = udmService.get(documentId);
@@ -44,6 +46,31 @@ public class XillUDMServiceImpl implements XillUDMService {
 		}
 	}
 
+	@Override
+	public long removeWhere(Document filter) throws PersistenceException {
+		try (UDMService udmService = connect()) {
+			return udmService.delete(filter);
+		}
+	}
+
+	@Override
+	public long removeWhere(Document filter, String version) throws PersistenceException {
+		return removeWhere(filter, version, Section.TARGET);
+	}
+
+	@Override
+	public long removeWhere(Document filter, String version, Section section) throws PersistenceException {
+		try (UDMService udmService = connect()) {
+			return udmService.update(filter,
+				new Document("$pull",
+					new Document(section.toString().toLowerCase() + ".versions",
+						new Document("version", version)
+					)
+				)
+			);
+		}
+	}
+
 	/**
 	 * Get the source or target from a {@link DocumentBuilder}.
 	 *
@@ -51,15 +78,14 @@ public class XillUDMServiceImpl implements XillUDMService {
 	 * @param section The section to return. Can be either "source" or "target", and is case-insensitive.
 	 * @return A {@link DocumentHistoryBuilder} of the given builder.
 	 */
-	private DocumentHistoryBuilder getSourceOrTarget(DocumentBuilder builder, String section) {
+	private DocumentHistoryBuilder getSourceOrTarget(DocumentBuilder builder, Section section) {
 		// Check if the section is source or target, else throw an exception.
-		if ("source".equalsIgnoreCase(section))
-			return builder.source();
-		else if ("target".equalsIgnoreCase(section))
+		if (section == Section.TARGET)
 			return builder.target();
-		else
-			throw new IllegalArgumentException("The \"section\" argument is not in a valid format."
-				+ "Valid values are \"source\" and \"target\".");
+		else if (section == Section.SOURCE)
+			return builder.source();
+
+		throw new IllegalArgumentException("Unknown Section was provided: " + section);
 	}
 
 	/**
