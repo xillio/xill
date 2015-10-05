@@ -4,8 +4,10 @@ import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.xml.data.XmlNode;
+import nl.xillio.xill.api.data.XmlNode;
+import nl.xillio.xill.plugins.xml.data.XmlNodeVar;
 import nl.xillio.xill.services.json.GsonParser;
+
 import org.apache.http.entity.ContentType;
 
 /**
@@ -95,9 +97,9 @@ public class Content {
 			Object result = jsonParser.fromJson(this.getContent(), Object.class);
 			return MetaExpression.parseObject(result);
 		} else if (ContentType.APPLICATION_XML.getMimeType().equals(this.getType().getMimeType())) {
-			XmlNode xml = null;
+			XmlNodeVar xml = null;
 			try {
-				xml = new XmlNode(this.getContent());
+				xml = new XmlNodeVar(this.getContent());
 			} catch (Exception e) {
 				throw new RobotRuntimeException(e.getMessage());
 			}

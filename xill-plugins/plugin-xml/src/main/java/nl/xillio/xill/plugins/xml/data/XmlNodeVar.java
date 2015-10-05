@@ -23,7 +23,7 @@ import java.io.StringWriter;
  *
  * @author Zbynek Hochmann
  */
-public class XmlNode implements nl.xillio.xill.api.data.XmlNode {
+public class XmlNodeVar implements nl.xillio.xill.api.data.XmlNode {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	private Node node = null;
@@ -37,7 +37,7 @@ public class XmlNode implements nl.xillio.xill.api.data.XmlNode {
 	 * @throws Exception         when any unspecified error occurs
 	 * @throws XmlParseException when XML format is invalid
 	 */
-	public XmlNode(final String xmlString) throws Exception, XmlParseException {
+	public XmlNodeVar(final String xmlString) throws Exception, XmlParseException {
 		String xmlStringValue = xmlCharacterWhitelist(xmlString);
 
 		try {
@@ -61,7 +61,7 @@ public class XmlNode implements nl.xillio.xill.api.data.XmlNode {
 	 *
 	 * @param node input node
 	 */
-	public XmlNode(Node node) {
+	public XmlNodeVar(Node node) {
 		this.node = node;
 	}
 
