@@ -29,8 +29,7 @@ public class RemoveAttributeConstruct extends Construct {
 
 	static MetaExpression process(MetaExpression nodeVar, MetaExpression nameVar, NodeService service) {
 		XmlNode xmlNode = assertMeta(nodeVar, "node", XmlNode.class, "XML node");
-		service.removeAttribute(xmlNode, nameVar.getStringValue());
-		return NULL;
+		return fromValue(service.removeAttribute(xmlNode, nameVar.getStringValue()));
 	}
 
 }

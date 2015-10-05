@@ -64,8 +64,9 @@ public interface NodeService {
 	 * 
 	 * @param xmlNode		existing XML node
 	 * @param attrName	name of the attribute that will be removed
+	 * @return true if attribute existed and was removed, false if attribute did not exist
 	 */
-	void removeAttribute(final XmlNode xmlNode, final String attrName);
+	boolean removeAttribute(final XmlNode xmlNode, final String attrName);
 	
 	/**
 	 * Loads XML document from file, parse it and returns root node (XML document)

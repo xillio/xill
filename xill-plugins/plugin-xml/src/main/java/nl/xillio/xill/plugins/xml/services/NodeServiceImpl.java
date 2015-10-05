@@ -102,8 +102,14 @@ public class NodeServiceImpl implements NodeService {
 	}
 
 	@Override
-	public void removeAttribute(final XmlNode xmlNode, final String attrName) {
-		xmlNode.getNode().getAttributes().removeNamedItem(attrName);
+	public boolean removeAttribute(final XmlNode xmlNode, final String attrName) {
+		NamedNodeMap attributes = xmlNode.getNode().getAttributes();
+		if (attributes.getNamedItem(attrName) == null) {
+			return false;
+		} else {
+			attributes.removeNamedItem(attrName);
+			return true;
+		}
 	}
 
 	@Override
