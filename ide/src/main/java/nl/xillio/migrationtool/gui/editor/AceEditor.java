@@ -28,6 +28,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import me.biesaart.utils.FileUtils;
 import netscape.javascript.JSObject;
 import nl.xillio.events.Event;
 import nl.xillio.events.EventHost;
@@ -89,6 +90,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	@Deprecated
 	private static void deployEditor() throws IOException, TemplateException {
 		File editorFile = File.createTempFile("xill_editor", ".html");
+		FileUtils.forceDeleteOnExit(editorFile);
 		Configuration config = new Configuration(Configuration.VERSION_2_3_23);
 		config.setClassForTemplateLoading(AceEditor.class, "/");
 		Template template = config.getTemplate("editor.html");
