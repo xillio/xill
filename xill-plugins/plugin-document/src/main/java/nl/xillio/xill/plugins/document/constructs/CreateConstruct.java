@@ -13,6 +13,12 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.document.services.XillUDMService;
 
+/**
+ * Construct for creating and inserting an object into the database.
+ * 
+ * @author Luca Scalzotto
+ *
+ */
 public class CreateConstruct extends Construct {
 
 	@Inject
@@ -25,7 +31,7 @@ public class CreateConstruct extends Construct {
 				new Argument("body", OBJECT));
 	}
 	
-	private static MetaExpression process(final MetaExpression conType, final MetaExpression body, final XillUDMService udmService) {
+	static MetaExpression process(final MetaExpression conType, final MetaExpression body, final XillUDMService udmService) {
 		String contentType = conType.getStringValue();
 		Object bodyObj = extractValue(body);
 		
