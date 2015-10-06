@@ -40,6 +40,15 @@ public class CreateConstructTest extends ConstructTest {
 	}
 	
 	/**
+	 * Create a MetaExpression containing a body object that does not have the correct format to be used as an argument in the create construct.
+	 */
+	private MetaExpression createWrongBodyObject() {
+		LinkedHashMap<String, MetaExpression> bodyMap = new LinkedHashMap<>();
+		bodyMap.put("This should not", fromValue("be here"));
+		return fromValue(bodyMap);
+	}
+	
+	/**
 	 * Test {@link CreateConstruct#process(MetaExpression, MetaExpression, XillUDMService)} under normal circumstances.
 	 * @throws PersistenceException Should never throw this, but needs this declaration because {@link UDMService#create(String, Map)} throws this.
 	 */
@@ -88,6 +97,17 @@ public class CreateConstructTest extends ConstructTest {
 		
 		when(udmService.create(anyString(), anyObject())).thenThrow(exceptionClass);
 
+		// Run
+		CreateConstruct.process(contentType, body, udmService);
+	}
+
+	@Test(expectedExceptions = RobotRuntimeException.class)
+	public void testInvalidBody() {
+		// Mock
+		XillUDMService udmService = mock(XillUDMService.class);
+		MetaExpression contentType = mockExpression(ATOMIC, false, 0, "file");
+		MetaExpression body = createWrongBodyObject();
+		
 		// Run
 		CreateConstruct.process(contentType, body, udmService);
 	}
