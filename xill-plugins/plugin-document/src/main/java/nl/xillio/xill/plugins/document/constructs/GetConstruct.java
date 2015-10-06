@@ -34,7 +34,7 @@ public class GetConstruct extends Construct {
 			new Argument("section", fromValue("target"), ATOMIC));
 	}
 
-	private static MetaExpression process(final MetaExpression docId, final MetaExpression verId,
+	static MetaExpression process(final MetaExpression docId, final MetaExpression verId,
 			final MetaExpression sec, final XillUDMService udmService) {
 		// Get the string values of the arguments.
 		String documentId = docId.getStringValue();
@@ -44,11 +44,7 @@ public class GetConstruct extends Construct {
 		Map<String, Map<String, Object>> result = null;
 		try {
 			result = udmService.get(documentId, versionId, section);
-		} catch (VersionNotFoundException e) {
-			throw new RobotRuntimeException(e.getMessage(), e);
-		} catch (DocumentNotFoundException e) {
-			throw new RobotRuntimeException(e.getMessage(), e);
-		} catch (IllegalArgumentException e) {
+		} catch (VersionNotFoundException | DocumentNotFoundException | IllegalArgumentException e) {
 			throw new RobotRuntimeException(e.getMessage(), e);
 		}
 

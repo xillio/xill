@@ -23,9 +23,12 @@ public class ConversionServiceImpl implements ConversionService {
 			
 			// Get all fields from the decorator.
 			for (Entry<String, Object> field : entry.getValue().entrySet()) {
-				decorator.field(field.getKey(), field.getValue()).commit();
+				decorator.field(field.getKey(), field.getValue());
 			}
 		}
+
+		// commit changes
+		builder.commit();
 	}
 
 	@Override

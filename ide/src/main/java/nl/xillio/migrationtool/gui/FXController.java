@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+import com.sun.javafx.application.PlatformImpl;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -217,7 +218,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 		// Add window handler
 		Platform.runLater(() -> apnRoot.getScene().getWindow().setOnCloseRequest(event -> {
 			this.cancelClose = false;
-			System.out.println("Shutting down application");
+			LOGGER.info("Shutting down application");
 			if (!closeApplication()) {
 				event.consume(); // this cancel the process of the application closing     
 			}
@@ -227,7 +228,6 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 		// Add listener for window shown
 		loadWorkSpace();
-
 	}
 
 	private void loadWorkSpace() {
@@ -300,6 +300,13 @@ public class FXController implements Initializable, EventHandler<Event> {
 		if (chosen == null) {
 			// No file was chosen so we abort
 			return;
+		}
+
+		// This code is because of different behaviour of FileChooser in Linux and Windows
+		// On Linux the FileChooser does not automatically add xill extension
+		String xillExt = "." + Xill.FILE_EXTENSION;
+		if (!chosen.getName().endsWith(xillExt)) {
+			chosen = new File(chosen.getPath() + xillExt);
 		}
 
 		RobotTab tab;
@@ -498,7 +505,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 		// Finish app closing
 		ProjectPane.stop();
 		Platform.exit();
-		System.exit(0);
+		ESConsoleClient.getInstance().close();
 		return false;
 	}
 
