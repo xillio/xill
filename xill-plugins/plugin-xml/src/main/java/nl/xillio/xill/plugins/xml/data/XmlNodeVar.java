@@ -27,6 +27,7 @@ public class XmlNodeVar implements nl.xillio.xill.api.data.XmlNode {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	private Node node = null;
+	private boolean treatAsDocument = false;
 
 	TransformerFactory tf = TransformerFactory.newInstance();
 
@@ -37,8 +38,9 @@ public class XmlNodeVar implements nl.xillio.xill.api.data.XmlNode {
 	 * @throws Exception         when any unspecified error occurs
 	 * @throws XmlParseException when XML format is invalid
 	 */
-	public XmlNodeVar(final String xmlString) throws Exception, XmlParseException {
+	public XmlNodeVar(final String xmlString, final boolean treatAsDocument) throws Exception, XmlParseException {
 		String xmlStringValue = xmlCharacterWhitelist(xmlString);
+		this.treatAsDocument = treatAsDocument;
 
 		try {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -86,9 +88,20 @@ public class XmlNodeVar implements nl.xillio.xill.api.data.XmlNode {
 		if (this.node == null) {
 			return "XML Node[null]";
 		}
-		return String.format("XML Node[root = %1$s]", this.node.getNodeName());
+		if (this.treatAsDocument) {
+			return String.format("XML Document[first node = %1$s]", this.node.getNodeName());
+		} else {
+			return String.format("XML Node[%1$s]", this.node.getNodeName());
+		}
 	}
 
+	/**
+	 * @return a string containing all text extracted from XML node or XML document
+	 */
+	public String getText() {
+		return (this.treatAsDocument ? this.getDocument().getTextContent() : this.getNode().getTextContent());
+	}
+	
 	/**
 	 * Returns XML content of this node in string format
 	 *
@@ -100,7 +113,7 @@ public class XmlNodeVar implements nl.xillio.xill.api.data.XmlNode {
 		}
 
 		try {
-			DOMSource domSource = new DOMSource(this.node);
+			DOMSource domSource = new DOMSource(this.treatAsDocument ? this.getDocument() : this.node);
 			StringWriter writer = new StringWriter();
 			StreamResult result = new StreamResult(writer);
 			Transformer transformer = tf.newTransformer();

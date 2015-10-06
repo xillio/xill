@@ -99,7 +99,7 @@ public class Content {
 		} else if (ContentType.APPLICATION_XML.getMimeType().equals(this.getType().getMimeType())) {
 			XmlNodeVar xml = null;
 			try {
-				xml = new XmlNodeVar(this.getContent());
+				xml = new XmlNodeVar(this.getContent(), true);
 			} catch (Exception e) {
 				throw new RobotRuntimeException(e.getMessage());
 			}

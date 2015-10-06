@@ -28,7 +28,7 @@ public class NodeServiceImpl implements NodeService {
 	public XmlNode insertNode(final XmlNode parentXmlNode, final String newChildNodeStr, final XmlNode beforeChildXmlNode) {
 		XmlNodeVar newXmlChildNode = null;
 		try {
-			newXmlChildNode = new XmlNodeVar(newChildNodeStr);
+			newXmlChildNode = new XmlNodeVar(newChildNodeStr, false);
 		} catch (XmlParseException e) {
 			throw new RobotRuntimeException("Function insertNode parse error!\n" + e.getMessage(), e);
 		} catch (Exception e) {
@@ -76,7 +76,7 @@ public class NodeServiceImpl implements NodeService {
 	public XmlNode replaceNode(final XmlNode orgXmlNode, final String replXmlStr) {
 		XmlNodeVar replXmlNode = null;
 		try {
-			replXmlNode = new XmlNodeVar(replXmlStr);
+			replXmlNode = new XmlNodeVar(replXmlStr, false);
 		} catch (XmlParseException e) {
 			throw new RobotRuntimeException("Function replaceNode parse error!\n" + e.getMessage(), e);
 		} catch (Exception e) {
@@ -122,7 +122,7 @@ public class NodeServiceImpl implements NodeService {
 		}
 
 		try {
-			return new XmlNodeVar(content);
+			return new XmlNodeVar(content, true);
 		} catch (XmlParseException e) {
 			throw new RobotRuntimeException("The XML source is invalid.", e);
 		} catch (Exception e) {
@@ -133,7 +133,7 @@ public class NodeServiceImpl implements NodeService {
 	@Override
 	public XmlNode fromString(final String xmlText) {
 		try {
-			return new XmlNodeVar(xmlText);
+			return new XmlNodeVar(xmlText, true);
 		} catch (XmlParseException e) {
 			throw new RobotRuntimeException("The XML source is invalid." + e.getMessage(), e);
 		} catch (Exception e) {

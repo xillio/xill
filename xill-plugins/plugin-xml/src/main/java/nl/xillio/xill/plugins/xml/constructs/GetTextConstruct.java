@@ -24,7 +24,7 @@ public class GetTextConstruct extends Construct {
 
 	static MetaExpression process(MetaExpression xmlNodeVar) {
 		XmlNode xmlNode = assertMeta(xmlNodeVar, "node", XmlNode.class, "XML node");
-		return fromValue(xmlNode.getNode().getTextContent());
+		return fromValue(xmlNode.getText());
 	}
 
 }
