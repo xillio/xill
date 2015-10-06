@@ -85,7 +85,7 @@ public class XillUDMServiceImpl implements XillUDMService {
 	 * @param builder
 	 *        Builder already containing data
 	 * @throws ModelException
-	 *         when object and builder do not correspond
+	 *         When object and builder do not correspond
 	 */
 	private void checkDecorators(Map<String, Map<String, Object>> object, DocumentRevisionBuilder builder) {
 		// Immediately throw an exception if the number of decorators does not correspond
@@ -101,18 +101,34 @@ public class XillUDMServiceImpl implements XillUDMService {
 			if (!object.containsKey(decoratorName)) {
 				throw new ModelException(String.format("Body does not contain decorator %s", decoratorName));
 			}
-			List<String> fields = builder.decorator(decoratorName).fields();
-			// Immediately throw an exception if the number of fields does not correspond
-			Map<String, Object> decorator = object.get(decoratorName);
-			if (decorator.size() != fields.size()) {
-				throw new ModelException(String.format("Decorator %s does not have the same number of fields in the body and retrieved document version", decoratorName));
-			}
-			for (String fieldName : fields) {
-				// The fields correspond one-to-one if the object's decorator contains the same names as the builder's
-				// since the number of fields is the same
-				if (!decorator.containsKey(fieldName)) {
-					throw new ModelException(String.format("Decorator %s does not contain field %s", decoratorName, fieldName));
-				}
+			checkFields(object, builder, decoratorName);
+		}
+	}
+
+	/**
+	 * Check that the decorator with the given name from the builder and object has exactly the same fields.
+	 * 
+	 * @param object
+	 *        Object representing a document version
+	 * @param builder
+	 *        Builder already containing data
+	 * @param decoratorName
+	 *        Name of the decorator to check
+	 * @throws ModelException
+	 *         When object and builder do not correspond
+	 */
+	private void checkFields(Map<String, Map<String, Object>> object, DocumentRevisionBuilder builder, String decoratorName) {
+		List<String> fields = builder.decorator(decoratorName).fields();
+		// Immediately throw an exception if the number of fields does not correspond
+		Map<String, Object> decorator = object.get(decoratorName);
+		if (decorator.size() != fields.size()) {
+			throw new ModelException(String.format("Decorator %s does not have the same number of fields in the body and retrieved document version", decoratorName));
+		}
+		for (String fieldName : fields) {
+			// The fields correspond one-to-one if the object's decorator contains the same names as the builder's
+			// since the number of fields is the same
+			if (!decorator.containsKey(fieldName)) {
+				throw new ModelException(String.format("Decorator %s does not contain field %s", decoratorName, fieldName));
 			}
 		}
 	}
@@ -131,8 +147,7 @@ public class XillUDMServiceImpl implements XillUDMService {
 	 * @return A {@link DocumentRevisionBuilder} for the given parameters
 	 */
 	private DocumentRevisionBuilder getVersion(DocumentID documentId, String versionId, String section, UDMService udmService) {
-		DocumentRevisionBuilder document = getVersion(getSourceOrTarget(udmService.document(documentId), section), versionId);
-		return document;
+		return getVersion(getSourceOrTarget(udmService.document(documentId), section), versionId);
 	}
 
 	/**
