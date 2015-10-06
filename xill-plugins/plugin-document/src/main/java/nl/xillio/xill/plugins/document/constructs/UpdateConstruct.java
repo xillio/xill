@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.document.constructs;
 
 import java.util.Map;
 
+import nl.xillio.udm.exceptions.DocumentNotFoundException;
 import nl.xillio.udm.exceptions.ModelException;
 import nl.xillio.udm.exceptions.PersistenceException;
 import nl.xillio.xill.api.components.MetaExpression;
@@ -46,7 +47,7 @@ public class UpdateConstruct extends Construct {
 
 		try {
 			udmService.update(documentId, parsedBody, versionId, section);
-		} catch (ModelException | PersistenceException | VersionNotFoundException e) {
+		} catch (ModelException | PersistenceException | VersionNotFoundException | DocumentNotFoundException e) {
 			throw new RobotRuntimeException(e.getMessage(), e);
 		}
 
