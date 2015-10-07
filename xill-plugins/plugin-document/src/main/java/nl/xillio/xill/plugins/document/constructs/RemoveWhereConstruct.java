@@ -1,6 +1,9 @@
 package nl.xillio.xill.plugins.document.constructs;
 
+import org.bson.Document;
+
 import com.google.inject.Inject;
+
 import nl.xillio.udm.exceptions.DocumentNotFoundException;
 import nl.xillio.udm.exceptions.PersistenceException;
 import nl.xillio.xill.api.components.MetaExpression;
@@ -11,7 +14,6 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
 import nl.xillio.xill.plugins.document.services.XillUDMService;
-import org.bson.Document;
 
 /**
  * Construct for removing documents or versions using a filter.
@@ -32,7 +34,7 @@ public class RemoveWhereConstruct extends Construct {
 	}
 
 	static MetaExpression process(final MetaExpression filter, final MetaExpression verId,
-																final MetaExpression sec, final XillUDMService udmService) {
+			final MetaExpression sec, final XillUDMService udmService) {
 		// Get the string values of the arguments.
 		String versionId = verId.getStringValue();
 		String section = sec.getStringValue();
@@ -51,7 +53,11 @@ public class RemoveWhereConstruct extends Construct {
 		} catch (VersionNotFoundException | DocumentNotFoundException | IllegalArgumentException e) {
 			throw new RobotRuntimeException(e.getMessage(), e);
 		} catch (PersistenceException e) {
-			throw new RobotRuntimeException(e.getMessage() + ": " + e.getCause().getMessage(), e);
+			if (e.getCause() != null) {
+				throw new RobotRuntimeException(e.getMessage() + ": " + e.getCause().getMessage(), e);
+			} else {
+				throw new RobotRuntimeException(e.getMessage(), e);
+			}
 		}
 
 		return fromValue(result);
