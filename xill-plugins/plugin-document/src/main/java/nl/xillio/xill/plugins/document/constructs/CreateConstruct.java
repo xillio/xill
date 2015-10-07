@@ -12,6 +12,7 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.document.services.XillUDMService;
+import nl.xillio.xill.plugins.document.util.DocumentUtil;
 
 /**
  * Construct for creating and inserting an object into the database.
@@ -33,21 +34,9 @@ public class CreateConstruct extends Construct {
 	
 	static MetaExpression process(final MetaExpression conType, final MetaExpression body, final XillUDMService udmService) {
 		String contentType = conType.getStringValue();
-		Object bodyObj = extractValue(body);
 		
-		// Get the body as a map (which we know it is, because it's an object).
-		@SuppressWarnings("unchecked")
-		Map<String, Object> firstMap = (Map<String, Object>)bodyObj;
-		
-		// Check if all values in the map are also maps.
-		for (Object value : firstMap.values())
-			if (!(value instanceof Map))
-				throw new RobotRuntimeException("The body has an invalid format."
-						+ "It should be an object containing sub-objects for each decorator.");
-		
-		// We now know that the body is the correct format, so it's safe to cast it.
-		@SuppressWarnings("unchecked")
-		Map<String, Map<String, Object>> bodyMap = (Map<String, Map<String, Object>>) bodyObj;
+		// Get the body as a map of maps
+		Map<String, Map<String, Object>> bodyMap = DocumentUtil.expressionBodyToMap(body);
 		
 		// Try to create the document.
 		try {
