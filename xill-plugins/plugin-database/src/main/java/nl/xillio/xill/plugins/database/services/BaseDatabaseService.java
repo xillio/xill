@@ -145,6 +145,14 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		return indexedParameters;
 	}
 
+	/**
+	 * 
+	 * @param stmt the prepared statement
+	 * @param indexedParameters the list with the parameters
+	 * @param parameters the list of maps
+	 * @return an array of update counts
+	 * @throws SQLException
+	 */
 	int[] executeBatch(final PreparedStatement stmt, final List<String> indexedParameters, final List<LinkedHashMap<String, Object>> parameters) throws SQLException {
 		for (LinkedHashMap<String, Object> parameter : parameters) {
 			for (int i = 0; i < indexedParameters.size(); i++) {
@@ -251,10 +259,9 @@ public abstract class BaseDatabaseService implements DatabaseService {
 			}
 			statement.close();
 			return map;
-		} else {
-			statement.close();
-			return null;
 		}
+		statement.close();
+		return null;
 	}
 
 	void setValue(final PreparedStatement statement, final String key, final Object value, final int i) throws SQLException {
@@ -295,8 +302,8 @@ public abstract class BaseDatabaseService implements DatabaseService {
 
 	/**
 	 * Store an object in the database.
-	 * Update the database when a row already exists and overwrite is true.
-	 * Do nothing when a row already exists and overwrite is false
+	 * Update the database when a row already exists and allowUpdate is true.
+	 * Do nothing when a row already exists and allowUpdate is false
 	 * Insert into the database when a row does not exist
 	 *
 	 * @param connection
@@ -307,13 +314,13 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 *        The object we want to store.
 	 * @param keys
 	 *        The keys we hand the object.
-	 * @param overwrite
+	 * @param allowUpdate
 	 *        A boolean whether we allow an overwrite.
 	 * @throws SQLException
 	 */
 	@SuppressWarnings("squid:S1319") // We need a map with guaranteed insertion order, there is no interface available, only the LinkedHashMap implementation is available
 	@Override
-	public void storeObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject, final List<String> keys, final boolean overwrite)
+	public void storeObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject, final List<String> keys, final boolean allowUpdate)
 			throws SQLException {
 	
 		boolean exists;
@@ -323,7 +330,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 			throw new SQLException(e);
 		}
 		if(exists){
-			if(overwrite){
+			if(allowUpdate){
 				updateObject(connection,table,newObject,keys);
 			}
 			else{
@@ -362,9 +369,9 @@ public abstract class BaseDatabaseService implements DatabaseService {
 
 	/**
 	 * Insert the provided object into the database
-	 * @param connection
-	 * @param table
-	 * @param newObject
+	 * @param connection the database connection
+	 * @param table the table in which the object will be inserted
+	 * @param newObject the objected that will be inserted
 	 * @throws SQLException
 	 */
 	void insertObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject) throws SQLException {
@@ -391,10 +398,10 @@ public abstract class BaseDatabaseService implements DatabaseService {
 
 	/**
 	 * Update the provided object in the database
-	 * @param connection
-	 * @param table
-	 * @param newObject
-	 * @param keys
+	 * @param connection the database connection
+	 * @param table the table in which an object will be updated
+	 * @param newObject the object that will be used to update the table
+	 * @param keys the keys for  the WHERE part of the query.
 	 * @throws SQLException
 	 */
 	void updateObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject, final List<String> keys)
