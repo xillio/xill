@@ -1,8 +1,11 @@
 package nl.xillio.xill.plugins.document.constructs;
 
-import java.util.Map;
+import org.bson.Document;
+
+import com.google.inject.Inject;
 
 import nl.xillio.udm.exceptions.DocumentNotFoundException;
+import nl.xillio.udm.exceptions.PersistenceException;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
@@ -12,42 +15,51 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
 import nl.xillio.xill.plugins.document.services.XillUDMService;
 
-import com.google.inject.Inject;
-
 /**
- * Construct for getting all decorators of a specific document version as one object.
- * 
- * @author Geert Konijnendijk
- * @author Luca Scalzotto
+ * Construct for removing documents or versions using a filter.
  *
+ * @author Thomas Biesaart
  */
-public class GetConstruct extends Construct {
+public class RemoveWhereConstruct extends Construct {
 
 	@Inject
 	XillUDMService udmService;
 
 	@Override
 	public ConstructProcessor prepareProcess(ConstructContext context) {
-		return new ConstructProcessor((docId, verId, sec) -> process(docId, verId, sec, udmService),
-			new Argument("documentId", ATOMIC),
-			new Argument("versionId", fromValue("current"), ATOMIC),
+		return new ConstructProcessor((filter, verId, sec) -> process(filter, verId, sec, udmService),
+			new Argument("filter", OBJECT),
+			new Argument("versionId", NULL, ATOMIC),
 			new Argument("section", fromValue("target"), ATOMIC));
 	}
 
-	static MetaExpression process(final MetaExpression docId, final MetaExpression verId,
+	static MetaExpression process(final MetaExpression filter, final MetaExpression verId,
 			final MetaExpression sec, final XillUDMService udmService) {
 		// Get the string values of the arguments.
-		String documentId = docId.getStringValue();
 		String versionId = verId.getStringValue();
 		String section = sec.getStringValue();
 
-		Map<String, Map<String, Object>> result;
+		String filterJson = filter.toString();
+		Document filterBson = Document.parse(filterJson);
+
+		long result;
 		try {
-			result = udmService.get(documentId, versionId, XillUDMService.Section.of(section));
+			if (versionId.isEmpty()) {
+				// Delete the whole entry
+				result = udmService.removeWhere(filterBson);
+			} else {
+				result = udmService.removeWhere(filterBson, versionId, XillUDMService.Section.of(section));
+			}
 		} catch (VersionNotFoundException | DocumentNotFoundException | IllegalArgumentException e) {
 			throw new RobotRuntimeException(e.getMessage(), e);
+		} catch (PersistenceException e) {
+			if (e.getCause() != null) {
+				throw new RobotRuntimeException(e.getMessage() + ": " + e.getCause().getMessage(), e);
+			} else {
+				throw new RobotRuntimeException(e.getMessage(), e);
+			}
 		}
 
-		return parseObject(result);
+		return fromValue(result);
 	}
 }

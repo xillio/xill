@@ -9,6 +9,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertNull;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -359,7 +360,6 @@ public class BaseDatabaseServiceTest {
 	 * @throws ConversionException
 	 */
 	@SuppressWarnings("unchecked")
-	@Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "No objects found with given constraints.")
 	public void testGetObjectWithNoObjectsFound() throws SQLException, ConversionException {
 		// mock
 		BaseDatabaseService service = spy(new BaseDatabaseServiceImpl());
@@ -374,7 +374,9 @@ public class BaseDatabaseServiceTest {
 		when(statement.executeQuery()).thenReturn(resultSet);
 
 		// run
-		service.getObject(connection, "table", constraints);
+		LinkedHashMap<String, Object> result = service.getObject(connection, "table", constraints);
+
+		assertNull(result);
 	}
 
 	/**
@@ -513,7 +515,7 @@ public class BaseDatabaseServiceTest {
 		service.storeObject(connection, "table", newObject, keys, false);
 
 		// verify
-		verify(service, times(1)).insertObject(connection, "table", newObject);
+		verify(service, times(1)).storeObject(connection, "table", newObject, keys, false);
 	}
 
 	/**
