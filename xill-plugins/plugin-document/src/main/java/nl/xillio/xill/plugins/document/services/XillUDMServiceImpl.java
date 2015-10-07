@@ -3,6 +3,10 @@ package nl.xillio.xill.plugins.document.services;
 import java.util.List;
 import java.util.Map;
 
+import org.bson.Document;
+
+import com.google.inject.Inject;
+
 import nl.xillio.udm.DocumentID;
 import nl.xillio.udm.UDM;
 import nl.xillio.udm.builders.DocumentBuilder;
@@ -12,9 +16,6 @@ import nl.xillio.udm.exceptions.ModelException;
 import nl.xillio.udm.exceptions.PersistenceException;
 import nl.xillio.udm.services.UDMService;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
-import org.bson.Document;
-
-import com.google.inject.Inject;
 
 /**
  * Implementation of {@link XillUDMService}.
@@ -81,7 +82,7 @@ public class XillUDMServiceImpl implements XillUDMService {
 		}
 	}
 
-	public void update(String documentId, Map<String, Map<String, Object>> body, String versionId, String section) throws PersistenceException {
+	public void update(String documentId, Map<String, Map<String, Object>> body, String versionId, Section section) throws PersistenceException {
 		try (UDMService udmService = connect()) {
 			DocumentID docId = udmService.get(documentId);
 			DocumentRevisionBuilder document = getVersion(docId, versionId, section, udmService);
@@ -166,7 +167,7 @@ public class XillUDMServiceImpl implements XillUDMService {
 	 *        Service to use
 	 * @return A {@link DocumentRevisionBuilder} for the given parameters
 	 */
-	private DocumentRevisionBuilder getVersion(DocumentID documentId, String versionId, String section, UDMService udmService) {
+	private DocumentRevisionBuilder getVersion(DocumentID documentId, String versionId, Section section, UDMService udmService) {
 		return getVersion(getSourceOrTarget(udmService.document(documentId), section), versionId);
 	}
 

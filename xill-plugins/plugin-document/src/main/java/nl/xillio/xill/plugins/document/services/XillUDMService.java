@@ -2,11 +2,10 @@ package nl.xillio.xill.plugins.document.services;
 
 import java.util.Map;
 
-import nl.xillio.udm.exceptions.PersistenceException;
-import nl.xillio.xill.services.XillService;
 import org.bson.Document;
 
-import java.util.Map;
+import nl.xillio.udm.exceptions.PersistenceException;
+import nl.xillio.xill.services.XillService;
 
 /**
  * Service for doing operations on the UDM from Xill.
@@ -81,5 +80,5 @@ public interface XillUDMService extends XillService {
 	 * @param section
 	 *        The name of the section to update
 	 */
-	public void update(String documentId, Map<String, Map<String, Object>> body, String versionId, String section) throws PersistenceException;
+	public void update(String documentId, Map<String, Map<String, Object>> body, String versionId, Section section) throws PersistenceException;
 }
