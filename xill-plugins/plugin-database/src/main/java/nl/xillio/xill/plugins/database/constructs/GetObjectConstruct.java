@@ -50,6 +50,9 @@ public class GetObjectConstruct extends BaseDatabaseConstruct {
 		} catch (ReflectiveOperationException | SQLException | ConversionException | IllegalArgumentException e) {
 			throw new RobotRuntimeException(e.getMessage(), e);
 		}
+		if(result == null)
+			return NULL;
+		
 		LinkedHashMap<String, MetaExpression> value = new LinkedHashMap<String, MetaExpression>();
 		result.forEach((k, v) -> value.put(k, parseObject(v)));
 		return fromValue(value);

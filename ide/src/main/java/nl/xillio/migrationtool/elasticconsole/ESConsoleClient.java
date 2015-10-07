@@ -1,11 +1,9 @@
 package nl.xillio.migrationtool.elasticconsole;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Pattern;
-
+import nl.xillio.events.Event;
+import nl.xillio.events.EventHost;
+import nl.xillio.xill.api.RobotAppender;
+import nl.xillio.xill.api.components.RobotID;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.count.CountRequestBuilder;
@@ -27,18 +25,24 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.sort.SortOrder;
 
-import nl.xillio.events.Event;
-import nl.xillio.events.EventHost;
-import nl.xillio.xill.api.RobotAppender;
-import nl.xillio.xill.api.components.RobotID;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
 
-public class ESConsoleClient {
+public class ESConsoleClient implements AutoCloseable {
+
+	@Override
+	public void close() {
+		node.close();
+	}
 
 	public class SearchFilter {
 		public String text = ""; // needle or pattern
 		public boolean regExp;
 		public Map<LogType, Boolean> types;
-			
+
 		private String getWildcardNeedle() {
 			return String.format("*%1$s*", text);
 		}
@@ -51,7 +55,7 @@ public class ESConsoleClient {
 					request.setQuery(QueryBuilders.wildcardQuery("message", this.getWildcardNeedle()));
 				}
 			}
-			
+
 			ArrayList<String> typeList = new ArrayList<String>();
 			if (types.get(LogType.DEBUG)) {
 				typeList.add("debug");
@@ -70,7 +74,7 @@ public class ESConsoleClient {
 			}
 			request.setTypes(typeList.toArray(new String[typeList.size()]));
 		}
-		
+
 		public void setSearchRequestFilter(SearchRequestBuilder request) {
 			if (!this.text.isEmpty()) {
 				if (this.regExp) {
@@ -79,7 +83,7 @@ public class ESConsoleClient {
 					request.setQuery(QueryBuilders.wildcardQuery("message", this.getWildcardNeedle()));
 				}
 			}
-			
+
 			ArrayList<String> typeList = new ArrayList<String>();
 			if (types.get(LogType.DEBUG)) {
 				typeList.add("debug");
@@ -97,10 +101,10 @@ public class ESConsoleClient {
 				typeList.add("fatal");
 			}
 			request.setTypes(typeList.toArray(new String[typeList.size()]));
-			
+
 		}
 	}
-	
+
 	public SearchFilter createSearchFilter(String text, boolean regExp, Map<LogType, Boolean> types) {
 		SearchFilter filter = new SearchFilter();
 		filter.text = text;
@@ -109,7 +113,7 @@ public class ESConsoleClient {
 		return filter;
 	}
 
-	
+
 	/**
 	 * The different logging message types.
 	 */
@@ -130,13 +134,13 @@ public class ESConsoleClient {
 		// Create the settings and node
 		Settings settings = ImmutableSettings.settingsBuilder()
 			.put("cluster.name", "console")
-			// Paths
+				// Paths
 			.put("path.data", "ESConsole/data")
 			.put("path.logs", "ESConsole/logs")
 			.put("path.work", "ESConsole/work")
 			.put("path.plugins", "ESConsole/plugins")
 			.put("path.conf", "ESConsole/config")
-			// Make the node unreachable from the outside
+				// Make the node unreachable from the outside
 			.put("discovery.zen.ping.multicast.enabled", false)
 			.put("node.local", true)
 			.put("http.enabled", false)
@@ -166,15 +170,11 @@ public class ESConsoleClient {
 	/**
 	 * Logs a message.
 	 *
-	 * @param robotId
-	 *        The robot ID of the robot that called the log.
-	 * @param type
-	 *        The log type.
-	 * @param timestamp
-	 *        The timestamp of the log message.
+	 * @param robotId   The robot ID of the robot that called the log.
+	 * @param type      The log type.
+	 * @param timestamp The timestamp of the log message.
 	 * @param order
-	 * @param message
-	 *        The message to log.
+	 * @param message   The message to log.
 	 */
 	public void log(final String robotId, String type, final long timestamp, final int order, final String message) {
 
@@ -205,8 +205,7 @@ public class ESConsoleClient {
 	/**
 	 * Create the index (with default log mapping) if it does not exist yet.
 	 *
-	 * @param index
-	 *        The index to create.
+	 * @param index The index to create.
 	 */
 	private void createIndex(final String index) {
 		// Check if the index exists
@@ -227,8 +226,7 @@ public class ESConsoleClient {
 	/**
 	 * Get the default mapping for log entries in elasticsearch.
 	 *
-	 * @param type
-	 *        The type to create the mapping source for.
+	 * @param type The type to create the mapping source for.
 	 * @return An XContentBuilder that contains the source for the mapping.
 	 */
 	private static XContentBuilder getLogMapping(final LogType type) {
@@ -256,13 +254,13 @@ public class ESConsoleClient {
 	public int countFilteredEntries(final String robotId, final SearchFilter searchFilter) {
 		// Normalize index
 		String normalizedId = normalizeId(robotId);
-			
+
 		CountRequestBuilder request = getClient().prepareCount(normalizedId);
-		
+
 		if (searchFilter != null) {
 			searchFilter.setCountRequestFilter(request);
 		}
-		
+
 		CountResponse response = null;
 		try {
 			// Refresh the index to make sure everything is properly indexed etc
@@ -272,30 +270,30 @@ public class ESConsoleClient {
 		} catch (SearchPhaseExecutionException | IndexMissingException e) {
 			return 0;
 		}
-		
+
 		// Return the count
 		return (int) response.getCount();
 	}
-	
+
 	public ArrayList<Map<String, Object>> getFilteredEntries(final String robotId, final int from, final int to, final SearchFilter searchFilter) {
 		// Normalize index
 		String normalizedId = normalizeId(robotId);
-			
+
 		SearchRequestBuilder request = getClient().prepareSearch(normalizedId).setQuery(QueryBuilders.matchAllQuery());
-		
+
 		if (searchFilter != null) {
 			searchFilter.setSearchRequestFilter(request);
 		}
-		
+
 		request.addSort("timestamp", SortOrder.ASC).addSort("order", SortOrder.ASC)
-				.setFrom(from)
-				.setSize(to-from+1);
-		
-		return this.getEntries(normalizedId, request);		
+			.setFrom(from)
+			.setSize(to - from + 1);
+
+		return this.getEntries(normalizedId, request);
 	}
-	
+
 	private ArrayList<Map<String, Object>> getEntries(final String normalizedId, final SearchRequestBuilder request) {
-		
+
 		SearchResponse response = null;
 		try {
 			// Refresh the index to make sure everything is properly indexed etc
@@ -310,14 +308,12 @@ public class ESConsoleClient {
 		// Return the hits as a list of maps
 		return hitsToList(response.getHits());
 	}
-	
+
 	/**
 	 * Searches for the last log entries for the specified robot and types, sorted by the timestamp.
 	 *
-	 * @param robotId
-	 *        The robot ID of the robot to get the log for.
-	 * @param amount
-	 *        The amount of messages to collect.
+	 * @param robotId The robot ID of the robot to get the log for.
+	 * @param amount  The amount of messages to collect.
 	 * @return A list of maps containing the timestamp, type and message of each log message.
 	 */
 	public ArrayList<Map<String, Object>> getLastEntries(final String robotId, final int amount) {
@@ -335,8 +331,7 @@ public class ESConsoleClient {
 	/**
 	 * Count the amount of documents in an index.
 	 *
-	 * @param robotId
-	 *        The ID of the robot to count the entries for.
+	 * @param robotId The ID of the robot to count the entries for.
 	 * @return The amount of documents in the index.
 	 */
 	public int countEntries(final String robotId) {
@@ -377,8 +372,7 @@ public class ESConsoleClient {
 	/**
 	 * Clear the log for a robot.
 	 *
-	 * @param robotId
-	 *        The robot ID of the robot to clear the log for.
+	 * @param robotId The robot ID of the robot to clear the log for.
 	 */
 	public void clearLog(final String robotId) {
 		// Normalize index
