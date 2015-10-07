@@ -26,7 +26,7 @@ public class RemoveWhereConstruct extends Construct {
 	XillUDMService udmService;
 
 	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor((filter, verId, sec) -> process(filter, verId, sec, udmService),
 			new Argument("filter", OBJECT),
 			new Argument("versionId", NULL, ATOMIC),

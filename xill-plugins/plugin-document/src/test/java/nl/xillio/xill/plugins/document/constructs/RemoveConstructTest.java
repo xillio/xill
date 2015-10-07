@@ -1,12 +1,10 @@
 package nl.xillio.xill.plugins.document.constructs;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertSame;
-
-import java.util.HashMap;
 
 import org.mockito.Mockito;
 import org.testng.annotations.DataProvider;
@@ -15,11 +13,11 @@ import org.testng.annotations.Test;
 import nl.xillio.udm.exceptions.DocumentNotFoundException;
 import nl.xillio.udm.exceptions.PersistenceException;
 import nl.xillio.xill.ConstructTest;
-import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
 import nl.xillio.xill.plugins.document.services.XillUDMService;
+import nl.xillio.xill.plugins.document.services.XillUDMService.Section;
 
 public class RemoveConstructTest extends ConstructTest{
 
@@ -36,7 +34,7 @@ public class RemoveConstructTest extends ConstructTest{
 		MetaExpression sec = mockExpression(ATOMIC, false, 0, "source");
 		
 	
-		Mockito.doNothing().when(udmService).remove(anyString(), anyString(), anyString());
+		Mockito.doNothing().when(udmService).remove(anyString(), anyString(), any());
 	
 		
 		// Run
@@ -44,7 +42,7 @@ public class RemoveConstructTest extends ConstructTest{
 		MetaExpression result = RemoveConstruct.process(docId, verId, sec, udmService);
 		
 		// Verify
-		verify(udmService).remove("docId", "verId", "source");
+		verify(udmService).remove("docId", "verId", Section.SOURCE);
 
 		// Assert
 		assertSame(result,NULL);
@@ -74,7 +72,7 @@ public class RemoveConstructTest extends ConstructTest{
 
 		
 		try {
-			Mockito.doThrow(exceptionClass).when(udmService).remove(anyString(), anyString(), anyString());
+			Mockito.doThrow(exceptionClass).when(udmService).remove(anyString(), anyString(), any());
 		} catch (PersistenceException e) {
 		}
 		// Run

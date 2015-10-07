@@ -5,6 +5,7 @@ import static nl.xillio.xill.plugins.document.util.DocumentTestUtil.mockReadable
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.same;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -27,9 +28,7 @@ import nl.xillio.udm.builders.DocumentBuilder;
 import nl.xillio.udm.builders.DocumentHistoryBuilder;
 import nl.xillio.udm.builders.DocumentRevisionBuilder;
 import nl.xillio.udm.exceptions.DocumentNotFoundException;
-
 import nl.xillio.udm.exceptions.ModelException;
-
 import nl.xillio.udm.exceptions.PersistenceException;
 import nl.xillio.udm.services.UDMService;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
@@ -65,13 +64,13 @@ public class XillUDMServiceImplTest {
 	 *
 	 * @return Combinations of versionId and sections test data
 	 */
-	@DataProvider(name = "versionIdSectionGet")
-	public Object[][] generateVersionIdSectionGet() {
+	@DataProvider(name = "versionIdSectionGetUpdate")
+	public Object[][] generateVersionIdSectionGetUpdate() {
 		return new Object[][]{
-			{"current", XillUDMService.Section.SOURCE},
-			{"current", XillUDMService.Section.TARGET},
-			{"v1", XillUDMService.Section.SOURCE},
-			{"v1", XillUDMService.Section.TARGET}};
+				{"current", Section.SOURCE},
+				{"current", Section.TARGET},
+				{"v1", Section.SOURCE},
+				{"v1", Section.TARGET}};
 	}
 
 	
@@ -82,7 +81,7 @@ public class XillUDMServiceImplTest {
 	 * @param versionId version ID to test for
 	 * @param section   "source" or "target"
 	 */
-	@Test(dataProvider = "versionIdSectionGet")
+	@Test(dataProvider = "versionIdSectionGetUpdate")
 	public void testGetNormal(String versionId, Section section) {
 		// Mock
 		DocumentID docId = mock(DocumentID.class);
@@ -118,7 +117,7 @@ public class XillUDMServiceImplTest {
 	 * @param section
 	 *        "source" or "target"
 	 */
-	@Test(dataProvider = "versionIdSection")
+	@Test(dataProvider = "versionIdSectionGetUpdate")
 	public void testUpdateNormal(String versionId, Section section) throws PersistenceException {
 		// Mock
 		DocumentID docId = mock(DocumentID.class);
@@ -177,10 +176,10 @@ public class XillUDMServiceImplTest {
 	@DataProvider(name = "versionIdSectionRemove")
 	public Object[][] generateVersionIdSectionRemove() {
 		return new Object[][]{
-			{"all", "source"},
-			{"all", "target"},
-			{"4", "source"},
-			{"4", "target"}};
+				{"all", Section.SOURCE},
+				{"all", Section.TARGET},
+				{"4", Section.SOURCE},
+				{"4", Section.TARGET}};
 	}
 	
 	/**
@@ -191,7 +190,7 @@ public class XillUDMServiceImplTest {
 	 * @throws PersistenceException 
 	 */
 	@Test(dataProvider = "versionIdSectionRemove")
-	public void testRemoveNormal(String versionId, String section) throws PersistenceException {
+	public void testRemoveNormal(String versionId, Section section) throws PersistenceException {
 		// Mock
 		String documentId = "docid";
 		DocumentID docId = mock(DocumentID.class);
@@ -371,28 +370,7 @@ public class XillUDMServiceImplTest {
 		when(udmService.get(anyString())).thenThrow(DocumentNotFoundException.class);
 
 		// Run
-		xillUdmService.remove("docId", "versionId", "section");
-	}
-	
-	/**
-	 * Test that {@link XillUDMServiceImpl#remove(String, String, String)} throws a {@link IllegalArgumentException} when section is something else than "source" or "target".
-	 * @throws PersistenceException 
-	 */
-	@Test(expectedExceptions = IllegalArgumentException.class)
-	public void testRemoveNonExistentSection() throws PersistenceException {
-		// Mock
-		String documentId = "docId";
-		String versionId = "current";
-		String section = "nonExistent";
-		DocumentID docId = mock(DocumentID.class);
-
-		DocumentBuilder documentBuilder = mock(DocumentBuilder.class);
-
-		when(udmService.get(documentId)).thenReturn(docId);
-		when(udmService.document(docId)).thenReturn(documentBuilder);
-
-		// Run
-		xillUdmService.remove(documentId, versionId, section);
+		xillUdmService.remove(DOCUMENT_ID, VERSION_ID, Section.SOURCE);
 	}
 	
 	/**
@@ -402,9 +380,7 @@ public class XillUDMServiceImplTest {
 	@Test(expectedExceptions = VersionNotFoundException.class)
 	public void testRemoveNonExistentRevision() throws PersistenceException {
 		// Mock
-		String documentId = "docId";
 		String versionId = "nonExistent";
-		String section = "source";
 		DocumentID docId = mock(DocumentID.class);
 
 		DocumentHistoryBuilder documentHistoryBuilder = mock(DocumentHistoryBuilder.class);
@@ -412,11 +388,11 @@ public class XillUDMServiceImplTest {
 
 		DocumentBuilder documentBuilder = mockDocumentBuilder(documentHistoryBuilder);
 
-		when(udmService.get(documentId)).thenReturn(docId);
+		when(udmService.get(DOCUMENT_ID)).thenReturn(docId);
 		when(udmService.document(docId)).thenReturn(documentBuilder);
 
 		// Run
-		xillUdmService.remove(documentId, versionId, section);
+		xillUdmService.remove(DOCUMENT_ID, versionId, Section.SOURCE);
 
 	}
 
