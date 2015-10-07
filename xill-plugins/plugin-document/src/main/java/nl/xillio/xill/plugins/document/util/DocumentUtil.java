@@ -25,7 +25,7 @@ public class DocumentUtil {
 	 *         When the given {@link MetaExpression} is not an object containing objects
 	 */
 	public static Map<String, Map<String, Object>> expressionBodyToMap(MetaExpression body) {
-		// Convert the MetaExpreiion to a map
+		// Convert the MetaExpression to a map
 		Map<String, Object> bodyMap = (Map<String, Object>) MetaExpression.extractValue(body);
 
 		// Convert the map of objects to a map of maps
