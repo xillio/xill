@@ -2,11 +2,17 @@
 <function>
   <description>
     Connect to a Mssql database. Returns a connection object.
+    The host parameter wants the name of the host.
+    The default port is 3306 but can be set to a different port is necessary.
+    The database parameter wants the name of the database you want to connect to.
+    The user and pass parameter are for the username and password. Both are optional.
+    The options parameter is optional. It is used for setting mssql specific options. These can be found here:
+    https://msdn.microsoft.com/en-us/library/ms378988(v=sql.110).aspx
+    
   </description>
   <examples>
     <example>
       <header>Connect to the MsSQL database "testdb" with user "user" and password "pass".
-      All possible options can be found here: https://msdn.microsoft.com/en-us/library/ms378988(v=sql.110).aspx
       </header>
       <code>
 	

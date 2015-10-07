@@ -3,8 +3,8 @@
   <description>
     Query a database.         
     
-    The connection parameter is optional, if not given the last created connection will be used. 
-    
+    The database parameter is optional. The last made connection will be used if no database is given.
+    the timeout parameter is optional. The default is set to 30 seconds. when the query takes longer than the given timeout it will stop.
     Returns an iterator containing an update count for each insert/update/delete and an object for each selected row in the case of a select.
   </description>
   <examples>

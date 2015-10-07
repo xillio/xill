@@ -40,6 +40,7 @@ public class ConnectConstruct extends BaseDatabaseConstruct {
 		String type = args[1].getStringValue();
 		String user = args[2].isNull() ? null : args[2].getStringValue();
 		String pass = args[3].isNull() ? null : args[3].getStringValue();
+		
 		Map<String, MetaExpression> options = (Map<String, MetaExpression>) args[4].getValue();
 		Tuple<String, String>[] optionsArray =
 				options.entrySet().stream()
@@ -61,9 +62,9 @@ public class ConnectConstruct extends BaseDatabaseConstruct {
 		}
 
 		MetaExpression metaExpression = fromValue(database);
-		ConnectionMetadata newConnection = new ConnectionMetadata(type, connection);
-		lastConnections.put(robotID, newConnection);
-		metaExpression.storeMeta(newConnection);
+		ConnectionMetadata newConnection = new ConnectionMetadata(type, connection); //
+		lastConnections.put(robotID, newConnection); //add the robotId with the new connection to the pool
+		metaExpression.storeMeta(newConnection); //store the connection metadata in the ouput MetaExpression
 
 		return metaExpression;
 	}

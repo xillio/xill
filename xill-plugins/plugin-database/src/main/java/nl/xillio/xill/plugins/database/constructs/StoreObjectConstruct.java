@@ -18,7 +18,8 @@ import nl.xillio.xill.plugins.database.services.DatabaseServiceFactory;
 import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
 
 /**
- * TODO: jdoc
+ * this construct is for storing / updating a table from a database.
+ * 
  * 
  * @author Sander Visser
  *
@@ -32,7 +33,7 @@ public class StoreObjectConstruct extends BaseDatabaseConstruct {
 				new Argument("table", ATOMIC),
 				new Argument("object", OBJECT),
 				new Argument("keys", LIST),
-				new Argument("overwrite", TRUE, ATOMIC),
+				new Argument("allowUpdate", TRUE, ATOMIC),
 				new Argument("database", NULL, ATOMIC),
 		};
 		return new ConstructProcessor(a -> process(a, factory, context.getRobotID()), args);
@@ -43,25 +44,25 @@ public class StoreObjectConstruct extends BaseDatabaseConstruct {
 		String tblName = args[0].getStringValue();
 		LinkedHashMap<String, Object> newObject = (LinkedHashMap<String, Object>) extractValue(args[1]);
 		ConnectionMetadata metaData;
-		if (args[4].equals(NULL)) {
+		if (args[4].equals(NULL)) { //if no database is given use the last made connection of this robot.
 			metaData = lastConnections.get(robotID);
 		} else {
-			metaData = assertMeta(args[4], "database", ConnectionMetadata.class, "variable with a connection");
+			metaData = assertMeta(args[4], "database", ConnectionMetadata.class, "variable with a connection"); //check whether the given MetaExpression has the right metaData.
 		}
 		Connection connection = metaData.getConnection();
 
 		List<MetaExpression> keysMeta = (ArrayList<MetaExpression>) args[2].getValue();
-		List<String> keys = keysMeta.stream().map(m -> m.getStringValue()).collect(Collectors.toList());
+		List<String> keys = keysMeta.stream().map(m -> m.getStringValue()).collect(Collectors.toList()); //create a list from the given keys.
 
-		boolean overwrite = args[3].getBooleanValue();
+		boolean allowUpdate = args[3].getBooleanValue();
 
 		try {
-			factory.getService(metaData.getDatabaseName()).storeObject(connection, tblName, newObject, keys, overwrite);
+			factory.getService(metaData.getDatabaseName()).storeObject(connection, tblName, newObject, keys, allowUpdate);
 		} catch (ReflectiveOperationException | SQLException e) {
 			throw new RobotRuntimeException("SQL Exception, " + e.getMessage(), e);
 		}
 
-		return NULL;
+		return NULL; 
 
 	}
 
