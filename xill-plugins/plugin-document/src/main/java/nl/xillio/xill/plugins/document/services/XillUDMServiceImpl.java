@@ -19,7 +19,7 @@ import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
 
 /**
  * Implementation of {@link XillUDMService}.
- * 
+ *
  * @author Geert Konijnendijk
  *
  */
@@ -34,13 +34,13 @@ public class XillUDMServiceImpl implements XillUDMService {
 	 *        The {@link ConversionService}
 	 */
 	@Inject
-	XillUDMServiceImpl(ConversionService conversionService) {
+	XillUDMServiceImpl(final ConversionService conversionService) {
 		this.conversionService = conversionService;
 	}
 
 	/**
 	 * Connect to the UDM
-	 * 
+	 *
 	 * @return Service to do UDM operations on
 	 */
 	protected UDMService connect() {
@@ -48,7 +48,7 @@ public class XillUDMServiceImpl implements XillUDMService {
 	}
 
 	@Override
-	public Map<String, Map<String, Object>> get(String documentId, String versionId, Section section) {
+	public Map<String, Map<String, Object>> get(final String documentId, final String versionId, final Section section) {
 		// Get the document and convert it to a map.
 		try (UDMService udmService = connect()) {
 			DocumentID docId = udmService.get(documentId);
@@ -57,32 +57,44 @@ public class XillUDMServiceImpl implements XillUDMService {
 
 			// Clear the cache.
 			udmService.release(docId);
-
 			return result;
 		}
 	}
 
 	@Override
-	public long removeWhere(Document filter) throws PersistenceException {
+	public void remove(final String documentId, final String versionId, final Section section) throws PersistenceException {
+		try (UDMService udmService = connect()) {
+			DocumentID docId = udmService.get(documentId);
+			if (versionId.equals("all")) {
+				udmService.delete(docId);
+			} else {
+				DocumentBuilder document = udmService.document(docId);
+				DocumentRevisionBuilder revision = getVersion(getSourceOrTarget(document, section), versionId);
+				revision.removeRevision(versionId);
+				udmService.persist(docId);
+			}
+		}
+	}
+
+	@Override
+	public long removeWhere(final Document filter) throws PersistenceException {
 		try (UDMService udmService = connect()) {
 			return udmService.delete(filter);
 		}
 	}
 
 	@Override
-	public long removeWhere(Document filter, String version, Section section) throws PersistenceException {
+	public long removeWhere(final Document filter, final String version, final Section section) throws PersistenceException {
 		try (UDMService udmService = connect()) {
 			return udmService.update(filter,
 				new Document("$pull",
 					new Document(section.toString().toLowerCase() + ".versions",
-						new Document("version", version)
-					)
-				)
-			);
+						new Document("version", version))));
 		}
 	}
 
-	public void update(String documentId, Map<String, Map<String, Object>> body, String versionId, Section section) throws PersistenceException {
+	@Override
+	public void update(final String documentId, final Map<String, Map<String, Object>> body, final String versionId, final Section section) throws PersistenceException {
 		try (UDMService udmService = connect()) {
 			DocumentID docId = udmService.get(documentId);
 			DocumentRevisionBuilder document = getVersion(docId, versionId, section, udmService);
@@ -100,7 +112,7 @@ public class XillUDMServiceImpl implements XillUDMService {
 
 	/**
 	 * Check that the builder and object have exactly the same decorators and that these decorators have the same fields.
-	 * 
+	 *
 	 * @param object
 	 *        Object representing a document version
 	 * @param builder
@@ -108,11 +120,10 @@ public class XillUDMServiceImpl implements XillUDMService {
 	 * @throws ModelException
 	 *         When object and builder do not correspond
 	 */
-	private void checkDecorators(Map<String, Map<String, Object>> object, DocumentRevisionBuilder builder) {
+	private void checkDecorators(final Map<String, Map<String, Object>> object, final DocumentRevisionBuilder builder) {
 		// Immediately throw an exception if the number of decorators does not correspond
 		List<String> decorators = builder.decorators();
-		if (object.size() != decorators.size())
-		{
+		if (object.size() != decorators.size()) {
 			throw new ModelException("Body and retrieved document version do not have the same number of decorators");
 		}
 		// Check if decorator names correspond one-to-one
@@ -128,7 +139,7 @@ public class XillUDMServiceImpl implements XillUDMService {
 
 	/**
 	 * Check that the decorator with the given name from the builder and object has exactly the same fields.
-	 * 
+	 *
 	 * @param object
 	 *        Object representing a document version
 	 * @param builder
@@ -138,7 +149,7 @@ public class XillUDMServiceImpl implements XillUDMService {
 	 * @throws ModelException
 	 *         When object and builder do not correspond
 	 */
-	private void checkFields(Map<String, Map<String, Object>> object, DocumentRevisionBuilder builder, String decoratorName) {
+	private void checkFields(final Map<String, Map<String, Object>> object, final DocumentRevisionBuilder builder, final String decoratorName) {
 		List<String> fields = builder.decorator(decoratorName).fields();
 		// Immediately throw an exception if the number of fields does not correspond
 		Map<String, Object> decorator = object.get(decoratorName);
@@ -156,7 +167,7 @@ public class XillUDMServiceImpl implements XillUDMService {
 
 	/**
 	 * Retrieve a {@link DocumentRevisionBuilder} from the UDM.
-	 * 
+	 *
 	 * @param documentId
 	 *        ID of the document
 	 * @param versionId
@@ -167,7 +178,7 @@ public class XillUDMServiceImpl implements XillUDMService {
 	 *        Service to use
 	 * @return A {@link DocumentRevisionBuilder} for the given parameters
 	 */
-	private DocumentRevisionBuilder getVersion(DocumentID documentId, String versionId, Section section, UDMService udmService) {
+	private DocumentRevisionBuilder getVersion(final DocumentID documentId, final String versionId, final Section section, final UDMService udmService) {
 		return getVersion(getSourceOrTarget(udmService.document(documentId), section), versionId);
 	}
 
@@ -180,12 +191,13 @@ public class XillUDMServiceImpl implements XillUDMService {
 	 *        The section to return. Can be either "source" or "target", and is case-insensitive.
 	 * @return A {@link DocumentHistoryBuilder} of the given builder.
 	 */
-	private DocumentHistoryBuilder getSourceOrTarget(DocumentBuilder builder, Section section) {
+	private DocumentHistoryBuilder getSourceOrTarget(final DocumentBuilder builder, final Section section) {
 		// Check if the section is source or target, else throw an exception.
-		if (section == Section.TARGET)
+		if (section == Section.TARGET) {
 			return builder.target();
-		else if (section == Section.SOURCE)
+		} else if (section == Section.SOURCE) {
 			return builder.source();
+		}
 
 		throw new IllegalArgumentException("Unknown Section was provided: " + section);
 	}
@@ -199,14 +211,15 @@ public class XillUDMServiceImpl implements XillUDMService {
 	 *        The version to het from the builder.
 	 * @return A {@link DocumentRevisionBuilder} that is the correct version of the document.
 	 */
-	private DocumentRevisionBuilder getVersion(DocumentHistoryBuilder builder, String version) {
+	private DocumentRevisionBuilder getVersion(final DocumentHistoryBuilder builder, final String version) {
 		// Check if the version is current or the version exists, else throw an exception.
-		if ("current".equalsIgnoreCase(version))
+		if ("current".equalsIgnoreCase(version)) {
 			return builder.current();
-		else if (builder.versions().contains(version))
+		} else if (builder.versions().contains(version)) {
 			return builder.revision(version);
-		else
+		} else {
 			throw new VersionNotFoundException("The document does not contain a version [" + version + "].");
+		}
 	}
 
 }

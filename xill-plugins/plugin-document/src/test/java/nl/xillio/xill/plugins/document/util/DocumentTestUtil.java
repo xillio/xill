@@ -14,7 +14,7 @@ import nl.xillio.udm.builders.DocumentRevisionBuilder;
 
 /**
  * Test utils for testing the document plugin.
- * 
+ *
  * @author Geert Konijnendijk
  *
  */
@@ -22,7 +22,7 @@ public class DocumentTestUtil {
 
 	/**
 	 * Mock a {@link DecoratorBuilder} supporting the {@link DecoratorBuilder#field(String, Object)} method.
-	 * 
+	 *
 	 * @return A mocked {@link DecoratorBuilder}
 	 */
 	public static DecoratorBuilder mockDecoratorBuilder() {
@@ -33,12 +33,12 @@ public class DocumentTestUtil {
 
 	/**
 	 * Mock a {@link DocumentRevisionBuilder} supporting the {@link DocumentRevisionBuilder#decorator(String)} and {@link DocumentRevisionBuilder#decorators()} methods.
-	 * 
+	 *
 	 * @param object
 	 *        Map backing the mocked {@link DocumentRevisionBuilder}
 	 * @return A mocked {@link DocumentRevisionBuilder}
 	 */
-	public static DocumentRevisionBuilder mockReadableDocumentRevisionBuilder(Map<String, Map<String, Object>> object) {
+	public static DocumentRevisionBuilder mockReadableDocumentRevisionBuilder(final Map<String, Map<String, Object>> object) {
 		DocumentRevisionBuilder builder = mock(DocumentRevisionBuilder.class);
 		when(builder.decorators()).thenReturn(new ArrayList<>(object.keySet()));
 		when(builder.decorator(anyString())).thenAnswer(i -> mockReadableDecoratorBuilder(object.get(i.getArgumentAt(0, String.class))));
@@ -47,12 +47,12 @@ public class DocumentTestUtil {
 
 	/**
 	 * Mock a {@link DecoratorBuilder} supporting the {@link DecoratorBuilder#field(String)} and {@link DecoratorBuilder#fields()} methods.
-	 * 
+	 *
 	 * @param decorator
 	 *        Map backing the mocked {@link DecoratorBuilder}
 	 * @return A mocked {@link DecoratorBuilder}
 	 */
-	public static DecoratorBuilder mockReadableDecoratorBuilder(Map<String, Object> decorator) {
+	public static DecoratorBuilder mockReadableDecoratorBuilder(final Map<String, Object> decorator) {
 		DecoratorBuilder builder = mockDecoratorBuilder();
 		when(builder.fields()).thenReturn(new ArrayList<>(decorator.keySet()));
 		when(builder.field(anyString())).thenAnswer(i -> decorator.get(i.getArgumentAt(0, String.class)));
@@ -61,7 +61,7 @@ public class DocumentTestUtil {
 
 	/**
 	 * Creates a map representing a collection of decorators
-	 * 
+	 *
 	 * @return A collection of decorators represented as a map
 	 */
 	public static Map<String, Map<String, Object>> createDecoratorMap() {

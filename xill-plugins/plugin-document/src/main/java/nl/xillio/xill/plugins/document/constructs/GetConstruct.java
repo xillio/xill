@@ -2,6 +2,8 @@ package nl.xillio.xill.plugins.document.constructs;
 
 import java.util.Map;
 
+import com.google.inject.Inject;
+
 import nl.xillio.udm.exceptions.DocumentNotFoundException;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
@@ -12,11 +14,9 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
 import nl.xillio.xill.plugins.document.services.XillUDMService;
 
-import com.google.inject.Inject;
-
 /**
  * Construct for getting all decorators of a specific document version as one object.
- * 
+ *
  * @author Geert Konijnendijk
  * @author Luca Scalzotto
  *
@@ -27,7 +27,7 @@ public class GetConstruct extends Construct {
 	XillUDMService udmService;
 
 	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor((docId, verId, sec) -> process(docId, verId, sec, udmService),
 			new Argument("documentId", ATOMIC),
 			new Argument("versionId", fromValue("current"), ATOMIC),

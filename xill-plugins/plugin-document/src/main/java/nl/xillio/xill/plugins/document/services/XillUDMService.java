@@ -25,11 +25,13 @@ public interface XillUDMService extends XillService {
 		/**
 		 * Get the section that belongs to a certain name.
 		 *
-		 * @param name the name of the section
+		 * @param name
+		 *        the name of the section
 		 * @return the section
-		 * @throws IllegalArgumentException if no valid name was provided.
+		 * @throws IllegalArgumentException
+		 *         if no valid name was provided.
 		 */
-		public static Section of(String name) {
+		public static Section of(final String name) {
 			if (name.isEmpty() || "target".equalsIgnoreCase(name)) {
 				return TARGET;
 			} else if ("source".equalsIgnoreCase(name)) {
@@ -42,9 +44,12 @@ public interface XillUDMService extends XillService {
 	/**
 	 * Get all decorators of a specific document version.
 	 *
-	 * @param documentId ID of the document
-	 * @param versionId  ID of the version
-	 * @param section    "target" or "source"
+	 * @param documentId
+	 *        ID of the document
+	 * @param versionId
+	 *        ID of the version
+	 * @param section
+	 *        "target" or "source"
 	 * @return A map with the keys being decorator names and the values being a map mapping from field names to field values
 	 */
 	Map<String, Map<String, Object>> get(String documentId, String versionId, Section section);
@@ -60,17 +65,21 @@ public interface XillUDMService extends XillService {
 	/**
 	 * Remove all versions with id in section of entry that matches a certain filter.
 	 *
-	 * @param filter  the filter
-	 * @param version the version
-	 * @param section the section
+	 * @param filter
+	 *        the filter
+	 * @param version
+	 *        the version
+	 * @param section
+	 *        the section
 	 * @return the number of edited entries
-	 * @throws PersistenceException if the query fails
+	 * @throws PersistenceException
+	 *         if the query fails
 	 */
 	long removeWhere(Document filter, String version, Section section) throws PersistenceException;
-	
+
 	/**
 	 * Update a specific version of a document by setting it to the given body.
-	 * 
+	 *
 	 * @param documentId
 	 *        The ID of the document to update
 	 * @param body
@@ -81,4 +90,18 @@ public interface XillUDMService extends XillService {
 	 *        The name of the section to update
 	 */
 	public void update(String documentId, Map<String, Map<String, Object>> body, String versionId, Section section) throws PersistenceException;
+
+	/**
+	 * Remove a document or a specific version of a document.
+	 * 
+	 * @param documentId
+	 *        ID of the document
+	 * @param versionId
+	 *        ID of the version
+	 * @param section
+	 *        "target" or "source"
+	 * @throws PersistenceException
+	 *         if the document could not be persisted
+	 */
+	public void remove(String documentId, String versionId, Section section) throws PersistenceException;
 }

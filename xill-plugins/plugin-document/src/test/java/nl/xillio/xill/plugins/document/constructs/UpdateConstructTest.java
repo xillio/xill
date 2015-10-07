@@ -1,4 +1,5 @@
 package nl.xillio.xill.plugins.document.constructs;
+
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.anyString;
@@ -27,7 +28,7 @@ import nl.xillio.xill.plugins.document.services.XillUDMService.Section;
 
 /**
  * Test the methods in {@link UpdateConstruct}
- * 
+ *
  * @author Geert Konijnendijk
  *
  */
@@ -35,13 +36,13 @@ public class UpdateConstructTest extends ConstructTest {
 
 	/**
 	 * Test {@link UpdateConstruct#process(MetaExpression, MetaExpression, MetaExpression, MetaExpression, XillUDMService)} under normal circumstances.
-	 * 
+	 *
 	 * @throws PersistenceException
 	 */
 	@Test
 	public void testProcessNormal() throws PersistenceException {
 		// Mock
-	  XillUDMService udmService = mock(XillUDMService.class);
+		XillUDMService udmService = mock(XillUDMService.class);
 		MetaExpression docId = mockExpression(ATOMIC, false, 0, "docId");
 		Map<String, MetaExpression> bodyMap = new HashMap<>();
 		MetaExpression body = mockExpression(OBJECT);
@@ -54,7 +55,7 @@ public class UpdateConstructTest extends ConstructTest {
 		// Run
 		// This is a real MetaExpression, parseObject can not be mocked
 		MetaExpression result = UpdateConstruct.process(docId, body, verId, sec, udmService);
-		
+
 		// Verify
 		verify(udmService).update(eq("docId"), eq(emptyMap), eq("verId"), eq(Section.SOURCE));
 
@@ -67,19 +68,19 @@ public class UpdateConstructTest extends ConstructTest {
 	 */
 	@DataProvider(name = "exceptions")
 	private Object[][] expectedExceptions() {
-		return new Object[][] { {ModelException.class}, {DocumentNotFoundException.class}, {PersistenceException.class}, {VersionNotFoundException.class}};
+		return new Object[][] {{ModelException.class}, {DocumentNotFoundException.class}, {PersistenceException.class}, {VersionNotFoundException.class}};
 	}
 
 	/**
 	 * Test that {@link UpdateConstruct#process(MetaExpression, MetaExpression, MetaExpression, MetaExpression, XillUDMService)} converts exceptions into {@link RobotRuntimeException
 	 * RobotRuntimeExceptions}.
-	 * 
+	 *
 	 * @param exceptionClass
 	 *        Class of exception that can be thrown by {@link XillUDMService#get(String, String, String)}
 	 * @throws PersistenceException
 	 */
 	@Test(dataProvider = "exceptions", expectedExceptions = RobotRuntimeException.class)
-	public void testProcessError(Class<Exception> exceptionClass) throws PersistenceException {
+	public void testProcessError(final Class<Exception> exceptionClass) throws PersistenceException {
 		// Mock
 		XillUDMService udmService = mock(XillUDMService.class);
 		MetaExpression docId = mockExpression(ATOMIC, false, 0, "docId");
