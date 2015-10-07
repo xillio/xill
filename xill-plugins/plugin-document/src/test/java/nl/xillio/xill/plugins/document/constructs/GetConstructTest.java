@@ -1,5 +1,17 @@
 package nl.xillio.xill.plugins.document.constructs;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertSame;
+
+import java.util.HashMap;
+
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
 import nl.xillio.udm.exceptions.DocumentNotFoundException;
 import nl.xillio.xill.ConstructTest;
 import nl.xillio.xill.api.components.ExpressionDataType;
@@ -7,15 +19,6 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
 import nl.xillio.xill.plugins.document.services.XillUDMService;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
-
-import java.util.HashMap;
-
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.assertSame;
 
 /**
  * Test the methods in {@link GetConstruct}
@@ -53,16 +56,17 @@ public class GetConstructTest extends ConstructTest {
 	 */
 	@DataProvider(name = "exceptions")
 	private Object[][] expectedExceptions() {
-		return new Object[][]{{VersionNotFoundException.class}, {DocumentNotFoundException.class}, {IllegalArgumentException.class}};
+		return new Object[][] {{VersionNotFoundException.class}, {DocumentNotFoundException.class}, {IllegalArgumentException.class}};
 	}
 
 	/**
 	 * Test that {@link GetConstruct#process(MetaExpression, MetaExpression, MetaExpression, XillUDMService)} converts exceptions into {@link RobotRuntimeException RobotRuntimeExceptions}.
 	 *
-	 * @param exceptionClass Class of exception that can be thrown by {@link XillUDMService#get(String, String, nl.xillio.xill.plugins.document.services.XillUDMService.Section)}
+	 * @param exceptionClass
+	 *        Class of exception that can be thrown by {@link XillUDMService#get(String, String, nl.xillio.xill.plugins.document.services.XillUDMService.Section)}
 	 */
 	@Test(dataProvider = "exceptions", expectedExceptions = RobotRuntimeException.class)
-	public void testProcessError(Class<Exception> exceptionClass) {
+	public void testProcessError(final Class<Exception> exceptionClass) {
 		// Mock
 		XillUDMService udmService = mock(XillUDMService.class);
 		MetaExpression docId = mockExpression(ATOMIC, false, 0, "docId");
