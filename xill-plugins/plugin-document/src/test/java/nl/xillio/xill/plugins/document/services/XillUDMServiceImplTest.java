@@ -3,16 +3,24 @@ package nl.xillio.xill.plugins.document.services;
 import static nl.xillio.xill.plugins.document.util.DocumentTestUtil.createDecoratorMap;
 import static nl.xillio.xill.plugins.document.util.DocumentTestUtil.mockReadableDocumentRevisionBuilder;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.bson.Document;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 import nl.xillio.udm.DocumentID;
 import nl.xillio.udm.builders.DocumentBuilder;
@@ -23,10 +31,7 @@ import nl.xillio.udm.exceptions.ModelException;
 import nl.xillio.udm.exceptions.PersistenceException;
 import nl.xillio.udm.services.UDMService;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
-
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import nl.xillio.xill.plugins.document.services.XillUDMService.Section;
 
 /**
  * Test the methods in the {@link XillUDMServiceImpl}
@@ -36,7 +41,7 @@ import org.testng.annotations.Test;
 public class XillUDMServiceImplTest {
 
 	// Default document ID, version ID and section name
-	private static final String DOCUMENT_ID = "docid", VERSION_ID = "current", SECTION = "target";
+	private static final String DOCUMENT_ID = "docid", VERSION_ID = "current";
 
 	XillUDMServiceImpl xillUdmService;
 	ConversionService conversionService;
@@ -54,27 +59,27 @@ public class XillUDMServiceImplTest {
 	}
 
 	/**
-	 * Generate combinations of versionIds and sections for use in {@link XillUDMServiceImplTest#testGetNormal(String, String)}.
+	 * Generate combinations of versionIds and sections for use in {@link XillUDMServiceImplTest#testGetNormal(String, nl.xillio.xill.plugins.document.services.XillUDMService.Section)}.
 	 *
 	 * @return Combinations of versionId and sections test data
 	 */
 	@DataProvider(name = "versionIdSection")
 	public Object[][] generateVersionIdSection() {
 		return new Object[][]{
-			{"current", "source"},
-			{"current", "target"},
-			{"v1", "source"},
-			{"v1", "target"}};
+			{"current", XillUDMService.Section.SOURCE},
+			{"current", XillUDMService.Section.TARGET},
+			{"v1", XillUDMService.Section.SOURCE},
+			{"v1", XillUDMService.Section.TARGET}};
 	}
 
 	/**
-	 * Test {@link XillUDMServiceImpl#get(String, String, String)} under normal usage
+	 * Test {@link XillUDMServiceImpl#get(String, String, nl.xillio.xill.plugins.document.services.XillUDMService.Section)} under normal usage
 	 *
 	 * @param versionId version ID to test for
 	 * @param section   "source" or "target"
 	 */
 	@Test(dataProvider = "versionIdSection")
-	public void testGetNormal(String versionId, String section) {
+	public void testGetNormal(String versionId, XillUDMService.Section section) {
 		// Mock
 		DocumentID docId = mock(DocumentID.class);
 
@@ -110,7 +115,7 @@ public class XillUDMServiceImplTest {
 	 *        "source" or "target"
 	 */
 	@Test(dataProvider = "versionIdSection")
-	public void testUpdateNormal(String versionId, String section) throws PersistenceException {
+	public void testUpdateNormal(String versionId, Section section) throws PersistenceException {
 		// Mock
 		DocumentID docId = mock(DocumentID.class);
 
@@ -145,7 +150,7 @@ public class XillUDMServiceImplTest {
 	 * @param documentBuilder
 	 *        {@link DocumentBuilder} mock to verify on
 	 */
-	private void verifyRetrieval(String versionId, String section, DocumentHistoryBuilder documentHistoryBuilder, DocumentBuilder documentBuilder) {
+	private void verifyRetrieval(String versionId, Section section, DocumentHistoryBuilder documentHistoryBuilder, DocumentBuilder documentBuilder) {
 		verify(udmService).get(DOCUMENT_ID);
 		if ("current".equals(versionId)) {
 			verify(documentHistoryBuilder).current();
@@ -153,7 +158,7 @@ public class XillUDMServiceImplTest {
 			verify(documentHistoryBuilder).versions();
 			verify(documentHistoryBuilder).revision(versionId);
 		}
-		if ("source".equals(section)) {
+		if (Section.SOURCE.equals(section)) {
 			verify(documentBuilder).source();
 		} else {
 			verify(documentBuilder).target();
@@ -161,7 +166,7 @@ public class XillUDMServiceImplTest {
 	}
 
 	/**
-	 * Test that {@link XillUDMServiceImpl#get(String, String, String)} does not eat exceptions of type {@link DocumentNotFoundException}.
+	 * Test that {@link XillUDMServiceImpl#get(String, String, nl.xillio.xill.plugins.document.services.XillUDMService.Section)} does not eat exceptions of type {@link DocumentNotFoundException}.
 	 */
 	@Test(expectedExceptions = DocumentNotFoundException.class)
 	public void testGetNonExistentDocument() {
@@ -169,7 +174,7 @@ public class XillUDMServiceImplTest {
 		prepareNonExistentDocument();
 
 		// Run
-		xillUdmService.get("docId", "versionId", "section");
+		xillUdmService.get(DOCUMENT_ID, VERSION_ID, Section.SOURCE);
 	}
 
 	/**
@@ -184,7 +189,7 @@ public class XillUDMServiceImplTest {
 		Map<String, Map<String, Object>> body = new HashMap<>();
 
 		// Run
-		xillUdmService.update("docId", body, "versionId", "section");
+		xillUdmService.update(DOCUMENT_ID, body, VERSION_ID, Section.TARGET);
 	}
 
 	/**
@@ -195,50 +200,7 @@ public class XillUDMServiceImplTest {
 	}
 
 	/**
-	 * Test that {@link XillUDMServiceImpl#get(String, String, String)} throws a {@link IllegalArgumentException} when section is something else than "source" or "target".
-	 */
-	@Test(expectedExceptions = IllegalArgumentException.class)
-	public void testGetNonExistentSection() {
-		// Mock
-		String section = mockNonExistentSection();
-
-		// Run
-		xillUdmService.get(DOCUMENT_ID, VERSION_ID, section);
-	}
-
-	/**
-	 * Test that {@link XillUDMServiceImpl#update(String, Map, String, String)} throws a {@link IllegalArgumentException} when section is something else than "source" or "target".
-	 * 
-	 * @throws PersistenceException
-	 */
-	@Test(expectedExceptions = IllegalArgumentException.class)
-	public void testUpdateNonExistentSection() throws PersistenceException {
-		// Mock
-		String section = mockNonExistentSection();
-		Map<String, Map<String, Object>> body = new HashMap<>();
-
-		// Run
-		xillUdmService.update(DOCUMENT_ID, body, VERSION_ID, section);
-	}
-
-	/**
-	 * Mock all necessary objects to test for a non-existent section
-	 * 
-	 * @return The non-existent section name
-	 */
-	private String mockNonExistentSection() {
-		String section = "nonExistent";
-		DocumentID docId = mock(DocumentID.class);
-
-		DocumentBuilder documentBuilder = mock(DocumentBuilder.class);
-
-		when(udmService.get(DOCUMENT_ID)).thenReturn(docId);
-		when(udmService.document(docId)).thenReturn(documentBuilder);
-		return section;
-	}
-
-	/**
-	 * Test that {@link XillUDMServiceImpl#get(String, String, String)} throws a {@link VersionNotFoundException} when a non-existent version is requested.
+	 * Test that {@link XillUDMServiceImpl#get(String, String, nl.xillio.xill.plugins.document.services.XillUDMService.Section)} throws a {@link VersionNotFoundException} when a non-existent version is requested.
 	 */
 	@Test(expectedExceptions = VersionNotFoundException.class)
 	public void testGetNonExistentRevision() {
@@ -246,7 +208,7 @@ public class XillUDMServiceImplTest {
 		String versionId = mockNonExistentRevision();
 
 		// Run
-		xillUdmService.get(DOCUMENT_ID, versionId, SECTION);
+		xillUdmService.get(DOCUMENT_ID, versionId, Section.SOURCE);
 	}
 
 	/**
@@ -261,7 +223,7 @@ public class XillUDMServiceImplTest {
 		Map<String, Map<String, Object>> body = new HashMap<>();
 
 		// Run
-		xillUdmService.update(DOCUMENT_ID, body, versionId, SECTION);
+		xillUdmService.update(DOCUMENT_ID, body, versionId, Section.SOURCE);
 	}
 
 	/**
@@ -339,7 +301,7 @@ public class XillUDMServiceImplTest {
 		when(udmService.document(docId)).thenReturn(documentBuilder);
 
 		// Run
-		xillUdmService.update(DOCUMENT_ID, body, VERSION_ID, SECTION);
+		xillUdmService.update(DOCUMENT_ID, body, VERSION_ID, Section.SOURCE);
 	}
 
 	/**
@@ -374,6 +336,48 @@ public class XillUDMServiceImplTest {
 		when(documentBuilder.source()).thenReturn(documentHistoryBuilder);
 		when(documentBuilder.target()).thenReturn(documentHistoryBuilder);
 		return documentBuilder;
+	}
+
+	/**
+	 * Test removing entire entries from the database.
+	 *
+	 * @throws PersistenceException
+	 */
+	@Test
+	public void testRemoveWhereNormalCircumstances() throws PersistenceException {
+		Document filter = mock(Document.class);
+		UDMService udmService = mock(UDMService.class);
+		XillUDMServiceImpl service = spy(new XillUDMServiceImpl(null));
+		doReturn(udmService).when(service).connect();
+		when(udmService.delete(filter)).thenReturn(112L);
+
+		long result = service.removeWhere(filter);
+		assertEquals(result, 112L);
+	}
+
+	/**
+	 * Test removing single versions from the database.
+	 *
+	 * @throws PersistenceException
+	 */
+	@Test
+	public void testRemoveWhereNormalVersionCircumstances() throws PersistenceException {
+		Document filter = mock(Document.class);
+		UDMService udmService = mock(UDMService.class);
+		XillUDMServiceImpl service = spy(new XillUDMServiceImpl(null));
+		doReturn(udmService).when(service).connect();
+
+		Document expectedQuery = new Document("$pull",
+			new Document("source.versions",
+				new Document("version", "1.2")
+			)
+		);
+
+		when(udmService.update(same(filter), eq(expectedQuery))).thenReturn(1337L);
+
+		long result = service.removeWhere(filter, "1.2", XillUDMService.Section.SOURCE);
+
+		assertEquals(result, 1337L);
 	}
 
 }

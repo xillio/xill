@@ -1,5 +1,5 @@
 package nl.xillio.xill.plugins.document.constructs;
-
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -12,6 +12,9 @@ import static org.testng.Assert.assertSame;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
 import nl.xillio.udm.exceptions.DocumentNotFoundException;
 import nl.xillio.udm.exceptions.ModelException;
 import nl.xillio.udm.exceptions.PersistenceException;
@@ -20,9 +23,7 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
 import nl.xillio.xill.plugins.document.services.XillUDMService;
-
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import nl.xillio.xill.plugins.document.services.XillUDMService.Section;
 
 /**
  * Test the methods in {@link UpdateConstruct}
@@ -55,7 +56,7 @@ public class UpdateConstructTest extends ConstructTest {
 		MetaExpression result = UpdateConstruct.process(docId, body, verId, sec, udmService);
 		
 		// Verify
-		verify(udmService).update(eq("docId"), eq(emptyMap), eq("verId"), eq("source"));
+		verify(udmService).update(eq("docId"), eq(emptyMap), eq("verId"), eq(Section.SOURCE));
 
 		// Assert
 		assertSame(result, NULL);
@@ -88,7 +89,7 @@ public class UpdateConstructTest extends ConstructTest {
 		MetaExpression verId = mockExpression(ATOMIC, false, 0, "verId");
 		MetaExpression sec = mockExpression(ATOMIC, false, 0, "source");
 
-		doThrow(exceptionClass).when(udmService).update(anyString(), anyMap(), anyString(), anyString());
+		doThrow(exceptionClass).when(udmService).update(anyString(), anyMap(), anyString(), any());
 
 		// Run
 		UpdateConstruct.process(docId, body, verId, sec, udmService);

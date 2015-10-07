@@ -2,6 +2,8 @@ package nl.xillio.xill.plugins.document.constructs;
 
 import java.util.Map;
 
+import com.google.inject.Inject;
+
 import nl.xillio.udm.exceptions.DocumentNotFoundException;
 import nl.xillio.udm.exceptions.ModelException;
 import nl.xillio.udm.exceptions.PersistenceException;
@@ -13,10 +15,8 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
 import nl.xillio.xill.plugins.document.services.XillUDMService;
+import nl.xillio.xill.plugins.document.services.XillUDMService.Section;
 import nl.xillio.xill.plugins.document.util.DocumentUtil;
-
-import com.google.inject.Inject;
-
 /**
  * Construct for updating a version of a document.
  * 
@@ -43,7 +43,7 @@ public class UpdateConstruct extends Construct {
 		String documentId = docId.getStringValue();
 		Map<String, Map<String, Object>> parsedBody = DocumentUtil.expressionBodyToMap(body);
 		String versionId = verId.getStringValue();
-		String section = sec.getStringValue();
+		Section section = Section.of(sec.getStringValue());
 
 		try {
 			udmService.update(documentId, parsedBody, versionId, section);

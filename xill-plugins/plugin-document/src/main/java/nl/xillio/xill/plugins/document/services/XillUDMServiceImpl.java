@@ -3,6 +3,10 @@ package nl.xillio.xill.plugins.document.services;
 import java.util.List;
 import java.util.Map;
 
+import org.bson.Document;
+
+import com.google.inject.Inject;
+
 import nl.xillio.udm.DocumentID;
 import nl.xillio.udm.UDM;
 import nl.xillio.udm.builders.DocumentBuilder;
@@ -12,8 +16,6 @@ import nl.xillio.udm.exceptions.ModelException;
 import nl.xillio.udm.exceptions.PersistenceException;
 import nl.xillio.udm.services.UDMService;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
-
-import com.google.inject.Inject;
 
 /**
  * Implementation of {@link XillUDMService}.
@@ -46,7 +48,7 @@ public class XillUDMServiceImpl implements XillUDMService {
 	}
 
 	@Override
-	public Map<String, Map<String, Object>> get(String documentId, String versionId, String section) {
+	public Map<String, Map<String, Object>> get(String documentId, String versionId, Section section) {
 		// Get the document and convert it to a map.
 		try (UDMService udmService = connect()) {
 			DocumentID docId = udmService.get(documentId);
@@ -61,7 +63,26 @@ public class XillUDMServiceImpl implements XillUDMService {
 	}
 
 	@Override
-	public void update(String documentId, Map<String, Map<String, Object>> body, String versionId, String section) throws PersistenceException {
+	public long removeWhere(Document filter) throws PersistenceException {
+		try (UDMService udmService = connect()) {
+			return udmService.delete(filter);
+		}
+	}
+
+	@Override
+	public long removeWhere(Document filter, String version, Section section) throws PersistenceException {
+		try (UDMService udmService = connect()) {
+			return udmService.update(filter,
+				new Document("$pull",
+					new Document(section.toString().toLowerCase() + ".versions",
+						new Document("version", version)
+					)
+				)
+			);
+		}
+	}
+
+	public void update(String documentId, Map<String, Map<String, Object>> body, String versionId, Section section) throws PersistenceException {
 		try (UDMService udmService = connect()) {
 			DocumentID docId = udmService.get(documentId);
 			DocumentRevisionBuilder document = getVersion(docId, versionId, section, udmService);
@@ -146,7 +167,7 @@ public class XillUDMServiceImpl implements XillUDMService {
 	 *        Service to use
 	 * @return A {@link DocumentRevisionBuilder} for the given parameters
 	 */
-	private DocumentRevisionBuilder getVersion(DocumentID documentId, String versionId, String section, UDMService udmService) {
+	private DocumentRevisionBuilder getVersion(DocumentID documentId, String versionId, Section section, UDMService udmService) {
 		return getVersion(getSourceOrTarget(udmService.document(documentId), section), versionId);
 	}
 
@@ -159,15 +180,14 @@ public class XillUDMServiceImpl implements XillUDMService {
 	 *        The section to return. Can be either "source" or "target", and is case-insensitive.
 	 * @return A {@link DocumentHistoryBuilder} of the given builder.
 	 */
-	private DocumentHistoryBuilder getSourceOrTarget(DocumentBuilder builder, String section) {
+	private DocumentHistoryBuilder getSourceOrTarget(DocumentBuilder builder, Section section) {
 		// Check if the section is source or target, else throw an exception.
-		if ("source".equalsIgnoreCase(section))
-			return builder.source();
-		else if ("target".equalsIgnoreCase(section))
+		if (section == Section.TARGET)
 			return builder.target();
-		else
-			throw new IllegalArgumentException("The \"section\" argument is not in a valid format."
-					+ "Valid values are \"source\" and \"target\".");
+		else if (section == Section.SOURCE)
+			return builder.source();
+
+		throw new IllegalArgumentException("Unknown Section was provided: " + section);
 	}
 
 	/**
