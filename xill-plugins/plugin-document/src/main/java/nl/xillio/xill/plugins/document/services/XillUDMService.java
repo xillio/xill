@@ -1,16 +1,13 @@
 package nl.xillio.xill.plugins.document.services;
 
 
+import java.util.List;
 import java.util.Map;
 
 import org.bson.Document;
 
 import nl.xillio.udm.exceptions.PersistenceException;
-
 import nl.xillio.xill.services.XillService;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * Service for doing operations on the UDM from Xill.
@@ -63,7 +60,7 @@ public interface XillUDMService extends XillService {
 	 * @param section    "target" or "source"
 	 * @return a list of version ids
 	 */
-	List<String> getVersions(String documentID, String section);
+	List<String> getVersions(String documentID, Section section);
 
 	
 	/**

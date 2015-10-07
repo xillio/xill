@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.document.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,10 +17,6 @@ import nl.xillio.udm.exceptions.ModelException;
 import nl.xillio.udm.exceptions.PersistenceException;
 import nl.xillio.udm.services.UDMService;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Implementation of {@link XillUDMService}.
@@ -67,11 +64,11 @@ public class XillUDMServiceImpl implements XillUDMService {
 
 	@Override
 	public List<String> getVersions(String documentID) {
-		return getVersions(documentID, "target");
+		return getVersions(documentID, Section.TARGET);
 	}
 
 	@Override
-	public List<String> getVersions(String documentID, String section) {
+	public List<String> getVersions(String documentID, Section section) {
 		try (UDMService udmService = connect()) {
 			DocumentID doc = udmService.get(documentID);
 			List<String> result = getSourceOrTarget(udmService.document(doc), section).versions();

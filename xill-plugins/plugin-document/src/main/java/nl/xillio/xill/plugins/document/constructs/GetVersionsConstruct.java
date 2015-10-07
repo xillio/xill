@@ -1,6 +1,9 @@
 package nl.xillio.xill.plugins.document.constructs;
 
+import java.util.List;
+
 import com.google.inject.Inject;
+
 import nl.xillio.udm.exceptions.DocumentNotFoundException;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
@@ -8,11 +11,8 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
 import nl.xillio.xill.plugins.document.services.XillUDMService;
-
-import java.util.List;
-import java.util.Map;
+import nl.xillio.xill.plugins.document.services.XillUDMService.Section;
 
 /**
  * Construct for getting a list of versions on a document.
@@ -35,7 +35,7 @@ public class GetVersionsConstruct extends Construct {
 	static MetaExpression process(final MetaExpression docId, final MetaExpression sec, final XillUDMService udmService) {
 		// Get the string values of the arguments.
 		String documentId = docId.getStringValue();
-		String section = sec.getStringValue();
+		Section section = Section.of(sec.getStringValue());
 
 		List<String> result;
 		try {
