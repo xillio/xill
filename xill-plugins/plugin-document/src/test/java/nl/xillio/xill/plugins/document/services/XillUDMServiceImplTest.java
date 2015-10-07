@@ -3,16 +3,24 @@ package nl.xillio.xill.plugins.document.services;
 import static nl.xillio.xill.plugins.document.util.DocumentTestUtil.createDecoratorMap;
 import static nl.xillio.xill.plugins.document.util.DocumentTestUtil.mockReadableDocumentRevisionBuilder;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.bson.Document;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 import nl.xillio.udm.DocumentID;
 import nl.xillio.udm.builders.DocumentBuilder;
@@ -23,19 +31,7 @@ import nl.xillio.udm.exceptions.ModelException;
 import nl.xillio.udm.exceptions.PersistenceException;
 import nl.xillio.udm.services.UDMService;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
-
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertSame;
+import nl.xillio.xill.plugins.document.services.XillUDMService.Section;
 
 /**
  * Test the methods in the {@link XillUDMServiceImpl}
@@ -45,7 +41,7 @@ import static org.testng.Assert.assertSame;
 public class XillUDMServiceImplTest {
 
 	// Default document ID, version ID and section name
-	private static final String DOCUMENT_ID = "docid", VERSION_ID = "current", SECTION = "target";
+	private static final String DOCUMENT_ID = "docid", VERSION_ID = "current";
 
 	XillUDMServiceImpl xillUdmService;
 	ConversionService conversionService;
@@ -119,7 +115,7 @@ public class XillUDMServiceImplTest {
 	 *        "source" or "target"
 	 */
 	@Test(dataProvider = "versionIdSection")
-	public void testUpdateNormal(String versionId, String section) throws PersistenceException {
+	public void testUpdateNormal(String versionId, Section section) throws PersistenceException {
 		// Mock
 		DocumentID docId = mock(DocumentID.class);
 
@@ -154,7 +150,7 @@ public class XillUDMServiceImplTest {
 	 * @param documentBuilder
 	 *        {@link DocumentBuilder} mock to verify on
 	 */
-	private void verifyRetrieval(String versionId, String section, DocumentHistoryBuilder documentHistoryBuilder, DocumentBuilder documentBuilder) {
+	private void verifyRetrieval(String versionId, Section section, DocumentHistoryBuilder documentHistoryBuilder, DocumentBuilder documentBuilder) {
 		verify(udmService).get(DOCUMENT_ID);
 		if ("current".equals(versionId)) {
 			verify(documentHistoryBuilder).current();
@@ -162,7 +158,7 @@ public class XillUDMServiceImplTest {
 			verify(documentHistoryBuilder).versions();
 			verify(documentHistoryBuilder).revision(versionId);
 		}
-		if (XillUDMService.Section.SOURCE.equals(section)) {
+		if (Section.SOURCE.equals(section)) {
 			verify(documentBuilder).source();
 		} else {
 			verify(documentBuilder).target();
@@ -178,7 +174,7 @@ public class XillUDMServiceImplTest {
 		prepareNonExistentDocument();
 
 		// Run
-		xillUdmService.get("docId", "versionId", XillUDMService.Section.SOURCE);
+		xillUdmService.get(DOCUMENT_ID, VERSION_ID, Section.SOURCE);
 	}
 
 	/**
@@ -193,7 +189,7 @@ public class XillUDMServiceImplTest {
 		Map<String, Map<String, Object>> body = new HashMap<>();
 
 		// Run
-		xillUdmService.update("docId", body, "versionId", "section");
+		xillUdmService.update(DOCUMENT_ID, body, VERSION_ID, Section.TARGET);
 	}
 
 	/**
@@ -201,53 +197,6 @@ public class XillUDMServiceImplTest {
 	 */
 	private void prepareNonExistentDocument() {
 		when(udmService.get(anyString())).thenThrow(DocumentNotFoundException.class);
-	}
-
-	/**
-	 * Test that {@link XillUDMServiceImpl#get(String, String, String)} throws a {@link IllegalArgumentException} when section is something else than "source" or "target".
-	 */
-	@Test(expectedExceptions = IllegalArgumentException.class)
-	public void testGetNonExistentSection() {
-		// Mock
-		String documentId = "docId";
-		String versionId = "current";
-		XillUDMService.Section section = null;
-		String section = mockNonExistentSection();
-
-		// Run
-		xillUdmService.get(DOCUMENT_ID, VERSION_ID, section);
-	}
-
-	/**
-	 * Test that {@link XillUDMServiceImpl#update(String, Map, String, String)} throws a {@link IllegalArgumentException} when section is something else than "source" or "target".
-	 * 
-	 * @throws PersistenceException
-	 */
-	@Test(expectedExceptions = IllegalArgumentException.class)
-	public void testUpdateNonExistentSection() throws PersistenceException {
-		// Mock
-		String section = mockNonExistentSection();
-		Map<String, Map<String, Object>> body = new HashMap<>();
-
-		// Run
-		xillUdmService.update(DOCUMENT_ID, body, VERSION_ID, section);
-	}
-
-	/**
-	 * Mock all necessary objects to test for a non-existent section
-	 * 
-	 * @return The non-existent section name
-	 */
-	private String mockNonExistentSection() {
-		String section = "nonExistent";
->>>>>>> develop
-		DocumentID docId = mock(DocumentID.class);
-
-		DocumentBuilder documentBuilder = mock(DocumentBuilder.class);
-
-		when(udmService.get(DOCUMENT_ID)).thenReturn(docId);
-		when(udmService.document(docId)).thenReturn(documentBuilder);
-		return section;
 	}
 
 	/**
@@ -259,7 +208,7 @@ public class XillUDMServiceImplTest {
 		String versionId = mockNonExistentRevision();
 
 		// Run
-		xillUdmService.get(DOCUMENT_ID, versionId, SECTION);
+		xillUdmService.get(DOCUMENT_ID, versionId, Section.SOURCE);
 	}
 
 	/**
@@ -274,7 +223,7 @@ public class XillUDMServiceImplTest {
 		Map<String, Map<String, Object>> body = new HashMap<>();
 
 		// Run
-		xillUdmService.update(DOCUMENT_ID, body, versionId, SECTION);
+		xillUdmService.update(DOCUMENT_ID, body, versionId, Section.SOURCE);
 	}
 
 	/**
@@ -284,7 +233,6 @@ public class XillUDMServiceImplTest {
 	 */
 	private String mockNonExistentRevision() {
 		String versionId = "nonExistent";
-		XillUDMService.Section section = XillUDMService.Section.SOURCE;
 		DocumentID docId = mock(DocumentID.class);
 
 		DocumentHistoryBuilder documentHistoryBuilder = mock(DocumentHistoryBuilder.class);
@@ -353,7 +301,7 @@ public class XillUDMServiceImplTest {
 		when(udmService.document(docId)).thenReturn(documentBuilder);
 
 		// Run
-		xillUdmService.update(DOCUMENT_ID, body, VERSION_ID, SECTION);
+		xillUdmService.update(DOCUMENT_ID, body, VERSION_ID, Section.SOURCE);
 	}
 
 	/**
