@@ -315,7 +315,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 * @param keys
 	 *        The keys we hand the object.
 	 * @param allowUpdate
-	 *        A boolean whether we allow an overwrite.
+	 *        A boolean whether we allow an to update an entry or not.
 	 * @throws SQLException
 	 */
 	@SuppressWarnings("squid:S1319") // We need a map with guaranteed insertion order, there is no interface available, only the LinkedHashMap implementation is available
@@ -325,19 +325,19 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	
 		boolean exists;
 		try {
-			exists = checkIfExists(connection,table,newObject,keys);
+			exists = checkIfExists(connection,table,newObject,keys); //check if an entry with the given keys exists
 		} catch (ConversionException e) {
 			throw new SQLException(e);
 		}
 		if(exists){
 			if(allowUpdate){
-				updateObject(connection,table,newObject,keys);
+				updateObject(connection,table,newObject,keys); //an entry exists and we are allowed to update it
 			}
 			else{
-				return;
+				return; //an entry exists but we are not allowed to update it so we do not do anything
 			}
 		}else{
-			insertObject(connection,table,newObject);
+			insertObject(connection,table,newObject); //no existing entry found so we insert the object.
 		}
 	}
 
