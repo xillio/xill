@@ -55,7 +55,7 @@ public class XillUDMServiceImpl implements XillUDMService {
 				getVersion
 						(getSourceOrTarget(
 							udmService.document(docId),section),versionId)
-								.removeRevision(versionId);//.commit();
+								.removeRevision(versionId);
 				udmService.persist(docId);
 			}
 		} 

@@ -146,4 +146,10 @@ public class XmlNode implements nl.xillio.xill.api.data.XmlNode {
 		return output.toString();
 	}
 
+	@Override
+	public String getText() {
+		//doesnt do anything
+		return null;
+	}
+
 }
