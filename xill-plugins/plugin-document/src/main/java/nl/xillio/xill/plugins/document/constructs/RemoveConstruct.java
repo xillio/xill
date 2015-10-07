@@ -2,11 +2,8 @@ package nl.xillio.xill.plugins.document.constructs;
 
 import com.google.inject.Inject;
 
-import nl.xillio.udm.DocumentID;
-import nl.xillio.udm.UDM;
 import nl.xillio.udm.exceptions.DocumentNotFoundException;
 import nl.xillio.udm.exceptions.PersistenceException;
-import nl.xillio.udm.services.UDMService;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
@@ -15,8 +12,7 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
 import nl.xillio.xill.plugins.document.services.XillUDMService;
-
-
+import nl.xillio.xill.plugins.document.services.XillUDMService.Section;
 
 /**
  * 
@@ -48,7 +44,7 @@ public class RemoveConstruct extends Construct {
 		//get string values of arguments
 		String docid = documentid.getStringValue();
 		String versid = versionid.getStringValue();
-		String sect = section.getStringValue();
+		Section sect = Section.of(section.getStringValue());
 		
 		try{
 			udmService.remove(docid,versid,sect);

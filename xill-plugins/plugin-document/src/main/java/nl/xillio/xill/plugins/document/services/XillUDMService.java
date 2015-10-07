@@ -92,5 +92,5 @@ public interface XillUDMService extends XillService {
 	 *        "target" or "source"
 	 * @throws PersistenceException if the document could not be persisted
 	 */
-	public void remove(String documentId, String versionId, String section) throws PersistenceException;
+	public void remove(String documentId, String versionId, Section section) throws PersistenceException;
 }

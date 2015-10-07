@@ -12,9 +12,7 @@ import nl.xillio.udm.UDM;
 import nl.xillio.udm.builders.DocumentBuilder;
 import nl.xillio.udm.builders.DocumentHistoryBuilder;
 import nl.xillio.udm.builders.DocumentRevisionBuilder;
-
 import nl.xillio.udm.exceptions.ModelException;
-
 import nl.xillio.udm.exceptions.PersistenceException;
 import nl.xillio.udm.services.UDMService;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
@@ -64,7 +62,7 @@ public class XillUDMServiceImpl implements XillUDMService {
 	}
 	
 	@Override
-	public void remove(String documentId, String versionId, String section) throws PersistenceException{
+	public void remove(String documentId, String versionId, Section section) throws PersistenceException {
 		//get the document
 		try (UDMService udmService = connect()){
 			DocumentID docId = udmService.get(documentId);
