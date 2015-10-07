@@ -155,6 +155,53 @@ public class XillUDMServiceImplTest {
 		xillUdmService.get(documentId, versionId, section);
 
 	}
+	
+	@DataProvider(name = "Sections")
+	public Object[][] generatSections() {
+		return new Object[][]{
+			{"source"},
+			{"target"}};
+	}
+	
+	/**
+	 * Test the getVersions method with normal input.
+	 * @param versionId
+	 * @param section
+	 */
+	@Test (dataProvider = "Sections")
+	public void testGetVersionsNormal(String section) {
+		// Mock
+		String documentId = "docid";
+		DocumentID docId = mock(DocumentID.class);
+		List<String> result = new ArrayList<>();
+
+		DocumentRevisionBuilder documentRevisionBuilder = mock(DocumentRevisionBuilder.class);
+		DocumentHistoryBuilder documentHistoryBuilder = mockDocumentHistoryBuilder("version", documentRevisionBuilder);
+		DocumentBuilder documentBuilder = mockDocumentBuilder(documentHistoryBuilder);
+
+		when(udmService.get(documentId)).thenReturn(docId);
+		when(udmService.document(docId)).thenReturn(documentBuilder);
+		doNothing().when(udmService).release(docId);
+		when(documentHistoryBuilder.versions()).thenReturn(result);
+
+
+		// Run
+		List<String> actual = xillUdmService.getVersions(documentId, section);
+
+		// Verify
+		verify(udmService).get(documentId);
+		verify(documentHistoryBuilder).versions();
+		
+		if ("source".equals(section)) {
+			verify(documentBuilder).source();
+		} else {
+			verify(documentBuilder).target();
+		}
+		verify(udmService).release(docId);
+
+		// Assert
+		assertEquals(actual, result);
+	}
 
 	/**
 	 * Mock a {@link DocumentHistoryBuilder} with {@link DocumentHistoryBuilder#current()}, {@link DocumentHistoryBuilder#versions()} and {@link DocumentHistoryBuilder#revision(String)}.
