@@ -15,7 +15,8 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  */
 public class DocumentUtil {
 
-	private DocumentUtil() {}
+	private DocumentUtil() {
+	}
 
 	/**
 	 * Convert an object {@link MetaExpression} containing objects to a map contianing maps.
