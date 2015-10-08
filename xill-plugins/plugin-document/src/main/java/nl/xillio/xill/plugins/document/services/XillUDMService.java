@@ -3,6 +3,7 @@ package nl.xillio.xill.plugins.document.services;
 import java.util.List;
 import java.util.Map;
 
+import nl.xillio.udm.DocumentID;
 import nl.xillio.udm.exceptions.PersistenceException;
 import nl.xillio.xill.services.XillService;
 
@@ -65,7 +66,6 @@ public interface XillUDMService extends XillService {
 
 	/**
 	 * Get all decorators of a specific document version.
-	 *
 	 * @param documentId
 	 *        ID of the document
 	 * @param versionId
@@ -112,6 +112,20 @@ public interface XillUDMService extends XillService {
 	 *        The name of the section to update
 	 */
 	public void update(String documentId, Map<String, Map<String, Object>> body, String versionId, Section section) throws PersistenceException;
+	
+	/**
+	 * Insert a document into the database.
+	 * 
+	 * @param contentType
+	 *        The content type of the document.
+	 * @param body
+	 *        The body of the document.
+	 * @param versionId
+	 *        The initial version ID
+	 * @return The ID of the inserted document.
+	 * @throws PersistenceException
+	 */
+	public DocumentID create(String contentType, Map<String, Map<String, Object>> body, String versionId) throws PersistenceException;
 
 	/**
 	 * Remove a document or a specific version of a document.
@@ -127,4 +141,13 @@ public interface XillUDMService extends XillService {
 	 */
 	public void remove(String documentId, String versionId, Section section) throws PersistenceException;
 
+	/**
+	 * Get all documents matching a certain filter.
+	 *
+	 * @param filter  the filter
+	 * @param version the version of the document to grab
+	 * @param section the section to check for the version
+	 * @return the requested revision
+	 */
+	Iterable<Map<String, Map<String, Object>>> findWhere(Document filter, String version, Section section) throws PersistenceException;
 }

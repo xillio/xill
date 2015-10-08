@@ -2,8 +2,6 @@ package nl.xillio.xill.plugins.document.constructs;
 
 import java.util.Map;
 
-import com.google.inject.Inject;
-
 import nl.xillio.udm.exceptions.DocumentNotFoundException;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
@@ -14,12 +12,13 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
 import nl.xillio.xill.plugins.document.services.XillUDMService;
 
+import com.google.inject.Inject;
+
 /**
  * Construct for getting all decorators of a specific document version as one object.
  *
  * @author Geert Konijnendijk
  * @author Luca Scalzotto
- *
  */
 public class GetConstruct extends Construct {
 
@@ -35,7 +34,7 @@ public class GetConstruct extends Construct {
 	}
 
 	static MetaExpression process(final MetaExpression docId, final MetaExpression verId,
-			final MetaExpression sec, final XillUDMService udmService) {
+																final MetaExpression sec, final XillUDMService udmService) {
 		// Get the string values of the arguments.
 		String documentId = docId.getStringValue();
 		String versionId = verId.getStringValue();

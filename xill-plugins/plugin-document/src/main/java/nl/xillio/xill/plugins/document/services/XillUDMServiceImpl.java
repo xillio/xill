@@ -11,8 +11,10 @@ import nl.xillio.udm.builders.DocumentHistoryBuilder;
 import nl.xillio.udm.builders.DocumentRevisionBuilder;
 import nl.xillio.udm.exceptions.ModelException;
 import nl.xillio.udm.exceptions.PersistenceException;
+import nl.xillio.udm.interfaces.FindResult;
 import nl.xillio.udm.services.UDMService;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
+import nl.xillio.xill.plugins.document.util.UDMFindResultIterator;
 
 import org.bson.Document;
 
@@ -63,6 +65,31 @@ public class XillUDMServiceImpl implements XillUDMService {
 	}
 
 	@Override
+	public DocumentID create(String contentType, Map<String, Map<String, Object>> body, String versionId)
+			throws PersistenceException {
+		try (UDMService udmService = connect()) {
+			// Build the document.
+			DocumentBuilder builder = udmService.create();
+			builder.contentType().name(contentType);
+			conversionService.mapToUdm(body, builder.source().current().version(versionId));
+			conversionService.mapToUdm(body, builder.target().current().version(versionId));
+
+			// Save to the database and return the id.
+			DocumentID id = builder.commit();
+			udmService.persist(id);
+			return id;
+		}
+	}
+
+	@Override
+	public Iterable<Map<String, Map<String, Object>>> findWhere(Document filter, String version, Section section) throws PersistenceException {
+		// Open a UDMService and don't close it yet. The result should be available later. The language framework should close this for us.
+		UDMService udmService = connect();
+		FindResult result = udmService.find(filter);
+		return new UDMFindResultIterator(result, udmService, conversionService, version, section);
+	}
+
+	@Override
 	public List<String> getVersions(final String documentID) {
 		return getVersions(documentID, Section.TARGET);
 	}
@@ -81,7 +108,7 @@ public class XillUDMServiceImpl implements XillUDMService {
 	public void remove(final String documentId, final String versionId, final Section section) throws PersistenceException {
 		try (UDMService udmService = connect()) {
 			DocumentID docId = udmService.get(documentId);
-			if (versionId.equals("all")) {
+			if ("all".equals(versionId)) {
 				udmService.delete(docId);
 			} else {
 				DocumentBuilder document = udmService.document(docId);
@@ -211,11 +238,9 @@ public class XillUDMServiceImpl implements XillUDMService {
 		// Check if the section is source or target, else throw an exception.
 		if (section == Section.TARGET) {
 			return builder.target();
-		} else if (section == Section.SOURCE) {
+		} else {
 			return builder.source();
 		}
-
-		throw new IllegalArgumentException("Unknown Section was provided: " + section);
 	}
 
 	/**
@@ -237,5 +262,4 @@ public class XillUDMServiceImpl implements XillUDMService {
 			throw new VersionNotFoundException("The document does not contain a version [" + version + "].");
 		}
 	}
-
 }
