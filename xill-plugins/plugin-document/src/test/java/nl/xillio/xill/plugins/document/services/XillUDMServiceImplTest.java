@@ -16,12 +16,8 @@ import static org.testng.Assert.assertSame;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import org.bson.Document;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
 
 import nl.xillio.udm.DocumentID;
 import nl.xillio.udm.builders.DocumentBuilder;
@@ -32,19 +28,12 @@ import nl.xillio.udm.exceptions.ModelException;
 import nl.xillio.udm.exceptions.PersistenceException;
 import nl.xillio.udm.services.UDMService;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
+import nl.xillio.xill.plugins.document.services.XillUDMService.Section;
 
+import org.bson.Document;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-import java.util.*;
-
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertSame;
-
-import nl.xillio.xill.plugins.document.services.XillUDMService.Section;
 
 
 /**
@@ -414,8 +403,8 @@ public class XillUDMServiceImplTest {
 	@DataProvider(name = "Sections")
 	public Object[][] generatSections() {
 		return new Object[][]{
-			{"source"},
-			{"target"}};
+				{Section.SOURCE},
+				{Section.TARGET}};
 	}
 	
 	/**
@@ -424,7 +413,7 @@ public class XillUDMServiceImplTest {
 	 * @param section
 	 */
 	@Test (dataProvider = "Sections")
-	public void testGetVersionsNormal(String section) {
+	public void testGetVersionsNormal(Section section) {
 		// Mock
 		String documentId = "docid";
 		DocumentID docId = mock(DocumentID.class);
@@ -447,7 +436,7 @@ public class XillUDMServiceImplTest {
 		verify(udmService).get(documentId);
 		verify(documentHistoryBuilder).versions();
 		
-		if ("source".equals(section)) {
+		if (section == Section.SOURCE) {
 			verify(documentBuilder).source();
 		} else {
 			verify(documentBuilder).target();
