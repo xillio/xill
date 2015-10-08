@@ -4,55 +4,51 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertSame;
 
-import java.util.HashMap;
-
+import org.mockito.Mockito;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import nl.xillio.udm.exceptions.DocumentNotFoundException;
+import nl.xillio.udm.exceptions.PersistenceException;
 import nl.xillio.xill.ConstructTest;
-import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
 import nl.xillio.xill.plugins.document.services.XillUDMService;
+import nl.xillio.xill.plugins.document.services.XillUDMService.Section;
 
-/**
- * Test the methods in {@link GetConstruct}
- *
- * @author Geert Konijnendijk
- */
-public class GetConstructTest extends ConstructTest {
+public class RemoveConstructTest extends ConstructTest {
 
 	/**
-	 * Test {@link GetConstruct#process(MetaExpression, MetaExpression, MetaExpression, XillUDMService)} under normal circumstances
+	 * Test {@link RemoveConstruct#process(MetaExpression, MetaExpression, MetaExpression, XillUDMService)} under normal circumstances
+	 * 
+	 * @throws PersistenceException
 	 */
 	@Test
-	public void testProcessNormal() {
+	public void testProcessNormal() throws PersistenceException {
 		// Mock
 		XillUDMService udmService = mock(XillUDMService.class);
 		MetaExpression docId = mockExpression(ATOMIC, false, 0, "docId");
 		MetaExpression verId = mockExpression(ATOMIC, false, 0, "verId");
 		MetaExpression sec = mockExpression(ATOMIC, false, 0, "source");
 
-		when(udmService.get("docId", "verId", XillUDMService.Section.SOURCE)).thenReturn(new HashMap<>());
+		Mockito.doNothing().when(udmService).remove(anyString(), anyString(), any());
 
 		// Run
 		// This is a real MetaExpression, parseObject can not be mocked
-		MetaExpression result = GetConstruct.process(docId, verId, sec, udmService);
+		MetaExpression result = RemoveConstruct.process(docId, verId, sec, udmService);
 
 		// Verify
-		verify(udmService).get("docId", "verId", XillUDMService.Section.SOURCE);
+		verify(udmService).remove("docId", "verId", Section.SOURCE);
 
 		// Assert
-		assertSame(result.getType(), ExpressionDataType.OBJECT);
+		assertSame(result, NULL);
 	}
 
 	/**
-	 * @return Exceptions that can be thrown by {@link XillUDMService#get(String, String, nl.xillio.xill.plugins.document.services.XillUDMService.Section)}
+	 * @return Exceptions that can be thrown by {@link XillUDMService#remove(String, String, String)}
 	 */
 	@DataProvider(name = "exceptions")
 	private Object[][] expectedExceptions() {
@@ -60,10 +56,10 @@ public class GetConstructTest extends ConstructTest {
 	}
 
 	/**
-	 * Test that {@link GetConstruct#process(MetaExpression, MetaExpression, MetaExpression, XillUDMService)} converts exceptions into {@link RobotRuntimeException RobotRuntimeExceptions}.
+	 * Test that {@link RemoveConstruct#process(MetaExpression, MetaExpression, MetaExpression, XillUDMService)} converts exceptions into {@link RobotRuntimeException RobotRuntimeExceptions}.
 	 *
 	 * @param exceptionClass
-	 *        Class of exception that can be thrown by {@link XillUDMService#get(String, String, nl.xillio.xill.plugins.document.services.XillUDMService.Section)}
+	 *        Class of exception that can be thrown by {@link XillUDMService#Remove(String, String, String)}
 	 */
 	@Test(dataProvider = "exceptions", expectedExceptions = RobotRuntimeException.class)
 	public void testProcessError(final Class<Exception> exceptionClass) {
@@ -73,10 +69,11 @@ public class GetConstructTest extends ConstructTest {
 		MetaExpression verId = mockExpression(ATOMIC, false, 0, "verId");
 		MetaExpression sec = mockExpression(ATOMIC, false, 0, "source");
 
-		when(udmService.get(anyString(), anyString(), any(XillUDMService.Section.class))).thenThrow(exceptionClass);
-
+		try {
+			Mockito.doThrow(exceptionClass).when(udmService).remove(anyString(), anyString(), any());
+		} catch (PersistenceException e) {}
 		// Run
-		GetConstruct.process(docId, verId, sec, udmService);
+		RemoveConstruct.process(docId, verId, sec, udmService);
 	}
 
 }

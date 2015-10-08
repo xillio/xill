@@ -1,7 +1,8 @@
 package nl.xillio.xill.plugins.document.services;
 
+import static nl.xillio.xill.plugins.document.util.DocumentTestUtil.createDecoratorMap;
 import static nl.xillio.xill.plugins.document.util.DocumentTestUtil.mockDecoratorBuilder;
-import static org.mockito.Matchers.anyString;
+import static nl.xillio.xill.plugins.document.util.DocumentTestUtil.mockReadableDecoratorBuilder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -11,15 +12,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import nl.xillio.udm.builders.DecoratorBuilder;
-import nl.xillio.udm.builders.DocumentRevisionBuilder;
-
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import nl.xillio.udm.builders.DecoratorBuilder;
+import nl.xillio.udm.builders.DocumentRevisionBuilder;
+
 /**
  * Tests the methods in the {@link ConversionServiceImpl}.
- * 
+ *
  * @author Geert Konijnendijk
  *
  */
@@ -105,29 +106,4 @@ public class ConversionServiceImplTest {
 		// Assert
 		assertEquals(result, object);
 	}
-
-	/**
-	 * Creates a map representing a collection of decorators
-	 * 
-	 * @return A collection of decorators represented as a map
-	 */
-	private Map<String, Map<String, Object>> createDecoratorMap() {
-		Map<String, Map<String, Object>> object = new HashMap<>();
-		Map<String, Object> decorator1 = new HashMap<>();
-		Map<String, Object> decorator2 = new HashMap<>();
-		decorator1.put("test1", 1);
-		decorator2.put("test2", 2);
-		decorator2.put("test3", 3);
-		object.put("d1", decorator1);
-		object.put("d2", decorator2);
-		return object;
-	}
-
-	private DecoratorBuilder mockReadableDecoratorBuilder(Map<String, Object> decorator) {
-		DecoratorBuilder builder = mockDecoratorBuilder();
-		when(builder.fields()).thenReturn(new ArrayList<>(decorator.keySet()));
-		when(builder.field(anyString())).thenAnswer(i -> decorator.get(i.getArgumentAt(0, String.class)));
-		return builder;
-	}
-
 }
