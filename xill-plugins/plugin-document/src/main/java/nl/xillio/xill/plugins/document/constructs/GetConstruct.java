@@ -2,8 +2,6 @@ package nl.xillio.xill.plugins.document.constructs;
 
 import java.util.Map;
 
-import com.google.inject.Inject;
-
 import nl.xillio.udm.exceptions.DocumentNotFoundException;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
@@ -14,7 +12,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
 import nl.xillio.xill.plugins.document.services.XillUDMService;
 
-import java.util.Map;
+import com.google.inject.Inject;
 
 /**
  * Construct for getting all decorators of a specific document version as one object.

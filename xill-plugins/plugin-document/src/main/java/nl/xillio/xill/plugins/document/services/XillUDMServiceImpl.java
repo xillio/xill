@@ -65,6 +65,23 @@ public class XillUDMServiceImpl implements XillUDMService {
 	}
 
 	@Override
+	public DocumentID create(String contentType, Map<String, Map<String, Object>> body, String versionId)
+			throws PersistenceException {
+		try (UDMService udmService = connect()) {
+			// Build the document.
+			DocumentBuilder builder = udmService.create();
+			builder.contentType().name(contentType);
+			conversionService.mapToUdm(body, builder.source().current().version(versionId));
+			conversionService.mapToUdm(body, builder.target().current().version(versionId));
+
+			// Save to the database and return the id.
+			DocumentID id = builder.commit();
+			udmService.persist(id);
+			return id;
+		}
+	}
+
+	@Override
 	public Iterable<Map<String, Map<String, Object>>> findWhere(Document filter, String version, Section section) throws PersistenceException {
 		// Open a UDMService and don't close it yet. The result should be available later. The language framework should close this for us.
 		UDMService udmService = connect();
@@ -245,5 +262,4 @@ public class XillUDMServiceImpl implements XillUDMService {
 			throw new VersionNotFoundException("The document does not contain a version [" + version + "].");
 		}
 	}
-
 }
