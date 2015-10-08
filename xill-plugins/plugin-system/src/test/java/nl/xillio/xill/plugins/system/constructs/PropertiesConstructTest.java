@@ -1,14 +1,17 @@
 package nl.xillio.xill.plugins.system.constructs;
 
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 import org.testng.annotations.Test;
 
+import nl.xillio.xill.ConstructTest;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.plugins.system.services.properties.SystemPropertiesService;
-import nl.xillio.xill.plugins.system.util.ConstructTest;
 
 /**
  * Test the {@link PropertiesConstruct}

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<function>
+  <description>
+    Stores the provided object into an existing table. 
+    This will update existing rows if found, or insert a new row otherwise. 
+    The strings listed in the keys argument will be used as primary key. 
+    Optionally you can set overwrite to false so that the it will not perform an update if an existing row matching the requirements is found.
+    If the database is left empty it will use the last made connection.
+  </description>
+  <examples>
+    <example>
+      <header>update the rows with the new values from the given object. using the 'name' column as primary key.
+      </header>
+      <code>
+	//we have a database with the table 'test' with columns: name | age 
+	//with the row: "Turing" | 55
+	
+	var entry = {"name":"Turing","age":90};
+	Database.storeObject("test",entry,["name"],true,database);
+	
+	//the row "Turing" | 55 has now changed to "Turing" | 90
+	
+      </code>
+    </example> 
+    <example>
+      <header>create new row with the values from the given object. using the 'name' column as primary key.
+      </header>
+      <code>
+	//we have a database with the table 'test' with columns: name | age , This table is empty.
+	
+	var entry = {"name":"Turing","age":90};
+	Database.storeObject("test",entry,["name"],true,database);
+	
+	//the table 'test' now has one row containing: "Turing" | 90
+	
+      </code>
+    </example> 
+  </examples>
+  <references>
+    <reference>connect</reference>
+    <reference>getObject</reference>
+  </references>
+  <tags>
+    storeObject,object
+  </tags>
+</function>

@@ -3,9 +3,6 @@ package nl.xillio.migrationtool.gui;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.logging.log4j.Logger;
-
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -22,11 +19,17 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.errors.XillParsingException;
 import nl.xillio.xill.api.events.RobotPausedAction;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * This class handles the activating and deactivating of robot control buttons
  * like play and pause according to the current state of the robot.
  */
 public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolicy {
+
+	private static final Logger LOG = LogManager.getLogger();
 
 	private final Button start;
 	private final Button stop;
@@ -49,7 +52,7 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 	 * @param cmiError
 	 */
 	public RobotControls(final RobotTab tab, final Button start, final Button pause, final Button stop,
-					final Button stepin, final Button stepover, final CheckMenuItem cmiError) {
+	    final Button stepin, final Button stepover, final CheckMenuItem cmiError) {
 		this.tab = tab;
 		this.start = start;
 		this.stop = stop;
@@ -163,13 +166,13 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 		tab.display(action.getRobotID(), action.getLineNumber());
 	}
 
-	private void stepIn() {
+	public void stepIn() {
 		onPause();
 
 		getDebugger().stepIn();
 	}
 
-	private void stepOver() {
+	public void stepOver() {
 		onPause();
 
 		getDebugger().stepOver();
@@ -224,7 +227,7 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 
 		// First we find the right tab
 		Optional<RobotTab> correctTab = tab.getGlobalController().getTabs().stream()
-			.filter(tb -> tb.getProcessor().getRobotID() == id).findAny();
+		  .filter(tb -> tb.getProcessor().getRobotID() == id).findAny();
 
 		if (correctTab.isPresent()) {
 			// This tab is already open
@@ -248,11 +251,11 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 				Platform.runLater(() -> {
 					if (success) {
 						// Highlight the tab
-						newTab.getEditorPane().getEditor().clearHighlight();
-						newTab.getEditorPane().getEditor().highlightLine(line, highlightType);
-						newTab.requestFocus();
-					}
-				});
+					newTab.getEditorPane().getEditor().clearHighlight();
+					newTab.getEditorPane().getEditor().highlightLine(line, highlightType);
+					newTab.requestFocus();
+				}
+			});
 			});
 		});
 
@@ -266,8 +269,10 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 
 		if (root instanceof RobotRuntimeException) {
 			log.error(root.getMessage());
+			LOG.error("Exception occurred in robot", e);
 		} else if (e instanceof RobotRuntimeException) {
 			log.error(e.getMessage());
+			LOG.error("Exception occurred in robot", e);
 		} else if (root == null) {
 			log.error("An error occurred in a robot: " + ExceptionUtils.getStackTrace(e), e);
 		} else {

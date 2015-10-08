@@ -1,226 +1,49 @@
-/*
-* Please do not change this file unless explicitly instructed to. The values you can change are found in gradle.properties
-*/
+/**
+ * This is the root build file for this repository
+ */
+//region Initialization
+buildscript {
+    apply from: file('gradle/xillio/buildscript.gradle'), to: buildscript
+}
 plugins {
     id "org.sonarqube" version "1.0"
     id "com.google.osdetector" version "1.3.1"
+    id "com.github.hierynomus.license" version "0.11.0"
 }
 
-apply plugin: 'jacoco'
+//region Version
+def buildNo = System.env.BUILD_NUMBER
 
-//Test vpn connection
-if (testConnection(mavenRepositoryHost)) {
-    logger.info "We have a connection to $mavenFriendlyServerName"
-
-    addRepositories(mavenRepositoryHost)
-} else if (testConnection(mavenRepositoryHostFallback)) {
-    logger.info "We have a connection to $mavenFriendlyServerName through an ssh tunnel"
-    addRepositories(mavenRepositoryHostFallback)
+if ("origin/master" == System.env.GIT_BRANCH) {
+    println "Building release on master branch"
+    project.version = version;
+} else if(buildNo == null) {
+    println "Building application locally"
+    project.version = version;
 } else {
-    logger.error "Unable to connect to $mavenFriendlyServerName\n" +
-            "Connect to office VPN or read the wiki to see how to connect to $mavenFriendlyServerName\n" +
-            "link: $mavenRepositoryConnectionGuide"
+    def result = version + "_" + buildNo;
+    println "This is not the master branch, version is " + result;
+    project.version = result;
 }
+//endregion
 
-checkVersion();
+// Set defaults for children
 allprojects {
-    apply from: new File(rootProject.projectDir, 'gradle/base.gradle')
+    apply from: rootProject.file('gradle/xillio/xillio.gradle')
+    apply from: rootProject.file('gradle/base.gradle')
 }
-
-/**
- * APPLICATION
- */
-evaluationDependsOnChildren()
-description = 'this root project contains the overview of the contenttools application'
-def mainClassName = "nl.xillio.contenttools.Application"
-def pluginsDir = new File(buildDir, '../plugins')
-def esConsoleDir = new File(buildDir, '../ESConsole')
-def helpFilesDir = new File(buildDir, '../helpfiles')
+//endregion
 
 dependencies {
     compile project(':api')
 }
 
-/**
- * PLUGINS
- */
-task assemblePlugins {
-    description 'Assemble and collect all plugins'
-    group 'build'
-    outputs.dir pluginsDir
-
-    // Iterate over all plugins
-    project(':xill-plugins').subprojects {
-        def plugin = it
-        assemblePlugins.inputs.dir plugin.libsDir
-        assemblePlugins.dependsOn plugin.assemble
-        doLast {
-            copy {
-                from plugin.libsDir
-                // We move every plugin to its own folder
-                into new File(pluginsDir, plugin.name)
-            }
-        }
-    }
+//region Deployment
+def osName = osdetector.classifier
+if ("linux" == osdetector.os) {
+    osName += "-" + getLinuxReleaseSuffix()
 }
-task assembleContenttools {
-    description 'Assamble and collect the IDE, Processor and plugins'
-    group 'build'
-    def ide = project(':ide')
-    def processor = project(':processor')
-
-    dependsOn ide.assemble
-    dependsOn processor.assemble
-    dependsOn assemblePlugins
-
-    inputs.dir pluginsDir
-    inputs.dir ide.libsDir
-    inputs.dir processor.libsDir
-
-    doLast {
-        copy {
-            from ide.configurations.runtime.files
-            from ide.libsDir
-            from processor.configurations.runtime.files
-            from processor.libsDir
-            into pluginsDir
-        }
-    }
-}
-build.dependsOn assembleContenttools
-
-/**
- * DEPLOYMENT
- */
-
-/* Download the JavaFX plugin if it doesn't exist */
-def javaFXPluginFile = new File(projectDir, "gradle/javafx.plugin")
-if (!javaFXPluginFile.exists()) {
-    new URL(javaFXPluginUrl).withInputStream{ i -> javaFXPluginFile.withOutputStream{ it << i }}
-}
-apply from: javaFXPluginFile.absolutePath
-
-assemble.dependsOn.remove(jfxDeploy)
-
-jfxDeploy {
-    dependsOn assembleContenttools
-    doFirst {
-        copy {
-            from pluginsDir
-            into new File(libsDir, "plugins")
-        }
-    }
-    inputFiles = files(
-            libsDir,
-            new File(projectDir, "CHANGELOG.md"),
-            new File(projectDir, "LICENSE"))
-
-    doLast {
-        distsDir.eachDir() {
-            dir -> deployZip.from dir
-        }
-    }
-}
-
-task deployZip(type: Zip, dependsOn: 'jfxDeploy') {
-    group 'build'
-    description "Deploy the application into a zip archive"
-
-    // Set the base name
-    baseName appID
-
-    // Set the classifier
-    def osName = osdetector.classifier
-    if("linux" == osdetector.os) {
-        osName += "-" + getLinuxReleaseSuffix()
-    }
-
-    classifier osName
-}
-
-task deploy(dependsOn: "deployZip") {
-    group 'build'
-    description "Deploy the application"
-
-    if("linux" == osdetector.os && System.env.BUILD_NUMBER != null) {
-        println "Running on linux on jenkins, deploy task also publishes to maven"
-        allprojects {
-            if (tasks.findByPath("publish") != null) {
-                rootProject.deploy.dependsOn publish
-            }
-        }
-    }
-}
-
-/**
- * JavaFX Configuration
- * Note that INNO_HOME env variable needs to be set to the INNO SETUP installation directory
- */
-javafx {
-    appID = appID
-    appName = friendlyName
-    copyright = copyrightInformation
-    description = description
-    licenseType = licenseType
-    mainClass mainClassName
-    vendor = company
-    menu = true
-    shortcut = true
-    embedLauncher = false
-    embedJNLP = false
-    // Allow the user to set the heap size
-    bundleArguments.userJvmOptions = ['-Xmx': '256m', '-Xms': '256m']
-}
-
-/**
- * CLEAN
- */
-task cleanRuntime(type: Delete) {
-    description 'Deletes all the folders generated and used by contenttools running in eclipse'
-
-    delete pluginsDir, esConsoleDir, helpFilesDir
-}
-
-//cssToBin.enabled = true
-
-clean.dependsOn cleanRuntime
-
-/**
- * VPN/SSH CONNECTION
- */
-
-def testConnection(host) {
-    try {
-        def socket = new Socket();
-        socket.connect(new InetSocketAddress(host, Integer.parseInt(mavenRespoitoryPort)), Integer.parseInt(mavenTimeout))
-        socket.close()
-
-        return true;
-    } catch (IOException ex) {
-        return false;
-    }
-}
-
-def addRepositories(host) {
-    allprojects {
-        repositories {
-            maven {
-                url "http://$host:$mavenRespoitoryPort/nexus/content/repositories/releases"
-                credentials {
-                    username mavenUsername
-                    password mavenPassword
-                }
-            }
-            maven {
-                url "http://$host:$mavenRespoitoryPort/nexus/content/repositories/thirdparty"
-                credentials {
-                    username mavenUsername
-                    password mavenPassword
-                }
-            }
-        }
-    }
-}
+distributeZip.classifier osName
 
 def getLinuxReleaseSuffix() {
     if (osdetector.release.isLike('debian')) {
@@ -231,21 +54,29 @@ def getLinuxReleaseSuffix() {
         return 'other'
     }
 }
-
-def checkVersion() {
-    def buildNo = System.env.BUILD_NUMBER
-
-    if ("origin/master" == System.env.GIT_BRANCH) {
-        println "Building release on master branch"
-        project.version = version;
-    } else if(buildNo == null) {
-        println "Building application locally"
-        project.version = version;
-    } else {
-        def result = version + "_" + buildNo;
-        println "This is not the master branch, version is " + result;
-        project.version = result;
-    }
+//endregion
+//region Plugins
+task copyToPluginsDir(type: Copy) {
+    dependsOn project(':ide').jar
+    from project(':ide').jar
+    dependsOn project(':processor').jar
+    from project(':processor').jar
+    from configurations.runtime
+    from project(':ide').configurations.runtime
+    from project(':processor').configurations.runtime
+    into new File(pluginsDir, 'core')
 }
 
-run.dependsOn(assemblePlugins)
+task assembleContentTools() {
+    group 'build'
+    description 'Build and prepare all plugins for runtime'
+
+    dependsOn copyToPluginsDir
+}
+
+clean {
+    delete pluginsDir, file('ESConsole'), file('helpfiles')
+}
+//endregion
+
+apply from: file('gradle/javafx.gradle')

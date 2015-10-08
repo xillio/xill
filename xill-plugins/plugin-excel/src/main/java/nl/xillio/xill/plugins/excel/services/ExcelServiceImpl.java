@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.excel.services;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
 import nl.xillio.xill.plugins.excel.datastructures.XillSheet;
 import nl.xillio.xill.plugins.excel.datastructures.XillWorkbook;
 import nl.xillio.xill.plugins.excel.datastructures.XillWorkbookFactory;
@@ -41,9 +42,6 @@ public class ExcelServiceImpl implements ExcelService {
 
 	@Override
 	public XillWorkbook createWorkbook(File file) throws IOException {
-		if (file.exists())
-			throw new FileAlreadyExistsException("File already exists: no new workbook has been created");
-
 		return factory.createWorkbook(file);
 	}
 
@@ -101,10 +99,9 @@ public class ExcelServiceImpl implements ExcelService {
 
 	@Override
 	public XillWorkbook save(XillWorkbook workbook, File file) throws IOException {
-		if (file.exists())
-			throw new IllegalArgumentException("Cannot write to this file: already exists");
 		XillWorkbook newBook = workbook.createCopy(file);
-		newBook.save();
+	
+		//newBook.save(file);
 		return newBook;
 	}
 

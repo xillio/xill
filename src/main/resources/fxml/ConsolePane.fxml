@@ -114,7 +114,7 @@
 					<children>
 						<TableView fx:id="tblConsoleOut" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 							<columns>
-								<TableColumn fx:id="colLogTime" editable="false" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" resizable="false" text="Time" />
+								<TableColumn fx:id="colLogTime" editable="false" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" text="Time" />
 								<TableColumn fx:id="colLogType" editable="false" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" resizable="false" text="Type" />
 								<TableColumn fx:id="colLogMessage" editable="false" minWidth="100.0" prefWidth="500.0" text="Message" />
 							</columns>

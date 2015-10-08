@@ -1,31 +1,37 @@
 package nl.xillio.migrationtool;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
-import nl.xillio.xill.api.components.RobotID;
-import nl.xillio.xill.api.construct.Construct;
-import nl.xillio.xill.api.construct.ConstructContext;
-import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.docgen.*;
-import nl.xillio.xill.docgen.data.Parameter;
-import nl.xillio.xill.docgen.exceptions.ParsingException;
-import nl.xillio.xill.docgen.impl.ConstructDocumentationEntity;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.google.inject.Module;
 
 import nl.xillio.events.Event;
 import nl.xillio.events.EventHost;
 import nl.xillio.plugins.CircularReferenceException;
 import nl.xillio.plugins.PluginLoader;
 import nl.xillio.plugins.XillPlugin;
+import nl.xillio.xill.api.components.RobotID;
+import nl.xillio.xill.api.construct.Construct;
+import nl.xillio.xill.api.construct.ConstructContext;
+import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.docgen.DocGen;
+import nl.xillio.xill.docgen.DocumentationEntity;
+import nl.xillio.xill.docgen.DocumentationGenerator;
+import nl.xillio.xill.docgen.DocumentationParser;
+import nl.xillio.xill.docgen.DocumentationSearcher;
+import nl.xillio.xill.docgen.data.Parameter;
+import nl.xillio.xill.docgen.exceptions.ParsingException;
+import nl.xillio.xill.docgen.impl.ConstructDocumentationEntity;
 import nl.xillio.xill.services.inject.InjectorUtils;
 import nl.xillio.xill.services.inject.PluginInjectorModule;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.google.inject.Module;
 
 /**
  * This {@link Thread} is responsible for loading the plugins an and initializing the language.
@@ -60,6 +66,9 @@ public class XillInitializer extends Thread {
 	public void run() {
 		parser = docGen.getParser();
 
+		LOGGER.info("Cleaning up old files...");
+		cleanUpTemporaryFiles();
+
 		LOGGER.info("Loading Xill language plugins...");
 
 		LOGGER.debug("Initializing loader...");
@@ -87,6 +96,14 @@ public class XillInitializer extends Thread {
 			onLoadComplete.invoke(new InitializationResult(docUrl, getSearcher()));
 		} catch (MalformedURLException e) {
 			LOGGER.error("Failed to call onLoadComplete event!", e);
+		}
+	}
+
+	private void cleanUpTemporaryFiles() {
+		for (File file : FileUtils.getTempDirectory().listFiles()) {
+			if(file.getName().startsWith("+JXF") || file.getName().startsWith("sqlite") || file.getName().startsWith("xill_editor")) {
+				file.delete();
+			}
 		}
 	}
 

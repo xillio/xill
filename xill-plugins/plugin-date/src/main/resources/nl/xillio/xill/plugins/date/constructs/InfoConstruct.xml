@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Returns detailed information about provided date.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Showing information about current datetime.</header>
+            <code>
+use System;
+use Date;
+var date = Date.now();
+System.print(Date.info(date));
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>now</reference>
+    </references>
+	    <tags>
+        date, time, datetime, info, information, detail
+    </tags>
+</function>

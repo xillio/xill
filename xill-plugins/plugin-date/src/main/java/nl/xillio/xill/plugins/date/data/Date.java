@@ -1,6 +1,7 @@
 package nl.xillio.xill.plugins.date.data;
 
-import nl.xillio.xill.api.components.MetadataExpression;
+
+import nl.xillio.xill.api.data.MetadataExpression;
 
 import java.time.ZonedDateTime;
 
@@ -31,7 +32,8 @@ public class Date implements MetadataExpression {
 		return date;
 	}
 
-	@Override public String toString() {
+	@Override
+	public String toString() {
 		return getZoned().toString();
 	}
 }

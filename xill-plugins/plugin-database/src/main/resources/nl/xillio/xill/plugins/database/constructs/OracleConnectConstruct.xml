@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<function>
+  <description>
+    Connect to a Oracle database. Returns a connection object.
+  </description>
+  <examples>
+    <example>
+      <header>Connect to the Oracle database "testdb" with user "user" and password "pass".
+      All possible options can be found here: http://docs.oracle.com/cd/E13222_01/wls/docs92/jdbc_drivers/oracle.html
+      </header>
+      <code>
+	
+	var connection = Database.oracleConnect("localhost",3306,"testdb",false,"user","pass");
+	
+      </code>
+    </example> 
+  </examples>
+  <references>
+    <reference>connect</reference>
+    <reference>mysqlConnect</reference>
+    <reference>mssqlConnect</reference>
+    <reference>sqliteConnect</reference>
+  </references>
+  <tags>
+   Oracle, connect
+  </tags>
+</function>
