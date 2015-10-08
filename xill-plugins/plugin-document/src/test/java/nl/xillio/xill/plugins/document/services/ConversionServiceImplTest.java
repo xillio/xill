@@ -12,15 +12,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import nl.xillio.udm.builders.DecoratorBuilder;
-import nl.xillio.udm.builders.DocumentRevisionBuilder;
-
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import nl.xillio.udm.builders.DecoratorBuilder;
+import nl.xillio.udm.builders.DocumentRevisionBuilder;
+
 /**
  * Tests the methods in the {@link ConversionServiceImpl}.
- * 
+ *
  * @author Geert Konijnendijk
  *
  */
