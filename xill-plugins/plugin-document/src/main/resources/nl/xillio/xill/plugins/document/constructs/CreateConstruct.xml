@@ -3,6 +3,7 @@
 	<description>
 		Creates a document and inserts it into the database.
 		The body of the document should be an object containing sub-objects for each decorator.
+		The versionId is a string representing the initial version.
 	</description>
 	<examples>
 		<example title="Usage">
@@ -30,8 +31,9 @@
 						"email" : "daniel.wartrous@office.com"
 					}
 				}
+				var version = "version1";
 				
-				var id = Document.create(type, body);
+				var id = Document.create(type, body, version);
 			</code>
 		</example>
 	</examples>

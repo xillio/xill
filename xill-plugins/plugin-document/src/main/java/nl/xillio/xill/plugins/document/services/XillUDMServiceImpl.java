@@ -63,14 +63,14 @@ public class XillUDMServiceImpl implements XillUDMService {
 	}
 
 	@Override
-	public DocumentID create(String contentType, Map<String, Map<String, Object>> body)
+	public DocumentID create(String contentType, Map<String, Map<String, Object>> body, String versionId)
 			throws PersistenceException {
 		try (UDMService udmService = connect()) {
 			// Build the document.
 			DocumentBuilder builder = udmService.create();
 			builder.contentType().name(contentType);
-			conversionService.mapToUdm(body, builder.source().current().version("current"));
-			conversionService.mapToUdm(body, builder.target().current().version("current"));
+			conversionService.mapToUdm(body, builder.source().current().version(versionId));
+			conversionService.mapToUdm(body, builder.target().current().version(versionId));
 
 			// Save to the database and return the id.
 			DocumentID id = builder.commit();

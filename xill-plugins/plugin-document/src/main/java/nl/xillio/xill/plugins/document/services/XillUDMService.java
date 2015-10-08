@@ -117,12 +117,16 @@ public interface XillUDMService extends XillService {
 	/**
 	 * Insert a document into the database.
 	 * 
-	 * @param contentType The content type of the document.
-	 * @param body The body of the document.
+	 * @param contentType
+	 *        The content type of the document.
+	 * @param body
+	 *        The body of the document.
+	 * @param versionId
+	 *        The initial version ID
 	 * @return The ID of the inserted document.
-	 * @throws PersistenceException 
+	 * @throws PersistenceException
 	 */
-	public DocumentID create(String contentType, Map<String, Map<String, Object>> body) throws PersistenceException;
+	public DocumentID create(String contentType, Map<String, Map<String, Object>> body, String versionId) throws PersistenceException;
 
 	/**
 	 * Remove a document or a specific version of a document.
