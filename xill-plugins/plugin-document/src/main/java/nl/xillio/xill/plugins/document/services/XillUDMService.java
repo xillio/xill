@@ -65,7 +65,6 @@ public interface XillUDMService extends XillService {
 
 	/**
 	 * Get all decorators of a specific document version.
-	 *
 	 * @param documentId
 	 *        ID of the document
 	 * @param versionId
@@ -127,4 +126,13 @@ public interface XillUDMService extends XillService {
 	 */
 	public void remove(String documentId, String versionId, Section section) throws PersistenceException;
 
+	/**
+	 * Get all documents matching a certain filter.
+	 *
+	 * @param filter  the filter
+	 * @param version the version of the document to grab
+	 * @param section the section to check for the version
+	 * @return the requested revision
+	 */
+	Iterable<Map<String, Map<String, Object>>> findWhere(Document filter, String version, Section section) throws PersistenceException;
 }
