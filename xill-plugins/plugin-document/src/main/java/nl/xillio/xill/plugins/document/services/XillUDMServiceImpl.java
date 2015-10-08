@@ -71,8 +71,8 @@ public class XillUDMServiceImpl implements XillUDMService {
 			// Build the document.
 			DocumentBuilder builder = udmService.create();
 			builder.contentType().name(contentType);
-			conversionService.mapToUdm(body, builder.source().current());
-			conversionService.mapToUdm(body, builder.target().current());
+			conversionService.mapToUdm(body, builder.source().current().version("current"));
+			conversionService.mapToUdm(body, builder.target().current().version("current"));
 			
 			// Save to the database and return the id.
 			DocumentID id = builder.commit();
