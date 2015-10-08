@@ -56,6 +56,9 @@ public class XillUDMServiceImpl implements XillUDMService {
 		try (UDMService udmService = connect()) {
 			DocumentID docId = udmService.get(documentId);
 			DocumentRevisionBuilder document = getVersion(docId, versionId, section, udmService);
+			if (document == null) {
+				throw new VersionNotFoundException("The document does not contain a version [" + versionId + "].");
+			}
 			Map<String, Map<String, Object>> result = conversionService.udmToMap(document);
 
 			// Clear the cache.
@@ -111,8 +114,10 @@ public class XillUDMServiceImpl implements XillUDMService {
 			if ("all".equals(versionId)) {
 				udmService.delete(docId);
 			} else {
-				DocumentBuilder document = udmService.document(docId);
-				DocumentRevisionBuilder revision = getVersion(getSourceOrTarget(document, section), versionId);
+				DocumentRevisionBuilder revision = getVersion(docId, versionId, section, udmService);
+				if (revision == null) {
+					throw new VersionNotFoundException("The document does not contain a version [" + versionId + "].");
+				}
 				revision.removeRevision(versionId);
 				udmService.persist(docId);
 			}
@@ -137,20 +142,50 @@ public class XillUDMServiceImpl implements XillUDMService {
 	}
 
 	@Override
+	public long updateWhere(Document filter, Map<String, Map<String, Object>> body) throws PersistenceException {
+		return updateWhere(filter, body, "current", Section.TARGET);
+	}
+
+	@Override
+	public long updateWhere(Document filter, Map<String, Map<String, Object>> body, String versionId, Section section) throws PersistenceException {
+		try (UDMService udmService = connect()) {
+			// Find all applicable documents
+			FindResult result = udmService.find(filter);
+			// Update all documents and count them
+			long count = 0;
+			for (DocumentID id : result) {
+				if (updateVersion(body, id, versionId, section, udmService))
+					count++;
+			}
+			return count;
+		}
+	}
+
+	@Override
 	public void update(final String documentId, final Map<String, Map<String, Object>> body, final String versionId, final Section section) throws PersistenceException {
 		try (UDMService udmService = connect()) {
 			DocumentID docId = udmService.get(documentId);
-			DocumentRevisionBuilder document = getVersion(docId, versionId, section, udmService);
-
-			// Verify that all decorator and fields are the same, else some decorators or fields might not be updated
-			checkDecorators(body, document);
-
-			// Input into the builder
-			conversionService.mapToUdm(body, document);
-
-			// Persist and clear from cache
-			udmService.persist(docId);
+			if (!updateVersion(body, docId, versionId, section, udmService)) {
+				throw new VersionNotFoundException("The document does not contain a version [" + versionId + "].");
+			}
 		}
+	}
+
+	private boolean updateVersion(final Map<String, Map<String, Object>> body, DocumentID docId, final String versionId, final Section section, UDMService udmService) throws PersistenceException {
+		DocumentRevisionBuilder document = getVersion(docId, versionId, section, udmService);
+		if (document == null)
+			return false;
+
+		// Verify that all decorator and fields are the same, else some decorators or fields might not be updated
+		checkDecorators(body, document);
+
+		// Input into the builder
+		conversionService.mapToUdm(body, document);
+
+		// Persist and clear from cache
+		udmService.persist(docId);
+
+		return true;
 	}
 
 	/**
@@ -219,7 +254,7 @@ public class XillUDMServiceImpl implements XillUDMService {
 	 *        Section to retrieve
 	 * @param udmService
 	 *        Service to use
-	 * @return A {@link DocumentRevisionBuilder} for the given parameters
+	 * @return A {@link DocumentRevisionBuilder} for the given parameters, or null if no such version exists
 	 */
 	private DocumentRevisionBuilder getVersion(final DocumentID documentId, final String versionId, final Section section, final UDMService udmService) {
 		return getVersion(getSourceOrTarget(udmService.document(documentId), section), versionId);
@@ -249,17 +284,17 @@ public class XillUDMServiceImpl implements XillUDMService {
 	 * @param builder
 	 *        The builder to get the revision from.
 	 * @param version
-	 *        The version to het from the builder.
+	 *        The version to get from the builder.
 	 * @return A {@link DocumentRevisionBuilder} that is the correct version of the document.
 	 */
 	private DocumentRevisionBuilder getVersion(final DocumentHistoryBuilder builder, final String version) {
 		// Check if the version is current or the version exists, else throw an exception.
-		if ("current".equalsIgnoreCase(version)) {
+		if ("current".equalsIgnoreCase(version) || builder.current().version().equals(version)) {
 			return builder.current();
 		} else if (builder.versions().contains(version)) {
 			return builder.revision(version);
 		} else {
-			throw new VersionNotFoundException("The document does not contain a version [" + version + "].");
+			return null;
 		}
 	}
 }

@@ -87,7 +87,7 @@ public class XillUDMServiceImplTest {
 		// Mock
 		DocumentID docId = mock(DocumentID.class);
 
-		DocumentRevisionBuilder documentRevisionBuilder = mock(DocumentRevisionBuilder.class);
+		DocumentRevisionBuilder documentRevisionBuilder = mockDocumentRevisionBuilder();
 		DocumentHistoryBuilder documentHistoryBuilder = mockDocumentHistoryBuilder(versionId, documentRevisionBuilder);
 		DocumentBuilder documentBuilder = mockDocumentBuilder(documentHistoryBuilder);
 
@@ -125,6 +125,7 @@ public class XillUDMServiceImplTest {
 
 		Map<String, Map<String, Object>> body = createDecoratorMap();
 		DocumentRevisionBuilder documentRevisionBuilder = mockReadableDocumentRevisionBuilder(body);
+		when(documentRevisionBuilder.version()).thenReturn(VERSION_ID);
 
 		DocumentHistoryBuilder documentHistoryBuilder = mockDocumentHistoryBuilder(versionId, documentRevisionBuilder);
 		DocumentBuilder documentBuilder = mockDocumentBuilder(documentHistoryBuilder);
@@ -196,7 +197,7 @@ public class XillUDMServiceImplTest {
 		String documentId = "docid";
 		DocumentID docId = mock(DocumentID.class);
 
-		DocumentRevisionBuilder documentRevisionBuilder = mock(DocumentRevisionBuilder.class);
+		DocumentRevisionBuilder documentRevisionBuilder = mockDocumentRevisionBuilder();
 		DocumentHistoryBuilder documentHistoryBuilder = mockDocumentHistoryBuilder(versionId, documentRevisionBuilder);
 		DocumentHistoryBuilder documentHistoryBuilder2 = mockDocumentHistoryBuilder(versionId, documentRevisionBuilder);
 		DocumentBuilder documentBuilder = mockDocumentBuilder(documentHistoryBuilder);
@@ -292,13 +293,18 @@ public class XillUDMServiceImplTest {
 		String versionId = "nonExistent";
 		DocumentID docId = mock(DocumentID.class);
 
+		DocumentRevisionBuilder revisionBuilder = mock(DocumentRevisionBuilder.class);
+		when(revisionBuilder.version()).thenReturn(VERSION_ID);
+
 		DocumentHistoryBuilder documentHistoryBuilder = mock(DocumentHistoryBuilder.class);
 		when(documentHistoryBuilder.versions()).thenReturn(new ArrayList<>());
+		when(documentHistoryBuilder.current()).thenReturn(revisionBuilder);
 
 		DocumentBuilder documentBuilder = mockDocumentBuilder(documentHistoryBuilder);
 
 		when(udmService.get(DOCUMENT_ID)).thenReturn(docId);
 		when(udmService.document(docId)).thenReturn(documentBuilder);
+
 		return versionId;
 	}
 
@@ -383,16 +389,7 @@ public class XillUDMServiceImplTest {
 	@Test(expectedExceptions = VersionNotFoundException.class)
 	public void testRemoveNonExistentRevision() throws PersistenceException {
 		// Mock
-		String versionId = "nonExistent";
-		DocumentID docId = mock(DocumentID.class);
-
-		DocumentHistoryBuilder documentHistoryBuilder = mock(DocumentHistoryBuilder.class);
-		when(documentHistoryBuilder.versions()).thenReturn(new ArrayList<>());
-
-		DocumentBuilder documentBuilder = mockDocumentBuilder(documentHistoryBuilder);
-
-		when(udmService.get(DOCUMENT_ID)).thenReturn(docId);
-		when(udmService.document(docId)).thenReturn(documentBuilder);
+		String versionId = mockNonExistentRevision();
 
 		// Run
 		xillUdmService.remove(DOCUMENT_ID, versionId, Section.SOURCE);
@@ -444,6 +441,17 @@ public class XillUDMServiceImplTest {
 
 		// Assert
 		assertEquals(actual, result);
+	}
+
+	/**
+	 * Mock a {@link DocumentRevisionBuilder} with {@link DocumentRevisionBuilder#version()}.
+	 * 
+	 * @return A mocked {@link DocumentRevisionBuilder}
+	 */
+	private DocumentRevisionBuilder mockDocumentRevisionBuilder() {
+		DocumentRevisionBuilder documentRevisionBuilder = mock(DocumentRevisionBuilder.class);
+		when(documentRevisionBuilder.version()).thenReturn(VERSION_ID);
+		return documentRevisionBuilder;
 	}
 
 	/**

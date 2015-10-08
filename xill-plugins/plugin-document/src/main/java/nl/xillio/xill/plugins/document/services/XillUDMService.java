@@ -16,6 +16,10 @@ import org.bson.Document;
  * @author Luca Scalzotto
  */
 public interface XillUDMService extends XillService {
+	/**
+	 * Enum with entries for the source and target sections of a document.
+	 *
+	 */
 	enum Section {
 		TARGET, SOURCE;
 
@@ -80,7 +84,9 @@ public interface XillUDMService extends XillService {
 	 * Remove all documents that match a certain filter.
 	 *
 	 * @param filter
-	 * @return
+	 * @return the number of edited entries
+	 * @throws PersistenceException
+	 *         if the query fails
 	 */
 	long removeWhere(Document filter) throws PersistenceException;
 
@@ -100,6 +106,32 @@ public interface XillUDMService extends XillService {
 	long removeWhere(Document filter, String version, Section section) throws PersistenceException;
 
 	/**
+	 * Update all versions with version id in section of entry that matches a certain filter.
+	 * 
+	 * @param filter
+	 *        The filter that determines which documents to update
+	 * @param body
+	 *        The body to update the document version with
+	 * @return The number of updated entries
+	 */
+	long updateWhere(Document filter, Map<String, Map<String, Object>> body) throws PersistenceException;
+
+	/**
+	 * Update all versions with version id in section of entry that matches a certain filter.
+	 * 
+	 * @param filter
+	 *        The filter that determines which documents to update
+	 * @param body
+	 *        The body to update the document version with
+	 * @param versionId
+	 *        The version to update
+	 * @param section
+	 *        The section to update
+	 * @return The number of updated entries
+	 */
+	long updateWhere(Document filter, Map<String, Map<String, Object>> body, String versionId, Section section) throws PersistenceException;
+
+	/**
 	 * Update a specific version of a document by setting it to the given body.
 	 *
 	 * @param documentId
@@ -110,6 +142,8 @@ public interface XillUDMService extends XillService {
 	 *        The ID of the version to update
 	 * @param section
 	 *        The name of the section to update
+	 * @throws PersistenceException
+	 *         if the update fails
 	 */
 	public void update(String documentId, Map<String, Map<String, Object>> body, String versionId, Section section) throws PersistenceException;
 	
