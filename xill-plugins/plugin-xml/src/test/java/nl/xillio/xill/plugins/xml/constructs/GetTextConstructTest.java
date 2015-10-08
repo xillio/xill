@@ -29,7 +29,7 @@ public class GetTextConstructTest {
 		when(node.getTextContent()).thenReturn(text);
 
 		XmlNode xmlNode = mock(XmlNode.class);
-		when(xmlNode.getNode()).thenReturn(node);
+		when(xmlNode.getText()).thenReturn(text);
 
 		MetaExpression xmlNodeVar = mock(MetaExpression.class);
 		when(xmlNodeVar.getMeta(XmlNode.class)).thenReturn(xmlNode);
