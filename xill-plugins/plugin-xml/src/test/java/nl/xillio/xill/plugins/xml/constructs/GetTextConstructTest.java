@@ -38,7 +38,7 @@ public class GetTextConstructTest {
 		MetaExpression result = GetTextConstruct.process(xmlNodeVar);
 
 		// Verify
-		verify(xmlNode).getNode();
+		verify(xmlNode).getText();
 		verify(node).getTextContent();
 
 		// Assert
