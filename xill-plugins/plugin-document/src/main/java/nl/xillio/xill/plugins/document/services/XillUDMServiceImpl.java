@@ -9,9 +9,7 @@ import nl.xillio.udm.UDM;
 import nl.xillio.udm.builders.DocumentBuilder;
 import nl.xillio.udm.builders.DocumentHistoryBuilder;
 import nl.xillio.udm.builders.DocumentRevisionBuilder;
-
 import nl.xillio.udm.exceptions.ModelException;
-
 import nl.xillio.udm.exceptions.PersistenceException;
 import nl.xillio.udm.services.UDMService;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
@@ -73,11 +71,12 @@ public class XillUDMServiceImpl implements XillUDMService {
 			builder.contentType().name(contentType);
 			conversionService.mapToUdm(body, builder.source().current().version("current"));
 			conversionService.mapToUdm(body, builder.target().current().version("current"));
-			
+
 			// Save to the database and return the id.
 			DocumentID id = builder.commit();
 			udmService.persist(id);
 			return id;
+		}
 	}
 
 	public List<String> getVersions(final String documentID) {

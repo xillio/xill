@@ -3,12 +3,7 @@ package nl.xillio.xill.plugins.document.services;
 import java.util.List;
 import java.util.Map;
 
-<<<<<<< HEAD
 import nl.xillio.udm.DocumentID;
-import org.bson.Document;
-
-=======
->>>>>>> origin/develop
 import nl.xillio.udm.exceptions.PersistenceException;
 import nl.xillio.xill.services.XillService;
 
