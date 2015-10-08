@@ -39,7 +39,6 @@ public class GetTextConstructTest {
 
 		// Verify
 		verify(xmlNode).getText();
-		verify(node).getTextContent();
 
 		// Assert
 		assertSame(result.getStringValue(), text);
