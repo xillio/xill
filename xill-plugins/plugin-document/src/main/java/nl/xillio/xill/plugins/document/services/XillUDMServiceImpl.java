@@ -55,10 +55,7 @@ public class XillUDMServiceImpl implements XillUDMService {
 		// Get the document and convert it to a map.
 		try (UDMService udmService = connect()) {
 			DocumentID docId = udmService.get(documentId);
-			DocumentRevisionBuilder document = getVersion(docId, versionId, section, udmService);
-			if (document == null) {
-				throw new VersionNotFoundException("The document does not contain a version [" + versionId + "].");
-			}
+			DocumentRevisionBuilder document = getVersionSafe(docId, versionId, section, udmService);
 			Map<String, Map<String, Object>> result = conversionService.udmToMap(document);
 
 			// Clear the cache.
@@ -114,10 +111,7 @@ public class XillUDMServiceImpl implements XillUDMService {
 			if ("all".equals(versionId)) {
 				udmService.delete(docId);
 			} else {
-				DocumentRevisionBuilder revision = getVersion(docId, versionId, section, udmService);
-				if (revision == null) {
-					throw new VersionNotFoundException("The document does not contain a version [" + versionId + "].");
-				}
+				DocumentRevisionBuilder revision = getVersionSafe(docId, versionId, section, udmService);
 				revision.removeRevision(versionId);
 				udmService.persist(docId);
 			}
@@ -258,6 +252,29 @@ public class XillUDMServiceImpl implements XillUDMService {
 	 */
 	private DocumentRevisionBuilder getVersion(final DocumentID documentId, final String versionId, final Section section, final UDMService udmService) {
 		return getVersion(getSourceOrTarget(udmService.document(documentId), section), versionId);
+	}
+
+	/**
+	 * Retrieve a {@link DocumentRevisionBuilder} from the UDM. Throws an exception when the version was not found
+	 *
+	 * @param documentId
+	 *        ID of the document
+	 * @param versionId
+	 *        Version to retrieve
+	 * @param section
+	 *        Section to retrieve
+	 * @param udmService
+	 *        Service to use
+	 * @return A {@link DocumentRevisionBuilder} for the given parameters, or null if no such version exists
+	 * @throws VersionNotFoundException
+	 *         When no such version exists
+	 */
+	private DocumentRevisionBuilder getVersionSafe(final DocumentID documentId, final String versionId, final Section section, final UDMService udmService) {
+		DocumentRevisionBuilder builder = getVersion(getSourceOrTarget(udmService.document(documentId), section), versionId);
+		if (builder == null) {
+			throw new VersionNotFoundException("The document does not contain a version [" + versionId + "].");
+		}
+		return builder;
 	}
 
 	/**
