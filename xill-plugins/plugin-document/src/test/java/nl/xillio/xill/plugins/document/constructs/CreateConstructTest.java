@@ -11,6 +11,7 @@ import java.util.LinkedHashMap;
 
 import nl.xillio.udm.DocumentID;
 import nl.xillio.udm.exceptions.PersistenceException;
+import nl.xillio.udm.services.UDMService;
 import nl.xillio.xill.ConstructTest;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
@@ -58,16 +59,17 @@ public class CreateConstructTest extends ConstructTest {
 		XillUDMService udmService = mock(XillUDMService.class);
 		MetaExpression contentType = mockExpression(ATOMIC, false, 0, "file");
 		MetaExpression body = createBodyObject();
+		MetaExpression versionId = mockExpression(ATOMIC, false, 0, "version1");
 		DocumentID returnId = mock(DocumentID.class);
 		
-		when(udmService.create(anyString(), anyObject())).thenReturn(returnId);
+		when(udmService.create(anyString(), anyObject(), anyString())).thenReturn(returnId);
 
 		// Run
 		// This is a real MetaExpression, parseObject can not be mocked
-		MetaExpression result = CreateConstruct.process(contentType, body, udmService);
+		MetaExpression result = CreateConstruct.process(contentType, body, versionId, udmService);
 		
 		// Verify
-		verify(udmService).create(anyString(), anyObject());
+		verify(udmService).create(anyString(), anyObject(), anyString());
 
 		// Assert
 		assertSame(result.getType(), ExpressionDataType.ATOMIC);
@@ -93,12 +95,13 @@ public class CreateConstructTest extends ConstructTest {
 		// Mock
 		XillUDMService udmService = mock(XillUDMService.class);
 		MetaExpression contentType = mockExpression(ATOMIC, false, 0, "file");
+		MetaExpression versionId = mockExpression(ATOMIC, false, 0, "version1");
 		MetaExpression body = createBodyObject();
 		
-		when(udmService.create(anyString(), anyObject())).thenThrow(exceptionClass);
+		when(udmService.create(anyString(), anyObject(), anyString())).thenThrow(exceptionClass);
 
 		// Run
-		CreateConstruct.process(contentType, body, udmService);
+		CreateConstruct.process(contentType, body, versionId, udmService);
 	}
 
 	@Test(expectedExceptions = RobotRuntimeException.class)
@@ -106,9 +109,10 @@ public class CreateConstructTest extends ConstructTest {
 		// Mock
 		XillUDMService udmService = mock(XillUDMService.class);
 		MetaExpression contentType = mockExpression(ATOMIC, false, 0, "file");
+		MetaExpression versionId = mockExpression(ATOMIC, false, 0, "version1");
 		MetaExpression body = createWrongBodyObject();
 		
 		// Run
-		CreateConstruct.process(contentType, body, udmService);
+		CreateConstruct.process(contentType, body, versionId, udmService);
 	}
 }
