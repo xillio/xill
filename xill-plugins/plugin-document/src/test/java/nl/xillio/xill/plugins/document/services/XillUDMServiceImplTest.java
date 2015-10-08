@@ -16,12 +16,8 @@ import static org.testng.Assert.assertSame;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import org.bson.Document;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
 
 import nl.xillio.udm.DocumentID;
 import nl.xillio.udm.builders.DocumentBuilder;
@@ -33,6 +29,11 @@ import nl.xillio.udm.exceptions.PersistenceException;
 import nl.xillio.udm.services.UDMService;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
 import nl.xillio.xill.plugins.document.services.XillUDMService.Section;
+
+import org.bson.Document;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 /**
  * Test the methods in the {@link XillUDMServiceImpl}
@@ -362,7 +363,7 @@ public class XillUDMServiceImplTest {
 
 	/**
 	 * Test that {@link XillUDMServiceImpl#get(String, String, String)} does not eat exceptions of type {@link DocumentNotFoundException}.
-	 * 
+	 *
 	 * @throws PersistenceException
 	 */
 	@Test(expectedExceptions = DocumentNotFoundException.class)
@@ -376,7 +377,7 @@ public class XillUDMServiceImplTest {
 
 	/**
 	 * Test that {@link XillUDMServiceImpl#remove(String, String, String)} throws a {@link VersionNotFoundException} when a non-existent version is requested.
-	 * 
+	 *
 	 * @throws PersistenceException
 	 */
 	@Test(expectedExceptions = VersionNotFoundException.class)
@@ -398,6 +399,53 @@ public class XillUDMServiceImplTest {
 
 	}
 
+	@DataProvider(name = "Sections")
+	public Object[][] generatSections() {
+		return new Object[][] {
+				{Section.SOURCE},
+				{Section.TARGET}};
+	}
+
+	/**
+	 * Test the getVersions method with normal input.
+	 * 
+	 * @param versionId
+	 * @param section
+	 */
+	@Test(dataProvider = "Sections")
+	public void testGetVersionsNormal(final Section section) {
+		// Mock
+		String documentId = "docid";
+		DocumentID docId = mock(DocumentID.class);
+		List<String> result = new ArrayList<>();
+
+		DocumentRevisionBuilder documentRevisionBuilder = mock(DocumentRevisionBuilder.class);
+		DocumentHistoryBuilder documentHistoryBuilder = mockDocumentHistoryBuilder("version", documentRevisionBuilder);
+		DocumentBuilder documentBuilder = mockDocumentBuilder(documentHistoryBuilder);
+
+		when(udmService.get(documentId)).thenReturn(docId);
+		when(udmService.document(docId)).thenReturn(documentBuilder);
+		doNothing().when(udmService).release(docId);
+		when(documentHistoryBuilder.versions()).thenReturn(result);
+
+		// Run
+		List<String> actual = xillUdmService.getVersions(documentId, section);
+
+		// Verify
+		verify(udmService).get(documentId);
+		verify(documentHistoryBuilder).versions();
+
+		if (section == Section.SOURCE) {
+			verify(documentBuilder).source();
+		} else {
+			verify(documentBuilder).target();
+		}
+		verify(udmService).release(docId);
+
+		// Assert
+		assertEquals(actual, result);
+	}
+
 	/**
 	 * Mock a {@link DocumentHistoryBuilder} with {@link DocumentHistoryBuilder#current()}, {@link DocumentHistoryBuilder#versions()} and {@link DocumentHistoryBuilder#revision(String)}.
 	 *
@@ -409,7 +457,7 @@ public class XillUDMServiceImplTest {
 		DocumentHistoryBuilder documentHistoryBuilder = mock(DocumentHistoryBuilder.class);
 		when(documentHistoryBuilder.current()).thenReturn(documentRevisionBuilder);
 		if (!"current".equals(versionId)) {
-			ArrayList<String> versions = new ArrayList<String>();
+			ArrayList<String> versions = new ArrayList<>();
 			versions.add(versionId);
 			when(documentHistoryBuilder.versions()).thenReturn(versions);
 		} else {

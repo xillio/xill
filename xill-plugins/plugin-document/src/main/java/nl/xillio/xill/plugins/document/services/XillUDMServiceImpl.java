@@ -1,11 +1,8 @@
 package nl.xillio.xill.plugins.document.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import org.bson.Document;
-
-import com.google.inject.Inject;
 
 import nl.xillio.udm.DocumentID;
 import nl.xillio.udm.UDM;
@@ -16,6 +13,10 @@ import nl.xillio.udm.exceptions.ModelException;
 import nl.xillio.udm.exceptions.PersistenceException;
 import nl.xillio.udm.services.UDMService;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
+
+import org.bson.Document;
+
+import com.google.inject.Inject;
 
 /**
  * Implementation of {@link XillUDMService}.
@@ -58,6 +59,21 @@ public class XillUDMServiceImpl implements XillUDMService {
 			// Clear the cache.
 			udmService.release(docId);
 			return result;
+		}
+	}
+
+	@Override
+	public List<String> getVersions(final String documentID) {
+		return getVersions(documentID, Section.TARGET);
+	}
+
+	@Override
+	public List<String> getVersions(final String documentID, final Section section) {
+		try (UDMService udmService = connect()) {
+			DocumentID doc = udmService.get(documentID);
+			List<String> result = getSourceOrTarget(udmService.document(doc), section).versions();
+			udmService.release(doc);
+			return new ArrayList<>(result);
 		}
 	}
 
