@@ -1,18 +1,23 @@
 package nl.xillio.xill.plugins.document.constructs;
 
-import com.google.inject.Inject;
+import java.util.Map;
+
 import nl.xillio.udm.exceptions.DocumentNotFoundException;
 import nl.xillio.udm.exceptions.PersistenceException;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.MetaExpressionIterator;
-import nl.xillio.xill.api.construct.*;
+import nl.xillio.xill.api.construct.Argument;
+import nl.xillio.xill.api.construct.Construct;
+import nl.xillio.xill.api.construct.ConstructContext;
+import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
 import nl.xillio.xill.plugins.document.services.XillUDMService;
+import nl.xillio.xill.plugins.document.services.XillUDMService.Section;
+
 import org.bson.Document;
 
-import java.util.Map;
-
+import com.google.inject.Inject;
 /**
  * Construct for getting all documents that match a certain filter.
  *
@@ -36,7 +41,7 @@ public class FindWhereConstruct extends Construct {
 		// Get the string values of the arguments.
 		String filterJson = filter.getStringValue();
 		String versionId = verId.getStringValue();
-		String section = sec.getStringValue();
+		Section section = Section.of(sec.getStringValue());
 
 		Document filterBson = Document.parse(filterJson);
 

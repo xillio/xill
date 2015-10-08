@@ -1,26 +1,28 @@
 package nl.xillio.xill.plugins.document.constructs;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertNotNull;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import nl.xillio.udm.exceptions.DocumentNotFoundException;
 import nl.xillio.udm.exceptions.PersistenceException;
-import nl.xillio.udm.interfaces.FindResult;
-import nl.xillio.udm.services.UDMService;
 import nl.xillio.xill.TestUtils;
-import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.MetaExpressionIterator;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
 import nl.xillio.xill.plugins.document.services.XillUDMService;
+import nl.xillio.xill.plugins.document.services.XillUDMService.Section;
+
 import org.bson.Document;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import static org.testng.Assert.*;
-import static org.mockito.Mockito.*;
-
 /**
  * Test the functionality of the FindWhereConstruct
  */
@@ -36,7 +38,7 @@ public class FindWhereConstructTest extends TestUtils {
 		MetaExpression section = fromValue("source");
 		Iterable<Map<String, Map<String, Object>>> result = mock(Iterable.class);
 		XillUDMService udmService = mock(XillUDMService.class);
-		when(udmService.findWhere(eq(new Document()), eq("current"), eq("source"))).thenReturn(result);
+		when(udmService.findWhere(eq(new Document()), eq("current"), eq(Section.SOURCE))).thenReturn(result);
 
 		// Run the method
 		MetaExpression processResult = FindWhereConstruct.process(filter, version, section, udmService);
@@ -64,7 +66,7 @@ public class FindWhereConstructTest extends TestUtils {
 		MetaExpression version = fromValue("current");
 		MetaExpression section = fromValue("source");
 		XillUDMService xillUDMService = mock(XillUDMService.class);
-		when(xillUDMService.findWhere(any(), anyString(), anyString())).thenThrow(exceptionClass);
+		when(xillUDMService.findWhere(any(), anyString(), any())).thenThrow(exceptionClass);
 
 		// Run the method
 		FindWhereConstruct.process(filter, version, section, xillUDMService);

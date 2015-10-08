@@ -1,5 +1,7 @@
 package nl.xillio.xill.plugins.document.util;
 
+import java.util.Map;
+
 import nl.xillio.udm.DocumentID;
 import nl.xillio.udm.builders.DocumentBuilder;
 import nl.xillio.udm.builders.DocumentHistoryBuilder;
@@ -8,8 +10,7 @@ import nl.xillio.udm.interfaces.FindResult;
 import nl.xillio.udm.services.UDMService;
 import nl.xillio.udm.util.TransformationIterable;
 import nl.xillio.xill.plugins.document.services.ConversionService;
-
-import java.util.Map;
+import nl.xillio.xill.plugins.document.services.XillUDMService.Section;
 
 /**
  * This Iterable will iterate over all requested DocumentRevisionBuilder and close the service once the close method is called.
@@ -32,12 +33,12 @@ public class UDMFindResultIterator extends TransformationIterable<DocumentID, Ma
 		final FindResult source,
 		final UDMService owningService,
 		final ConversionService conversionService, final String version,
-		final String section) {
+			final Section section) {
 		super(
 			source.iterator(),
 			(DocumentID id) -> {
 				DocumentBuilder documentBuilder = owningService.document(id);
-				DocumentHistoryBuilder documentHistoryBuilder = "source".equalsIgnoreCase(section) ? documentBuilder.source() : documentBuilder.target();
+				DocumentHistoryBuilder documentHistoryBuilder = section == Section.SOURCE ? documentBuilder.source() : documentBuilder.target();
 				DocumentRevisionBuilder documentRevisionBuilder = "current".equalsIgnoreCase(version) ? documentHistoryBuilder.current() : documentHistoryBuilder.revision(version);
 				return conversionService.udmToMap(documentRevisionBuilder);
 			},

@@ -3,12 +3,8 @@ package nl.xillio.xill.plugins.document.services;
 import java.util.List;
 import java.util.Map;
 
-
 import nl.xillio.udm.exceptions.PersistenceException;
 import nl.xillio.xill.services.XillService;
-import org.bson.Document;
-
-import java.util.Map;
 
 import org.bson.Document;
 
@@ -138,5 +134,5 @@ public interface XillUDMService extends XillService {
 	 * @param section the section to check for the version
 	 * @return the requested revision
 	 */
-	Iterable<Map<String, Map<String, Object>>> findWhere(Document filter, String version, String section) throws PersistenceException;
+	Iterable<Map<String, Map<String, Object>>> findWhere(Document filter, String version, Section section) throws PersistenceException;
 }
