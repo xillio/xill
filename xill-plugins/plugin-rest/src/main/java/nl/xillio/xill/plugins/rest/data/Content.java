@@ -18,7 +18,7 @@ import org.apache.http.entity.ContentType;
 public class Content {
 
 	private String content = "";
-	private ContentType type;
+	private ContentType type = ContentType.TEXT_PLAIN;
 
 	/**
 	 * Acquire content from Xill variable 
@@ -61,8 +61,10 @@ public class Content {
 	 * @param responseContent content
 	 */
 	public Content(final org.apache.http.client.fluent.Content responseContent) {
-		this.content = responseContent.toString();
-		this.type = responseContent.getType();
+		if(responseContent != null) {
+			this.content = responseContent.toString();
+			this.type = responseContent.getType();
+		}
 	}
 
 	/**

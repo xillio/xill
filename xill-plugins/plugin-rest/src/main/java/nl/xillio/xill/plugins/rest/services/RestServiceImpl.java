@@ -36,11 +36,11 @@ public class RestServiceImpl implements RestService {
 			try {
 				return new Content(executor.execute(request).returnContent());
 			} catch (IOException e) {
-				throw new RobotRuntimeException("Request error: " + e.getMessage());
+				throw new RobotRuntimeException("Request error: " + e.getMessage(), e);
 			}
 
 		} catch (Exception e) {
-			throw new RobotRuntimeException(e.getMessage());
+			throw new RobotRuntimeException(e.getMessage(), e);
 		}
 	}
 
