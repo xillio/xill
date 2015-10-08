@@ -146,10 +146,4 @@ public class XmlNode implements nl.xillio.xill.api.data.XmlNode {
 		return output.toString();
 	}
 
-	@Override
-	public String getText() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }
