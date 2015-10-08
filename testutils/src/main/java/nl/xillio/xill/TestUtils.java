@@ -16,7 +16,7 @@ import static org.mockito.Mockito.mock;
 /**
  * This class represents various utilities you could need during testing of a xill plugin
  */
-public class TestUtils extends ExpressionBuilderHelper {
+public class TestUtils extends ConstructTest {
 	public static final FileResolver CONSTRUCT_FILE_RESOLVER;
 
 	static {

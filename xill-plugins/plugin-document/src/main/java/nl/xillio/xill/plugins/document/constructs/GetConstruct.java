@@ -16,10 +16,9 @@ import com.google.inject.Inject;
 
 /**
  * Construct for getting all decorators of a specific document version as one object.
- * 
+ *
  * @author Geert Konijnendijk
  * @author Luca Scalzotto
- *
  */
 public class GetConstruct extends Construct {
 
@@ -27,7 +26,7 @@ public class GetConstruct extends Construct {
 	XillUDMService udmService;
 
 	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor((docId, verId, sec) -> process(docId, verId, sec, udmService),
 			new Argument("documentId", ATOMIC),
 			new Argument("versionId", fromValue("current"), ATOMIC),
@@ -35,7 +34,7 @@ public class GetConstruct extends Construct {
 	}
 
 	static MetaExpression process(final MetaExpression docId, final MetaExpression verId,
-			final MetaExpression sec, final XillUDMService udmService) {
+																final MetaExpression sec, final XillUDMService udmService) {
 		// Get the string values of the arguments.
 		String documentId = docId.getStringValue();
 		String versionId = verId.getStringValue();

@@ -4,6 +4,7 @@ import static nl.xillio.xill.plugins.document.util.DocumentTestUtil.createDecora
 import static nl.xillio.xill.plugins.document.util.DocumentTestUtil.mockDecoratorBuilder;
 import static nl.xillio.xill.plugins.document.util.DocumentTestUtil.mockReadableDecoratorBuilder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
@@ -20,7 +21,7 @@ import org.testng.annotations.Test;
 
 /**
  * Tests the methods in the {@link ConversionServiceImpl}.
- * 
+ *
  * @author Geert Konijnendijk
  *
  */
@@ -58,7 +59,6 @@ public class ConversionServiceImplTest {
 		service.mapToUdm(object, builder);
 
 		// Verify
-		verify(builder).commit();
 		for (String decoratorName : object.keySet()) {
 			verify(builder).decorator(decoratorName);
 			DecoratorBuilder decoratorBuilder = decoratorBuilders.get(decoratorName);
@@ -66,6 +66,7 @@ public class ConversionServiceImplTest {
 			for (String fieldName : decorator.keySet()) {
 				verify(decoratorBuilder).field(fieldName, decorator.get(fieldName));
 			}
+			verify(decoratorBuilder, times(decorator.size())).commit();
 		}
 
 		// Assert

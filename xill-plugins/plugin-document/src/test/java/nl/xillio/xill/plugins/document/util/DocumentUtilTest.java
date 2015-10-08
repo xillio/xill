@@ -14,9 +14,9 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
- * 
+ *
  * Test the methods in {@link DocumentUtil}
- * 
+ *
  * @author Geert Konijnendijk
  *
  */
@@ -26,7 +26,7 @@ public class DocumentUtilTest extends ConstructTest {
 	 * Test {@link DocumentUtil#expressionBodyToMap(MetaExpression)} under normal circumstances
 	 */
 	@Test
-	public void testExpressionBodyToMapNormal(){
+	public void testExpressionBodyToMapNormal() {
 		// Mock
 		Map<String, Map<String, String>> bodyMap = new HashMap<>();
 		Map<String, String> content1 = new HashMap<>();
@@ -36,7 +36,7 @@ public class DocumentUtilTest extends ConstructTest {
 		content1.put("k2", "v2");
 		bodyMap.put("c1", content1);
 		bodyMap.put("c2", content2);
-		
+
 		// Mock a MetaExpression willed with MetaExpressions
 		Map<String, MetaExpression> backingMap = bodyMap.entrySet().stream()
 			.collect(Collectors.toMap(e -> e.getKey(),
@@ -46,9 +46,9 @@ public class DocumentUtilTest extends ConstructTest {
 
 		// Run
 		Map<String, Map<String, Object>> result = DocumentUtil.expressionBodyToMap(body);
-		
+
 		// Verify
-		
+
 		// Assert
 		assertEquals(result, bodyMap);
 	}
@@ -64,18 +64,17 @@ public class DocumentUtilTest extends ConstructTest {
 		backingMap.put("value", mockExpression(ATOMIC, false, 42, null));
 		when(body.getValue()).thenReturn(backingMap);
 
-		// Run
-		Map<String, Map<String, Object>> result = DocumentUtil.expressionBodyToMap(body);
+		DocumentUtil.expressionBodyToMap(body);
 	}
 
 	/**
 	 * Mocks a readable {@link MetaExpression} of type OBJECT.
-	 * 
+	 *
 	 * @param backingMap
 	 *        The map that will be read from
 	 * @return A mocked {@link MetaExpression}
 	 */
-	private MetaExpression mockReadableObject(Map<String, MetaExpression> backingMap) {
+	private MetaExpression mockReadableObject(final Map<String, MetaExpression> backingMap) {
 		MetaExpression expression = mockExpression(OBJECT);
 		when(expression.getValue()).thenReturn(backingMap);
 		return expression;

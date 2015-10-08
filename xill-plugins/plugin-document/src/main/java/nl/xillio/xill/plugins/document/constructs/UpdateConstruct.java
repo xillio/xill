@@ -17,9 +17,10 @@ import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
 import nl.xillio.xill.plugins.document.services.XillUDMService;
 import nl.xillio.xill.plugins.document.services.XillUDMService.Section;
 import nl.xillio.xill.plugins.document.util.DocumentUtil;
+
 /**
  * Construct for updating a version of a document.
- * 
+ *
  * @author Geert Konijnendijk
  *
  */
@@ -29,7 +30,7 @@ public class UpdateConstruct extends Construct {
 	XillUDMService udmService;
 
 	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
+	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor((docId, body, verId, sec) -> process(docId, body, verId, sec, udmService),
 			new Argument("documentId", ATOMIC),
 			new Argument("body", OBJECT),
