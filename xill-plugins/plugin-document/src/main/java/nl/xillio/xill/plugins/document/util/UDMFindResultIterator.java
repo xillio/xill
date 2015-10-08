@@ -42,8 +42,7 @@ public class UDMFindResultIterator extends TransformationIterable<DocumentID, Ma
 				DocumentRevisionBuilder documentRevisionBuilder = "current".equalsIgnoreCase(version) ? documentHistoryBuilder.current() : documentHistoryBuilder.revision(version);
 				return conversionService.udmToMap(documentRevisionBuilder);
 			},
-			a -> {
-			});
+			null);
 		this.owningService = owningService;
 	}
 

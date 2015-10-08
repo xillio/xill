@@ -72,6 +72,7 @@ public class XillUDMServiceImpl implements XillUDMService {
 		return new UDMFindResultIterator(result, udmService, conversionService, version, section);
 	}
 
+	@Override
 	public List<String> getVersions(final String documentID) {
 		return getVersions(documentID, Section.TARGET);
 	}
@@ -90,7 +91,7 @@ public class XillUDMServiceImpl implements XillUDMService {
 	public void remove(final String documentId, final String versionId, final Section section) throws PersistenceException {
 		try (UDMService udmService = connect()) {
 			DocumentID docId = udmService.get(documentId);
-			if (versionId.equals("all")) {
+			if ("all".equals(versionId)) {
 				udmService.delete(docId);
 			} else {
 				DocumentBuilder document = udmService.document(docId);
@@ -220,11 +221,9 @@ public class XillUDMServiceImpl implements XillUDMService {
 		// Check if the section is source or target, else throw an exception.
 		if (section == Section.TARGET) {
 			return builder.target();
-		} else if (section == Section.SOURCE) {
+		} else {
 			return builder.source();
 		}
-
-		throw new IllegalArgumentException("Unknown Section was provided: " + section);
 	}
 
 	/**
