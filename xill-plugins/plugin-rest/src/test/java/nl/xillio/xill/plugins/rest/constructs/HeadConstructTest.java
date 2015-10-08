@@ -2,13 +2,13 @@ package nl.xillio.xill.plugins.rest.constructs;
 
 import java.util.HashMap;
 
+import nl.xillio.xill.api.data.XmlNode;
 import org.testng.annotations.Test;
 
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.rest.services.RestService;
-import nl.xillio.xill.plugins.xml.data.XmlNode;
 import nl.xillio.xill.plugins.rest.data.Content;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
