@@ -41,7 +41,7 @@ public class GetVersionsConstructTest extends TestUtils {
 		MetaExpression result = GetVersionsConstruct.process(fromValue(id), fromValue("target"), xillUDMService);
 
 		// Get result
-		List<String> stringResult = ((List<?>)result.getValue()).stream().map(Object::toString).collect(Collectors.toList());
+		List<String> stringResult = ((List<?>) result.getValue()).stream().map(Object::toString).collect(Collectors.toList());
 		assertEquals(stringResult, versions);
 	}
 
@@ -56,8 +56,5 @@ public class GetVersionsConstructTest extends TestUtils {
 		// Call the process
 		GetVersionsConstruct.process(fromValue(id), fromValue("target"), xillUDMService);
 	}
-
-
-
 
 }

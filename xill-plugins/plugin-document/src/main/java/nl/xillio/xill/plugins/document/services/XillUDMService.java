@@ -1,13 +1,12 @@
 package nl.xillio.xill.plugins.document.services;
 
-
 import java.util.List;
 import java.util.Map;
 
-import org.bson.Document;
-
 import nl.xillio.udm.exceptions.PersistenceException;
 import nl.xillio.xill.services.XillService;
+
+import org.bson.Document;
 
 /**
  * Service for doing operations on the UDM from Xill.
@@ -47,22 +46,23 @@ public interface XillUDMService extends XillService {
 	 * Get all versions for a specific document.
 	 * This lists all versions on the target revisions.
 	 *
-	 * @param documentID the id of the document
+	 * @param documentID
+	 *        the id of the document
 	 * @return a list of version ids
 	 */
 	List<String> getVersions(String documentID);
 
-
 	/**
 	 * Get all versions for a specific document.
 	 *
-	 * @param documentID the id of the document
-	 * @param section    "target" or "source"
+	 * @param documentID
+	 *        the id of the document
+	 * @param section
+	 *        "target" or "source"
 	 * @return a list of version ids
 	 */
 	List<String> getVersions(String documentID, Section section);
 
-	
 	/**
 	 * Get all decorators of a specific document version.
 	 *
@@ -115,7 +115,7 @@ public interface XillUDMService extends XillService {
 
 	/**
 	 * Remove a document or a specific version of a document.
-	 * 
+	 *
 	 * @param documentId
 	 *        ID of the document
 	 * @param versionId

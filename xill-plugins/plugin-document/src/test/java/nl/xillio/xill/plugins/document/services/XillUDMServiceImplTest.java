@@ -35,7 +35,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-
 /**
  * Test the methods in the {@link XillUDMServiceImpl}
  *
@@ -364,7 +363,7 @@ public class XillUDMServiceImplTest {
 
 	/**
 	 * Test that {@link XillUDMServiceImpl#get(String, String, String)} does not eat exceptions of type {@link DocumentNotFoundException}.
-	 * 
+	 *
 	 * @throws PersistenceException
 	 */
 	@Test(expectedExceptions = DocumentNotFoundException.class)
@@ -378,7 +377,7 @@ public class XillUDMServiceImplTest {
 
 	/**
 	 * Test that {@link XillUDMServiceImpl#remove(String, String, String)} throws a {@link VersionNotFoundException} when a non-existent version is requested.
-	 * 
+	 *
 	 * @throws PersistenceException
 	 */
 	@Test(expectedExceptions = VersionNotFoundException.class)
@@ -399,21 +398,22 @@ public class XillUDMServiceImplTest {
 		xillUdmService.remove(DOCUMENT_ID, versionId, Section.SOURCE);
 
 	}
-	
+
 	@DataProvider(name = "Sections")
 	public Object[][] generatSections() {
-		return new Object[][]{
+		return new Object[][] {
 				{Section.SOURCE},
 				{Section.TARGET}};
 	}
-	
+
 	/**
 	 * Test the getVersions method with normal input.
+	 * 
 	 * @param versionId
 	 * @param section
 	 */
-	@Test (dataProvider = "Sections")
-	public void testGetVersionsNormal(Section section) {
+	@Test(dataProvider = "Sections")
+	public void testGetVersionsNormal(final Section section) {
 		// Mock
 		String documentId = "docid";
 		DocumentID docId = mock(DocumentID.class);
@@ -428,14 +428,13 @@ public class XillUDMServiceImplTest {
 		doNothing().when(udmService).release(docId);
 		when(documentHistoryBuilder.versions()).thenReturn(result);
 
-
 		// Run
 		List<String> actual = xillUdmService.getVersions(documentId, section);
 
 		// Verify
 		verify(udmService).get(documentId);
 		verify(documentHistoryBuilder).versions();
-		
+
 		if (section == Section.SOURCE) {
 			verify(documentBuilder).source();
 		} else {
