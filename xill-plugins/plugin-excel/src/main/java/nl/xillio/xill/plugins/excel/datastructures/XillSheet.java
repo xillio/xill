@@ -3,6 +3,7 @@ package nl.xillio.xill.plugins.excel.datastructures;
 import nl.xillio.xill.api.data.MetadataExpression;
 import org.apache.poi.ss.usermodel.Sheet;
 
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 /**
@@ -17,6 +18,7 @@ public class XillSheet implements MetadataExpression {
 	private int columnLength;
 	private int rowLength;
 	private boolean readonly;
+    private final XillWorkbook workbook;
 
 	/**
 	 * Constructor for the XillSheet class.
@@ -24,7 +26,7 @@ public class XillSheet implements MetadataExpression {
 	 * @param sheet    an Apache POI {@link Sheet} object
 	 * @param readonly boolean representing if the sheet's workbook is read-only
 	 */
-	public XillSheet(Sheet sheet, boolean readonly) {
+	public XillSheet(Sheet sheet, boolean readonly, XillWorkbook workbook) {
 		this.readonly = readonly;
 		this.sheet = sheet;
 
@@ -32,7 +34,13 @@ public class XillSheet implements MetadataExpression {
 		columnLength = calculateColumnLength();
 		name = sheet.getSheetName();
 		int i = 0;
+
+        this.workbook = workbook;
 	}
+
+    XillWorkbook getParentWorkbook(){
+        return this.workbook;
+    }
 
 	int calculateRowLength() {
 		if (sheet.getLastRowNum() == 0 && sheet.getPhysicalNumberOfRows() == 0)
@@ -101,8 +109,8 @@ public class XillSheet implements MetadataExpression {
 		XillRow row = getRow(cellRef.getRow());
 		XillCell cell = null;
 		if (!row.isNull())
-			cell = row.getCell(cellRef.getColumn());
-		return cell == null ? new XillCell(null).getValue() : cell.getValue();
+			cell = row.getCell(cellRef.getColumn(), this);
+		return cell == null ? new XillCell(null, this).getValue() : cell.getValue();
 	}
 
 	/**
@@ -139,9 +147,9 @@ public class XillSheet implements MetadataExpression {
 		XillRow row = getRow(rowNr);
 		if (row.isNull()) //create new row if non-existent
 			row = createRow(rowNr);
-		XillCell cell = row.getCell(columnNr);
+		XillCell cell = row.getCell(columnNr, this);
 		if (cell.isNull()) //create new cell if non-existent
-			cell = row.createCell(columnNr);
+			cell = row.createCell(columnNr, this);
 
 		return cell;
 	}
@@ -159,6 +167,9 @@ public class XillSheet implements MetadataExpression {
 			columnLength = cellRef.getColumn() + 1;
 
 	}
+
+	public void setCellValue(XillCellRef cellRef, ZonedDateTime dateTime){
+    }
 
 	/**
 	 * Sets the value of the cell.

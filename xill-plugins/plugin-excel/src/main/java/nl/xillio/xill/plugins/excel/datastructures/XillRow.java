@@ -26,8 +26,8 @@ public class XillRow {
 	 * @param columnNr the number of the column where the cell is located in this row
 	 * @return the {@link XillCell} on the provided column
 	 */
-	public XillCell getCell(int columnNr) {
-		return new XillCell(row.getCell(columnNr));
+	public XillCell getCell(int columnNr, XillSheet sheet) {
+		return new XillCell(row.getCell(columnNr), sheet);
 	}
 
 	public boolean isNull() {
@@ -44,8 +44,8 @@ public class XillRow {
 	 *                                  than the maximum number of supported columns (255 for *.xls, 1048576
 	 *                                  for *.xlsx)
 	 */
-	public XillCell createCell(int columnNr) {
-		return new XillCell(row.createCell(columnNr));
+	public XillCell createCell(int columnNr, XillSheet sheet) {
+		return new XillCell(row.createCell(columnNr), sheet);
 	}
 
 	/**

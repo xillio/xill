@@ -3,8 +3,12 @@ package nl.xillio.xill.plugins.excel.datastructures;
 import nl.xillio.xill.api.errors.NotImplementedException;
 import org.apache.poi.ss.formula.FormulaParseException;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DateUtil;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 /**
@@ -16,6 +20,7 @@ import java.util.Date;
 public class XillCell {
 
 	private Cell cell;
+    private final XillSheet sheet;
 
 	/**
 	 * Constructor for the XillCell class.
@@ -23,13 +28,19 @@ public class XillCell {
 	 *
 	 * @param cell an Apache POI {@link Cell} object
 	 */
-	public XillCell(Cell cell) {
-		this.cell = cell;
+	public XillCell(Cell cell, XillSheet sheet) {
+
+        this.cell = cell;
+        this.sheet = sheet;
 	}
 
 	boolean isDateFormatted() {
 		return DateUtil.isCellDateFormatted(cell);
 	}
+
+    XillSheet getParentSheet(){
+        return this.sheet;
+    }
 
 	/**
 	 * Gets the value of this cell.
@@ -91,6 +102,7 @@ public class XillCell {
 			cell.setCellValue(value);
 	}
 
+
 	/**
 	 * Sets the cell's value to the provided Double
 	 *
@@ -108,5 +120,14 @@ public class XillCell {
 	public void setCellValue(boolean value) {
 		cell.setCellValue(value);
 	}
+
+    public void setCellValue(ZonedDateTime dateTime){
+        //Check if it contains a time
+        boolean containsTime = !(dateTime.getHour() == 0 && dateTime.getMinute() == 0);
+        //Check if it contains a date
+
+        //HOW TO CHECK THIS?
+        boolean containsDate = !(dateTime.getYear() == LocalDate.MIN);
+    }
 
 }
