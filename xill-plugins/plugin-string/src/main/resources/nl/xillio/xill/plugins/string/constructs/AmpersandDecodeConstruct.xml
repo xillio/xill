@@ -11,13 +11,14 @@
             <code><![CDATA[
                 String.ampersandDecode("Money &amp;lt;&amp;amp;gt; Health");
 
-                // Result: "Money <&amp;gt; Health"
+                // Result: "Money &lt;&amp;gt; Health"
             ]]></code>
             <header>Multiple passes</header>
-            <code>
+            <code><![CDATA[
                 String.ampersandDecode("Money &amp;lt;&amp;amp;gt; Health", 2);
 
-                // Result: "Money &lt;&gt; Health"
+                // Result: "Money <&gt; Health"
+                ]]>
             </code>
         </example>
     </examples>
