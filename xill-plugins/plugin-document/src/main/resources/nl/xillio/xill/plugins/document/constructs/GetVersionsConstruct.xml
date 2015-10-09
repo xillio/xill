@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<function>
+	<description>
+		Returns a list of all versions of a section in a document.
+		Valid values for the section are "source" and "target".
+		Throws an exception if the given Documentid does not exist or the section is invalid.
+	</description>
+	<examples>
+		<example title="Usage">
+			<header>Getting the versions of the "source" section</header>
+			<code>
+				use Document;
+				
+				// Given that the ID of the document is stored in the variable 'id'.
+				var versionList = Document.getVersions(id,"source");
+				// versionList = ["v1","v2","v3"]
+			</code>
+		</example>
+	</examples>
+	<searchTags>
+		version,versions, database, db, udm, document
+	</searchTags>
+</function>

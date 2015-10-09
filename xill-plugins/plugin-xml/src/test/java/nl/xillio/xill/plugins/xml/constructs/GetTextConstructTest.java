@@ -1,7 +1,7 @@
 package nl.xillio.xill.plugins.xml.constructs;
 
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.plugins.xml.data.XmlNode;
+import nl.xillio.xill.api.data.XmlNode;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 import org.w3c.dom.Node;
@@ -29,7 +29,7 @@ public class GetTextConstructTest {
 		when(node.getTextContent()).thenReturn(text);
 
 		XmlNode xmlNode = mock(XmlNode.class);
-		when(xmlNode.getNode()).thenReturn(node);
+		when(xmlNode.getText()).thenReturn(text);
 
 		MetaExpression xmlNodeVar = mock(MetaExpression.class);
 		when(xmlNodeVar.getMeta(XmlNode.class)).thenReturn(xmlNode);
@@ -38,8 +38,7 @@ public class GetTextConstructTest {
 		MetaExpression result = GetTextConstruct.process(xmlNodeVar);
 
 		// Verify
-		verify(xmlNode).getNode();
-		verify(node).getTextContent();
+		verify(xmlNode).getText();
 
 		// Assert
 		assertSame(result.getStringValue(), text);

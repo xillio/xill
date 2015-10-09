@@ -11,7 +11,7 @@ import java.util.function.Function;
  * construction loops over an ATOMIC value holding this element it will iterate over all the values in this
  * MetaExpressionIterator instead
  */
-public class MetaExpressionIterator<E> implements Iterator<MetaExpression>, MetadataExpression {
+public class MetaExpressionIterator<E> implements Iterator<MetaExpression>, MetadataExpression, AutoCloseable {
 	private final Iterator<E> iterator;
 	private final Function<E, MetaExpression> transformer;
 
@@ -34,5 +34,12 @@ public class MetaExpressionIterator<E> implements Iterator<MetaExpression>, Meta
 	@Override
 	public MetaExpression next() {
 		return transformer.apply(iterator.next());
+	}
+
+	@Override
+	public void close() throws Exception {
+		if (iterator instanceof AutoCloseable) {
+			((AutoCloseable) iterator).close();
+		}
 	}
 }

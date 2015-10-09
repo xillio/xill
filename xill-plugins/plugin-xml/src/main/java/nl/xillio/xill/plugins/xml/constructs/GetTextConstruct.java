@@ -5,7 +5,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.plugins.xml.data.XmlNode;
+import nl.xillio.xill.api.data.XmlNode;
 
 /**
  * Returns all texts from XML node and its subnodes
@@ -24,7 +24,7 @@ public class GetTextConstruct extends Construct {
 
 	static MetaExpression process(MetaExpression xmlNodeVar) {
 		XmlNode xmlNode = assertMeta(xmlNodeVar, "node", XmlNode.class, "XML node");
-		return fromValue(xmlNode.getNode().getTextContent());
+		return fromValue(xmlNode.getText());
 	}
 
 }
