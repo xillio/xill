@@ -4,7 +4,8 @@ import java.io.File;
 import java.io.IOException;
 
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.xml.data.XmlNode;
+import nl.xillio.xill.api.data.XmlNode;
+import nl.xillio.xill.plugins.xml.data.XmlNodeVar;
 import nl.xillio.xill.plugins.xml.exceptions.XmlParseException;
 
 import org.apache.commons.io.FileUtils;
@@ -25,9 +26,9 @@ public class NodeServiceImpl implements NodeService {
 
 	@Override 
 	public XmlNode insertNode(final XmlNode parentXmlNode, final String newChildNodeStr, final XmlNode beforeChildXmlNode) {
-		XmlNode newXmlChildNode = null;
+		XmlNodeVar newXmlChildNode = null;
 		try {
-			newXmlChildNode = new XmlNode(newChildNodeStr);
+			newXmlChildNode = new XmlNodeVar(newChildNodeStr, false);
 		} catch (XmlParseException e) {
 			throw new RobotRuntimeException("Function insertNode parse error!\n" + e.getMessage(), e);
 		} catch (Exception e) {
@@ -44,7 +45,7 @@ public class NodeServiceImpl implements NodeService {
 			parentNode.insertBefore(newNode, beforeChildNode);
 		}
 
-		return new XmlNode(newNode);
+		return new XmlNodeVar(newNode);
 	}
 
 	@Override
@@ -73,9 +74,9 @@ public class NodeServiceImpl implements NodeService {
 
 	@Override
 	public XmlNode replaceNode(final XmlNode orgXmlNode, final String replXmlStr) {
-		XmlNode replXmlNode = null;
+		XmlNodeVar replXmlNode = null;
 		try {
-			replXmlNode = new XmlNode(replXmlStr);
+			replXmlNode = new XmlNodeVar(replXmlStr, false);
 		} catch (XmlParseException e) {
 			throw new RobotRuntimeException("Function replaceNode parse error!\n" + e.getMessage(), e);
 		} catch (Exception e) {
@@ -121,7 +122,7 @@ public class NodeServiceImpl implements NodeService {
 		}
 
 		try {
-			return new XmlNode(content);
+			return new XmlNodeVar(content, true);
 		} catch (XmlParseException e) {
 			throw new RobotRuntimeException("The XML source is invalid.", e);
 		} catch (Exception e) {
@@ -132,7 +133,7 @@ public class NodeServiceImpl implements NodeService {
 	@Override
 	public XmlNode fromString(final String xmlText) {
 		try {
-			return new XmlNode(xmlText);
+			return new XmlNodeVar(xmlText, true);
 		} catch (XmlParseException e) {
 			throw new RobotRuntimeException("The XML source is invalid." + e.getMessage(), e);
 		} catch (Exception e) {
