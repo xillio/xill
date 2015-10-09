@@ -13,7 +13,7 @@ import java.time.ZonedDateTime;
  * @author Thomas Biesaart
  * @since 7-8-2015
  */
-public class Date implements MetadataExpression {
+public class Date implements nl.xillio.xill.api.data.Date {
 	private final ZonedDateTime date;
 
 	public Date(ZonedDateTime date) {

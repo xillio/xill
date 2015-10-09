@@ -1,6 +1,6 @@
 package nl.xillio.xill.plugins.date.services;
 
-import nl.xillio.xill.plugins.date.data.Date;
+import nl.xillio.xill.api.data.Date;
 import nl.xillio.xill.services.XillService;
 
 import java.time.ZoneId;

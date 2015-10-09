@@ -6,7 +6,7 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.date.BaseDateConstruct;
-import nl.xillio.xill.plugins.date.data.Date;
+import nl.xillio.xill.api.data.Date;
 import nl.xillio.xill.plugins.date.services.DateService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

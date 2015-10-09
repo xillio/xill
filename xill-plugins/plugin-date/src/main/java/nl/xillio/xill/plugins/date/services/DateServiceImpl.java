@@ -1,7 +1,7 @@
 package nl.xillio.xill.plugins.date.services;
 
 import com.google.inject.Singleton;
-import nl.xillio.xill.plugins.date.data.Date;
+import nl.xillio.xill.api.data.Date;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -33,12 +33,12 @@ public class DateServiceImpl implements DateService {
 
 	@Override
 	public Date now() {
-		return new Date(ZonedDateTime.now());
+		return new nl.xillio.xill.plugins.date.data.Date(ZonedDateTime.now());
 	}
 
 	@Override
 	public Date constructDate(int year, int month, int day, int hour, int minute, int second, int nano, ZoneId zone) {
-		return new Date(ZonedDateTime.of(year, month, day, hour, minute, second, nano, zone));
+		return new nl.xillio.xill.plugins.date.data.Date(ZonedDateTime.of(year, month, day, hour, minute, second, nano, zone));
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class DateServiceImpl implements DateService {
 			result = LocalDate.from(time).atStartOfDay(ZoneId.systemDefault());
 		}
 
-		return new Date(result);
+		return new nl.xillio.xill.plugins.date.data.Date(result);
 	}
 
 	private DateTimeFormatter createDateTimeFormatter(String format) {
@@ -67,12 +67,12 @@ public class DateServiceImpl implements DateService {
 		for (Entry<ChronoUnit, Long> entry : toAdd.entrySet()) {
 			value = value.plus(entry.getValue(), entry.getKey());
 		}
-		return new Date(value);
+		return new nl.xillio.xill.plugins.date.data.Date(value);
 	}
 
 	@Override
 	public Date changeTimeZone(Date original, ZoneId newZone) {
-		return new Date(ZonedDateTime.from(original.getZoned().withZoneSameInstant(newZone)));
+		return new nl.xillio.xill.plugins.date.data.Date(ZonedDateTime.from(original.getZoned().withZoneSameInstant(newZone)));
 	}
 
 	@Override

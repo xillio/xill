@@ -12,6 +12,7 @@ import static org.testng.Assert.assertEquals;
 import java.time.ZonedDateTime;
 
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.data.Date;
 import nl.xillio.xill.plugins.date.services.DateService;
 
 import org.testng.annotations.DataProvider;
@@ -29,6 +30,7 @@ public class FormatConstructTest {
 	@DataProvider(name = "format")
 	private Object[][] formatProvider() {
 		ZonedDateTime date = ZonedDateTime.now();
+        //Date date = new nl.xillio.xill.plugins.date.data.Date(ZonedDateTime.now());
 		MetaExpression dateExpression = mockDateExpression(date);
 		return new Object[][] { {dateExpression, mockStringExpression("yyyy-MM-dd")}, {dateExpression, mockNullExpression()}};
 	}
