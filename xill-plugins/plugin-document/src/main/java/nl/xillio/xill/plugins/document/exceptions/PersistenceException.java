@@ -10,19 +10,22 @@ public class PersistenceException extends Exception {
 	/**
 	 * Create a new PersistenceException
 	 *
-	 * @param message the message to describe the exception with
+	 * @param message
+	 *        the message to describe the exception with
 	 */
-	public PersistenceException(String message) {
+	public PersistenceException(final String message) {
 		super(message);
 	}
 
 	/**
 	 * Create a new PersistenceException with a cause
 	 *
-	 * @param message the message to describe the exception with
-	 * @param cause   the cause
+	 * @param message
+	 *        the message to describe the exception with
+	 * @param cause
+	 *        the cause
 	 */
-	public PersistenceException(String message, Throwable cause) {
+	public PersistenceException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 }

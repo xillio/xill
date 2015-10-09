@@ -7,12 +7,12 @@
         <example title="Usage">
             <header>Assuming we have an XML file note.xml which contains the following:</header>
             <code>
-&lt; note id="1"&gt;
-  &lt; to&gt;Tove&lt; /to&gt;
-  &lt; from&gt;Jani&lt; /from&gt;
-  &lt; heading&gt;Reminder&lt; /heading&gt;
-  &lt; body&gt;Don't forget me this weekend!&lt; /body&gt;
-&lt; /note&gt;
+<note id="1">
+  <to>Tove</to>
+  <from>Jani</from>
+  <heading>Reminder</heading>
+  <body>Don't forget me this weekend!</body>
+</note>
             </code>
             <header>After executing the following code:</header>
             <code>
@@ -27,13 +27,13 @@ System.print(Xml.toString(note));
 Xml contains:
             </header>
             <code>
-&lt; note id="1"&gt;
-  &lt; to&gt;Tove&lt; /to&gt;
-  &lt; from&gt;Jani&lt; /from&gt;
-  &lt; heading&gt;Reminder&lt; /heading&gt;
-  &lt; body&gt;Don't forget me this weekend!&lt; /body&gt;
-  &lt; comment&gt;Comments are welcome.&lt; /comment&gt;  
-&lt; /note&gt;
+<note id="1">
+  <to>Tove</to>
+  <from>Jani</from>
+  <heading>Reminder</heading>
+  <body>Don't forget me this weekend!</body>
+  <comment>Comments are welcome.</comment>  
+</note>
            </code>
         </example>
     </examples>

@@ -3,7 +3,7 @@ package nl.xillio.xill.plugins.xml.services;
 import com.google.inject.ImplementedBy;
 
 import nl.xillio.xill.plugins.xml.XMLXillPlugin;
-import nl.xillio.xill.plugins.xml.data.XmlNode;
+import nl.xillio.xill.api.data.XmlNode;
 
 import java.io.File;
 

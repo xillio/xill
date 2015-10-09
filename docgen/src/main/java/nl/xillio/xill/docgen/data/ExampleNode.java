@@ -7,6 +7,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.OptionalInt;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.elasticsearch.common.lang3.StringUtils;
+
 /**
  * Represents a single node in an example tag.
  *
@@ -24,7 +27,6 @@ public class ExampleNode implements PropertiesProvider {
 	 */
 	public ExampleNode(String tagName, String content){
 		this.tagName = tagName;
-
 		//Special case: code
 		if("code".equalsIgnoreCase(tagName)) {
 			this.content = cleanCode(content);
