@@ -32,9 +32,9 @@ public class OracleDatabaseServiceImpl extends BaseDatabaseService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected String createConnectionURL(final String database, final String user, final String pass, final Tuple<String, String>... options) throws SQLException {
+	protected String createConnectionURL(final String database, final String user, final String pass, final Tuple<String, String>... options) throws SQLException, IllegalArgumentException {
 		if ((user == null) != (pass == null)) {
-			throw new RobotRuntimeException("User and pass should be both null or both non-null");
+			throw new IllegalArgumentException("User and pass should be both null or both non-null");
 		} else if (user != null && pass != null) {
 			// prepend username and password
 			return String.format("jdbc:oracle:thin:%s/%s@%s", user, pass, database);

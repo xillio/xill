@@ -1,6 +1,7 @@
 package nl.xillio.xill.plugins.database.constructs;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -55,6 +56,7 @@ public class ConnectConstruct extends BaseDatabaseConstruct {
 			throw new RobotRuntimeException("Database type is not supported", e1);
 		}
 
+
 		Connection connection;
 		try {
 			connection = service.createConnection(database, user, pass, optionsArray);
@@ -62,6 +64,9 @@ public class ConnectConstruct extends BaseDatabaseConstruct {
 			Throwable cause = e1.getCause();
 			if(cause != null && cause instanceof UnknownHostException){
 				throw new RobotRuntimeException("Unknown host given", e1);
+			}
+			else if(cause != null && cause instanceof ConnectException){
+				throw new RobotRuntimeException("Wrong port given", e1);
 			}
 			else if(cause!= null && cause instanceof IOException){
 				throw new RobotRuntimeException("Wrong databaseType used", e1);
