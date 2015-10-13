@@ -19,9 +19,9 @@ import org.bson.Document;
 import com.google.inject.Inject;
 
 /**
- * Construct for removing documents or versions using a filter.
+ * Construct for updating documents or versions using a filter.
  *
- * @author Thomas Biesaart
+ * @author Geert Konijnendijk
  */
 public class UpdateWhereConstruct extends Construct {
 
