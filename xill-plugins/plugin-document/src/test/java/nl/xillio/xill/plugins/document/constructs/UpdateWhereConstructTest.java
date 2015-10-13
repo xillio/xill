@@ -82,11 +82,12 @@ public class UpdateWhereConstructTest extends ConstructTest {
 	@Test(dataProvider = "exceptions", expectedExceptions = RobotRuntimeException.class)
 	public void testProcessError(final Class<Exception> exceptionClass) throws PersistenceException {
 		LinkedHashMap<String, MetaExpression> filter = new LinkedHashMap<>();
+		LinkedHashMap<String, MetaExpression> body = new LinkedHashMap<>();
 		String section = "target";
 		XillUDMService udmService = mock(XillUDMService.class);
-		when(udmService.removeWhere(any())).thenThrow(exceptionClass);
+		when(udmService.updateWhere(any(Document.class), anyMap())).thenThrow(exceptionClass);
 
 		// Run
-		RemoveWhereConstruct.process(fromValue(filter), NULL, fromValue(section), udmService);
+		UpdateWhereConstruct.process(fromValue(filter), fromValue(body), NULL, fromValue(section), udmService);
 	}
 }
