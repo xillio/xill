@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.database.util.Tuple;
 import oracle.jdbc.driver.OracleConnection;
 
