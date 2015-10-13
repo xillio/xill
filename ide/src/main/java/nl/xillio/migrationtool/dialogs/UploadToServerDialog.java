@@ -26,8 +26,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.util.Pair;
 import nl.xillio.migrationtool.gui.ProjectPane;
-import nl.xillio.sharedlibrary.settings.SettingsHandler;
 import nl.xillio.xill.api.Xill;
+import nl.xillio.xill.util.settings.SettingsHandler;
 
 /**
  * A dialog to upload an item to the server.
@@ -79,9 +79,9 @@ public class UploadToServerDialog extends FXMLDialog {
 	}
 
 	private void loadDefaults() {
-		tfserver.setText(settings.getSimpleSetting(SERVERHOST));
-		tfusername.setText(settings.getSimpleSetting(SERVERUSER));
-		tfpassword.setText(settings.getSimpleSetting(SERVERPASS));
+		tfserver.setText(settings.simple().get("Server", SERVERHOST));
+		tfusername.setText(settings.simple().get("Server", SERVERUSER));
+		tfpassword.setText(settings.simple().get("Server", SERVERPASS));
 	}
 
 	private String getServer() {
@@ -89,19 +89,19 @@ public class UploadToServerDialog extends FXMLDialog {
 		while (serverResult.matches(".*//*$")) {
 			serverResult = serverResult.replaceAll("/$", "");
 		}
-		settings.saveSimpleSetting(SERVERHOST, serverResult);
+		settings.simple().save("Server", SERVERHOST, serverResult);
 		return serverResult;
 	}
 
 	private String getUsername() {
 		usernameResult = tfusername.getText();
-		settings.saveSimpleSetting(SERVERUSER, usernameResult);
+		settings.simple().save("Server", SERVERUSER, usernameResult);
 		return usernameResult;
 	}
 
 	private String getPassword() {
 		passwordResult = tfpassword.getText();
-		settings.saveSimpleSetting(SERVERPASS, passwordResult);
+		settings.simple().save("Server", SERVERPASS, passwordResult);
 		return passwordResult;
 	}
 

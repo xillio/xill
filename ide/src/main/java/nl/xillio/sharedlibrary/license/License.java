@@ -32,7 +32,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import nl.xillio.sharedlibrary.settings.SettingsHandler;
+import nl.xillio.xill.util.settings.SettingsHandler;
 
 public class License {
 
@@ -71,7 +71,7 @@ public class License {
 
 	// creates new License object from license file
 	public License() {
-		String licensetext = settings.getSimpleSetting("license");
+		String licensetext = settings.simple().get("license", "license");
 		init(licensetext);
 	}
 
@@ -107,8 +107,8 @@ public class License {
 	}
 
 	private void init(final String licensetext) {
-		settings.registerSimpleSetting("license", "license", null, "", true);
-		settings.registerSimpleSetting("license", "licensecheck", new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").format(new Date()), "", true);
+		settings.simple().register("license", "license", null, "", true);
+		settings.simple().register("license", "licensecheck", new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").format(new Date()), "", true);
 
 		if (licensetext == null) {
 			return;
@@ -199,7 +199,7 @@ public class License {
 	private boolean validDate(final String dateexpires) {
 		Date now = new Date();
 
-		String lastCheckDate = settings.getSimpleSetting("licensecheck").toString();
+		String lastCheckDate = settings.simple().get("license", "licensecheck").toString();
 
 		try {
 			Date expiry = new SimpleDateFormat("yyyy-MM-dd").parse(dateexpires);

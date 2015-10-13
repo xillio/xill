@@ -1,7 +1,5 @@
 package nl.xillio.migrationtool.gui;
 
-import static nl.xillio.sharedlibrary.settings.SimpleSetting.SIMPLE_SETTINGTYPE;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -9,7 +7,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import com.sun.javafx.application.PlatformImpl;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,11 +34,8 @@ import javafx.util.Pair;
 import nl.xillio.migrationtool.Loader;
 import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
 import nl.xillio.plugins.XillPlugin;
-import nl.xillio.sharedlibrary.settings.Setting;
-import nl.xillio.sharedlibrary.settings.SettingsHandler;
-import nl.xillio.sharedlibrary.settings.SettingsHandler.Id;
-import nl.xillio.sharedlibrary.settings.SimpleSetting;
 import nl.xillio.xill.api.Xill;
+import nl.xillio.xill.util.settings.SettingsHandler;
 
 /**
  * This class is the global controller for the application
@@ -167,43 +161,40 @@ public class FXController implements Initializable, EventHandler<Event> {
 	 */
 	@Override
 	public void initialize(final URL url, final ResourceBundle bundle) {
-		settings.registerSimpleSetting("File", "LastFolder", System.getProperty("user.dir"),
-			"The last folder a file was opened from or saved to.");
-		settings.registerSimpleSetting("Warning", "DialogDebug", "false", "Show warning dialogs for debug messages.");
-		settings.registerSimpleSetting("Warning", "DialogInfo", "false", "Show warning dialogs for info messages.");
-		settings.registerSimpleSetting("Warning", "DialogWarning", "false",
-			"Show warning dialogs for warning messages.");
-		settings.registerSimpleSetting("Warning", "DialogError", "true", "Show warning dialogs for error messages.");
-		settings.registerSimpleSetting("Server", "ServerHost", "http://localhost:10000",
-			"Location XMTS is running on.");
-		settings.registerSimpleSetting("Server", "ServerUsername", "", "Optional username to access XMTS.", true);
-		settings.registerSimpleSetting("Server", "ServerPassword", "", "Optional password to access XMTS.", true);
-		settings.registerSimpleSetting("Info", "LastVersion", "0.0.0", "Last version that was run.");
-		settings.registerSimpleSetting("Layout", "LeftPanelWidth", "0.2", "Width of the left panel");
-		settings.registerSimpleSetting("Layout", "LeftPanelCollapsed", "false",
-			"The collapsed-state of the left panel");
-		settings.registerSimpleSetting("Layout", "ProjectHeight", "0.5", "The height of the project panel");
+
+		settings.simple().register("File", "LastFolder", System.getProperty("user.dir"), "The last folder a file was opened from or saved to.");
+		settings.simple().register("Warning", "DialogDebug", "false", "Show warning dialogs for debug messages.");
+		settings.simple().register("Warning", "DialogInfo", "false", "Show warning dialogs for info messages.");
+		settings.simple().register("Warning", "DialogWarning", "false", "Show warning dialogs for warning messages.");
+		settings.simple().register("Warning", "DialogError", "true", "Show warning dialogs for error messages.");
+		settings.simple().register("Server", "ServerHost", "http://localhost:10000", "Location XMTS is running on.");
+		settings.simple().register("Server", "ServerUsername", "", "Optional username to access XMTS.", true);
+		settings.simple().register("Server", "ServerPassword", "", "Optional password to access XMTS.", true);
+		settings.simple().register("Info", "LastVersion", "0.0.0", "Last version that was run.");
+		settings.simple().register(SettingsHandler.LAYOUT, "LeftPanelWidth", "0.2", "Width of the left panel");
+		settings.simple().register(SettingsHandler.LAYOUT, "LeftPanelCollapsed", "false", "The collapsed-state of the left panel");
+		settings.simple().register(SettingsHandler.LAYOUT, "ProjectHeight", "0.5", "The height of the project panel");
 
 		// Initialize layout and layout listeners
 		Platform.runLater(() -> {
 			// Add splitpane position listener
 			spnMain.getDividers().get(0).positionProperty().addListener((observable, oldPos, newPos) -> {
 				if (spnMain.getItems().contains(apnLeft)) {
-					settings.saveSimpleSetting("LeftPanelWidth", newPos.toString());
+					settings.simple().save(SettingsHandler.LAYOUT, "LeftPanelWidth", newPos.toString());
 				}
 			});
 
-			spnMain.setDividerPosition(0, Double.parseDouble(settings.getSimpleSetting("LeftPanelWidth")));
+			spnMain.setDividerPosition(0, Double.parseDouble(settings.simple().get(SettingsHandler.LAYOUT, "LeftPanelWidth")));
 			// Remove the left hidden bar from dom
-			if (Boolean.parseBoolean(settings.getSimpleSetting("LeftPanelCollapsed"))) {
+			if (Boolean.parseBoolean(settings.simple().get(SettingsHandler.LAYOUT, "LeftPanelCollapsed"))) {
 				btnHideLeftPane();
 			} else {
 				btnShowLeftPane();
 			}
 
-			spnLeft.setDividerPosition(0, Double.parseDouble(settings.getSimpleSetting("ProjectHeight")));
+			spnLeft.setDividerPosition(0, Double.parseDouble(settings.simple().get(SettingsHandler.LAYOUT, "ProjectHeight")));
 			spnLeft.getDividers().get(0).positionProperty().addListener((observable, oldPos, newPos) -> settings
-				.saveSimpleSetting("ProjectHeight", Double.toString(newPos.doubleValue())));
+				.simple().save(SettingsHandler.LAYOUT, "ProjectHeight", Double.toString(newPos.doubleValue())));
 		});
 
 		// Start the elasticsearch console
@@ -232,7 +223,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 	private void loadWorkSpace() {
 		Platform.runLater(() -> {
-			String workspace = settings.getSimpleSetting(Id.WORKSPACE);
+			String workspace = settings.simple().get("Workspace", "OpenTabs");
 			if (workspace == null) {
 				workspace = DEFAULT_OPEN_BOT.getAbsolutePath();
 			}
@@ -252,7 +243,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 			} catch (IOException e) {
 				LOGGER.error("Failed to show release notes", e);
 
-				String activeTab = settings.getSimpleSetting(Id.ACTIVETAB);
+				String activeTab = settings.simple().get("Workspace", "ActiveTab");
 				if (activeTab != null && !"".equals(activeTab)) {
 					getTabs().stream()
 						.filter(tab -> tab.getDocument().getAbsolutePath().equals(activeTab))
@@ -327,7 +318,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 	@FXML
 	private void buttonOpenFile() {
 		FileChooser fileChooser = new FileChooser();
-		String lastfolder = settings.getSimpleSetting("LastFolder");
+		String lastfolder = settings.simple().get("File", "LastFolder");
 		if (lastfolder != null) {
 			fileChooser.setInitialDirectory(new File(lastfolder));
 		}
@@ -368,7 +359,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 		}
 
 		// Tab is not open yet: open new tab
-		settings.saveSimpleSetting("LastFolder", newfile.getParent());
+		settings.simple().save("File", "LastFolder", newfile.getParent());
 
 		RobotTab tab;
 		try {
@@ -447,8 +438,8 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 	@FXML
 	private void btnHideLeftPane() {
-		settings.saveSimpleSetting("LeftPanelWidth", "" + spnMain.getDividerPositions()[0]);
-		settings.saveSimpleSetting("LeftPanelCollapsed", "true");
+		settings.simple().save(SettingsHandler.LAYOUT, "LeftPanelWidth", "" + spnMain.getDividerPositions()[0]);
+		settings.simple().save(SettingsHandler.LAYOUT, "LeftPanelCollapsed", "true");
 		spnMain.getItems().remove(apnLeft);
 		if (!hbxMain.getChildren().contains(vbxLeftHidden)) {
 			hbxMain.getChildren().add(0, vbxLeftHidden);
@@ -457,12 +448,12 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 	@FXML
 	private void btnShowLeftPane() {
-		settings.saveSimpleSetting("LeftPanelCollapsed", "false");
+		settings.simple().save(SettingsHandler.LAYOUT, "LeftPanelCollapsed", "false");
 
 		hbxMain.getChildren().remove(vbxLeftHidden);
 		if (!spnMain.getItems().contains(apnLeft)) {
 			spnMain.getItems().add(0, apnLeft);
-			spnMain.setDividerPosition(0, Double.parseDouble(settings.getSimpleSetting("LeftPanelWidth")));
+			spnMain.setDividerPosition(0, Double.parseDouble(settings.simple().get(SettingsHandler.LAYOUT, "LeftPanelWidth")));
 		}
 	}
 
@@ -472,15 +463,15 @@ public class FXController implements Initializable, EventHandler<Event> {
 			getTabs().stream().map(tab -> tab.getDocument().getAbsolutePath()).collect(Collectors.toList()));
 
 		// Save all tabs
-		settings.saveSimpleSetting(Id.WORKSPACE, openTabs);
+		settings.simple().save("Workspace", "OpenTabs", openTabs, true);
 
 		// Save active tab
 		final String activeTab[] = {null};
 		getTabs().stream().filter(tab -> tab.isSelected()).forEach(tab -> activeTab[0] = tab.getDocument().getAbsolutePath());
 		if (activeTab[0] != null) {
-			settings.saveSimpleSetting(Id.ACTIVETAB, activeTab[0]);
+			settings.simple().save("Workspace", "ActiveTab", activeTab[0], true);
 		} else {
-			settings.saveSimpleSetting(Id.ACTIVETAB, "");
+			settings.simple().save("Workspace", "ActiveTab", "", true);
 		}
 
 		// Close all tabs
@@ -511,7 +502,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 	private void verifyLicense() {
 		//TODO Enable License Check
-		/*License license = new License(settings.getSimpleSetting("license"));
+		/*License license = new License(settings.simple().get("license"));
 		while (!license.isValid(SoftwareModule.IDE)) {
 			TextInputDialog enterLicence = new TextInputDialog();
 			enterLicence.setContentText("Copy the contents of the licensefile you received into the textfield.");
@@ -527,7 +518,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 			license = new License(licenseNew.get());
 
-			settings.saveSimpleSetting("license", license.toString());
+			settings.simple().save("license", license.toString());
 			Alert validLicense = new Alert(AlertType.INFORMATION);
 			if (license.getLicenseType() == LicenseType.INTERNAL) {
 				validLicense.setContentText(
@@ -550,27 +541,27 @@ public class FXController implements Initializable, EventHandler<Event> {
 		}*/
 	}
 
-	private void encryptSetting(String name) {
-		Setting<?> setting = settings.getSetting(SIMPLE_SETTINGTYPE, name);
-
-		if (setting.getValue("encrypted").equals(0)) {
-			setting.setValue("value", SimpleSetting.encrypt((String) setting.getValue("value")));
-			setting.setValue("encrypted", 1);
-			settings.saveSetting(setting, true, true);
-		}
-	}
+//	private void encryptSetting(String name) {
+//		Setting<?> setting = settings.getSetting(SIMPLE_SETTINGTYPE, name);
+//
+//		if (setting.getValue("encrypted").equals(0)) {
+//			setting.setValue("value", SimpleSetting.encrypt((String) setting.getValue("value")));
+//			setting.setValue("encrypted", 1);
+//			settings.saveSetting(setting, true, true);
+//		}
+//	}
 
 	/**
 	 * Display the release notes
 	 */
 	public void showReleaseNotes() throws IOException {
-		String lastVersion = settings.getSimpleSetting("LastVersion");
+		String lastVersion = settings.simple().get("Info", "LastVersion");
 
 		if (lastVersion.compareTo(Loader.SHORT_VERSION) < 0) {
 			String[] changeLog = FileUtils.readFileToString(new File("CHANGELOG.md")).split("\n\\#\\# ");
 			String notes = changeLog[1];
 
-			settings.saveSimpleSetting("LastVersion", Loader.SHORT_VERSION);
+			settings.simple().save("Info", "LastVersion", Loader.SHORT_VERSION);
 
 			Alert releaseNotes = new Alert(AlertType.INFORMATION);
 			releaseNotes.setHeaderText("Current version: " + Loader.SHORT_VERSION);
