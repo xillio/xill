@@ -53,7 +53,7 @@ public class ConnectConstruct extends BaseDatabaseConstruct {
 		try {
 			service = factory.getService(type);
 		} catch (ReflectiveOperationException | IllegalArgumentException e1) {
-			throw new RobotRuntimeException("Database type is not supported", e1);
+			throw new RobotRuntimeException("Connection Error: Database type is not supported", e1);
 		}
 
 
@@ -63,13 +63,13 @@ public class ConnectConstruct extends BaseDatabaseConstruct {
 		} catch (SQLException e1) {
 			Throwable cause = e1.getCause();
 			if(cause != null && cause instanceof UnknownHostException){
-				throw new RobotRuntimeException("Unknown host given", e1);
+				throw new RobotRuntimeException("Connection error: Unknown database host", e1);
 			}
 			else if(cause != null && cause instanceof ConnectException){
-				throw new RobotRuntimeException("Wrong port given", e1);
+				throw new RobotRuntimeException("Connection error: Unknown database port", e1);
 			}
 			else if(cause!= null && cause instanceof IOException){
-				throw new RobotRuntimeException("Wrong databaseType used", e1);
+				throw new RobotRuntimeException("Connection error: Could not connect to database", e1);
 			}
 			else{
 				throw new RobotRuntimeException(e1.getMessage(), e1);
