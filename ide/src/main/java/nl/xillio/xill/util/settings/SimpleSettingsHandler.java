@@ -1,9 +1,14 @@
 package nl.xillio.xill.util.settings;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
+/**
+ * Class that contains common methods for using simple settings
+ * There are simple variable category and the name and value of the simple variable including possibility of default value and encrypting of the variable value; and description text. 
+ * 
+ * @author Zbynek Hochmann
+ */
 public class SimpleSettingsHandler {
 
 	private static final String NAME = "name";
@@ -14,20 +19,38 @@ public class SimpleSettingsHandler {
 	private static final String ENCRYPTED = "encrypted";
 
 	private ContentHandler content;
-	
-	SimpleSettingsHandler(ContentHandler content) {
+
+	SimpleSettingsHandler(ContentHandler content) {// Can be instantiated within package only
 		this.content = content;
 	}
-	
+
+	/**
+	 * Sets the new value to named simple variable in provided category
+	 * The simple variable must be registered before otherwise it will cause error.
+	 * 
+	 * @param category The name of category
+	 * @param name The name of variable
+	 * @param value The value of variable
+	 */
 	public void save(final String category, final String name, final String value) {
 		this.save(category, name, value, false);
 	}
-	
+
+	/**
+	 * Sets the new value to named simple variable in provided category
+	 * If simple variable has not been registered before and allowUnregistered=false, it will cause error.
+	 * If simple variable has not been registered before and allowUnregistered=true, it will always set the new value (but just the value, nothing more)
+	 * 
+	 * @param category The name of category
+	 * @param name The name of variable
+	 * @param value The value of variable
+	 * @param allowUnregistered true if the simple variable can be stored without prior registration
+	 */
 	public void save(final String category, final String name, final String value, final boolean allowUnregistered) {
 		try {
 			HashMap<String, Object> itemContent = new HashMap<>();
 			String valueStr = value;
-			
+
 			if (!this.content.exist(category, KEYNAME, name)) {
 				// item does not exist!
 				if (allowUnregistered) {
@@ -51,6 +74,15 @@ public class SimpleSettingsHandler {
 		}
 	}
 
+	/**
+	 * Sets basic definition of simple variable
+	 * 
+	 * @param category The category name (e.g. "Layout")
+	 * @param name The name of simple variable (e.g. "LeftPanelWidth")
+	 * @param defaultValue The default value that is use in case of the value of the variable is not set yet
+	 * @param description The description of the variable
+	 * @param encrypted True if the variable value is stored encrypted
+	 */
 	public void register(final String category, final String name, final String defaultValue, final String description, final boolean encrypted) {
 		try {
 			HashMap<String, Object> itemContent = new HashMap<>();
@@ -64,11 +96,27 @@ public class SimpleSettingsHandler {
 			System.err.println(e.getMessage());
 		}
 	}
-	
+
+	/**
+	 * Sets basic definition of simple variable (not encrypted)
+	 * 
+	 * @param category The category name (e.g. "Layout")
+	 * @param name The name of simple variable (e.g. "LeftPanelWidth")
+	 * @param defaultValue The default value that is use in case of the value of the variable is not set yet
+	 * @param description The description of the variable
+	 */
 	public void register(final String category, final String name, final String defaultValue, final String description) {
 		this.register(category, name, defaultValue, description, false);
 	}
-	
+
+	/**
+	 * Returns the value of simple variable
+	 * It returns null in case of there is no provided category found or no variable with provided name found
+	 * 
+	 * @param category The category name (e.g. "Layout")
+	 * @param keyValue The name of a variable
+	 * @return The value of simple variable
+	 */
 	public String get(final String category, final String keyValue) {
 		Object o = null;
 		Map<String, Object> map;
@@ -85,7 +133,7 @@ public class SimpleSettingsHandler {
 					throw new Exception("Invalid structure of settings file!");
 				}
 			}
-			
+
 			String result = o.toString(); 
 
 			o = map.get(ENCRYPTED);
@@ -99,7 +147,13 @@ public class SimpleSettingsHandler {
 			return null;
 		}
 	}
-	
+
+	/**
+	 * Deletes the simple variable
+	 * 
+	 * @param category The category name (e.g. "Layout")
+	 * @param name The name of variable to be deleted
+	 */
 	public void delete(final String category, final String name) {
 		try {
 			this.content.delete(category, KEYNAME, name);
@@ -107,5 +161,4 @@ public class SimpleSettingsHandler {
 			System.err.println(e.getMessage());
 		}
 	}
-	
 }
