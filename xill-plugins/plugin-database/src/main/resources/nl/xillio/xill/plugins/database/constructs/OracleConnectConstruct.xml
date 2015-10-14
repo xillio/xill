@@ -7,7 +7,7 @@
     The database parameter is the name of the database you want to connect to.
     The user and pass parameter are for the username and password. Both are optional.
     The options parameter is optional. It is used to set Oracle specific options. These can be found here:
-    http://docs.oracle.com/cd/E13222_01/wls/docs92/jdbc_drivers/oracle.html
+    http://docs.oracle.com/cd/E13222_01/wls/docs92/jdbc_drivers/oracle.html#wp1066413
   </description>
   <examples>
     <example>

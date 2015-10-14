@@ -2,7 +2,7 @@
 <function>
   <description>
     Connect to a sqlite database. Returns a connection object.
-    the file parameter is optional. an in memory database will be created when it is left empty.
+    The file parameter is optional. An in-memory database will be created when it is left empty.
   </description>
   <examples>
     <example>

@@ -7,7 +7,7 @@
     The database parameter wants the name of the database you want to connect to.
     The user and pass parameter are for the username and password. Both are optional.
     The options parameter is optional. It is used for setting mssql specific options. These can be found here:
-    https://msdn.microsoft.com/en-us/library/ms378988(v=sql.110).aspx
+    http://jtds.sourceforge.net/faq.html#urlFormat
     
   </description>
   <examples>

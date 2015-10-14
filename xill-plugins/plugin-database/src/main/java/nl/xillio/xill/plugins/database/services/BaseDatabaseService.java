@@ -16,15 +16,15 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import nl.xillio.xill.plugins.database.util.StatementIterator;
-import nl.xillio.xill.plugins.database.util.Tuple;
-import nl.xillio.xill.plugins.database.util.TypeConverter;
-import nl.xillio.xill.plugins.database.util.TypeConverter.ConversionException;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Iterators;
+
+import nl.xillio.xill.plugins.database.util.StatementIterator;
+import nl.xillio.xill.plugins.database.util.Tuple;
+import nl.xillio.xill.plugins.database.util.TypeConverter;
+import nl.xillio.xill.plugins.database.util.TypeConverter.ConversionException;
 
 /**
  * The base service for any databaseService.
@@ -147,9 +147,12 @@ public abstract class BaseDatabaseService implements DatabaseService {
 
 	/**
 	 * 
-	 * @param stmt the prepared statement
-	 * @param indexedParameters the list with the parameters
-	 * @param parameters the list of maps
+	 * @param stmt
+	 *        the prepared statement
+	 * @param indexedParameters
+	 *        the list with the parameters
+	 * @param parameters
+	 *        the list of maps
 	 * @return an array of update counts
 	 * @throws SQLException
 	 */
@@ -230,7 +233,8 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	}
 
 	@Override
-	public LinkedHashMap<String, Object> getObject(final Connection connection, final String table, final Map<String, Object> constraints) throws SQLException, ConversionException, IllegalArgumentException {
+	public LinkedHashMap<String, Object> getObject(final Connection connection, final String table, final Map<String, Object> constraints)
+			throws SQLException, ConversionException, IllegalArgumentException {
 		// prepare statement
 		final LinkedHashMap<String, Object> notNullConstraints = new LinkedHashMap<>();
 		constraints.forEach((k, v) -> {
@@ -318,31 +322,35 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 *        A boolean whether we allow an to update an entry or not.
 	 * @throws SQLException
 	 */
-	@SuppressWarnings("squid:S1319") // We need a map with guaranteed insertion order, there is no interface available, only the LinkedHashMap implementation is available
+	// We need a map with guaranteed insertion order, there is no interface available, only the LinkedHashMap implementation is available
 	@Override
 	public void storeObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject, final List<String> keys, final boolean allowUpdate)
 			throws SQLException {
-	
+
 		boolean exists;
 		try {
-			exists = checkIfExists(connection,table,newObject,keys); //check if an entry with the given keys exists
+			// check if an entry with the given keys exists
+			exists = checkIfExists(connection, table, newObject, keys);
 		} catch (ConversionException e) {
 			throw new SQLException(e);
 		}
-		if(exists){
-			if(allowUpdate){
-				updateObject(connection,table,newObject,keys); //an entry exists and we are allowed to update it
+		if (exists) {
+			if (allowUpdate) {
+				// an entry exists and we are allowed to update it
+				updateObject(connection, table, newObject, keys);
+			} else {
+				// an entry exists but we are not allowed to update it so we do not do anything
+				return;
 			}
-			else{
-				return; //an entry exists but we are not allowed to update it so we do not do anything
-			}
-		}else{
-			insertObject(connection,table,newObject); //no existing entry found so we insert the object.
+		} else {
+			// no existing entry found so we insert the object.
+			insertObject(connection, table, newObject);
 		}
 	}
 
 	/**
 	 * Return true if the provided table has a row with the provided properties. In all other cases: return false.
+	 * 
 	 * @param connection
 	 * @param table
 	 * @param newObject
@@ -352,28 +360,32 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 * @throws ConversionException
 	 */
 	@SuppressWarnings("squid:S1166") // The illegal argument exception is expected and should always result in "false" being returned as the row does not exist in the database yet
-	boolean checkIfExists(final Connection connection, final String table, final Map<String, Object> newObject, final List<String> keys) throws SQLException, ConversionException{
-		Map<String,Object> constraints = new LinkedHashMap<>();
+	boolean checkIfExists(final Connection connection, final String table, final Map<String, Object> newObject, final List<String> keys) throws SQLException, ConversionException {
+		Map<String, Object> constraints = new LinkedHashMap<>();
 		for (String key : keys) {
-			if(newObject.containsKey(key)){
+			if (newObject.containsKey(key)) {
 				constraints.put(key, newObject.get(key));
 			}
 		}
-		try{
-			if(getObject(connection, table, constraints)!=null){ //if an object is found...
+		try {
+			if (getObject(connection, table, constraints) != null) { // if an object is found...
 				return true;
 			}
-			return false; //no object is found..
-		}catch(IllegalArgumentException e){
+			return false; // no object is found..
+		} catch (IllegalArgumentException e) {
 			return false;
 		}
 	}
 
 	/**
 	 * Insert the provided object into the database
-	 * @param connection the database connection
-	 * @param table the table in which the object will be inserted
-	 * @param newObject the objected that will be inserted
+	 * 
+	 * @param connection
+	 *        the database connection
+	 * @param table
+	 *        the table in which the object will be inserted
+	 * @param newObject
+	 *        the objected that will be inserted
 	 * @throws SQLException
 	 */
 	void insertObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject) throws SQLException {
@@ -400,10 +412,15 @@ public abstract class BaseDatabaseService implements DatabaseService {
 
 	/**
 	 * Update the provided object in the database
-	 * @param connection the database connection
-	 * @param table the table in which an object will be updated
-	 * @param newObject the object that will be used to update the table
-	 * @param keys the keys for  the WHERE part of the query.
+	 * 
+	 * @param connection
+	 *        the database connection
+	 * @param table
+	 *        the table in which an object will be updated
+	 * @param newObject
+	 *        the object that will be used to update the table
+	 * @param keys
+	 *        the keys for the WHERE part of the query.
 	 * @throws SQLException
 	 */
 	void updateObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject, final List<String> keys)

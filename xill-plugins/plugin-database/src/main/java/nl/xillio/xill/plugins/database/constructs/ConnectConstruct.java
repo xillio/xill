@@ -29,11 +29,11 @@ public class ConnectConstruct extends BaseDatabaseConstruct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		Argument[] args =
-		{new Argument("database", ATOMIC),
-				new Argument("type", ATOMIC),
-				new Argument("user", NULL, ATOMIC),
-				new Argument("pass", NULL, ATOMIC),
-				new Argument("options", new ObjectExpression(new LinkedHashMap<>()), OBJECT)};
+				{new Argument("database", ATOMIC),
+						new Argument("type", ATOMIC),
+						new Argument("user", NULL, ATOMIC),
+						new Argument("pass", NULL, ATOMIC),
+						new Argument("options", new ObjectExpression(new LinkedHashMap<>()), OBJECT)};
 		return new ConstructProcessor(a -> process(a, factory, context.getRobotID()), args);
 	}
 
@@ -43,7 +43,7 @@ public class ConnectConstruct extends BaseDatabaseConstruct {
 		String type = args[1].getStringValue();
 		String user = args[2].isNull() ? null : args[2].getStringValue();
 		String pass = args[3].isNull() ? null : args[3].getStringValue();
-		
+
 		Map<String, MetaExpression> options = (Map<String, MetaExpression>) args[4].getValue();
 		Tuple<String, String>[] optionsArray =
 				options.entrySet().stream()
@@ -57,30 +57,28 @@ public class ConnectConstruct extends BaseDatabaseConstruct {
 			throw new RobotRuntimeException("Connection Error: Database type is not supported", e1);
 		}
 
-
 		Connection connection;
 		try {
 			connection = service.createConnection(database, user, pass, optionsArray);
 		} catch (SQLException e1) {
 			Throwable cause = e1.getCause();
-			if(cause != null && cause instanceof UnknownHostException){
+			if (cause != null && cause instanceof UnknownHostException) {
 				throw new RobotRuntimeException("Connection error: Unknown database host", e1);
-			}
-			else if(cause != null && cause instanceof ConnectException){
+			} else if (cause != null && cause instanceof ConnectException) {
 				throw new RobotRuntimeException("Connection error: Unknown database port", e1);
-			}
-			else if(cause!= null && cause instanceof IOException){
+			} else if (cause != null && cause instanceof IOException) {
 				throw new RobotRuntimeException("Connection error: Could not connect to database", e1);
-			}
-			else{
+			} else {
 				throw new RobotRuntimeException(e1.getMessage(), e1);
 			}
 		}
 
 		MetaExpression metaExpression = fromValue(database);
-		ConnectionMetadata newConnection = new ConnectionMetadata(type, connection); //
-		lastConnections.put(robotID, newConnection); //add the robotId with the new connection to the pool
-		metaExpression.storeMeta(newConnection); //store the connection metadata in the ouput MetaExpression
+		ConnectionMetadata newConnection = new ConnectionMetadata(type, connection);
+		// add the robotId with the new connection to the pool
+		lastConnections.put(robotID, newConnection);
+		// store the connection metadata in the output MetaExpression
+		metaExpression.storeMeta(newConnection);
 
 		return metaExpression;
 	}

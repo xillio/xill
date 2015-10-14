@@ -29,13 +29,13 @@ public class StoreObjectConstruct extends BaseDatabaseConstruct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		Argument[] args =
-		{
-				new Argument("table", ATOMIC),
-				new Argument("object", OBJECT),
-				new Argument("keys", LIST),
-				new Argument("allowUpdate", TRUE, ATOMIC),
-				new Argument("database", NULL, ATOMIC),
-		};
+				{
+						new Argument("table", ATOMIC),
+						new Argument("object", OBJECT),
+						new Argument("keys", LIST),
+						new Argument("allowUpdate", TRUE, ATOMIC),
+						new Argument("database", NULL, ATOMIC),
+				};
 		return new ConstructProcessor(a -> process(a, factory, context.getRobotID()), args);
 	}
 
@@ -44,15 +44,16 @@ public class StoreObjectConstruct extends BaseDatabaseConstruct {
 		String tblName = args[0].getStringValue();
 		LinkedHashMap<String, Object> newObject = (LinkedHashMap<String, Object>) extractValue(args[1]);
 		ConnectionMetadata metaData;
-		if (args[4].equals(NULL)) { //if no database is given use the last made connection of this robot.
+		// if no database is given use the last made connection of this robot.
+		if (args[4].equals(NULL)) {
 			metaData = lastConnections.get(robotID);
 		} else {
-			metaData = assertMeta(args[4], "database", ConnectionMetadata.class, "variable with a connection"); //check whether the given MetaExpression has the right metaData.
+			metaData = assertMeta(args[4], "database", ConnectionMetadata.class, "variable with a connection"); // check whether the given MetaExpression has the right metaData.
 		}
 		Connection connection = metaData.getConnection();
 
 		List<MetaExpression> keysMeta = (ArrayList<MetaExpression>) args[2].getValue();
-		List<String> keys = keysMeta.stream().map(m -> m.getStringValue()).collect(Collectors.toList()); //create a list from the given keys.
+		List<String> keys = keysMeta.stream().map(m -> m.getStringValue()).collect(Collectors.toList()); // create a list from the given keys.
 
 		boolean allowUpdate = args[3].getBooleanValue();
 
@@ -62,7 +63,7 @@ public class StoreObjectConstruct extends BaseDatabaseConstruct {
 			throw new RobotRuntimeException("SQL Exception, " + e.getMessage(), e);
 		}
 
-		return NULL; 
+		return NULL;
 
 	}
 
