@@ -6,7 +6,7 @@
     The object is the object that needs to be stored.
     The strings listed in the keys argument will be used as primary key. 
     the allowUpdate parameter works as follows: If an entry is found with the same primary key(s) as the given object and allowUpdate is TRUE then the existing entry in the database will be updated
-    with the new object. If allowUpdate is FALSE it will not do anything.
+    with the new object. If allowUpdate is FALSE it will not do anything. if no entry is found then it will always create a new entry.
     The database parameter is optional. The last made connection will be used if no database is given.
     storeObject will always return null.
   </description>
