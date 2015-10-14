@@ -6,15 +6,15 @@
     <examples>
         <example title="Usage">
             <header>Assuming we have an XML file note.xml which contains the following:</header>
-            <code>
-&lt; note id="1"&gt;
-  &lt; to&gt;Tove&lt; /to&gt;
-  &lt; from&gt;Jani&lt; /from&gt;
-  &lt; heading&gt;Reminder&lt; /heading&gt;
-  &lt; comment&gt;This was sent to James as well&lt; /comment&gt;
-  &lt; comment&gt;John has not responded to the invitation&lt; /comment&gt;
-  &lt; body&gt;Don't forget me this weekend!&lt; /body&gt;
-&lt; /note&gt;
+            <code><![CDATA[
+<note id="1">
+  <to>Tove</to>;
+  <from>Jani</from>
+  <heading>Reminder</heading>
+  <comment>This was sent to James as well</comment>
+  <comment>John has not responded to the invitation</comment>
+  <body>Don't forget me this weekend!</body>
+</note> ]]>
             </code>
             <header>Then executing the following code:</header>
             <code>

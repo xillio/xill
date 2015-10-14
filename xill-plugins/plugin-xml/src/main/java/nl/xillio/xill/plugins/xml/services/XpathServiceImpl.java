@@ -1,12 +1,16 @@
 package nl.xillio.xill.plugins.xml.services;
 
+import nl.xillio.xill.api.data.XmlNode;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.xml.data.XmlNode;
+import nl.xillio.xill.plugins.xml.data.XmlNodeVar;
+
 import com.google.inject.Singleton;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.XPath;
@@ -21,6 +25,7 @@ import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import net.sf.saxon.lib.NamespaceConstant;
 
 /**
@@ -114,7 +119,7 @@ public class XpathServiceImpl implements XpathService {
 			case Node.TEXT_NODE:
 				return node.getNodeValue();
 			default:
-				return new XmlNode(node);
+				return new XmlNodeVar(node);
 		}
 	}	
 
