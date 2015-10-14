@@ -197,7 +197,12 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 	public void handle(final KeyEvent event) {
 		// Find
 		if (KeyCombination.valueOf(FXController.HOTKEY_FIND).match(event)) {
-			editorReplaceBar.open(1);
+			event.consume();
+			if (editorReplaceBar.isOpen()) {
+				editorReplaceBar.close(false);
+			} else {
+				editorReplaceBar.open(1);
+			}
 		}
 	}
 
