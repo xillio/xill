@@ -55,7 +55,7 @@ public class Assign implements Processable {
 		String name = path.get(pathID).process(debugger).get().getStringValue();
 		int index = path.get(pathID).process(debugger).get().getNumberValue().intValue();
 		if(!String.valueOf(index).equals(name)){
-			throw new RobotRuntimeException("Error: '" + variableDeclaration.getName() + "' does not contain any element called '" + name + "' (a list cannot have named elements).");
+			throw new RobotRuntimeException("List '" + variableDeclaration.getName() + "' does not contain any element called '" + name + "' (a list cannot have named elements).");
 		}
 		if (path.size() - 1 == pathID) {
 			// This is the value to write to
@@ -106,7 +106,7 @@ public class Assign implements Processable {
 
 		// We need to go deeper
 		if(!target.containsKey(index)){
-			throw new RobotRuntimeException("Error: '" + variableDeclaration.getName() + "' does not contain any element called '" + index + "'.");
+			throw new RobotRuntimeException("Object '" + variableDeclaration.getName() + "' does not contain any element called '" + index + "'.");
 		}
 		MetaExpression currentValue = target.get(index).process(debugger).get();
 
