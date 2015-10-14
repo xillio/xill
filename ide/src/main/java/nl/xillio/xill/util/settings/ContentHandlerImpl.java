@@ -45,6 +45,8 @@ public class ContentHandlerImpl implements ContentHandler {
 	private TransformerFactory transformerFactory  = TransformerFactory.newInstance();
 	private XPathFactory xpathFactory = XPathFactory.newInstance();
 
+	private Object lock = new Object(); // This lock object is used to prevent manipulation with XML content for more than one thread concurrently
+	
 	private static String DEFAULTPW = "6WyMNf99H32Qn3ofZ32rxVNTXcd8sA6b";
 	private static StandardPBEStringEncryptor encryptor;
 
@@ -94,43 +96,47 @@ public class ContentHandlerImpl implements ContentHandler {
 	 * @throws Exception when error occurs during saving to file
 	 */
 	private void save() throws Exception {
-		try {
-			Transformer transformer = this.transformerFactory.newTransformer();
-			DOMSource source = new DOMSource(this.document);
-			StreamResult result = new StreamResult(this.storage);
-			transformer.transform(source, result);
-		} catch (Exception e) {
-			throw new Exception("Cannot save settings file for reason: " + e.getMessage());
-		}			
+		synchronized(lock) {
+			try {
+				Transformer transformer = this.transformerFactory.newTransformer();
+				DOMSource source = new DOMSource(this.document);
+				StreamResult result = new StreamResult(this.storage);
+				transformer.transform(source, result);
+			} catch (Exception e) {
+				throw new Exception("Cannot save settings file for reason: " + e.getMessage());
+			}
+		}
 	}
 
 	@Override
 	public Map<String, Object> get(final String category, final String keyValue) throws Exception {
-		// Tries to iterate all items in given category
-		String path = String.format("%1$s/item", category);
-		Object result = xpathFactory.newXPath().compile(path).evaluate(this.document.getFirstChild(), XPathConstants.NODESET); 
-		if (result == null) {
-			return null;
-		}
-		if (result instanceof NodeList) {
-			HashMap<String, Object> map = new HashMap<>();
-			NodeList list = (NodeList) result;
-			for (int i = 0; i < list.getLength(); i++) {
-				Node node = list.item(i);
-				Node attr = node.getAttributes().getNamedItem("key");
-				if (attr != null) { // Deal with the items with key only
-					if (this.keyValueMatch(node, attr.getNodeValue(), keyValue)) {
-						// Key value matches (item found) so iterate all item values and put them to map
-						Node child = node.getFirstChild();
-						while (child != null) {
-							map.put(child.getNodeName(), child.getTextContent());
-							child = child.getNextSibling();
+		synchronized(lock) {
+			// Tries to iterate all items in given category
+			String path = String.format("%1$s/item", category);
+			Object result = xpathFactory.newXPath().compile(path).evaluate(this.document.getFirstChild(), XPathConstants.NODESET); 
+			if (result == null) {
+				return null;
+			}
+			if (result instanceof NodeList) {
+				HashMap<String, Object> map = new HashMap<>();
+				NodeList list = (NodeList) result;
+				for (int i = 0; i < list.getLength(); i++) {
+					Node node = list.item(i);
+					Node attr = node.getAttributes().getNamedItem("key");
+					if (attr != null) { // Deal with the items with key only
+						if (this.keyValueMatch(node, attr.getNodeValue(), keyValue)) {
+							// Key value matches (item found) so iterate all item values and put them to map
+							Node child = node.getFirstChild();
+							while (child != null) {
+								map.put(child.getNodeName(), child.getTextContent());
+								child = child.getNextSibling();
+							}
+							break;
 						}
-						break;
 					}
 				}
+				return map;
 			}
-			return map;
 		}
 		throw new Exception("Invalid content structure of settings file!");
 	}
@@ -151,73 +157,79 @@ public class ContentHandlerImpl implements ContentHandler {
 
 	@Override
 	public List<Map<String, Object>> getAll(final String category) throws Exception {
-		String path = String.format("%1$s/item", category);
-		Object result = xpathFactory.newXPath().compile(path).evaluate(this.document.getFirstChild(), XPathConstants.NODESET);
-		if (result == null) {
-			return null;
-		}
-		if (result instanceof NodeList) {
-			LinkedList<Map<String, Object>> output = new LinkedList<>();
-
-			NodeList nodeList = (NodeList) result;
-			for (int i = 0; i < nodeList.getLength(); i++) {
-				Node parentNode = nodeList.item(i);
-				HashMap<String, Object> map = new HashMap<>();
-				Node node = parentNode.getFirstChild();
-				while (node != null) {
-					map.put(node.getNodeName(), node.getTextContent());
-					node = node.getNextSibling();
-				}
-				output.add(map);
+		synchronized(lock) {
+			String path = String.format("%1$s/item", category);
+			Object result = xpathFactory.newXPath().compile(path).evaluate(this.document.getFirstChild(), XPathConstants.NODESET);
+			if (result == null) {
+				return null;
 			}
-			return output;
+			if (result instanceof NodeList) {
+				LinkedList<Map<String, Object>> output = new LinkedList<>();
+	
+				NodeList nodeList = (NodeList) result;
+				for (int i = 0; i < nodeList.getLength(); i++) {
+					Node parentNode = nodeList.item(i);
+					HashMap<String, Object> map = new HashMap<>();
+					Node node = parentNode.getFirstChild();
+					while (node != null) {
+						map.put(node.getNodeName(), node.getTextContent());
+						node = node.getNextSibling();
+					}
+					output.add(map);
+				}
+				return output;
+			}
 		}
 		throw new Exception("Invalid content structure of settings file!");
 	}
 
 	@Override
 	public boolean set(final String category, final Map<String, Object> itemContent, final String keyName, final String keyValue) throws Exception {
-
 		boolean created = false;
-		Node categoryNode = this.getCategoryNode(category);
-		Element itemNode[] = {null};
-		if (keyName != null) {
-			itemNode[0] = this.getItemNode(categoryNode, keyName, keyValue);
-		}
-		if (itemNode[0] == null) {
-			// creates new item node
-			created = true;
-			itemNode[0] = this.document.createElement("item");
-			categoryNode.appendChild(itemNode[0]);
+		synchronized(lock) {
+			Node categoryNode = this.getCategoryNode(category);
+			Element itemNode[] = {null};
 			if (keyName != null) {
-				itemNode[0].setAttribute("key", keyName);
+				itemNode[0] = this.getItemNode(categoryNode, keyName, keyValue);
 			}
+			if (itemNode[0] == null) {
+				// creates new item node
+				created = true;
+				itemNode[0] = this.document.createElement("item");
+				categoryNode.appendChild(itemNode[0]);
+				if (keyName != null) {
+					itemNode[0].setAttribute("key", keyName);
+				}
+			}
+	
+			itemContent.forEach( (k,v) -> set(itemNode[0], k, v));
+	
+			this.save();
 		}
-
-		itemContent.forEach( (k,v) -> set(itemNode[0], k, v));
-
-		this.save();
-
 		return created;
 	}
 
 	@Override
 	public boolean exist(final String category, final String keyName, final String keyValue) throws Exception {
 		String path = String.format("%1$s/item[@key='%2$s'][%2$s/text()='%3$s']", category, keyName, keyValue);
-		Object result = xpathFactory.newXPath().compile(path).evaluate(this.document.getFirstChild(), XPathConstants.NODE);
-		return (result != null);
+		synchronized(lock) {
+			Object result = xpathFactory.newXPath().compile(path).evaluate(this.document.getFirstChild(), XPathConstants.NODE);
+			return (result != null);
+		}
 	}
 
 	@Override
 	public boolean delete(final String category, final String keyName, final String keyValue) throws Exception {
-		Node categoryNode = this.getCategoryNode(category);
-		Element itemNode = this.getItemNode(categoryNode, keyName, keyValue);
-		if (itemNode == null) {
-			return false;
+		synchronized(lock) {
+			Node categoryNode = this.getCategoryNode(category);
+			Element itemNode = this.getItemNode(categoryNode, keyName, keyValue);
+			if (itemNode == null) {
+				return false;
+			}
+			categoryNode.removeChild(itemNode);
+	
+			this.save();
 		}
-		categoryNode.removeChild(itemNode);
-
-		this.save();
 
 		return true;
 	}
