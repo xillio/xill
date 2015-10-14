@@ -52,10 +52,10 @@ public class Assign implements Processable {
 	@SuppressWarnings("unchecked")
 	private void assign(final List<MetaExpression> target, final int pathID, final MetaExpression value,
 					final Debugger debugger) throws RobotRuntimeException {
-		String thing = path.get(pathID).process(debugger).get().getStringValue();
+		String name = path.get(pathID).process(debugger).get().getStringValue();
 		int index = path.get(pathID).process(debugger).get().getNumberValue().intValue();
-		if(!String.valueOf(index).equals(thing)){
-			throw new RobotRuntimeException("Incorrect Syntax, If you want to change a value in a list try: \n" + variableDeclaration.getName() + "[<index>] = "+value + ";");
+		if(!String.valueOf(index).equals(name)){
+			throw new RobotRuntimeException("Error: '" + variableDeclaration.getName() + "' does not contain any element called '" + name + "' (a list cannot have named elements).");
 		}
 		if (path.size() - 1 == pathID) {
 			// This is the value to write to
@@ -106,8 +106,7 @@ public class Assign implements Processable {
 
 		// We need to go deeper
 		if(!target.containsKey(index)){
-			throw new RobotRuntimeException("Incorrect Syntax, if you want to put a list in the object try: \n"
-					+ variableDeclaration.getName() + "." + index + " = " + "[" + value + "];");
+			throw new RobotRuntimeException("Error: '" + variableDeclaration.getName() + "' does not contain any element called '" + index + "'.");
 		}
 		MetaExpression currentValue = target.get(index).process(debugger).get();
 
