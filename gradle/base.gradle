@@ -2,9 +2,6 @@
  * This file will be applied to all projects.
  */
 
-repositories {
-    mavenLocal()
-}
 // Set some base dependencies
 dependencies {
     testCompile 'org.testng:testng:6.9.8'
@@ -16,7 +13,7 @@ dependencies {
     }
 }
 
-/*
+/**
  * Most project need to be copied to the plugins directory so we create a task for that here.
  */
 task copyToPluginsDir(type: Copy) {
