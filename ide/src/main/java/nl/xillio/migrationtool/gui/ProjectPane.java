@@ -36,7 +36,8 @@ import nl.xillio.migrationtool.dialogs.RenameDialog;
 import nl.xillio.migrationtool.dialogs.UploadToServerDialog;
 import nl.xillio.migrationtool.gui.WatchDir.FolderListener;
 import nl.xillio.xill.api.Xill;
-import nl.xillio.xill.util.settings.ProjectSetting;
+import nl.xillio.xill.util.settings.ProjectSettings;
+import nl.xillio.xill.util.settings.Settings;
 import nl.xillio.xill.util.settings.SettingsHandler;
 
 public class ProjectPane extends AnchorPane implements FolderListener, ChangeListener<TreeItem<Pair<File, String>>> {
@@ -166,13 +167,13 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 
 	private void loadProjects() {
 		Platform.runLater(() -> {
-			List<ProjectSetting> projects = settings.project().getAll();
+			List<ProjectSettings> projects = settings.project().getAll();
 			if (projects.isEmpty()) {
 				disableAllButtons();
 				return;
 			};
 			projects.forEach(this::addProject);
-			if (settings.simple().get("license", "license") == null && new File(DEFAULT_PROJECT_PATH).exists()) {
+			if (settings.simple().get(Settings.LICENSE, Settings.License) == null && new File(DEFAULT_PROJECT_PATH).exists()) {
 				newProject(DEFAULT_PROJECT_NAME, DEFAULT_PROJECT_PATH, "");
 			}
 
@@ -218,14 +219,14 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		boolean projectDoesntExist = root.getChildren().parallelStream().map(TreeItem::getValue).map(Pair::getValue).noneMatch(n -> n.equalsIgnoreCase(name))
 						&& findItemByPath(root, folder) == null;
 		if (projectDoesntExist) {
-			ProjectSetting project = new ProjectSetting(name, folder, description);
+			ProjectSettings project = new ProjectSettings(name, folder, description);
 			settings.project().save(project);
 			addProject(project);
 		}
 		return projectDoesntExist;
 	}
 
-	private void addProject(final ProjectSetting project) {
+	private void addProject(final ProjectSettings project) {
 		// Check if the project still exists
 		if (project.getFolder() == null) {
 			return;

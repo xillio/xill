@@ -40,6 +40,7 @@ import nl.xillio.xill.api.XillProcessor;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.preview.Replaceable;
 import nl.xillio.xill.util.HighlightSettings;
+import nl.xillio.xill.util.settings.Settings;
 import nl.xillio.xill.util.settings.SettingsHandler;
 
 import org.apache.logging.log4j.LogManager;
@@ -188,8 +189,8 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 		this.processor = processor;
 
 		// Read the zoom
-		settings.simple().register("Layout", "AceZoom_" + processor.getRobotID().getPath().getAbsolutePath(), "1.0", "The zoom factor of the code editor.");
-		String zoomString = settings.simple().get("Layout", "AceZoom_" + processor.getRobotID().getPath().getAbsolutePath());
+		settings.simple().register(Settings.LAYOUT, Settings.AceZoom_ + processor.getRobotID().getPath().getAbsolutePath(), "1.0", "The zoom factor of the code editor.");
+		String zoomString = settings.simple().get(Settings.LAYOUT, Settings.AceZoom_ + processor.getRobotID().getPath().getAbsolutePath());
 		if (zoomString != null) {
 			double zoom = Double.parseDouble(zoomString);
 			editor.setZoom(zoom);
@@ -332,7 +333,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 		editor.setZoom(value);
 
 		if (processor != null) {
-			settings.simple().save("Layout", "AceZoom_" + processor.getRobotID().getPath().getAbsolutePath(), Double.toString(value));
+			settings.simple().save(Settings.LAYOUT, Settings.AceZoom_ + processor.getRobotID().getPath().getAbsolutePath(), Double.toString(value));
 		}
 	}
 

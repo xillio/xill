@@ -1,9 +1,9 @@
 package nl.xillio.xill.util.settings;
 
 /**
- * The class uses like a read storage for one project variable
+ * The class used just like simple read storage for one project settings
  */
-public class ProjectSetting {
+public class ProjectSettings {
 
 	private String name;
 	private String folder;
@@ -14,7 +14,7 @@ public class ProjectSetting {
 	 * @param folder Project folder
 	 * @param description Project description
 	 */
-	public ProjectSetting(final String name, final String folder, final String description) {
+	public ProjectSettings(final String name, final String folder, final String description) {
 		this.name = name;
 		this.folder = folder;
 		this.description = description;

@@ -29,7 +29,7 @@ public class ProjectSettingsHandler {
 	 * 
 	 * @param project The project data
 	 */
-	public void save(ProjectSetting project) {
+	public void save(ProjectSettings project) {
 		try {
 			HashMap<String, Object> itemContent = new HashMap<>();
 			itemContent.put(NAME, project.getName());
@@ -45,13 +45,13 @@ public class ProjectSettingsHandler {
 	/**
 	 * @return List of all projects in settings
 	 */
-	public List<ProjectSetting> getAll() {
-		LinkedList<ProjectSetting> list = new LinkedList<>();
+	public List<ProjectSettings> getAll() {
+		LinkedList<ProjectSettings> list = new LinkedList<>();
 
 		try {
 			List<Map<String, Object>> result = this.content.getAll(CATEGORY);
 			for (Map<String, Object> item : result) {
-				list.add(new ProjectSetting(item.get(NAME).toString(), item.get(FOLDER).toString(), item.get(DESCRIPTION).toString()));
+				list.add(new ProjectSettings(item.get(NAME).toString(), item.get(FOLDER).toString(), item.get(DESCRIPTION).toString()));
 			}
 		} catch (Exception e) {
 			System.err.println(e.getMessage());

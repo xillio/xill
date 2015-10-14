@@ -37,6 +37,7 @@ import nl.xillio.xill.api.XillProcessor;
 import nl.xillio.xill.api.components.Robot;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.errors.XillParsingException;
+import nl.xillio.xill.util.settings.Settings;
 import nl.xillio.xill.util.settings.SettingsHandler;
 
 /**
@@ -111,9 +112,9 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	}
 
 	private static void initializeSettings(final File documentPath) {
-		settings.simple().register("Layout", "RightPanelWidth_" + documentPath.getAbsolutePath(), "0.7", "Width of the right panel for the specified currentRobot");
-		settings.simple().register("Layout", "RightPanelCollapsed_" + documentPath.getAbsolutePath(), "true", "The collapsed-state of the right panel for the specified currentRobot");
-		settings.simple().register("Layout", "EditorHeight_" + documentPath.getAbsolutePath(), "0.6", "The height of the editor");
+		settings.simple().register(Settings.LAYOUT, Settings.RightPanelWidth_ + documentPath.getAbsolutePath(), "0.7", "Width of the right panel for the specified currentRobot");
+		settings.simple().register(Settings.LAYOUT, Settings.RightPanelCollapsed_ + documentPath.getAbsolutePath(), "true", "The collapsed-state of the right panel for the specified currentRobot");
+		settings.simple().register(Settings.LAYOUT, Settings.EditorHeight_ + documentPath.getAbsolutePath(), "0.6", "The height of the editor");
 	}
 
 	private void initializeTab(final File documentPath) {
@@ -121,7 +122,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 		setText(getName());
 
 		// Set the tab dividers
-		double editorHeight = Double.parseDouble(settings.simple().get("Layout", "EditorHeight_" + documentPath.getAbsolutePath()));
+		double editorHeight = Double.parseDouble(settings.simple().get(Settings.LAYOUT, Settings.EditorHeight_ + documentPath.getAbsolutePath()));
 
 		spnBotLeft.setDividerPosition(0, editorHeight);
 
@@ -129,7 +130,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 		spnBotLeft.getDividers().get(0).positionProperty().addListener(
 			(observable, oldPos, newPos) -> {
 				double height = newPos.doubleValue();
-				settings.simple().save("Layout", "EditorHeight_" + documentPath.getAbsolutePath(), Double.toString(height));
+				settings.simple().save(Settings.LAYOUT, Settings.EditorHeight_ + documentPath.getAbsolutePath(), Double.toString(height));
 			});
 
 		// Subscribe to start/stop for icon change
@@ -180,7 +181,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
 			// Remove the left hidden bar from dom
 			// This must be done after initialization otherwise the debugpane won't receive the tab
-			boolean showRightPanel = Boolean.parseBoolean(settings.simple().get("Layout", "RightPanelCollapsed_" + getDocument().getAbsolutePath()));
+			boolean showRightPanel = Boolean.parseBoolean(settings.simple().get(Settings.LAYOUT, Settings.RightPanelCollapsed_ + getDocument().getAbsolutePath()));
 
 			if (showRightPanel) {
 				hideButtonPressed();
@@ -214,9 +215,9 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	private void hideButtonPressed() {
 		File document = processor.getRobotID().getPath();
 		if (document != null) {
-			settings.simple().save("Layout", "RightPanelCollapsed_" + document.getAbsolutePath(), "true");
+			settings.simple().save(Settings.LAYOUT, Settings.RightPanelCollapsed_ + document.getAbsolutePath(), "true");
 			if (!spnBotPanes.getDividers().isEmpty()) {
-				settings.simple().save("Layout", "RightPanelWidth_" + document.getAbsolutePath(), Double.toString(spnBotPanes.getDividerPositions()[0]));
+				settings.simple().save(Settings.LAYOUT, Settings.RightPanelWidth_ + document.getAbsolutePath(), Double.toString(spnBotPanes.getDividerPositions()[0]));
 			}
 		}
 
@@ -235,7 +236,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	@FXML
 	private void showButtonPressed() {
 		File document = processor.getRobotID().getPath();
-		settings.simple().save("Layout", "RightPanelCollapsed_" + document.getAbsolutePath(), "false");
+		settings.simple().save(Settings.LAYOUT, Settings.RightPanelCollapsed_ + document.getAbsolutePath(), "false");
 
 		// Hide small bar
 		hbxBot.getChildren().remove(vbxDebugHidden);
@@ -246,10 +247,10 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 		}
 
 		// Add splitpane position listener
-		spnBotPanes.setDividerPosition(0, Double.parseDouble(settings.simple().get("Layout", "RightPanelWidth_" + document.getAbsolutePath())));
+		spnBotPanes.setDividerPosition(0, Double.parseDouble(settings.simple().get(Settings.LAYOUT, Settings.RightPanelWidth_ + document.getAbsolutePath())));
 		spnBotPanes.getDividers().get(0).positionProperty().addListener((position, oldPos, newPos) -> {
 			if (spnBotPanes.getItems().contains(vbxDebugpane)) {
-				settings.simple().save("Layout", "RightPanelWidth_" + document.getAbsolutePath(), newPos.toString());
+				settings.simple().save(Settings.LAYOUT, Settings.RightPanelWidth_ + document.getAbsolutePath(), newPos.toString());
 			}
 		});
 	}

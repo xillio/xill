@@ -27,6 +27,7 @@ import javafx.scene.control.TreeItem;
 import javafx.util.Pair;
 import nl.xillio.migrationtool.gui.ProjectPane;
 import nl.xillio.xill.api.Xill;
+import nl.xillio.xill.util.settings.Settings;
 import nl.xillio.xill.util.settings.SettingsHandler;
 
 /**
@@ -34,7 +35,6 @@ import nl.xillio.xill.util.settings.SettingsHandler;
  */
 public class UploadToServerDialog extends FXMLDialog {
 	private static final SettingsHandler settings = SettingsHandler.getSettingsHandler();
-	private static final String SERVERHOST = "ServerHost", SERVERUSER = "ServerUsername", SERVERPASS = "ServerPassword";
 	private static final CloseableHttpClient client = HttpClientBuilder.create().build();
 
 	@FXML
@@ -68,20 +68,20 @@ public class UploadToServerDialog extends FXMLDialog {
 	}
 
 	@FXML
-	private void cancelBtnPressed(@SuppressWarnings("unused") final ActionEvent event) {
+	private void cancelBtnPressed(final ActionEvent event) {
 		close();
 	}
 
 	@FXML
-	private void okayBtnPressed(@SuppressWarnings("unused") final ActionEvent event) {
+	private void okayBtnPressed(final ActionEvent event) {
 		uploadToServer(treeItem, getServer(), getUsername(), getPassword(), treeItem.isLeaf());
 		close();
 	}
 
 	private void loadDefaults() {
-		tfserver.setText(settings.simple().get("Server", SERVERHOST));
-		tfusername.setText(settings.simple().get("Server", SERVERUSER));
-		tfpassword.setText(settings.simple().get("Server", SERVERPASS));
+		tfserver.setText(settings.simple().get(Settings.SERVER, Settings.ServerHost));
+		tfusername.setText(settings.simple().get(Settings.SERVER, Settings.ServerUsername));
+		tfpassword.setText(settings.simple().get(Settings.SERVER, Settings.ServerPassword));
 	}
 
 	private String getServer() {
@@ -89,19 +89,19 @@ public class UploadToServerDialog extends FXMLDialog {
 		while (serverResult.matches(".*//*$")) {
 			serverResult = serverResult.replaceAll("/$", "");
 		}
-		settings.simple().save("Server", SERVERHOST, serverResult);
+		settings.simple().save(Settings.SERVER, Settings.ServerHost, serverResult);
 		return serverResult;
 	}
 
 	private String getUsername() {
 		usernameResult = tfusername.getText();
-		settings.simple().save("Server", SERVERUSER, usernameResult);
+		settings.simple().save(Settings.SERVER, Settings.ServerUsername, usernameResult);
 		return usernameResult;
 	}
 
 	private String getPassword() {
 		passwordResult = tfpassword.getText();
-		settings.simple().save("Server", SERVERPASS, passwordResult);
+		settings.simple().save(Settings.SERVER, Settings.ServerPassword, passwordResult);
 		return passwordResult;
 	}
 

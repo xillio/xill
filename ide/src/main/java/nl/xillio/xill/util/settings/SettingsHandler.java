@@ -8,13 +8,11 @@ package nl.xillio.xill.util.settings;
  */
 public class SettingsHandler {
 
-	public static String LAYOUT = "Layout";
-
 	private static String FILENAME = "xilliosettings.cfg";
 
 	private ContentHandlerImpl content;
 	private static SettingsHandler settings = new SettingsHandler();
-	private SimpleSettingsHandler simple;
+	private SimpleVariableHandler simple;
 	private ProjectSettingsHandler project;
 
 	/**
@@ -32,14 +30,14 @@ public class SettingsHandler {
 			System.err.println("Cannot initialize settings handler for reason: " + e.getMessage());
 		}
 		
-		this.simple = new SimpleSettingsHandler(this.content);
+		this.simple = new SimpleVariableHandler(this.content);
 		this.project = new ProjectSettingsHandler(this.content);
 	}
 
 	/**
 	 * @return The implementation of simple variable settings
 	 */
-	public SimpleSettingsHandler simple() {
+	public SimpleVariableHandler simple() {
 		return this.simple;
 	}
 

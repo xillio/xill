@@ -9,7 +9,7 @@ import java.util.Map;
  * 
  * @author Zbynek Hochmann
  */
-public class SimpleSettingsHandler {
+public class SimpleVariableHandler {
 
 	private static final String NAME = "name";
 	private static final String KEYNAME = NAME;
@@ -20,7 +20,7 @@ public class SimpleSettingsHandler {
 
 	private ContentHandler content;
 
-	SimpleSettingsHandler(ContentHandler content) {// Can be instantiated within package only
+	SimpleVariableHandler(ContentHandler content) {// Can be instantiated within package only
 		this.content = content;
 	}
 
