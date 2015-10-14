@@ -1,6 +1,7 @@
 description 'This project contains the documentation generator system'
 
 dependencies {
+	compile project(':api')
     compile 'com.google.inject:guice:4.0'
     compile 'org.elasticsearch:elasticsearch:1.6.0'
     compile 'org.freemarker:freemarker:2.3.23'

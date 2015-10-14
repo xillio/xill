@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Carries out the Put REST request. Returns response from server.
+
+The body and response can be one of the following types:
+* XML (XmlNode)
+* JSON (Object)
+* String  
+
+Options:
+* timeout - processing timeout in ms (default = 5000)
+* proxyhost - proxy server URL
+* proxyport - port of the proxy server
+* proxyuser - user name for proxy valdiation         
+* proxypass - password for proxy valdiation
+
+The proxy options can be combined as follows:
+proxyhost
+proxyhost+proxyport 
+proxyhost+proxyport+proxyuser+proxypass
+proxyuser+proxypass
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Put request</header>
+            <code>
+use System;
+use REST;
+use XML;
+var bodyStr = "&lt; ?xml version=\"1.0\" encoding=\"UTF-8\"?&gt; &lt; test name=\"xillio\"&gt;content&lt; /test&gt;";
+var body = XML.fromString(bodyStr);
+var response = REST.put("http://whatever.com/uri", {"timeout" : 3000}, body);
+System.print(response);
+</code>
+        </example>
+    </examples>
+    <references>
+        <reference>delete</reference>
+        <reference>get</reference>
+        <reference>head</reference>
+        <reference>post</reference>
+    </references>
+	    <tags>
+        REST, put, request, response, JSON
+    </tags>
+</function>

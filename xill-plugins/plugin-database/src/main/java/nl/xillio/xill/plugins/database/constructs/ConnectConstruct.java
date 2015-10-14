@@ -1,5 +1,8 @@
 package nl.xillio.xill.plugins.database.constructs;
 
+import java.io.IOException;
+import java.net.ConnectException;
+import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
@@ -51,14 +54,27 @@ public class ConnectConstruct extends BaseDatabaseConstruct {
 		try {
 			service = factory.getService(type);
 		} catch (ReflectiveOperationException | IllegalArgumentException e1) {
-			throw new RobotRuntimeException("Database type is not supported", e1);
+			throw new RobotRuntimeException("Connection Error: Database type is not supported", e1);
 		}
+
 
 		Connection connection;
 		try {
 			connection = service.createConnection(database, user, pass, optionsArray);
 		} catch (SQLException e1) {
-			throw new RobotRuntimeException(e1.getMessage(), e1);
+			Throwable cause = e1.getCause();
+			if(cause != null && cause instanceof UnknownHostException){
+				throw new RobotRuntimeException("Connection error: Unknown database host", e1);
+			}
+			else if(cause != null && cause instanceof ConnectException){
+				throw new RobotRuntimeException("Connection error: Unknown database port", e1);
+			}
+			else if(cause!= null && cause instanceof IOException){
+				throw new RobotRuntimeException("Connection error: Could not connect to database", e1);
+			}
+			else{
+				throw new RobotRuntimeException(e1.getMessage(), e1);
+			}
 		}
 
 		MetaExpression metaExpression = fromValue(database);

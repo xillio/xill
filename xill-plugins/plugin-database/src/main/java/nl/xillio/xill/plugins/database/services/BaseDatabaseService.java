@@ -360,8 +360,10 @@ public abstract class BaseDatabaseService implements DatabaseService {
 			}
 		}
 		try{
-			getObject(connection, table, constraints);
-			return true;
+			if(getObject(connection, table, constraints)!=null){ //if an object is found...
+				return true;
+			}
+			return false; //no object is found..
 		}catch(IllegalArgumentException e){
 			return false;
 		}

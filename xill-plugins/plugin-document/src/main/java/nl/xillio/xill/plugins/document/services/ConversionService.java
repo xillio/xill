@@ -8,7 +8,7 @@ import nl.xillio.xill.services.XillService;
 
 /**
  * Service for conversion from Xill objects to the UDM layer and back.
- * 
+ *
  * @author Geert Konijnendijk
  * @author Luca Scalzotto
  *
@@ -17,7 +17,7 @@ public interface ConversionService extends XillService {
 
 	/**
 	 * Convert all decorators from a {@link DocumentRevisionBuilder} to a map suitable for parsing to a Xill object.
-	 * 
+	 *
 	 * @param builder
 	 *        Decorators to be converted
 	 * @return A Map suited for conversion to a Xill object
@@ -27,7 +27,7 @@ public interface ConversionService extends XillService {
 
 	/**
 	 * Convert a map parsed from a Xill object and input all converted decorators into a {@link DocumentRevisionBuilder}
-	 * 
+	 *
 	 * @param object
 	 *        Map to be converted
 	 * @param builder
