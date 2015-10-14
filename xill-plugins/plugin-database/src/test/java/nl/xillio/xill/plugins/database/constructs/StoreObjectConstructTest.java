@@ -54,7 +54,7 @@ public class StoreObjectConstructTest extends ConstructTest {
 		ConnectionMetadata conMetadata = mock(ConnectionMetadata.class);
 		when((conMetadata).getDatabaseName()).thenReturn("databaseName");
 
-		BaseDatabaseConstruct.setLastConnections(id, conMetadata);
+		BaseDatabaseConstruct.setLastConnection(id, conMetadata);
 
 		DatabaseService dbService = mock(DatabaseService.class);
 		when((factory).getService(any())).thenReturn(dbService);

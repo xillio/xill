@@ -4,15 +4,16 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 
-import nl.xillio.xill.api.components.RobotID;
-import nl.xillio.xill.api.construct.Construct;
-import nl.xillio.xill.plugins.database.services.DatabaseServiceFactory;
-import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.inject.Inject;
+
+import nl.xillio.xill.api.components.RobotID;
+import nl.xillio.xill.api.construct.Construct;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.database.services.DatabaseServiceFactory;
+import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
 
 /**
  * The base class for each construct in the database plugin.
@@ -21,7 +22,7 @@ public abstract class BaseDatabaseConstruct extends Construct {
 
 	private static final Logger log = LogManager.getLogger();
 
-	protected static LinkedHashMap<RobotID, ConnectionMetadata> lastConnections = new LinkedHashMap<>();
+	private static LinkedHashMap<RobotID, ConnectionMetadata> lastConnections = new LinkedHashMap<>();
 
 	@Inject
 	protected DatabaseServiceFactory factory;
@@ -54,7 +55,7 @@ public abstract class BaseDatabaseConstruct extends Construct {
 	 * @param connectionMetadata
 	 *        The connection.
 	 */
-	public static void setLastConnections(RobotID id, ConnectionMetadata connectionMetadata) {
+	public static void setLastConnection(RobotID id, ConnectionMetadata connectionMetadata) {
 		lastConnections.put(id, connectionMetadata);
 	}
 
@@ -66,7 +67,24 @@ public abstract class BaseDatabaseConstruct extends Construct {
 	 * @return
 	 *         The last used ConnectionMetadata.
 	 */
-	public ConnectionMetadata getLastConnections(RobotID id) {
-		return lastConnections.get(id);
+	public static ConnectionMetadata getLastConnection(RobotID id) {
+		// Determine that there is a connection that can be used
+		if (!lastConnections.containsKey(id)) {
+			throw new RobotRuntimeException("There is no connection that can be used, connect to a database first");
+		}
+
+		// Determine that this connection is usable
+		ConnectionMetadata metadata = lastConnections.get(id);
+		try {
+			if (metadata.getConnection().isClosed()) {
+				lastConnections.remove(id);
+				throw new RobotRuntimeException("The last connection was closed, reconnect to a database");
+			}
+		} catch (SQLException e) {
+			lastConnections.remove(id);
+			throw new RobotRuntimeException("The last connection can not be used: " + e.getMessage(), e);
+		}
+		
+		return metadata;
 	}
 }

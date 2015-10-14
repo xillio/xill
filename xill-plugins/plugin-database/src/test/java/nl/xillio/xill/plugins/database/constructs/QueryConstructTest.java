@@ -139,7 +139,7 @@ public class QueryConstructTest extends ConstructTest {
 
 		// the robotID
 		RobotID robotID = mock(RobotID.class);
-		BaseDatabaseConstruct.setLastConnections(robotID, connectionMetadata);
+		BaseDatabaseConstruct.setLastConnection(robotID, connectionMetadata);
 
 		// run
 		PreparedStatementConstruct.process(query, parameters, database, timeout, factory, robotID);
@@ -209,7 +209,7 @@ public class QueryConstructTest extends ConstructTest {
 
 		// the robotID
 		RobotID robotID = mock(RobotID.class);
-		BaseDatabaseConstruct.setLastConnections(robotID, connectionMetadata);
+		BaseDatabaseConstruct.setLastConnection(robotID, connectionMetadata);
 
 		// run
 		PreparedStatementConstruct.process(query, parameters, database, timeout, factory, robotID);

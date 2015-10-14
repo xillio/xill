@@ -46,7 +46,7 @@ public class PreparedStatementConstruct extends BaseDatabaseConstruct {
 		ConnectionMetadata metaData;
 
 		if (database.isNull()) {
-			metaData = lastConnections.get(robotID);
+			metaData = getLastConnection(robotID);
 		} else {
 			metaData = assertMeta(database, "database", ConnectionMetadata.class, "variable with a connection");
 		}

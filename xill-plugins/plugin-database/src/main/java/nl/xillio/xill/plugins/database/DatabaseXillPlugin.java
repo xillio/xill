@@ -13,5 +13,4 @@ public class DatabaseXillPlugin extends XillPlugin {
 	public DatabaseXillPlugin() {
 		BaseDatabaseConstruct.registerShutdownHook();
 	}
-
 }
