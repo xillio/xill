@@ -27,6 +27,7 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 
 	private Searchable searchable;
 	private String currentSearch = "";
+	private boolean enabledSearchAsYouType = false;
 	private final EventHost<Boolean> closeEvent = new EventHost<>();
 	private boolean isOpen = false;
 	/**
@@ -85,9 +86,8 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 	/**
 	 * Set the toggle button for this searchbar
 	 * 
-	 * @param toggleButton
-	 * @param id
-	 *        The index to pass to {@link SearchBar#open(int)}
+	 * @param toggleButton The search button  
+	 * @param id The index to pass to {@link SearchBar#open(int)}
 	 */
 	public void setButton(final ToggleButton toggleButton, final int id) {
 		this.toggleButton = toggleButton;
@@ -103,6 +103,7 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 	}
 
 	private void enableSearchAsYouType() {
+		enabledSearchAsYouType = true;
 		tfEditorSearchQuery.textProperty().addListener((ChangeListener<String>) (arg0, oldvalue, newvalue) -> runSearch(newvalue));
 	}
 
@@ -235,8 +236,9 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 
 	/**
 	 * Hide the searchbar and remove it from the flow.
+	 * @param clear if the search bar content and any highlights should be cleared
 	 */
-	private void close(final boolean clear) {
+	public void close(final boolean clear) {
 		// Clear the search
 		if (clear) {
 			searchable.clearSearch();
@@ -254,11 +256,18 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 		if (toggleButton != null) {
 			toggleButton.setSelected(false);
 			
-		if(this.isOpen){
-						closeEvent.invoke(new Boolean(true));
-						this.isOpen = false;
+			if(this.isOpen) {
+				closeEvent.invoke(new Boolean(true));
+				this.isOpen = false;
+			}
 		}
-		}
+	}
+
+	/**
+	 * @return true if searchbar is currently open, false if it's closed
+	 */
+	public boolean isOpen() {
+		return this.isOpen;
 	}
 
 	/**
@@ -301,15 +310,27 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 	}
 
 	@Override
-	public void handle(final KeyEvent k) {
+	public void handle(final KeyEvent keyEvent) {
 		// If enter is pressed, search
-		if (tfEditorSearchQuery.isFocused() && !k.isConsumed() && k.getCode() == KeyCode.ENTER && currentSearch != null) {
-			runSearch(currentSearch);
-			k.consume();
+		if (tfEditorSearchQuery.isFocused() && !keyEvent.isConsumed() && currentSearch != null) {
+			if (keyEvent.getCode() == KeyCode.ENTER) {
+				keyEvent.consume();
+				if (enabledSearchAsYouType) {
+					nextButtonPressed(null);// Search next for next Enter press in search text editbox
+				} else {
+					runSearch(currentSearch);
+				}
+			} else if (keyEvent.getCode() == KeyCode.ESCAPE) {
+				keyEvent.consume();
+				close(false);
+			}
 		}
 	}
-	
+
+	/**
+	 * @return event that is invoked when the search bar is closed
+	 */
 	public Event<Boolean> getOnClose(){
-				return closeEvent.getEvent();
+		return closeEvent.getEvent();
 	}
 }
