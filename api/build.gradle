@@ -1,9 +1,13 @@
 description = 'this project contains the classes required by both users and implementations of the xill language'
 
 dependencies {
-    compile 'nl.xillio.xill:xill-data-types:latest.release'
-	compile 'nl.xillio:commons-plugins:1.0'
-	compile 'org.apache.logging.log4j:log4j-core:2.3'
-	compile 'org.apache.logging.log4j:log4j-api:2.3'
-	compile 'org.apache.logging.log4j:log4j-1.2-api:2.3'
+    compile ('nl.xillio.xill:xill-data-types:1.0.7') {
+        // We do not need the utilservice annotation processors so skip this.
+        exclude group: 'me.biesaart', module: 'utilservice'
+    }
+    
+    compile 'nl.xillio:commons-plugins:1.0'
+    compile 'org.apache.logging.log4j:log4j-core:2.3'
+    compile 'org.apache.logging.log4j:log4j-api:2.3'
+    compile 'org.apache.logging.log4j:log4j-1.2-api:2.3'
 }

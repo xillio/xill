@@ -73,7 +73,7 @@ public interface DatabaseService extends XillService {
 	 * Stores an object in a table.
 	 * </p>
 	 * <p>
-	 * May or may not overwrite an existing object
+	 * May or may not update an existing object
 	 * <p>
 	 * 
 	 * @param connection
@@ -84,10 +84,10 @@ public interface DatabaseService extends XillService {
 	 *        The object we want to store.
 	 * @param keys
 	 *        The keys we hand the object.
-	 * @param overwrite
-	 *        A boolean whether we allow an overwrite.
+	 * @param allowUpdate
+	 *        A boolean whether we allow to update existing entries in the table.
 	 * @throws SQLException
 	 */
-	void storeObject(Connection connection, String table, LinkedHashMap<String, Object> newObject, List<String> keys, boolean overwrite) throws SQLException;
+	void storeObject(Connection connection, String table, LinkedHashMap<String, Object> newObject, List<String> keys, boolean allowUpdate) throws SQLException;
 
 }

@@ -513,7 +513,11 @@ public abstract class MetaExpression implements Expression, Processable {
 			List<MetaExpression> values = (List<MetaExpression>) result.getValue();
 
 			// Parse children
-			values.addAll(((List<?>) root).stream().map(child -> parseObject(child, cache)).collect(Collectors.toList()));
+			for (Object child: (List<?>) root) {
+				MetaExpression current = parseObject(child, cache);
+				values.add(current);
+				current.registerReference();
+			}
 
 			// Push list
 			result.setValue(values);
@@ -529,7 +533,9 @@ public abstract class MetaExpression implements Expression, Processable {
 
 			// Parse children
 			for (Entry<?, ?> child : ((Map<?, ?>) root).entrySet()) {
-				values.put(child.getKey().toString(), parseObject(child.getValue(), cache));
+				MetaExpression current = parseObject(child.getValue(), cache);
+				values.put(child.getKey().toString(), current);
+				current.registerReference();
 			}
 
 			// Push map
