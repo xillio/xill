@@ -124,7 +124,7 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 	}
 
 	private void checkJRE() throws IOException {
-		String expectedVersion = MANIFEST.getMainAttributes().getValue("Build-Java-Version");
+		String expectedVersion = MANIFEST.getMainAttributes().getValue("Created-By");
 		if(expectedVersion == null) {
 			throw new IOException("No java version was found. This is not a build.");
 		}

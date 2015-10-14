@@ -20,3 +20,6 @@ jar{
 		attributes "Class-Path": configurations.runtime.files.collect {File file-> file.name }.join(" ")
 	}
 }
+
+// To preprate for execution we need to copy the plugins to the plugin directory
+prepare.dependsOn copyToPluginsDir

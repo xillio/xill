@@ -1,11 +1,7 @@
-bin/
-dist/
 xilliosettings.db
-test-output/
-/ESConsole/
-/target/
-/plugins/
-/helpfiles
+ESConsole/
+plugins/
+helpfiles/
 
 # Gradle
 build/
@@ -21,4 +17,3 @@ build/
 # IntelliJ
 *.iml
 .idea/
-gradle/javafx.plugin

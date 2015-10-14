@@ -1,32 +1,31 @@
-/**
- * This file contains the javafx plugin configuration
- */
-/* Download the JavaFX plugin if it doesn't exist */
-def javaFXPluginFile = new File(projectDir, "gradle/javafx.plugin")
-if (!javaFXPluginFile.exists()) {
-    new URL(javaFXPluginUrl).withInputStream{ i -> javaFXPluginFile.withOutputStream{ it << i }}
-}
-apply from: javaFXPluginFile.absolutePath
+apply from: rootProject.file('gradle/javafx.plugin')
 
+// Do not deploy jfx on assemble
+assemble.dependsOn.remove jfxDeploy
 
 javafx {
-    appID = appID
-    appName = friendlyName
-    copyright = copyrightInformation
-    description = description
-    licenseType = licenseType
-    mainClass 'nl.xillio.contenttools.Application'
-    vendor = company
+    mainClass project.mainClassName
+    appID = project.appID
+    appName = project.friendlyName
+    copyright = project.copyrightInformation
+    description = project.description
+    licenseType = project.licenseType
+    vendor = project.company
     menu = true
     shortcut = true
     embedLauncher = false
     embedJNLP = false
+
     // Allow the user to set the heap size
     bundleArguments.userJvmOptions = ['-Xmx': '1024m', '-Xms': '1024m']
 }
 
+def self = project
+allprojects {
+    self.jfxDeploy.dependsOn project.prepare
+}
+
 jfxDeploy {
-    dependsOn assembleContentTools
     doFirst {
         copy {
             from pluginsDir
@@ -36,16 +35,8 @@ jfxDeploy {
     inputFiles = files(
             libsDir,
             new File(projectDir, "CHANGELOG.md"),
-            new File(projectDir, "LICENSE"))
-
-    doLast {
-        distsDir.eachDir() {
-            dir ->
-                distributeZip.from dir
-        }
-    }
+            new File(projectDir, "LICENSE")
+    )
 }
 
-deploy.dependsOn jfxDeploy
-
-run.dependsOn assembleContentTools
+buildDists.dependsOn jfxDeploy

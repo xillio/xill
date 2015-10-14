@@ -10,8 +10,9 @@ dependencies{
 
 jar{
 	manifest {
-		attributes "Implementation-Title": 			"Xill Processor"
 		attributes  "Class-Path": configurations.runtime.files.collect {File file-> file.name }.join(" ")
-		attributes "Implementation-Version": 		version
 	}
 }
+
+// To preprate for execution we need to copy the plugins to the plugin directory
+prepare.dependsOn copyToPluginsDir

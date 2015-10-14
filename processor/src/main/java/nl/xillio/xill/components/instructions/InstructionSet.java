@@ -97,8 +97,8 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
 	}
 
 	/**
-	 * Run only declarations. <br/>
-	 * This is required to run functions in this robot as a library
+	 * Run only declarations.
+	 * This is required to run functions in this robot as a library.
 	 *
 	 * @throws RobotRuntimeException
 	 */

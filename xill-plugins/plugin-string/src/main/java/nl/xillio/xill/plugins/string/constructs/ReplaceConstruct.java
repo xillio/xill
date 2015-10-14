@@ -31,10 +31,8 @@ public class ReplaceConstruct extends Construct {
 	private StringUtilityService stringService;
 
 	/**
-	 * Create a new {@link ReplaceConstruct}
+	 * Create a new {@link ReplaceConstruct}.
 	 *
-	 * @param regexConstruct
-	 *        the construct used to find matches
 	 */
 	public ReplaceConstruct() {}
 

@@ -10,7 +10,7 @@ import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 
 /**
  * <p>
- * Encodes all special XML characters (<,>,&,\",') to their respective xml entities.
+ * Encodes all special XML characters (&lt;,&gt;,&amp;,&quot;,&#39;) to their respective xml entities.
  * </p>
  *
  * @author Sander
