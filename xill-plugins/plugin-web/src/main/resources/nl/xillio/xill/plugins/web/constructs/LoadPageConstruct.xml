@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Loads the web page and returns it as a page object. Usually it is a good idea to reduce loading time by setting
-        up the options to ({"enablecss"=false, "enablejs"=false}) when calling Web.loadPage(). This deactivates
+        Loads the web page and returns it as a page object. The Web.loadPage() function can also be used for local HTML files.
+        Usually it is a good idea to reduce loading time by setting up the options to ({"enablecss"=false, "enablejs"=false}) when calling Web.loadPage(). This deactivates
         JavaScript and CSS and can reduce long waits for script timeouts.
     </description>
     <examples>
@@ -34,6 +34,31 @@
                 pass                   password (required for HTTP authentication)
                 timeout                timeoutvalue (in milliseconds)
                 */
+            </code>
+            
+            <header>Load a local webpage.</header>
+            <code>
+                /* Contents of the select.html
+                <html>
+                    <body>
+                        <select>
+                            <option value=\"volvo\">Volvo</option>
+                            <option value=\"saab\">Saab</option>
+                            <option value=\"mercedes\">Mercedes</option>
+                            <option value=\"audi\">Audi</option>
+                        </select>
+                    </body>
+                </html>
+                */
+                
+                var page = Web.loadPage("file:///C:/tmp/select.html");
+                var selectbox = Web.xPath(page, "//select");
+                var choice = Web.xPath(page, "//option[@value='saab']");
+                var before = Web.selected(choice);
+                Web.select(choice, true);
+                var after = Web.selected(choice);
+                System.print(before);
+                System.print(after);
             </code>
         </example>
     </examples>
