@@ -40,7 +40,7 @@ public class RemoveAttributeConstructTest {
 		verify(nodeService).removeAttribute(any(), anyString());
 
 		// Assert
-		assertTrue(result.isNull());
+		assertFalse(result.getBooleanValue());
 	}
 
 	/**
