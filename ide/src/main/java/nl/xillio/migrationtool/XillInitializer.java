@@ -48,6 +48,7 @@ public class XillInitializer extends Thread {
 	private final String aceLoader;
 	private final String editorCss;
 	private DocumentationSearcher searcher;
+	private boolean pluginsLoaded = false;
 
 	/**
 	 * Create a new XillInitializer.
@@ -72,7 +73,7 @@ public class XillInitializer extends Thread {
 
 		LOGGER.debug("Initializing loader...");
 		initializeLoader();
-
+		
 		LOGGER.debug("Loading plugins...");
 		loadPlugins();
 
@@ -223,6 +224,8 @@ public class XillInitializer extends Thread {
 		} catch (CircularReferenceException e) {
 			throw new RuntimeException(e);
 		}
+		
+		pluginsLoaded = true;
 	}
 
 	/**
@@ -230,6 +233,15 @@ public class XillInitializer extends Thread {
 	 * @return a list of all loaded plugins
 	 */
 	public List<XillPlugin> getPlugins() {
+		// Wait for all plugins to be loaded.
+		while (!pluginsLoaded) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		return new ArrayList<>(pluginLoader.getPluginManager().getPlugins());
 	}
 

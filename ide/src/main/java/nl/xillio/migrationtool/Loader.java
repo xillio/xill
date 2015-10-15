@@ -88,13 +88,6 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 			e.printStackTrace();
 		}
 		
-		// Join the initializer, because loader.load() needs it.
-		try {
-			initializer.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
 		Parent root;
 		try {
 			Font.loadFont(this.getClass().getResourceAsStream("/fonts/Glober SemiBold.ttf"), 10);
