@@ -13,6 +13,9 @@ build/
 .metadata/
 .classpath
 .project
+*/bin/
+*/test-output/
+
 
 # IntelliJ
 *.iml
