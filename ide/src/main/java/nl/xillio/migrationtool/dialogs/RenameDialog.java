@@ -39,12 +39,12 @@ public class RenameDialog extends FXMLDialog {
 	}
 
 	@FXML
-	private void cancelBtnPressed(@SuppressWarnings("unused") final ActionEvent event) {
+	private void cancelBtnPressed(final ActionEvent event) {
 		close();
 	}
 
 	@FXML
-	private void okayBtnPressed(@SuppressWarnings("unused") final ActionEvent event) {
+	private void okayBtnPressed(final ActionEvent event) {
 
 		final File oldFile = treeItem.getValue().getKey();
 		String fileName = tfname.getText();

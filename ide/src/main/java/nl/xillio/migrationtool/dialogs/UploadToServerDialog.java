@@ -68,12 +68,12 @@ public class UploadToServerDialog extends FXMLDialog {
 	}
 
 	@FXML
-	private void cancelBtnPressed(@SuppressWarnings("unused") final ActionEvent event) {
+	private void cancelBtnPressed(final ActionEvent event) {
 		close();
 	}
 
 	@FXML
-	private void okayBtnPressed(@SuppressWarnings("unused") final ActionEvent event) {
+	private void okayBtnPressed(final ActionEvent event) {
 		uploadToServer(treeItem, getServer(), getUsername(), getPassword(), treeItem.isLeaf());
 		close();
 	}

@@ -30,7 +30,7 @@ public class SaveBeforeClosingDialog extends FXMLDialog {
 	}
 
 	@FXML
-	private void yesBtnPressed(@SuppressWarnings("unused") final ActionEvent event) {
+	private void yesBtnPressed(final ActionEvent event) {
 		// Try to save, don't close the tab if it failed
 		if (!tab.save()) {
 			closeEvent.consume();
@@ -39,12 +39,12 @@ public class SaveBeforeClosingDialog extends FXMLDialog {
 	}
 
 	@FXML
-	private void noBtnPressed(@SuppressWarnings("unused") final ActionEvent event) {
+	private void noBtnPressed(final ActionEvent event) {
 		close();
 	}
 
 	@FXML
-	private void cancelBtnPressed(@SuppressWarnings("unused") final ActionEvent event) {
+	private void cancelBtnPressed(final ActionEvent event) {
 		closeEvent.consume();
 		cancelPressed = true;
 		close();
