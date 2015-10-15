@@ -22,3 +22,4 @@ build/
 *.iml
 .idea/
 gradle/javafx.plugin
+xilliosettings.cfg

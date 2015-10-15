@@ -10,7 +10,8 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
-import nl.xillio.sharedlibrary.settings.SettingsHandler;
+import nl.xillio.xill.util.settings.Settings;
+import nl.xillio.xill.util.settings.SettingsHandler;
 
 /**
  * A collapsible debug pane. Contains the variable and the preview panes.
@@ -58,10 +59,10 @@ public class DebugPane extends AnchorPane implements EventHandler<KeyEvent>, Rob
 	@Override
 	public void initialize(final RobotTab tab) {
 		String fullPath = tab.getProcessor().getRobotID().getPath().getAbsolutePath();
-		settings.registerSimpleSetting("Layout", "PreviewHeight_" + fullPath, "0.6", "The height of the preview panel");
+		settings.simple().register(Settings.LAYOUT, Settings.PreviewHeight_ + fullPath, "0.6", "The height of the preview panel");
 		// Load the divider position
-		spnBotRight.setDividerPosition(0, Double.parseDouble(settings.getSimpleSetting("PreviewHeight_" + fullPath)));
-		spnBotRight.getDividers().get(0).positionProperty().addListener((observable, prevPos, newPos) -> settings.saveSimpleSetting("PreviewHeight_" + fullPath, Double.toString(newPos.doubleValue())));
+		spnBotRight.setDividerPosition(0, Double.parseDouble(settings.simple().get(Settings.LAYOUT, Settings.PreviewHeight_ + fullPath)));
+		spnBotRight.getDividers().get(0).positionProperty().addListener((observable, prevPos, newPos) -> settings.simple().save(Settings.LAYOUT, Settings.PreviewHeight_ + fullPath, Double.toString(newPos.doubleValue())));
 		
 		initializeChildren(tab);
 	}

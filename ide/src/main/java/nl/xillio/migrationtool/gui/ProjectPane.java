@@ -9,8 +9,6 @@ import java.nio.file.WatchEvent;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
 import javax.swing.filechooser.FileFilter;
 
 import javafx.application.Platform;
@@ -37,9 +35,10 @@ import nl.xillio.migrationtool.dialogs.NewProjectDialog;
 import nl.xillio.migrationtool.dialogs.RenameDialog;
 import nl.xillio.migrationtool.dialogs.UploadToServerDialog;
 import nl.xillio.migrationtool.gui.WatchDir.FolderListener;
-import nl.xillio.sharedlibrary.settings.ProjectSetting;
-import nl.xillio.sharedlibrary.settings.SettingsHandler;
 import nl.xillio.xill.api.Xill;
+import nl.xillio.xill.util.settings.ProjectSettings;
+import nl.xillio.xill.util.settings.Settings;
+import nl.xillio.xill.util.settings.SettingsHandler;
 
 public class ProjectPane extends AnchorPane implements FolderListener, ChangeListener<TreeItem<Pair<File, String>>> {
 	private static final SettingsHandler settings = SettingsHandler.getSettingsHandler();
@@ -168,13 +167,13 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 
 	private void loadProjects() {
 		Platform.runLater(() -> {
-			List<ProjectSetting> projects = getProjects();
+			List<ProjectSettings> projects = settings.project().getAll();
 			if (projects.isEmpty()) {
 				disableAllButtons();
 				return;
 			};
 			projects.forEach(this::addProject);
-			if (settings.getSimpleSetting("license") == null && new File(DEFAULT_PROJECT_PATH).exists()) {
+			if (settings.simple().get(Settings.LICENSE, Settings.License) == null && new File(DEFAULT_PROJECT_PATH).exists()) {
 				newProject(DEFAULT_PROJECT_NAME, DEFAULT_PROJECT_PATH, "");
 			}
 
@@ -191,7 +190,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 	 */
 	public void removeProject(final TreeItem<Pair<File, String>> item) {
 		root.getChildren().remove(item);
-		SettingsHandler.getSettingsHandler().removeSetting(ProjectSetting.PROJECT_SETTINGTYPE, item.getValue().getValue());
+		settings.project().delete(item.getValue().getValue());
 	}
 
 	/**
@@ -220,14 +219,14 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		boolean projectDoesntExist = root.getChildren().parallelStream().map(TreeItem::getValue).map(Pair::getValue).noneMatch(n -> n.equalsIgnoreCase(name))
 						&& findItemByPath(root, folder) == null;
 		if (projectDoesntExist) {
-			ProjectSetting project = new ProjectSetting(name, folder, description);
-			settings.saveSetting(project, false, true);
+			ProjectSettings project = new ProjectSettings(name, folder, description);
+			settings.project().save(project);
 			addProject(project);
 		}
 		return projectDoesntExist;
 	}
 
-	private void addProject(final ProjectSetting project) {
+	private void addProject(final ProjectSettings project) {
 		// Check if the project still exists
 		if (project.getFolder() == null) {
 			return;
@@ -311,10 +310,6 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 	 */
 	public TreeItem<Pair<File, String>> getRoot() {
 		return root;
-	}
-
-	private static List<ProjectSetting> getProjects() {
-		return settings.getSettingsList(ProjectSetting.PROJECT_SETTINGTYPE).stream().map(ProjectSetting::new).collect(Collectors.toList());
 	}
 
 	/**
