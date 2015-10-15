@@ -18,8 +18,6 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ContextMenu;
@@ -32,6 +30,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.stage.FileChooser;
 import nl.xillio.migrationtool.Loader;
+import nl.xillio.migrationtool.dialogs.CloseStopRobotDialog;
 import nl.xillio.migrationtool.dialogs.SaveBeforeClosingDialog;
 import nl.xillio.migrationtool.gui.EditorPane.DocumentState;
 import nl.xillio.sharedlibrary.settings.SettingsHandler;
@@ -364,12 +363,19 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	 * @param event
 	 */
 	private void onClose(final Event event) {
+		// Check if the robot is saved, else show the save before closing dialog.
 		if (editorPane.getDocumentState().getValue() == DocumentState.CHANGED) {
 			SaveBeforeClosingDialog dlg = new SaveBeforeClosingDialog(this, event); 
 			dlg.showAndWait();
 			if (dlg.isCancelPressed()) {
 				globalController.setCancelClose(true);
 			}
+		}
+		
+		// Check if the robot is running, else show the stop robot dialog.
+		if (editorPane.getControls().robotRunning()) {
+			CloseStopRobotDialog dlg = new CloseStopRobotDialog(this, event);
+			dlg.showAndWait();
 		}
 	}
 
