@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Performs a browser click action on the provided element, which must be a node from an (X)HTML document.
+        Javascript handlers bound to the provided element will also be triggered.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Click an element on a web page.</header>
+            <code>
+                use File;
+
+                var page = Web.loadPage("http://google.com/");
+
+                if (page != null) {
+                var nodes = Web.xPath(page, "//a");
+                Web.click(nodes[0]);
+                /* Click every node; however, if you click the second node or further after having clicked the first
+                one, you will be navigated away from the page and get a stale element error, because the next element
+                you are trying to click has been detached from the page object.
+
+                foreach (key,node in nodes) {
+                System.print(key);
+                Web.click(node);
+                }*/
+                } else {
+                System.print("page could not be loaded");
+                }
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>loadPage</reference>
+        <reference>xPath</reference>
+    </references>
+    <tags>
+        load, page, web, click
+    </tags>
+</function>

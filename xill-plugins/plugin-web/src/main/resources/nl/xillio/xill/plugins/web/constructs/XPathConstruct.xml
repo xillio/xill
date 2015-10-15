@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Returns a string, element or a list of XML/HTML-elements from the specified XML/HTML-element as indicated by the
+        string ``xpath``. This function has full XPath 2.0 support.
+
+        For more information about the XPath syntax and available xpath functions look here: http://www.w3schools.com/xpath/
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Use XPATH to extract an element from a web page.</header>
+            <code>
+                use Web;
+                use System;
+
+                var page = Web.loadPage ("http://www.xillio.com");
+                var links = Web.xPath(page, "//img");
+
+                foreach(_,link in links) {
+                    var url = Web.xPath(link, "./@src");
+                    System.print(url);
+                }
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>loadPage</reference>
+        <reference>xPath</reference>
+    </references>
+    <tags>
+        load, page, web, xpath
+    </tags>
+</function>

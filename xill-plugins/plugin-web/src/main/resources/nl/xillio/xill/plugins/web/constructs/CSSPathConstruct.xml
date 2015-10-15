@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Returns a string, element or a list of node elements from the specified node element as indicated by the string css_selector.
+
+        For more information about the CSS Selector syntax and available csspath functions look here: http://www.w3schools.com/cssref/css_selectors.asp
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Retrieve img element on web page.</header>
+            <code>
+                use Web;
+                use System;
+
+                var page = Web.loadPage("http://www.xillio.com/");
+                var links = Web.cssPath(page, "img");
+
+                if (System.typeOf(links) == "node") {
+                    var url = Web.xPath(links, "./@src");
+                    System.print(url);
+                } else {
+                    foreach(key,value in links) {
+                    var url = Web.xPath(value, "./@src");
+                    System.print(url);
+                    }
+                }
+
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>loadPage</reference>
+        <reference>xPath</reference>
+    </references>
+    <tags>
+        load, page, web, css, path
+    </tags>
+</function>
