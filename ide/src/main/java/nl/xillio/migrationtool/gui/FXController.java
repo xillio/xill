@@ -9,10 +9,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -41,6 +37,10 @@ import nl.xillio.sharedlibrary.settings.SettingsHandler;
 import nl.xillio.sharedlibrary.settings.SettingsHandler.Id;
 import nl.xillio.sharedlibrary.settings.SimpleSetting;
 import nl.xillio.xill.api.Xill;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This class is the global controller for the application
@@ -225,15 +225,15 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 		apnRoot.addEventFilter(KeyEvent.KEY_PRESSED, this);
 
-		// Wait for all plugins to be loaded before loading the workspace.
-		Loader.getInitializer().getPlugins();
-		
 		// Add listener for window shown
 		loadWorkSpace();
 	}
 
 	private void loadWorkSpace() {
 		Platform.runLater(() -> {
+			// Wait for all plugins to be loaded before loading the workspace.
+			Loader.getInitializer().getPlugins();
+
 			String workspace = settings.getSimpleSetting(Id.WORKSPACE);
 			if (workspace == null) {
 				workspace = DEFAULT_OPEN_BOT.getAbsolutePath();
