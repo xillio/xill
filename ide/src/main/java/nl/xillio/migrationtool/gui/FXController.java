@@ -30,6 +30,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.util.Pair;
 import nl.xillio.migrationtool.Loader;
+import nl.xillio.migrationtool.dialogs.CloseAppStopRobotsDialog;
 import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.sharedlibrary.settings.Setting;
@@ -485,6 +486,18 @@ public class FXController implements Initializable, EventHandler<Event> {
 			settings.saveSimpleSetting(Id.ACTIVETAB, "");
 		}
 
+		// Check if there are tabs whose robots are running.
+		List<RobotTab> running = getTabs().stream().filter(tab -> tab.getEditorPane().getControls().robotRunning()).collect(Collectors.toList());
+		if (running.size() > 0) {
+			// Show the dialog.
+			CloseAppStopRobotsDialog dlg = new CloseAppStopRobotsDialog(running);
+			dlg.showAndWait();
+			
+			// Check if no was clicked on the dialog.
+			if (dlg.getPreventClose())
+				return false;
+		}
+		
 		// Close all tabs
 		tpnBots.getTabs().forEach(tab -> {
 			if (!this.cancelClose) {
@@ -508,7 +521,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 		ProjectPane.stop();
 		Platform.exit();
 		ESConsoleClient.getInstance().close();
-		return false;
+		return true;
 	}
 
 	private void verifyLicense() {

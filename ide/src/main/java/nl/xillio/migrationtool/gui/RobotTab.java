@@ -30,7 +30,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.stage.FileChooser;
 import nl.xillio.migrationtool.Loader;
-import nl.xillio.migrationtool.dialogs.CloseStopRobotDialog;
+import nl.xillio.migrationtool.dialogs.CloseTabStopRobotDialog;
 import nl.xillio.migrationtool.dialogs.SaveBeforeClosingDialog;
 import nl.xillio.migrationtool.gui.EditorPane.DocumentState;
 import nl.xillio.sharedlibrary.settings.SettingsHandler;
@@ -374,7 +374,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 		
 		// Check if the robot is running, else show the stop robot dialog.
 		if (editorPane.getControls().robotRunning()) {
-			CloseStopRobotDialog dlg = new CloseStopRobotDialog(this, event);
+			CloseTabStopRobotDialog dlg = new CloseTabStopRobotDialog(this, event);
 			dlg.showAndWait();
 		}
 	}

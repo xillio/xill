@@ -5,12 +5,12 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import nl.xillio.migrationtool.gui.RobotTab;
 
-public class CloseStopRobotDialog extends FXMLDialog {
+public class CloseTabStopRobotDialog extends FXMLDialog {
 	private final RobotTab tab;
 	private final Event closeEvent;
 	
-	public CloseStopRobotDialog(final RobotTab tab, final Event closeEvent) {
-		super("/fxml/dialogs/CloseStopRobot.fxml");
+	public CloseTabStopRobotDialog(final RobotTab tab, final Event closeEvent) {
+		super("/fxml/dialogs/CloseTabStopRobot.fxml");
 		
 		this.tab = tab;
 		this.closeEvent = closeEvent;

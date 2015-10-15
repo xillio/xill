@@ -23,7 +23,6 @@ public class SaveBeforeClosingDialog extends FXMLDialog {
 	 */
 	public SaveBeforeClosingDialog(final RobotTab tab, final Event closeEvent) {
 		super("/fxml/dialogs/SaveBeforeClosing.fxml");
-		setTitle("Save changes?");
 		this.tab = tab;
 		this.closeEvent = closeEvent;
 		setTitle("Save changes to " + this.tab.getText() + "?");
