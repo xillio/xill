@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.xml.services;
 
+import net.sf.saxon.xpath.XPathFactoryImpl;
 import nl.xillio.xill.api.data.XmlNode;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.xml.data.XmlNodeVar;
@@ -37,19 +38,9 @@ import net.sf.saxon.lib.NamespaceConstant;
 @Singleton
 public class XpathServiceImpl implements XpathService {
 
-	private static XPathFactory xpf = null;
-
+	private static final XPathFactory xpf = new XPathFactoryImpl();
 
 	private static final Logger LOGGER = LogManager.getLogger();
-
-	static {
-		System.setProperty("javax.xml.xpath.XPathFactory:" + NamespaceConstant.OBJECT_MODEL_SAXON, "net.sf.saxon.xpath.XPathFactoryImpl");
-		try {
-			xpf = XPathFactory.newInstance(NamespaceConstant.OBJECT_MODEL_SAXON);
-		} catch (XPathFactoryConfigurationException e) {
-			LOGGER.error("Could not initialise XPath", e);
-		}
-	}
 
 	@Override
 	public List<Object> xpath(final XmlNode node, final String xpathQuery, final Map<String, String> namespaces) {
