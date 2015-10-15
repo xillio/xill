@@ -1,28 +1,12 @@
 package nl.xillio.migrationtool.gui;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -37,6 +21,16 @@ import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.util.settings.Settings;
 import nl.xillio.xill.util.settings.SettingsHandler;
+import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 /**
  * This class is the global controller for the application
@@ -225,6 +219,9 @@ public class FXController implements Initializable, EventHandler<Event> {
 	private void loadWorkSpace() {
 		Platform.runLater(() -> {
 			String workspace = settings.simple().get(Settings.WORKSPACE, Settings.OpenTabs);
+			// Wait for all plugins to be loaded before loading the workspace.
+			Loader.getInitializer().getPlugins();
+
 			if (workspace == null) {
 				workspace = DEFAULT_OPEN_BOT.getAbsolutePath();
 			}
@@ -599,40 +596,35 @@ public class FXController implements Initializable, EventHandler<Event> {
 			} else if (KeyCombination.valueOf(HOTKEY_OPEN).match(keyEvent)) {
 				buttonOpenFile();
 			} else if (KeyCombination.valueOf(HOTKEY_CLEARCONSOLE).match(keyEvent)) {
-        tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> { 
-          ((RobotTab) tab).clearConsolePane();
-          keyEvent.consume();
-        });
-			}
-      else if (KeyCombination.valueOf(FXController.HOTKEY_RUN).match((KeyEvent) keyEvent)) {
-          tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> { 
-              ((RobotTab) tab).getEditorPane().getControls().start();
-              keyEvent.consume();
-          });
-      }
-      else if (KeyCombination.valueOf(FXController.HOTKEY_STEPIN).match((KeyEvent) keyEvent)) {
-          tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> { 
-              ((RobotTab) tab).getEditorPane().getControls().stepIn();
-              keyEvent.consume();
-          });
-      }
-      else if (KeyCombination.valueOf(FXController.HOTKEY_STEPOVER).match((KeyEvent) keyEvent)) {
-          tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> { 
-              ((RobotTab) tab).getEditorPane().getControls().stepOver();
-              keyEvent.consume();
-          });
-      }
-      else if (KeyCombination.valueOf(FXController.HOTKEY_PAUSE).match((KeyEvent) keyEvent)) {
-          tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> { 
-              ((RobotTab) tab).getEditorPane().getControls().pause();
-              keyEvent.consume();
-          });
-      }
-      else if (KeyCombination.valueOf(FXController.HOTKEY_STOP).match((KeyEvent) keyEvent)) {
-          tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> { 
-              ((RobotTab) tab).getEditorPane().getControls().stop();
-              keyEvent.consume();
-          });
+				tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
+					((RobotTab) tab).clearConsolePane();
+					keyEvent.consume();
+				});
+			} else if (KeyCombination.valueOf(FXController.HOTKEY_RUN).match((KeyEvent) keyEvent)) {
+				tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
+					((RobotTab) tab).getEditorPane().getControls().start();
+					keyEvent.consume();
+				});
+			} else if (KeyCombination.valueOf(FXController.HOTKEY_STEPIN).match((KeyEvent) keyEvent)) {
+				tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
+					((RobotTab) tab).getEditorPane().getControls().stepIn();
+					keyEvent.consume();
+				});
+			} else if (KeyCombination.valueOf(FXController.HOTKEY_STEPOVER).match((KeyEvent) keyEvent)) {
+				tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
+					((RobotTab) tab).getEditorPane().getControls().stepOver();
+					keyEvent.consume();
+				});
+			} else if (KeyCombination.valueOf(FXController.HOTKEY_PAUSE).match((KeyEvent) keyEvent)) {
+				tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
+					((RobotTab) tab).getEditorPane().getControls().pause();
+					keyEvent.consume();
+				});
+			} else if (KeyCombination.valueOf(FXController.HOTKEY_STOP).match((KeyEvent) keyEvent)) {
+				tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
+					((RobotTab) tab).getEditorPane().getControls().stop();
+					keyEvent.consume();
+				});
 			} else if (keyEvent.isControlDown() || keyEvent.isMetaDown()) {
 				// Check if other key is an integer, if so open that tab
 				try {
@@ -678,15 +670,16 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 	/**
 	 * Close all tabs except one.
+	 *
 	 * @param tab The tab to keep open.
 	 */
 	public void closeAllTabsExcept(final Tab tab) {
 		List<RobotTab> tabs = getTabs();
-		for(RobotTab t : tabs)
+		for (RobotTab t : tabs)
 			if (t != tab)
 				closeTab(t);
 	}
-	
+
 	/**
 	 * @return A list of active tabs
 	 */
@@ -730,7 +723,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 		});
 		return robotTabs[0];
 	}
-	
+
 	/**
 	 * @param cancelClose should be the closing of application interrupted?
 	 */
