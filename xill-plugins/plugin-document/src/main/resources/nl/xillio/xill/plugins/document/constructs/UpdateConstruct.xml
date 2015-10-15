@@ -9,7 +9,7 @@
 	</description>
 	<examples>
 		<example title="Usage">
-			<header>Getting a document.</header>
+			<header>Updating a document.</header>
 			<code>
 				use Document;
 				
@@ -27,7 +27,7 @@
 				// Given that the ID of the document is stored in the variable 'id'.
 				var version = "2";
 				var section = "source";
-				var doc = Document.get(id, body, version, section);
+				var doc = Document.update(id, body, version, section);
 			</code>
 		</example>
 	</examples>

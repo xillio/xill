@@ -1,9 +1,9 @@
 package nl.xillio.xill.plugins.xml.constructs;
 
+import nl.xillio.xill.api.data.XmlNode;
 import org.testng.annotations.Test;
 
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.plugins.xml.data.XmlNode;
 import nl.xillio.xill.plugins.xml.services.NodeService;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.xml.utils.MockUtils;
@@ -40,7 +40,7 @@ public class RemoveAttributeConstructTest {
 		verify(nodeService).removeAttribute(any(), anyString());
 
 		// Assert
-		assertTrue(result.isNull());
+		assertFalse(result.getBooleanValue());
 	}
 
 	/**

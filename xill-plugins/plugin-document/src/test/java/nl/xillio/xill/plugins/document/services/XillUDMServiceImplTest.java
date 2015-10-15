@@ -26,6 +26,7 @@ import nl.xillio.udm.builders.DocumentRevisionBuilder;
 import nl.xillio.udm.exceptions.DocumentNotFoundException;
 import nl.xillio.udm.exceptions.ModelException;
 import nl.xillio.udm.exceptions.PersistenceException;
+import nl.xillio.udm.interfaces.FindResult;
 import nl.xillio.udm.services.UDMService;
 import nl.xillio.xill.plugins.document.exceptions.VersionNotFoundException;
 import nl.xillio.xill.plugins.document.services.XillUDMService.Section;
@@ -87,7 +88,7 @@ public class XillUDMServiceImplTest {
 		// Mock
 		DocumentID docId = mock(DocumentID.class);
 
-		DocumentRevisionBuilder documentRevisionBuilder = mock(DocumentRevisionBuilder.class);
+		DocumentRevisionBuilder documentRevisionBuilder = mockDocumentRevisionBuilder();
 		DocumentHistoryBuilder documentHistoryBuilder = mockDocumentHistoryBuilder(versionId, documentRevisionBuilder);
 		DocumentBuilder documentBuilder = mockDocumentBuilder(documentHistoryBuilder);
 
@@ -102,6 +103,7 @@ public class XillUDMServiceImplTest {
 		Map<String, Map<String, Object>> actual = xillUdmService.get(DOCUMENT_ID, versionId, section);
 
 		// Verify
+		verify(udmService).get(DOCUMENT_ID);
 		verifyRetrieval(versionId, section, documentHistoryBuilder, documentBuilder);
 		verify(conversionService).udmToMap(documentRevisionBuilder);
 		verify(udmService).release(docId);
@@ -125,6 +127,7 @@ public class XillUDMServiceImplTest {
 
 		Map<String, Map<String, Object>> body = createDecoratorMap();
 		DocumentRevisionBuilder documentRevisionBuilder = mockReadableDocumentRevisionBuilder(body);
+		when(documentRevisionBuilder.version()).thenReturn(VERSION_ID);
 
 		DocumentHistoryBuilder documentHistoryBuilder = mockDocumentHistoryBuilder(versionId, documentRevisionBuilder);
 		DocumentBuilder documentBuilder = mockDocumentBuilder(documentHistoryBuilder);
@@ -136,6 +139,7 @@ public class XillUDMServiceImplTest {
 		xillUdmService.update(DOCUMENT_ID, body, versionId, section);
 
 		// Verify
+		verify(udmService).get(DOCUMENT_ID);
 		verifyRetrieval(versionId, section, documentHistoryBuilder, documentBuilder);
 		verify(conversionService).mapToUdm(body, documentRevisionBuilder);
 	}
@@ -153,7 +157,7 @@ public class XillUDMServiceImplTest {
 	 *        {@link DocumentBuilder} mock to verify on
 	 */
 	private void verifyRetrieval(final String versionId, final Section section, final DocumentHistoryBuilder documentHistoryBuilder, final DocumentBuilder documentBuilder) {
-		verify(udmService).get(DOCUMENT_ID);
+
 		if ("current".equals(versionId)) {
 			verify(documentHistoryBuilder).current();
 		} else {
@@ -196,7 +200,7 @@ public class XillUDMServiceImplTest {
 		String documentId = "docid";
 		DocumentID docId = mock(DocumentID.class);
 
-		DocumentRevisionBuilder documentRevisionBuilder = mock(DocumentRevisionBuilder.class);
+		DocumentRevisionBuilder documentRevisionBuilder = mockDocumentRevisionBuilder();
 		DocumentHistoryBuilder documentHistoryBuilder = mockDocumentHistoryBuilder(versionId, documentRevisionBuilder);
 		DocumentHistoryBuilder documentHistoryBuilder2 = mockDocumentHistoryBuilder(versionId, documentRevisionBuilder);
 		DocumentBuilder documentBuilder = mockDocumentBuilder(documentHistoryBuilder);
@@ -292,13 +296,18 @@ public class XillUDMServiceImplTest {
 		String versionId = "nonExistent";
 		DocumentID docId = mock(DocumentID.class);
 
+		DocumentRevisionBuilder revisionBuilder = mock(DocumentRevisionBuilder.class);
+		when(revisionBuilder.version()).thenReturn(VERSION_ID);
+
 		DocumentHistoryBuilder documentHistoryBuilder = mock(DocumentHistoryBuilder.class);
 		when(documentHistoryBuilder.versions()).thenReturn(new ArrayList<>());
+		when(documentHistoryBuilder.current()).thenReturn(revisionBuilder);
 
 		DocumentBuilder documentBuilder = mockDocumentBuilder(documentHistoryBuilder);
 
 		when(udmService.get(DOCUMENT_ID)).thenReturn(docId);
 		when(udmService.document(docId)).thenReturn(documentBuilder);
+
 		return versionId;
 	}
 
@@ -383,16 +392,7 @@ public class XillUDMServiceImplTest {
 	@Test(expectedExceptions = VersionNotFoundException.class)
 	public void testRemoveNonExistentRevision() throws PersistenceException {
 		// Mock
-		String versionId = "nonExistent";
-		DocumentID docId = mock(DocumentID.class);
-
-		DocumentHistoryBuilder documentHistoryBuilder = mock(DocumentHistoryBuilder.class);
-		when(documentHistoryBuilder.versions()).thenReturn(new ArrayList<>());
-
-		DocumentBuilder documentBuilder = mockDocumentBuilder(documentHistoryBuilder);
-
-		when(udmService.get(DOCUMENT_ID)).thenReturn(docId);
-		when(udmService.document(docId)).thenReturn(documentBuilder);
+		String versionId = mockNonExistentRevision();
 
 		// Run
 		xillUdmService.remove(DOCUMENT_ID, versionId, Section.SOURCE);
@@ -408,7 +408,7 @@ public class XillUDMServiceImplTest {
 
 	/**
 	 * Test the getVersions method with normal input.
-	 * 
+	 *
 	 * @param versionId
 	 * @param section
 	 */
@@ -444,6 +444,17 @@ public class XillUDMServiceImplTest {
 
 		// Assert
 		assertEquals(actual, result);
+	}
+
+	/**
+	 * Mock a {@link DocumentRevisionBuilder} with {@link DocumentRevisionBuilder#version()}.
+	 * 
+	 * @return A mocked {@link DocumentRevisionBuilder}
+	 */
+	private DocumentRevisionBuilder mockDocumentRevisionBuilder() {
+		DocumentRevisionBuilder documentRevisionBuilder = mock(DocumentRevisionBuilder.class);
+		when(documentRevisionBuilder.version()).thenReturn(VERSION_ID);
+		return documentRevisionBuilder;
 	}
 
 	/**
@@ -519,6 +530,45 @@ public class XillUDMServiceImplTest {
 		long result = service.removeWhere(filter, "1.2", XillUDMService.Section.SOURCE);
 
 		assertEquals(result, 1337L);
+	}
+
+	/**
+	 * Test {@link XillUDMServiceImpl#updateWhere(Document, Map, String, Section)} under normal usage.
+	 *
+	 * @param versionId
+	 *        version ID to test for
+	 * @param section
+	 *        "source" or "target"
+	 */
+	@Test(dataProvider = "versionIdSectionGetUpdate")
+	public void testUpdateWhereNormal(final String versionId, final Section section) throws PersistenceException {
+		// Mock
+		DocumentID docId = mock(DocumentID.class);
+		Document doc = mock(Document.class);
+		
+		FindResult result = mock(FindResult.class);
+		when(result.iterator()).thenReturn(result);
+		when(result.next()).thenReturn(docId);
+		when(result.hasNext()).thenReturn(true, false);
+
+		Map<String, Map<String, Object>> body = createDecoratorMap();
+		DocumentRevisionBuilder documentRevisionBuilder = mockReadableDocumentRevisionBuilder(body);
+		when(documentRevisionBuilder.version()).thenReturn(VERSION_ID);
+
+		DocumentHistoryBuilder documentHistoryBuilder = mockDocumentHistoryBuilder(versionId, documentRevisionBuilder);
+		DocumentBuilder documentBuilder = mockDocumentBuilder(documentHistoryBuilder);
+
+		when(udmService.document(docId)).thenReturn(documentBuilder);
+		
+		when(udmService.find(doc)).thenReturn(result);
+
+		// Run
+		xillUdmService.updateWhere(doc, body, versionId, section);
+
+		// Verify
+		verify(udmService).find(doc);
+		verifyRetrieval(versionId, section, documentHistoryBuilder, documentBuilder);
+		verify(conversionService).mapToUdm(body, documentRevisionBuilder);
 	}
 
 }

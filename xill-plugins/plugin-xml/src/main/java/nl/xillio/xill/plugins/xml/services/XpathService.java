@@ -1,7 +1,7 @@
 package nl.xillio.xill.plugins.xml.services;
 
+import nl.xillio.xill.api.data.XmlNode;
 import nl.xillio.xill.plugins.xml.XMLXillPlugin;
-import nl.xillio.xill.plugins.xml.data.XmlNode;
 
 import com.google.inject.ImplementedBy;
 

@@ -3,7 +3,8 @@ package nl.xillio.xill.plugins.xml.services;
 import com.google.inject.ImplementedBy;
 
 import nl.xillio.xill.plugins.xml.XMLXillPlugin;
-import nl.xillio.xill.plugins.xml.data.XmlNode;
+import nl.xillio.xill.api.data.XmlNode;
+import nl.xillio.xill.api.data.XmlNodeFactory;
 
 import java.io.File;
 
@@ -14,7 +15,7 @@ import java.io.File;
  */
 
 @ImplementedBy(NodeServiceImpl.class)
-public interface NodeService {
+public interface NodeService extends XmlNodeFactory {
 	/**
 	 * Inserts new node into existing XML document
 	 * 
@@ -64,8 +65,9 @@ public interface NodeService {
 	 * 
 	 * @param xmlNode		existing XML node
 	 * @param attrName	name of the attribute that will be removed
+	 * @return true if attribute existed and was removed, false if attribute did not exist
 	 */
-	void removeAttribute(final XmlNode xmlNode, final String attrName);
+	boolean removeAttribute(final XmlNode xmlNode, final String attrName);
 	
 	/**
 	 * Loads XML document from file, parse it and returns root node (XML document)
@@ -75,11 +77,5 @@ public interface NodeService {
 	 */
 	XmlNode fromFile(final File xmlSource);
 	
-	/**
-	 * Creates XML document from string, parse it and returns root node (XML document)
-	 * 
-	 * @param xmlText string that contains valid XMl document
-	 * @return newly created XML node representing root node of the entire document
-	 */
-	XmlNode fromString(final String xmlText);
+
 }

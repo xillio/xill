@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
@@ -89,11 +87,12 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 			System.err.println(e.getMessage());
 			e.printStackTrace();
 		}
+		
 		Parent root;
 		try {
 			Font.loadFont(this.getClass().getResourceAsStream("/fonts/Glober SemiBold.ttf"), 10);
 			Font.loadFont(this.getClass().getResourceAsStream("/fonts/UbuntuMono Regular.ttf"), 10);
-
+			
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/contenttools.fxml"));
 			root = loader.load();
 
@@ -115,7 +114,7 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 			e.printStackTrace();
 			System.exit(1);
 		}
-
+		
 		primaryStage.setTitle(APP_TITLE + " - " + LONG_VERSION);
 		primaryStage.getScene().lookup("#apnRoot").setVisible(false);
 		primaryStage.show();
