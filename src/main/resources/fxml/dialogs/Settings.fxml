@@ -1,0 +1,647 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" styleClass="root" stylesheets="@../styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+	<children>
+		<VBox styleClass="dialogWrapper" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+			<children>
+				<AnchorPane styleClass="dialogContent" VBox.vgrow="ALWAYS">
+					<children>
+						<TabPane styleClass="tpnSettings" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+							<tabs>
+								<Tab closable="false" text="General">
+									<content>
+										<AnchorPane>
+											<children>
+												<ScrollPane fitToWidth="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+													<content>
+														<AnchorPane>
+															<children>
+																<VBox styleClass="settingsFormWrapper" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+																	<children>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Default project location" />
+																				<TextField fx:id="tfprojectfolder" alignment="TOP_LEFT" depthTest="INHERIT" promptText="Default project folder path" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" layoutX="10.0" layoutY="10.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Open bot with clean console" />
+																				<CheckBox mnemonicParsing="false" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																	</children>
+																</VBox>
+															</children>
+														</AnchorPane>
+													</content>
+												</ScrollPane>
+											</children>
+										</AnchorPane>
+									</content>
+								</Tab>
+								<Tab text="Editor">
+									<content>
+										<AnchorPane>
+											<children>
+												<ScrollPane fitToWidth="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+													<content>
+														<AnchorPane>
+															<children>
+																<VBox styleClass="settingsFormWrapper" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+																	<children>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" layoutX="10.0" layoutY="10.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Enable code completion" />
+																				<CheckBox mnemonicParsing="false" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" layoutX="10.0" layoutY="10.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Display indent guides" />
+																				<CheckBox mnemonicParsing="false" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Font size" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="12px" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" layoutX="10.0" layoutY="10.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Highlight selected word" />
+																				<CheckBox mnemonicParsing="false" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="New line mode" />
+																				<ComboBox prefWidth="250.0" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Print margin column" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="100" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" layoutX="10.0" layoutY="10.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Show fold widgets" />
+																				<CheckBox mnemonicParsing="false" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" layoutX="10.0" layoutY="10.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Show gutter" />
+																				<CheckBox mnemonicParsing="false" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" layoutX="10.0" layoutY="10.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Show invisibles" />
+																				<CheckBox mnemonicParsing="false" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" layoutX="10.0" layoutY="10.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Show print margin" />
+																				<CheckBox mnemonicParsing="false" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Tab size" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="4" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" layoutX="10.0" layoutY="10.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Use soft tabs" />
+																				<CheckBox mnemonicParsing="false" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" layoutX="10.0" layoutY="10.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Wrap text" />
+																				<CheckBox mnemonicParsing="false" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Wrap limit" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="120" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																	</children>
+																</VBox>
+															</children>
+														</AnchorPane>
+													</content>
+												</ScrollPane>
+											</children>
+										</AnchorPane>
+									</content>
+								</Tab>
+								<Tab text="Key bindings">
+									<content>
+										<AnchorPane>
+											<children>
+												<ScrollPane fitToWidth="true" hbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+													<content>
+														<AnchorPane>
+															<children>
+																<VBox styleClass="settingsFormWrapper" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+																	<children>
+																		<HBox styleClass="hbxSettingsHeader">
+																			<children>
+																				<Label styleClass="lblSettingsHeader" text="Bot operations" HBox.hgrow="ALWAYS" />
+																			</children>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="New file" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Open file" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Save file" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Save file as" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Save all" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox styleClass="hbxSettingsHeader">
+																			<children>
+																				<Label styleClass="lblSettingsHeader" text="Project operations" />
+																			</children>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="New project" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="New folder" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Upload item" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Rename item" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Delete item" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox styleClass="hbxSettingsHeader">
+																			<children>
+																				<Label styleClass="lblSettingsHeader" text="Help operations" />
+																			</children>
+																		</HBox>
+
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Previous help page" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Next help page" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Help home" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Info on current keyword" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox styleClass="hbxSettingsHeader">
+																			<children>
+
+																				<Label styleClass="lblSettingsHeader" text="Editor/debug operations" />
+																			</children>
+																		</HBox>
+
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Undo" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Redo" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Run" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Pause" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Stop" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Step in" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Step over" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Remove all breakpoints" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Search in editor" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Close current bot" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Close all bots" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox styleClass="hbxSettingsHeader">
+																			<children>
+																				<Label styleClass="lblSettingsHeader" text="Console operations" />
+																			</children>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Clear console" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Search in colsole" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Toggle INFO messages" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Toggle DEBUG messages" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Toggle WARN messages" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Toggle ERROR messages" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox styleClass="hbxSettingsHeader">
+																			<children>
+																				<Label styleClass="lblSettingsHeader" text="Preview operations" />
+																			</children>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Search in preview window" />
+																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																	</children>
+																</VBox>
+															</children>
+														</AnchorPane>
+													</content>
+												</ScrollPane>
+											</children>
+										</AnchorPane>
+									</content>
+								</Tab>
+								<Tab text="License">
+									<content>
+										<AnchorPane>
+											<children>
+												<ScrollPane fitToWidth="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+													<content>
+														<AnchorPane>
+															<children>
+																<VBox styleClass="settingsFormWrapper" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+																	<children>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="150.0" text="License type" />
+																				<Label text="Internal" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="150.0" text="Licensed to" />
+																				<Label text="Xillio" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="150.0" text="Contact name" />
+																				<Label text="Xillio Developer" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="150.0" text="Contact e-mail" />
+																				<Label text="dev@xillio.nl" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="150.0" text="Date issued" />
+																				<Label text="2015-01-01" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="150.0" text="Expiry date" />
+																				<Label text="2016-01-01" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="150.0" text="Modules" />
+																				<Label text="Runtime, IDE, Server" HBox.hgrow="ALWAYS" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" layoutX="10.0" layoutY="10.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Button mnemonicParsing="false" text="Deactivate license" />
+																				<Button mnemonicParsing="false" text="Replace license" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+																	</children>
+																</VBox>
+															</children>
+														</AnchorPane>
+													</content>
+												</ScrollPane>
+											</children>
+										</AnchorPane>
+									</content>
+								</Tab>
+							</tabs>
+						</TabPane>
+					</children>
+				</AnchorPane>
+				<HBox styleClass="buttonsWrapper" VBox.vgrow="NEVER">
+					<children>
+						<Button fx:id="okBtn" defaultButton="true" mnemonicParsing="false" onAction="#okayBtnPressed" text="Ok" />
+						<Button fx:id="cancelBtn" cancelButton="true" mnemonicParsing="false" onAction="#cancelBtnPressed" text="Cancel" />
+					</children>
+				</HBox>
+			</children>
+		</VBox>
+	</children>
+</AnchorPane>
