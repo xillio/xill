@@ -46,12 +46,12 @@ public class NewFolderDialog extends FXMLDialog {
 	}
 
 	@FXML
-	private void cancelBtnPressed(@SuppressWarnings("unused") final ActionEvent event) {
+	private void cancelBtnPressed(final ActionEvent event) {
 		close();
 	}
 
 	@FXML
-	private void okayBtnPressed(@SuppressWarnings("unused") final ActionEvent event) {
+	private void okayBtnPressed(final ActionEvent event) {
 		try {
 			FileUtils.forceMkdir(new File(treeItem.getValue().getKey(), tffolder.getText()));
 			treeItem.setExpanded(true);
