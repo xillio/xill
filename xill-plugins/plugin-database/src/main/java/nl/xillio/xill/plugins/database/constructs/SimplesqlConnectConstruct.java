@@ -30,7 +30,7 @@ public abstract class SimplesqlConnectConstruct extends BaseDatabaseConstruct {
 	}
 
 	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
+	public ConstructProcessor doPrepareProcess(ConstructContext context) {
 		Argument[] args =
 		{new Argument("host", ATOMIC),
 				new Argument("port", fromValue(3306), ATOMIC),

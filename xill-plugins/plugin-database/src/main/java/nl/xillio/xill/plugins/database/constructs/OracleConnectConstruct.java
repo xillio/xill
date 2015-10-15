@@ -17,7 +17,7 @@ import nl.xillio.xill.plugins.database.util.Database;
  */
 public class OracleConnectConstruct extends BaseDatabaseConstruct {
 	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
+	public ConstructProcessor doPrepareProcess(ConstructContext context) {
 		Argument[] args =
 		{
 				new Argument("host", ATOMIC),

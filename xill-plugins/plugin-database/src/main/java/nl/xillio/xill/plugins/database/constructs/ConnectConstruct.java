@@ -27,7 +27,7 @@ import nl.xillio.xill.plugins.database.util.Tuple;
 public class ConnectConstruct extends BaseDatabaseConstruct {
 
 	@Override
-	public ConstructProcessor prepareProcess(final ConstructContext context) {
+	public ConstructProcessor doPrepareProcess(final ConstructContext context) {
 		Argument[] args =
 				{new Argument("database", ATOMIC),
 						new Argument("type", ATOMIC),

@@ -2,23 +2,29 @@ package nl.xillio.xill.plugins.database;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map.Entry;
+
+import nl.xillio.xill.api.components.RobotID;
+import nl.xillio.xill.api.construct.Construct;
+import nl.xillio.xill.api.construct.ConstructContext;
+import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.database.services.DatabaseServiceFactory;
+import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.inject.Inject;
 
-import nl.xillio.xill.api.components.RobotID;
-import nl.xillio.xill.api.construct.Construct;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.database.services.DatabaseServiceFactory;
-import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
-
 /**
  * The base class for each construct in the database plugin.
  */
 public abstract class BaseDatabaseConstruct extends Construct {
+
+	private static final int VALIDATION_TIMEOUT = 1000;
 
 	private static final Logger log = LogManager.getLogger();
 
@@ -26,6 +32,19 @@ public abstract class BaseDatabaseConstruct extends Construct {
 
 	@Inject
 	protected DatabaseServiceFactory factory;
+
+	@Override
+	public final ConstructProcessor prepareProcess(ConstructContext context) {
+		// Before start check that previous connections can be used
+		context.addRobotStartedListener((action) -> cleanLastConnections());
+		return doPrepareProcess(context);
+	}
+
+	/**
+	 * @param context
+	 * @return The {@link ConstructProcessor} that should be returned in {@link BaseDatabaseConstruct#prepareProcess(ConstructContext)}
+	 */
+	protected abstract ConstructProcessor doPrepareProcess(ConstructContext context);
 
 	/**
 	 * Add hook to close all connections when runtime terminates
@@ -86,5 +105,24 @@ public abstract class BaseDatabaseConstruct extends Construct {
 		}
 		
 		return metadata;
+	}
+
+	/**
+	 * Check for validity of all lastConnections and remove the invalid ones
+	 */
+	public static void cleanLastConnections() {
+		for (Entry<RobotID, ConnectionMetadata> entry : new ArrayList<>(lastConnections.entrySet())) {
+			Connection connection = entry.getValue().getConnection();
+			RobotID id = entry.getKey();
+			try {
+				// Try to find out if a connection is still valid, don't bother if this takes too long
+				if (connection.isClosed() || !connection.isValid(VALIDATION_TIMEOUT)) {
+					lastConnections.remove(id);
+				}
+			} catch (SQLException e) {
+				// When an operation on the connection fails also assume it is invalid
+				lastConnections.remove(id);
+			}
+		}
 	}
 }

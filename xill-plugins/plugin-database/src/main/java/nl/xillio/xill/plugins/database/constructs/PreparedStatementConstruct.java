@@ -31,7 +31,7 @@ import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
 public class PreparedStatementConstruct extends BaseDatabaseConstruct {
 
 	@Override
-	public ConstructProcessor prepareProcess(final ConstructContext context) {
+	public ConstructProcessor doPrepareProcess(final ConstructContext context) {
 		return new ConstructProcessor((query, parameters, database, timeout) -> process(query, parameters, database, timeout, factory, context.getRobotID()),
 			new Argument("query", ATOMIC),
 			new Argument("parameters", emptyObject(), LIST, OBJECT),

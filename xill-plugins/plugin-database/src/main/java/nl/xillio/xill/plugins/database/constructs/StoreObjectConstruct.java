@@ -27,7 +27,7 @@ import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
 public class StoreObjectConstruct extends BaseDatabaseConstruct {
 
 	@Override
-	public ConstructProcessor prepareProcess(final ConstructContext context) {
+	public ConstructProcessor doPrepareProcess(final ConstructContext context) {
 		Argument[] args =
 				{
 						new Argument("table", ATOMIC),

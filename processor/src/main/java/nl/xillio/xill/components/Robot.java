@@ -10,8 +10,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-import com.google.common.collect.Lists;
-
+import nl.xillio.events.EventHost;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.ExpressionBuilder;
 import nl.xillio.xill.api.components.Instruction;
@@ -20,7 +19,11 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.api.events.RobotStartedAction;
+import nl.xillio.xill.api.events.RobotStoppedAction;
 import nl.xillio.xill.components.instructions.InstructionSet;
+
+import com.google.common.collect.Lists;
 
 /**
  * This class represents the root node of the program structure
@@ -29,6 +32,13 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
 	private final RobotID robotID;
 	private final List<nl.xillio.xill.api.components.Robot> libraries = new ArrayList<>();
 	private MetaExpression callArgument = ExpressionBuilder.NULL;
+
+	/**
+	 * Events for signalling that a robot has started or stopped
+	 */
+	private EventHost<RobotStartedAction> startEvent;
+	private EventHost<RobotStoppedAction> endEvent;
+
 	private final static List<nl.xillio.xill.api.components.Robot> initializingRobots = new ArrayList<>();
 	private final static List<nl.xillio.xill.api.components.Robot> closingRobots = new ArrayList<>();
 
@@ -36,9 +46,11 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
 	 * @param robotID
 	 * @param debugger
 	 */
-	public Robot(final RobotID robotID, final Debugger debugger) {
+	public Robot(final RobotID robotID, final Debugger debugger, EventHost<RobotStartedAction> startEvent, EventHost<RobotStoppedAction> endEvent) {
 		super(debugger);
 		this.robotID = robotID;
+		this.startEvent = startEvent;
+		this.endEvent = endEvent;
 	}
 
 	/**
@@ -49,6 +61,7 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
 	@Override
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		getDebugger().robotStarted(this);
+		startEvent.invoke(new RobotStartedAction(this));
 
 		initializingRobots.add(this);
 		for (nl.xillio.xill.api.components.Robot robot : libraries) {
@@ -58,6 +71,7 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
 
 		InstructionFlow<MetaExpression> result = super.process(debugger);
 
+		endEvent.invoke(new RobotStoppedAction(this));
 		getDebugger().robotFinished(this);
 
 		return result;
