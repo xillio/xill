@@ -1,11 +1,12 @@
 buildscript {
     repositories {
-        mavenLocal()
-        jcenter()
+        maven {
+            url 'https://maven.xillio.com/artifactory/plugins-release/'
+        }
     }
 
     dependencies {
-        classpath 'nl.xillio:gradle-config:1.1.0-SNAPSHOT'
+        classpath 'nl.xillio:gradle-config:1.1.0'
     }
 }
 
