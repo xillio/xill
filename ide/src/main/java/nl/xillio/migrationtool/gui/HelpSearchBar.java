@@ -1,5 +1,7 @@
 package nl.xillio.migrationtool.gui;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -56,14 +58,29 @@ public class HelpSearchBar extends AnchorPane {
 		listView = new ListView<>(data);
 		listView.setOnMouseClicked(this::onClick);
 		listView.setOnKeyPressed(this::onKeyPressed);
-
+		listView.autosize();
+		
 		//Result wrapper
 		hoverToolTip = new Tooltip();
 		hoverToolTip.setGraphic(listView);
 		hoverToolTip.prefWidthProperty().bind(searchField.widthProperty());
+		
+
 
 		//Listen to search changes
 		searchField.textProperty().addListener(this::searchTextChanged);
+		
+		//Close on focus lost
+		searchField.focusedProperty().addListener(new ChangeListener<Boolean>(){
+	        @Override
+	        public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+	            if (newValue) {
+	                showResults();
+	            } else {
+	                hoverToolTip.hide();
+	            }
+	        }
+	    });
 	}
 
 	private void onKeyPressed(KeyEvent keyEvent) {
@@ -116,7 +133,6 @@ public class HelpSearchBar extends AnchorPane {
 		}
 
 		String[] results = searcher.search(query);
-
 		data.clear();
 		data.addAll(results);
 	}
