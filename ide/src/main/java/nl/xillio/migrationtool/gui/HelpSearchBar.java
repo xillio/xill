@@ -23,6 +23,9 @@ import javafx.stage.Window;
 import nl.xillio.xill.docgen.DocumentationSearcher;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.sun.javafx.tk.FontMetrics;
+import com.sun.javafx.tk.Toolkit;
 import java.io.IOException;
 
 /**
@@ -31,7 +34,7 @@ import java.io.IOException;
  */
 public class HelpSearchBar extends AnchorPane {
 	private static final Logger LOGGER = LogManager.getLogger();
-	private static final int ROW_HEIGHT = 29;
+	private static int ROW_HEIGHT = 29;
 	private final ListView<String> listView;
 	private HelpPane helpPane;
 	private final Tooltip hoverToolTip;
@@ -62,10 +65,15 @@ public class HelpSearchBar extends AnchorPane {
 		listView.setOnKeyPressed(this::onKeyPressed);
 		listView.setPrefHeight(ROW_HEIGHT);
 		
+		
 		//Result wrapper
 		hoverToolTip = new Tooltip();
 		hoverToolTip.setGraphic(listView);
 		hoverToolTip.prefWidthProperty().bind(searchField.widthProperty());
+		
+		//Set the height of the row to the font size plus padding
+		FontMetrics metrics = Toolkit.getToolkit().getFontLoader().getFontMetrics(hoverToolTip.getFont());
+		ROW_HEIGHT = (int) (metrics.getLineHeight() * 1.5);
 		
 		data.addListener(new ListChangeListener<Object>(){
 			 @Override
