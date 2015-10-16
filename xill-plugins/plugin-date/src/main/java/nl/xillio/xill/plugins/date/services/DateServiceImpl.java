@@ -5,10 +5,7 @@ import nl.xillio.xill.api.data.Date;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.temporal.ChronoField;
@@ -40,44 +37,36 @@ public class DateServiceImpl implements DateService {
 		return new nl.xillio.xill.plugins.date.data.Date(ZonedDateTime.of(year, month, day, hour, minute, second, nano, zone));
 	}
 
-    public int getValueOrDefault(ZonedDateTime now, TemporalAccessor parsed, ChronoField field){
+    int getValueOrDefault(ZonedDateTime now, TemporalAccessor parsed, ChronoField field){
         return (parsed.isSupported(field)) ? parsed.get(field) : now.get(field);
+    }
+
+    ZonedDateTime getValueOrDefaultZDT(TemporalAccessor parsed){
+        ZonedDateTime now = ZonedDateTime.now();
+        ChronoField[] parameters = {ChronoField.YEAR,
+                ChronoField.MONTH_OF_YEAR,
+                ChronoField.DAY_OF_MONTH,
+                ChronoField.HOUR_OF_DAY,
+                ChronoField.MINUTE_OF_HOUR,
+                ChronoField.SECOND_OF_MINUTE,
+                ChronoField.NANO_OF_SECOND};
+        int[] p = Arrays.stream(parameters).mapToInt(cf -> parsed.isSupported(cf) ? parsed.get(cf) : now.get(cf)).toArray();
+
+        ZoneId zone;
+        try{
+            zone = ZoneId.from(parsed);
+        } catch(DateTimeException dte){
+            zone = ZoneId.systemDefault();
+        }
+
+        return ZonedDateTime.of(p[0],p[1],p[2],p[3],p[4],p[5],p[6],zone);
     }
 
 	@Override
 	public Date parseDate(String date, String format) {
 		DateTimeFormatter formatter = createDateTimeFormatter(format);
-        TemporalAccessor time = formatter.parse(date);
-
-        ChronoField[] parameters = {ChronoField.YEAR,
-                                    ChronoField.MONTH_OF_YEAR,
-                                    ChronoField.DAY_OF_MONTH,
-                                    ChronoField.HOUR_OF_DAY,
-                                    ChronoField.MINUTE_OF_HOUR,
-                                    ChronoField.SECOND_OF_MINUTE,
-                                    ChronoField.NANO_OF_SECOND};
-
-        ZonedDateTime now = ZonedDateTime.now();
-        int[] parsedOrDefault = Arrays.stream(parameters).map(d -> getValueOrDefault(now,time,d)));
-        int year = (time.isSupported(ChronoField.YEAR)) ? time.get(ChronoField.YEAR) : now.getYear();
-
-
-        //------
-        DateTimeFormatter formatter = createDateTimeFormatter(format);
-		TemporalAccessor time = formatter.parse(date);
-
-        ZonedDateTime result;
-        time.isSupported(ChronoField.DAY_OF_MONTH);
-        ZonedDateTime.of(1)
-        if (time instanceof ZonedDateTime) {
-			result = (ZonedDateTime) time;
-		} else if (time instanceof LocalDateTime) {
-			result = ZonedDateTime.of((LocalDateTime) time, ZoneId.systemDefault());
-		} else {
-			result = LocalDate.from(time).atStartOfDay(ZoneId.systemDefault());
-		}
-        obj += " ";
-		return new nl.xillio.xill.plugins.date.data.Date(result);
+        TemporalAccessor parsed = formatter.parse(date);
+        return new nl.xillio.xill.plugins.date.data.Date(getValueOrDefaultZDT(parsed));
 	}
 
 	private DateTimeFormatter createDateTimeFormatter(String format) {
