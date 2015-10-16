@@ -102,7 +102,6 @@ public class XillCell {
 			cell.setCellValue(value);
 	}
 
-
 	/**
 	 * Sets the cell's value to the provided Double
 	 *
@@ -127,7 +126,7 @@ public class XillCell {
         //Check if it contains a date
 
         //HOW TO CHECK THIS?
-        boolean containsDate = !(dateTime.getYear() == LocalDate.MIN);
+        //boolean containsDate = !(dateTime.getYear() == LocalDate.MIN);
     }
 
 }

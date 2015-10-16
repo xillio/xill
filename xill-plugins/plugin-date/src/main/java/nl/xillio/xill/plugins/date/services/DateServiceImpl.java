@@ -14,11 +14,10 @@ import java.time.format.FormatStyle;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.time.temporal.TemporalField;
+import java.util.*;
 import java.util.Map.Entry;
+import java.util.function.Function;
 
 /**
  * Implementation providing {@link DateService} functions.
@@ -41,19 +40,43 @@ public class DateServiceImpl implements DateService {
 		return new nl.xillio.xill.plugins.date.data.Date(ZonedDateTime.of(year, month, day, hour, minute, second, nano, zone));
 	}
 
+    public int getValueOrDefault(ZonedDateTime now, TemporalAccessor parsed, ChronoField field){
+        return (parsed.isSupported(field)) ? parsed.get(field) : now.get(field);
+    }
+
 	@Override
 	public Date parseDate(String date, String format) {
 		DateTimeFormatter formatter = createDateTimeFormatter(format);
+        TemporalAccessor time = formatter.parse(date);
+
+        ChronoField[] parameters = {ChronoField.YEAR,
+                                    ChronoField.MONTH_OF_YEAR,
+                                    ChronoField.DAY_OF_MONTH,
+                                    ChronoField.HOUR_OF_DAY,
+                                    ChronoField.MINUTE_OF_HOUR,
+                                    ChronoField.SECOND_OF_MINUTE,
+                                    ChronoField.NANO_OF_SECOND};
+
+        ZonedDateTime now = ZonedDateTime.now();
+        int[] parsedOrDefault = Arrays.stream(parameters).map(d -> getValueOrDefault(now,time,d)));
+        int year = (time.isSupported(ChronoField.YEAR)) ? time.get(ChronoField.YEAR) : now.getYear();
+
+
+        //------
+        DateTimeFormatter formatter = createDateTimeFormatter(format);
 		TemporalAccessor time = formatter.parse(date);
-		ZonedDateTime result;
-		if (time instanceof ZonedDateTime) {
+
+        ZonedDateTime result;
+        time.isSupported(ChronoField.DAY_OF_MONTH);
+        ZonedDateTime.of(1)
+        if (time instanceof ZonedDateTime) {
 			result = (ZonedDateTime) time;
 		} else if (time instanceof LocalDateTime) {
 			result = ZonedDateTime.of((LocalDateTime) time, ZoneId.systemDefault());
 		} else {
 			result = LocalDate.from(time).atStartOfDay(ZoneId.systemDefault());
 		}
-
+        obj += " ";
 		return new nl.xillio.xill.plugins.date.data.Date(result);
 	}
 
