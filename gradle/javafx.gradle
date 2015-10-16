@@ -37,6 +37,13 @@ jfxDeploy {
             new File(projectDir, "CHANGELOG.md"),
             new File(projectDir, "LICENSE")
     )
+
+    doLast {
+        distsDir.eachDir() {
+            dir ->
+                zipDist.from dir
+        }
+    }
 }
 
 buildDists.dependsOn jfxDeploy

@@ -7,8 +7,10 @@ buildscript {
 
     dependencies {
         classpath 'nl.xillio:gradle-config:1.1.1'
+        classpath 'com.google.gradle:osdetector-gradle-plugin:1.4.0'
     }
 }
+
 
 // First we set some global constants
 ext {
@@ -21,6 +23,7 @@ allprojects {
 }
 
 // Apply the javafx build
+apply from: file('gradle/dist.gradle')
 apply from: file('gradle/javafx.gradle')
 
 // Then we apply the base configuration to all projects
