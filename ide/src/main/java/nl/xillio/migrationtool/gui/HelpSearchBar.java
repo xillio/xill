@@ -64,17 +64,13 @@ public class HelpSearchBar extends AnchorPane {
 		listView.setOnMouseClicked(this::onClick);
 		listView.setOnKeyPressed(this::onKeyPressed);
 		listView.setPrefHeight(ROW_HEIGHT);
-		
+		listView.setFixedCellSize(ROW_HEIGHT);
 		
 		//Result wrapper
 		hoverToolTip = new Tooltip();
 		hoverToolTip.setGraphic(listView);
 		hoverToolTip.prefWidthProperty().bind(searchField.widthProperty());
-		
-		//Set the height of the row to the font size plus padding
-		FontMetrics metrics = Toolkit.getToolkit().getFontLoader().getFontMetrics(hoverToolTip.getFont());
-		ROW_HEIGHT = (int) (metrics.getLineHeight() * 1.5);
-		
+
 		data.addListener(new ListChangeListener<Object>(){
 			 @Override
 			    public void onChanged(ListChangeListener.Change change) {
