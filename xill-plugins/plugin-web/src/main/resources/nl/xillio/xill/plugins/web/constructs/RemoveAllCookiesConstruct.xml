@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Remove all the cookies associated with the loaded page.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Remove all cookies from a web page.</header>
+            <code>
+                use Web;
+                use System;
+
+                var page = Web.loadPage ("http://www.xillio.com");
+                System.print(Web.pageInfo(page));
+                Web.removeAllCookies(page);
+                System.print(Web.pageInfo(page));
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>setCookie</reference>
+        <reference>loadPage</reference>
+    </references>
+    <tags>
+        load, page, web, remove, cookies
+    </tags>
+</function>

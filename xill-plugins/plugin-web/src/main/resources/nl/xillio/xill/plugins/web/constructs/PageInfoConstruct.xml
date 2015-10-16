@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Returns a list variable with specific info on the page object page such as: title and cookies.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Retrieve info about a web page.</header>
+            <code>
+                use Web;
+                use System;
+
+                var page = Web.loadPage ("http://www.xillio.com");
+                System.print(Web.pageInfo(page));
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>loadPage</reference>
+    </references>
+    <tags>
+        load, page, web, info
+    </tags>
+</function>

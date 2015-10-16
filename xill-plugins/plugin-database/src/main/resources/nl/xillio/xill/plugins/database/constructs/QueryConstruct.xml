@@ -9,13 +9,13 @@
   </description>
   <examples>
     <example>
-      <header>Select all rows from the table "test" in a SQLite database and display the results</header>
+      <header>Select all rows from the table "test" in a SQLite database and display the results, with timeout at 10 seconds and using the connection in the con variable</header>
       <code>
 	use Database;
 	use System;
 	
 	var con = Database.connect("database.sqlite", "sqlite");
-	var result = Database.query("SELECT * FROM test");
+	var result = Database.query("SELECT * FROM test",10,con);
 	
 	foreach (r in result){
 	 System.print(r); 
