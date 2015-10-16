@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        This browser function creates a screenshot of a current web page and save it to file. The file format is .png.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Make a screenshot of a web page.</header>
+            <code>
+                use Web;
+
+                var x = Web.loadPage("http://google.com");
+                Web.screenshot(x, "test.jpg");
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>loadPage</reference>
+    </references>
+    <tags>
+        load, page, web, screenshot
+    </tags>
+</function>
