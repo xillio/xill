@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Returns a new page object based on the string content.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Convert a string to a web page.</header>
+            <code>
+                var page = Web.stringToPage("
+                        <html>
+                            <head>
+                                <title> Strict DTD XHTML Example </title>
+                            </head>
+                            <body>
+                                <p>Please Choose a Day:
+                                    <br />
+                                    <br />
+                                    <select name="day">
+                                        <option selected="selected">Monday</option>
+                                        <option>Tuesday</option>
+                                        <option>Wednesday</option>
+                                    </select>
+                                </p>
+                            </body>
+                        </html>");
+
+                var options = Web.xPath(page, "//option/text()");
+
+                foreach(key,value in options) {
+                    System.print(value);
+                }
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>xPath</reference>
+    </references>
+    <tags>
+        load, page, web, string
+    </tags>
+</function>
