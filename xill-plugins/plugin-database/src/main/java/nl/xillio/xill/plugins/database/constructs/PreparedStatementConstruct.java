@@ -61,9 +61,9 @@ public class PreparedStatementConstruct extends BaseDatabaseConstruct {
 			if (parameters.getType() == LIST) {
 				List<Object> parameterContent = (List<Object>) extractValue(parameters);
 				for (Object param : parameterContent) {
-					try{
-					parameterObjects.add((LinkedHashMap<String, Object>) param);
-					}catch(ClassCastException e){
+					if (param instanceof LinkedHashMap) {
+						parameterObjects.add((LinkedHashMap<String, Object>) param);
+					}else{
 						throw new RobotRuntimeException("Expected objects in the 'parameters' parameter.");
 					}
 				}
