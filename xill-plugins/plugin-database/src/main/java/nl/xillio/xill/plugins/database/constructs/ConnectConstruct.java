@@ -27,7 +27,7 @@ import nl.xillio.xill.plugins.database.util.Tuple;
 public class ConnectConstruct extends BaseDatabaseConstruct {
 
 	@Override
-	public ConstructProcessor prepareProcess(final ConstructContext context) {
+	public ConstructProcessor doPrepareProcess(final ConstructContext context) {
 		Argument[] args =
 				{new Argument("database", ATOMIC),
 						new Argument("type", ATOMIC),
@@ -76,7 +76,7 @@ public class ConnectConstruct extends BaseDatabaseConstruct {
 		MetaExpression metaExpression = fromValue(database);
 		ConnectionMetadata newConnection = new ConnectionMetadata(type, connection);
 		// add the robotId with the new connection to the pool
-		lastConnections.put(robotID, newConnection);
+		setLastConnection(robotID, newConnection);
 		// store the connection metadata in the output MetaExpression
 		metaExpression.storeMeta(newConnection);
 

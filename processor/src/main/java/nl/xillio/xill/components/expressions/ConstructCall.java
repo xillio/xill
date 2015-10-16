@@ -9,7 +9,6 @@ import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.construct.Construct;
-import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
@@ -21,7 +20,7 @@ public class ConstructCall implements Processable {
 
 	private final Construct construct;
 	private final Processable[] arguments;
-	private final ConstructContext context;
+	private final ConstructProcessor processor;
 
 	/**
 	 * Create a new {@link ConstructCall}
@@ -33,16 +32,14 @@ public class ConstructCall implements Processable {
 	 * @param context
 	 *        the context to pass to the constructs
 	 */
-	public ConstructCall(final Construct construct, final List<Processable> arguments, final ConstructContext context) {
+	public ConstructCall(final Construct construct, final List<Processable> arguments, final ConstructProcessor processor) {
 		this.construct = construct;
 		this.arguments = arguments.toArray(new Processable[arguments.size()]);
-		this.context = context;
+		this.processor = processor;
 	}
 
 	@Override
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-		ConstructProcessor processor = construct.prepareProcess(context);
-
 		MetaExpression[] argumentResults = new MetaExpression[arguments.length];
 
 		// Process arguments
@@ -72,6 +69,9 @@ public class ConstructCall implements Processable {
 			for (MetaExpression argumentResult : argumentResults) {
 				argumentResult.releaseReference();
 			}
+
+			// Clear arguments
+			processor.reset();
 
 			return result;
 

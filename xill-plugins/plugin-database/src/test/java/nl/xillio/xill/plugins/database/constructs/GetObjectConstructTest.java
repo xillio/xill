@@ -8,12 +8,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
-
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
 
 import nl.xillio.xill.ConstructTest;
 import nl.xillio.xill.api.components.MetaExpression;
@@ -24,6 +21,10 @@ import nl.xillio.xill.plugins.database.services.DatabaseService;
 import nl.xillio.xill.plugins.database.services.DatabaseServiceFactory;
 import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
 import nl.xillio.xill.plugins.database.util.TypeConverter.ConversionException;
+
+import org.testng.Assert;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 /**
  * Test the {@link GetObjectConstruct}.
@@ -48,10 +49,13 @@ public class GetObjectConstructTest extends ConstructTest {
 		RobotID id = mock(RobotID.class);
 
 		ConnectionMetadata conMetadata = mock(ConnectionMetadata.class);
+		Connection connection = mock(Connection.class);
+		when(connection.isClosed()).thenReturn(false);
+		when(conMetadata.getConnection()).thenReturn(connection);
 
 		// so we get the lastConnections
 		when(database.equals(NULL)).thenReturn(true);
-		BaseDatabaseConstruct.setLastConnections(id, conMetadata);
+		BaseDatabaseConstruct.setLastConnection(id, conMetadata);
 
 		DatabaseService dbService = mock(DatabaseService.class);
 		when((factory).getService(any())).thenReturn(dbService);
@@ -65,7 +69,6 @@ public class GetObjectConstructTest extends ConstructTest {
 		MetaExpression result = GetObjectConstruct.process(table, object, database, factory, id);
 
 		// verify
-		verify(conMetadata, times(1)).getConnection();
 		verify(dbService, times(1)).getObject(any(), any(), any());
 		verify(database, never()).getMeta(ConnectionMetadata.class);
 
@@ -92,7 +95,7 @@ public class GetObjectConstructTest extends ConstructTest {
 		// so we get the lastConnections
 		when(database.equals(NULL)).thenReturn(false);
 		mock(LinkedHashMap.class);
-		BaseDatabaseConstruct.setLastConnections(id, conMetadata);
+		BaseDatabaseConstruct.setLastConnection(id, conMetadata);
 
 		DatabaseService dbService = mock(DatabaseService.class);
 		when((factory).getService(any())).thenReturn(dbService);
@@ -146,7 +149,7 @@ public class GetObjectConstructTest extends ConstructTest {
 		LinkedHashMap<String, Object> resultMap = new LinkedHashMap<String, Object>();
 		DatabaseService dbService = mock(DatabaseService.class);
 
-		BaseDatabaseConstruct.setLastConnections(id, conMetadata);
+		BaseDatabaseConstruct.setLastConnection(id, conMetadata);
 
 		when(database.equals(NULL)).thenReturn(false);
 		when((factory).getService(any())).thenThrow(e);
@@ -183,7 +186,7 @@ public class GetObjectConstructTest extends ConstructTest {
 		mock(LinkedHashMap.class);
 		DatabaseService dbService = mock(DatabaseService.class);
 
-		BaseDatabaseConstruct.setLastConnections(id, conMetadata);
+		BaseDatabaseConstruct.setLastConnection(id, conMetadata);
 
 		when(database.equals(NULL)).thenReturn(false);
 		when((factory).getService(any())).thenReturn(dbService);

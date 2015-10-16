@@ -9,16 +9,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
-
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
 
 import nl.xillio.xill.ConstructTest;
 import nl.xillio.xill.api.components.MetaExpression;
@@ -28,6 +25,10 @@ import nl.xillio.xill.plugins.database.BaseDatabaseConstruct;
 import nl.xillio.xill.plugins.database.services.DatabaseService;
 import nl.xillio.xill.plugins.database.services.DatabaseServiceFactory;
 import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
+
+import org.testng.Assert;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 /**
  * Tests the {@link PreparedStatementConstruct}.
@@ -112,6 +113,9 @@ public class QueryConstructTest extends ConstructTest {
 		MetaExpression database = mockExpression(ATOMIC, true, 42, "database");
 		when(database.isNull()).thenReturn(true);
 		ConnectionMetadata connectionMetadata = mock(ConnectionMetadata.class);
+		Connection connection = mock(Connection.class);
+		when(connection.isClosed()).thenReturn(false);
+		when(connectionMetadata.getConnection()).thenReturn(connection);
 
 		// the timeout
 		MetaExpression timeout = mockExpression(ATOMIC, true, 42, "timeout");
@@ -139,7 +143,7 @@ public class QueryConstructTest extends ConstructTest {
 
 		// the robotID
 		RobotID robotID = mock(RobotID.class);
-		BaseDatabaseConstruct.setLastConnections(robotID, connectionMetadata);
+		BaseDatabaseConstruct.setLastConnection(robotID, connectionMetadata);
 
 		// run
 		PreparedStatementConstruct.process(query, parameters, database, timeout, factory, robotID);
@@ -185,8 +189,7 @@ public class QueryConstructTest extends ConstructTest {
 
 		// the database
 		MetaExpression database = mockExpression(ATOMIC, true, 42, "database");
-		when(database.isNull()).thenReturn(true);
-		ConnectionMetadata connectionMetadata = mock(ConnectionMetadata.class);
+		when(database.isNull()).thenReturn(false);
 
 		// the timeout
 		MetaExpression timeout = mockExpression(ATOMIC, true, 42, "timeout");
@@ -209,7 +212,6 @@ public class QueryConstructTest extends ConstructTest {
 
 		// the robotID
 		RobotID robotID = mock(RobotID.class);
-		BaseDatabaseConstruct.setLastConnections(robotID, connectionMetadata);
 
 		// run
 		PreparedStatementConstruct.process(query, parameters, database, timeout, factory, robotID);
