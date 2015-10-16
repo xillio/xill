@@ -191,6 +191,9 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 	public void removeProject(final TreeItem<Pair<File, String>> item) {
 		root.getChildren().remove(item);
 		settings.project().delete(item.getValue().getValue());
+                if (getProjectsCount() == 0) {
+                    getScene().lookup("#btnNewFile").setDisable(true);
+                }
 	}
 
 	/**
@@ -202,6 +205,9 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 	public void deleteProject(final TreeItem<Pair<File, String>> item) {
 		item.getValue().getKey().delete();
 		removeProject(item);
+                if (getProjectsCount() == 0) {
+                    getScene().lookup("#btnNewFile").setDisable(true);
+                }
 	}
 
 	/**
@@ -505,14 +511,17 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		btnDelete.setDisable(false);
 		btnRename.setDisable(false);
 		btnUpload.setDisable(false);
+                getNewFileButton().setDisable(true);
 
 		if (newObject == null || newObject == trvProjects.getRoot()) {
 			// Disable all
 			disableAllButtons();
+                        getNewFileButton().setDisable(true);
 
 		} else if (newObject == getProject(newObject)) {
 			// This is a project
 			btnRename.setDisable(true);
+                        getNewFileButton().setDisable(false);
 		}
 	}
 
@@ -522,4 +531,17 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		btnRename.setDisable(true);
 		btnUpload.setDisable(true);
 	}
+        
+        /**
+         * Performs one lookup in the scene for the New File button
+         * 
+         * @return Node Return Node object that represents the New File button
+         */
+        public Node getNewFileButton() {
+            return getScene().lookup("#btnNewFile");
+        }
+        
+        public int getProjectsCount() {
+            return settings.project().getAll().size();
+        }
 }

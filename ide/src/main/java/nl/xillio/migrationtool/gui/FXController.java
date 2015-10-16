@@ -87,6 +87,9 @@ public class FXController implements Initializable, EventHandler<Event> {
 	 * etc.
 	 */
 
+        @FXML
+        private Button btnNewFile;
+        
 	@FXML
 	private Button btnOpenFile;
 	@FXML
@@ -214,6 +217,10 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 		// Add listener for window shown
 		loadWorkSpace();
+                
+                if (projectpane.getProjectsCount() == 0) {
+                    btnNewFile.setDisable(true);
+                }
 	}
 
 	private void loadWorkSpace() {
