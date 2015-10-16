@@ -168,9 +168,6 @@ public class XillSheet implements MetadataExpression {
 
 	}
 
-	public void setCellValue(XillCellRef cellRef, ZonedDateTime dateTime){
-    }
-
 	/**
 	 * Sets the value of the cell.
 	 *
@@ -198,6 +195,13 @@ public class XillSheet implements MetadataExpression {
 			columnLength = cellRef.getColumn() + 1;
 
 	}
+
+    public void setCellValue(XillCellRef cellRef, ZonedDateTime value){
+        getCell(cellRef).setCellValue(value);
+        calculateRowLength();
+        if(cellRef.getColumn() + 1 > columnLength)
+            columnLength = cellRef.getColumn() + 1;
+    }
 
 	/**
 	 * Returns if sheet is in a read-only workbook.

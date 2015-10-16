@@ -121,12 +121,18 @@ public class XillCell {
 	}
 
     public void setCellValue(ZonedDateTime dateTime){
-        //Check if it contains a time
         boolean containsTime = !(dateTime.getHour() == 0 && dateTime.getMinute() == 0);
-        //Check if it contains a date
+        if(containsTime){
+            cell.setCellValue(Date.from(dateTime.toInstant()));
+            CellStyle dateTimeStyle = this.sheet.getParentWorkbook().getDateTimeCellStyle();
+            this.cell.setCellStyle(dateTimeStyle);
 
-        //HOW TO CHECK THIS?
-        //boolean containsDate = !(dateTime.getYear() == LocalDate.MIN);
+        }
+        else{
+            cell.setCellValue(Date.from(dateTime.toInstant()));
+            CellStyle dateStyle = this.sheet.getParentWorkbook().getDateCellStyle();
+            this.cell.setCellStyle(dateStyle);
+        }
     }
 
 }

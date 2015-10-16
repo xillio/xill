@@ -11,10 +11,8 @@ import java.time.format.FormatStyle;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
-import java.time.temporal.TemporalField;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.function.Function;
 
 /**
  * Implementation providing {@link DateService} functions.
@@ -36,10 +34,6 @@ public class DateServiceImpl implements DateService {
 	public Date constructDate(int year, int month, int day, int hour, int minute, int second, int nano, ZoneId zone) {
 		return new nl.xillio.xill.plugins.date.data.Date(ZonedDateTime.of(year, month, day, hour, minute, second, nano, zone));
 	}
-
-    int getValueOrDefault(ZonedDateTime now, TemporalAccessor parsed, ChronoField field){
-        return (parsed.isSupported(field)) ? parsed.get(field) : now.get(field);
-    }
 
     ZonedDateTime getValueOrDefaultZDT(TemporalAccessor parsed){
         ZonedDateTime now = ZonedDateTime.now();

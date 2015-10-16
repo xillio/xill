@@ -25,7 +25,6 @@ public class XillWorkbook implements MetadataExpression {
 	private File file;
 	private boolean readonly = false;
 	private String location;
-    private CellStyle timeCellStyle;
     private CellStyle dateCellStyle;
     private CellStyle dateTimeCellStyle;
 
@@ -46,15 +45,6 @@ public class XillWorkbook implements MetadataExpression {
 		else
 			readonly = false;
 	}
-
-    public CellStyle getTimeCellStyle() {
-        if (timeCellStyle == null) {
-            CreationHelper creationHelper = workbook.getCreationHelper();
-            timeCellStyle = workbook.createCellStyle();
-            timeCellStyle.setDataFormat(creationHelper.createDataFormat().getFormat("hh:mm"));
-        }
-        return timeCellStyle;
-    }
 
     public CellStyle getDateCellStyle(){
         if(dateCellStyle == null){
