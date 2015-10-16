@@ -28,6 +28,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -293,30 +294,54 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 		File chosen = fileChooser.showSaveDialog(tpnBots.getScene().getWindow());
 
+                Path mikker = chosen.toPath();
+                String name = mikker.getFileName().toString();
+                String path = mikker.getParent().toString();
+                
+                
+                String robotFile = chosen.getAbsoluteFile().getPath();
+                String mekker = chosen.toURI().getPath();
+                String blah = chosen.getAbsoluteFile().getParent();//robotFile.getPath();
+                String bleh = projectfile.getAbsolutePath();
+                
 		if (chosen == null) {
 			// No file was chosen so we abort
 			return;
 		}
+                
+                if (chosen.getParent().equals(projectfile.getAbsolutePath())) {
+                    // This code is because of different behaviour of FileChooser in Linux and Windows
+                    // On Linux the FileChooser does not automatically add xill extension
+                    String xillExt = "." + Xill.FILE_EXTENSION;
+                    if (!chosen.getName().endsWith(xillExt)) {
+                            chosen = new File(chosen.getPath() + xillExt);
+                    }
 
-		// This code is because of different behaviour of FileChooser in Linux and Windows
-		// On Linux the FileChooser does not automatically add xill extension
-		String xillExt = "." + Xill.FILE_EXTENSION;
-		if (!chosen.getName().endsWith(xillExt)) {
-			chosen = new File(chosen.getPath() + xillExt);
-		}
+                    RobotTab tab;
+                    try {
+                            if (!chosen.exists()) {
+                                    chosen.createNewFile();
+                            }
 
-		RobotTab tab;
-		try {
-			if (!chosen.exists()) {
-				chosen.createNewFile();
-			}
+                            tab = new RobotTab(projectfile.getAbsoluteFile(), chosen, this);
+                            tpnBots.getTabs().add(tab);
+                            tab.requestFocus();
+                    } catch (IOException e) {
+                            e.printStackTrace();
+                    }
+                } else {
+                    // Delete the created robot since it is not in a project
+                    chosen.getAbsoluteFile().delete();
+                    
+                    // Inform the user about the 
+                    Alert projectPathErrorAlert = new Alert(AlertType.ERROR);
+                    projectPathErrorAlert.setTitle("Project path error");
+                    projectPathErrorAlert.setHeaderText("Error");
+                    projectPathErrorAlert.setContentText("The robot is not in the project path.");
+                    projectPathErrorAlert.show();
+                }
 
-			tab = new RobotTab(projectfile.getAbsoluteFile(), chosen, this);
-			tpnBots.getTabs().add(tab);
-			tab.requestFocus();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		
 
 	}
 
