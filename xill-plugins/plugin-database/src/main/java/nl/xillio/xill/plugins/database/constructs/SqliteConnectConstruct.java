@@ -15,7 +15,7 @@ import nl.xillio.xill.plugins.database.util.Database;
 public class SqliteConnectConstruct extends BaseDatabaseConstruct {
 
 	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
+	public ConstructProcessor doPrepareProcess(ConstructContext context) {
 		// Default is in-memory database
 		return new ConstructProcessor((file) -> process(file, factory,context.getRobotID()), new Argument("file", fromValue(":memory:"), ATOMIC));
 	}

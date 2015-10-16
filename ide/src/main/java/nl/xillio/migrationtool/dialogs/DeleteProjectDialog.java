@@ -32,18 +32,18 @@ public class DeleteProjectDialog extends FXMLDialog {
 	}
 
 	@FXML
-	private void cancelBtnPressed(@SuppressWarnings("unused") final ActionEvent event) {
+	private void cancelBtnPressed(final ActionEvent event) {
 		close();
 	}
 
 	@FXML
-	private void removeBtnPressed(@SuppressWarnings("unused") final ActionEvent event) {
+	private void removeBtnPressed(final ActionEvent event) {
 		projectPane.removeProject(treeItem);
 		close();
 	}
 
 	@FXML
-	private void deleteBtnPressed(@SuppressWarnings("unused") final ActionEvent event) {
+	private void deleteBtnPressed(final ActionEvent event) {
 		projectPane.deleteProject(treeItem);
 		close();
 	}

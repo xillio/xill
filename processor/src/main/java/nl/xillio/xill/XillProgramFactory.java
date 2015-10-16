@@ -12,13 +12,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Stack;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.nodemodel.INode;
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
-
+import nl.xillio.events.EventHost;
 import nl.xillio.plugins.PluginLoader;
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.api.Debugger;
@@ -34,6 +28,8 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.XillParsingException;
+import nl.xillio.xill.api.events.RobotStartedAction;
+import nl.xillio.xill.api.events.RobotStoppedAction;
 import nl.xillio.xill.components.expressions.CallbotExpression;
 import nl.xillio.xill.components.expressions.ConstructCall;
 import nl.xillio.xill.components.expressions.FilterExpression;
@@ -75,6 +71,14 @@ import nl.xillio.xill.components.operators.SmallerThan;
 import nl.xillio.xill.components.operators.SmallerThanOrEquals;
 import nl.xillio.xill.components.operators.Subtract;
 import nl.xillio.xill.debugging.DebugInfo;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+
 import xill.lang.xill.BooleanLiteral;
 import xill.lang.xill.Expression;
 import xill.lang.xill.IncludeStatement;
@@ -110,6 +114,12 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	private final Debugger debugger;
 	private final RobotID rootRobot;
 	private final Map<EObject, Map.Entry<RobotID, Robot>> compiledRobots = new HashMap<>();
+
+	/**
+	 * Events for signalling that a robot has started and that a robot has stopped
+	 */
+	private final EventHost<RobotStartedAction> robotStartedEvent = new EventHost<>();
+	private final EventHost<RobotStoppedAction> robotStoppedEvent = new EventHost<>();
 
 	/**
 	 * Create a new {@link XillProgramFactory}
@@ -173,7 +183,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 			useStatements.put(using, plugin.get());
 		}
 
-		nl.xillio.xill.components.Robot instructionRobot = new nl.xillio.xill.components.Robot(robotID, debugger);
+		nl.xillio.xill.components.Robot instructionRobot = new nl.xillio.xill.components.Robot(robotID, debugger, robotStartedEvent, robotStoppedEvent);
 		compiledRobots.put(robot, new SimpleEntry<>(robotID, instructionRobot));
 
 		for (xill.lang.xill.Instruction instruction : robot.getInstructionSet().getInstructions()) {
@@ -915,27 +925,30 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 		}
 
 		// Check argument count by mocking the input
-		ConstructProcessor testProcessor = construct
-		  .prepareProcess(new ConstructContext(robotID.get(token.eResource()), rootRobot, construct));
+		ConstructProcessor processor = construct
+			.prepareProcess(new ConstructContext(robotID.get(token.eResource()), rootRobot, construct, robotStartedEvent, robotStoppedEvent));
 		for (int i = 0; i < arguments.size(); i++) {
-			if (!testProcessor.setArgument(i, ExpressionBuilderHelper.NULL) &&
-			    !testProcessor.setArgument(i, ExpressionBuilderHelper.emptyList()) &&
-			    !testProcessor.setArgument(i, ExpressionBuilderHelper.emptyObject())) {
+			if (!processor.setArgument(i, ExpressionBuilderHelper.NULL) &&
+					!processor.setArgument(i, ExpressionBuilderHelper.emptyList()) &&
+					!processor.setArgument(i, ExpressionBuilderHelper.emptyObject())) {
 
-				throw new XillParsingException("Failed to find a matching type for " + testProcessor.toString(construct.getName()), pos.getLineNumber(), pos.getRobotID());
+				throw new XillParsingException("Failed to find a matching type for " + processor.toString(construct.getName()), pos.getLineNumber(), pos.getRobotID());
 
 			}
 		}
 
 		// Throw exception if count is incorrect (i.e. We're either missing an
 		// argument or provided too many)
-		if (testProcessor.getMissingArgument().isPresent() || testProcessor.getNumberOfArguments() < arguments.size()) {
-			throw new XillParsingException("Argument count mismatch in " + testProcessor.toString(construct.getName()),
+		if (processor.getMissingArgument().isPresent() || processor.getNumberOfArguments() < arguments.size()) {
+			throw new XillParsingException("Argument count mismatch in " + processor.toString(construct.getName()),
 			  pos.getLineNumber(), pos.getRobotID());
 		}
 
+		// Prepare th processor for use
+		processor.reset();
+
 		return new ConstructCall(construct, arguments,
-		  new ConstructContext(robotID.get(token.eResource()), rootRobot, construct));
+			processor);
 	}
 
 	/**
