@@ -2,8 +2,8 @@
 <function>
     <description>
         Loads the web page and returns it as a page object. The Web.loadPage() function can also be used for local HTML files.
-        Usually it is a good idea to reduce loading time by setting up the options to ({"enablecss"=false, "enablejs"=false}) when calling Web.loadPage(). This deactivates
-        JavaScript and CSS and can reduce long waits for script timeouts.
+        Usually it is a good idea to reduce loading time by setting up the options to ({"loadimages"=false, "enablejs"=false}) when calling Web.loadPage(). This deactivates
+        JavaScript and loading the images and it can reduce long waits for script timeouts.
     </description>
     <examples>
         <example title="Usage">

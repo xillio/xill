@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Returns a string, element or a list of XML/HTML-elements from the specified XML/HTML-element as indicated by the
+        Returns a string, element or a list of elements from the specified element as indicated by the
         string ``xpath``. This function has full XPath 2.0 support.
 
-        For more information about the XPath syntax and available xpath functions look here: http://www.w3schools.com/xpath/
+        For more information about the XPath syntax and available xpath functions look here: http://www.w3schools.com/xsl/xpath_intro.asp
     </description>
     <examples>
         <example title="Usage">
