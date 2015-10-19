@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Loads the web page and returns it as a page object. The Web.loadPage() function can also be used for local HTML files.
+        Usually it is a good idea to reduce loading time by setting up the options to ({"loadimages"=false, "enablejs"=false}) when calling Web.loadPage(). This deactivates
+        JavaScript and loading the images and it can reduce long waits for script timeouts.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Load a web page.</header>
+            <code>
+                use Web;
+                use System;
+
+                var page = Web.loadPage("http://www.xillio.com/", {"enablejs":true, "loadimages":false});
+                var mainmenutitles = Web.xPath(page, "//ul[@id='nav']/li/a/text()");
+                System.print(mainmenutitles);
+                var mainmenuurls = Web.xPath(page, "//ul[@id='nav']/li/a[@href]");
+                System.print(mainmenuurls);
+
+                /*
+                Options that can be passed to the loadPage function:
+                proxyhost              hostname or ip (required for using a proxy)
+                proxyport              hostport (required for using a proxy)
+                proxyuser              username (optional)
+                proxypass              password (optional)
+                proxytype              [http,socks5] (default: http)
+                enablejs               [true,false] (default: true)
+                enablewebsecurity      [true,false] (default: true)
+                loadimages             [true,false] (default: true)
+                insecuressl            [true,false] (default:false)
+                sslprotocol            [sslv3,sslv2,tlsv1,any] (default:sslv3)
+                user                   username (required for HTTP authentication)
+                pass                   password (required for HTTP authentication)
+                timeout                timeoutvalue (in milliseconds)
+                */
+            </code>
+            
+            <header>Load a local webpage.</header>
+            <code>
+                /* Contents of the select.html
+                <html>
+                    <body>
+                        <select>
+                            <option value="volvo">Volvo</option>
+                            <option value="saab">Saab</option>
+                            <option value="mercedes">Mercedes</option>
+                            <option value="audi">Audi</option>
+                        </select>
+                    </body>
+                </html>
+                */
+                
+                var page = Web.loadPage("file:///C:/tmp/select.html");
+                var selectbox = Web.xPath(page, "//select");
+                var choice = Web.xPath(page, "//option[@value='saab']");
+                var before = Web.selected(choice);
+                Web.select(choice, true);
+                var after = Web.selected(choice);
+                System.print(before);
+                System.print(after);
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>xPath</reference>
+    </references>
+    <tags>
+        load, page, web, xpath
+    </tags>
+</function>

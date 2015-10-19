@@ -21,8 +21,7 @@
                 var workbook = Excel.createWorkbook("C:\\Users\\Xillio\\Documents\\helloworldbook.xlsx");
             </code>
             <p>
-                You cannot create a workbook with the same name at the same location of an existing Excel file.
-                Workbooks are not automatically saved - you have to save them manually (see example below).
+                Workbooks are not automatically saved - you have to save them manually (see examples below).
             </p>
         </example>
         <example title="Saving">

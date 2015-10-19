@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        The function returns true if the element node is selected. It can be used primarily for radio and check
+        buttons.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Determine if an element is selected.</header>
+            <code>
+                use Web;
+                use System;
+
+                var page = Web.loadPage("http://www.w3schools.com/html/html_form_input_types.asp");
+                var input = Web.xPath(page, "//input[@type='radio']");
+                System.print(input);
+                var choice = Web.xPath(page, "//input[@type='radio'][2]");
+                var before = Web.selected(choice);
+                Web.select(choice, true);
+                var after = Web.selected(choice);
+                System.print(before);
+                System.print(after);
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>select</reference>
+        <reference>selected</reference>
+        <reference>loadPage</reference>
+        <reference>xPath</reference>
+    </references>
+    <tags>
+        load, page, web, xpath, select
+    </tags>
+</function>
