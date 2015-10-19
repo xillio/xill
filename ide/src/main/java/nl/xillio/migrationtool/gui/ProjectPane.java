@@ -511,17 +511,17 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		btnDelete.setDisable(false);
 		btnRename.setDisable(false);
 		btnUpload.setDisable(false);
-                getNewFileButton().setDisable(true);
+                getScene().lookup("#btnNewFile").setDisable(true);
 
 		if (newObject == null || newObject == trvProjects.getRoot()) {
 			// Disable all
 			disableAllButtons();
-                        getNewFileButton().setDisable(true);
+                        getScene().lookup("#btnNewFile").setDisable(true);
 
 		} else if (newObject == getProject(newObject)) {
 			// This is a project
 			btnRename.setDisable(true);
-                        getNewFileButton().setDisable(false);
+                        getScene().lookup("#btnNewFile").setDisable(false);
 		}
 	}
 
@@ -533,14 +533,10 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 	}
         
         /**
-         * Performs one lookup in the scene for the New File button
+         * Get the number of projects
          * 
-         * @return Node Return Node object that represents the New File button
+         * @return the number of projects present
          */
-        public Node getNewFileButton() {
-            return getScene().lookup("#btnNewFile");
-        }
-        
         public int getProjectsCount() {
             return settings.project().getAll().size();
         }
