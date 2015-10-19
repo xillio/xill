@@ -334,7 +334,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		} catch (ConversionException e) {
 			throw new SQLException(e);
 		}
-		if (exists) {
+		if (!keys.isEmpty() && exists) {
 			if (allowUpdate) {
 				// an entry exists and we are allowed to update it
 				updateObject(connection, table, newObject, keys);
