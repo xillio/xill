@@ -14,13 +14,19 @@ import org.apache.logging.log4j.Logger;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
@@ -381,46 +387,62 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	}
 
 	/**
-	 * Runs the currentRobot
+	 * Runs the currentRobot after the Ok-button has been pressed.
+         * If cancel is pressed, the robot is not run or saved
 	 *
 	 * @throws XillParsingException
-	 * @throws SyntaxError
 	 */
 	public void runRobot() throws XillParsingException {
-		save();
+            Dialog d = new Dialog();
+            VBox checkBoxContainer = new VBox();
+            Label tf = new Label("The robot " + currentRobot.getPath().getName() + " needs to be save before running. Do you want to continue?");
+            CheckBox cb =  new CheckBox("Don't ask me again.");
+            cb.addEventFilter(ActionEvent.ACTION, event -> {
+                System.out.println("mjeuh");
+            });
+            checkBoxContainer.getChildren().addAll(tf, cb);
+            d.getDialogPane().setContent(checkBoxContainer);
+            
+            d.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);//setContent(confirmationHbox);
+            Button okButton = (Button) d.getDialogPane().lookupButton(ButtonType.OK);
+            okButton.addEventFilter(ActionEvent.ACTION, event -> {
+                save();
 
-		try {
-			processor.compile();
+                try {
+                        processor.compile();
 
-			Robot robot = processor.getRobot();
+                        Robot robot = processor.getRobot();
 
-			Thread robotThread = new Thread(() -> {
-				try {
-					robot.process(processor.getDebugger());
-				} catch (Exception e) {
-					Platform.runLater(() -> {
-						Alert error = new Alert(AlertType.ERROR);
-						error.setTitle(e.getClass().getSimpleName());
-						error.setContentText(e.getMessage() + "\n" + ExceptionUtils.getStackTrace(e));
-						error.setHeaderText("Exception while processing");
-						error.setResizable(true);
-						error.getDialogPane().setPrefWidth(1080);
-						error.show();
-					});
-				}
-			});
+                        Thread robotThread = new Thread(() -> {
+                                try {
+                                        robot.process(processor.getDebugger());
+                                } catch (Exception e) {
+                                        Platform.runLater(() -> {
+                                                Alert error = new Alert(AlertType.ERROR);
+                                                error.setTitle(e.getClass().getSimpleName());
+                                                error.setContentText(e.getMessage() + "\n" + ExceptionUtils.getStackTrace(e));
+                                                error.setHeaderText("Exception while processing");
+                                                error.setResizable(true);
+                                                error.getDialogPane().setPrefWidth(1080);
+                                                error.show();
+                                        });
+                                }
+                        });
 
-			robotThread.start();
-		} catch (IOException e) {
-			e.printStackTrace();
-			errorPopup(-1, e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling.");
+                        robotThread.start();
+                } catch (IOException e) {
+                        errorPopup(-1, e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling.");
 
-		} catch (XillParsingException e) {
-			errorPopup(e.getLine(), e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling " + e.getRobot().getPath().getAbsolutePath());
-			throw e;
-
-		}
-
+                } catch (XillParsingException e) {
+                        errorPopup(e.getLine(), e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling " + e.getRobot().getPath().getAbsolutePath());
+                        //throw e;
+                }
+            });
+            Button cancelButton = (Button) d.getDialogPane().lookupButton(ButtonType.CANCEL);
+            cancelButton.addEventFilter(ActionEvent.ACTION, event -> {
+                d.close();
+            });
+            d.show();
 	}
 
 	private void errorPopup(final int line, final String message, final String title, final String context) {
@@ -528,4 +550,6 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 		this.consolePane.clear();
 	}
 
+        
+        
 }
