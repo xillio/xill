@@ -36,12 +36,30 @@
 																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" layoutX="10.0" layoutY="10.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
 																			<children>
 																				<Label prefWidth="200.0" text="Open bot with clean console" />
-																				<CheckBox mnemonicParsing="false" />
+																				<CheckBox fx:id="cbopenbotwcleanconsole" mnemonicParsing="false" />
 																			</children>
 																			<padding>
 																				<Insets />
 																			</padding>
 																		</HBox>
+                                                      <HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+                                                         <children>
+                                                            <Label prefWidth="200.0" text="Run bot with clean console" />
+                                                            <CheckBox fx:id="cbrunbotwcleanconsole" mnemonicParsing="false" />
+                                                         </children>
+                                                         <padding>
+                                                            <Insets />
+                                                         </padding>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+                                                         <children>
+                                                            <Label prefWidth="200.0" text="Auto-save bot before run" />
+                                                            <CheckBox fx:id="cbautosavebotbeforerun" mnemonicParsing="false" />
+                                                         </children>
+                                                         <padding>
+                                                            <Insets />
+                                                         </padding>
+                                                      </HBox>
 																	</children>
 																</VBox>
 															</children>
@@ -65,7 +83,7 @@
 																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" layoutX="10.0" layoutY="10.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
 																			<children>
 																				<Label prefWidth="200.0" text="Enable code completion" />
-																				<CheckBox mnemonicParsing="false" />
+																				<CheckBox fx:id="cbenablecodecompletion" mnemonicParsing="false" />
 																			</children>
 																			<padding>
 																				<Insets />
@@ -74,7 +92,7 @@
 																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" layoutX="10.0" layoutY="10.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
 																			<children>
 																				<Label prefWidth="200.0" text="Display indent guides" />
-																				<CheckBox mnemonicParsing="false" />
+																				<CheckBox fx:id="cbdisplayindentguides" mnemonicParsing="false" />
 																			</children>
 																			<padding>
 																				<Insets />
@@ -83,7 +101,7 @@
 																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
 																			<children>
 																				<Label prefWidth="200.0" text="Font size" />
-																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="12px" HBox.hgrow="ALWAYS" />
+																				<TextField fx:id="tffontsize" alignment="TOP_LEFT" depthTest="INHERIT" promptText="12px" HBox.hgrow="ALWAYS" />
 																			</children>
 																			<padding>
 																				<Insets />
@@ -92,7 +110,7 @@
 																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" layoutX="10.0" layoutY="10.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
 																			<children>
 																				<Label prefWidth="200.0" text="Highlight selected word" />
-																				<CheckBox mnemonicParsing="false" />
+																				<CheckBox fx:id="cbhighlightselword" mnemonicParsing="false" />
 																			</children>
 																			<padding>
 																				<Insets />
@@ -216,7 +234,7 @@
 																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
 																			<children>
 																				<Label prefWidth="200.0" text="New file" />
-																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																				<TextField fx:id="tfnewfile" alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
 																			</children>
 																			<padding>
 																				<Insets />
@@ -225,7 +243,7 @@
 																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
 																			<children>
 																				<Label prefWidth="200.0" text="Open file" />
-																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																				<TextField fx:id="tfopenfile" alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
 																			</children>
 																			<padding>
 																				<Insets />
@@ -234,7 +252,7 @@
 																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
 																			<children>
 																				<Label prefWidth="200.0" text="Save file" />
-																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																				<TextField fx:id="tfsavefile" alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
 																			</children>
 																			<padding>
 																				<Insets />
@@ -243,7 +261,7 @@
 																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
 																			<children>
 																				<Label prefWidth="200.0" text="Save file as" />
-																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																				<TextField fx:id="tfsavefileas" alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
 																			</children>
 																			<padding>
 																				<Insets />
@@ -252,7 +270,7 @@
 																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
 																			<children>
 																				<Label prefWidth="200.0" text="Save all" />
-																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																				<TextField fx:id="tfsaveall" alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
 																			</children>
 																			<padding>
 																				<Insets />

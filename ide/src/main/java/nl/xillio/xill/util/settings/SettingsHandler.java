@@ -47,4 +47,28 @@ public class SettingsHandler {
 	public ProjectSettingsHandler project() {
 		return this.project;
 	}
+
+	/**
+	 * It set the save mechanism (see {@link nl.xillio.xill.util.settings.ContentHandler#setManualCommit(boolean)}) 
+	 * 
+	 * @param manual true = manual commit, false = auto commit (default)
+	 */
+	public void setManualCommit(boolean manual) {
+		try {
+			this.content.setManualCommit(manual);
+		} catch (Exception e) {
+			System.err.println("Cannot set manual commit for reason: " + e.getMessage());
+		}
+	}
+
+	/**
+	 * It save all changes from last commit() if manual commit is on (see {@link nl.xillio.xill.util.settings.ContentHandler#commit()})
+	 */
+	public void commit() {
+		try {
+			this.content.commit();
+		} catch (Exception e) {
+			System.err.println("Cannot do commit for reason: " + e.getMessage());
+		}
+	}
 }

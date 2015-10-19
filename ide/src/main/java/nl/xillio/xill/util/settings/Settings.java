@@ -97,6 +97,44 @@ public class Settings {
 
 	/** Last time active tab */
 	public static String ActiveTab = "ActiveTab";
+	
+	// =============================================================================
+	/** General settings dialog */
+	public static String SETTINGS_GENERAL = "SettingsGeneral";
+	
+	public static String DefaultProjectLocation = "DefaultProjectLocation";
+	
+	public static String OpenBotWithCleanConsole = "OpenBotWithCleanConsole";
+	
+	public static String RunBotWithCleanConsole = "RunBotWithCleanConsole";
 
+	// =============================================================================
+	/** Editor settings dialog */
+	public static String SETTINGS_EDITOR = "SettingsEditor";
+	
+	public static String EnableCodeCompletion = "EnableCodeCompletion";
+	
+	public static String DisplayIndentGuides = "DisplayIndentGuides";
+	
+	public static String FontSize = "FontSize";
+	
+	public static String AutoSaveBotBeforeRun = "AutoSaveBotBeforeRun";
+	
+	public static String HighlightSelectedWord = "HighlightSelectedWord";
+
+	// =============================================================================
+	/** Editor settings dialog */
+	public static String SETTINGS_KEYBINDINGS = "KeyBindings";
+	
+	public static String NewFile = "NewFile";
+	
+	public static String OpenFile = "OpenFile";
+	
+	public static String SaveFile = "SaveFile";
+	
+	public static String SaveFileAs = "SaveFileAs";
+	
+	public static String SaveAll = "SaveFileAll";
+	
 	// =============================================================================
 }

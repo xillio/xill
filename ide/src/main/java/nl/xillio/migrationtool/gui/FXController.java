@@ -16,6 +16,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.util.Pair;
 import nl.xillio.migrationtool.Loader;
+import nl.xillio.migrationtool.dialogs.SettingsDialog;
 import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.api.Xill;
@@ -96,6 +97,8 @@ public class FXController implements Initializable, EventHandler<Event> {
 	@FXML
 	private Button btnSaveAll;
 	@FXML
+	private Button btnSettings;
+	@FXML
 	private Button btnRemoveAllBreakpoints;
 	@FXML
 	private Button btnEvaluate;
@@ -157,18 +160,8 @@ public class FXController implements Initializable, EventHandler<Event> {
 	@Override
 	public void initialize(final URL url, final ResourceBundle bundle) {
 
-		settings.simple().register(Settings.FILE, Settings.LastFolder, System.getProperty("user.dir"), "The last folder a file was opened from or saved to.");
-		settings.simple().register(Settings.WARNING, Settings.DialogDebug, "false", "Show warning dialogs for debug messages.");
-		settings.simple().register(Settings.WARNING, Settings.DialogInfo, "false", "Show warning dialogs for info messages.");
-		settings.simple().register(Settings.WARNING, Settings.DialogWarning, "false", "Show warning dialogs for warning messages.");
-		settings.simple().register(Settings.WARNING, Settings.DialogError, "true", "Show warning dialogs for error messages.");
-		settings.simple().register(Settings.SERVER, Settings.ServerHost, "http://localhost:10000", "Location XMTS is running on.");
-		settings.simple().register(Settings.SERVER, Settings.ServerUsername, "", "Optional username to access XMTS.", true);
-		settings.simple().register(Settings.SERVER, Settings.ServerPassword, "", "Optional password to access XMTS.", true);
-		settings.simple().register(Settings.INFO, Settings.LastVersion, "0.0.0", "Last version that was run.");
-		settings.simple().register(Settings.LAYOUT, Settings.LeftPanelWidth, "0.2", "Width of the left panel");
-		settings.simple().register(Settings.LAYOUT, Settings.LeftPanelCollapsed, "false", "The collapsed-state of the left panel");
-		settings.simple().register(Settings.LAYOUT, Settings.ProjectHeight, "0.5", "The height of the project panel");
+		// Register most of the settings
+		registerSettings();
 
 		// Initialize layout and layout listeners
 		Platform.runLater(() -> {
@@ -216,6 +209,28 @@ public class FXController implements Initializable, EventHandler<Event> {
 		loadWorkSpace();
 	}
 
+	private void registerSettings() {
+		settings.setManualCommit(true);
+		
+		settings.simple().register(Settings.FILE, Settings.LastFolder, System.getProperty("user.dir"), "The last folder a file was opened from or saved to.");
+		settings.simple().register(Settings.WARNING, Settings.DialogDebug, "false", "Show warning dialogs for debug messages.");
+		settings.simple().register(Settings.WARNING, Settings.DialogInfo, "false", "Show warning dialogs for info messages.");
+		settings.simple().register(Settings.WARNING, Settings.DialogWarning, "false", "Show warning dialogs for warning messages.");
+		settings.simple().register(Settings.WARNING, Settings.DialogError, "true", "Show warning dialogs for error messages.");
+		settings.simple().register(Settings.SERVER, Settings.ServerHost, "http://localhost:10000", "Location XMTS is running on.");
+		settings.simple().register(Settings.SERVER, Settings.ServerUsername, "", "Optional username to access XMTS.", true);
+		settings.simple().register(Settings.SERVER, Settings.ServerPassword, "", "Optional password to access XMTS.", true);
+		settings.simple().register(Settings.INFO, Settings.LastVersion, "0.0.0", "Last version that was run.");
+		settings.simple().register(Settings.LAYOUT, Settings.LeftPanelWidth, "0.2", "Width of the left panel");
+		settings.simple().register(Settings.LAYOUT, Settings.LeftPanelCollapsed, "false", "The collapsed-state of the left panel");
+		settings.simple().register(Settings.LAYOUT, Settings.ProjectHeight, "0.5", "The height of the project panel");
+		
+		SettingsDialog.register(settings);
+		
+		settings.commit();
+		settings.setManualCommit(false);
+	}
+	
 	private void loadWorkSpace() {
 		Platform.runLater(() -> {
 			String workspace = settings.simple().get(Settings.WORKSPACE, Settings.OpenTabs);
@@ -394,8 +409,16 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 	@FXML
 	private void buttonSaveAll() {
-		if (btnSaveAll.isDisabled()) {
+		if (!btnSaveAll.isDisabled()) {
 			tpnBots.getTabs().forEach(tab -> ((RobotTab) tab).save());
+		}
+	}
+
+	@FXML
+	private void buttonSettings() {
+		if (!btnSettings.isDisabled()) {
+			SettingsDialog dlg = new SettingsDialog(settings); 
+			dlg.showAndWait();
 		}
 	}
 

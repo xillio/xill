@@ -41,6 +41,7 @@ import org.w3c.dom.NodeList;
 public class ContentHandlerImpl implements ContentHandler {
 
 	private File storage;
+	private boolean manualCommit = false;
 	private Document document;
 	private TransformerFactory transformerFactory  = TransformerFactory.newInstance();
 	private XPathFactory xpathFactory = XPathFactory.newInstance();
@@ -76,7 +77,7 @@ public class ContentHandlerImpl implements ContentHandler {
 			if (!storage.exists()) {
 				this.document = docBuilder.newDocument();
 				this.createInnerStructure();
-				this.save();
+				this.save(true);
 			} else {
 				this.document = docBuilder.parse(FileUtils.openInputStream(storage));
 			}
@@ -93,9 +94,13 @@ public class ContentHandlerImpl implements ContentHandler {
 	/**
 	 * Saves the current XML content to file
 	 * 
+	 * @param force false means that save is done only if manualCommit = false, true means save is done always 
 	 * @throws Exception when error occurs during saving to file
 	 */
-	private void save() throws Exception {
+	private void save(boolean force) throws Exception {
+		if ((!force) && (this.manualCommit)) {
+			return;
+		}
 		synchronized(lock) {
 			try {
 				Transformer transformer = this.transformerFactory.newTransformer();
@@ -204,7 +209,7 @@ public class ContentHandlerImpl implements ContentHandler {
 	
 			itemContent.forEach( (k,v) -> set(itemNode[0], k, v));
 	
-			this.save();
+			this.save(false);
 		}
 		return created;
 	}
@@ -228,7 +233,7 @@ public class ContentHandlerImpl implements ContentHandler {
 			}
 			categoryNode.removeChild(itemNode);
 	
-			this.save();
+			this.save(false);
 		}
 
 		return true;
@@ -316,5 +321,17 @@ public class ContentHandlerImpl implements ContentHandler {
 		} else {
 			return (Node)o ;
 		}
+	}
+
+	@Override
+	public boolean setManualCommit(boolean manual) throws Exception {
+		this.manualCommit = manual;
+		return true;
+	}
+
+	@Override
+	public boolean commit() throws Exception {
+		this.save(true);
+		return true;
 	}
 }
