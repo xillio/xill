@@ -142,11 +142,11 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	private void createContextMenu() {
 		// Cut menu item.
 		MenuItem cut = new MenuItem("Cut");
-		cut.setOnAction(e -> executeJS("editor.onCut();"));
+		cut.setOnAction(e -> callOnAce("onCut"));
 		
 		// Copy menu item.
 		MenuItem copy = new MenuItem("Copy");
-		copy.setOnAction(e -> executeJS("editor.getCopyText();", r -> copyToClipboard((String)r)));
+		copy.setOnAction(e -> copyToClipboard((String)callOnAceBlocking("getCopyText")));
 		
 		// Paste menu item.
 		MenuItem paste = new MenuItem("Paste");
