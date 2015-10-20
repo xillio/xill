@@ -40,6 +40,7 @@ import nl.xillio.xill.api.XillProcessor;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.preview.Replaceable;
 import nl.xillio.xill.util.HighlightSettings;
+import nl.xillio.xill.util.HotkeysHandler.Hotkeys;
 import nl.xillio.xill.util.settings.Settings;
 import nl.xillio.xill.util.settings.SettingsHandler;
 
@@ -296,11 +297,11 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 		if (event instanceof KeyEvent) {
 			KeyEvent ke = (KeyEvent) event;
 
-			if (KeyCombination.valueOf(FXController.HOTKEY_PASTE).match(ke)) {
+			if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.PASTE)).match(ke)) {
 				paste();
-			} else if (KeyCombination.valueOf(FXController.HOTKEY_RESET_ZOOM).match(ke)) {
+			} else if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.RESET_ZOOM)).match(ke)) {
 				zoomTo(1);
-			} else if (helppane != null && KeyCombination.valueOf(FXController.HOTKEY_HELP).match(ke)) {
+			} else if (helppane != null && KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.HELP)).match(ke)) {
 				callOnAce(
 					result -> {
 						// helppane.display((String)result);

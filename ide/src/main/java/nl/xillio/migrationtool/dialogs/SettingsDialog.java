@@ -4,7 +4,6 @@ import java.util.regex.Pattern;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -14,7 +13,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Dialog;
+import nl.xillio.migrationtool.gui.FXController;
 import nl.xillio.xill.util.settings.Settings;
 import nl.xillio.xill.util.settings.SettingsHandler;
 
@@ -54,16 +53,8 @@ public class SettingsDialog  extends FXMLDialog {
 	private CheckBox cbautosavebotbeforerun;
 	@FXML
 	private CheckBox cbhighlightselword;
-	@FXML
-	private TextField tfnewfile;
-	@FXML
-	private TextField tfopenfile;
-	@FXML
-	private TextField tfsavefile;
-	@FXML
-	private TextField tfsavefileas;
-	@FXML
-	private TextField tfsaveall;
+	
+	
 	
 	
 	private SettingsHandler settings;
@@ -76,25 +67,41 @@ public class SettingsDialog  extends FXMLDialog {
 		
 		setRangeValidator(tffontsize, tffontsizeValid, 5, 50, "px");
 		
-		setShortcutHandler(tfnewfile);
-		setShortcutHandler(tfopenfile);
+		Platform.runLater(() -> {
+			FXController.hotkeys.getAllTextFields(getScene()).forEach(hk -> setShortcutHandler(hk));
+		});
 	}
 
 	private void setShortcutHandler(final TextField tf) {
 		tf.addEventHandler(KeyEvent.ANY, new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent event) {
+				String shortcut = null;
+				
 				if ((event.getCode() == KeyCode.TAB) || (event.getCharacter().equals("\t"))) {
 					return;
 				}
+				
 				if (event.getCode() == KeyCode.DELETE) {
 					tf.setText("");
 					event.consume();
+					return;
 				}
-				if ( (event.getEventType() == KeyEvent.KEY_PRESSED) && (!event.getText().isEmpty()) ) {
+				
+				if ((event.getCode().isFunctionKey()) && (event.getEventType() == KeyEvent.KEY_RELEASED)) {
+					shortcut = (event.isControlDown() ? "Shortcut+" : "") + (event.isAltDown() ? "Alt+" : "") + (event.isShiftDown() ? "Shift+" : "") + event.getCode().getName().toUpperCase();
+				} 
+				else if ( (event.getEventType() == KeyEvent.KEY_PRESSED) && (!event.getText().isEmpty()) ) {
 					if ((event.isControlDown() || event.isAltDown() || event.isShiftDown())) {
-						tf.setText( (event.isControlDown() ? "Shortcut+" : "") + (event.isAltDown() ? "Alt+" : "") + (event.isShiftDown() ? "Shift+" : "") + event.getText().toUpperCase().charAt(0) );
+						shortcut = (event.isControlDown() ? "Shortcut+" : "") + (event.isAltDown() ? "Alt+" : "") + (event.isShiftDown() ? "Shift+" : "") + event.getText().toUpperCase().charAt(0);
 					}
 				}
+
+				if (shortcut != null) {
+					if (FXController.hotkeys.findShortcutInDialog(getScene(), shortcut) == null) {
+						tf.setText(shortcut);
+					}
+				}
+
 				event.consume();
 			}
 		});
@@ -131,7 +138,7 @@ public class SettingsDialog  extends FXMLDialog {
 	private void okayBtnPressed(final ActionEvent event) {
 		try {
 			validate();
-			//!! apply(); // It applies new settings to be effective immediately
+			apply(); // It applies new settings to be effective immediately
 		} catch (Exception e) {
 			Alert alert = new Alert(AlertType.ERROR, e.getMessage(), ButtonType.OK);
 			alert.showAndWait();
@@ -163,11 +170,7 @@ public class SettingsDialog  extends FXMLDialog {
 		saveCheckBox(cbhighlightselword, Settings.SETTINGS_EDITOR, Settings.HighlightSelectedWord);
 
 		// Key bindings
-		saveText(tfnewfile, Settings.SETTINGS_KEYBINDINGS, Settings.NewFile);
-		saveText(tfopenfile, Settings.SETTINGS_KEYBINDINGS, Settings.OpenFile);
-		saveText(tfsavefile, Settings.SETTINGS_KEYBINDINGS, Settings.SaveFile);
-		saveText(tfsavefileas, Settings.SETTINGS_KEYBINDINGS, Settings.SaveFileAs);
-		saveText(tfsaveall, Settings.SETTINGS_KEYBINDINGS, Settings.SaveAll);
+		FXController.hotkeys.saveSettingsFromDialog(getScene(), settings);
 				
 		settings.commit();
 		settings.setManualCommit(false);
@@ -187,13 +190,16 @@ public class SettingsDialog  extends FXMLDialog {
 		setCheckBox(cbhighlightselword, Settings.SETTINGS_EDITOR, Settings.HighlightSelectedWord);
 		
 		// Key bindings
-		setText(tfnewfile, Settings.SETTINGS_KEYBINDINGS, Settings.NewFile);
-		setText(tfopenfile, Settings.SETTINGS_KEYBINDINGS, Settings.OpenFile);
-		setText(tfsavefile, Settings.SETTINGS_KEYBINDINGS, Settings.SaveFile);
-		setText(tfsavefileas, Settings.SETTINGS_KEYBINDINGS, Settings.SaveFileAs);
-		setText(tfsaveall, Settings.SETTINGS_KEYBINDINGS, Settings.SaveAll);
+		Platform.runLater(() -> {
+			FXController.hotkeys.setDialogFromSettings(getScene(), settings);
+		});
 	}
 
+	private void apply() {
+		// Key bindings
+		FXController.hotkeys.setHotkeysFromDialog(getScene());
+	}
+	
 	private void setCheckBox(final CheckBox checkBox, final String category, final String keyValue) {
 		checkBox.setSelected(new Boolean(this.settings.simple().get(category, keyValue)));
 	}
@@ -229,11 +235,7 @@ public class SettingsDialog  extends FXMLDialog {
 		settings.simple().register(Settings.SETTINGS_EDITOR, Settings.HighlightSelectedWord, "true", "Highlight selected word in editor");
 		
 		// Key bindings
-		settings.simple().register(Settings.SETTINGS_KEYBINDINGS, Settings.NewFile, "Shortcut+N", "Shortcut to New file");
-		settings.simple().register(Settings.SETTINGS_KEYBINDINGS, Settings.OpenFile, "Shortcut+O", "Shortcut to Open file");
-		settings.simple().register(Settings.SETTINGS_KEYBINDINGS, Settings.SaveFile, "Shortcut+S", "Shortcut to Save file");
-		settings.simple().register(Settings.SETTINGS_KEYBINDINGS, Settings.SaveFileAs, "Shortcut+Shift+S", "Shortcut to Save file as");
-		settings.simple().register(Settings.SETTINGS_KEYBINDINGS, Settings.SaveAll, "Shortcut+Alt+S", "Shortcut to Save all");
+		FXController.hotkeys.registerHotkeysSettings(settings);
 	}
 
 }

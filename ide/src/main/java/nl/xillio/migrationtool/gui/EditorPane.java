@@ -21,6 +21,7 @@ import nl.xillio.migrationtool.Loader;
 import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
 import nl.xillio.migrationtool.elasticconsole.RobotLogMessage;
 import nl.xillio.migrationtool.gui.editor.AceEditor;
+import nl.xillio.xill.util.HotkeysHandler.Hotkeys;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -196,7 +197,7 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 	@FXML
 	public void handle(final KeyEvent event) {
 		// Find
-		if (KeyCombination.valueOf(FXController.HOTKEY_FIND).match(event)) {
+		if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.FIND)).match(event)) {
 			event.consume();
 			if (editorReplaceBar.isOpen()) {
 				editorReplaceBar.close(false);

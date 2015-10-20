@@ -48,6 +48,7 @@ import nl.xillio.migrationtool.elasticconsole.ESConsoleClient.LogType;
 import nl.xillio.migrationtool.elasticconsole.LogEntry;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.preview.Searchable;
+import nl.xillio.xill.util.HotkeysHandler.Hotkeys;
 
 import com.sun.javafx.scene.control.behavior.CellBehaviorBase;
 
@@ -192,7 +193,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 	@Override
 	public void handle(final KeyEvent e) {
 		// Copy
-		if (KeyCombination.valueOf(FXController.HOTKEY_COPY).match(e) && tblConsoleOut.isFocused()) {
+		if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.COPY)).match(e) && tblConsoleOut.isFocused()) {
 			// Get all selected entries
 			StringBuilder text = new StringBuilder();
 			ObservableList<LogEntry> selected = tblConsoleOut.getSelectionModel().getSelectedItems();
@@ -208,12 +209,12 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 			e.consume();
 		}
 		// Clear
-		else if (KeyCombination.valueOf(FXController.HOTKEY_CLEARCONSOLE).match(e)) {
+		else if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.CLEARCONSOLE)).match(e)) {
 			clear();
 			e.consume();
 		}
 		// Search
-		else if (KeyCombination.valueOf(FXController.HOTKEY_FIND).match(e)) {
+		else if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.FIND)).match(e)) {
 			apnConsoleSearchBar.open(1);
 			e.consume();
 		}

@@ -7,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -20,6 +19,8 @@ import nl.xillio.migrationtool.dialogs.SettingsDialog;
 import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.api.Xill;
+import nl.xillio.xill.util.HotkeysHandler;
+import nl.xillio.xill.util.HotkeysHandler.Hotkeys;
 import nl.xillio.xill.util.settings.Settings;
 import nl.xillio.xill.util.settings.SettingsHandler;
 import org.apache.commons.io.FileUtils;
@@ -39,48 +40,12 @@ import java.util.stream.Collectors;
 public class FXController implements Initializable, EventHandler<Event> {
 	private static final Logger log = LogManager.getLogger(FXController.class);
 	private static final SettingsHandler settings = SettingsHandler.getSettingsHandler();
+	public static final HotkeysHandler hotkeys = new HotkeysHandler();
 
 	private static final File DEFAULT_OPEN_BOT = new File("samples/Hello-Xillio." + Xill.FILE_EXTENSION);
 
 	private boolean cancelClose = false; // should be the closing of application interrupted?
 
-	// Shortcut is Ctrl on Windows and Meta on Mac.
-	@SuppressWarnings("javadoc")
-	public static final String HOTKEY_SAVE = "Shortcut+S";
-	@SuppressWarnings("javadoc")
-	public static final String HOTKEY_SAVEAS = "Shortcut+Alt+S";
-	@SuppressWarnings("javadoc")
-	public static final String HOTKEY_SAVEALL = "Shortcut+Shift+S";
-	@SuppressWarnings("javadoc")
-	public static final String HOTKEY_NEW = "Shortcut+N";
-	@SuppressWarnings("javadoc")
-	public static final String HOTKEY_OPEN = "Shortcut+O";
-	@SuppressWarnings("javadoc")
-	public static final String HOTKEY_CLOSE = "Shortcut+W";
-	@SuppressWarnings("javadoc")
-	public static final String HOTKEY_HELP = "F1";
-	@SuppressWarnings("javadoc")
-	public static final String HOTKEY_RUN = "F6";
-	@SuppressWarnings("javadoc")
-	public static final String HOTKEY_PAUSE = "F7";
-	@SuppressWarnings("javadoc")
-	public static final String HOTKEY_STOP = "F8";
-	@SuppressWarnings("javadoc")
-	public static final String HOTKEY_STEPIN = "F9";
-	@SuppressWarnings("javadoc")
-	public static final String HOTKEY_STEPOVER = "F10";
-	@SuppressWarnings("javadoc")
-	public static final String HOTKEY_CLEARCONSOLE = "Shortcut+L";
-	@SuppressWarnings("javadoc")
-	public static final String HOTKEY_COPY = "Shortcut+C";
-	@SuppressWarnings("javadoc")
-	public static final String HOTKEY_CUT = "Shortcut+X";
-	@SuppressWarnings("javadoc")
-	public static final String HOTKEY_PASTE = "Shortcut+V";
-	@SuppressWarnings("javadoc")
-	public static final String HOTKEY_RESET_ZOOM = "Shortcut+0";
-	@SuppressWarnings("javadoc")
-	public static final String HOTKEY_FIND = "Shortcut+F";
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	/*
@@ -162,6 +127,8 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 		// Register most of the settings
 		registerSettings();
+		
+		hotkeys.setHotkeysFromSettings(settings);
 
 		// Initialize layout and layout listeners
 		Platform.runLater(() -> {
@@ -598,66 +565,94 @@ public class FXController implements Initializable, EventHandler<Event> {
 		if (event.getEventType() == KeyEvent.KEY_PRESSED) {
 			KeyEvent keyEvent = (KeyEvent) event;
 
-			if (KeyCombination.valueOf(FXController.HOTKEY_CLOSE).match(keyEvent)) {
-				// We need to close the current tab
-				RobotTab tab = (RobotTab) tpnBots.getSelectionModel().getSelectedItem();
-				closeTab(tab);
-			} else if (KeyCombination.valueOf(HOTKEY_NEW).match(keyEvent)) {
-				buttonNewFile();
-			} else if (KeyCombination.valueOf(HOTKEY_SAVE).match(keyEvent)) {
-				RobotTab tab = (RobotTab) tpnBots.getSelectionModel().getSelectedItem();
-				tab.save();
-			} else if (KeyCombination.valueOf(HOTKEY_SAVEAS).match(keyEvent)) {
-				RobotTab tab = (RobotTab) tpnBots.getSelectionModel().getSelectedItem();
-				tab.save(true);
-			} else if (KeyCombination.valueOf(HOTKEY_SAVEALL).match(keyEvent)) {
-				tpnBots.getTabs().forEach(tab -> {
-					if (tab != null && tab instanceof RobotTab) {
-						((RobotTab) tab).save();
+			Hotkeys hk = hotkeys.getHotkey(keyEvent);
+			if (hk != null) {
+			
+				switch (hk) {
+				case CLOSE:
+				{
+					// We need to close the current tab
+					RobotTab tab = (RobotTab) tpnBots.getSelectionModel().getSelectedItem();
+					closeTab(tab);
+				}
+					break;
+				case NEW:
+					buttonNewFile();
+					break;
+				case SAVE:
+				{
+					RobotTab tab = (RobotTab) tpnBots.getSelectionModel().getSelectedItem();
+					tab.save();
+				}
+					break;
+				case SAVEAS:
+				{
+					RobotTab tab = (RobotTab) tpnBots.getSelectionModel().getSelectedItem();
+					tab.save(true);
+				}
+					break;
+				case SAVEALL:
+					tpnBots.getTabs().forEach(tab -> {
+						if (tab != null && tab instanceof RobotTab) {
+							((RobotTab) tab).save();
+						}
+					});
+					break;
+				case OPEN:
+					buttonOpenFile();
+					break;
+				case CLEARCONSOLE:
+					tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
+						((RobotTab) tab).clearConsolePane();
+						keyEvent.consume();
+					});
+					break;
+				case RUN:
+					tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
+						((RobotTab) tab).getEditorPane().getControls().start();
+						keyEvent.consume();
+					});
+					break;
+				case STEPIN:
+					tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
+						((RobotTab) tab).getEditorPane().getControls().stepIn();
+						keyEvent.consume();
+					});
+					break;
+				case STEPOVER:
+					tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
+						((RobotTab) tab).getEditorPane().getControls().stepOver();
+						keyEvent.consume();
+					});
+					break;
+				case PAUSE:
+					tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
+						((RobotTab) tab).getEditorPane().getControls().pause();
+						keyEvent.consume();
+					});
+					break;
+				case STOP:
+					tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
+						((RobotTab) tab).getEditorPane().getControls().stop();
+						keyEvent.consume();
+					});
+					break;
+				case OPENSETTINGS:
+					buttonSettings();
+					break;
+				default:
+					if (keyEvent.isControlDown() || keyEvent.isMetaDown()) {
+						// Check if other key is an integer, if so open that tab
+						try {
+							int tab = Integer.parseInt(keyEvent.getText()) - 1;
+							if (tab < tpnBots.getTabs().size() && tab >= 0) {
+								tpnBots.getSelectionModel().select(tab);
+								((RobotTab) tpnBots.getTabs().get(tab)).requestFocus();
+							}
+						} catch (NumberFormatException e) {
+							// nevermind...
+						}
 					}
-				});
-			} else if (KeyCombination.valueOf(HOTKEY_OPEN).match(keyEvent)) {
-				buttonOpenFile();
-			} else if (KeyCombination.valueOf(HOTKEY_CLEARCONSOLE).match(keyEvent)) {
-				tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
-					((RobotTab) tab).clearConsolePane();
-					keyEvent.consume();
-				});
-			} else if (KeyCombination.valueOf(FXController.HOTKEY_RUN).match((KeyEvent) keyEvent)) {
-				tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
-					((RobotTab) tab).getEditorPane().getControls().start();
-					keyEvent.consume();
-				});
-			} else if (KeyCombination.valueOf(FXController.HOTKEY_STEPIN).match((KeyEvent) keyEvent)) {
-				tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
-					((RobotTab) tab).getEditorPane().getControls().stepIn();
-					keyEvent.consume();
-				});
-			} else if (KeyCombination.valueOf(FXController.HOTKEY_STEPOVER).match((KeyEvent) keyEvent)) {
-				tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
-					((RobotTab) tab).getEditorPane().getControls().stepOver();
-					keyEvent.consume();
-				});
-			} else if (KeyCombination.valueOf(FXController.HOTKEY_PAUSE).match((KeyEvent) keyEvent)) {
-				tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
-					((RobotTab) tab).getEditorPane().getControls().pause();
-					keyEvent.consume();
-				});
-			} else if (KeyCombination.valueOf(FXController.HOTKEY_STOP).match((KeyEvent) keyEvent)) {
-				tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
-					((RobotTab) tab).getEditorPane().getControls().stop();
-					keyEvent.consume();
-				});
-			} else if (keyEvent.isControlDown() || keyEvent.isMetaDown()) {
-				// Check if other key is an integer, if so open that tab
-				try {
-					int tab = Integer.parseInt(keyEvent.getText()) - 1;
-					if (tab < tpnBots.getTabs().size() && tab >= 0) {
-						tpnBots.getSelectionModel().select(tab);
-						((RobotTab) tpnBots.getTabs().get(tab)).requestFocus();
-					}
-				} catch (NumberFormatException e) {
-					// nevermind...
 				}
 			}
 		}

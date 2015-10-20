@@ -135,6 +135,34 @@ public class Settings {
 	public static String SaveFileAs = "SaveFileAs";
 	
 	public static String SaveAll = "SaveFileAll";
+
+	public static String Close = "Close";
+
+	public static String HelpHome = "HelpHome";
+	
+	public static String Run = "Run";
+	
+	public static String Pause = "Pause";
+	
+	public static String Stop = "Stop";
+	
+	public static String Stepin = "Stepin";
+	
+	public static String Stepover = "Stepover";
+	
+	public static String ClearConsole = "ClearConsole";
+	
+	public static String Search = "Search";
+	
+	public static String ResetZoom = "ResetZoom";
+	
+	public static String Copy = "Copy";
+	
+	public static String Cut = "Cut";
+	
+	public static String Paste = "Paste";
+	
+	public static String OpenSettings = "OpenSettings";
 	
 	// =============================================================================
 }
