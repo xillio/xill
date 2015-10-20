@@ -11,7 +11,7 @@ import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
- * This class represents the && operator
+ * This class represents the &gt; operator
  */
 public final class GreaterThan implements Processable {
 

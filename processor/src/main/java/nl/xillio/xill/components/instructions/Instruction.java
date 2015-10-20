@@ -21,7 +21,7 @@ public abstract class Instruction implements nl.xillio.xill.api.components.Instr
 	}
 
 	/**
-	 * Set the code position of this instruction<br/>
+	 * Set the code position of this instruction.
 	 * <b>Note!</b> This value can only be set once!
 	 *
 	 * @param position

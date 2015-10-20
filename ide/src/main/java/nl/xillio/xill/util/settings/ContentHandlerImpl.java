@@ -28,10 +28,10 @@ import org.w3c.dom.NodeList;
  * This is XML file content handler implementation
  * It uses XML structure to store settings.
  * 
- *  Root level is <settings>.
- *  The first level is "category" - tag having the category name (e.g. <Layout>). 
- *  Each category can contains items (tags <item>). 
- *  Each item can have key or not - if has then it's attribute of item tag (e.g. <item key='name'>).
+ *  Root level is &lt;settings&gt;.
+ *  The first level is "category" - tag having the category name (e.g. &lt;Layout&gt;).
+ *  Each category can contains items (tags &lt;item&gt;).
+ *  Each item can have key or not - if has then it's attribute of item tag (e.g. &lt;item key='name'&gt;).
  *  Each item contains one or more values - tag name means the name of value and the tag text is value itself.
  *  
  *  The values encrypting is done out of the content handler and it's transparent for content handler.

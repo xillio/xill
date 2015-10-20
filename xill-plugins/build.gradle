@@ -3,32 +3,7 @@
  */
 subprojects {
 
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-
-    dependencies {
-        compile project(':api');
-        testCompile project(':testutils')
-    }
-
-    /*
-     * Copy all dependencies to the libs folder. An alternative to this would be to build as an application (InstallApp task)
-     * We need all dependencies to be there so we can easily copy them over as a plugin
-     */
-    task copyToLib(type: Sync) {
-        description 'Copy dependencies to libs folder'
-        from configurations.runtime
-        def apiRuntime = project(':api').configurations.runtime.files
-        exclude { details -> apiRuntime.contains(details.file) || details.name.equals(project(':api').jar.archiveName) }
-        into libsDir
-    }
-
-    task copyToPluginDir(type: Copy) {
-        dependsOn assemble
-        from libsDir
-        into new File(pluginsDir, project.name)
-    }
-
+    // Add classpath to the jars
     tasks.withType(Jar) {
         doFirst {
             manifest {
@@ -37,6 +12,12 @@ subprojects {
         }
     }
 
-    rootProject.assembleContentTools.dependsOn copyToPluginDir
-    assemble.dependsOn copyToLib
+    // To preprate for execution we need to copy the plugins to the plugin directory
+    prepare.dependsOn copyToPluginsDir
+
+    dependencies {
+        testCompile project(':testutils')
+    }
 }
+
+install.enabled = false

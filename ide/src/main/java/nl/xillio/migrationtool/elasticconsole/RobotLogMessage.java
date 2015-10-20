@@ -11,8 +11,6 @@ public class RobotLogMessage {
 	/**
 	 * Creates a new log message.
 	 *
-	 * @param id
-	 *        a robot it
 	 * @param level
 	 * @param message
 	 *        the message to log

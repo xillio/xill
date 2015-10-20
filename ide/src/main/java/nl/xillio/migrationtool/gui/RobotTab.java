@@ -86,9 +86,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	 * @param projectPath
 	 * @param documentPath
 	 *        The full path to the currentRobot (absolute)
-	 * @param helppane
 	 * @param globalController
-	 * @param pluginLoader
 	 * @throws IOException
 	 */
 	public RobotTab(final File projectPath, final File documentPath, final FXController globalController) throws IOException {

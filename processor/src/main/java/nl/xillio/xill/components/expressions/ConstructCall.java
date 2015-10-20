@@ -29,7 +29,7 @@ public class ConstructCall implements Processable {
 	 *        the construct to call
 	 * @param arguments
 	 *        the arguments to insert into the construct
-	 * @param context
+	 * @param processor
 	 *        the context to pass to the constructs
 	 */
 	public ConstructCall(final Construct construct, final List<Processable> arguments, final ConstructProcessor processor) {

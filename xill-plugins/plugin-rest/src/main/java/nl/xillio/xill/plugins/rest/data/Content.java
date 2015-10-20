@@ -96,7 +96,7 @@ public class Content {
 	/**
 	 * Create the Xill variable according to the type of content and fill it with proper content
 	 *
-	 * @return new Xill variable (JSON->OBJECT type / XML->XmlNode / other->ATOMIC string)
+	 * @return new Xill variable (JSON-&gt;OBJECT type / XML-&gt;XmlNode / other-&gt;ATOMIC string)
 	 */
 	public MetaExpression getMeta() {
 		if (ContentType.APPLICATION_JSON.getMimeType().equals(this.getType().getMimeType())) {
@@ -108,7 +108,7 @@ public class Content {
 				// We have no factory yet
 				try {
 					xmlNodeFactory = InjectorUtils.get(XmlNodeFactory.class);
-				}catch(ConfigurationException e) {
+				} catch (ConfigurationException e) {
 					LOGGER.error("No binding found for XmlNodeFactory", e);
 					throw new RobotRuntimeException("Did not detect the XML plugin, do you have it installed?", e);
 				}
