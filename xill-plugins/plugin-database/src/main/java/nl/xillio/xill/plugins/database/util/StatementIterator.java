@@ -14,7 +14,7 @@ import nl.xillio.xill.plugins.database.util.TypeConverter.ConversionException;
 /**
  * 
  * Iterates over a {@link Statement}. When the current result of the Statement is a {@link ResultSet},
- * the iterator returns a Map<String,Object> with table column labels (the value of an AS clause if present, else the column name)
+ * the iterator returns a {@link Map} with table column labels (the value of an AS clause if present, else the column name)
  * as key and row values as values.
  * When the current result is an update count it returns a single integer.
  * 
