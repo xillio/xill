@@ -32,11 +32,11 @@ public class PreparedStatementConstruct extends BaseDatabaseConstruct {
 
 	@Override
 	public ConstructProcessor doPrepareProcess(final ConstructContext context) {
-		return new ConstructProcessor((query, parameters, database, timeout) -> process(query, parameters, database, timeout, factory, context.getRobotID()),
+		return new ConstructProcessor((query, parameters, timeout, database) -> process(query, parameters, database, timeout, factory, context.getRobotID()),
 			new Argument("query", ATOMIC),
 			new Argument("parameters", emptyObject(), LIST, OBJECT),
-			new Argument("database", NULL, ATOMIC),
-			new Argument("timeout", fromValue(30), ATOMIC));
+			new Argument("timeout", fromValue(30), ATOMIC),
+			new Argument("database", NULL, ATOMIC));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -61,7 +61,11 @@ public class PreparedStatementConstruct extends BaseDatabaseConstruct {
 			if (parameters.getType() == LIST) {
 				List<Object> parameterContent = (List<Object>) extractValue(parameters);
 				for (Object param : parameterContent) {
-					parameterObjects.add((LinkedHashMap<String, Object>) param);
+					if (param instanceof LinkedHashMap) {
+						parameterObjects.add((LinkedHashMap<String, Object>) param);
+					}else{
+						throw new RobotRuntimeException("Expected objects in the 'parameters' parameter.");
+					}
 				}
 			}
 			// Single parameter

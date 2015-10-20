@@ -1,6 +1,10 @@
 package nl.xillio.migrationtool.gui;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,6 +23,9 @@ import javafx.stage.Window;
 import nl.xillio.xill.docgen.DocumentationSearcher;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.sun.javafx.tk.FontMetrics;
+import com.sun.javafx.tk.Toolkit;
 import java.io.IOException;
 
 /**
@@ -27,7 +34,7 @@ import java.io.IOException;
  */
 public class HelpSearchBar extends AnchorPane {
 	private static final Logger LOGGER = LogManager.getLogger();
-	private static final int ROW_HEIGHT = 26;
+	private static int ROW_HEIGHT = 29;
 	private final ListView<String> listView;
 	private HelpPane helpPane;
 	private final Tooltip hoverToolTip;
@@ -56,14 +63,35 @@ public class HelpSearchBar extends AnchorPane {
 		listView = new ListView<>(data);
 		listView.setOnMouseClicked(this::onClick);
 		listView.setOnKeyPressed(this::onKeyPressed);
-
+		listView.setPrefHeight(ROW_HEIGHT);
+		listView.setFixedCellSize(ROW_HEIGHT);
+		
 		//Result wrapper
 		hoverToolTip = new Tooltip();
 		hoverToolTip.setGraphic(listView);
 		hoverToolTip.prefWidthProperty().bind(searchField.widthProperty());
 
+		data.addListener(new ListChangeListener<Object>(){
+			 @Override
+			    public void onChanged(ListChangeListener.Change change) {
+			        listView.setPrefHeight( (Math.min(10, data.size())) * ROW_HEIGHT + 2);
+			    }
+			});
+
 		//Listen to search changes
 		searchField.textProperty().addListener(this::searchTextChanged);
+		
+		//Close on focus lost
+		searchField.focusedProperty().addListener(new ChangeListener<Boolean>(){
+	        @Override
+	        public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+	            if (newValue) {
+	                showResults();
+	            } else {
+	                hoverToolTip.hide();
+	            }
+	        }
+	    });
 	}
 
 	private void onKeyPressed(KeyEvent keyEvent) {
@@ -116,7 +144,6 @@ public class HelpSearchBar extends AnchorPane {
 		}
 
 		String[] results = searcher.search(query);
-
 		data.clear();
 		data.addAll(results);
 	}

@@ -63,7 +63,7 @@ public class CreateSheetConstruct extends Construct {
 	public ConstructProcessor prepareProcess(ConstructContext context) {
 		return new ConstructProcessor(
 						(a, b) -> process(excelService, a, b),
-						new Argument("workboook", ATOMIC),
+						new Argument("workbook", ATOMIC),
 						new Argument("name", ATOMIC));
 	}
 
