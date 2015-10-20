@@ -19,8 +19,15 @@ import java.io.FileNotFoundException;
  */
 public abstract class LoadDefinitionsConstruct extends Construct {
 
+    protected final DocumentDefinitionService definitionService;
+
+    /**
+     * Create a new {@link LoadDefinitionsConstruct}
+     */
     @Inject
-    DocumentDefinitionService definitionService;
+    public LoadDefinitionsConstruct(DocumentDefinitionService definitionService){
+        this.definitionService = definitionService;
+    }
 
     @Override
     public ConstructProcessor prepareProcess(ConstructContext context) {

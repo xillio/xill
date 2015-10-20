@@ -20,6 +20,16 @@ import java.io.FileNotFoundException;
 public class LoadDecoratorDefinitionsConstruct extends LoadDefinitionsConstruct {
 
 
+    /**
+     * Create a new {@link LoadDefinitionsConstruct}
+     *
+     * @param definitionService
+     */
+    @Inject
+    public LoadDecoratorDefinitionsConstruct(DocumentDefinitionService definitionService) {
+        super(definitionService);
+    }
+
     @Override
     protected void load(File json) throws FileNotFoundException {
         definitionService.loadDecorators(json);
