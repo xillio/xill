@@ -115,7 +115,6 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 		editor.setContextMenuEnabled(false);
 		createContextMenu();
 
-
 		// Add event handlers.
 		editor.addEventHandler(KeyEvent.KEY_PRESSED, this);
 		editor.addEventHandler(ScrollEvent.SCROLL, this);
@@ -133,7 +132,6 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 		// Disable drag-and-drop, set the cursor graphic when dragging.
 		editor.setOnDragDropped(null);
 		editor.setOnDragOver(e -> editor.sceneProperty().get().setCursor(Cursor.DISAPPEAR));
-			
 	}
 	
 	/**
@@ -163,7 +161,6 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	 */
 	public void setTab(final RobotTab tab) {
 		this.tab = tab;
-
 	}
 
 	private void onDocumentLoad() {
@@ -300,11 +297,6 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 				paste();
 			} else if (KeyCombination.valueOf(FXController.HOTKEY_RESET_ZOOM).match(ke)) {
 				zoomTo(1);
-			} else if (helppane != null && KeyCombination.valueOf(FXController.HOTKEY_HELP).match(ke)) {
-				callOnAce(
-					result -> {
-						// helppane.display((String)result);
-				}, "getCurrentWord");
 			}
 		}
 
