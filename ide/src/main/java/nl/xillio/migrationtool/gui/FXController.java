@@ -207,7 +207,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 			this.cancelClose = false;
 			LOGGER.info("Shutting down application");
 			if (!closeApplication()) {
-				event.consume(); // this cancel the process of the application closing     
+				event.consume(); // this cancel the process of the application closing
 			}
 		}));
 
@@ -235,21 +235,23 @@ public class FXController implements Initializable, EventHandler<Event> {
 			}
 		});
 
-		Platform.runLater(() -> {
-			verifyLicense();
-			try {
-				showReleaseNotes();
-			} catch (IOException e) {
-				LOGGER.error("Failed to show release notes", e);
+        Platform.runLater(() -> {
+            // Verify the license.
+            verifyLicense();
+            try {
+                showReleaseNotes();
+            } catch (IOException e) {
+                LOGGER.error("Failed to show release notes", e);
+            }
 
-				String activeTab = settings.simple().get(Settings.WORKSPACE, Settings.ActiveTab);
-				if (activeTab != null && !"".equals(activeTab)) {
-					getTabs().stream()
-						.filter(tab -> tab.getDocument().getAbsolutePath().equals(activeTab))
-						.forEach(tab -> tpnBots.getSelectionModel().select(tab));
-				}
-			}
-		});
+            // Select the last opened tab.
+            String activeTab = settings.simple().get(Settings.WORKSPACE, Settings.ActiveTab);
+            if (activeTab != null && !"".equals(activeTab)) {
+                getTabs().stream()
+                        .filter(tab -> tab.getDocument().getAbsolutePath().equals(activeTab))
+                        .forEach(tab -> tpnBots.getSelectionModel().select(tab));
+            }
+        });
 	}
 
 	/**
@@ -466,7 +468,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 		// Save active tab
 		final String activeTab[] = {null};
-		getTabs().stream().filter(tab -> tab.isSelected()).forEach(tab -> activeTab[0] = tab.getDocument().getAbsolutePath());
+        getTabs().stream().filter(tab -> tab.isSelected()).forEach(tab -> activeTab[0] = tab.getDocument().getAbsolutePath());
 		if (activeTab[0] != null) {
 			settings.simple().save(Settings.WORKSPACE, Settings.ActiveTab, activeTab[0], true);
 		} else {

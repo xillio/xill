@@ -19,5 +19,3 @@ subprojects {
         testCompile project(':testutils')
     }
 }
-
-install.enabled = false
