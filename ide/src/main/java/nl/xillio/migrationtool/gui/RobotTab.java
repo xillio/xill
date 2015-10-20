@@ -393,57 +393,76 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	 * @throws XillParsingException
 	 */
 	public void runRobot() throws XillParsingException {
-            Dialog d = new Dialog();
-            VBox checkBoxContainer = new VBox();
-            Label tf = new Label("The robot " + currentRobot.getPath().getName() + " needs to be save before running. Do you want to continue?");
-            CheckBox cb =  new CheckBox("Don't ask me again.");
-            cb.addEventFilter(ActionEvent.ACTION, event -> {
-                System.out.println("mjeuh");
-            });
-            checkBoxContainer.getChildren().addAll(tf, cb);
-            d.getDialogPane().setContent(checkBoxContainer);
-            
-            d.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);//setContent(confirmationHbox);
-            Button okButton = (Button) d.getDialogPane().lookupButton(ButtonType.OK);
-            okButton.addEventFilter(ActionEvent.ACTION, event -> {
-                save();
+            boolean autoSaveBotBeforeRun = Boolean.valueOf(settings.simple().get("SettingsGeneral", "AutoSaveBotBeforeRun"));
+            if (autoSaveBotBeforeRun) {
+                Dialog d = new Dialog();
+                VBox checkBoxContainer = new VBox();
 
-                try {
-                        processor.compile();
+                Label tf = new Label("The robot " + currentRobot.getPath().getName() + " needs to be save before running. Do you want to continue?");
+                CheckBox cb =  new CheckBox("Don't ask me again.");
+                cb.addEventFilter(ActionEvent.ACTION, event -> {
+                    if (autoSaveBotBeforeRun) {
+                        settings.simple().register("SettingsGeneral", "AutoSaveBotBeforeRun", "false", "Enable the confirmation dialog before a robot is run");
+                    } else {
+                        settings.simple().register("SettingsGeneral", "AutoSaveBotBeforeRun", "true", "Enable the confirmation dialog before a robot is run");
+                    }
+                    System.out.println(autoSaveBotBeforeRun);
+                });
 
-                        Robot robot = processor.getRobot();
+                checkBoxContainer.getChildren().addAll(tf, cb);
+                d.getDialogPane().setContent(checkBoxContainer);
 
-                        Thread robotThread = new Thread(() -> {
-                                try {
-                                        robot.process(processor.getDebugger());
-                                } catch (Exception e) {
-                                        Platform.runLater(() -> {
-                                                Alert error = new Alert(AlertType.ERROR);
-                                                error.setTitle(e.getClass().getSimpleName());
-                                                error.setContentText(e.getMessage() + "\n" + ExceptionUtils.getStackTrace(e));
-                                                error.setHeaderText("Exception while processing");
-                                                error.setResizable(true);
-                                                error.getDialogPane().setPrefWidth(1080);
-                                                error.show();
-                                        });
-                                }
-                        });
-
-                        robotThread.start();
-                } catch (IOException e) {
-                        errorPopup(-1, e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling.");
-
-                } catch (XillParsingException e) {
-                        errorPopup(e.getLine(), e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling " + e.getRobot().getPath().getAbsolutePath());
-                        //throw e;
-                }
-            });
-            Button cancelButton = (Button) d.getDialogPane().lookupButton(ButtonType.CANCEL);
-            cancelButton.addEventFilter(ActionEvent.ACTION, event -> {
-                d.close();
-            });
-            d.show();
+                d.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);//setContent(confirmationHbox);
+                Button okButton = (Button) d.getDialogPane().lookupButton(ButtonType.OK);
+                okButton.addEventFilter(ActionEvent.ACTION, event -> {
+                    autoSaveAndRunRobot();
+                });
+                Button cancelButton = (Button) d.getDialogPane().lookupButton(ButtonType.CANCEL);
+                cancelButton.addEventFilter(ActionEvent.ACTION, event -> {
+                    d.close();
+                });
+                d.show();
+            } else {
+                autoSaveAndRunRobot();
+            }
 	}
+        
+        /**
+         * Automatically saves robot and runs it if the save is successful
+         */
+        private void autoSaveAndRunRobot() {
+            save();
+
+            try {
+                    processor.compile();
+
+                    Robot robot = processor.getRobot();
+
+                    Thread robotThread = new Thread(() -> {
+                            try {
+                                    robot.process(processor.getDebugger());
+                            } catch (Exception e) {
+                                    Platform.runLater(() -> {
+                                            Alert error = new Alert(AlertType.ERROR);
+                                            error.setTitle(e.getClass().getSimpleName());
+                                            error.setContentText(e.getMessage() + "\n" + ExceptionUtils.getStackTrace(e));
+                                            error.setHeaderText("Exception while processing");
+                                            error.setResizable(true);
+                                            error.getDialogPane().setPrefWidth(1080);
+                                            error.show();
+                                    });
+                            }
+                    });
+
+                    robotThread.start();
+            } catch (IOException e) {
+                    errorPopup(-1, e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling.");
+
+            } catch (XillParsingException e) {
+                    errorPopup(e.getLine(), e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling " + e.getRobot().getPath().getAbsolutePath());
+                    //throw e;
+            }
+        }
 
 	private void errorPopup(final int line, final String message, final String title, final String context) {
 		Alert error = new Alert(AlertType.ERROR);
