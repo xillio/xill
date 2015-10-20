@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Returns a randomized value based on the optional parameter value.
+        If an integer argument N is provided the return value is a random integer between 0 and N.
+        If a list argument L is provided it is a random entry from the list.
+        If no parameter is provided, a random floating point number between 0 and 1 will be generated.
+    </description>
+    <examples>
+        <example title="Roll a 6-sided die:">
+            <code>
+                Math.random(6)+1;
+            </code>
+            <p>
+                Note: the + 1 is needed, because the result of random is 0 to 6, but not including 6.
+            </p>
+        </example>
+        <example title="Determine a random work day:">
+            <code>
+                var list = {"monday", "tuesday", "wednesday", "thursday", "friday"};
+                Math.random(list);
+            </code>
+        </example>
+        <example description="Random number between 0 and 1:">
+            <code>
+                random();
+            </code>
+            <p>
+                Note: This excludes 1 but includes 0
+            </p>
+        </example>
+    </examples>
+    <searchTags>
+        random, dice
+    </searchTags>
+</function>

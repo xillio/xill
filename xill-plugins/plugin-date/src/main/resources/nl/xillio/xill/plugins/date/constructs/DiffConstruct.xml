@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Returns the difference between two dates. By default the function will return the absolute difference. Optionally you can set 'absolute' to false to get the relative difference.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Calculating date difference in a total hours unit.</header>
+            <code>
+use System;
+use Date;
+var date = Date.of(2015, 12, 31, 10, 5, 0);
+var date2 = Date.of(2015, 12, 30, 9, 2, 0);
+var diff = Date.diff(date2, date);
+System.print(diff["Total Hours"]);
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>change</reference>
+    </references>
+	    <tags>
+        date, time, datetime, difference, diff
+    </tags>
+</function>

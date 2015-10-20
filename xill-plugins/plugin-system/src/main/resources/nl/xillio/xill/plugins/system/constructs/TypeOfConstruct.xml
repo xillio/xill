@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Check the value of a type. It will evaluate to either ATOMIC, LIST or OBJECT
+    </description>
+    <examples>
+        <example title="Usage">
+            <code>
+                System.TypeOf([1,2,3, "Hello Xillio"]);
+                // Result: LIST
+
+                System.TypeOf(null);
+                // Result: ATOMIC
+            </code>
+        </example>
+    </examples>
+    <searchTags>
+        type, list, atomic, object
+    </searchTags>
+</function>

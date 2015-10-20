@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Returns a boolean if the string text matches the pattern specified by the regex.
+        Optionally a timeout can be provided in seconds, the default value is 5 seconds.
+        Set timeout to zero to let the function run without timeout. This should only be altered when dealing with large
+        source documents.
+        The timeout is there to protect the system from hanging on invalid expressions.
+        See the Regular Expressions page for more about Regular Expression support in Xillio Content Tools.
+    </description>
+    <examples>
+        <example title="Usage">
+            <code><![CDATA[
+              	String.matches("I need help!", ".*help.*");                         // TRUE
+    	        String.matches("I need help!", "help.*");                           // FALSE
+		        String.matches("<p>paragraph text</p>", "<p\\b[^>]*>(.*?)</p>");    // TRUE
+          ]]></code>
+        </example>
+    </examples>
+    <searchTags>
+        regex, match
+    </searchTags>
+</function>

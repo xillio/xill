@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Load an Excel sheet from a workbook.
+    </description>
+    <examples>
+        <example title="Loading a sheet">
+            <header>Getting a sheet by name from a workbook</header>
+            <code>
+                use Excel;
+                var workbook = Excel.loadWorkbook("workbook.xlsx");
+                var sheet = Excel.loadSheet(workbook, "firstsheet");
+            </code>
+            <header>Getting a sheet by index from a workbook</header>
+            <code>
+                use Excel;
+                var workbook = Excel.loadWorkbook("workbook.xlsx");
+                var sheetNames = Excel.getSheetNames(workbook);
+                var sheet = Excel.loadSheet(workbook, sheetNames[0]);
+            </code>
+        </example>
+        <example title="Printing sheet information">
+            <header>Getting all sheet information</header>
+            <code>
+                use Excel;
+                use System;
+                var workbook = Excel.loadWorkbook("workbook.xlsx");
+                var sheet = Excel.loadSheet(workbook, "firstsheet");
+                System.print(sheet);
+            </code>
+            <p>NB: this information reflects the state of the sheet at the moment
+                it is loaded and is not changed when a cell is changed after loading.
+            </p>
+        </example>
+    </examples>
+    <references>
+        <reference>loadWorkbook</reference>
+        <reference>columnCount</reference>
+        <reference>rowCount</reference>
+        <reference>getSheetNames</reference>
+        <reference>System.print</reference>
+        <reference>createWorkbook</reference>
+        <reference>createSheet</reference>
+    </references>
+    <tags>
+        Excel, workbook, sheet, spreadsheet, cell, load, get, value, extract
+    </tags>
+</function>

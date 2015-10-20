@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+	<description>
+		Creates a document and inserts it into the database.
+		The body of the document should be an object containing sub-objects for each decorator.
+		The versionId is a string representing the initial version.
+	</description>
+	<examples>
+		<example title="Usage">
+			<header>Creating a document.</header>
+			<code>
+				use Document;
+				
+				var type = "file";
+				var body = {
+					"document" : {
+					"title" : "Agenda for the next meeting",
+					"created" : "2015-07-01",
+					"modified" : "2015-07-15"
+					},
+					"file" : {
+						"parentpath" : "C:\\temp",
+						"name" : "agenda.doc",
+						"extension" : ".doc",
+						"size" : 55071
+					},
+					"author" : {
+						"userid" : "dwatrou1",
+						"firstName" : "Daniel",
+						"lastName" : "Watrous",
+						"email" : "daniel.wartrous@office.com"
+					}
+				}
+				var version = "version1";
+				
+				var id = Document.create(type, body, version);
+			</code>
+		</example>
+	</examples>
+	<searchTags>
+		create, db, database, udm, document 
+	</searchTags>
+</function>

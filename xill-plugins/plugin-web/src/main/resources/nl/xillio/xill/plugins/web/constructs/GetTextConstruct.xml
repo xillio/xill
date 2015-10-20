@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Returns a string containing all text extracted from HTML node(s) (without any markup). Any HTML-entities
+        (like the copyright entity) contained in the text will be converted to characters.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Get text from an element.</header>
+            <code>
+                use Web;
+                use System;
+
+                var page = Web.loadPage("http://www.xillio.com");
+
+                var text = "";
+
+                if (page != null) {
+                    var header = Web.xPath (page, "//h1");
+                    var text = Web.getText(header);
+                    System.print(text);
+                } else {
+                    System.print("no page");
+                }
+                /*
+                    To get all text on a page, do the following:
+
+                    var body = Web.xPath(page, "//body");
+                    var content = Web.getText(body);
+                */
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>loadPage</reference>
+        <reference>xPath</reference>
+    </references>
+    <tags>
+        load, page, web, text, xpath
+    </tags>
+</function>

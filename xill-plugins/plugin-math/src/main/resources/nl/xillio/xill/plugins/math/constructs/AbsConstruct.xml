@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Returns the absolute value of the provided value.
+    </description>
+    <examples>
+        <example title="Usage">
+            <code><![CDATA[
+                Math.abs(6) // 6
+                Math.abs(-5) // 5
+                Math.abs(-3.14) // 3.14
+            ]]>
+            </code>
+        </example>
+    </examples>
+</function>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Sets a single cookie. Cookies must be specified as a list in the format:
+        {
+        name: name,        //eg. "Xillio_cookie"
+        path: path,        //eg. "/"
+        domain: domain,    //eg. ".xillio.com",
+        value:value,      //eg. "Delivery finished."
+        expires: expiry date //eg. "2012-10-18T09:42:15"
+        }
+
+        The name attribute is mandatory, the others are optional. Current cookie information can be obtained through
+        Web.pageInfo. Cookies can be removed using Web.removeCookie. Due to the nature of Xillio Content Tools, all
+        cookies will be removed every time Xillio Content Tools is restarted.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Set a cookie.</header>
+            <code>
+                use Web;
+                use System;
+
+                var page = Web.loadPage("http://www.xillio.com");
+                Web.removeAllCookies(page);
+                var cookie = {"name":"Xillio", "path":"/", "domain":"www.xillio.com", "value":"123", "expires":"2018-10-18T09:42:15"};
+                Web.setCookie(page, cookie);
+                System.print(Web.pageInfo(page));
+                Web.removeCookie(page, "Xillio");
+                System.print(Web.pageInfo(page));
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>loadPage</reference>
+        <reference>removeCookie</reference>
+        <reference>removeAllCookie</reference>
+        <reference>pageInfo</reference>
+    </references>
+    <tags>
+        load, page, web, cookie, info
+    </tags>
+</function>

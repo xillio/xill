@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Returns a string containing the MD5 hash over the passed variable value.
+        This is commonly used to check if files have changed, since any slight change will cause the MD5 hash to be
+        completely different.
+    </description>
+    <examples>
+        <example title="Usage">
+            <code>
+                String.createMD5("string");
+
+                // Result: b45cffe084dd3d20d928bee85e7b0f21
+            </code>
+        </example>
+    </examples>
+    <searchTags>
+        MD5, md5, hash, encode
+    </searchTags>
+</function>

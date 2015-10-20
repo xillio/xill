@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<function>
+    <description>
+        Get system or environmental properties.
+        When a property key is provided only that specific property will be fetched.
+    </description>
+    <examples>
+        <example title="Usage">
+			<code>
+                // Get all environmental variables
+                System.properties();
+
+                // Get the PATH envirionmental variable
+                System.properties("PATH");
+            </code>
+        </example>
+    </examples>
+    <searchTags>
+        system, info, path, environment, property
+    </searchTags>
+</function>

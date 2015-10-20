@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        This field should contain a description on what the construct does an what it generally returns. More information can be provided in the examples.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>This is a header in the example</header>
+            <code>
+                use System;
+                System.print("Because this is in a code tag it will be inside a code editor");
+                if(true) {
+                System.print("Indentation is preserved...");
+                }
+            </code>
+            <header>Some more information</header>
+            <p>
+                You can simply add some tags here to add more information to the page
+            </p>
+        </example>
+    </examples>
+    <references>
+        <!-- Reference a construct inside this package -->
+        <reference>otherConstruct</reference>
+        <!-- Reference a construct in another package -->
+        <reference>Other.construct</reference>
+    </references>
+    <!--
+        These tags will be used by the search system.
+        Whenever a user types a word from this list
+        it will be added to the results
+    -->
+    <tags>
+        write, text, new, create, append, add
+    </tags>
+</function>

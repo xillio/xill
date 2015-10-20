@@ -1,0 +1,49 @@
+apply from: rootProject.file('gradle/javafx.plugin')
+
+// Do not deploy jfx on assemble
+assemble.dependsOn.remove jfxDeploy
+
+javafx {
+    mainClass project.mainClassName
+    appID = project.appID
+    appName = project.friendlyName
+    copyright = project.copyrightInformation
+    description = project.description
+    licenseType = project.licenseType
+    vendor = project.company
+    menu = true
+    shortcut = true
+    embedLauncher = false
+    embedJNLP = false
+
+    // Allow the user to set the heap size
+    bundleArguments.userJvmOptions = ['-Xmx': '1024m', '-Xms': '1024m']
+}
+
+def self = project
+allprojects {
+    self.jfxDeploy.dependsOn project.prepare
+}
+
+jfxDeploy {
+    doFirst {
+        copy {
+            from pluginsDir
+            into new File(libsDir, "plugins")
+        }
+    }
+    inputFiles = files(
+            libsDir,
+            new File(projectDir, "CHANGELOG.md"),
+            new File(projectDir, "LICENSE")
+    )
+
+    doLast {
+        distsDir.eachDir() {
+            dir ->
+                zipDist.from dir
+        }
+    }
+}
+
+buildDists.dependsOn jfxDeploy

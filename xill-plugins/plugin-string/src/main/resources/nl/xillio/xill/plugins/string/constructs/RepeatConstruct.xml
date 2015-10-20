@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Receives a string and repeats it count times concatenated.
+    </description>
+    <examples>
+        <example title="Usage">
+            <code>
+                String.repeat("thisIsAString", 3);
+                // Result: thisIsAStringthisIsAStringthisIsAString
+            </code>
+        </example>
+    </examples>
+</function>

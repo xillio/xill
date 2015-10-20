@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Check if a file or folder exists.
+        Returns true if the file or folder exists otherwise false
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Create and verify a folder</header>
+            <code>
+                use File;
+                use System;
+                var folder = File.createFolder("toBeDeleted");
+                if(!File.exists(folder)) {
+                System.print("The folder was not created...", "error");
+                }
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>createFolder</reference>
+        <reference>saveTo</reference>
+    </references>
+</function>

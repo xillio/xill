@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Copy a file or folder to a target destination, overwriting it if it exists
+        Returns an object containing the source destination [from], the target destination [into] and weather the operation was successful [success]
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Copy a file</header>
+            <code>
+                use System;
+                use File;
+                var result = File.copy("file.txt", "file_copy.txt");
+                if(!result.success) {
+                System.print("Copy Failed", "error");
+                }
+            </code>
+        </example>
+    </examples>
+    <tags>
+        test, other
+    </tags>
+</function>

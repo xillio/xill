@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Gets the content of a cell from an Excel sheet.
+    </description>
+    <examples>
+        <example title="Getting the content">
+            <header>Alphabetic Column Notation</header>
+            <code>
+                use Excel;
+                var workbook = Excel.loadWorkbook("workbook.xlsx");
+                var sheet = Excel.loadSheet(workbook, "firstsheet");
+                var cell = Excel.getCell(sheet, "A", 1);
+            </code>
+            <header>Numeric Column Notation</header>
+            <code>
+                use Excel;
+                var workbook = Excel.loadWorkbook("workbook.xlsx");
+                var sheet = Excel.loadSheet(workbook, "firstsheet");
+                var cell = Excel.getCell(sheet, 1, 1);
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>loadWorkbook</reference>
+        <reference>loadSheet</reference>
+        <reference>System.print</reference>
+        <reference>setCell</reference>
+    </references>
+    <tags>
+        Excel, workbook, sheet, spreadsheet, cell, load, get, value, extract
+    </tags>
+</function>

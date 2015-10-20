@@ -1,17 +1,23 @@
-bin/
-dist/
 xilliosettings.db
-test-output/
-/ESConsole/
-/target/
-/plugins/
+ESConsole/
+plugins/
+helpfiles/
+xilliosettings.cfg
 
 # Gradle
 build/
 .gradle/
+!gradle-wrapper.jar
 
 # Eclipse
 .settings/
 .metadata/
 .classpath
 .project
+*/bin/
+*/test-output/
+
+
+# IntelliJ
+*.iml
+.idea/

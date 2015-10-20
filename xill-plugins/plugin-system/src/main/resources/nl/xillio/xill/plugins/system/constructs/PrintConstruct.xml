@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Prints a message to the console.
+        When printing an object or list it will print the JSON representation. If you print an atomic value it will
+        print the string value.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Printing a message to the console</header>
+            <code>
+                System.print("Hello Xillio!");
+            </code>
+            <header>Throwing an error</header>
+            <code>
+                System.print("Pause me", "error");
+            </code>
+        </example>
+    </examples>
+    <searchTags>
+        log, println, line, write, console, terminal, error, warning, exception
+    </searchTags>
+</function>

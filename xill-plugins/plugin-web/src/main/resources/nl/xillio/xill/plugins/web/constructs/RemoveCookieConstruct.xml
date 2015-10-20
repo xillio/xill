@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Removes the browser cookie with the name cookie. cookie can be a string or a list. If cookie is a
+        boolean with value true, then all cookies will be cleared. Current cookie information can be obtained
+        through Web.pageInfo(). Cookies can be set using Web.setCookie(). Due to the nature of Content Tools, all
+        cookies will be removed with every restart.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Remove a cookie from a web page.</header>
+            <code>
+                use Web;
+                use System;
+
+                var page = Web.loadPage ("http://www.xillio.com");
+                System.print(Web.pageInfo(page));
+                Web.removeCookie(page, "_ga");
+                Web.removeCookie(page, "hubspotutk");
+                Web.removeCookie(page, "_gat");
+                System.print(Web.pageInfo(page));
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>setCookie</reference>
+        <reference>pageInfo</reference>
+    </references>
+    <tags>
+        load, page, web, info, remove, cookie
+    </tags>
+</function>

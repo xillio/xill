@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Returns a boolean whether the string haystack contains the element needle.
+    </description>
+    <examples>
+        <example title="String Usage">
+            <code>
+                String.contains("testing", "ing"); // TRUE
+                String.contains("TESTING", "ing"); // FALSE
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>List.contains</reference>
+    </references>
+    <searchTags>
+        search, list
+    </searchTags>
+</function>

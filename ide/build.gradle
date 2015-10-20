@@ -1,22 +1,16 @@
 description = 'this project contains all UI logic for the contenttools application'
 
 dependencies {
-	compile 'net.sf.saxon:Saxon-HE:9.6.0-5'
-	compile 'commons-io:commons-io:2.4'
-	compile 'org.elasticsearch:elasticsearch:1.6.0'
-	compile 'org.apache.httpcomponents:httpclient:4.3.3'
-	compile 'org.apache.commons:commons-lang3:3.4'
-	compile 'org.apache.httpcomponents:httpmime:4.5'
-	compile 'org.jasypt:jasypt:1.9.1'
-	compile 'org.xerial:sqlite-jdbc:3.8.7'
-	compile project(':api')
+    compile project(':api')
+    compile project(':docgen')
+    compile 'org.elasticsearch:elasticsearch:1.6.0'
+    compile 'org.jasypt:jasypt:1.9.1'
 }
 
-jar{
-	manifest {
-		attributes("Implementation-Title": 			"Xill IDE",
-										"Implementation-Version": 		version,
-										"Class-Path": configurations.runtime.files.collect {File file-> file.name }.join(" ")
-									 )
-	}
+// To prepare for execution we need to copy the plugins to the plugin directory
+prepare.dependsOn copyToPluginsDir
+jar {
+    manifest {
+        attributes "Class-Path": configurations.runtime.files.collect { File file -> file.name }.join(" ")
+    }
 }

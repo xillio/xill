@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Pause the robot for a period of time in milliseconds.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Wait 1 second</header>
+            <code>
+                System.wait(1000);
+            </code>
+        </example>
+    </examples>
+    <searchTags>
+        pause, wait, sleep, delay
+    </searchTags>
+</function>

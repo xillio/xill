@@ -1,0 +1,14 @@
+[xmt-property=selected]{
+border-color:#f00;
+border-style:dashed;
+border-width:1px;
+outline-color:#a00;
+outline-style:dashed;
+outline-width:1px;
+}
+
+[xmt-property=selection-capsule]{
+outline-color:#f00;
+outline-style:dashed;
+outline-width:1px;
+}

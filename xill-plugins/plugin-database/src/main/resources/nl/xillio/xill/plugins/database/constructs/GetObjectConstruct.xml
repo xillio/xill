@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<function>
+  <description>
+    Finds the first entry in a table with the values from the given object.
+    It fills the values that were left 'null' with the values from the entry that was found.
+    The database parameter is optional. The last made connection will be used if no database is given.
+    returns a new object with the filled in values.
+  </description>
+  <examples>
+    <example>
+      <header>Fill the object with the first entry from the table 'test' where "name" is "Alan" and "lastName" is "Turing". 
+      		  It will change the value of "age" with the value that is found in the entry.
+      		  The newObject will be: {"name":"Alan","lastName":"Turing","age":55};
+      </header>
+      <code>
+	
+	var object = {"name":"Alan","lastName":"Turing","age":null};
+	var newObject = Database.getObject("test",object,database); 
+	
+      </code>
+    </example> 
+  </examples>
+  <references>
+    <reference>connect</reference>
+    <reference>storeObject</reference>
+  </references>
+  <tags>
+    getobject,object
+  </tags>
+</function>

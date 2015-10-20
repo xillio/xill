@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Iterates over all folders in a folder. If recursive is set to true all folders in sub folders will also be iterated
+        The iterator returns an object containing various pieces of information about the folder access.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Executing</header>
+            <code>
+                use File;
+                use System;
+                var iterator = File.iterateFolders("C:/Users");
+                foreach(folder in iterator) {
+                    System.print(folder);
+                }
+            </code>
+            <header>Will print</header>
+            <p>
+                INFO: {"path":"C:\\Users\\Public","canRead":1,"canWrite":1,"isAccessible":1,"parent":"C:\\Users"}
+            </p>
+        </example>
+    </examples>
+    <references>
+        <reference>iterateFiles</reference>
+    </references>
+</function>

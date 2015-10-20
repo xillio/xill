@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Creates a new Excel sheet in the given workbook with a user-defined name.
+    </description>
+    <examples>
+        <example title="Creation">
+            <header>Creating a new sheet</header>
+            <code>
+                use Excel;
+                var workbook = Excel.createWorkbook("helloworldbook");
+                var sheet = Excel.createSheet(workbook, "hellosheet");
+            </code>
+        </example>
+        <example title="Showing properties">
+            <header>Getting the properties of a sheet</header>
+            <code>
+                use System;
+                use Excel;
+                var workbook = Excel.createWorkbook("helloworldbook");
+                var sheet = Excel.createSheet(workbook, "hellosheet");
+                System.print(sheet);
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>createSheet</reference>
+        <reference>createWorkbook</reference>
+        <reference>loadWorkbook</reference>
+        <reference>save</reference>
+        <reference>System.print</reference>
+    </references>
+    <tags>
+        Excel, workbook, sheet, spreadsheet, cell, load, get
+    </tags>
+</function>

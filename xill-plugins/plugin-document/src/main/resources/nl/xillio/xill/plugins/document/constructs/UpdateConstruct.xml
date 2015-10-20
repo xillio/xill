@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+	<description>
+		Updates a document version.
+		The body should consist of a object with objects as values. Each nested object represents a decorator. 
+		Valid values for the version are "current" or a version identifier, and valid values for the section are "source" and "target".
+		Throws an exception if the given id or version does not exist, or if the section is invalid. Also throws an exception when the decorators and fields in the given body do not match
+		one-to-one with those already in the document with the given id. 
+	</description>
+	<examples>
+		<example title="Usage">
+			<header>Updating a document.</header>
+			<code>
+				use Document;
+				
+				var body = {"decorator1" : {"field1": 1, "field2": 2}, "decorator2": {"field1": 1}}
+				
+				// Given that the ID of the document is stored in the variable 'id'.
+				var doc = Document.update(id, body);
+			</code>
+			<header>Updating a specific version and section of a document.</header>
+			<code>
+				use Document;
+				
+				var body = {"decorator1" : {"field1": 1, "field2": 2}, "decorator2": {"field1": 1}}
+				
+				// Given that the ID of the document is stored in the variable 'id'.
+				var version = "2";
+				var section = "source";
+				var doc = Document.update(id, body, version, section);
+			</code>
+		</example>
+	</examples>
+	<searchTags>
+		update, database, db, udm, document
+	</searchTags>
+</function>

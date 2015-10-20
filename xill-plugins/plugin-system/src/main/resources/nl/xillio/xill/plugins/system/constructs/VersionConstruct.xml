@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Returns the current version of the language. If a required version is provided it will throw an error when an
+        older version is used.
+    </description>
+    <examples>
+        <example title="Usage">
+            <code>
+                System.version();
+                // Result: 3.0.0
+
+                System.version("3.1.0");
+                // Throws an error and outputs: Version 3.1.0 is not supported in 3.0.0
+            </code>
+        </example>
+    </examples>
+    <searchTags>
+        version, check, error
+    </searchTags>
+</function>

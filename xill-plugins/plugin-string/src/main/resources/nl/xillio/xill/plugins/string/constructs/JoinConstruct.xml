@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Receives a list, object or string value 'list' and a delimiter which defaults to an empty string.
+        In case list is a string it returns the string. Else it joins the string content with the provided delimiter.
+    </description>
+    <examples>
+        <example title="Usage">
+            <code>
+                String.join(["a", "b", "c"]);       // Result: abc
+                String.join(["a", "b", "c"], "_");  // Result: a_b_c
+            </code>
+        </example>
+    </examples>
+</function>

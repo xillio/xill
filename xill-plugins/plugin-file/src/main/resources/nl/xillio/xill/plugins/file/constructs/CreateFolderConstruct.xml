@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Creates an empty folder at the target uri if it doesn't exist.
+        Returns the absolute path to that folder
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Create a folder</header>
+            <code>
+                use File;
+                var folder = File.createFolder("newFolder");
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>saveTo</reference>
+    </references>
+</function>

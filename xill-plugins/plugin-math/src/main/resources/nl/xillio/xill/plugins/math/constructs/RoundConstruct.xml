@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Rounds the provided value to the nearest whole number.
+    </description>
+    <examples>
+        <example title="Usage">
+            <code>
+                Math.round(6) // 6
+                Math.round(3.14) // 3
+                Math.round(-3.78) // -4
+            </code>
+        </example>
+    </examples>
+</function>

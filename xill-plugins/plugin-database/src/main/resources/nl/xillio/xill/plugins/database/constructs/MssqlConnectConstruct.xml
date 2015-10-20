@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<function>
+  <description>
+    Connect to a Mssql database. Returns a connection object.
+    The host parameter wants the name of the host.
+    The default port is 3306 but can be set to a different port is necessary.
+    The database parameter wants the name of the database you want to connect to.
+    The user and pass parameter are for the username and password. Both are optional.
+    The options parameter is optional. It is used for setting mssql specific options. These can be found here:
+    http://jtds.sourceforge.net/faq.html#urlFormat
+    
+  </description>
+  <examples>
+    <example>
+      <header>Connect to the MsSQL database "testdb" with user "user" and password "pass".
+      </header>
+      <code>
+	
+	var connection = Database.mssqlConnect("localhost",3306,"testdb","user","pass");
+	
+      </code>
+    </example> 
+  </examples>
+  <references>
+    <reference>connect</reference>
+    <reference>mysqlConnect</reference>
+    <reference>oracleConnect</reference>
+    <reference>sqliteConnect</reference>
+  </references>
+  <tags>
+    mssql, connect
+  </tags>
+</function>

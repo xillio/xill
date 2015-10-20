@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Delete a file or folder.
+        Returns the absolute path to the file or folder
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Create and delete a folder:</header>
+            <code>
+                use File;
+                var folder = File.createFolder("toBeDeleted");
+                File.delete(folder);
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>createFolder</reference>
+    </references>
+    <tags>
+        write, text, new, create, append, add
+    </tags>
+</function>
