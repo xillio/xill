@@ -112,8 +112,6 @@ public class Settings {
 	/** Editor settings dialog */
 	public static String SETTINGS_EDITOR = "SettingsEditor";
 	
-	public static String EnableCodeCompletion = "EnableCodeCompletion";
-	
 	public static String DisplayIndentGuides = "DisplayIndentGuides";
 	
 	public static String FontSize = "FontSize";
@@ -121,6 +119,26 @@ public class Settings {
 	public static String AutoSaveBotBeforeRun = "AutoSaveBotBeforeRun";
 	
 	public static String HighlightSelectedWord = "HighlightSelectedWord";
+
+	public static String NewLineMode = "NewLineMode";
+
+	public static String PrintMarginColumn = "PrintMarginColumn";
+	
+	public static String ShowGutter = "ShowGutter";
+
+	public static String ShowInvisibles = "ShowInvisibles";
+
+	public static String TabSize = "TabSize";
+	
+	public static String UseSoftTabs = "UseSoftTabs";
+
+	public static String WrapText = "WrapText";
+
+	public static String WrapLimit = "WrapLimit";
+	
+	public static String ShowPrintMargin = "ShowPrintMargin";
+
+	public static String ShowLineNumbers = "ShowLineNumbers";
 
 	// =============================================================================
 	/** Editor settings dialog */

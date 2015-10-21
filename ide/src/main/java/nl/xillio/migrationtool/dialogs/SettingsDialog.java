@@ -49,8 +49,6 @@ public class SettingsDialog  extends FXMLDialog {
 	@FXML
 	private CheckBox cbrunbotwcleanconsole;
 	@FXML
-	private CheckBox cbenablecodecompletion;
-	@FXML
 	private CheckBox cbdisplayindentguides;
 	@FXML
 	private TextField tffontsize;
@@ -60,9 +58,25 @@ public class SettingsDialog  extends FXMLDialog {
 	@FXML
 	private CheckBox cbhighlightselword;
 	@FXML
-	private ComboBox cbnewlinemode;
-	
-	
+	private ComboBox<String> cbnewlinemode;
+	@FXML
+	private TextField tfprintmargincolumn;//!! validator
+	@FXML
+	private CheckBox cbshowgutter;
+	@FXML
+	private CheckBox cbshowinvisibles;
+	@FXML
+	private TextField tftabsize;//!! validator
+	@FXML
+	private CheckBox cbusesofttabs;
+	@FXML
+	private CheckBox cbwraptext;
+	@FXML
+	private TextField tfwraplimit; //!! validator
+	@FXML
+	private CheckBox cbshowprintmargin;
+	@FXML
+	private CheckBox cbshowlinenumbers;
 	
 	private SettingsHandler settings;
 	
@@ -70,12 +84,14 @@ public class SettingsDialog  extends FXMLDialog {
 		super("/fxml/dialogs/Settings.fxml");
 		setTitle("Settings");
 		this.settings = settings;
+		
+		setRangeValidator(tffontsize, tffontsizeValid, 5, 26, "px");
+		
+		ObservableList<String> options = FXCollections.observableArrayList("auto", "windows", "unix");
+		cbnewlinemode.setItems(options);
+
 		loadSettings();
-		
-		setRangeValidator(tffontsize, tffontsizeValid, 5, 50, "px");
-		
-		
-		
+
 		Platform.runLater(() -> {
 			FXController.hotkeys.getAllTextFields(getScene()).forEach(hk -> setShortcutHandler(hk));
 		});
@@ -180,10 +196,19 @@ public class SettingsDialog  extends FXMLDialog {
 		saveCheckBox(cbautosavebotbeforerun, Settings.SETTINGS_GENERAL, Settings.AutoSaveBotBeforeRun);
 		
 		// Editor
-		saveCheckBox(cbenablecodecompletion, Settings.SETTINGS_EDITOR, Settings.EnableCodeCompletion);
 		saveCheckBox(cbdisplayindentguides, Settings.SETTINGS_EDITOR, Settings.DisplayIndentGuides);
 		saveText(tffontsize, Settings.SETTINGS_EDITOR, Settings.FontSize);
 		saveCheckBox(cbhighlightselword, Settings.SETTINGS_EDITOR, Settings.HighlightSelectedWord);
+		saveComboBox(cbnewlinemode, Settings.SETTINGS_EDITOR, Settings.NewLineMode);
+		saveText(tfprintmargincolumn, Settings.SETTINGS_EDITOR, Settings.PrintMarginColumn);
+		saveCheckBox(cbshowgutter, Settings.SETTINGS_EDITOR, Settings.ShowGutter);
+		saveCheckBox(cbshowinvisibles, Settings.SETTINGS_EDITOR, Settings.ShowInvisibles);
+		saveText(tftabsize, Settings.SETTINGS_EDITOR, Settings.TabSize);
+		saveCheckBox(cbusesofttabs, Settings.SETTINGS_EDITOR, Settings.UseSoftTabs);
+		saveCheckBox(cbwraptext, Settings.SETTINGS_EDITOR, Settings.WrapText);
+		saveText(tfwraplimit, Settings.SETTINGS_EDITOR, Settings.WrapLimit);
+		saveCheckBox(cbshowprintmargin, Settings.SETTINGS_EDITOR, Settings.ShowPrintMargin);
+		saveCheckBox(cbshowlinenumbers, Settings.SETTINGS_EDITOR, Settings.ShowLineNumbers);
 
 		// Key bindings
 		FXController.hotkeys.saveSettingsFromDialog(getScene(), settings);
@@ -200,10 +225,19 @@ public class SettingsDialog  extends FXMLDialog {
 		setCheckBox(cbautosavebotbeforerun, Settings.SETTINGS_GENERAL, Settings.AutoSaveBotBeforeRun);
 
 		// Editor
-		setCheckBox(cbenablecodecompletion, Settings.SETTINGS_EDITOR, Settings.EnableCodeCompletion);
 		setCheckBox(cbdisplayindentguides, Settings.SETTINGS_EDITOR, Settings.DisplayIndentGuides);
 		setText(tffontsize, Settings.SETTINGS_EDITOR, Settings.FontSize);
 		setCheckBox(cbhighlightselword, Settings.SETTINGS_EDITOR, Settings.HighlightSelectedWord);
+		setComboBox(cbnewlinemode, Settings.SETTINGS_EDITOR, Settings.NewLineMode);
+		setText(tfprintmargincolumn, Settings.SETTINGS_EDITOR, Settings.PrintMarginColumn);
+		setCheckBox(cbshowgutter, Settings.SETTINGS_EDITOR, Settings.ShowGutter);
+		setCheckBox(cbshowinvisibles, Settings.SETTINGS_EDITOR, Settings.ShowInvisibles);
+		setText(tftabsize, Settings.SETTINGS_EDITOR, Settings.TabSize);
+		setCheckBox(cbusesofttabs, Settings.SETTINGS_EDITOR, Settings.UseSoftTabs);
+		setCheckBox(cbwraptext, Settings.SETTINGS_EDITOR, Settings.WrapText);
+		setText(tfwraplimit, Settings.SETTINGS_EDITOR, Settings.WrapLimit);
+		setCheckBox(cbshowprintmargin, Settings.SETTINGS_EDITOR, Settings.ShowPrintMargin);
+		setCheckBox(cbshowlinenumbers, Settings.SETTINGS_EDITOR, Settings.ShowLineNumbers);
 		
 		// Key bindings
 		Platform.runLater(() -> {
@@ -215,8 +249,17 @@ public class SettingsDialog  extends FXMLDialog {
 		return apply;
 	}
 	
+	private void setComboBox(final ComboBox<String> comboBox, final String category, final String keyValue) {
+		String value = settings.simple().get(category, keyValue); 
+		comboBox.getSelectionModel().select(value);
+	}
+	
+	private void saveComboBox(final ComboBox<String> comboBox, final String category, final String keyValue) {
+		settings.simple().save(category, keyValue, comboBox.getSelectionModel().getSelectedItem()); 
+	}	
+	
 	private void setCheckBox(final CheckBox checkBox, final String category, final String keyValue) {
-		checkBox.setSelected(new Boolean(this.settings.simple().get(category, keyValue)));
+		checkBox.setSelected(this.settings.simple().getBoolean(category, keyValue));
 	}
 	
 	private void setText(final TextField field, final String category, final String keyValue) {
@@ -228,7 +271,7 @@ public class SettingsDialog  extends FXMLDialog {
 	}
 	
 	private void saveCheckBox(final CheckBox checkBox, final String category, final String keyValue) {
-		this.settings.simple().save(category, keyValue, new Boolean(checkBox.isSelected()).toString());
+		this.settings.simple().save(category, keyValue, checkBox.isSelected());
 	}
 	
 	@FXML
@@ -244,10 +287,19 @@ public class SettingsDialog  extends FXMLDialog {
 		settings.simple().register(Settings.SETTINGS_GENERAL, Settings.AutoSaveBotBeforeRun, "true", "Save the robot before it's run");
 		
 		// Editor
-		settings.simple().register(Settings.SETTINGS_EDITOR, Settings.EnableCodeCompletion, "true", "Enable the code completion");
 		settings.simple().register(Settings.SETTINGS_EDITOR, Settings.DisplayIndentGuides, "false", "Displays indent guides");
 		settings.simple().register(Settings.SETTINGS_EDITOR, Settings.FontSize, "12px", "The editor's font size");
 		settings.simple().register(Settings.SETTINGS_EDITOR, Settings.HighlightSelectedWord, "true", "Highlight selected word in editor");
+		settings.simple().register(Settings.SETTINGS_EDITOR, Settings.NewLineMode, "auto", "New-line mode in editor");
+		settings.simple().register(Settings.SETTINGS_EDITOR, Settings.PrintMarginColumn, "80", "Set print margin column");
+		settings.simple().register(Settings.SETTINGS_EDITOR, Settings.ShowGutter, "true", "Show editor gutter");
+		settings.simple().register(Settings.SETTINGS_EDITOR, Settings.ShowInvisibles, "false", "Show invisibles in editor");
+		settings.simple().register(Settings.SETTINGS_EDITOR, Settings.TabSize, "5", "Tab size in editor");
+		settings.simple().register(Settings.SETTINGS_EDITOR, Settings.UseSoftTabs, "true", "Use soft tabs in editor");
+		settings.simple().register(Settings.SETTINGS_EDITOR, Settings.WrapText, "false", "Wrap text in editor");
+		settings.simple().register(Settings.SETTINGS_EDITOR, Settings.WrapLimit, "60", "Wrap limit in editor");
+		settings.simple().register(Settings.SETTINGS_EDITOR, Settings.ShowPrintMargin, "false", "Show print margin in editor");
+		settings.simple().register(Settings.SETTINGS_EDITOR, Settings.ShowLineNumbers, "true", "Show line numbers in editor");
 		
 		// Key bindings
 		FXController.hotkeys.registerHotkeysSettings(settings);

@@ -82,15 +82,6 @@
 																	<children>
 																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" layoutX="10.0" layoutY="10.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
 																			<children>
-																				<Label prefWidth="200.0" text="Enable code completion" />
-																				<CheckBox fx:id="cbenablecodecompletion" mnemonicParsing="false" />
-																			</children>
-																			<padding>
-																				<Insets />
-																			</padding>
-																		</HBox>
-																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" layoutX="10.0" layoutY="10.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
-																			<children>
 																				<Label prefWidth="200.0" text="Display indent guides" />
 																				<CheckBox fx:id="cbdisplayindentguides" mnemonicParsing="false" />
 																			</children>
@@ -119,25 +110,25 @@
 																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
 																			<children>
 																				<Label prefWidth="200.0" text="New line mode" />
-																				<ComboBox prefWidth="250.0" HBox.hgrow="ALWAYS" />
+																				<ComboBox fx:id="cbnewlinemode" prefWidth="250.0" HBox.hgrow="ALWAYS" />
 																			</children>
 																			<padding>
 																				<Insets />
 																			</padding>
 																		</HBox>
+                                                      <HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+                                                         <children>
+                                                            <Label prefWidth="200.0" text="Show print margin" />
+                                                            <CheckBox fx:id="cbshowprintmargin" mnemonicParsing="false" />
+                                                         </children>
+                                                         <padding>
+                                                            <Insets />
+                                                         </padding>
+                                                      </HBox>
 																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
 																			<children>
 																				<Label prefWidth="200.0" text="Print margin column" />
-																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="100" HBox.hgrow="ALWAYS" />
-																			</children>
-																			<padding>
-																				<Insets />
-																			</padding>
-																		</HBox>
-																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" layoutX="10.0" layoutY="10.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
-																			<children>
-																				<Label prefWidth="200.0" text="Show fold widgets" />
-																				<CheckBox mnemonicParsing="false" />
+																				<TextField fx:id="tfprintmargincolumn" alignment="TOP_LEFT" depthTest="INHERIT" promptText="100" HBox.hgrow="ALWAYS" />
 																			</children>
 																			<padding>
 																				<Insets />
@@ -146,25 +137,25 @@
 																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" layoutX="10.0" layoutY="10.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
 																			<children>
 																				<Label prefWidth="200.0" text="Show gutter" />
-																				<CheckBox mnemonicParsing="false" />
+																				<CheckBox fx:id="cbshowgutter" mnemonicParsing="false" />
 																			</children>
 																			<padding>
 																				<Insets />
 																			</padding>
 																		</HBox>
+                                                      <HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+                                                         <children>
+                                                            <Label prefWidth="200.0" text="Show line numbers" />
+                                                            <CheckBox fx:id="cbshowlinenumbers" mnemonicParsing="false" />
+                                                         </children>
+                                                         <padding>
+                                                            <Insets />
+                                                         </padding>
+                                                      </HBox>
 																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" layoutX="10.0" layoutY="10.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
 																			<children>
 																				<Label prefWidth="200.0" text="Show invisibles" />
-																				<CheckBox mnemonicParsing="false" />
-																			</children>
-																			<padding>
-																				<Insets />
-																			</padding>
-																		</HBox>
-																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" layoutX="10.0" layoutY="10.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
-																			<children>
-																				<Label prefWidth="200.0" text="Show print margin" />
-																				<CheckBox mnemonicParsing="false" />
+																				<CheckBox fx:id="cbshowinvisibles" mnemonicParsing="false" />
 																			</children>
 																			<padding>
 																				<Insets />
@@ -173,7 +164,7 @@
 																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
 																			<children>
 																				<Label prefWidth="200.0" text="Tab size" />
-																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="4" HBox.hgrow="ALWAYS" />
+																				<TextField fx:id="tftabsize" alignment="TOP_LEFT" depthTest="INHERIT" promptText="4" HBox.hgrow="ALWAYS" />
 																			</children>
 																			<padding>
 																				<Insets />
@@ -182,7 +173,7 @@
 																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" layoutX="10.0" layoutY="10.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
 																			<children>
 																				<Label prefWidth="200.0" text="Use soft tabs" />
-																				<CheckBox mnemonicParsing="false" />
+																				<CheckBox fx:id="cbusesofttabs" mnemonicParsing="false" />
 																			</children>
 																			<padding>
 																				<Insets />
@@ -191,7 +182,7 @@
 																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" layoutX="10.0" layoutY="10.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
 																			<children>
 																				<Label prefWidth="200.0" text="Wrap text" />
-																				<CheckBox mnemonicParsing="false" />
+																				<CheckBox fx:id="cbwraptext" mnemonicParsing="false" />
 																			</children>
 																			<padding>
 																				<Insets />
@@ -200,7 +191,7 @@
 																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
 																			<children>
 																				<Label prefWidth="200.0" text="Wrap limit" />
-																				<TextField alignment="TOP_LEFT" depthTest="INHERIT" promptText="120" HBox.hgrow="ALWAYS" />
+																				<TextField fx:id="tfwraplimit" alignment="TOP_LEFT" depthTest="INHERIT" promptText="120" HBox.hgrow="ALWAYS" />
 																			</children>
 																			<padding>
 																				<Insets />
@@ -409,6 +400,20 @@
                                                          <children>
                                                             <Label prefWidth="200.0" text="Reset zoom" />
                                                             <TextField fx:id="tfresetzoom" alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+                                                         </children>
+                                                         <padding>
+                                                            <Insets />
+                                                         </padding>
+                                                      </HBox>
+                                                      <HBox styleClass="hbxSettingsHeader">
+                                                         <children>
+                                                            <Label styleClass="lblSettingsHeader" text="Other" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+                                                         <children>
+                                                            <Label prefWidth="200.0" text="Open settings dialog" />
+                                                            <TextField fx:id="tfopensettings" alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
                                                          </children>
                                                          <padding>
                                                             <Insets />

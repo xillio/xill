@@ -493,15 +493,44 @@ public class FXController implements Initializable, EventHandler<Event> {
 		return false;
 	}
 
+	private String formatEditorOptionJS(final String optionJS, final String keyValue) {
+		return String.format("%1$s: \"%2$s\",\n", optionJS, settings.simple().get(Settings.SETTINGS_EDITOR, keyValue));
+	}
+
+	private String formatEditorOptionJSBoolean(final String optionJS, final String keyValue) {
+		return String.format("%1$s: %2$s,\n", optionJS, new Boolean(settings.simple().getBoolean(Settings.SETTINGS_EDITOR, keyValue)).toString());
+	}
+
 	public String createEditorOptionsJSCode() {
-		String jsCode = "var editor = contenttools.getAce();\n";
+		String jsCode = "var editor = contenttools.getAce();\neditor.setOptions({\n";
+		String jsSettings = "";
 		
 		String s = settings.simple().get(Settings.SETTINGS_EDITOR, Settings.FontSize);
 		if (s.endsWith("px")) {
 			s = s.substring(0, s.length()-2);
 		}
-		//jsCode[0] += String.format("editor.setFontSize(%1$s);\n", s);
-		jsCode += String.format("editor.setOptions({fontSize: \"%1$spt\"});\n", s);
+		jsSettings += String.format("fontSize: \"%1$spt\",\n", s);
+
+		jsSettings += formatEditorOptionJSBoolean("displayIndentGuides", Settings.DisplayIndentGuides);
+		jsSettings += formatEditorOptionJS("newLineMode", Settings.NewLineMode);
+		jsSettings += formatEditorOptionJSBoolean("showPrintMargin", Settings.ShowPrintMargin);
+		jsSettings += formatEditorOptionJS("printMarginColumn", Settings.PrintMarginColumn);
+		jsSettings += formatEditorOptionJSBoolean("showGutter", Settings.ShowGutter);
+		jsSettings += formatEditorOptionJSBoolean("showInvisibles", Settings.ShowInvisibles);
+		jsSettings += formatEditorOptionJS("tabSize", Settings.TabSize);
+		jsSettings += formatEditorOptionJSBoolean("useSoftTabs", Settings.UseSoftTabs);
+		jsSettings += formatEditorOptionJSBoolean("wrap", Settings.WrapText);
+		jsSettings += formatEditorOptionJSBoolean("showLineNumbers", Settings.ShowLineNumbers);
+
+		if (jsSettings.endsWith(",\n")) {
+			jsSettings = jsSettings.substring(0,  jsSettings.length()-2); 
+		}
+		
+		jsCode += jsSettings;
+		jsCode += "\n});";
+		
+		jsCode += String.format("editor.session.setWrapLimit(%1$s);\n", settings.simple().get(Settings.SETTINGS_EDITOR, Settings.WrapLimit));
+		jsCode += String.format("editor.setHighlightSelectedWord(%1$s);\n", new Boolean(settings.simple().getBoolean(Settings.SETTINGS_EDITOR, Settings.HighlightSelectedWord)));
 		
 		return jsCode;
 	}
