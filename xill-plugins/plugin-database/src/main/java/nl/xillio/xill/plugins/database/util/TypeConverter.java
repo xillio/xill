@@ -128,8 +128,6 @@ public enum TypeConverter {
 	 * 
 	 * @param o
 	 * @return
-	 * @throws SQLException
-	 *         When a database error occurs
 	 * @throws ConversionException
 	 *         When a type cannot be converted
 	 */
@@ -140,7 +138,6 @@ public enum TypeConverter {
 	 * 
 	 * @param o
 	 * @return An object that can be passed to {@link MetaExpression#parseObject(Object)}
-	 * @throws SQLException
 	 * @throws ConversionException
 	 */
 	public static Object convertJDBCType(Object o) throws ConversionException {

@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
@@ -31,6 +35,7 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 	private static final Manifest MANIFEST;
 
 	static {
+		Logger logger = LogManager.getLogger();
 		try {
 			String path = Loader.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
 			MANIFEST = new JarFile(path).getManifest();
@@ -39,10 +44,17 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 		}
 
 		String shortVersion = Loader.class.getPackage().getImplementationVersion() == null ? "dev" : Loader.class.getPackage().getImplementationVersion();
-		String date = MANIFEST.getMainAttributes().getValue("Build-Date");
+		String date = MANIFEST.getMainAttributes().getValue("Created-On");
+		try {
+			Date parsedDate = new SimpleDateFormat("E MMM dd hh:mm:ss zzz yyyy").parse(date);
+			date = DateFormat.getDateInstance().format(parsedDate);
+		} catch (ParseException e) {
+			logger.error("Failed to parse date from manifest", e);
+		}
 		LONG_VERSION = shortVersion + ", " + date;
 		SHORT_VERSION = shortVersion;
 		VERSION_DATE = date;
+		LOGGER = logger;
 	}
 	/**
 	 * The GUI's current official version.
@@ -59,7 +71,7 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 	 */
 	public static final String LONG_VERSION;
 	public static final String APP_TITLE = Loader.class.getPackage().getImplementationTitle();
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER;
 
 	private static Xill xill;
 	private static XillInitializer initializer;
@@ -123,7 +135,7 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 	}
 
 	private void checkJRE() throws IOException {
-		String expectedVersion = MANIFEST.getMainAttributes().getValue("Build-Java-Version");
+		String expectedVersion = MANIFEST.getMainAttributes().getValue("Created-By");
 		if(expectedVersion == null) {
 			throw new IOException("No java version was found. This is not a build.");
 		}

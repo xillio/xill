@@ -17,7 +17,6 @@ public interface DocGen {
 	 * Create a {@link DocumentationParser}
 	 *
 	 * @return the parser
-	 * @throws ParsingException if the parser could not be initialized
 	 */
 	DocumentationParser getParser();
 
