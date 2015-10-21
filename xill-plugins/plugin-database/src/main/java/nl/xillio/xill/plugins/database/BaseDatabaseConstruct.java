@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 import nl.xillio.xill.api.components.RobotID;
@@ -28,7 +29,8 @@ public abstract class BaseDatabaseConstruct extends Construct {
 
 	private static final Logger log = LogManager.getLogger();
 
-	private static LinkedHashMap<RobotID, ConnectionMetadata> lastConnections = new LinkedHashMap<>();
+	private static List<ConnectionMetadata> Connections = new ArrayList<>();
+
 
 	@Inject
 	protected DatabaseServiceFactory factory;
@@ -50,7 +52,7 @@ public abstract class BaseDatabaseConstruct extends Construct {
 	 * Add hook to close all connections when runtime terminates
 	 */
 	public static void registerShutdownHook() {
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> lastConnections.forEach((k, v) -> closeConnection(v.getConnection()))));
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> Connections.forEach(c -> closeConnection(c.getConnection()))));
 	}
 
 	/**
@@ -74,8 +76,8 @@ public abstract class BaseDatabaseConstruct extends Construct {
 	 * @param connectionMetadata
 	 *        The connection.
 	 */
-	public static void setLastConnection(RobotID id, ConnectionMetadata connectionMetadata) {
-		lastConnections.put(id, connectionMetadata);
+	public static void setLastConnection(ConnectionMetadata connectionMetadata) {
+		Connections.add(0, connectionMetadata); //add lastconnection to start of the list
 	}
 
 	/**
@@ -86,21 +88,21 @@ public abstract class BaseDatabaseConstruct extends Construct {
 	 * @return
 	 *         The last used ConnectionMetadata.
 	 */
-	public static ConnectionMetadata getLastConnection(RobotID id) {
+	public static ConnectionMetadata getLastConnection() {
 		// Determine that there is a connection that can be used
-		if (!lastConnections.containsKey(id)) {
+		if (Connections.isEmpty()) {
 			throw new RobotRuntimeException("There is no connection that can be used, connect to a database first");
 		}
 
 		// Determine that this connection is usable
-		ConnectionMetadata metadata = lastConnections.get(id);
+		ConnectionMetadata metadata = Connections.get(0);
 		try {
 			if (metadata.getConnection().isClosed()) {
-				lastConnections.remove(id);
+				Connections.remove(0);
 				throw new RobotRuntimeException("The last connection was closed, reconnect to a database");
 			}
 		} catch (SQLException e) {
-			lastConnections.remove(id);
+			Connections.remove(0);
 			throw new RobotRuntimeException("The last connection can not be used: " + e.getMessage(), e);
 		}
 		
@@ -111,17 +113,16 @@ public abstract class BaseDatabaseConstruct extends Construct {
 	 * Check for validity of all lastConnections and remove the invalid ones
 	 */
 	public static void cleanLastConnections() {
-		for (Entry<RobotID, ConnectionMetadata> entry : new ArrayList<>(lastConnections.entrySet())) {
-			Connection connection = entry.getValue().getConnection();
-			RobotID id = entry.getKey();
+		for (int i = 0; i < Connections.size(); i++){
+			Connection connection = Connections.get(i).getConnection();
 			try {
 				// Try to find out if a connection is still valid, don't bother if this takes too long
 				if (connection.isClosed() || !connection.isValid(VALIDATION_TIMEOUT)) {
-					lastConnections.remove(id);
+					Connections.remove(i);
 				}
 			} catch (SQLException e) {
 				// When an operation on the connection fails also assume it is invalid
-				lastConnections.remove(id);
+				Connections.remove(i);
 			}
 		}
 	}

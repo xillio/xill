@@ -62,7 +62,7 @@ public class ConnectConstructTest extends ConstructTest {
 		when((factory).getService("databaseType")).thenReturn(dbService);
 		ConnectionMetadata metadata = mock(ConnectionMetadata.class);
 
-		BaseDatabaseConstruct.setLastConnection(robotID, metadata);
+		BaseDatabaseConstruct.setLastConnection(metadata);
 
 		mock(BaseDatabaseConstruct.class);
 

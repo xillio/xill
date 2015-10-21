@@ -46,7 +46,7 @@ public class StoreObjectConstruct extends BaseDatabaseConstruct {
 		ConnectionMetadata metaData;
 		// if no database is given use the last made connection of this robot.
 		if (args[4].equals(NULL)) {
-			metaData = getLastConnection(robotID);
+			metaData = getLastConnection();
 		} else {
 			metaData = assertMeta(args[4], "database", ConnectionMetadata.class, "variable with a connection"); // check whether the given MetaExpression has the right metaData.
 		}
