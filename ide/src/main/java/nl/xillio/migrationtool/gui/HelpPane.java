@@ -6,14 +6,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
@@ -32,6 +33,9 @@ public class HelpPane extends AnchorPane {
 	@FXML
 	private HelpSearchBar helpSearchBar;
 
+	// the logger
+	private static final Logger LOGGER = LogManager.getLogger();
+
 	private final HighlightSettings highlightSettings;
 
 	/**
@@ -43,12 +47,11 @@ public class HelpPane extends AnchorPane {
 		loader.setClassLoader(getClass().getClassLoader());
 		loader.setController(this);
 
-		
 		try {
 			Node ui = loader.load();
 			getChildren().add(ui);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		}
 		helpSearchBar.setHelpPane(this);
 
@@ -63,7 +66,7 @@ public class HelpPane extends AnchorPane {
 		highlightSettings = new HighlightSettings();
 		highlightSettings.addKeywords(Loader.getXill().getReservedKeywords());
 		highlightSettings.addBuiltins(Loader.getInitializer().getPlugins().stream()
-			.map((p -> p.getName()))
+			.map(p -> p.getName())
 			.collect(Collectors.toList()));
 
 		webFunctionDoc.getEngine().documentProperty().addListener((observable, o, n) -> {
@@ -74,8 +77,8 @@ public class HelpPane extends AnchorPane {
 			webFunctionDoc.getEngine().executeScript("if (typeof loadEditors !== 'undefined') {loadEditors()}");
 
 		});
-		
-		this.heightProperty().addListener((ChangeListener<Number>) (observable, oldValue, newValue) -> {
+
+		heightProperty().addListener((ChangeListener<Number>) (observable, oldValue, newValue) -> {
 			helpSearchBar.handleHeightChange();
 		});
 
@@ -94,7 +97,7 @@ public class HelpPane extends AnchorPane {
 		try {
 			this.display(new File("helpfiles", "index.html").toURI().toURL());
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 

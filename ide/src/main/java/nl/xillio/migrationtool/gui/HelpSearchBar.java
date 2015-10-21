@@ -23,8 +23,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Window;
 import nl.xillio.xill.docgen.DocumentationSearcher;
-import java.awt.Component;
-import java.awt.event.*;
 
 /**
  * A search bar, with the defined options and behavior.
@@ -74,8 +72,7 @@ public class HelpSearchBar extends AnchorPane {
 
 		// Listen to search changes
 		searchField.textProperty().addListener(this::searchTextChanged);
-	
-		
+
 		// Close on focus lost
 		searchField.focusedProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
 			if (newValue) {
@@ -107,7 +104,7 @@ public class HelpSearchBar extends AnchorPane {
 
 	/**
 	 * Tries to display the index of a given package name.
-	 * 
+	 *
 	 * @param packet
 	 *        The name of the package we try to display.
 	 */
@@ -116,13 +113,13 @@ public class HelpSearchBar extends AnchorPane {
 			helpPane.display(packet, "_index");
 			cleanup();
 		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 
 	/**
 	 * Handles the clicking mechanism.
-	 * 
+	 *
 	 * @param mouseEvent
 	 *        The mouseEvent.
 	 */
@@ -197,9 +194,9 @@ public class HelpSearchBar extends AnchorPane {
 
 		showResults();
 	}
-	
-	public void handleHeightChange(){
-		if(hoverToolTip.isShowing()){
+
+	public void handleHeightChange() {
+		if (hoverToolTip.isShowing()) {
 			showResults();
 		}
 	}
