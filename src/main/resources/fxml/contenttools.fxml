@@ -32,7 +32,7 @@
 										<Pane styleClass="icon" />
 									</graphic>
 									<tooltip>
-										<Tooltip text="New file (Ctrl-N)" />
+										<Tooltip text="New file" />
 									</tooltip>
 								</Button>
 								<Button fx:id="btnOpenFile" mnemonicParsing="false" onAction="#buttonOpenFile" styleClass="iconButton" text="Open file">
@@ -40,7 +40,7 @@
 										<Pane styleClass="icon" />
 									</graphic>
 									<tooltip>
-										<Tooltip text="Open file (Ctrl-O)" />
+										<Tooltip text="Open file" />
 									</tooltip>
 								</Button>
 								<Button fx:id="btnSave" mnemonicParsing="false" onAction="#buttonSave" styleClass="iconButton" text="Save">
@@ -48,7 +48,7 @@
 										<Pane styleClass="icon" />
 									</graphic>
 									<tooltip>
-										<Tooltip text="Save (Ctrl-S)" />
+										<Tooltip text="Save" />
 									</tooltip>
 								</Button>
 								<Button fx:id="btnSaveAs" mnemonicParsing="false" onAction="#buttonSaveAs" styleClass="iconButton" text="Save as">
@@ -56,7 +56,7 @@
 										<Pane styleClass="icon" />
 									</graphic>
 									<tooltip>
-										<Tooltip text="Save as (Ctrl-Alt-S)" />
+										<Tooltip text="Save as" />
 									</tooltip>
 								</Button>
 								<Button fx:id="btnSaveAll" mnemonicParsing="false" onAction="#buttonSaveAll" styleClass="iconButton" text="Save all">
@@ -64,7 +64,7 @@
 										<Pane styleClass="icon" />
 									</graphic>
 									<tooltip>
-										<Tooltip text="Save all (Ctrl-Shift-S)" />
+										<Tooltip text="Save all" />
 									</tooltip>
 								</Button>
                         <Button fx:id="btnSettings" mnemonicParsing="false" onAction="#buttonSettings" styleClass="iconButton" text="Settings">
@@ -72,7 +72,7 @@
                               <Pane styleClass="icon" />
                            </graphic>
                            <tooltip>
-                              <Tooltip text="Settings (Ctrl-Shift-P)" />
+                              <Tooltip text="Settings" />
                            </tooltip>
                         </Button>
 							</items>

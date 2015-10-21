@@ -489,8 +489,7 @@
 }
 
 	.label.lblSettingsHeader {
-		-fx-font-weight: bold;
-		/* -fx-text-fill: -fx-pane-border-color; */
+    -fx-font-family: "Glober xBold";
 	}
 
 .tpnSettings.tab-pane {
@@ -522,7 +521,7 @@
 		-fx-background-color: -fx-accent, #ffffff;
 		-fx-background-insets: 0, 0 0 3px 0;
 		-fx-background-radius: 0;
-		-fx-font-weight: bold;
+    -fx-font-family: "Glober xBold";
 	}
 	.tpnSettings .tab-content-area,
 	.tpnSettings.tab-pane:focused .tab-content-area {

@@ -1,8 +1,11 @@
 package nl.xillio.migrationtool.dialogs;
 
+import java.io.File;
 import java.util.regex.Pattern;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -13,6 +16,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import nl.xillio.migrationtool.gui.FXController;
 import nl.xillio.xill.util.settings.Settings;
 import nl.xillio.xill.util.settings.SettingsHandler;
@@ -20,6 +24,8 @@ import nl.xillio.xill.util.settings.SettingsHandler;
 
 public class SettingsDialog  extends FXMLDialog {
 
+	private boolean apply = false;
+	
 	private class Valid {
 		private boolean valid = true;
 		private String value = "";
@@ -53,7 +59,8 @@ public class SettingsDialog  extends FXMLDialog {
 	private CheckBox cbautosavebotbeforerun;
 	@FXML
 	private CheckBox cbhighlightselword;
-	
+	@FXML
+	private ComboBox cbnewlinemode;
 	
 	
 	
@@ -66,6 +73,8 @@ public class SettingsDialog  extends FXMLDialog {
 		loadSettings();
 		
 		setRangeValidator(tffontsize, tffontsizeValid, 5, 50, "px");
+		
+		
 		
 		Platform.runLater(() -> {
 			FXController.hotkeys.getAllTextFields(getScene()).forEach(hk -> setShortcutHandler(hk));
@@ -138,7 +147,7 @@ public class SettingsDialog  extends FXMLDialog {
 	private void okayBtnPressed(final ActionEvent event) {
 		try {
 			validate();
-			apply(); // It applies new settings to be effective immediately
+			apply = true;
 		} catch (Exception e) {
 			Alert alert = new Alert(AlertType.ERROR, e.getMessage(), ButtonType.OK);
 			alert.showAndWait();
@@ -151,6 +160,13 @@ public class SettingsDialog  extends FXMLDialog {
 	private void validate() throws Exception {
 		if (!this.tffontsizeValid.isValid()) {
 			throw new Exception("Invalid font size value!");
+		}
+		
+		if (!tfprojectfolder.getText().isEmpty()) {
+			File file = new File(tfprojectfolder.getText());
+			if ((file == null) || (!file.isDirectory())) {
+				throw new Exception("Invalid default project folder!");
+			}
 		}
 	}
 	
@@ -195,9 +211,8 @@ public class SettingsDialog  extends FXMLDialog {
 		});
 	}
 
-	private void apply() {
-		// Key bindings
-		FXController.hotkeys.setHotkeysFromDialog(getScene());
+	public boolean shouldApply() {
+		return apply;
 	}
 	
 	private void setCheckBox(final CheckBox checkBox, final String category, final String keyValue) {

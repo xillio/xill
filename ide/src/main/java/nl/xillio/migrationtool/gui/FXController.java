@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
  */
 public class FXController implements Initializable, EventHandler<Event> {
 	private static final Logger log = LogManager.getLogger(FXController.class);
-	private static final SettingsHandler settings = SettingsHandler.getSettingsHandler();
+	public static final SettingsHandler settings = SettingsHandler.getSettingsHandler();
 	public static final HotkeysHandler hotkeys = new HotkeysHandler();
 
 	private static final File DEFAULT_OPEN_BOT = new File("samples/Hello-Xillio." + Xill.FILE_EXTENSION);
@@ -386,6 +386,11 @@ public class FXController implements Initializable, EventHandler<Event> {
 		if (!btnSettings.isDisabled()) {
 			SettingsDialog dlg = new SettingsDialog(settings); 
 			dlg.showAndWait();
+			if (dlg.shouldApply()) {
+				// Apply all settings immediately
+				hotkeys.setHotkeysFromSettings(settings); // Apply new hotkeys settings 
+				getTabs().forEach(tab -> ((RobotTab)tab).getEditorPane().setEditorOptions(createEditorOptionsJSCode())); // Apply editor settings
+			}
 		}
 	}
 
@@ -488,6 +493,19 @@ public class FXController implements Initializable, EventHandler<Event> {
 		return false;
 	}
 
+	public String createEditorOptionsJSCode() {
+		String jsCode = "var editor = contenttools.getAce();\n";
+		
+		String s = settings.simple().get(Settings.SETTINGS_EDITOR, Settings.FontSize);
+		if (s.endsWith("px")) {
+			s = s.substring(0, s.length()-2);
+		}
+		//jsCode[0] += String.format("editor.setFontSize(%1$s);\n", s);
+		jsCode += String.format("editor.setOptions({fontSize: \"%1$spt\"});\n", s);
+		
+		return jsCode;
+	}
+	
 	private void verifyLicense() {
 		//TODO Enable License Check
 		/*License license = new License(settings.simple().get(Settings.LICENSE, Settings.License));

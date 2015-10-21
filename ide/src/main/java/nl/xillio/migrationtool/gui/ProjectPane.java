@@ -119,7 +119,9 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 
 	@FXML
 	private void newProjectButtonPressed() {
-		new NewProjectDialog(this).show();
+		NewProjectDialog dlg = new NewProjectDialog(this);
+		dlg.setProjectFolder(FXController.settings.simple().get(Settings.SETTINGS_GENERAL, Settings.DefaultProjectLocation));
+		dlg.showAndWait();
 	}
 
 	@FXML

@@ -49,6 +49,7 @@ import nl.xillio.migrationtool.elasticconsole.LogEntry;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.preview.Searchable;
 import nl.xillio.xill.util.HotkeysHandler.Hotkeys;
+import nl.xillio.xill.util.settings.Settings;
 
 import com.sun.javafx.scene.control.behavior.CellBehaviorBase;
 
@@ -276,7 +277,6 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 			}
 
 			ESConsoleClient.SearchFilter filter = ESConsoleClient.getInstance().createSearchFilter(searchNeedle, this.searchRegExp, this.filters);
-			;
 
 			this.entriesCount = ESConsoleClient.getInstance().countFilteredEntries(getRobotID().toString(), filter);
 
@@ -568,7 +568,9 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 	@Override
 	public void initialize(final RobotTab tab) {
 		this.tab = tab;
-
+		if (new Boolean(FXController.settings.simple().get(Settings.SETTINGS_GENERAL, Settings.OpenBotWithCleanConsole)).booleanValue()) {
+			ESConsoleClient.getInstance().clearLog(tab.getProcessor().getRobotID().toString());
+		}
 		this.tab.getProcessor().getDebugger().getOnRobotStart().addListener(start -> updateLog(Scroll.TOTALEND, false));
 		ESConsoleClient.getLogEvent(tab.getProcessor().getRobotID()).addListener(msg -> updateTimeline.play());
 	}

@@ -2,6 +2,7 @@ package nl.xillio.migrationtool.gui;
 
 import java.io.IOException;
 
+import javafx.application.Platform;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -137,7 +138,7 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 		});
 
 		editor.loadEditor();
-
+		editor.setOptions(tab.getGlobalController().createEditorOptionsJSCode());
 		ESConsoleClient.getLogEvent(tab.getProcessor().getRobotID()).addListener(this::onLogMessage);
 	}
 
@@ -207,6 +208,10 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 		}
 	}
 
+	public void setEditorOptions(final String jsCode) {
+		Platform.runLater(() -> {editor.setOptions(jsCode);});
+	}
+	
 	/**
 	 * Returns the editor.
 	 *
