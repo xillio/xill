@@ -70,7 +70,7 @@ public class XillUDMServiceImpl implements XillUDMService {
 		try (UDMService udmService = connect()) {
 			// Build the document.
 			DocumentBuilder builder = udmService.create();
-			builder.contentType().name(contentType);
+			builder.contentType(contentType);
 			conversionService.mapToUdm(body, builder.source().current().version(versionId));
 			conversionService.mapToUdm(body, builder.target().current().version(versionId));
 
