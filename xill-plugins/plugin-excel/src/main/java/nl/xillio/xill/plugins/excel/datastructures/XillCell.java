@@ -27,6 +27,7 @@ public class XillCell {
 	 *
 	 *
 	 * @param cell an Apache POI {@link Cell} object
+     * @param sheet the parent {@link XillSheet} of this cell
 	 */
 	public XillCell(Cell cell, XillSheet sheet) {
 
