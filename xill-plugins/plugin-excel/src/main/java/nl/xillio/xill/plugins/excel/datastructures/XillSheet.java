@@ -25,6 +25,7 @@ public class XillSheet implements MetadataExpression {
 	 *
 	 * @param sheet    an Apache POI {@link Sheet} object
 	 * @param readonly boolean representing if the sheet's workbook is read-only
+     * @param workbook the parent {@link XillWorkbook} of this sheet
 	 */
 	public XillSheet(Sheet sheet, boolean readonly, XillWorkbook workbook) {
 		this.readonly = readonly;
@@ -196,6 +197,12 @@ public class XillSheet implements MetadataExpression {
 
 	}
 
+    /**
+     * Sets the value of the cell.
+     *
+     * @param cellRef reference to the cell which should be changed
+     * @param value   {@link ZonedDateTime} value which should be put in the cell
+     */
     public void setCellValue(XillCellRef cellRef, ZonedDateTime value){
         getCell(cellRef).setCellValue(value);
         calculateRowLength();

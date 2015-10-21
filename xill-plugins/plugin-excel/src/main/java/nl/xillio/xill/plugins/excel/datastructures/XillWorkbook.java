@@ -46,6 +46,10 @@ public class XillWorkbook implements MetadataExpression {
 			readonly = false;
 	}
 
+    /**
+     * Get this workbook's cell style for date formatting (no time)
+     * @return a {@link CellStyle} for date formatting
+     */
     public CellStyle getDateCellStyle(){
         if(dateCellStyle == null){
             CreationHelper creationHelper = workbook.getCreationHelper();
@@ -55,6 +59,10 @@ public class XillWorkbook implements MetadataExpression {
         return dateCellStyle;
     }
 
+    /**
+     * Get the workbook's cell style for date-time formatting
+     * @return a {@link CellStyle} for date-time formatting
+     */
     public CellStyle getDateTimeCellStyle(){
         if(dateTimeCellStyle == null){
             CreationHelper creationHelper = workbook.getCreationHelper();

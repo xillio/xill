@@ -5,8 +5,6 @@ import nl.xillio.xill.api.data.Date;
 import nl.xillio.xill.plugins.date.services.DateService;
 import org.testng.annotations.Test;
 
-import java.time.ZonedDateTime;
-
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertSame;
 

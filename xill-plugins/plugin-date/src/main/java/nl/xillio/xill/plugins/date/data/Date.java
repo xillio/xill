@@ -1,8 +1,6 @@
 package nl.xillio.xill.plugins.date.data;
 
 
-import nl.xillio.xill.api.data.MetadataExpression;
-
 import java.time.ZonedDateTime;
 
 /**

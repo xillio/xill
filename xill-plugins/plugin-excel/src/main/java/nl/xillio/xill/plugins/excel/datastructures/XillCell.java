@@ -6,8 +6,6 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DateUtil;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
@@ -120,7 +118,13 @@ public class XillCell {
 		cell.setCellValue(value);
 	}
 
+    /**
+     * Sets the cell's value to the provided date time
+     *
+     * @param dateTime the datevalue that should be stored in the cell
+     */
     public void setCellValue(ZonedDateTime dateTime){
+        //Assumption: 0:00 means no time
         boolean containsTime = !(dateTime.getHour() == 0 && dateTime.getMinute() == 0);
         if(containsTime){
             cell.setCellValue(Date.from(dateTime.toInstant()));

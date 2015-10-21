@@ -10,8 +10,6 @@ import nl.xillio.xill.plugins.excel.datastructures.DateImpl;
 import nl.xillio.xill.plugins.excel.datastructures.XillCellRef;
 import nl.xillio.xill.plugins.excel.datastructures.XillSheet;
 
-import java.util.Date;
-
 /**
  * Construct to get the value of a cell from a XillSheet.
  *
