@@ -12,20 +12,64 @@ import javafx.scene.input.KeyEvent;
 import nl.xillio.xill.util.settings.Settings;
 import nl.xillio.xill.util.settings.SettingsHandler;
 
+/**
+ * Implementation of hot-keys handler
+ * It encapsulates everything that is needed for handling with hot-keys
+ *
+ * @author Zbynek Hochmann
+ */
 public class HotkeysHandler {
 
+	/**
+	 * List of symbolic names of all hot-keys 
+	 */
 	public enum Hotkeys {
-		NEW, OPEN, SAVE, SAVEAS, SAVEALL, CLOSE, HELP, RUN, 
-		PAUSE, STOP, STEPIN, STEPOVER, CLEARCONSOLE, COPY, CUT, 
-		PASTE, RESET_ZOOM, FIND, OPENSETTINGS
+		@SuppressWarnings("javadoc")
+		NEW,
+		@SuppressWarnings("javadoc")
+		OPEN,
+		@SuppressWarnings("javadoc")
+		SAVE, 
+		@SuppressWarnings("javadoc")
+		SAVEAS, 
+		@SuppressWarnings("javadoc")
+		SAVEALL, 
+		@SuppressWarnings("javadoc")
+		CLOSE, 
+		@SuppressWarnings("javadoc")
+		HELP, 
+		@SuppressWarnings("javadoc")
+		RUN,
+		@SuppressWarnings("javadoc")
+		PAUSE, 
+		@SuppressWarnings("javadoc")
+		STOP, 
+		@SuppressWarnings("javadoc")
+		STEPIN, 
+		@SuppressWarnings("javadoc")
+		STEPOVER, 
+		@SuppressWarnings("javadoc")
+		CLEARCONSOLE, 
+		@SuppressWarnings("javadoc")
+		COPY, 
+		@SuppressWarnings("javadoc")
+		CUT,
+		@SuppressWarnings("javadoc")
+		PASTE, 
+		@SuppressWarnings("javadoc")
+		RESET_ZOOM, 
+		@SuppressWarnings("javadoc")
+		FIND, 
+		@SuppressWarnings("javadoc")
+		OPENSETTINGS
 	}
-	
+
 	private class Hotkey {
 		String shortcut;
 		String settingsid;
 		String settingsDscr;
 		String fxid;
-		
+
 		public Hotkey(String shortcut, String settingsid, String settingsDscr, String fxid) {
 			this.shortcut = shortcut;
 			this.settingsid = settingsid;
@@ -33,13 +77,17 @@ public class HotkeysHandler {
 			this.fxid = "#" + fxid;
 		}
 	}
-	
+
 	private HashMap<Hotkeys, Hotkey> hotkeys = new HashMap<>();
 
+	/**
+	 * Constructor for HotkeysHandler
+	 * It does initialize internal the map of hotkeys and set all needed values 
+	 */
 	public HotkeysHandler() {
 		init();
 	}
-	
+
 	private void init() {
 		// Shortcut is Ctrl on Windows and Meta on Mac.
 		hotkeys.put(Hotkeys.NEW, new Hotkey("Shortcut+N", Settings.NewFile, "Shortcut to New file", "tfnewfile"));
@@ -62,17 +110,24 @@ public class HotkeysHandler {
 		hotkeys.put(Hotkeys.FIND, new Hotkey("Shortcut+F", Settings.Search, "Shortcut to start search", "tfsearch"));
 		hotkeys.put(Hotkeys.OPENSETTINGS, new Hotkey("Shortcut+P", Settings.OpenSettings, "Shortcut to open settings dialog", "tfopensettings"));
 	}
-	
+
+	/**
+	 * Takes current settings of hot-keys and assign their key shortcuts
+	 *  
+	 * @param settings SettingsHandler instance
+	 */
 	public void setHotkeysFromSettings(final SettingsHandler settings) {
 		hotkeys.entrySet().stream().forEach(hk -> {
 			hk.getValue().shortcut = settings.simple().get(Settings.SETTINGS_KEYBINDINGS, hk.getValue().settingsid);
 		});
 	}
-	
-	public void setHotkeysFromDialog(final Scene scene) {
-		hotkeys.entrySet().stream().forEach(hk -> hk.getValue().shortcut = ((TextField)scene.lookup(hk.getValue().fxid)).getText());
-	}
 
+	/**
+	 * Takes current settings of hot-keys and fills in all shortcut fields in SettingDialog
+	 * 
+	 * @param scene Scene instance of SettingsDialog
+	 * @param settings SettingsHandler instance
+	 */
 	public void setDialogFromSettings(final Scene scene, final SettingsHandler settings) {
 		hotkeys.entrySet().stream().forEach(hk -> {
 			TextField tf = (TextField)scene.lookup(hk.getValue().fxid);
@@ -80,6 +135,13 @@ public class HotkeysHandler {
 		});
 	}
 
+	/**
+	 * Try to find provided shortcut in all shortcut fields in SettingDialog
+	 * 
+	 * @param scene Scene instance of SettingsDialog
+	 * @param shortcut string interpretation of shortcut
+	 * @return TextField that contains provided shortcut, if not found it returns null 
+	 */
 	public TextField findShortcutInDialog(final Scene scene, final String shortcut) {
 		TextField result[] = {null};
 		hotkeys.entrySet().stream().forEach(hk -> {
@@ -90,7 +152,13 @@ public class HotkeysHandler {
 		});
 		return result[0];
 	}
-	
+
+	/**
+	 * Iterate shortcut fields in SettingDialog
+	 * 
+	 * @param scene Scene instance of SettingsDialog
+	 * @return list of all shortcut fields in SettingDialog
+	 */
 	public List<TextField> getAllTextFields(final Scene scene) {
 		LinkedList<TextField> result = new LinkedList<>();
 		for (Map.Entry<Hotkeys, Hotkey> entry : hotkeys.entrySet()) {
@@ -98,22 +166,41 @@ public class HotkeysHandler {
 		}
 		return result;
 	}
-	
+
+	/**
+	 * Takes all current shortcut settings from SettingsDialog and store them into settings
+	 * 
+	 * @param scene Scene instance of SettingsDialog
+	 * @param settings SettingsHandler instance
+	 */
 	public void saveSettingsFromDialog(final Scene scene, final SettingsHandler settings) {
 		hotkeys.entrySet().stream().forEach(hk -> settings.simple().save(Settings.SETTINGS_KEYBINDINGS, hk.getValue().settingsid, ((TextField)scene.lookup(hk.getValue().fxid)).getText()));
 	}
-	
+
+	/**
+	 * @param hk symbolic hot-key
+	 * @return string representation of provided hot-key
+	 */
 	public String getShortcut(final Hotkeys hk) {
 		return hotkeys.get(hk).shortcut;
 	}
-	
+
+	/**
+	 * @param keyEvent key combination
+	 * @return symbolic hot-key from provided key combination, return null if not found 
+	 */
 	public Hotkeys getHotkey(final KeyEvent keyEvent) {
 		Hotkeys result[] = {null};
 		hotkeys.entrySet().stream().filter(o -> (KeyCombination.valueOf(o.getValue().shortcut).match(keyEvent))).forEach(o -> result[0] = o.getKey());
 		return result[0];
 	}
-	
+
+	/**
+	 * Register all hot-key settings 
+	 * 
+	 * @param settings SettingsHandler instance
+	 */
 	public void registerHotkeysSettings(final SettingsHandler settings) {
-		hotkeys.entrySet().forEach( hk -> settings.simple().register(Settings.SETTINGS_KEYBINDINGS, hk.getValue().settingsid, hk.getValue().shortcut, hk.getValue().settingsDscr));
+		hotkeys.entrySet().forEach(hk -> settings.simple().register(Settings.SETTINGS_KEYBINDINGS, hk.getValue().settingsid, hk.getValue().shortcut, hk.getValue().settingsDscr));
 	}
 }

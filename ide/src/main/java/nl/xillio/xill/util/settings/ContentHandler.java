@@ -17,7 +17,7 @@ public interface ContentHandler {
 	 * @throws Exception when some problem occurs
 	 */
 	void init() throws Exception;
-	
+
 	/**
 	 * Returns all item values for item specified by category and key value
 	 * This is used for getting one concrete item having key specified
@@ -38,7 +38,7 @@ public interface ContentHandler {
 	 * @throws Exception when some problem occurs
 	 */
 	List<Map<String, Object>> getAll(final String category) throws Exception;
-	
+
 	/**
 	 * Sets one item - it means it will add the item if does not exist or update the values if already exists
 	 * The values that already exists and not in itemContent will be left unchanged - 
@@ -52,7 +52,7 @@ public interface ContentHandler {
 	 * @throws Exception when some problem occurs
 	 */
 	boolean set(final String category, final Map<String, Object> itemContent, final String keyName, final String keyValue) throws Exception;
-	
+
 	/**
 	 * Deletes existing item
 	 * It will try to find the existing item according to category and item's key
@@ -64,7 +64,7 @@ public interface ContentHandler {
 	 * @throws Exception when some problem occurs
 	 */
 	boolean delete(final String category, final String keyName, final String keyValue) throws Exception;
-	
+
 	/**
 	 * Checks the existence of the item 
 	 * 
@@ -75,7 +75,7 @@ public interface ContentHandler {
 	 * @throws Exception when some problem occurs
 	 */
 	boolean exist(final String category, final String keyName, final String keyValue) throws Exception;
-	
+
 	/**
 	 * Allow to use mechanism that stores the settings changes but does not automatically save them after each change -
 	 * - in such case the commit() must be called to save all changes done from last commit() if the manual commit is activated
@@ -86,7 +86,7 @@ public interface ContentHandler {
 	 * @return true if the manual commit is supported and set on/off; false if this feature is not supported
 	 */
 	boolean setManualCommit(boolean manual) throws Exception;
-	
+
 	/**
 	 * It save all changes done from last commit() if the manual commit is activated
 	 * 

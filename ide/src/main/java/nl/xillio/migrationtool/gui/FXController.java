@@ -39,7 +39,11 @@ import java.util.stream.Collectors;
  */
 public class FXController implements Initializable, EventHandler<Event> {
 	private static final Logger log = LogManager.getLogger(FXController.class);
+	
+	/** Instance of settings handler */
 	public static final SettingsHandler settings = SettingsHandler.getSettingsHandler();
+	
+	/** Instance of hotkeys handler */
 	public static final HotkeysHandler hotkeys = new HotkeysHandler();
 
 	private static final File DEFAULT_OPEN_BOT = new File("samples/Hello-Xillio." + Xill.FILE_EXTENSION);
@@ -125,9 +129,10 @@ public class FXController implements Initializable, EventHandler<Event> {
 	@Override
 	public void initialize(final URL url, final ResourceBundle bundle) {
 
-		// Register most of the settings
+		// Register most of the internal settings
 		registerSettings();
-		
+
+		// Set hotkeys from settings
 		hotkeys.setHotkeysFromSettings(settings);
 
 		// Initialize layout and layout listeners
@@ -178,7 +183,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 	private void registerSettings() {
 		settings.setManualCommit(true);
-		
+
 		settings.simple().register(Settings.FILE, Settings.LastFolder, System.getProperty("user.dir"), "The last folder a file was opened from or saved to.");
 		settings.simple().register(Settings.WARNING, Settings.DialogDebug, "false", "Show warning dialogs for debug messages.");
 		settings.simple().register(Settings.WARNING, Settings.DialogInfo, "false", "Show warning dialogs for info messages.");
@@ -191,13 +196,13 @@ public class FXController implements Initializable, EventHandler<Event> {
 		settings.simple().register(Settings.LAYOUT, Settings.LeftPanelWidth, "0.2", "Width of the left panel");
 		settings.simple().register(Settings.LAYOUT, Settings.LeftPanelCollapsed, "false", "The collapsed-state of the left panel");
 		settings.simple().register(Settings.LAYOUT, Settings.ProjectHeight, "0.5", "The height of the project panel");
-		
+
 		SettingsDialog.register(settings);
-		
+
 		settings.commit();
 		settings.setManualCommit(false);
 	}
-	
+
 	private void loadWorkSpace() {
 		Platform.runLater(() -> {
 			String workspace = settings.simple().get(Settings.WORKSPACE, Settings.OpenTabs);
@@ -312,7 +317,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 	}
 
 	/**
-	 * @param newfile
+	 * @param newfile file with Xill robot code
 	 * @return the tab that was opened or null if something went wrong
 	 */
 	public RobotTab openFile(final File newfile) {
@@ -501,10 +506,15 @@ public class FXController implements Initializable, EventHandler<Event> {
 		return String.format("%1$s: %2$s,\n", optionJS, new Boolean(settings.simple().getBoolean(Settings.SETTINGS_EDITOR, keyValue)).toString());
 	}
 
+	/**
+	 * Creates JavaScript code that sets Ace editor's options according to current settings
+	 * 
+	 * @return JavaScript code
+	 */
 	public String createEditorOptionsJSCode() {
 		String jsCode = "var editor = contenttools.getAce();\neditor.setOptions({\n";
 		String jsSettings = "";
-		
+
 		String s = settings.simple().get(Settings.SETTINGS_EDITOR, Settings.FontSize);
 		if (s.endsWith("px")) {
 			s = s.substring(0, s.length()-2);
@@ -525,16 +535,16 @@ public class FXController implements Initializable, EventHandler<Event> {
 		if (jsSettings.endsWith(",\n")) {
 			jsSettings = jsSettings.substring(0,  jsSettings.length()-2); 
 		}
-		
+
 		jsCode += jsSettings;
 		jsCode += "\n});";
-		
+
 		jsCode += String.format("editor.session.setWrapLimit(%1$s);\n", settings.simple().get(Settings.SETTINGS_EDITOR, Settings.WrapLimit));
 		jsCode += String.format("editor.setHighlightSelectedWord(%1$s);\n", new Boolean(settings.simple().getBoolean(Settings.SETTINGS_EDITOR, Settings.HighlightSelectedWord)));
-		
+
 		return jsCode;
 	}
-	
+
 	private void verifyLicense() {
 		//TODO Enable License Check
 		/*License license = new License(settings.simple().get(Settings.LICENSE, Settings.License));
@@ -588,6 +598,8 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 	/**
 	 * Display the release notes
+	 * 
+	 * @throws IOException if error occurs when reading the changelog file 
 	 */
 	public void showReleaseNotes() throws IOException {
 		String lastVersion = settings.simple().get(Settings.INFO, Settings.LastVersion);
@@ -614,7 +626,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 			Hotkeys hk = hotkeys.getHotkey(keyEvent);
 			if (hk != null) {
-			
+
 				switch (hk) {
 				case CLOSE:
 				{
@@ -708,7 +720,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 	/**
 	 * Close a tab
 	 *
-	 * @param tab
+	 * @param tab RobotTab
 	 */
 	public void closeTab(final Tab tab) {
 		closeTab(tab, true);

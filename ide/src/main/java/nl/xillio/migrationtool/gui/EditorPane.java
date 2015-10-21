@@ -208,10 +208,15 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 		}
 	}
 
+	/**
+	 * Perform Ace editor settings
+	 * 
+	 * @param jsCode JavaScript code with settings to be executed
+	 */
 	public void setEditorOptions(final String jsCode) {
 		Platform.runLater(() -> {editor.setOptions(jsCode);});
 	}
-	
+
 	/**
 	 * Returns the editor.
 	 *

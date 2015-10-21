@@ -47,7 +47,7 @@ public class SimpleVariableHandler {
 	public void save(final String category, final String name, final boolean value) {
 		this.save(category, name, value ? "true" : "false");
 	}
-	
+
 	/**
 	 * Sets the new value to named simple variable in provided category
 	 * If simple variable has not been registered before and allowUnregistered=false, it will cause error.
@@ -159,7 +159,7 @@ public class SimpleVariableHandler {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Returns the boolean value of simple variable
 	 * It returns true if variable found and equals "true", otherwise false 

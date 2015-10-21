@@ -452,6 +452,11 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 		callOnAce("undo");
 	}
 
+	/**
+	 * Perform Ace editor settings
+	 * 
+	 * @param jsCode JavaScript code with settings to be executed
+	 */
 	public void setOptions(final String jsCode) {
 		// If the document has not been loaded yet load the robot later
 		if (!documentLoaded.get()) {
@@ -466,7 +471,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 		}
 		executeJS(jsCode);
 	}
-	
+
 	private void bindToWindow() {
 		// Do not use executeJS here, it needs to be done immediately
 		JSObject jsobj = (JSObject) executeJSBlocking("window");

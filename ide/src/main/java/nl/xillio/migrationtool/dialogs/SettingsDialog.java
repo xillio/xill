@@ -2,7 +2,6 @@ package nl.xillio.migrationtool.dialogs;
 
 import java.io.File;
 import java.util.regex.Pattern;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,27 +20,56 @@ import nl.xillio.migrationtool.gui.FXController;
 import nl.xillio.xill.util.settings.Settings;
 import nl.xillio.xill.util.settings.SettingsHandler;
 
-
+/**
+ * Dialog contains all configurable ContentTools options and allows to change them
+ *
+ * @author Zbynek Hochmann
+ */
 public class SettingsDialog  extends FXMLDialog {
 
 	private boolean apply = false;
-	
-	private class Valid {
+
+	private interface TextValidator {
+		boolean test(final String text);
+	}
+
+	private class RangeValidator implements TextValidator {
 		private boolean valid = true;
-		private String value = "";
-		public void setValid(boolean valid) {
-			this.valid = valid;
+		private String suffix;
+		private int fromIncl;
+		private int toIncl;
+		private boolean allowEmpty;
+		private Pattern pattern; 
+
+		RangeValidator(final int fromIncl, final int toIncl, final String suffix, final boolean allowEmpty) {
+			this.fromIncl = fromIncl;
+			this.toIncl = toIncl;
+			this.suffix = (suffix == null ? "" : suffix);
+			this.allowEmpty = allowEmpty;
+			this.pattern = Pattern.compile("[0-9]+" + this.suffix);
 		}
+
+		@Override
+		public boolean test(final String text) {
+			if (allowEmpty && ((text == null) || (text.isEmpty()))) {
+				valid = true;
+			} else {
+				valid = false;
+				if (pattern.matcher(text).matches()) {
+	    			int value = Integer.parseInt(text.substring(0, text.length()-suffix.length()));
+	    			if ((value >= fromIncl) && (value <= toIncl)) {
+		    			valid = true;
+		    		}
+		    	}
+			}
+			return valid;
+		}
+
 		public boolean isValid() {
 			return this.valid;
 		}
-		public void setValue(final String value) {
-			this.value = value;
-		}
-		public String getValue() {
-			return this.value;
-		}
 	}
+
 	@FXML
 	private TextField tfprojectfolder;
 	@FXML
@@ -52,7 +80,7 @@ public class SettingsDialog  extends FXMLDialog {
 	private CheckBox cbdisplayindentguides;
 	@FXML
 	private TextField tffontsize;
-	private Valid tffontsizeValid = new Valid();
+	private RangeValidator tffontsizeValidator = new RangeValidator(5, 26, "px", false);
 	@FXML
 	private CheckBox cbautosavebotbeforerun;
 	@FXML
@@ -60,33 +88,44 @@ public class SettingsDialog  extends FXMLDialog {
 	@FXML
 	private ComboBox<String> cbnewlinemode;
 	@FXML
-	private TextField tfprintmargincolumn;//!! validator
+	private TextField tfprintmargincolumn;
+	private RangeValidator tfprintmargincolumnValidator = new RangeValidator(0, 1000, null, false);
 	@FXML
 	private CheckBox cbshowgutter;
 	@FXML
 	private CheckBox cbshowinvisibles;
 	@FXML
-	private TextField tftabsize;//!! validator
+	private TextField tftabsize;
+	private RangeValidator tftabsizeValidator = new RangeValidator(1, 100, null, false);
 	@FXML
 	private CheckBox cbusesofttabs;
 	@FXML
 	private CheckBox cbwraptext;
 	@FXML
-	private TextField tfwraplimit; //!! validator
+	private TextField tfwraplimit;
+	private RangeValidator tfwraplimitValidator = new RangeValidator(2, 1000, null, false);
 	@FXML
 	private CheckBox cbshowprintmargin;
 	@FXML
 	private CheckBox cbshowlinenumbers;
-	
+
 	private SettingsHandler settings;
-	
+
+	/**
+	 * Dialog constructor
+	 * 
+	 * @param settings SettingsHandler instance
+	 */
 	public SettingsDialog(final SettingsHandler settings) {
 		super("/fxml/dialogs/Settings.fxml");
 		setTitle("Settings");
 		this.settings = settings;
-		
-		setRangeValidator(tffontsize, tffontsizeValid, 5, 26, "px");
-		
+
+		setValidator(tffontsize, tffontsizeValidator);
+		setValidator(tfprintmargincolumn, tfprintmargincolumnValidator);
+		setValidator(tftabsize, tftabsizeValidator);
+		setValidator(tfwraplimit, tfwraplimitValidator);
+
 		ObservableList<String> options = FXCollections.observableArrayList("auto", "windows", "unix");
 		cbnewlinemode.setItems(options);
 
@@ -101,17 +140,17 @@ public class SettingsDialog  extends FXMLDialog {
 		tf.addEventHandler(KeyEvent.ANY, new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent event) {
 				String shortcut = null;
-				
+
 				if ((event.getCode() == KeyCode.TAB) || (event.getCharacter().equals("\t"))) {
 					return;
 				}
-				
+
 				if (event.getCode() == KeyCode.DELETE) {
 					tf.setText("");
 					event.consume();
 					return;
 				}
-				
+
 				if ((event.getCode().isFunctionKey()) && (event.getEventType() == KeyEvent.KEY_RELEASED)) {
 					shortcut = (event.isControlDown() ? "Shortcut+" : "") + (event.isAltDown() ? "Alt+" : "") + (event.isShiftDown() ? "Shift+" : "") + event.getCode().getName().toUpperCase();
 				} 
@@ -131,29 +170,17 @@ public class SettingsDialog  extends FXMLDialog {
 			}
 		});
 	}
-	
-	private void setRangeValidator(final TextField tf, final Valid valid, final int fromIncl, final int toIncl, final String suffix) {
-		Pattern pattern = Pattern.compile("[0-9]+" + suffix);
-		
+
+	private void setValidator(final TextField tf, final TextValidator validator) {
+
 		tf.addEventHandler(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>() {
 		    public void handle(KeyEvent event) {
 		    	Platform.runLater(() -> {
-		    		boolean matches = false;
-		    		String text = tf.getText();
-		    		if (pattern.matcher(text).matches()) {
-		    			int value = Integer.parseInt(text.substring(0, text.length()-suffix.length()));
-		    			if ((value >= fromIncl) && (value <= toIncl)) {
-			    			matches = true;
-			    			valid.setValue(new Integer(value).toString());
-			    		}
-			    	}
-		    		if (matches) {
+		    		if (validator.test(tf.getText())) {
 		    			tf.setStyle("-fx-text-fill: black;");
 		    		} else {
 		    			tf.setStyle("-fx-text-fill: red;");
-		    			valid.setValue("");
 		    		}
-		    		valid.setValid(matches);
 		    	});
 		    }
 		});
@@ -174,10 +201,22 @@ public class SettingsDialog  extends FXMLDialog {
 	}
 
 	private void validate() throws Exception {
-		if (!this.tffontsizeValid.isValid()) {
+		if (!this.tffontsizeValidator.isValid()) {
 			throw new Exception("Invalid font size value!");
 		}
-		
+
+		if (!this.tfprintmargincolumnValidator.isValid()) {
+			throw new Exception("Invalid print margin column value!");
+		}
+
+		if (!this.tftabsizeValidator.isValid()) {
+			throw new Exception("Invalid tab size value!");
+		}
+
+		if (!this.tfwraplimitValidator.isValid()) {
+			throw new Exception("Invalid wrap limit value!");
+		}
+
 		if (!tfprojectfolder.getText().isEmpty()) {
 			File file = new File(tfprojectfolder.getText());
 			if ((file == null) || (!file.isDirectory())) {
@@ -185,16 +224,16 @@ public class SettingsDialog  extends FXMLDialog {
 			}
 		}
 	}
-	
+
 	private void saveSettings() {
 		settings.setManualCommit(true);
-		
+
 		// General
 		saveText(tfprojectfolder, Settings.SETTINGS_GENERAL, Settings.DefaultProjectLocation);
 		saveCheckBox(cbopenbotwcleanconsole, Settings.SETTINGS_GENERAL, Settings.OpenBotWithCleanConsole);
 		saveCheckBox(cbrunbotwcleanconsole, Settings.SETTINGS_GENERAL, Settings.RunBotWithCleanConsole);
 		saveCheckBox(cbautosavebotbeforerun, Settings.SETTINGS_GENERAL, Settings.AutoSaveBotBeforeRun);
-		
+
 		// Editor
 		saveCheckBox(cbdisplayindentguides, Settings.SETTINGS_EDITOR, Settings.DisplayIndentGuides);
 		saveText(tffontsize, Settings.SETTINGS_EDITOR, Settings.FontSize);
@@ -212,7 +251,7 @@ public class SettingsDialog  extends FXMLDialog {
 
 		// Key bindings
 		FXController.hotkeys.saveSettingsFromDialog(getScene(), settings);
-				
+	
 		settings.commit();
 		settings.setManualCommit(false);
 	}
@@ -238,54 +277,62 @@ public class SettingsDialog  extends FXMLDialog {
 		setText(tfwraplimit, Settings.SETTINGS_EDITOR, Settings.WrapLimit);
 		setCheckBox(cbshowprintmargin, Settings.SETTINGS_EDITOR, Settings.ShowPrintMargin);
 		setCheckBox(cbshowlinenumbers, Settings.SETTINGS_EDITOR, Settings.ShowLineNumbers);
-		
+
 		// Key bindings
 		Platform.runLater(() -> {
 			FXController.hotkeys.setDialogFromSettings(getScene(), settings);
 		});
 	}
 
+	/**
+	 * @return true if OK button has been pressed
+	 */
 	public boolean shouldApply() {
 		return apply;
 	}
-	
+
 	private void setComboBox(final ComboBox<String> comboBox, final String category, final String keyValue) {
 		String value = settings.simple().get(category, keyValue); 
 		comboBox.getSelectionModel().select(value);
 	}
-	
+
 	private void saveComboBox(final ComboBox<String> comboBox, final String category, final String keyValue) {
 		settings.simple().save(category, keyValue, comboBox.getSelectionModel().getSelectedItem()); 
 	}	
-	
+
 	private void setCheckBox(final CheckBox checkBox, final String category, final String keyValue) {
 		checkBox.setSelected(this.settings.simple().getBoolean(category, keyValue));
 	}
-	
-	private void setText(final TextField field, final String category, final String keyValue) {
-		field.setText(this.settings.simple().get(category, keyValue));
-	}
-	
-	private void saveText(final TextField field, final String category, final String keyValue) {
-		this.settings.simple().save(category, keyValue, field.getText());
-	}
-	
+
 	private void saveCheckBox(final CheckBox checkBox, final String category, final String keyValue) {
 		this.settings.simple().save(category, keyValue, checkBox.isSelected());
 	}
-	
+
+	private void setText(final TextField field, final String category, final String keyValue) {
+		field.setText(this.settings.simple().get(category, keyValue));
+	}
+
+	private void saveText(final TextField field, final String category, final String keyValue) {
+		this.settings.simple().save(category, keyValue, field.getText());
+	}
+
 	@FXML
 	private void cancelBtnPressed(final ActionEvent event) {
 		close();
 	}
-	
+
+	/**
+	 * Register all (configurable) settings from this dialog
+	 * 
+	 * @param settings the SettingHandler instance
+	 */
 	public static void register(final SettingsHandler settings) {
 		// General
 		settings.simple().register(Settings.SETTINGS_GENERAL, Settings.DefaultProjectLocation, "", "The default project location");
 		settings.simple().register(Settings.SETTINGS_GENERAL, Settings.OpenBotWithCleanConsole, "true", "If the console is cleared when the bot is open");
 		settings.simple().register(Settings.SETTINGS_GENERAL, Settings.RunBotWithCleanConsole, "false", "If the console is cleared when the bot is about to run");
 		settings.simple().register(Settings.SETTINGS_GENERAL, Settings.AutoSaveBotBeforeRun, "true", "Save the robot before it's run");
-		
+
 		// Editor
 		settings.simple().register(Settings.SETTINGS_EDITOR, Settings.DisplayIndentGuides, "false", "Displays indent guides");
 		settings.simple().register(Settings.SETTINGS_EDITOR, Settings.FontSize, "12px", "The editor's font size");
@@ -300,9 +347,8 @@ public class SettingsDialog  extends FXMLDialog {
 		settings.simple().register(Settings.SETTINGS_EDITOR, Settings.WrapLimit, "60", "Wrap limit in editor");
 		settings.simple().register(Settings.SETTINGS_EDITOR, Settings.ShowPrintMargin, "false", "Show print margin in editor");
 		settings.simple().register(Settings.SETTINGS_EDITOR, Settings.ShowLineNumbers, "true", "Show line numbers in editor");
-		
+
 		// Key bindings
 		FXController.hotkeys.registerHotkeysSettings(settings);
 	}
-
 }

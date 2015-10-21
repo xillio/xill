@@ -29,7 +29,7 @@ public class SettingsHandler {
 		} catch (Exception e) {
 			System.err.println("Cannot initialize settings handler for reason: " + e.getMessage());
 		}
-		
+
 		this.simple = new SimpleVariableHandler(this.content);
 		this.project = new ProjectSettingsHandler(this.content);
 	}

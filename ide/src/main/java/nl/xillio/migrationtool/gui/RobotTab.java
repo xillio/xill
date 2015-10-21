@@ -382,10 +382,10 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	public void runRobot() throws XillParsingException {
 		save();
 
-		if (new Boolean(FXController.settings.simple().get(Settings.SETTINGS_GENERAL, Settings.RunBotWithCleanConsole)).booleanValue()) {
+		if (FXController.settings.simple().getBoolean(Settings.SETTINGS_GENERAL, Settings.RunBotWithCleanConsole)) {
 			ESConsoleClient.getInstance().clearLog(getProcessor().getRobotID().toString());
 		}
-		
+
 		try {
 			processor.compile();
 

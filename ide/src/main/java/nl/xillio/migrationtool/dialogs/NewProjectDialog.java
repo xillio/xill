@@ -35,10 +35,15 @@ public class NewProjectDialog extends FXMLDialog {
 		setTitle("New Project");
 	}
 
+	/**
+	 * Set the default project folder
+	 * 
+	 * @param folder project folder
+	 */
 	public void setProjectFolder(final String folder) {
 		tfprojectfolder.setText(folder);
 	}
-	
+
 	@FXML
 	private void browseBtnPressed(@SuppressWarnings("unused") final ActionEvent event) {
 		File result = new DirectoryChooser().showDialog(getOwner());
