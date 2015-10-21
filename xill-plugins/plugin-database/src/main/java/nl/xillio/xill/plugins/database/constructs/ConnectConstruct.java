@@ -76,7 +76,7 @@ public class ConnectConstruct extends BaseDatabaseConstruct {
 		MetaExpression metaExpression = fromValue(database);
 		ConnectionMetadata newConnection = new ConnectionMetadata(type, connection);
 		// add the robotId with the new connection to the pool
-		setLastConnection(newConnection);
+		setLastConnection(robotID, newConnection);
 		// store the connection metadata in the output MetaExpression
 		metaExpression.storeMeta(newConnection);
 
