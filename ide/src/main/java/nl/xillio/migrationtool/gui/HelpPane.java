@@ -7,10 +7,13 @@ import java.net.URL;
 import java.util.stream.Collectors;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
@@ -40,6 +43,7 @@ public class HelpPane extends AnchorPane {
 		loader.setClassLoader(getClass().getClassLoader());
 		loader.setController(this);
 
+		
 		try {
 			Node ui = loader.load();
 			getChildren().add(ui);
@@ -49,7 +53,7 @@ public class HelpPane extends AnchorPane {
 		helpSearchBar.setHelpPane(this);
 
 		Loader.getInitializer().getOnLoadComplete().addListener(init -> {
-			home();
+			displayHome();
 			webFunctionDoc.getEngine().getHistory().setMaxSize(0);
 			webFunctionDoc.getEngine().getHistory().setMaxSize(100);
 			helpSearchBar.setSearcher(init.getSearcher());
@@ -70,6 +74,10 @@ public class HelpPane extends AnchorPane {
 			webFunctionDoc.getEngine().executeScript("if (typeof loadEditors !== 'undefined') {loadEditors()}");
 
 		});
+		
+		this.heightProperty().addListener((ChangeListener<Number>) (observable, oldValue, newValue) -> {
+			helpSearchBar.handleHeightChange();
+		});
 
 		// Load splash page
 		webFunctionDoc.getEngine().load(getClass().getResource("/docgen/resources/splash.html").toExternalForm());
@@ -79,7 +87,10 @@ public class HelpPane extends AnchorPane {
 		webFunctionDoc.setOnDragOver(e -> getScene().setCursor(Cursor.DISAPPEAR));
 	}
 
-	private void home() {
+	/**
+	 * Displays the home page
+	 */
+	public void displayHome() {
 		try {
 			this.display(new File("helpfiles", "index.html").toURI().toURL());
 		} catch (MalformedURLException e) {
@@ -121,7 +132,7 @@ public class HelpPane extends AnchorPane {
 
 	@FXML
 	private void buttonHelpHome() {
-		home();
+		displayHome();
 	}
 
 	@FXML

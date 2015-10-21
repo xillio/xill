@@ -23,10 +23,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Window;
 import nl.xillio.xill.docgen.DocumentationSearcher;
+import java.awt.Component;
+import java.awt.event.*;
 
 /**
  * A search bar, with the defined options and behavior.
- * 
+ *
  * @author Thomas Biesaart
  */
 public class HelpSearchBar extends AnchorPane {
@@ -72,7 +74,8 @@ public class HelpSearchBar extends AnchorPane {
 
 		// Listen to search changes
 		searchField.textProperty().addListener(this::searchTextChanged);
-
+	
+		
 		// Close on focus lost
 		searchField.focusedProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
 			if (newValue) {
@@ -83,16 +86,53 @@ public class HelpSearchBar extends AnchorPane {
 		});
 	}
 
-	private void onKeyPressed(final KeyEvent keyEvent) {
+	/**
+	 * Handles a key press.
+	 * Checks for an ENTER and then tries to open a page.
+	 *
+	 * @param keyEvent
+	 */
+	public void onKeyPressed(final KeyEvent keyEvent) {
 		if (keyEvent.getCode() == KeyCode.ENTER) {
-			openSelected();
+			String content = searchField.getText();
+
+			if (content.isEmpty()) {
+				helpPane.displayHome();
+				cleanup();
+			} else if (content.split(" ").length == 1) {
+				tryDisplayIndexOf(content);
+			}
 		}
 	}
 
+	/**
+	 * Tries to display the index of a given package name.
+	 * 
+	 * @param packet
+	 *        The name of the package we try to display.
+	 */
+	private void tryDisplayIndexOf(final String packet) {
+		try {
+			helpPane.display(packet, "_index");
+			cleanup();
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+	}
+
+	/**
+	 * Handles the clicking mechanism.
+	 * 
+	 * @param mouseEvent
+	 *        The mouseEvent.
+	 */
 	private void onClick(final MouseEvent mouseEvent) {
 		openSelected();
 	}
 
+	/**
+	 * Opens the selected item.
+	 */
 	void openSelected() {
 		String selected = listView.getSelectionModel().getSelectedItem();
 
@@ -102,14 +142,22 @@ public class HelpSearchBar extends AnchorPane {
 
 		String[] parts = selected.split("\\.");
 		helpPane.display(parts[0], parts[1]);
+		cleanup();
+	}
+
+	/**
+	 * Cleans the UI (hiding the tooltips, clearing its content etc).
+	 */
+	void cleanup() {
 		hoverToolTip.hide();
+		data.clear();
 		searchField.clear();
 		helpPane.requestFocus();
 	}
 
 	/**
 	 * Set the searcher that should be used.
-	 * 
+	 *
 	 * @param searcher
 	 *        the searcher
 	 */
@@ -119,7 +167,7 @@ public class HelpSearchBar extends AnchorPane {
 
 	/**
 	 * Set the HelpPane.
-	 * 
+	 *
 	 * @param help
 	 *        The help pane in which the search bar is embedded
 	 */
@@ -148,6 +196,12 @@ public class HelpSearchBar extends AnchorPane {
 		runSearch(searchField.getText());
 
 		showResults();
+	}
+	
+	public void handleHeightChange(){
+		if(hoverToolTip.isShowing()){
+			showResults();
+		}
 	}
 
 	private void showResults() {
