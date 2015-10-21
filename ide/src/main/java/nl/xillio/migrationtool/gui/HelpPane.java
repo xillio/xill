@@ -19,7 +19,7 @@ import nl.xillio.xill.util.HighlightSettings;
 
 /**
  * This pane contains the documentation information.
- * 
+ *
  * @author Thomas Biesaart
  */
 public class HelpPane extends AnchorPane {
@@ -29,7 +29,7 @@ public class HelpPane extends AnchorPane {
 	@FXML
 	private HelpSearchBar helpSearchBar;
 
-	private HighlightSettings highlightSettings;
+	private final HighlightSettings highlightSettings;
 
 	/**
 	 * Instantiate the HelpPane and load the home page.
@@ -73,7 +73,7 @@ public class HelpPane extends AnchorPane {
 
 		// Load splash page
 		webFunctionDoc.getEngine().load(getClass().getResource("/docgen/resources/splash.html").toExternalForm());
-		
+
 		// Disable drag-and-drop, set the cursor graphic when dragging.
 		webFunctionDoc.setOnDragDropped(null);
 		webFunctionDoc.setOnDragOver(e -> getScene().setCursor(Cursor.DISAPPEAR));
