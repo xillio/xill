@@ -86,7 +86,7 @@ public class QueryConstructTest extends ConstructTest {
 		RobotID robotID = mock(RobotID.class);
 
 		// run
-		PreparedStatementConstruct.process(query, parameters, database, timeout, factory, robotID);
+		PreparedStatementConstruct.process(query, parameters, database, timeout, factory);
 
 		// verify
 		verify(databaseService, times(1)).query(any(), anyString(), anyList(), anyInt());
@@ -146,7 +146,7 @@ public class QueryConstructTest extends ConstructTest {
 		BaseDatabaseConstruct.setLastConnection(connectionMetadata);
 
 		// run
-		PreparedStatementConstruct.process(query, parameters, database, timeout, factory, robotID);
+		PreparedStatementConstruct.process(query, parameters, database, timeout, factory);
 
 		// verify
 		verify(databaseService, times(1)).query(any(), anyString(), anyList(), anyInt());
@@ -214,7 +214,7 @@ public class QueryConstructTest extends ConstructTest {
 		RobotID robotID = mock(RobotID.class);
 
 		// run
-		PreparedStatementConstruct.process(query, parameters, database, timeout, factory, robotID);
+		PreparedStatementConstruct.process(query, parameters, database, timeout, factory);
 	}
 
 	/**
@@ -286,7 +286,7 @@ public class QueryConstructTest extends ConstructTest {
 		RobotID robotID = mock(RobotID.class);
 
 		// run
-		PreparedStatementConstruct.process(query, parameters, database, timeout, factory, robotID);
+		PreparedStatementConstruct.process(query, parameters, database, timeout, factory);
 	}
 
 	/**

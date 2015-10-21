@@ -26,14 +26,14 @@ public class GetObjectConstruct extends BaseDatabaseConstruct {
 	@Override
 	public ConstructProcessor doPrepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(table, object, database) -> process(table, object, database, factory, context.getRobotID()),
+			(table, object, database) -> process(table, object, database, factory),
 			new Argument("table", ATOMIC),
 			new Argument("object", OBJECT),
 			new Argument("database", NULL, ATOMIC));
 	}
 
 	@SuppressWarnings("unchecked")
-	static MetaExpression process(final MetaExpression table, final MetaExpression object, final MetaExpression database, final DatabaseServiceFactory factory, final RobotID robotID) {
+	static MetaExpression process(final MetaExpression table, final MetaExpression object, final MetaExpression database, final DatabaseServiceFactory factory) {
 		// get the name of the table
 		String tblName = table.getStringValue();
 		// create a map
@@ -54,8 +54,9 @@ public class GetObjectConstruct extends BaseDatabaseConstruct {
 			throw new RobotRuntimeException(e.getMessage(), e);
 		}
 		// if no entry is found in the table with the given constraints then return null
-		if (result == null)
+		if (result == null) {
 			return NULL;
+		}
 
 		LinkedHashMap<String, MetaExpression> value = new LinkedHashMap<String, MetaExpression>();
 		result.forEach((k, v) -> value.put(k, parseObject(v)));

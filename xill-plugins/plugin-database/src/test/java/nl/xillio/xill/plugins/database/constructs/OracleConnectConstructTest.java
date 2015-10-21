@@ -55,7 +55,7 @@ public class OracleConnectConstructTest extends ConstructTest {
 		};
 
 		// run
-		MetaExpression output = OracleConnectConstruct.process(args, factory, robotID);
+		MetaExpression output = OracleConnectConstruct.process(args, factory);
 
 		// assert
 		Assert.assertEquals(output.getStringValue(), "host:1531:database");
@@ -96,7 +96,7 @@ public class OracleConnectConstructTest extends ConstructTest {
 		};
 
 		// run
-		MetaExpression output = OracleConnectConstruct.process(args, factory, robotID);
+		MetaExpression output = OracleConnectConstruct.process(args, factory);
 
 		// assert
 		Assert.assertEquals(output.getStringValue(), "host:1531/database");

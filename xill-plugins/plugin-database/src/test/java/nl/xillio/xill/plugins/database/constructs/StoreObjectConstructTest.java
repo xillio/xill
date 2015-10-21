@@ -56,7 +56,7 @@ public class StoreObjectConstructTest extends ConstructTest {
 		doThrow(RobotRuntimeException.class).when(dbService).storeObject(null, "table", (LinkedHashMap<String, Object>) extractValue(object), (java.util.List<String>) keys.getValue(), true);
 
 		// run
-		StoreObjectConstruct.process(args, factory, id);
+		StoreObjectConstruct.process(args, factory);
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class StoreObjectConstructTest extends ConstructTest {
 		doThrow(RobotRuntimeException.class).when(dbService).storeObject(null, "table", (LinkedHashMap<String, Object>) extractValue(object), (java.util.List<String>) keys.getValue(), true);
 
 		// run
-		StoreObjectConstruct.process(args, factory, id);
+		StoreObjectConstruct.process(args, factory);
 	}
 
 	@DataProvider(name = "exceptions")
@@ -146,7 +146,7 @@ public class StoreObjectConstructTest extends ConstructTest {
 		doThrow(RobotRuntimeException.class).when(dbService).storeObject(null, "table", (LinkedHashMap<String, Object>) extractValue(object), (java.util.List<String>) keys.getValue(), true);
 
 		// run
-		StoreObjectConstruct.process(args, factory, id);
+		StoreObjectConstruct.process(args, factory);
 	}
 
 	/**
@@ -181,7 +181,7 @@ public class StoreObjectConstructTest extends ConstructTest {
 
 		doThrow(new SQLException()).when(dbService).storeObject(null, "table", (LinkedHashMap<String, Object>) extractValue(object), (java.util.List<String>) keys.getValue(), true);
 
-		StoreObjectConstruct.process(args, factory, id);
+		StoreObjectConstruct.process(args, factory);
 	}
 
 }

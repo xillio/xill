@@ -32,7 +32,7 @@ public class PreparedStatementConstruct extends BaseDatabaseConstruct {
 
 	@Override
 	public ConstructProcessor doPrepareProcess(final ConstructContext context) {
-		return new ConstructProcessor((query, parameters, timeout, database) -> process(query, parameters, database, timeout, factory, context.getRobotID()),
+		return new ConstructProcessor((query, parameters, timeout, database) -> process(query, parameters, database, timeout, factory),
 			new Argument("query", ATOMIC),
 			new Argument("parameters", emptyObject(), LIST, OBJECT),
 			new Argument("timeout", fromValue(30), ATOMIC),
@@ -40,8 +40,7 @@ public class PreparedStatementConstruct extends BaseDatabaseConstruct {
 	}
 
 	@SuppressWarnings("unchecked")
-	static MetaExpression process(final MetaExpression query, final MetaExpression parameters, final MetaExpression database, final MetaExpression timeout, final DatabaseServiceFactory factory,
-			final RobotID robotID) {
+	static MetaExpression process(final MetaExpression query, final MetaExpression parameters, final MetaExpression database, final MetaExpression timeout, final DatabaseServiceFactory factory) {
 		String sql = query.getStringValue();
 		ConnectionMetadata metaData;
 

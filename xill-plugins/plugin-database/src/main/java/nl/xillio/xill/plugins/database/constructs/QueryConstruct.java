@@ -18,7 +18,7 @@ public class QueryConstruct extends BaseDatabaseConstruct {
 
 	@Override
 	public ConstructProcessor doPrepareProcess(final ConstructContext context) {
-		return new ConstructProcessor((query, timeout, database) -> PreparedStatementConstruct.process(query, NULL, database, timeout, factory, context.getRobotID()),
+		return new ConstructProcessor((query, timeout, database) -> PreparedStatementConstruct.process(query, NULL, database, timeout, factory),
 			new Argument("query", ATOMIC),
 			new Argument("timeout", fromValue(30), ATOMIC),
 			new Argument("database", NULL, ATOMIC));

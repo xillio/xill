@@ -66,7 +66,7 @@ public class GetObjectConstructTest extends ConstructTest {
 		when((dbService).getObject(any(), eq("table"), any())).thenReturn(resultMap);
 		mock(BaseDatabaseConstruct.class);
 
-		MetaExpression result = GetObjectConstruct.process(table, object, database, factory, id);
+		MetaExpression result = GetObjectConstruct.process(table, object, database, factory);
 
 		// verify
 		verify(dbService, times(1)).getObject(any(), any(), any());
@@ -108,7 +108,7 @@ public class GetObjectConstructTest extends ConstructTest {
 		when((database).getMeta(ConnectionMetadata.class)).thenReturn(conMetadata);
 
 		// run
-		MetaExpression result = GetObjectConstruct.process(table, object, database, factory, id);
+		MetaExpression result = GetObjectConstruct.process(table, object, database, factory);
 
 		// verify
 		verify(conMetadata, times(1)).getConnection();
@@ -158,7 +158,7 @@ public class GetObjectConstructTest extends ConstructTest {
 		when((database).getMeta(ConnectionMetadata.class)).thenReturn(conMetadata);
 
 		// run
-		MetaExpression result = GetObjectConstruct.process(table, object, database, factory, id);
+		MetaExpression result = GetObjectConstruct.process(table, object, database, factory);
 
 		// verify
 		verify(conMetadata, times(1)).getConnection();
@@ -195,7 +195,7 @@ public class GetObjectConstructTest extends ConstructTest {
 		when((database).getMeta(ConnectionMetadata.class)).thenReturn(conMetadata);
 
 		// run
-		MetaExpression result = GetObjectConstruct.process(table, object, database, factory, id);
+		MetaExpression result = GetObjectConstruct.process(table, object, database, factory);
 
 		// verify
 		verify(conMetadata, times(1)).getConnection();

@@ -17,11 +17,11 @@ public class SqliteConnectConstruct extends BaseDatabaseConstruct {
 	@Override
 	public ConstructProcessor doPrepareProcess(ConstructContext context) {
 		// Default is in-memory database
-		return new ConstructProcessor((file) -> process(file, factory,context.getRobotID()), new Argument("file", fromValue(":memory:"), ATOMIC));
+		return new ConstructProcessor((file) -> process(file, factory), new Argument("file", fromValue(":memory:"), ATOMIC));
 	}
 
-	static MetaExpression process(MetaExpression file, DatabaseServiceFactory factory,RobotID robotID) {
+	static MetaExpression process(MetaExpression file, DatabaseServiceFactory factory) {
 		MetaExpression[] newArgs = {file, fromValue(Database.SQLITE.getName()), NULL, NULL, emptyObject()};
-		return ConnectConstruct.process(newArgs, factory,robotID);
+		return ConnectConstruct.process(newArgs, factory);
 	}
 }

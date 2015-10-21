@@ -34,11 +34,11 @@ public class ConnectConstruct extends BaseDatabaseConstruct {
 						new Argument("user", NULL, ATOMIC),
 						new Argument("pass", NULL, ATOMIC),
 						new Argument("options", new ObjectExpression(new LinkedHashMap<>()), OBJECT)};
-		return new ConstructProcessor(a -> process(a, factory, context.getRobotID()), args);
+		return new ConstructProcessor(a -> process(a, factory), args);
 	}
 
 	@SuppressWarnings("unchecked")
-	static MetaExpression process(final MetaExpression[] args, final DatabaseServiceFactory factory, final RobotID robotID) {
+	static MetaExpression process(final MetaExpression[] args, final DatabaseServiceFactory factory) {
 		String database = args[0].isNull() ? null : args[0].getStringValue();
 		String type = args[1].getStringValue();
 		String user = args[2].isNull() ? null : args[2].getStringValue();

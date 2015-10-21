@@ -54,7 +54,7 @@ public class SimplesqlConnectConstructTest extends ConstructTest {
 				options
 		};
 		// run
-		MetaExpression output = SimplesqlConnectConstruct.process(args, "database", factory, robotID);
+		MetaExpression output = SimplesqlConnectConstruct.process(args, "database", factory);
 
 		// assert
 		Assert.assertEquals(output.getStringValue(), "host:1531/database");

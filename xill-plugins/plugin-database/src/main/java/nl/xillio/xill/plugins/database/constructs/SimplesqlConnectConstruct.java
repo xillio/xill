@@ -38,13 +38,13 @@ public abstract class SimplesqlConnectConstruct extends BaseDatabaseConstruct {
 				new Argument("user", NULL, ATOMIC),
 				new Argument("pass", NULL, ATOMIC),
 				new Argument("options", new ObjectExpression(new LinkedHashMap<>()), OBJECT)};
-		return new ConstructProcessor(a -> process(a, databaseName, factory, context.getRobotID()), args);
+		return new ConstructProcessor(a -> process(a, databaseName, factory), args);
 	}
 
-	static MetaExpression process(MetaExpression[] args, String databaseName, DatabaseServiceFactory factory, RobotID robotID) {
+	static MetaExpression process(MetaExpression[] args, String databaseName, DatabaseServiceFactory factory) {
 		// Re-order the arguments and call the generic connect construct
 		String database = String.format("%s:%d/%s", args[0].getStringValue(), args[1].getNumberValue().intValue(), args[2].getStringValue());
 		MetaExpression[] newArgs = {fromValue(database), fromValue(databaseName), args[3], args[4], args[5]};
-		return ConnectConstruct.process(newArgs, factory, robotID);
+		return ConnectConstruct.process(newArgs, factory);
 	}
 }

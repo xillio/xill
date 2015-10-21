@@ -36,11 +36,11 @@ public class StoreObjectConstruct extends BaseDatabaseConstruct {
 						new Argument("allowUpdate", TRUE, ATOMIC),
 						new Argument("database", NULL, ATOMIC),
 				};
-		return new ConstructProcessor(a -> process(a, factory, context.getRobotID()), args);
+		return new ConstructProcessor(a -> process(a, factory), args);
 	}
 
 	@SuppressWarnings("unchecked")
-	static MetaExpression process(final MetaExpression[] args, final DatabaseServiceFactory factory, final RobotID robotID) {
+	static MetaExpression process(final MetaExpression[] args, final DatabaseServiceFactory factory) {
 		String tblName = args[0].getStringValue();
 		LinkedHashMap<String, Object> newObject = (LinkedHashMap<String, Object>) extractValue(args[1]);
 		ConnectionMetadata metaData;

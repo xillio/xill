@@ -37,14 +37,13 @@ public class SqliteConnectConstructTest extends ConstructTest {
 		DatabaseServiceFactory factory = mock(DatabaseServiceFactory.class);
 		when(factory.getService(anyString())).thenReturn(service);
 
-		RobotID robotID = mock(RobotID.class);
 
 		MetaExpression options = mockExpression(ATOMIC);
 		when(options.getValue()).thenReturn(new LinkedHashMap<>());
 
 		MetaExpression file = mockExpression(ATOMIC, true, 5, ":memory:");
 		// run
-		MetaExpression output = SqliteConnectConstruct.process(file, factory, robotID);
+		MetaExpression output = SqliteConnectConstruct.process(file, factory);
 
 		// assert
 		Assert.assertEquals(output.getStringValue(), ":memory:");

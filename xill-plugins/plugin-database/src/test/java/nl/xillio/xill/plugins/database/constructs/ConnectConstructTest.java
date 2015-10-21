@@ -67,7 +67,7 @@ public class ConnectConstructTest extends ConstructTest {
 		mock(BaseDatabaseConstruct.class);
 
 		// run
-		MetaExpression result = ConnectConstruct.process(args, factory, robotID);
+		MetaExpression result = ConnectConstruct.process(args, factory);
 
 		// verify
 		verify(dbService, times(1)).createConnection(eq("databaseName"), eq("user"), eq("pass"));
@@ -109,7 +109,7 @@ public class ConnectConstructTest extends ConstructTest {
 		RobotID robotID = mock(RobotID.class);
 
 		// run
-		ConnectConstruct.process(args, factory, robotID);
+		ConnectConstruct.process(args, factory);
 	}
 
 	/**
@@ -160,6 +160,6 @@ public class ConnectConstructTest extends ConstructTest {
 		RobotID robotID = mock(RobotID.class);
 
 		// run
-		ConnectConstruct.process(args, factory, robotID);
+		ConnectConstruct.process(args, factory);
 	}
 }
