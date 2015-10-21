@@ -32,7 +32,7 @@ public class StoreObjectConstruct extends BaseDatabaseConstruct {
 				{
 						new Argument("table", ATOMIC),
 						new Argument("object", OBJECT),
-						new Argument("keys", LIST),
+						new Argument("keys",emptyList(), LIST),
 						new Argument("allowUpdate", TRUE, ATOMIC),
 						new Argument("database", NULL, ATOMIC),
 				};

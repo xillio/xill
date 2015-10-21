@@ -4,14 +4,14 @@ dependencies{
 	compile 'com.google.code.gson:gson:2.3.1'
 	compile 'org.apache.commons:commons-lang3:3.4'
 	compile 'commons-io:commons-io:2.4'
-	compile 'nl.xillio:xill-lang:3.0.5'
 	compile project(':api')
 }
 
 jar{
 	manifest {
-		attributes "Implementation-Title": 			"Xill Processor"
 		attributes  "Class-Path": configurations.runtime.files.collect {File file-> file.name }.join(" ")
-		attributes "Implementation-Version": 		version
 	}
 }
+
+// To preprate for execution we need to copy the plugins to the plugin directory
+prepare.dependsOn copyToPluginsDir
