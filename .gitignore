@@ -14,7 +14,7 @@ build/
 .metadata/
 .classpath
 .project
-*/bin/
+bin/
 */test-output/
 
 
