@@ -39,12 +39,13 @@ public class GetCellConstruct extends Construct {
 		else //numeric notation
 			cell = createCellRef(column.getStringValue(), row.getNumberValue().intValue());
 		Object cellValue = sheet.getCellValue(cell);
-		if (cellValue instanceof Date){
-			DateImpl date = new DateImpl((Date)cellValue);
-           MetaExpression toReturn = fromValue(date.getZoned().toString());
-           toReturn.storeMeta(nl.xillio.xill.api.data.Date.class, date);
-           return toReturn;
-		}
+
+        if(cellValue instanceof DateImpl){
+            DateImpl date = (DateImpl) cellValue;
+            MetaExpression toReturn = fromValue(date.getZoned().toString());
+            toReturn.storeMeta(nl.xillio.xill.api.data.Date.class, date);
+            return toReturn;
+        }
 		return parseObject(cellValue);
 	}
 

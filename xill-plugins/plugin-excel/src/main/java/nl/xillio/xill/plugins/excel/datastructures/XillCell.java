@@ -63,8 +63,7 @@ public class XillCell {
 					break;
 				case Cell.CELL_TYPE_NUMERIC:
 					if (isDateFormatted()) {
-						cell.getDateCellValue();
-						toReturn = cell.getDateCellValue();
+						toReturn = new DateImpl(cell.getDateCellValue());
 					} else {
 						toReturn = cell.getNumericCellValue();
 					}
