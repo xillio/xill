@@ -115,7 +115,9 @@ public abstract class BaseDatabaseConstruct extends Construct {
 	public static void cleanLastConnections() {
 		for (int i = 0; i < Connections.size(); i++){
 			Connection connection = Connections.get(i).getConnection();
+			
 			try {
+				connection.close();
 				// Try to find out if a connection is still valid, don't bother if this takes too long
 				if (connection.isClosed() || !connection.isValid(VALIDATION_TIMEOUT)) {
 					Connections.remove(i);
