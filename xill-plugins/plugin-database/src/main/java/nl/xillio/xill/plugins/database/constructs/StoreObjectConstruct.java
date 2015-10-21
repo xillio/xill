@@ -36,7 +36,7 @@ public class StoreObjectConstruct extends BaseDatabaseConstruct {
 						new Argument("allowUpdate", TRUE, ATOMIC),
 						new Argument("database", NULL, ATOMIC),
 				};
-		return new ConstructProcessor(a -> process(a, factory, context.getRobotID()), args);
+		return new ConstructProcessor(a -> process(a, factory, context.getRootRobot()), args);
 	}
 
 	@SuppressWarnings("unchecked")

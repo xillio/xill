@@ -26,7 +26,7 @@ public class GetObjectConstruct extends BaseDatabaseConstruct {
 	@Override
 	public ConstructProcessor doPrepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(table, object, database) -> process(table, object, database, factory, context.getRobotID()),
+			(table, object, database) -> process(table, object, database, factory, context.getRootRobot()),
 			new Argument("table", ATOMIC),
 			new Argument("object", OBJECT),
 			new Argument("database", NULL, ATOMIC));
