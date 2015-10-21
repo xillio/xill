@@ -1,7 +1,6 @@
 package nl.xillio.migrationtool;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -49,6 +48,7 @@ public class XillInitializer extends Thread {
 	private final String aceLoader;
 	private final String editorCss;
 	private DocumentationSearcher searcher;
+	private boolean pluginsLoaded = false;
 
 	/**
 	 * Create a new XillInitializer.
@@ -73,7 +73,7 @@ public class XillInitializer extends Thread {
 
 		LOGGER.debug("Initializing loader...");
 		initializeLoader();
-
+		
 		LOGGER.debug("Loading plugins...");
 		loadPlugins();
 
@@ -189,7 +189,7 @@ public class XillInitializer extends Thread {
 	 * @param entity the entity to push the signature into
 	 */
 	private void generateParameters(Construct construct, ConstructDocumentationEntity entity) {
-		ConstructContext context = new ConstructContext(RobotID.dummyRobot(), RobotID.dummyRobot(), construct);
+		ConstructContext context = new ConstructContext(RobotID.dummyRobot(), RobotID.dummyRobot(), construct, null, null);
 		ConstructProcessor proc = construct.prepareProcess(context);
 		List<Parameter> parameters = new ArrayList<>();
 
@@ -224,6 +224,8 @@ public class XillInitializer extends Thread {
 		} catch (CircularReferenceException e) {
 			throw new RuntimeException(e);
 		}
+		
+		pluginsLoaded = true;
 	}
 
 	/**
@@ -231,6 +233,15 @@ public class XillInitializer extends Thread {
 	 * @return a list of all loaded plugins
 	 */
 	public List<XillPlugin> getPlugins() {
+		// Wait for all plugins to be loaded.
+		while (!pluginsLoaded) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		return new ArrayList<>(pluginLoader.getPluginManager().getPlugins());
 	}
 

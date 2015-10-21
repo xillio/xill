@@ -1,28 +1,33 @@
 package nl.xillio.xill.plugins.rest.data;
 
+import com.google.inject.ConfigurationException;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.data.XmlNode;
-import nl.xillio.xill.plugins.xml.data.XmlNodeVar;
+import nl.xillio.xill.api.data.XmlNodeFactory;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.services.inject.InjectorUtils;
 import nl.xillio.xill.services.json.GsonParser;
-
 import org.apache.http.entity.ContentType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Support class for storing the content:
- *   either for request body
- *   or for the response   
+ * either for request body
+ * or for the response
  */
 public class Content {
 
+	private static final Logger LOGGER = LogManager.getLogger();
 	private String content = "";
 	private ContentType type = ContentType.TEXT_PLAIN;
+	private XmlNodeFactory xmlNodeFactory;
 
 	/**
-	 * Acquire content from Xill variable 
-	 * 
+	 * Acquire content from Xill variable
+	 *
 	 * @param contentVar request's body content
 	 */
 	public Content(final MetaExpression contentVar) {
@@ -47,7 +52,7 @@ public class Content {
 
 	/**
 	 * Acquire content from string
-	 * 
+	 *
 	 * @param text content
 	 */
 	public Content(final String text) {
@@ -57,11 +62,11 @@ public class Content {
 
 	/**
 	 * Acquire content from Apache Fluent response
-	 * 
+	 *
 	 * @param responseContent content
 	 */
 	public Content(final org.apache.http.client.fluent.Content responseContent) {
-		if(responseContent != null) {
+		if (responseContent != null) {
 			this.content = responseContent.toString();
 			this.type = responseContent.getType();
 		}
@@ -89,9 +94,9 @@ public class Content {
 	}
 
 	/**
-	 * Create the Xill variable according to the type of content and fill it with proper content 
-	 * 
-	 * @return new Xill variable (JSON->OBJECT type / XML->XmlNode / other->ATOMIC string)
+	 * Create the Xill variable according to the type of content and fill it with proper content
+	 *
+	 * @return new Xill variable (JSON-&gt;OBJECT type / XML-&gt;XmlNode / other-&gt;ATOMIC string)
 	 */
 	public MetaExpression getMeta() {
 		if (ContentType.APPLICATION_JSON.getMimeType().equals(this.getType().getMimeType())) {
@@ -99,12 +104,23 @@ public class Content {
 			Object result = jsonParser.fromJson(this.getContent(), Object.class);
 			return MetaExpression.parseObject(result);
 		} else if (ContentType.APPLICATION_XML.getMimeType().equals(this.getType().getMimeType())) {
-			XmlNodeVar xml = null;
+			if (xmlNodeFactory == null) {
+				// We have no factory yet
+				try {
+					xmlNodeFactory = InjectorUtils.get(XmlNodeFactory.class);
+				} catch (ConfigurationException e) {
+					LOGGER.error("No binding found for XmlNodeFactory", e);
+					throw new RobotRuntimeException("Did not detect the XML plugin, do you have it installed?", e);
+				}
+			}
+
+			XmlNode xml;
 			try {
-				xml = new XmlNodeVar(this.getContent(), true);
+				xml = xmlNodeFactory.fromString(this.getContent());
 			} catch (Exception e) {
 				throw new RobotRuntimeException(e.getMessage());
 			}
+
 			MetaExpression result = ExpressionBuilderHelper.fromValue(xml.toString());
 			result.storeMeta(XmlNode.class, xml);
 			return result;

@@ -82,6 +82,13 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 
 		getDebugger().setErrorHander(this);
 	}
+	
+	/**
+	 * Whether the robot is running.
+	 */
+	public boolean robotRunning() {
+		return running;
+	}
 
 	/**
 	 * Stop the robot
@@ -274,9 +281,9 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 			log.error(e.getMessage());
 			LOG.error("Exception occurred in robot", e);
 		} else if (root == null) {
-			log.error("An error occurred in a robot: " + ExceptionUtils.getStackTrace(e), e);
+			log.error("An error occurred in a robot: " + e.getMessage(), e);
 		} else {
-			log.error("An error occurred in a robot: " + ExceptionUtils.getStackTrace(root), root);
+			log.error("An error occurred in a robot: " + root.getMessage(), root);
 		}
 
 		if (shouldStopOnError.isSelected()) {

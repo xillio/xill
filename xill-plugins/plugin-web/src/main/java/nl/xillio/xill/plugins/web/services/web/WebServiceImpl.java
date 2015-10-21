@@ -237,7 +237,9 @@ public class WebServiceImpl implements WebService {
 	}
 	
 	boolean checkSupportedURL(URL url){
-		return "http".equalsIgnoreCase(url.getProtocol()) || "https".equalsIgnoreCase(url.getProtocol());
+		return "http".equalsIgnoreCase(url.getProtocol())
+				|| "https".equalsIgnoreCase(url.getProtocol())
+				|| "file".equalsIgnoreCase(url.getProtocol());
 	}
 
 	@Override

@@ -18,8 +18,6 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ContextMenu;
@@ -32,14 +30,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.stage.FileChooser;
 import nl.xillio.migrationtool.Loader;
+import nl.xillio.migrationtool.dialogs.CloseTabStopRobotDialog;
 import nl.xillio.migrationtool.dialogs.SaveBeforeClosingDialog;
 import nl.xillio.migrationtool.gui.EditorPane.DocumentState;
-import nl.xillio.sharedlibrary.settings.SettingsHandler;
 import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.api.XillProcessor;
 import nl.xillio.xill.api.components.Robot;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.errors.XillParsingException;
+import nl.xillio.xill.util.settings.Settings;
+import nl.xillio.xill.util.settings.SettingsHandler;
 
 /**
  * A tab containing the editor, console and debug panel attached to a specific currentRobot.
@@ -50,13 +50,8 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
 	private static final String PATH_STATUSICON_RUNNING = "M256,92.481c44.433,0,86.18,17.068,117.553,48.064C404.794,171.411,422,212.413,422,255.999 s-17.206,84.588-48.448,115.455c-31.372,30.994-73.12,48.064-117.552,48.064s-86.179-17.07-117.552-48.064 C107.206,340.587,90,299.585,90,255.999s17.206-84.588,48.448-115.453C169.821,109.55,211.568,92.481,256,92.481 M256,52.481 c-113.771,0-206,91.117-206,203.518c0,112.398,92.229,203.52,206,203.52c113.772,0,206-91.121,206-203.52 C462,143.599,369.772,52.481,256,52.481L256,52.481z M206.544,357.161V159.833l160.919,98.666L206.544,357.161z";
 	private static final String PATH_STATUSICON_PAUSED = "M256,92.481c44.433,0,86.18,17.068,117.553,48.064C404.794,171.411,422,212.413,422,255.999 s-17.206,84.588-48.448,115.455c-31.372,30.994-73.12,48.064-117.552,48.064s-86.179-17.07-117.552-48.064 C107.206,340.587,90,299.585,90,255.999s17.206-84.588,48.448-115.453C169.821,109.55,211.568,92.481,256,92.481 M256,52.481 c-113.771,0-206,91.117-206,203.518c0,112.398,92.229,203.52,206,203.52c113.772,0,206-91.121,206-203.52 C462,143.599,369.772,52.481,256,52.481L256,52.481z M240.258,346h-52.428V166h52.428V346z M326.17,346h-52.428V166h52.428V346z";
-	private static final Group STATUSICON_RUNNING = createIcon(PATH_STATUSICON_RUNNING);
-	private static final Group STATUSICON_PAUSED = createIcon(PATH_STATUSICON_PAUSED);
-
-	static {
-		STATUSICON_RUNNING.setAutoSizeChildren(true);
-		STATUSICON_PAUSED.setAutoSizeChildren(true);
-	}
+	private final Group STATUSICON_RUNNING = createIcon(PATH_STATUSICON_RUNNING);
+	private final Group STATUSICON_PAUSED = createIcon(PATH_STATUSICON_PAUSED);
 
 	@FXML
 	private HBox hbxBot;
@@ -80,9 +75,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	 * @param projectPath
 	 * @param documentPath
 	 *        The full path to the currentRobot (absolute)
-	 * @param helppane
 	 * @param globalController
-	 * @param pluginLoader
 	 * @throws IOException
 	 */
 	public RobotTab(final File projectPath, final File documentPath, final FXController globalController) throws IOException {
@@ -113,9 +106,9 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	}
 
 	private static void initializeSettings(final File documentPath) {
-		settings.registerSimpleSetting("Layout", "RightPanelWidth_" + documentPath.getAbsolutePath(), "0.7", "Width of the right panel for the specified currentRobot");
-		settings.registerSimpleSetting("Layout", "RightPanelCollapsed_" + documentPath.getAbsolutePath(), "true", "The collapsed-state of the right panel for the specified currentRobot");
-		settings.registerSimpleSetting("Layout", "EditorHeight_" + documentPath.getAbsolutePath(), "0.6", "The height of the editor");
+		settings.simple().register(Settings.LAYOUT, Settings.RightPanelWidth_ + documentPath.getAbsolutePath(), "0.7", "Width of the right panel for the specified currentRobot");
+		settings.simple().register(Settings.LAYOUT, Settings.RightPanelCollapsed_ + documentPath.getAbsolutePath(), "true", "The collapsed-state of the right panel for the specified currentRobot");
+		settings.simple().register(Settings.LAYOUT, Settings.EditorHeight_ + documentPath.getAbsolutePath(), "0.6", "The height of the editor");
 	}
 
 	private void initializeTab(final File documentPath) {
@@ -123,7 +116,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 		setText(getName());
 
 		// Set the tab dividers
-		double editorHeight = Double.parseDouble(settings.getSimpleSetting("EditorHeight_" + documentPath.getAbsolutePath()));
+		double editorHeight = Double.parseDouble(settings.simple().get(Settings.LAYOUT, Settings.EditorHeight_ + documentPath.getAbsolutePath()));
 
 		spnBotLeft.setDividerPosition(0, editorHeight);
 
@@ -131,8 +124,12 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 		spnBotLeft.getDividers().get(0).positionProperty().addListener(
 			(observable, oldPos, newPos) -> {
 				double height = newPos.doubleValue();
-				settings.saveSimpleSetting("EditorHeight_" + documentPath.getAbsolutePath(), Double.toString(height));
+				settings.simple().save(Settings.LAYOUT, Settings.EditorHeight_ + documentPath.getAbsolutePath(), Double.toString(height));
 			});
+
+        // Status icons
+        STATUSICON_RUNNING.setAutoSizeChildren(true);
+        STATUSICON_PAUSED.setAutoSizeChildren(true);
 
 		// Subscribe to start/stop for icon change
 		processor.getDebugger().getOnRobotStart().addListener(e -> Platform.runLater(() -> setGraphic(STATUSICON_RUNNING)));
@@ -182,7 +179,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
 			// Remove the left hidden bar from dom
 			// This must be done after initialization otherwise the debugpane won't receive the tab
-			boolean showRightPanel = Boolean.parseBoolean(settings.getSimpleSetting("RightPanelCollapsed_" + getDocument().getAbsolutePath()));
+			boolean showRightPanel = Boolean.parseBoolean(settings.simple().get(Settings.LAYOUT, Settings.RightPanelCollapsed_ + getDocument().getAbsolutePath()));
 
 			if (showRightPanel) {
 				hideButtonPressed();
@@ -216,9 +213,9 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	private void hideButtonPressed() {
 		File document = processor.getRobotID().getPath();
 		if (document != null) {
-			settings.saveSimpleSetting("RightPanelCollapsed_" + document.getAbsolutePath(), "true");
+			settings.simple().save(Settings.LAYOUT, Settings.RightPanelCollapsed_ + document.getAbsolutePath(), "true");
 			if (!spnBotPanes.getDividers().isEmpty()) {
-				settings.saveSimpleSetting("RightPanelWidth_" + document.getAbsolutePath(), Double.toString(spnBotPanes.getDividerPositions()[0]));
+				settings.simple().save(Settings.LAYOUT, Settings.RightPanelWidth_ + document.getAbsolutePath(), Double.toString(spnBotPanes.getDividerPositions()[0]));
 			}
 		}
 
@@ -237,7 +234,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	@FXML
 	private void showButtonPressed() {
 		File document = processor.getRobotID().getPath();
-		settings.saveSimpleSetting("RightPanelCollapsed_" + document.getAbsolutePath(), "false");
+		settings.simple().save(Settings.LAYOUT, Settings.RightPanelCollapsed_ + document.getAbsolutePath(), "false");
 
 		// Hide small bar
 		hbxBot.getChildren().remove(vbxDebugHidden);
@@ -248,10 +245,10 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 		}
 
 		// Add splitpane position listener
-		spnBotPanes.setDividerPosition(0, Double.parseDouble(settings.getSimpleSetting("RightPanelWidth_" + document.getAbsolutePath())));
+		spnBotPanes.setDividerPosition(0, Double.parseDouble(settings.simple().get(Settings.LAYOUT, Settings.RightPanelWidth_ + document.getAbsolutePath())));
 		spnBotPanes.getDividers().get(0).positionProperty().addListener((position, oldPos, newPos) -> {
 			if (spnBotPanes.getItems().contains(vbxDebugpane)) {
-				settings.saveSimpleSetting("RightPanelWidth_" + document.getAbsolutePath(), newPos.toString());
+				settings.simple().save(Settings.LAYOUT, Settings.RightPanelWidth_ + document.getAbsolutePath(), newPos.toString());
 			}
 		});
 	}
@@ -364,6 +361,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	 * @param event
 	 */
 	private void onClose(final Event event) {
+		// Check if the robot is saved, else show the save before closing dialog.
 		if (editorPane.getDocumentState().getValue() == DocumentState.CHANGED) {
 			SaveBeforeClosingDialog dlg = new SaveBeforeClosingDialog(this, event); 
 			dlg.showAndWait();
@@ -371,13 +369,18 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 				globalController.setCancelClose(true);
 			}
 		}
+		
+		// Check if the robot is running, else show the stop robot dialog.
+		if (editorPane.getControls().robotRunning()) {
+			CloseTabStopRobotDialog dlg = new CloseTabStopRobotDialog(this, event);
+			dlg.showAndWait();
+		}
 	}
 
 	/**
 	 * Runs the currentRobot
 	 *
 	 * @throws XillParsingException
-	 * @throws SyntaxError
 	 */
 	public void runRobot() throws XillParsingException {
 		save();

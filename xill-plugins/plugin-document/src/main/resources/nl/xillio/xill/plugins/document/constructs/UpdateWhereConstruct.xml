@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+	<description>
+		Updates one or multiple document versions that equal a given filter. The filter can be built according to the MongoDB 3.0 Query API.
+		The body should consist of a object with objects as values. Each nested object represents a decorator. 
+		Valid values for the version are "current" or a version identifier, and valid values for the section are "source" and "target".
+		Throws an exception if the given id or version does not exist, or if the section is invalid. Also throws an exception when the decorators and fields in the given body do not match
+		one-to-one with those already in the document with the given id. 
+	</description>
+	<examples>
+		<example title="Usage">
+			<header>Updating a number of document.</header>
+			<code>
+				use Document;
+				
+				var body = {"decorator1" : {"field1": 1, "field2": 2}, "decorator2": {"field1": 1}}
+				
+				// Filter should comply to http://docs.mongodb.org/manual/reference/operator/query/
+				var filter = {
+				  "source.modifiedBy": "Jack"
+				};
+				
+				var doc = Document.updateWhere(filter, body);
+			</code>
+			<header>Updating a number of specific versions of sections of a document.</header>
+			<code>
+				use Document;
+				
+				var body = {"decorator1" : {"field1": 1, "field2": 2}, "decorator2": {"field1": 1}}
+				
+				// Filter should comply to http://docs.mongodb.org/manual/reference/operator/query/
+				var filter = {
+				  "source.modifiedBy": "Jack"
+				};
+				
+				var version = "2";
+				var section = "source";
+				var doc = Document.updateWhere(filter, body, version, section);
+			</code>
+		</example>
+	</examples>
+	<searchTags>
+		update, database, db, udm, document
+	</searchTags>
+</function>

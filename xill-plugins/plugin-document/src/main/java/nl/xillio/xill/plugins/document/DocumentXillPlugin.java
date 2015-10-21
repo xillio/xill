@@ -1,6 +1,8 @@
 package nl.xillio.xill.plugins.document;
 
 import nl.xillio.plugins.XillPlugin;
+import nl.xillio.udm.services.DocumentDefinitionService;
+import nl.xillio.udm.util.DocumentDefinitionServiceFactory;
 import nl.xillio.xill.plugins.document.services.ConversionService;
 import nl.xillio.xill.plugins.document.services.ConversionServiceImpl;
 import nl.xillio.xill.plugins.document.services.XillUDMService;
@@ -22,5 +24,6 @@ public class DocumentXillPlugin extends XillPlugin {
 
 		binder.bind(ConversionService.class).to(ConversionServiceImpl.class);
 		binder.bind(XillUDMService.class).to(XillUDMServiceImpl.class);
+		binder.bind(DocumentDefinitionService.class).toProvider(new DocumentDefinitionServiceFactory());
 	}
 }
