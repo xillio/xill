@@ -126,7 +126,6 @@ public class XillCell {
             cell.setCellValue(Date.from(dateTime.toInstant()));
             CellStyle dateTimeStyle = this.sheet.getParentWorkbook().getDateTimeCellStyle();
             this.cell.setCellStyle(dateTimeStyle);
-
         }
         else{
             cell.setCellValue(Date.from(dateTime.toInstant()));

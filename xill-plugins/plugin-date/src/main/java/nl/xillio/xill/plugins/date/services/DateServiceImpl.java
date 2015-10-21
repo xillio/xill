@@ -37,6 +37,8 @@ public class DateServiceImpl implements DateService {
 
     ZonedDateTime getValueOrDefaultZDT(TemporalAccessor parsed){
         ZonedDateTime now = ZonedDateTime.now();
+        ZonedDateTime _default = ZonedDateTime.of(now.toLocalDate(), LocalTime.MIN, now.getZone());
+
         ChronoField[] parameters = {ChronoField.YEAR,
                 ChronoField.MONTH_OF_YEAR,
                 ChronoField.DAY_OF_MONTH,
@@ -44,7 +46,7 @@ public class DateServiceImpl implements DateService {
                 ChronoField.MINUTE_OF_HOUR,
                 ChronoField.SECOND_OF_MINUTE,
                 ChronoField.NANO_OF_SECOND};
-        int[] p = Arrays.stream(parameters).mapToInt(cf -> parsed.isSupported(cf) ? parsed.get(cf) : now.get(cf)).toArray();
+        int[] p = Arrays.stream(parameters).mapToInt(cf -> parsed.isSupported(cf) ? parsed.get(cf) : _default.get(cf)).toArray();
 
         ZoneId zone;
         try{
