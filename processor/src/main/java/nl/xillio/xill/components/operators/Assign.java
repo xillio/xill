@@ -52,9 +52,11 @@ public class Assign implements Processable {
 	@SuppressWarnings("unchecked")
 	private void assign(final List<MetaExpression> target, final int pathID, final MetaExpression value,
 					final Debugger debugger) throws RobotRuntimeException {
-
+		String name = path.get(pathID).process(debugger).get().getStringValue();
 		int index = path.get(pathID).process(debugger).get().getNumberValue().intValue();
-
+		if(!String.valueOf(index).equals(name)){
+			throw new RobotRuntimeException("List '" + variableDeclaration.getName() + "' does not contain any element called '" + name + "' (a list cannot have named elements).");
+		}
 		if (path.size() - 1 == pathID) {
 			// This is the value to write to
 			if (target.size() > index) {
@@ -72,6 +74,7 @@ public class Assign implements Processable {
 			return;
 		}
 
+		
 		// We need to go deeper
 		MetaExpression currentValue = target.get(index).process(debugger).get();
 
@@ -102,6 +105,9 @@ public class Assign implements Processable {
 		}
 
 		// We need to go deeper
+		if(!target.containsKey(index)){
+			throw new RobotRuntimeException("Object '" + variableDeclaration.getName() + "' does not contain any element called '" + index + "'.");
+		}
 		MetaExpression currentValue = target.get(index).process(debugger).get();
 
 		switch (currentValue.getType()) {

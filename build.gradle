@@ -1,82 +1,35 @@
-/**
- * This is the root build file for this repository
- */
-//region Initialization
 buildscript {
-    apply from: file('gradle/xillio/buildscript.gradle'), to: buildscript
-}
-plugins {
-    id "org.sonarqube" version "1.0"
-    id "com.google.osdetector" version "1.3.1"
-    id "com.github.hierynomus.license" version "0.11.0"
-}
+    repositories {
+        maven {
+            url 'https://maven.xillio.com/artifactory/plugins-release/'
+        }
+    }
 
-//region Version
-def buildNo = System.env.BUILD_NUMBER
-
-if ("origin/master" == System.env.GIT_BRANCH) {
-    println "Building release on master branch"
-    project.version = version;
-} else if(buildNo == null) {
-    println "Building application locally"
-    project.version = version;
-} else {
-    def result = version + "_" + buildNo;
-    println "This is not the master branch, version is " + result;
-    project.version = result;
-}
-//endregion
-
-// Set defaults for children
-allprojects {
-    apply from: rootProject.file('gradle/xillio/xillio.gradle')
-    apply from: rootProject.file('gradle/base.gradle')
-}
-//endregion
-
-dependencies {
-    compile project(':api')
-}
-
-//region Deployment
-def osName = osdetector.classifier
-if ("linux" == osdetector.os) {
-    osName += "-" + getLinuxReleaseSuffix()
-}
-distributeZip.classifier osName
-
-def getLinuxReleaseSuffix() {
-    if (osdetector.release.isLike('debian')) {
-        return 'debian'
-    } else if (osdetector.release.isLike('redhat')) {
-        return 'redhat'
-    } else {
-        return 'other'
+    dependencies {
+        classpath 'nl.xillio:gradle-config:1.1.2'
+        classpath 'com.google.gradle:osdetector-gradle-plugin:1.4.0'
     }
 }
-//endregion
-//region Plugins
-task copyToPluginsDir(type: Copy) {
-    dependsOn project(':ide').jar
-    from project(':ide').jar
-    dependsOn project(':processor').jar
-    from project(':processor').jar
-    from configurations.runtime
-    from project(':ide').configurations.runtime
-    from project(':processor').configurations.runtime
-    into new File(pluginsDir, 'core')
+
+
+// First we set some global constants
+ext {
+    pluginsDir = file('plugins')
 }
 
-task assembleContentTools() {
-    group 'build'
-    description 'Build and prepare all plugins for runtime'
-
-    dependsOn copyToPluginsDir
+// Then we apply the xillio plugin to all projects
+allprojects {
+    apply plugin: 'nl.xillio.gradle-config'
 }
 
-clean {
-    delete pluginsDir, file('ESConsole'), file('helpfiles')
-}
-//endregion
-
+// Apply the javafx build
+apply from: file('gradle/dist.gradle')
 apply from: file('gradle/javafx.gradle')
+
+// Then we apply the base configuration to all projects
+allprojects {
+    apply from: rootProject.file('gradle/base.gradle')
+}
+
+// When cleaning up we want to delete all runtime files too
+clean.delete pluginsDir, file('ESConsole'), file('helpfiles'), file('xilliosettings.db')

@@ -1,6 +1,10 @@
 package nl.xillio.xill.components.expressions;
 
-import com.google.inject.Inject;
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
+
 import nl.xillio.plugins.PluginLoader;
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.XillProcessor;
@@ -17,13 +21,11 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.errors.XillParsingException;
 import nl.xillio.xill.services.files.FileResolver;
 import nl.xillio.xill.services.inject.InjectorUtils;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
+import com.google.inject.Inject;
 
 /**
  * This class represents calling another robot
@@ -58,7 +60,7 @@ public class CallbotExpression implements Processable {
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		MetaExpression pathExpression = path.process(debugger).get();
 
-		File otherRobot = resolver.buildFile(new ConstructContext(robotID, robotID,null), pathExpression.getStringValue());
+		File otherRobot = resolver.buildFile(new ConstructContext(robotID, robotID, null, null, null), pathExpression.getStringValue());
 
 		LOGGER.debug("Evaluating callbot for " + otherRobot.getAbsolutePath());
 

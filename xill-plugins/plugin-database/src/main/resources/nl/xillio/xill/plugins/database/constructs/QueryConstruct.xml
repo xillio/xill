@@ -3,19 +3,19 @@
   <description>
     Query a database.         
     
-    The connection parameter is optional, if not given the last created connection will be used. 
-    
+    The database parameter is optional. The last made connection will be used if no database is given.
+    the timeout parameter is optional. The default is set to 30 seconds. when the query takes longer than the given timeout it will stop.A timeout of 0 means that there is no limit.
     Returns an iterator containing an update count for each insert/update/delete and an object for each selected row in the case of a select.
   </description>
   <examples>
     <example>
-      <header>Select all rows from the table "test" in a SQLite database and display the results</header>
+      <header>Select all rows from the table "test" in a SQLite database and display the results, with timeout at 10 seconds and using the connection in the con variable</header>
       <code>
 	use Database;
 	use System;
 	
 	var con = Database.connect("database.sqlite", "sqlite");
-	var result = Database.query("SELECT * FROM test");
+	var result = Database.query("SELECT * FROM test",10,con);
 	
 	foreach (r in result){
 	 System.print(r); 

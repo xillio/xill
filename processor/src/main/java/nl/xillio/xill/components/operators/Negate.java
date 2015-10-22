@@ -19,7 +19,6 @@ public class Negate implements Processable {
 
 	/**
 	 * @param value
-	 * @param right
 	 */
 	public Negate(final Processable value) {
 		this.value = value;

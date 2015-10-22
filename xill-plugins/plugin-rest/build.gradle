@@ -9,6 +9,5 @@
 
 dependencies {
     compile 'org.apache.httpcomponents:fluent-hc:4.5'
-    compile project(':xill-plugins:plugin-xml')
 }
 

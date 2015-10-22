@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<function>
+	<description>
+		Loads one or multiple decorator definitions from JSON, enabling them to be used in Document.create. 
+                When a string is passed as an argument the json is read from the file identified by the string. 
+                When an object is passed as a parameter it is treated as JSON representation. 
+	</description>
+	<examples>
+		<example title="Load from file">
+			<header>Loading decorator definitions from the file "decorators.json" in the project directory</header>
+			<code>
+				use Document;
+				
+				Document.loadContentTypes("decorators.json");
+			</code>
+		</example>
+                <example title="Load one from object">
+			<header>Loading one decorator definition from an object</header>
+			<code>
+				use Document;
+				
+				Document.loadContentTypes({"myDecorator":{"field1":{"type":"NUMBER",required:"true"}}});
+			</code>
+		</example>
+                <example title="Load multiple from object">
+			<header>Loading multiple decorator definitions from an object</header>
+			<code>
+				use Document;
+				
+				Document.loadContentTypes({"myDecorator1":{"field1":{"type":"NUMBER",required:true}},
+                                                            "myDecorator2":{"field1":{"type":"STRING",required:true}, "field2":{"type":"STRING",required:false}}});
+			</code>
+		</example>
+	</examples>
+	<searchTags>
+		version,versions, database, db, udm, document, persistContentType, loadDecoratorDefinitions
+	</searchTags>
+</function>

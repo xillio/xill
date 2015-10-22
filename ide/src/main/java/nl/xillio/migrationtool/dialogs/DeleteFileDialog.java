@@ -32,12 +32,12 @@ public class DeleteFileDialog extends FXMLDialog {
 	}
 
 	@FXML
-	private void cancelBtnPressed(@SuppressWarnings("unused") final ActionEvent event) {
+	private void cancelBtnPressed(final ActionEvent event) {
 		close();
 	}
 
 	@FXML
-	private void deleteBtnPressed(@SuppressWarnings("unused") final ActionEvent event) {
+	private void deleteBtnPressed(final ActionEvent event) {
 		deleteFile(treeItem);
 		treeItem.getParent().getChildren().remove(treeItem);
 		projectPane.getSelectionModel().clearSelection();

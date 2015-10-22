@@ -79,6 +79,12 @@ public class FunctionDeclaration extends Instruction {
 	}
 
 	@Override
+	public boolean preventDebugging() {
+		// Debugger should not halt on function declarations
+		return true;
+	}
+
+	@Override
 	public Collection<Processable> getChildren() {
 		List<Processable> children = new ArrayList<>(parameters);
 		children.add(instructions);
