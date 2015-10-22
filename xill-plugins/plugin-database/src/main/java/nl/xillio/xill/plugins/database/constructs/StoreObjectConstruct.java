@@ -27,16 +27,16 @@ import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
 public class StoreObjectConstruct extends BaseDatabaseConstruct {
 
 	@Override
-	public ConstructProcessor prepareProcess(final ConstructContext context) {
+	public ConstructProcessor doPrepareProcess(final ConstructContext context) {
 		Argument[] args =
 				{
 						new Argument("table", ATOMIC),
 						new Argument("object", OBJECT),
-						new Argument("keys", LIST),
+						new Argument("keys",emptyList(), LIST),
 						new Argument("allowUpdate", TRUE, ATOMIC),
 						new Argument("database", NULL, ATOMIC),
 				};
-		return new ConstructProcessor(a -> process(a, factory, context.getRobotID()), args);
+		return new ConstructProcessor(a -> process(a, factory, context.getRootRobot()), args);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -46,7 +46,7 @@ public class StoreObjectConstruct extends BaseDatabaseConstruct {
 		ConnectionMetadata metaData;
 		// if no database is given use the last made connection of this robot.
 		if (args[4].equals(NULL)) {
-			metaData = lastConnections.get(robotID);
+			metaData = getLastConnection(robotID);
 		} else {
 			metaData = assertMeta(args[4], "database", ConnectionMetadata.class, "variable with a connection"); // check whether the given MetaExpression has the right metaData.
 		}

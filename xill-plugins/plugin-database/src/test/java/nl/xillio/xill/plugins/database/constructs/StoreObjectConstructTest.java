@@ -10,19 +10,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
-
-import com.mysql.jdbc.Connection;
-
 import nl.xillio.xill.ConstructTest;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.database.BaseDatabaseConstruct;
 import nl.xillio.xill.plugins.database.services.DatabaseService;
 import nl.xillio.xill.plugins.database.services.DatabaseServiceFactory;
 import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
+
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
+import com.mysql.jdbc.Connection;
 
 /**
  * Test the {@link StoreObjectConstruct}.
@@ -50,11 +49,6 @@ public class StoreObjectConstructTest extends ConstructTest {
 		RobotID id = mock(RobotID.class);
 
 		when(database.equals(NULL)).thenReturn(true);
-
-		ConnectionMetadata conMetadata = mock(ConnectionMetadata.class);
-		when((conMetadata).getDatabaseName()).thenReturn("databaseName");
-
-		BaseDatabaseConstruct.setLastConnections(id, conMetadata);
 
 		DatabaseService dbService = mock(DatabaseService.class);
 		when((factory).getService(any())).thenReturn(dbService);

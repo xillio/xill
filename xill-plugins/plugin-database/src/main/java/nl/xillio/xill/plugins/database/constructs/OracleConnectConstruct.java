@@ -17,7 +17,7 @@ import nl.xillio.xill.plugins.database.util.Database;
  */
 public class OracleConnectConstruct extends BaseDatabaseConstruct {
 	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
+	public ConstructProcessor doPrepareProcess(ConstructContext context) {
 		Argument[] args =
 		{
 				new Argument("host", ATOMIC),
@@ -27,7 +27,7 @@ public class OracleConnectConstruct extends BaseDatabaseConstruct {
 				new Argument("user", NULL, ATOMIC),
 				new Argument("pass", NULL, ATOMIC),
 				new Argument("options", new ObjectExpression(new LinkedHashMap<>()), OBJECT)};
-		return new ConstructProcessor(a -> process(a, factory, context.getRobotID()), args);
+		return new ConstructProcessor(a -> process(a, factory, context.getRootRobot()), args);
 	}
 
 	static MetaExpression process(MetaExpression[] args, DatabaseServiceFactory factory, final RobotID robotID) {

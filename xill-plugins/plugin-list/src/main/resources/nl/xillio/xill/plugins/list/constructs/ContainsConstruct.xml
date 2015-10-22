@@ -9,11 +9,11 @@
                 use List;
                 use System
                 var list = ["a","b","c"];
-                List.containsValue(list, "b"); // TRUE
-                List.containsValue(list, "e"); // FALSE
+                List.contains(list, "b"); // TRUE
+                List.contains(list, "e"); // FALSE
                 var object ={1:"a",2:"b",3:"c"};
-                List.containsValue(object,"b"); // TRUE
-                List.containsValue(object,"e"); // FALSE
+                List.contains(object,"b"); // TRUE
+                List.contains(object,"e"); // FALSE
             </code>
         </example>
     </examples>

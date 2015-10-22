@@ -28,6 +28,11 @@ public class GetSizeConstruct extends Construct {
 	}
 
 	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri) {
+		// Check if the specified uri is not null.
+		if (uri.isNull())
+			throw new RobotRuntimeException("The specified uri cannot be null.");
+		
+		// Get the file and return the size.
 		File file = getFile(context, uri.getStringValue());
 		try {
 			return fromValue(fileUtils.getByteSize(file));

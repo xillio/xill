@@ -82,6 +82,13 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 
 		getDebugger().setErrorHander(this);
 	}
+	
+	/**
+	 * Whether the robot is running.
+	 */
+	public boolean robotRunning() {
+		return running;
+	}
 
 	/**
 	 * Stop the robot

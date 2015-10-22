@@ -110,7 +110,6 @@ public class BrowserPane extends AnchorPane {
 	/**
 	 * Create a new BrowserPane in XML mode, based on the provided xml node.
 	 *
-	 * @param content
 	 * @param documentNode
 	 */
 	public BrowserPane(final Node documentNode) {
@@ -497,7 +496,7 @@ public class BrowserPane extends AnchorPane {
 	/**
 	 * Convert XML to HTML that can be displayed
 	 *
-	 * @param xmlnode
+	 * @param xmlNode
 	 * @return
 	 */
 	public static String xmlToHtml(final Node xmlNode) {
