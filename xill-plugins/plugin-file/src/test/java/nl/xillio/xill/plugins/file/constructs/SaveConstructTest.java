@@ -18,9 +18,9 @@ import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 
 /**
- * Test the SaveToConstruct
+ * Test the SaveConstruct
  */
-public class SaveToConstructTest {
+public class SaveConstructTest {
 
 	@Test
 	public void testProcessNormal() throws IOException {
@@ -46,7 +46,7 @@ public class SaveToConstructTest {
 		FileUtilities fileUtils = mock(FileUtilities.class);
 
 		// Run the Method
-		MetaExpression result = SaveToConstruct.process(context, fileUtils, uri, content);
+		MetaExpression result = SaveConstruct.process(context, fileUtils, uri, content);
 
 		// Verify
 		verify(fileUtils, times(1)).saveStringToFile(contentString, file);
@@ -68,7 +68,7 @@ public class SaveToConstructTest {
 		doThrow(new IOException("Failed to save")).when(fileUtils).saveStringToFile(anyString(), any(File.class));
 
 		// Run the Method
-		SaveToConstruct.process(context, fileUtils, mock(MetaExpression.class), mock(MetaExpression.class));
+		SaveConstruct.process(context, fileUtils, mock(MetaExpression.class), mock(MetaExpression.class));
 
 		// Verify
 		verify(logger).error(eq("Failed to write to file: Failed to save"), any(IOException.class));

@@ -1,8 +1,11 @@
 package nl.xillio.migrationtool.gui;
 
-import javafx.beans.InvalidationListener;
+import java.io.IOException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -12,7 +15,6 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
-import javafx.scene.control.OverrunStyle;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
@@ -21,15 +23,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Window;
 import nl.xillio.xill.docgen.DocumentationSearcher;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.sun.javafx.tk.FontMetrics;
-import com.sun.javafx.tk.Toolkit;
-import java.io.IOException;
 
 /**
  * A search bar, with the defined options and behavior.
+ *
  * @author Thomas Biesaart
  */
 public class HelpSearchBar extends AnchorPane {
@@ -42,7 +39,7 @@ public class HelpSearchBar extends AnchorPane {
 	@FXML
 	private TextField searchField;
 
-	private ObservableList<String> data = FXCollections.observableArrayList();
+	private final ObservableList<String> data = FXCollections.observableArrayList();
 	private DocumentationSearcher searcher;
 
 	/**
@@ -59,86 +56,125 @@ public class HelpSearchBar extends AnchorPane {
 			LOGGER.error("Failed to load help pane", e);
 		}
 
-		//Result list
+		// Result list
 		listView = new ListView<>(data);
 		listView.setOnMouseClicked(this::onClick);
 		listView.setOnKeyPressed(this::onKeyPressed);
 		listView.setPrefHeight(ROW_HEIGHT);
 		listView.setFixedCellSize(ROW_HEIGHT);
-		
-		//Result wrapper
+
+		// Result wrapper
 		hoverToolTip = new Tooltip();
 		hoverToolTip.setGraphic(listView);
 		hoverToolTip.prefWidthProperty().bind(searchField.widthProperty());
 
-		data.addListener(new ListChangeListener<Object>(){
-			 @Override
-			    public void onChanged(ListChangeListener.Change change) {
-			        listView.setPrefHeight( (Math.min(10, data.size())) * ROW_HEIGHT + 2);
-			    }
-			});
+		data.addListener((ListChangeListener<Object>) change -> listView.setPrefHeight((Math.min(10, data.size())) * ROW_HEIGHT + 2));
 
-		//Listen to search changes
+		// Listen to search changes
 		searchField.textProperty().addListener(this::searchTextChanged);
-		
-		//Close on focus lost
-		searchField.focusedProperty().addListener(new ChangeListener<Boolean>(){
-	        @Override
-	        public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-	            if (newValue) {
-	                showResults();
-	            } else {
-	                hoverToolTip.hide();
-	            }
-	        }
-	    });
+
+		// Close on focus lost
+		searchField.focusedProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
+			if (newValue) {
+				showResults();
+			} else {
+				hoverToolTip.hide();
+			}
+		});
 	}
 
-	private void onKeyPressed(KeyEvent keyEvent) {
-		if(keyEvent.getCode() == KeyCode.ENTER) {
-			openSelected();
+	/**
+	 * Handles a key press.
+	 * Checks for an ENTER and then tries to open a page.
+	 *
+	 * @param keyEvent
+	 */
+	public void onKeyPressed(final KeyEvent keyEvent) {
+		if (keyEvent.getCode() == KeyCode.ENTER) {
+			String content = searchField.getText();
+
+			if (content.isEmpty()) {
+				helpPane.displayHome();
+				cleanup();
+			} else if (content.split(" ").length == 1) {
+				tryDisplayIndexOf(content);
+			}
 		}
 	}
 
-	private void onClick(MouseEvent mouseEvent) {
+	/**
+	 * Tries to display the index of a given package name.
+	 *
+	 * @param packet
+	 *        The name of the package we try to display.
+	 */
+	private void tryDisplayIndexOf(final String packet) {
+		try {
+			helpPane.display(packet, "_index");
+			cleanup();
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * Handles the clicking mechanism.
+	 *
+	 * @param mouseEvent
+	 *        The mouseEvent.
+	 */
+	private void onClick(final MouseEvent mouseEvent) {
 		openSelected();
 	}
 
-
+	/**
+	 * Opens the selected item.
+	 */
 	void openSelected() {
 		String selected = listView.getSelectionModel().getSelectedItem();
 
-		if(selected == null) {
+		if (selected == null) {
 			return;
 		}
 
 		String[] parts = selected.split("\\.");
 		helpPane.display(parts[0], parts[1]);
+		cleanup();
+	}
+
+	/**
+	 * Cleans the UI (hiding the tooltips, clearing its content etc).
+	 */
+	void cleanup() {
 		hoverToolTip.hide();
+		data.clear();
 		searchField.clear();
 		helpPane.requestFocus();
 	}
 
 	/**
 	 * Set the searcher that should be used.
-	 * @param searcher the searcher
+	 *
+	 * @param searcher
+	 *        the searcher
 	 */
-	public void setSearcher(DocumentationSearcher searcher) {
+	public void setSearcher(final DocumentationSearcher searcher) {
 		this.searcher = searcher;
 	}
 
 	/**
 	 * Set the HelpPane.
-	 * @param help The help pane in which the search bar is embedded
+	 *
+	 * @param help
+	 *        The help pane in which the search bar is embedded
 	 */
 	public void setHelpPane(final HelpPane help) {
 		helpPane = help;
 	}
 
-
 	// Runs the search
 	private void runSearch(final String query) {
-		if(searcher == null) {
+		if (searcher == null) {
 			data.clear();
 			return;
 		}
@@ -148,8 +184,8 @@ public class HelpSearchBar extends AnchorPane {
 		data.addAll(results);
 	}
 
-	private void searchTextChanged(Object source, String oldValue, String newValue) {
-		if(newValue == null || newValue.isEmpty()) {
+	private void searchTextChanged(final Object source, final String oldValue, final String newValue) {
+		if (newValue == null || newValue.isEmpty()) {
 			hoverToolTip.hide();
 			return;
 		}
@@ -157,6 +193,12 @@ public class HelpSearchBar extends AnchorPane {
 		runSearch(searchField.getText());
 
 		showResults();
+	}
+
+	public void handleHeightChange() {
+		if (hoverToolTip.isShowing()) {
+			showResults();
+		}
 	}
 
 	private void showResults() {
@@ -169,5 +211,4 @@ public class HelpSearchBar extends AnchorPane {
 			position.getX() + scene.getX() + window.getX(),
 			position.getY() + scene.getY() + window.getY() + searchField.getHeight());
 	}
-
 }
