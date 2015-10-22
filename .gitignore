@@ -1,11 +1,8 @@
-bin/
-dist/
 xilliosettings.db
-test-output/
-/ESConsole/
-/target/
-/plugins/
-/helpfiles
+ESConsole/
+plugins/
+helpfiles/
+xilliosettings.cfg
 
 # Gradle
 build/
@@ -17,9 +14,10 @@ build/
 .metadata/
 .classpath
 .project
+bin/
+*/test-output/
+
 
 # IntelliJ
 *.iml
 .idea/
-gradle/javafx.plugin
-xilliosettings.cfg

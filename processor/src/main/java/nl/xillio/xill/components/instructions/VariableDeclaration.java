@@ -74,9 +74,8 @@ public class VariableDeclaration extends Instruction {
 	}
 
 	/**
-	 * Release the current variable
+	 * Release the current variable.
 	 *
-	 * @param value
 	 */
 	public void releaseVariable() {
 		valueStack.pop().releaseReference();
@@ -105,7 +104,7 @@ public class VariableDeclaration extends Instruction {
 	}
 
 	/**
-	 * This name is for debugging purposes and is <b>NOT UNIQUE</b><br/>
+	 * This name is for debugging purposes and is <b>NOT UNIQUE</b>.
 	 * Do not use as identifier
 	 *
 	 * @return the name

@@ -23,14 +23,13 @@ public class SaveBeforeClosingDialog extends FXMLDialog {
 	 */
 	public SaveBeforeClosingDialog(final RobotTab tab, final Event closeEvent) {
 		super("/fxml/dialogs/SaveBeforeClosing.fxml");
-		setTitle("Save changes?");
 		this.tab = tab;
 		this.closeEvent = closeEvent;
 		setTitle("Save changes to " + this.tab.getText() + "?");
 	}
 
 	@FXML
-	private void yesBtnPressed(@SuppressWarnings("unused") final ActionEvent event) {
+	private void yesBtnPressed(final ActionEvent event) {
 		// Try to save, don't close the tab if it failed
 		if (!tab.save()) {
 			closeEvent.consume();
@@ -39,12 +38,12 @@ public class SaveBeforeClosingDialog extends FXMLDialog {
 	}
 
 	@FXML
-	private void noBtnPressed(@SuppressWarnings("unused") final ActionEvent event) {
+	private void noBtnPressed(final ActionEvent event) {
 		close();
 	}
 
 	@FXML
-	private void cancelBtnPressed(@SuppressWarnings("unused") final ActionEvent event) {
+	private void cancelBtnPressed(final ActionEvent event) {
 		closeEvent.consume();
 		cancelPressed = true;
 		close();

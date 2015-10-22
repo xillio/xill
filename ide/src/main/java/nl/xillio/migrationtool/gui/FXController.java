@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -16,6 +17,7 @@ import javafx.stage.FileChooser;
 import javafx.util.Pair;
 import nl.xillio.migrationtool.Loader;
 import nl.xillio.migrationtool.dialogs.SettingsDialog;
+import nl.xillio.migrationtool.dialogs.CloseAppStopRobotsDialog;
 import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.api.Xill;
@@ -171,7 +173,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 			this.cancelClose = false;
 			LOGGER.info("Shutting down application");
 			if (!closeApplication()) {
-				event.consume(); // this cancel the process of the application closing     
+				event.consume(); // this cancel the process of the application closing
 			}
 		}));
 
@@ -221,21 +223,23 @@ public class FXController implements Initializable, EventHandler<Event> {
 			}
 		});
 
-		Platform.runLater(() -> {
-			verifyLicense();
-			try {
-				showReleaseNotes();
-			} catch (IOException e) {
-				LOGGER.error("Failed to show release notes", e);
+        Platform.runLater(() -> {
+            // Verify the license.
+            verifyLicense();
+            try {
+                showReleaseNotes();
+            } catch (IOException e) {
+                LOGGER.error("Failed to show release notes", e);
+            }
 
-				String activeTab = settings.simple().get(Settings.WORKSPACE, Settings.ActiveTab);
-				if (activeTab != null && !"".equals(activeTab)) {
-					getTabs().stream()
-						.filter(tab -> tab.getDocument().getAbsolutePath().equals(activeTab))
-						.forEach(tab -> tpnBots.getSelectionModel().select(tab));
-				}
-			}
-		});
+            // Select the last opened tab.
+            String activeTab = settings.simple().get(Settings.WORKSPACE, Settings.ActiveTab);
+            if (activeTab != null && !"".equals(activeTab)) {
+                getTabs().stream()
+                        .filter(tab -> tab.getDocument().getAbsolutePath().equals(activeTab))
+                        .forEach(tab -> tpnBots.getSelectionModel().select(tab));
+            }
+        });
 	}
 
 	/**
@@ -465,13 +469,25 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 		// Save active tab
 		final String activeTab[] = {null};
-		getTabs().stream().filter(tab -> tab.isSelected()).forEach(tab -> activeTab[0] = tab.getDocument().getAbsolutePath());
+        getTabs().stream().filter(tab -> tab.isSelected()).forEach(tab -> activeTab[0] = tab.getDocument().getAbsolutePath());
 		if (activeTab[0] != null) {
 			settings.simple().save(Settings.WORKSPACE, Settings.ActiveTab, activeTab[0], true);
 		} else {
 			settings.simple().save(Settings.WORKSPACE, Settings.ActiveTab, "", true);
 		}
 
+		// Check if there are tabs whose robots are running.
+		List<RobotTab> running = getTabs().stream().filter(tab -> tab.getEditorPane().getControls().robotRunning()).collect(Collectors.toList());
+		if (running.size() > 0) {
+			// Show the dialog.
+			CloseAppStopRobotsDialog dlg = new CloseAppStopRobotsDialog(running);
+			dlg.showAndWait();
+			
+			// Check if no was clicked on the dialog.
+			if (dlg.getPreventClose())
+				return false;
+		}
+		
 		// Close all tabs
 		tpnBots.getTabs().forEach(tab -> {
 			if (!this.cancelClose) {
@@ -495,7 +511,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 		ProjectPane.stop();
 		Platform.exit();
 		ESConsoleClient.getInstance().close();
-		return false;
+		return true;
 	}
 
 	private String formatEditorOptionJS(final String optionJS, final String keyValue) {

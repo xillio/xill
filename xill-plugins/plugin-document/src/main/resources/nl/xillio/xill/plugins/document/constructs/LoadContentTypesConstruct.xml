@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<function>
+	<description>
+		Loads one or multiple content type definitions from JSON, enabling them to be used in Document.create. 
+                When a string is passed as an argument the json is read from the file identified by the string. 
+                When an object is passed as a parameter it is treated as JSON representation. 
+	</description>
+	<examples>
+		<example title="Load from file">
+			<header>Loading content type definitions from the file "types.json" in the project directory</header>
+			<code>
+				use Document;
+				
+				Document.loadContentTypes("types.json");
+			</code>
+		</example>
+                <example title="Load one from object">
+			<header>Loading one content type definition from an object</header>
+			<code>
+				use Document;
+				
+				Document.loadContentTypes({"myContentType":["myDecorator1", "myDecorator2"]});
+			</code>
+		</example>
+                <example title="Load multiple from object">
+			<header>Loading multiple content type definitions from an object</header>
+			<code>
+				use Document;
+				
+				Document.loadContentTypes({"myContentType1":["myDecorator1", "myDecorator2"],
+                                                            "myContentType2":["myDecorator1"]});
+			</code>
+		</example>
+	</examples>
+	<searchTags>
+		version,versions, database, db, udm, document, persistContentType, loadDecoratorDefinitions
+	</searchTags>
+</function>

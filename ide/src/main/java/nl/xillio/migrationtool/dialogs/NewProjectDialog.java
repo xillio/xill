@@ -45,7 +45,7 @@ public class NewProjectDialog extends FXMLDialog {
 	}
 
 	@FXML
-	private void browseBtnPressed(@SuppressWarnings("unused") final ActionEvent event) {
+	private void browseBtnPressed(final ActionEvent event) {
 		File result = new DirectoryChooser().showDialog(getOwner());
 		if (result != null) {
 			tfprojectfolder.setText(result.getPath());
@@ -53,12 +53,12 @@ public class NewProjectDialog extends FXMLDialog {
 	}
 
 	@FXML
-	private void cancelBtnPressed(@SuppressWarnings("unused") final ActionEvent event) {
+	private void cancelBtnPressed(final ActionEvent event) {
 		close();
 	}
 
 	@FXML
-	private void okayBtnPressed(@SuppressWarnings("unused") final ActionEvent event) {
+	private void okayBtnPressed(final ActionEvent event) {
 		String projectName = tfprojectname.getText();
 		String projectFolder = tfprojectfolder.getText();
 

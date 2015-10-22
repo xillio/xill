@@ -11,12 +11,12 @@
   </description>
   <examples>
     <example>
-      <header>Insert a single rows into an Oracle database</header>
+      <header>Insert a single rows into an Oracle database, with the timeout set to 10 seconds and using the connection from the 'con' variable (both are optional)</header>
       <code>
 	use Database;
 	
 	var con = Database.connect("localhost:1521:orcl", "oracle", "user", "pass");
-	var result = Database.preparedStatement("INSERT INTO table VALUES(:value1, :value2)", {"value1":1, "value2":2});
+	var result = Database.preparedStatement("INSERT INTO table VALUES(:value1, :value2)", {"value1":1, "value2":2},10,con);
       </code>
     </example>  
     <example>
