@@ -61,7 +61,7 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		reset(true);
+        reset(true);
 		enableSearchAsYouType();
 
 		this.addEventHandler(KeyEvent.KEY_PRESSED, this);
@@ -77,6 +77,13 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 		if (clearQuery) {
 			tfEditorSearchQuery.clear();
 		}
+
+        currentOccurrence = 0;
+        // Reset the count and index labels.
+        Platform.runLater(() -> {
+            lblEditorSearchCount.setText("0");
+            lblEditorSearchIndex.setText("0");
+        });
 	}
 
 	/**
@@ -121,9 +128,7 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 			searchable.search(query, isCaseSensitive());
 		}
 
-		// Highlight all occurrences and reset the current occurrence.
-		searchable.highlightAll();
-        setCurrentOccurrence(0);
+		// Update the labels.
         updateLabels();
 	}
 
@@ -180,32 +185,38 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 
     /**
      * Set the current occurrence.
-     * @param i The zero-based index of the current occurrence.
+     * @param next Whether the next or previous occurrence was selected.
      */
-    public void setCurrentOccurrence(final int i) {
-        currentOccurrence = i % searchable.getOccurrences();
-        if (currentOccurrence < 0)
-            currentOccurrence += searchable.getOccurrences();
+    private void updateOccurrence(final boolean next) {
+        if (!currentSearch.isEmpty()) {
+            // Set the current occurrence.
+            currentOccurrence += next ? 1 : -1;
+            currentOccurrence = searchable.getOccurrences() == 0 ? -1 : currentOccurrence % searchable.getOccurrences();
+            if (currentOccurrence < 0)
+                currentOccurrence += searchable.getOccurrences();
+
+            // Find the next/previous occurrence.
+            if (next)
+                searchable.findNext(currentOccurrence);
+            else
+                searchable.findPrevious(currentOccurrence);
+
+            updateLabels();
+        }
+        else
+            reset(false);
     }
 
 	///////////////////// Controls /////////////////////
 
 	@FXML
 	private void nextButtonPressed(final ActionEvent actionEvent) {
-		if (!currentSearch.isEmpty()) {
-            setCurrentOccurrence(currentOccurrence + 1);
-            searchable.findNext(currentOccurrence);
-            updateLabels();
-        }
+		updateOccurrence(true);
     }
 
 	@FXML
 	private void previousButtonPressed() {
-		if (!currentSearch.isEmpty()) {
-            setCurrentOccurrence(currentOccurrence - 1);
-            searchable.findPrevious(currentOccurrence);
-            updateLabels();
-        }
+		updateOccurrence(false);
     }
 
 	@FXML

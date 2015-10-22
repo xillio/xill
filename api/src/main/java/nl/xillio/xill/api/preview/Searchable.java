@@ -47,11 +47,6 @@ public interface Searchable {
     void findPrevious(int previous);
 
 	/**
-	 * Highlight all occurrences of the searched pattern or needle.
-	 */
-	void highlightAll();
-
-	/**
 	 * Clear the search and any highlights.
 	 */
 	void clearSearch();

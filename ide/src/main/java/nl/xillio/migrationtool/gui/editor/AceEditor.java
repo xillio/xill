@@ -525,9 +525,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	 * Call a method on the javascript ace editor object
 	 * 
 	 * Defers execution using {@link Platform#runLater(Runnable)}.
-	 * 
-	 * @param callback
-	 *        Callback that is called with the return value of the call
+	 *
 	 * @param method
 	 *        Method name
 	 * @param args
@@ -587,41 +585,22 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 		return raw.replace("\\", "\\\\").replace("\"", "\\\"").replace("'", "\\'").replace("\n", "\\n").replace("\r", "");
 	}
 
-	// ///////// SEARCH BAR //////////////////
+    ////////////////// SEARCH BAR //////////////////
 	private int occurrences = 0;
-
-	private String needle;
-	private boolean regex;
-	private boolean caseSensitive;
 
 	@Override
 	public void searchPattern(final String pattern, final boolean caseSensitive) {
-		this.needle = pattern;
-		this.caseSensitive = caseSensitive;
-		this.regex = true;
-		searchJS(pattern, true, caseSensitive, 0);
+		searchJS(pattern, true, caseSensitive);
 	}
 
 	@Override
 	public void search(final String needle, final boolean caseSensitive) {
-		this.needle = needle;
-		this.caseSensitive = caseSensitive;
-		this.regex = false;
-		searchJS(needle, false, caseSensitive, 0);
+		searchJS(needle, false, caseSensitive);
 	}
 
 	@Override
 	public int getOccurrences() {
 		return occurrences;
-	}
-
-	public void highlight(final int occurrence) {
-		this.searchJS(needle, regex, caseSensitive, occurrence);
-	}
-
-	@Override
-	public void highlightAll() {
-		// nothing to do
 	}
 
 	@Override
@@ -631,43 +610,35 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 
 	@Override
 	public void replaceOne(final int occurrence, final String replacement) {
-		highlight(occurrence);
 		callOnAce("replace", replacement);
 	}
 
-	private void searchJS(final String needle, final boolean regex, final boolean caseSensitive, final int occurence) {
-		JSObject flags = (JSObject) executeJSBlocking("var flags={ "
-				+ "backwards: false,"
-				+ "wrap: true,"
-				+ "caseSensitive: " + caseSensitive + ","
-				+ "regExp: " + regex + ","
-				+ "occurence: " + occurence
-				+ "}; flags;");
-
+	private void searchJS(final String needle, final boolean regex, final boolean caseSensitive) {
 		// Count
 		callOnAce(result -> {
-			occurrences = (Integer) result;
+			occurrences = (int)result;
 
 			// If there are no results, clear the search
 			if (occurrences == 0) {
-				callOnAceBlocking("clearOccurences");
+				callOnAceBlocking("clearOccurrences");
 			}
-		}, "findOccurences", needle, flags);
+
+		}, "findOccurrences", needle, regex, caseSensitive);
 	}
 
     @Override
     public void findNext(int next) {
-
+        callOnAce("findNext");
     }
 
     @Override
     public void findPrevious(int previous) {
-
+        callOnAce("findPrevious");
     }
 
 	@Override
 	public void clearSearch() {
-		callOnAce("clearOccurences");
+		callOnAce("clearOccurrences");
 	}
 
 	/**

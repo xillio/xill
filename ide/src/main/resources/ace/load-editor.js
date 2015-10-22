@@ -27,81 +27,101 @@ function loadEditor(){
 		else
 			this.xillBuildin += "|" + keyword;
 	}
-	
-	editor.$highlights = [];
-	editor.highlight = function(line, type) {
-		var editor = contenttools.getAce();
-		hl = editor.getSession().addMarker(new Range(line, 0, line, 1), "ace_" + type, "fullLine");
-		editor.$highlights.push(hl);
-		editor.scrollToLine(line);
-	}
-	editor.clearHighlight = function() {
-		var editor = contenttools.getAce();
-		editor.$highlights.forEach(function(entry) {
-			editor.getSession().removeMarker(entry);
-		});
-		editor.$highlights = [];
-	}
-	
-	editor.clearSearch = function() {
-		var editor = contenttools.getAce();
-		for ( var key in editor.getSession().getMarkers(false)) {
-			entry = editor.getSession().$backMarkers[key];
-	
-			if (entry.clazz == "ace_selection")
-				editor.getSession().removeMarker(key);
-		}
-	}
 
-	editor.$occurences = [];
-	editor.clearOccurences = function() {
-	  var editor = contenttools.getAce();
-	  if (editor.$occurences) {
-	    editor.$occurences.forEach(function(entry) {
-	    		editor.getSession().removeMarker(entry);
-	   	});
-	  }
-	  editor.$occurences = [];
-	} 
-	editor.findOccurences = function(needle, options) {
-	  var editor = contenttools.getAce();
-	  options = options || {};
-	  options.needle = needle || options.needle;
-	  if (options.needle == undefined) {
-	      var range = editor.selection.isEmpty()
-	          ? editor.selection.getWordRange()
-	          : editor.selection.getRange();
-	      options.needle = editor.session.getTextRange(range);
-	  }    
-	  editor.$search.set(options);
-	  var occurence = (options.occurence == undefined ? 0 : options.occurence);
-	  
-	  var ranges = editor.$search.findAll(editor.session);
-	  if (!ranges.length)
-	      return 0;
-	  
-	  editor.$blockScrolling += 1;
-	  
-	  editor.clearOccurences();
-	  
-	  var scrollRange = null;
-	  for (var i = 0; i<ranges.length; i++ ) {
-	    if (i == occurence) {
-	      scrollRange = ranges[i];
-	    }
-	    hl = editor.getSession().addMarker(ranges[i],"ace_highlight","text");
-	    editor.$occurences.push(hl);
-	  }
-	  editor.$blockScrolling -= 1;
-	  
-	  if (scrollRange) {
-	    editor.navigateTo(scrollRange.end.row, scrollRange.end.column);
-	    editor.navigateTo(scrollRange.start.row, scrollRange.start.column);
-	  }
-	  
-	  return ranges.length;
-	}
-	
+	///////////// SEARCHING /////////////
+
+	// Occurrences.
+	editor.$occurrences = [];
+	// Search options.
+	editor.$savedSearch = {
+		needle: "",
+		regex: false,
+		caseSensitive: false
+	};
+
+	// Clear the occurrences.
+    editor.clearOccurrences = function() {
+      if (editor.$occurrences) {
+        editor.$occurrences.forEach(function(entry) {
+                editor.getSession().removeMarker(entry);
+        });
+      }
+      editor.$occurrences = [];
+    }
+
+	// Save and execute the search.
+    editor.findOccurrences = function(needle, regex, caseSensitive) {
+        // Save the search settings.
+        editor.$savedSearch = {
+            needle: needle,
+            regex: regex,
+            caseSensitive: caseSensitive
+        };
+
+        // Set the cursor to the beginning of the selection.
+        // So that when successive searches are performed which match the current word, the current word stays selected.
+        selection = editor.getSelectionRange();
+        editor.moveCursorTo(selection.start.row, selection.start.column);
+
+        // Find all occurrences.
+        amount = editor.countOccurrences();
+
+        // Execute the search.
+        editor.doFind(false, false);
+
+        return amount;
+    }
+
+    // Do the actual search.
+    editor.doFind = function(backwards, skipCurrent) {
+	    options = {
+	        // Given settings.
+	        backwards: backwards,
+	        skipCurrent: skipCurrent,
+	        // Saved search settings.
+	        regExp: editor.$savedSearch.regex,
+	        caseSensitive: editor.$savedSearch.caseSensitive,
+	        // Constant settings.
+	        wrap: true
+	    };
+        editor.find(editor.$savedSearch.needle, options);
+
+        // Update the highlighting.
+        editor.session.highlight(editor.$search.$options.re);
+        editor.renderer.updateBackMarkers();
+    }
+
+    // Count the occurrences.
+    editor.countOccurrences = function() {
+        // Save the cursor position.
+        pos = editor.getCursorPosition();
+
+		// Find all occurrences.
+        options = {
+            regExp: editor.$savedSearch.regex,
+            caseSensitive: editor.$savedSearch.caseSensitive,
+            wrap: true
+        };
+        amount = editor.findAll(editor.$savedSearch.needle, options);
+
+        // Reset the cursor position.
+        editor.moveCursorToPosition(pos);
+        editor.clearSelection();
+
+        return amount;
+    }
+
+	// Find the next match.
+    editor.findNext = function() {
+        editor.doFind(false, true);
+    }
+
+	// Find the previous match.
+    editor.findPrevious = function() {
+        editor.doFind(true, true);
+    }
+
+	///////////// END OF SEARCHING /////////////
 	
 	editor.getCurrentWord = function() { 
 		var editor = contenttools.getAce();

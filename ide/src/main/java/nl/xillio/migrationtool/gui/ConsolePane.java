@@ -431,11 +431,6 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
     }
 
 	@Override
-	public void highlightAll() {
-		// not used
-	}
-
-	@Override
 	public void clearSearch() {
 		this.searchNeedle = "";
 		this.updateFilters(); // show all lines (without searching affected)

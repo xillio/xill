@@ -71,12 +71,6 @@ public class SearchTextArea extends TextArea implements Searchable {
     }
 
 	@Override
-	public void highlightAll() {
-		// This is not possible on a textarea
-		selectRange(0, 0);
-	}
-
-	@Override
 	public void clearSearch() {
 		selectRange(0, 0);
 	}
