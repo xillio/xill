@@ -3,7 +3,6 @@ package nl.xillio.migrationtool.gui;
 import java.io.IOException;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -33,8 +32,8 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 	/**
 	 * The current highlighted occurrence
 	 */
-	protected int currentOccurence;
 	private Node storedParent;
+    protected int currentOccurrence = 0;
 
 	// Nodes
 	@FXML
@@ -75,9 +74,6 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 	 *        whether the query should be erased
 	 */
 	public void reset(final boolean clearQuery) {
-		currentOccurence = 0;
-		lblEditorSearchIndex.setText("0");
-		lblEditorSearchCount.setText("0");
 		if (clearQuery) {
 			tfEditorSearchQuery.clear();
 		}
@@ -104,7 +100,7 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 
 	private void enableSearchAsYouType() {
 		enabledSearchAsYouType = true;
-		tfEditorSearchQuery.textProperty().addListener((ChangeListener<String>) (arg0, oldvalue, newvalue) -> runSearch(newvalue));
+		tfEditorSearchQuery.textProperty().addListener((arg0, oldvalue, newvalue) -> runSearch(newvalue));
 	}
 
 	private void runSearch(final String query) {
@@ -125,14 +121,10 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 			searchable.search(query, isCaseSensitive());
 		}
 
-		// Refresh the result counts
-		Platform.runLater(() -> lblEditorSearchCount.setText(String.valueOf(searchable.getOccurrences())));
-
-		// Highlight 0 to make sure the first result is visible, then highlight all
-		if (searchable.getOccurrences() > 0) {
-			highlight(0);
-		}
+		// Highlight all occurrences and reset the current occurrence.
 		searchable.highlightAll();
+        setCurrentOccurrence(0);
+        updateLabels();
 	}
 
 	/**
@@ -157,29 +149,6 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 		return tfEditorSearchQuery.getText();
 	}
 
-	private void highlight(final int i) {
-		int index = i;
-		// No ocurrences is no highlight
-		if (searchable.getOccurrences() != 0) {
-			// Wrap the index
-			index %= searchable.getOccurrences();
-			if (index < 0) {
-				index += searchable.getOccurrences();
-			}
-
-			// Prevent negative index
-			index = Math.max(index, 0);
-
-			searchable.highlight(index);
-
-			// push to label
-			lblEditorSearchIndex.setText(String.valueOf(index + 1));
-
-			// Save actual highlight
-			currentOccurence = index;
-		}
-	}
-
 	/**
 	 * Attaches a searchable item to this bar.
 	 *
@@ -201,21 +170,43 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 		return searchable;
 	}
 
+    private void updateLabels() {
+        // Update the count and index labels.
+        Platform.runLater(() -> {
+            lblEditorSearchCount.setText(String.valueOf(searchable.getOccurrences()));
+            lblEditorSearchIndex.setText(String.valueOf(currentOccurrence + 1));
+        });
+    }
+
+    /**
+     * Set the current occurrence.
+     * @param i The zero-based index of the current occurrence.
+     */
+    public void setCurrentOccurrence(final int i) {
+        currentOccurrence = i % searchable.getOccurrences();
+        if (currentOccurrence < 0)
+            currentOccurrence += searchable.getOccurrences();
+    }
+
 	///////////////////// Controls /////////////////////
 
 	@FXML
 	private void nextButtonPressed(final ActionEvent actionEvent) {
 		if (!currentSearch.isEmpty()) {
-			highlight(++currentOccurence);
-		}
-	}
+            setCurrentOccurrence(currentOccurrence + 1);
+            searchable.findNext(currentOccurrence);
+            updateLabels();
+        }
+    }
 
 	@FXML
 	private void previousButtonPressed() {
 		if (!currentSearch.isEmpty()) {
-			highlight(--currentOccurence);
-		}
-	}
+            setCurrentOccurrence(currentOccurrence - 1);
+            searchable.findPrevious(currentOccurrence);
+            updateLabels();
+        }
+    }
 
 	@FXML
 	private void caseButtonPressed() {
@@ -257,7 +248,7 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 			toggleButton.setSelected(false);
 			
 			if(this.isOpen) {
-				closeEvent.invoke(new Boolean(true));
+				closeEvent.invoke(true);
 				this.isOpen = false;
 			}
 		}

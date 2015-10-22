@@ -12,7 +12,6 @@ import java.util.Map;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -84,7 +83,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 	@FXML
 	private Slider sldNavigation;
 
-	public static enum Scroll {
+	public enum Scroll {
 		NONE, START, END, TOTALEND, CLEAR
 	}
 
@@ -110,11 +109,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 	private final Map<LogType, Boolean> filters = new HashMap<>(LogType.values().length);
 	private final Map<LogType, Integer> count = new Counter<>();
 
-	private final List<Integer> occurences = new ArrayList<>();
 	private RobotTab tab;
-
-	private boolean searchRegExp = false;
-	private String searchNeedle = "";
 
 	/**
 	 * Create an initialize a ConsolePane
@@ -141,9 +136,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 		// Log updater - when some slider changes happen
 		sliderTimeline = new Timeline(new KeyFrame(Duration.millis(1000), e -> {
 			if (this.sliderChanged) {
-				Platform.runLater(() -> {
-					this.updateLog(Scroll.START, true);
-				});
+				Platform.runLater(() -> this.updateLog(Scroll.START, true));
 			}
 		}));
 		sliderTimeline.setCycleCount(Timeline.INDEFINITE);
@@ -275,7 +268,6 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 			}
 
 			ESConsoleClient.SearchFilter filter = ESConsoleClient.getInstance().createSearchFilter(searchNeedle, this.searchRegExp, this.filters);
-			;
 
 			this.entriesCount = ESConsoleClient.getInstance().countFilteredEntries(getRobotID().toString(), filter);
 
@@ -287,9 +279,8 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 					this.startEntry = 0;
 				}
 			}
-			int showCount = lastEntry - this.startEntry + 1;
 
-			if (!fromSlider) {
+            if (!fromSlider) {
 				this.updateSlider = false;
 				if (this.entriesCount == 0) {
 					this.sldNavigation.setValue(0);
@@ -393,41 +384,51 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 	}
 
 	/* Searching */
+    private boolean searchRegExp = false;
+    private String searchNeedle = "";
 
 	@Override
 	public void searchPattern(final String pattern, final boolean caseSensitive) {
-		// Clear the list
-		occurences.clear();
-
 		this.searchNeedle = pattern;
 		this.searchRegExp = true;
 		this.startEntry = 0;
 		this.updateLog(Scroll.START, false);
+
+        // Select the first line.
+        select(0);
 	}
 
 	@Override
 	public void search(final String needle, final boolean caseSensitive) {
-		// Clear the list
-		occurences.clear();
-
 		this.searchNeedle = needle;
 		this.searchRegExp = false;
 		this.startEntry = 0;
 		this.updateLog(Scroll.START, false);
+
+        // Select the first line.
+        Platform.runLater(() -> select(0));
 	}
 
 	@Override
 	public int getOccurrences() {
-		return occurences.size();
+        return tblConsoleOut.getItems().size();
 	}
 
-	@Override
-	public void highlight(final int occurrence) {
-		// Clear and select, scroll to the occurrence
-		int line = occurrence; // only selected lines are shown in tblConsoleOut so line = occurrence
-		tblConsoleOut.getSelectionModel().clearAndSelect(line);
-		tblConsoleOut.scrollTo(line);
-	}
+    @Override
+    public void findNext(int next) {
+        select(next);
+    }
+
+    @Override
+    public void findPrevious(int previous) {
+        select(previous);
+    }
+
+    private void select(int line) {
+        // Clear and select, scroll to the line
+        tblConsoleOut.getSelectionModel().clearAndSelect(line);
+        tblConsoleOut.scrollTo(line);
+    }
 
 	@Override
 	public void highlightAll() {
@@ -494,7 +495,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 			textArea.setPrefHeight(getHeight());
 
 			// Just show text when focus is lost
-			textArea.focusedProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
+			textArea.focusedProperty().addListener((observable, oldValue, newValue) -> {
 				if (!newValue) {
 					createText();
 				}

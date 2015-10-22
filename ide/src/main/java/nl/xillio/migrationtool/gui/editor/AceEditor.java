@@ -615,7 +615,6 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 		return occurrences;
 	}
 
-	@Override
 	public void highlight(final int occurrence) {
 		this.searchJS(needle, regex, caseSensitive, occurrence);
 	}
@@ -655,6 +654,16 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 			}
 		}, "findOccurences", needle, flags);
 	}
+
+    @Override
+    public void findNext(int next) {
+
+    }
+
+    @Override
+    public void findPrevious(int previous) {
+
+    }
 
 	@Override
 	public void clearSearch() {
