@@ -34,7 +34,7 @@ public class ConnectConstruct extends BaseDatabaseConstruct {
 						new Argument("user", NULL, ATOMIC),
 						new Argument("pass", NULL, ATOMIC),
 						new Argument("options", new ObjectExpression(new LinkedHashMap<>()), OBJECT)};
-		return new ConstructProcessor(a -> process(a, factory, context.getRobotID()), args);
+		return new ConstructProcessor(a -> process(a, factory, context.getRootRobot()), args);
 	}
 
 	@SuppressWarnings("unchecked")
