@@ -1,11 +1,13 @@
 package nl.xillio.migrationtool.dialogs;
 
 import java.io.File;
+import java.io.IOException;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeItem;
 import javafx.util.Pair;
+import me.biesaart.utils.FileUtils;
 import nl.xillio.migrationtool.gui.ProjectPane;
 
 /**

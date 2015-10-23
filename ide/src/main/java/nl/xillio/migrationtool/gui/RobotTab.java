@@ -32,6 +32,7 @@ import javafx.stage.FileChooser;
 import nl.xillio.migrationtool.Loader;
 import nl.xillio.migrationtool.dialogs.CloseTabStopRobotDialog;
 import nl.xillio.migrationtool.dialogs.SaveBeforeClosingDialog;
+import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
 import nl.xillio.migrationtool.gui.EditorPane.DocumentState;
 import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.api.XillProcessor;
@@ -384,6 +385,10 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	 */
 	public void runRobot() throws XillParsingException {
 		save();
+
+		if (FXController.settings.simple().getBoolean(Settings.SETTINGS_GENERAL, Settings.RunBotWithCleanConsole)) {
+			ESConsoleClient.getInstance().clearLog(getProcessor().getRobotID().toString());
+		}
 
 		try {
 			processor.compile();

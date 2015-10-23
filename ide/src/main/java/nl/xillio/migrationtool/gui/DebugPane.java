@@ -10,6 +10,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import nl.xillio.xill.util.HotkeysHandler.Hotkeys;
 import nl.xillio.xill.util.settings.Settings;
 import nl.xillio.xill.util.settings.SettingsHandler;
 
@@ -51,7 +52,7 @@ public class DebugPane extends AnchorPane implements EventHandler<KeyEvent>, Rob
 
 	@Override
 	public void handle(final KeyEvent event) {
-		if (KeyCombination.valueOf(FXController.HOTKEY_FIND).match(event)) {
+		if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.FIND)).match(event)) {
 			previewpane.openSearch();
 		}
 	}

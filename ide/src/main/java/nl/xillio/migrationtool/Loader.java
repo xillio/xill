@@ -56,6 +56,7 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 		VERSION_DATE = date;
 		LOGGER = logger;
 	}
+
 	/**
 	 * The GUI's current official version.
 	 */
@@ -103,6 +104,7 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 		Parent root;
 		try {
 			Font.loadFont(this.getClass().getResourceAsStream("/fonts/Glober SemiBold.ttf"), 10);
+			Font.loadFont(this.getClass().getResourceAsStream("/fonts/Glober xBold.ttf"), 10);
 			Font.loadFont(this.getClass().getResourceAsStream("/fonts/UbuntuMono Regular.ttf"), 10);
 			
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/contenttools.fxml"));

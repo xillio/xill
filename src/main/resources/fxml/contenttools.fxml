@@ -13,6 +13,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.*?>
 <?import nl.xillio.migrationtool.gui.*?>
+
 <AnchorPane fx:id="apnRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1600.0" styleClass="root" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.xillio.migrationtool.gui.FXController">
 	<children>
 		<VBox fx:id="vbxContainer" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -31,7 +32,7 @@
 										<Pane styleClass="icon" />
 									</graphic>
 									<tooltip>
-										<Tooltip text="New file (Ctrl-N)" />
+										<Tooltip text="New file" />
 									</tooltip>
 								</Button>
 								<Button fx:id="btnOpenFile" mnemonicParsing="false" onAction="#buttonOpenFile" styleClass="iconButton" text="Open file">
@@ -39,7 +40,7 @@
 										<Pane styleClass="icon" />
 									</graphic>
 									<tooltip>
-										<Tooltip text="Open file (Ctrl-O)" />
+										<Tooltip text="Open file" />
 									</tooltip>
 								</Button>
 								<Button fx:id="btnSave" mnemonicParsing="false" onAction="#buttonSave" styleClass="iconButton" text="Save">
@@ -47,7 +48,7 @@
 										<Pane styleClass="icon" />
 									</graphic>
 									<tooltip>
-										<Tooltip text="Save (Ctrl-S)" />
+										<Tooltip text="Save" />
 									</tooltip>
 								</Button>
 								<Button fx:id="btnSaveAs" mnemonicParsing="false" onAction="#buttonSaveAs" styleClass="iconButton" text="Save as">
@@ -55,7 +56,7 @@
 										<Pane styleClass="icon" />
 									</graphic>
 									<tooltip>
-										<Tooltip text="Save as (Ctrl-Alt-S)" />
+										<Tooltip text="Save as" />
 									</tooltip>
 								</Button>
 								<Button fx:id="btnSaveAll" mnemonicParsing="false" onAction="#buttonSaveAll" styleClass="iconButton" text="Save all">
@@ -63,29 +64,21 @@
 										<Pane styleClass="icon" />
 									</graphic>
 									<tooltip>
-										<Tooltip text="Save all (Ctrl-Shift-S)" />
+										<Tooltip text="Save all" />
 									</tooltip>
 								</Button>
 							</items>
 						</ToolBar>
 						<ToolBar fx:id="tlbRight" focusTraversable="false" HBox.hgrow="NEVER">
 							<items>
-								<!-- <Button fx:id="btnInfo" mnemonicParsing="false" onAction="#buttonSearch" styleClass="iconButton" text="Info">
-									<graphic>
-										<Pane styleClass="icon" />
-									</graphic>
-									<tooltip>
-										<Tooltip text="Info" />
-									</tooltip>
-								</Button>
-								<Button fx:id="btnSettings" mnemonicParsing="false" onAction="#buttonSearch" styleClass="iconButton" text="Settings">
+								<Button fx:id="btnSettings" mnemonicParsing="false" onAction="#buttonSettings" styleClass="iconButton" text="Settings">
 									<graphic>
 										<Pane styleClass="icon" />
 									</graphic>
 									<tooltip>
 										<Tooltip text="Settings" />
 									</tooltip>
-								</Button> -->
+								</Button>
 							</items>
 						</ToolBar>
 					</children>
@@ -124,7 +117,7 @@
 									<children>
 										<VBox fx:id="vbxLeft" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 											<children>
-												<SplitPane fx:id="spnLeft" dividerPositions="0.5020804438280166" focusTraversable="false" orientation="VERTICAL" VBox.vgrow="ALWAYS">
+												<SplitPane fx:id="spnLeft" focusTraversable="false" orientation="VERTICAL" VBox.vgrow="ALWAYS">
 													<items>
 														<ProjectPane fx:id="projectpane" />
 														<HelpPane fx:id="helppane" />

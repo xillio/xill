@@ -35,6 +35,9 @@ public class Settings {
 	/** The zoom factor of the code editor.*/
 	public static String AceZoom_ = "AceZoom_";
 
+	/** The dimensions of the settings dialog */
+	public static String SettingsDialogDimensions = "SettingsDialogDimensions";
+
 	// =============================================================================
 	/** File category */
 	public static String FILE = "File";
@@ -98,5 +101,125 @@ public class Settings {
 	/** Last time active tab */
 	public static String ActiveTab = "ActiveTab";
 
+	// =============================================================================
+	/** General settings dialog */
+	public static String SETTINGS_GENERAL = "SettingsGeneral";
+
+	/** */
+	public static String DefaultProjectLocation = "DefaultProjectLocation";
+
+	/** */
+	public static String OpenBotWithCleanConsole = "OpenBotWithCleanConsole";
+
+	/** */	
+	public static String RunBotWithCleanConsole = "RunBotWithCleanConsole";
+
+	// =============================================================================
+	/** Editor settings dialog */
+	public static String SETTINGS_EDITOR = "SettingsEditor";
+
+	/** */	
+	public static String DisplayIndentGuides = "DisplayIndentGuides";
+
+	/** */	
+	public static String FontSize = "FontSize";
+
+	/** */	
+	public static String AutoSaveBotBeforeRun = "AutoSaveBotBeforeRun";
+
+	/** */	
+	public static String HighlightSelectedWord = "HighlightSelectedWord";
+
+	/** */
+	public static String NewLineMode = "NewLineMode";
+
+	/** */
+	public static String PrintMarginColumn = "PrintMarginColumn";
+
+	/** */	
+	public static String ShowGutter = "ShowGutter";
+
+	/** */
+	public static String ShowInvisibles = "ShowInvisibles";
+
+	/** */
+	public static String TabSize = "TabSize";
+
+	/** */	
+	public static String UseSoftTabs = "UseSoftTabs";
+
+	/** */
+	public static String WrapText = "WrapText";
+
+	/** */
+	public static String WrapLimit = "WrapLimit";
+
+	/** */	
+	public static String ShowPrintMargin = "ShowPrintMargin";
+
+	/** */
+	public static String ShowLineNumbers = "ShowLineNumbers";
+
+	/** */
+	// =============================================================================
+	/** Hot-keys settings */
+	public static String SETTINGS_KEYBINDINGS = "KeyBindings";
+
+	/** */
+	public static String NewFile = "NewFile";
+
+	/** */
+	public static String OpenFile = "OpenFile";
+
+	/** */
+	public static String SaveFile = "SaveFile";
+
+	/** */
+	public static String SaveFileAs = "SaveFileAs";
+
+	/** */
+	public static String SaveAll = "SaveFileAll";
+
+	/** */
+	public static String Close = "Close";
+
+	/** */
+	public static String HelpHome = "HelpHome";
+
+	/** */
+	public static String Run = "Run";
+
+	/** */
+	public static String Pause = "Pause";
+
+	/** */
+	public static String Stop = "Stop";
+
+	/** */
+	public static String Stepin = "Stepin";
+
+	/** */
+	public static String Stepover = "Stepover";
+
+	/** */
+	public static String ClearConsole = "ClearConsole";
+
+	/** */
+	public static String Search = "Search";
+
+	/** */
+	public static String ResetZoom = "ResetZoom";
+
+	/** */
+	public static String Copy = "Copy";
+
+	/** */
+	public static String Cut = "Cut";
+
+	/** */
+	public static String Paste = "Paste";
+
+	/** */
+	public static String OpenSettings = "OpenSettings";
 	// =============================================================================
 }
