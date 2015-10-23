@@ -41,12 +41,19 @@ function loadEditor(){
 
 	// Clear the occurrences.
     editor.clearOccurrences = function() {
-      if (editor.$occurrences) {
-        editor.$occurrences.forEach(function(entry) {
-                editor.getSession().removeMarker(entry);
-        });
-      }
-      editor.$occurrences = [];
+		if (editor.$occurrences) {
+			editor.$occurrences.forEach(function(entry) {
+				editor.getSession().removeMarker(entry);
+			});
+		}
+		editor.$occurrences = [];
+
+		// Clear the highlighting.
+		editor.session.highlight(null);
+		editor.renderer.updateBackMarkers();
+		// Remove the selection.
+		var selection = editor.getSelectionRange();
+		editor.moveCursorTo(selection.start.row, selection.start.column);
     }
 
 	// Save and execute the search.
@@ -60,11 +67,11 @@ function loadEditor(){
 
         // Set the cursor to the beginning of the selection.
         // So that when successive searches are performed which match the current word, the current word stays selected.
-        selection = editor.getSelectionRange();
+        var selection = editor.getSelectionRange();
         editor.moveCursorTo(selection.start.row, selection.start.column);
 
         // Find all occurrences.
-        amount = editor.countOccurrences();
+        var amount = editor.countOccurrences();
 
         // Execute the search.
         editor.doFind(false, false);
@@ -74,7 +81,7 @@ function loadEditor(){
 
     // Do the actual search.
     editor.doFind = function(backwards, skipCurrent) {
-	    options = {
+	    var options = {
 	        // Given settings.
 	        backwards: backwards,
 	        skipCurrent: skipCurrent,
@@ -94,15 +101,15 @@ function loadEditor(){
     // Count the occurrences.
     editor.countOccurrences = function() {
         // Save the cursor position.
-        pos = editor.getCursorPosition();
+        var pos = editor.getCursorPosition();
 
 		// Find all occurrences.
-        options = {
+        var options = {
             regExp: editor.$savedSearch.regex,
             caseSensitive: editor.$savedSearch.caseSensitive,
             wrap: true
         };
-        amount = editor.findAll(editor.$savedSearch.needle, options);
+        var amount = editor.findAll(editor.$savedSearch.needle, options);
 
         // Reset the cursor position.
         editor.moveCursorToPosition(pos);
