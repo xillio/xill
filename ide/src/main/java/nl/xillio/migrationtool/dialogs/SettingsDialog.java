@@ -1,24 +1,20 @@
 package nl.xillio.migrationtool.dialogs;
 
-import java.io.File;
-import java.util.regex.Pattern;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
 import nl.xillio.migrationtool.gui.FXController;
 import nl.xillio.xill.util.settings.Settings;
 import nl.xillio.xill.util.settings.SettingsHandler;
+
+import java.io.File;
+import java.util.regex.Pattern;
 
 /**
  * Dialog contains all configurable ContentTools options and allows to change them
@@ -131,59 +127,66 @@ public class SettingsDialog  extends FXMLDialog {
 
 		loadSettings();
 
-		Platform.runLater(() -> {
-			FXController.hotkeys.getAllTextFields(getScene()).forEach(hk -> setShortcutHandler(hk));
-		});
+		Platform.runLater(() -> FXController.hotkeys.getAllTextFields(getScene()).forEach(this::setShortcutHandler));
 	}
 
 	private void setShortcutHandler(final TextField tf) {
-		tf.addEventHandler(KeyEvent.ANY, new EventHandler<KeyEvent>() {
-			public void handle(KeyEvent event) {
-				String shortcut = null;
+		tf.addEventHandler(KeyEvent.ANY, this::handleShortcut);
+	}
 
-				if ((event.getCode() == KeyCode.TAB) || (event.getCharacter().equals("\t"))) {
-					return;
-				}
+	private void handleShortcut(KeyEvent event) {
+		TextField tf = (TextField) event.getTarget();
 
-				if (event.getCode() == KeyCode.DELETE) {
-					tf.setText("");
-					event.consume();
-					return;
-				}
+		if ((event.getCode() == KeyCode.TAB) || (event.getCharacter().equals("\t"))) {
+			return;
+		}
 
-				if ((event.getCode().isFunctionKey()) && (event.getEventType() == KeyEvent.KEY_RELEASED)) {
-					shortcut = (event.isControlDown() ? "Shortcut+" : "") + (event.isAltDown() ? "Alt+" : "") + (event.isShiftDown() ? "Shift+" : "") + event.getCode().getName().toUpperCase();
-				} 
-				else if ( (event.getEventType() == KeyEvent.KEY_PRESSED) && (!event.getText().isEmpty()) ) {
-					if ((event.isControlDown() || event.isAltDown() || event.isShiftDown())) {
-						shortcut = (event.isControlDown() ? "Shortcut+" : "") + (event.isAltDown() ? "Alt+" : "") + (event.isShiftDown() ? "Shift+" : "") + event.getText().toUpperCase().charAt(0);
-					}
-				}
+		if (event.getCode() == KeyCode.DELETE) {
+			tf.setText("");
+			event.consume();
+			return;
+		}
 
-				if (shortcut != null) {
-					if (FXController.hotkeys.findShortcutInDialog(getScene(), shortcut) == null) {
-						tf.setText(shortcut);
-					}
-				}
 
-				event.consume();
+		String shortcut = getShortCutPattern(event);
+
+		if (shortcut != null) {
+			if (FXController.hotkeys.findShortcutInDialog(getScene(), shortcut) == null) {
+				tf.setText(shortcut);
 			}
-		});
+		}
+
+		event.consume();
+	}
+
+	private String getShortCutPattern(KeyEvent event) {
+		String modifiers = (event.isControlDown() ? "Ctrl+" : "") +
+				(event.isMetaDown() ? "Meta+" : "") +
+				(event.isAltDown() ? "Alt+" : "") +
+				(event.isShiftDown() ? "Shift+" : "");
+
+		if ((event.getCode().isFunctionKey()) && (event.getEventType() == KeyEvent.KEY_RELEASED)) {
+			// This is an F* key.
+			return modifiers + event.getCode().getName().toUpperCase();
+		} else if ((event.getEventType() == KeyEvent.KEY_PRESSED)) {
+			// This is any other key holding a text value. We require there to be a modifier
+			if (!modifiers.isEmpty()) {
+				return modifiers + event.getCode().getName();
+			}
+		}
+
+		return null;
 	}
 
 	private void setValidator(final TextField tf, final TextValidator validator) {
 
-		tf.addEventHandler(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>() {
-		    public void handle(KeyEvent event) {
-		    	Platform.runLater(() -> {
-		    		if (validator.test(tf.getText())) {
-		    			tf.setStyle("-fx-text-fill: black;");
-		    		} else {
-		    			tf.setStyle("-fx-text-fill: red;");
-		    		}
-		    	});
-		    }
-		});
+		tf.addEventHandler(KeyEvent.KEY_TYPED, event -> Platform.runLater(() -> {
+            if (validator.test(tf.getText())) {
+                tf.setStyle("-fx-text-fill: black;");
+            } else {
+                tf.setStyle("-fx-text-fill: red;");
+            }
+        }));
 	}
 
 	@FXML
@@ -191,7 +194,7 @@ public class SettingsDialog  extends FXMLDialog {
 		try {
 			validate();
 			apply = true;
-		} catch (Exception e) {
+		} catch (ValidationException e) {
 			Alert alert = new Alert(AlertType.ERROR, e.getMessage(), ButtonType.OK);
 			alert.showAndWait();
 			return;
@@ -200,27 +203,27 @@ public class SettingsDialog  extends FXMLDialog {
 		close();
 	}
 
-	private void validate() throws Exception {
+	private void validate() throws ValidationException {
 		if (!this.tffontsizeValidator.isValid()) {
-			throw new Exception("Invalid font size value!");
+			throw new ValidationException("Invalid font size value!");
 		}
 
 		if (!this.tfprintmargincolumnValidator.isValid()) {
-			throw new Exception("Invalid print margin column value!");
+			throw new ValidationException("Invalid print margin column value!");
 		}
 
 		if (!this.tftabsizeValidator.isValid()) {
-			throw new Exception("Invalid tab size value!");
+			throw new ValidationException("Invalid tab size value!");
 		}
 
 		if (!this.tfwraplimitValidator.isValid()) {
-			throw new Exception("Invalid wrap limit value!");
+			throw new ValidationException("Invalid wrap limit value!");
 		}
 
 		if (!tfprojectfolder.getText().isEmpty()) {
 			File file = new File(tfprojectfolder.getText());
-			if ((file == null) || (!file.isDirectory())) {
-				throw new Exception("Invalid default project folder!");
+			if ((!file.isDirectory())) {
+				throw new ValidationException("Invalid default project folder!");
 			}
 		}
 	}
@@ -279,9 +282,7 @@ public class SettingsDialog  extends FXMLDialog {
 		setCheckBox(cbshowlinenumbers, Settings.SETTINGS_EDITOR, Settings.ShowLineNumbers);
 
 		// Key bindings
-		Platform.runLater(() -> {
-			FXController.hotkeys.setDialogFromSettings(getScene(), settings);
-		});
+		Platform.runLater(() -> FXController.hotkeys.setDialogFromSettings(getScene(), settings));
 	}
 
 	/**
@@ -350,5 +351,11 @@ public class SettingsDialog  extends FXMLDialog {
 
 		// Key bindings
 		FXController.hotkeys.registerHotkeysSettings(settings);
+	}
+
+	private class ValidationException extends Exception {
+		ValidationException(String message) {
+			super(message);
+		}
 	}
 }

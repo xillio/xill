@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
@@ -102,7 +103,7 @@ public class HotkeysHandler {
 	 * @param settings SettingsHandler instance
 	 */
 	public void setHotkeysFromSettings(final SettingsHandler settings) {
-		hotkeys.entrySet().stream().forEach(hk -> hk.getValue().setShortcut(settings.simple().get(Settings.SETTINGS_KEYBINDINGS, hk.getValue().getSettingsId())));
+		hotkeys.entrySet().forEach(hk -> hk.getValue().setShortcut(settings.simple().get(Settings.SETTINGS_KEYBINDINGS, hk.getValue().getSettingsId())));
 	}
 
 	/**
@@ -112,7 +113,7 @@ public class HotkeysHandler {
 	 * @param settings SettingsHandler instance
 	 */
 	public void setDialogFromSettings(final Scene scene, final SettingsHandler settings) {
-		hotkeys.entrySet().stream().forEach(hk -> {
+		hotkeys.entrySet().forEach(hk -> {
 			TextField tf = (TextField)scene.lookup(hk.getValue().getFxId());
 			tf.setText(settings.simple().get(Settings.SETTINGS_KEYBINDINGS, hk.getValue().getSettingsId()));
 		});
@@ -126,14 +127,11 @@ public class HotkeysHandler {
 	 * @return TextField that contains provided shortcut, if not found it returns null
 	 */
 	public TextField findShortcutInDialog(final Scene scene, final String shortcut) {
-		TextField result[] = {null};
-		hotkeys.entrySet().stream().forEach(hk -> {
-			TextField tf = (TextField)scene.lookup(hk.getValue().getFxId());
-			if (tf.getText().equals(shortcut)) {
-				result[0] = tf;
-			}
-		});
-		return result[0];
+		return hotkeys.entrySet().stream()
+                .map(hk -> (TextField)scene.lookup(hk.getValue().getFxId()))
+                .filter(tf -> tf.getText().equals(shortcut))
+                .findAny()
+                .orElse(null);
 	}
 
 	/**
@@ -143,11 +141,9 @@ public class HotkeysHandler {
 	 * @return list of all shortcut fields in SettingDialog
 	 */
 	public List<TextField> getAllTextFields(final Scene scene) {
-		LinkedList<TextField> result = new LinkedList<>();
-		for (Map.Entry<Hotkeys, Hotkey> entry : hotkeys.entrySet()) {
-			result.add((TextField)scene.lookup(entry.getValue().getFxId()));
-		}
-		return result;
+        return hotkeys.entrySet().stream()
+                .map(entry -> (TextField) scene.lookup(entry.getValue().getFxId()))
+                .collect(Collectors.toCollection(LinkedList::new));
 	}
 
 	/**
@@ -173,9 +169,11 @@ public class HotkeysHandler {
 	 * @return symbolic hot-key from provided key combination, return null if not found
 	 */
 	public Hotkeys getHotkey(final KeyEvent keyEvent) {
-		Hotkeys result[] = {null};
-		hotkeys.entrySet().stream().filter(o -> (KeyCombination.valueOf(o.getValue().getShortcut()).match(keyEvent))).forEach(o -> result[0] = o.getKey());
-		return result[0];
+		return hotkeys.entrySet().stream()
+                .filter(o -> (KeyCombination.valueOf(o.getValue().getShortcut()).match(keyEvent)))
+                .map(Map.Entry::getKey)
+                .findAny()
+                .orElse(null);
 	}
 
 	/**
