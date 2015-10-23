@@ -6,7 +6,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
@@ -29,6 +33,9 @@ public class HelpPane extends AnchorPane {
 	@FXML
 	private HelpSearchBar helpSearchBar;
 
+	// the logger
+	private static final Logger LOGGER = LogManager.getLogger();
+
 	private final HighlightSettings highlightSettings;
 
 	/**
@@ -44,12 +51,12 @@ public class HelpPane extends AnchorPane {
 			Node ui = loader.load();
 			getChildren().add(ui);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		}
 		helpSearchBar.setHelpPane(this);
 
 		Loader.getInitializer().getOnLoadComplete().addListener(init -> {
-			home();
+			displayHome();
 			webFunctionDoc.getEngine().getHistory().setMaxSize(0);
 			webFunctionDoc.getEngine().getHistory().setMaxSize(100);
 			helpSearchBar.setSearcher(init.getSearcher());
@@ -59,7 +66,7 @@ public class HelpPane extends AnchorPane {
 		highlightSettings = new HighlightSettings();
 		highlightSettings.addKeywords(Loader.getXill().getReservedKeywords());
 		highlightSettings.addBuiltins(Loader.getInitializer().getPlugins().stream()
-			.map((p -> p.getName()))
+			.map(p -> p.getName())
 			.collect(Collectors.toList()));
 
 		webFunctionDoc.getEngine().documentProperty().addListener((observable, o, n) -> {
@@ -71,6 +78,10 @@ public class HelpPane extends AnchorPane {
 
 		});
 
+		heightProperty().addListener((ChangeListener<Number>) (observable, oldValue, newValue) -> {
+			helpSearchBar.handleHeightChange();
+		});
+
 		// Load splash page
 		webFunctionDoc.getEngine().load(getClass().getResource("/docgen/resources/splash.html").toExternalForm());
 
@@ -79,11 +90,14 @@ public class HelpPane extends AnchorPane {
 		webFunctionDoc.setOnDragOver(e -> getScene().setCursor(Cursor.DISAPPEAR));
 	}
 
-	private void home() {
+	/**
+	 * Displays the home page
+	 */
+	public void displayHome() {
 		try {
 			this.display(new File("helpfiles", "index.html").toURI().toURL());
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 
@@ -121,7 +135,7 @@ public class HelpPane extends AnchorPane {
 
 	@FXML
 	private void buttonHelpHome() {
-		home();
+		displayHome();
 	}
 
 	@FXML

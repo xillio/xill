@@ -16,7 +16,7 @@ dependencies {
 /**
  * Most project need to be copied to the plugins directory so we create a task for that here.
  */
-task copyToPluginsDir(type: Copy) {
+task copyToPluginsDir(type: Sync) {
     dependsOn jar
     from jar
     from configurations.runtime
