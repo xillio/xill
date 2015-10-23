@@ -56,8 +56,10 @@ public class SearchTextArea extends TextArea implements Searchable {
 	}
 
 	private void select(final int occurrence) {
-		SearchOccurrence element = occurrences.get(occurrence);
-		selectRange(element.getStart(), element.getEnd());
+        if (occurrence >= 0 && occurrence < occurrences.size()) {
+            SearchOccurrence element = occurrences.get(occurrence);
+            selectRange(element.getStart(), element.getEnd());
+        }
 	}
 
     @Override
