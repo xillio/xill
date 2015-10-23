@@ -35,6 +35,9 @@ public class Settings {
 	/** The zoom factor of the code editor.*/
 	public static String AceZoom_ = "AceZoom_";
 
+	/** The dimensions of the settings dialog */
+	public static String SettingsDialogDimensions = "SettingsDialogDimensions";
+
 	// =============================================================================
 	/** File category */
 	public static String FILE = "File";

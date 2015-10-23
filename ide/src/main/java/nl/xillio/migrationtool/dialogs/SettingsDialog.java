@@ -10,6 +10,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Window;
 import nl.xillio.migrationtool.gui.FXController;
 import nl.xillio.xill.util.settings.Settings;
 import nl.xillio.xill.util.settings.SettingsHandler;
@@ -83,6 +84,7 @@ public class SettingsDialog  extends FXMLDialog {
 		setTitle("Settings");
 		this.settings = settings;
 
+		setSize();
 		setValidator(tffontsize, tffontsizeValidator);
 		setValidator(tfprintmargincolumn, tfprintmargincolumnValidator);
 		setValidator(tftabsize, tftabsizeValidator);
@@ -100,6 +102,29 @@ public class SettingsDialog  extends FXMLDialog {
 		LOGGER.warn("Removing license tab from settings.");
 		licenseTab.getTabPane().getTabs().remove(licenseTab);
 		// End of license tab removal
+	}
+
+	private void setSize() {
+		String dimensions = settings.simple().get(Settings.LAYOUT, Settings.SettingsDialogDimensions);
+		String[] parts = dimensions.split("[^0-9\\.]");
+		if (parts.length != 2) {
+			LOGGER.error("Failed to get size of settings dialog from the settings");
+			return;
+		}
+
+		Window window = getScene().getWindow();
+
+		window.setWidth(Double.parseDouble(parts[0]));
+		window.setHeight(Double.parseDouble(parts[1]));
+		window.widthProperty().addListener((a,b,c) -> saveSize());
+		window.heightProperty().addListener((a,b,c) -> saveSize());
+
+	}
+
+	private void saveSize() {
+		String value = getScene().getWindow().getWidth() + "x" + getScene().getWindow().getHeight();
+		settings.simple().save(Settings.LAYOUT, Settings.SettingsDialogDimensions, value);
+		settings.commit();
 	}
 
 	@FXML
@@ -324,6 +349,7 @@ public class SettingsDialog  extends FXMLDialog {
 	 */
 	public static void register(final SettingsHandler settings) {
 		// General
+		settings.simple().register(Settings.LAYOUT, Settings.SettingsDialogDimensions, "800×600", "The size of the settings window");
 		settings.simple().register(Settings.SETTINGS_GENERAL, Settings.DefaultProjectLocation, System.getProperty("user.home"), "The default project location");
 		settings.simple().register(Settings.SETTINGS_GENERAL, Settings.OpenBotWithCleanConsole, "true", "If the console is cleared when the bot is open");
 		settings.simple().register(Settings.SETTINGS_GENERAL, Settings.RunBotWithCleanConsole, "false", "If the console is cleared when the bot is about to run");
