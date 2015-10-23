@@ -179,12 +179,12 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
         // Update the count and index labels.
         Platform.runLater(() -> {
             lblEditorSearchCount.setText(String.valueOf(searchable.getOccurrences()));
-            lblEditorSearchIndex.setText(String.valueOf(currentOccurrence + 1));
+            lblEditorSearchIndex.setText(String.valueOf(searchable.getOccurrences() == 0 ? 0 : currentOccurrence + 1));
         });
     }
 
     /**
-     * Set the current occurrence.
+     * Update the current occurrence to the next of previous.
      * @param next Whether the next or previous occurrence was selected.
      */
     private void updateOccurrence(final boolean next) {
@@ -205,6 +205,15 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
         }
         else
             reset(false);
+    }
+
+    /**
+     * Set the current occurrence.
+     * @param current The index of the current occurrance.
+     */
+    public void setCurrentOccurrence(int current) {
+        currentOccurrence = current;
+        updateLabels();
     }
 
 	///////////////////// Controls /////////////////////
