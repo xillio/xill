@@ -18,7 +18,9 @@ ext {
 }
 
 // Then we apply the xillio plugin to all projects
-allprojects {
+apply plugin: 'nl.xillio.gradle-config'
+subprojects {
+    version = rootProject.version
     apply plugin: 'nl.xillio.gradle-config'
 }
 
@@ -32,4 +34,7 @@ allprojects {
 }
 
 // When cleaning up we want to delete all runtime files too
-clean.delete pluginsDir, file('ESConsole'), file('helpfiles'), file('xilliosettings.db')
+clean {
+    delete pluginsDir
+    delete file('ESConsole'), file('helpfiles'), file('xilliosettings.cfg')
+}

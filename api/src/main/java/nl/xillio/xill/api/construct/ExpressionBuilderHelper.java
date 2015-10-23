@@ -177,7 +177,7 @@ public class ExpressionBuilderHelper {
 
 		@Override
 		public String getStringValue() {
-			return "";
+			return "null";
 		}
 
 		@Override

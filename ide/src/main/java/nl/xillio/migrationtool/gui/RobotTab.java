@@ -43,6 +43,7 @@ import javafx.stage.FileChooser;
 import nl.xillio.migrationtool.Loader;
 import nl.xillio.migrationtool.dialogs.CloseTabStopRobotDialog;
 import nl.xillio.migrationtool.dialogs.SaveBeforeClosingDialog;
+import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
 import nl.xillio.migrationtool.gui.EditorPane.DocumentState;
 import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.api.XillProcessor;
@@ -453,6 +454,10 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
     private void autoSaveAndRunRobot() {
         save();
 
+		if (FXController.settings.simple().getBoolean(Settings.SETTINGS_GENERAL, Settings.RunBotWithCleanConsole)) {
+			ESConsoleClient.getInstance().clearLog(getProcessor().getRobotID().toString());
+		}
+
         try {
                 processor.compile();
 
@@ -474,15 +479,18 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
                         }
                 });
 
-                robotThread.start();
-        } catch (IOException e) {
-                errorPopup(-1, e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling.");
+			robotThread.start();
+		} catch (IOException e) {
+			e.printStackTrace();
+			errorPopup(-1, e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling.");
 
-        } catch (XillParsingException e) {
-                errorPopup(e.getLine(), e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling " + e.getRobot().getPath().getAbsolutePath());
-                //throw e;
-        }
-    }
+		} catch (XillParsingException e) {
+			errorPopup(e.getLine(), e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling " + e.getRobot().getPath().getAbsolutePath());
+			throw e;
+
+		}
+
+	}
 
 	private void errorPopup(final int line, final String message, final String title, final String context) {
 		Alert error = new Alert(AlertType.ERROR);

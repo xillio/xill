@@ -28,6 +28,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Pair;
+import me.biesaart.utils.FileUtils;
 import nl.xillio.migrationtool.dialogs.DeleteFileDialog;
 import nl.xillio.migrationtool.dialogs.DeleteProjectDialog;
 import nl.xillio.migrationtool.dialogs.NewFolderDialog;
@@ -39,11 +40,14 @@ import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.util.settings.ProjectSettings;
 import nl.xillio.xill.util.settings.Settings;
 import nl.xillio.xill.util.settings.SettingsHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ProjectPane extends AnchorPane implements FolderListener, ChangeListener<TreeItem<Pair<File, String>>> {
 	private static final SettingsHandler settings = SettingsHandler.getSettingsHandler();
 	private static final String DEFAULT_PROJECT_NAME = "Samples";
 	private static final String DEFAULT_PROJECT_PATH = "./samples";
+	private static final Logger LOGGER = LogManager.getLogger();
 	private final BotFileFilter robotFileFilter = new BotFileFilter();
 
 	@FXML
@@ -119,7 +123,8 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 
 	@FXML
 	private void newProjectButtonPressed() {
-		new NewProjectDialog(this).show();
+		NewProjectDialog dlg = new NewProjectDialog(this);
+		dlg.showAndWait();
 	}
 
 	@FXML
@@ -171,7 +176,8 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 			if (projects.isEmpty()) {
 				disableAllButtons();
 				return;
-			};
+			}
+			;
 			projects.forEach(this::addProject);
 			if (settings.simple().get(Settings.LICENSE, Settings.License) == null && new File(DEFAULT_PROJECT_PATH).exists()) {
 				newProject(DEFAULT_PROJECT_NAME, DEFAULT_PROJECT_PATH, "");
@@ -191,6 +197,9 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 	public void removeProject(final TreeItem<Pair<File, String>> item) {
 		root.getChildren().remove(item);
 		settings.project().delete(item.getValue().getValue());
+                if (getProjectsCount() == 0) {
+                    getScene().lookup("#btnNewFile").setDisable(true);
+                }
 	}
 
 	/**
@@ -200,8 +209,15 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 	 *        a project item
 	 */
 	public void deleteProject(final TreeItem<Pair<File, String>> item) {
-		item.getValue().getKey().delete();
+		try {
+			FileUtils.deleteDirectory(item.getValue().getKey());
+		} catch (IOException e) {
+			LOGGER.error("Failed to delete project",e);
+		}
 		removeProject(item);
+                if (getProjectsCount() == 0) {
+                    getScene().lookup("#btnNewFile").setDisable(true);
+                }
 	}
 
 	/**
@@ -221,6 +237,11 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		if (projectDoesntExist) {
 			ProjectSettings project = new ProjectSettings(name, folder, description);
 			settings.project().save(project);
+			try {
+				FileUtils.forceMkdir(new File(project.getFolder()));
+			}catch(IOException e) {
+				LOGGER.error("Failed to create project directory", e);
+			}
 			addProject(project);
 		}
 		return projectDoesntExist;
@@ -505,14 +526,17 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		btnDelete.setDisable(false);
 		btnRename.setDisable(false);
 		btnUpload.setDisable(false);
+                getScene().lookup("#btnNewFile").setDisable(true);
 
 		if (newObject == null || newObject == trvProjects.getRoot()) {
 			// Disable all
 			disableAllButtons();
+                        getScene().lookup("#btnNewFile").setDisable(true);
 
 		} else if (newObject == getProject(newObject)) {
 			// This is a project
 			btnRename.setDisable(true);
+                        getScene().lookup("#btnNewFile").setDisable(false);
 		}
 	}
 
@@ -522,4 +546,13 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		btnRename.setDisable(true);
 		btnUpload.setDisable(true);
 	}
+        
+        /**
+         * Get the number of projects
+         * 
+         * @return the number of projects present
+         */
+        public int getProjectsCount() {
+            return settings.project().getAll().size();
+        }
 }
