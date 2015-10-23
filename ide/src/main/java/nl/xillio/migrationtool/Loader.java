@@ -56,6 +56,7 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 		VERSION_DATE = date;
 		LOGGER = logger;
 	}
+
 	/**
 	 * The GUI's current official version.
 	 */
