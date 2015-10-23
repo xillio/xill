@@ -3,8 +3,11 @@ package nl.xillio.migrationtool.gui;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
+import javafx.stage.Modality;
+import javafx.stage.StageStyle;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -18,6 +21,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -26,6 +30,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
@@ -384,82 +389,100 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	}
 
 	/**
-	 * Runs the currentRobot after the Ok-button has been pressed.
+	 * Runs the currentRobot after the Ok-button has been pressed of the dialog that pops up.
          * If cancel is pressed, the robot is not run or saved
+         * There is also a check box that can be ticked in order not to show the dialog again.
+         * The dialog can be re-enabled in the Settings window.
 	 *
 	 * @throws XillParsingException
 	 */
 	public void runRobot() throws XillParsingException {
-            boolean autoSaveBotBeforeRun = Boolean.valueOf(settings.simple().get("SettingsGeneral", "AutoSaveBotBeforeRun"));
-            if (autoSaveBotBeforeRun) {
-                Dialog d = new Dialog();
-                VBox checkBoxContainer = new VBox();
+        // Read the current setting in the configuration
+        boolean autoSaveBotBeforeRun = Boolean.valueOf(settings.simple().get("SettingsGeneral", "AutoSaveBotBeforeRun"));
 
-                Label tf = new Label("The robot " + currentRobot.getPath().getName() + " needs to be save before running. Do you want to continue?");
-                CheckBox cb =  new CheckBox("Don't ask me again.");
-                cb.addEventFilter(ActionEvent.ACTION, event -> {
-                    if (autoSaveBotBeforeRun) {
-                        settings.simple().register("SettingsGeneral", "AutoSaveBotBeforeRun", "false", "Enable the confirmation dialog before a robot is run");
-                    } else {
-                        settings.simple().register("SettingsGeneral", "AutoSaveBotBeforeRun", "true", "Enable the confirmation dialog before a robot is run");
-                    }
-                    System.out.println(autoSaveBotBeforeRun);
-                });
+        if (autoSaveBotBeforeRun) {
+            // If true, show the confirmation dialog
+            Alert confirmationDialog = new Alert(AlertType.CONFIRMATION);
+            confirmationDialog.setTitle("Do you want to save and run the robot?");
+            // This enables xillio icon to be displayed in the upper left corner
+            confirmationDialog.initOwner(editorPane.getScene().getWindow());
 
-                checkBoxContainer.getChildren().addAll(tf, cb);
-                d.getDialogPane().setContent(checkBoxContainer);
+            // Compose the dialog pane
+            DialogPane dp = new DialogPane();
 
-                d.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);//setContent(confirmationHbox);
-                Button okButton = (Button) d.getDialogPane().lookupButton(ButtonType.OK);
-                okButton.addEventFilter(ActionEvent.ACTION, event -> {
-                    autoSaveAndRunRobot();
-                });
-                Button cancelButton = (Button) d.getDialogPane().lookupButton(ButtonType.CANCEL);
-                cancelButton.addEventFilter(ActionEvent.ACTION, event -> {
-                    d.close();
-                });
-                d.show();
-            } else {
+            VBox checkBoxContainer = new VBox();
+
+            Label l = new Label("The robot " + currentRobot.getPath().getName() + " needs to be save before running. Do you want to continue?");
+            CheckBox cb = new CheckBox("Don't ask me again.");
+            cb.addEventHandler(ActionEvent.ACTION, event -> {
+                boolean currentSettingValue = Boolean.valueOf(settings.simple().get("SettingsGeneral", "AutoSaveBotBeforeRun"));
+                if (currentSettingValue) {
+                    settings.simple().register("SettingsGeneral", "AutoSaveBotBeforeRun", "false", "Enable the confirmation dialog before a robot is run");
+                } else {
+                    settings.simple().register("SettingsGeneral", "AutoSaveBotBeforeRun", "true", "Enable the confirmation dialog before a robot is run");
+                }
+            });
+
+            checkBoxContainer.getChildren().addAll(l, cb);
+
+            dp.setContent(checkBoxContainer);
+            // Add the dialog pane to the Alert/dialog
+            confirmationDialog.setDialogPane(dp);
+            // Make the dialog close by clicking the close button
+            confirmationDialog.initModality(Modality.APPLICATION_MODAL);
+            confirmationDialog.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+            // Get the result from the confirmation dialog
+            Optional<ButtonType> result = confirmationDialog.showAndWait();
+
+            // Process the result
+            if (result.get() == ButtonType.OK) {
                 autoSaveAndRunRobot();
+            } else if (result.get() == ButtonType.CANCEL) {
+                editorPane.getControls().stop();
             }
+        } else {
+            // If false, just auto-save and run the robot without the confirmation dialog popping up
+            autoSaveAndRunRobot();
+        }
 	}
         
-        /**
-         * Automatically saves robot and runs it if the save is successful
-         */
-        private void autoSaveAndRunRobot() {
-            save();
+    /**
+     * Automatically saves robot and runs it if the save is successful
+     */
+    private void autoSaveAndRunRobot() {
+        save();
 
-            try {
-                    processor.compile();
+        try {
+                processor.compile();
 
-                    Robot robot = processor.getRobot();
+                Robot robot = processor.getRobot();
 
-                    Thread robotThread = new Thread(() -> {
-                            try {
-                                    robot.process(processor.getDebugger());
-                            } catch (Exception e) {
-                                    Platform.runLater(() -> {
-                                            Alert error = new Alert(AlertType.ERROR);
-                                            error.setTitle(e.getClass().getSimpleName());
-                                            error.setContentText(e.getMessage() + "\n" + ExceptionUtils.getStackTrace(e));
-                                            error.setHeaderText("Exception while processing");
-                                            error.setResizable(true);
-                                            error.getDialogPane().setPrefWidth(1080);
-                                            error.show();
-                                    });
-                            }
-                    });
+                Thread robotThread = new Thread(() -> {
+                        try {
+                                robot.process(processor.getDebugger());
+                        } catch (Exception e) {
+                                Platform.runLater(() -> {
+                                        Alert error = new Alert(AlertType.ERROR);
+                                        error.setTitle(e.getClass().getSimpleName());
+                                        error.setContentText(e.getMessage() + "\n" + ExceptionUtils.getStackTrace(e));
+                                        error.setHeaderText("Exception while processing");
+                                        error.setResizable(true);
+                                        error.getDialogPane().setPrefWidth(1080);
+                                        error.show();
+                                });
+                        }
+                });
 
-                    robotThread.start();
-            } catch (IOException e) {
-                    errorPopup(-1, e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling.");
+                robotThread.start();
+        } catch (IOException e) {
+                errorPopup(-1, e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling.");
 
-            } catch (XillParsingException e) {
-                    errorPopup(e.getLine(), e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling " + e.getRobot().getPath().getAbsolutePath());
-                    //throw e;
-            }
+        } catch (XillParsingException e) {
+                errorPopup(e.getLine(), e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling " + e.getRobot().getPath().getAbsolutePath());
+                //throw e;
         }
+    }
 
 	private void errorPopup(final int line, final String message, final String title, final String context) {
 		Alert error = new Alert(AlertType.ERROR);
@@ -565,6 +588,10 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	public void clearConsolePane() {
 		this.consolePane.clear();
 	}
+
+    private Exception Exception(String empty_fucking_button) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
         
         
