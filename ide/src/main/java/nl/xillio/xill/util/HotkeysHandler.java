@@ -19,9 +19,8 @@ import nl.xillio.xill.util.settings.SettingsHandler;
  * @author Zbynek Hochmann
  */
 public class HotkeysHandler {
-
-	/**
-	 * List of symbolic names of all hot-keys 
+    /**
+	 * List of symbolic names of all hot-keys
 	 */
 	public enum Hotkeys {
 		@SuppressWarnings("javadoc")
@@ -29,60 +28,46 @@ public class HotkeysHandler {
 		@SuppressWarnings("javadoc")
 		OPEN,
 		@SuppressWarnings("javadoc")
-		SAVE, 
+		SAVE,
 		@SuppressWarnings("javadoc")
-		SAVEAS, 
+		SAVEAS,
 		@SuppressWarnings("javadoc")
-		SAVEALL, 
+		SAVEALL,
 		@SuppressWarnings("javadoc")
-		CLOSE, 
+		CLOSE,
 		@SuppressWarnings("javadoc")
-		HELP, 
+		HELP,
 		@SuppressWarnings("javadoc")
 		RUN,
 		@SuppressWarnings("javadoc")
-		PAUSE, 
+		PAUSE,
 		@SuppressWarnings("javadoc")
-		STOP, 
+		STOP,
 		@SuppressWarnings("javadoc")
-		STEPIN, 
+		STEPIN,
 		@SuppressWarnings("javadoc")
-		STEPOVER, 
+		STEPOVER,
 		@SuppressWarnings("javadoc")
-		CLEARCONSOLE, 
+		CLEARCONSOLE,
 		@SuppressWarnings("javadoc")
-		COPY, 
+		COPY,
 		@SuppressWarnings("javadoc")
 		CUT,
 		@SuppressWarnings("javadoc")
-		PASTE, 
+		PASTE,
 		@SuppressWarnings("javadoc")
-		RESET_ZOOM, 
+		RESET_ZOOM,
 		@SuppressWarnings("javadoc")
-		FIND, 
+		FIND,
 		@SuppressWarnings("javadoc")
 		OPENSETTINGS
-	}
-
-	private class Hotkey {
-		String shortcut;
-		String settingsid;
-		String settingsDscr;
-		String fxid;
-
-		public Hotkey(String shortcut, String settingsid, String settingsDscr, String fxid) {
-			this.shortcut = shortcut;
-			this.settingsid = settingsid;
-			this.settingsDscr = settingsDscr;
-			this.fxid = "#" + fxid;
-		}
 	}
 
 	private HashMap<Hotkeys, Hotkey> hotkeys = new HashMap<>();
 
 	/**
 	 * Constructor for HotkeysHandler
-	 * It does initialize internal the map of hotkeys and set all needed values 
+	 * It does initialize internal the map of hotkeys and set all needed values
 	 */
 	public HotkeysHandler() {
 		init();
@@ -113,39 +98,37 @@ public class HotkeysHandler {
 
 	/**
 	 * Takes current settings of hot-keys and assign their key shortcuts
-	 *  
+	 *
 	 * @param settings SettingsHandler instance
 	 */
 	public void setHotkeysFromSettings(final SettingsHandler settings) {
-		hotkeys.entrySet().stream().forEach(hk -> {
-			hk.getValue().shortcut = settings.simple().get(Settings.SETTINGS_KEYBINDINGS, hk.getValue().settingsid);
-		});
+		hotkeys.entrySet().stream().forEach(hk -> hk.getValue().setShortcut(settings.simple().get(Settings.SETTINGS_KEYBINDINGS, hk.getValue().getSettingsId())));
 	}
 
 	/**
 	 * Takes current settings of hot-keys and fills in all shortcut fields in SettingDialog
-	 * 
+	 *
 	 * @param scene Scene instance of SettingsDialog
 	 * @param settings SettingsHandler instance
 	 */
 	public void setDialogFromSettings(final Scene scene, final SettingsHandler settings) {
 		hotkeys.entrySet().stream().forEach(hk -> {
-			TextField tf = (TextField)scene.lookup(hk.getValue().fxid);
-			tf.setText(settings.simple().get(Settings.SETTINGS_KEYBINDINGS, hk.getValue().settingsid));
+			TextField tf = (TextField)scene.lookup(hk.getValue().getFxId());
+			tf.setText(settings.simple().get(Settings.SETTINGS_KEYBINDINGS, hk.getValue().getSettingsId()));
 		});
 	}
 
 	/**
 	 * Try to find provided shortcut in all shortcut fields in SettingDialog
-	 * 
+	 *
 	 * @param scene Scene instance of SettingsDialog
 	 * @param shortcut string interpretation of shortcut
-	 * @return TextField that contains provided shortcut, if not found it returns null 
+	 * @return TextField that contains provided shortcut, if not found it returns null
 	 */
 	public TextField findShortcutInDialog(final Scene scene, final String shortcut) {
 		TextField result[] = {null};
 		hotkeys.entrySet().stream().forEach(hk -> {
-			TextField tf = (TextField)scene.lookup(hk.getValue().fxid);
+			TextField tf = (TextField)scene.lookup(hk.getValue().getFxId());
 			if (tf.getText().equals(shortcut)) {
 				result[0] = tf;
 			}
@@ -155,26 +138,26 @@ public class HotkeysHandler {
 
 	/**
 	 * Iterate shortcut fields in SettingDialog
-	 * 
+	 *
 	 * @param scene Scene instance of SettingsDialog
 	 * @return list of all shortcut fields in SettingDialog
 	 */
 	public List<TextField> getAllTextFields(final Scene scene) {
 		LinkedList<TextField> result = new LinkedList<>();
 		for (Map.Entry<Hotkeys, Hotkey> entry : hotkeys.entrySet()) {
-			result.add((TextField)scene.lookup(entry.getValue().fxid));
+			result.add((TextField)scene.lookup(entry.getValue().getFxId()));
 		}
 		return result;
 	}
 
 	/**
 	 * Takes all current shortcut settings from SettingsDialog and store them into settings
-	 * 
+	 *
 	 * @param scene Scene instance of SettingsDialog
 	 * @param settings SettingsHandler instance
 	 */
 	public void saveSettingsFromDialog(final Scene scene, final SettingsHandler settings) {
-		hotkeys.entrySet().stream().forEach(hk -> settings.simple().save(Settings.SETTINGS_KEYBINDINGS, hk.getValue().settingsid, ((TextField)scene.lookup(hk.getValue().fxid)).getText()));
+		hotkeys.entrySet().stream().forEach(hk -> settings.simple().save(Settings.SETTINGS_KEYBINDINGS, hk.getValue().getSettingsId(), ((TextField)scene.lookup(hk.getValue().getFxId())).getText()));
 	}
 
 	/**
@@ -182,25 +165,25 @@ public class HotkeysHandler {
 	 * @return string representation of provided hot-key
 	 */
 	public String getShortcut(final Hotkeys hk) {
-		return hotkeys.get(hk).shortcut;
+		return hotkeys.get(hk).getShortcut();
 	}
 
 	/**
 	 * @param keyEvent key combination
-	 * @return symbolic hot-key from provided key combination, return null if not found 
+	 * @return symbolic hot-key from provided key combination, return null if not found
 	 */
 	public Hotkeys getHotkey(final KeyEvent keyEvent) {
 		Hotkeys result[] = {null};
-		hotkeys.entrySet().stream().filter(o -> (KeyCombination.valueOf(o.getValue().shortcut).match(keyEvent))).forEach(o -> result[0] = o.getKey());
+		hotkeys.entrySet().stream().filter(o -> (KeyCombination.valueOf(o.getValue().getShortcut()).match(keyEvent))).forEach(o -> result[0] = o.getKey());
 		return result[0];
 	}
 
 	/**
-	 * Register all hot-key settings 
-	 * 
+	 * Register all hot-key settings
+	 *
 	 * @param settings SettingsHandler instance
 	 */
 	public void registerHotkeysSettings(final SettingsHandler settings) {
-		hotkeys.entrySet().forEach(hk -> settings.simple().register(Settings.SETTINGS_KEYBINDINGS, hk.getValue().settingsid, hk.getValue().shortcut, hk.getValue().settingsDscr));
+		hotkeys.entrySet().forEach(hk -> settings.simple().register(Settings.SETTINGS_KEYBINDINGS, hk.getValue().getSettingsId(), hk.getValue().getShortcut(), hk.getValue().getSettingsDescription()));
 	}
 }
