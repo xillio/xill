@@ -6,6 +6,8 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 /**
+ * Implementation of {@link nl.xillio.xill.api.data.Date} to use the Xill Date Plugin
+ * with the Excel Plugin
  * @author Daan Knoope
  */
 public class DateImpl implements Date{
