@@ -418,9 +418,9 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
             cb.addEventHandler(ActionEvent.ACTION, event -> {
                 boolean currentSettingValue = Boolean.valueOf(settings.simple().get("SettingsGeneral", "AutoSaveBotBeforeRun"));
                 if (currentSettingValue) {
-                    settings.simple().register("SettingsGeneral", "AutoSaveBotBeforeRun", "false", "Enable the confirmation dialog before a robot is run");
+                    settings.simple().save("SettingsGeneral", "AutoSaveBotBeforeRun", false);
                 } else {
-                    settings.simple().register("SettingsGeneral", "AutoSaveBotBeforeRun", "true", "Enable the confirmation dialog before a robot is run");
+                    settings.simple().save("SettingsGeneral", "AutoSaveBotBeforeRun", true);
                 }
             });
 
