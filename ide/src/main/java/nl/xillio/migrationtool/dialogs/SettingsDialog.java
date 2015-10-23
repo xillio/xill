@@ -12,6 +12,8 @@ import javafx.scene.input.KeyEvent;
 import nl.xillio.migrationtool.gui.FXController;
 import nl.xillio.xill.util.settings.Settings;
 import nl.xillio.xill.util.settings.SettingsHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.util.regex.Pattern;
@@ -23,48 +25,8 @@ import java.util.regex.Pattern;
  */
 public class SettingsDialog  extends FXMLDialog {
 
+	private static final Logger LOGGER = LogManager.getLogger();
 	private boolean apply = false;
-
-	private interface TextValidator {
-		boolean test(final String text);
-	}
-
-	private class RangeValidator implements TextValidator {
-		private boolean valid = true;
-		private String suffix;
-		private int fromIncl;
-		private int toIncl;
-		private boolean allowEmpty;
-		private Pattern pattern; 
-
-		RangeValidator(final int fromIncl, final int toIncl, final String suffix, final boolean allowEmpty) {
-			this.fromIncl = fromIncl;
-			this.toIncl = toIncl;
-			this.suffix = (suffix == null ? "" : suffix);
-			this.allowEmpty = allowEmpty;
-			this.pattern = Pattern.compile("[0-9]+" + this.suffix);
-		}
-
-		@Override
-		public boolean test(final String text) {
-			if (allowEmpty && ((text == null) || (text.isEmpty()))) {
-				valid = true;
-			} else {
-				valid = false;
-				if (pattern.matcher(text).matches()) {
-	    			int value = Integer.parseInt(text.substring(0, text.length()-suffix.length()));
-	    			if ((value >= fromIncl) && (value <= toIncl)) {
-		    			valid = true;
-		    		}
-		    	}
-			}
-			return valid;
-		}
-
-		public boolean isValid() {
-			return this.valid;
-		}
-	}
 
 	@FXML
 	private TextField tfprojectfolder;
@@ -104,12 +66,14 @@ public class SettingsDialog  extends FXMLDialog {
 	private CheckBox cbshowprintmargin;
 	@FXML
 	private CheckBox cbshowlinenumbers;
+	@FXML
+	private Tab licenseTab;
 
 	private SettingsHandler settings;
 
 	/**
 	 * Dialog constructor
-	 * 
+	 *
 	 * @param settings SettingsHandler instance
 	 */
 	public SettingsDialog(final SettingsHandler settings) {
@@ -128,6 +92,12 @@ public class SettingsDialog  extends FXMLDialog {
 		loadSettings();
 
 		Platform.runLater(() -> FXController.hotkeys.getAllTextFields(getScene()).forEach(this::setShortcutHandler));
+
+
+		// TODO We do not have license functionality yet. If this is implemented in the future remove this code
+		LOGGER.warn("Removing license tab from settings.");
+		licenseTab.getTabPane().getTabs().remove(licenseTab);
+		// End of license tab removal
 	}
 
 	private void setShortcutHandler(final TextField tf) {
@@ -254,7 +224,7 @@ public class SettingsDialog  extends FXMLDialog {
 
 		// Key bindings
 		FXController.hotkeys.saveSettingsFromDialog(getScene(), settings);
-	
+
 		settings.commit();
 		settings.setManualCommit(false);
 	}
@@ -293,13 +263,13 @@ public class SettingsDialog  extends FXMLDialog {
 	}
 
 	private void setComboBox(final ComboBox<String> comboBox, final String category, final String keyValue) {
-		String value = settings.simple().get(category, keyValue); 
+		String value = settings.simple().get(category, keyValue);
 		comboBox.getSelectionModel().select(value);
 	}
 
 	private void saveComboBox(final ComboBox<String> comboBox, final String category, final String keyValue) {
-		settings.simple().save(category, keyValue, comboBox.getSelectionModel().getSelectedItem()); 
-	}	
+		settings.simple().save(category, keyValue, comboBox.getSelectionModel().getSelectedItem());
+	}
 
 	private void setCheckBox(final CheckBox checkBox, final String category, final String keyValue) {
 		checkBox.setSelected(this.settings.simple().getBoolean(category, keyValue));
@@ -324,7 +294,7 @@ public class SettingsDialog  extends FXMLDialog {
 
 	/**
 	 * Register all (configurable) settings from this dialog
-	 * 
+	 *
 	 * @param settings the SettingHandler instance
 	 */
 	public static void register(final SettingsHandler settings) {
@@ -356,6 +326,47 @@ public class SettingsDialog  extends FXMLDialog {
 	private class ValidationException extends Exception {
 		ValidationException(String message) {
 			super(message);
+		}
+	}
+
+	private interface TextValidator {
+		boolean test(final String text);
+	}
+
+	private class RangeValidator implements TextValidator {
+		private boolean valid = true;
+		private String suffix;
+		private int fromIncl;
+		private int toIncl;
+		private boolean allowEmpty;
+		private Pattern pattern;
+
+		RangeValidator(final int fromIncl, final int toIncl, final String suffix, final boolean allowEmpty) {
+			this.fromIncl = fromIncl;
+			this.toIncl = toIncl;
+			this.suffix = (suffix == null ? "" : suffix);
+			this.allowEmpty = allowEmpty;
+			this.pattern = Pattern.compile("[0-9]+" + this.suffix);
+		}
+
+		@Override
+		public boolean test(final String text) {
+			if (allowEmpty && ((text == null) || (text.isEmpty()))) {
+				valid = true;
+			} else {
+				valid = false;
+				if (pattern.matcher(text).matches()) {
+					int value = Integer.parseInt(text.substring(0, text.length()-suffix.length()));
+					if ((value >= fromIncl) && (value <= toIncl)) {
+						valid = true;
+					}
+				}
+			}
+			return valid;
+		}
+
+		public boolean isValid() {
+			return this.valid;
 		}
 	}
 }

@@ -429,7 +429,7 @@
 										</AnchorPane>
 									</content>
 								</Tab>
-								<Tab text="License">
+								<Tab text="License" fx:id="licenseTab">
 									<content>
 										<AnchorPane>
 											<children>
