@@ -118,6 +118,7 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 		editorReplaceBar.setSearchable(editor);
 		editorReplaceBar.setButton(tbnEditorSearch, 1);
 		editor.getCodeProperty().addListener(this);
+        editor.setReplaceBar(editorReplaceBar);
 
 		addEventHandler(KeyEvent.KEY_PRESSED, this);
 	}

@@ -35,6 +35,7 @@ import nl.xillio.events.EventHost;
 import nl.xillio.migrationtool.BreakpointPool;
 import nl.xillio.migrationtool.gui.FXController;
 import nl.xillio.migrationtool.gui.HelpPane;
+import nl.xillio.migrationtool.gui.ReplaceBar;
 import nl.xillio.migrationtool.gui.RobotTab;
 import nl.xillio.xill.api.XillProcessor;
 import nl.xillio.xill.api.components.RobotID;
@@ -586,7 +587,16 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	}
 
     ////////////////// SEARCH BAR //////////////////
+    private ReplaceBar replaceBar;
 	private int occurrences = 0;
+
+    /**
+     * Set the replace bar that the editor uses.
+     * @param bar The replace bar.
+     */
+    public void setReplaceBar(ReplaceBar bar) {
+        replaceBar = bar;
+    }
 
 	@Override
 	public void searchPattern(final String pattern, final boolean caseSensitive) {
@@ -615,13 +625,16 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 
 	private void searchJS(final String needle, final boolean regex, final boolean caseSensitive) {
 		// Count
-		callOnAce(result -> {
-			occurrences = (int)result;
+		callOnAce(r -> {
+            // Get the amount of occurrences and current index.
+			JSObject result = (JSObject)r;
+            occurrences = (int)result.getMember("amount");
+            if (replaceBar != null)
+                replaceBar.setCurrentOccurrence((int)result.getMember("index"));
 
 			// If there are no results, clear the search
-			if (occurrences == 0) {
+			if (occurrences == 0)
 				callOnAceBlocking("clearOccurrences");
-			}
 
 		}, "findOccurrences", needle, regex, caseSensitive);
 	}
@@ -647,10 +660,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	public Event<Boolean> getOnDocumentLoaded() {
 		return onDocumentLoaded.getEvent();
 	}
-
-	/**
-	 * @param editable
-	 */
+    
 	public void setEditable(final boolean editable) {
 		callOnAce("setReadOnly", !editable);
 	}

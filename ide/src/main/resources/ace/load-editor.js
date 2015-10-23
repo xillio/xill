@@ -54,6 +54,7 @@ function loadEditor(){
 		// Remove the selection.
 		var selection = editor.getSelectionRange();
 		editor.moveCursorTo(selection.start.row, selection.start.column);
+		editor.clearSelection();
     }
 
 	// Save and execute the search.
@@ -71,12 +72,12 @@ function loadEditor(){
         editor.moveCursorTo(selection.start.row, selection.start.column);
 
         // Find all occurrences.
-        var amount = editor.countOccurrences();
+        var result = editor.countOccurrences();
 
         // Execute the search.
         editor.doFind(false, false);
 
-        return amount;
+        return result;
     }
 
     // Do the actual search.
@@ -89,7 +90,8 @@ function loadEditor(){
 	        regExp: editor.$savedSearch.regex,
 	        caseSensitive: editor.$savedSearch.caseSensitive,
 	        // Constant settings.
-	        wrap: true
+	        wrap: true,
+	        range: null
 	    };
         editor.find(editor.$savedSearch.needle, options);
 
@@ -100,6 +102,8 @@ function loadEditor(){
 
     // Count the occurrences.
     editor.countOccurrences = function() {
+        var result = {};
+
         // Save the cursor position.
         var pos = editor.getCursorPosition();
 
@@ -109,13 +113,17 @@ function loadEditor(){
             caseSensitive: editor.$savedSearch.caseSensitive,
             wrap: true
         };
-        var amount = editor.findAll(editor.$savedSearch.needle, options);
+        result.amount = editor.findAll(editor.$savedSearch.needle, options);
+
+        // Find all occurrences before the cursor, so we know the index.
+        options.range = new Range(0, 0, pos.row, pos.column);
+        result.index = editor.findAll(editor.$savedSearch.needle, options);
 
         // Reset the cursor position.
         editor.moveCursorToPosition(pos);
         editor.clearSelection();
 
-        return amount;
+        return result;
     }
 
 	// Find the next match.
