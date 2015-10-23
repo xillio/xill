@@ -528,6 +528,7 @@
 				</AnchorPane>
 				<HBox styleClass="buttonsWrapper" VBox.vgrow="NEVER">
 					<children>
+						<Button fx:id="applyBtn" mnemonicParsing="false" onAction="#applyBtnPressed" text="Apply" />
 						<Button fx:id="okBtn" defaultButton="true" mnemonicParsing="false" onAction="#okayBtnPressed" text="Ok" />
 						<Button fx:id="cancelBtn" cancelButton="true" mnemonicParsing="false" onAction="#cancelBtnPressed" text="Cancel" />
 					</children>

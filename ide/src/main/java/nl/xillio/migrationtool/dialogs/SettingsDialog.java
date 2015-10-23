@@ -29,7 +29,6 @@ import java.util.regex.Pattern;
 public class SettingsDialog  extends FXMLDialog {
 
 	private static final Logger LOGGER = LogManager.getLogger();
-	private boolean apply = false;
 
 	@FXML
 	private TextField tfprojectfolder;
@@ -73,6 +72,7 @@ public class SettingsDialog  extends FXMLDialog {
 	private Tab licenseTab;
 
 	private SettingsHandler settings;
+	private Runnable onApply;
 
 	/**
 	 * Dialog constructor
@@ -116,8 +116,8 @@ public class SettingsDialog  extends FXMLDialog {
 
 		window.setWidth(Double.parseDouble(parts[0]));
 		window.setHeight(Double.parseDouble(parts[1]));
-		window.widthProperty().addListener((a,b,c) -> saveSize());
-		window.heightProperty().addListener((a,b,c) -> saveSize());
+		window.widthProperty().addListener((a, b, c) -> saveSize());
+		window.heightProperty().addListener((a, b, c) -> saveSize());
 
 	}
 
@@ -141,7 +141,7 @@ public class SettingsDialog  extends FXMLDialog {
 		Platform.runLater(() -> {
 			File chosen = chooser.showDialog(getScene().getWindow());
 
-			if(chosen != null) {
+			if (chosen != null) {
 				try {
 					tfprojectfolder.setText(chosen.getCanonicalPath());
 				} catch (IOException e) {
@@ -201,26 +201,33 @@ public class SettingsDialog  extends FXMLDialog {
 	private void setValidator(final TextField tf, final TextValidator validator) {
 
 		tf.addEventHandler(KeyEvent.KEY_TYPED, event -> Platform.runLater(() -> {
-            if (validator.test(tf.getText())) {
-                tf.setStyle("-fx-text-fill: black;");
-            } else {
-                tf.setStyle("-fx-text-fill: red;");
-            }
-        }));
+			if (validator.test(tf.getText())) {
+				tf.setStyle("-fx-text-fill: black;");
+			} else {
+				tf.setStyle("-fx-text-fill: red;");
+			}
+		}));
 	}
 
 	@FXML
 	private void okayBtnPressed(final ActionEvent event) {
+		applyBtnPressed(event);
+		close();
+	}
+
+	@FXML
+	private void applyBtnPressed(final ActionEvent event) {
 		try {
 			validate();
-			apply = true;
 		} catch (ValidationException e) {
 			Alert alert = new Alert(AlertType.ERROR, e.getMessage(), ButtonType.OK);
 			alert.showAndWait();
 			return;
 		}
 		saveSettings();
-		close();
+		if(onApply != null) {
+			onApply.run();
+		}
 	}
 
 	private void validate() throws ValidationException {
@@ -305,13 +312,6 @@ public class SettingsDialog  extends FXMLDialog {
 		Platform.runLater(() -> FXController.hotkeys.setDialogFromSettings(getScene(), settings));
 	}
 
-	/**
-	 * @return true if OK button has been pressed
-	 */
-	public boolean shouldApply() {
-		return apply;
-	}
-
 	private void setComboBox(final ComboBox<String> comboBox, final String category, final String keyValue) {
 		String value = settings.simple().get(category, keyValue);
 		comboBox.getSelectionModel().select(value);
@@ -372,6 +372,10 @@ public class SettingsDialog  extends FXMLDialog {
 
 		// Key bindings
 		FXController.hotkeys.registerHotkeysSettings(settings);
+	}
+
+	public void setOnApply(Runnable applyHandler) {
+		this.onApply = applyHandler;
 	}
 
 	private class ValidationException extends Exception {

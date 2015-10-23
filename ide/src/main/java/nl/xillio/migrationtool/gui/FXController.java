@@ -408,13 +408,14 @@ public class FXController implements Initializable, EventHandler<Event> {
 	@FXML
 	private void buttonSettings() {
 		if (!btnSettings.isDisabled()) {
-			SettingsDialog dlg = new SettingsDialog(settings); 
-			dlg.showAndWait();
-			if (dlg.shouldApply()) {
+			SettingsDialog dlg = new SettingsDialog(settings);
+			dlg.setOnApply(() -> {
 				// Apply all settings immediately
-				hotkeys.setHotkeysFromSettings(settings); // Apply new hotkeys settings 
-				getTabs().forEach(tab -> ((RobotTab)tab).getEditorPane().setEditorOptions(createEditorOptionsJSCode())); // Apply editor settings
-			}
+				hotkeys.setHotkeysFromSettings(settings); // Apply new hotkeys settings
+				getTabs().forEach(tab -> tab.getEditorPane().setEditorOptions(createEditorOptionsJSCode())); // Apply editor settings
+			});
+
+			dlg.show();
 		}
 	}
 
