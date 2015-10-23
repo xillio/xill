@@ -2,7 +2,6 @@ xilliosettings.db
 ESConsole/
 plugins/
 helpfiles/
-xilliosettings.cfg
 
 # Gradle
 build/
