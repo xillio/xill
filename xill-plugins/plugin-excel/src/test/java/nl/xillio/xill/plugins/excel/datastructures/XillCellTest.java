@@ -1,12 +1,12 @@
 package nl.xillio.xill.plugins.excel.datastructures;
 
 import nl.xillio.xill.api.errors.NotImplementedException;
-import nl.xillio.xill.plugins.excel.datastructures.XillCell;
-
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.testng.annotations.Test;
 
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 import static org.mockito.Mockito.*;
@@ -38,7 +38,8 @@ public class XillCellTest {
 					= "A cell format that has been used in the Excel file is currently unsupported.")
 	public void testGetValue() throws Exception {
 		Cell cell = mock(Cell.class);
-		XillCell testCell = spy(new XillCell(cell));
+        XillSheet sheet = mock(XillSheet.class);
+		XillCell testCell = spy(new XillCell(cell, sheet));
 
 		when(cell.getCellType()).thenReturn(cell.CELL_TYPE_STRING);
 		RichTextString rich = mock(RichTextString.class);
@@ -56,9 +57,11 @@ public class XillCellTest {
 
 		when(cell.getCellType()).thenReturn(cell.CELL_TYPE_NUMERIC);
 		doReturn(true).when(testCell).isDateFormatted();
-		Date d = new Date();
+		Date d = Date.from(Instant.now());
 		when(cell.getDateCellValue()).thenReturn(d);
-		assertEquals(testCell.getValue(), d);
+        ZonedDateTime result = ((DateImpl) testCell.getValue()).getZoned();
+        Date resultDate = Date.from(result.toInstant());
+		assertEquals(d.compareTo(resultDate), 0);
 
 		doReturn(false).when(testCell).isDateFormatted();
 		Double num = 2d;
@@ -83,7 +86,8 @@ public class XillCellTest {
 	@Test
 	public void setCellValue() throws Exception {
 		Cell cell = mock(Cell.class);
-		XillCell testCell = new XillCell(cell);
+        XillSheet sheet = mock(XillSheet.class);
+		XillCell testCell = new XillCell(cell, sheet);
 
 		testCell.setCellValue("=1");
 		verify(cell, times(1)).setCellFormula("1");

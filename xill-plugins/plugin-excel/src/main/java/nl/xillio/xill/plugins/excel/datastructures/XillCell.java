@@ -3,8 +3,10 @@ package nl.xillio.xill.plugins.excel.datastructures;
 import nl.xillio.xill.api.errors.NotImplementedException;
 import org.apache.poi.ss.formula.FormulaParseException;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DateUtil;
 
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 /**
@@ -16,20 +18,28 @@ import java.util.Date;
 public class XillCell {
 
 	private Cell cell;
+    private final XillSheet sheet;
 
 	/**
 	 * Constructor for the XillCell class.
 	 *
 	 *
 	 * @param cell an Apache POI {@link Cell} object
+     * @param sheet the parent {@link XillSheet} of this cell
 	 */
-	public XillCell(Cell cell) {
-		this.cell = cell;
+	public XillCell(Cell cell, XillSheet sheet) {
+
+        this.cell = cell;
+        this.sheet = sheet;
 	}
 
 	boolean isDateFormatted() {
 		return DateUtil.isCellDateFormatted(cell);
 	}
+
+    XillSheet getParentSheet(){
+        return this.sheet;
+    }
 
 	/**
 	 * Gets the value of this cell.
@@ -52,8 +62,7 @@ public class XillCell {
 					break;
 				case Cell.CELL_TYPE_NUMERIC:
 					if (isDateFormatted()) {
-						cell.getDateCellValue();
-						toReturn = cell.getDateCellValue();
+						toReturn = new DateImpl(cell.getDateCellValue());
 					} else {
 						toReturn = cell.getNumericCellValue();
 					}
@@ -108,5 +117,25 @@ public class XillCell {
 	public void setCellValue(boolean value) {
 		cell.setCellValue(value);
 	}
+
+    /**
+     * Sets the cell's value to the provided date time
+     *
+     * @param dateTime the datevalue that should be stored in the cell
+     */
+    public void setCellValue(ZonedDateTime dateTime){
+        //Assumption: 0:00 means no time
+        boolean containsTime = !(dateTime.getHour() == 0 && dateTime.getMinute() == 0);
+        if(containsTime){
+            cell.setCellValue(Date.from(dateTime.toInstant()));
+            CellStyle dateTimeStyle = this.sheet.getParentWorkbook().getDateTimeCellStyle();
+            this.cell.setCellStyle(dateTimeStyle);
+        }
+        else{
+            cell.setCellValue(Date.from(dateTime.toInstant()));
+            CellStyle dateStyle = this.sheet.getParentWorkbook().getDateCellStyle();
+            this.cell.setCellStyle(dateStyle);
+        }
+    }
 
 }

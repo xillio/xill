@@ -1,21 +1,16 @@
 package nl.xillio.xill.plugins.date.constructs;
 
-import static nl.xillio.xill.plugins.date.utils.MockUtils.mockDateExpression;
-import static nl.xillio.xill.plugins.date.utils.MockUtils.mockNullExpression;
-import static nl.xillio.xill.plugins.date.utils.MockUtils.mockStringExpression;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
+import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.plugins.date.services.DateService;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 import java.time.ZonedDateTime;
 
-import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.plugins.date.services.DateService;
-
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import static nl.xillio.xill.plugins.date.utils.MockUtils.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
 
 /**
  * 
@@ -29,6 +24,7 @@ public class FormatConstructTest {
 	@DataProvider(name = "format")
 	private Object[][] formatProvider() {
 		ZonedDateTime date = ZonedDateTime.now();
+        //Date date = new nl.xillio.xill.plugins.date.data.Date(ZonedDateTime.now());
 		MetaExpression dateExpression = mockDateExpression(date);
 		return new Object[][] { {dateExpression, mockStringExpression("yyyy-MM-dd")}, {dateExpression, mockNullExpression()}};
 	}
