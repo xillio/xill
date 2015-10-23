@@ -28,6 +28,7 @@
 																			<children>
 																				<Label prefWidth="200.0" text="Default project location" />
 																				<TextField fx:id="tfprojectfolder" alignment="TOP_LEFT" depthTest="INHERIT" promptText="Default project folder path" HBox.hgrow="ALWAYS" />
+																				<Button mnemonicParsing="false" onAction="#projectBrowseButtonPressed" text="Browse" />
 																			</children>
 																			<padding>
 																				<Insets />

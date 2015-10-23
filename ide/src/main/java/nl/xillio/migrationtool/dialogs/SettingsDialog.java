@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.DirectoryChooser;
 import nl.xillio.migrationtool.gui.FXController;
 import nl.xillio.xill.util.settings.Settings;
 import nl.xillio.xill.util.settings.SettingsHandler;
@@ -16,6 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.regex.Pattern;
 
 /**
@@ -100,6 +102,29 @@ public class SettingsDialog  extends FXMLDialog {
 		// End of license tab removal
 	}
 
+	@FXML
+	private void projectBrowseButtonPressed() {
+		DirectoryChooser chooser = new DirectoryChooser();
+
+		// Set directory
+		if (!tfprojectfolder.getText().isEmpty()) {
+			chooser.setInitialDirectory(new File(tfprojectfolder.getText()));
+		} else {
+			chooser.setInitialDirectory(new File(System.getProperty("user.home")));
+		}
+
+		Platform.runLater(() -> {
+			File chosen = chooser.showDialog(getScene().getWindow());
+
+			if(chosen != null) {
+				try {
+					tfprojectfolder.setText(chosen.getCanonicalPath());
+				} catch (IOException e) {
+					LOGGER.error("Failed to get canonical path of " + chosen, e);
+				}
+			}
+		});
+	}
 	private void setShortcutHandler(final TextField tf) {
 		tf.addEventHandler(KeyEvent.ANY, this::handleShortcut);
 	}
@@ -299,7 +324,7 @@ public class SettingsDialog  extends FXMLDialog {
 	 */
 	public static void register(final SettingsHandler settings) {
 		// General
-		settings.simple().register(Settings.SETTINGS_GENERAL, Settings.DefaultProjectLocation, "", "The default project location");
+		settings.simple().register(Settings.SETTINGS_GENERAL, Settings.DefaultProjectLocation, System.getProperty("user.home"), "The default project location");
 		settings.simple().register(Settings.SETTINGS_GENERAL, Settings.OpenBotWithCleanConsole, "true", "If the console is cleared when the bot is open");
 		settings.simple().register(Settings.SETTINGS_GENERAL, Settings.RunBotWithCleanConsole, "false", "If the console is cleared when the bot is about to run");
 		settings.simple().register(Settings.SETTINGS_GENERAL, Settings.AutoSaveBotBeforeRun, "true", "Save the robot before it's run");
