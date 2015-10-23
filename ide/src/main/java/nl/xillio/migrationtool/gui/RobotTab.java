@@ -486,8 +486,6 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
 		} catch (XillParsingException e) {
 			errorPopup(e.getLine(), e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling " + e.getRobot().getPath().getAbsolutePath());
-			throw e;
-
 		}
 
 	}
