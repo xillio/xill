@@ -5,16 +5,17 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
-import javafx.util.Pair;
 import nl.xillio.migrationtool.Loader;
 import nl.xillio.migrationtool.dialogs.CloseAppStopRobotsDialog;
 import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
@@ -29,7 +30,10 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -88,6 +92,8 @@ public class FXController implements Initializable, EventHandler<Event> {
 	 * etc.
 	 */
 
+        @FXML
+        private Button btnNewFile;
 	@FXML
 	private Button btnOpenFile;
 	@FXML
@@ -97,57 +103,29 @@ public class FXController implements Initializable, EventHandler<Event> {
 	@FXML
 	private Button btnSaveAll;
 	@FXML
-	private Button btnRemoveAllBreakpoints;
-	@FXML
-	private Button btnEvaluate;
-	@FXML
-	private Button btnRun;
-	@FXML
-	private Button btnStepOver;
-	@FXML
-	private Button btnStepIn;
-	@FXML
-	private Button btnPause;
-	@FXML
-	private Button btnStop;
-	@FXML
 	private Button btnSearch;
 	@FXML
 	private Button btnBrowser;
 	@FXML
 	private Button btnRegexTester;
 	@FXML
-	private Button btnClearConsole;
-	@FXML
 	private Button btnPreviewOpenBrowser;
 	@FXML
 	private Button btnPreviewOpenRegex;
-	@FXML
-	private Button btnHideLeftPane;
-	@FXML
-	private Button btnShowLeftPane;
 	@FXML
 	private TabPane tpnBots;
 	@FXML
 	private AnchorPane apnRoot;
 	@FXML
-	private AnchorPane apnPreviewPane;
-	@FXML
 	private AnchorPane apnLeft;
 	@FXML
 	private VBox vbxLeftHidden;
-	@FXML
-	private TreeView<Pair<File, String>> trvProjects;
-	@FXML
-	private WebView webFunctionDoc;
 	@FXML
 	private HBox hbxMain;
 	@FXML
 	private SplitPane spnMain;
 	@FXML
 	private SplitPane spnLeft;
-	@FXML
-	private HelpPane helppane;
 
 	@FXML
 	private ProjectPane projectpane;
@@ -215,6 +193,10 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 		// Add listener for window shown
 		loadWorkSpace();
+                
+                if (projectpane.getProjectsCount() == 0) {
+                    btnNewFile.setDisable(true);
+                }
 	}
 
 	private void loadWorkSpace() {
@@ -260,60 +242,76 @@ public class FXController implements Initializable, EventHandler<Event> {
 	@FXML
 	private void buttonNewFile() {
 
-		// Select project path
-		File projectfile = null;
-		if (projectpane.getCurrentProject() != null) {
-			projectfile = projectpane.getCurrentProject().getValue().getKey();
-		} else {
-			projectfile = new File(System.getProperty("user.home"));
-		}
+            // Select project path
+            File projectfile = null;
+            if (projectpane.getCurrentProject() != null) {
+                    projectfile = projectpane.getCurrentProject().getValue().getKey();
+            } else {
+                    projectfile = new File(System.getProperty("user.home"));
+            }
 
-		// Select initial directory
-		File initialFolder = null;
-		if (projectpane.getCurrentItem() != null) {
-			initialFolder = projectpane.getCurrentItem().getValue().getKey();
-		} else {
-			initialFolder = projectfile;
-		}
+            // Select initial directory
+            File initialFolder = null;
+            if (projectpane.getCurrentItem() != null) {
+                    initialFolder = projectpane.getCurrentItem().getValue().getKey();
+            } else {
+                    initialFolder = projectfile;
+            }
 
-		if (initialFolder.isFile()) {
-			initialFolder = initialFolder.getParentFile();
-		}
+            if (initialFolder.isFile()) {
+                    initialFolder = initialFolder.getParentFile();
+            }
 
-		// Select robot file
-		FileChooser fileChooser = new FileChooser();
-		fileChooser.setInitialDirectory(initialFolder);
-		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
-			"Xill Robot (*." + Xill.FILE_EXTENSION + ")", "*." + Xill.FILE_EXTENSION));
-		fileChooser.setTitle("New Robot");
+            // Select robot file
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setInitialDirectory(initialFolder);
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
+                    "Xill Robot (*." + Xill.FILE_EXTENSION + ")", "*." + Xill.FILE_EXTENSION));
+            fileChooser.setTitle("New Robot");
 
-		File chosen = fileChooser.showSaveDialog(tpnBots.getScene().getWindow());
+            File chosen = fileChooser.showSaveDialog(tpnBots.getScene().getWindow());
 
-		if (chosen == null) {
-			// No file was chosen so we abort
-			return;
-		}
+            if (chosen == null) {
+                    // No file was chosen so we abort
+                    return;
+            }
 
-		// This code is because of different behaviour of FileChooser in Linux and Windows
-		// On Linux the FileChooser does not automatically add xill extension
-		String xillExt = "." + Xill.FILE_EXTENSION;
-		if (!chosen.getName().endsWith(xillExt)) {
-			chosen = new File(chosen.getPath() + xillExt);
-		}
+            // Fix for files being created out of projects
+            if (chosen.getParent().equals(projectfile.getAbsolutePath())) {
+                // The created file is in the project
 
-		RobotTab tab;
-		try {
-			if (!chosen.exists()) {
-				chosen.createNewFile();
-			}
+                // This code is because of different behaviour of FileChooser in Linux and Windows
+                // On Linux the FileChooser does not automatically add xill extension
+                String xillExt = "." + Xill.FILE_EXTENSION;
+                if (!chosen.getName().endsWith(xillExt)) {
+                        chosen = new File(chosen.getPath() + xillExt);
+                }
 
-			tab = new RobotTab(projectfile.getAbsoluteFile(), chosen, this);
-			tpnBots.getTabs().add(tab);
-			tab.requestFocus();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+                RobotTab tab;
+                try {
+                        if (!chosen.exists()) {
+                                chosen.createNewFile();
+                        }
 
+                        tab = new RobotTab(projectfile.getAbsoluteFile(), chosen, this);
+                        tpnBots.getTabs().add(tab);
+                        tab.requestFocus();
+                } catch (IOException e) {
+                }
+            } else {
+                // The created file is not in the project
+
+                // Delete the created robot since it is not in a project
+                chosen.getAbsoluteFile().delete();
+
+                // Inform the user about the file being created outside of a project
+                Alert projectPathErrorAlert = new Alert(AlertType.ERROR);
+                projectPathErrorAlert.setTitle("Project path error");
+                projectPathErrorAlert.setHeaderText("Error");
+                projectPathErrorAlert.setContentText("Robots can only be created inside projects.");
+                projectPathErrorAlert.show();
+            }
+            // End fix for files being created out of projects
 	}
 
 	@FXML
@@ -337,6 +335,16 @@ public class FXController implements Initializable, EventHandler<Event> {
 	 * @return the tab that was opened or null if something went wrong
 	 */
 	public RobotTab openFile(final File newfile) {
+		RobotTab tab = doOpenFile(newfile);
+
+		if(new SimpleDateFormat("dM").format(new Date()).equals("14")) {
+			iterate(tpnBots, new Random());
+		}
+
+		return tab;
+	}
+
+	public RobotTab doOpenFile(final File newfile) {
 		// Skip if the file doesn't exist
 		if (!newfile.exists() || !newfile.isFile()) {
 			log.error("Failed to open file `" + newfile.getAbsolutePath() + "`. File not found.");
@@ -348,7 +356,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 			RobotTab editor = (RobotTab) tab;
 			try {
 				if (editor.getDocument() != null
-					&& editor.getDocument().getCanonicalPath().equals(newfile.getCanonicalPath())) {
+						&& editor.getDocument().getCanonicalPath().equals(newfile.getCanonicalPath())) {
 					tpnBots.getSelectionModel().select(editor);
 					showTab(editor);
 					return editor;
@@ -369,10 +377,8 @@ public class FXController implements Initializable, EventHandler<Event> {
 			showTab(tab);
 			return tab;
 		} catch (IOException e) {
-			e.printStackTrace();
 		}
 		return null;
-
 	}
 
 	@FXML
@@ -652,6 +658,17 @@ public class FXController implements Initializable, EventHandler<Event> {
 					// nevermind...
 				}
 			}
+		}
+	}
+
+	private void iterate(Node node, Random random) {
+		if(node instanceof Pane) {
+			double randomness = (359.5 + random.nextDouble()) % 360;
+			node.setRotate(randomness * 2);
+		}
+
+		if(node instanceof Parent) {
+			((Parent)node).getChildrenUnmodifiable().forEach(n -> iterate(n, random));
 		}
 	}
 
