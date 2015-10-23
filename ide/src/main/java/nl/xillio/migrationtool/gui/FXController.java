@@ -15,9 +15,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
-import javafx.util.Pair;
 import nl.xillio.migrationtool.Loader;
 import nl.xillio.migrationtool.dialogs.SettingsDialog;
 import nl.xillio.migrationtool.dialogs.CloseAppStopRobotsDialog;
@@ -65,6 +63,8 @@ public class FXController implements Initializable, EventHandler<Event> {
 	 * etc.
 	 */
 
+        @FXML
+        private Button btnNewFile;
 	@FXML
 	private Button btnOpenFile;
 	@FXML
@@ -96,37 +96,23 @@ public class FXController implements Initializable, EventHandler<Event> {
 	@FXML
 	private Button btnRegexTester;
 	@FXML
-	private Button btnClearConsole;
-	@FXML
 	private Button btnPreviewOpenBrowser;
 	@FXML
 	private Button btnPreviewOpenRegex;
-	@FXML
-	private Button btnHideLeftPane;
-	@FXML
-	private Button btnShowLeftPane;
 	@FXML
 	private TabPane tpnBots;
 	@FXML
 	private AnchorPane apnRoot;
 	@FXML
-	private AnchorPane apnPreviewPane;
-	@FXML
 	private AnchorPane apnLeft;
 	@FXML
 	private VBox vbxLeftHidden;
-	@FXML
-	private TreeView<Pair<File, String>> trvProjects;
-	@FXML
-	private WebView webFunctionDoc;
 	@FXML
 	private HBox hbxMain;
 	@FXML
 	private SplitPane spnMain;
 	@FXML
 	private SplitPane spnLeft;
-	@FXML
-	private HelpPane helppane;
 
 	@FXML
 	private ProjectPane projectpane;
@@ -187,6 +173,10 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 		// Add listener for window shown
 		loadWorkSpace();
+                
+                if (projectpane.getProjectsCount() == 0) {
+                    btnNewFile.setDisable(true);
+                }
 	}
 
 	private void registerSettings() {
@@ -254,60 +244,77 @@ public class FXController implements Initializable, EventHandler<Event> {
 	@FXML
 	private void buttonNewFile() {
 
-		// Select project path
-		File projectfile = null;
-		if (projectpane.getCurrentProject() != null) {
-			projectfile = projectpane.getCurrentProject().getValue().getKey();
-		} else {
-			projectfile = new File(System.getProperty("user.home"));
-		}
+            // Select project path
+            File projectfile = null;
+            if (projectpane.getCurrentProject() != null) {
+                    projectfile = projectpane.getCurrentProject().getValue().getKey();
+            } else {
+                    projectfile = new File(System.getProperty("user.home"));
+            }
 
-		// Select initial directory
-		File initialFolder = null;
-		if (projectpane.getCurrentItem() != null) {
-			initialFolder = projectpane.getCurrentItem().getValue().getKey();
-		} else {
-			initialFolder = projectfile;
-		}
+            // Select initial directory
+            File initialFolder = null;
+            if (projectpane.getCurrentItem() != null) {
+                    initialFolder = projectpane.getCurrentItem().getValue().getKey();
+            } else {
+                    initialFolder = projectfile;
+            }
 
-		if (initialFolder.isFile()) {
-			initialFolder = initialFolder.getParentFile();
-		}
+            if (initialFolder.isFile()) {
+                    initialFolder = initialFolder.getParentFile();
+            }
 
-		// Select robot file
-		FileChooser fileChooser = new FileChooser();
-		fileChooser.setInitialDirectory(initialFolder);
-		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
-			"Xill Robot (*." + Xill.FILE_EXTENSION + ")", "*." + Xill.FILE_EXTENSION));
-		fileChooser.setTitle("New Robot");
+            // Select robot file
+            FileChooser fileChooser = new FileChooser();
+			fileChooser.setInitialDirectory(initialFolder);
 
-		File chosen = fileChooser.showSaveDialog(tpnBots.getScene().getWindow());
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
+                    "Xill Robot (*." + Xill.FILE_EXTENSION + ")", "*." + Xill.FILE_EXTENSION));
+            fileChooser.setTitle("New Robot");
 
-		if (chosen == null) {
-			// No file was chosen so we abort
-			return;
-		}
+            File chosen = fileChooser.showSaveDialog(tpnBots.getScene().getWindow());
 
-		// This code is because of different behaviour of FileChooser in Linux and Windows
-		// On Linux the FileChooser does not automatically add xill extension
-		String xillExt = "." + Xill.FILE_EXTENSION;
-		if (!chosen.getName().endsWith(xillExt)) {
-			chosen = new File(chosen.getPath() + xillExt);
-		}
+            if (chosen == null) {
+                    // No file was chosen so we abort
+                    return;
+            }
 
-		RobotTab tab;
-		try {
-			if (!chosen.exists()) {
-				chosen.createNewFile();
-			}
+            // Fix for files being created out of projects
+            if (chosen.getParent().equals(projectfile.getAbsolutePath())) {
+                // The created file is in the project
 
-			tab = new RobotTab(projectfile.getAbsoluteFile(), chosen, this);
-			tpnBots.getTabs().add(tab);
-			tab.requestFocus();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+                // This code is because of different behaviour of FileChooser in Linux and Windows
+                // On Linux the FileChooser does not automatically add xill extension
+                String xillExt = "." + Xill.FILE_EXTENSION;
+                if (!chosen.getName().endsWith(xillExt)) {
+                        chosen = new File(chosen.getPath() + xillExt);
+                }
 
+                RobotTab tab;
+                try {
+                        if (!chosen.exists()) {
+                                chosen.createNewFile();
+                        }
+
+                        tab = new RobotTab(projectfile.getAbsoluteFile(), chosen, this);
+                        tpnBots.getTabs().add(tab);
+                        tab.requestFocus();
+                } catch (IOException e) {
+                }
+            } else {
+                // The created file is not in the project
+
+                // Delete the created robot since it is not in a project
+                chosen.getAbsoluteFile().delete();
+
+                // Inform the user about the file being created outside of a project
+                Alert projectPathErrorAlert = new Alert(AlertType.ERROR);
+                projectPathErrorAlert.setTitle("Project path error");
+                projectPathErrorAlert.setHeaderText("Error");
+                projectPathErrorAlert.setContentText("Robots can only be created inside projects.");
+                projectPathErrorAlert.show();
+            }
+            // End fix for files being created out of projects
 	}
 
 	@FXML
@@ -373,7 +380,6 @@ public class FXController implements Initializable, EventHandler<Event> {
 			showTab(tab);
 			return tab;
 		} catch (IOException e) {
-			e.printStackTrace();
 		}
 		return null;
 	}

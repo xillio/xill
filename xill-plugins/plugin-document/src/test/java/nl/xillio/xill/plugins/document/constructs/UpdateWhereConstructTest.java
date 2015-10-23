@@ -42,12 +42,15 @@ public class UpdateWhereConstructTest extends ConstructTest {
 		String section = "target";
 		String versionId = "2.4";
 
+		MetaExpression versionIdVar = mock(MetaExpression.class);
+		when(versionIdVar.getStringValue()).thenReturn("");
+
 		XillUDMService service = mock(XillUDMService.class);
 		when(service.updateWhere(any(Document.class), anyMap())).thenReturn(10L);
 		when(service.updateWhere(any(Document.class), anyMap(), eq(versionId), eq(XillUDMService.Section.TARGET))).thenReturn(20L);
 
 		// Run delete whole project
-		MetaExpression result = UpdateWhereConstruct.process(fromValue(filter), fromValue(body), NULL, fromValue(section), service);
+		MetaExpression result = UpdateWhereConstruct.process(fromValue(filter), fromValue(body), versionIdVar, fromValue(section), service);
 
 		// Verify
 		verify(service).updateWhere(any(Document.class), anyMap());
@@ -84,10 +87,14 @@ public class UpdateWhereConstructTest extends ConstructTest {
 		LinkedHashMap<String, MetaExpression> filter = new LinkedHashMap<>();
 		LinkedHashMap<String, MetaExpression> body = new LinkedHashMap<>();
 		String section = "target";
+
+		MetaExpression versionIdVar = mock(MetaExpression.class);
+		when(versionIdVar.getStringValue()).thenReturn("");
+
 		XillUDMService udmService = mock(XillUDMService.class);
 		when(udmService.updateWhere(any(Document.class), anyMap())).thenThrow(exceptionClass);
 
 		// Run
-		UpdateWhereConstruct.process(fromValue(filter), fromValue(body), NULL, fromValue(section), udmService);
+		UpdateWhereConstruct.process(fromValue(filter), fromValue(body), versionIdVar, fromValue(section), udmService);
 	}
 }

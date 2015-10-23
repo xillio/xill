@@ -34,12 +34,15 @@ public class RemoveWhereConstructTest extends TestUtils {
 		String section = "target";
 		String versionId = "2.4";
 
+		MetaExpression versionIdVar = mock(MetaExpression.class);
+		when(versionIdVar.getStringValue()).thenReturn("");
+
 		XillUDMService service = mock(XillUDMService.class);
 		when(service.removeWhere(any(Document.class))).thenReturn(10L);
 		when(service.removeWhere(any(), eq(versionId), eq(XillUDMService.Section.TARGET))).thenReturn(20L);
 
 		// Run delete whole project
-		MetaExpression result = RemoveWhereConstruct.process(fromValue(filter), NULL, fromValue(section), service);
+		MetaExpression result = RemoveWhereConstruct.process(fromValue(filter), versionIdVar, fromValue(section), service);
 		assertEquals(result.getNumberValue().longValue(), 10L);
 
 		// Run delete version
@@ -60,10 +63,14 @@ public class RemoveWhereConstructTest extends TestUtils {
 	public void testProcessError(final Class<Exception> exceptionClass) throws PersistenceException {
 		LinkedHashMap<String, MetaExpression> filter = new LinkedHashMap<>();
 		String section = "target";
+
+        MetaExpression versionIdVar = mock(MetaExpression.class);
+        when(versionIdVar.getStringValue()).thenReturn("");
+
 		XillUDMService udmService = mock(XillUDMService.class);
 		when(udmService.removeWhere(any())).thenThrow(exceptionClass);
 
 		// Run
-		RemoveWhereConstruct.process(fromValue(filter), NULL, fromValue(section), udmService);
+		RemoveWhereConstruct.process(fromValue(filter), versionIdVar, fromValue(section), udmService);
 	}
 }

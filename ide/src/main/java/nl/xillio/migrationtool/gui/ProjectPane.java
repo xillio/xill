@@ -176,7 +176,8 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 			if (projects.isEmpty()) {
 				disableAllButtons();
 				return;
-			};
+			}
+			;
 			projects.forEach(this::addProject);
 			if (settings.simple().get(Settings.LICENSE, Settings.License) == null && new File(DEFAULT_PROJECT_PATH).exists()) {
 				newProject(DEFAULT_PROJECT_NAME, DEFAULT_PROJECT_PATH, "");
@@ -196,6 +197,9 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 	public void removeProject(final TreeItem<Pair<File, String>> item) {
 		root.getChildren().remove(item);
 		settings.project().delete(item.getValue().getValue());
+                if (getProjectsCount() == 0) {
+                    getScene().lookup("#btnNewFile").setDisable(true);
+                }
 	}
 
 	/**
@@ -211,6 +215,9 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 			LOGGER.error("Failed to delete project",e);
 		}
 		removeProject(item);
+                if (getProjectsCount() == 0) {
+                    getScene().lookup("#btnNewFile").setDisable(true);
+                }
 	}
 
 	/**
@@ -230,6 +237,11 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		if (projectDoesntExist) {
 			ProjectSettings project = new ProjectSettings(name, folder, description);
 			settings.project().save(project);
+			try {
+				FileUtils.forceMkdir(new File(project.getFolder()));
+			}catch(IOException e) {
+				LOGGER.error("Failed to create project directory", e);
+			}
 			addProject(project);
 		}
 		return projectDoesntExist;
@@ -514,14 +526,17 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		btnDelete.setDisable(false);
 		btnRename.setDisable(false);
 		btnUpload.setDisable(false);
+                getScene().lookup("#btnNewFile").setDisable(true);
 
 		if (newObject == null || newObject == trvProjects.getRoot()) {
 			// Disable all
 			disableAllButtons();
+                        getScene().lookup("#btnNewFile").setDisable(true);
 
 		} else if (newObject == getProject(newObject)) {
 			// This is a project
 			btnRename.setDisable(true);
+                        getScene().lookup("#btnNewFile").setDisable(false);
 		}
 	}
 
@@ -531,4 +546,13 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		btnRename.setDisable(true);
 		btnUpload.setDisable(true);
 	}
+        
+        /**
+         * Get the number of projects
+         * 
+         * @return the number of projects present
+         */
+        public int getProjectsCount() {
+            return settings.project().getAll().size();
+        }
 }
