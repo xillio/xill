@@ -413,7 +413,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
             VBox checkBoxContainer = new VBox();
 
-            Label l = new Label("The robot " + currentRobot.getPath().getName() + " needs to be save before running. Do you want to continue?");
+            Label l = new Label("The robot " + currentRobot.getPath().getName() + " needs to be saved before running. Do you want to continue?");
             CheckBox cb = new CheckBox("Don't ask me again.");
             cb.addEventHandler(ActionEvent.ACTION, event -> {
                 boolean currentSettingValue = Boolean.valueOf(settings.simple().get("SettingsGeneral", "AutoSaveBotBeforeRun"));
