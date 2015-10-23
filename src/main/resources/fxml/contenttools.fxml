@@ -67,34 +67,18 @@
 										<Tooltip text="Save all" />
 									</tooltip>
 								</Button>
-                        <Button fx:id="btnSettings" mnemonicParsing="false" onAction="#buttonSettings" styleClass="iconButton" text="Settings">
-                           <graphic>
-                              <Pane styleClass="icon" />
-                           </graphic>
-                           <tooltip>
-                              <Tooltip text="Settings" />
-                           </tooltip>
-                        </Button>
 							</items>
 						</ToolBar>
 						<ToolBar fx:id="tlbRight" focusTraversable="false" HBox.hgrow="NEVER">
 							<items>
-								<!-- <Button fx:id="btnInfo" mnemonicParsing="false" onAction="#buttonSearch" styleClass="iconButton" text="Info">
-									<graphic>
-										<Pane styleClass="icon" />
-									</graphic>
-									<tooltip>
-										<Tooltip text="Info" />
-									</tooltip>
-								</Button>
-								<Button fx:id="btnSettings" mnemonicParsing="false" onAction="#buttonSearch" styleClass="iconButton" text="Settings">
+								<Button fx:id="btnSettings" mnemonicParsing="false" onAction="#buttonSettings" styleClass="iconButton" text="Settings">
 									<graphic>
 										<Pane styleClass="icon" />
 									</graphic>
 									<tooltip>
 										<Tooltip text="Settings" />
 									</tooltip>
-								</Button> -->
+								</Button>
 							</items>
 						</ToolBar>
 					</children>
