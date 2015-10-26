@@ -856,4 +856,13 @@ public class FXController implements Initializable, EventHandler<Event> {
 	public void setCancelClose(boolean cancelClose) {
 		this.cancelClose = cancelClose;
 	}
+
+	/**
+	 * Disables the new file button
+	 *
+	 * @param disable boolean parameter to disable the new file button
+	 */
+	public void disableNewFileButton(boolean disable) {
+		btnNewFile.setDisable(disable);
+	}
 }
