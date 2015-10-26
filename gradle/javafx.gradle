@@ -16,6 +16,9 @@ javafx {
     embedLauncher = false
     embedJNLP = false
 
+    // Use UTF8 encoding as standard encoding
+    jvmArgs = ['-Dfile.encoding=UTF8']
+
     // Allow the user to set the heap size
     bundleArguments.userJvmOptions = ['-Xmx': '1024m', '-Xms': '1024m']
 }
