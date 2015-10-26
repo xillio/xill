@@ -25,20 +25,21 @@ public class PostConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(ConstructContext context) {
 		return new ConstructProcessor(
-			(url, options, body) -> process(url, options, body, restService),
+			(url, options, body, contenttype) -> process(url, options, body, contenttype, restService),
 				new Argument("url", ATOMIC),
 				new Argument("options", NULL, OBJECT),
-				new Argument("body", NULL, LIST, OBJECT, ATOMIC)
+				new Argument("body", NULL, LIST, OBJECT, ATOMIC),
+				new Argument("contenttype", NULL, ATOMIC)
 		);
 	}
 
-	static MetaExpression process(final MetaExpression urlVar, final MetaExpression optionsVar, final MetaExpression bodyVar, final RestService service) {
+	static MetaExpression process(final MetaExpression urlVar, final MetaExpression optionsVar, final MetaExpression bodyVar, final MetaExpression contentTypeVar, final RestService service) {
 		String url = urlVar.getStringValue();
 		if (url.isEmpty()) {
 			throw new RobotRuntimeException("URL is empty!");
 		}
 		Options options = new Options(optionsVar);
-		Content body = new Content(bodyVar);
+		Content body = new Content(bodyVar, contentTypeVar);
 		return service.post(url, options, body).getMeta();
 	}
 }
