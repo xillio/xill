@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 import nl.xillio.xill.api.components.MetaExpression;
+import oracle.sql.Datum;
 
 /**
  * Converts from one JDBC type to a type suited for a MetaExpression.
@@ -20,6 +21,15 @@ import nl.xillio.xill.api.components.MetaExpression;
  */
 public enum TypeConverter {
 
+	/**
+	 * Converts a {@link Character} to a {@link String}
+	 */
+	CHAR(Character.class) {
+		@Override
+		protected Object convert(Object o) {
+			return String.valueOf((Character) o);
+		}
+	},
 	/**
 	 * Converts a {@link Byte} to an int
 	 */
@@ -52,8 +62,16 @@ public enum TypeConverter {
 	 */
 	BIG_DECIMAL(BigDecimal.class) {
 		@Override
-		public Object convert(Object o) {
-			return ((BigDecimal) o).doubleValue();
+		public Object convert(Object o) throws ConversionException {
+			BigDecimal decimal = (BigDecimal) o;
+			if (decimal.compareTo(BigDecimal.valueOf(Double.MAX_VALUE)) > 1) {
+				throw new ConversionException("Number ["+ decimal.toString() +"] is too large to be converted");
+			}
+			// If this number has no decimal positions, and it fits in a long value return the long value
+			if (decimal.remainder(BigDecimal.ONE).equals(BigDecimal.ZERO) && decimal.compareTo(BigDecimal.valueOf(Long.MAX_VALUE)) <= 0) {
+				return decimal.longValue();
+			}
+			return decimal.doubleValue();
 		}
 	},
 	/**
@@ -66,16 +84,13 @@ public enum TypeConverter {
 			long length;
 			try {
 				length = clob.length();
-			}
-			catch (SQLException e) {
+			} catch (SQLException e) {
 				throw new ConversionException(e);
 			}
-			if (length > Integer.MAX_VALUE)
-				throw new ConversionException("Clob is too long");
+			if (length > Integer.MAX_VALUE) throw new ConversionException("Clob is too long");
 			try {
 				return clob.getSubString(1, (int) length);
-			}
-			catch (SQLException e) {
+			} catch (SQLException e) {
 				throw new ConversionException(e);
 			}
 		}
@@ -101,12 +116,23 @@ public enum TypeConverter {
 				while (array.next()) {
 					result.add(convertJDBCType(array.getObject(ARRAY_RESULTSET_VALUE)));
 				}
-			}
-			catch (SQLException e)
-			{
+			} catch (SQLException e) {
 				throw new ConversionException(e);
 			}
 			return result;
+		}
+	},
+	/**
+	 * Converts a {@link oracle.sql.Datum} instance to the correct jdbc type and does further conversion since it is the root of the Oracle types hierarchy.
+	 */
+	ORACLE_DATUM(Datum.class) {
+		@Override
+		protected Object convert(Object o) throws ConversionException {
+			try {
+				return convertJDBCType(((Datum) o).toJdbc());
+			} catch (SQLException e) {
+				throw new ConversionException(e);
+			}
 		}
 	};
 
