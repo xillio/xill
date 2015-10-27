@@ -28,6 +28,22 @@ function loadEditor(){
 			this.xillBuildin += "|" + keyword;
 	}
 
+    editor.$highlights = [];
+    editor.highlight = function(line, type) {
+        var editor = contenttools.getAce();
+        hl = editor.getSession().addMarker(new Range(line, 0, line, 1), "ace_" + type, "fullLine");
+        editor.$highlights.push(hl);
+        editor.scrollToLine(line);
+    }
+    editor.clearHighlight = function() {
+        var editor = contenttools.getAce();
+        editor.$highlights.forEach(function(entry) {
+            editor.getSession().removeMarker(entry);
+        });
+        editor.$highlights = [];
+    }
+
+
 	///////////// SEARCHING /////////////
 
 	// Occurrences.
