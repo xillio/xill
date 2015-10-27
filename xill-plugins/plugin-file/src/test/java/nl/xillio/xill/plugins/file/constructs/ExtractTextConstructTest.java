@@ -14,7 +14,7 @@ import static org.testng.Assert.assertEquals;
 /**
  * Test the GetTextConstruct
  */
-public class GetTextConstructTest {
+public class ExtractTextConstructTest {
 
 	@Test
 	public void testProcessNormal() throws Exception {
@@ -42,7 +42,7 @@ public class GetTextConstructTest {
 		when(extractor.extractText(any(), eq(timeoutValue.intValue()))).thenReturn(resultText);
 
 		// Run the Method
-		MetaExpression result = GetTextConstruct.process(context, extractor, fileUtils, file, timeout);
+		MetaExpression result = ExtractTextConstruct.process(context, extractor, fileUtils, file, timeout);
 
 		// Verify
 		verify(extractor, times(1)).extractText(any(), eq(timeoutValue.intValue()));
@@ -59,6 +59,6 @@ public class GetTextConstructTest {
 		when(timeout.getNumberValue()).thenReturn(Double.NaN);
 
 		// Run the Method
-		GetTextConstruct.process(null, null, null, null, timeout);
+		ExtractTextConstruct.process(null, null, null, null, timeout);
 	}
 }
