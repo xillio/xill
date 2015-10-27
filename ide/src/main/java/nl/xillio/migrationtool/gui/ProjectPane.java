@@ -300,6 +300,13 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		if (item != null) {
 			trvProjects.getSelectionModel().clearSelection();
 			trvProjects.getSelectionModel().select(item);
+			trvProjects.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+				if (observable.getValue() != null) {
+					controller.disableNewFileButton(false);
+				} else {
+					controller.disableNewFileButton(true);
+				}
+			});
 		}
 	}
 

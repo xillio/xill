@@ -402,46 +402,50 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
         boolean autoSaveBotBeforeRun = Boolean.valueOf(settings.simple().get("SettingsGeneral", "AutoSaveBotBeforeRun"));
 
         if (autoSaveBotBeforeRun) {
-            // If true, show the confirmation dialog
-            Alert confirmationDialog = new Alert(AlertType.CONFIRMATION);
-            confirmationDialog.setTitle("Do you want to save and run the robot?");
-            // This enables xillio icon to be displayed in the upper left corner
-            confirmationDialog.initOwner(editorPane.getScene().getWindow());
+			if (editorPane.getDocumentState().getValue() == DocumentState.CHANGED) {
+				// If true, show the confirmation dialog
+				Alert confirmationDialog = new Alert(AlertType.CONFIRMATION);
+				confirmationDialog.setTitle("Do you want to save and run the robot?");
+				// This enables xillio icon to be displayed in the upper left corner
+				confirmationDialog.initOwner(editorPane.getScene().getWindow());
 
-            // Compose the dialog pane
-            DialogPane dp = new DialogPane();
+				// Compose the dialog pane
+				DialogPane dp = new DialogPane();
 
-            VBox checkBoxContainer = new VBox();
+				VBox checkBoxContainer = new VBox();
 
-            Label l = new Label("The robot " + currentRobot.getPath().getName() + " needs to be saved before running. Do you want to continue?");
-            CheckBox cb = new CheckBox("Don't ask me again.");
-            cb.addEventHandler(ActionEvent.ACTION, event -> {
-                boolean currentSettingValue = Boolean.valueOf(settings.simple().get("SettingsGeneral", "AutoSaveBotBeforeRun"));
-                if (currentSettingValue) {
-                    settings.simple().save("SettingsGeneral", "AutoSaveBotBeforeRun", false);
-                } else {
-                    settings.simple().save("SettingsGeneral", "AutoSaveBotBeforeRun", true);
-                }
-            });
+				Label l = new Label("The robot " + currentRobot.getPath().getName() + " needs to be saved before running. Do you want to continue?");
+				CheckBox cb = new CheckBox("Don't ask me again.");
+				cb.addEventHandler(ActionEvent.ACTION, event -> {
+					boolean currentSettingValue = Boolean.valueOf(settings.simple().get("SettingsGeneral", "AutoSaveBotBeforeRun"));
+					if (currentSettingValue) {
+						settings.simple().save("SettingsGeneral", "AutoSaveBotBeforeRun", false);
+					} else {
+						settings.simple().save("SettingsGeneral", "AutoSaveBotBeforeRun", true);
+					}
+				});
 
-            checkBoxContainer.getChildren().addAll(l, cb);
+				checkBoxContainer.getChildren().addAll(l, cb);
 
-            dp.setContent(checkBoxContainer);
-            // Add the dialog pane to the Alert/dialog
-            confirmationDialog.setDialogPane(dp);
-            // Make the dialog close by clicking the close button
-            confirmationDialog.initModality(Modality.APPLICATION_MODAL);
-            confirmationDialog.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+				dp.setContent(checkBoxContainer);
+				// Add the dialog pane to the Alert/dialog
+				confirmationDialog.setDialogPane(dp);
+				// Make the dialog close by clicking the close button
+				confirmationDialog.initModality(Modality.APPLICATION_MODAL);
+				confirmationDialog.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-            // Get the result from the confirmation dialog
-            Optional<ButtonType> result = confirmationDialog.showAndWait();
+				// Get the result from the confirmation dialog
+				Optional<ButtonType> result = confirmationDialog.showAndWait();
 
-            // Process the result
-            if (result.get() == ButtonType.OK) {
-                autoSaveAndRunRobot();
-            } else if (result.get() == ButtonType.CANCEL) {
-                editorPane.getControls().stop();
-            }
+				// Process the result
+				if (result.get() == ButtonType.OK) {
+					autoSaveAndRunRobot();
+				} else if (result.get() == ButtonType.CANCEL) {
+					editorPane.getControls().stop();
+				}
+			} else {
+				autoSaveAndRunRobot();
+			}
         } else {
             // If false, just auto-save and run the robot without the confirmation dialog popping up
             autoSaveAndRunRobot();
@@ -452,7 +456,9 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
      * Automatically saves robot and runs it if the save is successful
      */
     private void autoSaveAndRunRobot() {
-        save();
+		if (editorPane.getDocumentState().getValue() == DocumentState.CHANGED) {
+			save();
+		}
 
 		if (FXController.settings.simple().getBoolean(Settings.SETTINGS_GENERAL, Settings.RunBotWithCleanConsole)) {
 			ESConsoleClient.getInstance().clearLog(getProcessor().getRobotID().toString());
