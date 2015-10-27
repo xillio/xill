@@ -356,7 +356,7 @@ public class SettingsDialog extends FXMLDialog {
      */
     public static void register(final SettingsHandler settings) {
         // General
-        settings.simple().register(Settings.LAYOUT, Settings.SettingsDialogDimensions, "800×600", "The size of the settings window");
+        settings.simple().register(Settings.LAYOUT, Settings.SettingsDialogDimensions, "800x600", "The size of the settings window");
         settings.simple().register(Settings.SETTINGS_GENERAL, Settings.DefaultProjectLocation, System.getProperty("user.home"), "The default project location");
         settings.simple().register(Settings.SETTINGS_GENERAL, Settings.OpenBotWithCleanConsole, "true", "If the console is cleared when the bot is open");
         settings.simple().register(Settings.SETTINGS_GENERAL, Settings.RunBotWithCleanConsole, "false", "If the console is cleared when the bot is about to run");
