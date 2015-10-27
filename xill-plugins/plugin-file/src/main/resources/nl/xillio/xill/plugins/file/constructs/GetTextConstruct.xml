@@ -2,7 +2,8 @@
 <function>
     <description>
         Read text from a plain text file. 
-        Character encoding can be set manually, using a string identifying the format. 
+        Character encoding can be set manually, using a string identifying the format.
+        By default, i.e. without specifying any encoding type, de getText function will use the system encoding.
     </description>
     <examples>
         <example title="Usage">
