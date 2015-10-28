@@ -1,6 +1,7 @@
 package nl.xillio.xill.plugins.database.util;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.Array;
 import java.sql.Clob;
 import java.sql.ResultSet;
@@ -58,13 +59,13 @@ public enum TypeConverter {
 		}
 	},
 	/**
-	 * Converts a {@link BigDecimal} to a double. A double is the largest a {@link MetaExpression} can handle, this might return {@link Double#POSITIVE_INFINITY} or {@link Double#NEGATIVE_INFINITY}.
+	 * Converts a {@link BigDecimal} to a double. Throws a {@link ConversionException} when the decimal is too large for a double to hold.
 	 */
 	BIG_DECIMAL(BigDecimal.class) {
 		@Override
 		public Object convert(Object o) throws ConversionException {
 			BigDecimal decimal = (BigDecimal) o;
-			if (decimal.compareTo(BigDecimal.valueOf(Double.MAX_VALUE)) > 1) {
+			if (decimal.compareTo(BigDecimal.valueOf(Double.MAX_VALUE)) > 0) {
 				throw new ConversionException("Number ["+ decimal.toString() +"] is too large to be converted");
 			}
 			// If this number has no decimal positions, and it fits in a long value return the long value
@@ -72,6 +73,19 @@ public enum TypeConverter {
 				return decimal.longValue();
 			}
 			return decimal.doubleValue();
+		}
+	},
+	/**
+	 * Converts a {@link BigInteger} to a long. Throws a {@link ConversionException} when the integer is too long for a long to hold.
+	 */
+	BIG_INTEGER(BigInteger.class) {
+		@Override
+		protected Object convert(Object o) throws ConversionException {
+			BigInteger integer = (BigInteger) o;
+			if (integer.compareTo(BigInteger.valueOf(Long.MAX_VALUE)) > 0) {
+				throw new ConversionException("Number [" + integer.toString() + "] is too large to be converted");
+			}
+			return integer.longValue();
 		}
 	},
 	/**
