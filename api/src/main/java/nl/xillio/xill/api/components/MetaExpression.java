@@ -282,7 +282,7 @@ public abstract class MetaExpression implements Expression, Processable {
 		if (getType().equals(ExpressionDataType.ATOMIC)) {
 			return getStringValue().hashCode();
 		}
-		return getValue().toString().hashCode();
+		return getValue().hashCode();
 	}
 
 	/**

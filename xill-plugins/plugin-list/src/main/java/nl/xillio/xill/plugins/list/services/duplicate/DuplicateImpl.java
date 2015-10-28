@@ -68,40 +68,7 @@ public class DuplicateImpl implements Duplicate {
 		}
 		return input;
 	}
-	
-	
-	
-	
-		/*
-		for (Object m : input) {
-			if (m instanceof List<?>) {
-				List<?> list = (List<?>) m;
-				copy.add(deepCopyList((List<Object>) m,results)); // element in list is a list so copy that list too
-				results.put(list, copy);
-			} else if (m instanceof LinkedHashMap<?, ?>) {
-				copy.add(deepCopyMap((LinkedHashMap<String, Object>) m,results)); // element in list is object, copy this object too.
-			} else {
-				copy.add(m);
-			}
-		}
-		return copy;
-	}
 
-	@SuppressWarnings("unchecked")
-	private Object deepCopyMap(LinkedHashMap<String, Object> input,IdentityHashMap<Object, Object> results) {
-		LinkedHashMap<String, Object> copy = new LinkedHashMap<>();
-		for (Entry<String, Object> entry : input.entrySet()) {
-			if (entry.getValue() instanceof List<?>) {
-				copy.put(entry.getKey(), deepCopyList((List<Object>) entry.getValue(),results)); // value is a list.
-			} else if (entry.getValue() instanceof LinkedHashMap<?, ?>) {
-				copy.put(entry.getKey(), deepCopyMap((LinkedHashMap<String, Object>) entry.getValue(),results)); // value is an object.
-			} else {
-				copy.put(entry.getKey(), entry.getValue());
-			}
-		}
-		return copy;
-	}
-*/
 	private List<Object> copy(List<Object> input){
 		List<Object> output = new ArrayList<>();
 		for(Object o : input){
