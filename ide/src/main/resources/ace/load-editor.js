@@ -43,7 +43,6 @@ function loadEditor(){
         editor.$highlights = [];
     }
 
-
 	///////////// SEARCHING /////////////
 
 	// Occurrences.
@@ -116,7 +115,7 @@ function loadEditor(){
         editor.renderer.updateBackMarkers();
     }
 
-    // Count the occurrences.
+    // Count the occurrences and get the index.
     editor.countOccurrences = function() {
         var result = {};
 
@@ -125,13 +124,18 @@ function loadEditor(){
 
 		// Find all occurrences.
         var options = {
+        	// Saved search settings.
             regExp: editor.$savedSearch.regex,
             caseSensitive: editor.$savedSearch.caseSensitive,
-            wrap: true
+            // Constant settings.
+            wrap: true,
+            range: null,
+            backwards: false,
+            skipCurrent: false
         };
         result.amount = editor.findAll(editor.$savedSearch.needle, options);
 
-        // Find all occurrences before the cursor, so we know the index.
+        // Find occurrences before the cursor, so we know the index.
         options.range = new Range(0, 0, pos.row, pos.column);
         result.index = editor.findAll(editor.$savedSearch.needle, options);
 
