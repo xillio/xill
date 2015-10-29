@@ -2,6 +2,7 @@
 //Needed libraries
 var Range = ace.require('ace/range').Range;
 var UndoManager = ace.require("ace/undomanager").UndoManager;
+var Search = ace.require("ace/search").Search;
 
 function loadEditor(){
 	ace.require("ace/ext/language_tools");
@@ -45,8 +46,6 @@ function loadEditor(){
 
 	///////////// SEARCHING /////////////
 
-	// Occurrences.
-	editor.$occurrences = [];
 	// Search options.
 	editor.$savedSearch = {
 		needle: "",
@@ -55,14 +54,7 @@ function loadEditor(){
 	};
 
 	// Clear the occurrences.
-    editor.clearOccurrences = function() {
-		if (editor.$occurrences) {
-			editor.$occurrences.forEach(function(entry) {
-				editor.getSession().removeMarker(entry);
-			});
-		}
-		editor.$occurrences = [];
-
+    editor.clearSearch = function() {
 		// Clear the highlighting.
 		editor.session.highlight(null);
 		editor.renderer.updateBackMarkers();
@@ -81,18 +73,8 @@ function loadEditor(){
             caseSensitive: caseSensitive
         };
 
-        // Set the cursor to the beginning of the selection.
-        // So that when successive searches are performed which match the current word, the current word stays selected.
-        var selection = editor.getSelectionRange();
-        editor.moveCursorTo(selection.start.row, selection.start.column);
-
-        // Find all occurrences.
-        var result = editor.countOccurrences();
-
         // Execute the search.
-        editor.doFind(false, false);
-
-        return result;
+        return editor.doFind(false, false);
     }
 
     // Do the actual search.
@@ -102,58 +84,34 @@ function loadEditor(){
 	        backwards: backwards,
 	        skipCurrent: skipCurrent,
 	        // Saved search settings.
+	        needle: editor.$savedSearch.needle,
 	        regExp: editor.$savedSearch.regex,
 	        caseSensitive: editor.$savedSearch.caseSensitive,
 	        // Constant settings.
 	        wrap: true,
 	        range: null
 	    };
-        editor.find(editor.$savedSearch.needle, options);
 
-        // Update the highlighting.
-        editor.session.highlight(editor.$search.$options.re);
-        editor.renderer.updateBackMarkers();
-    }
+	    // Create a search object and find all ranges.
+	    var s = new Search();
+	    s.setOptions(options);
+	    var ranges = s.findAll(editor.session);
 
-    // Count the occurrences and get the index.
-    editor.countOccurrences = function() {
-        var result = {};
+	    // Find, save the current hit.
+        var current = editor.find(editor.$savedSearch.needle, options).start;
 
-        // Save the cursor position.
-        var pos = editor.getCursorPosition();
+        // Build the result.
+        var result = { amount: ranges.length, index: 0 };
 
-		// Find all occurrences.
-        var options = {
-        	// Saved search settings.
-            regExp: editor.$savedSearch.regex,
-            caseSensitive: editor.$savedSearch.caseSensitive,
-            // Constant settings.
-            wrap: true,
-            range: null,
-            backwards: false,
-            skipCurrent: false
-        };
-        result.amount = editor.findAll(editor.$savedSearch.needle, options);
+        for (var key in ranges) {
+            var check = ranges[key].start;
 
-        // Find occurrences before the cursor, so we know the index.
-        options.range = new Range(0, 0, pos.row, pos.column);
-        result.index = editor.findAll(editor.$savedSearch.needle, options);
-
-        // Reset the cursor position.
-        editor.moveCursorToPosition(pos);
-        editor.clearSelection();
+            // Check if the highlight is the same as the current.
+            if (current.row == check.row && current.column == check.column)
+                result.index = parseInt(key);
+        }
 
         return result;
-    }
-
-	// Find the next match.
-    editor.findNext = function() {
-        editor.doFind(false, true);
-    }
-
-	// Find the previous match.
-    editor.findPrevious = function() {
-        editor.doFind(true, true);
     }
 
 	///////////// END OF SEARCHING /////////////

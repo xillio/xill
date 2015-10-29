@@ -621,12 +621,12 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 
 	@Override
 	public void searchPattern(final String pattern, final boolean caseSensitive) {
-		searchJS(pattern, true, caseSensitive);
+		callOnAce(this::handleResult, "findOccurrences", pattern, true, caseSensitive);
 	}
 
 	@Override
 	public void search(final String needle, final boolean caseSensitive) {
-		searchJS(needle, false, caseSensitive);
+		callOnAce(this::handleResult, "findOccurrences", needle, false, caseSensitive);
 	}
 
 	@Override
@@ -644,35 +644,31 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 		callOnAce("replace", replacement);
 	}
 
-	private void searchJS(final String needle, final boolean regex, final boolean caseSensitive) {
-		// Count
-		callOnAce(r -> {
-            // Get the amount of occurrences and current index.
-			JSObject result = (JSObject)r;
-            occurrences = (int)result.getMember("amount");
-            if (replaceBar != null)
-                replaceBar.setCurrentOccurrence((int)result.getMember("index"));
+	private void handleResult(Object r) {
+		// Get the amount of occurrences and current index.
+		JSObject result = (JSObject)r;
+		occurrences = (int)result.getMember("amount");
+		if (replaceBar != null)
+			replaceBar.setCurrentOccurrence((int)result.getMember("index"));
 
-			// If there are no results, clear the search
-			if (occurrences == 0)
-				callOnAceBlocking("clearOccurrences");
-
-		}, "findOccurrences", needle, regex, caseSensitive);
+		// If there are no results, clear the search
+		if (occurrences == 0)
+			callOnAceBlocking("clearSearch");
 	}
 
     @Override
     public void findNext(int next) {
-        callOnAce("findNext");
+        callOnAce(this::handleResult, "doFind", false, true);
     }
 
     @Override
     public void findPrevious(int previous) {
-        callOnAce("findPrevious");
+        callOnAce(this::handleResult, "doFind", true, true);
     }
 
 	@Override
 	public void clearSearch() {
-		callOnAce("clearOccurrences");
+		callOnAce("clearSearch");
 	}
 
 	/**
