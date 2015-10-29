@@ -41,6 +41,7 @@ import nl.xillio.xill.api.XillProcessor;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.preview.Replaceable;
 import nl.xillio.xill.util.HighlightSettings;
+import nl.xillio.xill.util.HotkeysHandler.Hotkeys;
 import nl.xillio.xill.util.settings.Settings;
 import nl.xillio.xill.util.settings.SettingsHandler;
 
@@ -294,9 +295,9 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 		if (event instanceof KeyEvent) {
 			KeyEvent ke = (KeyEvent) event;
 
-			if (KeyCombination.valueOf(FXController.HOTKEY_PASTE).match(ke)) {
+			if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.PASTE)).match(ke)) {
 				paste();
-			} else if (KeyCombination.valueOf(FXController.HOTKEY_RESET_ZOOM).match(ke)) {
+			} else if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.RESET_ZOOM)).match(ke)) {
 				zoomTo(1);
 			}
 		}
@@ -442,6 +443,26 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	 */
 	public void undo() {
 		callOnAce("undo");
+	}
+
+	/**
+	 * Perform Ace editor settings
+	 * 
+	 * @param jsCode JavaScript code with settings to be executed
+	 */
+	public void setOptions(final String jsCode) {
+		// If the document has not been loaded yet load the robot later
+		if (!documentLoaded.get()) {
+			documentLoaded.addListener(
+				(obs, oldVal, newVal) -> {
+					if (newVal != null) {
+						setOptions(jsCode);
+					}
+				});
+
+			return;
+		}
+		executeJS(jsCode);
 	}
 
 	private void bindToWindow() {

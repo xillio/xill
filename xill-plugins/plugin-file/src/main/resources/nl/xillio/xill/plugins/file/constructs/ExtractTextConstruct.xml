@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Read text from a plain text file. 
-        Character encoding can be set manually, using a string identifying the format.
-        By default, i.e. without specifying any encoding type, de getText function will use the system encoding.
+        Extract text from a file if possible.
+        This construct also supports most other textual file formats like html, pdf and rtf
     </description>
     <examples>
         <example title="Usage">
@@ -12,9 +11,7 @@
                 use File;
                 use System;
                 var file = File.save("tmp.txt", "This is the content");
-		
-		// Read as UTF-8, supported formats are listed here: https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html
-                var text = File.getText(file, "UTF-8");
+                var text = File.getText(file);
                 System.print(text);
             </code>
             <header>Will print</header>

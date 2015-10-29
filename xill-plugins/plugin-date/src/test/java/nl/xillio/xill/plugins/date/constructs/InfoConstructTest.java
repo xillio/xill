@@ -1,21 +1,18 @@
 package nl.xillio.xill.plugins.date.constructs;
 
-import static nl.xillio.xill.plugins.date.utils.MockUtils.mockDateExpression;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
+import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.plugins.date.services.DateService;
+import org.testng.annotations.Test;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.plugins.date.services.DateService;
-
-import org.testng.annotations.Test;
+import static nl.xillio.xill.plugins.date.utils.MockUtils.mockDateExpression;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
 
 /**
  * Test the {@link InfoConstruct}

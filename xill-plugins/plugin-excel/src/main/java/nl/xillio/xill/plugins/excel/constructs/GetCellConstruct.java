@@ -6,10 +6,9 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.excel.datastructures.DateImpl;
 import nl.xillio.xill.plugins.excel.datastructures.XillCellRef;
 import nl.xillio.xill.plugins.excel.datastructures.XillSheet;
-
-import java.util.Date;
 
 /**
  * Construct to get the value of a cell from a XillSheet.
@@ -38,10 +37,13 @@ public class GetCellConstruct extends Construct {
 		else //numeric notation
 			cell = createCellRef(column.getStringValue(), row.getNumberValue().intValue());
 		Object cellValue = sheet.getCellValue(cell);
-		if (cellValue instanceof Date)
-			cellValue = cellValue.toString(); // Because Dates cannot be put in MetaExpression. Should be changed into Date plugin
-		// when plugins can be used in each other
 
+        if(cellValue instanceof DateImpl){
+            DateImpl date = (DateImpl) cellValue;
+            MetaExpression toReturn = fromValue(date.getZoned().toString());
+            toReturn.storeMeta(nl.xillio.xill.api.data.Date.class, date);
+            return toReturn;
+        }
 		return parseObject(cellValue);
 	}
 

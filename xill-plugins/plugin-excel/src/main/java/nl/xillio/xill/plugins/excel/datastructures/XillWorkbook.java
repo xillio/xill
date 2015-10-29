@@ -4,6 +4,8 @@ import com.google.common.io.Files;
 import nl.xillio.xill.api.data.MetadataExpression;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -23,6 +25,8 @@ public class XillWorkbook implements MetadataExpression {
 	private File file;
 	private boolean readonly = false;
 	private String location;
+    private CellStyle dateCellStyle;
+    private CellStyle dateTimeCellStyle;
 
 	/**
 	 * Constructor for the XillWorkbook class.
@@ -41,6 +45,33 @@ public class XillWorkbook implements MetadataExpression {
 		else
 			readonly = false;
 	}
+
+    /**
+     * Get this workbook's cell style for date formatting (no time)
+     * @return a {@link CellStyle} for date formatting
+     */
+    public CellStyle getDateCellStyle(){
+        if(dateCellStyle == null){
+            CreationHelper creationHelper = workbook.getCreationHelper();
+            dateCellStyle = workbook.createCellStyle();
+            dateCellStyle.setDataFormat(creationHelper.createDataFormat().getFormat("dd-mm-yyyy"));
+        }
+        return dateCellStyle;
+    }
+
+    /**
+     * Get the workbook's cell style for date-time formatting
+     * @return a {@link CellStyle} for date-time formatting
+     */
+    public CellStyle getDateTimeCellStyle(){
+        if(dateTimeCellStyle == null){
+            CreationHelper creationHelper = workbook.getCreationHelper();
+            dateTimeCellStyle = workbook.createCellStyle();
+            dateTimeCellStyle.setDataFormat(creationHelper.createDataFormat().getFormat("dd-mm-yyyy hh:mm"));
+        }
+        return dateTimeCellStyle;
+    }
+
 
 	/**
 	 * Returns a string with information for the debugging window
@@ -62,7 +93,7 @@ public class XillWorkbook implements MetadataExpression {
 	public XillSheet getSheet(String sheetName) {
 		if (workbook.getSheetIndex(sheetName) == -1)
 			throw new IllegalArgumentException("Sheet cannot be found in the supplied workbook");
-		return new XillSheet(workbook.getSheet(sheetName), readonly);
+		return new XillSheet(workbook.getSheet(sheetName), readonly, this);
 	}
 
 	/**
@@ -72,7 +103,7 @@ public class XillWorkbook implements MetadataExpression {
 	 * @return the {@link XillSheet} which has been created
 	 */
 	public XillSheet makeSheet(String sheetName) {
-		return new XillSheet(workbook.createSheet(sheetName), readonly);
+		return new XillSheet(workbook.createSheet(sheetName), readonly, this);
 	}
 
 	/**

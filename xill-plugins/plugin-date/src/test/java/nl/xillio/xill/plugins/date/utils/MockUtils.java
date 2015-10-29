@@ -1,7 +1,7 @@
 package nl.xillio.xill.plugins.date.utils;
 
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.plugins.date.data.Date;
+import nl.xillio.xill.api.data.Date;
 
 import java.time.ZonedDateTime;
 

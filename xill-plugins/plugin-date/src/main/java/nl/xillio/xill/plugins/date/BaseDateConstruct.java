@@ -3,8 +3,8 @@ package nl.xillio.xill.plugins.date;
 import com.google.inject.Inject;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Construct;
+import nl.xillio.xill.api.data.Date;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.date.data.Date;
 import nl.xillio.xill.plugins.date.services.DateService;
 
 import java.time.ZonedDateTime;

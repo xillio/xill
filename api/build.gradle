@@ -11,8 +11,5 @@ dependencies {
     compile 'org.apache.logging.log4j:log4j-api:2.3'
     compile 'org.apache.logging.log4j:log4j-1.2-api:2.3'
 
-    compile ('nl.xillio:xill-lang:3.0.5') {
-        exclude group: 'org.antlr', module: 'stringtemplate'
-    }
 
 }

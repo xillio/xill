@@ -25,7 +25,7 @@ public class SimpleVariableHandler {
 	}
 
 	/**
-	 * Sets the new value to named simple variable in provided category
+	 * Sets the new string value to named simple variable in provided category
 	 * The simple variable must be registered before otherwise it will cause error.
 	 * 
 	 * @param category The name of category
@@ -34,6 +34,18 @@ public class SimpleVariableHandler {
 	 */
 	public void save(final String category, final String name, final String value) {
 		this.save(category, name, value, false);
+	}
+
+	/**
+	 * Sets the new boolean value to named simple variable in provided category
+	 * The simple variable must be registered before otherwise it will cause error.
+	 * 
+	 * @param category The name of category
+	 * @param name The name of variable
+	 * @param value The value of variable
+	 */
+	public void save(final String category, final String name, final boolean value) {
+		this.save(category, name, value ? "true" : "false");
 	}
 
 	/**
@@ -110,7 +122,7 @@ public class SimpleVariableHandler {
 	}
 
 	/**
-	 * Returns the value of simple variable
+	 * Returns the string value of simple variable
 	 * It returns null in case of there is no provided category found or no variable with provided name found
 	 * 
 	 * @param category The category name (e.g. "Layout")
@@ -146,6 +158,18 @@ public class SimpleVariableHandler {
 			System.err.println(e.getMessage());
 			return null;
 		}
+	}
+
+	/**
+	 * Returns the boolean value of simple variable
+	 * It returns true if variable found and equals "true", otherwise false 
+	 * 
+	 * @param category The category name (e.g. "Layout")
+	 * @param keyValue The name of a variable
+	 * @return The value of simple variable
+	 */
+	public boolean getBoolean(final String category, final String keyValue) {
+		return get(category, keyValue).equals("true");
 	}
 
 	/**

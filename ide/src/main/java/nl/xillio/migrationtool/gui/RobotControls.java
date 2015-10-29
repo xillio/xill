@@ -18,6 +18,7 @@ import nl.xillio.xill.api.errors.ErrorHandlingPolicy;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.errors.XillParsingException;
 import nl.xillio.xill.api.events.RobotPausedAction;
+import nl.xillio.xill.util.HotkeysHandler.Hotkeys;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -202,23 +203,23 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 	public void handle(final KeyEvent event) {
 
 		// Run
-		if (KeyCombination.valueOf(FXController.HOTKEY_RUN).match(event)) {
+		if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.RUN)).match(event)) {
 			start();
 		}
 		// Step in
-		else if (KeyCombination.valueOf(FXController.HOTKEY_STEPIN).match(event)) {
+		else if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.STEPIN)).match(event)) {
 			stepIn();
 		}
 		// Step over
-		else if (KeyCombination.valueOf(FXController.HOTKEY_STEPOVER).match(event)) {
+		else if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.STEPOVER)).match(event)) {
 			stepOver();
 		}
 		// Pause
-		else if (KeyCombination.valueOf(FXController.HOTKEY_PAUSE).match(event)) {
+		else if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.PAUSE)).match(event)) {
 			pause();
 		}
 		// Stop
-		else if (KeyCombination.valueOf(FXController.HOTKEY_STOP).match(event)) {
+		else if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.STOP)).match(event)) {
 			stop();
 		}
 	}

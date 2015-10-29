@@ -61,7 +61,11 @@ public class SetCellConstruct extends Construct {
 	 * @param value   a {@link MetaExpression} containing the value which the cell should contain
 	 */
 	static void setValue(XillSheet sheet, XillCellRef cellRef, MetaExpression value) {
-		if (value.getValue() instanceof BooleanBehavior) { // DO NOT REPEAT ANYWHERE ELSE, WAS UNAVOIDABLE :-(
+        nl.xillio.xill.api.data.Date date = value.getMeta(nl.xillio.xill.api.data.Date.class);
+        if(date != null) {
+            sheet.setCellValue(cellRef, date.getZoned());
+        }
+		else if (value.getValue() instanceof BooleanBehavior) { // DO NOT REPEAT ANYWHERE ELSE, WAS UNAVOIDABLE :-(
 			sheet.setCellValue(cellRef, value.getBooleanValue());
 		} else if (isNumeric(value)) {
 			sheet.setCellValue(cellRef, value.getNumberValue().doubleValue());

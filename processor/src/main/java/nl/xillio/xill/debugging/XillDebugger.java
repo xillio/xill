@@ -148,7 +148,7 @@ public class XillDebugger implements Debugger {
 	 *        The instruction to pause on (i.e. pass to the pause event
 	 */
 	private void checkPause(final Instruction instruction) {
-		if (paused) {
+		if (paused && !shouldStop) {
 			pausedOnInstruction = instruction;
 			onRobotPaused.invoke(new RobotPausedAction(instruction));
 			while (paused) {

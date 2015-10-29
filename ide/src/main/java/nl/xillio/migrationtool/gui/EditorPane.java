@@ -2,6 +2,7 @@ package nl.xillio.migrationtool.gui;
 
 import java.io.IOException;
 
+import javafx.application.Platform;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -21,6 +22,7 @@ import nl.xillio.migrationtool.Loader;
 import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
 import nl.xillio.migrationtool.elasticconsole.RobotLogMessage;
 import nl.xillio.migrationtool.gui.editor.AceEditor;
+import nl.xillio.xill.util.HotkeysHandler.Hotkeys;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -137,7 +139,7 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 		});
 
 		editor.loadEditor();
-
+		editor.setOptions(tab.getGlobalController().createEditorOptionsJSCode());
 		ESConsoleClient.getLogEvent(tab.getProcessor().getRobotID()).addListener(this::onLogMessage);
 	}
 
@@ -197,7 +199,7 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 	@FXML
 	public void handle(final KeyEvent event) {
 		// Find
-		if (KeyCombination.valueOf(FXController.HOTKEY_FIND).match(event)) {
+		if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.FIND)).match(event)) {
 			event.consume();
 			if (editorReplaceBar.isOpen()) {
 				editorReplaceBar.close(false);
@@ -205,6 +207,15 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 				editorReplaceBar.open(1);
 			}
 		}
+	}
+
+	/**
+	 * Perform Ace editor settings
+	 * 
+	 * @param jsCode JavaScript code with settings to be executed
+	 */
+	public void setEditorOptions(final String jsCode) {
+		Platform.runLater(() -> {editor.setOptions(jsCode);});
 	}
 
 	/**

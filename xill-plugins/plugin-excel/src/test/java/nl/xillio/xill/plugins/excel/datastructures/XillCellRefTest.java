@@ -1,7 +1,5 @@
 package nl.xillio.xill.plugins.excel.datastructures;
 
-import nl.xillio.xill.plugins.excel.datastructures.XillCellRef;
-
 import org.testng.annotations.Test;
 
 /**
