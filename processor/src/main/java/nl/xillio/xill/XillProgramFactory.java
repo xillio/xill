@@ -696,23 +696,23 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 				break;
 			case "+=":
 				expression = new Assign(declaration, path,
-				  new Add(new VariableAccessExpression(declaration), parse(token.getRight())));
+				  new Add(parse(token.getLeft()), parse(token.getRight())));
 				break;
 			case "-=":
 				expression = new Assign(declaration, path,
-				  new Subtract(new VariableAccessExpression(declaration), parse(token.getRight())));
+				  new Subtract(parse(token.getLeft()), parse(token.getRight())));
 				break;
 			case "*=":
 				expression = new Assign(declaration, path,
-				  new Multiply(new VariableAccessExpression(declaration), parse(token.getRight())));
+				  new Multiply(parse(token.getLeft()), parse(token.getRight())));
 				break;
 			case "::=":
 				expression = new Assign(declaration, path,
-				  new Concat(new VariableAccessExpression(declaration), parse(token.getRight())));
+				  new Concat(parse(token.getLeft()), parse(token.getRight())));
 				break;
 			case "/=":
 				expression = new Assign(declaration, path,
-				  new Divide(new VariableAccessExpression(declaration), parse(token.getRight())));
+				  new Divide(parse(token.getLeft()), parse(token.getRight())));
 				break;
 			default:
 				CodePosition pos = pos(token);
@@ -1056,7 +1056,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @throws XillParsingException
 	 */
 	Processable parseToken(final xill.lang.xill.GetArgumentExpression token) throws XillParsingException {
-		// First we need to find the robot of this token. Do do this we need the
+		// First we need to find the robot of this token. To do this we need the
 		// token's root
 		EObject robot = token;
 		while (!(robot instanceof xill.lang.xill.Robot || robot == null)) {
