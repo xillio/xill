@@ -17,7 +17,7 @@ public class SqliteConnectConstruct extends BaseDatabaseConstruct {
 	@Override
 	public ConstructProcessor doPrepareProcess(ConstructContext context) {
 		// Default is in-memory database
-		return new ConstructProcessor((file) -> process(file, factory,context.getRobotID()), new Argument("file", fromValue(":memory:"), ATOMIC));
+		return new ConstructProcessor((file) -> process(file, factory,context.getRootRobot()), new Argument("file", fromValue(":memory:"), ATOMIC));
 	}
 
 	static MetaExpression process(MetaExpression file, DatabaseServiceFactory factory,RobotID robotID) {

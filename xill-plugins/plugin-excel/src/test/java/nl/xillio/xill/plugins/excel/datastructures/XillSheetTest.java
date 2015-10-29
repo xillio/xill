@@ -1,10 +1,5 @@
 package nl.xillio.xill.plugins.excel.datastructures;
 
-import nl.xillio.xill.plugins.excel.datastructures.XillCell;
-import nl.xillio.xill.plugins.excel.datastructures.XillCellRef;
-import nl.xillio.xill.plugins.excel.datastructures.XillRow;
-import nl.xillio.xill.plugins.excel.datastructures.XillSheet;
-
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.testng.annotations.Test;
@@ -36,7 +31,7 @@ public class XillSheetTest {
 		when(row1.getLastCellNum()).thenReturn((short) 82);
 		when(row2.getLastCellNum()).thenReturn((short) 81);
 
-		XillSheet testSheet = new XillSheet(sheet, false);
+		XillSheet testSheet = new XillSheet(sheet, false, mock(XillWorkbook.class));
 		assertEquals(82, testSheet.getColumnLength());
 	}
 
@@ -48,7 +43,7 @@ public class XillSheetTest {
 		Sheet sheet = mock(Sheet.class);
 
 		when(sheet.getLastRowNum()).thenReturn(3);
-		XillSheet testSheet = new XillSheet(sheet, false);
+		XillSheet testSheet = new XillSheet(sheet, false, mock(XillWorkbook.class));
 
 		assertEquals(4, testSheet.getRowLength());
 	}
@@ -60,7 +55,7 @@ public class XillSheetTest {
 	public void testGetName() throws Exception {
 		Sheet sheet = mock(Sheet.class);
 		when(sheet.getSheetName()).thenReturn("sheet");
-		XillSheet testsheet = new XillSheet(sheet, false);
+		XillSheet testsheet = new XillSheet(sheet, false, mock(XillWorkbook.class));
 		assertEquals("sheet", testsheet.getName());
 	}
 
@@ -71,12 +66,12 @@ public class XillSheetTest {
 	public void testGetCellValue() throws Exception {
 		XillRow row = mock(XillRow.class);
 		Sheet sheet = mock(Sheet.class);
-		XillSheet xillSheet = spy(new XillSheet(sheet, false));
+		XillSheet xillSheet = spy(new XillSheet(sheet, false, mock(XillWorkbook.class)));
 		XillCell cell = mock(XillCell.class);
 
 		doReturn(row).when(xillSheet).getRow(any(Integer.class));
 		when(cell.getValue()).thenReturn(true);
-		when(row.getCell(any(Integer.class))).thenReturn(cell);
+		when(row.getCell(any(Integer.class), any(XillSheet.class))).thenReturn(cell);
 
 		assertTrue((boolean) xillSheet.getCellValue(new XillCellRef(1, 1)));
 	}
@@ -87,7 +82,7 @@ public class XillSheetTest {
 	@Test
 	public void testGetCellValueEmpty() throws Exception {
 		Sheet sheet = mock(Sheet.class);
-		XillSheet xillSheet = spy(new XillSheet(sheet, false));
+		XillSheet xillSheet = spy(new XillSheet(sheet, false, mock(XillWorkbook.class)));
 		XillRow row = mock(XillRow.class);
 
 		doReturn(row).when(xillSheet).getRow(any(Integer.class));
@@ -102,13 +97,13 @@ public class XillSheetTest {
 	@Test
 	public void getCell() throws Exception {
 		XillCellRef cellRef = new XillCellRef(3, 3);
-		XillSheet sheet = spy(new XillSheet(mock(Sheet.class), false));
+		XillSheet sheet = spy(new XillSheet(mock(Sheet.class), false, mock(XillWorkbook.class)));
 		XillRow row = mock(XillRow.class);
 
 		doReturn(row).when(sheet).getRow(cellRef.getRow());
 		when(row.isNull()).thenReturn(false);
 		XillCell cell = mock(XillCell.class);
-		when(row.getCell(cellRef.getRow())).thenReturn(cell);
+		when(row.getCell(cellRef.getRow(), sheet)).thenReturn(cell);
 		when(cell.isNull()).thenReturn(false);
 
 		assertTrue(sheet.getCell(cellRef).equals(cell));
@@ -121,16 +116,16 @@ public class XillSheetTest {
 	public void getCellDoesNotExist() throws Exception {
 		XillCellRef cellRef = new XillCellRef(4, 3);
 		Sheet sheet = mock(Sheet.class);
-		XillSheet testSheet = spy(new XillSheet(sheet, false));
+		XillSheet testSheet = spy(new XillSheet(sheet, false, mock(XillWorkbook.class)));
 
 		XillRow emptyRow = mock(XillRow.class);
 		when(emptyRow.isNull()).thenReturn(true);
 
 		XillRow newRow = mock(XillRow.class);
 		XillCell cell = mock(XillCell.class);
-		when(newRow.getCell(cellRef.getColumn())).thenReturn(cell);
+		when(newRow.getCell(cellRef.getColumn(), testSheet)).thenReturn(cell);
 		when(cell.isNull()).thenReturn(true);
-		when(newRow.createCell(cellRef.getColumn())).thenReturn(cell);
+		when(newRow.createCell(cellRef.getColumn(), testSheet)).thenReturn(cell);
 
 		doReturn(emptyRow).when(testSheet).getRow(cellRef.getRow());
 		doReturn(newRow).when(testSheet).createRow(cellRef.getRow());
@@ -147,7 +142,7 @@ public class XillSheetTest {
 		XillCellRef cellRef = new XillCellRef(5, 3);
 		String value = "val";
 		Sheet sheet = mock(Sheet.class);
-		XillSheet testSheet = spy(new XillSheet(sheet, false));
+		XillSheet testSheet = spy(new XillSheet(sheet, false, mock(XillWorkbook.class)));
 		XillCell cell = mock(XillCell.class);
 		doReturn(cell).when(testSheet).getCell(any(XillCellRef.class));
 
@@ -164,9 +159,9 @@ public class XillSheetTest {
 	@Test
 	public void testIsReadonly() throws Exception {
 		Sheet sheet = mock(Sheet.class);
-		XillSheet testSheet = new XillSheet(sheet, true);
+		XillSheet testSheet = new XillSheet(sheet, true, mock(XillWorkbook.class));
 		assertTrue(testSheet.isReadonly());
-		testSheet = new XillSheet(sheet, false);
+		testSheet = new XillSheet(sheet, false, mock(XillWorkbook.class));
 		assertFalse(testSheet.isReadonly());
 	}
 
@@ -181,7 +176,7 @@ public class XillSheetTest {
 		//Creating setup
 		Sheet oldsheet = mock(Sheet.class);
 		when(oldsheet.getLastRowNum()).thenReturn(4);
-		XillSheet sheet = spy(new XillSheet(oldsheet, false));
+		XillSheet sheet = spy(new XillSheet(oldsheet, false, mock(XillWorkbook.class)));
 		XillCellRef cellRef = mock(XillCellRef.class);
 		doReturn(mock(XillCell.class)).when(sheet).getCell(cellRef);
 		doReturn(3).when(sheet).calculateColumnLength();

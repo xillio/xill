@@ -3,8 +3,11 @@ package nl.xillio.migrationtool.gui;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
+import javafx.stage.Modality;
+import javafx.stage.StageStyle;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -14,13 +17,21 @@ import org.apache.logging.log4j.Logger;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
@@ -32,6 +43,7 @@ import javafx.stage.FileChooser;
 import nl.xillio.migrationtool.Loader;
 import nl.xillio.migrationtool.dialogs.CloseTabStopRobotDialog;
 import nl.xillio.migrationtool.dialogs.SaveBeforeClosingDialog;
+import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
 import nl.xillio.migrationtool.gui.EditorPane.DocumentState;
 import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.api.XillProcessor;
@@ -50,13 +62,8 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
 	private static final String PATH_STATUSICON_RUNNING = "M256,92.481c44.433,0,86.18,17.068,117.553,48.064C404.794,171.411,422,212.413,422,255.999 s-17.206,84.588-48.448,115.455c-31.372,30.994-73.12,48.064-117.552,48.064s-86.179-17.07-117.552-48.064 C107.206,340.587,90,299.585,90,255.999s17.206-84.588,48.448-115.453C169.821,109.55,211.568,92.481,256,92.481 M256,52.481 c-113.771,0-206,91.117-206,203.518c0,112.398,92.229,203.52,206,203.52c113.772,0,206-91.121,206-203.52 C462,143.599,369.772,52.481,256,52.481L256,52.481z M206.544,357.161V159.833l160.919,98.666L206.544,357.161z";
 	private static final String PATH_STATUSICON_PAUSED = "M256,92.481c44.433,0,86.18,17.068,117.553,48.064C404.794,171.411,422,212.413,422,255.999 s-17.206,84.588-48.448,115.455c-31.372,30.994-73.12,48.064-117.552,48.064s-86.179-17.07-117.552-48.064 C107.206,340.587,90,299.585,90,255.999s17.206-84.588,48.448-115.453C169.821,109.55,211.568,92.481,256,92.481 M256,52.481 c-113.771,0-206,91.117-206,203.518c0,112.398,92.229,203.52,206,203.52c113.772,0,206-91.121,206-203.52 C462,143.599,369.772,52.481,256,52.481L256,52.481z M240.258,346h-52.428V166h52.428V346z M326.17,346h-52.428V166h52.428V346z";
-	private static final Group STATUSICON_RUNNING = createIcon(PATH_STATUSICON_RUNNING);
-	private static final Group STATUSICON_PAUSED = createIcon(PATH_STATUSICON_PAUSED);
-
-	static {
-		STATUSICON_RUNNING.setAutoSizeChildren(true);
-		STATUSICON_PAUSED.setAutoSizeChildren(true);
-	}
+	private final Group STATUSICON_RUNNING = createIcon(PATH_STATUSICON_RUNNING);
+	private final Group STATUSICON_PAUSED = createIcon(PATH_STATUSICON_PAUSED);
 
 	@FXML
 	private HBox hbxBot;
@@ -131,6 +138,10 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 				double height = newPos.doubleValue();
 				settings.simple().save(Settings.LAYOUT, Settings.EditorHeight_ + documentPath.getAbsolutePath(), Double.toString(height));
 			});
+
+        // Status icons
+        STATUSICON_RUNNING.setAutoSizeChildren(true);
+        STATUSICON_PAUSED.setAutoSizeChildren(true);
 
 		// Subscribe to start/stop for icon change
 		processor.getDebugger().getOnRobotStart().addListener(e -> Platform.runLater(() -> setGraphic(STATUSICON_RUNNING)));
@@ -379,33 +390,100 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	}
 
 	/**
-	 * Runs the currentRobot
+	 * Runs the currentRobot after the Ok-button has been pressed of the dialog that pops up.
+         * If cancel is pressed, the robot is not run or saved
+         * There is also a check box that can be ticked in order not to show the dialog again.
+         * The dialog can be re-enabled in the Settings window.
 	 *
 	 * @throws XillParsingException
 	 */
 	public void runRobot() throws XillParsingException {
-		save();
+        // Read the current setting in the configuration
+        boolean autoSaveBotBeforeRun = Boolean.valueOf(settings.simple().get("SettingsGeneral", "AutoSaveBotBeforeRun"));
 
-		try {
-			processor.compile();
+        if (autoSaveBotBeforeRun) {
+			if (editorPane.getDocumentState().getValue() == DocumentState.CHANGED) {
+				// If true, show the confirmation dialog
+				Alert confirmationDialog = new Alert(AlertType.CONFIRMATION);
+				confirmationDialog.setTitle("Do you want to save and run the robot?");
+				// This enables xillio icon to be displayed in the upper left corner
+				confirmationDialog.initOwner(editorPane.getScene().getWindow());
 
-			Robot robot = processor.getRobot();
+				// Compose the dialog pane
+				DialogPane dp = new DialogPane();
 
-			Thread robotThread = new Thread(() -> {
-				try {
-					robot.process(processor.getDebugger());
-				} catch (Exception e) {
-					Platform.runLater(() -> {
-						Alert error = new Alert(AlertType.ERROR);
-						error.setTitle(e.getClass().getSimpleName());
-						error.setContentText(e.getMessage() + "\n" + ExceptionUtils.getStackTrace(e));
-						error.setHeaderText("Exception while processing");
-						error.setResizable(true);
-						error.getDialogPane().setPrefWidth(1080);
-						error.show();
-					});
+				VBox checkBoxContainer = new VBox();
+
+				Label l = new Label("The robot " + currentRobot.getPath().getName() + " needs to be saved before running. Do you want to continue?");
+				CheckBox cb = new CheckBox("Don't ask me again.");
+				cb.addEventHandler(ActionEvent.ACTION, event -> {
+					boolean currentSettingValue = Boolean.valueOf(settings.simple().get("SettingsGeneral", "AutoSaveBotBeforeRun"));
+					if (currentSettingValue) {
+						settings.simple().save("SettingsGeneral", "AutoSaveBotBeforeRun", false);
+					} else {
+						settings.simple().save("SettingsGeneral", "AutoSaveBotBeforeRun", true);
+					}
+				});
+
+				checkBoxContainer.getChildren().addAll(l, cb);
+
+				dp.setContent(checkBoxContainer);
+				// Add the dialog pane to the Alert/dialog
+				confirmationDialog.setDialogPane(dp);
+				// Make the dialog close by clicking the close button
+				confirmationDialog.initModality(Modality.APPLICATION_MODAL);
+				confirmationDialog.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+				// Get the result from the confirmation dialog
+				Optional<ButtonType> result = confirmationDialog.showAndWait();
+
+				// Process the result
+				if (result.get() == ButtonType.OK) {
+					autoSaveAndRunRobot();
+				} else if (result.get() == ButtonType.CANCEL) {
+					editorPane.getControls().stop();
 				}
-			});
+			} else {
+				autoSaveAndRunRobot();
+			}
+        } else {
+            // If false, just auto-save and run the robot without the confirmation dialog popping up
+            autoSaveAndRunRobot();
+        }
+	}
+        
+    /**
+     * Automatically saves robot and runs it if the save is successful
+     */
+    private void autoSaveAndRunRobot() {
+		if (editorPane.getDocumentState().getValue() == DocumentState.CHANGED) {
+			save();
+		}
+
+		if (FXController.settings.simple().getBoolean(Settings.SETTINGS_GENERAL, Settings.RunBotWithCleanConsole)) {
+			ESConsoleClient.getInstance().clearLog(getProcessor().getRobotID().toString());
+		}
+
+        try {
+                processor.compile();
+
+                Robot robot = processor.getRobot();
+
+                Thread robotThread = new Thread(() -> {
+                        try {
+                                robot.process(processor.getDebugger());
+                        } catch (Exception e) {
+                                Platform.runLater(() -> {
+                                        Alert error = new Alert(AlertType.ERROR);
+                                        error.setTitle(e.getClass().getSimpleName());
+                                        error.setContentText(e.getMessage() + "\n" + ExceptionUtils.getStackTrace(e));
+                                        error.setHeaderText("Exception while processing");
+                                        error.setResizable(true);
+                                        error.getDialogPane().setPrefWidth(1080);
+                                        error.show();
+                                });
+                        }
+                });
 
 			robotThread.start();
 		} catch (IOException e) {
@@ -414,8 +492,6 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
 		} catch (XillParsingException e) {
 			errorPopup(e.getLine(), e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling " + e.getRobot().getPath().getAbsolutePath());
-			throw e;
-
 		}
 
 	}
@@ -525,4 +601,10 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 		this.consolePane.clear();
 	}
 
+    private Exception Exception(String empty_fucking_button) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+        
+        
 }

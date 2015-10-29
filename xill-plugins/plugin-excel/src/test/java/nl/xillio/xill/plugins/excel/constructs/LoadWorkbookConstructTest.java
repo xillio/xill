@@ -7,7 +7,6 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.excel.datastructures.XillWorkbook;
 import nl.xillio.xill.plugins.excel.services.ExcelService;
 import nl.xillio.xill.services.inject.InjectorUtils;
-
 import org.apache.logging.log4j.Logger;
 import org.mockito.ArgumentCaptor;
 import org.testng.annotations.BeforeClass;

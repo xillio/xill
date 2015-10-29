@@ -1,6 +1,6 @@
 xilliosettings.db
 ESConsole/
-plugins/
+/plugins
 helpfiles/
 xilliosettings.cfg
 
@@ -14,7 +14,7 @@ build/
 .metadata/
 .classpath
 .project
-*/bin/
+bin/
 */test-output/
 
 

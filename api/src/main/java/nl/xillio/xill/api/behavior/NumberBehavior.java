@@ -15,7 +15,7 @@ import nl.xillio.xill.api.components.Expression;
  */
 public class NumberBehavior implements Expression {
 
-	private final double value;
+	private final Number value;
 
 	/**
 	 * Create a new {@link NumberBehavior}
@@ -23,7 +23,7 @@ public class NumberBehavior implements Expression {
 	 * @param value
 	 *        the value to set
 	 */
-	public NumberBehavior(final double value) {
+	public NumberBehavior(final Number value) {
 		this.value = value;
 	}
 
@@ -37,12 +37,19 @@ public class NumberBehavior implements Expression {
 
 	@Override
 	public String getStringValue() {
-		return value == (int) value ? Integer.toString((int) value) : Double.toString(value);
+		double doubleValue = value.doubleValue();
+		long longValue = value.longValue();
+
+		// Range within which the long and double values have to be in order to assume there are no decimal places
+		double epsilon = Math.ulp(doubleValue);
+
+		return longValue >= doubleValue - epsilon && longValue <= doubleValue + epsilon
+				? Long.toString(longValue) : Double.toString(doubleValue);
 	}
 
 	@Override
 	public boolean getBooleanValue() {
-		return value != 0;
+		return value.doubleValue() != 0;
 	}
 
 	@Override

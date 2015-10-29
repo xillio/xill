@@ -17,12 +17,12 @@ import org.testng.annotations.Test;
 
 /**
  *
- * Test the {@link ContainsValueConstruct}
+ * Test the {@link ContainsConstruct}
  *
  * @author Sander Visser
  *
  */
-public class ContainsValueConstructTest extends ExpressionBuilderHelper {
+public class ContainsConstructTest extends ExpressionBuilderHelper {
 
 	/**
 	 * Test the process method under normal circumstances with list input.
@@ -42,7 +42,7 @@ public class ContainsValueConstructTest extends ExpressionBuilderHelper {
 		when(list.contains(value)).thenReturn(expectedOutput);
 
 		// run
-		MetaExpression output = ContainsValueConstruct.process(input, value);
+		MetaExpression output = ContainsConstruct.process(input, value);
 
 		// verify
 		verify(list, times(1)).contains(value);
@@ -72,7 +72,7 @@ public class ContainsValueConstructTest extends ExpressionBuilderHelper {
 		when(obj.containsValue(value)).thenReturn(expectedOutput);
 
 		// run
-		MetaExpression output = ContainsValueConstruct.process(input, value);
+		MetaExpression output = ContainsConstruct.process(input, value);
 
 		// verify
 		verify(obj, times(1)).containsValue(value);
@@ -109,7 +109,7 @@ public class ContainsValueConstructTest extends ExpressionBuilderHelper {
 		when(input.getValue()).thenReturn(list);
 		when(list.contains(value)).thenReturn(true);
 
-		ContainsValueConstruct.process(input, value);
+		ContainsConstruct.process(input, value);
 
 		// verify
 		verify(list, times(0)).contains(value);

@@ -17,7 +17,7 @@ import java.io.IOException;
  * the affected file if the file was created, otherwise false
  */
 @Singleton
-public class SaveToConstruct extends Construct {
+public class SaveConstruct extends Construct {
 
 	@Inject
 	private FileUtilities fileUtils;

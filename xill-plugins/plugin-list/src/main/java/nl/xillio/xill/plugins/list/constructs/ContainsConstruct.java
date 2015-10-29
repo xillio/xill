@@ -17,7 +17,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  * @author Sander Visser
  *
  */
-public class ContainsValueConstruct extends Construct {
+public class ContainsConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {

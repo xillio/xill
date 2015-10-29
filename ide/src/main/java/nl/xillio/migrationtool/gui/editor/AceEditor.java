@@ -40,6 +40,7 @@ import nl.xillio.xill.api.XillProcessor;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.preview.Replaceable;
 import nl.xillio.xill.util.HighlightSettings;
+import nl.xillio.xill.util.HotkeysHandler.Hotkeys;
 import nl.xillio.xill.util.settings.Settings;
 import nl.xillio.xill.util.settings.SettingsHandler;
 
@@ -115,7 +116,6 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 		editor.setContextMenuEnabled(false);
 		createContextMenu();
 
-
 		// Add event handlers.
 		editor.addEventHandler(KeyEvent.KEY_PRESSED, this);
 		editor.addEventHandler(ScrollEvent.SCROLL, this);
@@ -133,7 +133,6 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 		// Disable drag-and-drop, set the cursor graphic when dragging.
 		editor.setOnDragDropped(null);
 		editor.setOnDragOver(e -> editor.sceneProperty().get().setCursor(Cursor.DISAPPEAR));
-			
 	}
 	
 	/**
@@ -142,11 +141,11 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	private void createContextMenu() {
 		// Cut menu item.
 		MenuItem cut = new MenuItem("Cut");
-		cut.setOnAction(e -> executeJS("editor.onCut();"));
+		cut.setOnAction(e -> callOnAce("onCut"));
 		
 		// Copy menu item.
 		MenuItem copy = new MenuItem("Copy");
-		copy.setOnAction(e -> executeJS("editor.getCopyText();", r -> copyToClipboard((String)r)));
+		copy.setOnAction(e -> copyToClipboard((String)callOnAceBlocking("getCopyText")));
 		
 		// Paste menu item.
 		MenuItem paste = new MenuItem("Paste");
@@ -163,7 +162,6 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	 */
 	public void setTab(final RobotTab tab) {
 		this.tab = tab;
-
 	}
 
 	private void onDocumentLoad() {
@@ -296,15 +294,10 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 		if (event instanceof KeyEvent) {
 			KeyEvent ke = (KeyEvent) event;
 
-			if (KeyCombination.valueOf(FXController.HOTKEY_PASTE).match(ke)) {
+			if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.PASTE)).match(ke)) {
 				paste();
-			} else if (KeyCombination.valueOf(FXController.HOTKEY_RESET_ZOOM).match(ke)) {
+			} else if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.RESET_ZOOM)).match(ke)) {
 				zoomTo(1);
-			} else if (helppane != null && KeyCombination.valueOf(FXController.HOTKEY_HELP).match(ke)) {
-				callOnAce(
-					result -> {
-						// helppane.display((String)result);
-				}, "getCurrentWord");
 			}
 		}
 
@@ -449,6 +442,26 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	 */
 	public void undo() {
 		callOnAce("undo");
+	}
+
+	/**
+	 * Perform Ace editor settings
+	 * 
+	 * @param jsCode JavaScript code with settings to be executed
+	 */
+	public void setOptions(final String jsCode) {
+		// If the document has not been loaded yet load the robot later
+		if (!documentLoaded.get()) {
+			documentLoaded.addListener(
+				(obs, oldVal, newVal) -> {
+					if (newVal != null) {
+						setOptions(jsCode);
+					}
+				});
+
+			return;
+		}
+		executeJS(jsCode);
 	}
 
 	private void bindToWindow() {
