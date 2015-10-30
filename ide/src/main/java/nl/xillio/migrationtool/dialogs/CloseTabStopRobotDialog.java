@@ -8,6 +8,7 @@ import nl.xillio.migrationtool.gui.RobotTab;
 public class CloseTabStopRobotDialog extends FXMLDialog {
 	private final RobotTab tab;
 	private final Event closeEvent;
+	private boolean yesPressed = false;
 	
 	public CloseTabStopRobotDialog(final RobotTab tab, final Event closeEvent) {
 		super("/fxml/dialogs/CloseTabStopRobot.fxml");
@@ -20,6 +21,7 @@ public class CloseTabStopRobotDialog extends FXMLDialog {
 	@FXML
 	private void yesBtnPressed(final ActionEvent event) {
 		tab.getEditorPane().getControls().stop();
+		yesPressed = true;
 		this.close();
 	}
 	
@@ -27,5 +29,12 @@ public class CloseTabStopRobotDialog extends FXMLDialog {
 	private void noBtnPressed(final ActionEvent event) {
 		closeEvent.consume();
 		this.close();
+	}
+
+	/**
+	 * @return if the yes button has been pressed
+	 */
+	public boolean isYesPressed() {
+		return yesPressed;
 	}
 }

@@ -379,19 +379,30 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 			dlg.showAndWait();
 			if (dlg.isCancelPressed()) {
 				globalController.setCancelClose(true);
-			}
-		}
+
+			}else{checkTabAmount();}
+		}else
 		
 		// Check if the robot is running, else show the stop robot dialog.
 		if (editorPane.getControls().robotRunning()) {
 			CloseTabStopRobotDialog dlg = new CloseTabStopRobotDialog(this, event);
 			dlg.showAndWait();
-		}
-
-		if(globalController.getTabs().size() == 1){
-			globalController.disableSaveButtons(true);
+			if(dlg.isYesPressed()){
+				checkTabAmount();
+			}
+		}else{
+			checkTabAmount(); //if not running and saved then just check if it is the last robot.
 		}
 	}
+
+	/**
+	 *
+	 * Disable the save buttons if this was the last tab
+	 */
+	private void checkTabAmount(){
+		if(this.globalController.getTabs().size() == 1){
+			globalController.disableSaveButtons(true);
+	}}
 
 	/**
 	 * Runs the currentRobot after the Ok-button has been pressed of the dialog that pops up.

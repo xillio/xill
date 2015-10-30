@@ -177,10 +177,10 @@ public class FXController implements Initializable, EventHandler<Event> {
                 if (projectpane.getProjectsCount() == 0) {
                     btnNewFile.setDisable(true);
 					btnOpenFile.setDisable(true);
-					btnSave.setDisable(true);
-					btnSaveAll.setDisable(true);
-					btnSaveAs.setDisable(true);
                 }
+				if (getTabs().size() == 0){
+					disableSaveButtons(true);
+				}
 	}
 
 	private void registerSettings() {
@@ -874,10 +874,18 @@ public class FXController implements Initializable, EventHandler<Event> {
 		btnNewFile.setDisable(disable);
 	}
 
+	/**
+	 * Disable the openFile button
+	 * @param disable boolean parameter to disable the open file button
+	 */
 	public void disableOpenFileButton(boolean disable){
 		btnOpenFile.setDisable(disable);
 	}
 
+	/**
+	 * Disable the save,save as and save all button
+	 * @param disable boolean parameter to disable the save,save as and save all button
+	 */
 	public void disableSaveButtons(boolean disable){
 		btnSaveAs.setDisable(disable);
 		btnSaveAll.setDisable(disable);
