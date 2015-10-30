@@ -176,6 +176,10 @@ public class FXController implements Initializable, EventHandler<Event> {
                 
                 if (projectpane.getProjectsCount() == 0) {
                     btnNewFile.setDisable(true);
+					btnOpenFile.setDisable(true);
+					btnSave.setDisable(true);
+					btnSaveAll.setDisable(true);
+					btnSaveAs.setDisable(true);
                 }
 	}
 
@@ -792,6 +796,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 		if (!closeEvent.isConsumed() && removeTab) {
 			tpnBots.getTabs().remove(tab);
 		}
+
 	}
 
 	/**
@@ -824,6 +829,9 @@ public class FXController implements Initializable, EventHandler<Event> {
 		if (index >= 0) {
 			tpnBots.getSelectionModel().clearAndSelect(index);
 		}
+
+		//a robot is opened so enable the save buttons
+		disableSaveButtons(false);
 	}
 
 	/**
@@ -864,5 +872,15 @@ public class FXController implements Initializable, EventHandler<Event> {
 	 */
 	public void disableNewFileButton(boolean disable) {
 		btnNewFile.setDisable(disable);
+	}
+
+	public void disableOpenFileButton(boolean disable){
+		btnOpenFile.setDisable(disable);
+	}
+
+	public void disableSaveButtons(boolean disable){
+		btnSaveAs.setDisable(disable);
+		btnSaveAll.setDisable(disable);
+		btnSave.setDisable(disable);
 	}
 }

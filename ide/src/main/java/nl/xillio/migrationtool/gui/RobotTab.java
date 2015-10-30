@@ -387,6 +387,10 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 			CloseTabStopRobotDialog dlg = new CloseTabStopRobotDialog(this, event);
 			dlg.showAndWait();
 		}
+
+		if(globalController.getTabs().size() == 1){
+			globalController.disableSaveButtons(true);
+		}
 	}
 
 	/**
