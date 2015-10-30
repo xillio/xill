@@ -60,7 +60,7 @@ public class Assign implements Processable {
 		if (path.size() - 1 == pathID) {
 			// This is the value to write to
 			if(index < 0){
-				throw new RobotRuntimeException("Negative index was given.");
+				throw new RobotRuntimeException("Cannot dereference negative array index.");
 			}
 			if (target.size() > index) {
 				// Change the value and release reference of the old one
