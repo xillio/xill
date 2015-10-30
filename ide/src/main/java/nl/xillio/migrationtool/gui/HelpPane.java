@@ -96,7 +96,7 @@ public class HelpPane extends AnchorPane {
 		generator.generateSplash();
 		try {
 			this.display(splashFile.toURI().toURL());
-		} catch (MalformedURLException e1) {
+		} catch (MalformedURLException e) {
 			LOGGER.error("Malformed url when displaying splash", e);
 		}
 
