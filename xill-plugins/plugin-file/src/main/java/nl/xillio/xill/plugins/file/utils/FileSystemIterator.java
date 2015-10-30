@@ -44,8 +44,6 @@ abstract class FileSystemIterator {
 
     private void addFolder(Path folder) throws IOException {
         stack.push(new DirectoryStreamWithIterator(Files.newDirectoryStream(folder)));
-        logger.error("No access to " + folder.toAbsolutePath());
-        noAccessPaths.add(folder);
     }
 
     /**
@@ -125,7 +123,16 @@ abstract class FileSystemIterator {
      * @param path the path to check
      * @return true if and only if the path was denied access to while iterating
      */
-    boolean isAccessible(Path path) {
+    public boolean isAccessible(Path path) {
         return !noAccessPaths.contains(path);
+    }
+
+    /**
+     * On an accces denied acception, add the inaccessible path to the set of inaccessible paths
+     *
+     * @param inaccessiblePath The path that is inaccessible
+     */
+    public void addInaccessiblePath(Path inaccessiblePath) {
+        noAccessPaths.add(inaccessiblePath);
     }
 }
