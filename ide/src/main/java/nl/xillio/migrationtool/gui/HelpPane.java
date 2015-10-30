@@ -97,8 +97,7 @@ public class HelpPane extends AnchorPane {
 		try {
 			this.display(splashFile.toURI().toURL());
 		} catch (MalformedURLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			LOGGER.error("Malformed url when displaying splash", e);
 		}
 
 		// Disable drag-and-drop, set the cursor graphic when dragging.
