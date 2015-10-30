@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 
 /**
- * Dialog contains all configurable ContentTools options and allows to change them
+ * Dialog contains all configurable Xill IDE options and allows to change them
  *
  * @author Zbynek Hochmann
  */
