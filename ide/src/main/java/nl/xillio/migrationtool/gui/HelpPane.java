@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -88,11 +89,16 @@ public class HelpPane extends AnchorPane {
 		heightProperty().addListener((ChangeListener<Number>) (observable, oldValue, newValue) -> {
 			helpSearchBar.handleHeightChange();
 		});
-
-		// Load splash page
-		webFunctionDoc.getEngine().load(new File("helpfiles", "splash.html").getAbsolutePath());
+		
+		//load the splash
 		this.generateSplash();
-		webFunctionDoc.getEngine().load(new File("helpfiles", "splash.html").getAbsolutePath());
+		try {
+			URL path = new File("helpfiles", "splash.html").toURI().toURL();
+			this.display(new File("helpfiles", "splash.html").toURI().toURL());
+		} catch (MalformedURLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		// Disable drag-and-drop, set the cursor graphic when dragging.
 		webFunctionDoc.setOnDragDropped(null);
@@ -112,11 +118,16 @@ public class HelpPane extends AnchorPane {
 			FileWriter writer = new FileWriter(new File("helpfiles", "splash.html"));
 			Template template = config.getTemplate("splash.html");
 			template.process(substitutions, writer);
+			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (TemplateException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	void touch(File file) throws IOException {
+		FileUtils.touch(file);
 	}
 
 	/**
