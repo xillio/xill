@@ -767,7 +767,7 @@ function SmartBreakpoints() {
 			}
 		}
 		
-		//Push new breakpoints to contenttools
+		//Push new breakpoints to contenttools (old name of Xill IDE)
 		if (typeof contenttools !== 'undefined') {
 			contenttools.breakpointsChanged(this.$breakpoints);
 		}
