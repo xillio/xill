@@ -1,14 +1,20 @@
 package nl.xillio.migrationtool.gui;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
@@ -19,6 +25,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 import nl.xillio.migrationtool.Loader;
+import nl.xillio.xill.docgen.DocGenConfiguration;
 import nl.xillio.xill.util.HighlightSettings;
 
 /**
@@ -83,11 +90,33 @@ public class HelpPane extends AnchorPane {
 		});
 
 		// Load splash page
-		webFunctionDoc.getEngine().load(getClass().getResource("/docgen/resources/splash.html").toExternalForm());
+		webFunctionDoc.getEngine().load(new File("helpfiles", "splash.html").getAbsolutePath());
+		this.generateSplash();
+		webFunctionDoc.getEngine().load(new File("helpfiles", "splash.html").getAbsolutePath());
 
 		// Disable drag-and-drop, set the cursor graphic when dragging.
 		webFunctionDoc.setOnDragDropped(null);
 		webFunctionDoc.setOnDragOver(e -> getScene().setCursor(Cursor.DISAPPEAR));
+	}
+	
+	private void generateSplash(){
+		DocGenConfiguration docConfig = new DocGenConfiguration();
+		
+		Configuration config = new Configuration(Configuration.VERSION_2_3_23);
+		config.setClassForTemplateLoading(getClass(), docConfig.getTemplateUrl());
+		Map<String, String> substitutions = new HashMap<String, String>();
+		substitutions.put("style", getClass().getResource("/docgen/resources/_assets/css/style.css").toExternalForm());
+		substitutions.put("splash", getClass().getResource("/docgen/resources/_assets/img/splash.png").toExternalForm());
+		
+		try {
+			FileWriter writer = new FileWriter(new File("helpfiles", "splash.html"));
+			Template template = config.getTemplate("splash.html");
+			template.process(substitutions, writer);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (TemplateException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
