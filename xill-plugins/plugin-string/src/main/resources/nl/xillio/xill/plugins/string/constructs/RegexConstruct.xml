@@ -9,7 +9,7 @@
         Set timeout to zero to let the function run without timeout. This should only be altered when dealing with large
         source documents.
         The timeout is there to protect the system from hanging on invalid expressions.
-        See the Regular Expressions page for more about Regular Expression support in Xillio Content Tools.
+        See the Regular Expressions page for more about Regular Expression support in Xill IDE.
     </description>
     <examples>
         <example title="Usage">

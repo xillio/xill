@@ -54,7 +54,7 @@
                                                       </HBox>
                                                       <HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
                                                          <children>
-                                                            <Label prefWidth="200.0" text="Auto-save bot before run" />
+                                                            <Label prefWidth="200.0" text="Show Auto-save dialog before run" />
                                                             <CheckBox fx:id="cbautosavebotbeforerun" mnemonicParsing="false" />
                                                          </children>
                                                          <padding>

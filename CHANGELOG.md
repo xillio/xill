@@ -1,7 +1,7 @@
-# Xillio Content Tools 3 - Change Log
+# Xill IDE - Change Log
 All notable changes to this project will be documented in this file
 
-## [3.0.0] - unreleased
+## [3.0.21] - 29-10-2015
 ### Changed
 - Redefinition of the Xill scripting language.
 - Rewrite of the scripting engine.
