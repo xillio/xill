@@ -620,7 +620,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 			validLicense.showAndWait();
 			Stage stage = (Stage) apnRoot.getScene().getWindow();
 			stage.setTitle(
-				"xillio content tools - " + Loader.LONG_VERSION + " - Licensed to: " + license.getLicenseName());
+				"Xill IDE - " + Loader.LONG_VERSION + " - Licensed to: " + license.getLicenseName());
 		}*/
 	}
 

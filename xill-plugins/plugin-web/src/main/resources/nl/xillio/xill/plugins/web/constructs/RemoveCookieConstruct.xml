@@ -3,7 +3,7 @@
     <description>
         Removes the browser cookie with the name cookie. cookie can be a string or a list. If cookie is a
         boolean with value true, then all cookies will be cleared. Current cookie information can be obtained
-        through Web.pageInfo(). Cookies can be set using Web.setCookie(). Due to the nature of Content Tools, all
+        through Web.pageInfo(). Cookies can be set using Web.setCookie(). Due to the nature of Xill IDE, all
         cookies will be removed with every restart.
     </description>
     <examples>
