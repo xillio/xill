@@ -89,12 +89,13 @@ public class HelpPane extends AnchorPane {
 		heightProperty().addListener((ChangeListener<Number>) (observable, oldValue, newValue) -> {
 			helpSearchBar.handleHeightChange();
 		});
-		
-		//load the splash
-		this.generateSplash();
+
+		// load the splash
+		File splashFile = new File("helpfiles", "splash.html");
+		SplashGenerator generator = new SplashGenerator(splashFile);
+		generator.generateSplash();
 		try {
-			URL path = new File("helpfiles", "splash.html").toURI().toURL();
-			this.display(new File("helpfiles", "splash.html").toURI().toURL());
+			this.display(splashFile.toURI().toURL());
 		} catch (MalformedURLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -103,31 +104,6 @@ public class HelpPane extends AnchorPane {
 		// Disable drag-and-drop, set the cursor graphic when dragging.
 		webFunctionDoc.setOnDragDropped(null);
 		webFunctionDoc.setOnDragOver(e -> getScene().setCursor(Cursor.DISAPPEAR));
-	}
-	
-	private void generateSplash(){
-		DocGenConfiguration docConfig = new DocGenConfiguration();
-		
-		Configuration config = new Configuration(Configuration.VERSION_2_3_23);
-		config.setClassForTemplateLoading(getClass(), docConfig.getTemplateUrl());
-		Map<String, String> substitutions = new HashMap<String, String>();
-		substitutions.put("style", getClass().getResource("/docgen/resources/_assets/css/style.css").toExternalForm());
-		substitutions.put("splash", getClass().getResource("/docgen/resources/_assets/img/splash.png").toExternalForm());
-		
-		try {
-			FileWriter writer = new FileWriter(new File("helpfiles", "splash.html"));
-			Template template = config.getTemplate("splash.html");
-			template.process(substitutions, writer);
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (TemplateException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	void touch(File file) throws IOException {
-		FileUtils.touch(file);
 	}
 
 	/**
@@ -194,5 +170,60 @@ public class HelpPane extends AnchorPane {
 	@Override
 	public void requestFocus() {
 		webFunctionDoc.requestFocus();
+	}
+
+	/**
+	 * The generator of the splash file.
+	 */
+	private class SplashGenerator {
+		private final File file;
+
+		/**
+		 * Creates a SplashGenerator which will generate a splash html at a given file
+		 * 
+		 * @param file
+		 */
+		public SplashGenerator(final File file) {
+			this.file = file;
+		}
+
+		/**
+		 * Generates the splash and places it in the Helpfiles folder
+		 */
+		public void generateSplash() {
+			Map<String, String> substitutions = new HashMap<String, String>();
+			substitutions.put("style", getClass().getResource("/docgen/resources/_assets/css/style.css").toExternalForm());
+			substitutions.put("splash", getClass().getResource("/docgen/resources/_assets/img/splash.png").toExternalForm());
+
+			try {
+				touch(file);
+				FileWriter writer = new FileWriter(file);
+				Template template = configureHTMLGenerator().getTemplate("splash.html");
+				template.process(substitutions, writer);
+				writer.close();
+			} catch (IOException e) {
+				LOGGER.error("IO exception when generating splash", e);
+			} catch (TemplateException e) {
+				LOGGER.error("Template exception when generating splash", e);
+			}
+		}
+
+		private Configuration configureHTMLGenerator() {
+			DocGenConfiguration docConfig = new DocGenConfiguration();
+			Configuration config = new Configuration(Configuration.VERSION_2_3_23);
+			config.setClassForTemplateLoading(getClass(), docConfig.getTemplateUrl());
+			return config;
+		}
+
+		/**
+		 * Checks if a file exists, else creates that file.
+		 * 
+		 * @param file
+		 *        The file we want to touch.
+		 * @throws IOException
+		 */
+		private void touch(final File file) throws IOException {
+			FileUtils.touch(file);
+		}
 	}
 }
