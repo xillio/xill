@@ -30,7 +30,7 @@ import nl.xillio.xill.api.preview.PreviewComponent;
 import nl.xillio.xill.api.preview.Searchable;
 
 /**
- * This pane can show a visual representation of the contenttools Variable
+ * This pane can show a visual representation of the Xill IDE Variable
  * classes.
  *
  */

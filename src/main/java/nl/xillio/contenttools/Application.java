@@ -13,7 +13,7 @@ import nl.xillio.plugins.PluginLoader;
 import nl.xillio.xill.api.Xill;
 
 /**
- * This is the main class of the contenttools application
+ * This is the main class of the Xill IDE application
  */
 public class Application extends javafx.application.Application {
 	private static List<ContenttoolsPlugin> plugins;
@@ -43,7 +43,7 @@ public class Application extends javafx.application.Application {
 		plugins = loader.getPluginManager().getPlugins();
 
 		if (plugins.size() < 2) {
-			throw new RuntimeException("Could not find the Xill and Contenttools plugins.");
+			throw new RuntimeException("Could not find the Xill and Xill IDE plugins.");
 		}
 
 		launch(args);
