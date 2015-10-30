@@ -43,12 +43,9 @@ abstract class FileSystemIterator {
     }
 
     private void addFolder(Path folder) throws IOException {
-        try {
-            stack.push(new DirectoryStreamWithIterator(Files.newDirectoryStream(folder)));
-        } catch (AccessDeniedException e) {
-            logger.error("No access to " + folder.toAbsolutePath());
-            noAccessPaths.add(folder);
-        }
+        stack.push(new DirectoryStreamWithIterator(Files.newDirectoryStream(folder)));
+        logger.error("No access to " + folder.toAbsolutePath());
+        noAccessPaths.add(folder);
     }
 
     /**
