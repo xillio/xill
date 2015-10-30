@@ -18,7 +18,7 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.internal.xtend.xtend.parser.SyntaxError;
 
 /**
- * This class can be used to run a robot in eclipse without booting contenttools
+ * This class can be used to run a robot in eclipse without booting Xill IDE
  */
 class RobotLoader {
 	private static final Logger log = LogManager.getLogger();
