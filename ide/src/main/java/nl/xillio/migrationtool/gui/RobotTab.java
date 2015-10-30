@@ -6,8 +6,6 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import javafx.stage.Modality;
-import javafx.stage.StageStyle;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -21,15 +19,12 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -40,6 +35,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import nl.xillio.migrationtool.Loader;
 import nl.xillio.migrationtool.dialogs.CloseTabStopRobotDialog;
 import nl.xillio.migrationtool.dialogs.SaveBeforeClosingDialog;
@@ -75,6 +71,8 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	private VBox vbxDebugHidden, vbxDebugpane;
 	@FXML
 	private ConsolePane consolePane;
+	@FXML
+	private StatusBar apnStatusBar;
 
 	private XillProcessor processor;
 
@@ -148,6 +146,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 		processor.getDebugger().getOnRobotStop().addListener(e -> Platform.runLater(() -> setGraphic(null)));
 		processor.getDebugger().getOnRobotPause().addListener(e -> Platform.runLater(() -> setGraphic(STATUSICON_PAUSED)));
 		processor.getDebugger().getOnRobotContinue().addListener(e -> Platform.runLater(() -> setGraphic(STATUSICON_RUNNING)));
+		apnStatusBar.registerDebugger(processor.getDebugger());
 	}
 	
 	private void addContextMenu(FXController controller) {
@@ -451,11 +450,11 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
             autoSaveAndRunRobot();
         }
 	}
-        
-    /**
-     * Automatically saves robot and runs it if the save is successful
-     */
-    private void autoSaveAndRunRobot() {
+
+	/**
+	 * Automatically saves robot and runs it if the save is successful
+	 */
+	private void autoSaveAndRunRobot() {
 		if (editorPane.getDocumentState().getValue() == DocumentState.CHANGED) {
 			save();
 		}
@@ -464,35 +463,39 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 			ESConsoleClient.getInstance().clearLog(getProcessor().getRobotID().toString());
 		}
 
-        try {
-                processor.compile();
-
-                Robot robot = processor.getRobot();
-
-                Thread robotThread = new Thread(() -> {
-                        try {
-                                robot.process(processor.getDebugger());
-                        } catch (Exception e) {
-                                Platform.runLater(() -> {
-                                        Alert error = new Alert(AlertType.ERROR);
-                                        error.setTitle(e.getClass().getSimpleName());
-                                        error.setContentText(e.getMessage() + "\n" + ExceptionUtils.getStackTrace(e));
-                                        error.setHeaderText("Exception while processing");
-                                        error.setResizable(true);
-                                        error.getDialogPane().setPrefWidth(1080);
-                                        error.show();
-                                });
-                        }
-                });
-
-			robotThread.start();
+		try {
+			apnStatusBar.setCompiling(true);
+			processor.compile();
 		} catch (IOException e) {
 			e.printStackTrace();
 			errorPopup(-1, e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling.");
-
+			return;
 		} catch (XillParsingException e) {
 			errorPopup(e.getLine(), e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling " + e.getRobot().getPath().getAbsolutePath());
+			return;
+		} finally {
+			apnStatusBar.setCompiling(false);
 		}
+
+		Robot robot = processor.getRobot();
+
+		Thread robotThread = new Thread(() -> {
+			try {
+				robot.process(processor.getDebugger());
+			} catch (Exception e) {
+				Platform.runLater(() -> {
+					Alert error = new Alert(AlertType.ERROR);
+					error.setTitle(e.getClass().getSimpleName());
+					error.setContentText(e.getMessage() + "\n" + ExceptionUtils.getStackTrace(e));
+					error.setHeaderText("Exception while processing");
+					error.setResizable(true);
+					error.getDialogPane().setPrefWidth(1080);
+					error.show();
+				});
+			}
+		});
+
+		robotThread.start();
 
 	}
 
