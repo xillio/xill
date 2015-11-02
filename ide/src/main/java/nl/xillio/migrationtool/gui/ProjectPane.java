@@ -199,6 +199,8 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		settings.project().delete(item.getValue().getValue());
                 if (getProjectsCount() == 0) {
                     getScene().lookup("#btnNewFile").setDisable(true);
+					getScene().lookup("#btnOpenFile").setDisable(true);
+					disableAllButtons();
                 }
 	}
 
@@ -217,6 +219,8 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		removeProject(item);
                 if (getProjectsCount() == 0) {
                     getScene().lookup("#btnNewFile").setDisable(true);
+					getScene().lookup("#btnOpenFile").setDisable(true);
+					disableAllButtons();
                 }
 	}
 
@@ -303,8 +307,10 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 			trvProjects.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 				if (observable.getValue() != null) {
 					controller.disableNewFileButton(false);
+					controller.disableOpenFileButton(false);
 				} else {
 					controller.disableNewFileButton(true);
+					controller.disableOpenFileButton(true);
 				}
 			});
 		}
@@ -534,16 +540,19 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		btnRename.setDisable(false);
 		btnUpload.setDisable(false);
                 getScene().lookup("#btnNewFile").setDisable(true);
+				getScene().lookup("#btnOpenFile").setDisable(true);
 
 		if (newObject == null || newObject == trvProjects.getRoot()) {
 			// Disable all
 			disableAllButtons();
                         getScene().lookup("#btnNewFile").setDisable(true);
+						getScene().lookup("#btnOpenFile").setDisable(true);
 
 		} else if (newObject == getProject(newObject)) {
 			// This is a project
 			btnRename.setDisable(true);
                         getScene().lookup("#btnNewFile").setDisable(false);
+						getScene().lookup("#btnOpenFile").setDisable(false);
 		}
 	}
 
