@@ -17,8 +17,8 @@ public class Options {
 
 	private String proxyHost = "";
 	private int proxyPort = 0;
-	private String proxyUser = "";
-	private String proxyPass = "";
+	private String authUser = "";
+	private String authPass = "";
 
 	/**
 	 * @param optionsVar the map of options and their values for request operation
@@ -40,7 +40,7 @@ public class Options {
 			processOption(optionParameters, entry.getKey(), entry.getValue());
 		}
 
-		this.checkProxyOptions();
+		this.checkOptions();
 	}
 
 	private void processOption(final Map<String, MetaExpression> optionParameters, final String option, final MetaExpression value) {
@@ -58,12 +58,12 @@ public class Options {
 				this.proxyPort = value.getNumberValue().intValue();
 				break;
 
-			case "proxyuser":
-				this.proxyUser = value.getStringValue();
+			case "user":
+				this.authUser = value.getStringValue();
 				break;
 
-			case "proxypass":
-				this.proxyPass = value.getStringValue();
+			case "pass":
+				this.authPass = value.getStringValue();
 				break;
 
 			default:
@@ -71,13 +71,13 @@ public class Options {
 		}
 	}
 
-	private void checkProxyOptions() {
-		if (this.proxyUser.isEmpty() != this.proxyPass.isEmpty()) {
-			throw new RobotRuntimeException("User and password must be set both!");
+	private void checkOptions() {
+		if (this.authUser.isEmpty() != this.authPass.isEmpty()) {
+			throw new RobotRuntimeException("User and password for server authentication must be set both!");
 		}
 
 		if ((this.proxyPort != 0) && (this.proxyHost.isEmpty())) {
-			throw new RobotRuntimeException("Port cannot be set without host!");
+			throw new RobotRuntimeException("Proxy port cannot be set without host!");
 		}
 	}
 
@@ -94,25 +94,20 @@ public class Options {
 	 * @param executor request executor
 	 */
 	public void doAuth(Executor executor) {
-		HttpHost host = null;
+		// Proxy settings
+		HttpHost proxyHost;
 		if (!this.proxyHost.isEmpty()) {
 			if (this.proxyPort == 0) {
-				host = new HttpHost(this.proxyHost);
+				proxyHost = new HttpHost(this.proxyHost);
 			} else {
-				host = new HttpHost(this.proxyHost, this.proxyPort);
+				proxyHost = new HttpHost(this.proxyHost, this.proxyPort);
 			}
+            executor.authPreemptiveProxy(proxyHost);
 		}
 
-		if (this.proxyUser.isEmpty()) {
-			if (host != null) {
-				executor.authPreemptive(host);
-			}
-		} else {
-			if (host != null) {
-				executor.auth(host, this.proxyUser, this.proxyPass);
-			} else {
-				executor.auth(this.proxyUser, this.proxyPass);
-			}
+		// Server authentication
+		if (!this.authUser.isEmpty()) {
+			executor.auth(this.authUser, this.authPass);
 		}
 	}
 
