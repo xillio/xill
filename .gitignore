@@ -2,6 +2,7 @@ xilliosettings.db
 ESConsole/
 /plugins
 helpfiles/
+test-output/
 xilliosettings.cfg
 
 # Gradle
