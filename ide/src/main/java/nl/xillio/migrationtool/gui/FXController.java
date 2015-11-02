@@ -176,7 +176,11 @@ public class FXController implements Initializable, EventHandler<Event> {
                 
                 if (projectpane.getProjectsCount() == 0) {
                     btnNewFile.setDisable(true);
+					btnOpenFile.setDisable(true);
                 }
+				if (getTabs().size() == 0){
+					disableSaveButtons(true);
+				}
 	}
 
 	private void registerSettings() {
@@ -620,7 +624,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 			validLicense.showAndWait();
 			Stage stage = (Stage) apnRoot.getScene().getWindow();
 			stage.setTitle(
-				"xillio content tools - " + Loader.LONG_VERSION + " - Licensed to: " + license.getLicenseName());
+				"Xill IDE - " + Loader.LONG_VERSION + " - Licensed to: " + license.getLicenseName());
 		}*/
 	}
 
@@ -792,6 +796,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 		if (!closeEvent.isConsumed() && removeTab) {
 			tpnBots.getTabs().remove(tab);
 		}
+
 	}
 
 	/**
@@ -824,6 +829,9 @@ public class FXController implements Initializable, EventHandler<Event> {
 		if (index >= 0) {
 			tpnBots.getSelectionModel().clearAndSelect(index);
 		}
+
+		//a robot is opened so enable the save buttons
+		disableSaveButtons(false);
 	}
 
 	/**
@@ -855,5 +863,32 @@ public class FXController implements Initializable, EventHandler<Event> {
 	 */
 	public void setCancelClose(boolean cancelClose) {
 		this.cancelClose = cancelClose;
+	}
+
+	/**
+	 * Disables the new file button
+	 *
+	 * @param disable boolean parameter to disable the new file button
+	 */
+	public void disableNewFileButton(boolean disable) {
+		btnNewFile.setDisable(disable);
+	}
+
+	/**
+	 * Disable the openFile button
+	 * @param disable boolean parameter to disable the open file button
+	 */
+	public void disableOpenFileButton(boolean disable){
+		btnOpenFile.setDisable(disable);
+	}
+
+	/**
+	 * Disable the save,save as and save all button
+	 * @param disable boolean parameter to disable the save,save as and save all button
+	 */
+	public void disableSaveButtons(boolean disable){
+		btnSaveAs.setDisable(disable);
+		btnSaveAll.setDisable(disable);
+		btnSave.setDisable(disable);
 	}
 }

@@ -43,7 +43,7 @@ public class AtomicExpression extends MetaExpression {
 	 * @param value
 	 *        the value to set
 	 */
-	public AtomicExpression(final double value) {
+	public AtomicExpression(final Number value) {
 		this(new NumberBehavior(value));
 	}
 

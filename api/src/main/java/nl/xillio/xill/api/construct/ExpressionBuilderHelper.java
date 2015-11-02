@@ -48,25 +48,14 @@ public class ExpressionBuilderHelper {
 	public static final MetaExpression NULL = new ImmutableLiteral(NullLiteral.Instance);
 
 	/**
-	 * Create a new expression containing an int
+	 * Create a new expression containing a number
 	 *
 	 * @param value
 	 *        the value of the expression
 	 * @return expression
 	 */
-	public static MetaExpression fromValue(final int value) {
+	public static MetaExpression fromValue(final Number value) {
 		return new AtomicExpression(new NumberBehavior(value));
-	}
-
-	/**
-	 * Create a new expression containing a double
-	 *
-	 * @param value
-	 *        the value of the expression
-	 * @return expression
-	 */
-	public static MetaExpression fromValue(final double value) {
-		return new AtomicExpression(value);
 	}
 
 	/**

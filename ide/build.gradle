@@ -1,4 +1,4 @@
-description = 'this project contains all UI logic for the contenttools application'
+description = 'this project contains all UI logic for the Xill IDE application'
 
 dependencies {
     compile project(':api')
