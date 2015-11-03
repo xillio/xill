@@ -40,8 +40,7 @@ public class ReverseConstruct extends Construct {
 
 		Object obj = extractValue(input);
 		obj = reverse.asReversed(obj, reverseRecursive);
-		MetaExpression m = MetaExpression.parseObject(obj);
-		return m;
+		return MetaExpression.parseObject(obj);
 
 	}
 }

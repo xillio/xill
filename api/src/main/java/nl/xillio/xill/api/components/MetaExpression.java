@@ -338,7 +338,7 @@ public abstract class MetaExpression implements Expression, Processable {
 	 * </ul>
 	 */
 	public static Object extractValue(final MetaExpression expression) {
-		return extractValue(expression, new LinkedHashMap<>());
+		return extractValue(expression, new IdentityHashMap<>());
 
 	}
 
