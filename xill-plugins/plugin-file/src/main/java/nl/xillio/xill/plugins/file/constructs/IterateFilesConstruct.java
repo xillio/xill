@@ -50,6 +50,8 @@ public class IterateFilesConstruct extends Construct {
 				throw new RobotRuntimeException("The specified folder does not exist:  " + e.getMessage(), e);
 			} else if ("java.nio.file.AccessDeniedException".equals(e.getClass().getName())) {
 				throw new RobotRuntimeException("Access to the specified folder is denied:  " + e.getMessage(), e);
+			} else if ("java.nio.file.NotDirectoryException".equals(e.getClass().getName())) {
+				throw new RobotRuntimeException("The specified folder is not a directory:  " + e.getMessage(), e);
 			}
 			throw new RobotRuntimeException("An error occurred: " + e.getMessage(), e);
 		}
