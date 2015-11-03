@@ -17,6 +17,8 @@ public class Options {
 
 	private String proxyHost = "";
 	private int proxyPort = 0;
+	private String proxyUser = "";
+	private String proxyPass = "";
 	private String authUser = "";
 	private String authPass = "";
 
@@ -37,13 +39,13 @@ public class Options {
 		@SuppressWarnings("unchecked")
 		Map<String, MetaExpression> optionParameters = (Map<String, MetaExpression>) optionsVar.getValue();
 		for (Map.Entry<String, MetaExpression> entry : optionParameters.entrySet()) {
-			processOption(optionParameters, entry.getKey(), entry.getValue());
+			processOption(entry.getKey(), entry.getValue());
 		}
 
 		this.checkOptions();
 	}
 
-	private void processOption(final Map<String, MetaExpression> optionParameters, final String option, final MetaExpression value) {
+	private void processOption(final String option, final MetaExpression value) {
 		switch (option) {
 
 			case "timeout":
@@ -56,6 +58,14 @@ public class Options {
 
 			case "proxyport":
 				this.proxyPort = value.getNumberValue().intValue();
+				break;
+
+			case "proxyuser":
+				this.proxyUser = value.getStringValue();
+				break;
+
+			case "proxypass":
+				this.proxyPass = value.getStringValue();
 				break;
 
 			case "user":
@@ -73,7 +83,11 @@ public class Options {
 
 	private void checkOptions() {
 		if (this.authUser.isEmpty() != this.authPass.isEmpty()) {
-			throw new RobotRuntimeException("User and password for server authentication must be set both!");
+			throw new RobotRuntimeException("User and password for server authentication must be set both or none!");
+		}
+
+		if (this.proxyUser.isEmpty() != this.proxyPass.isEmpty()) {
+			throw new RobotRuntimeException("User and password for proxy authentication must be set both or none!");
 		}
 
 		if ((this.proxyPort != 0) && (this.proxyHost.isEmpty())) {
@@ -94,6 +108,11 @@ public class Options {
 	 * @param executor request executor
 	 */
 	public void doAuth(Executor executor) {
+		// Server authentication
+		if (!this.authUser.isEmpty()) {
+			executor.auth(this.authUser, this.authPass);
+		}
+
 		// Proxy settings
 		HttpHost proxyHost;
 		if (!this.proxyHost.isEmpty()) {
@@ -102,13 +121,10 @@ public class Options {
 			} else {
 				proxyHost = new HttpHost(this.proxyHost, this.proxyPort);
 			}
+			if (!this.proxyUser.isEmpty()) {
+				executor.auth(proxyHost, this.proxyUser, this.proxyPass);
+			}
             executor.authPreemptiveProxy(proxyHost);
 		}
-
-		// Server authentication
-		if (!this.authUser.isEmpty()) {
-			executor.auth(this.authUser, this.authPass);
-		}
 	}
-
 }
