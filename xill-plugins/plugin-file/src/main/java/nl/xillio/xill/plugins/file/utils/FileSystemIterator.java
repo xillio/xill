@@ -5,13 +5,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.AccessDeniedException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.Stack;
 import java.util.function.Predicate;
 
@@ -27,7 +24,6 @@ abstract class FileSystemIterator {
     private Path nextValue;
     private final boolean recursive;
     private final Predicate<Path> resultChecker;
-    private final Set<Path> noAccessPaths = new HashSet<>();
 
     /**
      * Create a new FileIterator and add the rootFolder to the stream
@@ -43,12 +39,7 @@ abstract class FileSystemIterator {
     }
 
     private void addFolder(Path folder) throws IOException {
-        try {
-            stack.push(new DirectoryStreamWithIterator(Files.newDirectoryStream(folder)));
-        } catch (AccessDeniedException e) {
-            logger.error("No access to " + folder.toAbsolutePath());
-            noAccessPaths.add(folder);
-        }
+        stack.push(new DirectoryStreamWithIterator(Files.newDirectoryStream(folder)));
     }
 
     /**
@@ -120,15 +111,5 @@ abstract class FileSystemIterator {
         public void close() throws IOException {
             stream.close();
         }
-    }
-
-    /**
-     * Check if the path was accessible
-     *
-     * @param path the path to check
-     * @return true if and only if the path was denied access to while iterating
-     */
-    boolean isAccessible(Path path) {
-        return !noAccessPaths.contains(path);
     }
 }
