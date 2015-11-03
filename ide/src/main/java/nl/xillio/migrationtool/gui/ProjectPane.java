@@ -29,12 +29,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Pair;
 import me.biesaart.utils.FileUtils;
-import nl.xillio.migrationtool.dialogs.DeleteFileDialog;
-import nl.xillio.migrationtool.dialogs.DeleteProjectDialog;
-import nl.xillio.migrationtool.dialogs.NewFolderDialog;
-import nl.xillio.migrationtool.dialogs.NewProjectDialog;
-import nl.xillio.migrationtool.dialogs.RenameDialog;
-import nl.xillio.migrationtool.dialogs.UploadToServerDialog;
+import nl.xillio.migrationtool.dialogs.*;
 import nl.xillio.migrationtool.gui.WatchDir.FolderListener;
 import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.util.settings.ProjectSettings;
@@ -166,7 +161,9 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		if (item == getCurrentProject()) {
 			new DeleteProjectDialog(this, item).show();
 		} else {
-			new DeleteFileDialog(this, item).show();
+			// Check if the robot is running.
+			boolean robotRunning = ((RobotTab)controller.findTab(item.getValue().getKey())).getEditorPane().getControls().robotRunning();
+			new DeleteFileDialog(robotRunning, controller, this, item).show();
 		}
 	}
 
