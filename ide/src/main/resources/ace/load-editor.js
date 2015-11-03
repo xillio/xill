@@ -97,11 +97,14 @@ function loadEditor(){
 	    s.setOptions(options);
 	    var ranges = s.findAll(editor.session);
 
-	    // Find, save the current hit.
-        var current = editor.find(editor.$savedSearch.needle, options).start;
-
-        // Build the result.
+		// Build the result.
         var result = { amount: ranges.length, index: 0 };
+
+	    // Find, save the current hit.
+        var f = editor.find(editor.$savedSearch.needle, options);
+        if (f == null)
+            return result;
+        var current = f.start;
 
         for (var key in ranges) {
             var check = ranges[key].start;
