@@ -46,7 +46,7 @@ public class ReplaceBar extends SearchBar {
 
 	@FXML
 	private void onReplace(final ActionEvent actionEvent) {
-		getReplaceable().replaceOne(currentOccurence, getReplacement());
+		getReplaceable().replaceOne(currentOccurrence, getReplacement());
 	}
 
 	@FXML

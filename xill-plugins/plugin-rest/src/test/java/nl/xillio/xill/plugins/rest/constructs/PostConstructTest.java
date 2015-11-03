@@ -5,6 +5,7 @@ import java.util.HashMap;
 import nl.xillio.xill.api.data.XmlNode;
 import org.testng.annotations.Test;
 
+import static nl.xillio.xill.api.construct.ExpressionBuilderHelper.NULL;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
@@ -49,7 +50,7 @@ public class PostConstructTest {
 		when(restService.post(anyString(), any(), any())).thenReturn(content);
 
 		// Run
-		MetaExpression result = PostConstruct.process(urlVar, optionsVar, bodyVar, restService);
+		MetaExpression result = PostConstruct.process(urlVar, optionsVar, bodyVar, NULL, restService);
 
 		// Verify
 		verify(restService).post(anyString(), any(), any());
@@ -75,7 +76,7 @@ public class PostConstructTest {
 		MetaExpression bodyVar = mock(MetaExpression.class);
 
 		// Run
-		PostConstruct.process(urlVar, optionsVar, bodyVar, restService);
+		PostConstruct.process(urlVar, optionsVar, bodyVar, NULL, restService);
 	}
 	
 	/**
@@ -101,6 +102,6 @@ public class PostConstructTest {
 		MetaExpression bodyVar = mock(MetaExpression.class);
 
 		// Run
-		PostConstruct.process(urlVar, optionsVar, bodyVar, restService);
+		PostConstruct.process(urlVar, optionsVar, bodyVar, NULL, restService);
 	}
 }

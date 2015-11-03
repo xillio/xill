@@ -45,8 +45,10 @@ public class XpathServiceImpl implements XpathService {
 	@Override
 	public List<Object> xpath(final XmlNode node, final String xpathQuery, final Map<String, String> namespaces) {
 		HTMLNamespaceContext namespaceContext = new HTMLNamespaceContext(namespaces);
+
 		XPath xpath = xpf.newXPath();
-		ArrayList<Object> output = new ArrayList<Object>(); 
+		xpath.setNamespaceContext(namespaceContext);
+		ArrayList<Object> output = new ArrayList<>();
 		
 		boolean fetchText = xpathQuery.endsWith("/text()");
 
