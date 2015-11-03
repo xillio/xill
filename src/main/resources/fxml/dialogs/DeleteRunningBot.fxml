@@ -19,7 +19,7 @@
 								</StackPane>
 								<TextFlow prefHeight="0.0">
 									<children>
-										<Text strokeType="OUTSIDE" strokeWidth="0.0" text="Are you sure you want to delete the selected item from your drive?" />
+										<Text strokeType="OUTSIDE" strokeWidth="0.0" text="The robot you're about to delete is still running, deleting it fom your drive will terminate it. Delete anyway?" />
 									</children>
 								</TextFlow>
 							</children>
