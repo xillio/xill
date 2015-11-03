@@ -14,6 +14,8 @@ import nl.xillio.xill.plugins.file.utils.Folder;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
@@ -65,10 +67,12 @@ public class IterateFoldersConstruct extends Construct {
 	private static MetaExpression createExpression(Folder folder) {
 		LinkedHashMap<String, MetaExpression> value = new LinkedHashMap<>();
 
+		Path path = folder.toPath();
+
 		value.put("path", fromValue(folder.getAbsolutePath()));
-		value.put("canRead", fromValue(folder.canRead()));
-		value.put("canWrite", fromValue(folder.canWrite()));
-		value.put("isAccessible", fromValue(folder.isAccessible()));
+		value.put("canRead", fromValue(Files.isReadable(path)));
+		value.put("canWrite", fromValue(Files.isWritable(path)));
+		value.put("isAccessible", fromValue(Files.isReadable(path) & Files.isWritable(path) & Files.isExecutable(path)));
 
 		if (folder.getParentFile() != null) {
 			value.put("parent", fromValue(folder.getParentFile().getAbsolutePath()));
