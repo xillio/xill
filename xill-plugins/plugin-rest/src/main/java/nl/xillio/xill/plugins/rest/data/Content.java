@@ -24,31 +24,39 @@ public class Content {
 	private String content = "";
 	private ContentType type = ContentType.TEXT_PLAIN;
 	private XmlNodeFactory xmlNodeFactory;
+    private static final String ENCODING = "UTF-8";
 
 	/**
 	 * Acquire content from Xill variable
 	 *
 	 * @param contentVar request's body content
+     * @param contentTypeVar request's body content type
 	 */
-	public Content(final MetaExpression contentVar) {
-		if (contentVar.isNull()) {
-			return;
-		}
+	public Content(final MetaExpression contentVar, final MetaExpression contentTypeVar) {
+        if (contentVar.isNull()) {
+            return;
+        }
 
-		if ((contentVar.getType() == ExpressionDataType.OBJECT) || (contentVar.getType() == ExpressionDataType.LIST)) {
-			// JSON format
-			this.content = contentVar.toString();
-			this.type = ContentType.APPLICATION_JSON;
-		} else if (contentVar.getMeta(XmlNode.class) != null) {
-			// XML format
-			XmlNode xmlNode = contentVar.getMeta(XmlNode.class);
-			this.type = ContentType.APPLICATION_XML;
-			this.content = xmlNode.getXmlContent();
+		if (contentTypeVar.isNull()) {
+            if ((contentVar.getType() == ExpressionDataType.OBJECT) || (contentVar.getType() == ExpressionDataType.LIST)) {
+                // JSON format
+                this.content = contentVar.toString();
+                this.type = ContentType.create(ContentType.APPLICATION_JSON.getMimeType(), ENCODING);
+            } else if (contentVar.getMeta(XmlNode.class) != null) {
+                // XML format
+                XmlNode xmlNode = contentVar.getMeta(XmlNode.class);
+                this.content = xmlNode.getXmlContent();
+                this.type = ContentType.create(ContentType.APPLICATION_XML.getMimeType(), ENCODING);
+            } else {
+                this.content = contentVar.getStringValue();
+                this.type = ContentType.create(ContentType.TEXT_PLAIN.getMimeType(), ENCODING);
+            }
+            this.type.withCharset("UTF-8");
 		} else {
-			this.content = contentVar.getStringValue();
-			this.type = ContentType.TEXT_PLAIN;
-		}
-	}
+            this.type = ContentType.create(contentTypeVar.getStringValue(), ENCODING);
+            this.content = contentVar.getStringValue();
+        }
+    }
 
 	/**
 	 * Acquire content from string

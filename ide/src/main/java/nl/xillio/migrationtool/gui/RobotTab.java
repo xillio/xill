@@ -470,9 +470,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 	 * Automatically saves robot and runs it if the save is successful
 	 */
 	private void autoSaveAndRunRobot() {
-		if (editorPane.getDocumentState().getValue() == DocumentState.CHANGED) {
-			save();
-		}
+		save();
 
 		if (FXController.settings.simple().getBoolean(Settings.SETTINGS_GENERAL, Settings.RunBotWithCleanConsole)) {
 			ESConsoleClient.getInstance().clearLog(getProcessor().getRobotID().toString());

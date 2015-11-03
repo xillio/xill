@@ -6,7 +6,7 @@ Carries out the Put REST request. Returns response from server.
 The body and response can be one of the following types:
 * XML (XmlNode)
 * JSON (Object)
-* String  
+* String [with custom content type]  
 
 Options:
 * timeout - processing timeout in ms (default = 5000)

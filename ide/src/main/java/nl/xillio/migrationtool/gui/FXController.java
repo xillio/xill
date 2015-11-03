@@ -284,7 +284,7 @@ public class FXController implements Initializable, EventHandler<Event> {
             }
 
             // Fix for files being created out of projects
-            if (chosen.getParent().equals(projectfile.getAbsolutePath())) {
+            if (chosen.getParent().startsWith(projectfile.getAbsolutePath())) {
                 // The created file is in the project
 
                 // This code is because of different behaviour of FileChooser in Linux and Windows

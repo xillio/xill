@@ -6,7 +6,7 @@ Carries out the Post REST request. Returns response from server.
 The body and response can be one of the following types:
 * XML (XmlNode)
 * JSON (Object)
-* String  
+* String [with custom content type]
 
 Options:
 * timeout - processing timeout in ms (default = 5000)
@@ -34,6 +34,18 @@ var response = REST.post("http://whatever.com/uri", {"timeout" : 3000}, body);
 System.print(response);
 </code>
         </example>
+        <example title="Usage with custom content type">
+            <header>Post request</header>
+            <code>
+use System;
+use REST;
+use XML;
+var body = "just test text";
+var contentType = "application/vnd.emc.documentum+json";
+var response = REST.post("http://whatever.com/uri", {"timeout" : 3000}, body, contentType);
+System.print(response);
+</code>
+        </example>        
     </examples>
     <references>
         <reference>delete</reference>

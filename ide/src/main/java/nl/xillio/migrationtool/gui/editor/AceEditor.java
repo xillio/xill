@@ -35,6 +35,7 @@ import nl.xillio.events.EventHost;
 import nl.xillio.migrationtool.BreakpointPool;
 import nl.xillio.migrationtool.gui.FXController;
 import nl.xillio.migrationtool.gui.HelpPane;
+import nl.xillio.migrationtool.gui.ReplaceBar;
 import nl.xillio.migrationtool.gui.RobotTab;
 import nl.xillio.xill.api.XillProcessor;
 import nl.xillio.xill.api.components.RobotID;
@@ -546,9 +547,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	 * Call a method on the javascript ace editor object
 	 * 
 	 * Defers execution using {@link Platform#runLater(Runnable)}.
-	 * 
-	 * @param callback
-	 *        Callback that is called with the return value of the call
+	 *
 	 * @param method
 	 *        Method name
 	 * @param args
@@ -608,42 +607,31 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 		return raw.replace("\\", "\\\\").replace("\"", "\\\"").replace("'", "\\'").replace("\n", "\\n").replace("\r", "");
 	}
 
-	// ///////// SEARCH BAR //////////////////
+    ////////////////// SEARCH BAR //////////////////
+    private ReplaceBar replaceBar;
 	private int occurrences = 0;
 
-	private String needle;
-	private boolean regex;
-	private boolean caseSensitive;
+    /**
+     * Set the replace bar that the editor uses.
+     * @param bar The replace bar.
+     */
+    public void setReplaceBar(ReplaceBar bar) {
+        replaceBar = bar;
+    }
 
 	@Override
 	public void searchPattern(final String pattern, final boolean caseSensitive) {
-		this.needle = pattern;
-		this.caseSensitive = caseSensitive;
-		this.regex = true;
-		searchJS(pattern, true, caseSensitive, 0);
+		callOnAce(this::handleResult, "findOccurrences", pattern, true, caseSensitive);
 	}
 
 	@Override
 	public void search(final String needle, final boolean caseSensitive) {
-		this.needle = needle;
-		this.caseSensitive = caseSensitive;
-		this.regex = false;
-		searchJS(needle, false, caseSensitive, 0);
+		callOnAce(this::handleResult, "findOccurrences", needle, false, caseSensitive);
 	}
 
 	@Override
 	public int getOccurrences() {
 		return occurrences;
-	}
-
-	@Override
-	public void highlight(final int occurrence) {
-		this.searchJS(needle, regex, caseSensitive, occurrence);
-	}
-
-	@Override
-	public void highlightAll() {
-		// nothing to do
 	}
 
 	@Override
@@ -653,33 +641,34 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 
 	@Override
 	public void replaceOne(final int occurrence, final String replacement) {
-		highlight(occurrence);
 		callOnAce("replace", replacement);
 	}
 
-	private void searchJS(final String needle, final boolean regex, final boolean caseSensitive, final int occurence) {
-		JSObject flags = (JSObject) executeJSBlocking("var flags={ "
-				+ "backwards: false,"
-				+ "wrap: true,"
-				+ "caseSensitive: " + caseSensitive + ","
-				+ "regExp: " + regex + ","
-				+ "occurence: " + occurence
-				+ "}; flags;");
+	private void handleResult(Object r) {
+		// Get the amount of occurrences and current index.
+		JSObject result = (JSObject)r;
+		occurrences = (int)result.getMember("amount");
+		if (replaceBar != null)
+			replaceBar.setCurrentOccurrence((int)result.getMember("index"));
 
-		// Count
-		callOnAce(result -> {
-			occurrences = (Integer) result;
-
-			// If there are no results, clear the search
-			if (occurrences == 0) {
-				callOnAceBlocking("clearOccurences");
-			}
-		}, "findOccurences", needle, flags);
+		// If there are no results, clear the search
+		if (occurrences == 0)
+			callOnAceBlocking("clearSearch");
 	}
+
+    @Override
+    public void findNext(int next) {
+        callOnAce(this::handleResult, "doFind", false, true);
+    }
+
+    @Override
+    public void findPrevious(int previous) {
+        callOnAce(this::handleResult, "doFind", true, true);
+    }
 
 	@Override
 	public void clearSearch() {
-		callOnAce("clearOccurences");
+		callOnAce("clearSearch");
 	}
 
 	/**
@@ -688,10 +677,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	public Event<Boolean> getOnDocumentLoaded() {
 		return onDocumentLoaded.getEvent();
 	}
-
-	/**
-	 * @param editable
-	 */
+    
 	public void setEditable(final boolean editable) {
 		callOnAce("setReadOnly", !editable);
 	}
