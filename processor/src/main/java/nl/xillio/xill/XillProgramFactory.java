@@ -51,25 +51,7 @@ import nl.xillio.xill.components.instructions.InstructionSet;
 import nl.xillio.xill.components.instructions.ReturnInstruction;
 import nl.xillio.xill.components.instructions.VariableDeclaration;
 import nl.xillio.xill.components.instructions.WhileInstruction;
-import nl.xillio.xill.components.operators.Add;
-import nl.xillio.xill.components.operators.And;
-import nl.xillio.xill.components.operators.Assign;
-import nl.xillio.xill.components.operators.Concat;
-import nl.xillio.xill.components.operators.Divide;
-import nl.xillio.xill.components.operators.Equals;
-import nl.xillio.xill.components.operators.FromList;
-import nl.xillio.xill.components.operators.GreaterThan;
-import nl.xillio.xill.components.operators.GreaterThanOrEquals;
-import nl.xillio.xill.components.operators.IntegerShortcut;
-import nl.xillio.xill.components.operators.Modulo;
-import nl.xillio.xill.components.operators.Multiply;
-import nl.xillio.xill.components.operators.Negate;
-import nl.xillio.xill.components.operators.NotEquals;
-import nl.xillio.xill.components.operators.Or;
-import nl.xillio.xill.components.operators.Power;
-import nl.xillio.xill.components.operators.SmallerThan;
-import nl.xillio.xill.components.operators.SmallerThanOrEquals;
-import nl.xillio.xill.components.operators.Subtract;
+import nl.xillio.xill.components.operators.*;
 import nl.xillio.xill.debugging.DebugInfo;
 
 import org.apache.commons.lang3.StringUtils;
@@ -510,6 +492,9 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 					VariableDeclaration mDeclaration = variables.get(mTarget);
 					value = new IntegerShortcut(mDeclaration, mPath, value, -1, false);
 					break;
+				case "@":
+					value = new StringConstant(value);
+					break;
 				default:
 					throw new NotImplementedException("This prefix has not been implemented.");
 			}
@@ -696,23 +681,23 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 				break;
 			case "+=":
 				expression = new Assign(declaration, path,
-				  new Add(new VariableAccessExpression(declaration), parse(token.getRight())));
+				  new Add(parse(token.getLeft()), parse(token.getRight())));
 				break;
 			case "-=":
 				expression = new Assign(declaration, path,
-				  new Subtract(new VariableAccessExpression(declaration), parse(token.getRight())));
+				  new Subtract(parse(token.getLeft()), parse(token.getRight())));
 				break;
 			case "*=":
 				expression = new Assign(declaration, path,
-				  new Multiply(new VariableAccessExpression(declaration), parse(token.getRight())));
+				  new Multiply(parse(token.getLeft()), parse(token.getRight())));
 				break;
 			case "::=":
 				expression = new Assign(declaration, path,
-				  new Concat(new VariableAccessExpression(declaration), parse(token.getRight())));
+				  new Concat(parse(token.getLeft()), parse(token.getRight())));
 				break;
 			case "/=":
 				expression = new Assign(declaration, path,
-				  new Divide(new VariableAccessExpression(declaration), parse(token.getRight())));
+				  new Divide(parse(token.getLeft()), parse(token.getRight())));
 				break;
 			default:
 				CodePosition pos = pos(token);
@@ -1056,7 +1041,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @throws XillParsingException
 	 */
 	Processable parseToken(final xill.lang.xill.GetArgumentExpression token) throws XillParsingException {
-		// First we need to find the robot of this token. Do do this we need the
+		// First we need to find the robot of this token. To do this we need the
 		// token's root
 		EObject robot = token;
 		while (!(robot instanceof xill.lang.xill.Robot || robot == null)) {
