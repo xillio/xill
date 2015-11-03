@@ -132,8 +132,9 @@ public class SettingsDialog extends FXMLDialog {
         DirectoryChooser chooser = new DirectoryChooser();
 
         // Set directory
-        if (!tfprojectfolder.getText().isEmpty()) {
-            chooser.setInitialDirectory(new File(tfprojectfolder.getText()));
+	    File folder = new File(tfprojectfolder.getText());
+        if (folder.isDirectory()) {
+            chooser.setInitialDirectory(folder);
         } else {
             chooser.setInitialDirectory(new File(System.getProperty("user.home")));
         }
