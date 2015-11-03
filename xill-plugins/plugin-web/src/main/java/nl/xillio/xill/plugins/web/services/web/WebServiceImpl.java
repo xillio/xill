@@ -62,8 +62,13 @@ public class WebServiceImpl implements WebService {
 
 	@Override
 	public String getText(final WebVariable var) {
-		WebElement element = var.getElement();
-		return element.getText();
+		String text;
+		if (var instanceof PageVariable) {
+			text = var.getDriver().getPageSource();
+		} else {
+			text = var.getElement().getText();
+		}
+		return text;
 	}
 
 	@Override
