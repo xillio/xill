@@ -53,7 +53,9 @@ public class NewFolderDialog extends FXMLDialog {
 	@FXML
 	private void okayBtnPressed(final ActionEvent event) {
 		try {
-			FileUtils.forceMkdir(new File(treeItem.getValue().getKey(), tffolder.getText()));
+			File folder = getFolder(treeItem.getValue().getKey());
+
+			FileUtils.forceMkdir(new File(folder, tffolder.getText()));
 			treeItem.setExpanded(true);
 			projectPane.select(treeItem);
 		} catch (IOException e) {
@@ -67,5 +69,13 @@ public class NewFolderDialog extends FXMLDialog {
 			log.error(e.getMessage());
 		}
 		close();
+	}
+
+	private File getFolder(File key) {
+		if(key.isFile()) {
+			return key.getParentFile();
+		}
+
+		return key;
 	}
 }
