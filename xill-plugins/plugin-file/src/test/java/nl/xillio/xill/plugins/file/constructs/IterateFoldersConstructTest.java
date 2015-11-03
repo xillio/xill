@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.file.constructs;
 
+import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.MetaExpressionIterator;
 import nl.xillio.xill.api.components.RobotID;
@@ -19,7 +20,7 @@ import static org.testng.Assert.assertNotNull;
 /**
  * Test the IterateFoldersConstruct
  */
-public class IterateFoldersConstructTest {
+public class IterateFoldersConstructTest extends TestUtils {
 
 	@Test
 	public void testProcessNormalTrue() throws Exception {
@@ -39,6 +40,7 @@ public class IterateFoldersConstructTest {
 
 		// FileUtilities
 		FileUtilities fileUtils = mock(FileUtilities.class);
+		this.setFileResolverReturnValue(new File(""));
 
 		// Run the Method
 		MetaExpression result = IterateFoldersConstruct.process(context, fileUtils, uri, recursive);
@@ -51,12 +53,13 @@ public class IterateFoldersConstructTest {
 	}
 
 	@Test(
-					expectedExceptions = RobotRuntimeException.class,
-					expectedExceptionsMessageRegExp = "Failed to iterate folders: This is an error")
+			expectedExceptions = RobotRuntimeException.class
+	)
 	public void testProcessIOException() throws IOException {
 		// FileUtils
 		FileUtilities fileUtils = mock(FileUtilities.class);
 		when(fileUtils.iterateFolders(any(File.class), anyBoolean())).thenThrow(new IOException("This is an error"));
+		this.setFileResolverReturnValue(new File(""));
 
 		// Run the Method
 		IterateFoldersConstruct.process(mock(ConstructContext.class), fileUtils, mock(MetaExpression.class), mock(MetaExpression.class));
