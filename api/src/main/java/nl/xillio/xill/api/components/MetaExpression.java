@@ -344,10 +344,10 @@ public abstract class MetaExpression implements Expression, Processable {
 
 	@SuppressWarnings("unchecked")
 	private static Object extractValue(final MetaExpression expression, final Map<MetaExpression, Object> results) {
+		
 		if (results.containsKey(expression)) {
 			return results.get(expression);
 		}
-
 		Object result;
 		switch (expression.getType()) {
 			case ATOMIC:
