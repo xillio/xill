@@ -257,8 +257,12 @@ public class SettingsDialog extends FXMLDialog {
 
         if (!tfprojectfolder.getText().isEmpty()) {
             File file = new File(tfprojectfolder.getText());
-            if ((!file.isDirectory())) {
-                throw new ValidationException("Invalid default project folder!");
+            if(!file.exists()) {
+                throw new ValidationException("The chosen project folder does not exist!");
+            }
+
+            if (!file.isDirectory()) {
+                throw new ValidationException("The chosen project folder is not a directory!");
             }
         }
     }
