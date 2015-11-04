@@ -3,6 +3,8 @@ package nl.xillio.xill.plugins.list;
 import com.google.inject.Binder;
 
 import nl.xillio.plugins.XillPlugin;
+import nl.xillio.xill.plugins.list.services.duplicate.Duplicate;
+import nl.xillio.xill.plugins.list.services.duplicate.DuplicateImpl;
 import nl.xillio.xill.plugins.list.services.reverse.Reverse;
 import nl.xillio.xill.plugins.list.services.reverse.ReverseImpl;
 import nl.xillio.xill.plugins.list.services.sort.Sort;
@@ -19,5 +21,6 @@ public class ListXillPlugin extends XillPlugin {
 
 		binder.bind(Sort.class).to(SortImpl.class);
 		binder.bind(Reverse.class).to(ReverseImpl.class);
+		binder.bind(Duplicate.class).to(DuplicateImpl.class);
 	}
 }
