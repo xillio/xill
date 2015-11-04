@@ -3,10 +3,10 @@ package nl.xillio.xill.plugins.web.services.web;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import nl.xillio.xill.plugins.web.data.CookieVariable;
 import nl.xillio.xill.plugins.web.data.NodeVariable;
@@ -80,11 +80,9 @@ public class WebServiceImpl implements WebService {
 			node = var.getElement();
 		}
 		List<WebElement> searchResults = node.findElements(By.cssSelector(cssPath));
-		List<WebVariable> result = new ArrayList<>();
-		for (WebElement element : searchResults) {
-			result.add(new NodeVariable(null, element));
-		}
-		return result;
+		return searchResults.stream()
+				.map(element -> new NodeVariable(null, element))
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -96,11 +94,9 @@ public class WebServiceImpl implements WebService {
 			node = var.getElement();
 		}
 		List<WebElement> searchResults = node.findElements(By.xpath(xpath));
-		List<WebVariable> result = new ArrayList<>();
-		for (WebElement element : searchResults) {
-			result.add(new NodeVariable(null, element));
-		}
-		return result;
+		return searchResults.stream()
+				.map(element -> new NodeVariable(null, element))
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -235,7 +231,7 @@ public class WebServiceImpl implements WebService {
 	 */
 	String getRef(final String url) throws MalformedURLException {
 		URL newURL = new URL(url);
-		if(newURL == null || !checkSupportedURL(newURL)){
+		if(!checkSupportedURL(newURL)){
 			throw new MalformedURLException();
 		}
 		return newURL.getRef();

@@ -63,14 +63,10 @@ public class GetTextConstruct extends PhantomJSConstruct {
 		}
 
 		String text;
-		if (checkPageType(var)) {
-			text = webService.getText(element);
+		if (!checkPageType(var) && ("input".equals(webService.getTagName(element)) || "textarea".equals(webService.getTagName(element)))) {
+			text = webService.getAttribute(element, "value");
 		} else {
-			if ("input".equals(webService.getTagName(element)) || "textarea".equals(webService.getTagName(element))) {
-				text = webService.getAttribute(element, "value");
-			} else {
-				text = webService.getText(element);
-			}
+			text = webService.getText(element);
 		}
 		return text;
 	}
