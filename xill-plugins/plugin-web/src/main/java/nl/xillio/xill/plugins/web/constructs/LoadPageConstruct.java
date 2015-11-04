@@ -27,7 +27,6 @@ public class LoadPageConstruct extends PhantomJSConstruct implements AutoCloseab
 	private static final PhantomJSPool pool = new PhantomJSPool(10);
 
 	static {
-		Options.cleanUnusedPJSExe();
 		Options.extractNativeBinary();
 	}
 
