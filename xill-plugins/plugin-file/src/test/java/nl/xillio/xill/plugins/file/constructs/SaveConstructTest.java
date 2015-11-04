@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 /**
  * Test the SaveConstruct
  */
-public class SaveConstructTest {
+public class SaveConstructTest extends TestUtils {
 
 	@Test
 	public void testProcessNormal() throws IOException {

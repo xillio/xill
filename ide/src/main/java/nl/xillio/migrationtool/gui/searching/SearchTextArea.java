@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import javafx.application.Platform;
 import javafx.scene.control.TextArea;
 import nl.xillio.xill.api.preview.Searchable;
 
@@ -35,12 +36,18 @@ public class SearchTextArea extends TextArea implements Searchable {
 		while (matcher.find()) {
 			occurrences.add(new SearchOccurrence(matcher.start(), matcher.group()));
 		}
+
+        // Select the first occurrence.
+        select(0);
 	}
 
 	@Override
 	public void search(final String needle, final boolean caseSensitive) {
 		String pattern = Pattern.quote(needle);
 		searchPattern(pattern, caseSensitive);
+
+        // Select the first occurrence.
+        Platform.runLater(() -> select(0));
 	}
 
 	@Override
@@ -48,17 +55,22 @@ public class SearchTextArea extends TextArea implements Searchable {
 		return occurrences.size();
 	}
 
-	@Override
-	public void highlight(final int occurrence) {
-		SearchOccurrence element = occurrences.get(occurrence);
-		selectRange(element.getStart(), element.getEnd());
+	private void select(final int occurrence) {
+        if (occurrence >= 0 && occurrence < occurrences.size()) {
+            SearchOccurrence element = occurrences.get(occurrence);
+            selectRange(element.getStart(), element.getEnd());
+        }
 	}
 
-	@Override
-	public void highlightAll() {
-		// This is not possible on a textarea
-		selectRange(0, 0);
-	}
+    @Override
+    public void findNext(int next) {
+        select(next);
+    }
+
+    @Override
+    public void findPrevious(int previous) {
+        select(previous);
+    }
 
 	@Override
 	public void clearSearch() {

@@ -29,12 +29,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Pair;
 import me.biesaart.utils.FileUtils;
-import nl.xillio.migrationtool.dialogs.DeleteFileDialog;
-import nl.xillio.migrationtool.dialogs.DeleteProjectDialog;
-import nl.xillio.migrationtool.dialogs.NewFolderDialog;
-import nl.xillio.migrationtool.dialogs.NewProjectDialog;
-import nl.xillio.migrationtool.dialogs.RenameDialog;
-import nl.xillio.migrationtool.dialogs.UploadToServerDialog;
+import nl.xillio.migrationtool.dialogs.*;
 import nl.xillio.migrationtool.gui.WatchDir.FolderListener;
 import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.util.settings.ProjectSettings;
@@ -166,7 +161,9 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		if (item == getCurrentProject()) {
 			new DeleteProjectDialog(this, item).show();
 		} else {
-			new DeleteFileDialog(this, item).show();
+			// Check if the robot is running.
+			boolean robotRunning = ((RobotTab)controller.findTab(item.getValue().getKey())).getEditorPane().getControls().robotRunning();
+			new DeleteFileDialog(robotRunning, controller, this, item).show();
 		}
 	}
 
@@ -199,6 +196,8 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		settings.project().delete(item.getValue().getValue());
                 if (getProjectsCount() == 0) {
                     getScene().lookup("#btnNewFile").setDisable(true);
+					getScene().lookup("#btnOpenFile").setDisable(true);
+					disableAllButtons();
                 }
 	}
 
@@ -217,6 +216,8 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		removeProject(item);
                 if (getProjectsCount() == 0) {
                     getScene().lookup("#btnNewFile").setDisable(true);
+					getScene().lookup("#btnOpenFile").setDisable(true);
+					disableAllButtons();
                 }
 	}
 
@@ -303,8 +304,10 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 			trvProjects.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 				if (observable.getValue() != null) {
 					controller.disableNewFileButton(false);
+					controller.disableOpenFileButton(false);
 				} else {
 					controller.disableNewFileButton(true);
+					controller.disableOpenFileButton(true);
 				}
 			});
 		}
@@ -534,16 +537,19 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		btnRename.setDisable(false);
 		btnUpload.setDisable(false);
                 getScene().lookup("#btnNewFile").setDisable(true);
+				getScene().lookup("#btnOpenFile").setDisable(true);
 
 		if (newObject == null || newObject == trvProjects.getRoot()) {
 			// Disable all
 			disableAllButtons();
                         getScene().lookup("#btnNewFile").setDisable(true);
+						getScene().lookup("#btnOpenFile").setDisable(true);
 
 		} else if (newObject == getProject(newObject)) {
 			// This is a project
 			btnRename.setDisable(true);
                         getScene().lookup("#btnNewFile").setDisable(false);
+						getScene().lookup("#btnOpenFile").setDisable(false);
 		}
 	}
 

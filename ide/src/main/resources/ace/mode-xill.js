@@ -540,7 +540,7 @@ ace.define('ace/mode/xill_highlight_rules', function(require, exports, module) {
 		var keywordMapper = this.createKeywordMapper({
 			"keyword" : highlightSettings.getKeywords(),
 			"buildin" : highlightSettings.getBuiltins(),
-			"language.constant": "true|false|null|ATOMIC|LIST|OBJECT"
+			"language.constant": "true|false|null|ATOMIC|LIST|OBJECT|NaN"
 		}, "identifier");
 
 		this.$rules = {
@@ -727,7 +727,7 @@ function SmartBreakpoints() {
 	};
 
 	this.updateDataOnDocChange = function(e) {
-		//Push change to contenttools
+		//Push change to contenttools (The old name of Xill IDE)
 		contenttools.codeChanged(contenttools.getAce().getValue());
 		
 		var delta = e.data;
@@ -767,7 +767,7 @@ function SmartBreakpoints() {
 			}
 		}
 		
-		//Push new breakpoints to contenttools
+		//Push new breakpoints to contenttools (old name of Xill IDE)
 		if (typeof contenttools !== 'undefined') {
 			contenttools.breakpointsChanged(this.$breakpoints);
 		}
@@ -790,7 +790,7 @@ function SmartBreakpoints() {
 	}
 	
 	this.onChangeBreakPoint = function() {
-		//Push new breakpoints to contenttools
+		//Push new breakpoints to contenttools (the old name of Xill IDE)
 		if (typeof contenttools !== 'undefined') {
 			contenttools.breakpointsChanged(this.$breakpoints);
 		}

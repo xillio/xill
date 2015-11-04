@@ -47,7 +47,7 @@ public class StringBehavior implements Expression {
 
 	@Override
 	public boolean getBooleanValue() {
-		return value != null || !value.isEmpty();
+		return value != null && !value.isEmpty();
 	}
 
 	@Override

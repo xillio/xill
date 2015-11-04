@@ -25,6 +25,6 @@ public class FolderIterator extends FileSystemIterator implements Iterator<Folde
     @Override
     public Folder next() {
         Path next = getNextValue();
-        return new Folder(next.toString(), isAccessible(next));
+        return new Folder(next.toString());
     }
 }

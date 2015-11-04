@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.database.util;
 
 import static nl.xillio.xill.plugins.database.util.TypeConverter.ARRAY;
 import static nl.xillio.xill.plugins.database.util.TypeConverter.BIG_DECIMAL;
+import static nl.xillio.xill.plugins.database.util.TypeConverter.BIG_INTEGER;
 import static nl.xillio.xill.plugins.database.util.TypeConverter.BYTE;
 import static nl.xillio.xill.plugins.database.util.TypeConverter.CLOB;
 import static nl.xillio.xill.plugins.database.util.TypeConverter.DATE;
@@ -18,6 +19,7 @@ import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.Array;
 import java.sql.Clob;
 import java.sql.ResultSet;
@@ -26,10 +28,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import nl.xillio.xill.plugins.database.util.TypeConverter.ConversionException;
-
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import nl.xillio.xill.plugins.database.util.TypeConverter.ConversionException;
 
 /**
  * Tests for the {@link TypeConverter}
@@ -96,16 +98,38 @@ public class TypeConverterTest {
 	}
 
 	/**
-	 * Test conversion from {@link BigDecimal} to double when the decimal is larger than the allowd value for double
+	 * Test conversion from {@link BigDecimal} to double when the decimal is larger than the possible value for double
 	 * 
 	 * @throws ConversionException
 	 * @throws SQLException
 	 */
-	@Test
-	public void testBigDecimalInfinity() throws SQLException, ConversionException {
+	@Test(expectedExceptions = ConversionException.class)
+	public void testBigDecimalLarge() throws SQLException, ConversionException {
 		BigDecimal bd = new BigDecimal("10E2048");
-		Object result = BIG_DECIMAL.convert(bd);
-		assertEquals((double) result, Double.POSITIVE_INFINITY);
+		BIG_DECIMAL.convert(bd);
+	}
+
+	/**
+	 * Test conversion from {@link BigInteger} to long under normal circumstances
+	 * 
+	 * @throws ConversionException
+	 */
+	@Test
+	public void testBigIntegerNormal() throws ConversionException {
+		BigInteger bi = BigInteger.valueOf(10);
+		Object result = BIG_INTEGER.convert(bi);
+		assertEquals((long) result, 10);
+	}
+
+	/**
+	 * Test conversion from {@link BigInteger} to long when the integer is larger than the possible value for long
+	 * 
+	 * @throws ConversionException
+	 */
+	@Test(expectedExceptions = ConversionException.class)
+	public void testBigIntegerLarge() throws ConversionException {
+		BigInteger bi = BigInteger.valueOf(Long.MAX_VALUE).add(BigInteger.ONE);
+		BIG_INTEGER.convert(bi);
 	}
 
 	/**
@@ -267,7 +291,9 @@ public class TypeConverterTest {
 				{(byte) 1, Integer.class},
 				{(short) 2, Integer.class},
 				{3f, Double.class},
-				{new BigDecimal(5), Double.class},
+				{BigDecimal.valueOf(5), Long.class},
+				{BigDecimal.valueOf(5.1), Double.class},
+				{BigInteger.valueOf(10), Long.class},
 				{mockClob(), String.class},
 				{mockDate(), String.class},
 				{mockArray(mockResultSet()), List.class}};

@@ -48,6 +48,16 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
 	}
 
 	/**
+	 * Create a new {@link ExpressionBuilder} that will produce a string
+	 *
+	 * @param value
+	 *        the value to set
+	 */
+	public ExpressionBuilder(final String value, final boolean isConstant) {
+		expressionSupplier = () -> fromValue(value, isConstant);
+	}
+
+	/**
 	 * Create a new {@link ExpressionBuilder} that will produce a List
 	 *
 	 * @param value

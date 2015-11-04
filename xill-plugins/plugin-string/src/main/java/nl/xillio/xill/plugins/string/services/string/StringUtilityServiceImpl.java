@@ -83,7 +83,7 @@ public class StringUtilityServiceImpl implements StringUtilityService {
 
     @Override
     public String replaceAll(final String haystack, final String needle, final String replacement) {
-        return haystack.replaceAll(needle, replacement);
+        return haystack.replace(needle, replacement);
     }
 
     @Override
