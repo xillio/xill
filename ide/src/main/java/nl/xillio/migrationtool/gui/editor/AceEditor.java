@@ -146,7 +146,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 		
 		// Copy menu item.
 		MenuItem copy = new MenuItem("Copy");
-		copy.setOnAction(e -> copyToClipboard((String)callOnAceBlocking("getCopyText")));
+		copy.setOnAction(e -> copy());
 		
 		// Paste menu item.
 		MenuItem paste = new MenuItem("Paste");
@@ -233,9 +233,15 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	 * @param text
 	 *        The text to copy to the clipboard.
 	 */
-	public void copyToClipboard(final String text) {
+	public void copy() {
+		// Get the copy text from ace.
+		String text = (String)callOnAceBlocking("getSelectedText");
+
+		// Replace double newlines and carriage returns by single newlines.
+		String removedNewlines = text.replaceAll("\r\n?", "\n");
+
 		final ClipboardContent content = new ClipboardContent();
-		content.putString(text);
+		content.putString(removedNewlines);
 		clipboard.setContent(content);
 	}
 
