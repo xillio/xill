@@ -162,7 +162,8 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 			new DeleteProjectDialog(this, item).show();
 		} else {
 			// Check if the robot is running.
-			boolean robotRunning = ((RobotTab)controller.findTab(item.getValue().getKey())).getEditorPane().getControls().robotRunning();
+			RobotTab tab = (RobotTab)controller.findTab(item.getValue().getKey());
+			boolean robotRunning = tab != null && tab.getEditorPane().getControls().robotRunning();
 			new DeleteFileDialog(robotRunning, controller, this, item).show();
 		}
 	}

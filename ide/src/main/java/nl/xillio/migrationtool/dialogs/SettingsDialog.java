@@ -10,6 +10,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Modality;
 import javafx.stage.Window;
 import nl.xillio.migrationtool.gui.FXController;
 import nl.xillio.xill.util.settings.Settings;
@@ -228,6 +229,7 @@ public class SettingsDialog extends FXMLDialog {
             validate();
         } catch (ValidationException e) {
             Alert alert = new Alert(AlertType.ERROR, e.getMessage(), ButtonType.OK);
+            alert.initModality(Modality.APPLICATION_MODAL);
             alert.showAndWait();
             return false;
         }

@@ -21,7 +21,7 @@ public class FXMLDialog extends Stage {
 	 */
 	public FXMLDialog(final String url) {
 		loadFXML(getClass().getResource(url));
-		initModality(Modality.WINDOW_MODAL);
+		initModality(Modality.APPLICATION_MODAL);
 	}
 
 	private void loadFXML(final URL resource) {

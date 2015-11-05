@@ -3,6 +3,7 @@ package nl.xillio.migrationtool.dialogs;
 import java.io.File;
 import java.io.IOException;
 
+import javafx.stage.Modality;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -63,6 +64,7 @@ public class NewFolderDialog extends FXMLDialog {
 			projectPane.getSelectionModel().clearSelection();
 
 			Alert error = new Alert(AlertType.ERROR);
+			error.initModality(Modality.APPLICATION_MODAL);
 			error.setContentText("Cannot create the new folder.");
 			error.show();
 

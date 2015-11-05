@@ -13,6 +13,7 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 import javafx.scene.control.Alert;
+import javafx.stage.Modality;
 import nl.xillio.xill.docgen.impl.XillDocGen;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -151,6 +152,7 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 
 	private void alert(String message) {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.initModality(Modality.APPLICATION_MODAL);
 		alert.setTitle("Warning");
 		alert.setContentText(message);
 		alert.show();
