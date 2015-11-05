@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import javax.swing.filechooser.FileFilter;
+import javafx.scene.control.*;
+import javafx.stage.StageStyle;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -134,8 +136,26 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 
 	@FXML
 	private void renameButtonPressed() {
-		Tab orgTab = controller.findTab(getCurrentItem().getValue().getKey()); // org file
-		String oldName = getCurrentItem().getValue().getValue();
+        RobotTab orgTab = (RobotTab)controller.findTab(getCurrentItem().getValue().getKey()); // org file
+
+        // Test if robot is still running
+        if (orgTab != null && orgTab.getEditorPane().getControls().robotRunning()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.initStyle(StageStyle.UNIFIED);
+            alert.setTitle("Renaming running robot");
+            alert.setHeaderText("You are trying to rename running robot!");
+            alert.setContentText("Do you want to stop the robot so you can rename it?");
+            alert.getButtonTypes().clear();
+            alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+            final Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.NO) {
+                return;
+            } else {
+                orgTab.getEditorPane().getControls().stop();// Stop robot before renaming
+            }
+        }
+
+        String oldName = getCurrentItem().getValue().getValue();
 		RenameDialog dlg = new RenameDialog(getCurrentItem());
 		dlg.showAndWait();
 		String newName = getCurrentItem().getValue().getValue();
