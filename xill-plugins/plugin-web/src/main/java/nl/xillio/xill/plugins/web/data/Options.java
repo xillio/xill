@@ -1,7 +1,9 @@
 package nl.xillio.xill.plugins.web.data;
 
+import me.biesaart.utils.FileUtils;
+import me.biesaart.utils.IOUtils;
+import nl.xillio.util.XillioHomeFolder;
 import nl.xillio.xill.api.data.MetadataExpression;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.WebXillPlugin;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
@@ -25,8 +27,9 @@ import java.util.concurrent.TimeUnit;
  * non-CLI options are those that can be set whenever at whatever existing PhantomJS process
  */
 public class Options implements MetadataExpression {
+	private static final File PHANTOM_JS_WINDOWS_BIN = new File(XillioHomeFolder.forXill3(), "bin/web/phantomjs.exe");
 	private static final Logger LOGGER = LogManager.getLogger();
-	private static final String TEMP_FILE_BASE = "phantomjs";
+
 	// Driver options
 	private int timeout = 0;
 
@@ -323,35 +326,6 @@ public class Options implements MetadataExpression {
 		return driver;
 	}
 
-	/**
-	 * Method deletes all existing PhantomJS process files from temp folder (on
-	 * Windows only) There are cases when the file is not removed after CT is
-	 * closed (e.g. when CT crashes or is manually terminated, etc.) This
-	 * prevents from accumulating useless files in the system.
-	 */
-	public static void cleanUnusedPJSExe() {
-		try {
-			File phantomJStoolBinary;
-
-			String os = System.getProperty("os.name").toLowerCase();
-			// Windows
-			if (os.contains("win")) {
-				phantomJStoolBinary = File.createTempFile(TEMP_FILE_BASE, ".exe");
-				String path = phantomJStoolBinary.toPath().getParent().toString();
-				delete(phantomJStoolBinary);
-
-				// delete all phantomjs process files
-				File dir = new File(path);
-				File[] files = dir.listFiles((final File file, final String name) -> name.startsWith(TEMP_FILE_BASE) && name.endsWith(".exe"));
-				for (File file : files) {
-					delete(file);
-				}
-			}
-		} catch (IOException e) {
-			throw new RobotRuntimeException("IO error when deleting existing PhantomJS files  from temp folder", e);
-		}
-	}
-
 	private static boolean delete(File file) {
 		try {
 			return file.delete();
@@ -368,37 +342,33 @@ public class Options implements MetadataExpression {
 	public static void extractNativeBinary() {
 
 		try {
-			File phantomJStoolBinary;
 			String nativeBinarySource;
 
 			String os = System.getProperty("os.name").toLowerCase();
 			// Windows
 			if (os.contains("win")) {
-				phantomJStoolBinary = File.createTempFile(TEMP_FILE_BASE, ".exe");
-				nativeBinarySource = "/phantomjs/phantomjs.exe";
+				System.setProperty("phantomjs.binary.path", PHANTOM_JS_WINDOWS_BIN.getAbsolutePath());
+				if(PHANTOM_JS_WINDOWS_BIN.exists()) {
+					// We are done here
+					return;
+				}
 
-				phantomJStoolBinary.deleteOnExit();
-				String phantomJStoolPath = phantomJStoolBinary.getAbsolutePath();
-
-				System.setProperty("phantomjs.binary.path", phantomJStoolPath);
+				LOGGER.info("Deploying PhantomJS binary");
 
 				// extract file into the current directory
-				InputStream reader = WebXillPlugin.class.getResourceAsStream(nativeBinarySource);
+				InputStream reader = WebXillPlugin.class.getResourceAsStream("/phantomjs/phantomjs.exe");
 				if (reader == null) {
 					throw new FileNotFoundException("Cannot find phantomjs.exe resource file!");
 				}
-				FileOutputStream writer = new FileOutputStream(phantomJStoolPath);
-				byte[] buffer = new byte[1024];
-				int bytesRead;
-				while ((bytesRead = reader.read(buffer)) != -1) {
-					writer.write(buffer, 0, bytesRead);
-				}
+				FileUtils.touch(PHANTOM_JS_WINDOWS_BIN);
+				FileOutputStream writer = new FileOutputStream(PHANTOM_JS_WINDOWS_BIN);
+				IOUtils.copy(reader, writer);
 
 				writer.close();
 				reader.close();
 			}
 		} catch (Exception e) {
-			LOGGER.catching(e);
+			LOGGER.error("Failed to deploy PhantomJS binary", e);
 		}
 	}
 
