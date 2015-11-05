@@ -229,9 +229,6 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 
 	/**
 	 * This method is called from javascript whenever cut or copy is performed, to copy the selected text to the clipboard.
-	 * 
-	 * @param text
-	 *        The text to copy to the clipboard.
 	 */
 	public void copy() {
 		// Get the copy text from ace.
