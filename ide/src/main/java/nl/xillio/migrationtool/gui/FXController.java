@@ -15,6 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import nl.xillio.migrationtool.ApplicationKillThread;
 import nl.xillio.migrationtool.Loader;
 import nl.xillio.migrationtool.dialogs.CloseAppStopRobotsDialog;
@@ -313,6 +314,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 
                 // Inform the user about the file being created outside of a project
                 Alert projectPathErrorAlert = new Alert(AlertType.ERROR);
+				projectPathErrorAlert.initModality(Modality.APPLICATION_MODAL);
                 projectPathErrorAlert.setTitle("Project path error");
                 projectPathErrorAlert.setHeaderText("Error");
                 projectPathErrorAlert.setContentText("Robots can only be created inside projects.");
@@ -654,6 +656,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 			settings.simple().save(Settings.INFO, Settings.LastVersion, Loader.SHORT_VERSION);
 
 			Alert releaseNotes = new Alert(AlertType.INFORMATION);
+			releaseNotes.initModality(Modality.APPLICATION_MODAL);
 			releaseNotes.setHeaderText("Current version: " + Loader.SHORT_VERSION);
 			releaseNotes.setContentText(notes);
 			releaseNotes.setTitle("Release notes");

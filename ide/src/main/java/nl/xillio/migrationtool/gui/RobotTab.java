@@ -319,7 +319,11 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 			log.info("Saved currentRobot to " + document.getAbsolutePath());
 
 		} catch (IOException e) {
-			new Alert(AlertType.ERROR, e.getMessage());
+			Alert errorAlert = new Alert(AlertType.ERROR);
+			errorAlert.initModality(Modality.APPLICATION_MODAL);
+			errorAlert.setTitle("Error");
+			errorAlert.setContentText(e.getMessage());
+			errorAlert.show();
 		}
 
 		loadProcessor(document, projectPath);
@@ -444,7 +448,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 				dp.setContent(checkBoxContainer);
 				// Add the dialog pane to the Alert/dialog
 				confirmationDialog.setDialogPane(dp);
-				// Make the dialog close by clicking the close button
+				// Make the dialog close by clicking the close button, inherit styling
 				confirmationDialog.initModality(Modality.APPLICATION_MODAL);
 				confirmationDialog.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
@@ -498,6 +502,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 			} catch (Exception e) {
 				Platform.runLater(() -> {
 					Alert error = new Alert(AlertType.ERROR);
+					error.initModality(Modality.APPLICATION_MODAL);
 					error.setTitle(e.getClass().getSimpleName());
 					error.setContentText(e.getMessage() + "\n" + ExceptionUtils.getStackTrace(e));
 					error.setHeaderText("Exception while processing");
@@ -514,6 +519,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
 	private void errorPopup(final int line, final String message, final String title, final String context) {
 		Alert error = new Alert(AlertType.ERROR);
+		error.initModality(Modality.APPLICATION_MODAL);
 		error.setTitle(title);
 		error.setContentText(message);
 		error.setHeaderText(context);

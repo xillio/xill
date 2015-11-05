@@ -6,6 +6,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Modality;
 import nl.xillio.migrationtool.gui.FXController;
 import nl.xillio.migrationtool.gui.ProjectPane;
 import nl.xillio.xill.util.settings.Settings;
@@ -111,6 +112,7 @@ public class NewProjectDialog extends FXMLDialog {
 
         if (projectName.equals("") || projectFolder.equals("") || !projectPane.newProject(projectName, projectFolder, "")) {
             Alert error = new Alert(AlertType.ERROR);
+            error.initModality(Modality.APPLICATION_MODAL);
             error.setContentText("Make sure the name and folder are not empty, and do not exist as a project yet.");
             error.show();
         } else {
