@@ -139,12 +139,12 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         RobotTab orgTab = (RobotTab)controller.findTab(getCurrentItem().getValue().getKey()); // org file
 
         // Test if robot is still running
-        if (orgTab.getEditorPane().getControls().robotRunning()) {
+        if (orgTab != null && orgTab.getEditorPane().getControls().robotRunning()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.initStyle(StageStyle.UNIFIED);
             alert.setTitle("Renaming running robot");
             alert.setHeaderText("You are trying to rename running robot!");
-            alert.setContentText("Do you want to stop it first?");
+            alert.setContentText("Do you want to stop the robot so you can rename it?");
             alert.getButtonTypes().clear();
             alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
             final Optional<ButtonType> result = alert.showAndWait();
