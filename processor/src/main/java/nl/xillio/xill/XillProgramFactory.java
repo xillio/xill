@@ -79,7 +79,7 @@ import xill.lang.xill.Variable;
  *
  */
 public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot> {
-	private final DynamicInvoker<EObject> expressionParseInvoker = new DynamicInvoker<EObject>("parseToken", this);
+	private final DynamicInvoker<EObject> expressionParseInvoker = new DynamicInvoker<>("parseToken", this);
 	private final Map<xill.lang.xill.Target, VariableDeclaration> variables = new HashMap<>();
 	private final Map<xill.lang.xill.FunctionDeclaration, FunctionDeclaration> functions = new HashMap<>();
 	/**
