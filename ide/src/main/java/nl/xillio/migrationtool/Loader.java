@@ -8,10 +8,12 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 import javafx.scene.control.Alert;
+import javafx.stage.Modality;
 import nl.xillio.xill.docgen.impl.XillDocGen;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -46,7 +48,7 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 		String shortVersion = Loader.class.getPackage().getImplementationVersion() == null ? "dev" : Loader.class.getPackage().getImplementationVersion();
 		String date = MANIFEST.getMainAttributes().getValue("Created-On");
 		try {
-			Date parsedDate = new SimpleDateFormat("E MMM dd hh:mm:ss zzz yyyy").parse(date);
+			Date parsedDate = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH).parse(date);
 			date = DateFormat.getDateInstance().format(parsedDate);
 		} catch (ParseException e) {
 			logger.error("Failed to parse date from manifest", e);
@@ -150,6 +152,7 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 
 	private void alert(String message) {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.initModality(Modality.APPLICATION_MODAL);
 		alert.setTitle("Warning");
 		alert.setContentText(message);
 		alert.show();

@@ -11,8 +11,8 @@
         }
 
         The name attribute is mandatory, the others are optional. Current cookie information can be obtained through
-        Web.pageInfo. Cookies can be removed using Web.removeCookie. Due to the nature of Xillio Content Tools, all
-        cookies will be removed every time Xillio Content Tools is restarted.
+        Web.pageInfo. Cookies can be removed using Web.removeCookie. Due to the nature of Xill IDE, all
+        cookies will be removed every time Xill IDE is restarted.
     </description>
     <examples>
         <example title="Usage">

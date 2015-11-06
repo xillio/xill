@@ -9,16 +9,17 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import nl.xillio.migrationtool.ApplicationKillThread;
 import nl.xillio.migrationtool.Loader;
-import nl.xillio.migrationtool.dialogs.SettingsDialog;
 import nl.xillio.migrationtool.dialogs.CloseAppStopRobotsDialog;
+import nl.xillio.migrationtool.dialogs.SettingsDialog;
 import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.api.Xill;
@@ -148,7 +149,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 			spnLeft.setDividerPosition(0, Double.parseDouble(settings.simple().get(Settings.LAYOUT, Settings.ProjectHeight)));
 			spnLeft.getDividers().get(0).positionProperty().addListener((observable, oldPos, newPos) -> settings
-				.simple().save(Settings.LAYOUT, Settings.ProjectHeight, Double.toString(newPos.doubleValue())));
+					.simple().save(Settings.LAYOUT, Settings.ProjectHeight, Double.toString(newPos.doubleValue())));
 		});
 
 		// Start the elasticsearch console
@@ -176,7 +177,11 @@ public class FXController implements Initializable, EventHandler<Event> {
                 
                 if (projectpane.getProjectsCount() == 0) {
                     btnNewFile.setDisable(true);
+					btnOpenFile.setDisable(true);
                 }
+				if (getTabs().size() == 0){
+					disableSaveButtons(true);
+				}
 	}
 
 	private void registerSettings() {
@@ -269,7 +274,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 			fileChooser.setInitialDirectory(initialFolder);
 
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
-                    "Xill Robot (*." + Xill.FILE_EXTENSION + ")", "*." + Xill.FILE_EXTENSION));
+					"Xill Robot (*." + Xill.FILE_EXTENSION + ")", "*." + Xill.FILE_EXTENSION));
             fileChooser.setTitle("New Robot");
 
             File chosen = fileChooser.showSaveDialog(tpnBots.getScene().getWindow());
@@ -280,7 +285,7 @@ public class FXController implements Initializable, EventHandler<Event> {
             }
 
             // Fix for files being created out of projects
-            if (chosen.getParent().equals(projectfile.getAbsolutePath())) {
+            if (chosen.getParent().startsWith(projectfile.getAbsolutePath())) {
                 // The created file is in the project
 
                 // This code is because of different behaviour of FileChooser in Linux and Windows
@@ -309,6 +314,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 
                 // Inform the user about the file being created outside of a project
                 Alert projectPathErrorAlert = new Alert(AlertType.ERROR);
+				projectPathErrorAlert.initModality(Modality.APPLICATION_MODAL);
                 projectPathErrorAlert.setTitle("Project path error");
                 projectPathErrorAlert.setHeaderText("Error");
                 projectPathErrorAlert.setContentText("Robots can only be created inside projects.");
@@ -325,7 +331,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 			fileChooser.setInitialDirectory(new File(lastfolder));
 		}
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
-			"Xillio scripts (*" + "." + Xill.FILE_EXTENSION + ")", "*" + "." + Xill.FILE_EXTENSION));
+				"Xillio scripts (*" + "." + Xill.FILE_EXTENSION + ")", "*" + "." + Xill.FILE_EXTENSION));
 		File newfile = fileChooser.showOpenDialog(btnOpenFile.getScene().getWindow());
 
 		if (newfile != null) {
@@ -533,6 +539,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 		ProjectPane.stop();
 		Platform.exit();
 		ESConsoleClient.getInstance().close();
+		ApplicationKillThread.exit();
 		return true;
 	}
 
@@ -620,7 +627,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 			validLicense.showAndWait();
 			Stage stage = (Stage) apnRoot.getScene().getWindow();
 			stage.setTitle(
-				"xillio content tools - " + Loader.LONG_VERSION + " - Licensed to: " + license.getLicenseName());
+				"Xill IDE - " + Loader.LONG_VERSION + " - Licensed to: " + license.getLicenseName());
 		}*/
 	}
 
@@ -649,6 +656,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 			settings.simple().save(Settings.INFO, Settings.LastVersion, Loader.SHORT_VERSION);
 
 			Alert releaseNotes = new Alert(AlertType.INFORMATION);
+			releaseNotes.initModality(Modality.APPLICATION_MODAL);
 			releaseNotes.setHeaderText("Current version: " + Loader.SHORT_VERSION);
 			releaseNotes.setContentText(notes);
 			releaseNotes.setTitle("Release notes");
@@ -792,6 +800,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 		if (!closeEvent.isConsumed() && removeTab) {
 			tpnBots.getTabs().remove(tab);
 		}
+
 	}
 
 	/**
@@ -824,6 +833,9 @@ public class FXController implements Initializable, EventHandler<Event> {
 		if (index >= 0) {
 			tpnBots.getSelectionModel().clearAndSelect(index);
 		}
+
+		//a robot is opened so enable the save buttons
+		disableSaveButtons(false);
 	}
 
 	/**
@@ -864,5 +876,23 @@ public class FXController implements Initializable, EventHandler<Event> {
 	 */
 	public void disableNewFileButton(boolean disable) {
 		btnNewFile.setDisable(disable);
+	}
+
+	/**
+	 * Disable the openFile button
+	 * @param disable boolean parameter to disable the open file button
+	 */
+	public void disableOpenFileButton(boolean disable){
+		btnOpenFile.setDisable(disable);
+	}
+
+	/**
+	 * Disable the save,save as and save all button
+	 * @param disable boolean parameter to disable the save,save as and save all button
+	 */
+	public void disableSaveButtons(boolean disable){
+		btnSaveAs.setDisable(disable);
+		btnSaveAll.setDisable(disable);
+		btnSave.setDisable(disable);
 	}
 }

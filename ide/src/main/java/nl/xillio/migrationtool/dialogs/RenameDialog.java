@@ -3,6 +3,7 @@ package nl.xillio.migrationtool.dialogs;
 import java.io.File;
 import java.io.IOException;
 
+import javafx.stage.Modality;
 import org.apache.commons.io.FileUtils;
 
 import javafx.event.ActionEvent;
@@ -45,13 +46,14 @@ public class RenameDialog extends FXMLDialog {
 
 	@FXML
 	private void okayBtnPressed(final ActionEvent event) {
-
 		final File oldFile = treeItem.getValue().getKey();
 		String fileName = tfname.getText();
-		if (!fileName.endsWith(Xill.FILE_EXTENSION)) {
+		if (oldFile.isFile() && !fileName.endsWith(Xill.FILE_EXTENSION)) {
 			fileName += "." + Xill.FILE_EXTENSION;
 		}
 		final File newFile = new File(oldFile.getParent(), fileName);
+
+		error.initModality(Modality.APPLICATION_MODAL);
 
 		if (newFile.exists()) {
 			error.setContentText("Cannot rename file or folder. The target path already exists.");

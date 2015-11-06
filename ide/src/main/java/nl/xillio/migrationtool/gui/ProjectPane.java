@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import javax.swing.filechooser.FileFilter;
+import javafx.scene.control.*;
+import javafx.stage.StageStyle;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -29,12 +31,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Pair;
 import me.biesaart.utils.FileUtils;
-import nl.xillio.migrationtool.dialogs.DeleteFileDialog;
-import nl.xillio.migrationtool.dialogs.DeleteProjectDialog;
-import nl.xillio.migrationtool.dialogs.NewFolderDialog;
-import nl.xillio.migrationtool.dialogs.NewProjectDialog;
-import nl.xillio.migrationtool.dialogs.RenameDialog;
-import nl.xillio.migrationtool.dialogs.UploadToServerDialog;
+import nl.xillio.migrationtool.dialogs.*;
 import nl.xillio.migrationtool.gui.WatchDir.FolderListener;
 import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.util.settings.ProjectSettings;
@@ -139,8 +136,26 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 
 	@FXML
 	private void renameButtonPressed() {
-		Tab orgTab = controller.findTab(getCurrentItem().getValue().getKey()); // org file
-		String oldName = getCurrentItem().getValue().getValue();
+        RobotTab orgTab = (RobotTab)controller.findTab(getCurrentItem().getValue().getKey()); // org file
+
+        // Test if robot is still running
+        if (orgTab != null && orgTab.getEditorPane().getControls().robotRunning()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.initStyle(StageStyle.UNIFIED);
+            alert.setTitle("Renaming running robot");
+            alert.setHeaderText("You are trying to rename running robot!");
+            alert.setContentText("Do you want to stop the robot so you can rename it?");
+            alert.getButtonTypes().clear();
+            alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+            final Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.NO) {
+                return;
+            } else {
+                orgTab.getEditorPane().getControls().stop();// Stop robot before renaming
+            }
+        }
+
+        String oldName = getCurrentItem().getValue().getValue();
 		RenameDialog dlg = new RenameDialog(getCurrentItem());
 		dlg.showAndWait();
 		String newName = getCurrentItem().getValue().getValue();
@@ -166,7 +181,10 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		if (item == getCurrentProject()) {
 			new DeleteProjectDialog(this, item).show();
 		} else {
-			new DeleteFileDialog(this, item).show();
+			// Check if the robot is running.
+			RobotTab tab = (RobotTab)controller.findTab(item.getValue().getKey());
+			boolean robotRunning = tab != null && tab.getEditorPane().getControls().robotRunning();
+			new DeleteFileDialog(robotRunning, controller, this, item).show();
 		}
 	}
 
@@ -199,6 +217,8 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		settings.project().delete(item.getValue().getValue());
                 if (getProjectsCount() == 0) {
                     getScene().lookup("#btnNewFile").setDisable(true);
+					getScene().lookup("#btnOpenFile").setDisable(true);
+					disableAllButtons();
                 }
 	}
 
@@ -217,6 +237,8 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		removeProject(item);
                 if (getProjectsCount() == 0) {
                     getScene().lookup("#btnNewFile").setDisable(true);
+					getScene().lookup("#btnOpenFile").setDisable(true);
+					disableAllButtons();
                 }
 	}
 
@@ -303,8 +325,10 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 			trvProjects.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 				if (observable.getValue() != null) {
 					controller.disableNewFileButton(false);
+					controller.disableOpenFileButton(false);
 				} else {
 					controller.disableNewFileButton(true);
+					controller.disableOpenFileButton(true);
 				}
 			});
 		}
@@ -534,16 +558,19 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		btnRename.setDisable(false);
 		btnUpload.setDisable(false);
                 getScene().lookup("#btnNewFile").setDisable(true);
+				getScene().lookup("#btnOpenFile").setDisable(true);
 
 		if (newObject == null || newObject == trvProjects.getRoot()) {
 			// Disable all
 			disableAllButtons();
                         getScene().lookup("#btnNewFile").setDisable(true);
+						getScene().lookup("#btnOpenFile").setDisable(true);
 
 		} else if (newObject == getProject(newObject)) {
 			// This is a project
 			btnRename.setDisable(true);
                         getScene().lookup("#btnNewFile").setDisable(false);
+						getScene().lookup("#btnOpenFile").setDisable(false);
 		}
 	}
 

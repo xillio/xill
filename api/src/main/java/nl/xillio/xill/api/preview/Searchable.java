@@ -32,18 +32,19 @@ public interface Searchable {
 	 */
 	int getOccurrences();
 
-	/**
-	 * Highlight a single occurrence.
-	 *
-	 * @param occurrence
-	 *        the occurrence to highlight.
-	 */
-	void highlight(int occurrence);
+    /**
+     * Find the next occurrence.
+     *
+     * @param next The zero-based index of the next occurrence.
+     */
+    void findNext(int next);
 
-	/**
-	 * Highlight all occurrences of the searched pattern or needle.
-	 */
-	void highlightAll();
+    /**
+     * Find the previous occurrence.
+     *
+     * @param previous The zero-based index of the previous occurrence.
+     */
+    void findPrevious(int previous);
 
 	/**
 	 * Clear the search and any highlights.

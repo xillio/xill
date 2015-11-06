@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.date.data;
 
 
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * <p>
@@ -32,6 +33,6 @@ public class Date implements nl.xillio.xill.api.data.Date {
 
 	@Override
 	public String toString() {
-		return getZoned().toString();
+		return DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(getZoned());
 	}
 }

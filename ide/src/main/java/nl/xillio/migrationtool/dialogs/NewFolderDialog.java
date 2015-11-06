@@ -3,6 +3,7 @@ package nl.xillio.migrationtool.dialogs;
 import java.io.File;
 import java.io.IOException;
 
+import javafx.stage.Modality;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,7 +54,9 @@ public class NewFolderDialog extends FXMLDialog {
 	@FXML
 	private void okayBtnPressed(final ActionEvent event) {
 		try {
-			FileUtils.forceMkdir(new File(treeItem.getValue().getKey(), tffolder.getText()));
+			File folder = getFolder(treeItem.getValue().getKey());
+
+			FileUtils.forceMkdir(new File(folder, tffolder.getText()));
 			treeItem.setExpanded(true);
 			projectPane.select(treeItem);
 		} catch (IOException e) {
@@ -61,11 +64,20 @@ public class NewFolderDialog extends FXMLDialog {
 			projectPane.getSelectionModel().clearSelection();
 
 			Alert error = new Alert(AlertType.ERROR);
+			error.initModality(Modality.APPLICATION_MODAL);
 			error.setContentText("Cannot create the new folder.");
 			error.show();
 
 			log.error(e.getMessage());
 		}
 		close();
+	}
+
+	private File getFolder(File key) {
+		if(key.isFile()) {
+			return key.getParentFile();
+		}
+
+		return key;
 	}
 }

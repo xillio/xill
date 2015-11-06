@@ -32,9 +32,6 @@ public class Breakpoint {
 	 */
 	public boolean matches(final Instruction previous, final Instruction next) {
 		return next.getRobotID() == robotID &&
-						next.getLineNumber() == lineNumber &&
-						(previous == null ||
-										previous.getRobotID() != robotID ||
-										previous.getLineNumber() != lineNumber);
+						next.getLineNumber() == lineNumber;
 	}
 }

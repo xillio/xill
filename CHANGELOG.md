@@ -1,4 +1,4 @@
-# Xillio Content Tools 3 - Change Log
+# Xill IDE - Change Log
 All notable changes to this project will be documented in this file
 
 ## [3.0.21] - 29-10-2015

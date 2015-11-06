@@ -3,6 +3,7 @@ package nl.xillio.migrationtool.gui;
 import java.io.IOException;
 import java.util.List;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -22,6 +23,7 @@ import nl.xillio.xill.api.components.MetaExpression;
  */
 public class VariablePane extends AnchorPane implements RobotTabComponent, ListChangeListener<ObservableVariable> {
 	private final ObservableList<ObservableVariable> observableStateList = FXCollections.observableArrayList();
+	private ObservableVariable selectedItem = null;
 
 	@FXML
 	private TableView<ObservableVariable> tblVariables;
@@ -71,6 +73,8 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
 		return tblVariables;
 	}
 
+
+
 	/**
 	 * Refresh the variable pane.
 	 */
@@ -80,13 +84,19 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
 		debugger.getVariables().forEach(var -> {
 			String name = debugger.getVariableName(var);
 			MetaExpression value = debugger.getVariableValue(var);
+			ObservableVariable observable = new ObservableVariable(name, value, var);
+			observableStateList.add(observable);
 
-			observableStateList.add(new ObservableVariable(name, value, var));
+			// Re-select an item if it was selected before
+			if (selectedItem != null && selectedItem.getName().equals(name)) {
+				tblVariables.getSelectionModel().select(observable);
+			}
 		});
 	}
 
 	private void clear() {
 		observableStateList.clear();
+
 	}
 
 	@Override
@@ -108,10 +118,16 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
 
 	@Override
 	public void onChanged(final javafx.collections.ListChangeListener.Change<? extends ObservableVariable> change) {
-		List<? extends ObservableVariable> selected = change.getList();
+		Platform.runLater(() -> {
+			List<? extends ObservableVariable> selected = change.getList();
+			ObservableVariable observableVariable = getTableView().getSelectionModel().getSelectedItem();
+			if (!selected.isEmpty()) {
+				selectedItem = selected.get(0);
+			}
+			if (selectedItem != null && observableVariable != null) {
+				previewpane.preview(observableVariable);
+			}
 
-		if (!selected.isEmpty()) {
-			previewpane.preview(selected.get(0));
-		}
+		});
 	}
 }

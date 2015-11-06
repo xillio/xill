@@ -57,11 +57,10 @@ public class GetTextConstructTest extends ExpressionBuilderHelper {
 		when(webService.getTagName(nodeVariable)).thenReturn("input");
 		when(webService.getAttribute(eq(nodeVariable), anyString())).thenReturn("pet");
 
-		// the processItem method for the second variable
-		when(webService.getTagName(pageVariable)).thenReturn("textarea");
-		when(webService.getAttribute(eq(pageVariable), anyString())).thenReturn("master");
+        // the processItem method for the second variable
+        when(webService.getText(pageVariable)).thenReturn("master");
 
-		// run
+        // run
 		MetaExpression output = GetTextConstruct.process(elementList, webService);
 
 		// verify
@@ -78,12 +77,10 @@ public class GetTextConstructTest extends ExpressionBuilderHelper {
 
 		// the processItemMethod for the second variable
 		verify(second, times(1)).getMeta(NodeVariable.class);
-		verify(second, times(2)).getMeta(PageVariable.class);
-		verify(webService, times(2)).getTagName(pageVariable);
-		verify(webService, times(1)).getAttribute(eq(pageVariable), anyString());
-
-		// We hope not to hit this
-		verify(webService, times(0)).getText(any());
+		verify(second, times(3)).getMeta(PageVariable.class);
+		verify(webService, times(0)).getTagName(pageVariable);
+		verify(webService, times(0)).getAttribute(eq(pageVariable), anyString());
+        verify(webService, times(1)).getText(any());
 
 		// assert
 		Assert.assertEquals(output.getStringValue(), "petmaster");

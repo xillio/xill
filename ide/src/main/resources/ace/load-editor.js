@@ -2,6 +2,7 @@
 //Needed libraries
 var Range = ace.require('ace/range').Range;
 var UndoManager = ace.require("ace/undomanager").UndoManager;
+var Search = ace.require("ace/search").Search;
 
 function loadEditor(){
 	ace.require("ace/ext/language_tools");
@@ -27,81 +28,96 @@ function loadEditor(){
 		else
 			this.xillBuildin += "|" + keyword;
 	}
-	
-	editor.$highlights = [];
-	editor.highlight = function(line, type) {
-		var editor = contenttools.getAce();
-		hl = editor.getSession().addMarker(new Range(line, 0, line, 1), "ace_" + type, "fullLine");
-		editor.$highlights.push(hl);
-		editor.scrollToLine(line);
-	}
-	editor.clearHighlight = function() {
-		var editor = contenttools.getAce();
-		editor.$highlights.forEach(function(entry) {
-			editor.getSession().removeMarker(entry);
-		});
-		editor.$highlights = [];
-	}
-	
-	editor.clearSearch = function() {
-		var editor = contenttools.getAce();
-		for ( var key in editor.getSession().getMarkers(false)) {
-			entry = editor.getSession().$backMarkers[key];
-	
-			if (entry.clazz == "ace_selection")
-				editor.getSession().removeMarker(key);
-		}
-	}
 
-	editor.$occurences = [];
-	editor.clearOccurences = function() {
-	  var editor = contenttools.getAce();
-	  if (editor.$occurences) {
-	    editor.$occurences.forEach(function(entry) {
-	    		editor.getSession().removeMarker(entry);
-	   	});
-	  }
-	  editor.$occurences = [];
-	} 
-	editor.findOccurences = function(needle, options) {
-	  var editor = contenttools.getAce();
-	  options = options || {};
-	  options.needle = needle || options.needle;
-	  if (options.needle == undefined) {
-	      var range = editor.selection.isEmpty()
-	          ? editor.selection.getWordRange()
-	          : editor.selection.getRange();
-	      options.needle = editor.session.getTextRange(range);
-	  }    
-	  editor.$search.set(options);
-	  var occurence = (options.occurence == undefined ? 0 : options.occurence);
-	  
-	  var ranges = editor.$search.findAll(editor.session);
-	  if (!ranges.length)
-	      return 0;
-	  
-	  editor.$blockScrolling += 1;
-	  
-	  editor.clearOccurences();
-	  
-	  var scrollRange = null;
-	  for (var i = 0; i<ranges.length; i++ ) {
-	    if (i == occurence) {
-	      scrollRange = ranges[i];
-	    }
-	    hl = editor.getSession().addMarker(ranges[i],"ace_highlight","text");
-	    editor.$occurences.push(hl);
-	  }
-	  editor.$blockScrolling -= 1;
-	  
-	  if (scrollRange) {
-	    editor.navigateTo(scrollRange.end.row, scrollRange.end.column);
-	    editor.navigateTo(scrollRange.start.row, scrollRange.start.column);
-	  }
-	  
-	  return ranges.length;
-	}
-	
+    editor.$highlights = [];
+    editor.highlight = function(line, type) {
+        var editor = contenttools.getAce();
+        hl = editor.getSession().addMarker(new Range(line, 0, line, 1), "ace_" + type, "fullLine");
+        editor.$highlights.push(hl);
+        editor.scrollToLine(line);
+    }
+    editor.clearHighlight = function() {
+        var editor = contenttools.getAce();
+        editor.$highlights.forEach(function(entry) {
+            editor.getSession().removeMarker(entry);
+        });
+        editor.$highlights = [];
+    }
+
+	///////////// SEARCHING /////////////
+
+	// Search options.
+	editor.$savedSearch = {
+		needle: "",
+		regex: false,
+		caseSensitive: false
+	};
+
+	// Clear the occurrences.
+    editor.clearSearch = function() {
+		// Clear the highlighting.
+		editor.session.highlight(null);
+		editor.renderer.updateBackMarkers();
+		// Remove the selection.
+		var selection = editor.getSelectionRange();
+		editor.moveCursorTo(selection.start.row, selection.start.column);
+		editor.clearSelection();
+    }
+
+	// Save and execute the search.
+    editor.findOccurrences = function(needle, regex, caseSensitive) {
+        // Save the search settings.
+        editor.$savedSearch = {
+            needle: needle,
+            regex: regex,
+            caseSensitive: caseSensitive
+        };
+
+        // Execute the search.
+        return editor.doFind(false, false);
+    }
+
+    // Do the actual search.
+    editor.doFind = function(backwards, skipCurrent) {
+	    var options = {
+	        // Given settings.
+	        backwards: backwards,
+	        skipCurrent: skipCurrent,
+	        // Saved search settings.
+	        needle: editor.$savedSearch.needle,
+	        regExp: editor.$savedSearch.regex,
+	        caseSensitive: editor.$savedSearch.caseSensitive,
+	        // Constant settings.
+	        wrap: true,
+	        range: null
+	    };
+
+	    // Create a search object and find all ranges.
+	    var s = new Search();
+	    s.setOptions(options);
+	    var ranges = s.findAll(editor.session);
+
+		// Build the result.
+        var result = { amount: ranges.length, index: 0 };
+
+	    // Find, save the current hit.
+        var f = editor.find(editor.$savedSearch.needle, options);
+        if (f == null)
+            return result;
+        var current = f.start;
+
+        for (var key in ranges) {
+            var check = ranges[key].start;
+
+            // Check if the highlight is the same as the current.
+            if (current.row == check.row && current.column == check.column)
+                result.index = parseInt(key);
+        }
+
+        return result;
+    }
+
+	///////////// END OF SEARCHING /////////////
 	
 	editor.getCurrentWord = function() { 
 		var editor = contenttools.getAce();
@@ -128,7 +144,7 @@ function loadEditor(){
 	// Add listeners for copy and cut
 	var toClipboard = function(range) {
 		var editor = contenttools.getAce();
-		contenttools.copyToClipboard(editor.getSelectedText());
+		contenttools.copy();
 	}
 	editor.on('cut', toClipboard);
 	editor.on('copy', toClipboard);

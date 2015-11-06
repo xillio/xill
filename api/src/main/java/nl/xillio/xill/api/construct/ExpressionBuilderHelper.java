@@ -1,19 +1,14 @@
 package nl.xillio.xill.api.construct;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-
 import nl.xillio.xill.api.behavior.BooleanBehavior;
 import nl.xillio.xill.api.behavior.NumberBehavior;
 import nl.xillio.xill.api.behavior.StringBehavior;
-import nl.xillio.xill.api.components.AtomicExpression;
-import nl.xillio.xill.api.components.Expression;
-import nl.xillio.xill.api.components.ExpressionDataType;
-import nl.xillio.xill.api.components.ImmutableLiteral;
-import nl.xillio.xill.api.components.ListExpression;
-import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.components.ObjectExpression;
+import nl.xillio.xill.api.behavior.StringConstantBehavior;
+import nl.xillio.xill.api.components.*;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * This class contains various useful utility functions to create Expressions
@@ -79,6 +74,20 @@ public class ExpressionBuilderHelper {
 	public static MetaExpression fromValue(final String value) {
 		return new AtomicExpression(new StringBehavior(value));
 	}
+
+    /**
+     * Create a new constant expression.
+     *
+     * @param value      the value
+     * @param isConstant true if this expression should be a string constant
+     * @return the expression
+     */
+    public static MetaExpression fromValue(final String value, final boolean isConstant) {
+        if (!isConstant) {
+            return fromValue(value);
+        }
+        return new AtomicExpression(new StringConstantBehavior(value));
+    }
 
 	/**
 	 * Create a new {@link ExpressionDataType#LIST} containing a value. For empty lists you can use {@link ExpressionBuilderHelper#emptyList()}

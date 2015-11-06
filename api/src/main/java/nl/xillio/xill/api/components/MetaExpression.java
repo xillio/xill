@@ -338,16 +338,16 @@ public abstract class MetaExpression implements Expression, Processable {
 	 * </ul>
 	 */
 	public static Object extractValue(final MetaExpression expression) {
-		return extractValue(expression, new LinkedHashMap<>());
+		return extractValue(expression, new IdentityHashMap<>());
 
 	}
 
 	@SuppressWarnings("unchecked")
 	private static Object extractValue(final MetaExpression expression, final Map<MetaExpression, Object> results) {
+		
 		if (results.containsKey(expression)) {
 			return results.get(expression);
 		}
-
 		Object result;
 		switch (expression.getType()) {
 			case ATOMIC:

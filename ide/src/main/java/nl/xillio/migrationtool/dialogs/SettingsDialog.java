@@ -10,6 +10,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Modality;
 import javafx.stage.Window;
 import nl.xillio.migrationtool.gui.FXController;
 import nl.xillio.xill.util.settings.Settings;
@@ -22,7 +23,7 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 
 /**
- * Dialog contains all configurable ContentTools options and allows to change them
+ * Dialog contains all configurable Xill IDE options and allows to change them
  *
  * @author Zbynek Hochmann
  */
@@ -132,8 +133,9 @@ public class SettingsDialog extends FXMLDialog {
         DirectoryChooser chooser = new DirectoryChooser();
 
         // Set directory
-        if (!tfprojectfolder.getText().isEmpty()) {
-            chooser.setInitialDirectory(new File(tfprojectfolder.getText()));
+	    File folder = new File(tfprojectfolder.getText());
+        if (folder.isDirectory()) {
+            chooser.setInitialDirectory(folder);
         } else {
             chooser.setInitialDirectory(new File(System.getProperty("user.home")));
         }
@@ -227,6 +229,7 @@ public class SettingsDialog extends FXMLDialog {
             validate();
         } catch (ValidationException e) {
             Alert alert = new Alert(AlertType.ERROR, e.getMessage(), ButtonType.OK);
+            alert.initModality(Modality.APPLICATION_MODAL);
             alert.showAndWait();
             return false;
         }
@@ -256,8 +259,12 @@ public class SettingsDialog extends FXMLDialog {
 
         if (!tfprojectfolder.getText().isEmpty()) {
             File file = new File(tfprojectfolder.getText());
-            if ((!file.isDirectory())) {
-                throw new ValidationException("Invalid default project folder!");
+            if(!file.exists()) {
+                throw new ValidationException("The chosen project folder does not exist!");
+            }
+
+            if (!file.isDirectory()) {
+                throw new ValidationException("The chosen project folder is not a directory!");
             }
         }
     }

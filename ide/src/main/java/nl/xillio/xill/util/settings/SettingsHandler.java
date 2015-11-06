@@ -1,7 +1,7 @@
 package nl.xillio.xill.util.settings;
 
 /**
- * Class that is main point for dealing with settings in Content Tools 
+ * Class that is main point for dealing with settings in Xill IDE
  * It encapsulates all settings handlers.
  * 
  * @author Zbynek Hochmann
