@@ -16,11 +16,15 @@ public class MathUtils {
         NumberType type = NumberType.forClass(a.getClass(), b.getClass());
         switch (type) {
             case INT:
-                return a.intValue() + b.intValue();
+                try {
+                    return Math.addExact(a.intValue(), b.intValue());
+                } catch (ArithmeticException ignore) {
+                }
             case LONG:
-                return a.longValue() + b.longValue();
-            case FLOAT:
-                return a.floatValue() + b.floatValue();
+                try {
+                    return Math.addExact(a.longValue(), b.longValue());
+                } catch (ArithmeticException ignore) {
+                }
             case DOUBLE:
                 return a.doubleValue() + b.doubleValue();
             default:
@@ -40,11 +44,15 @@ public class MathUtils {
         NumberType type = NumberType.forClass(a.getClass(), b.getClass());
         switch (type) {
             case INT:
-                return a.intValue() - b.intValue();
+                try {
+                    return Math.subtractExact(a.intValue(), b.intValue());
+                } catch (ArithmeticException ignore) {
+                }
             case LONG:
-                return a.longValue() - b.longValue();
-            case FLOAT:
-                return a.floatValue() - b.floatValue();
+                try {
+                    return Math.subtractExact(a.longValue(), b.longValue());
+                } catch (ArithmeticException ignore) {
+                }
             case DOUBLE:
                 return a.doubleValue() - b.doubleValue();
             default:
@@ -64,11 +72,15 @@ public class MathUtils {
         NumberType type = NumberType.forClass(a.getClass(), b.getClass());
         switch (type) {
             case INT:
-                return a.intValue() / b.intValue();
+                int intResult = a.intValue() / b.intValue();
+                if (intResult * b.intValue() == a.intValue()) {
+                    return intResult;
+                }
             case LONG:
-                return a.longValue() / b.longValue();
-            case FLOAT:
-                return a.floatValue() / b.floatValue();
+                long longResult = a.longValue() / b.longValue();
+                if (longResult * b.longValue() == a.longValue()) {
+                    return longResult;
+                }
             case DOUBLE:
                 return a.doubleValue() / b.doubleValue();
             default:
@@ -88,11 +100,15 @@ public class MathUtils {
         NumberType type = NumberType.forClass(a.getClass(), b.getClass());
         switch (type) {
             case INT:
-                return a.intValue() * b.intValue();
+                try {
+                    return Math.multiplyExact(a.intValue(), b.intValue());
+                } catch (ArithmeticException ignore) {
+                }
             case LONG:
-                return a.longValue() * b.longValue();
-            case FLOAT:
-                return a.floatValue() * b.floatValue();
+                try {
+                    return Math.multiplyExact(a.longValue(), b.longValue());
+                } catch (ArithmeticException ignore) {
+                }
             case DOUBLE:
                 return a.doubleValue() * b.doubleValue();
             default:
@@ -115,8 +131,6 @@ public class MathUtils {
                 return a.intValue() % b.intValue();
             case LONG:
                 return a.longValue() % b.longValue();
-            case FLOAT:
-                return a.floatValue() % b.floatValue();
             case DOUBLE:
                 return a.doubleValue() % b.doubleValue();
             default:
@@ -139,8 +153,6 @@ public class MathUtils {
                 return Math.pow(a.intValue(), b.intValue());
             case LONG:
                 return Math.pow(a.longValue(), b.longValue());
-            case FLOAT:
-                return Math.pow(a.floatValue(), b.floatValue());
             case DOUBLE:
                 return Math.pow(a.doubleValue(), b.doubleValue());
             default:
@@ -154,8 +166,8 @@ public class MathUtils {
      * @param a the left operand
      * @param b the right operand
      * @return the value {@code 0} if {@code x == y};
-     *         a value less than {@code 0} if {@code x < y}; and
-     *         a value greater than {@code 0} if {@code x > y}
+     * a value less than {@code 0} if {@code x < y}; and
+     * a value greater than {@code 0} if {@code x > y}
      * @throws UnsupportedOperationException if no supported number type is found
      */
     public static int compare(Number a, Number b) {
@@ -165,8 +177,6 @@ public class MathUtils {
                 return Integer.compare(a.intValue(), b.intValue());
             case LONG:
                 return Long.compare(a.longValue(), b.longValue());
-            case FLOAT:
-                return Float.compare(a.floatValue(), b.floatValue());
             case DOUBLE:
                 return Double.compare(a.doubleValue(), b.doubleValue());
             default:
@@ -180,8 +190,7 @@ public class MathUtils {
      * Note that these types should be ordered from low to high precedence
      */
     private enum NumberType {
-        DOUBLE(Double.class),
-        FLOAT(Float.class),
+        DOUBLE(Double.class, Float.class),
         LONG(Long.class),
         INT(Integer.class, Byte.class, Short.class);
 
