@@ -2,6 +2,7 @@ package nl.xillio.xill;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -1095,7 +1096,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 			try {
 				return new ExpressionBuilder(Long.parseLong(token.getValue()));
 			} catch (NumberFormatException e2) {
-				return new ExpressionBuilder(Double.parseDouble(token.getValue()));
+				return new ExpressionBuilder(new BigInteger(token.getValue()));
 			}
 		}
 	}

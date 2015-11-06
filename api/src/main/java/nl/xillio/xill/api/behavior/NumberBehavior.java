@@ -37,14 +37,7 @@ public class NumberBehavior implements Expression {
 
 	@Override
 	public String getStringValue() {
-		double doubleValue = value.doubleValue();
-		long longValue = value.longValue();
-
-		// Range within which the long and double values have to be in order to assume there are no decimal places
-		double epsilon = Math.ulp(doubleValue);
-
-		return longValue >= doubleValue - epsilon && longValue <= doubleValue + epsilon
-				? Long.toString(longValue) : Double.toString(doubleValue);
+		return value.toString();
 	}
 
 	@Override

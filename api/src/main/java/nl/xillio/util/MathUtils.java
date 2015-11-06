@@ -1,5 +1,7 @@
 package nl.xillio.util;
 
+import java.math.BigInteger;
+
 /**
  * This class represents some basic arithmetic operations on abstract Numbers.
  */
@@ -25,11 +27,23 @@ public class MathUtils {
                     return Math.addExact(a.longValue(), b.longValue());
                 } catch (ArithmeticException ignore) {
                 }
+            case BIG:
+                BigInteger bigA = getBig(a);
+                BigInteger bigB = getBig(b);
+                return bigA.add(bigB);
             case DOUBLE:
                 return a.doubleValue() + b.doubleValue();
             default:
                 throw new UnsupportedOperationException("Type " + type + " is not supported by the add operation.");
         }
+    }
+
+    private static BigInteger getBig(Number number) {
+        if (number instanceof BigInteger) {
+            return (BigInteger) number;
+        }
+
+        return BigInteger.valueOf(number.longValue());
     }
 
     /**
@@ -53,6 +67,10 @@ public class MathUtils {
                     return Math.subtractExact(a.longValue(), b.longValue());
                 } catch (ArithmeticException ignore) {
                 }
+            case BIG:
+                BigInteger bigA = getBig(a);
+                BigInteger bigB = getBig(b);
+                return bigA.subtract(bigB);
             case DOUBLE:
                 return a.doubleValue() - b.doubleValue();
             default:
@@ -81,6 +99,10 @@ public class MathUtils {
                 if (longResult * b.longValue() == a.longValue()) {
                     return longResult;
                 }
+            case BIG:
+                BigInteger bigA = getBig(a);
+                BigInteger bigB = getBig(b);
+                return bigA.divide(bigB);
             case DOUBLE:
                 return a.doubleValue() / b.doubleValue();
             default:
@@ -109,6 +131,10 @@ public class MathUtils {
                     return Math.multiplyExact(a.longValue(), b.longValue());
                 } catch (ArithmeticException ignore) {
                 }
+            case BIG:
+                BigInteger bigA = getBig(a);
+                BigInteger bigB = getBig(b);
+                return bigA.multiply(bigB);
             case DOUBLE:
                 return a.doubleValue() * b.doubleValue();
             default:
@@ -131,6 +157,10 @@ public class MathUtils {
                 return a.intValue() % b.intValue();
             case LONG:
                 return a.longValue() % b.longValue();
+            case BIG:
+                BigInteger bigA = getBig(a);
+                BigInteger bigB = getBig(b);
+                return bigA.mod(bigB);
             case DOUBLE:
                 return a.doubleValue() % b.doubleValue();
             default:
@@ -153,6 +183,9 @@ public class MathUtils {
                 return Math.pow(a.intValue(), b.intValue());
             case LONG:
                 return Math.pow(a.longValue(), b.longValue());
+            case BIG:
+                BigInteger bigA = getBig(a);
+                return bigA.pow(b.intValue());
             case DOUBLE:
                 return Math.pow(a.doubleValue(), b.doubleValue());
             default:
@@ -177,6 +210,10 @@ public class MathUtils {
                 return Integer.compare(a.intValue(), b.intValue());
             case LONG:
                 return Long.compare(a.longValue(), b.longValue());
+            case BIG:
+                BigInteger bigA = getBig(a);
+                BigInteger bigB = getBig(b);
+                return bigA.compareTo(bigB);
             case DOUBLE:
                 return Double.compare(a.doubleValue(), b.doubleValue());
             default:
@@ -192,6 +229,7 @@ public class MathUtils {
     private enum NumberType {
         DOUBLE(Double.class, Float.class),
         LONG(Long.class),
+        BIG(BigInteger.class),
         INT(Integer.class, Byte.class, Short.class);
 
         private static final NumberType[] values = NumberType.values();
