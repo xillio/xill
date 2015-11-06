@@ -272,20 +272,7 @@ public class XillUDMServiceImplTest {
 		xillUdmService.get(DOCUMENT_ID, versionId, Section.SOURCE);
 	}
 
-	/**
-	 * Test that {@link XillUDMServiceImpl#update(String, Map, String, String)} throws a {@link VersionNotFoundException} when a non-existent version is requested.
-	 *
-	 * @throws PersistenceException
-	 */
-	@Test(expectedExceptions = VersionNotFoundException.class)
-	public void testUpdateNonExistentRevision() throws PersistenceException {
-		// Mock
-		String versionId = mockNonExistentRevision();
-		Map<String, Map<String, Object>> body = new HashMap<>();
 
-		// Run
-		xillUdmService.update(DOCUMENT_ID, body, versionId, Section.SOURCE);
-	}
 
 	/**
 	 * Mock all necessary objects to test for a non-existent version
