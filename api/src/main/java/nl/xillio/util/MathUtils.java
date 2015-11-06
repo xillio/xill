@@ -102,7 +102,10 @@ public class MathUtils {
             case BIG:
                 BigInteger bigA = getBig(a);
                 BigInteger bigB = getBig(b);
-                return bigA.divide(bigB);
+                BigInteger result = bigA.divide(bigB);
+                if(result.multiply(bigB).equals(bigA)) {
+                    return result;
+                }
             case DOUBLE:
                 return a.doubleValue() / b.doubleValue();
             default:
