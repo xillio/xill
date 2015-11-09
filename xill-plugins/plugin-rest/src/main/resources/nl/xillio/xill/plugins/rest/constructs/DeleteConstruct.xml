@@ -12,14 +12,14 @@ Options:
 * timeout - processing timeout in ms (default = 5000)
 * proxyhost - proxy server URL
 * proxyport - port of the proxy server
-* proxyuser - user name for proxy valdiation         
-* proxypass - password for proxy valdiation
+* user - user name for server authentication         
+* pass - password for server authentication
 
-The proxy options can be combined as follows:
+The proxy and server authentication options can be combined as follows:
 proxyhost
 proxyhost+proxyport 
-proxyhost+proxyport+proxyuser+proxypass
-proxyuser+proxypass
+proxyhost+proxyport+user+pass
+user+pass
     </description>
     <examples>
         <example title="Usage">
