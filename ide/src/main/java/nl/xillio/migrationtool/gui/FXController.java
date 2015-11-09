@@ -310,6 +310,7 @@ public class FXController implements Initializable, EventHandler<Event> {
                         tab = new RobotTab(projectfile.getAbsoluteFile(), chosen, this);
                         tpnBots.getTabs().add(tab);
                         showTab(tab);
+						Platform.runLater(() -> buttonsReturnFocus(tab.getContent()));
                 } catch (IOException e) {
                 }
             } else {
@@ -403,10 +404,21 @@ public class FXController implements Initializable, EventHandler<Event> {
 	 *        The node to search for buttons in
 	 */
 	protected void buttonsReturnFocus(Node node) {
+		// For some nodes (like SplitPane) children are added by the skin
+		// Apply CSS to make sure all children are present
+		node.applyCss();
+
 		node.lookupAll(".button")
 				.forEach((n) ->
 						n.focusedProperty().addListener(
 								returnFocusListener));
+
+		// MenuButtons do not seem to get children, only items. Handle them as a special case.
+		node.lookupAll(".menu-button").forEach((mb) -> {
+			if (mb instanceof MenuButton) {
+				 ((MenuButton) mb).showingProperty().not().addListener(returnFocusListener);
+			}
+				});
 		}
 
 	@FXML
