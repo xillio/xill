@@ -118,6 +118,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 	@FXML
 	private ProjectPane projectpane;
 
+	private ReturnFocusListener returnFocusListener;
 	/**
 	 * Initialize custom components
 	 */
@@ -174,7 +175,12 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 		// Add listener for window shown
 		loadWorkSpace();
-                
+
+		Platform.runLater(() -> {
+						returnFocusListener = new ReturnFocusListener(apnRoot.getScene());
+						buttonsReturnFocus(apnRoot);
+					});
+
                 if (projectpane.getProjectsCount() == 0) {
                     btnNewFile.setDisable(true);
 					btnOpenFile.setDisable(true);
@@ -303,7 +309,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 
                         tab = new RobotTab(projectfile.getAbsoluteFile(), chosen, this);
                         tpnBots.getTabs().add(tab);
-                        tab.requestFocus();
+                        showTab(tab);
                 } catch (IOException e) {
                 }
             } else {
@@ -389,6 +395,19 @@ public class FXController implements Initializable, EventHandler<Event> {
 		}
 		return null;
 	}
+
+	/**
+	 * Make all buttons that are children of the given node return focus to the previously focussed node after receiving focus
+	 *
+	 * @param node
+	 *        The node to search for buttons in
+	 */
+	protected void buttonsReturnFocus(Node node) {
+		node.lookupAll(".button")
+				.forEach((n) ->
+						n.focusedProperty().addListener(
+								returnFocusListener));
+		}
 
 	@FXML
 	private void buttonSave() {
