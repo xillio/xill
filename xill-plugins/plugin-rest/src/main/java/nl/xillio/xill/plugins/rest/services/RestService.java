@@ -3,6 +3,7 @@ package nl.xillio.xill.plugins.rest.services;
 import com.google.inject.ImplementedBy;
 import nl.xillio.xill.plugins.rest.RESTXillPlugin;
 import nl.xillio.xill.plugins.rest.data.Content;
+import nl.xillio.xill.plugins.rest.data.MultipartBody;
 import nl.xillio.xill.plugins.rest.data.Options;
 
 /**
@@ -60,4 +61,27 @@ public interface RestService {
 	 * @return					response content
 	 */	
 	Content head(final String url, final Options options);
+
+	/**
+	 * Create empty multipart body object
+	 */
+	MultipartBody bodyCreate();
+
+	/**
+	 * Add file as a part of the multiple content
+	 *
+	 * @param body 		MultipartBody object holding all content parts
+	 * @param name 		name of the content part
+	 * @param fileName	filenamepath
+	 */
+	void bodyAddFile(final MultipartBody body, final String name, final String fileName);
+
+	/**
+	 * Add text as a part of the multiple content
+	 *
+	 * @param body 		MultipartBody object holding all content parts
+	 * @param name 		name of the content part
+	 * @param text		text content
+	 */
+	void bodyAddText(final MultipartBody body, final String name, final String text);
 }
