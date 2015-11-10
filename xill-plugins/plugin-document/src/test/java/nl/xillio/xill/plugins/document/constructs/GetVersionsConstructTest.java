@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import nl.xillio.udm.exceptions.DocumentNotFoundException;
 import nl.xillio.xill.TestUtils;
+import nl.xillio.xill.api.behavior.NumberBehavior;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.document.services.XillUDMService;
@@ -32,7 +33,7 @@ public class GetVersionsConstructTest extends TestUtils {
 	public void testProcessNormal() {
 		// Mock context
 		String id = "This is a document id";
-		List<String> versions = Arrays.asList("1", "1.2", "2");
+		List<String> versions = Arrays.asList("1", "3", "2");
 
 		XillUDMService xillUDMService = mock(XillUDMService.class);
 		when(xillUDMService.getVersions(eq(id), eq(Section.TARGET))).thenReturn(versions);
@@ -41,7 +42,7 @@ public class GetVersionsConstructTest extends TestUtils {
 		MetaExpression result = GetVersionsConstruct.process(fromValue(id), fromValue("target"), xillUDMService);
 
 		// Get result
-		List<String> stringResult = ((List<?>) result.getValue()).stream().map(Object::toString).collect(Collectors.toList());
+		List<String> stringResult = ((List<?>) result.getValue()).stream().map(o -> (MetaExpression) o).map(MetaExpression::getNumberValue).map(Number::intValue).map(Object::toString).collect(Collectors.toList());
 		assertEquals(stringResult, versions);
 	}
 
