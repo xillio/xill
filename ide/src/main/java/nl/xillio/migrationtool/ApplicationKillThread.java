@@ -15,7 +15,7 @@ public class ApplicationKillThread extends Thread {
     }
 
     @Override
-    @SuppressWarnings("squid:S1147")
+    @SuppressWarnings("squid:S1147") // use of System.exit
     public void run() {
         try {
             sleep(5000);
