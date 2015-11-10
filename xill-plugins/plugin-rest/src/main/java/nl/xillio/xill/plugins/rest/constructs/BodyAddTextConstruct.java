@@ -30,7 +30,7 @@ public class BodyAddTextConstruct extends Construct {
     }
 
     static MetaExpression process(final MetaExpression bodyVar, final MetaExpression nameVar, final MetaExpression textVar, final RestService service) {
-        MultipartBody body = assertMeta(bodyVar, "body", MultipartBody.class, "REST Body");
+        MultipartBody body = assertMeta(bodyVar, "body", MultipartBody.class, "REST multipart body");
         String name = nameVar.getStringValue();
         String text = textVar.getStringValue();
         service.bodyAddText(body, name, text);

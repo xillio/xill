@@ -30,7 +30,7 @@ public class BodyAddFileConstruct extends Construct {
     }
 
     static MetaExpression process(final MetaExpression bodyVar, final MetaExpression nameVar, final MetaExpression fileNameVar, final RestService service) {
-        MultipartBody body = assertMeta(bodyVar, "body", MultipartBody.class, "REST Body");
+        MultipartBody body = assertMeta(bodyVar, "body", MultipartBody.class, "REST multipart body");
         String name = nameVar.getStringValue();
         String fileName = fileNameVar.getStringValue();
         service.bodyAddFile(body, name, fileName);

@@ -14,6 +14,7 @@ import nl.xillio.xill.plugins.rest.services.RestService;
  * @author Zbynek Hochmann
  */
 public class BodyCreateConstruct extends Construct {
+
     @Inject
     private RestService restService;
 
