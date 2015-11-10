@@ -197,7 +197,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 			} else {
 				showButtonPressed();
 			}
-		//	globalController.buttonsReturnFocus(getContent());
+
 		});
 		setText(getName());
 

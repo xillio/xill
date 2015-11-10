@@ -309,8 +309,8 @@ public class FXController implements Initializable, EventHandler<Event> {
 
                         tab = new RobotTab(projectfile.getAbsoluteFile(), chosen, this);
                         tpnBots.getTabs().add(tab);
-                        showTab(tab);
-						Platform.runLater(() -> buttonsReturnFocus(tab.getContent()));
+						tab.requestFocus();
+
                 } catch (IOException e) {
                 }
             } else {
@@ -374,7 +374,11 @@ public class FXController implements Initializable, EventHandler<Event> {
 				if (editor.getDocument() != null
 						&& editor.getDocument().getCanonicalPath().equals(newfile.getCanonicalPath())) {
 					tpnBots.getSelectionModel().select(editor);
+
 					showTab(editor);
+					editor.requestFocus();
+
+
 					return editor;
 				}
 			} catch (IOException e) {
@@ -390,7 +394,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 		try {
 			tab = new RobotTab(new File(projectpane.getProjectPath(newfile).get()), newfile.getAbsoluteFile(), this);
 			tpnBots.getTabs().add(tab);
-			showTab(tab);
+			tab.requestFocus();
 			return tab;
 		} catch (IOException e) {
 		}
@@ -398,7 +402,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 	}
 
 	/**
-	 * Make all buttons that are children of the given node return focus to the previously focussed node after receiving focus
+	 * Make all buttons that are children of the given node return focus to the previously focused node after receiving focus
 	 *
 	 * @param node
 	 *        The node to search for buttons in
@@ -419,6 +423,11 @@ public class FXController implements Initializable, EventHandler<Event> {
 				 ((MenuButton) mb).showingProperty().not().addListener(returnFocusListener);
 			}
 				});
+		node.lookupAll(".toggle-button").forEach((tb) -> {
+			((ToggleButton)tb).focusedProperty().addListener(returnFocusListener);
+		});
+
+		//maybe need to add more here... since some things do not yet return focus.
 		}
 
 	@FXML
@@ -781,6 +790,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 						// Check if other key is an integer, if so open that tab
 						try {
 							int tab = Integer.parseInt(keyEvent.getText()) - 1;
+
 							if (tab < tpnBots.getTabs().size() && tab >= 0) {
 								tpnBots.getSelectionModel().select(tab);
 								((RobotTab) tpnBots.getTabs().get(tab)).requestFocus();

@@ -6,6 +6,9 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonBase;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.web.WebView;
 
 /**
  * Listener that can be attached to a {@link Node#focusedProperty()} that will return focus to the previous focus owner.
@@ -14,7 +17,6 @@ import javafx.scene.control.ButtonBase;
  *
  * @author Geert Konijnendijk, Sander Visser
  *         <p>
- *
  */
 public class ReturnFocusListener implements ChangeListener<Boolean> {
     // The previous owner of the focus
@@ -22,14 +24,26 @@ public class ReturnFocusListener implements ChangeListener<Boolean> {
 
     public ReturnFocusListener(Scene scene) {
         // Keep track of the previous focus owner
-        scene.focusOwnerProperty().addListener((observable, oldValue, newValue) ->
-                // Do not return focus to buttons
-                previousFocusOwner = oldValue instanceof ButtonBase ? previousFocusOwner : oldValue);
+        scene.focusOwnerProperty().addListener((observable, oldValue, newValue) -> {
+            // Do not return focus to buttons
+            previousFocusOwner = oldValue instanceof ButtonBase ? previousFocusOwner : oldValue;
+
+
+
+            //set the focus on a new editor when changing robot.
+            if (oldValue instanceof WebView && newValue instanceof TabPane) {
+                ((TabPane) newValue).getTabs().forEach((tab) -> {
+                    if (tab.isSelected()) {
+                        ((RobotTab) tab).requestFocus();
+                    }
+                });
+            }
+        });
     }
 
     @Override
     public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-        //if focussed return focus.
+        //if focused return focus.
         if (newValue) {
             Platform.runLater(() -> {
                 if (previousFocusOwner != null) {
