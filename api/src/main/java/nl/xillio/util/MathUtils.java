@@ -250,8 +250,8 @@ public class MathUtils {
          * @return true if and only if this type supports the number
          */
         public boolean supports(Class<? extends Number> clazz) {
-            for (Class<?> testClazz : numberClasses) {
-                if (testClazz.isAssignableFrom(clazz)) {
+            for (Class<?> testClass : numberClasses) {
+                if (testClass.isAssignableFrom(clazz)) {
                     return true;
                 }
             }
