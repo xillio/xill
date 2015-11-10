@@ -9,10 +9,7 @@ import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This {@link Instruction} represents the foreach looping context.
@@ -114,67 +111,77 @@ public class ForeachInstruction extends Instruction {
 				}
 				break;
 			case LIST: // Iterate over list
-				int i = 0;
-				for (MetaExpression value : (List<MetaExpression>) result.getValue()) {
-					valueVar.pushVariable(value);
-					if (keyVar != null) {
-						keyVar.pushVariable(ExpressionBuilderHelper.fromValue(i++));
+				try {
+					int i = 0;
+					for (MetaExpression value : (List<MetaExpression>) result.getValue()) {
+						valueVar.pushVariable(value);
+						if (keyVar != null) {
+							keyVar.pushVariable(ExpressionBuilderHelper.fromValue(i++));
+						}
+
+						InstructionFlow<MetaExpression> instructionResult = instructionSet.process(debugger);
+
+						// Release
+						valueVar.releaseVariable();
+						if (keyVar != null) {
+							keyVar.releaseVariable();
+						}
+
+
+						if (instructionResult.skips()) {
+							continue;
+						}
+
+						if (instructionResult.returns()) {
+							foreachResult = instructionResult;
+							break;
+						}
+
+						if (instructionResult.breaks()) {
+							foreachResult = InstructionFlow.doResume();
+							break;
+						}
+
 					}
-
-					InstructionFlow<MetaExpression> instructionResult = instructionSet.process(debugger);
-
-					// Release
-					valueVar.releaseVariable();
-					if (keyVar != null) {
-						keyVar.releaseVariable();
-					}
-
-
-					if (instructionResult.skips()) {
-						continue;
-					}
-
-					if (instructionResult.returns()) {
-						foreachResult = instructionResult;
-						break;
-					}
-
-					if (instructionResult.breaks()) {
-						foreachResult = InstructionFlow.doResume();
-						break;
-					}
-
+				}
+				catch (ConcurrentModificationException e) {
+					throw new RobotRuntimeException("You cannot modify (add to, or remove from) a list while you are iterating over it.", e);
 				}
 				break;
 			case OBJECT:
-				for (Map.Entry<String, MetaExpression> value : ((Map<String, MetaExpression>) result.getValue()).entrySet()) {
-					valueVar.pushVariable(value.getValue());
-					if (keyVar != null) {
-						keyVar.pushVariable(ExpressionBuilderHelper.fromValue(value.getKey()));
+				try {
+					for (Map.Entry<String, MetaExpression> value : ((Map<String, MetaExpression>) result.getValue()).entrySet()) {
+						valueVar.pushVariable(value.getValue());
+						if (keyVar != null) {
+							keyVar.pushVariable(ExpressionBuilderHelper.fromValue(value.getKey()));
+						}
+
+						InstructionFlow<MetaExpression> instructionResult = instructionSet.process(debugger);
+
+						// Release
+						valueVar.releaseVariable();
+						if (keyVar != null) {
+							keyVar.releaseVariable();
+						}
+
+						if (instructionResult.skips()) {
+							continue;
+						}
+
+						if (instructionResult.returns()) {
+							foreachResult = instructionResult;
+							break;
+						}
+
+						if (instructionResult.breaks()) {
+							foreachResult = InstructionFlow.doResume();
+							break;
+						}
+
 					}
-
-					InstructionFlow<MetaExpression> instructionResult = instructionSet.process(debugger);
-
-					// Release
-					valueVar.releaseVariable();
-					if (keyVar != null) {
-						keyVar.releaseVariable();
-					}
-
-					if (instructionResult.skips()) {
-						continue;
-					}
-
-					if (instructionResult.returns()) {
-						foreachResult = instructionResult;
-						break;
-					}
-
-					if (instructionResult.breaks()) {
-						foreachResult = InstructionFlow.doResume();
-						break;
-					}
-
+				}
+				catch (ConcurrentModificationException e) {
+					throw new RobotRuntimeException("You cannot modify (add to, or remove from) an object while you are iterating over it.", e);
 				}
 				break;
 			default:
