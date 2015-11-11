@@ -7,6 +7,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import nl.xillio.xill.api.behavior.NumberBehavior;
+import nl.xillio.xill.api.behavior.StringBehavior;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
@@ -19,7 +22,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * Test the {@link SwithToFrameConstruct}.
+ * Test the {@link SwitchFrameConstruct}.
  */
 public class SwitchFrameConstructTest extends ExpressionBuilderHelper {
 
@@ -69,7 +72,7 @@ public class SwitchFrameConstructTest extends ExpressionBuilderHelper {
 		// The frame
 		int frameValue = 42;
 		MetaExpression frame = mock(MetaExpression.class);
-		when(frame.getValue()).thenReturn(frameValue);
+		when(frame.getValue()).thenReturn(new NumberBehavior(frameValue));
 		when(frame.getMeta(NodeVariable.class)).thenReturn(null);
 		when(frame.getType()).thenReturn(ATOMIC);
 		when(frame.getNumberValue()).thenReturn(frameValue);
@@ -102,7 +105,7 @@ public class SwitchFrameConstructTest extends ExpressionBuilderHelper {
 		// The frame
 		String frameValue = "frame as a String";
 		MetaExpression frame = mock(MetaExpression.class);
-		when(frame.getValue()).thenReturn(frameValue);
+		when(frame.getValue()).thenReturn(new StringBehavior(frameValue));
 		when(frame.getMeta(NodeVariable.class)).thenReturn(null);
 		when(frame.getType()).thenReturn(ATOMIC);
 		when(frame.getStringValue()).thenReturn(frameValue);
@@ -162,7 +165,7 @@ public class SwitchFrameConstructTest extends ExpressionBuilderHelper {
 		// The frame
 		int frameValue = 404;
 		MetaExpression frame = mock(MetaExpression.class);
-		when(frame.getValue()).thenReturn(frameValue);
+		when(frame.getValue()).thenReturn(new NumberBehavior(frameValue));
 		when(frame.getMeta(NodeVariable.class)).thenReturn(null);
 		when(frame.getType()).thenReturn(ATOMIC);
 		when(frame.getNumberValue()).thenReturn(frameValue);

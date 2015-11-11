@@ -3,8 +3,11 @@ package nl.xillio.xill.api.components;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import nl.xillio.util.IdentityArrayList;
+import nl.xillio.util.MathUtils;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.behavior.BooleanBehavior;
+import nl.xillio.xill.api.behavior.NumberBehavior;
+import nl.xillio.xill.api.behavior.StringBehavior;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.data.MetadataExpression;
 import nl.xillio.xill.api.errors.NotImplementedException;
@@ -301,9 +304,8 @@ public abstract class MetaExpression implements Expression, Processable {
 		switch (getType()) {
 			case ATOMIC:
 				return getBooleanValue() == other.getBooleanValue() &&
-					getStringValue().equals(other.getStringValue()) &&
-					(getNumberValue().doubleValue() == other.getNumberValue().doubleValue()
-						|| Double.isNaN(getNumberValue().doubleValue()) && Double.isNaN(getNumberValue().doubleValue()));
+						getStringValue().equals(other.getStringValue()) &&
+						MathUtils.compare(getNumberValue(), other.getNumberValue()) == 0;
 			case LIST:
 				return getValue().equals(other.getValue());
 			case OBJECT:
@@ -356,23 +358,16 @@ public abstract class MetaExpression implements Expression, Processable {
 					return null;
 				}
 
-				// Boolean
-				if (expression.getValue() instanceof BooleanBehavior) {
+				Object behaviour = expression.getValue();
+
+				if(behaviour instanceof BooleanBehavior) {
 					result = expression.getBooleanValue();
-				}
-
-				// String
-				else if (Double.isNaN(expression.getNumberValue().doubleValue())) {
+				} else if(behaviour instanceof StringBehavior) {
 					result = expression.getStringValue();
-				}
-
-				// Int
-				else if (expression.getNumberValue().intValue() == expression.getNumberValue().doubleValue()) {
-					result = expression.getNumberValue().intValue();
-				} else {
-
-					// Double
+				} else if(behaviour instanceof NumberBehavior) {
 					result = expression.getNumberValue();
+				}else {
+					throw new UnsupportedOperationException("No extraction found for " + behaviour.getClass().getSimpleName());
 				}
 				break;
 			case LIST:
