@@ -3,6 +3,7 @@ package nl.xillio.xill.plugins.rest.services;
 import java.io.IOException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.rest.data.Content;
+import nl.xillio.xill.plugins.rest.data.MultipartBody;
 import nl.xillio.xill.plugins.rest.data.Options;
 import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.fluent.Request;
@@ -17,7 +18,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class RestServiceImpl implements RestService {
 
-	private Content processRequest(Request request, final Options options, final Content body) {
+	private Content processRequest(final Request request, final Options options, final Content body) {
 		try {
 			// set-up request options
 			if (options.getTimeout() != 0) {
@@ -29,7 +30,7 @@ public class RestServiceImpl implements RestService {
 
 			// set body
 			if ((body != null) && (!body.isEmpty())) {
-				request.bodyString(body.getContent(), body.getType());
+				body.setToRequest(request);
 			}
 
 			// do request
@@ -56,21 +57,36 @@ public class RestServiceImpl implements RestService {
 		return this.processRequest(request, options, body);
 	}
 
-	@Override 
+	@Override
 	public Content post(final String url, final Options options, final Content body) {
 		Request request = Request.Post(url);
 		return this.processRequest(request, options, body);
 	}
 
-	@Override 
+	@Override
 	public Content delete(final String url, final Options options) {
 		Request request = Request.Delete(url);
 		return this.processRequest(request, options, null);
 	}
 
-	@Override 
+	@Override
 	public Content head(final String url, final Options options) {
 		Request request = Request.Head(url);
 		return this.processRequest(request, options, null);
 	}
+
+    @Override
+    public MultipartBody bodyCreate() {
+        return new MultipartBody();
+    }
+
+    @Override
+    public void bodyAddFile(final MultipartBody body, final String name, final String fileName) {
+        body.addFile(name, fileName);
+    }
+
+    @Override
+    public void bodyAddText(final MultipartBody body, final String name, final String text) {
+        body.addText(name, text);
+    }
 }

@@ -15,11 +15,10 @@ public class ApplicationKillThread extends Thread {
     }
 
     @Override
+    @SuppressWarnings("squid:S1147") // use of System.exit
     public void run() {
         try {
-            synchronized (this) {
-                this.wait(5000);
-            }
+            sleep(5000);
         } catch (InterruptedException e) {
             System.out.println("Application was closed before it had to be force killed");
             return;
