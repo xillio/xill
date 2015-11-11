@@ -1,6 +1,7 @@
 package nl.xillio.util;
 
 import java.math.BigInteger;
+import java.util.IntSummaryStatistics;
 
 /**
  * This class represents some basic arithmetic operations on abstract Numbers.
@@ -18,14 +19,14 @@ public class MathUtils {
         NumberType type = NumberType.forClass(a.getClass(), b.getClass());
         switch (type) {
             case INT:
-                try {
-                    return Math.addExact(a.intValue(), b.intValue());
-                } catch (ArithmeticException ignore) {
+                Integer intR = addExactWithoutException(a.intValue(), b.intValue());
+                if (intR != null) {
+                    return intR;
                 }
             case LONG:
-                try {
-                    return Math.addExact(a.longValue(), b.longValue());
-                } catch (ArithmeticException ignore) {
+                Long longR = addExactWithoutException(a.longValue(), b.longValue());
+                if (longR != null) {
+                    return longR;
                 }
             case BIG:
                 BigInteger bigA = getBig(a);
@@ -58,14 +59,14 @@ public class MathUtils {
         NumberType type = NumberType.forClass(a.getClass(), b.getClass());
         switch (type) {
             case INT:
-                try {
-                    return Math.subtractExact(a.intValue(), b.intValue());
-                } catch (ArithmeticException ignore) {
+                Integer intR = subtractExactWithoutException(a.intValue(), b.intValue());
+                if (intR != null) {
+                    return intR;
                 }
             case LONG:
-                try {
-                    return Math.subtractExact(a.longValue(), b.longValue());
-                } catch (ArithmeticException ignore) {
+                Long longR = subtractExactWithoutException(a.longValue(), b.longValue());
+                if (longR != null) {
+                    return longR;
                 }
             case BIG:
                 BigInteger bigA = getBig(a);
@@ -103,7 +104,7 @@ public class MathUtils {
                 BigInteger bigA = getBig(a);
                 BigInteger bigB = getBig(b);
                 BigInteger result = bigA.divide(bigB);
-                if(result.multiply(bigB).equals(bigA)) {
+                if (result.multiply(bigB).equals(bigA)) {
                     return result;
                 }
             case DOUBLE:
@@ -125,14 +126,14 @@ public class MathUtils {
         NumberType type = NumberType.forClass(a.getClass(), b.getClass());
         switch (type) {
             case INT:
-                try {
-                    return Math.multiplyExact(a.intValue(), b.intValue());
-                } catch (ArithmeticException ignore) {
+                Integer intR = multiplyExactWithoutException(a.intValue(), b.intValue());
+                if (intR != null) {
+                    return intR;
                 }
             case LONG:
-                try {
-                    return Math.multiplyExact(a.longValue(), b.longValue());
-                } catch (ArithmeticException ignore) {
+                Long longR = multiplyExactWithoutException(a.longValue(), b.longValue());
+                if (longR != null) {
+                    return longR;
                 }
             case BIG:
                 BigInteger bigA = getBig(a);
@@ -224,6 +225,97 @@ public class MathUtils {
         }
     }
 
+    /**
+     * Recreate the addExact method from Math.java to check for overflow while avoiding throwing and handling
+     * of Exceptions (including empty catch blocks)
+     *
+     * @return null if an overflow would occur else the result of the addition
+     */
+    static Integer addExactWithoutException(int x, int y) {
+        int r = x + y;
+        if (((x ^ r) & (y ^ r)) < 0) {
+            return null;
+        }
+        return r;
+    }
+
+    /**
+     * Recreate the addExact method from Math.java to check for overflow while avoiding throwing and handling
+     * of Exceptions (including empty catch blocks)
+     *
+     * @return null if an overflow would occur else the result of the addition
+     */
+    static Long addExactWithoutException(long x, long y) {
+        long r = x + y;
+        if (((x ^ r) & (y ^ r)) < 0) {
+            return null;
+        }
+        return r;
+    }
+
+    /**
+     * Recreate the subtractExact method from Math.java to check for overflow while avoiding throwing and handling
+     * of Exceptions (including empty catch blocks)
+     *
+     * @return null if an overflow would occur else the result of the subtraction
+     */
+    static Integer subtractExactWithoutException(int x, int y) {
+        int r = x - y;
+        if (((x ^ y) & (x ^ r)) < 0) {
+            return null;
+        }
+        return r;
+    }
+
+    /**
+     * Recreate the subtractExact method from Math.java to check for overflow while avoiding throwing and handling
+     * of Exceptions (including empty catch blocks)
+     *
+     * @return null if an overflow would occur else the result of the subtraction
+     */
+    static Long subtractExactWithoutException(long x, long y) {
+        long r = x - y;
+        if (((x ^ y) & (x ^ r)) < 0) {
+            return null;
+        }
+        return r;
+    }
+
+    /**
+     * Recreate the multiplyExact method from Math.java to check for overflow while avoiding throwing and handling
+     * of Exceptions (including empty catch blocks)
+     *
+     * @return null if an overflow would occur else the result of the multiplication
+     */
+    static Integer multiplyExactWithoutException(int x, int y) {
+        long r = (long) x * (long) y;
+        if ((int) r != r) {
+            return null;
+        }
+        return (int) r;
+    }
+
+    /**
+     * Recreate the multiplyExact method from Math.java to check for overflow while avoiding throwing and handling
+     * of Exceptions (including empty catch blocks)
+     *
+     * @return null if an overflow would occur else the result of the multiplication
+     */
+    static Long multiplyExactWithoutException(long x, long y) {
+        long r = x * y;
+        long ax = Math.abs(x);
+        long ay = Math.abs(y);
+        if (((ax | ay) >>> 31 != 0)) {
+            // Some bits greater than 2^31 that might cause overflow
+            // Check the result using the divide operator
+            // and check for the special case of Long.MIN_VALUE * -1
+            if (((y != 0) && (r / y != x)) ||
+                    (x == Long.MIN_VALUE && y == -1)) {
+                return null;
+            }
+        }
+        return r;
+    }
 
     /**
      * The supported number types.
