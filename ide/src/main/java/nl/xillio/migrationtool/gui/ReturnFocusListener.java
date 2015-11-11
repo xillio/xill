@@ -26,7 +26,9 @@ public class ReturnFocusListener implements ChangeListener<Boolean> {
         // Keep track of the previous focus owner
         scene.focusOwnerProperty().addListener((observable, oldValue, newValue) -> {
             // Do not return focus to buttons
-            previousFocusOwner = oldValue instanceof ButtonBase ? previousFocusOwner : oldValue;
+
+                previousFocusOwner = oldValue instanceof ButtonBase ? previousFocusOwner : oldValue;
+
 
 
 

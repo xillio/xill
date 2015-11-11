@@ -525,6 +525,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 			spnMain.getItems().add(0, apnLeft);
 			spnMain.setDividerPosition(0, Double.parseDouble(settings.simple().get(Settings.LAYOUT, Settings.LeftPanelWidth)));
 		}
+		((RobotTab)getSelectedTab()).requestFocus();
 	}
 
 
