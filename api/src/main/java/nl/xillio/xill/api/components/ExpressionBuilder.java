@@ -18,22 +18,12 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
 	private final Supplier<MetaExpression> expressionSupplier;
 
 	/**
-	 * Create a new {@link ExpressionBuilder} that will produce a double
+	 * Create a new {@link ExpressionBuilder} that will produce a Number
 	 *
 	 * @param value
 	 *        the value to set
 	 */
-	public ExpressionBuilder(final double value) {
-		expressionSupplier = () -> fromValue(value);
-	}
-
-	/**
-	 * Create a new {@link ExpressionBuilder} that will produce an integer
-	 *
-	 * @param value
-	 *        the value to set
-	 */
-	public ExpressionBuilder(final int value) {
+	public ExpressionBuilder(final Number value) {
 		expressionSupplier = () -> fromValue(value);
 	}
 

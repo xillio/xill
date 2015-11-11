@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Adds text to REST mulipart body.
+     </description>
+    <examples>
+        <example title="Usage">
+            <header>Put request with multipart body</header>
+            <code>
+
+</code>
+        </example>
+    </examples>
+    <references>
+        <reference>bodyAddFile</reference>
+        <reference>bodyCreate</reference>
+        <reference>post</reference>
+        <reference>put</reference>
+    </references>
+	    <tags>
+        REST, add, text, body, multipart, content
+    </tags>
+</function>

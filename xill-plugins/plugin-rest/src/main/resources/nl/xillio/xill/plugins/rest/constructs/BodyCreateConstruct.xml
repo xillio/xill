@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Creates empty multipart REST body content. Returns an empty REST body variable.
+     </description>
+    <references>
+        <reference>bodyAddFile</reference>
+        <reference>bodyAddText</reference>
+        <reference>post</reference>
+        <reference>put</reference>
+    </references>
+	    <tags>
+        REST, body, multipart, mime, header, request, response
+    </tags>
+</function>

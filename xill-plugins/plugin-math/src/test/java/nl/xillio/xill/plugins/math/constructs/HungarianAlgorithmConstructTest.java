@@ -32,7 +32,7 @@ public class HungarianAlgorithmConstructTest extends ExpressionBuilderHelper {
 	public void processNormalUsage() {
 		// Mock
 		MetaExpression matrix = mock(MetaExpression.class);
-		String hungarianReturnValue = "[{\"sum\":10},{\"cells\":[{\"row\":0,\"col\":2},{\"row\":1,\"col\":1},{\"row\":2,\"col\":0}]}]";
+		String hungarianReturnValue = "[{\"sum\":10.0},{\"cells\":[{\"row\":0,\"col\":2},{\"row\":1,\"col\":1},{\"row\":2,\"col\":0}]}]";
 		when(matrix.getType()).thenReturn(LIST);
 		when(matrix.getValue()).thenReturn(Arrays.asList(
 			fromValue(Arrays.asList(fromValue(0), fromValue(1), fromValue(3))),
