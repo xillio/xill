@@ -3,10 +3,16 @@
     <description>
 Carries out the Put REST request. Returns response from server.
 
-The body and response can be one of the following types:
+The body for request can be one of the following types:
 * XML (XmlNode)
 * JSON (Object)
-* String [with custom content type]  
+* String [with custom content type]
+* REST multipart body (bodyCreate() function) 
+
+The response can be one of the following types:
+* XML (XmlNode)
+* JSON (Object)
+* String
 
 Options:
 * timeout - processing timeout in ms (default = 5000)
