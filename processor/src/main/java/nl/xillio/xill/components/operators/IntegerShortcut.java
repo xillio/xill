@@ -42,7 +42,7 @@ public final class IntegerShortcut implements Processable {
 		MetaExpression assignedValue = assign.processWithValue(debugger);
 
 		// Now we need to determine the return type
-		int value = assignedValue.getNumberValue().intValue();
+		long value = assignedValue.getNumberValue().longValue();
 
 		if (returnFirst) {
 			// This is suffix mode so revert the addition

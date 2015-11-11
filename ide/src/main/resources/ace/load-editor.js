@@ -34,7 +34,7 @@ function loadEditor(){
         var editor = contenttools.getAce();
         hl = editor.getSession().addMarker(new Range(line, 0, line, 1), "ace_" + type, "fullLine");
         editor.$highlights.push(hl);
-        editor.scrollToLine(line);
+        editor.scrollToLine(line, true);
     }
     editor.clearHighlight = function() {
         var editor = contenttools.getAce();

@@ -2,9 +2,13 @@ package nl.xillio.xill;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import nl.xillio.xill.api.behavior.StringBehavior;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
+
+import java.util.Collections;
 
 /**
  * This class contains some utility for testing constructs
@@ -19,8 +23,18 @@ public class ConstructTest extends ExpressionBuilderHelper {
 	 */
 	protected static MetaExpression mockExpression(final ExpressionDataType type) {
 		MetaExpression expression = mock(MetaExpression.class);
-
 		when(expression.getType()).thenReturn(type);
+		switch (type){
+			case ATOMIC:
+				when(expression.getValue()).thenReturn(new StringBehavior(""));
+				break;
+			case LIST:
+				when(expression.getValue()).thenReturn(Collections.<MetaExpression>emptyList());
+				break;
+			case OBJECT:
+				when(expression.getValue()).thenReturn(Collections.<String, MetaExpression>emptyMap());
+				break;
+		}
 		return expression;
 	}
 
