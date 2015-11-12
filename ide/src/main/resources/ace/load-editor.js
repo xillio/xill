@@ -154,5 +154,6 @@ function loadEditor(){
 	editor.duplicateCurrentLines = function() {
 		var range = editor.selection.getRange();
 		editor.session.duplicateLines(range.start.row, range.end.row);
+		editor.selection.setRange(range);
 	};
 }
