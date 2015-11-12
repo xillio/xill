@@ -137,6 +137,7 @@ function loadEditor(){
 	// Remove keybindings
 	editor.commands.removeCommand('find');
 	editor.commands.removeCommand('replace');
+	editor.commands.removeCommand('removeline');
 	
 	editor.getSession().setUndoManager(new UndoManager());
 	editor.setOption("dragEnabled", false);
@@ -148,4 +149,10 @@ function loadEditor(){
 	}
 	editor.on('cut', toClipboard);
 	editor.on('copy', toClipboard);
+
+	// Duplicate the selected lines.
+	editor.duplicateCurrentLines = function() {
+		var range = editor.selection.getRange();
+		editor.session.duplicateLines(range.start.row, range.end.row);
+	};
 }
