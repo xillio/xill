@@ -197,8 +197,8 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 			} else {
 				showButtonPressed();
 			}
-		});
 
+		});
 		setText(getName());
 
 		// Load code
