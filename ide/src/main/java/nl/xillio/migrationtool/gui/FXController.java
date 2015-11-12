@@ -118,6 +118,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 	@FXML
 	private ProjectPane projectpane;
 
+	private ReturnFocusListener returnFocusListener;
 	/**
 	 * Initialize custom components
 	 */
@@ -174,7 +175,12 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 		// Add listener for window shown
 		loadWorkSpace();
-                
+
+		Platform.runLater(() -> {
+						returnFocusListener = new ReturnFocusListener(apnRoot.getScene());
+						buttonsReturnFocus(apnRoot);
+					});
+
                 if (projectpane.getProjectsCount() == 0) {
                     btnNewFile.setDisable(true);
 					btnOpenFile.setDisable(true);
@@ -303,7 +309,8 @@ public class FXController implements Initializable, EventHandler<Event> {
 
                         tab = new RobotTab(projectfile.getAbsoluteFile(), chosen, this);
                         tpnBots.getTabs().add(tab);
-                        tab.requestFocus();
+						tab.requestFocus();
+
                 } catch (IOException e) {
                 }
             } else {
@@ -367,7 +374,11 @@ public class FXController implements Initializable, EventHandler<Event> {
 				if (editor.getDocument() != null
 						&& editor.getDocument().getCanonicalPath().equals(newfile.getCanonicalPath())) {
 					tpnBots.getSelectionModel().select(editor);
+
 					showTab(editor);
+					editor.requestFocus();
+
+
 					return editor;
 				}
 			} catch (IOException e) {
@@ -383,12 +394,41 @@ public class FXController implements Initializable, EventHandler<Event> {
 		try {
 			tab = new RobotTab(new File(projectpane.getProjectPath(newfile).get()), newfile.getAbsoluteFile(), this);
 			tpnBots.getTabs().add(tab);
-			showTab(tab);
+			tab.requestFocus();
 			return tab;
 		} catch (IOException e) {
 		}
 		return null;
 	}
+
+	/**
+	 * Make all buttons that are children of the given node return focus to the previously focused node after receiving focus
+	 *
+	 * @param node
+	 *        The node to search for buttons in
+	 */
+	protected void buttonsReturnFocus(Node node) {
+		// For some nodes (like SplitPane) children are added by the skin
+		// Apply CSS to make sure all children are present
+		node.applyCss();
+
+		node.lookupAll(".button")
+				.forEach((n) ->
+						n.focusedProperty().addListener(
+								returnFocusListener));
+
+		// MenuButtons do not seem to get children, only items. Handle them as a special case.
+		node.lookupAll(".menu-button").forEach((mb) -> {
+			if (mb instanceof MenuButton) {
+				 ((MenuButton) mb).showingProperty().not().addListener(returnFocusListener);
+			}
+				});
+		node.lookupAll(".toggle-button").forEach((tb) -> {
+			((ToggleButton)tb).focusedProperty().addListener(returnFocusListener);
+		});
+
+		//maybe need to add more here... since some things do not yet return focus.
+		}
 
 	@FXML
 	private void buttonSave() {
@@ -485,6 +525,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 			spnMain.getItems().add(0, apnLeft);
 			spnMain.setDividerPosition(0, Double.parseDouble(settings.simple().get(Settings.LAYOUT, Settings.LeftPanelWidth)));
 		}
+		((RobotTab)getSelectedTab()).requestFocus();
 	}
 
 
@@ -750,6 +791,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 						// Check if other key is an integer, if so open that tab
 						try {
 							int tab = Integer.parseInt(keyEvent.getText()) - 1;
+
 							if (tab < tpnBots.getTabs().size() && tab >= 0) {
 								tpnBots.getSelectionModel().select(tab);
 								((RobotTab) tpnBots.getTabs().get(tab)).requestFocus();
