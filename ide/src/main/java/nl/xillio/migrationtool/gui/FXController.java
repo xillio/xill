@@ -254,84 +254,91 @@ public class FXController implements Initializable, EventHandler<Event> {
 	 */
 	@FXML
 	private void buttonNewFile() {
+		// Check if the button is enabled.
+		if (btnNewFile.isDisabled())
+			return;
 
-            // Select project path
-            File projectfile = null;
-            if (projectpane.getCurrentProject() != null) {
-                    projectfile = projectpane.getCurrentProject().getValue().getKey();
-            } else {
-                    projectfile = new File(System.getProperty("user.home"));
+        // Select project path
+        File projectfile = null;
+        if (projectpane.getCurrentProject() != null) {
+                projectfile = projectpane.getCurrentProject().getValue().getKey();
+        } else {
+                projectfile = new File(System.getProperty("user.home"));
+        }
+
+        // Select initial directory
+        File initialFolder = null;
+        if (projectpane.getCurrentItem() != null) {
+                initialFolder = projectpane.getCurrentItem().getValue().getKey();
+        } else {
+                initialFolder = projectfile;
+        }
+
+        if (initialFolder.isFile()) {
+                initialFolder = initialFolder.getParentFile();
+        }
+
+        // Select robot file
+        FileChooser fileChooser = new FileChooser();
+		fileChooser.setInitialDirectory(initialFolder);
+
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
+				"Xill Robot (*." + Xill.FILE_EXTENSION + ")", "*." + Xill.FILE_EXTENSION));
+        fileChooser.setTitle("New Robot");
+
+        File chosen = fileChooser.showSaveDialog(tpnBots.getScene().getWindow());
+
+        if (chosen == null) {
+                // No file was chosen so we abort
+                return;
+        }
+
+        // Fix for files being created out of projects
+        if (chosen.getParent().startsWith(projectfile.getAbsolutePath())) {
+            // The created file is in the project
+
+            // This code is because of different behaviour of FileChooser in Linux and Windows
+            // On Linux the FileChooser does not automatically add xill extension
+            String xillExt = "." + Xill.FILE_EXTENSION;
+            if (!chosen.getName().endsWith(xillExt)) {
+                    chosen = new File(chosen.getPath() + xillExt);
             }
 
-            // Select initial directory
-            File initialFolder = null;
-            if (projectpane.getCurrentItem() != null) {
-                    initialFolder = projectpane.getCurrentItem().getValue().getKey();
-            } else {
-                    initialFolder = projectfile;
+            RobotTab tab;
+            try {
+                    if (!chosen.exists()) {
+                            chosen.createNewFile();
+                    }
+
+                    tab = new RobotTab(projectfile.getAbsoluteFile(), chosen, this);
+                    tpnBots.getTabs().add(tab);
+					tab.requestFocus();
+
+            } catch (IOException e) {
             }
+        } else {
+            // The created file is not in the project
 
-            if (initialFolder.isFile()) {
-                    initialFolder = initialFolder.getParentFile();
-            }
+            // Delete the created robot since it is not in a project
+            chosen.getAbsoluteFile().delete();
 
-            // Select robot file
-            FileChooser fileChooser = new FileChooser();
-			fileChooser.setInitialDirectory(initialFolder);
-
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
-					"Xill Robot (*." + Xill.FILE_EXTENSION + ")", "*." + Xill.FILE_EXTENSION));
-            fileChooser.setTitle("New Robot");
-
-            File chosen = fileChooser.showSaveDialog(tpnBots.getScene().getWindow());
-
-            if (chosen == null) {
-                    // No file was chosen so we abort
-                    return;
-            }
-
-            // Fix for files being created out of projects
-            if (chosen.getParent().startsWith(projectfile.getAbsolutePath())) {
-                // The created file is in the project
-
-                // This code is because of different behaviour of FileChooser in Linux and Windows
-                // On Linux the FileChooser does not automatically add xill extension
-                String xillExt = "." + Xill.FILE_EXTENSION;
-                if (!chosen.getName().endsWith(xillExt)) {
-                        chosen = new File(chosen.getPath() + xillExt);
-                }
-
-                RobotTab tab;
-                try {
-                        if (!chosen.exists()) {
-                                chosen.createNewFile();
-                        }
-
-                        tab = new RobotTab(projectfile.getAbsoluteFile(), chosen, this);
-                        tpnBots.getTabs().add(tab);
-						tab.requestFocus();
-
-                } catch (IOException e) {
-                }
-            } else {
-                // The created file is not in the project
-
-                // Delete the created robot since it is not in a project
-                chosen.getAbsoluteFile().delete();
-
-                // Inform the user about the file being created outside of a project
-                Alert projectPathErrorAlert = new Alert(AlertType.ERROR);
-				projectPathErrorAlert.initModality(Modality.APPLICATION_MODAL);
-                projectPathErrorAlert.setTitle("Project path error");
-                projectPathErrorAlert.setHeaderText("Error");
-                projectPathErrorAlert.setContentText("Robots can only be created inside projects.");
-                projectPathErrorAlert.show();
-            }
-            // End fix for files being created out of projects
+            // Inform the user about the file being created outside of a project
+            Alert projectPathErrorAlert = new Alert(AlertType.ERROR);
+			projectPathErrorAlert.initModality(Modality.APPLICATION_MODAL);
+            projectPathErrorAlert.setTitle("Project path error");
+            projectPathErrorAlert.setHeaderText("Error");
+            projectPathErrorAlert.setContentText("Robots can only be created inside projects.");
+            projectPathErrorAlert.show();
+        }
+        // End fix for files being created out of projects
 	}
 
 	@FXML
 	private void buttonOpenFile() {
+		// Check if the button is enabled.
+		if (btnOpenFile.isDisabled())
+			return;
+
 		FileChooser fileChooser = new FileChooser();
 		String lastfolder = settings.simple().get(Settings.FILE, Settings.LastFolder);
 		if (lastfolder != null) {
@@ -716,33 +723,19 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 				switch (hk) {
 				case CLOSE:
-				{
-					// We need to close the current tab
-					RobotTab tab = (RobotTab) tpnBots.getSelectionModel().getSelectedItem();
-					closeTab(tab);
-				}
+					closeTab(tpnBots.getSelectionModel().getSelectedItem());
 					break;
 				case NEW:
 					buttonNewFile();
 					break;
 				case SAVE:
-				{
-					RobotTab tab = (RobotTab) tpnBots.getSelectionModel().getSelectedItem();
-					tab.save();
-				}
+					buttonSave();
 					break;
 				case SAVEAS:
-				{
-					RobotTab tab = (RobotTab) tpnBots.getSelectionModel().getSelectedItem();
-					tab.save(true);
-				}
+					buttonSaveAs();
 					break;
 				case SAVEALL:
-					tpnBots.getTabs().forEach(tab -> {
-						if (tab != null && tab instanceof RobotTab) {
-							((RobotTab) tab).save();
-						}
-					});
+					buttonSaveAll();
 					break;
 				case OPEN:
 					buttonOpenFile();
