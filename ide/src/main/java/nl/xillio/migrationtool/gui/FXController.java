@@ -259,7 +259,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 			return;
 
         // Select project path
-        File projectfile = null;
+        File projectfile;
         if (projectpane.getCurrentProject() != null) {
                 projectfile = projectpane.getCurrentProject().getValue().getKey();
         } else {
@@ -267,7 +267,7 @@ public class FXController implements Initializable, EventHandler<Event> {
         }
 
         // Select initial directory
-        File initialFolder = null;
+        File initialFolder;
         if (projectpane.getCurrentItem() != null) {
                 initialFolder = projectpane.getCurrentItem().getValue().getKey();
         } else {
@@ -306,15 +306,15 @@ public class FXController implements Initializable, EventHandler<Event> {
 
             RobotTab tab;
             try {
-                    if (!chosen.exists()) {
-                            chosen.createNewFile();
-                    }
+                if (!chosen.exists()) {
+                    chosen.createNewFile();
+                }
 
-                    tab = new RobotTab(projectfile.getAbsoluteFile(), chosen, this);
-                    tpnBots.getTabs().add(tab);
-					tab.requestFocus();
-
+                tab = new RobotTab(projectfile.getAbsoluteFile(), chosen, this);
+                tpnBots.getTabs().add(tab);
+                tab.requestFocus();
             } catch (IOException e) {
+	            LOGGER.error("Failed to perform operation.", e);
             }
         } else {
             // The created file is not in the project
@@ -404,6 +404,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 			tab.requestFocus();
 			return tab;
 		} catch (IOException e) {
+            LOGGER.error("Failed to perform operation.", e);
 		}
 		return null;
 	}
@@ -430,9 +431,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 				 ((MenuButton) mb).showingProperty().not().addListener(returnFocusListener);
 			}
 				});
-		node.lookupAll(".toggle-button").forEach((tb) -> {
-			((ToggleButton)tb).focusedProperty().addListener(returnFocusListener);
-		});
+		node.lookupAll(".toggle-button").forEach((tb) -> tb.focusedProperty().addListener(returnFocusListener));
 
 		//maybe need to add more here... since some things do not yet return focus.
 		}
@@ -480,37 +479,22 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 	@FXML
 	private void buttonSearch() {
-		if (btnSearch.isDisabled()) {
-			return;
-		}
 	}
 
 	@FXML
 	private void buttonBrowser() {
-		if (btnBrowser.isDisabled()) {
-			return;
-		}
 	}
 
 	@FXML
 	private void buttonRegexTester() {
-		if (btnRegexTester.isDisabled()) {
-			return;
-		}
 	}
 
 	@FXML
 	private void buttonPreviewOpenBrowser() {
-		if (btnPreviewOpenBrowser.isDisabled()) {
-			return;
-		}
 	}
 
 	@FXML
 	private void buttonPreviewOpenRegex() {
-		if (btnPreviewOpenRegex.isDisabled()) {
-			return;
-		}
 	}
 
 	@FXML
@@ -532,7 +516,10 @@ public class FXController implements Initializable, EventHandler<Event> {
 			spnMain.getItems().add(0, apnLeft);
 			spnMain.setDividerPosition(0, Double.parseDouble(settings.simple().get(Settings.LAYOUT, Settings.LeftPanelWidth)));
 		}
-		((RobotTab)getSelectedTab()).requestFocus();
+
+		RobotTab selected = (RobotTab)getSelectedTab();
+		if (selected != null)
+			selected.requestFocus();
 	}
 
 
@@ -545,7 +532,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 		// Save active tab
 		final String activeTab[] = {null};
-        getTabs().stream().filter(tab -> tab.isSelected()).forEach(tab -> activeTab[0] = tab.getDocument().getAbsolutePath());
+        getTabs().stream().filter(Tab::isSelected).forEach(tab -> activeTab[0] = tab.getDocument().getAbsolutePath());
 		if (activeTab[0] != null) {
 			settings.simple().save(Settings.WORKSPACE, Settings.ActiveTab, activeTab[0], true);
 		} else {
@@ -596,7 +583,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 	}
 
 	private String formatEditorOptionJSBoolean(final String optionJS, final String keyValue) {
-		return String.format("%1$s: %2$s,\n", optionJS, new Boolean(settings.simple().getBoolean(Settings.SETTINGS_EDITOR, keyValue)).toString());
+		return String.format("%1$s: %2$s,\n", optionJS, Boolean.toString(settings.simple().getBoolean(Settings.SETTINGS_EDITOR, keyValue)));
 	}
 
 	/**
@@ -633,7 +620,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 		jsCode += "\n});";
 
 		jsCode += String.format("editor.session.setWrapLimit(%1$s);\n", settings.simple().get(Settings.SETTINGS_EDITOR, Settings.WrapLimit));
-		jsCode += String.format("editor.setHighlightSelectedWord(%1$s);\n", new Boolean(settings.simple().getBoolean(Settings.SETTINGS_EDITOR, Settings.HighlightSelectedWord)));
+		jsCode += String.format("editor.setHighlightSelectedWord(%1$s);\n", settings.simple().getBoolean(Settings.SETTINGS_EDITOR, Settings.HighlightSelectedWord));
 
 		return jsCode;
 	}
@@ -741,37 +728,37 @@ public class FXController implements Initializable, EventHandler<Event> {
 					buttonOpenFile();
 					break;
 				case CLEARCONSOLE:
-					tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
+					tpnBots.getTabs().filtered(Tab::isSelected).forEach(tab -> {
 						((RobotTab) tab).clearConsolePane();
 						keyEvent.consume();
 					});
 					break;
 				case RUN:
-					tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
+					tpnBots.getTabs().filtered(Tab::isSelected).forEach(tab -> {
 						((RobotTab) tab).getEditorPane().getControls().start();
 						keyEvent.consume();
 					});
 					break;
 				case STEPIN:
-					tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
+					tpnBots.getTabs().filtered(Tab::isSelected).forEach(tab -> {
 						((RobotTab) tab).getEditorPane().getControls().stepIn();
 						keyEvent.consume();
 					});
 					break;
 				case STEPOVER:
-					tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
+					tpnBots.getTabs().filtered(Tab::isSelected).forEach(tab -> {
 						((RobotTab) tab).getEditorPane().getControls().stepOver();
 						keyEvent.consume();
 					});
 					break;
 				case PAUSE:
-					tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
+					tpnBots.getTabs().filtered(Tab::isSelected).forEach(tab -> {
 						((RobotTab) tab).getEditorPane().getControls().pause();
 						keyEvent.consume();
 					});
 					break;
 				case STOP:
-					tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
+					tpnBots.getTabs().filtered(Tab::isSelected).forEach(tab -> {
 						((RobotTab) tab).getEditorPane().getControls().stop();
 						keyEvent.consume();
 					});
@@ -845,9 +832,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 	 */
 	public void closeAllTabsExcept(final Tab tab) {
 		List<RobotTab> tabs = getTabs();
-		for (RobotTab t : tabs)
-			if (t != tab)
-				closeTab(t);
+		tabs.stream().filter(t -> t != tab).forEach(this::closeTab);
 	}
 
 	/**
