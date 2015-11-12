@@ -302,6 +302,8 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 				paste();
 			} else if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.RESET_ZOOM)).match(ke)) {
 				zoomTo(1);
+			} else if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.DUPLICATELINES)).match(ke)) {
+				callOnAce("duplicateCurrentLines");
 			}
 		}
 

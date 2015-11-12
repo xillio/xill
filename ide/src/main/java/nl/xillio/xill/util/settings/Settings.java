@@ -220,6 +220,9 @@ public class Settings {
 	public static String Paste = "Paste";
 
 	/** */
+	public static String DuplicateLines = "DuplicateLines";
+
+	/** */
 	public static String OpenSettings = "OpenSettings";
 	// =============================================================================
 }
