@@ -4,5 +4,5 @@
 description 'This plugin is responsible for operations regarding the UDM'
 
 dependencies{
-    compile 'nl.xillio:udm:ALPHA-17-g312cdb4'
+    compile 'nl.xillio:udm:ALPHA-20-g4138fa2'
 }
