@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javafx.scene.control.*;
+import nl.xillio.migrationtool.gui.searching.PreviewSearch;
 import org.apache.commons.lang3.text.WordUtils;
 
 import javafx.application.Platform;
@@ -14,15 +16,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.Tooltip;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeTableColumn;
-import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.util.Pair;
-import nl.xillio.migrationtool.gui.searching.SearchTextArea;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
@@ -42,7 +38,8 @@ public class PreviewPane extends AnchorPane implements RobotTabComponent {
 	@FXML
 	private ToggleButton tbnPreviewSearch;
 	private Debugger debugger;
-	private final SearchTextArea textView = new SearchTextArea();
+	private final TextArea textView = new TextArea();
+	private PreviewSearch previewSearch;
 
 	/**
 	 * Create a new PreviewPane
@@ -57,7 +54,8 @@ public class PreviewPane extends AnchorPane implements RobotTabComponent {
 			e.printStackTrace();
 		}
 
-		apnPreviewSearchBar.setSearchable(textView);
+		previewSearch = new PreviewSearch(apnPreviewPane);
+		apnPreviewSearchBar.setSearchable(previewSearch);
 		apnPreviewSearchBar.setButton(tbnPreviewSearch, 1);
 
 		AnchorPane.setBottomAnchor(textView, 0.0);
@@ -70,26 +68,31 @@ public class PreviewPane extends AnchorPane implements RobotTabComponent {
 	 * @param observableVariable
 	 */
 	public void preview(final ObservableVariable observableVariable) {
-		MetaExpression value = debugger.getVariableValue(observableVariable.getSource());
+        apnPreviewSearchBar.reset(false);
+        previewSearch.clearSearch();
 
-		apnPreviewPane.getChildren().clear();
+        MetaExpression value = debugger.getVariableValue(observableVariable.getSource());
 
-		Node node = getPreview(value, apnPreviewSearchBar);
+        apnPreviewPane.getChildren().clear();
 
-		if (node == null) {
-			node = buildTree(value);
-		}
+        Node node = getPreview(value, apnPreviewSearchBar);
 
-		if (node instanceof Text) {
-			textView.setText(((Text) node).getText());
-			apnPreviewPane.getChildren().add(textView);
-		} else {
-			apnPreviewPane.getChildren().add(node);
-		}
-	}
+        if (node == null) {
+            node = buildTree(value);
+        }
+
+        if (node instanceof Text) {
+            textView.setText(((Text) node).getText());
+            apnPreviewPane.getChildren().add(textView);
+        } else {
+            apnPreviewPane.getChildren().add(node);
+        }
+    }
 
 	private void clear() {
 		Platform.runLater(() -> {
+            apnPreviewSearchBar.reset(true);
+            apnPreviewSearchBar.close(true);
 			apnPreviewPane.getChildren().clear();
 		});
 	}
