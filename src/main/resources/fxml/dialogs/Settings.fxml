@@ -452,7 +452,7 @@
 																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
 																			<children>
 																				<Label prefWidth="150.0" text="License type" />
-																				<Label text="Internal" HBox.hgrow="ALWAYS" />
+																				<Label fx:id="lblLicenseType" text="Internal" HBox.hgrow="ALWAYS" />
 																			</children>
 																			<padding>
 																				<Insets />

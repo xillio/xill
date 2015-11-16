@@ -12,6 +12,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Window;
+import nl.xillio.license.License;
+import nl.xillio.migrationtool.LicenseUtils;
 import nl.xillio.migrationtool.gui.FXController;
 import nl.xillio.xill.util.settings.Settings;
 import nl.xillio.xill.util.settings.SettingsHandler;
@@ -71,6 +73,8 @@ public class SettingsDialog extends FXMLDialog {
     private CheckBox cbshowlinenumbers;
     @FXML
     private Tab licenseTab;
+    @FXML
+    private Label lblLicenseType;
 
     private SettingsHandler settings;
     private Runnable onApply;
@@ -98,11 +102,13 @@ public class SettingsDialog extends FXMLDialog {
 
         Platform.runLater(() -> FXController.hotkeys.getAllTextFields(getScene()).forEach(this::setShortcutHandler));
 
+        loadLicenseInfo();
+    }
 
-        // TODO We do not have license functionality yet. If this is implemented in the future remove this code
-        LOGGER.warn("Removing license tab from settings.");
-        licenseTab.getTabPane().getTabs().remove(licenseTab);
-        // End of license tab removal
+    private void loadLicenseInfo() {
+        License license = LicenseUtils.getLicense();
+
+        lblLicenseType.setText(license.getVendor());
     }
 
     private void setSize() {
