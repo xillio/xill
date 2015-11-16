@@ -254,84 +254,91 @@ public class FXController implements Initializable, EventHandler<Event> {
 	 */
 	@FXML
 	private void buttonNewFile() {
+		// Check if the button is enabled.
+		if (btnNewFile.isDisabled())
+			return;
 
-            // Select project path
-            File projectfile = null;
-            if (projectpane.getCurrentProject() != null) {
-                    projectfile = projectpane.getCurrentProject().getValue().getKey();
-            } else {
-                    projectfile = new File(System.getProperty("user.home"));
+        // Select project path
+        File projectfile;
+        if (projectpane.getCurrentProject() != null) {
+                projectfile = projectpane.getCurrentProject().getValue().getKey();
+        } else {
+                projectfile = new File(System.getProperty("user.home"));
+        }
+
+        // Select initial directory
+        File initialFolder;
+        if (projectpane.getCurrentItem() != null) {
+                initialFolder = projectpane.getCurrentItem().getValue().getKey();
+        } else {
+                initialFolder = projectfile;
+        }
+
+        if (initialFolder.isFile()) {
+                initialFolder = initialFolder.getParentFile();
+        }
+
+        // Select robot file
+        FileChooser fileChooser = new FileChooser();
+		fileChooser.setInitialDirectory(initialFolder);
+
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
+				"Xill Robot (*." + Xill.FILE_EXTENSION + ")", "*." + Xill.FILE_EXTENSION));
+        fileChooser.setTitle("New Robot");
+
+        File chosen = fileChooser.showSaveDialog(tpnBots.getScene().getWindow());
+
+        if (chosen == null) {
+                // No file was chosen so we abort
+                return;
+        }
+
+        // Fix for files being created out of projects
+        if (chosen.getParent().startsWith(projectfile.getAbsolutePath())) {
+            // The created file is in the project
+
+            // This code is because of different behaviour of FileChooser in Linux and Windows
+            // On Linux the FileChooser does not automatically add xill extension
+            String xillExt = "." + Xill.FILE_EXTENSION;
+            if (!chosen.getName().endsWith(xillExt)) {
+                    chosen = new File(chosen.getPath() + xillExt);
             }
 
-            // Select initial directory
-            File initialFolder = null;
-            if (projectpane.getCurrentItem() != null) {
-                    initialFolder = projectpane.getCurrentItem().getValue().getKey();
-            } else {
-                    initialFolder = projectfile;
-            }
-
-            if (initialFolder.isFile()) {
-                    initialFolder = initialFolder.getParentFile();
-            }
-
-            // Select robot file
-            FileChooser fileChooser = new FileChooser();
-			fileChooser.setInitialDirectory(initialFolder);
-
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
-					"Xill Robot (*." + Xill.FILE_EXTENSION + ")", "*." + Xill.FILE_EXTENSION));
-            fileChooser.setTitle("New Robot");
-
-            File chosen = fileChooser.showSaveDialog(tpnBots.getScene().getWindow());
-
-            if (chosen == null) {
-                    // No file was chosen so we abort
-                    return;
-            }
-
-            // Fix for files being created out of projects
-            if (chosen.getParent().startsWith(projectfile.getAbsolutePath())) {
-                // The created file is in the project
-
-                // This code is because of different behaviour of FileChooser in Linux and Windows
-                // On Linux the FileChooser does not automatically add xill extension
-                String xillExt = "." + Xill.FILE_EXTENSION;
-                if (!chosen.getName().endsWith(xillExt)) {
-                        chosen = new File(chosen.getPath() + xillExt);
+            RobotTab tab;
+            try {
+                if (!chosen.exists()) {
+                    chosen.createNewFile();
                 }
 
-                RobotTab tab;
-                try {
-                        if (!chosen.exists()) {
-                                chosen.createNewFile();
-                        }
-
-                        tab = new RobotTab(projectfile.getAbsoluteFile(), chosen, this);
-                        tpnBots.getTabs().add(tab);
-						tab.requestFocus();
-
-                } catch (IOException e) {
-                }
-            } else {
-                // The created file is not in the project
-
-                // Delete the created robot since it is not in a project
-                chosen.getAbsoluteFile().delete();
-
-                // Inform the user about the file being created outside of a project
-                Alert projectPathErrorAlert = new Alert(AlertType.ERROR);
-				projectPathErrorAlert.initModality(Modality.APPLICATION_MODAL);
-                projectPathErrorAlert.setTitle("Project path error");
-                projectPathErrorAlert.setHeaderText("Error");
-                projectPathErrorAlert.setContentText("Robots can only be created inside projects.");
-                projectPathErrorAlert.show();
+                tab = new RobotTab(projectfile.getAbsoluteFile(), chosen, this);
+                tpnBots.getTabs().add(tab);
+                tab.requestFocus();
+            } catch (IOException e) {
+	            LOGGER.error("Failed to perform operation.", e);
             }
-            // End fix for files being created out of projects
+        } else {
+            // The created file is not in the project
+
+            // Delete the created robot since it is not in a project
+            chosen.getAbsoluteFile().delete();
+
+            // Inform the user about the file being created outside of a project
+            Alert projectPathErrorAlert = new Alert(AlertType.ERROR);
+			projectPathErrorAlert.initModality(Modality.APPLICATION_MODAL);
+            projectPathErrorAlert.setTitle("Project path error");
+            projectPathErrorAlert.setHeaderText("Error");
+            projectPathErrorAlert.setContentText("Robots can only be created inside projects.");
+            projectPathErrorAlert.show();
+        }
+        // End fix for files being created out of projects
 	}
 
 	@FXML
 	private void buttonOpenFile() {
+		// Check if the button is enabled.
+		if (btnOpenFile.isDisabled())
+			return;
+
 		FileChooser fileChooser = new FileChooser();
 		String lastfolder = settings.simple().get(Settings.FILE, Settings.LastFolder);
 		if (lastfolder != null) {
@@ -397,6 +404,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 			tab.requestFocus();
 			return tab;
 		} catch (IOException e) {
+            LOGGER.error("Failed to perform operation.", e);
 		}
 		return null;
 	}
@@ -423,9 +431,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 				 ((MenuButton) mb).showingProperty().not().addListener(returnFocusListener);
 			}
 				});
-		node.lookupAll(".toggle-button").forEach((tb) -> {
-			((ToggleButton)tb).focusedProperty().addListener(returnFocusListener);
-		});
+		node.lookupAll(".toggle-button").forEach((tb) -> tb.focusedProperty().addListener(returnFocusListener));
 
 		//maybe need to add more here... since some things do not yet return focus.
 		}
@@ -473,37 +479,22 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 	@FXML
 	private void buttonSearch() {
-		if (btnSearch.isDisabled()) {
-			return;
-		}
 	}
 
 	@FXML
 	private void buttonBrowser() {
-		if (btnBrowser.isDisabled()) {
-			return;
-		}
 	}
 
 	@FXML
 	private void buttonRegexTester() {
-		if (btnRegexTester.isDisabled()) {
-			return;
-		}
 	}
 
 	@FXML
 	private void buttonPreviewOpenBrowser() {
-		if (btnPreviewOpenBrowser.isDisabled()) {
-			return;
-		}
 	}
 
 	@FXML
 	private void buttonPreviewOpenRegex() {
-		if (btnPreviewOpenRegex.isDisabled()) {
-			return;
-		}
 	}
 
 	@FXML
@@ -525,7 +516,10 @@ public class FXController implements Initializable, EventHandler<Event> {
 			spnMain.getItems().add(0, apnLeft);
 			spnMain.setDividerPosition(0, Double.parseDouble(settings.simple().get(Settings.LAYOUT, Settings.LeftPanelWidth)));
 		}
-		((RobotTab)getSelectedTab()).requestFocus();
+
+		RobotTab selected = (RobotTab)getSelectedTab();
+		if (selected != null)
+			selected.requestFocus();
 	}
 
 
@@ -538,7 +532,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 		// Save active tab
 		final String activeTab[] = {null};
-        getTabs().stream().filter(tab -> tab.isSelected()).forEach(tab -> activeTab[0] = tab.getDocument().getAbsolutePath());
+        getTabs().stream().filter(Tab::isSelected).forEach(tab -> activeTab[0] = tab.getDocument().getAbsolutePath());
 		if (activeTab[0] != null) {
 			settings.simple().save(Settings.WORKSPACE, Settings.ActiveTab, activeTab[0], true);
 		} else {
@@ -589,7 +583,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 	}
 
 	private String formatEditorOptionJSBoolean(final String optionJS, final String keyValue) {
-		return String.format("%1$s: %2$s,\n", optionJS, new Boolean(settings.simple().getBoolean(Settings.SETTINGS_EDITOR, keyValue)).toString());
+		return String.format("%1$s: %2$s,\n", optionJS, Boolean.toString(settings.simple().getBoolean(Settings.SETTINGS_EDITOR, keyValue)));
 	}
 
 	/**
@@ -626,7 +620,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 		jsCode += "\n});";
 
 		jsCode += String.format("editor.session.setWrapLimit(%1$s);\n", settings.simple().get(Settings.SETTINGS_EDITOR, Settings.WrapLimit));
-		jsCode += String.format("editor.setHighlightSelectedWord(%1$s);\n", new Boolean(settings.simple().getBoolean(Settings.SETTINGS_EDITOR, Settings.HighlightSelectedWord)));
+		jsCode += String.format("editor.setHighlightSelectedWord(%1$s);\n", settings.simple().getBoolean(Settings.SETTINGS_EDITOR, Settings.HighlightSelectedWord));
 
 		return jsCode;
 	}
@@ -716,69 +710,55 @@ public class FXController implements Initializable, EventHandler<Event> {
 
 				switch (hk) {
 				case CLOSE:
-				{
-					// We need to close the current tab
-					RobotTab tab = (RobotTab) tpnBots.getSelectionModel().getSelectedItem();
-					closeTab(tab);
-				}
+					closeTab(tpnBots.getSelectionModel().getSelectedItem());
 					break;
 				case NEW:
 					buttonNewFile();
 					break;
 				case SAVE:
-				{
-					RobotTab tab = (RobotTab) tpnBots.getSelectionModel().getSelectedItem();
-					tab.save();
-				}
+					buttonSave();
 					break;
 				case SAVEAS:
-				{
-					RobotTab tab = (RobotTab) tpnBots.getSelectionModel().getSelectedItem();
-					tab.save(true);
-				}
+					buttonSaveAs();
 					break;
 				case SAVEALL:
-					tpnBots.getTabs().forEach(tab -> {
-						if (tab != null && tab instanceof RobotTab) {
-							((RobotTab) tab).save();
-						}
-					});
+					buttonSaveAll();
 					break;
 				case OPEN:
 					buttonOpenFile();
 					break;
 				case CLEARCONSOLE:
-					tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
+					tpnBots.getTabs().filtered(Tab::isSelected).forEach(tab -> {
 						((RobotTab) tab).clearConsolePane();
 						keyEvent.consume();
 					});
 					break;
 				case RUN:
-					tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
+					tpnBots.getTabs().filtered(Tab::isSelected).forEach(tab -> {
 						((RobotTab) tab).getEditorPane().getControls().start();
 						keyEvent.consume();
 					});
 					break;
 				case STEPIN:
-					tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
+					tpnBots.getTabs().filtered(Tab::isSelected).forEach(tab -> {
 						((RobotTab) tab).getEditorPane().getControls().stepIn();
 						keyEvent.consume();
 					});
 					break;
 				case STEPOVER:
-					tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
+					tpnBots.getTabs().filtered(Tab::isSelected).forEach(tab -> {
 						((RobotTab) tab).getEditorPane().getControls().stepOver();
 						keyEvent.consume();
 					});
 					break;
 				case PAUSE:
-					tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
+					tpnBots.getTabs().filtered(Tab::isSelected).forEach(tab -> {
 						((RobotTab) tab).getEditorPane().getControls().pause();
 						keyEvent.consume();
 					});
 					break;
 				case STOP:
-					tpnBots.getTabs().filtered(tab -> tab.isSelected()).forEach(tab -> {
+					tpnBots.getTabs().filtered(Tab::isSelected).forEach(tab -> {
 						((RobotTab) tab).getEditorPane().getControls().stop();
 						keyEvent.consume();
 					});
@@ -852,9 +832,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 	 */
 	public void closeAllTabsExcept(final Tab tab) {
 		List<RobotTab> tabs = getTabs();
-		for (RobotTab t : tabs)
-			if (t != tab)
-				closeTab(t);
+		tabs.stream().filter(t -> t != tab).forEach(this::closeTab);
 	}
 
 	/**

@@ -38,7 +38,7 @@
 										<Tooltip text="Previous search result" />
 									</tooltip>
 								</Button>
-								<Button fx:id="btnEditorSearchNext" defaultButton="true" mnemonicParsing="false" onAction="#nextButtonPressed" text="Next" HBox.hgrow="NEVER">
+								<Button fx:id="btnEditorSearchNext" mnemonicParsing="false" onAction="#nextButtonPressed" text="Next" HBox.hgrow="NEVER">
 									<graphic>
 										<Pane styleClass="icon" />
 									</graphic>
