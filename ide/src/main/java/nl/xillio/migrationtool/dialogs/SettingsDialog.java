@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
  */
 public class SettingsDialog extends FXMLDialog {
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(SettingsDialog.class);
 
     @FXML
     private TextField tfprojectfolder;
@@ -228,6 +228,7 @@ public class SettingsDialog extends FXMLDialog {
         try {
             validate();
         } catch (ValidationException e) {
+            LOGGER.error(e.getMessage(), e);
             Alert alert = new Alert(AlertType.ERROR, e.getMessage(), ButtonType.OK);
             alert.initModality(Modality.APPLICATION_MODAL);
             alert.showAndWait();

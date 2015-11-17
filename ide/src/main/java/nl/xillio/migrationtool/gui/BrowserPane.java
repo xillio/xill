@@ -11,6 +11,7 @@ import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -35,7 +36,7 @@ import javafx.scene.web.WebView;
  *
  */
 public class BrowserPane extends AnchorPane {
-	private final Logger log = LogManager.getLogger();
+	private final Logger LOGGER = LogManager.getLogger(BrowserPane.class);
 
 	public static enum ContentType {
 		HTML, XML
@@ -252,7 +253,7 @@ public class BrowserPane extends AnchorPane {
 	 * @throws IllegalArgumentException
 	 *         If the parent node hasn't the required xmt-property
 	 */
-	private void decapsulate(final Node node) throws IllegalArgumentException {
+	private void decapsulate(final Node node) {
 		Node child = node.getFirstChild();
 		Node parent = node.getParentNode();
 		if (!"DIV".equals(node.getNodeName()) || !"xmt-selection-capsule".equals(node.getAttributes().getNamedItem(CSS_PROPERTY_NAME).getNodeValue())) {
@@ -278,10 +279,8 @@ public class BrowserPane extends AnchorPane {
 		try {
 			Object result = xpath.evaluate(query, source, type);
 			return result;
-		} catch (Exception e) {
-			// System.err.println(new SAX_XMLVariable(source).toString());
-			System.err.println("XPath query: " + query);
-			// e.printStackTrace();
+		} catch (XPathExpressionException e) {
+			LOGGER.error(e.getMessage(), e);
 		}
 		return null;
 	}
