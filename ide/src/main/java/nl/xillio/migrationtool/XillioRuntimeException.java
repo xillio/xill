@@ -18,4 +18,8 @@ public class XillioRuntimeException extends RuntimeException {
     public XillioRuntimeException(String message, Throwable t) {
         super(message, t);
     }
+
+    public XillioRuntimeException(Throwable t) {
+        super(t);
+    }
 }

@@ -146,7 +146,7 @@ public class XillInitializer extends Thread {
 		try (DocumentationGenerator generator = generator(plugin.getName())) {
 			plugin.getConstructs().forEach(construct -> generateDocumentation(construct, generator));
 		} catch (Exception e) {
-			throw new RuntimeException("Failed to generate documentation for " + plugin.getClass().getName(), e);
+			throw new XillioRuntimeException("Failed to generate documentation for " + plugin.getClass().getName(), e);
 		}
 	}
 
@@ -222,7 +222,7 @@ public class XillInitializer extends Thread {
 		try {
 			pluginLoader.load();
 		} catch (CircularReferenceException e) {
-			throw new RuntimeException(e);
+			throw new XillioRuntimeException(e);
 		}
 		
 		pluginsLoaded = true;
@@ -238,7 +238,7 @@ public class XillInitializer extends Thread {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				LOGGER.error("Failed to list the plugins.", e);
 			}
 		}
 		
