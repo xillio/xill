@@ -1,11 +1,6 @@
 package nl.xillio.xill.plugins.database.services;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -67,7 +62,16 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	}
 
 	@Override
-	public Object query(final Connection connection, final String query, final List<LinkedHashMap<String, Object>> parameters, final int timeout) throws SQLException {
+	public Object query(final Connection connection, final String query, final int timeout) throws SQLException {
+		Statement stmt = connection.createStatement();
+		stmt.setQueryTimeout(timeout);
+		stmt.execute(query);
+
+		return createQueryResult(stmt);
+	}
+
+	@Override
+	public Object preparedQuery(final Connection connection, final String query, final List<LinkedHashMap<String, Object>> parameters, final int timeout) throws SQLException {
 		PreparedStatement stmt = parseNamedParameters(connection, query);
 		stmt.setQueryTimeout(timeout);
 
@@ -98,7 +102,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 * @return An Integer if the query represents one insert or update, an iterator otherwise
 	 * @throws SQLException
 	 */
-	private Object createQueryResult(PreparedStatement stmt) throws SQLException {
+	private Object createQueryResult(Statement stmt) throws SQLException {
 		// If the first result is the only result and an update count simply return that count, otherwise create an iterator over the statement
 		int firstCount = stmt.getUpdateCount();
 		if (firstCount != -1) {
