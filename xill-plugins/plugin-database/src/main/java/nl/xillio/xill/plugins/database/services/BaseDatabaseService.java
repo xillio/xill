@@ -215,6 +215,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 *        Driver specific options
 	 * @return A URL to connect to the database
 	 */
+	@SuppressWarnings("squid:S2068") // The hard-coded password is a false alert.
 	String createJDBCURL(final String type, final String database, final String user, final String pass, String optionsMarker, String optionsSeparator, final Tuple<String, String>... options) {
 		String url = String.format("jdbc:%s://%s", type, database);
 
@@ -238,7 +239,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 
 	@Override
 	public LinkedHashMap<String, Object> getObject(final Connection connection, final String table, final Map<String, Object> constraints)
-			throws SQLException, ConversionException, IllegalArgumentException {
+			throws SQLException, ConversionException {
 		// prepare statement
 		final LinkedHashMap<String, Object> notNullConstraints = new LinkedHashMap<>();
 		constraints.forEach((k, v) -> {

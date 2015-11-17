@@ -101,7 +101,9 @@ public enum TypeConverter {
 			} catch (SQLException e) {
 				throw new ConversionException(e);
 			}
-			if (length > Integer.MAX_VALUE) throw new ConversionException("Clob is too long");
+			if (length > Integer.MAX_VALUE) {
+				throw new ConversionException("Clob is too long");
+			}
 			try {
 				return clob.getSubString(1, (int) length);
 			} catch (SQLException e) {
