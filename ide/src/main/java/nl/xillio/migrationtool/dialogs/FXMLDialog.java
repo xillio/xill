@@ -9,11 +9,15 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * A general dialog.
  */
 public class FXMLDialog extends Stage {
+
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * Default constructor.
@@ -30,8 +34,7 @@ public class FXMLDialog extends Stage {
                 this.getIcons().add(new Image(image));
             }
         } catch (IOException e) {
-            System.err.println(e.getMessage());
-            e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
         }
 	}
 
@@ -43,7 +46,7 @@ public class FXMLDialog extends Stage {
 		try {
 			setScene(new Scene(loader.load()));
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Failed to load FXML.", e);
 		}
 	}
 }
