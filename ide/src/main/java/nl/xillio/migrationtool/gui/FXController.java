@@ -239,7 +239,10 @@ public class FXController implements Initializable, EventHandler<Event> {
 
         Platform.runLater(() -> {
             // Verify the license.
-            LicenseUtils.performValidation(false);
+            if(!LicenseUtils.performValidation(false)) {
+                closeApplication();
+            }
+
             try {
                 showReleaseNotes();
             } catch (IOException e) {

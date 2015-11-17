@@ -55,7 +55,7 @@ public class LicenseUtils {
      * @return true if and only if the license is valid
      */
     public static boolean isValid(File licenseFile) {
-        if (!licenseFile.exists() || !licenseFile.isFile()) {
+        if (licenseFile == null || !licenseFile.exists() || !licenseFile.isFile()) {
             return false;
         }
 
@@ -73,28 +73,26 @@ public class LicenseUtils {
      *
      * @param insist Ask for a license even though it is valid
      */
-    public static void performValidation(boolean insist) {
-        boolean shouldInsists = insist;
+    public static boolean performValidation(boolean insist) {
 
-        while (!isValid() || shouldInsists) {
-            shouldInsists = false;
-            AddLicenseDialog dialog = new AddLicenseDialog();
-            dialog.showAndWait();
+        if (!insist && isValid()) {
+            return true;
+        }
 
-            File chosenFile = dialog.getChosen();
+        AddLicenseDialog dialog = new AddLicenseDialog();
+        dialog.showAndWait();
 
-            if (chosenFile == null) continue;
-            if (!chosenFile.exists()) continue;
-            if (!chosenFile.isFile()) continue;
+        File chosenFile = dialog.getChosen();
 
-            if (LicenseUtils.isValid(chosenFile)) {
-                try {
-                    FileUtils.copyFile(chosenFile, LicenseUtils.LICENSE_FILE);
-                } catch (IOException e) {
-                    LOGGER.error("Failed to copy license file", e);
-                }
+        if (LicenseUtils.isValid(chosenFile)) {
+            try {
+                FileUtils.copyFile(chosenFile, LicenseUtils.LICENSE_FILE);
+            } catch (IOException e) {
+                LOGGER.error("Failed to copy license file", e);
             }
         }
+
+        return isValid();
     }
 
     private static License getLicense(InputStream stream) throws IOException {
