@@ -42,7 +42,7 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 			String path = Loader.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
 			MANIFEST = new JarFile(path).getManifest();
 		} catch (URISyntaxException | IOException e) {
-			throw new RuntimeException("Failed to find running jar file", e);
+			throw new XillioRuntimeException("Failed to find running jar file", e);
 		}
 
 		String shortVersion = Loader.class.getPackage().getImplementationVersion() == null ? "dev" : Loader.class.getPackage().getImplementationVersion();
@@ -99,8 +99,7 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 				primaryStage.getIcons().add(new Image(image));
 			}
 		} catch (IOException e) {
-			System.err.println(e.getMessage());
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		}
 		
 		Parent root;
@@ -126,8 +125,7 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 			primaryStage.setHeight(bounds.getHeight());
 
 		} catch (IOException e) {
-			System.err.println("Loader.initGUI(): Fatal error occurred during launch: " + e.getMessage());
-			e.printStackTrace();
+			LOGGER.error("Loader.initGUI(): Fatal error occurred during launch: " + e.getMessage(), e);
 			System.exit(1);
 		}
 		
