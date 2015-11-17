@@ -2,8 +2,10 @@ package nl.xillio.migrationtool.dialogs;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
+import nl.xillio.migrationtool.LicenseUtils;
 
 import java.io.File;
 
@@ -33,12 +35,20 @@ public class AddLicenseDialog extends FXMLDialog {
 
     @FXML
     private void cancelBtnPressed(final ActionEvent event) {
+        tfLicenseFile.clear();
         close();
     }
 
     @FXML
     private void okayBtnPressed(final ActionEvent event) {
-        close();
+        if (LicenseUtils.isValid(getChosen())) {
+            close();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "This license is not valid");
+            alert.setTitle("Invalid license");
+            alert.initOwner(this.getScene().getWindow());
+            alert.show();
+        }
     }
 
     public File getChosen() {

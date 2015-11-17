@@ -239,7 +239,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 
         Platform.runLater(() -> {
             // Verify the license.
-            verifyLicense();
+            LicenseUtils.performValidation(false);
             try {
                 showReleaseNotes();
             } catch (IOException e) {
@@ -629,27 +629,6 @@ public class FXController implements Initializable, EventHandler<Event> {
         jsCode += String.format("editor.setHighlightSelectedWord(%1$s);\n", settings.simple().getBoolean(Settings.SETTINGS_EDITOR, Settings.HighlightSelectedWord));
 
         return jsCode;
-    }
-
-    private void verifyLicense() {
-        while (LicenseUtils.isValid()) {
-            AddLicenseDialog dialog = new AddLicenseDialog();
-            dialog.showAndWait();
-
-            File chosenFile = dialog.getChosen();
-
-            if (chosenFile == null) continue;
-            if (!chosenFile.exists()) continue;
-            if (!chosenFile.isFile()) continue;
-
-            if (LicenseUtils.isValid(chosenFile)) {
-                try {
-                    FileUtils.copyFile(chosenFile, LicenseUtils.LICENSE_FILE);
-                } catch (IOException e) {
-                    LOGGER.error("Failed to copy license file", e);
-                }
-            }
-        }
     }
 
 

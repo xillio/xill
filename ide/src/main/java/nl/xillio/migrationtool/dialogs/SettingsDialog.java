@@ -12,7 +12,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Window;
+import me.biesaart.utils.StringUtils;
 import nl.xillio.license.License;
+import nl.xillio.license.LicenseDetails;
 import nl.xillio.migrationtool.LicenseUtils;
 import nl.xillio.migrationtool.gui.FXController;
 import nl.xillio.xill.util.settings.Settings;
@@ -22,6 +24,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 
 /**
@@ -74,7 +79,8 @@ public class SettingsDialog extends FXMLDialog {
     @FXML
     private Tab licenseTab;
     @FXML
-    private Label lblLicenseType;
+    private Label lblLicenseType, lblLicensedTo, lblLicenseContactName, lblLicenseContactEmail,
+            lblLicenseDateIssued, lblLicenseExpiryDate, lblLicenseModules;
 
     private SettingsHandler settings;
     private Runnable onApply;
@@ -107,8 +113,16 @@ public class SettingsDialog extends FXMLDialog {
 
     private void loadLicenseInfo() {
         License license = LicenseUtils.getLicense();
+        LicenseDetails details = license.getLicenseDetails();
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("d-M-Y");
 
-        lblLicenseType.setText(license.getVendor());
+        lblLicenseType.setText(details.getLicenseType().toString());
+        lblLicenseContactEmail.setText(details.getEmailAddress());
+        lblLicenseContactName.setText(details.getContactName());
+        lblLicenseDateIssued.setText(format.format(details.getIssuedDate()));
+        lblLicenseExpiryDate.setText(format.format(details.getExpiryDate()));
+        lblLicensedTo.setText(details.getCompanyName());
+        lblLicenseModules.setText(StringUtils.join(details.getSoftwareModules(), ", "));
     }
 
     private void setSize() {
@@ -135,11 +149,17 @@ public class SettingsDialog extends FXMLDialog {
     }
 
     @FXML
+    private void browseLicenseBtnPressed() {
+        LicenseUtils.performValidation(true);
+        loadLicenseInfo();
+    }
+
+    @FXML
     private void projectBrowseButtonPressed() {
         DirectoryChooser chooser = new DirectoryChooser();
 
         // Set directory
-	    File folder = new File(tfprojectfolder.getText());
+        File folder = new File(tfprojectfolder.getText());
         if (folder.isDirectory()) {
             chooser.setInitialDirectory(folder);
         } else {
@@ -265,7 +285,7 @@ public class SettingsDialog extends FXMLDialog {
 
         if (!tfprojectfolder.getText().isEmpty()) {
             File file = new File(tfprojectfolder.getText());
-            if(!file.exists()) {
+            if (!file.exists()) {
                 throw new ValidationException("The chosen project folder does not exist!");
             }
 

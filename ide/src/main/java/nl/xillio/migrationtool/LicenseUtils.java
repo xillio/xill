@@ -1,13 +1,14 @@
 package nl.xillio.migrationtool;
 
 
-import me.biesaart.utils.IOUtils;
 import nl.xillio.license.License;
 import nl.xillio.license.LicenseFactory;
 import nl.xillio.license.LicenseValidator;
 import nl.xillio.license.SoftwareModule;
 import nl.xillio.license.util.PublicKeyReaderUtil;
+import nl.xillio.migrationtool.dialogs.AddLicenseDialog;
 import nl.xillio.util.XillioHomeFolder;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,7 +45,7 @@ public class LicenseUtils {
      * @return true if and only if the license is valid
      */
     public static boolean isValid() {
-        return true || isValid(LICENSE_FILE);
+        return isValid(LICENSE_FILE);
     }
 
     /**
@@ -67,10 +68,41 @@ public class LicenseUtils {
         }
     }
 
+    /**
+     * Show a license dialog if the current license if not valid.
+     *
+     * @param insist Ask for a license even though it is valid
+     */
+    public static void performValidation(boolean insist) {
+        boolean shouldInsists = insist;
+
+        while (!isValid() || shouldInsists) {
+            shouldInsists = false;
+            AddLicenseDialog dialog = new AddLicenseDialog();
+            dialog.showAndWait();
+
+            File chosenFile = dialog.getChosen();
+
+            if (chosenFile == null) continue;
+            if (!chosenFile.exists()) continue;
+            if (!chosenFile.isFile()) continue;
+
+            if (LicenseUtils.isValid(chosenFile)) {
+                try {
+                    FileUtils.copyFile(chosenFile, LicenseUtils.LICENSE_FILE);
+                } catch (IOException e) {
+                    LOGGER.error("Failed to copy license file", e);
+                }
+            }
+        }
+    }
+
     private static License getLicense(InputStream stream) throws IOException {
         try {
             return getFactory().fetchLicense(stream);
-        } catch (PublicKeyReaderUtil.PublicKeyParseException e) {
+        } catch (IOException e) {
+            throw e;
+        } catch (Exception e) {
             /*
                 We catch all exceptions here because we don't want a mistake in the license library
                 to allow the application to start
@@ -98,6 +130,6 @@ public class LicenseUtils {
     }
 
     private static InputStream openPublicKeyString() {
-        return IOUtils.toInputStream("This is a test");
+        return License.class.getResourceAsStream("/publickey");
     }
 }
