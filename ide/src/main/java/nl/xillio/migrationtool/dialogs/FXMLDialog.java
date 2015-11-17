@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class FXMLDialog extends Stage {
 
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger(FXMLDialog.class);
 
 	/**
 	 * Default constructor.

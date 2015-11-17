@@ -37,7 +37,7 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 	private static final Manifest MANIFEST;
 
 	static {
-		Logger logger = LogManager.getLogger();
+		Logger logger = LogManager.getLogger(Loader.class);
 		try {
 			String path = Loader.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
 			MANIFEST = new JarFile(path).getManifest();

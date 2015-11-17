@@ -39,7 +39,7 @@ import com.google.inject.Module;
 public class XillInitializer extends Thread {
 	private final DocGen docGen;
 	private DocumentationParser parser;
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger(XillInitializer.class);
 	private static final File PLUGIN_FOLDER = new File("plugins");
 	private PluginLoader<XillPlugin> pluginLoader;
 	private final EventHost<InitializationResult> onLoadComplete = new EventHost<>();
