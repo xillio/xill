@@ -11,7 +11,7 @@ import com.google.inject.Singleton;
  * This is the default implementation of the {@link SystemPropertiesService}
  */
 @Singleton
-public class SystemPropertyiesServiceImpl implements SystemPropertiesService {
+public class SystemPropertiesServiceImpl implements SystemPropertiesService {
 
 	@Override
 	public Map<String, Object> getProperties() {
@@ -20,7 +20,7 @@ public class SystemPropertyiesServiceImpl implements SystemPropertiesService {
 		properties.putAll(System.getProperties());
 		properties.putAll(System.getenv());
 
-		return properties.entrySet().stream().collect(Collectors.toMap(Object::toString, Function.identity()));
+		return properties.entrySet().stream().collect(Collectors.toMap(e -> e.getKey().toString(), e -> e.getValue().toString()));
 	}
 
 	@Override

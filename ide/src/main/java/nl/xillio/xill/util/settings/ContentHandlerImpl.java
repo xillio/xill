@@ -1,6 +1,8 @@
 package nl.xillio.xill.util.settings;
 
 import java.io.File;
+import java.io.IOException;
+import java.security.acl.LastOwnerException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -60,10 +62,10 @@ public class ContentHandlerImpl implements ContentHandler {
 	/**
 	 * Constructor that sets up the target XML file.
 	 * 
-	 * @param fileName target XML file
+	 * @param file target XML file
 	 */
-	public ContentHandlerImpl(final String fileName) {
-		this.storage = new File(fileName);
+	public ContentHandlerImpl(final File file) {
+		this.storage = file;
 	}
 
 	@Override
@@ -103,6 +105,7 @@ public class ContentHandlerImpl implements ContentHandler {
 		}
 		synchronized(lock) {
 			try {
+				FileUtils.touch(storage);
 				Transformer transformer = this.transformerFactory.newTransformer();
 				DOMSource source = new DOMSource(this.document);
 				StreamResult result = new StreamResult(this.storage);
