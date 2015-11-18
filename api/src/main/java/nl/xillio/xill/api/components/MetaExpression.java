@@ -225,8 +225,7 @@ public abstract class MetaExpression implements Expression, Processable {
 	 * @return a copy of the passed expression without any circular references
 	 */
 	@SuppressWarnings("unchecked")
-	private static MetaExpression removeCircularReference(final MetaExpression metaExpression,
-																												final List<MetaExpression> currentlyProcessing, final MetaExpression replacement) {
+	private static MetaExpression removeCircularReference(final MetaExpression metaExpression, final List<MetaExpression> currentlyProcessing, final MetaExpression replacement) {
 		MetaExpression result = ExpressionBuilderHelper.NULL;
 		currentlyProcessing.add(metaExpression);
 
