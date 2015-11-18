@@ -80,7 +80,7 @@ public class PreviewSearch implements Searchable {
         try {
             regexPattern = caseSensitive ? Pattern.compile(pattern) : Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
         } catch (PatternSyntaxException e) {
-            return;
+            return; // This return in catch (i.e. exception handling missing) is intentionally - if not valid regexp pattern is passed from user, it will do nothing
         }
 
         occurrences.clear();
@@ -95,12 +95,17 @@ public class PreviewSearch implements Searchable {
             tableView = null;
             searchText(); // Search in textarea
         } else {
-            tableView = (TreeTableView) node;
+            tableView = getTreeTableView(node);
             text = null;
             searchTreeIterate(tableView.getRoot()); // Search in treetable
         }
 
         Platform.runLater(() -> select(0));
+    }
+
+    @SuppressWarnings("unchecked")
+    private TreeTableView<Pair<String, Node>> getTreeTableView(final Node node) {
+        return (TreeTableView<Pair<String, Node>>) node;
     }
 
     @Override
@@ -152,7 +157,7 @@ public class PreviewSearch implements Searchable {
         SearchTreeOccurrence treeOccurrence = (SearchTreeOccurrence)occurrences.get(occurrence);
 
         Node node = apnPreviewPane.getChildren().get(0);
-        TreeTableView<Pair<String, Node>> tableView = (TreeTableView) node;
+        TreeTableView<Pair<String, Node>> tableView = getTreeTableView(node);
 
         expandItem(treeOccurrence.getItem());
         tableView.getSelectionModel().select(treeOccurrence.getItem());

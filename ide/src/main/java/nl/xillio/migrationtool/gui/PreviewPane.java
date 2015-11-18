@@ -87,6 +87,8 @@ public class PreviewPane extends AnchorPane implements RobotTabComponent {
         } else {
             apnPreviewPane.getChildren().add(node);
         }
+
+        apnPreviewSearchBar.refresh();
     }
 
 	private void clear() {
