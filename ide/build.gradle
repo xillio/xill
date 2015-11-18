@@ -5,7 +5,7 @@ dependencies {
     compile project(':docgen')
     compile 'org.elasticsearch:elasticsearch:1.6.0'
     compile 'org.jasypt:jasypt:1.9.1'
-    compile 'nl.xillio.license:model:0.9-3-g8f10cb7'
+    compile 'nl.xillio.license:model:1.0.0'
 }
 
 // To prepare for execution we need to copy the plugins to the plugin directory
