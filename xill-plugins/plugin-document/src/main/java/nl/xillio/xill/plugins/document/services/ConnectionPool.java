@@ -5,6 +5,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import nl.xillio.udm.services.UDMService;
 import nl.xillio.xill.plugins.document.data.UDMConnection;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,7 @@ import java.util.Optional;
  */
 @Singleton
 public class ConnectionPool {
+    private static final Logger LOGGER = LogManager.getLogger();
     private final List<UDMConnection> connections = new ArrayList<>();
     private final ConnectionFactory connectionFactory;
 
@@ -60,6 +63,7 @@ public class ConnectionPool {
     }
 
     private UDMService createConnection(String identity) {
+        LOGGER.debug("Creating new UDM Connection [" + identity + "]");
         UDMConnection connection = connectionFactory.build(identity);
         connections.add(connection);
         return connection.getUdm();
