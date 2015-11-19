@@ -36,6 +36,21 @@ public interface DatabaseService extends XillService {
 
 	/**
 	 * Executes a query and returns an object.
+	 *
+	 * @param connection
+	 *        The JDBC connection
+	 * @param query
+	 *        A SQL query, can contain multiple queries (if enabled in the JDBC driver).
+	 * @param timeout
+	 *        Maximum timeout in seconds
+	 * @return An Integer if the query contains one insert or update statement, a {@link StatementIterator} otherwise.
+	 * @throws SQLException
+	 *         When the query fails
+	 */
+	Object query(Connection connection, String query, int timeout) throws SQLException;
+
+	/**
+	 * Executes a query with parameters and returns an object.
 	 * 
 	 * @param connection
 	 *        The JDBC connection
@@ -50,7 +65,7 @@ public interface DatabaseService extends XillService {
 	 * @throws SQLException
 	 *         When the query fails
 	 */
-	Object query(Connection connection, String query, List<LinkedHashMap<String, Object>> parameters, int timeout) throws SQLException;
+	Object preparedQuery(Connection connection, String query, List<LinkedHashMap<String, Object>> parameters, int timeout) throws SQLException;
 
 	/**
 	 * Gets an object from a database.
