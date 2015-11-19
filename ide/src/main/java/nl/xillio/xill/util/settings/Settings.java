@@ -9,220 +9,220 @@ public class Settings {
 
 	// =============================================================================
 	/** Layout category */
-	public static String LAYOUT = "Layout";
+	static final String LAYOUT = "Layout";
 
 	/** Width of the left panel */
-	public static String LeftPanelWidth = "LeftPanelWidth";
+	static final String LeftPanelWidth = "LeftPanelWidth";
 
 	/** The collapsed-state of the left panel */
-	public static String LeftPanelCollapsed = "LeftPanelCollapsed";
+	static final String LeftPanelCollapsed = "LeftPanelCollapsed";
 
 	/** The height of the project panel */
-	public static String ProjectHeight = "ProjectHeight";
+	static final String ProjectHeight = "ProjectHeight";
 
 	/** Width of the right panel for the specified currentRobot */
-	public static String RightPanelWidth_ = "RightPanelWidth_";
+	static final String RightPanelWidth_ = "RightPanelWidth_";
 
 	/** The collapsed-state of the right panel for the specified currentRobot */
-	public static String RightPanelCollapsed_ = "RightPanelCollapsed_";
+	static final String RightPanelCollapsed_ = "RightPanelCollapsed_";
 
 	/** The height of the editor */
-	public static String EditorHeight_ = "EditorHeight_";
+	static final String EditorHeight_ = "EditorHeight_";
 
 	/** The height of the preview panel */
-	public static String PreviewHeight_ = "PreviewHeight_";
+	static final String PreviewHeight_ = "PreviewHeight_";
 
 	/** The zoom factor of the code editor.*/
-	public static String AceZoom_ = "AceZoom_";
+	static final String AceZoom_ = "AceZoom_";
 
 	/** The dimensions of the settings dialog */
-	public static String SettingsDialogDimensions = "SettingsDialogDimensions";
+	static final String SettingsDialogDimensions = "SettingsDialogDimensions";
 
 	// =============================================================================
 	/** File category */
-	public static String FILE = "File";
+	static final String FILE = "File";
 
 	/** The last folder a file was opened from or saved to */
-	public static String LastFolder = "LastFolder";
+	static final String LastFolder = "LastFolder";
 
 	// =============================================================================
 	/** Warning category */
-	public static String WARNING = "Warning";
+	static final String WARNING = "Warning";
 
 	/** Show warning dialogs for debug messages */
-	public static String DialogDebug =  "DialogDebug";
+	static final String DialogDebug =  "DialogDebug";
 
 	/** Show warning dialogs for info messages */
-	public static String DialogInfo = "DialogInfo";
+	static final String DialogInfo = "DialogInfo";
 
 	/** Show warning dialogs for warning messages */
-	public static String DialogWarning = "DialogWarning";
+	static final String DialogWarning = "DialogWarning";
 
 	/** Show warning dialogs for error messages */
-	public static String DialogError = "DialogError";
+	static final String DialogError = "DialogError";
 
 	// =============================================================================
 	/** Server category */
-	public static String SERVER = "Server";
+	static final String SERVER = "Server";
 
 	/** Optional username to access XMTS */
-	public static String ServerUsername = "ServerUsername";
+	static final String ServerUsername = "ServerUsername";
 
 	/** Optional password to access XMTS */
-	public static String ServerPassword = "ServerPassword";
+	static final String ServerPassword = "ServerPassword";
 
 	/** Location XMTS is running on */
-	public static String ServerHost = "ServerHost";
+	static final String ServerHost = "ServerHost";
 
 	// =============================================================================
 	/** Info category */
-	public static String INFO = "Info";
+	static final String INFO = "Info";
 
 	/** Last version that was run */
-	public static String LastVersion = "LastVersion";
+	static final String LastVersion = "LastVersion";
 
 	// =============================================================================
 	/** License category */
-	public static String LICENSE = "License";
+	static final String LICENSE = "License";
 
 	/** ?TBS */
-	public static String License = "License";
+	static final String License = "License";
 
 	/** ?TBS */
-	public static String LicenseCheck = "LicenseCheck";
+	static final String LicenseCheck = "LicenseCheck";
 
 	// =============================================================================
 	/** Workspace category */
-	public static String WORKSPACE = "Workspace";
+	static final String WORKSPACE = "Workspace";
 
 	/** List of last time open tabs */
-	public static String OpenTabs = "OpenTabs";
+	static final String OpenTabs = "OpenTabs";
 
 	/** Last time active tab */
-	public static String ActiveTab = "ActiveTab";
+	static final String ActiveTab = "ActiveTab";
 
 	// =============================================================================
 	/** General settings dialog */
-	public static String SETTINGS_GENERAL = "SettingsGeneral";
+	static final String SETTINGS_GENERAL = "SettingsGeneral";
 
 	/** */
-	public static String DefaultProjectLocation = "DefaultProjectLocation";
+	static final String DefaultProjectLocation = "DefaultProjectLocation";
 
 	/** */
-	public static String OpenBotWithCleanConsole = "OpenBotWithCleanConsole";
+	static final String OpenBotWithCleanConsole = "OpenBotWithCleanConsole";
 
 	/** */	
-	public static String RunBotWithCleanConsole = "RunBotWithCleanConsole";
+	static final String RunBotWithCleanConsole = "RunBotWithCleanConsole";
 
 	// =============================================================================
 	/** Editor settings dialog */
-	public static String SETTINGS_EDITOR = "SettingsEditor";
+	static final String SETTINGS_EDITOR = "SettingsEditor";
 
 	/** */	
-	public static String DisplayIndentGuides = "DisplayIndentGuides";
+	static final String DisplayIndentGuides = "DisplayIndentGuides";
 
 	/** */	
-	public static String FontSize = "FontSize";
+	static final String FontSize = "FontSize";
 
 	/** */	
-	public static String AutoSaveBotBeforeRun = "AutoSaveBotBeforeRun";
+	static final String AutoSaveBotBeforeRun = "AutoSaveBotBeforeRun";
 
 	/** */	
-	public static String HighlightSelectedWord = "HighlightSelectedWord";
+	static final String HighlightSelectedWord = "HighlightSelectedWord";
 
 	/** */
-	public static String NewLineMode = "NewLineMode";
+	static final String NewLineMode = "NewLineMode";
 
 	/** */
-	public static String PrintMarginColumn = "PrintMarginColumn";
+	static final String PrintMarginColumn = "PrintMarginColumn";
 
 	/** */	
-	public static String ShowGutter = "ShowGutter";
+	static final String ShowGutter = "ShowGutter";
 
 	/** */
-	public static String ShowInvisibles = "ShowInvisibles";
+	static final String ShowInvisibles = "ShowInvisibles";
 
 	/** */
-	public static String TabSize = "TabSize";
+	static final String TabSize = "TabSize";
 
 	/** */	
-	public static String UseSoftTabs = "UseSoftTabs";
+	static final String UseSoftTabs = "UseSoftTabs";
 
 	/** */
-	public static String WrapText = "WrapText";
+	static final String WrapText = "WrapText";
 
 	/** */
-	public static String WrapLimit = "WrapLimit";
+	static final String WrapLimit = "WrapLimit";
 
 	/** */	
-	public static String ShowPrintMargin = "ShowPrintMargin";
+	static final String ShowPrintMargin = "ShowPrintMargin";
 
 	/** */
-	public static String ShowLineNumbers = "ShowLineNumbers";
+	static final String ShowLineNumbers = "ShowLineNumbers";
 
 	/** */
 	// =============================================================================
 	/** Hot-keys settings */
-	public static String SETTINGS_KEYBINDINGS = "KeyBindings";
+	static final String SETTINGS_KEYBINDINGS = "KeyBindings";
 
 	/** */
-	public static String NewFile = "NewFile";
+	static final String NewFile = "NewFile";
 
 	/** */
-	public static String OpenFile = "OpenFile";
+	static final String OpenFile = "OpenFile";
 
 	/** */
-	public static String SaveFile = "SaveFile";
+	static final String SaveFile = "SaveFile";
 
 	/** */
-	public static String SaveFileAs = "SaveFileAs";
+	static final String SaveFileAs = "SaveFileAs";
 
 	/** */
-	public static String SaveAll = "SaveFileAll";
+	static final String SaveAll = "SaveFileAll";
 
 	/** */
-	public static String Close = "Close";
+	static final String Close = "Close";
 
 	/** */
-	public static String HelpHome = "HelpHome";
+	static final String HelpHome = "HelpHome";
 
 	/** */
-	public static String Run = "Run";
+	static final String Run = "Run";
 
 	/** */
-	public static String Pause = "Pause";
+	static final String Pause = "Pause";
 
 	/** */
-	public static String Stop = "Stop";
+	static final String Stop = "Stop";
 
 	/** */
-	public static String Stepin = "Stepin";
+	static final String Stepin = "Stepin";
 
 	/** */
-	public static String Stepover = "Stepover";
+	static final String Stepover = "Stepover";
 
 	/** */
-	public static String ClearConsole = "ClearConsole";
+	static final String ClearConsole = "ClearConsole";
 
 	/** */
-	public static String Search = "Search";
+	static final String Search = "Search";
 
 	/** */
-	public static String ResetZoom = "ResetZoom";
+	static final String ResetZoom = "ResetZoom";
 
 	/** */
-	public static String Copy = "Copy";
+	static final String Copy = "Copy";
 
 	/** */
-	public static String Cut = "Cut";
+	static final String Cut = "Cut";
 
 	/** */
-	public static String Paste = "Paste";
+	static final String Paste = "Paste";
 
 	/** */
-	public static String DuplicateLines = "DuplicateLines";
+	static final String DuplicateLines = "DuplicateLines";
 
 	/** */
-	public static String OpenSettings = "OpenSettings";
+	static final String OpenSettings = "OpenSettings";
 	// =============================================================================
 }
