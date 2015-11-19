@@ -23,7 +23,7 @@ public class AddLicenseDialog extends FXMLDialog {
     @FXML
     private void browseBtnPressed(final ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML doc(*.xml)", "*.xml"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("License files (*.license)", "*.license"));
         File chosen = fileChooser.showOpenDialog(this.getScene().getWindow());
 
         if (chosen != null) {
