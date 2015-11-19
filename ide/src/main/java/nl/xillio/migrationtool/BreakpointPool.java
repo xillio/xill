@@ -4,10 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import nl.xillio.xill.api.Breakpoint;
 import nl.xillio.xill.api.components.RobotID;
 
@@ -16,7 +12,6 @@ import nl.xillio.xill.api.components.RobotID;
  */
 public class BreakpointPool {
 	private final Map<RobotID, List<Integer>> breakpoints = new HashMap<>();
-	private static final Logger log = LogManager.getLogger(BreakpointPool.class);
 
 	/**
 	 * Get all breakpoints in a certain robot
