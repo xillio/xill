@@ -35,6 +35,8 @@ public class ObjectExpression extends MetaExpression {
 	}
 
 	@Override
+	@SuppressWarnings(" squid:RedundantThrowsDeclarationCheck ")
+	// The RobotRuntimeException triggers specific behaviour in the editor, so this will remain unchanged.
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		return InstructionFlow.doResume(this);
 	}

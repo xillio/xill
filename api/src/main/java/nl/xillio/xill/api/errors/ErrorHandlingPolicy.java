@@ -12,5 +12,7 @@ public interface ErrorHandlingPolicy {
 	 * @throws RobotRuntimeException
 	 *         when the policy decides to stop processing
 	 */
+	@SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
+	// The RobotRuntimeException will not be addressed as it triggers specific behaviour in the editor.
 	public void handle(final Throwable e) throws RobotRuntimeException;
 }

@@ -11,6 +11,8 @@ import nl.xillio.xill.api.behavior.StringBehavior;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.data.MetadataExpression;
 import nl.xillio.xill.api.errors.NotImplementedException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -20,6 +22,9 @@ import java.util.stream.Collectors;
  * This class represents a general expression in the Xill language.
  */
 public abstract class MetaExpression implements Expression, Processable {
+
+	private static final Logger LOGGER = LogManager.getLogger(MetaExpression.class);
+
 	private static final Gson gson = new GsonBuilder().enableComplexMapKeySerialization().serializeNulls()
 		// .setPrettyPrinting()
 		.disableHtmlEscaping().disableInnerClassSerialization().serializeSpecialFloatingPointValues()
@@ -413,7 +418,7 @@ public abstract class MetaExpression implements Expression, Processable {
 			try {
 				close();
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOGGER.error(e.getMessage(), e);
 			}
 		}
 
@@ -465,7 +470,7 @@ public abstract class MetaExpression implements Expression, Processable {
 		try {
 			metadataPool.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Failed to dispose of all the items in the Metadata expression pool.", e);
 		}
 	}
 
@@ -481,14 +486,13 @@ public abstract class MetaExpression implements Expression, Processable {
 	 *
 	 * @param value the object to parse
 	 * @return a {@link MetaExpression}, not null
-	 * @throws IllegalArgumentException when the value cannot be parsed
 	 */
-	public static MetaExpression parseObject(final Object value) throws IllegalArgumentException {
+	public static MetaExpression parseObject(final Object value) {
 		return parseObject(value, new IdentityHashMap<>());
 	}
 
 	@SuppressWarnings("unchecked")
-	private static MetaExpression parseObject(final Object root, final Map<Object, MetaExpression> cache) throws IllegalArgumentException {
+	private static MetaExpression parseObject(final Object root, final Map<Object, MetaExpression> cache) {
 		// Check the cache (Don't use key because we need REFERENCE equality not CONTENT)
 		for (Map.Entry<Object, MetaExpression> entry : cache.entrySet()) {
 			if (entry.getKey() == root) {
