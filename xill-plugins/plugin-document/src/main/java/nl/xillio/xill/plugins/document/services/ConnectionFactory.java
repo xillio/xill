@@ -1,6 +1,5 @@
 package nl.xillio.xill.plugins.document.services;
 
-import com.google.inject.ImplementedBy;
 import nl.xillio.udm.UDM;
 import nl.xillio.udm.services.UDMService;
 import nl.xillio.xill.plugins.document.data.UDMConnection;

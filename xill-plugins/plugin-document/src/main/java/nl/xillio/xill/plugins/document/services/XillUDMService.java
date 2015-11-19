@@ -11,6 +11,7 @@ import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.plugins.document.data.UDMDocument;
 import nl.xillio.xill.plugins.document.exceptions.PersistException;
 import nl.xillio.xill.plugins.document.exceptions.ValidationException;
+import org.bson.Document;
 
 /**
  * This class is responsible for communicating with the udm.
@@ -19,8 +20,8 @@ import nl.xillio.xill.plugins.document.exceptions.ValidationException;
  */
 @Singleton
 public class XillUDMService implements XillUDMPersistence {
-    private final ConnectionPool connectionPool;
     private static final String DEFAULT_IDENTITY = "xill";
+    private final ConnectionPool connectionPool;
 
     @Inject
     public XillUDMService(ConnectionPool connectionPool) {
@@ -34,6 +35,21 @@ public class XillUDMService implements XillUDMPersistence {
         } else {
             throw new NotImplementedException("I have not implemented this yet");
         }
+    }
+
+    @Override
+    public String getJSON(String id) {
+        UDMService service = getUdmService(DEFAULT_IDENTITY);
+        DocumentID docId = service.get(id);
+        String json = service.toJSON(docId);
+        service.release(docId);
+        return json;
+    }
+
+    @Override
+    public void delete(String stringValue) throws PersistenceException {
+        UDMService service = getUdmService(DEFAULT_IDENTITY);
+        service.delete(new Document("_id", stringValue));
     }
 
     public void create(UDMDocument document) throws PersistException, ValidationException {

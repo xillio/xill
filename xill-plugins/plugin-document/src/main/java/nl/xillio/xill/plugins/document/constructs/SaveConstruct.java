@@ -41,7 +41,7 @@ public class SaveConstruct extends Construct {
     public MetaExpression process(MetaExpression document) {
 
         UDMDocument udmDocument = documentBuilder.build(document);
-        
+
         try {
             persistence.save(udmDocument);
         } catch (PersistException | ValidationException e) {
