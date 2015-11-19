@@ -269,8 +269,8 @@ public class BrowserPane extends AnchorPane {
 
 	public Node translateDocumentToPresentationNode(final Node node) {
 		if (node != null) {
-			String xpath = getPresentationXPath(node);
-			return (Node) evaluateXPath(presentationNode, xpath, XPathConstants.NODE);
+			String presentationXpath = getPresentationXPath(node);
+			return (Node) evaluateXPath(presentationNode, presentationXpath, XPathConstants.NODE);
 		}
 		return null;
 	}
