@@ -130,7 +130,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	    final boolean verbose) {
 		this.debugger = debugger;
 		rootRobot = robotID;
-		expressionParseInvoker.VERBOSE = verbose;
+		expressionParseInvoker.setVERBOSE(verbose);
 		pluginLoader = loader;
 	}
 
@@ -196,14 +196,14 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 			xill.lang.xill.Robot robotToken = (xill.lang.xill.Robot) token;
 			Map.Entry<RobotID, Robot> pair = compiledRobots.get(robotToken);
 			Robot robot = pair.getValue();
-			RobotID robotID = pair.getKey();
+			RobotID id = pair.getKey();
 
 			// Get includes
 			for (IncludeStatement include : robotToken.getIncludes()) {
 				// Build robotID
 				String path = StringUtils.join(include.getName(), File.separator) + "." + Xill.FILE_EXTENSION;
-				RobotID expectedID = RobotID.getInstance(new File(robotID.getProjectPath(), path),
-				  robotID.getProjectPath());
+				RobotID expectedID = RobotID.getInstance(new File(id.getProjectPath(), path),
+				  id.getProjectPath());
 				CodePosition pos = pos(include);
 
 				// Find the matching robot
@@ -712,7 +712,6 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	/**
 	 * Get the target of an assignment
 	 *
-	 * @param token
 	 * @return
 	 */
 	private static Target getTarget(final EObject start) {
@@ -736,7 +735,6 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	/**
 	 * Construct a list that represents the path into a variable
 	 *
-	 * @param token
 	 * @return
 	 * @throws XillParsingException
 	 */

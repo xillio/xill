@@ -27,11 +27,11 @@ public class PrintConstruct extends Construct {
 
 		String text = textVar.getStringValue();
 
-		if (level.toLowerCase().equals("debug")) {
+		if ("debug".equalsIgnoreCase(level)) {
 			robotLog.debug(text);
 		} else if (level.toLowerCase().startsWith("warn")) {
 			robotLog.warn(text);
-		} else if (level.toLowerCase().equals("error")) {
+		} else if ("error".equalsIgnoreCase(level)) {
 			robotLog.error(text);
 		} else {
 			robotLog.info(text);

@@ -50,7 +50,7 @@ public class Base64EncodeConstruct extends Construct {
 
 		if (data != null && data.length > 0) {
 			String content = stringService.printBase64Binary(data);
-			if (content != null && !content.equals("")) {
+			if (content != null && !"".equals(content)) {
 				return fromValue(content);
 			}
 		}

@@ -352,12 +352,12 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	 * Pastes the current clipboard at the caret.
 	 */
 	public void paste() {
-		String code = (String) clipboard.getContent(DataFormat.PLAIN_TEXT);
-		if (code != null) {
+		String clipboardContent = (String) clipboard.getContent(DataFormat.PLAIN_TEXT);
+		if (clipboardContent != null) {
 			Platform.runLater(() -> {
 				JSObject session = (JSObject) callOnAceBlocking("getSession");
 				JSObject selection = (JSObject) callOnAceBlocking("getSelection");
-				JSObject r = (JSObject) session.call("replace", selection.call("getRange"), code);
+				JSObject r = (JSObject) session.call("replace", selection.call("getRange"), clipboardContent);
 				int row = (int)r.getMember("row");
 				int column = (int)r.getMember("column");
 				JSObject range = (JSObject) executeJSBlocking(String.format("new Range(%d, %d, %d, %d)", row, column, row, column));

@@ -190,7 +190,7 @@ public class BrowserPane extends AnchorPane {
 		if (node != null) {
 			switch (node.getNodeType()) {
 				case Node.ELEMENT_NODE:
-					if (node.getLocalName().equals("br")) {
+					if ("br".equals(node.getLocalName())) {
 						encapsulate(node);
 					} else {
 						Element element = (Element) node;
@@ -270,8 +270,8 @@ public class BrowserPane extends AnchorPane {
 
 	public Node translateDocumentToPresentationNode(final Node node) {
 		if (node != null) {
-			String xpath = getPresentationXPath(node);
-			return (Node) evaluateXPath(presentationNode, xpath, XPathConstants.NODE);
+			String presentationXpath = getPresentationXPath(node);
+			return (Node) evaluateXPath(presentationNode, presentationXpath, XPathConstants.NODE);
 		}
 		return null;
 	}
@@ -303,7 +303,7 @@ public class BrowserPane extends AnchorPane {
 		}
 
 		Node parent = node.getParentNode();
-		while (parent != null && !parent.getNodeName().equals("#document")) {
+		while (parent != null && !"#document".equals(parent.getNodeName())) {
 
 			position = getPosition(parent);
 			res.insert(0, "/" + parent.getNodeName() + (position == 0 ? "" : "[" + position + "]"));
@@ -333,7 +333,7 @@ public class BrowserPane extends AnchorPane {
 			}
 
 			Node parent = node.getParentNode();
-			while (parent != null && parent.getLocalName() != null && !parent.getLocalName().equals("#document")) {
+			while (parent != null && parent.getLocalName() != null && !"#document".equals(parent.getLocalName())) {
 
 				position = getPosition(parent);
 				res.insert(0, "/" + parent.getLocalName() + (position == 0 ? "" : "[" + position + "]"));
@@ -357,7 +357,7 @@ public class BrowserPane extends AnchorPane {
 			}
 
 			Node parent = node.getParentNode();
-			while (parent != null && !parent.getNodeName().equals("#document")) {
+			while (parent != null && !"#document".equals(parent.getNodeName())) {
 
 				id = parent.getAttributes().getNamedItem("id");
 				name = id != null ? id.getTextContent() : null;
@@ -377,7 +377,7 @@ public class BrowserPane extends AnchorPane {
 			r = "." + r;
 		}
 
-		if (r.equals("./") || r.equals("")) {
+		if ("./".equals(r) || "".equals(r)) {
 			r = ".";
 		}
 
@@ -403,7 +403,7 @@ public class BrowserPane extends AnchorPane {
 			}
 
 			Node parent = node.getParentNode();
-			while (parent != null && !parent.getNodeName().equals("#document")) {
+			while (parent != null && !"#document".equals(parent.getNodeName())) {
 
 				position = getPosition(parent);
 				res.insert(0, "/html:" + parent.getNodeName() + (position == 0 ? "" : "[" + position + "]"));
@@ -421,7 +421,7 @@ public class BrowserPane extends AnchorPane {
 				res.append("/html:div[@id='" + node.getNodeName() + "'" + (position != 0 ? " and position()=" + position : "") + "]");
 			}
 			Node parent = node.getParentNode();
-			while (parent != null && !parent.getNodeName().equals("#document")) {
+			while (parent != null && !"#document".equals(parent.getNodeName())) {
 
 				position = getPosition(parent);
 				res.insert(0, "/html:div[@id='" + parent.getNodeName() + "'" + (position != 0 ? " and position()=" + position : "") + "]");
@@ -616,7 +616,7 @@ public class BrowserPane extends AnchorPane {
 			if (prefix.equals(XMLConstants.DEFAULT_NS_PREFIX)) {
 				return webView.getEngine().getDocument().lookupNamespaceURI(null);
 
-			} else if (prefix.equals("html")) { // Ugly hardcoded namespace fix
+			} else if ("html".equals(prefix)) { // Ugly hardcoded namespace fix
 				return "http://www.w3.org/1999/xhtml";
 			} else {
 				return webView.getEngine().getDocument().lookupNamespaceURI(prefix);

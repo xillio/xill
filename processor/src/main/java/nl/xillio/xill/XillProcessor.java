@@ -155,9 +155,9 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
 
 	private void gatherResources(final Resource resource) throws XillParsingException {
 		for (EObject root : resource.getContents()) {
-			xill.lang.xill.Robot robot = (xill.lang.xill.Robot) root;
+			xill.lang.xill.Robot rootRobot = (xill.lang.xill.Robot) root;
 
-			for (IncludeStatement include : robot.getIncludes()) {
+			for (IncludeStatement include : rootRobot.getIncludes()) {
 				URI uri = getURI(include);
 				if (!resourceSet.getURIResourceMap().containsKey(uri)) {
 					// This is not in there yet

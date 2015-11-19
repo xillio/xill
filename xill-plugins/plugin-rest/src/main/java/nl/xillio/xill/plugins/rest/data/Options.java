@@ -114,17 +114,17 @@ public class Options {
 		}
 
 		// Proxy settings
-		HttpHost proxyHost;
+		HttpHost httpProxy;
 		if (!this.proxyHost.isEmpty()) {
 			if (this.proxyPort == 0) {
-				proxyHost = new HttpHost(this.proxyHost);
+				httpProxy = new HttpHost(this.proxyHost);
 			} else {
-				proxyHost = new HttpHost(this.proxyHost, this.proxyPort);
+				httpProxy = new HttpHost(this.proxyHost, this.proxyPort);
 			}
 			if (!this.proxyUser.isEmpty()) {
-				executor.auth(proxyHost, this.proxyUser, this.proxyPass);
+				executor.auth(httpProxy, this.proxyUser, this.proxyPass);
 			}
-            executor.authPreemptiveProxy(proxyHost);
+            executor.authPreemptiveProxy(httpProxy);
 		}
 	}
 }

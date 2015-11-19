@@ -115,7 +115,7 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 		editor = new AceEditor((WebView) lookup("#webCode"));
 
 		ToolBar tlbSearchToolBar = (ToolBar) lookup("#tlbSearchToolBar");
-		ToggleButton tbnEditorSearch = (ToggleButton) tlbSearchToolBar.getItems().stream().filter(child -> child.getId().equals("tbnEditorSearch")).findAny().get();
+		ToggleButton tbnEditorSearch = (ToggleButton) tlbSearchToolBar.getItems().stream().filter(child -> "tbnEditorSearch".equals(child.getId())).findAny().get();
 
 		editorReplaceBar.setSearchable(editor);
 		editorReplaceBar.setButton(tbnEditorSearch, 1);
