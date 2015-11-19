@@ -22,7 +22,7 @@ import java.io.InputStream;
  */
 public class LicenseUtils {
     private static final Logger LOGGER = LogManager.getLogger();
-    public static final File LICENSE_FILE = new File(XillioHomeFolder.forXillIDE(), "license.xml");
+    public static final File LICENSE_FILE = new File(XillioHomeFolder.forXillIDE(), "license.json");
     private static LicenseFactory licenseFactory;
 
     /**
