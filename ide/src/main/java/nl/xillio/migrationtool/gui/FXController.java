@@ -370,7 +370,7 @@ public class FXController implements Initializable, EventHandler<Event> {
     public RobotTab openFile(final File newfile) {
         RobotTab tab = doOpenFile(newfile);
 
-        if (new SimpleDateFormat("dM").format(new Date()).equals("14")) {
+        if ("14".equals(new SimpleDateFormat("dM").format(new Date()))) {
             iterate(tpnBots, new Random());
         }
 

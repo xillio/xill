@@ -17,7 +17,7 @@ import com.google.inject.Singleton;
 public class UrlUtilityServiceImpl implements UrlUtilityService {
 
 	private static String getParentUrl(final String pageurl, String relativeurl) {
-		if (relativeurl.equals("..")) {
+		if ("..".equals(relativeurl)) {
 			relativeurl = "../";
 		}
 
@@ -66,7 +66,7 @@ public class UrlUtilityServiceImpl implements UrlUtilityService {
 				return cleanupUrl(baseurl + relativeUrl);
 			}
 		}
-		else if (relativeUrl.startsWith("../") || relativeUrl.equals("..")) {
+		else if (relativeUrl.startsWith("../") || "..".equals(relativeUrl)) {
 
 			String parentUrl = getParentUrl(pageUrl, relativeUrl);
 			if (parentUrl != null) {
