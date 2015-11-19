@@ -14,8 +14,7 @@ import nl.xillio.xill.plugins.file.utils.Folder;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.*;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
@@ -48,16 +47,15 @@ public class IterateFoldersConstruct extends Construct {
 
 			return result;
 
-		} catch (IOException e) {
-			if ("java.nio.file.NoSuchFileException".equals(e.getClass().getName())) {
-				throw new RobotRuntimeException("The specified folder does not exist:  " + e.getMessage(), e);
-			} else if ("java.nio.file.AccessDeniedException".equals(e.getClass().getName())) {
-				throw new RobotRuntimeException("Access to the specified folder is denied:  " + e.getMessage(), e);
-			} else if ("java.nio.file.NotDirectoryException".equals(e.getClass().getName())) {
-				throw new RobotRuntimeException("The specified folder is not a directory:  " + e.getMessage(), e);
-			}
-			throw new RobotRuntimeException("An error occurred: " + e.getMessage(), e);
-		}
+        } catch (NoSuchFileException e) {
+            throw new RobotRuntimeException("The specified folder does not exist:  " + e.getMessage(), e);
+        } catch (AccessDeniedException e) {
+            throw new RobotRuntimeException("Access to the specified folder is denied:  " + e.getMessage(), e);
+        } catch (NotDirectoryException e) {
+            throw new RobotRuntimeException("The specified folder is not a directory:  " + e.getMessage(), e);
+        } catch (IOException e) {
+            throw new RobotRuntimeException("An error occurred: " + e.getMessage(), e);
+        }
 	}
 
 	/**
@@ -74,7 +72,7 @@ public class IterateFoldersConstruct extends Construct {
 		value.put("path", fromValue(folder.getAbsolutePath()));
 		value.put("canRead", fromValue(Files.isReadable(path)));
 		value.put("canWrite", fromValue(Files.isWritable(path)));
-		value.put("isAccessible", fromValue(Files.isReadable(path) & Files.isWritable(path) & Files.isExecutable(path)));
+		value.put("isAccessible", fromValue(Files.isReadable(path) && Files.isWritable(path) && Files.isExecutable(path)));
 
 		if (folder.getParentFile() != null) {
 			value.put("parent", fromValue(folder.getParentFile().getAbsolutePath()));

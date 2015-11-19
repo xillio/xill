@@ -140,6 +140,15 @@ public class HungarianAlgorithmConstruct extends Construct {
 
 	}
 
+    /**
+     * Check if a double value equals zero by byte comparison.
+     * @param value The double value to check.
+     * @return True if the value equals zero.
+     */
+    private static boolean doubleEqualsZero(final double value) {
+        return Double.doubleToRawLongBits(value) == 0;
+    }
+
 	// ///////////////////////////////////////////////////////////////
 	// Hungarian Alghoritm implementation by Konstantinos A. Nedas
 	// Credits and code below
@@ -330,7 +339,7 @@ public class HungarianAlgorithmConstruct extends Construct {
 
 		for (int i = 0; i < cost.length; i++) {
 			for (int j = 0; j < cost[i].length; j++) {
-				if (cost[i][j] == 0 && colCover[j] == 0 && rowCover[i] == 0) {
+				if (doubleEqualsZero(cost[i][j]) && colCover[j] == 0 && rowCover[i] == 0) {
 					mask[i][j] = 1;
 					colCover[j] = 1;
 					rowCover[i] = 1;
@@ -423,7 +432,7 @@ public class HungarianAlgorithmConstruct extends Construct {
 		while (!done) {
 			int j = 0;
 			while (j < cost[i].length) {
-				if (cost[i][j] == 0 && rowCover[i] == 0 && colCover[j] == 0) {
+				if (doubleEqualsZero(cost[i][j]) && rowCover[i] == 0 && colCover[j] == 0) {
 					row_col[0] = i;
 					row_col[1] = j;
 					done = true;
