@@ -69,7 +69,8 @@ public class Settings {
 	public static final String ServerUsername = "ServerUsername";
 
 	/** Optional password to access XMTS */
-	public static final String ServerPassword = "ServerPassword"; //NOSONAR
+    @SuppressWarnings("squid:S2068") // Credentials should not be hard-coded.
+	public static final String ServerPassword = "ServerPassword";
 
 	/** Location XMTS is running on */
 	public static final String ServerHost = "ServerHost";
