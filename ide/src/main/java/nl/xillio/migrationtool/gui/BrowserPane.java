@@ -42,7 +42,7 @@ public class BrowserPane extends AnchorPane {
 		HTML, XML
 	};
 
-	public static String CSS_PROPERTY_NAME = "xmt-property";
+	public static final String CSS_PROPERTY_NAME = "xmt-property";
 
 	protected WebView webView = new WebView();
 	protected static XPath xpath = XPathFactory.newInstance().newXPath();
@@ -579,14 +579,19 @@ public class BrowserPane extends AnchorPane {
 				break;
 			case Node.PROCESSING_INSTRUCTION_NODE:
 				text.append("\n<div class=\"comment\">" + indent + "&lt;!-- Processing instruction --&gt;</div>");
+				break;
 			case Node.ATTRIBUTE_NODE:
 				text.append("\n<div class=\"comment\">" + indent + "&lt;!-- Attribute node --&gt;</div>");
+				break;
 			case Node.ENTITY_REFERENCE_NODE:
 				text.append("\n<div class=\"comment\">" + indent + "&lt;!-- Entity reference --&gt;</div>");
+				break;
 			case Node.DOCUMENT_FRAGMENT_NODE:
 				text.append("\n<div class=\"comment\">" + indent + "&lt;!-- Document fragment --&gt;</div>");
+				break;
 			case Node.NOTATION_NODE:
 				text.append("\n<div class=\"comment\">" + indent + "&lt;!-- Notation node --&gt;</div>");
+				break;
 			default:
 				text.append("\n<div class=\"text\">" + node.getNodeValue() + "</div>"); // TODO: handle other node types: http://www.w3schools.com/jsref/dom_obj_node.asp
 		}
