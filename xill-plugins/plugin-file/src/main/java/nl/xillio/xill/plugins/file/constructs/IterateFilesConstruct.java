@@ -48,14 +48,13 @@ public class IterateFilesConstruct extends Construct {
 
 			return result;
 
-		} catch (IOException e) {
-			if (e instanceof NoSuchFileException) {
-				throw new RobotRuntimeException("The specified folder does not exist:  " + e.getMessage(), e);
-			} else if (e instanceof AccessDeniedException) {
-				throw new RobotRuntimeException("Access to the specified folder is denied:  " + e.getMessage(), e);
-			} else if (e instanceof NotDirectoryException) {
-				throw new RobotRuntimeException("The specified folder is not a directory:  " + e.getMessage(), e);
-			}
+		} catch (NoSuchFileException e) {
+            throw new RobotRuntimeException("The specified folder does not exist:  " + e.getMessage(), e);
+        } catch (AccessDeniedException e) {
+            throw new RobotRuntimeException("Access to the specified folder is denied:  " + e.getMessage(), e);
+        } catch (NotDirectoryException e) {
+            throw new RobotRuntimeException("The specified folder is not a directory:  " + e.getMessage(), e);
+        } catch (IOException e) {
 			throw new RobotRuntimeException("An error occurred: " + e.getMessage(), e);
 		}
 	}
