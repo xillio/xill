@@ -89,7 +89,7 @@ public class QueryConstructTest extends ConstructTest {
 		PreparedStatementConstruct.process(query, parameters, database, timeout, factory, robotID);
 
 		// verify
-		verify(databaseService, times(1)).query(any(), anyString(), anyList(), anyInt());
+		verify(databaseService, times(1)).preparedQuery(any(), anyString(), anyList(), anyInt());
 	}
 
 	/**
@@ -149,7 +149,7 @@ public class QueryConstructTest extends ConstructTest {
 		PreparedStatementConstruct.process(query, parameters, database, timeout, factory, robotID);
 
 		// verify
-		verify(databaseService, times(1)).query(any(), anyString(), anyList(), anyInt());
+		verify(databaseService, times(1)).preparedQuery(any(), anyString(), anyList(), anyInt());
 	}
 
 	/**
@@ -280,7 +280,7 @@ public class QueryConstructTest extends ConstructTest {
 		DatabaseServiceFactory factory = mock(DatabaseServiceFactory.class);
 		DatabaseService databaseService = mock(DatabaseService.class);
 		when(factory.getService(anyString())).thenReturn(databaseService);
-		when(databaseService.query(any(), anyString(), anyList(), anyInt())).thenThrow(e);
+		when(databaseService.preparedQuery(any(), anyString(), anyList(), anyInt())).thenThrow(e);
 
 		// the robotID
 		RobotID robotID = mock(RobotID.class);

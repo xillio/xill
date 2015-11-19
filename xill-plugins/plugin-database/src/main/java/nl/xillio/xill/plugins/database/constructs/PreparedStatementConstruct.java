@@ -55,7 +55,7 @@ public class PreparedStatementConstruct extends BaseDatabaseConstruct {
 		int timeoutValue = timeout.getNumberValue().intValue();
 
 		// Parse the content of the parameter MetaExpression
-		List<LinkedHashMap<String, Object>> parameterObjects = new ArrayList<LinkedHashMap<String, Object>>();
+		List<LinkedHashMap<String, Object>> parameterObjects = new ArrayList<>();
 		if (!parameters.isNull()) {
 			// Multiple parameters
 			if (parameters.getType() == LIST) {
@@ -76,7 +76,7 @@ public class PreparedStatementConstruct extends BaseDatabaseConstruct {
 
 		Object result;
 		try {
-			result = factory.getService(metaData.getDatabaseName()).query(connection, sql, parameterObjects, timeoutValue);
+			result = factory.getService(metaData.getDatabaseName()).preparedQuery(connection, sql, parameterObjects, timeoutValue);
 
 			return returnValue(result, sql);
 		} catch (ReflectiveOperationException | ClassCastException e) {
