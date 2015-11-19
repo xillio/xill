@@ -73,7 +73,7 @@ public class IterateFoldersConstruct extends Construct {
 		value.put("path", fromValue(folder.getAbsolutePath()));
 		value.put("canRead", fromValue(Files.isReadable(path)));
 		value.put("canWrite", fromValue(Files.isWritable(path)));
-		value.put("isAccessible", fromValue(Files.isReadable(path) & Files.isWritable(path) & Files.isExecutable(path)));
+		value.put("isAccessible", fromValue(Files.isReadable(path) && Files.isWritable(path) && Files.isExecutable(path)));
 
 		if (folder.getParentFile() != null) {
 			value.put("parent", fromValue(folder.getParentFile().getAbsolutePath()));
