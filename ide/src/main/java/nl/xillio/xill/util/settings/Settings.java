@@ -69,7 +69,7 @@ public class Settings {
 	public static final String ServerUsername = "ServerUsername";
 
 	/** Optional password to access XMTS */
-	public static final String ServerPassword = "ServerPassword";
+	public static final String ServerPassword = "ServerPassword"; //NOSONAR
 
 	/** Location XMTS is running on */
 	public static final String ServerHost = "ServerHost";
