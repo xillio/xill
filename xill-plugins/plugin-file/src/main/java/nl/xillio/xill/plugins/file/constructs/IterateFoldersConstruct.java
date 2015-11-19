@@ -14,8 +14,7 @@ import nl.xillio.xill.plugins.file.utils.Folder;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.*;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
@@ -49,11 +48,11 @@ public class IterateFoldersConstruct extends Construct {
 			return result;
 
 		} catch (IOException e) {
-			if ("java.nio.file.NoSuchFileException".equals(e.getClass().getName())) {
+			if (e instanceof NoSuchFileException) {
 				throw new RobotRuntimeException("The specified folder does not exist:  " + e.getMessage(), e);
-			} else if ("java.nio.file.AccessDeniedException".equals(e.getClass().getName())) {
+			} else if (e instanceof AccessDeniedException) {
 				throw new RobotRuntimeException("Access to the specified folder is denied:  " + e.getMessage(), e);
-			} else if ("java.nio.file.NotDirectoryException".equals(e.getClass().getName())) {
+			} else if (e instanceof NotDirectoryException) {
 				throw new RobotRuntimeException("The specified folder is not a directory:  " + e.getMessage(), e);
 			}
 			throw new RobotRuntimeException("An error occurred: " + e.getMessage(), e);
