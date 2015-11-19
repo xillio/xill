@@ -44,8 +44,10 @@ public class SaveConstruct extends Construct {
 
         try {
             persistence.save(udmDocument);
-        } catch (PersistException | ValidationException e) {
+        } catch (PersistException e) {
             throw new RobotRuntimeException(e.getMessage(), e);
+        } catch (ValidationException e) {
+            throw new RobotRuntimeException("Input is not a valid document.\n" + e.getMessage(), e);
         }
 
         return NULL;

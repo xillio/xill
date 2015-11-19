@@ -9,6 +9,7 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.plugins.document.exceptions.ValidationException;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,10 +17,10 @@ import java.util.Map;
  *
  * @author Thomas Biesaart
  */
+@SuppressWarnings("unchecked")
 public class MetaExpressionUDMMapper implements UDMDocument {
     private final LinkedHashMap<String, MetaExpression> expression;
 
-    @SuppressWarnings("unchecked")
     public MetaExpressionUDMMapper(MetaExpression expression) {
         if (expression.getType() != ExpressionDataType.OBJECT) {
             throw new IllegalArgumentException("Can only map UDM documents from an object");
@@ -31,8 +32,8 @@ public class MetaExpressionUDMMapper implements UDMDocument {
     @Override
     public void applyTo(DocumentBuilder builder) throws ValidationException {
         builder.contentType(getContentType());
-        processHistory(builder.target(), expression.get("target"));
-        processHistory(builder.source(), expression.get("source"));
+        processHistory(builder.target(), getRequired(expression, "target"));
+        processHistory(builder.source(), getRequired(expression, "source"));
     }
 
     private void processHistory(DocumentHistoryBuilder history, MetaExpression expression) throws ValidationException {
@@ -44,7 +45,19 @@ public class MetaExpressionUDMMapper implements UDMDocument {
         history.versions().forEach(history::removeRevision);
 
         // Parse current
-        processRevision(history.current(), convertedExpression.get("current"));
+        processRevision(history.current(), getRequired(convertedExpression, "current"));
+
+        // Parse other revisions
+        MetaExpression versions = getRequired(convertedExpression, "versions");
+        if (versions.getType() != ExpressionDataType.LIST) {
+            throw new ValidationException("Property `versions` on document revision must be a list");
+        }
+        for (MetaExpression version : (List<MetaExpression>) versions.getValue()) {
+            Map<String, MetaExpression> versionMap = getAsObject(version, "Document revision");
+            MetaExpression versionProperty = getRequired(versionMap, "version");
+
+            processRevision(history.revision(versionProperty.getStringValue()), version);
+        }
     }
 
     private void processRevision(DocumentRevisionBuilder revision, MetaExpression expression) throws ValidationException {
@@ -53,10 +66,17 @@ public class MetaExpressionUDMMapper implements UDMDocument {
         revision.version("myVersion");
 
         for (Map.Entry<String, MetaExpression> entry : convertedExpression.entrySet()) {
-            if ("version".equals(entry.getKey())) {
-                revision.version(entry.getValue().getStringValue());
-            } else {
-                parseDecorator(revision.decorator(entry.getKey()), entry.getValue());
+            switch (entry.getKey()) {
+                case "timestamp":
+                case "modifiedby":
+                case "action":
+                    break;
+                case "version":
+                    revision.version(entry.getValue().getStringValue());
+                    break;
+                default:
+                    parseDecorator(revision.decorator(entry.getKey()), entry.getValue());
+                    break;
             }
         }
 
@@ -77,18 +97,35 @@ public class MetaExpressionUDMMapper implements UDMDocument {
         return MetaExpression.extractValue(value);
     }
 
-    @SuppressWarnings("unchecked")
     private Map<String, MetaExpression> getAsObject(MetaExpression expression, String type) throws ValidationException {
+        if (expression == null) {
+            throw new ValidationException("Could not parse null value to a " + type);
+        }
         if (expression.getType() != ExpressionDataType.OBJECT) {
             throw new ValidationException(type + " must be an object. Could not parse [" + expression + "]");
         }
         return (Map<String, MetaExpression>) expression.getValue();
     }
 
+    private MetaExpression getRequired(Map<String, MetaExpression> map, String value) throws ValidationException {
+        MetaExpression result = map.get(value);
+
+        if (result == null) {
+            throw new ValidationException("Could not find requried property " + value + " in [" + map + "]");
+        }
+
+        return result;
+    }
+
     @Override
     public boolean isNew() {
+        return getId() == null;
+    }
+
+    @Override
+    public String getId() {
         MetaExpression idExpr = expression.get("_id");
-        return idExpr == null || idExpr.isNull();
+        return idExpr == null ? null : idExpr.getStringValue();
     }
 
     public String getContentType() {

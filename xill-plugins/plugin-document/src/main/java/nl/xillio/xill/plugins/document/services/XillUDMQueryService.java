@@ -12,4 +12,6 @@ import java.util.Iterator;
 @ImplementedBy(XillUDMService.class)
 public interface XillUDMQueryService {
     Iterator<String> findJsonWhere(Document filter) throws PersistenceException;
+
+    long delete(Document filterDoc) throws PersistenceException;
 }

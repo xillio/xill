@@ -37,7 +37,7 @@ public class XillUDMService implements XillUDMPersistence, XillUDMQueryService {
         if (document.isNew()) {
             create(document);
         } else {
-            throw new NotImplementedException("I have not implemented this yet");
+            update(document);
         }
     }
 
@@ -58,6 +58,14 @@ public class XillUDMService implements XillUDMPersistence, XillUDMQueryService {
 
     public void create(UDMDocument document) throws PersistException, ValidationException {
         DocumentBuilder builder = getUdmService(DEFAULT_IDENTITY).create();
+        document.applyTo(builder);
+        persist(builder);
+    }
+
+    public void update(UDMDocument document) throws PersistException, ValidationException {
+        UDMService service = getUdmService(DEFAULT_IDENTITY);
+        DocumentID id = service.get(document.getId());
+        DocumentBuilder builder = service.document(id);
         document.applyTo(builder);
         persist(builder);
     }
@@ -101,5 +109,11 @@ public class XillUDMService implements XillUDMPersistence, XillUDMQueryService {
 
                 }
         );
+    }
+
+    @Override
+    public long delete(Document filterDoc) throws PersistenceException {
+        UDMService service = getUdmService(DEFAULT_IDENTITY);
+        return service.delete(filterDoc);
     }
 }

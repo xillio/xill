@@ -8,4 +8,6 @@ public interface UDMDocument {
     void applyTo(DocumentBuilder builder) throws ValidationException;
 
     boolean isNew();
+
+    String getId();
 }
