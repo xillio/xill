@@ -28,7 +28,7 @@ public class NewFolderDialog extends FXMLDialog {
 	private final TreeItem<Pair<File, String>> treeItem;
 	private final ProjectPane projectPane;
 
-	private static final Logger log = LogManager.getLogger(NewFolderDialog.class);
+	private static final Logger LOGGER = LogManager.getLogger(NewFolderDialog.class);
 
 	/**
 	 * Default constructor.
@@ -68,7 +68,7 @@ public class NewFolderDialog extends FXMLDialog {
 			error.setContentText("Cannot create the new folder.");
 			error.show();
 
-			log.error(e.getMessage());
+			LOGGER.error(e.getMessage(), e);
 		}
 		close();
 	}

@@ -37,20 +37,13 @@ public class NumberBehavior implements Expression {
 
 	@Override
 	public String getStringValue() {
-		double doubleValue = value.doubleValue();
-		long longValue = value.longValue();
-
-		// Range within which the long and double values have to be in order to assume there are no decimal places
-		double epsilon = Math.ulp(doubleValue);
-
-		return longValue >= doubleValue - epsilon && longValue <= doubleValue + epsilon
-				? Long.toString(longValue) : Double.toString(doubleValue);
+		return value.toString();
 	}
 
 	@Override
 	public boolean getBooleanValue() {
-		return value.doubleValue() != 0;
-	}
+        return Double.doubleToRawLongBits(value.doubleValue()) != 0;
+    }
 
 	@Override
 	public boolean isNull() {

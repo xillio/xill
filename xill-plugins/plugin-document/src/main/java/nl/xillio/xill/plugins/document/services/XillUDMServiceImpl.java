@@ -159,23 +159,20 @@ public class XillUDMServiceImpl implements XillUDMService {
 	public void update(final String documentId, final Map<String, Map<String, Object>> body, final String versionId, final Section section) throws PersistenceException {
 		try (UDMService udmService = connect()) {
 			DocumentID docId = udmService.get(documentId);
-			if (!updateVersion(body, docId, versionId, section, udmService)) {
-				throw new VersionNotFoundException("The document does not contain a version [" + versionId + "].");
-			}
+			updateVersion(body, docId, versionId, section, udmService);
 		}
 	}
 
 	private boolean updateVersion(final Map<String, Map<String, Object>> body, DocumentID docId, final String versionId, final Section section, UDMService udmService) throws PersistenceException {
-		DocumentRevisionBuilder document = getVersion(docId, versionId, section, udmService);
+		DocumentRevisionBuilder document =  getVersion(docId, versionId, section, udmService);
 		if (document == null)
-			return false;
-
-		// Verify that all decorator and fields are the same, else some decorators or fields might not be updated
-		checkDecorators(body, document);
+			document = getVersion(docId, "current", section, udmService).revision(versionId); //create a revision
 
 		// Input into the builder
 		conversionService.mapToUdm(body, document);
 
+		// Verify that all decorator and fields are the same, else some decorators or fields might not be updated
+		checkDecorators(body, document);
 		// Persist and clear from cache
 		udmService.persist(docId);
 

@@ -61,7 +61,9 @@ public class HotkeysHandler {
 		@SuppressWarnings("javadoc")
 		FIND,
 		@SuppressWarnings("javadoc")
-		OPENSETTINGS
+		OPENSETTINGS,
+	    @SuppressWarnings("javadoc")
+	    DUPLICATELINES
 	}
 
 	private HashMap<Hotkeys, Hotkey> hotkeys = new HashMap<>();
@@ -95,6 +97,7 @@ public class HotkeysHandler {
 		hotkeys.put(Hotkeys.RESET_ZOOM,new Hotkey("Shortcut+0", Settings.ResetZoom, "Shortcut to reset zoom", "tfresetzoom"));
 		hotkeys.put(Hotkeys.FIND, new Hotkey("Shortcut+F", Settings.Search, "Shortcut to start search", "tfsearch"));
 		hotkeys.put(Hotkeys.OPENSETTINGS, new Hotkey("Shortcut+P", Settings.OpenSettings, "Shortcut to open settings dialog", "tfopensettings"));
+		hotkeys.put(Hotkeys.DUPLICATELINES, new Hotkey("Shortcut+D", Settings.DuplicateLines, "Shortcut to duplicate selected lines", "tfduplicatelines"));
 	}
 
 	/**

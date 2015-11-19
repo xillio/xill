@@ -4,6 +4,8 @@ import nl.xillio.events.Event;
 import nl.xillio.events.EventHost;
 import nl.xillio.xill.api.RobotAppender;
 import nl.xillio.xill.api.components.RobotID;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.count.CountRequestBuilder;
@@ -32,6 +34,8 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 public class ESConsoleClient implements AutoCloseable {
+
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	@Override
 	public void close() {
@@ -245,8 +249,7 @@ public class ESConsoleClient implements AutoCloseable {
 
 			return source;
 		} catch (IOException e) {
-			// Should never occur
-			e.printStackTrace();
+			LOGGER.error("Content builder creation failed", e);
 			return null;
 		}
 	}
@@ -268,6 +271,7 @@ public class ESConsoleClient implements AutoCloseable {
 			// Get the response
 			response = request.execute().actionGet();
 		} catch (SearchPhaseExecutionException | IndexMissingException e) {
+			LOGGER.error(e.getMessage(), e);
 			return 0;
 		}
 
@@ -301,6 +305,7 @@ public class ESConsoleClient implements AutoCloseable {
 			// Get the response
 			response = request.execute().actionGet();
 		} catch (SearchPhaseExecutionException | IndexMissingException e) {
+			LOGGER.error("Failed to get entries: " + e.getMessage(), e);
 			// If an exception is thrown, return an empty list
 			return new ArrayList<>(0);
 		}
@@ -348,6 +353,7 @@ public class ESConsoleClient implements AutoCloseable {
 			// Get the response
 			response = request.execute().actionGet();
 		} catch (SearchPhaseExecutionException | IndexMissingException e) {
+			LOGGER.error("Failed to count the amount of documents in an index", e);
 			return 0;
 		}
 
@@ -382,6 +388,7 @@ public class ESConsoleClient implements AutoCloseable {
 		try {
 			getClient().admin().indices().delete(new DeleteIndexRequest(normalizedId));
 		} catch (IndexMissingException e) {
+			LOGGER.error("The index does not exist.", e);
 			// If the index does not exist yet, do nothing
 		}
 	}

@@ -12,6 +12,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Window;
+import me.biesaart.utils.StringUtils;
+import nl.xillio.license.License;
+import nl.xillio.license.LicenseDetails;
+import nl.xillio.migrationtool.LicenseUtils;
 import nl.xillio.migrationtool.gui.FXController;
 import nl.xillio.xill.util.settings.Settings;
 import nl.xillio.xill.util.settings.SettingsHandler;
@@ -20,6 +24,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 
 /**
@@ -29,7 +36,7 @@ import java.util.regex.Pattern;
  */
 public class SettingsDialog extends FXMLDialog {
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(SettingsDialog.class);
 
     @FXML
     private TextField tfprojectfolder;
@@ -71,9 +78,12 @@ public class SettingsDialog extends FXMLDialog {
     private CheckBox cbshowlinenumbers;
     @FXML
     private Tab licenseTab;
+    @FXML
+    private Label lblLicenseType, lblLicensedTo, lblLicenseContactName, lblLicenseContactEmail,
+            lblLicenseDateIssued, lblLicenseExpiryDate, lblLicenseModules;
 
     private SettingsHandler settings;
-    private Runnable onApply;
+    private ApplyHandler onApply;
 
     /**
      * Dialog constructor
@@ -98,11 +108,21 @@ public class SettingsDialog extends FXMLDialog {
 
         Platform.runLater(() -> FXController.hotkeys.getAllTextFields(getScene()).forEach(this::setShortcutHandler));
 
+        loadLicenseInfo();
+    }
 
-        // TODO We do not have license functionality yet. If this is implemented in the future remove this code
-        LOGGER.warn("Removing license tab from settings.");
-        licenseTab.getTabPane().getTabs().remove(licenseTab);
-        // End of license tab removal
+    private void loadLicenseInfo() {
+        License license = LicenseUtils.getLicense();
+        LicenseDetails details = license.getLicenseDetails();
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("d-M-Y");
+
+        lblLicenseType.setText(details.getLicenseType().toString());
+        lblLicenseContactEmail.setText(details.getEmailAddress());
+        lblLicenseContactName.setText(details.getContactName());
+        lblLicenseDateIssued.setText(format.format(details.getIssuedDate()));
+        lblLicenseExpiryDate.setText(format.format(details.getExpiryDate()));
+        lblLicensedTo.setText(details.getCompanyName());
+        lblLicenseModules.setText(StringUtils.join(details.getSoftwareModules(), ", "));
     }
 
     private void setSize() {
@@ -129,11 +149,17 @@ public class SettingsDialog extends FXMLDialog {
     }
 
     @FXML
+    private void browseLicenseBtnPressed() {
+        LicenseUtils.performValidation(true);
+        loadLicenseInfo();
+    }
+
+    @FXML
     private void projectBrowseButtonPressed() {
         DirectoryChooser chooser = new DirectoryChooser();
 
         // Set directory
-	    File folder = new File(tfprojectfolder.getText());
+        File folder = new File(tfprojectfolder.getText());
         if (folder.isDirectory()) {
             chooser.setInitialDirectory(folder);
         } else {
@@ -228,6 +254,7 @@ public class SettingsDialog extends FXMLDialog {
         try {
             validate();
         } catch (ValidationException e) {
+            LOGGER.error(e.getMessage(), e);
             Alert alert = new Alert(AlertType.ERROR, e.getMessage(), ButtonType.OK);
             alert.initModality(Modality.APPLICATION_MODAL);
             alert.showAndWait();
@@ -235,7 +262,7 @@ public class SettingsDialog extends FXMLDialog {
         }
         saveSettings();
         if (onApply != null) {
-            onApply.run();
+            onApply.applySettings();
         }
         return true;
     }
@@ -259,7 +286,7 @@ public class SettingsDialog extends FXMLDialog {
 
         if (!tfprojectfolder.getText().isEmpty()) {
             File file = new File(tfprojectfolder.getText());
-            if(!file.exists()) {
+            if (!file.exists()) {
                 throw new ValidationException("The chosen project folder does not exist!");
             }
 
@@ -388,7 +415,7 @@ public class SettingsDialog extends FXMLDialog {
         FXController.hotkeys.registerHotkeysSettings(settings);
     }
 
-    public void setOnApply(Runnable applyHandler) {
+    public void setOnApply(ApplyHandler applyHandler) {
         this.onApply = applyHandler;
     }
 

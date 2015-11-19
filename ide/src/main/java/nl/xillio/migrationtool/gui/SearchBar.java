@@ -88,8 +88,8 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 
 	/**
 	 * Set the toggle button for this searchbar
-	 * 
-	 * @param toggleButton The search button  
+	 *
+	 * @param toggleButton The search button
 	 * @param id The index to pass to {@link SearchBar#open(int)}
 	 */
 	public void setButton(final ToggleButton toggleButton, final int id) {
@@ -131,6 +131,19 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 		// Update the labels.
         updateLabels();
 	}
+
+    /**
+     * Run search again on current state of search (i.e. use current search settings)
+     * Usually used right after the source data of search has been changed - so it will do search with current settings on a new data
+     */
+    public void refresh() {
+        String query = tfEditorSearchQuery.getText();
+        if (!query.isEmpty()) {
+            Platform.runLater(() -> {
+                runSearch(query);
+            });
+        }
+    }
 
 	/**
 	 * Returns whether regex are enabled.
@@ -266,7 +279,7 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 		// Unselect the toggle button
 		if (toggleButton != null) {
 			toggleButton.setSelected(false);
-			
+
 			if(this.isOpen) {
 				closeEvent.invoke(true);
 				this.isOpen = false;

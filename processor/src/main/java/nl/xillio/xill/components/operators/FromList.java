@@ -39,6 +39,9 @@ public class FromList implements Processable {
 		switch (list.getType()) {
 			case LIST:
 				try {
+					if(Double.isNaN(index.getNumberValue().doubleValue())){
+						throw new RobotRuntimeException("The list does not contain any element called '" + index.getStringValue() + "' (a list does not have named elements).");
+					}
 					MetaExpression result = ((List<MetaExpression>) list.getValue()).get(index.getNumberValue().intValue());
 					return InstructionFlow.doResume(result);
 				} catch (IndexOutOfBoundsException e) {

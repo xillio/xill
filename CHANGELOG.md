@@ -1,6 +1,13 @@
 # Xill IDE - Change Log
 All notable changes to this project will be documented in this file
 
+## [3.0.22] - 19-11-2015
+### Changed
+- Number/String/Boolean behaviour determines how a variable is exported.
+- UX improvements.
+- Various bugfixes.
+- REST plugin supports: authentication, binary POST, custom data types
+
 ## [3.0.21] - 29-10-2015
 ### Changed
 - Redefinition of the Xill scripting language.

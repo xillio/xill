@@ -9,6 +9,7 @@ import nl.xillio.xill.api.data.XmlNodeFactory;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.services.inject.InjectorUtils;
 import nl.xillio.xill.services.json.GsonParser;
+import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,6 +24,7 @@ public class Content {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private String content = "";
 	private ContentType type = ContentType.TEXT_PLAIN;
+    private MultipartBody multipartBody = null;
 	private XmlNodeFactory xmlNodeFactory;
     private static final String ENCODING = "UTF-8";
 
@@ -47,7 +49,11 @@ public class Content {
                 XmlNode xmlNode = contentVar.getMeta(XmlNode.class);
                 this.content = xmlNode.getXmlContent();
                 this.type = ContentType.create(ContentType.APPLICATION_XML.getMimeType(), ENCODING);
+            } else if (contentVar.getMeta(MultipartBody.class) != null) {
+                // MultipartBody
+                this.multipartBody = contentVar.getMeta(MultipartBody.class);
             } else {
+                // Plain text content
                 this.content = contentVar.getStringValue();
                 this.type = ContentType.create(ContentType.TEXT_PLAIN.getMimeType(), ENCODING);
             }
@@ -84,6 +90,10 @@ public class Content {
 	 * @return the content as a string
 	 */
 	public String getContent() {
+        if (this.multipartBody != null) {
+            throw new RobotRuntimeException("Multipart can be used for request only!");
+        }
+        // else
 		return this.content;
 	}
 
@@ -91,6 +101,10 @@ public class Content {
 	 * @return the type of the content
 	 */
 	public ContentType getType() {
+        if (this.multipartBody != null) {
+            throw new RobotRuntimeException("Multipart can be used for request only!");
+        }
+        // else
 		return this.type;
 	}
 
@@ -98,12 +112,13 @@ public class Content {
 	 * @return true if content is empty
 	 */
 	public boolean isEmpty() {
-		return this.content.isEmpty();
+		return (this.content.isEmpty() && (this.multipartBody == null));
 	}
 
 	/**
 	 * Create the Xill variable according to the type of content and fill it with proper content
-	 *
+	 * It should be used for REST response only!
+     *
 	 * @return new Xill variable (JSON-&gt;OBJECT type / XML-&gt;XmlNode / other-&gt;ATOMIC string)
 	 */
 	public MetaExpression getMeta() {
@@ -135,5 +150,18 @@ public class Content {
 		} else {
 			return ExpressionBuilderHelper.fromValue(this.content);
 		}
+	}
+
+    /**
+     * Set the single content or multipart body to the REST request
+     *
+     * @param request REST request
+     */
+	public void setToRequest(final Request request) {
+        if (this.multipartBody == null) {
+            request.bodyString(this.getContent(), this.getType());
+        } else {
+            this.multipartBody.setToRequest(request);
+        }
 	}
 }

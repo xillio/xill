@@ -26,7 +26,7 @@ public abstract class BaseDatabaseConstruct extends Construct {
 
 	private static final int VALIDATION_TIMEOUT = 1000;
 
-	private static final Logger log = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	private static LinkedHashMap<RobotID, ConnectionMetadata> lastConnections = new LinkedHashMap<>();
 
@@ -36,7 +36,7 @@ public abstract class BaseDatabaseConstruct extends Construct {
 	@Override
 	public final ConstructProcessor prepareProcess(ConstructContext context) {
 		// Before start check that previous connections can be used
-		context.addRobotStartedListener((action) -> cleanLastConnections());
+		context.addRobotStartedListener(action -> cleanLastConnections());
 		return doPrepareProcess(context);
 	}
 
@@ -62,7 +62,7 @@ public abstract class BaseDatabaseConstruct extends Construct {
 		try {
 			c.close();
 		} catch (SQLException e) {
-			log.error("Could not close database connection", e);
+			LOGGER.error("Could not close database connection", e);
 		}
 	}
 

@@ -397,6 +397,15 @@
                                                             <Insets />
                                                          </padding>
                                                       </HBox>
+													  <HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+                                                         <children>
+                                                            <Label prefWidth="200.0" text="Duplicate lines" />
+                                                            <TextField fx:id="tfduplicatelines" alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+                                                         </children>
+                                                         <padding>
+                                                            <Insets />
+                                                         </padding>
+                                                      </HBox>
                                                       <HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
                                                          <children>
                                                             <Label prefWidth="200.0" text="Reset zoom" />
@@ -443,7 +452,7 @@
 																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
 																			<children>
 																				<Label prefWidth="150.0" text="License type" />
-																				<Label text="Internal" HBox.hgrow="ALWAYS" />
+																				<Label fx:id="lblLicenseType" text="Internal" HBox.hgrow="ALWAYS" />
 																			</children>
 																			<padding>
 																				<Insets />
@@ -452,7 +461,7 @@
 																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
 																			<children>
 																				<Label prefWidth="150.0" text="Licensed to" />
-																				<Label text="Xillio" HBox.hgrow="ALWAYS" />
+																				<Label fx:id="lblLicensedTo" text="Xillio" HBox.hgrow="ALWAYS" />
 																			</children>
 																			<padding>
 																				<Insets />
@@ -461,7 +470,7 @@
 																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
 																			<children>
 																				<Label prefWidth="150.0" text="Contact name" />
-																				<Label text="Xillio Developer" HBox.hgrow="ALWAYS" />
+																				<Label fx:id="lblLicenseContactName" text="Xillio Developer" HBox.hgrow="ALWAYS" />
 																			</children>
 																			<padding>
 																				<Insets />
@@ -470,7 +479,7 @@
 																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
 																			<children>
 																				<Label prefWidth="150.0" text="Contact e-mail" />
-																				<Label text="dev@xillio.nl" HBox.hgrow="ALWAYS" />
+																				<Label fx:id="lblLicenseContactEmail" text="dev@xillio.nl" HBox.hgrow="ALWAYS" />
 																			</children>
 																			<padding>
 																				<Insets />
@@ -479,7 +488,7 @@
 																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
 																			<children>
 																				<Label prefWidth="150.0" text="Date issued" />
-																				<Label text="2015-01-01" HBox.hgrow="ALWAYS" />
+																				<Label fx:id="lblLicenseDateIssued" text="2015-01-01" HBox.hgrow="ALWAYS" />
 																			</children>
 																			<padding>
 																				<Insets />
@@ -488,7 +497,7 @@
 																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
 																			<children>
 																				<Label prefWidth="150.0" text="Expiry date" />
-																				<Label text="2016-01-01" HBox.hgrow="ALWAYS" />
+																				<Label fx:id="lblLicenseExpiryDate" text="2016-01-01" HBox.hgrow="ALWAYS" />
 																			</children>
 																			<padding>
 																				<Insets />
@@ -497,7 +506,7 @@
 																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
 																			<children>
 																				<Label prefWidth="150.0" text="Modules" />
-																				<Label text="Runtime, IDE, Server" HBox.hgrow="ALWAYS" />
+																				<Label fx:id="lblLicenseModules" text="Runtime, IDE, Server" HBox.hgrow="ALWAYS" />
 																			</children>
 																			<padding>
 																				<Insets />
@@ -505,8 +514,7 @@
 																		</HBox>
 																		<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" layoutX="10.0" layoutY="10.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
 																			<children>
-																				<Button mnemonicParsing="false" text="Deactivate license" />
-																				<Button mnemonicParsing="false" text="Replace license" />
+																				<Button mnemonicParsing="false" onAction="#browseLicenseBtnPressed" text="Browse license" />
 																			</children>
 																			<padding>
 																				<Insets />

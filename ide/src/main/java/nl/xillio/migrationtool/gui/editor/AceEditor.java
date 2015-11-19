@@ -302,6 +302,8 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 				paste();
 			} else if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.RESET_ZOOM)).match(ke)) {
 				zoomTo(1);
+			} else if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.DUPLICATELINES)).match(ke)) {
+				callOnAce("duplicateCurrentLines");
 			}
 		}
 
@@ -356,8 +358,8 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 				JSObject session = (JSObject) callOnAceBlocking("getSession");
 				JSObject selection = (JSObject) callOnAceBlocking("getSelection");
 				JSObject r = (JSObject) session.call("replace", selection.call("getRange"), code);
-				Object row = r.getMember("row");
-				Object column = r.getMember("column");
+				int row = (int)r.getMember("row");
+				int column = (int)r.getMember("column");
 				JSObject range = (JSObject) executeJSBlocking(String.format("new Range(%d, %d, %d, %d)", row, column, row, column));
 				selection.call("setSelectionRange", range);
 			});
