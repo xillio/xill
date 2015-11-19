@@ -19,9 +19,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 public class WatchDir implements Runnable {
 
 	private final WatchService watcher;

@@ -1,13 +1,9 @@
 package nl.xillio.migrationtool;
 
-import me.biesaart.utils.Log;
-import org.slf4j.Logger;
-
 /**
  * This thread will wait for 5 seconds and then kill the application
  */
 public class ApplicationKillThread extends Thread {
-
 
     private ApplicationKillThread() {
         super("ApplicationKillThread");
