@@ -36,7 +36,7 @@ import xill.lang.xill.Target;
  * This class contains all information and controls required for debugging
  */
 public class XillDebugger implements Debugger {
-	private static final Logger log = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger(XillDebugger.class);
 	private final List<Breakpoint> breakpoints;
 	private Instruction previousInstruction;
 	private Instruction currentInstruction;
@@ -155,7 +155,7 @@ public class XillDebugger implements Debugger {
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					LOGGER.error("Unable to determine if the robot should be paused.", e);
 				}
 			}
 			pausedOnInstruction = null;
@@ -212,7 +212,7 @@ public class XillDebugger implements Debugger {
 	public void robotFinished(final Robot robot) {
 		onRobotStopped.invoke(new RobotStoppedAction(robot));
 
-		log.info("Robot finished.");
+		LOGGER.info("Robot finished.");
 	}
 
 	@Override
@@ -265,7 +265,9 @@ public class XillDebugger implements Debugger {
 				if (pair.getValue().getVariable() != null && isVisible(pair.getKey(), pausedOnInstruction)) {
 					filtered.add(pair.getKey());
 				}
-			} catch (EmptyStackException e) {}
+			} catch (EmptyStackException e) {
+				LOGGER.error(e.getMessage(), e);
+			}
 		}
 
 		return filtered;
@@ -304,6 +306,8 @@ public class XillDebugger implements Debugger {
 	}
 
 	@Override
+	@SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
+	// This RobotRuntimeException will not be addressed as it triggers editor specific behaviour.
 	public void handle(final Throwable e) throws RobotRuntimeException {
 		handler.handle(e);
 	}

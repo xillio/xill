@@ -17,9 +17,8 @@ public interface DocumentationGenerator extends AutoCloseable {
 	 *
 	 * @param entity the {@link DocumentationEntity} to generate the output for
 	 * @throws ParsingException      if parsing the entity failed
-	 * @throws IllegalStateException if this DocumentationGenerator has already been closed
 	 */
-	void generate(DocumentationEntity entity) throws ParsingException, IllegalFormatException;
+	void generate(DocumentationEntity entity) throws ParsingException;
 
 	/**
 	 * Generate the index of all packages
