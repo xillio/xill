@@ -43,9 +43,9 @@ public class ESConsoleClient implements AutoCloseable {
 	}
 
 	public class SearchFilter {
-		public String text = ""; // needle or pattern
-		public boolean regExp;
-		public Map<LogType, Boolean> types;
+		private String text = ""; // needle or pattern
+		private boolean regExp;
+		private Map<LogType, Boolean> types;
 
 		private String getWildcardNeedle() {
 			return String.format("*%1$s*", text);
