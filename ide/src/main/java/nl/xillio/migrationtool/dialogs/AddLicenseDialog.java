@@ -43,13 +43,20 @@ public class AddLicenseDialog extends FXMLDialog {
     private void okayBtnPressed(final ActionEvent event) {
         if (LicenseUtils.isValid(getChosen())) {
             close();
+        } else if (!getChosen().exists()) {
+            showError("The provided license file does not exist.");
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "This license is not valid");
-            alert.setTitle("Invalid license");
-            alert.initOwner(this.getScene().getWindow());
-            alert.show();
+            showError("The provided license is not valid.");
         }
     }
+
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR, message);
+        alert.setTitle("Invalid license");
+        alert.initOwner(this.getScene().getWindow());
+        alert.show();
+    }
+
 
     public File getChosen() {
         return new File(tfLicenseFile.getText());
