@@ -14,6 +14,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.util.Pair;
 import nl.xillio.xill.api.Xill;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * A dialog to remove an item in the project view.
@@ -25,6 +27,8 @@ public class RenameDialog extends FXMLDialog {
 	private final TreeItem<Pair<File, String>> treeItem;
 
 	private final Alert error = new Alert(AlertType.ERROR);
+
+	private static final Logger LOGGER = LogManager.getLogger(RenameDialog.class);
 
 	/**
 	 * Default constructor.
@@ -68,7 +72,7 @@ public class RenameDialog extends FXMLDialog {
 				treeItem.setValue(new Pair<File, String>(newFile, tfname.getText()));
 				close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				LOGGER.error(e.getMessage(), e);
 				error.setContentText("Something went wrong while renaming a file/folder: " + e.getMessage());
 				error.show();
 			}

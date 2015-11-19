@@ -11,6 +11,7 @@ import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -35,13 +36,13 @@ import javafx.scene.web.WebView;
  *
  */
 public class BrowserPane extends AnchorPane {
-	private final Logger log = LogManager.getLogger();
+	private final Logger LOGGER = LogManager.getLogger(BrowserPane.class);
 
 	public static enum ContentType {
 		HTML, XML
 	};
 
-	public static String CSS_PROPERTY_NAME = "xmt-property";
+	public static final String CSS_PROPERTY_NAME = "xmt-property";
 
 	protected WebView webView = new WebView();
 	protected static XPath xpath = XPathFactory.newInstance().newXPath();
@@ -252,7 +253,7 @@ public class BrowserPane extends AnchorPane {
 	 * @throws IllegalArgumentException
 	 *         If the parent node hasn't the required xmt-property
 	 */
-	private void decapsulate(final Node node) throws IllegalArgumentException {
+	private void decapsulate(final Node node) {
 		Node child = node.getFirstChild();
 		Node parent = node.getParentNode();
 		if (!"DIV".equals(node.getNodeName()) || !"xmt-selection-capsule".equals(node.getAttributes().getNamedItem(CSS_PROPERTY_NAME).getNodeValue())) {
@@ -278,10 +279,8 @@ public class BrowserPane extends AnchorPane {
 		try {
 			Object result = xpath.evaluate(query, source, type);
 			return result;
-		} catch (Exception e) {
-			// System.err.println(new SAX_XMLVariable(source).toString());
-			System.err.println("XPath query: " + query);
-			// e.printStackTrace();
+		} catch (XPathExpressionException e) {
+			LOGGER.error(e.getMessage(), e);
 		}
 		return null;
 	}
@@ -580,14 +579,19 @@ public class BrowserPane extends AnchorPane {
 				break;
 			case Node.PROCESSING_INSTRUCTION_NODE:
 				text.append("\n<div class=\"comment\">" + indent + "&lt;!-- Processing instruction --&gt;</div>");
+				break;
 			case Node.ATTRIBUTE_NODE:
 				text.append("\n<div class=\"comment\">" + indent + "&lt;!-- Attribute node --&gt;</div>");
+				break;
 			case Node.ENTITY_REFERENCE_NODE:
 				text.append("\n<div class=\"comment\">" + indent + "&lt;!-- Entity reference --&gt;</div>");
+				break;
 			case Node.DOCUMENT_FRAGMENT_NODE:
 				text.append("\n<div class=\"comment\">" + indent + "&lt;!-- Document fragment --&gt;</div>");
+				break;
 			case Node.NOTATION_NODE:
 				text.append("\n<div class=\"comment\">" + indent + "&lt;!-- Notation node --&gt;</div>");
+				break;
 			default:
 				text.append("\n<div class=\"text\">" + node.getNodeValue() + "</div>"); // TODO: handle other node types: http://www.w3schools.com/jsref/dom_obj_node.asp
 		}
