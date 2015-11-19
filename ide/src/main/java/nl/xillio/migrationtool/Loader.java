@@ -126,7 +126,8 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 
 		} catch (IOException e) {
 			LOGGER.error("Loader.initGUI(): Fatal error occurred during launch: " + e.getMessage(), e);
-			System.exit(1);
+			//System.exit is appropriate here since there is a fatal error.
+			System.exit(1); //NOSONAR
 		}
 		
 		primaryStage.setTitle(APP_TITLE + " - " + LONG_VERSION);
