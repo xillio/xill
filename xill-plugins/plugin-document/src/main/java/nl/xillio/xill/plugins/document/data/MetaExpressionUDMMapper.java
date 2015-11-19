@@ -67,9 +67,7 @@ public class MetaExpressionUDMMapper implements UDMDocument {
 
         for (Map.Entry<String, MetaExpression> entry : convertedExpression.entrySet()) {
             switch (entry.getKey()) {
-                case "timestamp":
-                case "modifiedby":
-                case "action":
+                case "order":
                     break;
                 case "version":
                     revision.version(entry.getValue().getStringValue());
