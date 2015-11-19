@@ -393,6 +393,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 *        the objected that will be inserted
 	 * @throws SQLException
 	 */
+    @SuppressWarnings("squid:S2077") //table name cannot be set with prepared statement.
 	void insertObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject) throws SQLException {
 
 		List<String> escaped = new ArrayList<>();
@@ -428,6 +429,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 *        the keys for the WHERE part of the query.
 	 * @throws SQLException
 	 */
+    @SuppressWarnings("squid:S2077") //table name cannot be set with prepared statement.
 	void updateObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject, final List<String> keys)
 			throws SQLException {
 		String setString = createQueryPart(connection, newObject.keySet(), ",");
