@@ -83,7 +83,7 @@ public class SettingsDialog extends FXMLDialog {
             lblLicenseDateIssued, lblLicenseExpiryDate, lblLicenseModules;
 
     private SettingsHandler settings;
-    private Runnable onApply;
+    private ApplyHandler onApply;
 
     /**
      * Dialog constructor
@@ -262,7 +262,7 @@ public class SettingsDialog extends FXMLDialog {
         }
         saveSettings();
         if (onApply != null) {
-            onApply.run();
+            onApply.applySettings();
         }
         return true;
     }
@@ -415,7 +415,7 @@ public class SettingsDialog extends FXMLDialog {
         FXController.hotkeys.registerHotkeysSettings(settings);
     }
 
-    public void setOnApply(Runnable applyHandler) {
+    public void setOnApply(ApplyHandler applyHandler) {
         this.onApply = applyHandler;
     }
 

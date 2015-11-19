@@ -42,8 +42,8 @@ public class NumberBehavior implements Expression {
 
 	@Override
 	public boolean getBooleanValue() {
-		return value.doubleValue() != 0;
-	}
+        return Double.doubleToRawLongBits(value.doubleValue()) != 0;
+    }
 
 	@Override
 	public boolean isNull() {
