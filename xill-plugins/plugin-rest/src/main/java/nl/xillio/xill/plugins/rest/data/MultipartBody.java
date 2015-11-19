@@ -86,6 +86,6 @@ public class MultipartBody implements MetadataExpression {
 
     @Override
     public String toString() {
-        return String.format("REST multipart body");
+        return "REST multipart body";
     }
 }
