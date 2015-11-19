@@ -6,12 +6,16 @@ import nl.xillio.udm.DocumentID;
 import nl.xillio.udm.builders.DocumentBuilder;
 import nl.xillio.udm.exceptions.ModelException;
 import nl.xillio.udm.exceptions.PersistenceException;
+import nl.xillio.udm.interfaces.FindResult;
 import nl.xillio.udm.services.UDMService;
+import nl.xillio.udm.util.TransformationIterable;
 import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.plugins.document.data.UDMDocument;
 import nl.xillio.xill.plugins.document.exceptions.PersistException;
 import nl.xillio.xill.plugins.document.exceptions.ValidationException;
 import org.bson.Document;
+
+import java.util.Iterator;
 
 /**
  * This class is responsible for communicating with the udm.
@@ -19,7 +23,7 @@ import org.bson.Document;
  * @author Thomas Biesaart
  */
 @Singleton
-public class XillUDMService implements XillUDMPersistence {
+public class XillUDMService implements XillUDMPersistence, XillUDMQueryService {
     private static final String DEFAULT_IDENTITY = "xill";
     private final ConnectionPool connectionPool;
 
@@ -79,5 +83,23 @@ public class XillUDMService implements XillUDMPersistence {
      */
     private UDMService getUdmService(String identity) {
         return connectionPool.get(identity);
+    }
+
+
+    @Override
+    public Iterator<String> findJsonWhere(Document filter) throws PersistenceException {
+        UDMService service = getUdmService(DEFAULT_IDENTITY);
+        FindResult result = service.find(filter);
+        return new TransformationIterable<>(
+                result.iterator(),
+                id -> {
+                    String json = service.toJSON(id);
+                    service.release(id);
+                    return json;
+                },
+                noCleanUp -> {
+
+                }
+        );
     }
 }
