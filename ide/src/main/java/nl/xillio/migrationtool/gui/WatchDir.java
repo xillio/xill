@@ -27,7 +27,6 @@ public class WatchDir implements Runnable {
 	private final WatchService watcher;
 	private volatile Map<WatchKey, Path> keys;
 	private volatile Map<FolderListener, List<Path>> listeners;
-	private final Logger log = LogManager.getLogger();
 
 	private boolean stop = false;
 
@@ -84,7 +83,6 @@ public class WatchDir implements Runnable {
 	private void registerDir(final Path dir) throws IOException {
 		WatchKey key = dir.register(watcher, ENTRY_CREATE, ENTRY_DELETE); // ENTRY_MODIFY
 		keys.put(key, dir);
-		// log.debug("WatchDir.registerDir(): " + dir);
 	}
 
 	/**
@@ -93,7 +91,6 @@ public class WatchDir implements Runnable {
 	 */
 	private void registerAll(final Path start) throws IOException {
 		// register directory and sub-directories
-		// log.debug("Registering: " + start);
 		Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
 			@Override
 			public FileVisitResult preVisitDirectory(final Path dir, final BasicFileAttributes attrs)

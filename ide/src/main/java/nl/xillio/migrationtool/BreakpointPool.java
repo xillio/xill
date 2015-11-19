@@ -16,7 +16,6 @@ import nl.xillio.xill.api.components.RobotID;
  */
 public class BreakpointPool {
 	private final Map<RobotID, List<Integer>> breakpoints = new HashMap<>();
-	private static final Logger log = LogManager.getLogger(BreakpointPool.class);
 
 	/**
 	 * Get all breakpoints in a certain robot

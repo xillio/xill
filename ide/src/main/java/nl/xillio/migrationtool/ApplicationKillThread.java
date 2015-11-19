@@ -7,7 +7,7 @@ import org.slf4j.Logger;
  * This thread will wait for 5 seconds and then kill the application
  */
 public class ApplicationKillThread extends Thread {
-    private static final Logger LOGGER = Log.get();
+
 
     private ApplicationKillThread() {
         super("ApplicationKillThread");

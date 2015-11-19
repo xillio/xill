@@ -17,7 +17,6 @@ import java.io.IOException;
 public class SettingsHandler {
 
     private final static File SETTINGS_FILE = new File(XillioHomeFolder.forXillIDE(), "settings.cfg");
-    private final static Logger LOGGER = LogManager.getLogger();
 
     private ContentHandlerImpl content;
     private static SettingsHandler settings = new SettingsHandler();
