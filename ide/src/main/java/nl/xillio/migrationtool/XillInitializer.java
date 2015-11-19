@@ -8,6 +8,7 @@ import java.util.List;
 
 import nl.xillio.events.Event;
 import nl.xillio.events.EventHost;
+import nl.xillio.exceptions.XillioRuntimeException;
 import nl.xillio.plugins.CircularReferenceException;
 import nl.xillio.plugins.PluginLoader;
 import nl.xillio.plugins.XillPlugin;

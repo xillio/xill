@@ -9,6 +9,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.util.Pair;
 import nl.xillio.xill.api.preview.Searchable;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,8 @@ import java.util.regex.PatternSyntaxException;
  * @author Zbynek Hochmann
  */
 public class PreviewSearch implements Searchable {
+
+    private static final Logger LOGGER = LogManager.getLogger(PreviewSearch.class);
 
     private class SearchTextOccurrence {
         private final int start;
@@ -80,6 +84,7 @@ public class PreviewSearch implements Searchable {
         try {
             regexPattern = caseSensitive ? Pattern.compile(pattern) : Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
         } catch (PatternSyntaxException e) {
+            LOGGER.error(e.getMessage(), e);
             return; // This return in catch (i.e. exception handling missing) is intentionally - if not valid regexp pattern is passed from user, it will do nothing
         }
 

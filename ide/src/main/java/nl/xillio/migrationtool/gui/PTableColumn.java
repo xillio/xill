@@ -32,7 +32,7 @@ public class PTableColumn<S, T> extends javafx.scene.control.TableColumn<S, T> {
 		return this.percentageWidthProperty().get();
 	}
 
-	public final void setPercentageWidth(final double value) throws IllegalArgumentException {
+	public final void setPercentageWidth(final double value) {
 		if (value >= 0 && value <= 1) {
 			this.percentageWidthProperty().set(value);
 		} else {

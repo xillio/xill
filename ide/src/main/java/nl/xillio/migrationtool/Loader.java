@@ -14,6 +14,7 @@ import java.util.jar.Manifest;
 
 import javafx.scene.control.Alert;
 import javafx.stage.Modality;
+import nl.xillio.exceptions.XillioRuntimeException;
 import nl.xillio.xill.docgen.impl.XillDocGen;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

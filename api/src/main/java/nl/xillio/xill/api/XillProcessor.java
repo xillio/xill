@@ -21,6 +21,8 @@ public interface XillProcessor {
 	 * @throws XillParsingException
 	 *         When the code was not compiled correctly
 	 */
+	@SuppressWarnings("squid:S1160")
+	// Both exceptions are thrown, but at a higher level in different places.
 	public List<Issue> compile() throws IOException, XillParsingException;
 
 	/**

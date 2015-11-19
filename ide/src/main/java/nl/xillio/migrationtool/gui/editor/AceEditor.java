@@ -1,37 +1,24 @@
 package nl.xillio.migrationtool.gui.editor;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.EventHandler;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.Cursor;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.DataFormat;
-import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
+import javafx.scene.input.*;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import me.biesaart.utils.FileUtils;
 import netscape.javascript.JSObject;
 import nl.xillio.events.Event;
 import nl.xillio.events.EventHost;
+import nl.xillio.exceptions.XillioRuntimeException;
 import nl.xillio.migrationtool.BreakpointPool;
 import nl.xillio.migrationtool.gui.FXController;
 import nl.xillio.migrationtool.gui.HelpPane;
@@ -44,13 +31,18 @@ import nl.xillio.xill.util.HighlightSettings;
 import nl.xillio.xill.util.HotkeysHandler.Hotkeys;
 import nl.xillio.xill.util.settings.Settings;
 import nl.xillio.xill.util.settings.SettingsHandler;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * This class wraps around a webview object containing an ace editor in Xill mode.
@@ -61,7 +53,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	private static final SettingsHandler settings = SettingsHandler.getSettingsHandler();
 	private static final double ZOOM_SENSITIVITY = 100;
 	private static final Clipboard clipboard = Clipboard.getSystemClipboard();
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger(AceEditor.class);
 	private final StringProperty code = new SimpleStringProperty();
 	private final WebView editor;
 	private final SimpleBooleanProperty documentLoaded = new SimpleBooleanProperty(false);
@@ -77,7 +69,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 		try {
 			deployEditor();
 		} catch (IOException | TemplateException e) {
-			throw new RuntimeException("Failed to deploy editor", e);
+			throw new XillioRuntimeException("Failed to deploy editor", e);
 		}
 	}
 
