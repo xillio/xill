@@ -44,6 +44,7 @@ public class BrowserPane extends AnchorPane {
 
 	public static final String CSS_PROPERTY_NAME = "xmt-property";
 
+
 	protected WebView webView = new WebView();
 	protected static XPath xpath = XPathFactory.newInstance().newXPath();
 	private final MyNamespaceContext namespaceContext = new MyNamespaceContext();

@@ -215,7 +215,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 *        Driver specific options
 	 * @return A URL to connect to the database
 	 */
-	@SuppressWarnings("squid:S2068") // The hard-coded password is a false alert.
+	@SuppressWarnings("squid:S2068") // Credentials should not be hard-coded.
 	String createJDBCURL(final String type, final String database, final String user, final String pass, String optionsMarker, String optionsSeparator, final Tuple<String, String>... options) {
 		String url = String.format("jdbc:%s://%s", type, database);
 
@@ -393,6 +393,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 *        the objected that will be inserted
 	 * @throws SQLException
 	 */
+    @SuppressWarnings("squid:S2077") // Table name cannot be set with prepared statement.
 	void insertObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject) throws SQLException {
 
 		List<String> escaped = new ArrayList<>();
@@ -428,6 +429,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 	 *        the keys for the WHERE part of the query.
 	 * @throws SQLException
 	 */
+    @SuppressWarnings("squid:S2077") // Table name cannot be set with prepared statement.
 	void updateObject(final Connection connection, final String table, final LinkedHashMap<String, Object> newObject, final List<String> keys)
 			throws SQLException {
 		String setString = createQueryPart(connection, newObject.keySet(), ",");
