@@ -70,6 +70,7 @@ public class HelpSearchBar extends AnchorPane {
 
 		data.addListener((ListChangeListener<Object>) change -> listView.setPrefHeight((Math.min(10, data.size())) * ROW_HEIGHT + 2));
 
+		searchField.setPromptText("Type here to start a search");
 		// Listen to search changes
 		searchField.textProperty().addListener(this::searchTextChanged);
 
