@@ -57,11 +57,7 @@ public class BreakpointPool {
 	public List<Breakpoint> get() {
 		List<Breakpoint> bpList = new ArrayList<>();
 
-		breakpoints.entrySet().forEach(entry -> {
-			entry.getValue().forEach(line -> {
-				bpList.add(new Breakpoint(entry.getKey(), line));
-			});
-		});
+		breakpoints.entrySet().forEach(entry -> entry.getValue().forEach(line -> bpList.add(new Breakpoint(entry.getKey(), line))));
 
 		return bpList;
 	}

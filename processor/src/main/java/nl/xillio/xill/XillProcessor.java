@@ -220,9 +220,7 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
 		}
 
 		// Add warnings to issues
-		resource.getWarnings().forEach(warning -> {
-			issues.add(new Issue(warning.getMessage(), warning.getLine(), Issue.Type.WARNING));
-		});
+		resource.getWarnings().forEach(warning -> issues.add(new Issue(warning.getMessage(), warning.getLine(), Issue.Type.WARNING)));
 
 		return issues;
 	}

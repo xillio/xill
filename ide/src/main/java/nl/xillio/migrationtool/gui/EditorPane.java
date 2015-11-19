@@ -215,7 +215,7 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 	 * @param jsCode JavaScript code with settings to be executed
 	 */
 	public void setEditorOptions(final String jsCode) {
-		Platform.runLater(() -> {editor.setOptions(jsCode);});
+		Platform.runLater(() -> editor.setOptions(jsCode));
 	}
 
 	/**
@@ -239,9 +239,7 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 	@FXML
 	private void buttonRemoveAllBreakpoints() {
 		BreakpointPool.INSTANCE.clear();
-		tab.getGlobalController().getTabs().forEach(editorTab -> {
-			editorTab.getEditorPane().getEditor().clearBreakpoints();
-		});
+		tab.getGlobalController().getTabs().forEach(editorTab -> editorTab.getEditorPane().getEditor().clearBreakpoints());
 	}
 
 	@Override

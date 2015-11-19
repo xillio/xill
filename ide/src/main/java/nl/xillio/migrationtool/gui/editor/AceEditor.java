@@ -392,10 +392,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	 * @see WebView#requestFocus()
 	 */
 	public void requestFocus() {
-		Platform.runLater(() -> {
-			editor.requestFocus();
-		});
-
+		Platform.runLater(() -> editor.requestFocus());
 	}
 
 	/**
@@ -504,9 +501,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 
 		BreakpointPool.INSTANCE.clear(tab.getCurrentRobot());
 
-		breakpoints.forEach(bp -> {
-			BreakpointPool.INSTANCE.add(tab.getCurrentRobot(), bp);
-		});
+		breakpoints.forEach(bp -> BreakpointPool.INSTANCE.add(tab.getCurrentRobot(), bp));
 	}
 
 	/**
@@ -525,9 +520,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	}
 
 	private void executeJS(final String js, final Consumer<Object> callback) {
-		Platform.runLater(() -> {
-			callback.accept(executeJSBlocking(js));
-		});
+		Platform.runLater(() -> callback.accept(executeJSBlocking(js)));
 	}
 
 	/**
@@ -602,10 +595,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 
 	private void load(final String path) {
 		editor.getEngine().load(path);
-		editor.getEngine().documentProperty().addListener(
-			(obs, oldDoc, newDoc) -> {
-				documentLoaded.setValue(true);
-			});
+		editor.getEngine().documentProperty().addListener((obs, oldDoc, newDoc) -> documentLoaded.setValue(true));
 	}
 
 	private static String escape(final String raw) {
