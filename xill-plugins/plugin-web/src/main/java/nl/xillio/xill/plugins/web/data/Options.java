@@ -326,15 +326,6 @@ public class Options implements MetadataExpression {
 		return driver;
 	}
 
-	private static boolean delete(File file) {
-		try {
-			return file.delete();
-		} catch (Exception e) {
-			LOGGER.error("Failed to delete file", e);
-		}
-		return false;
-	}
-
 	/**
 	 * Creates new PhantomJS.exe file in temporary folder - on MS Windows only
 	 * For other operating systems, PhantomJS is expected to be properly installed in the path.
@@ -342,8 +333,6 @@ public class Options implements MetadataExpression {
 	public static void extractNativeBinary() {
 
 		try {
-			String nativeBinarySource;
-
 			String os = System.getProperty("os.name").toLowerCase();
 			// Windows
 			if (os.contains("win")) {

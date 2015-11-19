@@ -17,7 +17,6 @@ import java.util.stream.IntStream;
  */
 @Singleton
 public class RegexServiceImpl implements RegexService {
-	private final Thread regexTimerThread;
 	private RegexTimer regexTimer = null;
 	private static Logger logger = LogManager.getLogger();
 
@@ -26,7 +25,6 @@ public class RegexServiceImpl implements RegexService {
 	 */
 	public RegexServiceImpl() {
 		this.regexTimer = new RegexTimer();
-		this.regexTimerThread = new Thread(regexTimer);
 	}
 
 

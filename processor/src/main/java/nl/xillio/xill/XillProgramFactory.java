@@ -130,7 +130,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	    final boolean verbose) {
 		this.debugger = debugger;
 		rootRobot = robotID;
-		expressionParseInvoker.VERBOSE = verbose;
+		expressionParseInvoker.setVERBOSE(verbose);
 		pluginLoader = loader;
 	}
 
@@ -712,7 +712,6 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	/**
 	 * Get the target of an assignment
 	 *
-	 * @param token
 	 * @return
 	 */
 	private static Target getTarget(final EObject start) {
@@ -736,7 +735,6 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	/**
 	 * Construct a list that represents the path into a variable
 	 *
-	 * @param token
 	 * @return
 	 * @throws XillParsingException
 	 */
