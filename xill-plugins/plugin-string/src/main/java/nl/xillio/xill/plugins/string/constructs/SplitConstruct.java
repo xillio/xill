@@ -50,7 +50,7 @@ public class SplitConstruct extends Construct {
 		List<MetaExpression> list = new ArrayList<>();
 
 		Arrays.stream(stringArray).forEach(str -> {
-			if (keepEmpty || !str.equals("")) {
+			if (keepEmpty || !"".equals(str)) {
 				list.add(fromValue(str));
 			}
 		});
