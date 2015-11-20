@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Delete all documents that match a filter.
+        This construct expects a mongo filter. It will delete all documents that match that filter and return the
+        number of deleted documents.
+    </description>
+    <examples>
+        <example title="Usage">
+
+            <header>Delete all documents with a given content type</header>
+            <code>
+                use Document;
+
+                // Delete the document
+                Document.deleteWhere({
+                    "contenttype": "CustomPage"
+                });
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>get</reference>
+        <reference>save</reference>
+        <reference>deleteWhere</reference>
+    </references>
+    <tags>
+        udm, define, build, create, remove, bulk, filter
+    </tags>
+</function>

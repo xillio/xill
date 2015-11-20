@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Fetch a document by id.
+        If the provided id was not found this construct will return null and throw an error.
+    </description>
+    <examples>
+        <example title="Usage">
+
+            <header>Get a document</header>
+            <code>
+                use Document;
+
+                // Get the document
+                Document.get("af981cd6-e077-4b50-844d-3b58758038b4");
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>delete</reference>
+        <reference>save</reference>
+        <reference>find</reference>
+    </references>
+    <tags>
+        udm, define, build, create, fetch
+    </tags>
+</function>

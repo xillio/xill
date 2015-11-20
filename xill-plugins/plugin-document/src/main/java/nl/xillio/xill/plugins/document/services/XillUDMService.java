@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.document.services;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.mongodb.MongoException;
 import nl.xillio.udm.DocumentID;
 import nl.xillio.udm.builders.DocumentBuilder;
 import nl.xillio.udm.exceptions.ModelException;
@@ -9,7 +10,6 @@ import nl.xillio.udm.exceptions.PersistenceException;
 import nl.xillio.udm.interfaces.FindResult;
 import nl.xillio.udm.services.UDMService;
 import nl.xillio.udm.util.TransformationIterable;
-import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.plugins.document.data.UDMDocument;
 import nl.xillio.xill.plugins.document.exceptions.PersistException;
 import nl.xillio.xill.plugins.document.exceptions.ValidationException;
@@ -99,18 +99,22 @@ public class XillUDMService implements XillUDMPersistence, XillUDMQueryService {
     @Override
     public Iterator<String> findJsonWhere(Document filter) throws PersistenceException {
         UDMService service = getUdmService(DEFAULT_IDENTITY);
-        FindResult result = service.find(filter);
-        return new TransformationIterable<>(
-                result.iterator(),
-                id -> {
-                    String json = service.toJSON(id);
-                    service.release(id);
-                    return json;
-                },
-                noCleanUp -> {
+        try {
+            FindResult result = service.find(filter);
+            return new TransformationIterable<>(
+                    result.iterator(),
+                    id -> {
+                        String json = service.toJSON(id);
+                        service.release(id);
+                        return json;
+                    },
+                    noCleanUp -> {
 
-                }
-        );
+                    }
+            );
+        } catch (MongoException e) {
+            throw new PersistenceException(e.getMessage(), e);
+        }
     }
 
     @Override

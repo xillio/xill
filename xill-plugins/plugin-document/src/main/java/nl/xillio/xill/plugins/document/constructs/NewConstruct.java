@@ -28,7 +28,7 @@ public class NewConstruct extends Construct {
         return new ConstructProcessor(
                 this::process,
                 new Argument("contentType", ATOMIC),
-                new Argument("currentVersion", emptyObject(), OBJECT),
+                new Argument("currentVersion", OBJECT),
                 new Argument("history", emptyList(), LIST)
         );
     }

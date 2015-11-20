@@ -1,6 +1,7 @@
 package nl.xillio.xill.plugins.document.constructs;
 
 import com.google.inject.Inject;
+import me.biesaart.utils.ExceptionUtils;
 import nl.xillio.udm.exceptions.PersistenceException;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
@@ -48,7 +49,14 @@ public class DeleteWhereConstruct extends Construct {
         try {
             return queryService.delete(filterDoc);
         } catch (PersistenceException e) {
-            throw new RobotRuntimeException(e.getMessage(), e);
+            Throwable root = ExceptionUtils.getRootCause(e);
+            String message = e.getMessage();
+
+            if(root != null) {
+                message += ": " + root.getMessage();
+            }
+
+            throw new RobotRuntimeException(message, e);
         }
     }
 }
