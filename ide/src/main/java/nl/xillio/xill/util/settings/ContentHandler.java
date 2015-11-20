@@ -17,7 +17,7 @@ public interface ContentHandler {
 	 * Initialize the target content provider
 	 * E.g. opens existing file or creates the new file and creates the basic structure or connects to DB, creates the schema if not done yet, etc. 
 	 */
-	void init() throws ContentHandlerException;
+	void init() throws SettingParseException;
 
 	/**
 	 * Returns all item values for item specified by category and key value

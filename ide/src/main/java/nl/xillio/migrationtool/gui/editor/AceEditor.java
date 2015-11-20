@@ -18,7 +18,6 @@ import me.biesaart.utils.FileUtils;
 import netscape.javascript.JSObject;
 import nl.xillio.events.Event;
 import nl.xillio.events.EventHost;
-import nl.xillio.exceptions.XillioRuntimeException;
 import nl.xillio.migrationtool.BreakpointPool;
 import nl.xillio.migrationtool.gui.FXController;
 import nl.xillio.migrationtool.gui.HelpPane;
@@ -69,7 +68,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 		try {
 			deployEditor();
 		} catch (IOException | TemplateException e) {
-			throw new XillioRuntimeException("Failed to deploy editor", e);
+			throw new RuntimeException("Failed to deploy editor", e);
 		}
 	}
 

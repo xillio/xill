@@ -75,7 +75,7 @@ public class ContentHandlerImpl implements ContentHandler {
 	}
 
 	@Override
-	public void init() throws ContentHandlerException {
+	public void init() throws SettingParseException {
 		// Open existing XML file with settings
 		// If file does not exist it will create new one with the basic structure (i.e. just root node)
 		try {
@@ -91,7 +91,7 @@ public class ContentHandlerImpl implements ContentHandler {
 			}
 		} catch (Exception e) {
 			LOGGER.error("Cannot open settings file: " + e.getMessage(), e);
-			throw new ContentHandlerException("Cannot open settings file: " + e.getMessage(), e);
+			throw new SettingParseException("Cannot open settings file: " + e.getMessage(), e);
 		}
 	}
 

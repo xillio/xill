@@ -1,14 +1,8 @@
 package nl.xillio.migrationtool;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.google.inject.Module;
 import nl.xillio.events.Event;
 import nl.xillio.events.EventHost;
-import nl.xillio.exceptions.XillioRuntimeException;
 import nl.xillio.plugins.CircularReferenceException;
 import nl.xillio.plugins.PluginLoader;
 import nl.xillio.plugins.XillPlugin;
@@ -16,22 +10,21 @@ import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.docgen.DocGen;
-import nl.xillio.xill.docgen.DocumentationEntity;
-import nl.xillio.xill.docgen.DocumentationGenerator;
-import nl.xillio.xill.docgen.DocumentationParser;
-import nl.xillio.xill.docgen.DocumentationSearcher;
+import nl.xillio.xill.docgen.*;
 import nl.xillio.xill.docgen.data.Parameter;
 import nl.xillio.xill.docgen.exceptions.ParsingException;
 import nl.xillio.xill.docgen.impl.ConstructDocumentationEntity;
 import nl.xillio.xill.services.inject.InjectorUtils;
 import nl.xillio.xill.services.inject.PluginInjectorModule;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.inject.Module;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This {@link Thread} is responsible for loading the plugins an and initializing the language.
@@ -147,7 +140,7 @@ public class XillInitializer extends Thread {
 		try (DocumentationGenerator generator = generator(plugin.getName())) {
 			plugin.getConstructs().forEach(construct -> generateDocumentation(construct, generator));
 		} catch (Exception e) {
-			throw new XillioRuntimeException("Failed to generate documentation for " + plugin.getClass().getName(), e);
+			throw new RuntimeException("Failed to generate documentation for " + plugin.getClass().getName(), e);
 		}
 	}
 
@@ -223,7 +216,7 @@ public class XillInitializer extends Thread {
 		try {
 			pluginLoader.load();
 		} catch (CircularReferenceException e) {
-			throw new XillioRuntimeException(e);
+			throw new RuntimeException(e);
 		}
 		
 		pluginsLoaded = true;
