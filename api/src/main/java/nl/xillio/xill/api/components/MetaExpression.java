@@ -552,20 +552,8 @@ public abstract class MetaExpression implements Expression, Processable {
         }
 
         // Numbers
-        if (root instanceof Integer) {
-            return ExpressionBuilderHelper.fromValue((Integer) root);
-        }
-
-        if (root instanceof Long) {
-            return ExpressionBuilderHelper.fromValue((Long) root);
-        }
-
-        if (root instanceof Double) {
-            return ExpressionBuilderHelper.fromValue((Double) root);
-        }
-
-        if (root instanceof String) {
-            return ExpressionBuilderHelper.fromValue((String) root);
+        if (root instanceof Number) {
+            return ExpressionBuilderHelper.fromValue((Number) root);
         }
 
         throw new IllegalArgumentException("The class type " + root.getClass().getName() + " has not been implemented by parseObject");
