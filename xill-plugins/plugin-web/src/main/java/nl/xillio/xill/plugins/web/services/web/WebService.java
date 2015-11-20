@@ -31,8 +31,10 @@ public interface WebService {
 	 *
 	 * @param var
 	 *        The variable we want to click.
+	 * @throws StaleElementReferenceException
+	 *         Throws an exception when the element is stale.
 	 */
-	void click(WebVariable var);
+	void click(WebVariable var) throws StaleElementReferenceException;
 
 	/**
 	 * Sets focus on an element on a given page.
@@ -93,8 +95,9 @@ public interface WebService {
 	 *        The cssPath we're using.
 	 * @return
 	 *         Returns a list of elements: {@link WebVariable}.
+	 * @throws InvalidSelectorException if the cssPath query is invalid
 	 */
-	List<WebVariable> findElementsWithCssPath(WebVariable var, String cssPath);
+	List<WebVariable> findElementsWithCssPath(WebVariable var, String cssPath) throws InvalidSelectorException;
 
 	/**
 	 * Finds all the elements in a node given a cssPath.
@@ -105,8 +108,9 @@ public interface WebService {
 	 *        The xpath we're using.
 	 * @return
 	 *         Returns a list of elements: {@link WebVariable}.
+	 * @throws InvalidSelectorException if the xpath query is invalid
 	 */
-	List<WebVariable> findElementsWithXpath(WebVariable var, String xpath);
+	List<WebVariable> findElementsWithXpath(WebVariable var, String xpath) throws InvalidSelectorException;
 
 	/**
 	 * Returns the current URL of a {@link WebVariable}.
@@ -137,7 +141,7 @@ public interface WebService {
 	 * @throws Exception
 	 *         The selenium implementation can throw an exception.
 	 */
-	void sendKeys(WebVariable var, String key);
+	void sendKeys(WebVariable var, String key) throws Exception;
 
 	/**
 	 * Gets the cookies from a {@link WebVariable}.
@@ -207,7 +211,7 @@ public interface WebService {
 	 * @throws Exception
 	 *         The selinium implementation can throw exceptions.
 	 */
-	void deleteCookies(WebVariable var);
+	void deleteCookies(WebVariable var) throws Exception;
 
 	/**
 	 * Makes a screenshot on a {@link WebVariable} and returns it as file.
@@ -294,7 +298,7 @@ public interface WebService {
 	 * @throws MalformedURLException
 	 *         When the url is malformed an exception can occur.
 	 */
-	void httpGet(WebVariable var, String url) throws MalformedURLException;
+	void httpGet(WebVariable var, String url) throws ClassCastException, MalformedURLException;
 
 	/**
 	 * Creates a page as a {@link WebVariable} given a {@link Options} as setting.

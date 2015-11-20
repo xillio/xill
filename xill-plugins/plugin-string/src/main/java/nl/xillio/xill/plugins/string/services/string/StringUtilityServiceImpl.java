@@ -30,7 +30,7 @@ public class StringUtilityServiceImpl implements StringUtilityService {
     }
 
     @Override
-    public String format(final String text, final List<Object> args) {
+    public String format(final String text, final List<Object> args) throws IllegalFormatException {
         return String.format(text, args.toArray());
     }
 

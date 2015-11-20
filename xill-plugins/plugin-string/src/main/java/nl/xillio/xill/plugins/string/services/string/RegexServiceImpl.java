@@ -31,7 +31,7 @@ public class RegexServiceImpl implements RegexService {
 
 
 	@Override
-	public Matcher getMatcher(final String regex, final String value, int timeout) throws FailedToGetMatcherException {
+	public Matcher getMatcher(final String regex, final String value, int timeout) throws FailedToGetMatcherException, IllegalArgumentException {
 		if (timeout < 0) {
 			timeout = RegexConstruct.REGEX_TIMEOUT;
 		}
@@ -123,7 +123,6 @@ public class RegexServiceImpl implements RegexService {
 		@Override
 		public char charAt(final int index) {
 			if (regexTimer.timeOut()) {
-				// This issue was not addressed, because it was no trivial matter to add a general exceptions package.
 				throw new RuntimeException("Pattern match timed out!");
 			}
 			return inner.charAt(index);

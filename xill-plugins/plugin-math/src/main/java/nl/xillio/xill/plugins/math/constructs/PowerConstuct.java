@@ -3,15 +3,11 @@ package nl.xillio.xill.plugins.math.constructs;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * This construct will return the meaning of life as proven by Deep Thought
  */
 public class PowerConstuct extends Construct {
-
-	private static final Logger LOGGER = LogManager.getLogger(PowerConstuct.class);
 
 	@Override
 	public String getName() {
@@ -25,7 +21,7 @@ public class PowerConstuct extends Construct {
 			try {
 				Thread.sleep(5000);
 			} catch (Exception e) {
-				LOGGER.error(e.getMessage(), e);
+				e.printStackTrace();
 			}
 
 			return fromValue(42);

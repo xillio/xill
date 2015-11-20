@@ -48,9 +48,9 @@ public class MatchesConstruct extends Construct {
 			Matcher matcher = regexService.getMatcher(regex, value, timeout);
 			return fromValue(regexService.matches(matcher));
 		} catch (PatternSyntaxException p) {
-			throw new RobotRuntimeException("Invalid pattern in matches.", p);
+			throw new RobotRuntimeException("Invalid pattern in matches.");
 		} catch (IllegalArgumentException | FailedToGetMatcherException e) {
-			throw new RobotRuntimeException("Illegal argument given.", e);
+			throw new RobotRuntimeException("Illegal argument given.");
 		}
 
 	}

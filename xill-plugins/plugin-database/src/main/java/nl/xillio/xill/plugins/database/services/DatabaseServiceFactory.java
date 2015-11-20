@@ -29,7 +29,7 @@ public class DatabaseServiceFactory {
 	 * @throws ReflectiveOperationException
 	 *         When the driver for the service can not be loaded
 	 */
-	public DatabaseService getService(String name) throws ReflectiveOperationException {
+	public DatabaseService getService(String name) throws ReflectiveOperationException, IllegalArgumentException {
 		if (!services.containsKey(name)) {
 			BaseDatabaseService service = Database.findServiceClass(name).newInstance();
 			services.put(name, service);

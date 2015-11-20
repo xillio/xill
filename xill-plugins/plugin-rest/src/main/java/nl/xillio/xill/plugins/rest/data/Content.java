@@ -8,7 +8,8 @@ import nl.xillio.xill.api.data.XmlNode;
 import nl.xillio.xill.api.data.XmlNodeFactory;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.services.inject.InjectorUtils;
-import nl.xillio.xill.services.json.GsonParser;
+import nl.xillio.xill.services.json.JsonException;
+import nl.xillio.xill.services.json.JsonParser;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 import org.apache.logging.log4j.LogManager;
@@ -123,8 +124,13 @@ public class Content {
 	 */
 	public MetaExpression getMeta() {
 		if (ContentType.APPLICATION_JSON.getMimeType().equals(this.getType().getMimeType())) {
-			GsonParser jsonParser = new GsonParser();
-			Object result = jsonParser.fromJson(this.getContent(), Object.class);
+			JsonParser jsonParser = InjectorUtils.get(JsonParser.class);
+			Object result = null;
+			try {
+				result = jsonParser.fromJson(this.getContent(), Object.class);
+			} catch (JsonException e) {
+				throw new RobotRuntimeException(e.getMessage(), e);
+			}
 			return MetaExpression.parseObject(result);
 		} else if (ContentType.APPLICATION_XML.getMimeType().equals(this.getType().getMimeType())) {
 			if (xmlNodeFactory == null) {
@@ -141,7 +147,6 @@ public class Content {
 			try {
 				xml = xmlNodeFactory.fromString(this.getContent());
 			} catch (Exception e) {
-				LOGGER.error(e.getMessage(), e);
 				throw new RobotRuntimeException(e.getMessage());
 			}
 

@@ -17,8 +17,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.MetaExpression;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * This class represents a list of variables and their names
@@ -26,8 +24,6 @@ import org.apache.logging.log4j.Logger;
 public class VariablePane extends AnchorPane implements RobotTabComponent, ListChangeListener<ObservableVariable> {
 	private final ObservableList<ObservableVariable> observableStateList = FXCollections.observableArrayList();
 	private ObservableVariable selectedItem = null;
-
-	private static final Logger LOGGER = LogManager.getLogger(VariablePane.class);
 
 	@FXML
 	private TableView<ObservableVariable> tblVariables;
@@ -56,7 +52,7 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
 			Node ui = loader.load();
 			getChildren().add(ui);
 		} catch (IOException e) {
-			LOGGER.error(e.getMessage(), e);
+			e.printStackTrace();
 		}
 
 		tblVariables.setItems(observableStateList);

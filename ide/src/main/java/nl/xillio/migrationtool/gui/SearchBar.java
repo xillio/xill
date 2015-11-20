@@ -18,8 +18,6 @@ import javafx.scene.layout.Pane;
 import nl.xillio.events.Event;
 import nl.xillio.events.EventHost;
 import nl.xillio.xill.api.preview.Searchable;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * A search bar, with the defined options and behavior.
@@ -36,8 +34,6 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 	 */
 	private Node storedParent;
     protected int currentOccurrence = 0;
-
-	private static final Logger LOGGER = LogManager.getLogger(SearchBar.class);
 
 	// Nodes
 	@FXML
@@ -63,7 +59,7 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 			Node ui = loader.load();
 			getChildren().add(ui);
 		} catch (IOException e) {
-			LOGGER.error(e.getMessage(), e);
+			e.printStackTrace();
 		}
         reset(true);
 		enableSearchAsYouType();

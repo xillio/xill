@@ -23,8 +23,6 @@ public final class StringConstant implements Processable {
     }
 
     @Override
-    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
-    // This RobotRuntimeException will not be addressed as it triggers editor specific behaviour.
     public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
         InstructionFlow<MetaExpression> resultExpression = value.process(debugger);
         String result = resultExpression.get().getStringValue();

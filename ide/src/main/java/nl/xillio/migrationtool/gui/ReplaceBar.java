@@ -10,15 +10,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import nl.xillio.xill.api.preview.Replaceable;
 import nl.xillio.xill.api.preview.Searchable;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class ReplaceBar extends SearchBar {
 
 	@FXML
 	private TextField tfEditorReplaceString;
-
-	private static final Logger LOGGER = LogManager.getLogger(ReplaceBar.class);
 
 	public ReplaceBar() {
 		try {
@@ -28,7 +24,8 @@ public class ReplaceBar extends SearchBar {
 			Node ui = loader.load();
 			((VBox) getChildren().get(0)).getChildren().add(ui);
 		} catch (IOException e) {
-			LOGGER.error(e.getMessage(), e);
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

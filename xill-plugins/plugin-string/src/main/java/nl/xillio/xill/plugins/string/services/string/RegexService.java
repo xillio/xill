@@ -22,7 +22,7 @@ public interface RegexService {
      * @throws IllegalArgumentException
      * @throws PatternSyntaxException
      */
-    Matcher getMatcher(String regex, String value, int timeout) throws FailedToGetMatcherException;
+    Matcher getMatcher(String regex, String value, int timeout) throws FailedToGetMatcherException, IllegalArgumentException;
 
     /**
      * Attempts to match an entire region to a pattern.

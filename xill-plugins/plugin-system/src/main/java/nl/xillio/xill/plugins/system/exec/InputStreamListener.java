@@ -6,8 +6,6 @@ import java.io.InputStreamReader;
 
 import nl.xillio.events.Event;
 import nl.xillio.events.EventHost;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * This class will listen for lines and call an event when data is found
@@ -16,8 +14,6 @@ public class InputStreamListener implements Runnable {
 	private final BufferedReader input;
 	private final EventHost<String> onLineComplete = new EventHost<>();
 	private Thread thread;
-
-	private static final Logger LOGGER = LogManager.getLogger(InputStreamListener.class);
 
 	/**
 	 * Create a new {@link InputStreamListener}
@@ -50,7 +46,7 @@ public class InputStreamListener implements Runnable {
 			try {
 				line = input.readLine();
 			} catch (Exception e) {
-				LOGGER.error(e.getMessage(), e);
+				e.printStackTrace();
 			}
 
 			if (line == null) {

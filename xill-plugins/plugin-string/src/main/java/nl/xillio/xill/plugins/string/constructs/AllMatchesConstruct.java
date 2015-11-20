@@ -52,9 +52,9 @@ public class AllMatchesConstruct extends Construct {
                 list.add(fromValue(s));
             }
         } catch (PatternSyntaxException e) {
-            throw new RobotRuntimeException("Invalid pattern handed.", e);
+            throw new RobotRuntimeException("Invalid pattern handed.");
         } catch (IllegalArgumentException | FailedToGetMatcherException e) {
-            throw new RobotRuntimeException("Illegal argument handed.", e);
+            throw new RobotRuntimeException("Illegal argument handed.");
         }
         return fromValue(list);
     }

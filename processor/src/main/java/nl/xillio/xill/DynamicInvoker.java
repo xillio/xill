@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
  *        The argument base type for the method.
  */
 public class DynamicInvoker<I> {
-	private static final Logger LOGGER = LogManager.getLogger(DynamicInvoker.class);
+	private static final Logger logger = LogManager.getLogger();
 	/**
 	 * If set to true the invocation process will be logged more verbose.
 	 */
@@ -55,9 +55,14 @@ public class DynamicInvoker<I> {
 	 *         </ul>
 	 * @throws InvocationTargetException
 	 *         if the underlying method throws an exception or no compatible method could be found.
+	 * @throws IllegalArgumentException
+	 *         if the method is an instance method and the specified object argument is not an instance of the class or interface declaring the underlying method (or of a subclass or implementor
+	 *         thereof);
+	 *         if the number of actual and formal parameters differ; if an unwrapping conversion for primitive arguments fails; or if,
+	 *         after possible unwrapping, a parameter value cannot be converted to the corresponding formal parameter type by a method invocation conversion.
 	 */
 	@SuppressWarnings("unchecked")
-	public <O> O invoke(final I argument, final Class<O> returnType) throws InvocationTargetException {
+	public <O> O invoke(final I argument, final Class<O> returnType) throws InvocationTargetException, IllegalArgumentException {
 		Method parseMethod = null;
 		log("Finding method for: " + argument.getClass());
 
@@ -112,16 +117,13 @@ public class DynamicInvoker<I> {
 			return (O) parseMethod.invoke(invokeObject, argument);
 		} catch (IllegalAccessException e) {
 			// This should not be able to happen since it is checked above
-			LOGGER.error(e.getMessage(), e);
-			// This exception was explicitly not addressed, because it was no trivial matter to create a generic exceptions module
-			// that every other module depends.
 			throw new RuntimeException("The disposer tried to access a private method. Please report this to development.", e);
 		}
 	}
 
 	private void log(final String message) {
 		if (VERBOSE) {
-			LOGGER.debug(message);
+			logger.debug(message);
 		}
 	}
 

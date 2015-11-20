@@ -52,7 +52,7 @@ public class AbsoluteURLConstruct extends Construct {
                 throw new RobotRuntimeException("The page url is invalid.");
             }
         } catch (IllegalArgumentException e) {
-            throw new RobotRuntimeException("Illegal argument was handed to the matcher when trying to convert the URL", e);
+            throw new RobotRuntimeException("Illegal argument was handed to the matcher when trying to convert the URL");
         }
 
     }

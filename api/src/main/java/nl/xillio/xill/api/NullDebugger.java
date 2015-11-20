@@ -106,8 +106,6 @@ public class NullDebugger implements Debugger {
 	public void reset() {}
 
 	@Override
-	@SuppressWarnings("RedundantThrowsDeclarationCheck")
-	// RobotRuntimeException causes specific behaviour of the IDE, which is why this was not rewritten.
 	public void handle(final Throwable e) throws RobotRuntimeException {
 		if (e instanceof RobotRuntimeException) {
 			throw (RobotRuntimeException) e;

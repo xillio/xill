@@ -32,8 +32,7 @@ public class FilterExpression implements Processable, FunctionParameterExpressio
 		this.arguments = arguments;
 	}
 
-	@SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
-	// This RobotRuntimeException will not be addressed as it triggers editor specific behaviour.
+	@SuppressWarnings("unchecked")
 	@Override
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		List<MetaExpression> results = new ArrayList<>();

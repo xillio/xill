@@ -1,8 +1,5 @@
 package nl.xillio.xill.util;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -22,9 +19,6 @@ import java.util.zip.ZipInputStream;
  * Utility class that offers various generic file/io functions
  */
 public class IOUtil {
-
-	private static final Logger LOGGER = LogManager.getLogger(IOUtil.class);
-
 	private static Map<String, List<URL>> urlCache = new Hashtable<>();
 
 	/**
@@ -57,15 +51,11 @@ public class IOUtil {
 						Optional<URL> result = Optional.empty();
 						try {
 							result = Optional.of(new URL(stringUrl));
-						} catch (Exception e) {
-							LOGGER.error(e.getMessage(), e);
-						}
+						} catch (Exception e) {/* skip it */}
 						return result;
 					})
 					.filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
-			} catch (Exception e) {
-				LOGGER.error(e.getMessage(), e);
-			}
+			} catch (Exception e) {}
 		}
 		urlCache.put(folder, urls);
 		return urls;
@@ -94,7 +84,7 @@ public class IOUtil {
 					}
 				}
 			} catch (IOException e) {
-				LOGGER.error(e.getMessage(), e);
+				e.printStackTrace();
 				return null;
 			}
 		} else {
@@ -118,7 +108,7 @@ public class IOUtil {
 				.filter(path -> path.endsWith("Construct.class"))
 				.collect(Collectors.toList());
 		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
+			e.printStackTrace();
 		}
 		return constructNames;
 	}

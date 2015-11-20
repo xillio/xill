@@ -1,13 +1,14 @@
 package nl.xillio.xill.api.components;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Hashtable;
 import java.util.Map;
 
 /**
  *
  */
-public class RobotID {
+public class RobotID implements Serializable {
 	private static Map<String, RobotID> ids = new Hashtable<>();
 	private final File path;
 	private final File projectPath;

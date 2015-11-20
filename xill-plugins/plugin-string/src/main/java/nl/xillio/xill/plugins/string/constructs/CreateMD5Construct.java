@@ -34,7 +34,7 @@ public class CreateMD5Construct extends Construct {
         try {
             return fromValue(stringService.createMD5Construct(value.getStringValue()));
         } catch (NoSuchAlgorithmException e) {
-            throw new RobotRuntimeException("No such algorithm", e);
+            throw new RobotRuntimeException("No such algorithm");
         }
     }
 }
