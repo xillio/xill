@@ -5,6 +5,9 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.services.files.FileResolver;
 import nl.xillio.xill.services.inject.InjectorUtils;
+import nl.xillio.xill.services.json.JacksonParser;
+import nl.xillio.xill.services.json.JsonParser;
+import nl.xillio.xill.services.json.PrettyJsonParser;
 
 import java.io.File;
 
@@ -29,6 +32,8 @@ public class TestUtils extends ConstructTest {
 		@Override
 		protected void configure() {
 			bind(FileResolver.class).toInstance(CONSTRUCT_FILE_RESOLVER);
+			bind(JsonParser.class).toInstance(new JacksonParser(false));
+			bind(PrettyJsonParser.class).toInstance(new JacksonParser(true));
 			requestStaticInjection(Construct.class);
 		}
 	}
