@@ -2,8 +2,6 @@ package nl.xillio.xill.plugins.excel.datastructures;
 
 import nl.xillio.xill.api.errors.NotImplementedException;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -17,8 +15,6 @@ import java.io.*;
  */
 
 public class XillWorkbookFactory {
-
-	private static final Logger LOGGER = LogManager.getLogger(XillWorkbookFactory.class);
 
 	//For unit testing
 	FileInputStream getStream(File file) throws FileNotFoundException {
@@ -61,7 +57,6 @@ public class XillWorkbookFactory {
 		try {
 			workbook = new HSSFWorkbook(stream);
 		} catch (IOException e) {
-			LOGGER.error(e.getMessage(), e);
 			throw new InvalidObjectException("File cannot be opened as Excel Workbook");
 		}
 		return workbook;
@@ -79,7 +74,6 @@ public class XillWorkbookFactory {
 		try {
 			workbook = new XSSFWorkbook(stream);
 		} catch (IOException e) {
-			LOGGER.error(e.getMessage(), e);
 			throw new InvalidObjectException("File cannot be opened as Excel Workbook");
 		}
 		return workbook;

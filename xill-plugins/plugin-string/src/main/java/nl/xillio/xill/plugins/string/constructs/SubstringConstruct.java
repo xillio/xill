@@ -62,7 +62,7 @@ public class SubstringConstruct extends Construct {
 		try {
 			return fromValue(stringService.subString(text, start, end));
 		} catch (StringIndexOutOfBoundsException e) {
-			throw new RobotRuntimeException("Index out of bounds.", e);
+			throw new RobotRuntimeException("Index out of bounds.");
 		}
 
 	}

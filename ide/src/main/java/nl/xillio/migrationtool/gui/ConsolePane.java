@@ -51,8 +51,6 @@ import nl.xillio.xill.util.HotkeysHandler.Hotkeys;
 import nl.xillio.xill.util.settings.Settings;
 
 import com.sun.javafx.scene.control.behavior.CellBehaviorBase;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * This pane displays the console log stored in elasticsearch
@@ -86,8 +84,6 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 	private Button btnNavigateForward;
 	@FXML
 	private Slider sldNavigation;
-
-	private static final Logger LOGGER = LogManager.getLogger(ConsolePane.class);
 
 	public enum Scroll {
 		NONE, START, END, TOTALEND, CLEAR
@@ -128,7 +124,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 			Node ui = loader.load();
 			getChildren().add(ui);
 		} catch (IOException e) {
-			LOGGER.error("Failed to initialize the console pane.", e);
+			e.printStackTrace();
 		}
 
 		// Search bar

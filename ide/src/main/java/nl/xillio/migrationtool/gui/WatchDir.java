@@ -27,7 +27,7 @@ public class WatchDir implements Runnable {
 	private final WatchService watcher;
 	private volatile Map<WatchKey, Path> keys;
 	private volatile Map<FolderListener, List<Path>> listeners;
-	private static final Logger LOGGER = LogManager.getLogger();
+	private final Logger log = LogManager.getLogger();
 
 	private boolean stop = false;
 
@@ -60,9 +60,7 @@ public class WatchDir implements Runnable {
 		stop = true;
 		try {
 			watcher.close();
-		} catch (IOException e) {
-			LOGGER.error(e.getMessage(), e);
-		}
+		} catch (IOException e) {}
 	}
 
 	private void fireEvent(final Path dir, final Path child, final WatchEvent<Path> event) {
@@ -115,7 +113,6 @@ public class WatchDir implements Runnable {
 			try {
 				key = watcher.take();
 			} catch (Exception x) {
-				LOGGER.error(x.getMessage(), x);
 				return;
 			}
 
@@ -147,9 +144,7 @@ public class WatchDir implements Runnable {
 						if (Files.isDirectory(child, NOFOLLOW_LINKS)) {
 							registerAll(child);
 						}
-					} catch (IOException x) {
-						LOGGER.error(x.getMessage(), x);
-					}
+					} catch (IOException x) {}
 				}
 			}
 

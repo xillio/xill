@@ -73,9 +73,9 @@ public class RegexConstruct extends Construct {
 			}
 			return NULL;
 		} catch (PatternSyntaxException e) {
-			throw new RobotRuntimeException("Invalid pattern in regex()", e);
+			throw new RobotRuntimeException("Invalid pattern in regex()");
 		} catch (IllegalArgumentException | FailedToGetMatcherException e) {
-			throw new RobotRuntimeException("Error while executing the regex", e);
+			throw new RobotRuntimeException("Error while executing the regex");
 		}
 	}
 

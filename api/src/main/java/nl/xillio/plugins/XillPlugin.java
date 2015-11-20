@@ -22,7 +22,7 @@ import nl.xillio.xill.services.inject.InjectorUtils;
  * This class represents the base for all Xill plugins
  */
 public abstract class XillPlugin implements Loadable<XillPlugin>, AutoCloseable {
-	private static final Logger LOGGER = LogManager.getLogger(XillPlugin.class);
+	private static final Logger log = LogManager.getLogger();
 	private final List<Construct> constructs = new ArrayList<>();
 	private final String defaultName;
 	private boolean loadingConstructs = false;
@@ -80,8 +80,10 @@ public abstract class XillPlugin implements Loadable<XillPlugin>, AutoCloseable 
 	 *
 	 * @param construct
 	 *        the construct to be added
+	 * @throws IllegalArgumentException
+	 *         when a construct with the same name already exists
 	 */
-	protected final void add(final Construct construct) {
+	protected final void add(final Construct construct) throws IllegalArgumentException {
 		if (!loadingConstructs) {
 			throw new IllegalStateException("Can only load constructs in the loadConstructs() method.");
 		}
@@ -99,8 +101,10 @@ public abstract class XillPlugin implements Loadable<XillPlugin>, AutoCloseable 
 	 *
 	 * @param constructs
 	 *        the constructs to add the the list
+	 * @throws IllegalArgumentException
+	 *         when a construct with the same name already exists
 	 */
-	protected final void add(final Construct... constructs) {
+	protected final void add(final Construct... constructs) throws IllegalArgumentException {
 		if (!loadingConstructs) {
 			throw new IllegalStateException("Can only load constructs in the loadConstructs() method.");
 		}
@@ -115,8 +119,10 @@ public abstract class XillPlugin implements Loadable<XillPlugin>, AutoCloseable 
 	 *
 	 * @param constructs
 	 *        the constructs to add to the list
+	 * @throws IllegalArgumentException
+	 *         when a construct with the same name already exists
 	 */
-	protected final void add(final Collection<Construct> constructs) {
+	protected final void add(final Collection<Construct> constructs) throws IllegalArgumentException {
 		if (!loadingConstructs) {
 			throw new IllegalStateException("Can only load constructs in the loadConstructs() method.");
 		}
@@ -134,7 +140,7 @@ public abstract class XillPlugin implements Loadable<XillPlugin>, AutoCloseable 
 				try {
 					((AutoCloseable) construct).close();
 				} catch (Exception e) {
-					LOGGER.error(e.getMessage(), e);
+					e.printStackTrace();
 				}
 			}
 		}
@@ -180,7 +186,7 @@ public abstract class XillPlugin implements Loadable<XillPlugin>, AutoCloseable 
 				}
 			}
 		} catch (IOException e) {
-			LOGGER.error("Error while autoloading constructs", e);
+			log.error("Error while autoloading constructs", e);
 		}
 	}
 

@@ -1,22 +1,5 @@
 package nl.xillio.migrationtool;
 
-import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.image.Image;
-import javafx.scene.text.Font;
-import javafx.stage.Modality;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
-import nl.xillio.xill.api.Xill;
-import nl.xillio.xill.docgen.impl.XillDocGen;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -28,6 +11,24 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+
+import javafx.scene.control.Alert;
+import javafx.stage.Modality;
+import nl.xillio.xill.docgen.impl.XillDocGen;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.text.Font;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import nl.xillio.xill.api.Xill;
 
 /**
  * Launcher class, is used to launch processors in their own threads, facilitates a simple Log, and provides commandline running.
@@ -41,7 +42,7 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 			String path = Loader.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
 			MANIFEST = new JarFile(path).getManifest();
 		} catch (URISyntaxException | IOException e) {
-			throw new RuntimeException("Failed to find running jar file", e);
+			throw new XillioRuntimeException("Failed to find running jar file", e);
 		}
 
 		String shortVersion = Loader.class.getPackage().getImplementationVersion() == null ? "dev" : Loader.class.getPackage().getImplementationVersion();

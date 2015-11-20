@@ -47,6 +47,8 @@ import java.util.stream.Collectors;
  * This class is the global controller for the application
  */
 public class FXController implements Initializable, EventHandler<Event> {
+    private static final Logger log = LogManager.getLogger(FXController.class);
+
     /**
      * Instance of settings handler
      */
@@ -61,7 +63,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 
     private boolean cancelClose = false; // should be the closing of application interrupted?
 
-    private static final Logger LOGGER = LogManager.getLogger(FXController.class);
+    private static final Logger LOGGER = LogManager.getLogger();
 
 	/*
      * ******************************************************* Buttons, fields,
@@ -378,7 +380,7 @@ public class FXController implements Initializable, EventHandler<Event> {
     public RobotTab doOpenFile(final File newfile) {
         // Skip if the file doesn't exist
         if (!newfile.exists() || !newfile.isFile()) {
-            LOGGER.error("Failed to open file `" + newfile.getAbsolutePath() + "`. File not found.");
+            log.error("Failed to open file `" + newfile.getAbsolutePath() + "`. File not found.");
             return null;
         }
 
@@ -397,7 +399,7 @@ public class FXController implements Initializable, EventHandler<Event> {
                     return editor;
                 }
             } catch (IOException e) {
-                LOGGER.error("Error while opening file: " + e.getMessage(), e);
+                log.error("Error while opening file: " + e.getMessage());
                 return null;
             }
         }
@@ -572,8 +574,8 @@ public class FXController implements Initializable, EventHandler<Event> {
         for (XillPlugin plugin : Loader.getInitializer().getPlugins()) {
             try {
                 plugin.close();
-            } catch (Exception e) { // A custom exception here is not possible. because the close method is from the Java AutoCloseable interface, which throws an java.lang.Exception
-                LOGGER.error("Failed to close the plugin: " + plugin.getName(), e);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 

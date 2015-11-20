@@ -71,9 +71,9 @@ public class ReplaceConstruct extends Construct {
 				}
 				return fromValue(regexService.replaceFirst(m, replacement));
 			} catch (PatternSyntaxException e) {
-				throw new RobotRuntimeException("Invalid pattern in regex()", e);
+				throw new RobotRuntimeException("Invalid pattern in regex()");
 			} catch (IllegalArgumentException | FailedToGetMatcherException e) {
-				throw new RobotRuntimeException("Error while executing the regex", e);
+				throw new RobotRuntimeException("Error while executing the regex");
 			}
 		}
 		if (replaceall) {

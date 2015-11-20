@@ -8,8 +8,6 @@ import nl.xillio.xill.api.data.Date;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.date.BaseDateConstruct;
 import nl.xillio.xill.plugins.date.services.DateService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.time.DateTimeException;
 import java.time.format.FormatStyle;
@@ -26,8 +24,6 @@ import java.util.Locale;
  * @author Sander
  */
 public class LocalizedFormatConstruct extends BaseDateConstruct {
-
-	private static final Logger LOGGER = LogManager.getLogger(LocalizedFormatConstruct.class);
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
@@ -51,7 +47,6 @@ public class LocalizedFormatConstruct extends BaseDateConstruct {
 			try {
 				dateStyle = FormatStyle.valueOf(dateStyleVar.getStringValue().toUpperCase());
 			} catch (IllegalArgumentException e) {
-				LOGGER.error(e.getMessage(), e);
 				throw new RobotRuntimeException("Datestyle has to be 'full','long','medium' or 'short'.");
 			}
 		}
@@ -62,7 +57,6 @@ public class LocalizedFormatConstruct extends BaseDateConstruct {
 			try {
 				timeStyle = FormatStyle.valueOf(timeStyleVar.getStringValue().toUpperCase());
 			} catch (IllegalArgumentException e) {
-				LOGGER.error(e.getMessage(), e);
 				throw new RobotRuntimeException("Timestyle has to be 'full','long','medium' or 'short'.");
 			}
 		}

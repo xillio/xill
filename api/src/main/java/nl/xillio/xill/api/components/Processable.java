@@ -20,8 +20,6 @@ public interface Processable {
 	 * @throws RobotRuntimeException
 	 *         When processing went wrong
 	 */
-	@SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
-	// This RobotRuntimeException is not addressed, because it triggers specific behaviour in the editor.
 	public InstructionFlow<MetaExpression> process(Debugger debugger) throws RobotRuntimeException;
 
 	/**

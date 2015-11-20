@@ -23,16 +23,12 @@ import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.events.RobotPausedAction;
 import nl.xillio.xill.api.events.RobotStoppedAction;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * This pane can show the current position in the stack
  */
 public class InstructionStackPane extends AnchorPane implements RobotTabComponent, ChangeListener<Instruction> {
 	private static final int MAX_STACK = 40;
-	private static final Logger LOGGER = LogManager.getLogger(InstructionStackPane.class);
-
 	@FXML
 	private ComboBox<Instruction> cbxStackPos;
 	private RobotTab tab;
@@ -45,7 +41,7 @@ public class InstructionStackPane extends AnchorPane implements RobotTabComponen
 			Node ui = loader.load();
 			getChildren().add(ui);
 		} catch (IOException e) {
-			LOGGER.error(e.getMessage(), e);
+			e.printStackTrace();
 		}
 
 		cbxStackPos.getSelectionModel().selectedItemProperty().addListener(this);
@@ -127,9 +123,6 @@ public class InstructionStackPane extends AnchorPane implements RobotTabComponen
 		}
 
 		@Override
-		@SuppressWarnings("RedundantThrowsDeclarationCheck")// squid:RedundantThrowsDeclarationCheck
-		// In this case, RobotRuntimeException is a custom runtime exception that triggers behaviour in the editor,
-		// so it was not removed
 		public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 			return null;
 		}

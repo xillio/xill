@@ -28,8 +28,6 @@ public class GetArgumentExpression implements Processable {
 	}
 
 	@Override
-	@SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
-	// This RobotRuntimeException will not be addressed as it triggers editor specific behaviour.
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		return InstructionFlow.doResume(robot.getArgument());
 	}

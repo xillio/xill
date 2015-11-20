@@ -13,8 +13,6 @@ import javafx.scene.layout.AnchorPane;
 import nl.xillio.xill.util.HotkeysHandler.Hotkeys;
 import nl.xillio.xill.util.settings.Settings;
 import nl.xillio.xill.util.settings.SettingsHandler;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * A collapsible debug pane. Contains the variable and the preview panes.
@@ -31,8 +29,6 @@ public class DebugPane extends AnchorPane implements EventHandler<KeyEvent>, Rob
 	@FXML
 	private InstructionStackPane instructionstackpane;
 
-	private static final Logger LOGGER = LogManager.getLogger(DebugPane.class);
-
 	/**
 	 * Default constructor.
 	 */
@@ -46,7 +42,7 @@ public class DebugPane extends AnchorPane implements EventHandler<KeyEvent>, Rob
 			getChildren().add(ui);
 
 		} catch (IOException e) {
-			LOGGER.error(e.getMessage(), e);
+			e.printStackTrace();
 		}
 
 		variablepane.setPreviewPane(previewpane);

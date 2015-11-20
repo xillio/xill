@@ -108,8 +108,6 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
 	}
 
 	@Override
-	@SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
-	// RobotRuntimeException triggers specific behaviour in the editor. So, it will not be removed.
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		return InstructionFlow.doResume(expressionSupplier.get());
 	}

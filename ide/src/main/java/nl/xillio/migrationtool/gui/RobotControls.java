@@ -30,7 +30,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolicy {
 
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOG = LogManager.getLogger();
 
 	private final Button start;
 	private final Button stop;
@@ -123,7 +123,6 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 		} catch (XillParsingException e) {
 			onStop();
 			highlight(e.getRobot(), e.getLine(), "error");
-			LOGGER.error("Failed to start/resume the robot " + e.getRobot().getPath().getName(), e);
 		}
 
 	}
@@ -271,8 +270,6 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 	}
 
 	@Override
-	@SuppressWarnings("RedundantThrowsDeclarationCheck")
-	// The RobotRuntimeException triggers certain behaviour in the GUI, so it is not removed here.
 	public void handle(final Throwable e) throws RobotRuntimeException {
 		Logger log = RobotAppender.getLogger(tab.getProcessor().getRobotID());
 
@@ -280,10 +277,10 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 
 		if (root instanceof RobotRuntimeException) {
 			log.error(root.getMessage());
-			LOGGER.error("Exception occurred in robot", e);
+			LOG.error("Exception occurred in robot", e);
 		} else if (e instanceof RobotRuntimeException) {
 			log.error(e.getMessage());
-			LOGGER.error("Exception occurred in robot", e);
+			LOG.error("Exception occurred in robot", e);
 		} else if (root == null) {
 			log.error("An error occurred in a robot: " + e.getMessage(), e);
 		} else {

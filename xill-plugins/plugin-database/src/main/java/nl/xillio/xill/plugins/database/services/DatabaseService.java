@@ -81,7 +81,7 @@ public interface DatabaseService extends XillService {
 	 * @throws SQLException
 	 * @throws ConversionException
 	 */
-	LinkedHashMap<String, Object> getObject(Connection connection, String tableName, Map<String, Object> constraints) throws SQLException, ConversionException;
+	LinkedHashMap<String, Object> getObject(Connection connection, String tableName, Map<String, Object> constraints) throws SQLException, ConversionException, IllegalArgumentException;
 
 	/**
 	 * <p>

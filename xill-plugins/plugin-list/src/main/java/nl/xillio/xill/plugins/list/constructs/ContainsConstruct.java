@@ -45,7 +45,7 @@ public class ContainsConstruct extends Construct {
 				try {
 					result = m.containsValue(value);
 				} catch (ClassCastException | NullPointerException e) {
-					throw new RobotRuntimeException("The value handed was no valid MetaExpression", e);
+					throw new RobotRuntimeException("The value handed was no valid MetaExpression");
 				}
 				break;
 			case LIST:
@@ -54,7 +54,7 @@ public class ContainsConstruct extends Construct {
 				try {
 					result = l.contains(value);
 				} catch (ClassCastException | NullPointerException e) {
-					throw new RobotRuntimeException("The value handed was no valid MetaExpression", e);
+					throw new RobotRuntimeException("The value handed was no valid MetaExpression");
 				}
 				break;
 			default:
