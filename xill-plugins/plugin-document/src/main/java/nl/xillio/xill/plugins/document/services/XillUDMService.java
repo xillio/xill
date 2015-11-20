@@ -72,12 +72,14 @@ public class XillUDMService implements XillUDMPersistence, XillUDMQueryService {
 
     private void persist(DocumentBuilder builder) throws PersistException, ValidationException {
         DocumentID id = builder.commit();
+        UDMService service = getUdmService(DEFAULT_IDENTITY);
 
         try {
-            getUdmService(DEFAULT_IDENTITY).persist(id);
+            service.persist(id);
         } catch (PersistenceException e) {
             throw new PersistException("Failed to persist document " + id.toString() + " to the database", e);
         } catch (ModelException e) {
+            service.release(id);
             throw new ValidationException("Validation failed: " + e.getMessage(), e);
         }
     }
