@@ -65,8 +65,10 @@ public class DownloadConstruct extends PhantomJSConstruct {
         if (!webContextVar.isNull()) {
             if (checkPageType(webContextVar)) {
                 webContext = getPage(webContextVar);
-            } else {
+            } else if (checkNodeType(webContextVar)) {
                 webContext = getNode(webContextVar);
+            } else {
+                throw new RobotRuntimeException("Invalid variable type. PAGE or NODE variable type expected!");
             }
         }
 
