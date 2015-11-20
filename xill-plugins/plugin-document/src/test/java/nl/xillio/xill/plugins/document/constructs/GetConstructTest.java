@@ -9,6 +9,7 @@ import static org.testng.Assert.assertSame;
 
 import java.util.HashMap;
 
+import nl.xillio.xill.TestUtils;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -25,7 +26,7 @@ import nl.xillio.xill.plugins.document.services.XillUDMService;
  *
  * @author Geert Konijnendijk
  */
-public class GetConstructTest extends ConstructTest {
+public class GetConstructTest extends TestUtils {
 
 	/**
 	 * Test {@link GetConstruct#process(MetaExpression, MetaExpression, MetaExpression, XillUDMService)} under normal circumstances

@@ -13,6 +13,7 @@ import nl.xillio.udm.DocumentID;
 import nl.xillio.udm.exceptions.PersistenceException;
 import nl.xillio.udm.services.UDMService;
 import nl.xillio.xill.ConstructTest;
+import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
@@ -27,7 +28,7 @@ import org.testng.annotations.Test;
  * @author Luca Scalzotto
  *
  */
-public class CreateConstructTest extends ConstructTest {
+public class CreateConstructTest extends TestUtils {
 
 	/**
 	 * Create a random MetaExpression containing a body object used as an argument in the create construct.
