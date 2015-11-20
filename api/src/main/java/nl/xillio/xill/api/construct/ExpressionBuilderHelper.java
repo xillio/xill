@@ -148,11 +148,9 @@ public class ExpressionBuilderHelper {
 	 * @param value
 	 *        the object to parse into a {@link MetaExpression}
 	 * @return the {@link MetaExpression} not null
-	 * @throws IllegalArgumentException
-	 *         if parsing the value failed
 	 * @see MetaExpression#parseObject(Object)
 	 */
-	protected static MetaExpression parseObject(final Object value) throws IllegalArgumentException {
+	protected static MetaExpression parseObject(final Object value) {
 		return MetaExpression.parseObject(value);
 	}
 

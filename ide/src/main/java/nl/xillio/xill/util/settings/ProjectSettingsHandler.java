@@ -1,5 +1,11 @@
 package nl.xillio.xill.util.settings;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +23,8 @@ public class ProjectSettingsHandler {
 	private static final String KEYNAME = NAME;
 	private static final String FOLDER = "folder";
 	private static final String DESCRIPTION = "description";
+
+	private static final Logger LOGGER = LogManager.getLogger(ProjectSettingsHandler.class);
 
 	private ContentHandler content;
 
@@ -37,8 +45,8 @@ public class ProjectSettingsHandler {
 			itemContent.put(DESCRIPTION, project.getDescription());
 
 			this.content.set(CATEGORY, itemContent, KEYNAME, project.getName());
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
+		} catch (XPathExpressionException|IOException|TransformerException e) {
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 
@@ -53,8 +61,8 @@ public class ProjectSettingsHandler {
 			for (Map<String, Object> item : result) {
 				list.add(new ProjectSettings(item.get(NAME).toString(), item.get(FOLDER).toString(), item.get(DESCRIPTION).toString()));
 			}
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
+		} catch (XPathExpressionException e) {
+			LOGGER.error(e.getMessage(), e);
 		}
 		return list;
 	}
@@ -67,8 +75,8 @@ public class ProjectSettingsHandler {
 	public void delete(final String name) {
 		try {
 			this.content.delete(CATEGORY, KEYNAME, name);
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
+		} catch (XPathExpressionException|IOException|TransformerException e) {
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 }

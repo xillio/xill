@@ -7,6 +7,7 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.data.Date;
 import nl.xillio.xill.plugins.date.BaseDateConstruct;
 import nl.xillio.xill.plugins.date.services.DateService;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.time.ZoneId;
@@ -21,6 +22,8 @@ import java.util.Map.Entry;
  * @author Sander
  */
 public class ChangeConstruct extends BaseDateConstruct {
+
+	private static final Logger LOGGER = LogManager.getLogger(ChangeConstruct.class);
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
@@ -55,6 +58,7 @@ public class ChangeConstruct extends BaseDateConstruct {
 				long value = entry.getValue().getNumberValue().longValue();
 				changes.put(unit, value);
 			} catch (IllegalArgumentException e) {
+				LOGGER.error(e.getMessage(), e);
 				String lower = entry.getKey().toLowerCase();
 				if (!(lower.equals("zone") || lower.equals("timezone"))) {
 					logger.warn("`" + entry.getKey() + "` is not a valid date change operation.");

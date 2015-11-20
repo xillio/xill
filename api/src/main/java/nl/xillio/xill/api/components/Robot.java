@@ -23,6 +23,8 @@ public interface Robot extends InstructionSet {
 	 * @throws RobotRuntimeException
 	 *         when the library couldn't be initialized
 	 */
+	@SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
+	// The RobotRuntimeException will not be addressed as it triggers specific behaviour in the editor.
 	public void initializeAsLibrary() throws RobotRuntimeException;
 
 	/**

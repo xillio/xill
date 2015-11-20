@@ -51,9 +51,9 @@ public class Base64DecodeConstruct extends Construct {
 		try {
 			urlUtilityService.write(file, data);
 		} catch (FileNotFoundException e) {
-			throw new RobotRuntimeException("The file could not be found or the filename is invalid");
+			throw new RobotRuntimeException("The file could not be found or the filename is invalid", e);
 		} catch (IOException e) {
-			throw new RobotRuntimeException("IO Exception");
+			throw new RobotRuntimeException("IO Exception", e);
 		}
 		return NULL;
 	}

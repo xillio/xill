@@ -23,5 +23,5 @@ public interface TextExtractor extends XillService {
 	 * @throws IOException                   The an I/O Error occurred
 	 * @throws UnsupportedOperationException when the file format wasn't supported or could not be parsed
 	 */
-	String extractText(File file, int timeoutValue) throws IOException, UnsupportedOperationException;
+	String extractText(File file, int timeoutValue) throws IOException;
 }

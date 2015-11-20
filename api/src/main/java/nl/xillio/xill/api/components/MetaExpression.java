@@ -1,6 +1,7 @@
 package nl.xillio.xill.api.components;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import nl.xillio.util.IdentityArrayList;
 import nl.xillio.util.MathUtils;
 import nl.xillio.xill.api.Debugger;
@@ -12,6 +13,8 @@ import nl.xillio.xill.api.data.MetadataExpression;
 import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.services.inject.InjectorUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import nl.xillio.xill.services.json.JsonException;
 import nl.xillio.xill.services.json.JsonParser;
 
@@ -24,12 +27,18 @@ import java.util.stream.Collectors;
  */
 public abstract class MetaExpression implements Expression, Processable {
     private static JsonParser jsonParser;
-    private final MetadataExpressionPool<MetadataExpression> metadataPool = new MetadataExpressionPool<>();
-    private Object value;
-    private ExpressionDataType type = ExpressionDataType.ATOMIC;
-    private boolean isClosed;
-    private int referenceCount;
-    private boolean preventDispose;
+	private static final Logger LOGGER = LogManager.getLogger(MetaExpression.class);
+
+	private static final Gson gson = new GsonBuilder().enableComplexMapKeySerialization().serializeNulls()
+		// .setPrettyPrinting()
+		.disableHtmlEscaping().disableInnerClassSerialization().serializeSpecialFloatingPointValues()
+		.serializeNulls().create();
+	private final MetadataExpressionPool<MetadataExpression> metadataPool = new MetadataExpressionPool<>();
+	private Object value;
+	private ExpressionDataType type = ExpressionDataType.ATOMIC;
+	private boolean isClosed;
+	private int referenceCount;
+	private boolean preventDispose;
 
     /**
      * Get a value from the {@link MetadataExpressionPool}
@@ -184,26 +193,20 @@ public abstract class MetaExpression implements Expression, Processable {
         return type;
     }
 
-    /**
-     * <p>
-     * Generate the JSON representation of this expression using a {@link Gson} parser
-     * </p>
-     * <b>NOTE: </b> This is not the string value of this expression. It is
-     * JSON. For the string value use {@link MetaExpression#getStringValue()}
-     *
-     * @return JSON representation
-     */
-    @Override
-    public String toString() {
-        if (jsonParser == null) {
-            jsonParser = InjectorUtils.get(JsonParser.class);
-        }
-        try {
-            return toString(jsonParser);
-        } catch (JsonException e) {
-            throw new RobotRuntimeException("Failed to parse expressing to string", e);
-        }
-    }
+	/**
+	 * <p>
+	 * Generate the JSON representation of this expression using a {@link Gson} parser
+	 * </p>
+	 * <b>NOTE: </b> This is not the string value of this expression. It is
+	 * JSON. For the string value use {@link MetaExpression#getStringValue()}
+	 *
+	 * @return JSON representation
+	 */
+	@Override
+	public String toString() {
+
+		return toString(gson);
+	}
 
     /**
      * <p>
@@ -419,7 +422,7 @@ public abstract class MetaExpression implements Expression, Processable {
             try {
                 close();
             } catch (Exception e) {
-                e.printStackTrace();
+				LOGGER.error(e.getMessage(), e);
             }
         }
 
@@ -471,7 +474,7 @@ public abstract class MetaExpression implements Expression, Processable {
         try {
             metadataPool.close();
         } catch (Exception e) {
-            e.printStackTrace();
+			LOGGER.error("Failed to dispose of all the items in the Metadata expression pool.", e);
         }
     }
 
@@ -489,7 +492,7 @@ public abstract class MetaExpression implements Expression, Processable {
      * @return a {@link MetaExpression}, not null
      * @throws IllegalArgumentException when the value cannot be parsed
      */
-    public static MetaExpression parseObject(final Object value) throws IllegalArgumentException {
+	public static MetaExpression parseObject(final Object value) {
         return parseObject(value, new IdentityHashMap<>());
     }
 
@@ -556,9 +559,17 @@ public abstract class MetaExpression implements Expression, Processable {
             return ExpressionBuilderHelper.fromValue((Number) root);
         }
 
-        if (root instanceof String) {
-            return ExpressionBuilderHelper.fromValue(root.toString());
-        }
+		if (root instanceof Long) {
+			return ExpressionBuilderHelper.fromValue((Long) root);
+		}
+
+		if (root instanceof Double) {
+			return ExpressionBuilderHelper.fromValue((Double) root);
+		}
+
+		if (root instanceof String) {
+			return ExpressionBuilderHelper.fromValue((String) root);
+		}
 
         throw new IllegalArgumentException("The class type " + root.getClass().getName() + " has not been implemented by parseObject");
     }

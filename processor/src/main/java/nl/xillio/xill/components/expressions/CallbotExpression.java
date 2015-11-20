@@ -57,6 +57,8 @@ public class CallbotExpression implements Processable {
 	}
 
 	@Override
+	@SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
+	// This exception will not be addressed, because it triggers certain behaviour in the editor.
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		MetaExpression pathExpression = path.process(debugger).get();
 
@@ -96,15 +98,13 @@ public class CallbotExpression implements Processable {
 				if (result.hasValue()) {
 					return InstructionFlow.doResume(result.get());
 				}
+			} catch (RobotRuntimeException e) {
+				throw new RobotRuntimeException(e.getMessage(), e);
 			} catch (Exception e) {
-				if (e instanceof RobotRuntimeException) {
-					throw (RobotRuntimeException) e;
-				}
 				throw new RobotRuntimeException("An exception occurred while evaluating " + otherRobot.getAbsolutePath(), e);
 			}
-
 		} catch (IOException e) {
-			throw new RobotRuntimeException("Error while calling robot: " + e.getMessage());
+			throw new RobotRuntimeException("Error while calling robot: " + e.getMessage(), e);
 		} catch (XillParsingException e) {
 			throw new RobotRuntimeException("Error while parsing robot: " + e.getMessage(), e);
 		} catch (Exception e) {

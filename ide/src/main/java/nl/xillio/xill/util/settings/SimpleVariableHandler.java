@@ -1,5 +1,12 @@
 package nl.xillio.xill.util.settings;
 
+import nl.xillio.xill.api.components.Expression;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +25,8 @@ public class SimpleVariableHandler {
 	private static final String DESCRIPTION = "description";
 	private static final String ENCRYPTED = "encrypted";
 
+	private static final Logger LOGGER = LogManager.getLogger(SimpleVariableHandler.class);
+
 	private ContentHandler content;
 
 	SimpleVariableHandler(ContentHandler content) {// Can be instantiated within package only
@@ -33,7 +42,7 @@ public class SimpleVariableHandler {
 	 * @param value The value of variable
 	 */
 	public void save(final String category, final String name, final String value) {
-		this.save(category, name, value, false);
+			this.save(category, name, value, false);
 	}
 
 	/**
@@ -69,7 +78,7 @@ public class SimpleVariableHandler {
 					// need to add name (as a key)
 					itemContent.put(NAME, name);
 				} else {
-					throw new Exception(String.format("Settings [%1$s] has not been registered", name));
+					throw new UnregisteredSettingException(String.format("Setting [%1$s] has not been registered", name));
 				}
 			} else {
 				Object o = this.content.get(category, name).get(ENCRYPTED);
@@ -81,8 +90,8 @@ public class SimpleVariableHandler {
 			itemContent.put(VALUE, valueStr);
 
 			this.content.set(category, itemContent, KEYNAME, name);
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
+		} catch (XPathExpressionException|IOException|TransformerException e) {
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 
@@ -104,8 +113,8 @@ public class SimpleVariableHandler {
 			itemContent.put(ENCRYPTED, encrypted ? "1" : "0");
 
 			this.content.set(category, itemContent, KEYNAME, name);
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
+		} catch (XPathExpressionException|IOException|TransformerException e) {
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 
@@ -142,7 +151,7 @@ public class SimpleVariableHandler {
 				// no value defined - using default value
 				o = map.get(DEFAULT);
 				if (o == null) {
-					throw new Exception("Invalid structure of settings file!");
+					throw new SettingParseException("Invalid structure of settings file!");
 				}
 			}
 
@@ -154,8 +163,8 @@ public class SimpleVariableHandler {
 			}
 			return result;
 
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
+		} catch (XPathExpressionException|SettingParseException e) {
+			LOGGER.error(e.getMessage(), e);
 			return null;
 		}
 	}
@@ -169,7 +178,12 @@ public class SimpleVariableHandler {
 	 * @return The value of simple variable
 	 */
 	public boolean getBoolean(final String category, final String keyValue) {
-		return get(category, keyValue).equals("true");
+		try {
+			return get(category, keyValue).equals("true");
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+			return false;
+		}
 	}
 
 	/**
@@ -181,8 +195,8 @@ public class SimpleVariableHandler {
 	public void delete(final String category, final String name) {
 		try {
 			this.content.delete(category, KEYNAME, name);
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
+		} catch (XPathExpressionException|IOException|TransformerException e) {
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 }

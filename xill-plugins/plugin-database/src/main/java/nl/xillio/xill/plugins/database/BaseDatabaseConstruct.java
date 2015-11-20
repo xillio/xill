@@ -26,7 +26,7 @@ public abstract class BaseDatabaseConstruct extends Construct {
 
 	private static final int VALIDATION_TIMEOUT = 1000;
 
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger(BaseDatabaseConstruct.class);
 
 	private static LinkedHashMap<RobotID, ConnectionMetadata> lastConnections = new LinkedHashMap<>();
 
@@ -120,6 +120,7 @@ public abstract class BaseDatabaseConstruct extends Construct {
 					lastConnections.remove(id);
 				}
 			} catch (SQLException e) {
+				LOGGER.error(e.getMessage(), e);
 				// When an operation on the connection fails also assume it is invalid
 				lastConnections.remove(id);
 			}

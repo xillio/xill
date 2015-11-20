@@ -36,7 +36,7 @@ import com.google.inject.Singleton;
 public class WebServiceImpl implements WebService {
 
 	@Override
-	public void click(final WebVariable node) throws StaleElementReferenceException {
+	public void click(final WebVariable node) {
 		WebElement webElement = node.getElement();
 		webElement.click();
 	}
@@ -72,7 +72,7 @@ public class WebServiceImpl implements WebService {
 	}
 
 	@Override
-	public List<WebVariable> findElementsWithCssPath(final WebVariable var, final String cssPath) throws InvalidSelectorException {
+	public List<WebVariable> findElementsWithCssPath(final WebVariable var, final String cssPath) {
 		SearchContext node;
 		if (var instanceof PageVariable) {
 			node = var.getDriver();
@@ -86,7 +86,7 @@ public class WebServiceImpl implements WebService {
 	}
 
 	@Override
-	public List<WebVariable> findElementsWithXpath(final WebVariable var, final String xpath) throws InvalidSelectorException {
+	public List<WebVariable> findElementsWithXpath(final WebVariable var, final String xpath) {
 		SearchContext node;
 		if (var instanceof PageVariable) {
 			node = var.getDriver();
@@ -112,7 +112,7 @@ public class WebServiceImpl implements WebService {
 	}
 
 	@Override
-	public void sendKeys(final WebVariable var, final String key) throws Exception {
+	public void sendKeys(final WebVariable var, final String key) {
 		WebElement element = var.getElement();
 		element.sendKeys(key);
 	}
@@ -156,7 +156,7 @@ public class WebServiceImpl implements WebService {
 	}
 
 	@Override
-	public void deleteCookies(final WebVariable var) throws Exception {
+	public void deleteCookies(final WebVariable var) {
 		WebDriver driver = var.getDriver();
 		driver.manage().deleteAllCookies();
 	}
@@ -212,7 +212,7 @@ public class WebServiceImpl implements WebService {
 	}
 
 	@Override
-	public void httpGet(final WebVariable var, final String url) throws ClassCastException, MalformedURLException {
+	public void httpGet(final WebVariable var, final String url) throws MalformedURLException {
 		PhantomJSDriver driver = getJSDriver(var.getDriver());
 		if (getRef(url) != null) {
 			driver.get("about:blank");

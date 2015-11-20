@@ -29,6 +29,8 @@ public class Or implements Processable {
 	}
 
 	@Override
+	@SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
+	// This RobotRuntimeException will not be addressed as it triggers editor specific behaviour.
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		boolean result = left.process(debugger).get().getBooleanValue() || right.process(debugger).get().getBooleanValue();
 

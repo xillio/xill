@@ -78,7 +78,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 			Node ui = loader.load();
 			getChildren().add(ui);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Failed to initialize the project pane.", e);
 		}
 
 		trvProjects.setRoot(root);
@@ -89,7 +89,9 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		try {
 			watcher = new WatchDir();
 			new Thread(watcher).start();
-		} catch (IOException e) {}
+		} catch (IOException e) {
+			LOGGER.error(e.getMessage(), e);
+		}
 
 		trvProjects.setCellFactory(treeView -> new TreeCell<Pair<File, String>>() {
 			@Override
@@ -281,7 +283,9 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		if (watcher != null) {
 			try {
 				watcher.addFolderListener(this, Paths.get(project.getFolder()));
-			} catch (IOException e) {}
+			} catch (IOException e) {
+				LOGGER.error(e.getMessage(), e);
+			}
 		}
 		projectNode.setExpanded(false);
 		select(projectNode);

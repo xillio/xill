@@ -53,7 +53,7 @@ import nl.xillio.xill.util.settings.SettingsHandler;
  * A tab containing the editor, console and debug panel attached to a specific currentRobot.
  */
 public class RobotTab extends Tab implements Initializable, ChangeListener<DocumentState> {
-	private static final Logger log = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 	private static final SettingsHandler settings = SettingsHandler.getSettingsHandler();
 
 	private static final String PATH_STATUSICON_RUNNING = "M256,92.481c44.433,0,86.18,17.068,117.553,48.064C404.794,171.411,422,212.413,422,255.999 s-17.206,84.588-48.448,115.455c-31.372,30.994-73.12,48.064-117.552,48.064s-86.179-17.07-117.552-48.064 C107.206,340.587,90,299.585,90,255.999s17.206-84.588,48.448-115.453C169.821,109.55,211.568,92.481,256,92.481 M256,52.481 c-113.771,0-206,91.117-206,203.518c0,112.398,92.229,203.52,206,203.52c113.772,0,206-91.121,206-203.52 C462,143.599,369.772,52.481,256,52.481L256,52.481z M206.544,357.161V159.833l160.919,98.666L206.544,357.161z";
@@ -102,7 +102,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 		try {
 			setContent(Loader.load(getClass().getResource("/fxml/RobotTabContent.fxml"), this));
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Failed to load RobotTabContent.fxml.", e);
 		}
 
 		// Add close request event handler
@@ -209,7 +209,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 				editorPane.setLastSavedCode(code);
 				editorPane.getEditor().setCode(code);
 			} catch (IOException e) {
-				log.info("Could not open " + document.getAbsolutePath());
+				LOGGER.error("Could not open " + document.getAbsolutePath(), e);
 			}
 		}
 
@@ -316,7 +316,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 			String code = editorPane.getEditor().getCodeProperty().get();
 			FileUtils.write(document, code);
 			editorPane.setLastSavedCode(code);
-			log.info("Saved currentRobot to " + document.getAbsolutePath());
+			LOGGER.info("Saved currentRobot to " + document.getAbsolutePath());
 
 		} catch (IOException e) {
 			Alert errorAlert = new Alert(AlertType.ERROR);
@@ -324,6 +324,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 			errorAlert.setTitle("Error");
 			errorAlert.setContentText(e.getMessage());
 			errorAlert.show();
+			LOGGER.error("Failed to save the robot.", e);
 		}
 
 		loadProcessor(document, projectPath);
@@ -484,10 +485,11 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 			apnStatusBar.setCompiling(true);
 			processor.compile();
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 			errorPopup(-1, e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling.");
 			return;
 		} catch (XillParsingException e) {
+			LOGGER.error(e.getMessage(), e);
 			errorPopup(e.getLine(), e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling " + e.getRobot().getPath().getAbsolutePath());
 			return;
 		} finally {
@@ -576,7 +578,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 			try {
 				code = FileUtils.readFileToString(robot.getPath());
 			} catch (IOException e) {
-				e.printStackTrace();
+				LOGGER.error("Failed to update the robot code.", e);
 				return;
 			}
 			// Load the code

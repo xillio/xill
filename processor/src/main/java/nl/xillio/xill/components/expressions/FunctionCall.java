@@ -19,6 +19,8 @@ public class FunctionCall implements Processable {
 	private List<Processable> arguments;
 
 	@Override
+	@SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
+	// The RobotRuntimeException will not be addressed as it triggers editor specific behaviour.
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		if(debugger.getStackTrace().size() > Xill.MAX_STACK_SIZE) {
 			throw new RobotRuntimeException("The robot went in too many recursions. The language currently supports up to " + Xill.MAX_STACK_SIZE + " recursions");

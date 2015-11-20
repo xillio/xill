@@ -12,11 +12,15 @@ import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * this class represents the list[0] object["keyValue"] and object.keyValue operations.
  */
 public class FromList implements Processable {
+
+	private static final Logger LOGGER = LogManager.getLogger(FromList.class);
 
 	private final Processable list;
 	private final Processable index;
@@ -30,7 +34,8 @@ public class FromList implements Processable {
 		this.index = index;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
+	// This RobotRuntimeException will not be addressed as it triggers editor specific behaviour.
 	@Override
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		MetaExpression list = this.list.process(debugger).get();
@@ -45,6 +50,7 @@ public class FromList implements Processable {
 					MetaExpression result = ((List<MetaExpression>) list.getValue()).get(index.getNumberValue().intValue());
 					return InstructionFlow.doResume(result);
 				} catch (IndexOutOfBoundsException e) {
+					LOGGER.error(e.getMessage(), e);
 					return InstructionFlow.doResume(ExpressionBuilderHelper.NULL);
 				}
 			case OBJECT:

@@ -24,6 +24,8 @@ import nl.xillio.xill.api.events.RobotStoppedAction;
 import nl.xillio.xill.components.instructions.InstructionSet;
 
 import com.google.common.collect.Lists;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This class represents the root node of the program structure
@@ -32,6 +34,8 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
 	private final RobotID robotID;
 	private final List<nl.xillio.xill.api.components.Robot> libraries = new ArrayList<>();
 	private MetaExpression callArgument = ExpressionBuilder.NULL;
+
+	private static final Logger LOGGER = LogManager.getLogger(Robot.class);
 
 	/**
 	 * Events for signalling that a robot has started or stopped
@@ -59,6 +63,8 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
 	 * @return the result
 	 */
 	@Override
+	@SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
+	// The RobotRuntimeException will not be addressed, because it triggers specific behaviour in the editor
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		getDebugger().robotStarted(this);
 		startEvent.invoke(new RobotStartedAction(this));
@@ -150,7 +156,7 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
 			try {
 				robot.close();
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOGGER.error("Failed to close all external bots.", e);
 			}
 		}
 
@@ -177,6 +183,8 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
 	}
 
 	@Override
+	@SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
+	// The RobotRuntimeException will not be addressed, because it triggers specific behaviour in the editor.
 	public void initializeAsLibrary() throws RobotRuntimeException {
 		for (nl.xillio.xill.api.components.Robot robot : libraries) {
 			if (!initializingRobots.contains(robot)) {

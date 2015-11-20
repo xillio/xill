@@ -37,6 +37,8 @@ public final class IntegerShortcut implements Processable {
 	}
 
 	@Override
+	@SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
+	// This RobotRuntimeException will not be addressed as it triggers editor specific behaviour.
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		// Actually assign the value
 		MetaExpression assignedValue = assign.processWithValue(debugger);

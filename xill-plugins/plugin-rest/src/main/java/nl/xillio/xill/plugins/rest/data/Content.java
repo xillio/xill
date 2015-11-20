@@ -147,6 +147,7 @@ public class Content {
 			try {
 				xml = xmlNodeFactory.fromString(this.getContent());
 			} catch (Exception e) {
+				LOGGER.error(e.getMessage(), e);
 				throw new RobotRuntimeException(e.getMessage());
 			}
 

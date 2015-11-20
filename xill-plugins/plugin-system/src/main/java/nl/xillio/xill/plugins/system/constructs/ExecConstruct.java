@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.time.StopWatch;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import nl.xillio.xill.api.components.MetaExpression;
@@ -29,6 +30,8 @@ import nl.xillio.xill.services.inject.FactoryBuilderException;
 public class ExecConstruct extends Construct {
 
 	private final ProcessFactory processFactory = new ProcessFactory();
+
+	private static final Logger LOGGER = LogManager.getLogger(ExecConstruct.class);
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
@@ -58,7 +61,7 @@ public class ExecConstruct extends Construct {
 		try {
 			process.waitFor();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		}
 
 		while (output.isAlive()) {

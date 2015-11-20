@@ -11,6 +11,8 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -18,6 +20,8 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 
 import org.apache.commons.io.FileUtils;
@@ -41,6 +45,8 @@ import org.w3c.dom.NodeList;
  * @author Zbynek Hochmann
  */
 public class ContentHandlerImpl implements ContentHandler {
+
+	private static final Logger LOGGER = LogManager.getLogger(ContentHandlerImpl.class);
 
 	private File storage;
 	private boolean manualCommit = false;
@@ -69,7 +75,7 @@ public class ContentHandlerImpl implements ContentHandler {
 	}
 
 	@Override
-	public void init() throws Exception {
+	public void init() throws SettingParseException {
 		// Open existing XML file with settings
 		// If file does not exist it will create new one with the basic structure (i.e. just root node)
 		try {
@@ -84,7 +90,8 @@ public class ContentHandlerImpl implements ContentHandler {
 				this.document = docBuilder.parse(FileUtils.openInputStream(storage));
 			}
 		} catch (Exception e) {
-			throw new Exception("Cannot open settings file for reason: " + e.getMessage());
+			LOGGER.error("Cannot open settings file: " + e.getMessage(), e);
+			throw new SettingParseException("Cannot open settings file: " + e.getMessage(), e);
 		}
 	}
 
@@ -97,9 +104,8 @@ public class ContentHandlerImpl implements ContentHandler {
 	 * Saves the current XML content to file
 	 * 
 	 * @param force false means that save is done only if manualCommit = false, true means save is done always 
-	 * @throws Exception when error occurs during saving to file
 	 */
-	private void save(boolean force) throws Exception {
+	private void save(boolean force) throws IOException, TransformerException {
 		if ((!force) && (this.manualCommit)) {
 			return;
 		}
@@ -110,14 +116,18 @@ public class ContentHandlerImpl implements ContentHandler {
 				DOMSource source = new DOMSource(this.document);
 				StreamResult result = new StreamResult(this.storage);
 				transformer.transform(source, result);
-			} catch (Exception e) {
-				throw new Exception("Cannot save settings file for reason: " + e.getMessage());
+			} catch (IOException e) {
+				LOGGER.error(e.getMessage(), e);
+				throw new IOException("Failed to touch " + storage.getName(), e);
+			} catch (TransformerException e) {
+				LOGGER.error(e.getMessage(), e);
+				throw new TransformerException("Failed transformation.", e);
 			}
 		}
 	}
 
 	@Override
-	public Map<String, Object> get(final String category, final String keyValue) throws Exception {
+	public Map<String, Object> get(final String category, final String keyValue) throws XPathExpressionException {
 		synchronized(lock) {
 			// Tries to iterate all items in given category
 			String path = String.format("%1$s/item", category);
@@ -146,7 +156,7 @@ public class ContentHandlerImpl implements ContentHandler {
 				return map;
 			}
 		}
-		throw new Exception("Invalid content structure of settings file!");
+		throw new XPathExpressionException("Invalid content structure of settings file!");
 	}
 
 	private boolean keyValueMatch(final Node item, final String keyName, final String keyValue) {
@@ -164,7 +174,7 @@ public class ContentHandlerImpl implements ContentHandler {
 	}
 
 	@Override
-	public List<Map<String, Object>> getAll(final String category) throws Exception {
+	public List<Map<String, Object>> getAll(final String category) throws XPathExpressionException {
 		synchronized(lock) {
 			String path = String.format("%1$s/item", category);
 			Object result = xpathFactory.newXPath().compile(path).evaluate(this.document.getFirstChild(), XPathConstants.NODESET);
@@ -188,11 +198,11 @@ public class ContentHandlerImpl implements ContentHandler {
 				return output;
 			}
 		}
-		throw new Exception("Invalid content structure of settings file!");
+		throw new XPathExpressionException("Invalid content structure of settings file!");
 	}
 
 	@Override
-	public boolean set(final String category, final Map<String, Object> itemContent, final String keyName, final String keyValue) throws Exception {
+	public boolean set(final String category, final Map<String, Object> itemContent, final String keyName, final String keyValue) throws XPathExpressionException, IOException, TransformerException {
 		boolean created = false;
 		synchronized(lock) {
 			Node categoryNode = this.getCategoryNode(category);
@@ -218,7 +228,7 @@ public class ContentHandlerImpl implements ContentHandler {
 	}
 
 	@Override
-	public boolean exist(final String category, final String keyName, final String keyValue) throws Exception {
+	public boolean exist(final String category, final String keyName, final String keyValue) throws XPathExpressionException {
 		String path = String.format("%1$s/item[@key='%2$s'][%2$s/text()='%3$s']", category, keyName, keyValue);
 		synchronized(lock) {
 			Object result = xpathFactory.newXPath().compile(path).evaluate(this.document.getFirstChild(), XPathConstants.NODE);
@@ -227,7 +237,7 @@ public class ContentHandlerImpl implements ContentHandler {
 	}
 
 	@Override
-	public boolean delete(final String category, final String keyName, final String keyValue) throws Exception {
+	public boolean delete(final String category, final String keyName, final String keyValue) throws XPathExpressionException, IOException, TransformerException {
 		synchronized(lock) {
 			Node categoryNode = this.getCategoryNode(category);
 			Element itemNode = this.getItemNode(categoryNode, keyName, keyValue);
@@ -257,7 +267,7 @@ public class ContentHandlerImpl implements ContentHandler {
 		try {
 			node = (Element) xpathFactory.newXPath().compile(path).evaluate(itemNode, XPathConstants.NODE);
 		} catch (XPathExpressionException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 			return;
 		}
 
@@ -327,13 +337,13 @@ public class ContentHandlerImpl implements ContentHandler {
 	}
 
 	@Override
-	public boolean setManualCommit(boolean manual) throws Exception {
+	public boolean setManualCommit(boolean manual) {
 		this.manualCommit = manual;
 		return true;
 	}
 
 	@Override
-	public boolean commit() throws Exception {
+	public boolean commit() throws IOException, TransformerException {
 		this.save(true);
 		return true;
 	}

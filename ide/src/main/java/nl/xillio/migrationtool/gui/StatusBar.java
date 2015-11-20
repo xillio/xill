@@ -11,11 +11,15 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.AnchorPane;
 import nl.xillio.events.Event;
 import nl.xillio.xill.api.Debugger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * A status bar, that can be used to represent the progress of the current running robot.
  */
 public class StatusBar extends AnchorPane {
+
+	private static final Logger LOGGER = LogManager.getLogger(StatusBar.class);
 
 	private static final String STATUS_RUNNING = "Running", STATUS_STOPPED = "Stopped",
 			STATUS_PAUSED = "Paused", STATUS_COMPILING = "Compiling", STATUS_READY = "Ready";
@@ -40,8 +44,7 @@ public class StatusBar extends AnchorPane {
 			Node ui = loader.load();
 			getChildren().add(ui);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 

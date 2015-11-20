@@ -1,6 +1,8 @@
 package nl.xillio.xill.plugins.list.services.sort;
 
 import com.google.inject.Singleton;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -13,6 +15,8 @@ import java.util.stream.Collectors;
  */
 @Singleton
 public class SortImpl implements Sort {
+
+	private static final Logger LOGGER = LogManager.getLogger(SortImpl.class);
 
 	@Override
 	public Object asSorted(final Object input, final boolean recursive, final boolean onKeys, final boolean reverse) {
@@ -122,6 +126,7 @@ public class SortImpl implements Sort {
 					result = 0;
 				}
 			} catch (NullPointerException e) {
+				LOGGER.error(e.getMessage(), e);
 				result = 0;
 			}
 

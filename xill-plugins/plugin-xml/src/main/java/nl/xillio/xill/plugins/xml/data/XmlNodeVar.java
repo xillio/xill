@@ -6,15 +6,18 @@ import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 
@@ -38,7 +41,7 @@ public class XmlNodeVar implements nl.xillio.xill.api.data.XmlNode {
 	 * @throws Exception         when any unspecified error occurs
 	 * @throws XmlParseException when XML format is invalid
 	 */
-	public XmlNodeVar(final String xmlString, final boolean treatAsDocument) throws Exception, XmlParseException {
+	public XmlNodeVar(final String xmlString, final boolean treatAsDocument) throws ParserConfigurationException, SAXException, IOException, XmlParseException {
 		String xmlStringValue = xmlCharacterWhitelist(xmlString);
 		this.treatAsDocument = treatAsDocument;
 

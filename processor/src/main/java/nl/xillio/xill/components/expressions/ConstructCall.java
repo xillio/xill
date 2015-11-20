@@ -39,7 +39,8 @@ public class ConstructCall implements Processable {
 	}
 
 	@Override
-	@SuppressWarnings("squid:S1181") // catch Throwable
+	@SuppressWarnings("squid:RedundantThrowsDeclarationCheck") // catch Throwable
+	// This RobotRuntimeException will not be addressed as it triggers specific behaviour in the editor.
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		MetaExpression[] argumentResults = new MetaExpression[arguments.length];
 
