@@ -18,6 +18,8 @@ import nl.xillio.xill.plugins.string.services.string.RegexService;
 import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 
 import com.google.inject.Inject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -32,6 +34,9 @@ import com.google.inject.Inject;
  *
  */
 public class FormatConstruct extends Construct {
+
+	private static final Logger LOGGER = LogManager.getLogger(FormatConstruct.class);
+
 	@Inject
 	private RegexService regexService;
 	@Inject
@@ -65,9 +70,9 @@ public class FormatConstruct extends Construct {
 				formatList.add(fromValue(s));
 			}
 		} catch (PatternSyntaxException e) {
-			throw new RobotRuntimeException("SyntaxError in the by the system provided pattern.");
+			throw new RobotRuntimeException("SyntaxError in the by the system provided pattern.", e);
 		} catch (IllegalArgumentException | FailedToGetMatcherException e) {
-			throw new RobotRuntimeException("Illegal argument handed when trying to match.");
+			throw new RobotRuntimeException("Illegal argument handed when trying to match.", e);
 		}
 
 		// Cast the MetaExpressions to the right type.
@@ -77,6 +82,7 @@ public class FormatConstruct extends Construct {
 			try {
 				typeString = formatList.get(j).getStringValue();
 			} catch (IndexOutOfBoundsException e) {
+				LOGGER.error(e.getMessage(), e);
 				break;
 			}
 			switch (typeString.charAt(typeString.length() - 1)) {
@@ -122,9 +128,9 @@ public class FormatConstruct extends Construct {
 		try {
 			return fromValue(stringService.format(textVar.getStringValue(), list));
 		} catch (MissingFormatArgumentException e) {
-			throw new RobotRuntimeException("Not enough arguments.");
+			throw new RobotRuntimeException("Not enough arguments.", e);
 		} catch (IllegalFormatException e) {
-			throw new RobotRuntimeException("Illegal format handed.");
+			throw new RobotRuntimeException("Illegal format handed.", e);
 		}
 	}
 }

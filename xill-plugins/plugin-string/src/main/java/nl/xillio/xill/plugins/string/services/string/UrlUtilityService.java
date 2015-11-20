@@ -48,7 +48,7 @@ public interface UrlUtilityService {
 	 * @throws IllegalArgumentException 
 	 * @throws PatternSyntaxException 
 	 */
-	String tryConvert(final String pageUrl, final String relativeUrl) throws IllegalArgumentException;
+	String tryConvert(final String pageUrl, final String relativeUrl);
 
 	/**
 	 * Writes a given output in a file.

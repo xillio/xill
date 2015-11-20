@@ -48,12 +48,12 @@ public class OfConstruct extends BaseDateConstruct {
 		try {
 			zone = ZoneId.of(input[7].getStringValue());
 		} catch (DateTimeException e) {
-			throw new RobotRuntimeException("Invalid zone ID");
+			throw new RobotRuntimeException("Invalid zone ID", e);
 		}
 		try {
 			date = dateService.constructDate(year, month, day, hour, minute, second, nano, zone);
 		} catch (DateTimeException e) {
-			throw new RobotRuntimeException(e.getLocalizedMessage());
+			throw new RobotRuntimeException(e.getLocalizedMessage(), e);
 		}
 
 		return fromValue(date);

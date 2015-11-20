@@ -6,11 +6,15 @@ import nl.xillio.xill.services.json.GsonParser;
 import nl.xillio.xill.services.json.JsonParser;
 import nl.xillio.xill.services.json.PrettyGsonParser;
 import nl.xillio.xill.services.json.PrettyJsonParser;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This module is the main module that will run for the injector at runtime
  */
 public class DefaultInjectorModule extends AbstractModule {
+
+	private static final Logger LOGGER = LogManager.getLogger(DefaultInjectorModule.class);
 
 	@Override
 	protected void configure() {
@@ -28,7 +32,7 @@ public class DefaultInjectorModule extends AbstractModule {
 			requestStaticInjection(Construct.class);
 
 		} catch (NoSuchMethodException | SecurityException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 

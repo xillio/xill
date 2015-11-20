@@ -2,6 +2,8 @@ package nl.xillio.xill.plugins.date.services;
 
 import com.google.inject.Singleton;
 import nl.xillio.xill.api.data.Date;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -27,6 +29,7 @@ import java.util.Map.Entry;
 public class DateServiceImpl implements DateService {
 
 	private static final DateTimeFormatter DEFAULT_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	private static final Logger LOGGER = LogManager.getLogger(DateServiceImpl.class);
 
 	@Override
 	public Date now() {
@@ -55,6 +58,7 @@ public class DateServiceImpl implements DateService {
         try{
             zone = ZoneId.from(parsed);
         } catch(DateTimeException dte){
+			LOGGER.error(dte.getMessage(), dte);
             zone = ZoneId.systemDefault();
         }
 
