@@ -129,7 +129,7 @@ public class Content {
 			try {
 				result = jsonParser.fromJson(this.getContent(), Object.class);
 			} catch (JsonException e) {
-				LOGGER.error("Failed to parse json response", e);
+				throw new RobotRuntimeException(e.getMessage(), e);
 			}
 			return MetaExpression.parseObject(result);
 		} else if (ContentType.APPLICATION_XML.getMimeType().equals(this.getType().getMimeType())) {

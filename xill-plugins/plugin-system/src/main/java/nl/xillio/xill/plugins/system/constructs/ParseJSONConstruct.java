@@ -1,7 +1,6 @@
 package nl.xillio.xill.plugins.system.constructs;
 
 import com.google.inject.Inject;
-import me.biesaart.utils.Log;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
@@ -11,16 +10,14 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.services.json.JsonException;
 import nl.xillio.xill.services.json.JsonParser;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
 
 /**
  * Forwards a JSON string to GSON
  */
 public class ParseJSONConstruct extends Construct {
 
-    private static final Logger LOGGER = Log.get();
     @Inject
-    JsonParser jsonParser;
+    private JsonParser jsonParser;
 
     @Override
     public ConstructProcessor prepareProcess(final ConstructContext context) {
