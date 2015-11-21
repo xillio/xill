@@ -116,11 +116,11 @@ public class Argument {
 
 	@Override
 	public String toString() {
-		String name = getName();
+		String nameString = getName();
 		if (defaultValue != null) {
-			name += " = " + defaultValue;
+			nameString += " = " + defaultValue;
 		}
-		return "<" + getType() + "> " + name;
+		return "<" + getType() + "> " + nameString;
 	}
 
 	/**

@@ -91,9 +91,7 @@ public class InstructionStackPane extends AnchorPane implements RobotTabComponen
 	}
 
 	private void onRobotStop(final RobotStoppedAction action) {
-		Platform.runLater(() -> {
-			cbxStackPos.getItems().clear();
-		});
+		Platform.runLater(() -> cbxStackPos.getItems().clear());
 	}
 
 	@Override

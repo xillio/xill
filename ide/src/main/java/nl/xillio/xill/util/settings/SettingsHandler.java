@@ -1,12 +1,6 @@
 package nl.xillio.xill.util.settings;
-
-import me.biesaart.utils.FileUtils;
 import nl.xillio.util.XillioHomeFolder;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.io.File;
-import java.io.IOException;
 
 /**
  * Class that is main point for dealing with settings in Xill IDE
@@ -17,7 +11,6 @@ import java.io.IOException;
 public class SettingsHandler {
 
     private final static File SETTINGS_FILE = new File(XillioHomeFolder.forXillIDE(), "settings.cfg");
-    private final static Logger LOGGER = LogManager.getLogger();
 
     private ContentHandlerImpl content;
     private static SettingsHandler settings = new SettingsHandler();

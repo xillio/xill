@@ -587,9 +587,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 			editorPane.getEditor().setEditable(currentRobot == getProcessor().getRobotID());
 
 			// Remove the 'edited' state
-			Platform.runLater(() -> {
-				editorPane.getDocumentState().setValue(DocumentState.SAVED);
-			});
+			Platform.runLater(() -> editorPane.getDocumentState().setValue(DocumentState.SAVED));
 		}
 
 		if (line > 0) {

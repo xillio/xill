@@ -56,7 +56,7 @@ public class ChangeConstruct extends BaseDateConstruct {
 				changes.put(unit, value);
 			} catch (IllegalArgumentException e) {
 				String lower = entry.getKey().toLowerCase();
-				if (!(lower.equals("zone") || lower.equals("timezone"))) {
+				if (!("zone".equals(lower) || "timezone".equals(lower))) {
 					logger.warn("`" + entry.getKey() + "` is not a valid date change operation.");
 				}
 			}
