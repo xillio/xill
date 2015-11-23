@@ -11,6 +11,7 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.document.services.XillUDMQueryService;
 import nl.xillio.xill.plugins.document.services.xill.DocumentQueryBuilder;
+import nl.xillio.xill.services.json.JsonException;
 import nl.xillio.xill.services.json.JsonParser;
 import org.bson.Document;
 
@@ -70,7 +71,11 @@ public class FindConstruct extends Construct {
     }
 
     private MetaExpression fromJson(String json) {
-        Map<?, ?> value = jsonParser.fromJson(json, Map.class);
-        return parseObject(value);
+        try {
+            Map<?, ?> value = jsonParser.fromJson(json, Map.class);
+            return parseObject(value);
+        } catch (JsonException e) {
+            throw new RobotRuntimeException(e.getMessage(), e);
+        }
     }
 }

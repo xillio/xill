@@ -88,7 +88,6 @@ public abstract class XillPlugin implements Loadable<XillPlugin>, AutoCloseable 
 			throw new IllegalStateException("Can only load constructs in the loadConstructs() method.");
 		}
 		if (getConstructs().stream().anyMatch(c -> c.getName().equals(construct.getName()))) {
-			System.out.println(construct.getName());
 			throw new IllegalArgumentException("A construct with the same name exsits.");
 		}
 

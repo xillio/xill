@@ -9,6 +9,7 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.document.services.XillUDMPersistence;
+import nl.xillio.xill.services.json.JsonException;
 import nl.xillio.xill.services.json.JsonParser;
 
 import java.util.Map;
@@ -39,9 +40,17 @@ public class GetConstruct extends Construct {
 
     private MetaExpression process(MetaExpression documentId) {
         String jsonDocument = getJson(documentId.getStringValue());
-        Map<?, ?> value = jsonParser.fromJson(jsonDocument, Map.class);
+        Map<?, ?> value = parse(jsonDocument);
 
         return parseObject(value);
+    }
+
+    private Map<?, ?> parse(String jsonDocument) {
+        try {
+            return jsonParser.fromJson(jsonDocument, Map.class);
+        } catch (JsonException e) {
+            throw new RobotRuntimeException("Failed to parse json: " + e.getMessage(), e);
+        }
     }
 
     private String getJson(String id) {
