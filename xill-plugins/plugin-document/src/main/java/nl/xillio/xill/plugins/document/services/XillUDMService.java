@@ -33,11 +33,11 @@ public class XillUDMService implements XillUDMPersistence, XillUDMQueryService {
     }
 
     @Override
-    public void save(UDMDocument document) throws PersistException, ValidationException {
+    public String save(UDMDocument document) throws PersistException, ValidationException {
         if (document.isNew()) {
-            create(document);
+            return create(document);
         } else {
-            update(document);
+            return update(document);
         }
     }
 
@@ -56,21 +56,21 @@ public class XillUDMService implements XillUDMPersistence, XillUDMQueryService {
         service.delete(new Document("_id", stringValue));
     }
 
-    public void create(UDMDocument document) throws PersistException, ValidationException {
+    public String create(UDMDocument document) throws PersistException, ValidationException {
         DocumentBuilder builder = getUdmService(DEFAULT_IDENTITY).create();
         document.applyTo(builder);
-        persist(builder);
+        return persist(builder);
     }
 
-    public void update(UDMDocument document) throws PersistException, ValidationException {
+    public String update(UDMDocument document) throws PersistException, ValidationException {
         UDMService service = getUdmService(DEFAULT_IDENTITY);
         DocumentID id = service.get(document.getId());
         DocumentBuilder builder = service.document(id);
         document.applyTo(builder);
-        persist(builder);
+        return persist(builder);
     }
 
-    private void persist(DocumentBuilder builder) throws PersistException, ValidationException {
+    private String persist(DocumentBuilder builder) throws PersistException, ValidationException {
         DocumentID id = builder.commit();
         UDMService service = getUdmService(DEFAULT_IDENTITY);
 
@@ -82,6 +82,8 @@ public class XillUDMService implements XillUDMPersistence, XillUDMQueryService {
             service.release(id);
             throw new ValidationException("Validation failed: " + e.getMessage(), e);
         }
+
+        return id.get();
     }
 
     /**

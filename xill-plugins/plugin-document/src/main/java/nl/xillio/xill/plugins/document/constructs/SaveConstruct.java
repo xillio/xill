@@ -13,6 +13,8 @@ import nl.xillio.xill.plugins.document.exceptions.ValidationException;
 import nl.xillio.xill.plugins.document.services.XillUDMPersistence;
 import nl.xillio.xill.plugins.document.services.xill.UDMDocumentBuilder;
 
+import java.util.Map;
+
 /**
  * This construct will save a document to the database.
  *
@@ -38,18 +40,28 @@ public class SaveConstruct extends Construct {
         );
     }
 
+    @SuppressWarnings("unchecked")
     public MetaExpression process(MetaExpression document) {
 
         UDMDocument udmDocument = documentBuilder.build(document);
 
+        String id = save(udmDocument);
+
+        MetaExpression idValue = fromValue(id);
+        idValue.registerReference();
+
+        ((Map<String,MetaExpression>)document.getValue()).put("_id", idValue);
+
+        return NULL;
+    }
+
+    private String save(UDMDocument udmDocument) {
         try {
-            persistence.save(udmDocument);
+            return persistence.save(udmDocument);
         } catch (PersistException e) {
             throw new RobotRuntimeException(e.getMessage(), e);
         } catch (ValidationException e) {
             throw new RobotRuntimeException("Input is not a valid document.\n" + e.getMessage(), e);
         }
-
-        return NULL;
     }
 }

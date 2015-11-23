@@ -62,10 +62,15 @@ public class MetaExpressionUDMMapper implements UDMDocument {
 
     private void processRevision(DocumentRevisionBuilder revision, MetaExpression expression) throws ValidationException {
         Map<String, MetaExpression> convertedExpression = getAsObject(expression, "Document revision");
-
+        revision.decorators().forEach(revision::removeDecorator);
         revision.version("myVersion");
 
         for (Map.Entry<String, MetaExpression> entry : convertedExpression.entrySet()) {
+            // Skip null values
+            if (entry.getValue().isNull()) {
+                continue;
+            }
+
             switch (entry.getKey()) {
                 case "order":
                     break;
