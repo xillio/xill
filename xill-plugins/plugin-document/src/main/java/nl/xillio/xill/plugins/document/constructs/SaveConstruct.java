@@ -52,7 +52,7 @@ public class SaveConstruct extends Construct {
 
         ((Map<String,MetaExpression>)document.getValue()).put("_id", idValue);
 
-        return NULL;
+        return idValue;
     }
 
     private String save(UDMDocument udmDocument) {
