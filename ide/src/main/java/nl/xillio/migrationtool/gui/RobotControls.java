@@ -246,25 +246,22 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 			return;
 		}
 
-		// Seems like the tab wasn't open so we open it. This has to be done in
-		// the JavaFX Thread.
+		// Seems like the tab wasn't open so we open it. This has to be done in the JavaFX Thread.
 		Platform.runLater(() -> {
 			RobotTab newTab = tab.getGlobalController().openFile(id.getPath());
 
 			// Wait for the editor to load
-			newTab.getEditorPane().getEditor().getOnDocumentLoaded().addListener((success) -> {
-
-				// We queue this for later execution because the tab has to
-				// display before we can scroll to the right location
+			newTab.getEditorPane().getEditor().getOnDocumentLoaded().addListener((success) ->
+				// We queue this for later execution because the tab has to display before we can scroll to the right location.
 				Platform.runLater(() -> {
-					if (success) {
-						// Highlight the tab
-					newTab.getEditorPane().getEditor().clearHighlight();
-					newTab.getEditorPane().getEditor().highlightLine(line, highlightType);
-					newTab.requestFocus();
-				}
-			});
-			});
+                    if (success) {
+                        // Highlight the tab
+                        newTab.getEditorPane().getEditor().clearHighlight();
+                        newTab.getEditorPane().getEditor().highlightLine(line, highlightType);
+                        newTab.requestFocus();
+                    }
+                })
+			);
 		});
 
 	}

@@ -86,9 +86,7 @@ public class HelpPane extends AnchorPane {
 
 		});
 
-		heightProperty().addListener((ChangeListener<Number>) (observable, oldValue, newValue) -> {
-			helpSearchBar.handleHeightChange();
-		});
+		heightProperty().addListener((observable, oldValue, newValue) -> helpSearchBar.handleHeightChange());
 
 		// load the splash
 		File splashFile = new File("helpfiles", "splash.html");

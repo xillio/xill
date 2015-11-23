@@ -139,9 +139,7 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
     public void refresh() {
         String query = tfEditorSearchQuery.getText();
         if (!query.isEmpty()) {
-            Platform.runLater(() -> {
-                runSearch(query);
-            });
+            Platform.runLater(() -> runSearch(query));
         }
     }
 

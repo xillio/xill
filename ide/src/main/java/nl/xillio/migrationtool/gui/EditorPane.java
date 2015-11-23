@@ -115,7 +115,7 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 		editor = new AceEditor((WebView) lookup("#webCode"));
 
 		ToolBar tlbSearchToolBar = (ToolBar) lookup("#tlbSearchToolBar");
-		ToggleButton tbnEditorSearch = (ToggleButton) tlbSearchToolBar.getItems().stream().filter(child -> child.getId().equals("tbnEditorSearch")).findAny().get();
+		ToggleButton tbnEditorSearch = (ToggleButton) tlbSearchToolBar.getItems().stream().filter(child -> "tbnEditorSearch".equals(child.getId())).findAny().get();
 
 		editorReplaceBar.setSearchable(editor);
 		editorReplaceBar.setButton(tbnEditorSearch, 1);
@@ -215,7 +215,7 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 	 * @param jsCode JavaScript code with settings to be executed
 	 */
 	public void setEditorOptions(final String jsCode) {
-		Platform.runLater(() -> {editor.setOptions(jsCode);});
+		Platform.runLater(() -> editor.setOptions(jsCode));
 	}
 
 	/**
@@ -239,9 +239,7 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 	@FXML
 	private void buttonRemoveAllBreakpoints() {
 		BreakpointPool.INSTANCE.clear();
-		tab.getGlobalController().getTabs().forEach(editorTab -> {
-			editorTab.getEditorPane().getEditor().clearBreakpoints();
-		});
+		tab.getGlobalController().getTabs().forEach(editorTab -> editorTab.getEditorPane().getEditor().clearBreakpoints());
 	}
 
 	@Override

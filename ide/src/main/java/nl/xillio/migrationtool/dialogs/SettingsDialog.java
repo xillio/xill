@@ -186,7 +186,7 @@ public class SettingsDialog extends FXMLDialog {
     private void handleShortcut(KeyEvent event) {
         TextField tf = (TextField) event.getTarget();
 
-        if ((event.getCode() == KeyCode.TAB) || (event.getCharacter().equals("\t"))) {
+        if (event.getCode() == KeyCode.TAB || "\t".equals(event.getCharacter())) {
             return;
         }
 

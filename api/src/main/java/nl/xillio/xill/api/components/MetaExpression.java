@@ -272,6 +272,8 @@ public abstract class MetaExpression implements Expression, Processable {
             case ATOMIC:
                 result = metaExpression;
                 break;
+			default:
+    			throw new NotImplementedException("This type has not been implemented.");
         }
 
         currentlyProcessing.remove(metaExpression);
@@ -316,9 +318,9 @@ public abstract class MetaExpression implements Expression, Processable {
                 return getValue().equals(other.getValue());
             case OBJECT:
                 return getValue().equals(other.getValue());
+            default:
+                throw new NotImplementedException("This type has not been implemented.");
         }
-
-        return false;
     }
 
     @Override
