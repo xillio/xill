@@ -1,12 +1,18 @@
 package nl.xillio.util;
 
+import me.biesaart.utils.Log;
+import org.slf4j.Logger;
+
 import java.math.BigInteger;
-import java.util.IntSummaryStatistics;
 
 /**
  * This class represents some basic arithmetic operations on abstract Numbers.
  */
 public class MathUtils {
+    private static final Logger LOGGER = Log.get();
+    private static int INT_MAX_VALUE_LENGTH = Integer.toString(Integer.MAX_VALUE).length();
+    private static int LONG_MAX_VALUE_LENGTH = Long.toString(Long.MAX_VALUE).length();
+
     /**
      * Perform the arithmetic addition operation on two abstract numbers.
      *
@@ -91,6 +97,13 @@ public class MathUtils {
         NumberType type = NumberType.forClass(a.getClass(), b.getClass());
         switch (type) {
             case INT:
+                if(b.intValue() == 0) {
+                    if(a.intValue() == 0) {
+                        return Double.NaN;
+                    }
+
+                    return a.intValue() > 0 ? Double.POSITIVE_INFINITY : Double.NEGATIVE_INFINITY;
+                }
                 int intResult = a.intValue() / b.intValue();
                 if (intResult * b.intValue() == a.intValue()) {
                     return intResult;
@@ -315,6 +328,49 @@ public class MathUtils {
             }
         }
         return r;
+    }
+
+    public static Number parse(String value) {
+        try {
+            return tryParse(value);
+        } catch (NumberFormatException e) {
+            return Double.NaN;
+        }
+    }
+
+    private static Number tryParse(String value) {
+        if (value.contains(".")) {
+            // This is a decimal value
+            return Double.parseDouble(value);
+        } else {
+            return parseNonDecimal(value);
+        }
+    }
+
+    private static Number parseNonDecimal(String value) {
+
+        if (value.length() < INT_MAX_VALUE_LENGTH) {
+            try {
+                return Integer.parseInt(value);
+            } catch (NumberFormatException ignore) { // NO SONAR
+                // Fallback
+            }
+        }
+
+        if (value.length() < LONG_MAX_VALUE_LENGTH) {
+            try {
+                return Long.parseLong(value);
+            } catch (NumberFormatException ignore) { // NO SONAR
+                // Fallback
+            }
+        }
+
+        try {
+            return new BigInteger(value);
+        } catch (NumberFormatException e) {
+            LOGGER.error("Failed to parse " + value + " as a number", e);
+            return Double.NaN;
+        }
     }
 
     /**

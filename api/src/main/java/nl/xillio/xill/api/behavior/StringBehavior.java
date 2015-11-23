@@ -1,5 +1,6 @@
 package nl.xillio.xill.api.behavior;
 
+import nl.xillio.util.MathUtils;
 import nl.xillio.xill.api.components.Expression;
 
 /**
@@ -33,11 +34,7 @@ public class StringBehavior implements Expression {
 
 	@Override
 	public Number getNumberValue() {
-		try {
-			return Double.parseDouble(value);
-		} catch (NumberFormatException e) {
-			return Double.NaN;
-		}
+		return MathUtils.parse(value);
 	}
 
 	@Override
