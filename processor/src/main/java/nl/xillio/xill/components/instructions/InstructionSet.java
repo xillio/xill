@@ -68,6 +68,11 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
 			}
 		}
 
+		// Make sure the result is not disposed
+		if(processResult != null && processResult.hasValue()) {
+			processResult.get().preventDisposal();
+		}
+
 		// Dispose all processed instructions
 		for (Instruction instruction : processedInstructions) {
 			try {
@@ -80,6 +85,11 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
 		} catch (Exception e) {}
 
 		if (processResult != null) {
+			// Restore disposal state
+			if(processResult.hasValue()) {
+				processResult.get().allowDisposal();
+			}
+
 			return processResult;
 		}
 
