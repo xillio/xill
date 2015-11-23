@@ -7,33 +7,39 @@
         <example title="Usage">
             <header>Assuming we have an XML file note.xml which contains the following:</header>
             <code>
-<note id="1">
-  <to>Tove</to>
-  <from>Jani</from>
-  <heading>Reminder</heading>
-  <body>Don't forget me this weekend!</body>
-</note>
+                <![CDATA[
+                    <note id="1">
+                      <to>Tove</to>
+                      <from>Jani</from>
+                      <heading>Reminder</heading>
+                      <body>Don't forget me this weekend!</body>
+                    </note>
+                ]]>
             </code>
             <header>After executing the following code:</header>
             <code>
-use System;
-use Xml;
-var note = Xml.fromFile("C:/tmp/note.xml");
-var parent = Xml.xpath(note, "//note");
-Xml.insertNode(parent, "&lt; comment&gt;Comments are welcome.&lt; /comment&gt;");
-System.print(Xml.toString(note));
+                use System;
+                use XML;
+
+                var note = XML.fromFile("C:/tmp/note.xml");
+                var parent = XML.xpath(note, "//note");
+                XML.insertNode(parent, "&lt; comment&gt;Comments are welcome.&lt; /comment&gt;");
+                System.print(XML.toString(note));
             </code>
             <header>
-Xml contains:
+                XML contains:
             </header>
             <code>
-<note id="1">
-  <to>Tove</to>
-  <from>Jani</from>
-  <heading>Reminder</heading>
-  <body>Don't forget me this weekend!</body>
-  <comment>Comments are welcome.</comment>  
-</note>
+                <![CDATA[
+                    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                    <note id="1">
+                    <to>Tove</to>
+                    <from>Jani</from>
+                    <heading>Reminder</heading>
+                    <body>Don't forget me this weekend!</body>
+                    <comment>Comments are welcome.</comment>
+                    </note>
+                ]]>
            </code>
         </example>
     </examples>
