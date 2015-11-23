@@ -12,10 +12,10 @@
                 /*
                     Outputs:
                         {
-                            "robotpath":"D:\\Code\\CT\\Xill 3.0\\projects\\tmp.xill",
-                            "rootrobotpath":"D:\\Code\\CT\\Xill 3.0\\projects\\tmp.xill",
-                            "projectpath":"D:\\Code\\CT\\Xill 3.0",
-                            "availableprocessors":8,
+                            "robotPath":"D:\\Code\\CT\\Xill 3.0\\projects\\tmp.xill",
+                            "rootRobotPath":"D:\\Code\\CT\\Xill 3.0\\projects\\tmp.xill",
+                            "projectPath":"D:\\Code\\CT\\Xill 3.0",
+                            "availableProcessors":8,
                             "memory":{
                                 "free":281276656,
                                 "total":468713472,
