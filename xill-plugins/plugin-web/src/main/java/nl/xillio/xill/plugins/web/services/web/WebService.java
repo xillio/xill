@@ -1,6 +1,7 @@
 package nl.xillio.xill.plugins.web.services.web;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Set;
@@ -343,4 +344,19 @@ public interface WebService {
 	 */
 	void quit(WebVariable var);
 
+    /**
+     * Download a content given by URL link and save it to a file
+     *
+     * @param url
+     *        The URL of the link that has to be downloaded
+     * @param targetFile
+     *        A file where the downloaded content is to be stored
+     * @param context
+     *        An optional {@link WebVariable} that is used for take-over the cookies and use is during the download
+     * @param timeout
+     *        The timeout in miliseconds
+     * @throws IOException
+     *        When download fails - for more reasons
+     */
+	void download(String url, File targetFile, WebVariable context, int timeout) throws IOException;
 }
