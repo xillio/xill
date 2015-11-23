@@ -7,6 +7,7 @@ import nl.xillio.xill.api.behavior.StringBehavior;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
+import nl.xillio.xill.api.errors.NotImplementedException;
 
 import java.util.Collections;
 
@@ -34,6 +35,8 @@ public class ConstructTest extends ExpressionBuilderHelper {
 			case OBJECT:
 				when(expression.getValue()).thenReturn(Collections.<String, MetaExpression>emptyMap());
 				break;
+			default:
+				throw new NotImplementedException("This type has not been implemented.");
 		}
 		return expression;
 	}

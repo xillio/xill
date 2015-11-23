@@ -157,13 +157,13 @@ public class PreviewSearch implements Searchable {
         SearchTreeOccurrence treeOccurrence = (SearchTreeOccurrence)occurrences.get(occurrence);
 
         Node node = apnPreviewPane.getChildren().get(0);
-        TreeTableView<Pair<String, Node>> tableView = getTreeTableView(node);
+        TreeTableView<Pair<String, Node>> nodeTableView = getTreeTableView(node);
 
         expandItem(treeOccurrence.getItem());
-        tableView.getSelectionModel().select(treeOccurrence.getItem());
+        nodeTableView.getSelectionModel().select(treeOccurrence.getItem());
 
-        int row = tableView.getRow(treeOccurrence.getItem());
-        tableView.scrollTo(row);
+        int row = nodeTableView.getRow(treeOccurrence.getItem());
+        nodeTableView.scrollTo(row);
     }
 
     private void expandItem(final TreeItem<Pair<String, Node>> item) {

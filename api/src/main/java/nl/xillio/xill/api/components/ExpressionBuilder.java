@@ -89,9 +89,7 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
 		expressionSupplier = () -> {
 			LinkedHashMap<String, MetaExpression> entries = new LinkedHashMap<>();
 
-			value.forEach((key, expression) -> {
-				entries.put(key.process(debugger).get().getStringValue(), expression.process(debugger).get());
-			});
+			value.forEach((key, expression) -> entries.put(key.process(debugger).get().getStringValue(), expression.process(debugger).get()));
 
 			return fromValue(entries);
 		};

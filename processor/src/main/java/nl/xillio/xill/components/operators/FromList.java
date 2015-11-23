@@ -33,22 +33,22 @@ public class FromList implements Processable {
 	@SuppressWarnings("unchecked")
 	@Override
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-		MetaExpression list = this.list.process(debugger).get();
-		MetaExpression index = this.index.process(debugger).get();
+		MetaExpression listMeta = this.list.process(debugger).get();
+		MetaExpression indexMeta = this.index.process(debugger).get();
 
-		switch (list.getType()) {
+		switch (listMeta.getType()) {
 			case LIST:
 				try {
-					if(Double.isNaN(index.getNumberValue().doubleValue())){
-						throw new RobotRuntimeException("The list does not contain any element called '" + index.getStringValue() + "' (a list does not have named elements).");
+					if(Double.isNaN(indexMeta.getNumberValue().doubleValue())){
+						throw new RobotRuntimeException("The list does not contain any element called '" + indexMeta.getStringValue() + "' (a list does not have named elements).");
 					}
-					MetaExpression result = ((List<MetaExpression>) list.getValue()).get(index.getNumberValue().intValue());
+					MetaExpression result = ((List<MetaExpression>) listMeta.getValue()).get(indexMeta.getNumberValue().intValue());
 					return InstructionFlow.doResume(result);
 				} catch (IndexOutOfBoundsException e) {
 					return InstructionFlow.doResume(ExpressionBuilderHelper.NULL);
 				}
 			case OBJECT:
-				MetaExpression result = ((Map<String, MetaExpression>) list.getValue()).get(index.getStringValue());
+				MetaExpression result = ((Map<String, MetaExpression>) listMeta.getValue()).get(indexMeta.getStringValue());
 				if (result == null) {
 					return InstructionFlow.doResume(ExpressionBuilderHelper.NULL);
 				}

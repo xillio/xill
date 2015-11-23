@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 
+import nl.xillio.xill.services.json.JsonException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -28,7 +29,7 @@ public class ParseJSONConstructTest extends ConstructTest {
 	 * Test the process method under normal circumstances
 	 */
 	@Test
-	public void testProcess() {
+	public void testProcess() throws JsonException {
 		// Mock context
 		String json = "[\"this\", \"is\", \"valid\", \"json\"]";
 		ArrayList<?> expectedResult = new ArrayList<>();
@@ -68,7 +69,7 @@ public class ParseJSONConstructTest extends ConstructTest {
 		// Mock context
 		MetaExpression expression = mockExpression(ATOMIC);
 		JsonParser parser = mock(JsonParser.class);
-		when(parser.fromJson(anyString(), any())).thenThrow(new JsonSyntaxException("CORRECT"));
+		when(parser.fromJson(anyString(), any())).thenThrow(new JsonException("CORRECT", null));
 
 		// Run method
 		ParseJSONConstruct.process(expression, parser);

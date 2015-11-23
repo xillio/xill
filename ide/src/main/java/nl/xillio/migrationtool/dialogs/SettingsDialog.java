@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
  */
 public class SettingsDialog extends FXMLDialog {
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(SettingsDialog.class);
 
     @FXML
     private TextField tfprojectfolder;
@@ -83,7 +83,7 @@ public class SettingsDialog extends FXMLDialog {
             lblLicenseDateIssued, lblLicenseExpiryDate, lblLicenseModules;
 
     private SettingsHandler settings;
-    private Runnable onApply;
+    private ApplyHandler onApply;
 
     /**
      * Dialog constructor
@@ -186,7 +186,7 @@ public class SettingsDialog extends FXMLDialog {
     private void handleShortcut(KeyEvent event) {
         TextField tf = (TextField) event.getTarget();
 
-        if ((event.getCode() == KeyCode.TAB) || (event.getCharacter().equals("\t"))) {
+        if (event.getCode() == KeyCode.TAB || "\t".equals(event.getCharacter())) {
             return;
         }
 
@@ -254,6 +254,7 @@ public class SettingsDialog extends FXMLDialog {
         try {
             validate();
         } catch (ValidationException e) {
+            LOGGER.error(e.getMessage(), e);
             Alert alert = new Alert(AlertType.ERROR, e.getMessage(), ButtonType.OK);
             alert.initModality(Modality.APPLICATION_MODAL);
             alert.showAndWait();
@@ -261,7 +262,7 @@ public class SettingsDialog extends FXMLDialog {
         }
         saveSettings();
         if (onApply != null) {
-            onApply.run();
+            onApply.applySettings();
         }
         return true;
     }
@@ -414,7 +415,7 @@ public class SettingsDialog extends FXMLDialog {
         FXController.hotkeys.registerHotkeysSettings(settings);
     }
 
-    public void setOnApply(Runnable applyHandler) {
+    public void setOnApply(ApplyHandler applyHandler) {
         this.onApply = applyHandler;
     }
 

@@ -110,7 +110,7 @@ public class NewProjectDialog extends FXMLDialog {
         String projectName = tfprojectname.getText();
         String projectFolder = tfprojectfolder.getText();
 
-        if (projectName.equals("") || projectFolder.equals("") || !projectPane.newProject(projectName, projectFolder, "")) {
+        if ("".equals(projectName) || "".equals(projectFolder) || !projectPane.newProject(projectName, projectFolder, "")) {
             Alert error = new Alert(AlertType.ERROR);
             error.initModality(Modality.APPLICATION_MODAL);
             error.setContentText("Make sure the name and folder are not empty, and do not exist as a project yet.");
