@@ -105,4 +105,10 @@ public interface DatabaseService extends XillService {
 	 */
 	void storeObject(Connection connection, String table, LinkedHashMap<String, Object> newObject, List<String> keys, boolean allowUpdate) throws SQLException;
 
+	/**
+	 * Escapes a sql string.
+	 * @param unescaped The unescaped sql string.
+     * @return The escaped sql string.
+     */
+	String escapeString(String unescaped);
 }
