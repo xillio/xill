@@ -10,9 +10,10 @@
         <example title="Usage">
             <header>Running on windows</header>
             <code>
-                Use System;
+                use System;
 
-                System.exec(["cmd.exe", "/C", "echo test"]);
+                var result = System.exec(["cmd.exe", "/C", "echo test"]);
+                System.print(result);
 
                 // Result: {"errors":[],"output":["test"],"runtime":14}
             </code>
@@ -23,7 +24,7 @@
             the name of the new file is target.jpg. The copy, i.e. target.jpg, is created in the
             specified working directory, in this case C:/tmp.</header>
             <code>
-                Use System;
+                use System;
 
                 System.exec(["cmd.exe", "/C", "copy source.jpg target.jpg"], "C:/tmp")
 

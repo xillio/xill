@@ -7,7 +7,9 @@
     <examples>
         <example title="Usage">
             <code>
-                System.info();
+                use System;
+
+                System.print(System.info());
 
                 /*
                     Outputs:
