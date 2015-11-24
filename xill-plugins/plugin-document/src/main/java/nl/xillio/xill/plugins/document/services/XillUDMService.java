@@ -2,7 +2,9 @@ package nl.xillio.xill.plugins.document.services;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.mongodb.DBObject;
 import com.mongodb.MongoException;
+import com.mongodb.util.JSON;
 import nl.xillio.udm.DocumentID;
 import nl.xillio.udm.builders.DocumentBuilder;
 import nl.xillio.udm.exceptions.ModelException;
@@ -16,6 +18,7 @@ import nl.xillio.xill.plugins.document.exceptions.ValidationException;
 import org.bson.Document;
 
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * This class is responsible for communicating with the udm.
@@ -42,12 +45,13 @@ public class XillUDMService implements XillUDMPersistence, XillUDMQueryService {
     }
 
     @Override
-    public String getJSON(String id) {
+    public Map<?, ?> getMap(String id) {
         UDMService service = getUdmService(DEFAULT_IDENTITY);
         DocumentID docId = service.get(id);
         String json = service.toJSON(docId);
+        DBObject obj = (DBObject) JSON.parse(json);
         service.release(docId);
-        return json;
+        return obj.toMap();
     }
 
     @Override
@@ -99,7 +103,7 @@ public class XillUDMService implements XillUDMPersistence, XillUDMQueryService {
 
 
     @Override
-    public Iterator<String> findJsonWhere(Document filter) throws PersistenceException {
+    public Iterator<Map<?, ?>> findMapWhere(Document filter) throws PersistenceException {
         UDMService service = getUdmService(DEFAULT_IDENTITY);
         try {
             FindResult result = service.find(filter);
@@ -107,8 +111,9 @@ public class XillUDMService implements XillUDMPersistence, XillUDMQueryService {
                     result.iterator(),
                     id -> {
                         String json = service.toJSON(id);
+                        DBObject obj = (DBObject) JSON.parse(json);
                         service.release(id);
-                        return json;
+                        return obj.toMap();
                     },
                     noCleanUp -> {
 

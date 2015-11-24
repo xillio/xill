@@ -12,7 +12,7 @@ import java.util.Map;
 public interface XillUDMPersistence {
     String save(UDMDocument document) throws PersistException, ValidationException;
 
-    String getJSON(String stringValue);
+    Map<?, ?> getMap(String id);
 
     void delete(String stringValue) throws PersistenceException;
 }

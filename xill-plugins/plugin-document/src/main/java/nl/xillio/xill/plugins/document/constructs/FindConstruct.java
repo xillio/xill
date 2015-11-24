@@ -11,8 +11,6 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.document.services.XillUDMQueryService;
 import nl.xillio.xill.plugins.document.services.xill.DocumentQueryBuilder;
-import nl.xillio.xill.services.json.JsonException;
-import nl.xillio.xill.services.json.JsonParser;
 import org.bson.Document;
 
 import java.util.Iterator;
@@ -25,13 +23,11 @@ import java.util.Map;
  */
 public class FindConstruct extends Construct {
     private final XillUDMQueryService queryService;
-    private final JsonParser jsonParser;
     private final DocumentQueryBuilder queryBuilder;
 
     @Inject
-    public FindConstruct(XillUDMQueryService queryService, JsonParser jsonParser, DocumentQueryBuilder queryBuilder) {
+    public FindConstruct(XillUDMQueryService queryService, DocumentQueryBuilder queryBuilder) {
         this.queryService = queryService;
-        this.jsonParser = jsonParser;
         this.queryBuilder = queryBuilder;
     }
 
@@ -48,12 +44,12 @@ public class FindConstruct extends Construct {
         Document filterDoc = queryBuilder.parseQuery(filter);
 
         // Run the query
-        Iterator<String> searchResult = getResult(filterDoc);
+        Iterator<Map<?, ?>> searchResult = getResult(filterDoc);
 
         // Transform the result
-        MetaExpressionIterator<String> iterator = new MetaExpressionIterator<>(
+        MetaExpressionIterator<Map<?, ?>> iterator = new MetaExpressionIterator<>(
                 searchResult,
-                this::fromJson
+                MetaExpression::parseObject
         );
 
         // Build the result
@@ -62,19 +58,10 @@ public class FindConstruct extends Construct {
         return result;
     }
 
-    private Iterator<String> getResult(Document filterDoc) {
+    private Iterator<Map<?, ?>> getResult(Document filterDoc) {
         try {
-            return queryService.findJsonWhere(filterDoc);
+            return queryService.findMapWhere(filterDoc);
         } catch (PersistenceException e) {
-            throw new RobotRuntimeException(e.getMessage(), e);
-        }
-    }
-
-    private MetaExpression fromJson(String json) {
-        try {
-            Map<?, ?> value = jsonParser.fromJson(json, Map.class);
-            return parseObject(value);
-        } catch (JsonException e) {
             throw new RobotRuntimeException(e.getMessage(), e);
         }
     }

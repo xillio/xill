@@ -9,8 +9,6 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.document.services.XillUDMPersistence;
-import nl.xillio.xill.services.json.JsonException;
-import nl.xillio.xill.services.json.JsonParser;
 
 import java.util.Map;
 
@@ -22,12 +20,10 @@ import java.util.Map;
 public class GetConstruct extends Construct {
 
     private final XillUDMPersistence persistence;
-    private final JsonParser jsonParser;
 
     @Inject
-    public GetConstruct(XillUDMPersistence persistence, JsonParser jsonParser) {
+    public GetConstruct(XillUDMPersistence persistence) {
         this.persistence = persistence;
-        this.jsonParser = jsonParser;
     }
 
     @Override
@@ -39,23 +35,14 @@ public class GetConstruct extends Construct {
     }
 
     private MetaExpression process(MetaExpression documentId) {
-        String jsonDocument = getJson(documentId.getStringValue());
-        Map<?, ?> value = parse(jsonDocument);
+        Map<?, ?> value = getDocument(documentId.getStringValue());
 
         return parseObject(value);
     }
 
-    private Map<?, ?> parse(String jsonDocument) {
+    private Map<?, ?> getDocument(String id) {
         try {
-            return jsonParser.fromJson(jsonDocument, Map.class);
-        } catch (JsonException e) {
-            throw new RobotRuntimeException("Failed to parse json: " + e.getMessage(), e);
-        }
-    }
-
-    private String getJson(String id) {
-        try {
-            return persistence.getJSON(id);
+            return persistence.getMap(id);
         } catch (DocumentNotFoundException e) {
             throw new RobotRuntimeException("Document [" + id + "] was not found", e);
         }

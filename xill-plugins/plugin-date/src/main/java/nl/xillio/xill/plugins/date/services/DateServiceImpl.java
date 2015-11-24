@@ -157,7 +157,11 @@ public class DateServiceImpl implements DateService, DateFactory {
 
     @Override
     public nl.xillio.xill.plugins.date.data.Date from(Instant instant) {
-        return new nl.xillio.xill.plugins.date.data.Date(ZonedDateTime.from(instant));
+        long milli = instant.toEpochMilli();
+
+        return new nl.xillio.xill.plugins.date.data.Date(
+                ZonedDateTime.from(Instant.ofEpochMilli(milli).atZone(ZoneId.systemDefault()))
+        );
     }
 
     /**
