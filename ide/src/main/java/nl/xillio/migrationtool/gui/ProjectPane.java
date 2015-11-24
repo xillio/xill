@@ -377,33 +377,22 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 
         tab.requestFocus();
 
-        // This must be done in FX thread but at the same time we have to wait for the result (otherwise it could cause to show multiple dialogs)
-        final FutureTask guiQuery = new FutureTask(new Callable() {
-            @Override
-            public Object call() throws Exception {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.initStyle(StageStyle.UNIFIED);
-                alert.setTitle("Robot file content change");
-                alert.setHeaderText("Robot file content change has been detected!");
-                alert.setContentText("Do you want reload the robot file?");
-                alert.getButtonTypes().clear();
-                alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
-                final Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.NO) {
-                    return null;
-                }
-                return true;
-            }
-        });
+	    // This must be done in the FX application thread.
+	    final Runnable showDialog = new Runnable() {
+		    @Override
+		    public void run() {
+			    // Create and show an alert dialog saying the content has been changed.
+			    AlertDialog alert = new AlertDialog(Alert.AlertType.WARNING, "Robot file content change",
+					    "The robot file has been modified outside the editor.", "Do you want reload the robot file?",
+					    ButtonType.YES, ButtonType.NO);
 
-        Platform.runLater(guiQuery);
-        try {
-            if (guiQuery.get() != null) {
-                tab.reload();
-            }
-        } catch (Exception e) {
-            LOGGER.warn("Failed to show user query because of robot content change outside the editor", e);
-        }
+			    final Optional<ButtonType> result = alert.showAndWait();
+			    if (result.get() == ButtonType.YES) {
+				    tab.reload();
+			    }
+		    }
+	    };
+	    Platform.runLater(showDialog);
     }
 
 	@Override
