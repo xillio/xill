@@ -97,7 +97,7 @@ public class XillUDMService implements XillUDMPersistence, XillUDMQueryService {
      * @param identity the project identity
      * @return the connection
      */
-    private UDMService getUdmService(String identity) {
+    UDMService getUdmService(String identity) {
         return connectionPool.get(identity);
     }
 

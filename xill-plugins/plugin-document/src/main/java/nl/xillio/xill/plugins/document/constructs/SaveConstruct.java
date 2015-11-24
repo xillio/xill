@@ -52,7 +52,8 @@ public class SaveConstruct extends Construct {
 
         ((Map<String,MetaExpression>)document.getValue()).put("_id", idValue);
 
-        return idValue;
+        // Return a COPY for the scoping administration
+        return fromValue(id);
     }
 
     private String save(UDMDocument udmDocument) {
