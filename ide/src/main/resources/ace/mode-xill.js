@@ -511,6 +511,9 @@ ace.define('ace/mode/xill', [ "ace/mode/folding/cstyle", "ace/mode/behaviour/cst
 		this.$behaviour = new CstyleBehaviour();
 		this.$tokenizer = new Tokenizer(new XillHighlightRules().getRules());
 		this.foldingRules = new CStyleFoldMode();
+
+        this.lineCommentStart = "//";
+        this.blockComment = {start: "/*", end: "*/"};
 	};
 	oop.inherits(Mode, TextMode);
 
