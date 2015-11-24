@@ -240,7 +240,7 @@ public class HungarianAlgorithmConstruct extends Construct {
 
 	private static int[][] hgAlgorithm(final double[][] array, final String sumType) {
 		double[][] cost = copyOf(array); // Create the cost matrix
-		if (sumType.equalsIgnoreCase("max")) { // Then array is weight array.
+		if ("max".equalsIgnoreCase(sumType)) { // Then array is weight array.
 			// Must change to cost.
 			double maxWeight = findLargest(cost);
 			for (int i = 0; i < cost.length; i++) { // Generate cost by

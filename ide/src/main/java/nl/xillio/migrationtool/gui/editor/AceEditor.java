@@ -352,12 +352,12 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	 * Pastes the current clipboard at the caret.
 	 */
 	public void paste() {
-		String code = (String) clipboard.getContent(DataFormat.PLAIN_TEXT);
-		if (code != null) {
+		String clipboardContent = (String) clipboard.getContent(DataFormat.PLAIN_TEXT);
+		if (clipboardContent != null) {
 			Platform.runLater(() -> {
 				JSObject session = (JSObject) callOnAceBlocking("getSession");
 				JSObject selection = (JSObject) callOnAceBlocking("getSelection");
-				JSObject r = (JSObject) session.call("replace", selection.call("getRange"), code);
+				JSObject r = (JSObject) session.call("replace", selection.call("getRange"), clipboardContent);
 				int row = (int)r.getMember("row");
 				int column = (int)r.getMember("column");
 				JSObject range = (JSObject) executeJSBlocking(String.format("new Range(%d, %d, %d, %d)", row, column, row, column));
@@ -392,10 +392,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	 * @see WebView#requestFocus()
 	 */
 	public void requestFocus() {
-		Platform.runLater(() -> {
-			editor.requestFocus();
-		});
-
+		Platform.runLater(() -> editor.requestFocus());
 	}
 
 	/**
@@ -504,9 +501,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 
 		BreakpointPool.INSTANCE.clear(tab.getCurrentRobot());
 
-		breakpoints.forEach(bp -> {
-			BreakpointPool.INSTANCE.add(tab.getCurrentRobot(), bp);
-		});
+		breakpoints.forEach(bp -> BreakpointPool.INSTANCE.add(tab.getCurrentRobot(), bp));
 	}
 
 	/**
@@ -525,9 +520,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 	}
 
 	private void executeJS(final String js, final Consumer<Object> callback) {
-		Platform.runLater(() -> {
-			callback.accept(executeJSBlocking(js));
-		});
+		Platform.runLater(() -> callback.accept(executeJSBlocking(js)));
 	}
 
 	/**
@@ -602,10 +595,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 
 	private void load(final String path) {
 		editor.getEngine().load(path);
-		editor.getEngine().documentProperty().addListener(
-			(obs, oldDoc, newDoc) -> {
-				documentLoaded.setValue(true);
-			});
+		editor.getEngine().documentProperty().addListener((obs, oldDoc, newDoc) -> documentLoaded.setValue(true));
 	}
 
 	private static String escape(final String raw) {

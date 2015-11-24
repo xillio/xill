@@ -537,6 +537,22 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 		return processor;
 	}
 
+    /**
+     * Replace the existing robot code in editor by the content that is in the robot file (it could be changed outside of editor)
+     */
+	public void reload() {
+        File document = processor.getRobotID().getPath();
+        if (document.exists()) {
+            try {
+                String code = FileUtils.readFileToString(document);
+                editorPane.setLastSavedCode(code);
+                editorPane.getEditor().setCode(code);
+            } catch (IOException e) {
+                log.warn("Could not open " + document.getAbsolutePath());
+            }
+        }
+    }
+
 	@Override
 	public void changed(final ObservableValue<? extends DocumentState> source, final DocumentState oldValue, final DocumentState newValue) {
 		// This needs to happen in JFX Thread
@@ -587,9 +603,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 			editorPane.getEditor().setEditable(currentRobot == getProcessor().getRobotID());
 
 			// Remove the 'edited' state
-			Platform.runLater(() -> {
-				editorPane.getDocumentState().setValue(DocumentState.SAVED);
-			});
+			Platform.runLater(() -> editorPane.getDocumentState().setValue(DocumentState.SAVED));
 		}
 
 		if (line > 0) {

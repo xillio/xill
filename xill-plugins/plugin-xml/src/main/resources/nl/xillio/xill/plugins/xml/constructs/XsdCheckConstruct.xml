@@ -7,9 +7,12 @@
         <example title="Usage">
             <header>Validating a xml file against a xsd.</header>
             <code>
-if (Xml.xsdCheck("d:/temp/books.xml", "d:/temp/books.xsd")) {
-    System.print("File is valid!");
-}
+                use XML;
+                use System;
+
+                if (XML.xsdCheck("d:/temp/books.xml", "d:/temp/books.xsd")) {
+                    System.print("File is valid!");
+                }
             </code>
         </example>
     </examples>
