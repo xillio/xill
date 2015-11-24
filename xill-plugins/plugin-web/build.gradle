@@ -8,4 +8,5 @@ description 'This plugin contains constructs to support Selenium/PhantomJS engin
 dependencies {
 	compile 'org.seleniumhq.selenium:selenium-server:2.45.0'
 	compile 'com.codeborne:phantomjsdriver:1.2.1'	
+	compile 'org.apache.httpcomponents:httpclient:4.5.1'
 }

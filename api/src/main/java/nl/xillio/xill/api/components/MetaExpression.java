@@ -414,7 +414,6 @@ public abstract class MetaExpression implements Expression, Processable {
      */
     public final void registerReference() {
         // When this variable is assigned, take over ownership
-        preventDispose = false;
         referenceCount++;
     }
 
@@ -432,15 +431,27 @@ public abstract class MetaExpression implements Expression, Processable {
                 e.printStackTrace();
             }
         }
-
-        preventDispose = false;
     }
 
     /**
-     * Next time a reference is released, this expression won't be disposed.
+     * Prevent this expression from being disposed.
      */
     public final void preventDisposal() {
         preventDispose = true;
+    }
+
+    /**
+     * @return true if disposal is being prevented.
+     */
+    public final boolean isDisposalPrevented() {
+        return preventDispose;
+    }
+
+    /**
+     * Allow this expression to be disposed.
+     */
+    public final void allowDisposal() {
+        preventDispose = false;
     }
 
     /**

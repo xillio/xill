@@ -2,6 +2,7 @@ package nl.xillio.xill.components.instructions;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.NoSuchElementException;
 
 import nl.xillio.xill.api.Debugger;
@@ -42,8 +43,6 @@ public class ReturnInstruction extends Instruction {
 
 		try {
 			MetaExpression result = value.process(debugger).get();
-			// Prevent return value from being disposed in limbo. (Temporarily no reference)
-			result.preventDisposal();
 
 			return InstructionFlow.doReturn(result);
 		} catch (NoSuchElementException e) {
@@ -54,7 +53,7 @@ public class ReturnInstruction extends Instruction {
 
 	@Override
 	public Collection<Processable> getChildren() {
-		return Arrays.asList(value);
+		return Collections.singletonList(value);
 	}
 
 	@Override
