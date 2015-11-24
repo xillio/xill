@@ -27,7 +27,7 @@ public class DeleteConstruct extends Construct {
     public ConstructProcessor prepareProcess(ConstructContext context) {
         return new ConstructProcessor(
                 this::process,
-                new Argument("documentId", ATOMIC)
+                new Argument("id", ATOMIC)
         );
     }
 

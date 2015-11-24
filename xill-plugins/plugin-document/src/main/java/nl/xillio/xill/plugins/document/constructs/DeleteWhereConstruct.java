@@ -49,14 +49,18 @@ public class DeleteWhereConstruct extends Construct {
         try {
             return queryService.delete(filterDoc);
         } catch (PersistenceException e) {
-            Throwable root = ExceptionUtils.getRootCause(e);
-            String message = e.getMessage();
-
-            if(root != null) {
-                message += ": " + root.getMessage();
-            }
-
-            throw new RobotRuntimeException(message, e);
+            throw new RobotRuntimeException(buildErrorMessage(e), e);
         }
+    }
+
+    private String buildErrorMessage(PersistenceException e) {
+        Throwable root = ExceptionUtils.getRootCause(e);
+        String message = e.getMessage();
+
+        if (root != null) {
+            message += ": " + root.getMessage();
+        }
+
+        return message;
     }
 }
