@@ -2,13 +2,13 @@ package nl.xillio.xill.plugins.contenttype.constructs;
 
 import com.google.inject.Inject;
 import nl.xillio.udm.exceptions.PersistenceException;
-import nl.xillio.udm.services.DocumentDefinitionService;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.document.services.XillUDMPersistence;
 
 import java.util.LinkedHashMap;
 
@@ -18,11 +18,11 @@ import java.util.LinkedHashMap;
  * @author Thomas Biesaart
  */
 public class SaveConstruct extends Construct {
-    private final DocumentDefinitionService documentDefinitionService;
+    private final XillUDMPersistence udmPersistence;
 
     @Inject
-    public SaveConstruct(DocumentDefinitionService documentDefinitionService) {
-        this.documentDefinitionService = documentDefinitionService;
+    public SaveConstruct(XillUDMPersistence udmPersistence) {
+        this.udmPersistence = udmPersistence;
     }
 
     @Override
@@ -41,10 +41,8 @@ public class SaveConstruct extends Construct {
         contentTypesWrapper.put(contentType, decorators);
 
         String json = contentTypesWrapper.toString();
-
-        documentDefinitionService.loadContentTypes(json);
         try {
-            documentDefinitionService.persist(contentType);
+            udmPersistence.persistContentType(contentType, json);
         } catch (PersistenceException e) {
             throw new RobotRuntimeException(e.getMessage(), e);
         }

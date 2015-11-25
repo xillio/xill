@@ -15,4 +15,8 @@ public interface XillUDMPersistence {
     Map<?, ?> getMap(String id);
 
     void delete(String stringValue) throws PersistenceException;
+
+    void loadDecorators(String json);
+
+    void persistContentType(String contentType, String json) throws PersistenceException;
 }

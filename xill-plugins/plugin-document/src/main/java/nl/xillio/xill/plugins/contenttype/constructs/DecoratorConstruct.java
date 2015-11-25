@@ -2,12 +2,12 @@ package nl.xillio.xill.plugins.contenttype.constructs;
 
 
 import com.google.inject.Inject;
-import nl.xillio.udm.services.DocumentDefinitionService;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.plugins.document.services.XillUDMPersistence;
 
 import java.util.LinkedHashMap;
 
@@ -18,11 +18,11 @@ import java.util.LinkedHashMap;
  */
 public class DecoratorConstruct extends Construct {
 
-    private final DocumentDefinitionService documentDefinitionService;
+    private final XillUDMPersistence udmService;
 
     @Inject
-    public DecoratorConstruct(DocumentDefinitionService documentDefinitionService) {
-        this.documentDefinitionService = documentDefinitionService;
+    public DecoratorConstruct(XillUDMPersistence udmService) {
+        this.udmService = udmService;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class DecoratorConstruct extends Construct {
         decoratorWrapper.put(decoratorName, definition);
 
         String json = fromValue(decoratorWrapper).toString();
-        documentDefinitionService.loadDecorators(json);
+        udmService.loadDecorators(json);
 
         return NULL;
     }

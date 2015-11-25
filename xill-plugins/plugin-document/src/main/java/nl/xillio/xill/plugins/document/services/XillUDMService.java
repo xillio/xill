@@ -10,6 +10,7 @@ import nl.xillio.udm.builders.DocumentBuilder;
 import nl.xillio.udm.exceptions.ModelException;
 import nl.xillio.udm.exceptions.PersistenceException;
 import nl.xillio.udm.interfaces.FindResult;
+import nl.xillio.udm.services.DocumentDefinitionService;
 import nl.xillio.udm.services.UDMService;
 import nl.xillio.udm.util.TransformationIterable;
 import nl.xillio.xill.plugins.document.data.UDMDocument;
@@ -27,7 +28,7 @@ import java.util.Map;
  */
 @Singleton
 public class XillUDMService implements XillUDMPersistence, XillUDMQueryService {
-    private static final String DEFAULT_IDENTITY = "xill";
+    private static final String DEFAULT_IDENTITY = "default";
     private final ConnectionPool connectionPool;
 
     @Inject
@@ -58,6 +59,20 @@ public class XillUDMService implements XillUDMPersistence, XillUDMQueryService {
     public void delete(String stringValue) throws PersistenceException {
         UDMService service = getUdmService(DEFAULT_IDENTITY);
         service.delete(new Document("_id", stringValue));
+    }
+
+    @Override
+    public void loadDecorators(String json) {
+        UDMService service = getUdmService(DEFAULT_IDENTITY);
+        service.getDefinitionService().loadDecorators(json);
+    }
+
+    @Override
+    public void persistContentType(String contentType, String json) throws PersistenceException {
+        UDMService service = getUdmService(DEFAULT_IDENTITY);
+        DocumentDefinitionService definitionService = service.getDefinitionService();
+        definitionService.loadContentTypes(json);
+        definitionService.persist(contentType);
     }
 
     String create(UDMDocument document) throws PersistException, ValidationException {
