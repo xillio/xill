@@ -3,17 +3,11 @@ package nl.xillio.xill.services.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
-import com.fasterxml.jackson.databind.util.ISO8601Utils;
 import nl.xillio.xill.api.components.MetaExpression;
-import sun.java2d.pipe.SpanShapeRenderer;
 
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 
 /**
  * This implementation of the JsonParser uses Jackson to parse json.
