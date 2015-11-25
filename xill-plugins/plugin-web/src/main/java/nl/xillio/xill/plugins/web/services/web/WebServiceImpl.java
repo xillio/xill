@@ -1,6 +1,7 @@
 package nl.xillio.xill.plugins.web.services.web;
 
 import com.google.inject.Singleton;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.data.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpEntity;
@@ -11,7 +12,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.openqa.selenium.*;
@@ -277,7 +278,7 @@ public class WebServiceImpl implements WebService {
 		return pool.get(pool.createIdentifier(options), this).getPage();
 	}
 
-    private CookieStore createCookieStore(Set<Cookie> seleniumCookieSet) {
+    CookieStore createCookieStore(Set<Cookie> seleniumCookieSet) {
         CookieStore cookieStore = new BasicCookieStore();
 
         for (Cookie seleniumCookie : seleniumCookieSet) {
@@ -289,6 +290,10 @@ public class WebServiceImpl implements WebService {
             cookieStore.addCookie(cookie);
         }
         return cookieStore;
+    }
+
+    void copyInputStreamToFile(final InputStream stream, final  File targetFile) throws IOException {
+        FileUtils.copyInputStreamToFile(stream, targetFile);
     }
 
 	@Override
@@ -303,7 +308,7 @@ public class WebServiceImpl implements WebService {
         // Set timeout
         RequestConfig requestConfig = RequestConfig.custom().setConnectionRequestTimeout(timeout).setConnectTimeout(timeout).setSocketTimeout(timeout).build();
 
-        CloseableHttpClient httpclient;
+        HttpClientBuilder builder;
 
         if (webContext != null) {
             // Takeover cookies from web context
@@ -312,34 +317,24 @@ public class WebServiceImpl implements WebService {
             context.setCookieStore(cookieStore);
 
             // Create httpclient
-            httpclient = HttpClients.custom().setDefaultRequestConfig(requestConfig).setDefaultCookieStore(cookieStore).setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE).build();
+            builder = HttpClients.custom().setDefaultRequestConfig(requestConfig).setDefaultCookieStore(cookieStore).setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE);
         } else {
             // Create httpclient
-            httpclient = HttpClients.custom().setDefaultRequestConfig(requestConfig).setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE).build();
+            builder = HttpClients.custom().setDefaultRequestConfig(requestConfig).setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE);
         }
 
-        try {
-            HttpGet httpget = new HttpGet(url);
+        HttpGet httpget = new HttpGet(url);
 
-            CloseableHttpResponse response = httpclient.execute(httpget);
+        try ( CloseableHttpResponse response = builder.build().execute(httpget) ) {
+            HttpEntity entity = response.getEntity();
 
-            try {
-                HttpEntity entity = response.getEntity();
-
-                if (entity != null) {
-                    InputStream stream = entity.getContent();
-
-                    try {
-                        FileUtils.copyInputStreamToFile(stream, targetFile);
-                    } finally {
-                        stream.close();
-                    }
+            if (entity != null) {
+                try (InputStream stream = entity.getContent()) {
+                    copyInputStreamToFile(stream, targetFile);
                 }
-            } finally {
-                response.close();
+            } else {
+                throw new RobotRuntimeException("Cannot do a http request!");
             }
-        } finally {
-            httpclient.close();
         }
 	}
 }

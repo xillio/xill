@@ -1,29 +1,11 @@
 package nl.xillio.xill.plugins.web.services.web;
 
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
-
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
-import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.web.data.CookieVariable;
-import nl.xillio.xill.plugins.web.data.NodeVariable;
-import nl.xillio.xill.plugins.web.data.PageVariable;
-import nl.xillio.xill.plugins.web.data.PhantomJSPool;
+import nl.xillio.xill.plugins.web.data.*;
 import nl.xillio.xill.plugins.web.data.PhantomJSPool.Entity;
 import nl.xillio.xill.plugins.web.data.PhantomJSPool.Identifier;
-import nl.xillio.xill.plugins.web.data.WebVariable;
-import nl.xillio.xill.plugins.web.services.web.WebService;
-import nl.xillio.xill.plugins.web.services.web.WebServiceImpl;
-
+import org.apache.http.client.CookieStore;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.Options;
@@ -35,6 +17,18 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 
 /**
  * Test the {@link WebService}.
@@ -734,4 +728,47 @@ public class WebServiceImplTest {
 		
 	}
 
+    /**
+     * Test the download() method with normal usage
+     */
+	@Test
+	public void testDownload() throws IOException {
+		// mock
+        CookieStore cookieStore = mock(BasicCookieStore.class);
+
+		WebVariable webVariable = mock(WebVariable.class);
+        WebDriver driver = mock(WebDriver.class);
+		when(webVariable.getDriver()).thenReturn(driver);
+		Options options = mock(Options.class);
+        when(driver.manage()).thenReturn(options);
+        when(options.getCookies()).thenReturn(null);
+
+        String url = "http://www.google.com";
+        File file = mock(File.class);
+
+        WebServiceImpl implementation = spy(new WebServiceImpl());
+        doReturn(cookieStore).when(implementation).createCookieStore(any());
+        doNothing().when(implementation).copyInputStreamToFile(any(), any());
+
+        // run
+		implementation.download(url, file, webVariable, 1000);
+
+		// verify
+		verify(implementation, times(1)).copyInputStreamToFile(any(), any());
+	}
+
+    /**
+     * Test the download() method when URL is invalid
+     */
+    @Test(expectedExceptions = MalformedURLException.class)
+    public void testDownloadInvalidURL() throws IOException {
+        // mock
+        WebServiceImpl implementation = spy(new WebServiceImpl());
+
+        String url = "www.google.com"; // invalid URL
+        File file = mock(File.class);
+
+        // run
+        implementation.download(url, file, null, 1000);
+    }
 }
