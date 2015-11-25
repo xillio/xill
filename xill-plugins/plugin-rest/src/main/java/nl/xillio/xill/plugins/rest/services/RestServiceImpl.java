@@ -25,8 +25,14 @@ public class RestServiceImpl implements RestService {
 				request.connectTimeout(options.getTimeout()).socketTimeout(options.getTimeout());
 			}
 
+            // set HTTP header items
+            options.setHeaders(request);
+
+			// create executor
 			Executor executor = Executor.newInstance();
-			options.doAuth(executor);
+
+            // set authentication
+			options.setAuth(executor);
 
 			// set body
 			if ((body != null) && (!body.isEmpty())) {
