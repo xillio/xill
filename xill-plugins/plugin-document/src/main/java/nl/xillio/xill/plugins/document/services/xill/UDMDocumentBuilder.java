@@ -5,7 +5,7 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.plugins.document.data.UDMDocument;
 
 /**
- * This interface represents an object that can build  {@link UDMDocument, udm documents} from a {@link MetaExpression}.
+ * This interface represents an object that can build  {@link UDMDocument} from a {@link MetaExpression}.
  *
  * @author Thomas Biesaart
  */
