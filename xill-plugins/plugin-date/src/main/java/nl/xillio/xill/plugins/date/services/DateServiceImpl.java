@@ -1,8 +1,10 @@
 package nl.xillio.xill.plugins.date.services;
 
 import com.google.inject.Singleton;
+import me.biesaart.utils.Log;
 import nl.xillio.xill.api.data.Date;
 import nl.xillio.xill.api.data.DateFactory;
+import org.slf4j.Logger;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -25,6 +27,7 @@ import java.util.Map.Entry;
 public class DateServiceImpl implements DateService, DateFactory {
 
     private static final DateTimeFormatter DEFAULT_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final Logger LOGGER = Log.get();
 
     @Override
     public Date now() {
@@ -135,12 +138,9 @@ public class DateServiceImpl implements DateService, DateFactory {
 
     @Override
     public Map<String, Double> difference(Date date1, Date date2, boolean absolute) {
-        // Calculate difference and convert to seconds
-        long nanoDifference = date1.getZoned().until(date2.getZoned(), ChronoUnit.NANOS);
-        if (absolute)
-            nanoDifference = Math.abs(nanoDifference);
-        BigDecimal difference = new BigDecimal(nanoDifference).multiply(TimeUnits.Nanos.getNumSeconds());
-        // Calculate the totals
+        BigDecimal difference = getDifference(date1.getZoned(), date2.getZoned(), absolute);
+
+       // Calculate the totals
         Map<String, Double> diff = new LinkedHashMap<>();
         for (TimeUnits t : TimeUnits.values()) {
             diff.put(String.format("Total %s", t.name()), difference.divide(t.getNumSeconds(), RoundingMode.HALF_UP).doubleValue());
@@ -153,6 +153,25 @@ public class DateServiceImpl implements DateService, DateFactory {
             difference = division[1];
         }
         return diff;
+    }
+
+    private BigDecimal getDifference(ZonedDateTime dateA, ZonedDateTime dateB, boolean absolute) {
+        try {
+            // Calculate difference and convert to seconds
+            long nanoDifference = dateA.until(dateB, ChronoUnit.NANOS);
+            if (absolute)
+                nanoDifference = Math.abs(nanoDifference);
+            return new BigDecimal(nanoDifference).multiply(TimeUnits.Nanos.getNumSeconds());
+        } catch(ArithmeticException ignore) {
+            LOGGER.error("Failed to get difference in nanos for {} and {}", dateA, dateB);
+        }
+
+        // If we fail to get difference based on nanos, simply return in seconds
+        long secondDifference = dateA.until(dateB, ChronoUnit.SECONDS);
+        if(absolute) {
+            secondDifference = Math.abs(secondDifference);
+        }
+        return new BigDecimal(secondDifference);
     }
 
     @Override

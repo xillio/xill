@@ -74,7 +74,7 @@ public class XillUDMService implements XillUDMPersistence, XillUDMQueryService {
         return persist(builder);
     }
 
-    private String persist(DocumentBuilder builder) throws PersistException, ValidationException {
+    String persist(DocumentBuilder builder) throws PersistException, ValidationException {
         DocumentID id = builder.commit();
         UDMService service = getUdmService(DEFAULT_IDENTITY);
 
