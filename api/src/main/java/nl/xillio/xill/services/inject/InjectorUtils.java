@@ -6,6 +6,7 @@ import com.google.inject.Module;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,6 +45,10 @@ public class InjectorUtils {
         }
         log.info("Initializing InjectorUtils with custom settings...");
         module = globalModules;
+    }
+
+    public static void initialize(Module... modules) {
+        initialize(Arrays.asList(modules));
     }
 
     private static void defaultConfig() {
