@@ -9,10 +9,17 @@ import java.util.Map;
 
 /**
  * This interface represents an object that can query the udm.
+ *
+ * @author Thomas Biesaart
  */
 @ImplementedBy(XillUDMService.class)
 public interface XillUDMQueryService {
-    Iterator<Map<?,?>> findMapWhere(Document filter) throws PersistenceException;
-
-    long delete(Document filterDoc) throws PersistenceException;
+    /**
+     * Find all document that match a filter.
+     *
+     * @param filter the filter
+     * @return a map iterator
+     * @throws PersistenceException
+     */
+    Iterator<Map<?, ?>> findMapWhere(Document filter) throws PersistenceException;
 }

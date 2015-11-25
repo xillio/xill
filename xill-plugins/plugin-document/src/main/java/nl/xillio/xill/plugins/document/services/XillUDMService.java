@@ -122,26 +122,24 @@ public class XillUDMService implements XillUDMPersistence, XillUDMQueryService {
         UDMService service = getUdmService(DEFAULT_IDENTITY);
         try {
             FindResult result = service.find(filter);
-            return new TransformationIterable<>(
-                    result.iterator(),
-                    id -> {
-                        String json = service.toJSON(id);
-                        DBObject obj = (DBObject) JSON.parse(json);
-                        service.release(id);
-                        return obj.toMap();
-                    },
-                    noCleanUp -> {
-
-                    }
-            );
+            return buildResult(result, service);
         } catch (MongoException e) {
             throw new PersistenceException(e.getMessage(), e);
         }
     }
 
-    @Override
-    public long delete(Document filterDoc) throws PersistenceException {
-        UDMService service = getUdmService(DEFAULT_IDENTITY);
-        return service.delete(filterDoc);
+    private TransformationIterable<DocumentID, Map<?, ?>> buildResult(FindResult result, UDMService service) {
+        return new TransformationIterable<>(
+                result.iterator(),
+                id -> {
+                    String json = service.toJSON(id);
+                    DBObject obj = (DBObject) JSON.parse(json);
+                    service.release(id);
+                    return obj.toMap();
+                },
+                noCleanUp -> {
+
+                }
+        );
     }
 }
