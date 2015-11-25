@@ -22,7 +22,7 @@ public class XillParsingException extends Exception {
 	 *        the robot that couldn't be parsed
 	 */
 	public XillParsingException(final String message, final int line, final RobotID robot) {
-		super(message);
+		super(message + " (line " + line + ")");
 		this.line = line;
 		this.robot = robot;
 	}
