@@ -189,7 +189,7 @@ public class ExpressionBuilderHelper {
 		}
 
 		@Override
-		public void close() throws Exception {}
+		public void close() {}
 
 	}
 }

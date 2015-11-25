@@ -220,7 +220,9 @@ public abstract class MetaExpression implements Expression, Processable {
     public String toString(final JsonParser jsonParser) throws JsonException {
         MetaExpression cleaned = removeCircularReference(this, new IdentityArrayList<>(),
                 ExpressionBuilderHelper.fromValue("<<CIRCULAR REFERENCE>>"));
-        return jsonParser.toJson(extractValue(cleaned));
+        String result = jsonParser.toJson(extractValue(cleaned));
+        cleaned.close();
+        return result;
     }
 
     /**
@@ -271,7 +273,7 @@ public abstract class MetaExpression implements Expression, Processable {
                 break;
 
             case ATOMIC:
-                result = metaExpression;
+                result = new AtomicExpression((Expression) metaExpression.getValue());
                 break;
             default:
                 throw new NotImplementedException("This type has not been implemented.");
@@ -437,7 +439,7 @@ public abstract class MetaExpression implements Expression, Processable {
      * Prevent this expression from being disposed.
      */
     public final void preventDisposal() {
-        preventDispose = true;
+        setPreventDispose(true);
     }
 
     /**
@@ -451,7 +453,26 @@ public abstract class MetaExpression implements Expression, Processable {
      * Allow this expression to be disposed.
      */
     public final void allowDisposal() {
-        preventDispose = false;
+        setPreventDispose(false);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void setPreventDispose(boolean value) {
+        if (preventDispose == value) {
+            return;
+        }
+
+        preventDispose = value;
+
+        if (getType() == ExpressionDataType.OBJECT) {
+            ((Map<String, MetaExpression>) getValue())
+                    .values()
+                    .forEach(child -> child.setPreventDispose(value));
+        } else if (getType() == ExpressionDataType.LIST) {
+            ((List<MetaExpression>) getValue())
+                    .forEach(child -> child.setPreventDispose(value));
+        }
+
     }
 
     /**
@@ -463,7 +484,7 @@ public abstract class MetaExpression implements Expression, Processable {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void close() throws Exception {
+    public void close() {
         if (isClosed || this == ExpressionBuilderHelper.NULL) {
             return;
         }

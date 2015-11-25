@@ -45,7 +45,7 @@ public class ImmutableLiteral extends MetaExpression {
 	}
 
 	@Override
-	public void close() throws Exception {
+	public void close() {
 		// Stub to prevent closing of literals
 
 		// Clear out the meta pool

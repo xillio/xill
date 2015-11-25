@@ -78,7 +78,7 @@ public class AtomicExpression extends MetaExpression {
 	}
 
 	@Override
-	public void close() throws Exception {
+	public void close() {
 		super.close();
 		expressionValue.close();
 	}

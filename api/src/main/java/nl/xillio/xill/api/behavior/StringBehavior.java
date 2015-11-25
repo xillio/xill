@@ -30,9 +30,6 @@ public class StringBehavior implements Expression {
 	}
 
 	@Override
-	public void close() throws Exception {}
-
-	@Override
 	public Number getNumberValue() {
 		return MathUtils.parse(value);
 	}
