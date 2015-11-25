@@ -60,13 +60,13 @@ public class XillUDMService implements XillUDMPersistence, XillUDMQueryService {
         service.delete(new Document("_id", stringValue));
     }
 
-    public String create(UDMDocument document) throws PersistException, ValidationException {
+    String create(UDMDocument document) throws PersistException, ValidationException {
         DocumentBuilder builder = getUdmService(DEFAULT_IDENTITY).create();
         document.applyTo(builder);
         return persist(builder);
     }
 
-    public String update(UDMDocument document) throws PersistException, ValidationException {
+    String update(UDMDocument document) throws PersistException, ValidationException {
         UDMService service = getUdmService(DEFAULT_IDENTITY);
         DocumentID id = service.get(document.getId());
         DocumentBuilder builder = service.document(id);

@@ -18,7 +18,7 @@ public class ConnectionFactory {
      * @return the connection
      */
     public UDMConnection build(String identity) {
-        UDMService udm = UDM.connect();
+        UDMService udm = UDM.connect("udm_" + identity);
         return new UDMConnection(identity, udm);
     }
 }
