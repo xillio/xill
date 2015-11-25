@@ -1,6 +1,7 @@
 package nl.xillio.plugins;
 
 import com.google.common.reflect.ClassPath;
+import com.google.inject.AbstractModule;
 import com.google.inject.Binder;
 import nl.xillio.plugins.interfaces.Loadable;
 import nl.xillio.xill.api.construct.Construct;
@@ -19,7 +20,7 @@ import java.util.Optional;
 /**
  * This class represents the base for all Xill plugins
  */
-public abstract class XillPlugin implements Loadable<XillPlugin>, AutoCloseable {
+public abstract class XillPlugin extends AbstractModule implements Loadable<XillPlugin>, AutoCloseable {
     private static final Logger LOGGER = LogManager.getLogger();
     private final List<Construct> constructs = new ArrayList<>();
     private final String defaultName;
@@ -39,11 +40,9 @@ public abstract class XillPlugin implements Loadable<XillPlugin>, AutoCloseable 
     }
 
     /**
-     * Configure bindings for Injection
-     *
-     * @param binder the binder
+     * Configure bindings for Injection.
      */
-    public void configure(final Binder binder) {
+    public void configure() {
 
     }
 

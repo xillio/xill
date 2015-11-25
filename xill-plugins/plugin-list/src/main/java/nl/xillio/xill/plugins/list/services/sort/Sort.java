@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.list.services.sort;
 
+import com.google.inject.ImplementedBy;
 import nl.xillio.xill.plugins.list.ListXillPlugin;
 import nl.xillio.xill.services.XillService;
 
@@ -10,6 +11,7 @@ import nl.xillio.xill.services.XillService;
  * @author Sander Visser
  *
  */
+@ImplementedBy(SortImpl.class)
 public interface Sort extends XillService {
 
 	/**

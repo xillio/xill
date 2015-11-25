@@ -1,5 +1,6 @@
 package nl.xillio.xill.services.inject;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -36,6 +37,10 @@ public class PluginInjectorModule extends DefaultInjectorModule {
 				plugin.configure(binder());
 			} catch (Exception e) {
 				log.error("Exception while configuring binders for " + plugins, e);
+			}
+
+			for(Method method : plugin.getClass().getMethods()) {
+				
 			}
 		}
 	}
