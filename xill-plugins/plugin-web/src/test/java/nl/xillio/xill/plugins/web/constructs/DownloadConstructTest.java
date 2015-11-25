@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 public class DownloadConstructTest extends ExpressionBuilderHelper {
 
 	/**
-	 * test the process with normal usage.
+	 * Test the process with normal usage
 	 *
 	 * @throws IOException
 	 */
@@ -65,6 +65,11 @@ public class DownloadConstructTest extends ExpressionBuilderHelper {
 		Assert.assertEquals(output, NULL);
 	}
 
+    /**
+     * Test the process when invalid URL is passed
+     *
+     * @throws IOException
+     */
     @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid URL! ")
     public void testMalformedURL() throws IOException {
         // mock
@@ -99,6 +104,11 @@ public class DownloadConstructTest extends ExpressionBuilderHelper {
         DownloadConstruct.process(urlVar, targetFileVar, webContextVar, timeoutVar, webService, null);
     }
 
+    /**
+     * Test the process when error occured during downloading
+     *
+     * @throws IOException
+     */
     @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Error occured during the download! ")
     public void testDownloadFailed() throws IOException {
         // mock
@@ -133,6 +143,11 @@ public class DownloadConstructTest extends ExpressionBuilderHelper {
         DownloadConstruct.process(urlVar, targetFileVar, webContextVar, timeoutVar, webService, null);
     }
 
+    /**
+     * Test the process when empty URL is passed
+     *
+     * @throws IOException
+     */
     @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid variable value. Url is empty!")
     public void testNullURL() throws IOException {
         // mock
@@ -147,6 +162,11 @@ public class DownloadConstructTest extends ExpressionBuilderHelper {
         DownloadConstruct.process(urlVar, targetFileVar, webContextVar, timeoutVar, webService, null);
     }
 
+    /**
+     * Test the process when empty filename is passed
+     *
+     * @throws IOException
+     */
     @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid variable value. Filename is empty!")
     public void testNullFilename() throws IOException {
         // mock
