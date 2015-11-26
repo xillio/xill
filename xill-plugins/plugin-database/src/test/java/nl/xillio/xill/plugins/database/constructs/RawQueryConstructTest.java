@@ -31,10 +31,10 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 /**
- * Tests the {@link PreparedStatementConstruct}.
+ * Tests the {@link QueryConstruct}.
  *
  */
-public class QueryConstructTest extends ConstructTest {
+public class RawQueryConstructTest extends ConstructTest {
 
 	/**
 	 * <p>
@@ -86,7 +86,7 @@ public class QueryConstructTest extends ConstructTest {
 		RobotID robotID = mock(RobotID.class);
 
 		// run
-		PreparedStatementConstruct.process(query, parameters, database, timeout, factory, robotID);
+		QueryConstruct.process(query, parameters, database, timeout, factory, robotID);
 
 		// verify
 		verify(databaseService, times(1)).preparedQuery(any(), anyString(), anyList(), anyInt());
@@ -146,7 +146,7 @@ public class QueryConstructTest extends ConstructTest {
 		BaseDatabaseConstruct.setLastConnection(robotID, connectionMetadata);
 
 		// run
-		PreparedStatementConstruct.process(query, parameters, database, timeout, factory, robotID);
+		QueryConstruct.process(query, parameters, database, timeout, factory, robotID);
 
 		// verify
 		verify(databaseService, times(1)).preparedQuery(any(), anyString(), anyList(), anyInt());
@@ -214,7 +214,7 @@ public class QueryConstructTest extends ConstructTest {
 		RobotID robotID = mock(RobotID.class);
 
 		// run
-		PreparedStatementConstruct.process(query, parameters, database, timeout, factory, robotID);
+		QueryConstruct.process(query, parameters, database, timeout, factory, robotID);
 	}
 
 	/**
@@ -286,7 +286,7 @@ public class QueryConstructTest extends ConstructTest {
 		RobotID robotID = mock(RobotID.class);
 
 		// run
-		PreparedStatementConstruct.process(query, parameters, database, timeout, factory, robotID);
+		QueryConstruct.process(query, parameters, database, timeout, factory, robotID);
 	}
 
 	/**
@@ -294,7 +294,7 @@ public class QueryConstructTest extends ConstructTest {
 	 */
 	@Test
 	public void testReturnValueWithInteger() {
-		MetaExpression output = PreparedStatementConstruct.returnValue(42, "sql");
+		MetaExpression output = QueryConstruct.returnValue(42, "sql");
 
 		Assert.assertEquals(output, fromValue(42));
 	}
@@ -304,7 +304,7 @@ public class QueryConstructTest extends ConstructTest {
 	 */
 	@Test
 	public void testReturnValueWithNoValidValue() {
-		MetaExpression output = PreparedStatementConstruct.returnValue(null, "sql");
+		MetaExpression output = QueryConstruct.returnValue(null, "sql");
 
 		Assert.assertEquals(output, NULL);
 	}
@@ -316,7 +316,7 @@ public class QueryConstructTest extends ConstructTest {
 	public void testReturnValueWithIntegerIterator() {
 		Iterator<Integer> iterator = Arrays.asList(5, 10).iterator();
 
-		MetaExpression output = PreparedStatementConstruct.returnValue(iterator, "sql");
+		MetaExpression output = QueryConstruct.returnValue(iterator, "sql");
 
 		Assert.assertEquals(output.getStringValue(), "Results[sql]");
 	}
@@ -327,7 +327,7 @@ public class QueryConstructTest extends ConstructTest {
 	@Test
 	public void testTransformIteratorElementWithInteger() {
 
-		MetaExpression output = PreparedStatementConstruct.transformIteratorElement(42);
+		MetaExpression output = QueryConstruct.transformIteratorElement(42);
 
 		Assert.assertEquals(output, fromValue(42));
 	}
@@ -340,7 +340,7 @@ public class QueryConstructTest extends ConstructTest {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("key", "value");
 
-		MetaExpression output = PreparedStatementConstruct.transformIteratorElement(map);
+		MetaExpression output = QueryConstruct.transformIteratorElement(map);
 
 		Assert.assertEquals(output.getValue().toString(), "{key=\"value\"}");
 	}
