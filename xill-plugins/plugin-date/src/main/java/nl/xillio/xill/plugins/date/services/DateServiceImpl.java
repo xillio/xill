@@ -3,7 +3,6 @@ package nl.xillio.xill.plugins.date.services;
 import com.google.common.base.CaseFormat;
 import com.google.inject.Singleton;
 import nl.xillio.xill.api.data.Date;
-import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -184,7 +183,7 @@ public class DateServiceImpl implements DateService {
 		YEARS("31556952"),
 		DECADES("31556952E1"),
 		CENTURIES("31556952E2"),
-		MILLENIA("31556952E3"),
+		MILLENNIA("31556952E3"),
 		ERAS("31556952E9");
 		// @formatter:on
 
