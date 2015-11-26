@@ -120,9 +120,10 @@ public class FXController implements Initializable, EventHandler<Event> {
     private SplitPane spnMain;
     @FXML
     private SplitPane spnLeft;
-
     @FXML
     private ProjectPane projectpane;
+    @FXML
+    private Label lblNearExpiry;
 
     private ReturnFocusListener returnFocusListener;
 
@@ -241,6 +242,14 @@ public class FXController implements Initializable, EventHandler<Event> {
             // Verify the license.
             if(!LicenseUtils.performValidation(false)) {
                 closeApplication();
+            }
+
+            // Check if the licence is about to expire.
+            long daysLeft = LicenseUtils.daysToExpiration();
+            if (daysLeft <= LicenseUtils.DAYS_NEAR_EXPIRATION) {
+                lblNearExpiry.setText(daysLeft + " Days until license expires.");
+            } else {
+                lblNearExpiry.setVisible(false);
             }
 
             try {

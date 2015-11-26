@@ -728,6 +728,9 @@
 .label {
 	-fx-text-fill: -fx-control-text-color;
 }
+.errorLabel {
+	-fx-text-fill: -fx-error-color;
+}
 
 
 /* LIST VIEW AND LIST CELL */

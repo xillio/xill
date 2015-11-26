@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 
 /**
  * This class is responsible for performing a license check.
@@ -23,6 +24,7 @@ import java.io.InputStream;
 public class LicenseUtils {
     private static final Logger LOGGER = LogManager.getLogger();
     public static final File LICENSE_FILE = new File(XillioHomeFolder.forXillIDE(), "license.json");
+    public static final int DAYS_NEAR_EXPIRATION = 1000;
     private static LicenseFactory licenseFactory;
 
     /**
@@ -93,6 +95,16 @@ public class LicenseUtils {
         }
 
         return isValid();
+    }
+
+    /**
+     * Get the amount of days until the license expires.
+     */
+    public static long daysToExpiration() {
+        // Subtract the epoch days of now from the expiry date.
+        long expiry = getLicense().getLicenseDetails().getExpiryDate().toEpochDay();
+        long now = LocalDate.now().toEpochDay();
+        return expiry - now;
     }
 
     private static License getLicense(InputStream stream) throws IOException {
