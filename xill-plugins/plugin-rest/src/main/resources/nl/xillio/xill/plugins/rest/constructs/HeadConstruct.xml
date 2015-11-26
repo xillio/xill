@@ -14,6 +14,7 @@ Options:
 * proxyport - port of the proxy server
 * user - user name for server authentication         
 * pass - password for server authentication
+* headers - the object of name and value pair strings added as a parts of HTTP request header  
 
 The proxy and server authentication options can be combined as follows:
 proxyhost
@@ -27,7 +28,8 @@ user+pass
             <code>
 use System;
 use REST;
-var response = REST.head("http://whatever.com/uri", {"timeout" : 3000});
+var options = {"timeout" : 3000, "headers": {"X-XSRF-TOKEN": "9q32y74389tg4927h294h9850unf98u", "X-XSRF-TOKEN2": "9t32y74329tg4927h294h9850ujy98u"}};
+var response = REST.head("http://whatever.com/uri", options);
 System.print(response);
 </code>
         </example>
