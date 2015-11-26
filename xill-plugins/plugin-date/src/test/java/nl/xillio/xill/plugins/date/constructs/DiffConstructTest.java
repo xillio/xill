@@ -51,8 +51,12 @@ public class DiffConstructTest {
 	@Test(dataProvider = "differences")
 	public void testProcess(Map<String, Double> differences, MetaExpression absolute) {
 		// Mock
-		ZonedDateTime date1 = ZonedDateTime.now(), date2 = ZonedDateTime.now();
-		MetaExpression date1Expression = mockDateExpression(date1), date2Expression = mockDateExpression(date2);
+		ZonedDateTime date1 = ZonedDateTime.now();
+		ZonedDateTime date2 = ZonedDateTime.now();
+
+		MetaExpression date1Expression = mockDateExpression(date1);
+		MetaExpression date2Expression = mockDateExpression(date2);
+
 		DateService dateService = mock(DateService.class);
 		when(dateService.difference(any(), any(), anyBoolean())).thenReturn(differences);
 
