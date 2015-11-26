@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.rest.data;
 
+import java.util.HashMap;
 import java.util.Map;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
@@ -7,6 +8,7 @@ import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import org.apache.http.HttpHost;
 import org.apache.http.client.fluent.Executor;
+import org.apache.http.client.fluent.Request;
 
 /**
  * Support class for processing request options
@@ -14,7 +16,7 @@ import org.apache.http.client.fluent.Executor;
 public class Options {
 
 	private int timeout = 5000;
-
+    private HashMap<String, String> headers = new HashMap<>();
 	private String proxyHost = "";
 	private int proxyPort = 0;
 	private String proxyUser = "";
@@ -76,10 +78,28 @@ public class Options {
 				this.authPass = value.getStringValue();
 				break;
 
+            case "headers":
+                this.processHeaders(value);
+                break;
+
 			default:
 				throw new RobotRuntimeException(String.format("Option [%1$s] is invalid!", option));
 		}
 	}
+
+    private void processHeaders(final MetaExpression headersVar) {
+        if (headersVar.getType() != ExpressionDataType.OBJECT) {
+            throw new RobotRuntimeException("Invalid headers content in options variable!");
+        }
+
+        this.headers.clear();
+
+        @SuppressWarnings("unchecked")
+        Map<String, MetaExpression> headersMap = (Map<String, MetaExpression>) headersVar.getValue();
+        for (Map.Entry<String, MetaExpression> entry : headersMap.entrySet()) {
+            this.headers.put(entry.getKey(), entry.getValue().getStringValue());
+        }
+    }
 
 	private void checkOptions() {
 		if (this.authUser.isEmpty() != this.authPass.isEmpty()) {
@@ -107,7 +127,7 @@ public class Options {
 	 * 
 	 * @param executor request executor
 	 */
-	public void doAuth(Executor executor) {
+	public void setAuth(final Executor executor) {
 		// Server authentication
 		if (!this.authUser.isEmpty()) {
 			executor.auth(this.authUser, this.authPass);
@@ -127,4 +147,14 @@ public class Options {
             executor.authPreemptiveProxy(httpProxy);
 		}
 	}
+
+    /**
+     * Add HTTP header items from "headers" option
+     *
+     * @param request Existing REST request
+     */
+	public void setHeaders(final Request request) {
+        this.headers.forEach((k,v) -> request.addHeader(k,v));
+    }
+
 }

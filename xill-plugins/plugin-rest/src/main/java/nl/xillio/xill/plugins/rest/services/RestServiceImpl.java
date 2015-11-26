@@ -1,13 +1,14 @@
 package nl.xillio.xill.plugins.rest.services;
 
-import java.io.IOException;
+import com.google.inject.Singleton;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.rest.data.Content;
 import nl.xillio.xill.plugins.rest.data.MultipartBody;
 import nl.xillio.xill.plugins.rest.data.Options;
 import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.fluent.Request;
-import com.google.inject.Singleton;
+
+import java.io.IOException;
 
 /**
  * This class is the main implementation of the {@link RestService}
@@ -18,15 +19,25 @@ import com.google.inject.Singleton;
 @Singleton
 public class RestServiceImpl implements RestService {
 
-	private Content processRequest(final Request request, final Options options, final Content body) {
+    Executor createExecutor() {
+        return Executor.newInstance();
+    }
+
+	Content processRequest(final Request request, final Options options, final Content body) {
 		try {
 			// set-up request options
 			if (options.getTimeout() != 0) {
 				request.connectTimeout(options.getTimeout()).socketTimeout(options.getTimeout());
 			}
 
-			Executor executor = Executor.newInstance();
-			options.doAuth(executor);
+            // set HTTP header items
+            options.setHeaders(request);
+
+			// create executor
+            Executor executor = createExecutor();
+
+            // set authentication
+			options.setAuth(executor);
 
 			// set body
 			if ((body != null) && (!body.isEmpty())) {
@@ -35,7 +46,7 @@ public class RestServiceImpl implements RestService {
 
 			// do request
 			try {
-				return new Content(executor.execute(request).returnContent());
+                return new Content(executor.execute(request).returnContent());
 			} catch (IOException e) {
 				throw new RobotRuntimeException("Request error: " + e.getMessage(), e);
 			}

@@ -1,13 +1,8 @@
 package nl.xillio.xill.plugins.database.services;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -490,4 +485,19 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		return delimiterString + identifier + delimiterString;
 	}
 
+	/**
+	 * Escapes a sql string.
+	 * @param unescaped The unescaped sql string.
+	 * @return The escaped sql string.
+	 */
+	@Override
+	public String escapeString(String unescaped) {
+		String escaped = unescaped;
+		escaped = escaped.replaceAll("(\\\\|'|\")", "\\\\$1");
+		escaped = escaped.replaceAll("\n", "\\\\n");
+		escaped = escaped.replaceAll("\r", "\\\\r");
+		escaped = escaped.replaceAll("\t", "\\\\t");
+		escaped = escaped.replaceAll("\000", "\\\\000");
+		return escaped;
+	}
 }

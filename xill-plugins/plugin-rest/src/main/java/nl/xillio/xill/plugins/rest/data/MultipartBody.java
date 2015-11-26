@@ -22,7 +22,7 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 public class MultipartBody implements MetadataExpression {
 
     private interface MultipartContent {
-        void add(final MultipartEntityBuilder entity);
+        void addTo(final MultipartEntityBuilder entity);
     }
 
     private class FileContent implements MultipartContent {
@@ -35,7 +35,7 @@ public class MultipartBody implements MetadataExpression {
             this.file = file;
         }
 
-        public void add(final MultipartEntityBuilder entity) {
+        public void addTo(final MultipartEntityBuilder entity) {
             entity.addBinaryBody(name, file);
         }
     }
@@ -49,7 +49,7 @@ public class MultipartBody implements MetadataExpression {
             this.text = text;
         }
 
-        public void add(final MultipartEntityBuilder entity) {
+        public void addTo(final MultipartEntityBuilder entity) {
             ContentType contentType = ContentType.create(ContentType.TEXT_PLAIN.getMimeType(), "UTF-8");
             entity.addTextBody(name, text, contentType);
         }
@@ -58,9 +58,14 @@ public class MultipartBody implements MetadataExpression {
     private static final Logger LOGGER = LogManager.getLogger();
     private List<MultipartContent> multipartContentList = new ArrayList<>();
 
+    /**
+     * Build HTTP data from all content parts and assign it to REST request
+     *
+     * @param request Existing REST request
+     */
     public void setToRequest(final Request request) {
         MultipartEntityBuilder entity = MultipartEntityBuilder.create();
-        multipartContentList.stream().forEach(content -> content.add(entity));
+        multipartContentList.stream().forEach(content -> content.addTo(entity)); // Feed the entitybuilder with all particular content parts
 
         HttpEntity httpEntity = entity.build();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream((int)httpEntity.getContentLength());
@@ -75,11 +80,23 @@ public class MultipartBody implements MetadataExpression {
         request.bodyByteArray(outputStream.toByteArray());
     }
 
+    /**
+     * Add a content of file to a multipart data (as binary part)
+     *
+     * @param name The content name
+     * @param fileName The filenamepath
+     */
     public void addFile(final String name, final String fileName) {
         File file = new File(fileName);
         multipartContentList.add(new FileContent(name, file));
     }
 
+    /**
+     * Add text content to multipart data
+     *
+     * @param name The content name
+     * @param text The content text
+     */
     public void addText(final String name, final String text) {
         multipartContentList.add(new TextContent(name, text));
     }
