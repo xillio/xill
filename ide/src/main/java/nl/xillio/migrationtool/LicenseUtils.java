@@ -24,7 +24,7 @@ import java.time.LocalDate;
 public class LicenseUtils {
     private static final Logger LOGGER = LogManager.getLogger();
     public static final File LICENSE_FILE = new File(XillioHomeFolder.forXillIDE(), "license.json");
-    public static final int DAYS_NEAR_EXPIRATION = 1000;
+    public static final int DAYS_NEAR_EXPIRATION = 10;
     private static LicenseFactory licenseFactory;
 
     /**
