@@ -1,48 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
-  <description>
-    Run a raw query on a database (normal statement as opposed to a prepared statement).
-    NOTE: You are advised to use Database.query() as opposed to this function if possible.
-    The database parameter is optional. The last made connection will be used if no database is given.
-    the timeout parameter is optional. The default is set to 30 seconds. when the query takes longer than the given timeout it will stop.A timeout of 0 means that there is no limit.
-    Returns an iterator containing an update count for each insert/update/delete and an object for each selected row in the case of a select.
-  </description>
-  <examples>
-    <example>
-      <header>Select all rows from the table "test" in a SQLite database and display the results, with timeout at 10 seconds and using the connection in the con variable</header>
-      <code>
-	use Database;
-	use System;
-	
-	var con = Database.connect("database.sqlite", "sqlite");
-	var result = Database.rawQuery("SELECT * FROM test",10,con);
-	
-	foreach (r in result){
-	 System.print(r); 
-	}
-      </code>
-    </example>
-    <example>
-      <header>Insert a single rows into an Oracle database</header>
-      <code>
-	use Database;
-	
-	var con = Database.connect("localhost:1521:orcl", "user", "pass");
-	var result = Database.rawQuery("INSERT INTO table VALUES(1,2)");
-      </code>
-    </example>  
-  </examples>
-  <references>
-    <reference>mysqlConnect</reference>
-    <reference>mssqlConnect</reference>
-    <reference>oracleConnect</reference>
-    <reference>sqliteConnect</reference>
-    <reference>query</reference>
-    <reference>getObject</reference>
-    <reference>storeObject</reference>
-    <reference>System.print</reference>
-  </references>
-  <tags>
-    MySQL, MSSQL, SQL Server, Oracle, SQLite, query, connect, SQL, insert, select, update
-  </tags>
+    <description>
+        Run a raw query on a database (normal statement as opposed to a prepared statement).
+        NOTE: You are advised to use Database.query() as opposed to this function if possible.
+        The database parameter is optional. The last made connection will be used if no database is given.
+        the timeout parameter is optional. The default is set to 30 seconds. when the query takes longer than the given
+        timeout it will stop.A timeout of 0 means that there is no limit.
+        Returns an iterator containing an update count for each insert/update/delete and an object for each selected row
+        in the case of a select.
+    </description>
+    <examples>
+        <example>
+            <header>Select all rows from the table "test" in a SQLite database and display the results, with timeout at
+                10 seconds and using the connection in the con variable
+            </header>
+            <code>
+                use Database;
+                use System;
+
+                var con = Database.connect("database.sqlite", "sqlite");
+                var result = Database.rawQuery("SELECT * FROM test",10,con);
+
+                foreach (r in result){
+                    System.print(r);
+                }
+            </code>
+        </example>
+        <example>
+            <header>Insert a single rows into an Oracle database</header>
+            <code>
+                use Database;
+
+                var con = Database.connect(
+                    "localhost:1521:orcl",
+                    "user",
+                    "pass"
+                );
+
+                var result = Database.rawQuery(
+                    "INSERT INTO table VALUES(1,2)"
+                );
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>mysqlConnect</reference>
+        <reference>mssqlConnect</reference>
+        <reference>oracleConnect</reference>
+        <reference>sqliteConnect</reference>
+        <reference>query</reference>
+        <reference>getObject</reference>
+        <reference>storeObject</reference>
+        <reference>System.print</reference>
+    </references>
+    <tags>
+        MySQL, MSSQL, SQL Server, Oracle, SQLite, query, connect, SQL, insert, select, update
+    </tags>
 </function>
