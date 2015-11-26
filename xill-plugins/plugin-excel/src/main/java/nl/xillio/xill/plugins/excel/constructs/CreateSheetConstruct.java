@@ -48,9 +48,9 @@ public class CreateSheetConstruct extends Construct {
 		}
 
 		LinkedHashMap<String, MetaExpression> sheetObject = new LinkedHashMap<>();
-		sheetObject.put("Name", fromValue(sheet.getName()));
-		sheetObject.put("Rows", fromValue(0));
-		sheetObject.put("Columns", fromValue(0));
+		sheetObject.put("sheetName", fromValue(sheet.getName()));
+		sheetObject.put("rows", fromValue(0));
+		sheetObject.put("columns", fromValue(0));
 		MetaExpression toReturn = fromValue(sheetObject);
 
 		toReturn.storeMeta(XillSheet.class, sheet);

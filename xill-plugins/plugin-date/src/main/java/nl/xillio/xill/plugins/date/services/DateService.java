@@ -45,7 +45,7 @@ public interface DateService extends XillService {
 	 * Adds a number of different time units to a {@link Date}.
 	 *
 	 * @param original The orginal date to add to
-	 * @param toAdd    A map containing {@link ChronoUnit ChronoUnits} as key and the amount of the unit to add as a value.
+	 * @param toAdd A map containing {@link ChronoUnit ChronoUnits} as key and the amount of the unit to add as a value.
 	 * @return The resulting time
 	 */
 	Date add(Date original, Map<ChronoUnit, Long> toAdd);
@@ -114,8 +114,8 @@ public interface DateService extends XillService {
 	 *
 	 * @param date1 First comparison date
 	 * @param date2 Second comparison date
-	 * @return A map containing names of time units as keys (first letter capitlized and in plural) and the amount of this time unit as value. The amount is always positive. When the key has "Total "
-	 * prepended, the value is not additive.
+	 * @return A map containing names of time units as keys (camelCased) and the amount of this time unit as value. The
+     * amount is always positive. When the key has "total" prepended, the value is not additive.
 	 */
 	public Map<String, Double> difference(Date date1, Date date2, boolean absolute);
 
