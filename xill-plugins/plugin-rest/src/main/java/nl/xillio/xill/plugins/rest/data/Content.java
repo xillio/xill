@@ -90,13 +90,18 @@ public class Content {
      */
     public Content(HttpResponse fullResponse) {
 
+        this.fullResponse = fullResponse;
+
+        if(fullResponse == null) {
+            return;
+        }
+
         try {
             this.content = IOUtils.toString(fullResponse.getEntity().getContent());
         } catch (IOException e) {
             e.printStackTrace();
         }
         this.type = ContentType.create(fullResponse.getEntity().getContentType().getValue());
-        this.fullResponse = fullResponse;
     }
 
     /**

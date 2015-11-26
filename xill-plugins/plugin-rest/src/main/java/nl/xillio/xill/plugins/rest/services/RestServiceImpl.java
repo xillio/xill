@@ -25,7 +25,7 @@ public class RestServiceImpl implements RestService {
         return Executor.newInstance();
     }
 
-    private Content processRequest(final Request request, final Options options, final Content body) {
+    Content processRequest(final Request request, final Options options, final Content body) {
 
         try {
             // set-up request options
