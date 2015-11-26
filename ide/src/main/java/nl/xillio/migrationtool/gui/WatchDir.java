@@ -78,7 +78,7 @@ public class WatchDir implements Runnable {
 	 * Register the given directory with the WatchService
 	 */
 	private void registerDir(final Path dir) throws IOException {
-		WatchKey key = dir.register(watcher, ENTRY_CREATE, ENTRY_DELETE); // ENTRY_MODIFY
+		WatchKey key = dir.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
 		keys.put(key, dir);
 	}
 
