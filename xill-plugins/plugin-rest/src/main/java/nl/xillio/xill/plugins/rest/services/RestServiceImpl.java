@@ -1,14 +1,13 @@
 package nl.xillio.xill.plugins.rest.services;
 
-import com.google.inject.Singleton;
+import java.io.IOException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.rest.data.Content;
 import nl.xillio.xill.plugins.rest.data.MultipartBody;
 import nl.xillio.xill.plugins.rest.data.Options;
 import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.fluent.Request;
-
-import java.io.IOException;
+import com.google.inject.Singleton;
 
 /**
  * This class is the main implementation of the {@link RestService}
@@ -19,6 +18,9 @@ import java.io.IOException;
 @Singleton
 public class RestServiceImpl implements RestService {
 
+	private static final Logger LOGGER = Log.get();
+
+	private Content processRequest(final Request request, final Options options, final Content body) {
     Executor createExecutor() {
         return Executor.newInstance();
     }
@@ -46,7 +48,11 @@ public class RestServiceImpl implements RestService {
 
 			// do request
 			try {
-                return new Content(executor.execute(request).returnContent());
+				Response responseContent = executor.execute(request);
+				HttpResponse httpResponse = responseContent.returnResponse();
+
+
+				return new Content(httpResponse);
 			} catch (IOException e) {
 				throw new RobotRuntimeException("Request error: " + e.getMessage(), e);
 			}
