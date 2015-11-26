@@ -34,6 +34,10 @@ function loadEditor(id) {
     editor.setOptions({
         maxLines: Infinity
     });
+
+    // Vertical margin to make space for scrollbar
+    editor.renderer.setScrollMargin(0,24,0,0);
+    
     // Read Only
     editor.setReadOnly(true)
     editor.getSession().setUseWorker(false);
