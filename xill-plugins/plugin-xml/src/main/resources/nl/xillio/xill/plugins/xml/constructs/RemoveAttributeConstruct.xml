@@ -6,35 +6,42 @@
     <examples>
         <example title="Usage">
             <header>Assuming we have an XML file note.xml which contains the following:</header>
-            <code> <![CDATA[
-<note id="1">
-  <to>Tove</to>
-  <from>Jani</from>
-  <heading>Reminder</heading>
-  <comment>This was sent to James as well</comment>
-  <comment>John has not responded to the invitation</comment>
-  <body>Don't forget me this weekend!</body>
-</note>  ]]>
+            <code>
+                <![CDATA[
+                    <note id="1">
+                      <to>Tove</to>
+                      <from>Jani</from>
+                      <heading>Reminder</heading>
+                      <comment>This was sent to James as well</comment>
+                      <comment>John has not responded to the invitation</comment>
+                      <body>Don't forget me this weekend!</body>
+                    </note>
+                ]]>
             </code>
             <header>After executing the following code:</header>
             <code>
-var note = Xml.fromFile("C:/tmp/note.xml");
-var parent = Xml.xpath(note, "//note");
-Xml.removeAttribute(parent, "id");
-System.print(Xml.toString(note));
+                use System;
+                use XML;
+
+                var note = XML.fromFile("C:/tmp/note.xml");
+                var parent = XML.xpath(note, "//note");
+                XML.removeAttribute(parent, "id");
+                System.print(XML.toString(note));
             </code>
             <header>
-Xml contains:
+                Xml contains:
             </header>
-            <code> <![CDATA[
-<note id="1">
-  <to>Tove</to>
-  <from>Jani</from>
-  <heading>Reminder</heading>
-  <comment>This was sent to James as well</comment>
-  <comment>John has not responded to the invitation</comment>
-  <body>Don't forget me this weekend!</body>
-</note>  ]]>
+            <code>
+                <![CDATA[
+                    <note id="1">
+                      <to>Tove</to>
+                      <from>Jani</from>
+                      <heading>Reminder</heading>
+                      <comment>This was sent to James as well</comment>
+                      <comment>John has not responded to the invitation</comment>
+                      <body>Don't forget me this weekend!</body>
+                    </note>
+                ]]>
            </code>
         </example>
     </examples>

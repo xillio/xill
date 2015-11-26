@@ -8,28 +8,31 @@
         <example title="Usage">
             <header>Assuming we have an XML file note.xml which contains the following:</header>
             <code>
-<![CDATA[
-< note id="1">
-  < to>Tove< /to>
-  < from>Jani< /from>
-  < heading>Reminder< /heading>
-  < comment>This was sent to James as well< /comment>
-  < comment>John has not responded to the invitation< /comment>
-  < body>Don't forget me this weekend!< /body>
-< /note>
-]]>
+                <![CDATA[
+                    <note id="1">
+                      <to>Tove</to>
+                      <from>Jani</from>
+                      <heading>Reminder</heading>
+                      <comment>This was sent to James as well</comment>
+                      <comment>John has not responded to the invitation</comment>
+                      <body>Don't forget me this weekend!</body>
+                    </note>
+                ]]>
             </code>
             <header>After executing the following code:</header>
             <code>
-var note = Xml.fromFile("C:/tmp/note.xml");
-var body = Xml.xpath(note, "//body");
-System.print(Xml.toString(body));
+                use System;
+                use XML;
+
+                var note = XML.fromFile("C:/tmp/note.xml");
+                var body = XML.xpath(note, "//body");
+                System.print(XML.toString(body));
             </code>
             <header>
-It will show:
+                It will show:
             </header>
             <code>
-&lt; ?xml version="1.0" encoding="UTF-8"?&gt;&lt; body&gt;Don't forget me this weekend!&lt; /body&gt;
+                &lt; ?xml version="1.0" encoding="UTF-8"?&gt;&lt; body&gt;Don't forget me this weekend!&lt; /body&gt;
            </code>
         </example>
     </examples>

@@ -101,6 +101,12 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 	 */
 	private String lastSavedCode = "";
 
+    /**
+     * Contains the code content that was detected last time as changed outside the editor (the file with robot was changed outside of editor - this contains last content of that file)
+     * It's needed to store this because after one real file content change, the system can fire multiple events for that and this is a way how not to display multiple query dialogs for one file change..
+     */
+	private String lastChangedCode = "";
+
 	/**
 	 * Default constructor. Just sets up the UI and the listener.
 	 */
@@ -274,6 +280,27 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 		this.lastSavedCode = newCode;
 		this.getDocumentState().setValue(DocumentState.SAVED);
 	}
+
+    /**
+     * Check if the last code in robot file that was changed outside the editor is different than both current code in editor and the last outside change
+     *
+     * @param newChangedCode the source code that is currently saved in the robot file
+     * @return true if newChangedCode is very new (display gui dialog), false if the new content is not different from editor's content and not different from last changed content
+     */
+    public boolean checkChangedCode(final String newChangedCode) {
+        if (this.getEditor().getCodeProperty().get().equals(newChangedCode)) {
+            return false; // The new changed source code is the same as existing
+        }
+
+        // The new changed source code is different from existing in editor
+        if (this.lastChangedCode.equals(newChangedCode)) {
+            // But the new changed source code is the same as the last changed source code - so no change here
+            return false;
+        } else {
+            this.lastChangedCode = newChangedCode;
+            return true;
+        }
+    }
 
 	/**
 	 * @return the robot controls which allows to control the active robot
