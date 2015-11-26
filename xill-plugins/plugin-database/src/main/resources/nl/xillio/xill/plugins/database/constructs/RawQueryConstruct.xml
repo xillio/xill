@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
   <description>
-    Query a database.         
+    Raw query a database (normal statement as opposed to a prepared statement).
     
     The database parameter is optional. The last made connection will be used if no database is given.
     the timeout parameter is optional. The default is set to 30 seconds. when the query takes longer than the given timeout it will stop.A timeout of 0 means that there is no limit.
