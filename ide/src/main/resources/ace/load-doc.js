@@ -35,9 +35,11 @@ function loadEditor(id) {
         maxLines: Infinity
     });
 
-    // Vertical margin to make space for scrollbar
-    editor.renderer.setScrollMargin(0,24,0,0);
-    
+    // Text wrapping
+    editor.setOptions({
+        wrap: true
+    });
+
     // Read Only
     editor.setReadOnly(true)
     editor.getSession().setUseWorker(false);
