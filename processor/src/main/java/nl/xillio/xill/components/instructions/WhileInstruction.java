@@ -1,5 +1,6 @@
 package nl.xillio.xill.components.instructions;
 
+import nl.xillio.xill.CodePosition;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
@@ -12,9 +13,9 @@ import java.util.Collection;
 /**
  * This {@link Instruction} represents the while looping mechanism.
  */
-public class WhileInstruction extends Instruction {
+public class WhileInstruction extends CompoundInstruction {
 
-    private final Processable condition;
+    private final ExpressionInstruction condition;
     private final InstructionSet instructionSet;
 
     /**
@@ -24,13 +25,13 @@ public class WhileInstruction extends Instruction {
      * @param instructionSet the set that should be processes until the condition hits false
      */
     public WhileInstruction(final Processable condition, final InstructionSet instructionSet) {
-        this.condition = condition;
+        this.condition = new ExpressionInstruction(condition);
         this.instructionSet = instructionSet;
     }
 
     @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-        while (check(condition.process(debugger))) {
+        while (check(debugger)) {
             InstructionFlow<MetaExpression> result = instructionSet.process(debugger);
 
             if (result.returns()) {
@@ -45,8 +46,17 @@ public class WhileInstruction extends Instruction {
         return InstructionFlow.doResume();
     }
 
-    private static boolean check(final InstructionFlow<MetaExpression> conditionResult) {
-        return conditionResult.get().getBooleanValue();
+    @Override
+    public void setPosition(CodePosition position) {
+        super.setPosition(position);
+        condition.setPosition(position);
+    }
+
+    private boolean check(Debugger debugger) {
+        debugger.startInstruction(condition);
+        InstructionFlow<MetaExpression> result = condition.process(debugger);
+        debugger.endInstruction(condition, result);
+        return result.get().getBooleanValue();
     }
 
     @Override
