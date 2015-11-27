@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import nl.xillio.xill.api.components.MetaExpression;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 
 /**
  * This implementation of the JsonParser uses Jackson to parse json.
@@ -20,6 +21,8 @@ public class JacksonParser implements JsonParser, PrettyJsonParser {
         if (pretty) {
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
         }
+        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"));
     }
 
     @Override

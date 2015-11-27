@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.list.services.reverse;
 
+import com.google.inject.ImplementedBy;
 import nl.xillio.xill.plugins.list.ListXillPlugin;
 import nl.xillio.xill.services.XillService;
 
@@ -9,6 +10,7 @@ import nl.xillio.xill.services.XillService;
  * @author Sander
  *
  */
+@ImplementedBy(ReverseImpl.class)
 public interface Reverse extends XillService {
 
 	/**

@@ -23,6 +23,7 @@ import nl.xillio.xill.docgen.DocumentationSearcher;
 import nl.xillio.xill.docgen.data.Parameter;
 import nl.xillio.xill.docgen.exceptions.ParsingException;
 import nl.xillio.xill.docgen.impl.ConstructDocumentationEntity;
+import nl.xillio.xill.services.inject.DefaultInjectorModule;
 import nl.xillio.xill.services.inject.InjectorUtils;
 import nl.xillio.xill.services.inject.PluginInjectorModule;
 
@@ -124,8 +125,10 @@ public class XillInitializer extends Thread {
 	}
 
 	private void initializeInjector() {
-		Module module = new PluginInjectorModule(getPlugins());
-		InjectorUtils.initialize(module);
+		Module module = new DefaultInjectorModule();
+		List<Module> modules = new ArrayList<>(getPlugins());
+		modules.add(module);
+		InjectorUtils.initialize(modules);
 	}
 
 	private void initializePlugins() {

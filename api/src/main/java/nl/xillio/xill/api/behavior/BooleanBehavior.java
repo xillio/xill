@@ -28,9 +28,6 @@ public class BooleanBehavior implements Expression {
 	}
 
 	@Override
-	public void close() throws Exception {}
-
-	@Override
 	public Number getNumberValue() {
 		return value ? 1 : 0;
 	}

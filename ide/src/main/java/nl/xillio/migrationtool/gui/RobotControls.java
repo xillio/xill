@@ -171,8 +171,6 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 	private void onPause(final RobotPausedAction action) {
 		onPause();
 
-		LOGGER.error(action.getLineNumber());
-
 		tab.display(action.getRobotID(), action.getLineNumber());
 	}
 

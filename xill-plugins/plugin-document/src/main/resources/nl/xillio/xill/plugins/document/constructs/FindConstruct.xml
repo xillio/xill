@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Find all documents that match a filter.
+        This construct expects a mongo filter. It will iterate over all documents that match that filter.
+        If no filter is provided this construct will iterate over all constructs.
+    </description>
+    <examples>
+        <example title="Usage">
+
+            <header>Iterate over all CustomPages</header>
+            <code>
+                use Document;
+                use System;
+
+                // Run the query
+                var pages = Document.find({
+                    "contenttype": "CustomPage"
+                });
+
+                foreach(page in pages) {
+                    System.print(page._id);
+                }
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>get</reference>
+        <reference>save</reference>
+        <reference>deleteWhere</reference>
+    </references>
+    <tags>
+        udm, define, build, create, remove, bulk, filter
+    </tags>
+</function>
