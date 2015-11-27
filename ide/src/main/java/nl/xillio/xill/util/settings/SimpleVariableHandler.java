@@ -2,6 +2,8 @@ package nl.xillio.xill.util.settings;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Class that contains common methods for using simple settings
@@ -10,6 +12,8 @@ import java.util.Map;
  * @author Zbynek Hochmann
  */
 public class SimpleVariableHandler {
+
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	private static final String NAME = "name";
 	private static final String KEYNAME = NAME;
@@ -82,7 +86,7 @@ public class SimpleVariableHandler {
 
 			this.content.set(category, itemContent, KEYNAME, name);
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			LOGGER.error("Cannot save simple settings variable!", e);
 		}
 	}
 
@@ -105,7 +109,7 @@ public class SimpleVariableHandler {
 
 			this.content.set(category, itemContent, KEYNAME, name);
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+            LOGGER.error("Cannot register simple settings variable!", e);
 		}
 	}
 
@@ -155,7 +159,7 @@ public class SimpleVariableHandler {
 			return result;
 
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+            LOGGER.error("Cannot get simple settings variable!", e);
 			return null;
 		}
 	}
@@ -182,7 +186,7 @@ public class SimpleVariableHandler {
 		try {
 			this.content.delete(category, KEYNAME, name);
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+            LOGGER.error("Cannot delete simple settings variable!", e);
 		}
 	}
 }
