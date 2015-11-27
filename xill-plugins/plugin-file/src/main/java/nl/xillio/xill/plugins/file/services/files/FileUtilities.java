@@ -6,6 +6,7 @@ import nl.xillio.xill.services.XillService;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.attribute.FileTime;
 import java.util.Iterator;
 
 /**
@@ -92,4 +93,20 @@ public interface FileUtilities extends XillService {
 	 * @throws IOException when the folder does not exist or is not a folder at all
 	 */
 	Iterator<Folder> iterateFolders(File folder, boolean recursive) throws IOException;
+
+	/**
+	 * Determine creation time (ctime) of specified file.
+	 * @param file the file
+	 * @return ctime
+	 * @throws IOException if the file does not exist, file statistics do not work, or some I/O operation failed.
+	 */
+	FileTime getCreationDate(File file) throws IOException;
+
+	/**
+	 * Determine last modified time (mtime) of specified file.
+	 * @param file the file
+	 * @return mtime
+	 * @throws IOException if the file does not exist, file statistics do not work, or some I/O operation failed.
+	 */
+	FileTime getLastModifiedDate(File file) throws IOException;
 }

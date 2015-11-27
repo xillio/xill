@@ -11,6 +11,11 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.util.Iterator;
 
 /**
@@ -43,6 +48,11 @@ public class FileUtilitiesImpl implements FileUtilities {
 		return madeFolders;
 	}
 
+	/**
+	 * Determine whether the specified file is present
+	 * @param file the file to check
+	 * @return <tt>true</tt> if it exists. <tt>false</tt> otherwise.
+	 */
 	@Override
 	public boolean exists(final File file) {
 		return file.exists();
@@ -57,6 +67,12 @@ public class FileUtilitiesImpl implements FileUtilities {
 		}
 	}
 
+	/**
+	 * Force remove the specified file.
+	 * If the file does not exist, it will log a failure message.
+	 * @param file the file
+	 * @throws IOException If an I/O operation has failed.
+	 */
 	@Override
 	public void delete(final File file) throws IOException {
 		try {
@@ -86,4 +102,28 @@ public class FileUtilitiesImpl implements FileUtilities {
 		return new FolderIterator(folder, recursive);
 	}
 
+	@Override
+	public FileTime getCreationDate(File file) throws IOException {
+		try {
+			return stat(file).creationTime();
+		} catch (IOException e) {
+			log.info("Failed to read attributes: " + e.getMessage(), e);
+		}
+		return null;
+	}
+
+	@Override
+	public FileTime getLastModifiedDate(File file) throws IOException {
+		try {
+			return stat(file).lastModifiedTime();
+		} catch (IOException e) {
+			log.info("Failed to read attributes: " + e.getMessage(), e);
+		}
+		return null;
+	}
+
+	private static BasicFileAttributes stat(File file) throws IOException {
+		Path path = FileSystems.getDefault().getPath(file.getAbsolutePath());
+		return Files.readAttributes(path, BasicFileAttributes.class);
+	}
 }
