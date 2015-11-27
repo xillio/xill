@@ -24,7 +24,9 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 /**
- * This class contains all information and controls required for debugging
+ * This class contains all information and controls required for debugging.
+ *
+ * @author Thomas Biesaart
  */
 public class XillDebugger implements Debugger {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -40,7 +42,7 @@ public class XillDebugger implements Debugger {
     private Mode mode = Mode.RUN;
 
     /**
-     * Create a new {@link XillDebugger}
+     * Create a new {@link XillDebugger}.
      */
     public XillDebugger() {
         breakpoints = new ArrayList<>();
@@ -56,9 +58,6 @@ public class XillDebugger implements Debugger {
         mode = Mode.STOPPED;
     }
 
-    /**
-     * Resume running
-     */
     @Override
     public void resume() {
         mode = Mode.RUN;
@@ -119,9 +118,9 @@ public class XillDebugger implements Debugger {
     }
 
     /**
-     * Check if the robot should pause
+     * Check if the robot should pause.
      *
-     * @param instruction The instruction to pause on (i.e. pass to the pause event
+     * @param instruction The instruction to pause on (i.e. pass to the pause event)
      */
     private void checkPause(final Instruction instruction) {
         if (mode == Mode.PAUSED) {
@@ -143,7 +142,7 @@ public class XillDebugger implements Debugger {
     }
 
     /**
-     * Add breakpoint to this debugger
+     * Add breakpoint to this debugger.
      *
      * @param breakpoint the breakpoint
      */
@@ -153,7 +152,7 @@ public class XillDebugger implements Debugger {
     }
 
     /**
-     * Remove all breakpoints from this debugger
+     * Remove all breakpoints from this debugger.
      */
     public void clearBreakpoints() {
         breakpoints.clear();
