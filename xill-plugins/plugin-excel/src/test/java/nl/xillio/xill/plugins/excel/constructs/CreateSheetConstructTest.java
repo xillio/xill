@@ -93,7 +93,7 @@ public class CreateSheetConstructTest {
 		MetaExpression result = CreateSheetConstruct.process(service, workbookInput, fromValue("name"));
 
 		//Assertions
-		assertEquals(result.getStringValue(), "{\"Name\":\"name\",\"Rows\":0,\"Columns\":0}");
+		assertEquals(result.getStringValue(), "{\"sheetName\":\"name\",\"rows\":0,\"columns\":0}");
 		assertEquals(result.getMeta(XillSheet.class), sheet);
 	}
 

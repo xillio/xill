@@ -20,7 +20,7 @@ import java.util.Map;
  */
 @ImplementedBy(DateServiceImpl.class)
 public interface DateService extends XillService {
-
+    
     /**
      * @return The current date
      */

@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.date.services;
 
+import com.google.common.base.CaseFormat;
 import com.google.inject.Singleton;
 import me.biesaart.utils.Log;
 import nl.xillio.xill.api.data.Date;
@@ -95,17 +96,18 @@ public class DateServiceImpl implements DateService, DateFactory {
 
     @Override
     public String formatDateLocalized(Date date, FormatStyle dateStyle, FormatStyle timeStyle, Locale locale) {
-        DateTimeFormatter formatter = null;
-        if (locale == null)
+        DateTimeFormatter formatter;
+        if (locale == null) {
             formatter = DEFAULT_FORMATTER;
-        else if (dateStyle != null && timeStyle != null)
-            formatter = DateTimeFormatter.ofLocalizedDateTime(dateStyle, timeStyle).withLocale(locale);
-        else if (dateStyle == null && timeStyle != null)
+        } else if (dateStyle == null) {
+            if (timeStyle == null) {
+                throw new IllegalArgumentException("No dateStyle or timeStyle was provided");
+            }
             formatter = DateTimeFormatter.ofLocalizedTime(timeStyle).withLocale(locale);
-        else if (dateStyle != null && timeStyle == null)
-            formatter = DateTimeFormatter.ofLocalizedDate(dateStyle).withLocale(locale);
-        else
-            throw new IllegalArgumentException("No dateStyle or timeStyle was provided");
+        } else {
+            formatter = timeStyle == null ? DateTimeFormatter.ofLocalizedDate(dateStyle).withLocale(locale)
+                    : DateTimeFormatter.ofLocalizedDateTime(dateStyle, timeStyle).withLocale(locale);
+        }
 
         return formatter.format(date.getZoned());
     }
@@ -138,44 +140,29 @@ public class DateServiceImpl implements DateService, DateFactory {
 
     @Override
     public Map<String, Double> difference(Date date1, Date date2, boolean absolute) {
-        BigDecimal difference = getDifference(date1.getZoned(), date2.getZoned(), absolute);
-
-       // Calculate the totals
+        // Calculate difference and convert to seconds
+        long nanoDifference = date1.getZoned().until(date2.getZoned(), ChronoUnit.NANOS);
+        if (absolute) {
+            nanoDifference = Math.abs(nanoDifference);
+        }
+        BigDecimal difference = new BigDecimal(nanoDifference).multiply(TimeUnits.NANOS.getNumSeconds());
+        // Calculate the totals
         Map<String, Double> diff = new LinkedHashMap<>();
         for (TimeUnits t : TimeUnits.values()) {
-            diff.put(String.format("Total %s", t.name()), difference.divide(t.getNumSeconds(), RoundingMode.HALF_UP).doubleValue());
+            diff.put(String.format("total%s", t.getPascalName()), difference.divide(t.getNumSeconds(), RoundingMode.HALF_UP).doubleValue());
         }
         // Calculate the additive differences by going through the TimeUnits in reverse order and
         for (int i = TimeUnits.values().length - 1; i >= 0; i--) {
             TimeUnits unit = TimeUnits.values()[i];
             BigDecimal[] division = difference.divideAndRemainder(unit.getNumSeconds());
-            diff.put(unit.name(), Math.floor(division[0].doubleValue()));
+            diff.put(unit.getCamelName(), Math.floor(division[0].doubleValue()));
             difference = division[1];
         }
         return diff;
     }
 
-    private BigDecimal getDifference(ZonedDateTime dateA, ZonedDateTime dateB, boolean absolute) {
-        try {
-            // Calculate difference and convert to seconds
-            long nanoDifference = dateA.until(dateB, ChronoUnit.NANOS);
-            if (absolute)
-                nanoDifference = Math.abs(nanoDifference);
-            return new BigDecimal(nanoDifference).multiply(TimeUnits.Nanos.getNumSeconds());
-        } catch(ArithmeticException ignore) {
-            LOGGER.error("Failed to get difference in nanos for {} and {}", dateA, dateB);
-        }
-
-        // If we fail to get difference based on nanos, simply return in seconds
-        long secondDifference = dateA.until(dateB, ChronoUnit.SECONDS);
-        if(absolute) {
-            secondDifference = Math.abs(secondDifference);
-        }
-        return new BigDecimal(secondDifference);
-    }
-
     @Override
-    public nl.xillio.xill.plugins.date.data.Date from(Instant instant) {
+    public Date from(Instant instant) {
         long milli = instant.toEpochMilli();
 
         return new nl.xillio.xill.plugins.date.data.Date(
@@ -193,35 +180,46 @@ public class DateServiceImpl implements DateService, DateFactory {
     private enum TimeUnits {
 
         // @formatter:off
-        Nanos("1E-9"),
-        Micros("1E-6"),
-        Millis("1E-3"),
-        Seconds("1"),
-        Minutes("60"),
-        Hours("3600"),
-        HalfDays("43200"),
-        Days("86400"),
-        Weeks("604800"),
-        Months("2629746"),
-        Years("31556952"),
-        Decades("31556952E1"),
-        Centuries("31556952E2"),
-        Millenia("31556952E3"),
-        Eras("31556952E9");
+        NANOS("1E-9"),
+        MICROS("1E-6"),
+        MILLIS("1E-3"),
+        SECONDS("1"),
+        MINUTES("60"),
+        HOURS("3600"),
+        HALF_DAYS("43200"),
+        DAYS("86400"),
+        WEEKS("604800"),
+        MONTHS("2629746"),
+        YEARS("31556952"),
+        DECADES("31556952E1"),
+        CENTURIES("31556952E2"),
+        MILLENNIA("31556952E3"),
+        ERAS("31556952E9");
         // @formatter:on
 
-        private BigDecimal numSeconds;
+        private final BigDecimal numSeconds;
+        private final String camelName;
+        private final String pascalName;
 
         /**
          * @param numSeconds Number of seconds that fit into one unit of this kind in {@link BigDecimal} String representation
          */
         TimeUnits(String numSeconds) {
             this.numSeconds = new BigDecimal(numSeconds);
+            this.camelName = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, this.name());
+            this.pascalName = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.name());
         }
 
         public BigDecimal getNumSeconds() {
             return numSeconds;
         }
 
+        public String getCamelName() {
+            return camelName;
+        }
+
+        public String getPascalName() {
+            return pascalName;
+        }
     }
 }
