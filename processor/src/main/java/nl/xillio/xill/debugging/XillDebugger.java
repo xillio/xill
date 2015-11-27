@@ -6,15 +6,15 @@ import nl.xillio.xill.api.Breakpoint;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.NullDebugger;
 import nl.xillio.xill.api.components.*;
+import nl.xillio.xill.api.components.Instruction;
+import nl.xillio.xill.api.components.InstructionSet;
 import nl.xillio.xill.api.errors.ErrorHandlingPolicy;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.events.RobotContinuedAction;
 import nl.xillio.xill.api.events.RobotPausedAction;
 import nl.xillio.xill.api.events.RobotStartedAction;
 import nl.xillio.xill.api.events.RobotStoppedAction;
-import nl.xillio.xill.components.instructions.ForeachInstruction;
-import nl.xillio.xill.components.instructions.VariableDeclaration;
-import nl.xillio.xill.components.instructions.WhileInstruction;
+import nl.xillio.xill.components.instructions.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xill.lang.xill.Target;
@@ -39,7 +39,7 @@ public class XillDebugger implements Debugger {
     private final EventHost<RobotContinuedAction> onRobotContinued = new EventHost<>();
     private ErrorHandlingPolicy handler = new NullDebugger();
     private final Stack<Instruction> currentStack = new Stack<>();
-    private Mode mode = Mode.RUN;
+    private Mode mode = Mode.RUNNING;
 
     /**
      * Create a new {@link XillDebugger}.
@@ -60,7 +60,7 @@ public class XillDebugger implements Debugger {
 
     @Override
     public void resume() {
-        mode = Mode.RUN;
+        mode = Mode.RUNNING;
     }
 
     @Override
@@ -77,6 +77,7 @@ public class XillDebugger implements Debugger {
 
     @Override
     public void startInstruction(final Instruction instruction) {
+        currentStack.add(instruction);
         checkBreakpoints(instruction);
         checkStepIn();
         checkPause(instruction);
@@ -100,11 +101,12 @@ public class XillDebugger implements Debugger {
     public void endInstruction(final Instruction instruction, final InstructionFlow<MetaExpression> result) {
         checkPause(instruction);
         checkStepOver(instruction);
+        currentStack.pop();
     }
 
     private void checkStepOver(Instruction instruction) {
         if (mode == Mode.STEP_OVER) {
-            if (isLoopInstruction(pausedOnInstruction)) {
+            if (isCompoundInstruction(pausedOnInstruction)) {
                 mode = Mode.PAUSED;
             } else if (instruction == pausedOnInstruction) {
                 mode = Mode.PAUSED;
@@ -112,9 +114,13 @@ public class XillDebugger implements Debugger {
         }
     }
 
-    private boolean isLoopInstruction(Instruction instruction) {
-        return instruction instanceof WhileInstruction ||
-                instruction instanceof ForeachInstruction;
+    /**
+     * Check if this instruction is a compound instruction.
+     * @param instruction the instruction to check
+     * @return true if and only if the instruction is a compound instruction AND not a FunctionCall
+     */
+    private boolean isCompoundInstruction(Instruction instruction) {
+        return instruction instanceof CompoundInstruction;
     }
 
     /**
@@ -124,8 +130,8 @@ public class XillDebugger implements Debugger {
      */
     private void checkPause(final Instruction instruction) {
         if (mode == Mode.PAUSED) {
-            onRobotPaused.invoke(new RobotPausedAction(instruction));
             pausedOnInstruction = instruction;
+            onRobotPaused.invoke(new RobotPausedAction(instruction));
             while (mode == Mode.PAUSED) {
                 try {
                     Thread.sleep(100);
@@ -279,9 +285,10 @@ public class XillDebugger implements Debugger {
     }
 
     private enum Mode {
-        RUN,
+        RUNNING,
         STEP_IN,
         STEP_OVER,
-        PAUSED, STOPPED
+        PAUSED,
+        STOPPED
     }
 }
