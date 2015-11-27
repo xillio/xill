@@ -153,7 +153,7 @@ public class SimpleVariableHandler {
 			String result = o.toString(); 
 
 			o = map.get(ENCRYPTED);
-			if ((o != null) && (o.toString().equals("1"))) {
+			if ((o != null) && ("1".equals(o.toString()))) {
 				result = ContentHandlerImpl.decrypt(result);
 			}
 			return result;
