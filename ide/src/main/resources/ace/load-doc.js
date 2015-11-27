@@ -34,6 +34,12 @@ function loadEditor(id) {
     editor.setOptions({
         maxLines: Infinity
     });
+
+    // Text wrapping
+    editor.setOptions({
+        wrap: true
+    });
+
     // Read Only
     editor.setReadOnly(true)
     editor.getSession().setUseWorker(false);

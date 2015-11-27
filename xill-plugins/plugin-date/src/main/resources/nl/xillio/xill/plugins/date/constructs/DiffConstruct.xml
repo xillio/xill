@@ -12,7 +12,7 @@ use Date;
 var date = Date.of(2015, 12, 31, 10, 5, 0);
 var date2 = Date.of(2015, 12, 30, 9, 2, 0);
 var diff = Date.diff(date2, date);
-System.print(diff["Total Hours"]);
+System.print(diff.totalHours);
             </code>
         </example>
     </examples>
