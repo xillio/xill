@@ -81,7 +81,7 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 		getDebugger().getOnRobotPause().addListener(this::onPause);
 		getDebugger().getOnRobotStop().addListener(e -> onStop());
 
-		getDebugger().setErrorHander(this);
+		getDebugger().setErrorHandler(this);
 	}
 	
 	/**
