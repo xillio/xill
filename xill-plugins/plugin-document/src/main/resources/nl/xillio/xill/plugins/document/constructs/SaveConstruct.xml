@@ -12,6 +12,7 @@
             <header>Make a change to a document</header>
             <code>
                 use Document;
+                use System;
 
                 // Fetch the document
                 var doc = Document.get("7ece5644-8d36-4937-b95b-285804598729");
@@ -20,7 +21,8 @@
                 doc.target.current.author.name ::= "Sir ";
 
                 // Save the document
-                Document.save(doc);
+                System.print(Document.save(doc));
+                // Prints: 7ece5644-8d36-4937-b95b-285804598729
             </code>
 
             <header>Create a new document</header>
@@ -41,7 +43,8 @@
                 );
 
                 // Save the document
-                Document.save(doc);
+                System.print(Document.save(doc));
+                // Prints: 7ece5644-8d36-4937-b95b-285804598729
             </code>
         </example>
     </examples>

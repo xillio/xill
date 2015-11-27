@@ -187,9 +187,5 @@ public class ExpressionBuilderHelper {
 		public boolean isNull() {
 			return true;
 		}
-
-		@Override
-		public void close() {}
-
 	}
 }

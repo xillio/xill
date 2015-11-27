@@ -52,7 +52,11 @@ public class SaveConstruct extends Construct {
 
         ((Map<String,MetaExpression>)document.getValue()).put("_id", idValue);
 
-        // Return a COPY for the scoping administration
+        /*
+         Return a COPY for the scoping administration.
+         This is to prevent the garbage collector to collect the same expression as if they
+         are two different expressions.
+          */
         return fromValue(id);
     }
 

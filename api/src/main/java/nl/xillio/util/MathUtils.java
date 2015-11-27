@@ -349,7 +349,7 @@ public class MathUtils {
 
     private static Number parseNonDecimal(String value) {
 
-        if (value.length() < INT_MAX_VALUE_LENGTH) {
+        if (value.length() <= INT_MAX_VALUE_LENGTH) {
             try {
                 return Integer.parseInt(value);
             } catch (NumberFormatException ignore) { // NO SONAR
@@ -357,7 +357,7 @@ public class MathUtils {
             }
         }
 
-        if (value.length() < LONG_MAX_VALUE_LENGTH) {
+        if (value.length() <= LONG_MAX_VALUE_LENGTH) {
             try {
                 return Long.parseLong(value);
             } catch (NumberFormatException ignore) { // NO SONAR
