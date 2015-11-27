@@ -1,6 +1,5 @@
 package nl.xillio.xill.api.components;
 
-import com.google.gson.Gson;
 import nl.xillio.util.IdentityArrayList;
 import nl.xillio.util.MathUtils;
 import nl.xillio.xill.api.Debugger;
@@ -8,6 +7,8 @@ import nl.xillio.xill.api.behavior.BooleanBehavior;
 import nl.xillio.xill.api.behavior.NumberBehavior;
 import nl.xillio.xill.api.behavior.StringBehavior;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
+import nl.xillio.xill.api.data.Date;
+import nl.xillio.xill.api.data.DateFactory;
 import nl.xillio.xill.api.data.MetadataExpression;
 import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
@@ -186,7 +187,7 @@ public abstract class MetaExpression implements Expression, Processable {
 
     /**
      * <p>
-     * Generate the JSON representation of this expression using a {@link Gson} parser
+     * Generate the JSON representation of this expression using a {@link JsonParser} parser.
      * </p>
      * <b>NOTE: </b> This is not the string value of this expression. It is
      * JSON. For the string value use {@link MetaExpression#getStringValue()}
@@ -207,7 +208,7 @@ public abstract class MetaExpression implements Expression, Processable {
 
     /**
      * <p>
-     * Generate the JSON representation of this expression using a {@link Gson} parser
+     * Generate the JSON representation of this expression using a {@link JsonParser}.
      * </p>
      * <p>
      * <b>NOTE: </b> This is not the string value of this expression. It is JSON. For the string value use {@link MetaExpression#getStringValue()}
@@ -219,7 +220,9 @@ public abstract class MetaExpression implements Expression, Processable {
     public String toString(final JsonParser jsonParser) throws JsonException {
         MetaExpression cleaned = removeCircularReference(this, new IdentityArrayList<>(),
                 ExpressionBuilderHelper.fromValue("<<CIRCULAR REFERENCE>>"));
-        return jsonParser.toJson(extractValue(cleaned));
+        String result = jsonParser.toJson(extractValue(cleaned));
+        cleaned.close();
+        return result;
     }
 
     /**
@@ -233,7 +236,7 @@ public abstract class MetaExpression implements Expression, Processable {
     @SuppressWarnings("unchecked")
     private static MetaExpression removeCircularReference(final MetaExpression metaExpression,
                                                           final List<MetaExpression> currentlyProcessing, final MetaExpression replacement) {
-        MetaExpression result = ExpressionBuilderHelper.NULL;
+        MetaExpression result;
         currentlyProcessing.add(metaExpression);
 
         switch (metaExpression.getType()) {
@@ -270,10 +273,10 @@ public abstract class MetaExpression implements Expression, Processable {
                 break;
 
             case ATOMIC:
-                result = metaExpression;
+                result = new AtomicExpression((Expression) metaExpression.getValue());
                 break;
-			default:
-    			throw new NotImplementedException("This type has not been implemented.");
+            default:
+                throw new NotImplementedException("This type has not been implemented.");
         }
 
         currentlyProcessing.remove(metaExpression);
@@ -366,6 +369,13 @@ public abstract class MetaExpression implements Expression, Processable {
                     return null;
                 }
 
+                // First we check for the presence of a date
+                Date date = expression.getMeta(Date.class);
+                if (date != null) {
+                    // We have a Date, convert it to a java.util.Date
+                    return java.util.Date.from(date.getZoned().toInstant());
+                }
+
                 Object behaviour = expression.getValue();
 
                 if (behaviour instanceof BooleanBehavior) {
@@ -429,7 +439,7 @@ public abstract class MetaExpression implements Expression, Processable {
      * Prevent this expression from being disposed.
      */
     public final void preventDisposal() {
-        preventDispose = true;
+        setPreventDispose(true);
     }
 
     /**
@@ -443,7 +453,26 @@ public abstract class MetaExpression implements Expression, Processable {
      * Allow this expression to be disposed.
      */
     public final void allowDisposal() {
-        preventDispose = false;
+        setPreventDispose(false);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void setPreventDispose(boolean value) {
+        if (preventDispose == value) {
+            return;
+        }
+
+        preventDispose = value;
+
+        if (getType() == ExpressionDataType.OBJECT) {
+            ((Map<String, MetaExpression>) getValue())
+                    .values()
+                    .forEach(child -> child.setPreventDispose(value));
+        } else if (getType() == ExpressionDataType.LIST) {
+            ((List<MetaExpression>) getValue())
+                    .forEach(child -> child.setPreventDispose(value));
+        }
+
     }
 
     /**
@@ -455,7 +484,7 @@ public abstract class MetaExpression implements Expression, Processable {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void close() throws Exception {
+    public void close() {
         if (isClosed || this == ExpressionBuilderHelper.NULL) {
             return;
         }
@@ -571,6 +600,13 @@ public abstract class MetaExpression implements Expression, Processable {
 
         if (root instanceof String) {
             return ExpressionBuilderHelper.fromValue(root.toString());
+        }
+
+        if (root instanceof java.util.Date) {
+            Date date = InjectorUtils.get(DateFactory.class).from(((java.util.Date) root).toInstant());
+            MetaExpression result = ExpressionBuilderHelper.fromValue(date.toString());
+            result.storeMeta(Date.class, date);
+            return result;
         }
 
         throw new IllegalArgumentException("The class type " + root.getClass().getName() + " has not been implemented by parseObject");
