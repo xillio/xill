@@ -134,9 +134,9 @@ public class ChangeConstructTest {
 	}
 
 	private void addUnitsChange() {
-		changes.put("Nanos", mockNumberExpression(42));
-		changes.put("Hours", mockNumberExpression(42));
-		changes.put("Centuries", mockNumberExpression(42));
+		changes.put("nanos", mockNumberExpression(42));
+		changes.put("hours", mockNumberExpression(42));
+		changes.put("centuries", mockNumberExpression(42));
 	}
 
 	private void addZoneChange() {
