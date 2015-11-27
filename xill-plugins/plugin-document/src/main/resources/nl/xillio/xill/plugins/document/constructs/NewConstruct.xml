@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Build a document.
+        This construct is a convenience function, it will NOT persist or validate a document. It simply provides an easy
+        way to build a document from some parameters.
+        There are three possible parameters for this construct: The content type name, the body of the current version
+        and an optional list of bodies for the version history.
+    </description>
+    <examples>
+        <example title="Usage">
+
+            <header>Create a new document</header>
+            <code>
+                use Document;
+
+                // Build the document
+                var doc = Document.new(
+                    "CustomPage",
+                    {
+                        "version": 2,
+                        "user": {
+                            "id": 54,
+                            "username": "lancelot34",
+                            "password": "IAmASafePassword"
+                        }
+                    },
+                    [
+                        {
+                        "version": 1,
+                            "user": {
+                                "id": 54,
+                                "username": "lancelot34",
+                                "password": "HelloWorld"
+                            }
+                        }
+                    ]
+                );
+
+                // Save the document
+                Document.save(doc);
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>ContentType.save</reference>
+        <reference>ContentType.document</reference>
+        <reference>get</reference>
+        <reference>save</reference>
+    </references>
+    <tags>
+        udm, define, build, create
+    </tags>
+</function>
