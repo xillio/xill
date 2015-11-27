@@ -73,7 +73,7 @@ public class SimpleVariableHandler {
 				}
 			} else {
 				Object o = this.content.get(category, name).get(ENCRYPTED);
-				if ("1".equals(o.toString())) {
+				if ((o != null) && (o.toString().equals("1"))) {
 					valueStr = ContentHandlerImpl.encrypt(value);
 				}
 			}
@@ -149,7 +149,7 @@ public class SimpleVariableHandler {
 			String result = o.toString(); 
 
 			o = map.get(ENCRYPTED);
-			if ("1".equals(o.toString())) {
+			if ((o != null) && (o.toString().equals("1"))) {
 				result = ContentHandlerImpl.decrypt(result);
 			}
 			return result;
