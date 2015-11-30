@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Adds text to REST mulipart body.
-     </description>
+    Adds text to REST mulipart body.
+    </description>
     <examples>
         <example title="Usage">
             <header>Put request with multipart body</header>
             <code>
+                use System;
+                use REST;
 
-</code>
+                var body = REST.bodyCreate();
+                REST.bodyAddText(body, "try", "hello!");
+                REST.bodyAddFile(body, "content", "c:/Users/Peter/Documents/test.json");
+
+                var response = REST.put("http://whatever.com/uri?format=pdf", {"timeout" : 3000}, body);
+                System.print(response);
+            </code>
         </example>
     </examples>
     <references>
