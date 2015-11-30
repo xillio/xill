@@ -4,16 +4,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import nl.xillio.xill.TestUtils;
+import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import org.testng.annotations.Test;
 
-import nl.xillio.xill.ConstructTest;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.plugins.system.services.wait.WaitService;
 
 /**
  * Test the {@link WaitConstruct}
  */
-public class WaitConstructTest extends ConstructTest {
+public class WaitConstructTest extends TestUtils {
 
 	/**
 	 * Test normal usage

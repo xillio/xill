@@ -7,7 +7,6 @@ import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.data.XmlNode;
 import nl.xillio.xill.api.data.XmlNodeFactory;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.services.inject.InjectorUtils;
 import nl.xillio.xill.services.json.JsonException;
 import nl.xillio.xill.services.json.JsonParser;
 import org.apache.http.client.fluent.Request;
@@ -26,7 +25,6 @@ public class Content {
 	private String content = "";
 	private ContentType type = ContentType.TEXT_PLAIN;
     private MultipartBody multipartBody = null;
-	private XmlNodeFactory xmlNodeFactory;
     private static final String ENCODING = "UTF-8";
 
 	/**
@@ -122,9 +120,8 @@ public class Content {
      *
 	 * @return new Xill variable (JSON-&gt;OBJECT type / XML-&gt;XmlNode / other-&gt;ATOMIC string)
 	 */
-	public MetaExpression getMeta() {
+	public MetaExpression getMeta(JsonParser jsonParser, XmlNodeFactory xmlNodeFactory) {
 		if (ContentType.APPLICATION_JSON.getMimeType().equals(this.getType().getMimeType())) {
-			JsonParser jsonParser = InjectorUtils.get(JsonParser.class);
 			Object result = null;
 			try {
 				result = jsonParser.fromJson(this.getContent(), Object.class);
@@ -133,15 +130,7 @@ public class Content {
 			}
 			return MetaExpression.parseObject(result);
 		} else if (ContentType.APPLICATION_XML.getMimeType().equals(this.getType().getMimeType())) {
-			if (xmlNodeFactory == null) {
-				// We have no factory yet
-				try {
-					xmlNodeFactory = InjectorUtils.get(XmlNodeFactory.class);
-				} catch (ConfigurationException e) {
-					LOGGER.error("No binding found for XmlNodeFactory", e);
-					throw new RobotRuntimeException("Did not detect the XML plugin, do you have it installed?", e);
-				}
-			}
+
 
 			XmlNode xml;
 			try {

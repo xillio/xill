@@ -12,9 +12,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 
-import nl.xillio.xill.ConstructTest;
+import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
+import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.database.BaseDatabaseConstruct;
 import nl.xillio.xill.plugins.database.services.DatabaseService;
@@ -30,7 +31,7 @@ import org.testng.annotations.Test;
  * Test the {@link GetObjectConstruct}.
  *
  */
-public class GetObjectConstructTest extends ConstructTest {
+public class GetObjectConstructTest extends TestUtils {
 
 	/**
 	 * test the method with normal input, with no database given.
