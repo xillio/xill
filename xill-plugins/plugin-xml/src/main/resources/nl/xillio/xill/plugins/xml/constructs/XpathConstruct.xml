@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Returns a string, XML node or a list of XML nodes from the specified XML node as indicated by the string XPath locator.
-        For more information about the XPath syntax and available xpath functions look here: http://www.w3schools.com/xsl/xpath_intro.asp
+Returns a string, XML node or a list of XML nodes from the specified XML node as indicated by the string XPath locator.  
+
+For more information about the XPath syntax and available xpath functions look here:
+
+	http://www.w3schools.com/xsl/xpath_intro.asp
     </description>
     <examples>
         <example title="Usage">

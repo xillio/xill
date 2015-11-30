@@ -1,7 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Parse a json string to an expression.
+Parse a json string to an expression.
     </description>
     <examples>
         <example title="Usage">

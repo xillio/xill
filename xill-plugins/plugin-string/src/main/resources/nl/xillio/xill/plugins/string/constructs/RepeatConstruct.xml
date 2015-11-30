@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Receives a string and repeats it count times concatenated.
+Receives a string and repeats it count times concatenated.
     </description>
     <examples>
         <example title="Usage">

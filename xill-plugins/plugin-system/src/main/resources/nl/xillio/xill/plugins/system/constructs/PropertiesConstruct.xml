@@ -1,8 +1,9 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <function>
     <description>
-        Get system or environmental properties.
-        When a property key is provided only that specific property will be fetched.
+Get system or environmental properties.  
+
+When a property key is provided only that specific property will be fetched.
     </description>
     <examples>
         <example title="Usage">

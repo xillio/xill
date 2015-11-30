@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Appends content in the form of text to a file, creating it if it doesn't exist. Returns the absolute path to the file.
+Appends content in the form of text to a file, creating it if it doesn't exist.  
+
+Returns the absolute path to the file.
     </description>
     <examples>
         <example title="Usage">

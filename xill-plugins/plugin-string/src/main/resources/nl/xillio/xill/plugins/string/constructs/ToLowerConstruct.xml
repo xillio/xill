@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Returns the string lowercased.
+Returns the string lowercased.
     </description>
     <examples>
         <example title="Usage">

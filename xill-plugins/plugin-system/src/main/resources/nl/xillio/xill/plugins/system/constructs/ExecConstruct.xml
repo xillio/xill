@@ -1,10 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Runs an application and returns the output.
-        The result will contain a list of errors, a list of output and the runtime in milliseconds.
-        All errors will also be logged in the console while running.
-        The directory parameter is the working directory where you would like the command to be executed.
+Runs an application and returns the output.  
+
+The result will contain a list of errors, a list of output and the runtime in milliseconds.  
+All errors will also be logged in the console while running.  
+The directory parameter is the working directory where you would like the command to be executed.
     </description>
     <examples>
         <example title="Usage">

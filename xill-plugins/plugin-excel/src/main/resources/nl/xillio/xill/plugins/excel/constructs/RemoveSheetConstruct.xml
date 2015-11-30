@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Removes the specified sheet from the given workbook. NB: a workbook must contain at least one
-        sheet, otherwise it is not valid.
+Removes the specified sheet from the given workbook.   
+NB: a workbook must contain at least one sheet, otherwise it is not valid.
     </description>
     <examples>
         <example title="Usage">

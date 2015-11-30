@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Save a document to the database.
-        This construct will create a new document if the index of the document has not been set. If an id has already been
-        set the document will be updated.
-        This construct will validate the document to it's content type before saving it.
-        Returns the id of the document.
+Save a document to the database.  
+
+This construct will create a new document if the index of the document has not been set. If an id has already been
+set the document will be updated.  
+This construct will validate the document to it's content type before saving it.  
+Returns the id of the document.
     </description>
     <examples>
         <example title="Usage">

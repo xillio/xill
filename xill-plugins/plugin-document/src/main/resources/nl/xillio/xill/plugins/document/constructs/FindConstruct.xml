@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Find all documents that match a filter.
-        This construct expects a mongo filter. It will iterate over all documents that match that filter.
-        If no filter is provided this construct will iterate over all constructs.
+Find all documents that match a filter.  
+
+This construct expects a mongo filter. It will iterate over all documents that match that filter.  
+If no filter is provided this construct will iterate over all constructs.
     </description>
     <examples>
         <example title="Usage">

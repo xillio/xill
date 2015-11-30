@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Creates an empty folder at the target uri if it doesn't exist.
-        Returns the absolute path to that folder
+Creates an empty folder at the target uri if it doesn't exist.  
+
+Returns the absolute path to that folder
     </description>
     <examples>
         <example title="Usage">

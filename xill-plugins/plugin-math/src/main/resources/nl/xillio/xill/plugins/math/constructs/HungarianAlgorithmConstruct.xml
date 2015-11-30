@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Solves the optimal assignment problem using the Hungarian Algorithm on matrix,
-        which is a two-dimensional list containing numbers. Returns the optimal
-        combination of rows / columns and the optimal sum as an object. The optional
-        argument max (defaults to true) defines whether maximum sum or minimum sum should be returned.
-        Useful for calculating optimal costs or income based on a matrix.
+Solves the optimal assignment problem using the Hungarian Algorithm on matrix, which is a two-dimensional list containing numbers.  
+
+Returns the optimal combination of rows / columns and the optimal sum as an object.  
+The optional argument max (defaults to true) defines whether maximum sum or minimum sum should be returned.  
+Useful for calculating optimal costs or income based on a matrix.
     </description>
     <examples>
         <example title="Usage">

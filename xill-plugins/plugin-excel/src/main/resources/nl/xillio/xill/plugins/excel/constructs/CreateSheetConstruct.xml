@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Creates a new Excel sheet in the given workbook with a user-defined name.
+Creates a new Excel sheet in the given workbook with a user-defined name.
     </description>
     <examples>
         <example title="Creation">

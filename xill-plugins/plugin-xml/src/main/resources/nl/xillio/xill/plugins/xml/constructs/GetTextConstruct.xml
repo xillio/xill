@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Returns a string containing all text extracted from XML-node (without any markup). 
+Returns a string containing all text extracted from XML-node (without any markup). 
     </description>
     <examples>
         <example title="Usage">

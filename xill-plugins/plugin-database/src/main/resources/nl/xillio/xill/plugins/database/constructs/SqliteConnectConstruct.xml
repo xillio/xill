@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <function>
   <description>
-    Connect to a sqlite database. Returns a connection object.
-    The file parameter is optional. An in-memory database will be created when it is left empty.
+Connect to a sqlite database. Returns a connection object.  
+
+The file parameter is optional. An in-memory database will be created when it is left empty.
   </description>
   <examples>
     <example>
