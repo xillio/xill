@@ -9,13 +9,55 @@ Optionally you can set 'absolute' to false to get the relative difference.
     <examples>
         <example title="Usage">
             <header>Calculating date difference in a total hours unit.</header>
+            <header>Everything prefixed with total will give the difference in the specified suffix, e.g. 1 hour in
+            totalMinutes = 60 minutes, in totalSeconds = 3600 seconds, etc.</header>
+            <header>All other properties are a specification of the total difference, e.g. 25.05 hours = 1 day, 1 hour,
+            3 minutes. However, 25.05 hours in totalDays is 1.04375, in totalCenturies is 2.8577e-05, etc.</header>
             <code>
-use System;
-use Date;
-var date = Date.of(2015, 12, 31, 10, 5, 0);
-var date2 = Date.of(2015, 12, 30, 9, 2, 0);
-var diff = Date.diff(date2, date);
-System.print(diff.totalHours);
+                use System;
+                use Date;
+                var date = Date.of(2015, 12, 31, 10, 5, 0);
+                var date2 = Date.of(2015, 12, 30, 9, 2, 0);
+                var diff = Date.diff(date2, date);
+                System.print(diff.totalHours);
+                System.print(diff);
+
+                /*
+                This will print:
+
+                25.05
+
+                "centuries": 0.0,
+                "days": 1.0,
+                "decades": 0.0,
+                "eras": 0.0,
+                "halfDays": 0.0,
+                "hours": 1.0,
+                "micros": 0.0,
+                "millennia": 0.0,
+                "millis": 0.0,
+                "minutes": 3.0,
+                "months": 0.0,
+                "nanos": 0.0,
+                "seconds": 0.0,
+                "totalCenturies": 2.8577e-05,    // diff.totalHours in centuries.
+                "totalDays": 1.04375,            // diff.totalDays in days.
+                "totalDecades": 0.000285769,     // diff.totalDecades in decades.
+                "totalEras": 0.0,                // diff.totalEras in eras.
+                "totalHalfDays": 2.0875,         // diff.totalHalfDays in half days.
+                "totalHours": 25.05,             // diff.totalHours in hours.
+                "totalMicros": 90180000000.0,    // diff.totalHours in microseconds.
+                "totalMillennia": 2.858e-06,     // diff.totalHours in millennia.
+                "totalMillis": 90180000.0,       // diff.totalHours in milliseconds.
+                "totalMinutes": 1503.0,          // diff.totalHours in minutes.
+                "totalMonths": 0.034292285,      // diff.totalHours in months.
+                "totalNanos": 90180000000000.0,  // diff.totalHours in nanoseconds.
+                "totalSeconds": 90180.0,         // diff.totalHours in seconds.
+                "totalWeeks": 0.149107143,       // diff.totalHours in weeks.
+                "totalYears": 0.00285769,        // diff.totalHours in years.
+                "weeks": 0.0,
+                "years": 0.0
+                */
             </code>
         </example>
     </examples>
