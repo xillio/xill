@@ -44,7 +44,7 @@ public class XpathConstructTest {
 		MetaExpression textVar = MockUtils.mockStringExpression(text);
 
 		// Run
-		MetaExpression result = XpathConstruct.process(xmlNodeVar, textVar, MockUtils.mockNullExpression(), xpathService);
+		MetaExpression result = XPathConstruct.process(xmlNodeVar, textVar, MockUtils.mockNullExpression(), xpathService);
 
 		// Verify
 		verify(xpathService).xpath(any(), anyString(), any());
@@ -69,6 +69,6 @@ public class XpathConstructTest {
 		when(xmlNodeVar.isNull()).thenReturn(true);
 
 		// Run
-		XpathConstruct.process(xmlNodeVar, textVar, MockUtils.mockNullExpression(), xpathService);
+		XPathConstruct.process(xmlNodeVar, textVar, MockUtils.mockNullExpression(), xpathService);
 	}
 }

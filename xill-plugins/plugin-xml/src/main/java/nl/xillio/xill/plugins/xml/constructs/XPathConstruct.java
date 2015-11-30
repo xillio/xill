@@ -21,7 +21,7 @@ import nl.xillio.xill.plugins.xml.services.XpathService;
  *
  * @author Zbynek Hochmann
  */
-public class XpathConstruct extends Construct {
+public class XPathConstruct extends Construct {
 	@Inject
 	private XpathService xpathService;
 
