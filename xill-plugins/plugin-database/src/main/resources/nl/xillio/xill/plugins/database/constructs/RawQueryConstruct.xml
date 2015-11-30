@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Run a raw query on a database (normal statement as opposed to a prepared statement).
-        NOTE: You are advised to use Database.query() as opposed to this function if possible.
-        The database parameter is optional. The last made connection will be used if no database is given.
-        the timeout parameter is optional. The default is set to 30 seconds. when the query takes longer than the given
-        timeout it will stop.A timeout of 0 means that there is no limit.
-        Returns an iterator containing an update count for each insert/update/delete and an object for each selected row
-        in the case of a select.
+Run a raw query on a database (normal statement as opposed to a prepared statement).  
+
+*NOTE:* You are advised to use Database.query() as opposed to this function if possible.  
+The database parameter is optional. The last made connection will be used if no database is given.  
+the timeout parameter is optional. The default is set to 30 seconds. when the query takes longer than the given
+timeout it will stop.A timeout of 0 means that there is no limit.  
+Returns an iterator containing an update count for each insert/update/delete and an object for each selected row
+in the case of a select.
     </description>
     <examples>
         <example>

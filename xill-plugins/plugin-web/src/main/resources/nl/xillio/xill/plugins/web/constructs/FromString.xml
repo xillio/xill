@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Returns a new page object based on the string content.
+Returns a new page object based on the string content.
     </description>
     <examples>
         <example title="Usage">
