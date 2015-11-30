@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        This browser function creates a screenshot of a current web page and save it to file. The file format is .png.
+This browser function creates a screenshot of a current web page and save it to file.  
+
+The file format is .png.
     </description>
     <examples>
         <example title="Usage">

@@ -1,7 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Rounds the provided value to the nearest whole number.
+Rounds the provided value to the nearest whole number.
     </description>
     <examples>
         <example title="Usage">

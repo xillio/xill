@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        If the input is a list it will remove the element at the given index.
-        If the input is an object it will remove the element with the given key.
+If the input is a list it will remove the element at the given index.  
+If the input is an object it will remove the element with the given key.
     </description>
     <examples>
         <example title="Usage">

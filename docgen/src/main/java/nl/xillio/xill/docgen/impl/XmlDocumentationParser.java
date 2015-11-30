@@ -15,6 +15,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.petebevin.markdown.MarkdownProcessor;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -39,6 +40,7 @@ public class XmlDocumentationParser implements DocumentationParser {
 	private XPathExpression tagXPathQuery;
 	private XPathExpression exampleNodesXPathQuery;
 	private XPathExpression referenceXPathQuery;
+	private static MarkdownProcessor markdownProcessor = new MarkdownProcessor();
 
 	/**
 	 * The constructor for the parser when we hand it a factory.
@@ -104,7 +106,7 @@ public class XmlDocumentationParser implements DocumentationParser {
 
 	String parseDescription(final Document doc) throws ParsingException {
 		try {
-			return StringEscapeUtils.escapeHtml3((String) descriptionXPathQuery.evaluate(doc, XPathConstants.STRING));
+			return markdownProcessor.markdown((String) descriptionXPathQuery.evaluate(doc, XPathConstants.STRING));
 		} catch (XPathExpressionException e) {
 			throw new ParsingException("Failed to parse description", e);
 		}

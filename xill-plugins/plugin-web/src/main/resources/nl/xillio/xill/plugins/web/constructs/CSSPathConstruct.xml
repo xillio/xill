@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Returns a string, element or a list of node elements from the specified node element as indicated by the string csspath.
+Returns a string, element or a list of node elements from the specified node element as indicated by the string csspath.  
 
-        For more information about the CSS Selector syntax and available csspath functions look here: http://www.w3schools.com/cssref/css_selectors.asp
+For more information about the CSS Selector syntax and available csspath functions look here:
+
+	http://www.w3schools.com/cssref/css_selectors.asp
     </description>
     <examples>
         <example title="Usage">

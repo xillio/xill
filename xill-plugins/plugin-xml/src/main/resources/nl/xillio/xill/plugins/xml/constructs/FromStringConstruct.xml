@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Loads the specified text as XML. Useful to generate (parts of) XML documents inline.
+Loads the specified text as XML.  
+
+Useful to generate (parts of) XML documents inline.
     </description>
     <examples>
         <example title="Usage">
