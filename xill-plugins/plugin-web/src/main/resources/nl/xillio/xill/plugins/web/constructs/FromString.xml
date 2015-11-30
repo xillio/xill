@@ -7,7 +7,7 @@
         <example title="Usage">
             <header>Convert a string to a web page.</header>
             <code>
-                var page = Web.stringToPage("
+                var page = Web.fromString("
                         <html>
                             <head>
                                 <title> Strict DTD XHTML Example </title>
