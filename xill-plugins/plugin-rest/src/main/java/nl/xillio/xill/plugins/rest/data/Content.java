@@ -162,11 +162,13 @@ public class Content {
     }
 
     private MetaExpression getMetaBody() {
+        // Only this is branch is covered with unit tests (FOR NOW) in accordance with a discussion with Thomas Biesaart.
         if (this.getType().getMimeType().contains("json")) {
             JsonParser jsonParser = InjectorUtils.get(JsonParser.class);
             try {
                 Object result = jsonParser.fromJson(this.getContent(), Object.class);
-                return MetaExpression.parseObject(result);
+                return MetaExpression.parseObject(result); // Mockito does not provide mechanisms for testing static methods.
+                // In order to test static methods, we would need to use PowerMockito.
             } catch (JsonException e) {
                 LOGGER.error("Failed to parse response as json. Falling back.", e);
             }

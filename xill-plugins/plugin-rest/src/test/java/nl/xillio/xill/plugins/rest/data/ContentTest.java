@@ -8,29 +8,23 @@ import nl.xillio.xill.services.json.JsonParser;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicHeader;
-import org.apache.tools.ant.taskdefs.condition.Http;
-import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.LinkedHashMap;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 /**
- * Created by Anwar on 11/27/2015.
+ * Test class for the Content class.
  */
 public class ContentTest {
 
     /**
      * Tests the getMeta() method of the Content class.
+     *
+     * @throws IOException
      */
     @Test
     public void testGetMeta() throws IOException {
@@ -47,13 +41,18 @@ public class ContentTest {
         when(fullResponse.getStatusLine().getStatusCode()).thenReturn(200);
         when(fullResponse.getAllHeaders()).thenReturn(headers);
 
-
-
         // Call to getMeta()
         MetaExpression result = content.getMeta();
         assertEquals(result.toString(), "{\"body\":\"XILLIDE\",\"status\":200,\"headers\":{\"type\":\"XILLSERVER\"}}");
     }
 
+    /**
+     * Test the conditional branch "json" of the private method getMetaBody(). This method, i.e. getMetaBody(), is
+     * called by the getMeta() method in the Content class.
+     *
+     * @throws IOException
+     * @throws JsonException
+     */
     @Test
     public void testPartialGetMetaBody() throws IOException, JsonException {
 
