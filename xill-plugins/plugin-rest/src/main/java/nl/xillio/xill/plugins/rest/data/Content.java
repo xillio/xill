@@ -99,7 +99,7 @@ public class Content {
         try {
             this.content = IOUtils.toString(fullResponse.getEntity().getContent());
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Cannot read the content!", e);
         }
         this.type = ContentType.create(fullResponse.getEntity().getContentType().getValue());
     }
