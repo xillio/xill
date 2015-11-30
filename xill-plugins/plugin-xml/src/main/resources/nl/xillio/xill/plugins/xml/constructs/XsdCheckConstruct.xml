@@ -19,7 +19,7 @@ Returns true if the xml file is valid, returns false and a warning when it is no
         </example>
     </examples>
     <references>
-        <reference>xpath</reference>
+        <reference>xPath</reference>
     </references>
 	    <tags>
         XSD, check, validate, XML

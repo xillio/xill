@@ -18,7 +18,7 @@ import com.google.inject.Inject;
 /**
  * It loads web page from a provided string (the string represents HTML code of a web page)
  */
-public class StringToPageConstruct extends PhantomJSConstruct {
+public class FromString extends PhantomJSConstruct {
 	@Inject
 	private FileService fileService;
 	@Inject
