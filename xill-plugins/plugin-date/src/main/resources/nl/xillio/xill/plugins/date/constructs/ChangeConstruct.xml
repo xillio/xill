@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Creates a date variable from provided date and list of changes. The function changes input date according to changes in list and returns new date variable.
+Creates a date variable from provided date and list of changes.  
+
+The function changes input date according to changes in list and returns new date variable.  
 Change identificators can be: zone, timezone, YEARS, MONTHS, DAYS, HOURS, MINUTES, SECONDS, etc. 
     </description>
     <examples>

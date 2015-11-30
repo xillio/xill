@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        This browser function sets the focus to the selected node. This is used as a replacement for mouseover and
-        mouseout events in the absence of a mouse. Some pages require these events to be triggered to load data for
-        combo-boxes, menus or other dynamic elements.
+This browser function sets the focus to the selected node.  
+
+This is used as a replacement for mouseover and mouseout events in the absence of a mouse.  
+Some pages require these events to be triggered to load data for combo-boxes, menus or other dynamic elements.
     </description>
     <examples>
         <example title="Usage">

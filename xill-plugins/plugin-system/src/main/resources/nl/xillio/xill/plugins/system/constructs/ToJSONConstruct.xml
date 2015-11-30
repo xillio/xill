@@ -1,8 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Converts an expression to a JSON string. Note that circular references cannot be parsed and will be substituted.
-        To pretty print the JSON string set pretty to true
+Converts an expression to a JSON string.  
+
+Note that circular references cannot be parsed and will be substituted.  
+To pretty print the JSON string set pretty to true
     </description>
     <examples>
         <example title="Usage">

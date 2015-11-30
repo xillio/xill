@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Moves the XML-node 'subnode' to the XML-node 'parentnode', optionally before 'beforenode'.
+Moves the XML-node 'subnode' to the XML-node 'parentnode', optionally before 'beforenode'.
     </description>
     <examples>
         <example title="Usage">
