@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        This field should contain a description on what the construct does an what it generally returns. More information can be provided in the examples.
+This field should contain a description on what the construct does an what it generally returns.  
+More information can be provided in the examples.
     </description>
     <examples>
         <example title="Usage">

@@ -38,9 +38,9 @@ public class LoadSheetConstruct extends Construct {
 		}
 
 		LinkedHashMap<String, MetaExpression> sheetObject = new LinkedHashMap<>();
-		sheetObject.put("Sheet name", fromValue(sheet.getName()));
-		sheetObject.put("Rows", fromValue(sheet.getRowLength()));
-		sheetObject.put("Columns", fromValue(sheet.getColumnLength()));
+		sheetObject.put("sheetName", fromValue(sheet.getName()));
+		sheetObject.put("rows", fromValue(sheet.getRowLength()));
+		sheetObject.put("columns", fromValue(sheet.getColumnLength()));
 
 		MetaExpression returnValue = fromValue(sheetObject);
 		returnValue.storeMeta(XillSheet.class, sheet);

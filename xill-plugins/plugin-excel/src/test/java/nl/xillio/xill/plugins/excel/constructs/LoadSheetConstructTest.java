@@ -79,7 +79,7 @@ public class LoadSheetConstructTest {
 		MetaExpression result = LoadSheetConstruct.process(input, fromValue("Sheet"));
 
 		//Check results
-		assertEquals(result.getStringValue(), "{\"Sheet name\":\"SheetName\",\"Rows\":3,\"Columns\":5}");
+		assertEquals(result.getStringValue(), "{\"sheetName\":\"SheetName\",\"rows\":3,\"columns\":5}");
 		XillSheet resultSheet = result.getMeta(XillSheet.class);
 		assertEquals(resultSheet, sheet);
 	}

@@ -1,13 +1,16 @@
 package nl.xillio.xill.plugins.rest.services;
 
-import java.io.IOException;
+import com.google.inject.Singleton;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.rest.data.Content;
 import nl.xillio.xill.plugins.rest.data.MultipartBody;
 import nl.xillio.xill.plugins.rest.data.Options;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.fluent.Request;
-import com.google.inject.Singleton;
+import org.apache.http.client.fluent.Response;
+
+import java.io.IOException;
 
 /**
  * This class is the main implementation of the {@link RestService}
@@ -18,62 +21,77 @@ import com.google.inject.Singleton;
 @Singleton
 public class RestServiceImpl implements RestService {
 
-	private Content processRequest(final Request request, final Options options, final Content body) {
-		try {
-			// set-up request options
-			if (options.getTimeout() != 0) {
-				request.connectTimeout(options.getTimeout()).socketTimeout(options.getTimeout());
-			}
+    Executor createExecutor() {
+        return Executor.newInstance();
+    }
 
-			Executor executor = Executor.newInstance();
-			options.doAuth(executor);
+    Content processRequest(final Request request, final Options options, final Content body) {
 
-			// set body
-			if ((body != null) && (!body.isEmpty())) {
-				body.setToRequest(request);
-			}
+        try {
+            // set-up request options
+            if (options.getTimeout() != 0) {
+                request.connectTimeout(options.getTimeout()).socketTimeout(options.getTimeout());
+            }
 
-			// do request
-			try {
-				return new Content(executor.execute(request).returnContent());
-			} catch (IOException e) {
-				throw new RobotRuntimeException("Request error: " + e.getMessage(), e);
-			}
+            // set HTTP header items
+            options.setHeaders(request);
 
-		} catch (Exception e) {
-			throw new RobotRuntimeException(e.getMessage(), e);
-		}
-	}
+            // create executor
+            Executor executor = createExecutor();
 
-	@Override 
-	public Content get(final String url, final Options options) {
-		Request request = Request.Get(url);
-		return this.processRequest(request, options, null);
-	}
+            // set authentication
+            options.setAuth(executor);
 
-	@Override 
-	public Content put(final String url, final Options options, final Content body) {
-		Request request = Request.Put(url);
-		return this.processRequest(request, options, body);
-	}
+            // set body
+            if ((body != null) && (!body.isEmpty())) {
+                body.setToRequest(request);
+            }
 
-	@Override
-	public Content post(final String url, final Options options, final Content body) {
-		Request request = Request.Post(url);
-		return this.processRequest(request, options, body);
-	}
+            // do request
+            try {
+                Response responseContent = executor.execute(request);
+                HttpResponse httpResponse = responseContent.returnResponse();
 
-	@Override
-	public Content delete(final String url, final Options options) {
-		Request request = Request.Delete(url);
-		return this.processRequest(request, options, null);
-	}
 
-	@Override
-	public Content head(final String url, final Options options) {
-		Request request = Request.Head(url);
-		return this.processRequest(request, options, null);
-	}
+                return new Content(httpResponse);
+            } catch (IOException e) {
+                throw new RobotRuntimeException("Request error: " + e.getMessage(), e);
+            }
+
+        } catch (Exception e) {
+            throw new RobotRuntimeException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Content get(final String url, final Options options) {
+        Request request = Request.Get(url);
+        return this.processRequest(request, options, null);
+    }
+
+    @Override
+    public Content put(final String url, final Options options, final Content body) {
+        Request request = Request.Put(url);
+        return this.processRequest(request, options, body);
+    }
+
+    @Override
+    public Content post(final String url, final Options options, final Content body) {
+        Request request = Request.Post(url);
+        return this.processRequest(request, options, body);
+    }
+
+    @Override
+    public Content delete(final String url, final Options options) {
+        Request request = Request.Delete(url);
+        return this.processRequest(request, options, null);
+    }
+
+    @Override
+    public Content head(final String url, final Options options) {
+        Request request = Request.Head(url);
+        return this.processRequest(request, options, null);
+    }
 
     @Override
     public MultipartBody bodyCreate() {

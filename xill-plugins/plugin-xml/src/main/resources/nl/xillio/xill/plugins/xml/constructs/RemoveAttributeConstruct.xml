@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Removes the attribute from the XML-node. Returns false if attribute does not exist, otherwise true.
+Removes the attribute from the XML-node.  
+
+Returns false if attribute does not exist, otherwise true.
     </description>
     <examples>
         <example title="Usage">

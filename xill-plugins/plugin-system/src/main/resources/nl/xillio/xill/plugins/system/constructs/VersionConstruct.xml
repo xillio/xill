@@ -1,8 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Returns the current version of the language. If a required version is provided it will throw an error when an
-        older version is used.
+Returns the current version of the language.  
+
+If a required version is provided it will throw an error when an older version is used.
     </description>
     <examples>
         <example title="Usage">

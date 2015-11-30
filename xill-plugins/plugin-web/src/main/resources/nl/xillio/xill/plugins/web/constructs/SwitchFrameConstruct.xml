@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        This browser function switches the context to a given iframe. Useful for working with an iframe or normal
-        content frame.
+This browser function switches the context to a given iframe.  
+
+Useful for working with an iframe or normal content frame.
     </description>
     <examples>
         <example title="Usage">

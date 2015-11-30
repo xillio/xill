@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Define a new content type.  
+
+*Note!* This construct will persist the defined content type in the database.  
+To define a content type you need to provide 2 parameters: The name of the content type and a list of decorator
+names. These decorators have to be present in the udm cache. See ContentType.decorator to find out how to do that.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Define a Content Type</header>
+            <code>
+                use ContentType;
+
+                // Build the body
+                var userDecorator = {
+                    ...
+                };
+
+                // Add to cache
+                ContentType.decorator("user", userDecorator);
+
+                // Define content type
+                ContentType.save("CustomPage", ["user"]);
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>decorator</reference>
+        <reference>Document.save</reference>
+    </references>
+    <tags>
+        udm, persist, define, save, decorator, content, type
+    </tags>
+</function>

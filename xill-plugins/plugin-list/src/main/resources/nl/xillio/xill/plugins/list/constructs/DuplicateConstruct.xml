@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
 	<description>
-		Duplicates the given list. Changes to the first list will not change the duplicated list.
+Duplicates the given list. Changes to the first list will not change the duplicated list.
 	</description>
 	<examples>
 		<example title="Usage">

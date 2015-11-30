@@ -171,7 +171,7 @@ public interface Debugger extends ErrorHandlingPolicy {
 	 * @param handler
 	 *        the handler to set
 	 */
-	public void setErrorHander(final ErrorHandlingPolicy handler);
+	public void setErrorHandler(final ErrorHandlingPolicy handler);
 
 	/**
 	 * @return the stack trace to the current instruction

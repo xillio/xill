@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <function>
   <description>
-    Store/update an entry in a table from a database.
-    The table parameter is the name of the table where the new object will be inserted in.
-    The object is the object that needs to be stored.
-    The keys argument is optional. The strings listed in the keys argument will be used as primary key. 
-    the allowUpdate parameter works as follows: If an entry is found with the same primary key(s) as the given object and allowUpdate is TRUE then the existing entry in the database will be updated
-    with the new object. If allowUpdate is FALSE it will not do anything. It will always create a new entry if no entry is found or no keys have been given.
-    The database parameter is optional. The last made connection will be used if no database is given.
-    storeObject will always return null.
+Store/update an entry in a table from a database.  
+
+The table parameter is the name of the table where the new object will be inserted in.  
+The object is the object that needs to be stored.  
+The keys argument is optional. The strings listed in the keys argument will be used as primary key.   
+the allowUpdate parameter works as follows: If an entry is found with the same primary key(s) as the given object and allowUpdate is TRUE then the existing entry in the database will be updated
+with the new object. If allowUpdate is FALSE it will not do anything. It will always create a new entry if no entry is found or no keys have been given.
+The database parameter is optional. The last made connection will be used if no database is given.  
+
+storeObject will always return *null*.
   </description>
   <examples>
     <example>

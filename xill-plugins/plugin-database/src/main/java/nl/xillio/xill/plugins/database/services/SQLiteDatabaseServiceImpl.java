@@ -33,4 +33,11 @@ public class SQLiteDatabaseServiceImpl extends BaseDatabaseService {
 		Class.forName(Database.SQLITE.getDriverClass());
 	}
 
+	@Override
+	public String escapeString(String unescaped) {
+		// SQLite does not escape with backslashes.
+		String escaped = unescaped;
+		escaped = escaped.replaceAll("'", "''");
+		return escaped;
+	}
 }

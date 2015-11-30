@@ -1,31 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Carries out the Post REST request. Returns response from server.
+Carries out the Put REST request. Returns response from server.
 
 The body for request can be one of the following types:
-* XML (XmlNode)
-* JSON (Object)
-* String [with custom content type]
-* REST multipart body (bodyCreate() function) 
 
-The response can be one of the following types:
-* XML (XmlNode)
-* JSON (Object)
-* String  
+	* XML (XmlNode)
+	* JSON (Object)
+	* String [with custom content type]
+	* REST multipart body (bodyCreate() function) 
+
+The response.body can be one of the following types:
+
+	* XML (XmlNode)
+	* JSON (Object)
+	* String 
 
 Options:
-* timeout - processing timeout in ms (default = 5000)
-* proxyhost - proxy server URL
-* proxyport - port of the proxy server
-* user - user name for server authentication         
-* pass - password for server authentication
+
+	* timeout - processing timeout in ms (default = 5000)
+	* proxyhost - proxy server URL
+	* proxyport - port of the proxy server
+	* user - user name for server authentication         
+	* pass - password for server authentication
+	* headers - the object of name and value pair strings added as a parts of HTTP request header
 
 The proxy and server authentication options can be combined as follows:
-proxyhost
-proxyhost+proxyport 
-proxyhost+proxyport+user+pass
-user+pass
+
+	proxyhost
+	proxyhost+proxyport 
+	proxyhost+proxyport+user+pass
+	user+pass
     </description>
     <examples>
         <example title="Usage">

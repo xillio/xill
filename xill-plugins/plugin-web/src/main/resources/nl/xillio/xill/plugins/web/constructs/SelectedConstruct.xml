@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        The function returns true if the element node is selected. It can be used primarily for radio and check
-        buttons.
+The function returns true if the element node is selected.  
+ 
+It can be used primarily for radio and check buttons.
     </description>
     <examples>
         <example title="Usage">
