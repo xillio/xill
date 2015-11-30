@@ -2,7 +2,23 @@
 <function>
     <description>
 Creates empty multipart REST body content. Returns an empty REST body variable.
-     </description>
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Put request with multipart body: demonstrates use of the bodyCreate function.</header>
+            <code>
+                use System;
+                use REST;
+
+                var body = REST.bodyCreate();
+                REST.bodyAddText(body, "try", "hello!");
+                REST.bodyAddFile(body, "content", "c:/Users/Peter/Documents/test.json");
+
+                var response = REST.put("http://whatever.com/uri?format=pdf", {"timeout" : 3000}, body);
+                System.print(response);
+            </code>
+        </example>
+    </examples>
     <references>
         <reference>bodyAddFile</reference>
         <reference>bodyAddText</reference>
