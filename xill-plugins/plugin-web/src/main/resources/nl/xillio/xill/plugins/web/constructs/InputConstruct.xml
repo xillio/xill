@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        This browser function enters the string into the form input-element. This is useful for
-        entering text into web forms before submitting them.
+This browser function enters the string into the form input-element.  
+  
+This is useful for entering text into web forms before submitting them.
     </description>
     <examples>
         <example title="Usage">

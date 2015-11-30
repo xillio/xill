@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Saves a workbook to the file system.
+Saves a workbook to the file system.
     </description>
     <examples>
         <example title="Usage">

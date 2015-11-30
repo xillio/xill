@@ -1,7 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Pause the robot for a period of time in milliseconds.
+Pause the robot for a period of time in milliseconds.
     </description>
     <examples>
         <example title="Usage">

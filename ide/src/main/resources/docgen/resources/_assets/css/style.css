@@ -48,6 +48,12 @@ a:hover {
 	text-decoration: underline;
 }
 
+em {
+	-fx-font-family: "Ubuntu Mono";
+	font-family: "Ubuntu Mono";
+	font-size: 15px;
+}
+
 /* ------ Table ------ */
 table {
     border-collapse: collapse;

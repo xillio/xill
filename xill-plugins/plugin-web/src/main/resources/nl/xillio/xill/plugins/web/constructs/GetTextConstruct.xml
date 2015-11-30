@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Returns a string containing all text extracted from HTML node(s) (without any markup). Any HTML-entities
-        (like the copyright entity) contained in the text will be converted to characters.
-        It returns web page source content if the PAGE variable is provided. 
+Returns a string containing all text extracted from HTML node(s) (without any markup).  
+
+Any HTML-entities (like the copyright entity) contained in the text will be converted to characters.  
+It returns web page source content if the PAGE variable is provided. 
     </description>
     <examples>
         <example title="Usage">
