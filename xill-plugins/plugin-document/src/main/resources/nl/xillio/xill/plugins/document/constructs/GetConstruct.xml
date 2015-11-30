@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Fetch a document by id.
-        If the provided id was not found this construct will return null and throw an error.
+Fetch a document by id.  
+
+If the provided id was not found this construct will return null and throw an error.
     </description>
     <examples>
         <example title="Usage">

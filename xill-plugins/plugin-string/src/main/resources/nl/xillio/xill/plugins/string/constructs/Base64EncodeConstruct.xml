@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Returns the base-64 encoded string of file file.
-        Commonly used to encode binary data for transfer over a text channel (such as attachments in e-mails).
-        The parameter file is expected to be either a valid file name, or a binary variable.
+Returns the base-64 encoded string of file file.  
+
+Commonly used to encode binary data for transfer over a text channel (such as attachments in e-mails).  
+The parameter file is expected to be either a valid file name, or a binary variable.
     </description>
     <examples>
         <example title="Usage">

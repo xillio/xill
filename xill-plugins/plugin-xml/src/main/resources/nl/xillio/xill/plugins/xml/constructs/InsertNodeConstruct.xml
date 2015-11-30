@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Add the provided XML string as a child to node, optionally at a provided position. Returns the newly created node.
+Add the provided XML string as a child to node, optionally at a provided position.  
+
+Returns the newly created node.
     </description>
     <examples>
         <example title="Usage">
