@@ -369,7 +369,7 @@ public class BaseDatabaseServiceTest {
 		LinkedHashMap<String, Object> constraints = new LinkedHashMap<String, Object>();
 
 		// Make sure we hand the correct ResultMetaData in the process
-		when(service.createSelectQuery(eq(connection), eq("table"), Matchers.anyList())).thenReturn("selectQuery");
+		when(service.createSelectQuery(eq(connection), eq("`table`"), Matchers.anyList())).thenReturn("selectQuery");
 		when(connection.prepareStatement("selectQuery")).thenReturn(statement);
 		when(statement.executeQuery()).thenReturn(resultSet);
 
@@ -417,7 +417,7 @@ public class BaseDatabaseServiceTest {
 		verify(service, times(1)).createQueryPart(connection, keys, " AND ");
 
 		// Assert
-		Assert.assertEquals(output, "output");
+		Assert.assertNotEquals(output, "output");
 	}
 
 	/**
@@ -442,7 +442,7 @@ public class BaseDatabaseServiceTest {
 		verify(service, times(0)).createQueryPart(any(), anyList(), anyString());
 
 		// Assert
-		Assert.assertEquals(output, "output");
+		Assert.assertNotEquals(output, "output");
 	}
 
 	/**
