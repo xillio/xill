@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Check if a file or folder exists.
-        Returns true if the file or folder exists otherwise false
+Check if a file or folder exists.  
+
+Returns true if the file or folder exists otherwise false
     </description>
     <examples>
         <example title="Usage">

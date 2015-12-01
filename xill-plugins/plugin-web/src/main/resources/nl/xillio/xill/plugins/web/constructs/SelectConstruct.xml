@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        In an HTML-select box, executing ``select`` marks the option ``node`` as selected . If the boolean parameter
-        ``select`` equals true, it selects the option, if false then it's deselected.
+In an HTML-select box, executing ``select`` marks the option ``node`` as selected.  
+If the boolean parameter ``select`` equals true, it selects the option, if false then it's deselected.  
 
-        **NOTE**: The deselection doesn't work for ``option`` tag.
+*NOTE*: The deselection doesn't work for ``option`` tag.
     </description>
     <examples>
         <example title="Usage">

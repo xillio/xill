@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <function>
   <description>
-    Connect to a mysql database. Returns a connection object.
-    The host parameter wants the name of the host.
-    The default port is 3306 but can be set to a different port is necessary.
-    The database parameter wants the name of the database you want to connect to.
-    The user and pass parameter are for the username and password. Both are optional.
-    The options parameter is optional. It is used for setting mysql specific options. These can be found here:
-    http://dev.mysql.com/doc/connector-j/en/connector-j-reference-configuration-properties.html
+Connect to a mysql database. Returns a connection object.  
+
+The host parameter wants the name of the host.  
+The default port is 3306 but can be set to a different port is necessary.  
+The database parameter wants the name of the database you want to connect to.  
+The user and pass parameter are for the username and password. Both are optional.  
+The options parameter is optional. It is used for setting mysql specific options. These can be found here:  
+
+	http://dev.mysql.com/doc/connector-j/en/connector-j-reference-configuration-properties.html
   </description>
   <examples>
     <example>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Adds the attribute to the XML-node and assigns it the value.
+Adds the attribute to the XML-node and assigns it the value.
     </description>
     <examples>
         <example title="Usage">

@@ -1,10 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Returns a randomized value based on the optional parameter value.
-        If an integer argument N is provided the return value is a random integer between 0 and N.
-        If a list argument L is provided it is a random entry from the list.
-        If no parameter is provided, a random floating point number between 0 and 1 will be generated.
+Returns a randomized value based on the optional parameter value.  
+
+If an integer argument N is provided the return value is a random integer between 0 and N.  
+If a list argument L is provided it is a random entry from the list.  
+If no parameter is provided, a random floating point number between 0 and 1 will be generated.
     </description>
     <examples>
         <example title="Roll a 6-sided die:">

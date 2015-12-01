@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Build a document.
-        This construct is a convenience function, it will NOT persist or validate a document. It simply provides an easy
-        way to build a document from some parameters.
-        There are three possible parameters for this construct: The content type name, the body of the current version
-        and an optional list of bodies for the version history.
+Build a document.  
+
+This construct is a convenience function, it will NOT persist or validate a document. It simply provides an easy
+way to build a document from some parameters.  
+There are three possible parameters for this construct: The content type name, the body of the current version
+and an optional list of bodies for the version history.
     </description>
     <examples>
         <example title="Usage">

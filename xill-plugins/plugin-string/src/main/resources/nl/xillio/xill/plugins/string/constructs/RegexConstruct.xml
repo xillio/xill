@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Returns a list of regular expression matches of string regex on the string value.
-        Note that the result will be a list which contains the entire string value as the first entry and after that one
-        or more matching groups. regex must always match the entire string value.
-        Note that the escape character '\' needs to be escaped.
-        Optionally a timeout can be provided in seconds, the default value is 5 seconds.
-        Set timeout to zero to let the function run without timeout. This should only be altered when dealing with large
-        source documents.
-        The timeout is there to protect the system from hanging on invalid expressions.
-        See the Regular Expressions page for more about Regular Expression support in Xill IDE.
+Returns a list of regular expression matches of string regex on the string value.  
+
+Note that the result will be a list which contains the entire string value as the first entry and after that one or more matching groups. regex must always match the entire string value.  
+Note that the escape character '\' needs to be escaped.  
+Optionally a timeout can be provided in seconds, the default value is 5 seconds.  
+Set timeout to zero to let the function run without timeout. This should only be altered when dealing with large source documents.  
+The timeout is there to protect the system from hanging on invalid expressions.  
+See the Regular Expressions page for more about Regular Expression support in Xill IDE.
     </description>
     <examples>
         <example title="Usage">

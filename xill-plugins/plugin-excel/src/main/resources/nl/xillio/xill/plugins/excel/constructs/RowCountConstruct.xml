@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Counts the number of rows in a given sheet.
+Counts the number of rows in a given sheet.
     </description>
     <examples>
         <example title="Usage">

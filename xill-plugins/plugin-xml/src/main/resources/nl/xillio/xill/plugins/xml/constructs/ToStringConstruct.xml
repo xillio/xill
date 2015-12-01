@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Outputs the string representation of an xml node.
+Outputs the string representation of an xml node.
     </description>
     <examples>
         <example title="Usage">

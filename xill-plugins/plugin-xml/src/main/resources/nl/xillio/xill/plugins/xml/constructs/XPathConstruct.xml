@@ -2,7 +2,7 @@
 <function>
     <description>
         Returns a string, XML node or a list of XML nodes from the specified XML node as indicated by the string XPath locator.
-        For more information about the XPath syntax and available xpath functions look here: http://www.w3schools.com/xsl/xpath_intro.asp
+        For more information about the XPath syntax and available xPath functions look here: http://www.w3schools.com/xsl/xpath_intro.asp
     </description>
     <examples>
         <example title="Usage">
@@ -25,7 +25,7 @@
                 use XML;
 
                 var note = XML.fromFile("C:/tmp/note.xml");
-                var body = XML.xpath(note, "//body");
+                var body = XML.xPath(note, "//body");
                 System.print(XML.toString(body));
             </code>
             <header>
@@ -40,6 +40,6 @@
         <reference>xsdCheck</reference>
     </references>
 	    <tags>
-        xpath, select, selector, XML, node
+        xPath, select, selector, XML, node
     </tags>
 </function>
