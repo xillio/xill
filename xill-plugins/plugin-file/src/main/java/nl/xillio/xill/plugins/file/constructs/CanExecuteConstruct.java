@@ -34,9 +34,11 @@ public class CanExecuteConstruct extends Construct {
                                   final MetaExpression uri) {
         File file = getFile(constructContext, uri.getStringValue());
 
+        boolean canExecute = fileUtilities.canExecute(file);
+
         LinkedHashMap<String, MetaExpression> result = new LinkedHashMap<>();
         result.put("file/folder: ", fromValue(file.getAbsolutePath()));
-        result.put("can execute: ", fromValue(fileUtilities.canExecute(file)));
+        result.put("can execute: ", fromValue(canExecute));
         return fromValue(result);
     }
 }
