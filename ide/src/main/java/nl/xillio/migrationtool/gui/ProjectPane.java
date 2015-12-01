@@ -10,9 +10,6 @@ import java.nio.file.WatchEvent;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
 import javax.swing.filechooser.FileFilter;
 import javafx.scene.control.*;
 import javafx.stage.StageStyle;
@@ -90,6 +87,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		trvProjects.setRoot(root);
 		trvProjects.getSelectionModel().selectedItemProperty().addListener(this);
 		trvProjects.setShowRoot(false);
+		trvProjects.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		root.setExpanded(true);
 
 		try {
@@ -198,7 +196,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		Platform.runLater(() -> {
 			List<ProjectSettings> projects = settings.project().getAll();
 			if (projects.isEmpty()) {
-				disableAllButtons();
+				disableAllButtons(true);
 				return;
 			}
 			;
@@ -224,7 +222,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
                 if (getProjectsCount() == 0) {
                     getScene().lookup("#btnNewFile").setDisable(true);
 					getScene().lookup("#btnOpenFile").setDisable(true);
-					disableAllButtons();
+					disableAllButtons(true);
                 }
 	}
 
@@ -244,7 +242,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
                 if (getProjectsCount() == 0) {
                     getScene().lookup("#btnNewFile").setDisable(true);
 					getScene().lookup("#btnOpenFile").setDisable(true);
-					disableAllButtons();
+					disableAllButtons(true);
                 }
 	}
 
@@ -430,6 +428,13 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 	}
 
 	/**
+	 * @return All currently selected nodes.
+     */
+	public ObservableList<TreeItem<Pair<File, String>>> getAllCurrentItems() {
+		return trvProjects.getSelectionModel().getSelectedItems();
+	}
+
+	/**
 	 * Gets the first project node above the childItem.
 	 *
 	 * @param childItem
@@ -608,43 +613,53 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 	 */
 	@Override
 	public void changed(final ObservableValue<? extends TreeItem<Pair<File, String>>> arg0, final TreeItem<Pair<File, String>> oldObject, final TreeItem<Pair<File, String>> newObject) {
-
-		// Update the buttons
-		// Enable all
-		btnAddFolder.setDisable(false);
-		btnDelete.setDisable(false);
-		btnRename.setDisable(false);
-		btnUpload.setDisable(false);
-                getScene().lookup("#btnNewFile").setDisable(true);
-				getScene().lookup("#btnOpenFile").setDisable(true);
+		// Update all buttons to their default state.
+		disableAllButtons(false);
+        disableFileButtons(true);
 
 		if (newObject == null || newObject == trvProjects.getRoot()) {
-			// Disable all
-			disableAllButtons();
-                        getScene().lookup("#btnNewFile").setDisable(true);
-						getScene().lookup("#btnOpenFile").setDisable(true);
-
+			// No item is selected.
+			disableAllButtons(true);
+            disableFileButtons(true);
 		} else if (newObject == getProject(newObject)) {
-			// This is a project
+			// This is a project.
 			btnRename.setDisable(true);
-                        getScene().lookup("#btnNewFile").setDisable(false);
-						getScene().lookup("#btnOpenFile").setDisable(false);
+            disableFileButtons(false);
+		}
+
+		// Check if more than 1 item is selected.
+		if (getAllCurrentItems().size() > 1) {
+			btnRename.setDisable(true);
+			btnAddFolder.setDisable(true);
 		}
 	}
 
-	private void disableAllButtons() {
-		btnAddFolder.setDisable(true);
-		btnDelete.setDisable(true);
-		btnRename.setDisable(true);
-		btnUpload.setDisable(true);
+	/**
+	 * Enable or disable all buttons.
+	 * @param disable Whether to disable or enable the buttons.
+     */
+	private void disableAllButtons(boolean disable) {
+		btnAddFolder.setDisable(disable);
+		btnDelete.setDisable(disable);
+		btnRename.setDisable(disable);
+		btnUpload.setDisable(disable);
 	}
-        
-        /**
-         * Get the number of projects
-         * 
-         * @return the number of projects present
-         */
-        public int getProjectsCount() {
-            return settings.project().getAll().size();
-        }
+
+	/**
+	 * Update the New File and Open File buttons.
+	 * @param disable Whether to disable or enable the buttons.
+     */
+	private void disableFileButtons(boolean disable) {
+		controller.disableNewFileButton(disable);
+		controller.disableOpenFileButton(disable);
+	}
+
+    /**
+     * Get the number of projects
+     *
+     * @return the number of projects present
+     */
+    public int getProjectsCount() {
+        return settings.project().getAll().size();
+    }
 }
