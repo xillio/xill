@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Appends content in the form of text to a file, creating it if it doesn't exist.  
-
-Returns the absolute path to the file.
+        Determines if the specified file/folder is hidden or not.
     </description>
     <examples>
         <example title="Usage">
-            <header>Appending a string to a file:</header>
+            <header>Determine if the specified file/folder is hidden or not.</header>
             <code>
                 use File;
-                File.appendTo("file.txt", "Add this line");
+                use System;
+
+                System.print(File.isHidden("file.txt"));
+
+                // This will print: {"file/folder: ":"file.txt","can read: ":true}
+
             </code>
         </example>
     </examples>
     <references>
-        <reference>saveTo</reference>
+        <reference>canExecute</reference>
+        <reference>canWrite</reference>
+        <reference>canRead</reference>
+        <reference>print</reference>
     </references>
     <tags>
-        write, text, new, create, append, add
+        read, write, execute, hidden
     </tags>
 </function>
