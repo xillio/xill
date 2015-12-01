@@ -9,10 +9,14 @@ body {
 	padding: 0;
 }
 
+section {
+	margin-bottom: 1.5em;
+}
+
 h1, .example-node.h1 {
 	border-bottom: 1px solid #cecece;
 	color: #777777;
-	font-size: 150%;
+	font-size: 1.5em;
 	font-weight: bold;
 	margin: 0 0 0.5em 0;
 	padding: 0 0 0.25em 0px;
@@ -21,13 +25,13 @@ h1, .example-node.h1 {
 h2, .example-node.h2 {
 	border-bottom: 1px solid #cecece;
 	color: #777777;
-	font-size: 125%;
+	font-size: 1.25em;
 	font-weight: bold;
 	margin: 0 0 0.5em 0;
 	padding: 0 0 0.25em 0px;
 }
 
-h3, h4, h5, h6 , .example-node.h3, .example-node.h4, .example-node.h5, .example-node.h6, .example-node.header{
+h3, h4, h5, h6 , .example-node.h3, .example-node.h4, .example-node.h5, .example-node.h6 {
 	font-weight: bold;
 	color: #777777;
 	margin: 0 0 0.5em 0;
@@ -48,48 +52,65 @@ a:hover {
 	text-decoration: underline;
 }
 
-em {
+code {
 	-fx-font-family: "Ubuntu Mono";
 	font-family: "Ubuntu Mono";
-	font-size: 15px;
 }
 
+em {
+	color: #3f4cFF;
+}
 /* ------ Table ------ */
 table {
-    border-collapse: collapse;
-    width: 100%;
-    margin-bottom:20px;
+	border-collapse: collapse;
+	width: 100%;
+	margin-bottom:20px;
 }
 table, th, td {
-   border: 1px solid #cecece
+	border: 1px solid #cecece
 }
 td {
-    padding: 5px;
+	padding: 5px;
 }
 th {
-   width: 100px;
-   font-weight: bold;
+	width: 100px;
+	font-weight: bold;
 }
 
 /* ------ Signature ------ */
 #signature .signature-content {
-   font-size: 1.5em;
+	font-family: 'Ubuntu Mono';
+	font-size: 1.2em;
+	color: #2F2F99;
+	font-weight: bold;
+}
+#signature .package-name {
+	color: rgb(147, 15, 128);
 }
 #signature .parameter {
-    margin-left: 20px;
+	margin-left: 2.0em;
 }
 #signature .parameter-default {
-   font-weight: bold;
+	font-weight: normal;
 }
 
 /* ----- Editor ------ */
-.example-node.code { 
+.example {
+	margin-bottom: 1.0em;
+}
+
+.example-node.header, .example-node.p {
+	margin: 0.5em 0 0.5em 0;
+	padding: 0;
+}
+
+
+.example-node.code {
 	width: 100%;
-	height: 300px;
 }
 
 .example-node.code div.ace_marker-layer div.ace_active-line{
-   background: transparent;
+	background: transparent;
 }
 
 /* ------ Package index ------ */

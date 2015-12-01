@@ -3,12 +3,18 @@
     <description>
 Carries out the Put REST request. Returns response from server.
 
-The response can be one of the following types:
+The body for request can be one of the following types:
+
+	* XML (XmlNode)
+	* JSON (Object)
+	* String [with custom content type]
+	* REST multipart body (bodyCreate() function) 
+
+The response.body can be one of the following types:
 
 	* XML (XmlNode)
 	* JSON (Object)
 	* String 
-	* REST multipart body (bodyCreate() function) 
 
 Options:
 
@@ -36,7 +42,8 @@ use XML;
 var bodyStr = "&lt; ?xml version=\"1.0\" encoding=\"UTF-8\"?&gt; &lt; test name=\"xillio\"&gt;content&lt; /test&gt;";
 var body = XML.fromString(bodyStr);
 var response = REST.put("http://whatever.com/uri", {"timeout" : 3000}, body);
-System.print(response);
+System.print(response); // Show the entire response
+System.print(response.body); // Show the response content
 </code>
         </example>
     </examples>
