@@ -53,13 +53,26 @@ a:hover {
 }
 
 code {
-	-fx-font-family: "Ubuntu Mono";
-	font-family: "Ubuntu Mono";
+	-fx-font-family: 'Ubunt Mono';
+	font-family: 'Ubuntu Mono';
 }
 
 em {
 	color: #3f4cFF;
 }
+
+strong {
+	color: #3f4cFF;
+    -fx-font-family: "Glober xBold";
+    font-family: "Glober xBold", Glober, Segoe UI, Arial, sans-serif;
+}
+
+blockquote {
+    -fx-background-color: #d0deff;
+    background-color: #d0deff;
+    color: #3f4c54;
+}
+
 /* ------ Table ------ */
 table {
 	border-collapse: collapse;

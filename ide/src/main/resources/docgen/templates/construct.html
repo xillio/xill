@@ -15,31 +15,19 @@
     <section id="signature">
         <header><h2>Signature</h2></header>
         <div class="signature-content">
-            <span class="package-name">${packageName}</span>.<span class="construct-name">${identity}</span>
-                (
-                <#if parameters?size != 0>
+            <span class="package-name">${packageName}</span>.<span class="construct-name">${identity}</span><#list parameters>(
                 <span class="parameters">
                     <br>
-                    <#list parameters as parameter>
+                    <#items as parameter>
                     <span class="parameter">
-                        <span class="parameter-type">
-                            ${parameter.type}
-                        </span>
-                        <span class="parameter-name">
-                            ${parameter.name}
-                        </span>
-                        <#if parameter.defaultValue??>
-                        = <span class="parameter-default">${parameter.defaultValue}</span>
-                        </#if>
-                        <#if parameter?index + 1 != parameters?size>
-                        ,
-                        </#if>
+                        <span class="parameter-type">${parameter.type}</span> <span class="parameter-name">${parameter.name}</span><#if parameter.defaultValue??><span class="parameter-default"> = ${parameter.defaultValue}</span></#if><#sep>,</#sep>
                     </span>
                     <br>
-                    </#list>
+                    </#items>
                 </span>
                 );
-                </#if>
+            <#else>();
+            </#list>
             </span>
         </div>
         <table>
