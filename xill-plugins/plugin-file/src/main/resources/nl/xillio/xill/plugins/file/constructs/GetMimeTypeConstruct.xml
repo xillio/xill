@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Get the MIME type of a file.  
+
+Returns a string value containing the MIME type of the specified file, or null if it could not identify it.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Get the MIME type</header>
+            <code>
+                use File;
+                use System;
+                var file = "D:/image.jpg";
+                var type = File.getMimeType(file);
+                System.print(type); // This will print: image/jpeg
+            </code>
+        </example>
+    </examples>
+    <references>
+    </references>
+	<tags>
+        read, mime, type, mimetype
+    </tags>
+</function>
