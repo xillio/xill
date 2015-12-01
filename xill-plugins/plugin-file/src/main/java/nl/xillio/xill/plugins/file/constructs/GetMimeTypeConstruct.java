@@ -11,6 +11,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 @Singleton
 public class GetMimeTypeConstruct extends Construct {
@@ -18,20 +19,23 @@ public class GetMimeTypeConstruct extends Construct {
     @Override
     public ConstructProcessor prepareProcess(final ConstructContext context) {
         return new ConstructProcessor(
-                (uri) -> process(context, uri),
+                (uri) -> process(this, context, uri),
                 new Argument("uri", ATOMIC)
         );
     }
 
-    private static MetaExpression process(final ConstructContext context, final MetaExpression uri) {
+    static MetaExpression process(final GetMimeTypeConstruct construct, final ConstructContext context, final MetaExpression uri) {
         File file = getFile(context, uri.getStringValue());
 
         try {
             // The result is either null or a string containing the MIME type.
-            String result = Files.probeContentType(file.toPath());
-            return MetaExpression.parseObject(result);
+            return MetaExpression.parseObject(construct.getMimeType(file.toPath()));
         } catch (IOException | SecurityException e) {
             throw new RobotRuntimeException("Failed to read MIME type: " + e.getMessage(), e);
         }
+    }
+
+    String getMimeType(Path path) throws java.io.IOException {
+        return Files.probeContentType(path);
     }
 }
