@@ -137,7 +137,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 
     @FXML
     private void uploadButtonPressed() {
-        new UploadToServerDialog(this, getCurrentItem()).show();
+        new UploadToServerDialog(this, getAllCurrentItems()).show();
     }
 
     @FXML
