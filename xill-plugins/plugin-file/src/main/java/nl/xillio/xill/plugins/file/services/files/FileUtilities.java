@@ -92,4 +92,12 @@ public interface FileUtilities extends XillService {
 	 * @throws IOException when the folder does not exist or is not a folder at all
 	 */
 	Iterator<Folder> iterateFolders(File folder, boolean recursive) throws IOException;
+
+	boolean canRead(File file);
+
+	boolean canWrite(File file);
+
+	boolean canExecute(File file);
+
+	boolean isHidden(File file) throws IOException;
 }
