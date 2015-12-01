@@ -3,16 +3,16 @@
     <description>
 Returns the difference between two dates.  
 
-By default the function will return the absolute difference.  
+By default this function will return the absolute difference.  
 Optionally you can set 'absolute' to false to get the relative difference.
+
+Everything prefixed with total will give the difference in the specified suffix,
+e.g. 1 hour is the same as 60 minutes, 3600 seconds, etc.
+All other properties together form the total difference, e.g. 25.05 hours = 1 day, 1 hour and 3 minutes (see the code example).
     </description>
     <examples>
         <example title="Usage">
-            <header>Calculating date difference in a total hours unit.</header>
-            <header>Everything prefixed with total will give the difference in the specified suffix, e.g. 1 hour in
-            totalMinutes = 60 minutes, in totalSeconds = 3600 seconds, etc.</header>
-            <header>All other properties are a specification of the total difference, e.g. 25.05 hours = 1 day, 1 hour,
-            3 minutes. However, 25.05 hours in totalDays is 1.04375, in totalCenturies is 2.8577e-05, etc.</header>
+            <header>Calculating the difference between 2 dates.</header>
             <code>
                 use System;
                 use Date;
@@ -27,36 +27,38 @@ Optionally you can set 'absolute' to false to get the relative difference.
 
                 25.05
 
-                "centuries": 0.0,
-                "days": 1.0,
-                "decades": 0.0,
-                "eras": 0.0,
-                "halfDays": 0.0,
-                "hours": 1.0,
-                "micros": 0.0,
-                "millennia": 0.0,
-                "millis": 0.0,
-                "minutes": 3.0,
-                "months": 0.0,
-                "nanos": 0.0,
-                "seconds": 0.0,
-                "totalCenturies": 2.8577e-05,    // diff.totalHours in centuries.
-                "totalDays": 1.04375,            // diff.totalDays in days.
-                "totalDecades": 0.000285769,     // diff.totalDecades in decades.
-                "totalEras": 0.0,                // diff.totalEras in eras.
-                "totalHalfDays": 2.0875,         // diff.totalHalfDays in half days.
-                "totalHours": 25.05,             // diff.totalHours in hours.
-                "totalMicros": 90180000000.0,    // diff.totalHours in microseconds.
-                "totalMillennia": 2.858e-06,     // diff.totalHours in millennia.
-                "totalMillis": 90180000.0,       // diff.totalHours in milliseconds.
-                "totalMinutes": 1503.0,          // diff.totalHours in minutes.
-                "totalMonths": 0.034292285,      // diff.totalHours in months.
-                "totalNanos": 90180000000000.0,  // diff.totalHours in nanoseconds.
-                "totalSeconds": 90180.0,         // diff.totalHours in seconds.
-                "totalWeeks": 0.149107143,       // diff.totalHours in weeks.
-                "totalYears": 0.00285769,        // diff.totalHours in years.
-                "weeks": 0.0,
-                "years": 0.0
+                {
+                    "totalNanos" : 9.018E13,
+                    "totalMicros" : 9.018E10,
+                    "totalMillis" : 9.018E7,
+                    "totalSeconds" : 90180.0,
+                    "totalMinutes" : 1503.0,
+                    "totalHours" : 25.05,
+                    "totalHalfDays" : 2.0875,
+                    "totalDays" : 1.04375,
+                    "totalWeeks" : 0.149107143,
+                    "totalMonths" : 0.034292285,
+                    "totalYears" : 0.00285769,
+                    "totalDecades" : 2.85769E-4,
+                    "totalCenturies" : 2.8577E-5,
+                    "totalMillennia" : 2.858E-6,
+                    "totalEras" : 0.0,
+                    "eras" : 0.0,
+                    "millennia" : 0.0,
+                    "centuries" : 0.0,
+                    "decades" : 0.0,
+                    "years" : 0.0,
+                    "months" : 0.0,
+                    "weeks" : 0.0,
+                    "days" : 1.0,       // 25.05 hours is: 1 day,
+                    "halfDays" : 0.0,
+                    "hours" : 1.0,      // 1 hour,
+                    "minutes" : 3.0,    // and 3 minutes.
+                    "seconds" : 0.0,
+                    "millis" : 0.0,
+                    "micros" : 0.0,
+                    "nanos" : 0.0
+                }
                 */
             </code>
         </example>
