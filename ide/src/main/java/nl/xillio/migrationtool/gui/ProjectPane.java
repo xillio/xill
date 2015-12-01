@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import javax.swing.filechooser.FileFilter;
+
 import javafx.scene.control.*;
 import javafx.stage.StageStyle;
 
@@ -44,103 +45,104 @@ import org.apache.logging.log4j.Logger;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 
 public class ProjectPane extends AnchorPane implements FolderListener, ChangeListener<TreeItem<Pair<File, String>>> {
-	private static final SettingsHandler settings = SettingsHandler.getSettingsHandler();
-	private static final String DEFAULT_PROJECT_NAME = "Samples";
-	private static final String DEFAULT_PROJECT_PATH = "./samples";
-	private static final Logger LOGGER = LogManager.getLogger();
-	private final BotFileFilter robotFileFilter = new BotFileFilter();
+    private static final SettingsHandler settings = SettingsHandler.getSettingsHandler();
+    private static final String DEFAULT_PROJECT_NAME = "Samples";
+    private static final String DEFAULT_PROJECT_PATH = "./samples";
+    private static final Logger LOGGER = LogManager.getLogger();
+    private final BotFileFilter robotFileFilter = new BotFileFilter();
 
-	@FXML
-	private TreeView<Pair<File, String>> trvProjects;
+    @FXML
+    private TreeView<Pair<File, String>> trvProjects;
 
-	@FXML
-	private Button btnAddFolder;
-	@FXML
-	private Button btnUpload;
-	@FXML
-	private Button btnRename;
-	@FXML
-	private Button btnDelete;
-	/**
-	 * A file filter filtering on the FXController.BOT_EXTENSION extension. Protected to avoid synthetic accessors.
-	 */
-	protected final BotFileFilter fileFilter = new BotFileFilter();
-	private static WatchDir watcher;
+    @FXML
+    private Button btnAddFolder;
+    @FXML
+    private Button btnUpload;
+    @FXML
+    private Button btnRename;
+    @FXML
+    private Button btnDelete;
+    /**
+     * A file filter filtering on the FXController.BOT_EXTENSION extension. Protected to avoid synthetic accessors.
+     */
+    protected final BotFileFilter fileFilter = new BotFileFilter();
+    private static WatchDir watcher;
 
-	private final TreeItem<Pair<File, String>> root = new TreeItem<>(new Pair<>(new File("."), "Projects"));
-	private FXController controller;
+    private final TreeItem<Pair<File, String>> root = new TreeItem<>(new Pair<>(new File("."), "Projects"));
+    private FXController controller;
 
-	/**
-	 * Initialize UI stuff
-	 */
-	public ProjectPane() {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ProjectPane.fxml"));
-			loader.setClassLoader(getClass().getClassLoader());
-			loader.setController(this);
-			Node ui = loader.load();
-			getChildren().add(ui);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+    /**
+     * Initialize UI stuff
+     */
+    public ProjectPane() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ProjectPane.fxml"));
+            loader.setClassLoader(getClass().getClassLoader());
+            loader.setController(this);
+            Node ui = loader.load();
+            getChildren().add(ui);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-		trvProjects.setRoot(root);
-		trvProjects.getSelectionModel().selectedItemProperty().addListener(this);
-		trvProjects.setShowRoot(false);
-		trvProjects.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-		root.setExpanded(true);
+        trvProjects.setRoot(root);
+        trvProjects.getSelectionModel().selectedItemProperty().addListener(this);
+        trvProjects.setShowRoot(false);
+        trvProjects.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        root.setExpanded(true);
 
-		try {
-			watcher = new WatchDir();
-			new Thread(watcher).start();
-		} catch (IOException e) {}
+        try {
+            watcher = new WatchDir();
+            new Thread(watcher).start();
+        } catch (IOException e) {
+        }
 
-		trvProjects.setCellFactory(treeView -> new TreeCell<Pair<File, String>>() {
-			@Override
-			protected void updateItem(final Pair<File, String> pair, final boolean empty) {
-				super.updateItem(pair, empty);
+        trvProjects.setCellFactory(treeView -> new TreeCell<Pair<File, String>>() {
+            @Override
+            protected void updateItem(final Pair<File, String> pair, final boolean empty) {
+                super.updateItem(pair, empty);
 
-				if (pair == null || pair.getValue() == null) {
-					setText("");
-					return;
-				}
+                if (pair == null || pair.getValue() == null) {
+                    setText("");
+                    return;
+                }
 
-				setText(pair.getValue());
+                setText(pair.getValue());
 
-				setOnMouseClicked(event -> {
-					// Double click
-					if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() > 1) {
-						if (pair.getKey() != null && pair.getKey().exists() && pair.getKey().isFile()) {
-							// Open new tab from file
-							controller.openFile(pair.getKey());
-						}
-					}
-				});
-			}
-		});
+                setOnMouseClicked(event -> {
+                    // Double click
+                    if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() > 1) {
+                        if (pair.getKey() != null && pair.getKey().exists() && pair.getKey().isFile()) {
+                            // Open new tab from file
+                            controller.openFile(pair.getKey());
+                        }
+                    }
+                });
+            }
+        });
 
-		loadProjects();
-	}
+        loadProjects();
+    }
 
-	@FXML
-	private void newProjectButtonPressed() {
-		NewProjectDialog dlg = new NewProjectDialog(this);
-		dlg.showAndWait();
-	}
+    @FXML
+    private void newProjectButtonPressed() {
+        NewProjectDialog dlg = new NewProjectDialog(this);
+        dlg.showAndWait();
+    }
 
-	@FXML
-	private void newFolderButtonPressed() {
-		new NewFolderDialog(this, getCurrentItem()).show();
-	}
+    @FXML
+    private void newFolderButtonPressed() {
+        new NewFolderDialog(this, getCurrentItem()).show();
+    }
 
-	@FXML
-	private void uploadButtonPressed() {
-		new UploadToServerDialog(this, getCurrentItem()).show();
-	}
+    @FXML
+    private void uploadButtonPressed() {
+        new UploadToServerDialog(this, getCurrentItem()).show();
+    }
 
-	@FXML
-	private void renameButtonPressed() {
-        RobotTab orgTab = (RobotTab)controller.findTab(getCurrentItem().getValue().getKey()); // org file
+    @FXML
+    private void renameButtonPressed() {
+        RobotTab orgTab = (RobotTab) controller.findTab(getCurrentItem().getValue().getKey());
 
         // Test if robot is still running
         if (orgTab != null && orgTab.getEditorPane().getControls().robotRunning()) {
@@ -160,192 +162,250 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         }
 
         String oldName = getCurrentItem().getValue().getValue();
-		RenameDialog dlg = new RenameDialog(getCurrentItem());
-		dlg.showAndWait();
-		String newName = getCurrentItem().getValue().getValue();
-		if (oldName != newName) {// name has changed
-			if (orgTab != null) {// if tab with the org file is opened then close it and open new one
-				Tab selectedTab = controller.getSelectedTab();
-				if (orgTab == selectedTab) {
-					selectedTab = null;
-				}
-				controller.closeTab(orgTab);
-				controller.openFile(getCurrentItem().getValue().getKey());
-				if (selectedTab != null) {
-					controller.showTab((RobotTab) selectedTab);
-				}
-			}
-		}
-	}
-
-	@FXML
-	private void deleteButtonPressed() {
-		TreeItem<Pair<File, String>> item = getCurrentItem();
-
-		if (item == getCurrentProject()) {
-			new DeleteProjectDialog(this, item).show();
-		} else {
-			// Check if the robot is running.
-			RobotTab tab = (RobotTab)controller.findTab(item.getValue().getKey());
-			boolean robotRunning = tab != null && tab.getEditorPane().getControls().robotRunning();
-			new DeleteFileDialog(robotRunning, controller, this, item).show();
-		}
-	}
-
-	private void loadProjects() {
-		Platform.runLater(() -> {
-			List<ProjectSettings> projects = settings.project().getAll();
-			if (projects.isEmpty()) {
-				disableAllButtons(true);
-				return;
-			}
-			;
-			projects.forEach(this::addProject);
-			if (settings.simple().get(Settings.LICENSE, Settings.License) == null && new File(DEFAULT_PROJECT_PATH).exists()) {
-				newProject(DEFAULT_PROJECT_NAME, DEFAULT_PROJECT_PATH, "");
-			}
-
-			root.getChildren().forEach(node -> node.setExpanded(false));
-			root.setExpanded(true);
-		});
-	}
-
-	/**
-	 * Removes an item from the project list and keeps the files.
-	 *
-	 * @param item
-	 *        the item to remove
-	 */
-	public void removeProject(final TreeItem<Pair<File, String>> item) {
-		root.getChildren().remove(item);
-		settings.project().delete(item.getValue().getValue());
-                if (getProjectsCount() == 0) {
-                    getScene().lookup("#btnNewFile").setDisable(true);
-					getScene().lookup("#btnOpenFile").setDisable(true);
-					disableAllButtons(true);
+        RenameDialog dlg = new RenameDialog(getCurrentItem());
+        dlg.showAndWait();
+        String newName = getCurrentItem().getValue().getValue();
+        if (oldName != newName) {// name has changed
+            if (orgTab != null) {// if tab with the org file is opened then close it and open new one
+                Tab selectedTab = controller.getSelectedTab();
+                if (orgTab == selectedTab) {
+                    selectedTab = null;
                 }
-	}
-
-	/**
-	 * Deletes a project and it's files.
-	 *
-	 * @param item
-	 *        a project item
-	 */
-	public void deleteProject(final TreeItem<Pair<File, String>> item) {
-		try {
-			FileUtils.deleteDirectory(item.getValue().getKey());
-		} catch (IOException e) {
-			LOGGER.error("Failed to delete project",e);
-		}
-		removeProject(item);
-                if (getProjectsCount() == 0) {
-                    getScene().lookup("#btnNewFile").setDisable(true);
-					getScene().lookup("#btnOpenFile").setDisable(true);
-					disableAllButtons(true);
+                controller.closeTab(orgTab);
+                controller.openFile(getCurrentItem().getValue().getKey());
+                if (selectedTab != null) {
+                    controller.showTab((RobotTab) selectedTab);
                 }
-	}
+            }
+        }
+    }
 
-	/**
-	 * Creates a new project.
-	 *
-	 * @param name
-	 *        the name of the new project
-	 * @param folder
-	 *        the folder representing the project
-	 * @param description
-	 *        the description of the project
-	 * @return whether creating the project was successful
-	 */
-	public boolean newProject(final String name, final String folder, final String description) {
-		boolean projectDoesntExist = root.getChildren().parallelStream().map(TreeItem::getValue).map(Pair::getValue).noneMatch(n -> n.equalsIgnoreCase(name))
-						&& findItemByPath(root, folder) == null;
-		if (projectDoesntExist) {
-			ProjectSettings project = new ProjectSettings(name, folder, description);
-			settings.project().save(project);
-			try {
-				FileUtils.forceMkdir(new File(project.getFolder()));
-			}catch(IOException e) {
-				LOGGER.error("Failed to create project directory", e);
-			}
-			addProject(project);
-		}
-		return projectDoesntExist;
-	}
+    @FXML
+    private void deleteButtonPressed() {
+        ObservableList<TreeItem<Pair<File, String>>> selectedItems = getAllCurrentItems();
 
-	private void addProject(final ProjectSettings project) {
-		// Check if the project still exists
-		if (project.getFolder() == null) {
-			return;
-		}
+        // First check if there are any robots running, and count the amount of projects and robot files.
+        int running = 0;
+        int robotFiles = 0;
+        int projects = 0;
+        for (TreeItem<Pair<File, String>> item : selectedItems) {
+            if (item == getProject(item)) {
+                projects++;
+            } else {
+                robotFiles++;
+                RobotTab tab = (RobotTab) controller.findTab(item.getValue().getKey());
+                if (tab != null && tab.getEditorPane().getControls().robotRunning())
+                    running++;
+            }
+        }
 
-		TreeItem<Pair<File, String>> projectNode = new ProjectTreeItem(new File(project.getFolder()), project.getName());
-		root.getChildren().add(projectNode);
+        // Build the title text for the confirmation dialog.
+        String titleText = "Deleting "
+                + (robotFiles > 0 ? robotFiles + " robot(s)" : "")
+                + (robotFiles > 0 && projects > 0 ? " and " : "")
+                + (projects > 0 ? projects + " project(s)." : ".");
 
-		if (watcher != null) {
-			try {
-				watcher.addFolderListener(this, Paths.get(project.getFolder()));
-			} catch (IOException e) {}
-		}
-		projectNode.setExpanded(false);
-		select(projectNode);
-	}
+        // Create and show the dialog.
+        AlertDialog dialog = new AlertDialog(Alert.AlertType.WARNING,
+                titleText,
+                running > 0 ? "One or more robots are still running, deleting will terminate them." : "",
+                "Do you want to delete all selected items from your drive?",
+                ButtonType.YES, ButtonType.NO
+        );
+        Optional<ButtonType> result = dialog.showAndWait();
 
-	/**
-	 * Selects an item in the treeview corresponding to given a path.
-	 *
-	 * @param path
-	 *        the path of the item to select
-	 */
-	public void select(final String path) {
-		select(findItemByPath(root, path));
-	}
+        if (result.isPresent() && result.get() == ButtonType.YES) {
+            // If there are projects to be deleted, ask whether to remove them or delete them on disk.
+            boolean hardDelete = false;
+            if (projects > 0) {
+                AlertDialog projectDelete = new AlertDialog(Alert.AlertType.WARNING,
+                        "Delete projects from disk?", "",
+                        "Deleting projects will remove them from your workspace. Do you also want to delete all files from your disk?",
+                        ButtonType.YES, ButtonType.NO, ButtonType.CANCEL
+                );
 
-	private TreeItem<Pair<File, String>> findItemByPath(final TreeItem<Pair<File, String>> parent, final String path) {
-		TreeItem<Pair<File, String>> resultItem = null;
-		for (TreeItem<Pair<File, String>> item : parent.getChildren()) {
-			if (path.equals(item.getValue().getKey().getPath())) {
-				resultItem = item;
-			} else {
-				TreeItem<Pair<File, String>> child = findItemByPath(item, path);
-				if (child != null) {
-					resultItem = child;
-				}
-			}
-		}
-		return resultItem;
-	}
+                Optional<ButtonType> res = projectDelete.showAndWait();
+                if (res.isPresent() && res.get() == ButtonType.YES) {
+                    hardDelete = true;
+                } else if (res.isPresent() && res.get() == ButtonType.CANCEL) {
+                    return;
+                }
+            }
 
-	/**
-	 * Refreshes the selection in the treeview.
-	 *
-	 * @param item
-	 *        the clicked item
-	 */
-	public void select(final TreeItem<Pair<File, String>> item) {
-		if (item != null) {
-			trvProjects.getSelectionModel().clearSelection();
-			trvProjects.getSelectionModel().select(item);
-			trvProjects.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-				if (observable.getValue() != null) {
-					controller.disableNewFileButton(false);
-					controller.disableOpenFileButton(false);
-				} else {
-					controller.disableNewFileButton(true);
-					controller.disableOpenFileButton(true);
-				}
-			});
-		}
-	}
+            // Delete the items.
+            deleteItems(selectedItems, hardDelete);
+        }
+    }
 
-	/**
-	 * Gets the selectionmodel from the treeview.
-	 *
-	 * @return the selectionmodel
-	 */
-	public MultipleSelectionModel<TreeItem<Pair<File, String>>> getSelectionModel() {
-		return trvProjects.getSelectionModel();
-	}
+    /**
+     * Delete multiple items from the tree view.
+     *
+     * @param items              The items to delete.
+     * @param hardDeleteProjects Whether to delete the projects from disk.
+     */
+    private void deleteItems(ObservableList<TreeItem<Pair<File, String>>> items, boolean hardDeleteProjects) {
+        // Stop and delete all robots.
+        items.stream().filter(t -> t != null).forEach(t -> {
+            RobotTab tab = (RobotTab) controller.findTab(t.getValue().getKey());
+            if (tab != null) {
+                tab.getEditorPane().getControls().stop();
+            }
+            t.getValue().getKey().delete();
+        });
+
+        // Delete all projects.
+        items.stream().filter(i -> i != null && i == getProject(i))
+                .forEach(p -> {
+                    if (hardDeleteProjects) {
+                        deleteProject(p);
+                    } else {
+                        removeProject(p);
+                    }
+                });
+    }
+
+    private void loadProjects() {
+        Platform.runLater(() -> {
+            List<ProjectSettings> projects = settings.project().getAll();
+            if (projects.isEmpty()) {
+                disableAllButtons(true);
+                return;
+            }
+            ;
+            projects.forEach(this::addProject);
+            if (settings.simple().get(Settings.LICENSE, Settings.License) == null && new File(DEFAULT_PROJECT_PATH).exists()) {
+                newProject(DEFAULT_PROJECT_NAME, DEFAULT_PROJECT_PATH, "");
+            }
+
+            root.getChildren().forEach(node -> node.setExpanded(false));
+            root.setExpanded(true);
+        });
+    }
+
+    /**
+     * Removes an item from the project list and keeps the files.
+     *
+     * @param item the item to remove
+     */
+    public void removeProject(final TreeItem<Pair<File, String>> item) {
+        root.getChildren().remove(item);
+        settings.project().delete(item.getValue().getValue());
+        if (getProjectsCount() == 0) {
+            disableFileButtons(true);
+            disableAllButtons(true);
+        }
+    }
+
+    /**
+     * Deletes a project and it's files.
+     *
+     * @param item a project item
+     */
+    public void deleteProject(final TreeItem<Pair<File, String>> item) {
+        try {
+            FileUtils.deleteDirectory(item.getValue().getKey());
+        } catch (IOException e) {
+            LOGGER.error("Failed to delete project", e);
+        }
+        removeProject(item);
+    }
+
+    /**
+     * Creates a new project.
+     *
+     * @param name        the name of the new project
+     * @param folder      the folder representing the project
+     * @param description the description of the project
+     * @return whether creating the project was successful
+     */
+    public boolean newProject(final String name, final String folder, final String description) {
+        boolean projectDoesntExist = root.getChildren().parallelStream().map(TreeItem::getValue).map(Pair::getValue).noneMatch(n -> n.equalsIgnoreCase(name))
+                && findItemByPath(root, folder) == null;
+        if (projectDoesntExist) {
+            ProjectSettings project = new ProjectSettings(name, folder, description);
+            settings.project().save(project);
+            try {
+                FileUtils.forceMkdir(new File(project.getFolder()));
+            } catch (IOException e) {
+                LOGGER.error("Failed to create project directory", e);
+            }
+            addProject(project);
+        }
+        return projectDoesntExist;
+    }
+
+    private void addProject(final ProjectSettings project) {
+        // Check if the project still exists
+        if (project.getFolder() == null) {
+            return;
+        }
+
+        TreeItem<Pair<File, String>> projectNode = new ProjectTreeItem(new File(project.getFolder()), project.getName());
+        root.getChildren().add(projectNode);
+
+        if (watcher != null) {
+            try {
+                watcher.addFolderListener(this, Paths.get(project.getFolder()));
+            } catch (IOException e) {
+            }
+        }
+        projectNode.setExpanded(false);
+        select(projectNode);
+    }
+
+    /**
+     * Selects an item in the treeview corresponding to given a path.
+     *
+     * @param path the path of the item to select
+     */
+    public void select(final String path) {
+        select(findItemByPath(root, path));
+    }
+
+    private TreeItem<Pair<File, String>> findItemByPath(final TreeItem<Pair<File, String>> parent, final String path) {
+        TreeItem<Pair<File, String>> resultItem = null;
+        for (TreeItem<Pair<File, String>> item : parent.getChildren()) {
+            if (path.equals(item.getValue().getKey().getPath())) {
+                resultItem = item;
+            } else {
+                TreeItem<Pair<File, String>> child = findItemByPath(item, path);
+                if (child != null) {
+                    resultItem = child;
+                }
+            }
+        }
+        return resultItem;
+    }
+
+    /**
+     * Refreshes the selection in the treeview.
+     *
+     * @param item the clicked item
+     */
+    public void select(final TreeItem<Pair<File, String>> item) {
+        if (item != null) {
+            trvProjects.getSelectionModel().clearSelection();
+            trvProjects.getSelectionModel().select(item);
+            trvProjects.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                if (observable.getValue() != null) {
+                    controller.disableNewFileButton(false);
+                    controller.disableOpenFileButton(false);
+                } else {
+                    controller.disableNewFileButton(true);
+                    controller.disableOpenFileButton(true);
+                }
+            });
+        }
+    }
+
+    /**
+     * Gets the selectionmodel from the treeview.
+     *
+     * @return the selectionmodel
+     */
+    public MultipleSelectionModel<TreeItem<Pair<File, String>>> getSelectionModel() {
+        return trvProjects.getSelectionModel();
+    }
 
     /**
      * Called when the outside change to the robot file has been done
@@ -356,7 +416,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
     private void robotFileChanged(final Path child) {
 
         File file = child.toFile();
-        RobotTab tab = (RobotTab)controller.findTab(file);
+        RobotTab tab = (RobotTab) controller.findTab(file);
         if (tab == null) {
             return;
         }
@@ -375,284 +435,268 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 
         tab.requestFocus();
 
-	    // This must be done in the FX application thread.
-	    final Runnable showDialog = new Runnable() {
-		    @Override
-		    public void run() {
-			    // Create and show an alert dialog saying the content has been changed.
-			    AlertDialog alert = new AlertDialog(Alert.AlertType.WARNING, "Robot file content change",
-					    "The robot file has been modified outside the editor.", "Do you want reload the robot file?",
-					    ButtonType.YES, ButtonType.NO);
+        // This must be done in the FX application thread.
+        final Runnable showDialog = new Runnable() {
+            @Override
+            public void run() {
+                // Create and show an alert dialog saying the content has been changed.
+                AlertDialog alert = new AlertDialog(Alert.AlertType.WARNING, "Robot file content change",
+                        "The robot file has been modified outside the editor.", "Do you want reload the robot file?",
+                        ButtonType.YES, ButtonType.NO);
 
-			    final Optional<ButtonType> result = alert.showAndWait();
-			    if (result.get() == ButtonType.YES) {
-				    tab.reload();
-			    }
-		    }
-	    };
-	    Platform.runLater(showDialog);
+                final Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.YES) {
+                    tab.reload();
+                }
+            }
+        };
+        Platform.runLater(showDialog);
     }
 
-	@Override
-	public void folderChanged(final Path dir, final Path child, final WatchEvent<Path> event) {
-		for (TreeItem<Pair<File, String>> item : root.getChildren()) {
-			if (item instanceof ProjectTreeItem) {
-				ProjectTreeItem project = (ProjectTreeItem) item;
-				if (dir.startsWith(project.getValue().getKey().getAbsolutePath())) {
-					if (event.kind() == ENTRY_MODIFY) {
+    @Override
+    public void folderChanged(final Path dir, final Path child, final WatchEvent<Path> event) {
+        for (TreeItem<Pair<File, String>> item : root.getChildren()) {
+            if (item instanceof ProjectTreeItem) {
+                ProjectTreeItem project = (ProjectTreeItem) item;
+                if (dir.startsWith(project.getValue().getKey().getAbsolutePath())) {
+                    if (event.kind() == ENTRY_MODIFY) {
                         // The content of file in project directory has been changed
                         robotFileChanged(child);
-					} else { // ENTRY_CREATE
+                    } else { // ENTRY_CREATE
                         // The files in project directory has changed (i.e. some file(s) has been removed / renamed / added)
-						project.refresh();
-					}
-				}
-			}
-		}
-	}
+                        project.refresh();
+                    }
+                }
+            }
+        }
+    }
 
-	/**
-	 * Returns the root of the tree.
-	 *
-	 * @return the root of the tree
-	 */
-	public TreeItem<Pair<File, String>> getRoot() {
-		return root;
-	}
-
-	/**
-	 * @return the currently selected node
-	 */
-	public TreeItem<Pair<File, String>> getCurrentItem() {
-		return trvProjects.getSelectionModel().getSelectedItem();
-	}
-
-	/**
-	 * @return All currently selected nodes.
+    /**
+     * Returns the root of the tree.
+     *
+     * @return the root of the tree
      */
-	public ObservableList<TreeItem<Pair<File, String>>> getAllCurrentItems() {
-		return trvProjects.getSelectionModel().getSelectedItems();
-	}
+    public TreeItem<Pair<File, String>> getRoot() {
+        return root;
+    }
 
-	/**
-	 * Gets the first project node above the childItem.
-	 *
-	 * @param childItem
-	 * @return the project node
-	 */
-	public TreeItem<Pair<File, String>> getProject(final TreeItem<Pair<File, String>> childItem) {
-		TreeItem<Pair<File, String>> item = childItem;
-		if (item == root) {
-			return null;
-		}
-		if (item != null) {
-			while (item.getParent() != root) {
-				item = item.getParent();
-			}
-			return item;
-		}
-		return null;
-	}
+    /**
+     * @return the currently selected node
+     */
+    public TreeItem<Pair<File, String>> getCurrentItem() {
+        return trvProjects.getSelectionModel().getSelectedItem();
+    }
 
-	/**
-	 * Gets the first project node above the selected item.
-	 *
-	 * @return project node
-	 */
-	public TreeItem<Pair<File, String>> getCurrentProject() {
-		return getProject(getCurrentItem());
-	}
+    /**
+     * @return All currently selected nodes.
+     */
+    public ObservableList<TreeItem<Pair<File, String>>> getAllCurrentItems() {
+        return trvProjects.getSelectionModel().getSelectedItems();
+    }
 
-	/**
-	 * Gets the project path of a node.
-	 *
-	 * @param file
-	 * @return The project path if it exists
-	 */
-	public Optional<String> getProjectPath(final File file) {
-		select(file.getAbsolutePath());
-		Optional<String> projectPath = Optional.empty();
-		TreeItem<Pair<File, String>> project = getCurrentProject();
+    /**
+     * Gets the first project node above the childItem.
+     *
+     * @param childItem
+     * @return the project node
+     */
+    public TreeItem<Pair<File, String>> getProject(final TreeItem<Pair<File, String>> childItem) {
+        TreeItem<Pair<File, String>> item = childItem;
+        if (item == root) {
+            return null;
+        }
+        if (item != null) {
+            while (item.getParent() != root) {
+                item = item.getParent();
+            }
+            return item;
+        }
+        return null;
+    }
 
-		if (project != null) {
-			projectPath = Optional.of(project.getValue().getKey().getPath());
-		}
+    /**
+     * Gets the first project node above the selected item.
+     *
+     * @return project node
+     */
+    public TreeItem<Pair<File, String>> getCurrentProject() {
+        return getProject(getCurrentItem());
+    }
 
-		return projectPath;
-	}
+    /**
+     * Gets the project path of a node.
+     *
+     * @param file
+     * @return The project path if it exists
+     */
+    public Optional<String> getProjectPath(final File file) {
+        select(file.getAbsolutePath());
+        Optional<String> projectPath = Optional.empty();
+        TreeItem<Pair<File, String>> project = getCurrentProject();
 
-	/**
-	 * Stops the folder watcher.
-	 */
-	public static void stop() {
-		if (watcher != null) {
-			watcher.stop();
-		}
-	}
+        if (project != null) {
+            projectPath = Optional.of(project.getValue().getKey().getPath());
+        }
 
-	// public Optional<File> getRobot(final TreeItem<Pair<File, String>> parent, final RobotID robotID) {
-	// for (int i = 0; i < parent.getChildren().size(); i++) {
-	// TreeItem<Pair<File, String>> c = parent.getChildren().get(i);
-	// if (c.isLeaf()) {
-	// RobotID rId = RobotID.getInstance(c.getValue().getKey());
-	// if (rId == robotID) {
-	// return Optional.of(c.getValue().getKey());
-	// }
-	// } else {
-	// Optional<File> file = getRobot(c, robotID);
-	// if (file.isPresent()) {
-	// return file;
-	// }
-	// }
-	// }
-	// return Optional.empty();
-	// }
+        return projectPath;
+    }
 
-	protected void setGlobalController(final FXController controller) {
-		this.controller = controller;
-	}
+    /**
+     * Stops the folder watcher.
+     */
+    public static void stop() {
+        if (watcher != null) {
+            watcher.stop();
+        }
+    }
 
-	/**
-	 * A filefilter filtering on the FXController.BOT_EXTENSION extension.
-	 */
-	protected class BotFileFilter extends FileFilter implements FilenameFilter {
-		@Override
-		public boolean accept(final File file) {
-			return file.isDirectory() && !file.getName().startsWith(".") || file.getName().endsWith("." + Xill.FILE_EXTENSION);
-		}
+    protected void setGlobalController(final FXController controller) {
+        this.controller = controller;
+    }
 
-		@Override
-		public String getDescription() {
-			return "Xillio bot script files (*" + Xill.FILE_EXTENSION + ")";
-		}
+    /**
+     * A filefilter filtering on the FXController.BOT_EXTENSION extension.
+     */
+    protected class BotFileFilter extends FileFilter implements FilenameFilter {
+        @Override
+        public boolean accept(final File file) {
+            return file.isDirectory() && !file.getName().startsWith(".") || file.getName().endsWith("." + Xill.FILE_EXTENSION);
+        }
 
-		@Override
-		public boolean accept(final File directory, final String fileName) {
-			return accept(new File(directory, fileName));
-		}
-	}
+        @Override
+        public String getDescription() {
+            return "Xillio bot script files (*" + Xill.FILE_EXTENSION + ")";
+        }
 
-	private class ProjectTreeItem extends TreeItem<Pair<File, String>> {
+        @Override
+        public boolean accept(final File directory, final String fileName) {
+            return accept(new File(directory, fileName));
+        }
+    }
 
-		private boolean isLeaf;
-		private boolean isFirstTimeChildren = true;
-		private boolean isFirstTimeLeaf = true;
+    private class ProjectTreeItem extends TreeItem<Pair<File, String>> {
 
-		/**
-		 * @param file
-		 * @param name
-		 */
-		public ProjectTreeItem(final File file, final String name) {
-			super(new Pair<>(file, name));
-		}
+        private boolean isLeaf;
+        private boolean isFirstTimeChildren = true;
+        private boolean isFirstTimeLeaf = true;
 
-		@Override
-		public ObservableList<TreeItem<Pair<File, String>>> getChildren() {
-			if (isFirstTimeChildren) {
-				isFirstTimeChildren = false;
-				super.getChildren().setAll(buildChildren(this));
-			}
-			return super.getChildren();
-		}
+        /**
+         * @param file
+         * @param name
+         */
+        public ProjectTreeItem(final File file, final String name) {
+            super(new Pair<>(file, name));
+        }
 
-		@Override
-		public boolean isLeaf() {
-			if (isFirstTimeLeaf) {
-				isFirstTimeLeaf = false;
-				isLeaf = getValue().getKey().isFile();
-			}
-			return isLeaf;
-		}
+        @Override
+        public ObservableList<TreeItem<Pair<File, String>>> getChildren() {
+            if (isFirstTimeChildren) {
+                isFirstTimeChildren = false;
+                super.getChildren().setAll(buildChildren(this));
+            }
+            return super.getChildren();
+        }
 
-		public void refresh() {
-			Platform.runLater(() -> {
-				if (trvProjects.getScene() != null && trvProjects.getSelectionModel().getSelectedItem() != null) {
-					File selection = trvProjects.getSelectionModel().getSelectedItem().getValue().getKey();
-					ProjectTreeItem.super.getChildren().setAll(buildChildren(ProjectTreeItem.this));
-					select(selection.getAbsolutePath());
-				}
-			});
-		}
+        @Override
+        public boolean isLeaf() {
+            if (isFirstTimeLeaf) {
+                isFirstTimeLeaf = false;
+                isLeaf = getValue().getKey().isFile();
+            }
+            return isLeaf;
+        }
 
-		private ObservableList<TreeItem<Pair<File, String>>> buildChildren(final TreeItem<Pair<File, String>> TreeItem) {
-			File f = TreeItem.getValue().getKey();
-			ObservableList<TreeItem<Pair<File, String>>> children = FXCollections.observableArrayList();
+        public void refresh() {
+            Platform.runLater(() -> {
+                if (trvProjects.getScene() != null && trvProjects.getSelectionModel().getSelectedItem() != null) {
+                    File selection = trvProjects.getSelectionModel().getSelectedItem().getValue().getKey();
+                    ProjectTreeItem.super.getChildren().setAll(buildChildren(ProjectTreeItem.this));
+                    select(selection.getAbsolutePath());
+                }
+            });
+        }
 
-			if (f != null && f.isDirectory()) {
-				// Get a list with all files (folders and robots)
-				File[] files = f.listFiles(robotFileFilter);
+        private ObservableList<TreeItem<Pair<File, String>>> buildChildren(final TreeItem<Pair<File, String>> TreeItem) {
+            File f = TreeItem.getValue().getKey();
+            ObservableList<TreeItem<Pair<File, String>>> children = FXCollections.observableArrayList();
 
-				// Sort the list of files
-				Arrays.sort(files, (o1, o2) -> {
-					// Put directories above files
-					if (o1.isDirectory() && o2.isFile()) {
-						return -1;
-					} else if (o1.isFile() && o2.isDirectory()) {
-						return 1;
-						// Both are the same type, compare them normally
-					} else {
-						return o1.compareTo(o2);
-					}
-				});
+            if (f != null && f.isDirectory()) {
+                // Get a list with all files (folders and robots)
+                File[] files = f.listFiles(robotFileFilter);
 
-				// Create tree items from all files, add them to the list
-				for (File file : files) {
-					ProjectTreeItem treeItem = new ProjectTreeItem(file, file.getName());
-					children.add(treeItem);
-				}
-			}
+                // Sort the list of files
+                Arrays.sort(files, (o1, o2) -> {
+                    // Put directories above files
+                    if (o1.isDirectory() && o2.isFile()) {
+                        return -1;
+                    } else if (o1.isFile() && o2.isDirectory()) {
+                        return 1;
+                        // Both are the same type, compare them normally
+                    } else {
+                        return o1.compareTo(o2);
+                    }
+                });
 
-			return children;
-		}
-	}
+                // Create tree items from all files, add them to the list
+                for (File file : files) {
+                    ProjectTreeItem treeItem = new ProjectTreeItem(file, file.getName());
+                    children.add(treeItem);
+                }
+            }
 
-	/*
-	 * This method is called when the selection in the tree view is changed
-	 *
-	 * @see javafx.beans.value.ChangeListener#changed(javafx.beans.value.ObservableValue, java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	public void changed(final ObservableValue<? extends TreeItem<Pair<File, String>>> arg0, final TreeItem<Pair<File, String>> oldObject, final TreeItem<Pair<File, String>> newObject) {
-		// Update all buttons to their default state.
-		disableAllButtons(false);
+            return children;
+        }
+    }
+
+    /**
+     * This method is called when the selection in the tree view is changed
+     *
+     * @see javafx.beans.value.ChangeListener#changed(javafx.beans.value.ObservableValue, java.lang.Object, java.lang.Object)
+     */
+    @Override
+    public void changed(final ObservableValue<? extends TreeItem<Pair<File, String>>> arg0, final TreeItem<Pair<File, String>> oldObject, final TreeItem<Pair<File, String>> newObject) {
+        // Update all buttons to their default state.
+        disableAllButtons(false);
         disableFileButtons(true);
 
-		if (newObject == null || newObject == trvProjects.getRoot()) {
-			// No item is selected.
-			disableAllButtons(true);
+        if (newObject == null) {
+            // No item is selected.
+            disableAllButtons(true);
             disableFileButtons(true);
-		} else if (newObject == getProject(newObject)) {
-			// This is a project.
-			btnRename.setDisable(true);
+        } else if (newObject == getProject(newObject)) {
+            // This is a project.
+            btnRename.setDisable(true);
             disableFileButtons(false);
-		}
+        }
 
-		// Check if more than 1 item is selected.
-		if (getAllCurrentItems().size() > 1) {
-			btnRename.setDisable(true);
-			btnAddFolder.setDisable(true);
-		}
-	}
+        // Check if more than 1 item is selected.
+        if (getAllCurrentItems().size() > 1) {
+            btnRename.setDisable(true);
+            btnAddFolder.setDisable(true);
+        }
+    }
 
-	/**
-	 * Enable or disable all buttons.
-	 * @param disable Whether to disable or enable the buttons.
+    /**
+     * Enable or disable all buttons.
+     *
+     * @param disable Whether to disable or enable the buttons.
      */
-	private void disableAllButtons(boolean disable) {
-		btnAddFolder.setDisable(disable);
-		btnDelete.setDisable(disable);
-		btnRename.setDisable(disable);
-		btnUpload.setDisable(disable);
-	}
+    private void disableAllButtons(boolean disable) {
+        btnAddFolder.setDisable(disable);
+        btnDelete.setDisable(disable);
+        btnRename.setDisable(disable);
+        btnUpload.setDisable(disable);
+    }
 
-	/**
-	 * Update the New File and Open File buttons.
-	 * @param disable Whether to disable or enable the buttons.
+    /**
+     * Update the New File and Open File buttons.
+     *
+     * @param disable Whether to disable or enable the buttons.
      */
-	private void disableFileButtons(boolean disable) {
-		controller.disableNewFileButton(disable);
-		controller.disableOpenFileButton(disable);
-	}
+    private void disableFileButtons(boolean disable) {
+        controller.disableNewFileButton(disable);
+        controller.disableOpenFileButton(disable);
+    }
 
     /**
      * Get the number of projects
