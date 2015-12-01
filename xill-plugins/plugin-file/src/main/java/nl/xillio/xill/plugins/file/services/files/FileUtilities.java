@@ -93,11 +93,36 @@ public interface FileUtilities extends XillService {
 	 */
 	Iterator<Folder> iterateFolders(File folder, boolean recursive) throws IOException;
 
+	/**
+	 * Verifies whether an authenticated user has read access to a specified file/folder.
+	 *
+	 * @param file The associated file object.
+	 * @return True if an authenticated user has read access to the specified file. Otherwise, false.
+     */
 	boolean canRead(File file);
 
+	/**
+	 * Verifies whether an authenticated user has write access to a specified file/folder.
+	 *
+	 * @param file The associated file object.
+	 * @return True if an authenticated user has write access to a specified file. Otherwise, false.
+     */
 	boolean canWrite(File file);
 
+	/**
+	 * Verifies whether an authenticated user has executability rights to the specified file/folder.
+	 *
+	 * @param file The associated file object
+	 * @return True if an authenticated user has executability rights to a specified file. Otherwise, false
+     */
 	boolean canExecute(File file);
 
+	/**
+	 * Verifies whether a file/folder is hidden or not.
+	 *
+	 * @param file The associated file object.
+	 * @return True if the file is hidden. Otherwise, false.
+	 * @throws IOException
+     */
 	boolean isHidden(File file) throws IOException;
 }

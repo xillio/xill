@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Iterator;
 
 /**
@@ -94,7 +95,7 @@ public class FileUtilitiesImpl implements FileUtilities {
 
 	@Override
 	public boolean canWrite(File file) {
-		return Files.isWritable(file.toPath());
+			return Files.isWritable(file.toPath());
 	}
 
 	@Override
