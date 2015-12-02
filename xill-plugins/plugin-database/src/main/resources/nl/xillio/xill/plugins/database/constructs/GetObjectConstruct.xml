@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <function>
   <description>
-    Finds the first entry in a table with the values from the given object.
-    It fills the values that were left 'null' with the values from the entry that was found.
-    The database parameter is optional. The last made connection will be used if no database is given.
-    returns a new object with the filled in values.
+Finds the first entry in a table with the values from the given object.
+
+The database parameter is optional. The last made connection will be used if no database is given.
+This function returns a new object with all its values.
+
+NOTE: Fields with null values are ignored in the search of objects.
   </description>
   <examples>
     <example>

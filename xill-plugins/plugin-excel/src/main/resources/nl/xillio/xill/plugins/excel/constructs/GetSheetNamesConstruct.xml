@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Get the names of all the sheets in a workbook.
+Get the names of all the sheets in a workbook.
     </description>
     <examples>
         <example title="Getting sheet names">

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Performs a browser click action on the provided element, which must be a node from an (X)HTML document.
-        Javascript handlers bound to the provided element will also be triggered.
+Performs a browser click action on the provided element, which must be a node from an (X)HTML document.  
+
+Javascript handlers bound to the provided element will also be triggered.
     </description>
     <examples>
         <example title="Usage">

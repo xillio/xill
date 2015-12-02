@@ -30,7 +30,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolicy {
 
-	private static final Logger LOG = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	private final Button start;
 	private final Button stop;
@@ -81,7 +81,7 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 		getDebugger().getOnRobotPause().addListener(this::onPause);
 		getDebugger().getOnRobotStop().addListener(e -> onStop());
 
-		getDebugger().setErrorHander(this);
+		getDebugger().setErrorHandler(this);
 	}
 	
 	/**
@@ -274,10 +274,10 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 
 		if (root instanceof RobotRuntimeException) {
 			log.error(root.getMessage());
-			LOG.error("Exception occurred in robot", e);
+			LOGGER.error("Exception occurred in robot", e);
 		} else if (e instanceof RobotRuntimeException) {
 			log.error(e.getMessage());
-			LOG.error("Exception occurred in robot", e);
+			LOGGER.error("Exception occurred in robot", e);
 		} else if (root == null) {
 			log.error("An error occurred in a robot: " + e.getMessage(), e);
 		} else {

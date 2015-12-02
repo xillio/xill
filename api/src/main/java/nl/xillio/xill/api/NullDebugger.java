@@ -115,7 +115,7 @@ public class NullDebugger implements Debugger {
 	}
 
 	@Override
-	public void setErrorHander(final ErrorHandlingPolicy handler) {}
+	public void setErrorHandler(final ErrorHandlingPolicy handler) {}
 
 	@Override
 	public List<Instruction> getStackTrace() {

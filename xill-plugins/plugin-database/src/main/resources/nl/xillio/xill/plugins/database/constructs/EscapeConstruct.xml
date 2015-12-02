@@ -1,36 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<function Tag="escape">
-  <name>escape</name>
-  <parameters>
-    <param name="database">
-    </param>
-  </parameters>
-  <description><![CDATA[
-	
-  ]]></description>
-  <examples>
-    <example description="Executing:"><![CDATA[
-    	String.ampersandEncode("<p><a href=\"default.asp\">HTML Tutorial</a> This is a link to a page on this website.</p>");
-    ]]></example>
-    <example description="Will return:"><![CDATA[
-    	"&lt;p&gt;&lt;a href=&quot;default.asp&quot;&gt;HTML Tutorial&lt;/a&gt; This is a link to a page on this website.&lt;/p&gt"
-    	]]>
-    </example>
-  </examples>
-  <references>
-  	<reference package = "String">
-  		ampersandDecode
-  	</reference>
-  </references>
-  <searchTags>
-	<searchTag>
-		ampersand
-	</searchTag>
-	<searchTag>
-		encode
-	</searchTag>
-	<searchTag>
-		encrypt
-	</searchTag>
-  </searchTags>
+<function>
+	<description>
+Escapes a string and returns it.  
+
+The escaping depends on the database type, so in order to escape a string a connection to a database must first be established.
+	</description>
+	<examples>
+		<example title="Usage">
+			<header>Escaping a string.</header>
+			<code>
+				use System;
+				use Database;
+
+				var con = Database.connect("database.sqlite", "sqlite");
+
+				var unescaped = "This is an \"unescaped\" string.\n\tIt contains 'special' characters.";
+				var escaped = Database.escape(unescaped);
+
+				System.print(escaped);
+				// This will print: This is an \"unescaped\" string.\n\tIt contains \'special\' characters.
+				// Note how the newline and tab are not printed as such, but as their string counterpart (the literals "\n" and "\t").
+			</code>
+		</example>
+	</examples>
+	<references>
+		<reference>connect</reference>
+	</references>
+	<searchTags>
+		MySQL, MSSQL, SQL Server, Oracle, SQLite, SQL, escape
+	</searchTags>
 </function>

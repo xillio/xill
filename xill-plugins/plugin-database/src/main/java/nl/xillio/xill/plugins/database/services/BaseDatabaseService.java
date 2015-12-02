@@ -1,13 +1,8 @@
 package nl.xillio.xill.plugins.database.services;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -293,7 +288,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		}
 
 		// creates entire SQL query according to DB type
-		return createSelectQuery(table, constraintsSql);
+		return createSelectQuery(escapeTableName(table), constraintsSql);
 	}
 
 	/**
@@ -408,7 +403,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		Arrays.fill(markers, '?');
 		String valueString = StringUtils.join(markers, ',');
 
-		String sql = "INSERT INTO " + table + " (" + keyString + ") VALUES (" + valueString + ")";
+		String sql = "INSERT INTO " + escapeTableName(table) + " (" + keyString + ") VALUES (" + valueString + ")";
 
 		PreparedStatement statement = connection.prepareStatement(sql);
 		fillStatement(newObject, statement, 1);
@@ -435,7 +430,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		String setString = createQueryPart(connection, newObject.keySet(), ",");
 		String whereString = createQueryPart(connection, keys, " AND ");
 
-		String sql = "UPDATE " + table + " SET " + setString + " WHERE " + whereString;
+		String sql = "UPDATE " + escapeTableName(table) + " SET " + setString + " WHERE " + whereString;
 
 		PreparedStatement statement = connection.prepareStatement(sql);
 		fillStatement(newObject, statement, 1);
@@ -446,6 +441,16 @@ public abstract class BaseDatabaseService implements DatabaseService {
 
 		statement.execute();
 		statement.close();
+	}
+
+	/**
+	 * Escape the table name.
+	 *
+	 * @param table The table name that needs to be escaped
+	 * @return The escaped table name
+     */
+	private String escapeTableName(String table) {
+		return String.format("`%s`", table);
 	}
 
 	/**
@@ -490,4 +495,19 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		return delimiterString + identifier + delimiterString;
 	}
 
+	/**
+	 * Escapes a sql string.
+	 * @param unescaped The unescaped sql string.
+	 * @return The escaped sql string.
+	 */
+	@Override
+	public String escapeString(String unescaped) {
+		String escaped = unescaped;
+		escaped = escaped.replaceAll("(\\\\|'|\")", "\\\\$1");
+		escaped = escaped.replaceAll("\n", "\\\\n");
+		escaped = escaped.replaceAll("\r", "\\\\r");
+		escaped = escaped.replaceAll("\t", "\\\\t");
+		escaped = escaped.replaceAll("\000", "\\\\000");
+		return escaped;
+	}
 }

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Delete a file or folder.
-        Returns the absolute path to the file or folder
+Delete a file or folder.  
+
+Returns the absolute path to the file or folder
     </description>
     <examples>
         <example title="Usage">

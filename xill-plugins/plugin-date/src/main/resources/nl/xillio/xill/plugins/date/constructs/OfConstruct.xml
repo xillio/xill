@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Creates a date variable from provided date and time inputs. Returns new date variable. The timezone field will
-        default
-        to your system's timezone.
+Creates a date variable from provided date and time inputs. Returns new date variable.   
+
+The timezone field will default to your system's timezone.
     </description>
     <examples>
         <example title="Usage">

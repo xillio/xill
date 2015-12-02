@@ -1,7 +1,7 @@
 description = 'this project contains the classes required by both users and implementations of the xill language'
 
 dependencies {
-    compile ('nl.xillio.xill:xill-data-types:1.0.7') {
+    compile ('nl.xillio.xill:xill-data-types:3.0.22') {
         // We do not need the utilservice annotation processors so skip this.
         exclude group: 'me.biesaart', module: 'utilservice'
     }

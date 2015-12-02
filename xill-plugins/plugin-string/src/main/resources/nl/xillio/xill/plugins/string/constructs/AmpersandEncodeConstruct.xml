@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
-  <description><![CDATA[
-    Encodes all special XML characters (,>,&,”,’) to their respective XML entities.
-  ]]></description>
+  <description>
+Encodes all special XML characters (,&gt;,&amp;,",') to their respective XML entities.
+  </description>
   <examples>
     <example title="Usage">
         <code>
