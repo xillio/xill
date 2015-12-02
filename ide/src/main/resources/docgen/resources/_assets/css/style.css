@@ -63,14 +63,46 @@ em {
 
 strong {
 	color: #3f4cFF;
-    -fx-font-family: "Glober xBold";
-    font-family: "Glober xBold", Glober, Segoe UI, Arial, sans-serif;
+	-fx-font-family: "Glober xBold";
+	font-family: "Glober xBold", Glober, Segoe UI, Arial, sans-serif;
 }
 
 blockquote {
-    -fx-background-color: #d0deff;
-    background-color: #d0deff;
-    color: #3f4c54;
+	-fx-background-color: #d0deff;
+	background-color: #d0deff;
+	color: #3f4c54;
+}
+
+li {
+	list-style-type: none;
+	margin-left: -1.5em;
+}
+
+li::before {
+	content: "\f069";
+	cursor: default;
+	display: block;
+	float: left;
+	font-family: FontAwesome;
+	font-size: .6em;
+	margin: 0.4em 0 0 -1.5em;
+}
+
+pre code {
+}
+pre {
+	padding: 0.1em 0.3em 0.3em 0.3em;
+	border-left: 0.5em solid #ccc;
+	margin: 1em 0 1em 0;
+	overflow: auto;
+	width: 93%;
+	background-color: #f5f5f5;
+}
+
+* html pre {
+	padding-bottom: 2em;
+	overflow: visible;
+	overflow-x: auto;
 }
 
 /* ------ Table ------ */
@@ -103,7 +135,12 @@ th {
 #signature .parameter {
 	margin-left: 2.0em;
 }
+
 #signature .parameter-default {
+	font-weight: normal;
+}
+
+#signature .parameter-type {
 	font-weight: normal;
 }
 
