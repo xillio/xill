@@ -133,6 +133,11 @@ public interface Debugger extends ErrorHandlingPolicy {
 	 */
 	public Event<RobotContinuedAction> getOnRobotContinue();
 
+    /**
+     * @return The Event
+     */
+    public Event<Object> getOnRobotInterrupt();
+
 	/**
 	 * @return true if the robot should be killed
 	 */

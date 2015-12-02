@@ -60,7 +60,7 @@ public class CallbotExpression implements Processable {
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		MetaExpression pathExpression = path.process(debugger).get();
 
-		File otherRobot = resolver.buildFile(new ConstructContext(robotID, robotID, null, null, null), pathExpression.getStringValue());
+		File otherRobot = resolver.buildFile(new ConstructContext(robotID, robotID, null, null, null, null), pathExpression.getStringValue());
 
 		LOGGER.debug("Evaluating callbot for " + otherRobot.getAbsolutePath());
 

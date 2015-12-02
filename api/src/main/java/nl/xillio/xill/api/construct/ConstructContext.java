@@ -2,7 +2,9 @@ package nl.xillio.xill.api.construct;
 
 import java.util.function.Consumer;
 
+import nl.xillio.events.Event;
 import nl.xillio.events.EventHost;
+import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.RobotAppender;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.events.RobotStartedAction;
@@ -18,6 +20,7 @@ public class ConstructContext {
 	private Logger robotLogger;
 	private final RobotID rootRobot;
 	private Logger rootLogger;
+    private Debugger debugger;
 
 	/**
 	 * Events for signalling to constructs that robots have started or stopped.
@@ -33,19 +36,20 @@ public class ConstructContext {
 	 *        the robotID of the current robot
 	 * @param rootRobot
 	 *        the robotID of the root robot
-	 * @param contstruct
+	 * @param construct
 	 *        the construct that will be using this context
 	 * @param robotStartedEvent
 	 *        The event host for started robots
 	 * @param robotStoppedEvent
 	 *        The event host for stopped robots
 	 */
-	public ConstructContext(final RobotID robot, final RobotID rootRobot, final Construct contstruct, final EventHost<RobotStartedAction> robotStartedEvent,
+	public ConstructContext(final RobotID robot, final RobotID rootRobot, final Construct construct, final Debugger debugger, final EventHost<RobotStartedAction> robotStartedEvent,
 			final EventHost<RobotStoppedAction> robotStoppedEvent) {
 		robotID = robot;
 		this.rootRobot = rootRobot;
 		this.robotStartedEvent = robotStartedEvent;
 		this.robotStoppedEvent = robotStoppedEvent;
+        this.debugger = debugger;
 	}
 
 	/**
@@ -111,4 +115,15 @@ public class ConstructContext {
 			robotStoppedEvent.getEvent().addListener(listener);
 		}
 	}
+
+    /**
+     * @return event that is invoked when the debugger is being stopped
+     */
+    public Event<Object> getOnRobotInterrupt() {
+        if (debugger == null) {
+            return null;
+        } else {
+            return debugger.getOnRobotInterrupt();
+        }
+    }
 }

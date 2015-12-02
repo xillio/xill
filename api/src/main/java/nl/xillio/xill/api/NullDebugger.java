@@ -70,7 +70,10 @@ public class NullDebugger implements Debugger {
 		return null;
 	}
 
-	@Override
+    @Override
+    public Event<Object> getOnRobotInterrupt() { return null; }
+
+    @Override
 	public void addBreakpoint(final Breakpoint breakpoint) {}
 
 	@Override
