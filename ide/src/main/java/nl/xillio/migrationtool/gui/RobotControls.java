@@ -272,12 +272,11 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 
 		Throwable root = ExceptionUtils.getRootCause(e);
 
+		LOGGER.error("Exception occurred in robot", e);
 		if (root instanceof RobotRuntimeException) {
 			log.error(root.getMessage());
-			LOGGER.error("Exception occurred in robot", e);
 		} else if (e instanceof RobotRuntimeException) {
 			log.error(e.getMessage());
-			LOGGER.error("Exception occurred in robot", e);
 		} else if (root == null) {
 			log.error("An error occurred in a robot: " + e.getMessage(), e);
 		} else {
