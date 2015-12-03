@@ -43,7 +43,7 @@ public class CanWriteConstructTest {
      * Test the regular flow of the CanWriteConstruct class.
      */
     @Test
-    public void testProcess() {
+    public void testProcess() throws FileNotFoundException {
 
         when(metaExpression.getStringValue()).thenReturn("");
 

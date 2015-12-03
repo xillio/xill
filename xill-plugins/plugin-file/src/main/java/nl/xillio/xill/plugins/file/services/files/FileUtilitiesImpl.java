@@ -90,31 +90,30 @@ public class FileUtilitiesImpl implements FileUtilities {
 
 	@Override
 	public boolean canRead(File file) throws FileNotFoundException {
-		if (Files.exists(file.toPath())) {
-			return Files.isReadable(file.toPath());
-		} else {
-			throw new FileNotFoundException("The specified file/folder does not exist.");
-		}
-
+		return fileCheck(file, Files.isReadable(file.toPath()));
 	}
 
 	@Override
-	public boolean canWrite(File file) {
-			return Files.isWritable(file.toPath());
+	public boolean canWrite(File file) throws FileNotFoundException {
+		return fileCheck(file, Files.isWritable(file.toPath()));
 	}
 
 	@Override
 	public boolean canExecute(File file) throws FileNotFoundException {
 
-		if (Files.exists(file.toPath())) {
-			return Files.isExecutable(file.toPath());
-		} else {
-			throw new FileNotFoundException("The specified file/folder does not exist.");
-		}
+		return fileCheck(file, Files.isExecutable(file.toPath()));
 	}
 
 	@Override
 	public boolean isHidden(File file) throws IOException{
-		return Files.isHidden(file.toPath());
+		return fileCheck(file, Files.isHidden(file.toPath()));
+	}
+
+	private boolean fileCheck(File file, boolean statement) throws FileNotFoundException {
+		if (Files.exists(file.toPath())) {
+			return statement;
+		} else {
+			throw new FileNotFoundException("The specified file folder does not exist.");
+		}
 	}
 }

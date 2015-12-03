@@ -20,6 +20,12 @@ import static org.mockito.Mockito.*;
  */
 public class IsHiddenConstructTest extends TestUtils {
 
+
+    /**
+     *
+     *
+     * @throws IOException
+     */
     @Test
     public void testProcess() throws IOException {
 

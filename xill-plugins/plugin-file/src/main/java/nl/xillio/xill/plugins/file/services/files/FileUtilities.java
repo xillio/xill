@@ -109,7 +109,7 @@ public interface FileUtilities extends XillService {
 	 * @param file The associated file object.
 	 * @return True if an authenticated user has write access to a specified file. Otherwise, false.
      */
-	boolean canWrite(File file);
+	boolean canWrite(File file) throws FileNotFoundException;
 
 	/**
 	 * Verifies whether an authenticated user has executability rights to the specified file/folder.
