@@ -3,12 +3,10 @@ package nl.xillio.xill.plugins.xml.constructs;
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.data.XmlNode;
 import org.testng.annotations.Test;
-import org.testng.annotations.BeforeClass;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.plugins.xml.services.NodeService;
 import nl.xillio.xill.api.construct.ConstructContext;
-import nl.xillio.xill.services.inject.InjectorUtils;
 import nl.xillio.xill.api.components.RobotID;
 
 import java.io.File;

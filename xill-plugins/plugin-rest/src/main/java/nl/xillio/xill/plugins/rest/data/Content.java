@@ -1,12 +1,10 @@
 package nl.xillio.xill.plugins.rest.data;
 
-import com.google.inject.ConfigurationException;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.data.XmlNode;
 import nl.xillio.xill.api.data.XmlNodeFactory;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.services.inject.InjectorUtils;
 import nl.xillio.xill.services.json.JsonException;
 import nl.xillio.xill.services.json.JsonParser;
 import org.apache.commons.io.IOUtils;
@@ -34,7 +32,6 @@ public class Content {
     private String content = "";
     private ContentType type = ContentType.TEXT_PLAIN;
     private MultipartBody multipartBody = null;
-    private XmlNodeFactory xmlNodeFactory;
     private static final String ENCODING = "UTF-8";
 
     /**
@@ -92,7 +89,7 @@ public class Content {
 
         this.fullResponse = fullResponse;
 
-        if(fullResponse == null) {
+        if (fullResponse == null) {
             return;
         }
 
@@ -139,9 +136,9 @@ public class Content {
      *
      * @return new Xill variable (JSON-&gt;OBJECT type / XML-&gt;XmlNode / other-&gt;ATOMIC string)
      */
-    public MetaExpression getMeta() {
+    public MetaExpression getMeta(JsonParser jsonParser, XmlNodeFactory xmlNodeFactory) {
         LinkedHashMap<String, MetaExpression> response = new LinkedHashMap<>();
-        response.put("body", getMetaBody());
+        response.put("body", getMetaBody(jsonParser, xmlNodeFactory));
 
         if (fullResponse != null) {
             response.put("status", fromValue(fullResponse.getStatusLine().getStatusCode()));
@@ -161,10 +158,9 @@ public class Content {
         return headers;
     }
 
-    private MetaExpression getMetaBody() {
+    private MetaExpression getMetaBody(JsonParser jsonParser, XmlNodeFactory xmlNodeFactory) {
         // Only this is branch is covered with unit tests (FOR NOW) in accordance with a discussion with Thomas Biesaart.
         if (this.getType().getMimeType().contains("json")) {
-            JsonParser jsonParser = InjectorUtils.get(JsonParser.class);
             try {
                 Object result = jsonParser.fromJson(this.getContent(), Object.class);
                 return MetaExpression.parseObject(result); // Mockito does not provide mechanisms for testing static methods.
@@ -175,15 +171,6 @@ public class Content {
         }
 
         if (this.getType().getMimeType().contains("xml")) {
-            if (xmlNodeFactory == null) {
-                // We have no factory yet
-                try {
-                    xmlNodeFactory = InjectorUtils.get(XmlNodeFactory.class);
-                } catch (ConfigurationException e) {
-                    LOGGER.error("No binding found for XmlNodeFactory", e);
-                    throw new RobotRuntimeException("Did not detect the XML plugin, do you have it installed?", e);
-                }
-            }
 
             try {
                 XmlNode xml = xmlNodeFactory.fromString(this.getContent());

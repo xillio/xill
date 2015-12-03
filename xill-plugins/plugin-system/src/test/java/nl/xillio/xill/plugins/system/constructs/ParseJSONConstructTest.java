@@ -1,7 +1,8 @@
 package nl.xillio.xill.plugins.system.constructs;
 
-import nl.xillio.xill.ConstructTest;
+import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.services.json.JsonException;
 import nl.xillio.xill.services.json.JsonParser;
@@ -18,7 +19,7 @@ import static org.mockito.Mockito.*;
 /**
  * Test the {@link ParseJSONConstruct}
  */
-public class ParseJSONConstructTest extends ConstructTest {
+public class ParseJSONConstructTest extends TestUtils {
 
     /**
      * Test the process method under normal circumstances

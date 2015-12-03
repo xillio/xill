@@ -1,6 +1,7 @@
 package nl.xillio.xill.services.inject;
 
 import com.google.inject.AbstractModule;
+import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.services.json.JacksonParser;
 import nl.xillio.xill.services.json.JsonParser;
@@ -27,6 +28,7 @@ public class DefaultInjectorModule extends AbstractModule {
             bind(PrettyJsonParser.class).toInstance(new JacksonParser(true));
 
             requestStaticInjection(Construct.class);
+            requestStaticInjection(MetaExpression.class);
 
         } catch (NoSuchMethodException | SecurityException e) {
             e.printStackTrace();

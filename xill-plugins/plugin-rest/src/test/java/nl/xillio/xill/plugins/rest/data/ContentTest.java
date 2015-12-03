@@ -2,7 +2,7 @@ package nl.xillio.xill.plugins.rest.data;
 
 import me.biesaart.utils.IOUtils;
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.services.inject.InjectorUtils;
+import nl.xillio.xill.services.json.JacksonParser;
 import nl.xillio.xill.services.json.JsonException;
 import nl.xillio.xill.services.json.JsonParser;
 import org.apache.http.Header;
@@ -37,12 +37,12 @@ public class ContentTest {
         when(httpEntity.getContentType()).thenReturn(header);
 
         Content content = new Content(fullResponse);
-        Header[] headers = new Header[]{ new BasicHeader("type", "XILLSERVER") };
+        Header[] headers = new Header[]{new BasicHeader("type", "XILLSERVER")};
         when(fullResponse.getStatusLine().getStatusCode()).thenReturn(200);
         when(fullResponse.getAllHeaders()).thenReturn(headers);
 
         // Call to getMeta()
-        MetaExpression result = content.getMeta();
+        MetaExpression result = content.getMeta(new JacksonParser(false), null);
         assertEquals(result.toString(), "{\"body\":\"XILLIDE\",\"status\":200,\"headers\":{\"type\":\"XILLSERVER\"}}");
     }
 
@@ -61,7 +61,7 @@ public class ContentTest {
         Header header = new BasicHeader("type", "application/json");
         HttpEntity httpEntity = mock(HttpEntity.class);
         when(httpEntity.getContentType()).thenReturn(header);
-        JsonParser jsonParser = InjectorUtils.get(JsonParser.class);
+        JsonParser jsonParser = new JacksonParser(false);
         Object o = jsonParser.fromJson("{\"body\":\"XILLIDE\"}", Object.class);
         assertEquals("{\"body\":\"XILLIDE\"}", MetaExpression.parseObject(o).toString());
     }
