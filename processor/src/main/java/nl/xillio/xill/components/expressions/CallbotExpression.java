@@ -80,7 +80,7 @@ public class CallbotExpression implements Processable {
 			Debugger childDebugger = debugger.createChild();
 			XillProcessor processor = new XillProcessor(robotID.getProjectPath(), otherRobot, pluginLoader, childDebugger);
 
-			processor.compileAsSubrobot(robotID);
+			processor.compileAsSubRobot(robotID);
 
 			try {
 				nl.xillio.xill.api.components.Robot robot = processor.getRobot();
