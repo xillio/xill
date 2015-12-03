@@ -1,14 +1,18 @@
 package nl.xillio.xill.plugins.math.services;
 
+import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.plugins.math.services.math.MathOperationsImpl;
 
+import java.time.ZonedDateTime;
+import nl.xillio.xill.plugins.date.data.Date;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 /**
@@ -16,35 +20,44 @@ import org.testng.annotations.Test;
  *
  * @author Pieter Soels.
  */
-public class MathOperationsImplTest {
+public class MathOperationsImplTest extends TestUtils {
 
-    @Test
-    public void testIsNumber(){
-        //Initialize
+    @DataProvider(name = "isNumber")
+    Object[][] isNumberTypes() {
+        return new Object[][]{
+                {fromValue(5.05), true},
+                {fromValue("1"), true},
+                {fromValue("Test"), false},
+                {fromValue(Double.NEGATIVE_INFINITY), true},
+                {fromValue(Double.POSITIVE_INFINITY), true},
+                {fromValue(true), true},
+                {fromValue((String) null), false},
+                {emptyList(), false},
+                {emptyObject(), false},
+                {fromValue(initializeTestList()), false},
+                {fromValue(initializeTestObject()), false},
+                {fromValue(new Date(ZonedDateTime.now()).toString()), false}
+        };
+    }
+
+    private LinkedHashMap<String, MetaExpression> initializeTestObject(){
+        LinkedHashMap<String, MetaExpression> value = new LinkedHashMap<>();
+        value.put("test", fromValue(1));
+        return value;
+    }
+
+    private List<MetaExpression> initializeTestList(){
+        List<MetaExpression> value = new ArrayList<>();
+        value.add(fromValue(1));
+        return value;
+    }
+
+    @Test(dataProvider = "isNumber")
+    public void testIsNumber(MetaExpression value, boolean result){
+        // Initialize
         MathOperationsImpl math = new MathOperationsImpl();
-        List<MetaExpression> list = new ArrayList<>();
-        LinkedHashMap<String, MetaExpression> object = new LinkedHashMap<>();
 
-        //Mock
-        MetaExpression intValue = ExpressionBuilderHelper.fromValue(5);
-        list.add(intValue);
-        object.put("test", intValue);
-        MetaExpression doubleValue = ExpressionBuilderHelper.fromValue(5.05);
-        MetaExpression stringNumberValue = ExpressionBuilderHelper.fromValue("1");
-        MetaExpression stringTextValue = ExpressionBuilderHelper.fromValue("Test");
-        MetaExpression boolValue = ExpressionBuilderHelper.fromValue(true);
-        MetaExpression nullValue = ExpressionBuilderHelper.fromValue((String)null);
-        MetaExpression listValue = ExpressionBuilderHelper.fromValue(list);
-        MetaExpression objectValue = ExpressionBuilderHelper.fromValue(object);
-
-        //Assert
-        Assert.assertTrue(math.isNumber(intValue));
-        Assert.assertTrue(math.isNumber(doubleValue));
-        Assert.assertTrue(math.isNumber(stringNumberValue));
-        Assert.assertTrue(!math.isNumber(stringTextValue));
-        Assert.assertTrue(math.isNumber(boolValue));
-        Assert.assertTrue(!math.isNumber(nullValue));
-        Assert.assertTrue(!math.isNumber(listValue));
-        Assert.assertTrue(!math.isNumber(objectValue));
+        // Assert
+        Assert.assertEquals(math.isNumber(value), result);
     }
 }
