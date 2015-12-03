@@ -210,7 +210,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         ObservableList<TreeItem<Pair<File, String>>> selectedItems = getAllCurrentItems();
 
         // First check if there are any robots running, and count the amount of projects and robot files.
-        int running = 0;
+        boolean running = checkRobotsRunning(selectedItems, false);
         int robotFiles = 0;
         int projects = 0;
         for (TreeItem<Pair<File, String>> item : selectedItems) {
@@ -218,9 +218,6 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
                 projects++;
             } else {
                 robotFiles++;
-                RobotTab tab = (RobotTab) controller.findTab(item.getValue().getKey());
-                if (tab != null && tab.getEditorPane().getControls().robotRunning())
-                    running++;
             }
         }
 
@@ -233,7 +230,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         // Create and show the dialog.
         AlertDialog dialog = new AlertDialog(Alert.AlertType.WARNING,
                 titleText,
-                running > 0 ? "One or more robots are still running, deleting will terminate them." : "",
+                running ? "One or more robots are still running, deleting will terminate them." : "",
                 "Do you want to delete all selected items from your drive?",
                 ButtonType.YES, ButtonType.NO
         );
@@ -263,6 +260,36 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
     }
 
     /**
+     * Check if there are any robots running.
+     *
+     * @param items The items to check.
+     * @param stop Whether to stop the running robots.
+     * @return True if any items or sub-items are running robots.
+     */
+    private boolean checkRobotsRunning(ObservableList<TreeItem<Pair<File, String>>> items, boolean stop) {
+        boolean running = false;
+
+        for (TreeItem<Pair<File, String>> item : items) {
+            if (item == getProject(item)) {
+                // If the item is a project, recursively check all sub-items.
+                running |= checkRobotsRunning(item.getChildren(), stop);
+            } else {
+                // Check if the robot tab is open and the robot is running.
+                RobotTab tab = (RobotTab) controller.findTab(item.getValue().getKey());
+                if (tab != null && tab.getEditorPane().getControls().robotRunning()) {
+                    running = true;
+                    // Stop the robot.
+                    if (stop) {
+                        tab.getEditorPane().getControls().stop();
+                    }
+                }
+            }
+        }
+
+        return running;
+    }
+
+    /**
      * Delete multiple items from the tree view.
      *
      * @param items              The items to delete.
@@ -270,13 +297,8 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
      */
     private void deleteItems(ObservableList<TreeItem<Pair<File, String>>> items, boolean hardDeleteProjects) {
         // Stop and delete all robots.
-        items.stream().filter(t -> t != null).forEach(t -> {
-            RobotTab tab = (RobotTab) controller.findTab(t.getValue().getKey());
-            if (tab != null) {
-                tab.getEditorPane().getControls().stop();
-            }
-            t.getValue().getKey().delete();
-        });
+        checkRobotsRunning(items, true);
+        items.stream().forEach(t -> t.getValue().getKey().delete());
 
         // Delete all projects.
         items.stream().filter(i -> i != null && i == getProject(i))
