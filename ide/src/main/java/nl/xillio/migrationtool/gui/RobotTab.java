@@ -1,17 +1,5 @@
 package nl.xillio.migrationtool.gui;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Optional;
-import java.util.ResourceBundle;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -20,16 +8,8 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.DialogPane;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -48,499 +28,512 @@ import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.errors.XillParsingException;
 import nl.xillio.xill.util.settings.Settings;
 import nl.xillio.xill.util.settings.SettingsHandler;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 /**
  * A tab containing the editor, console and debug panel attached to a specific currentRobot.
  */
 public class RobotTab extends Tab implements Initializable, ChangeListener<DocumentState> {
-	private static final Logger log = LogManager.getLogger();
-	private static final SettingsHandler settings = SettingsHandler.getSettingsHandler();
+    private static final Logger log = LogManager.getLogger();
+    private static final SettingsHandler settings = SettingsHandler.getSettingsHandler();
 
-	private static final String PATH_STATUSICON_RUNNING = "M256,92.481c44.433,0,86.18,17.068,117.553,48.064C404.794,171.411,422,212.413,422,255.999 s-17.206,84.588-48.448,115.455c-31.372,30.994-73.12,48.064-117.552,48.064s-86.179-17.07-117.552-48.064 C107.206,340.587,90,299.585,90,255.999s17.206-84.588,48.448-115.453C169.821,109.55,211.568,92.481,256,92.481 M256,52.481 c-113.771,0-206,91.117-206,203.518c0,112.398,92.229,203.52,206,203.52c113.772,0,206-91.121,206-203.52 C462,143.599,369.772,52.481,256,52.481L256,52.481z M206.544,357.161V159.833l160.919,98.666L206.544,357.161z";
-	private static final String PATH_STATUSICON_PAUSED = "M256,92.481c44.433,0,86.18,17.068,117.553,48.064C404.794,171.411,422,212.413,422,255.999 s-17.206,84.588-48.448,115.455c-31.372,30.994-73.12,48.064-117.552,48.064s-86.179-17.07-117.552-48.064 C107.206,340.587,90,299.585,90,255.999s17.206-84.588,48.448-115.453C169.821,109.55,211.568,92.481,256,92.481 M256,52.481 c-113.771,0-206,91.117-206,203.518c0,112.398,92.229,203.52,206,203.52c113.772,0,206-91.121,206-203.52 C462,143.599,369.772,52.481,256,52.481L256,52.481z M240.258,346h-52.428V166h52.428V346z M326.17,346h-52.428V166h52.428V346z";
-	private final Group STATUSICON_RUNNING = createIcon(PATH_STATUSICON_RUNNING);
-	private final Group STATUSICON_PAUSED = createIcon(PATH_STATUSICON_PAUSED);
+    private static final String PATH_STATUSICON_RUNNING = "M256,92.481c44.433,0,86.18,17.068,117.553,48.064C404.794,171.411,422,212.413,422,255.999 s-17.206,84.588-48.448,115.455c-31.372,30.994-73.12,48.064-117.552,48.064s-86.179-17.07-117.552-48.064 C107.206,340.587,90,299.585,90,255.999s17.206-84.588,48.448-115.453C169.821,109.55,211.568,92.481,256,92.481 M256,52.481 c-113.771,0-206,91.117-206,203.518c0,112.398,92.229,203.52,206,203.52c113.772,0,206-91.121,206-203.52 C462,143.599,369.772,52.481,256,52.481L256,52.481z M206.544,357.161V159.833l160.919,98.666L206.544,357.161z";
+    private static final String PATH_STATUSICON_PAUSED = "M256,92.481c44.433,0,86.18,17.068,117.553,48.064C404.794,171.411,422,212.413,422,255.999 s-17.206,84.588-48.448,115.455c-31.372,30.994-73.12,48.064-117.552,48.064s-86.179-17.07-117.552-48.064 C107.206,340.587,90,299.585,90,255.999s17.206-84.588,48.448-115.453C169.821,109.55,211.568,92.481,256,92.481 M256,52.481 c-113.771,0-206,91.117-206,203.518c0,112.398,92.229,203.52,206,203.52c113.772,0,206-91.121,206-203.52 C462,143.599,369.772,52.481,256,52.481L256,52.481z M240.258,346h-52.428V166h52.428V346z M326.17,346h-52.428V166h52.428V346z";
+    private final Group STATUSICON_RUNNING = createIcon(PATH_STATUSICON_RUNNING);
+    private final Group STATUSICON_PAUSED = createIcon(PATH_STATUSICON_PAUSED);
 
-	@FXML
-	private HBox hbxBot;
-	@FXML
-	private EditorPane editorPane;
-	@FXML
-	private SplitPane spnBotPanes, spnBotLeft;
-	@FXML
-	private VBox vbxDebugHidden, vbxDebugpane;
-	@FXML
-	private ConsolePane consolePane;
-	@FXML
-	private StatusBar apnStatusBar;
+    @FXML
+    private HBox hbxBot;
+    @FXML
+    private EditorPane editorPane;
+    @FXML
+    private SplitPane spnBotPanes, spnBotLeft;
+    @FXML
+    private VBox vbxDebugHidden, vbxDebugpane;
+    @FXML
+    private ConsolePane consolePane;
+    @FXML
+    private StatusBar apnStatusBar;
 
-	private XillProcessor processor;
+    private XillProcessor processor;
 
-	private final FXController globalController;
-	private RobotID currentRobot;
+    private final FXController globalController;
+    private RobotID currentRobot;
 
-	/**
-	 * Create a new robottab that holds a currentRobot
-	 *
-	 * @param projectPath
-	 * @param documentPath
-	 *        The full path to the currentRobot (absolute)
-	 * @param globalController
-	 * @throws IOException
-	 */
-	public RobotTab(final File projectPath, final File documentPath, final FXController globalController) throws IOException {
-		this.globalController = globalController;
+    /**
+     * Create a new robottab that holds a currentRobot
+     *
+     * @param projectPath
+     * @param documentPath     The full path to the currentRobot (absolute)
+     * @param globalController
+     * @throws IOException
+     */
+    public RobotTab(final File projectPath, final File documentPath, final FXController globalController) throws IOException {
+        this.globalController = globalController;
 
-		if (!documentPath.isAbsolute()) {
-			throw new IllegalArgumentException("The provided document must be an absolute path.");
-		}
+        if (!documentPath.isAbsolute()) {
+            throw new IllegalArgumentException("The provided document must be an absolute path.");
+        }
 
-		loadProcessor(documentPath, projectPath);
-		currentRobot = getProcessor().getRobotID();
+        loadProcessor(documentPath, projectPath);
+        currentRobot = getProcessor().getRobotID();
 
-		// Load the FXML
-		try {
-			setContent(Loader.load(getClass().getResource("/fxml/RobotTabContent.fxml"), this));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+        // Load the FXML
+        try {
+            setContent(Loader.load(getClass().getResource("/fxml/RobotTabContent.fxml"), this));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-		// Add close request event handler
-		setOnCloseRequest(this::onClose);
+        // Add close request event handler
+        setOnCloseRequest(this::onClose);
 
-		initializeSettings(documentPath);
-		initializeTab(documentPath);
-		
-		// Add the context menu.
-		addContextMenu(globalController);
-	}
+        initializeSettings(documentPath);
+        initializeTab(documentPath);
 
-	private static void initializeSettings(final File documentPath) {
-		settings.simple().register(Settings.LAYOUT, Settings.RightPanelWidth_ + documentPath.getAbsolutePath(), "0.7", "Width of the right panel for the specified currentRobot");
-		settings.simple().register(Settings.LAYOUT, Settings.RightPanelCollapsed_ + documentPath.getAbsolutePath(), "true", "The collapsed-state of the right panel for the specified currentRobot");
-		settings.simple().register(Settings.LAYOUT, Settings.EditorHeight_ + documentPath.getAbsolutePath(), "0.6", "The height of the editor");
-	}
+        // Add the context menu.
+        addContextMenu(globalController);
+    }
 
-	private void initializeTab(final File documentPath) {
-		// First we set the tab name
-		setText(getName());
+    private static void initializeSettings(final File documentPath) {
+        settings.simple().register(Settings.LAYOUT, Settings.RightPanelWidth_ + documentPath.getAbsolutePath(), "0.7", "Width of the right panel for the specified currentRobot");
+        settings.simple().register(Settings.LAYOUT, Settings.RightPanelCollapsed_ + documentPath.getAbsolutePath(), "true", "The collapsed-state of the right panel for the specified currentRobot");
+        settings.simple().register(Settings.LAYOUT, Settings.EditorHeight_ + documentPath.getAbsolutePath(), "0.6", "The height of the editor");
+    }
 
-		// Set the tab dividers
-		double editorHeight = Double.parseDouble(settings.simple().get(Settings.LAYOUT, Settings.EditorHeight_ + documentPath.getAbsolutePath()));
+    private void initializeTab(final File documentPath) {
+        // First we set the tab name
+        setText(getName());
 
-		spnBotLeft.setDividerPosition(0, editorHeight);
+        // Set the tab dividers
+        double editorHeight = Double.parseDouble(settings.simple().get(Settings.LAYOUT, Settings.EditorHeight_ + documentPath.getAbsolutePath()));
 
-		// Save the position on change
-		spnBotLeft.getDividers().get(0).positionProperty().addListener(
-			(observable, oldPos, newPos) -> {
-				double height = newPos.doubleValue();
-				settings.simple().save(Settings.LAYOUT, Settings.EditorHeight_ + documentPath.getAbsolutePath(), Double.toString(height));
-			});
+        spnBotLeft.setDividerPosition(0, editorHeight);
+
+        // Save the position on change
+        spnBotLeft.getDividers().get(0).positionProperty().addListener(
+                (observable, oldPos, newPos) -> {
+                    double height = newPos.doubleValue();
+                    settings.simple().save(Settings.LAYOUT, Settings.EditorHeight_ + documentPath.getAbsolutePath(), Double.toString(height));
+                });
 
         // Status icons
         STATUSICON_RUNNING.setAutoSizeChildren(true);
         STATUSICON_PAUSED.setAutoSizeChildren(true);
 
-		// Subscribe to start/stop for icon change
-		processor.getDebugger().getOnRobotStart().addListener(e -> Platform.runLater(() -> setGraphic(STATUSICON_RUNNING)));
-		processor.getDebugger().getOnRobotStop().addListener(e -> Platform.runLater(() -> setGraphic(null)));
-		processor.getDebugger().getOnRobotPause().addListener(e -> Platform.runLater(() -> setGraphic(STATUSICON_PAUSED)));
-		processor.getDebugger().getOnRobotContinue().addListener(e -> Platform.runLater(() -> setGraphic(STATUSICON_RUNNING)));
-		apnStatusBar.registerDebugger(processor.getDebugger());
-	}
-	
-	private void addContextMenu(FXController controller) {
-		// Close this tab.
-		MenuItem closeThis = new MenuItem("Close");
-		closeThis.setOnAction(e -> controller.closeTab(this));
-		
-		// Close all other tabs.
-		MenuItem closeOther = new MenuItem("Close all other tabs");
-		closeOther.setOnAction(e -> controller.closeAllTabsExcept(this));
-		
-		// Save
-		MenuItem saveTab = new MenuItem("Save");
-		saveTab.setOnAction(e -> save());
-		
-		// Save
-		MenuItem saveAs = new MenuItem("Save as...");
-		saveAs.setOnAction(e -> save(true));
-		
-		// Create the context menu.
-		ContextMenu menu = new ContextMenu(closeThis, closeOther, saveTab, saveAs);
-		this.setContextMenu(menu);
-	}
+        // Subscribe to start/stop for icon change
+        processor.getDebugger().getOnRobotStart().addListener(e -> Platform.runLater(() -> setGraphic(STATUSICON_RUNNING)));
+        processor.getDebugger().getOnRobotStop().addListener(e -> Platform.runLater(() -> setGraphic(null)));
+        processor.getDebugger().getOnRobotPause().addListener(e -> Platform.runLater(() -> setGraphic(STATUSICON_PAUSED)));
+        processor.getDebugger().getOnRobotContinue().addListener(e -> Platform.runLater(() -> setGraphic(STATUSICON_RUNNING)));
+        apnStatusBar.registerDebugger(processor.getDebugger());
+    }
 
-	private void loadProcessor(final File document, final File projectPath) {
-		if (processor == null) {
-			processor = Loader.getXill().createProcessor(document, projectPath, Loader.getInitializer().getLoader());
-		} else {
-			processor = Loader.getXill().createProcessor(document, projectPath, Loader.getInitializer().getLoader(), processor.getDebugger());
-		}
-	}
+    private void addContextMenu(FXController controller) {
+        // Close this tab.
+        MenuItem closeThis = new MenuItem("Close");
+        closeThis.setOnAction(e -> controller.closeTab(this));
 
-	@Override
-	public void initialize(final URL arg0, final ResourceBundle arg1) {
+        // Close all other tabs.
+        MenuItem closeOther = new MenuItem("Close all other tabs");
+        closeOther.setOnAction(e -> controller.closeAllTabsExcept(this));
 
-		Platform.runLater(() -> {
-			// FX graphical child items initialization (CTC-713)
-			editorPane.initialize(this);
-			consolePane.initialize(this);
-			vbxDebugpane.getChildrenUnmodifiable().filtered(node -> (node instanceof DebugPane)).forEach(node -> ((DebugPane)node).initialize(this)); 
+        // Save
+        MenuItem saveTab = new MenuItem("Save");
+        saveTab.setOnAction(e -> save());
 
-			// Remove the left hidden bar from dom
-			// This must be done after initialization otherwise the debugpane won't receive the tab
-			boolean showRightPanel = Boolean.parseBoolean(settings.simple().get(Settings.LAYOUT, Settings.RightPanelCollapsed_ + getDocument().getAbsolutePath()));
+        // Save
+        MenuItem saveAs = new MenuItem("Save as...");
+        saveAs.setOnAction(e -> save(true));
 
-			if (showRightPanel) {
-				hideButtonPressed();
-			} else {
-				showButtonPressed();
-			}
+        // Create the context menu.
+        ContextMenu menu = new ContextMenu(closeThis, closeOther, saveTab, saveAs);
+        this.setContextMenu(menu);
+    }
 
-		});
-		setText(getName());
+    private void loadProcessor(final File document, final File projectPath) {
+        if (processor == null) {
+            processor = Loader.getXill().createProcessor(document, projectPath, Loader.getInitializer().getLoader());
+        } else {
+            processor = Loader.getXill().createProcessor(document, projectPath, Loader.getInitializer().getLoader(), processor.getDebugger());
+        }
+    }
 
-		// Load code
-		File document = processor.getRobotID().getPath();
-		if (document.exists()) {
-			try {
-				String code = FileUtils.readFileToString(document);
-				editorPane.setLastSavedCode(code);
-				editorPane.getEditor().setCode(code);
-			} catch (IOException e) {
-				log.info("Could not open " + document.getAbsolutePath());
-			}
-		}
+    @Override
+    public void initialize(final URL arg0, final ResourceBundle arg1) {
 
-		// Subscribe to events
-		editorPane.getDocumentState().addListener(this);
-	}
+        Platform.runLater(() -> {
+            // FX graphical child items initialization (CTC-713)
+            editorPane.initialize(this);
+            consolePane.initialize(this);
+            vbxDebugpane.getChildrenUnmodifiable().filtered(node -> (node instanceof DebugPane)).forEach(node -> ((DebugPane) node).initialize(this));
 
-	/**
-	 * Hide the debugpane
-	 */
-	@FXML
-	private void hideButtonPressed() {
-		File document = processor.getRobotID().getPath();
-		if (document != null) {
-			settings.simple().save(Settings.LAYOUT, Settings.RightPanelCollapsed_ + document.getAbsolutePath(), "true");
-			if (!spnBotPanes.getDividers().isEmpty()) {
-				settings.simple().save(Settings.LAYOUT, Settings.RightPanelWidth_ + document.getAbsolutePath(), Double.toString(spnBotPanes.getDividerPositions()[0]));
-			}
-		}
+            // Remove the left hidden bar from dom
+            // This must be done after initialization otherwise the debugpane won't receive the tab
+            boolean showRightPanel = Boolean.parseBoolean(settings.simple().get(Settings.LAYOUT, Settings.RightPanelCollapsed_ + getDocument().getAbsolutePath()));
 
-		// Hide debug
-		spnBotPanes.getItems().remove(vbxDebugpane);
+            if (showRightPanel) {
+                hideButtonPressed();
+            } else {
+                showButtonPressed();
+            }
 
-		// Show the small bar
-		if (!hbxBot.getChildren().contains(vbxDebugHidden)) {
-			hbxBot.getChildren().add(vbxDebugHidden);
-		}
-	}
+        });
+        setText(getName());
 
-	/**
-	 * Show the debug pane
-	 */
-	@FXML
-	private void showButtonPressed() {
-		File document = processor.getRobotID().getPath();
-		settings.simple().save(Settings.LAYOUT, Settings.RightPanelCollapsed_ + document.getAbsolutePath(), "false");
+        // Load code
+        File document = processor.getRobotID().getPath();
+        if (document.exists()) {
+            try {
+                String code = FileUtils.readFileToString(document);
+                editorPane.setLastSavedCode(code);
+                editorPane.getEditor().setCode(code);
+            } catch (IOException e) {
+                log.info("Could not open " + document.getAbsolutePath());
+            }
+        }
 
-		// Hide small bar
-		hbxBot.getChildren().remove(vbxDebugHidden);
+        // Subscribe to events
+        editorPane.getDocumentState().addListener(this);
+    }
 
-		// Show debugpane
-		if (!spnBotPanes.getItems().contains(vbxDebugpane)) {
-			spnBotPanes.getItems().add(vbxDebugpane);
-		}
+    /**
+     * Hide the debugpane
+     */
+    @FXML
+    private void hideButtonPressed() {
+        File document = processor.getRobotID().getPath();
+        if (document != null) {
+            settings.simple().save(Settings.LAYOUT, Settings.RightPanelCollapsed_ + document.getAbsolutePath(), "true");
+            if (!spnBotPanes.getDividers().isEmpty()) {
+                settings.simple().save(Settings.LAYOUT, Settings.RightPanelWidth_ + document.getAbsolutePath(), Double.toString(spnBotPanes.getDividerPositions()[0]));
+            }
+        }
 
-		// Add splitpane position listener
-		spnBotPanes.setDividerPosition(0, Double.parseDouble(settings.simple().get(Settings.LAYOUT, Settings.RightPanelWidth_ + document.getAbsolutePath())));
-		spnBotPanes.getDividers().get(0).positionProperty().addListener((position, oldPos, newPos) -> {
-			if (spnBotPanes.getItems().contains(vbxDebugpane)) {
-				settings.simple().save(Settings.LAYOUT, Settings.RightPanelWidth_ + document.getAbsolutePath(), newPos.toString());
-			}
-		});
-	}
+        // Hide debug
+        spnBotPanes.getItems().remove(vbxDebugpane);
 
-	/**
-	 * Transfers the focus to the editor pane.
-	 */
-	public void requestFocus() {
-		globalController.showTab(this);
-		editorPane.requestFocus();
-	}
+        // Show the small bar
+        if (!hbxBot.getChildren().contains(vbxDebugHidden)) {
+            hbxBot.getChildren().add(vbxDebugHidden);
+        }
+    }
 
-	/**
-	 * Save this document.
-	 *
-	 * @return whether the document was saved successfully.
-	 */
-	public boolean save() {
-		return save(editorPane.getDocumentState().getValue() == DocumentState.NEW);
-	}
+    /**
+     * Show the debug pane
+     */
+    @FXML
+    private void showButtonPressed() {
+        File document = processor.getRobotID().getPath();
+        settings.simple().save(Settings.LAYOUT, Settings.RightPanelCollapsed_ + document.getAbsolutePath(), "false");
 
-	/**
-	 * Save this document.
-	 *
-	 * @param showDialog
-	 *        whether a "Save as..." dialog should be shown
-	 * @return whether the document was saved successfully.
-	 */
-	protected boolean save(final boolean showDialog) {
-		// Reset to root robot
-		resetCode();
-		// Clear editor highlights
-		getEditorPane().getEditor().clearHighlight();
+        // Hide small bar
+        hbxBot.getChildren().remove(vbxDebugHidden);
 
-		File document = getDocument();
-		File projectPath = getProjectPath();
+        // Show debugpane
+        if (!spnBotPanes.getItems().contains(vbxDebugpane)) {
+            spnBotPanes.getItems().add(vbxDebugpane);
+        }
 
-		if (showDialog) {
-			// Show file picker
-			FileChooser chooser = new FileChooser();
-			chooser.setInitialDirectory(projectPath);
-			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Xill Robot (*." + Xill.FILE_EXTENSION + ")", "*." + Xill.FILE_EXTENSION));
-			File selected = chooser.showSaveDialog(getContent().getScene().getWindow());
+        // Add splitpane position listener
+        spnBotPanes.setDividerPosition(0, Double.parseDouble(settings.simple().get(Settings.LAYOUT, Settings.RightPanelWidth_ + document.getAbsolutePath())));
+        spnBotPanes.getDividers().get(0).positionProperty().addListener((position, oldPos, newPos) -> {
+            if (spnBotPanes.getItems().contains(vbxDebugpane)) {
+                settings.simple().save(Settings.LAYOUT, Settings.RightPanelWidth_ + document.getAbsolutePath(), newPos.toString());
+            }
+        });
+    }
 
-			if (selected == null) {
-				return false;
-			}
+    /**
+     * Transfers the focus to the editor pane.
+     */
+    public void requestFocus() {
+        globalController.showTab(this);
+        editorPane.requestFocus();
+    }
 
-			document = selected;
-		}
+    /**
+     * Save this document.
+     *
+     * @return whether the document was saved successfully.
+     */
+    public boolean save() {
+        return save(editorPane.getDocumentState().getValue() == DocumentState.NEW);
+    }
 
-		// Actually save
-		try {
-			String code = editorPane.getEditor().getCodeProperty().get();
-			FileUtils.write(document, code);
-			editorPane.setLastSavedCode(code);
-			log.info("Saved currentRobot to " + document.getAbsolutePath());
+    /**
+     * Save this document.
+     *
+     * @param showDialog whether a "Save as..." dialog should be shown
+     * @return whether the document was saved successfully.
+     */
+    protected boolean save(final boolean showDialog) {
+        // Reset to root robot
+        resetCode();
+        // Clear editor highlights
+        getEditorPane().getEditor().clearHighlight();
 
-		} catch (IOException e) {
-			Alert errorAlert = new Alert(AlertType.ERROR);
-			errorAlert.initModality(Modality.APPLICATION_MODAL);
-			errorAlert.setTitle("Error");
-			errorAlert.setContentText(e.getMessage());
-			errorAlert.show();
-		}
+        File document = getDocument();
+        File projectPath = getProjectPath();
 
-		loadProcessor(document, projectPath);
+        if (showDialog) {
+            // Show file picker
+            FileChooser chooser = new FileChooser();
+            chooser.setInitialDirectory(projectPath);
+            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Xill Robot (*." + Xill.FILE_EXTENSION + ")", "*." + Xill.FILE_EXTENSION));
+            File selected = chooser.showSaveDialog(getContent().getScene().getWindow());
 
-		return true;
-	}
+            if (selected == null) {
+                return false;
+            }
 
-	/**
-	 * @return the project path
-	 */
-	private File getProjectPath() {
-		return processor.getRobotID().getProjectPath();
-	}
+            document = selected;
+        }
 
-	/**
-	 * @return the document
-	 */
-	public File getDocument() {
-		return processor.getRobotID().getPath();
-	}
+        // Actually save
+        try {
+            String code = editorPane.getEditor().getCodeProperty().get();
+            FileUtils.write(document, code);
+            editorPane.setLastSavedCode(code);
+            log.info("Saved currentRobot to " + document.getAbsolutePath());
 
-	/**
-	 * @return the name of the tab
-	 */
-	public String getName() {
-		String filename = getDocument().getName();
-		if (filename.endsWith("." + Xill.FILE_EXTENSION)) {
-			filename = filename.substring(0, filename.length() - Xill.FILE_EXTENSION.length() - 1);
-		}
-		return filename;
-	}
+        } catch (IOException e) {
+            Alert errorAlert = new Alert(AlertType.ERROR);
+            errorAlert.initModality(Modality.APPLICATION_MODAL);
+            errorAlert.setTitle("Error");
+            errorAlert.setContentText(e.getMessage());
+            errorAlert.show();
+            log.error("Failed to save robot", e);
+        }
 
-	private static Group createIcon(final String shape) {
-		SVGPath path = new SVGPath();
-		path.setFill(Color.DARKGRAY);
-		path.setScaleX(0.04);
-		path.setScaleY(0.04);
-		path.setContent(shape);
-		return new Group(path);
-	}
+        loadProcessor(document, projectPath);
 
-	/**
-	 * @return the globalController
-	 */
-	public FXController getGlobalController() {
-		return globalController;
-	}
+        return true;
+    }
 
-	/**
-	 * @param event
-	 */
-	private void onClose(final Event event) {
-		// Check if the robot is saved, else show the save before closing dialog.
-		if (editorPane.getDocumentState().getValue() == DocumentState.CHANGED) {
-			SaveBeforeClosingDialog dlg = new SaveBeforeClosingDialog(this, event); 
-			dlg.showAndWait();
-			if (dlg.isCancelPressed()) {
-				globalController.setCancelClose(true);
+    /**
+     * @return the project path
+     */
+    private File getProjectPath() {
+        return processor.getRobotID().getProjectPath();
+    }
 
-			}else{checkTabAmount();}
-		}else
-		
-		// Check if the robot is running, else show the stop robot dialog.
-		if (editorPane.getControls().robotRunning()) {
-			CloseTabStopRobotDialog dlg = new CloseTabStopRobotDialog(this, event);
-			dlg.showAndWait();
-			if(dlg.isYesPressed()){
-				checkTabAmount();
-			}
-		}else{
-			checkTabAmount(); //if not running and saved then just check if it is the last robot.
-		}
-	}
+    /**
+     * @return the document
+     */
+    public File getDocument() {
+        return processor.getRobotID().getPath();
+    }
 
-	/**
-	 *
-	 * Disable the save buttons if this was the last tab
-	 */
-	private void checkTabAmount(){
-		if(this.globalController.getTabs().size() == 1){
-			globalController.disableSaveButtons(true);
-	}}
+    /**
+     * @return the name of the tab
+     */
+    public String getName() {
+        String filename = getDocument().getName();
+        if (filename.endsWith("." + Xill.FILE_EXTENSION)) {
+            filename = filename.substring(0, filename.length() - Xill.FILE_EXTENSION.length() - 1);
+        }
+        return filename;
+    }
 
-	/**
-	 * Runs the currentRobot after the Ok-button has been pressed of the dialog that pops up.
-         * If cancel is pressed, the robot is not run or saved
-         * There is also a check box that can be ticked in order not to show the dialog again.
-         * The dialog can be re-enabled in the Settings window.
-	 *
-	 * @throws XillParsingException
-	 */
-	public void runRobot() throws XillParsingException {
+    private static Group createIcon(final String shape) {
+        SVGPath path = new SVGPath();
+        path.setFill(Color.DARKGRAY);
+        path.setScaleX(0.04);
+        path.setScaleY(0.04);
+        path.setContent(shape);
+        return new Group(path);
+    }
+
+    /**
+     * @return the globalController
+     */
+    public FXController getGlobalController() {
+        return globalController;
+    }
+
+    /**
+     * @param event
+     */
+    private void onClose(final Event event) {
+        // Check if the robot is saved, else show the save before closing dialog.
+        if (editorPane.getDocumentState().getValue() == DocumentState.CHANGED) {
+            SaveBeforeClosingDialog dlg = new SaveBeforeClosingDialog(this, event);
+            dlg.showAndWait();
+            if (dlg.isCancelPressed()) {
+                globalController.setCancelClose(true);
+
+            } else {
+                checkTabAmount();
+            }
+        } else
+
+            // Check if the robot is running, else show the stop robot dialog.
+            if (editorPane.getControls().robotRunning()) {
+                CloseTabStopRobotDialog dlg = new CloseTabStopRobotDialog(this, event);
+                dlg.showAndWait();
+                if (dlg.isYesPressed()) {
+                    checkTabAmount();
+                }
+            } else {
+                checkTabAmount(); //if not running and saved then just check if it is the last robot.
+            }
+    }
+
+    /**
+     * Disable the save buttons if this was the last tab
+     */
+    private void checkTabAmount() {
+        if (this.globalController.getTabs().size() == 1) {
+            globalController.disableSaveButtons(true);
+        }
+    }
+
+    /**
+     * Runs the currentRobot after the Ok-button has been pressed of the dialog that pops up.
+     * If cancel is pressed, the robot is not run or saved
+     * There is also a check box that can be ticked in order not to show the dialog again.
+     * The dialog can be re-enabled in the Settings window.
+     *
+     * @throws XillParsingException
+     */
+    public void runRobot() throws XillParsingException {
         // Read the current setting in the configuration
         boolean autoSaveBotBeforeRun = Boolean.valueOf(settings.simple().get("SettingsGeneral", "AutoSaveBotBeforeRun"));
 
         if (autoSaveBotBeforeRun) {
-			if (editorPane.getDocumentState().getValue() == DocumentState.CHANGED) {
-				// If true, show the confirmation dialog
-				Alert confirmationDialog = new Alert(AlertType.CONFIRMATION);
-				confirmationDialog.setTitle("Do you want to save and run the robot?");
-				// This enables xillio icon to be displayed in the upper left corner
-				confirmationDialog.initOwner(editorPane.getScene().getWindow());
+            if (editorPane.getDocumentState().getValue() == DocumentState.CHANGED) {
+                // If true, show the confirmation dialog
+                Alert confirmationDialog = new Alert(AlertType.CONFIRMATION);
+                confirmationDialog.setTitle("Do you want to save and run the robot?");
+                // This enables xillio icon to be displayed in the upper left corner
+                confirmationDialog.initOwner(editorPane.getScene().getWindow());
 
-				// Compose the dialog pane
-				DialogPane dp = new DialogPane();
+                // Compose the dialog pane
+                DialogPane dp = new DialogPane();
 
-				VBox checkBoxContainer = new VBox();
+                VBox checkBoxContainer = new VBox();
 
-				Label l = new Label("The robot " + currentRobot.getPath().getName() + " needs to be saved before running. Do you want to continue?");
-				CheckBox cb = new CheckBox("Don't ask me again.");
-				cb.addEventHandler(ActionEvent.ACTION, event -> {
-					boolean currentSettingValue = Boolean.valueOf(settings.simple().get("SettingsGeneral", "AutoSaveBotBeforeRun"));
-					if (currentSettingValue) {
-						settings.simple().save("SettingsGeneral", "AutoSaveBotBeforeRun", false);
-					} else {
-						settings.simple().save("SettingsGeneral", "AutoSaveBotBeforeRun", true);
-					}
-				});
+                Label l = new Label("The robot " + currentRobot.getPath().getName() + " needs to be saved before running. Do you want to continue?");
+                CheckBox cb = new CheckBox("Don't ask me again.");
+                cb.addEventHandler(ActionEvent.ACTION, event -> {
+                    boolean currentSettingValue = Boolean.valueOf(settings.simple().get("SettingsGeneral", "AutoSaveBotBeforeRun"));
+                    if (currentSettingValue) {
+                        settings.simple().save("SettingsGeneral", "AutoSaveBotBeforeRun", false);
+                    } else {
+                        settings.simple().save("SettingsGeneral", "AutoSaveBotBeforeRun", true);
+                    }
+                });
 
-				checkBoxContainer.getChildren().addAll(l, cb);
+                checkBoxContainer.getChildren().addAll(l, cb);
 
-				dp.setContent(checkBoxContainer);
-				// Add the dialog pane to the Alert/dialog
-				confirmationDialog.setDialogPane(dp);
-				// Make the dialog close by clicking the close button, inherit styling
-				confirmationDialog.initModality(Modality.APPLICATION_MODAL);
-				confirmationDialog.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+                dp.setContent(checkBoxContainer);
+                // Add the dialog pane to the Alert/dialog
+                confirmationDialog.setDialogPane(dp);
+                // Make the dialog close by clicking the close button, inherit styling
+                confirmationDialog.initModality(Modality.APPLICATION_MODAL);
+                confirmationDialog.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-				// Get the result from the confirmation dialog
-				Optional<ButtonType> result = confirmationDialog.showAndWait();
+                // Get the result from the confirmation dialog
+                Optional<ButtonType> result = confirmationDialog.showAndWait();
 
-				// Process the result
-				if (result.get() == ButtonType.OK) {
-					autoSaveAndRunRobot();
-				} else if (result.get() == ButtonType.CANCEL) {
-					editorPane.getControls().stop();
-				}
-			} else {
-				autoSaveAndRunRobot();
-			}
+                // Process the result
+                if (result.get() == ButtonType.OK) {
+                    autoSaveAndRunRobot();
+                } else if (result.get() == ButtonType.CANCEL) {
+                    editorPane.getControls().stop();
+                }
+            } else {
+                autoSaveAndRunRobot();
+            }
         } else {
             // If false, just auto-save and run the robot without the confirmation dialog popping up
             autoSaveAndRunRobot();
         }
-	}
+    }
 
-	/**
-	 * Automatically saves robot and runs it if the save is successful
-	 */
-	private void autoSaveAndRunRobot() {
-		save();
+    /**
+     * Automatically saves robot and runs it if the save is successful
+     */
+    private void autoSaveAndRunRobot() {
+        save();
 
-		if (FXController.settings.simple().getBoolean(Settings.SETTINGS_GENERAL, Settings.RunBotWithCleanConsole)) {
-			ESConsoleClient.getInstance().clearLog(getProcessor().getRobotID().toString());
-		}
+        if (FXController.settings.simple().getBoolean(Settings.SETTINGS_GENERAL, Settings.RunBotWithCleanConsole)) {
+            ESConsoleClient.getInstance().clearLog(getProcessor().getRobotID().toString());
+        }
 
-		try {
-			apnStatusBar.setCompiling(true);
-			processor.compile();
-		} catch (IOException e) {
-			e.printStackTrace();
-			errorPopup(-1, e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling.");
-			return;
-		} catch (XillParsingException e) {
-			errorPopup(e.getLine(), e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling " + e.getRobot().getPath().getAbsolutePath());
-			return;
-		} finally {
-			apnStatusBar.setCompiling(false);
-		}
+        try {
+            apnStatusBar.setCompiling(true);
+            processor.compile();
+        } catch (IOException e) {
+            e.printStackTrace();
+            errorPopup(-1, e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling.");
+            return;
+        } catch (XillParsingException e) {
+            errorPopup(e.getLine(), e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling " + e.getRobot().getPath().getAbsolutePath());
+            return;
+        } finally {
+            apnStatusBar.setCompiling(false);
+        }
 
-		Robot robot = processor.getRobot();
+        Robot robot = processor.getRobot();
 
-		Thread robotThread = new Thread(() -> {
-			try {
-				robot.process(processor.getDebugger());
-			} catch (Exception e) {
-				Platform.runLater(() -> {
-					Alert error = new Alert(AlertType.ERROR);
-					error.initModality(Modality.APPLICATION_MODAL);
-					error.setTitle(e.getClass().getSimpleName());
-					error.setContentText(e.getMessage() + "\n" + ExceptionUtils.getStackTrace(e));
-					error.setHeaderText("Exception while processing");
-					error.setResizable(true);
-					error.getDialogPane().setPrefWidth(1080);
-					error.show();
-				});
-			}
-		});
+        Thread robotThread = new Thread(() -> {
+            try {
+                robot.process(processor.getDebugger());
+            } catch (Exception e) {
+                log.error("Exception while processing", e);
+                Platform.runLater(() -> {
+                    Alert error = new Alert(AlertType.ERROR);
+                    error.initModality(Modality.APPLICATION_MODAL);
+                    error.setTitle(e.getClass().getSimpleName());
+                    error.setContentText(e.getMessage() + "\n" + ExceptionUtils.getStackTrace(e));
+                    error.setHeaderText("Exception while processing");
+                    error.setResizable(true);
+                    error.getDialogPane().setPrefWidth(1080);
+                    error.show();
+                });
+            }
+        });
 
-		robotThread.start();
+        robotThread.start();
 
-	}
+    }
 
-	private void errorPopup(final int line, final String message, final String title, final String context) {
-		Alert error = new Alert(AlertType.ERROR);
-		error.initModality(Modality.APPLICATION_MODAL);
-		error.setTitle(title);
-		error.setContentText(message);
-		error.setHeaderText(context);
-		error.show();
+    private void errorPopup(final int line, final String message, final String title, final String context) {
+        Alert error = new Alert(AlertType.ERROR);
+        error.initModality(Modality.APPLICATION_MODAL);
+        error.setTitle(title);
+        error.setContentText(message);
+        error.setHeaderText(context);
+        error.show();
 
-		getEditorPane().getEditor().highlightLine(line, "error");
-	}
+        getEditorPane().getEditor().highlightLine(line, "error");
+    }
 
-	/**
-	 * <b>NOTE: </b> Do not save this processor over a long period as it will be swapped out often.
-	 *
-	 * @return the processor for this tab
-	 */
-	public XillProcessor getProcessor() {
-		return processor;
-	}
+    /**
+     * <b>NOTE: </b> Do not save this processor over a long period as it will be swapped out often.
+     *
+     * @return the processor for this tab
+     */
+    public XillProcessor getProcessor() {
+        return processor;
+    }
 
     /**
      * Replace the existing robot code in editor by the content that is in the robot file (it could be changed outside of editor)
      */
-	public void reload() {
+    public void reload() {
         File document = processor.getRobotID().getPath();
         if (document.exists()) {
             try {
@@ -553,94 +546,93 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
         }
     }
 
-	@Override
-	public void changed(final ObservableValue<? extends DocumentState> source, final DocumentState oldValue, final DocumentState newValue) {
-		// This needs to happen in JFX Thread
-		Platform.runLater(() -> {
-			String name = getName();
-			if (newValue == DocumentState.CHANGED) {
-				name += "*";
-			}
-			if (currentRobot != getProcessor().getRobotID()) {
-				String filename = currentRobot.getPath().getName();
-				name += " > " + FilenameUtils.getBaseName(filename);
-			}
-			setText(name);
-		});
-	}
+    @Override
+    public void changed(final ObservableValue<? extends DocumentState> source, final DocumentState oldValue, final DocumentState newValue) {
+        // This needs to happen in JFX Thread
+        Platform.runLater(() -> {
+            String name = getName();
+            if (newValue == DocumentState.CHANGED) {
+                name += "*";
+            }
+            if (currentRobot != getProcessor().getRobotID()) {
+                String filename = currentRobot.getPath().getName();
+                name += " > " + FilenameUtils.getBaseName(filename);
+            }
+            setText(name);
+        });
+    }
 
-	/**
-	 * @return the {@link EditorPane} in this tab
-	 */
-	public EditorPane getEditorPane() {
-		return editorPane;
-	}
+    /**
+     * @return the {@link EditorPane} in this tab
+     */
+    public EditorPane getEditorPane() {
+        return editorPane;
+    }
 
-	/**
-	 * Show a different currentRobot in this tab and highlight the line
-	 *
-	 * @param robot
-	 * @param line
-	 */
-	public void display(final RobotID robot, final int line) {
+    /**
+     * Show a different currentRobot in this tab and highlight the line
+     *
+     * @param robot
+     * @param line
+     */
+    public void display(final RobotID robot, final int line) {
 
-		// Update the code
-		if (currentRobot != robot) {
+        // Update the code
+        if (currentRobot != robot) {
 
-			currentRobot = robot;
-			String code;
-			try {
-				code = FileUtils.readFileToString(robot.getPath());
-			} catch (IOException e) {
-				e.printStackTrace();
-				return;
-			}
-			// Load the code
-			editorPane.getEditor().setCode(code);
-			editorPane.getEditor().refreshBreakpoints(robot);
+            currentRobot = robot;
+            String code;
+            try {
+                code = FileUtils.readFileToString(robot.getPath());
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            // Load the code
+            editorPane.getEditor().setCode(code);
+            editorPane.getEditor().refreshBreakpoints(robot);
 
-			// Blocker
-			editorPane.getEditor().setEditable(currentRobot == getProcessor().getRobotID());
+            // Blocker
+            editorPane.getEditor().setEditable(currentRobot == getProcessor().getRobotID());
 
-			// Remove the 'edited' state
-			Platform.runLater(() -> editorPane.getDocumentState().setValue(DocumentState.SAVED));
-		}
+            // Remove the 'edited' state
+            Platform.runLater(() -> editorPane.getDocumentState().setValue(DocumentState.SAVED));
+        }
 
-		if (line > 0) {
-			// Highlight the line
-			Platform.runLater(() -> {
-				editorPane.getEditor().clearHighlight();
-				editorPane.getEditor().highlightLine(line, "highlight");
-			});
-		}
+        if (line > 0) {
+            // Highlight the line
+            Platform.runLater(() -> {
+                editorPane.getEditor().clearHighlight();
+                editorPane.getEditor().highlightLine(line, "highlight");
+            });
+        }
 
-	}
+    }
 
-	/**
-	 * Display the code from this tab's main currentRobot
-	 */
-	public void resetCode() {
-		display(getProcessor().getRobotID(), -1);
-	}
+    /**
+     * Display the code from this tab's main currentRobot
+     */
+    public void resetCode() {
+        display(getProcessor().getRobotID(), -1);
+    }
 
-	/**
-	 * @return The robot the is currently being displayed
-	 */
-	public RobotID getCurrentRobot() {
-		return currentRobot;
-	}
+    /**
+     * @return The robot the is currently being displayed
+     */
+    public RobotID getCurrentRobot() {
+        return currentRobot;
+    }
 
-	/**
-	 * Clear the console content related to this robot
-	 */
-	public void clearConsolePane() {
-		this.consolePane.clear();
-	}
+    /**
+     * Clear the console content related to this robot
+     */
+    public void clearConsolePane() {
+        this.consolePane.clear();
+    }
 
     private Exception Exception(String empty_fucking_button) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-        
-        
+
 }
