@@ -64,6 +64,6 @@ public class CanReadConstructTest extends TestUtils {
 
         CanReadConstruct.process(constructContext, fileUtilities, metaExpression);
 
-        verify(fileUtilities, times(1)).canExecute(any(File.class));
+        verify(fileUtilities, times(1)).canRead(any(File.class));
     }
 }
