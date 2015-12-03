@@ -23,6 +23,7 @@ public class CanReadConstructTest extends TestUtils {
 
     private ConstructContext constructContext;
     private FileUtilities fileUtilities;
+    private MetaExpression metaExpression;
 
     /**
      * Initialize objects that will be used in all tests.
@@ -33,7 +34,7 @@ public class CanReadConstructTest extends TestUtils {
 
         fileUtilities = mock(FileUtilities.class);
 
-        setFileResolverReturnValue(new File(""));
+        metaExpression = mock(MetaExpression.class);
     }
 
     /**
@@ -44,9 +45,9 @@ public class CanReadConstructTest extends TestUtils {
     @Test
     public void testProcess() throws FileNotFoundException {
 
-        String uri = "This is a test.";
-        MetaExpression metaExpression = mock(MetaExpression.class);
-        when(metaExpression.getStringValue()).thenReturn(uri);
+        setFileResolverReturnValue(new File(""));
+
+        when(metaExpression.getStringValue()).thenReturn("");
 
         CanReadConstruct.process(constructContext, fileUtilities, metaExpression);
 
@@ -62,8 +63,6 @@ public class CanReadConstructTest extends TestUtils {
     public void testProcessException() throws FileNotFoundException {
 
         doThrow(new FileNotFoundException("File does not exist.")).when(fileUtilities).canRead(any(File.class));
-
-        MetaExpression metaExpression = mock(MetaExpression.class);
 
         CanReadConstruct.process(constructContext, fileUtilities, metaExpression);
 
