@@ -24,6 +24,9 @@ public class CanReadConstructTest extends TestUtils {
     private ConstructContext constructContext;
     private FileUtilities fileUtilities;
 
+    /**
+     * Initialize objects that will be used in all tests.
+     */
     @BeforeMethod
     public void initialize() {
         constructContext = mock(ConstructContext.class);
