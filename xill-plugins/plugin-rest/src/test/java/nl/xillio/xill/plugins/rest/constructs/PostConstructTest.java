@@ -38,7 +38,7 @@ public class PostConstructTest {
 		MetaExpression returnContent = mock(MetaExpression.class);
 		when(returnContent.getMeta(XmlNode.class)).thenReturn(returnXmlNode);
 		Content content = mock(Content.class);
-		when(content.getMeta()).thenReturn(returnContent);
+		when(content.getMeta(any(), any())).thenReturn(returnContent);
 
 		//.Content body = mock(Content.class);
 		MetaExpression bodyVar = mock(MetaExpression.class);
@@ -50,7 +50,7 @@ public class PostConstructTest {
 		when(restService.post(anyString(), any(), any())).thenReturn(content);
 
 		// Run
-		MetaExpression result = PostConstruct.process(urlVar, optionsVar, bodyVar, NULL, restService);
+		MetaExpression result = new PostConstruct(restService, null,null).processMeta(urlVar, optionsVar, bodyVar, NULL);
 
 		// Verify
 		verify(restService).post(anyString(), any(), any());
@@ -76,7 +76,7 @@ public class PostConstructTest {
 		MetaExpression bodyVar = mock(MetaExpression.class);
 
 		// Run
-		PostConstruct.process(urlVar, optionsVar, bodyVar, NULL, restService);
+		new PostConstruct(restService, null,null).processMeta(urlVar, optionsVar, bodyVar, NULL);
 	}
 	
 	/**
@@ -102,6 +102,6 @@ public class PostConstructTest {
 		MetaExpression bodyVar = mock(MetaExpression.class);
 
 		// Run
-		PostConstruct.process(urlVar, optionsVar, bodyVar, NULL, restService);
+		new PostConstruct(restService, null,null).processMeta(urlVar, optionsVar, bodyVar, NULL);
 	}
 }

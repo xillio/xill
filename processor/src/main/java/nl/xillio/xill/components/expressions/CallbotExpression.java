@@ -20,8 +20,8 @@ import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.errors.XillParsingException;
 import nl.xillio.xill.services.files.FileResolver;
-import nl.xillio.xill.services.inject.InjectorUtils;
 
+import nl.xillio.xill.services.files.FileResolverImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,9 +37,7 @@ public class CallbotExpression implements Processable {
 	private final RobotID robotID;
 	private final PluginLoader<XillPlugin> pluginLoader;
 	private Processable argument;
-
-	@Inject
-	private FileResolver resolver;
+	private final FileResolver resolver;
 
 	/**
 	 * Create a new {@link CallbotExpression}
@@ -53,7 +51,7 @@ public class CallbotExpression implements Processable {
 		this.robotID = robotID;
 		this.pluginLoader = pluginLoader;
 		robotLogger = RobotAppender.getLogger(robotID);
-		InjectorUtils.getGlobalInjector().injectMembers(this);
+		resolver = new FileResolverImpl();
 	}
 
 	@Override
@@ -80,7 +78,7 @@ public class CallbotExpression implements Processable {
 			Debugger childDebugger = debugger.createChild();
 			XillProcessor processor = new XillProcessor(robotID.getProjectPath(), otherRobot, pluginLoader, childDebugger);
 
-			processor.compileAsSubrobot(robotID);
+			processor.compileAsSubRobot(robotID);
 
 			try {
 				nl.xillio.xill.api.components.Robot robot = processor.getRobot();

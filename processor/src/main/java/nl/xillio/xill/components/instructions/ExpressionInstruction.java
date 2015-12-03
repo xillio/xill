@@ -50,7 +50,7 @@ public class ExpressionInstruction extends Instruction {
         // Close all results
         while (!results.isEmpty()) {
             try {
-                results.pop().close();
+                results.pop().releaseReference();
             } catch (Exception e) {
             }
         }
