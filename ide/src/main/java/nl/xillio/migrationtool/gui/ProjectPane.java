@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Optional;
 import javax.swing.filechooser.FileFilter;
 
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.control.*;
 
 import javafx.application.Platform;
@@ -28,6 +30,8 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Pair;
@@ -35,6 +39,7 @@ import me.biesaart.utils.FileUtils;
 import nl.xillio.migrationtool.dialogs.*;
 import nl.xillio.migrationtool.gui.WatchDir.FolderListener;
 import nl.xillio.xill.api.Xill;
+import nl.xillio.xill.util.HotkeysHandler;
 import nl.xillio.xill.util.settings.ProjectSettings;
 import nl.xillio.xill.util.settings.Settings;
 import nl.xillio.xill.util.settings.SettingsHandler;
@@ -43,7 +48,7 @@ import org.apache.logging.log4j.Logger;
 
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 
-public class ProjectPane extends AnchorPane implements FolderListener, ChangeListener<TreeItem<Pair<File, String>>> {
+public class ProjectPane extends AnchorPane implements FolderListener, ChangeListener<TreeItem<Pair<File, String>>>, EventHandler<Event> {
     private static final SettingsHandler settings = SettingsHandler.getSettingsHandler();
     private static final String DEFAULT_PROJECT_NAME = "Samples";
     private static final String DEFAULT_PROJECT_PATH = "./samples";
@@ -125,6 +130,9 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
                 });
             }
         });
+
+        // Add event listeners.
+        this.addEventFilter(KeyEvent.KEY_PRESSED, this);
 
         loadProjects();
         addContextMenu();
@@ -331,6 +339,40 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 
             // Delete the items.
             deleteItems(selectedItems, hardDelete);
+        }
+    }
+
+    @Override
+    public void handle(Event event) {
+        if (event.getEventType() == KeyEvent.KEY_PRESSED) {
+            KeyEvent keyEvent = (KeyEvent) event;
+
+            // Hotkeys.
+            HotkeysHandler.Hotkeys hk = FXController.hotkeys.getHotkey(keyEvent);
+            if (hk != null) {
+                switch (hk) {
+                    case CUT:
+                        if (!menuCut.isDisable()) {
+                            cut();
+                        }
+                        break;
+                    case COPY:
+                        if (!menuCopy.isDisable()) {
+                            copy();
+                        }
+                        break;
+                    case PASTE:
+                        if (!menuPaste.isDisable()) {
+                            paste();
+                        }
+                        break;
+                }
+            }
+
+            // Keypresses.
+            if (keyEvent.getCode() == KeyCode.DELETE && !btnDelete.isDisable()) {
+                deleteButtonPressed();
+            }
         }
     }
 
@@ -797,6 +839,8 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
             btnRename.setDisable(true);
             btnAddFolder.setDisable(true);
         }
+
+        // TODO: Check if a project is selected, disable the cut and copy menu items.
     }
 
     /**
