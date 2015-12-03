@@ -1,6 +1,9 @@
 package nl.xillio.xill.plugins.math.services.math;
 
 import com.google.inject.Singleton;
+import nl.xillio.xill.api.behavior.NumberBehavior;
+import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.errors.NotImplementedException;
 
 /**
  * This is the main implementation of {@link MathOperations}
@@ -44,5 +47,18 @@ public class MathOperationsImpl implements MathOperations {
 	@Override
 	public long random(final long value) {
 		return (long) (Math.random() * value);
+	}
+
+	@Override
+	public boolean isNumber(final MetaExpression value){
+		switch (value.getType()) {
+			case ATOMIC:
+				Object behaviour = value.getValue();
+				return behaviour != null && (behaviour instanceof NumberBehavior);
+			case LIST:
+			case OBJECT:
+				return false;
+			default: throw new NotImplementedException("This type has not been implemented.");
+		}
 	}
 }
