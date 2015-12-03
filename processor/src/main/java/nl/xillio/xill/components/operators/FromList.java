@@ -1,17 +1,18 @@
 package nl.xillio.xill.components.operators;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 import nl.xillio.xill.api.Debugger;
+import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * this class represents the list[0] object["keyValue"] and object.keyValue operations.
@@ -35,7 +36,9 @@ public class FromList implements Processable {
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		MetaExpression listMeta = this.list.process(debugger).get();
 		MetaExpression indexMeta = this.index.process(debugger).get();
-
+		if(indexMeta.getType() != ExpressionDataType.ATOMIC || indexMeta.isNull()){
+			return InstructionFlow.doResume(ExpressionBuilderHelper.NULL);
+		}
 		switch (listMeta.getType()) {
 			case LIST:
 				try {
