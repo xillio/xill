@@ -24,6 +24,9 @@ public class CanExecuteConstructTest extends TestUtils {
     private FileUtilities fileUtilities;
     private MetaExpression metaExpression;
 
+    /**
+     * Initialization method for mocked objects used in all methods.
+     */
     @BeforeMethod
     public void initialize() {
         constructContext = mock(ConstructContext.class);
@@ -45,7 +48,7 @@ public class CanExecuteConstructTest extends TestUtils {
 
         when(metaExpression.getStringValue()).thenReturn("");
 
-        CanExecuteConstruct.process(constructContext, fileUtilities, metaExpression);
+        MetaExpression result = CanExecuteConstruct.process(constructContext, fileUtilities, metaExpression);
 
         verify(fileUtilities, times(1)).canExecute(any());
     }
