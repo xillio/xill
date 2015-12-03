@@ -12,9 +12,10 @@ import java.io.File;
 import java.io.IOException;
 
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
 
 /**
+ * Tests the IsHidden construct.
+ *
  * Created by Anwar on 12/1/2015.
  */
 public class IsHiddenConstructTest extends TestUtils {
