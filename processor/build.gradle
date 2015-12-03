@@ -5,9 +5,7 @@ dependencies{
 	compile 'org.apache.commons:commons-lang3:3.4'
 	compile 'commons-io:commons-io:2.4'
 	compile project(':api')
-	compile ('nl.xillio.xill:xill-lang:3.0.6') {
-		exclude group: 'org.antlr', module: 'stringtemplate'
-	}
+	compile 'nl.xillio.xill:xill.lang.Xill:3.0.22'
 }
 
 jar{
@@ -16,5 +14,5 @@ jar{
 	}
 }
 
-// To preprate for execution we need to copy the plugins to the plugin directory
+// To prepare for execution we need to copy the plugins to the plugin directory
 prepare.dependsOn copyToPluginsDir
