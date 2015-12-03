@@ -6,6 +6,7 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 import opennlp.tools.parser.Cons;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -20,14 +21,25 @@ import static org.mockito.Mockito.*;
  */
 public class CanReadConstructTest extends TestUtils {
 
-    @Test
-    public void testProcess() throws FileNotFoundException {
+    private ConstructContext constructContext;
+    private FileUtilities fileUtilities;
 
-        ConstructContext constructContext = mock(ConstructContext.class);
+    @BeforeMethod
+    public void initialize() {
+        constructContext = mock(ConstructContext.class);
 
-        FileUtilities fileUtilities = mock(FileUtilities.class);
+        fileUtilities = mock(FileUtilities.class);
 
         setFileResolverReturnValue(new File(""));
+    }
+
+    /**
+     * Test the regular flow of the process method in the CanReadConstruct class.
+     *
+     * @throws FileNotFoundException If the file is not found.
+     */
+    @Test
+    public void testProcess() throws FileNotFoundException {
 
         String uri = "This is a test.";
         MetaExpression metaExpression = mock(MetaExpression.class);
@@ -38,17 +50,20 @@ public class CanReadConstructTest extends TestUtils {
         verify(fileUtilities, times(1)).canRead(any());
     }
 
+    /**
+     * Test the exception flow of the process method in the CanReadConstruct class.
+     *
+     * @throws FileNotFoundException If the file is not found.
+     */
     @Test(expectedExceptions = RobotRuntimeException.class)
     public void testProcessException() throws FileNotFoundException {
 
-        ConstructContext constructContext = mock(ConstructContext.class);
-
-        FileUtilities fileUtilities = mock(FileUtilities.class);
-        doThrow(new RobotRuntimeException("File does not exist.")).when(fileUtilities).canRead(any());
+        doThrow(new FileNotFoundException("File does not exist.")).when(fileUtilities).canRead(any(File.class));
 
         MetaExpression metaExpression = mock(MetaExpression.class);
 
         CanReadConstruct.process(constructContext, fileUtilities, metaExpression);
 
+        verify(fileUtilities, times(1)).canExecute(any(File.class));
     }
 }
