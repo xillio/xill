@@ -122,6 +122,31 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         });
 
         loadProjects();
+        addContextMenu();
+    }
+
+    private void addContextMenu() {
+        // Cut.
+        MenuItem menuCut = new MenuItem("Cut");
+
+        // Copy.
+        MenuItem menuCopy = new MenuItem("Copy");
+
+        // Paste.
+        MenuItem menuPaste = new MenuItem("Paste");
+
+        // Rename.
+        MenuItem menuRename = new MenuItem("Rename");
+        menuRename.setOnAction(e -> renameButtonPressed());
+        btnRename.disabledProperty().addListener((obs, old, newValue) -> menuRename.setDisable(newValue));
+
+        // Delete.
+        MenuItem menuDelete = new MenuItem("Delete");
+        menuDelete.setOnAction(e -> deleteButtonPressed());
+
+        // Create the context menu.
+        ContextMenu menu = new ContextMenu(menuCut, menuCopy, menuRename, menuDelete);
+        trvProjects.setContextMenu(menu);
     }
 
     @FXML
