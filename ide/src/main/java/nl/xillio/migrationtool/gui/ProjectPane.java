@@ -133,21 +133,15 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
     private void addContextMenu() {
         // Cut.
         menuCut = new MenuItem("Cut");
-        menuCut.setOnAction(e -> {
-            copy = false;
-            bulkFiles = FXCollections.observableArrayList(getAllCurrentItems());
-        });
+        menuCut.setOnAction(e -> cut());
 
         // Copy.
         menuCopy = new MenuItem("Copy");
-        menuCopy.setOnAction(e -> {
-            copy = true;
-            bulkFiles = FXCollections.observableArrayList(getAllCurrentItems());
-        });
+        menuCopy.setOnAction(e -> copy());
 
         // Paste.
         menuPaste = new MenuItem("Paste");
-        menuPaste.setOnAction(e -> bulkMoveFiles());
+        menuPaste.setOnAction(e -> paste());
 
         // Rename.
         MenuItem menuRename = new MenuItem("Rename");
@@ -166,7 +160,19 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         trvProjects.setOnContextMenuRequested(e -> menuPaste.setDisable(getAllCurrentItems().size() != 1 || bulkFiles == null || bulkFiles.isEmpty()));
     }
 
-    private void bulkMoveFiles() {
+    /* Bulk file functionality. */
+
+    private void cut() {
+        copy = false;
+        bulkFiles = FXCollections.observableArrayList(getAllCurrentItems());
+    }
+
+    private void copy() {
+        copy = true;
+        bulkFiles = FXCollections.observableArrayList(getAllCurrentItems());
+    }
+
+    private void paste() {
         // Get the directory to paste in.
         File pasteLoc = getCurrentItem().getValue().getKey();
         final File destDir = pasteLoc.isDirectory() ? pasteLoc : pasteLoc.getParentFile();
@@ -216,6 +222,8 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
             bulkFiles = null;
         }
     }
+
+    /* End of bulk file functionality. */
 
     @FXML
     private void newProjectButtonPressed() {
