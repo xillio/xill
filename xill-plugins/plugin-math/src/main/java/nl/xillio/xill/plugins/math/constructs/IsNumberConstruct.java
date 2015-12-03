@@ -12,7 +12,7 @@ import nl.xillio.xill.plugins.math.services.math.MathOperationsImpl;
 /**
  * This construct is to check whether the given MetaExpression is a number or not.
  *
- * Created by Pieter Soels on 3/12/2015.
+ * @author Pieter Soels
  */
 public class IsNumberConstruct extends Construct {
 

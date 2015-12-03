@@ -53,8 +53,7 @@ public class MathOperationsImpl implements MathOperations {
 	public boolean isNumber(final MetaExpression value){
 		switch (value.getType()) {
 			case ATOMIC:
-				Object behaviour = value.getValue();
-				return behaviour != null && (behaviour instanceof NumberBehavior);
+				return !value.isNull() && !Double.isNaN(value.getNumberValue().doubleValue());
 			case LIST:
 			case OBJECT:
 				return false;
