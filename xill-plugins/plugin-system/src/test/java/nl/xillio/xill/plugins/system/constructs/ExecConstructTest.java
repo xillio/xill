@@ -13,11 +13,12 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Map;
 
+import nl.xillio.xill.TestUtils;
+import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import org.apache.logging.log4j.Logger;
 import org.mockito.ArgumentCaptor;
 import org.testng.annotations.Test;
 
-import nl.xillio.xill.ConstructTest;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.plugins.system.exec.ProcessDescription;
 import nl.xillio.xill.plugins.system.exec.ProcessFactory;
@@ -25,7 +26,7 @@ import nl.xillio.xill.plugins.system.exec.ProcessFactory;
 /**
  * Test the {@link ExecConstruct}
  */
-public class ExecConstructTest extends ConstructTest {
+public class ExecConstructTest extends TestUtils {
 
 	/**
 	 * Test invoke the construct with a string as command and default working directory

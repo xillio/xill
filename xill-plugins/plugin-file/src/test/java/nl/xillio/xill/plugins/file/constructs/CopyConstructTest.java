@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.file.constructs;
 
+import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
@@ -11,13 +12,12 @@ import java.io.File;
 import java.io.IOException;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 /**
  * Test the CopyConstruct
  */
-public class CopyConstructTest {
+public class CopyConstructTest extends TestUtils {
 
 	@Test
 	public void testProcessNormal() throws Exception {
@@ -25,6 +25,8 @@ public class CopyConstructTest {
 		String sourceString = "This is the source file";
 		MetaExpression source = mock(MetaExpression.class);
 		when(source.getStringValue()).thenReturn(sourceString);
+		setFileResolverReturnValue(new File(sourceString));
+
 
 		// Target
 		String targetString = "This is the target file";
@@ -63,6 +65,8 @@ public class CopyConstructTest {
 		when(context.getRobotID()).thenReturn(robotID);
 		when(context.getRootLogger()).thenReturn(logger);
 
+		setFileResolverReturnValue(new File(""));
+
 		// FileUtilities
 		FileUtilities fileUtils = mock(FileUtilities.class);
 		doThrow(new IOException("Something went wrong")).when(fileUtils).copy(any(File.class), any(File.class));
@@ -71,7 +75,7 @@ public class CopyConstructTest {
 		CopyConstruct.process(context, fileUtils, source, target);
 
 		// Verify the error that was logged
-		verify(logger).error(eq("Failed to copy null to null: Something went wrong"), any(IOException.class));
+		verify(logger).error(contains("Something went wrong"), any(IOException.class));
 
 	}
 }
