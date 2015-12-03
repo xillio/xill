@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.file.constructs;
 
+import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
@@ -21,7 +22,7 @@ import static org.mockito.Mockito.*;
  *
  * Created by Anwar on 12/1/2015.
  */
-public class CanWriteConstructTest {
+public class CanWriteConstructTest extends TestUtils {
 
     private ConstructContext constructContext;
     private FileUtilities fileUtilities;
@@ -45,6 +46,8 @@ public class CanWriteConstructTest {
     @Test
     public void testProcess() throws FileNotFoundException {
 
+        setFileResolverReturnValue(new File(""));
+
         when(metaExpression.getStringValue()).thenReturn("");
 
         CanWriteConstruct.process(constructContext, fileUtilities, metaExpression);
@@ -58,12 +61,12 @@ public class CanWriteConstructTest {
      *
      * @throws FileNotFoundException If the file is not found.
      */
-    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "The specified file does not exist.")
+    @Test(expectedExceptions = RobotRuntimeException.class)
     public void testProcessException() throws FileNotFoundException {
 
-        doThrow(new FileNotFoundException("The specified file does not exist.")).when(fileUtilities).canWrite(any(File.class));
+        doThrow(new FileNotFoundException("")).when(fileUtilities).canWrite(any(File.class));
 
-        CanExecuteConstruct.process(constructContext, fileUtilities, metaExpression);
+        CanWriteConstruct.process(constructContext, fileUtilities, metaExpression);
 
         verify(fileUtilities, times(1)).canWrite(any(File.class));
     }
