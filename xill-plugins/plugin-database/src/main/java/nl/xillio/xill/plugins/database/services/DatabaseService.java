@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import nl.xillio.events.Event;
+import nl.xillio.xill.api.components.EventEx;
 import nl.xillio.xill.plugins.database.util.StatementIterator;
 import nl.xillio.xill.plugins.database.util.Tuple;
 import nl.xillio.xill.plugins.database.util.TypeConverter.ConversionException;
@@ -66,7 +67,7 @@ public interface DatabaseService extends XillService {
 	 * @throws SQLException
 	 *         When the query fails
 	 */
-	Object preparedQuery(Connection connection, String query, List<LinkedHashMap<String, Object>> parameters, int timeout, Event<Object> interruptEvent) throws SQLException;
+	Object preparedQuery(Connection connection, String query, List<LinkedHashMap<String, Object>> parameters, int timeout, EventEx<Object> interruptEvent) throws SQLException;
 
 	/**
 	 * Gets an object from a database.

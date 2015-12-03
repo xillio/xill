@@ -6,6 +6,7 @@ import nl.xillio.events.Event;
 import nl.xillio.events.EventHost;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.RobotAppender;
+import nl.xillio.xill.api.components.EventEx;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.events.RobotStartedAction;
 import nl.xillio.xill.api.events.RobotStoppedAction;
@@ -119,7 +120,7 @@ public class ConstructContext {
     /**
      * @return event that is invoked when the debugger is being stopped
      */
-    public Event<Object> getOnRobotInterrupt() {
+    public EventEx<Object> getOnRobotInterrupt() {
         if (debugger == null) {
             return null;
         } else {

@@ -1,11 +1,13 @@
 package nl.xillio.xill.plugins.database.services;
 
+import nl.xillio.xill.api.components.EventEx;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -70,25 +72,31 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		return createQueryResult(stmt);
 	}
 
-    private void interruptibleExec(final PreparedStatement stmt, final Event<Object> interruptEvent) throws SQLException {
+    private void interruptibleExec(final PreparedStatement stmt, final EventEx<Object> interruptEvent) throws SQLException {
         if (interruptEvent == null) {
             stmt.execute();
         } else {
-            interruptEvent.addListener(e -> {
-                new Thread(() -> { // As it's recommended - the statement is canceled in different thread (and rather not in FX thread)
+
+            Consumer<Object> stopStmt = new Consumer<Object>() {
+                @Override
+                public void accept(Object o) {
+                    new Thread(() -> { // As it's recommended - the statement is canceled in different thread (and rather not in FX thread)
                     try {
                         stmt.cancel();
                     } catch (SQLException ex) {
                         LOGGER.warn("Cannot cancel running SQL statement!", ex);
                     }
                 }).start();
-            });
+                }
+            };
+            interruptEvent.addListener(stopStmt);
             stmt.execute();
+            interruptEvent.removeListener(stopStmt);
         }
     }
 
 	@Override
-	public Object preparedQuery(final Connection connection, final String query, final List<LinkedHashMap<String, Object>> parameters, final int timeout, final Event<Object> interruptEvent) throws SQLException {
+	public Object preparedQuery(final Connection connection, final String query, final List<LinkedHashMap<String, Object>> parameters, final int timeout, final EventEx<Object> interruptEvent) throws SQLException {
 		PreparedStatement stmt = parseNamedParameters(connection, query);
 		stmt.setQueryTimeout(timeout);
 

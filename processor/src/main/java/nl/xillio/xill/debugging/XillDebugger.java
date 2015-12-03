@@ -37,7 +37,7 @@ public class XillDebugger implements Debugger {
     private final EventHost<RobotStoppedAction> onRobotStopped = new EventHost<>();
     private final EventHost<RobotPausedAction> onRobotPaused = new EventHost<>();
     private final EventHost<RobotContinuedAction> onRobotContinued = new EventHost<>();
-    private final EventHost<Object> onRobotInterrupt = new EventHost<>();
+    private final EventHostEx<Object> onRobotInterrupt = new EventHostEx<>();
     private ErrorHandlingPolicy handler = new NullDebugger();
     private final Stack<Instruction> currentStack = new Stack<>();
     private Mode mode = Mode.RUNNING;
@@ -207,7 +207,7 @@ public class XillDebugger implements Debugger {
     }
 
     @Override
-    public Event<Object> getOnRobotInterrupt() {
+    public EventEx<Object> getOnRobotInterrupt() {
         return onRobotInterrupt.getEvent();
     }
 
