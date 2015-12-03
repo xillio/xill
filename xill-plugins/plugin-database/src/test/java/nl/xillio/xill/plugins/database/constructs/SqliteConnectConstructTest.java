@@ -6,10 +6,11 @@ import static org.mockito.Mockito.when;
 
 import java.util.LinkedHashMap;
 
+import nl.xillio.xill.TestUtils;
+import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import nl.xillio.xill.ConstructTest;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.plugins.database.services.DatabaseService;
@@ -18,7 +19,7 @@ import nl.xillio.xill.plugins.database.services.DatabaseServiceFactory;
 /**
  * Test the (@link SqliteConnectConstruct}.
  */
-public class SqliteConnectConstructTest extends ConstructTest {
+public class SqliteConnectConstructTest extends TestUtils {
 
 	/**
 	 * <p>

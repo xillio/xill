@@ -2,10 +2,10 @@ package nl.xillio.plugins;
 
 import com.google.common.reflect.ClassPath;
 import com.google.inject.AbstractModule;
-import com.google.inject.Binder;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import nl.xillio.plugins.interfaces.Loadable;
 import nl.xillio.xill.api.construct.Construct;
-import nl.xillio.xill.services.inject.InjectorUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,6 +25,8 @@ public abstract class XillPlugin extends AbstractModule implements Loadable<Xill
     private final List<Construct> constructs = new ArrayList<>();
     private final String defaultName;
     private boolean loadingConstructs = false;
+    @Inject
+    private Injector injector;
 
     /**
      * Create a new {@link XillPlugin} and set the default name
@@ -170,11 +172,11 @@ public abstract class XillPlugin extends AbstractModule implements Loadable<Xill
                 Class<?> constructClass = classInfo.load();
                 if (Construct.class.isAssignableFrom(constructClass) && !Modifier.isAbstract(constructClass.getModifiers())) {
                     //This is a construct
-                    add((Construct) InjectorUtils.get(constructClass));
+                    add((Construct)injector.getInstance(constructClass));
                 }
             }
         } catch (IOException e) {
-            LOGGER.error("Error while autoloading constructs", e);
+            LOGGER.error("Error while auto loading constructs", e);
         }
     }
 

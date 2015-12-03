@@ -7,18 +7,19 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import nl.xillio.xill.TestUtils;
+import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import nl.xillio.xill.ConstructTest;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.plugins.system.services.version.VersionProvider;
 
 /**
  * Test {@link VersionConstruct}
  */
-public class VersionConstructTest extends ConstructTest {
+public class VersionConstructTest extends TestUtils {
 
 	/**
 	 * Test getting the version

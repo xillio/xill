@@ -1,13 +1,11 @@
 package nl.xillio.xill.plugins.xml.constructs;
 
 import nl.xillio.xill.TestUtils;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.plugins.xml.services.XsdService;
-import nl.xillio.xill.services.inject.InjectorUtils;
 import nl.xillio.xill.api.construct.ConstructContext;
 
 import java.io.File;

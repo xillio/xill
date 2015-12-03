@@ -10,13 +10,14 @@ import static org.mockito.Mockito.when;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 
+import nl.xillio.xill.TestUtils;
+import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import com.mysql.jdbc.Connection;
 
-import nl.xillio.xill.ConstructTest;
 import nl.xillio.xill.api.components.AtomicExpression;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
@@ -30,7 +31,7 @@ import nl.xillio.xill.plugins.database.util.ConnectionMetadata;
  * Test the {@link ConnectConstruct}
  *
  */
-public class ConnectConstructTest extends ConstructTest {
+public class ConnectConstructTest extends TestUtils {
 
 	/**
 	 * test the method when all given input is valid. does not throw any exceptions
