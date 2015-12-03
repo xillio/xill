@@ -13,7 +13,6 @@ import java.util.Optional;
 import javax.swing.filechooser.FileFilter;
 
 import javafx.scene.control.*;
-import javafx.stage.StageStyle;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -70,6 +69,11 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 
     private final TreeItem<Pair<File, String>> root = new TreeItem<>(new Pair<>(new File("."), "Projects"));
     private FXController controller;
+
+    // Context menu items.
+    private MenuItem menuCut, menuCopy, menuPaste;
+    private List<TreeItem<Pair<File, String>>> bulkFiles; // Files to copy or cut.
+    private boolean copy = false; // True: copy, false: cut.
 
     /**
      * Initialize UI stuff
@@ -128,13 +132,22 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 
     private void addContextMenu() {
         // Cut.
-        MenuItem menuCut = new MenuItem("Cut");
+        menuCut = new MenuItem("Cut");
+        menuCut.setOnAction(e -> {
+            copy = false;
+            bulkFiles = FXCollections.observableArrayList(getAllCurrentItems());
+        });
 
         // Copy.
-        MenuItem menuCopy = new MenuItem("Copy");
+        menuCopy = new MenuItem("Copy");
+        menuCopy.setOnAction(e -> {
+            copy = true;
+            bulkFiles = FXCollections.observableArrayList(getAllCurrentItems());
+        });
 
         // Paste.
-        MenuItem menuPaste = new MenuItem("Paste");
+        menuPaste = new MenuItem("Paste");
+        menuPaste.setOnAction(e -> bulkMoveFiles());
 
         // Rename.
         MenuItem menuRename = new MenuItem("Rename");
@@ -144,10 +157,64 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         // Delete.
         MenuItem menuDelete = new MenuItem("Delete");
         menuDelete.setOnAction(e -> deleteButtonPressed());
+        btnDelete.disabledProperty().addListener((obs, old, newValue) -> menuDelete.setDisable(newValue));
 
         // Create the context menu.
-        ContextMenu menu = new ContextMenu(menuCut, menuCopy, menuRename, menuDelete);
+        ContextMenu menu = new ContextMenu(menuCut, menuCopy, menuPaste, menuRename, menuDelete);
         trvProjects.setContextMenu(menu);
+        // Only paste when there is just 1 item selected (the paste location) and there are files to paste.
+        trvProjects.setOnContextMenuRequested(e -> menuPaste.setDisable(getAllCurrentItems().size() != 1 || bulkFiles == null || bulkFiles.isEmpty()));
+    }
+
+    private void bulkMoveFiles() {
+        // Get the directory to paste in.
+        File pasteLoc = getCurrentItem().getValue().getKey();
+        final File destDir = pasteLoc.isDirectory() ? pasteLoc : pasteLoc.getParentFile();
+
+
+        for (TreeItem<Pair<File, String>> treeItem : bulkFiles) {
+            File oldFile = treeItem.getValue().getKey();
+
+            // Check if the file already exists.
+            File destFile = new File(destDir, oldFile.getName());
+            if (destFile.exists()) {
+                // Show a dialog.
+                AlertDialog dialog = new AlertDialog(Alert.AlertType.ERROR,
+                        "File already exists", "",
+                        "The destination file (" + destFile.toString() + ") already exists. Press OK to continue or Cancel to abort.",
+                        ButtonType.OK, ButtonType.CANCEL);
+                final Optional<ButtonType> result = dialog.showAndWait();
+
+                // If cancel was pressed, abort.
+                if (result.isPresent() && result.get() == ButtonType.CANCEL) {
+                    break;
+                }
+            }
+
+            try {
+                // Copy or move the file or directory.
+                if (copy) {
+                    if (oldFile.isDirectory()) {
+                        FileUtils.copyDirectoryToDirectory(oldFile, destDir);
+                    } else {
+                        FileUtils.copyFileToDirectory(oldFile, destDir);
+                    }
+                } else {
+                    if (oldFile.isDirectory()) {
+                        FileUtils.moveDirectoryToDirectory(oldFile, destDir, false);
+                    } else {
+                        FileUtils.moveFileToDirectory(oldFile, destDir, false);
+                    }
+                }
+            } catch (IOException e) {
+                LOGGER.error("IOException while moving robot files.", e);
+            }
+        }
+
+        // If the files were moved (not copied), clear the bulk files.
+        if (!copy) {
+            bulkFiles = null;
+        }
     }
 
     @FXML
