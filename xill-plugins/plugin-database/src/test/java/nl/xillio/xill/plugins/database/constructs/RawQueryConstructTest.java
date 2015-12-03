@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import nl.xillio.xill.ConstructTest;
+import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
@@ -34,7 +34,7 @@ import org.testng.annotations.Test;
  * Tests the {@link QueryConstruct}.
  *
  */
-public class RawQueryConstructTest extends ConstructTest {
+public class RawQueryConstructTest extends TestUtils {
 
 	/**
 	 * <p>

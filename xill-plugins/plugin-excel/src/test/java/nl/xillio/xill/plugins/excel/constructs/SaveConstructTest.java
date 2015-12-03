@@ -1,12 +1,12 @@
 package nl.xillio.xill.plugins.excel.constructs;
 
+import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.excel.datastructures.XillWorkbook;
 import nl.xillio.xill.plugins.excel.services.ExcelService;
-import nl.xillio.xill.services.inject.InjectorUtils;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -23,12 +23,7 @@ import static org.testng.Assert.assertEquals;
  *
  * @author Daan Knoope
  */
-public class SaveConstructTest {
-
-	@BeforeClass
-	public void initializeInjector() {
-		InjectorUtils.getGlobalInjector();
-	}
+public class SaveConstructTest extends TestUtils {
 
 	/**
 	 * Tests if the correct exception is thrown when there was no workbook in the input MetaExpression

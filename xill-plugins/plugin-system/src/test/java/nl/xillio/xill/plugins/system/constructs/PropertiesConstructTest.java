@@ -7,16 +7,17 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
+import nl.xillio.xill.TestUtils;
+import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import org.testng.annotations.Test;
 
-import nl.xillio.xill.ConstructTest;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.plugins.system.services.properties.SystemPropertiesService;
 
 /**
  * Test the {@link PropertiesConstruct}
  */
-public class PropertiesConstructTest extends ConstructTest {
+public class PropertiesConstructTest extends TestUtils {
 
 	/**
 	 * Test getting all properties under normal circumstances

@@ -37,13 +37,13 @@ public class GetConstructTest {
 		MetaExpression returnContent = mock(MetaExpression.class);
 		when(returnContent.getMeta(XmlNode.class)).thenReturn(returnXmlNode);
 		Content content = mock(Content.class);
-		when(content.getMeta()).thenReturn(returnContent);
+		when(content.getMeta(any(), any())).thenReturn(returnContent);
 
 		RestService restService = mock(RestService.class);
 		when(restService.get(anyString(), any())).thenReturn(content);
 
 		// Run
-		MetaExpression result = GetConstruct.process(urlVar, optionsVar, restService);
+		MetaExpression result = new GetConstruct(restService, null, null).processMeta(urlVar, optionsVar);
 
 		// Verify
 		verify(restService).get(anyString(), any());
@@ -67,7 +67,7 @@ public class GetConstructTest {
 		when(optionsVar.isNull()).thenReturn(true);
 
 		// Run
-		GetConstruct.process(urlVar, optionsVar, restService);
+		new GetConstruct(restService, null, null).processMeta(urlVar, optionsVar);
 	}
 	
 	/**
@@ -91,6 +91,6 @@ public class GetConstructTest {
 		when(optionsVar.getValue()).thenReturn(optionList);
 
 		// Run
-		GetConstruct.process(urlVar, optionsVar, restService);
+		new GetConstruct(restService, null, null).processMeta(urlVar, optionsVar);
 	}
 }
