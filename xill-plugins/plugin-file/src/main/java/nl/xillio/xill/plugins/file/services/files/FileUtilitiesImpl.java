@@ -110,7 +110,7 @@ public class FileUtilitiesImpl implements FileUtilities {
 	}
 
 	private boolean fileCheck(File file, boolean statement) throws FileNotFoundException {
-		if (Files.exists(file.toPath())) {
+		if (!Files.notExists(file.toPath())) {
 			return statement;
 		} else {
 			throw new FileNotFoundException("The specified file folder does not exist.");
