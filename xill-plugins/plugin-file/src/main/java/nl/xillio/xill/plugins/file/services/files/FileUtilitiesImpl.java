@@ -89,8 +89,13 @@ public class FileUtilitiesImpl implements FileUtilities {
 	}
 
 	@Override
-	public boolean canRead(File file) {
-		return Files.isReadable(file.toPath());
+	public boolean canRead(File file) throws FileNotFoundException {
+		if (Files.exists(file.toPath())) {
+			return Files.isReadable(file.toPath());
+		} else {
+			throw new FileNotFoundException("The specified file does not exist.");
+		}
+
 	}
 
 	@Override
@@ -100,6 +105,7 @@ public class FileUtilitiesImpl implements FileUtilities {
 
 	@Override
 	public boolean canExecute(File file) {
+
 		return Files.isExecutable(file.toPath());
 	}
 

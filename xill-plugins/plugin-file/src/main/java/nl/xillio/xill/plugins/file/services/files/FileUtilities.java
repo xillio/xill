@@ -5,6 +5,7 @@ import nl.xillio.xill.plugins.file.utils.Folder;
 import nl.xillio.xill.services.XillService;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
 
@@ -98,8 +99,9 @@ public interface FileUtilities extends XillService {
 	 *
 	 * @param file The associated file object.
 	 * @return True if an authenticated user has read access to the specified file. Otherwise, false.
+	 * @throws FileNotFoundException If the file does not exist.
      */
-	boolean canRead(File file);
+	boolean canRead(File file) throws FileNotFoundException;
 
 	/**
 	 * Verifies whether an authenticated user has write access to a specified file/folder.

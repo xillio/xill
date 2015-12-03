@@ -3,10 +3,13 @@ package nl.xillio.xill.plugins.file.constructs;
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ConstructContext;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
+import opennlp.tools.parser.Cons;
 import org.testng.annotations.Test;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 import static org.mockito.Mockito.*;
 
@@ -18,7 +21,7 @@ import static org.mockito.Mockito.*;
 public class CanReadConstructTest extends TestUtils {
 
     @Test
-    public void testProcess() {
+    public void testProcess() throws FileNotFoundException {
 
         ConstructContext constructContext = mock(ConstructContext.class);
 
@@ -33,5 +36,19 @@ public class CanReadConstructTest extends TestUtils {
         CanReadConstruct.process(constructContext, fileUtilities, metaExpression);
 
         verify(fileUtilities, times(1)).canRead(any());
+    }
+
+    @Test(expectedExceptions = RobotRuntimeException.class)
+    public void testProcessException() throws FileNotFoundException {
+
+        ConstructContext constructContext = mock(ConstructContext.class);
+
+        FileUtilities fileUtilities = mock(FileUtilities.class);
+        doThrow(new RobotRuntimeException("File does not exist.")).when(fileUtilities).canRead(any());
+
+        MetaExpression metaExpression = mock(MetaExpression.class);
+
+        CanReadConstruct.process(constructContext, fileUtilities, metaExpression);
+
     }
 }
