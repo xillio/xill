@@ -114,10 +114,11 @@ public interface FileUtilities extends XillService {
 	/**
 	 * Verifies whether an authenticated user has executability rights to the specified file/folder.
 	 *
-	 * @param file The associated file object
-	 * @return True if an authenticated user has executability rights to a specified file. Otherwise, false
+	 * @param file The associated file object.
+	 * @return True if an authenticated user has executability rights to a specified file. Otherwise, false.
+	 * @throws FileNotFoundException If the file does not exist.
      */
-	boolean canExecute(File file);
+	boolean canExecute(File file) throws FileNotFoundException;
 
 	/**
 	 * Verifies whether a file/folder is hidden or not.
