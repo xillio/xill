@@ -95,6 +95,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
             watcher = new WatchDir();
             new Thread(watcher).start();
         } catch (IOException e) {
+            LOGGER.error("IOException when creating the WatchDir.", e);
         }
 
         trvProjects.setCellFactory(treeView -> new TreeCell<Pair<File, String>>() {
@@ -265,11 +266,11 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
      * @param stop Whether to stop the running robots.
      * @return True if any items or sub-items are running robots.
      */
-    private boolean checkRobotsRunning(ObservableList<TreeItem<Pair<File, String>>> items, boolean stop) {
+    private boolean checkRobotsRunning(List<TreeItem<Pair<File, String>>> items, boolean stop) {
         boolean running = false;
 
         for (TreeItem<Pair<File, String>> item : items) {
-            if (item == getProject(item)) {
+            if (item != null && item == getProject(item)) {
                 // If the item is a project, recursively check all sub-items.
                 running |= checkRobotsRunning(item.getChildren(), stop);
             } else {
@@ -393,6 +394,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
             try {
                 watcher.addFolderListener(this, Paths.get(project.getFolder()));
             } catch (IOException e) {
+                LOGGER.error("IOException while adding a folder listener.", e);
             }
         }
         projectNode.setExpanded(false);
