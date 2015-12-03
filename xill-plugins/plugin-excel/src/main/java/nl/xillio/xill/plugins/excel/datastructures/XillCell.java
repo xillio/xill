@@ -67,10 +67,11 @@ public class XillCell {
 					if (isDateFormatted()) {
 						toReturn = new DateImpl(cell.getDateCellValue());
 					} else {
-						DataFormatter d = new DataFormatter();
+						DataFormatter d = new DataFormatter(Locale.ENGLISH);
 						d.setDefaultNumberFormat(d.getDefaultFormat(cell));
-						String formatted = d.formatCellValue(cell);
-						toReturn = formatted.replace(',','.');
+						toReturn = d.formatCellValue(cell);
+
+
 					}
 					break;
 				case Cell.CELL_TYPE_BLANK:
