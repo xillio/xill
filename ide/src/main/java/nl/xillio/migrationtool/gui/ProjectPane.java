@@ -171,18 +171,17 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 
         // Test if robot is still running
         if (orgTab != null && orgTab.getEditorPane().getControls().robotRunning()) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.initStyle(StageStyle.UNIFIED);
-            alert.setTitle("Renaming running robot");
-            alert.setHeaderText("You are trying to rename running robot!");
-            alert.setContentText("Do you want to stop the robot so you can rename it?");
-            alert.getButtonTypes().clear();
-            alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
-            final Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.NO) {
-                return;
-            } else {
+            AlertDialog dialog = new AlertDialog(Alert.AlertType.WARNING,
+                    "Rename running robot",
+                    "You are trying to rename running robot!",
+                    "Do you want to stop the robot so you can rename it?",
+                    ButtonType.YES, ButtonType.NO
+            );
+            final Optional<ButtonType> result = dialog.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.YES) {
                 orgTab.getEditorPane().getControls().stop();// Stop robot before renaming
+            } else {
+                return;
             }
         }
 
