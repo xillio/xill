@@ -6,7 +6,6 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.data.MetadataExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.services.files.FileResolver;
-import nl.xillio.xill.services.inject.InjectorUtils;
 import org.apache.commons.lang3.text.WordUtils;
 
 import java.io.File;
@@ -32,8 +31,6 @@ public abstract class Construct extends ExpressionBuilderHelper implements HelpC
 			name = name.substring(0, name.length() - superName.length());
 		}
 		defaultName = WordUtils.uncapitalize(name);
-
-		InjectorUtils.getGlobalInjector().injectMembers(this);
 	}
 
 	/**

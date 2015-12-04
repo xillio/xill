@@ -11,6 +11,8 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Iterator;
 
 /**
@@ -18,7 +20,7 @@ import java.util.Iterator;
  */
 @Singleton
 public class FileUtilitiesImpl implements FileUtilities {
-	private static final Logger log = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	@Override
 	public void copy(final File source, final File target) throws IOException {
@@ -62,7 +64,7 @@ public class FileUtilitiesImpl implements FileUtilities {
 		try {
 			FileUtils.forceDelete(file);
 		} catch (FileNotFoundException e) {
-			log.info("Failed to delete " + file.getAbsolutePath(), e);
+			LOGGER.info("Failed to delete " + file.getAbsolutePath(), e);
 		}
 	}
 
@@ -86,4 +88,32 @@ public class FileUtilitiesImpl implements FileUtilities {
 		return new FolderIterator(folder, recursive);
 	}
 
+	@Override
+	public boolean canRead(File file) throws FileNotFoundException {
+		return fileCheck(file, Files.isReadable(file.toPath()));
+	}
+
+	@Override
+	public boolean canWrite(File file) throws FileNotFoundException {
+		return fileCheck(file, Files.isWritable(file.toPath()));
+	}
+
+	@Override
+	public boolean canExecute(File file) throws FileNotFoundException {
+
+		return fileCheck(file, Files.isExecutable(file.toPath()));
+	}
+
+	@Override
+	public boolean isHidden(File file) throws IOException{
+		return fileCheck(file, Files.isHidden(file.toPath()));
+	}
+
+	private boolean fileCheck(File file, boolean statement) throws FileNotFoundException {
+		if (!Files.notExists(file.toPath())) {
+			return statement;
+		} else {
+			throw new FileNotFoundException("The specified file folder does not exist.");
+		}
+	}
 }

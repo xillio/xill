@@ -17,9 +17,7 @@ import nl.xillio.xill.plugins.web.data.PageVariable;
 import nl.xillio.xill.plugins.web.services.web.FileService;
 import nl.xillio.xill.plugins.web.services.web.WebService;
 
-import nl.xillio.xill.services.inject.InjectorUtils;
 import org.testng.Assert;
-import org.testng.TestNGUtils;
 import org.testng.annotations.Test;
 
 /**
