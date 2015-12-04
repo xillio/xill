@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 
 /**
  * This class allows other classes to subscribe to an event that can be fired by the {@link EventHostEx}.
+ * This version is thread-safe
  *
  * @param <T>
  */
@@ -40,12 +41,22 @@ public class EventEx<T> {
 		listeners.remove(listener);
 	}
 
+    /**
+     * Invoke this event with a given argument.
+     *
+     * @param argument
+     *        an argument
+     */
     protected synchronized void invoke(final T argument) {
         listeners.forEach(listener -> listener.accept(argument));
     }
 
+    /**
+     * Gets a list of listeners.
+     *
+     * @return listeners
+     */
     protected synchronized List<Consumer<T>> getListeners() {
         return listeners;
     }
-
 }

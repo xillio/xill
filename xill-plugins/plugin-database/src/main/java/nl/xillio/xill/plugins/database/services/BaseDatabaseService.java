@@ -1,6 +1,13 @@
 package nl.xillio.xill.plugins.database.services;
 
+import com.google.common.collect.Iterators;
 import nl.xillio.xill.api.components.EventEx;
+import nl.xillio.xill.plugins.database.util.StatementIterator;
+import nl.xillio.xill.plugins.database.util.Tuple;
+import nl.xillio.xill.plugins.database.util.TypeConverter;
+import nl.xillio.xill.plugins.database.util.TypeConverter.ConversionException;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,17 +17,6 @@ import java.util.Map.Entry;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import nl.xillio.events.Event;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-
-import com.google.common.collect.Iterators;
-
-import nl.xillio.xill.plugins.database.util.StatementIterator;
-import nl.xillio.xill.plugins.database.util.Tuple;
-import nl.xillio.xill.plugins.database.util.TypeConverter;
-import nl.xillio.xill.plugins.database.util.TypeConverter.ConversionException;
 
 /**
  * The base service for any databaseService.
@@ -76,22 +72,23 @@ public abstract class BaseDatabaseService implements DatabaseService {
         if (interruptEvent == null) {
             stmt.execute();
         } else {
-
             Consumer<Object> stopStmt = new Consumer<Object>() {
                 @Override
                 public void accept(Object o) {
-                    new Thread(() -> { // As it's recommended - the statement is canceled in different thread (and rather not in FX thread)
                     try {
                         stmt.cancel();
                     } catch (SQLException ex) {
+                        System.err.println("== STMT Cancel error");
                         LOGGER.warn("Cannot cancel running SQL statement!", ex);
                     }
-                }).start();
                 }
             };
             interruptEvent.addListener(stopStmt);
-            stmt.execute();
-            interruptEvent.removeListener(stopStmt);
+            try {
+                stmt.execute();
+            } finally {
+                interruptEvent.removeListener(stopStmt);
+            }
         }
     }
 
