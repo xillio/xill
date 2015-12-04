@@ -2,14 +2,18 @@
 <function>
   <description>
 Connect to a Mssql database. Returns a connection object.  
-  
-The host parameter wants the name of the host.  
-The default port is 3306 but can be set to a different port is necessary.  
-The database parameter wants the name of the database you want to connect to.  
-The user and pass parameter are for the username and password. Both are optional.  
-The options parameter is optional. It is used for setting mssql specific options. These can be found here:
-  
-	http://jtds.sourceforge.net/faq.html#urlFormat
+
+| Parameter  | Description |
+| ---------- | ----------- |
+| `host`     | The host parameter wants the name of the host. |
+| `port`     | The default port is 3306 but can be set to a different port is necessary. |
+| `database` | The database parameter wants the name of the database you want to connect to. |
+| `user`     | The user parameter is for the username. This is optional.
+| `pass`     | The pass parameter is for the password. This is optional.
+| `options`  | The options parameter is optional. It is used for setting mssql specific options. |
+
+More information on the options parameter can be found on [http://jtds.sourceforge.net/faq.html#urlFormat](http://jtds.sourceforge.net/faq.html#urlFormat)
+
   </description>
   <examples>
     <example>

@@ -17,7 +17,6 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
@@ -72,8 +71,8 @@ public class HelpPane extends AnchorPane {
 
 		// Fill the highlight settings with keywords and builtins
 		highlightSettings = new HighlightSettings();
-		highlightSettings.addKeywords(Loader.getXill().getReservedKeywords());
-		highlightSettings.addBuiltins(Loader.getInitializer().getPlugins().stream()
+		highlightSettings.addBuiltins(Loader.getXill().getReservedKeywords());
+		highlightSettings.addKeywords(Loader.getInitializer().getPlugins().stream()
 			.map(p -> p.getName())
 			.collect(Collectors.toList()));
 

@@ -6,6 +6,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import nl.xillio.events.Event;
 import nl.xillio.events.EventHost;
 import nl.xillio.plugins.CircularReferenceException;
@@ -24,8 +26,6 @@ import nl.xillio.xill.docgen.data.Parameter;
 import nl.xillio.xill.docgen.exceptions.ParsingException;
 import nl.xillio.xill.docgen.impl.ConstructDocumentationEntity;
 import nl.xillio.xill.services.inject.DefaultInjectorModule;
-import nl.xillio.xill.services.inject.InjectorUtils;
-import nl.xillio.xill.services.inject.PluginInjectorModule;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
@@ -79,10 +79,10 @@ public class XillInitializer extends Thread {
 		loadPlugins();
 
 		LOGGER.debug("Initializing injector...");
-		initializeInjector();
+		Injector injector = initializeInjector();
 
 		LOGGER.debug("Initializing plugins...");
-		initializePlugins();
+		initializePlugins(injector);
 
 		LOGGER.debug("Generating documentation...");
 		generateDocumentation();
@@ -124,16 +124,17 @@ public class XillInitializer extends Thread {
 		return this.searcher;
 	}
 
-	private void initializeInjector() {
+	private Injector initializeInjector() {
 		Module module = new DefaultInjectorModule();
 		List<Module> modules = new ArrayList<>(getPlugins());
 		modules.add(module);
-		InjectorUtils.initialize(modules);
+		return Guice.createInjector(modules.toArray(new Module[modules.size()]));
 	}
 
-	private void initializePlugins() {
+	private void initializePlugins(Injector injector) {
 		for (XillPlugin plugin : getPlugins()) {
 			try {
+				injector.injectMembers(plugin);
 				plugin.initialize();
 			} catch (Exception e) {
 				LOGGER.error("Exception while initializing " + plugin, e);
