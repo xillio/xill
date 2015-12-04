@@ -109,7 +109,6 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 			Font.loadFont(this.getClass().getResourceAsStream("/fonts/Glober xBold.ttf"), 10);
 			Font.loadFont(this.getClass().getResourceAsStream("/fonts/UbuntuMono Regular.ttf"), 10);
 			Font.loadFont(this.getClass().getResourceAsStream("/fonts/UbuntuMono Bold.ttf"), 10);
-			Font.loadFont(this.getClass().getResourceAsStream("/fonts/fontawesome-webfont.ttf"), 10);
 
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/contenttools.fxml"));
 			root = loader.load();
