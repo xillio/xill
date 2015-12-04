@@ -71,7 +71,11 @@
 						</ToolBar>
 						<ToolBar fx:id="tlbRight" focusTraversable="false" HBox.hgrow="NEVER">
 							<items>
-                                <Label fx:id="lblNearExpiry" prefWidth="200.0" styleClass="errorLabel" />
+                                <Label fx:id="lblNearExpiry" styleClass="msgWarning" text="">
+									<graphic>
+										<Pane styleClass="icon" />
+									</graphic>
+								</Label>
 								<Button fx:id="btnSettings" mnemonicParsing="false" onAction="#buttonSettings" styleClass="iconButton" text="Settings">
 									<graphic>
 										<Pane styleClass="icon" />
