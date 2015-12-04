@@ -59,7 +59,7 @@ public class XillInitializer extends Thread {
 		this.docGen = docGen;
 		cssFile = getClass().getResource(docGen.getConfig().getResourceUrl() + "/_assets/css/style.css").toExternalForm();
 		aceJSFile = getClass().getResource("/ace/ace.js").toExternalForm();
-		aceLoader = getClass().getResource("/ace/load-doc.js").toExternalForm();
+		aceLoader = getClass().getResource("/load-doc-editor.js").toExternalForm();
 		editorCss = getClass().getResource("/editor.css").toExternalForm();
 	}
 
