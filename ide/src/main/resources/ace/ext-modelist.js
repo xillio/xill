@@ -156,6 +156,7 @@ var supportedModes = {
     Velocity:    ["vm"],
     Verilog:     ["v|vh|sv|svh"],
     VHDL:        ["vhd|vhdl"],
+    Xill:        ["xill"],
     XML:         ["xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl|xaml"],
     XQuery:      ["xq"],
     YAML:        ["yaml|yml"],

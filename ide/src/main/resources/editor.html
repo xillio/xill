@@ -74,7 +74,11 @@
 
     function init() {
         console.log = function () {
-            xillCoreOverride.info(JSON.stringify(arguments));
+            var output = "[JAVASCRIPT]";
+            for(var key in arguments) {
+                output += " " + arguments[key];
+            }
+            xillCoreOverride.info(output);
         };
         console.error = console.log;
         console.warn = console.log;
@@ -82,12 +86,14 @@
         editor = ace.edit('editor');
 
         editor.getSession().setMode("ace/mode/xill");
+        editor.setTheme("ace/theme/xillio");
 
         var langTools = ace.require("ace/ext/language_tools");
         editor.setOptions({
             enableBasicAutocompletion: true,
             enableLiveAutocompletion: true
         });
+        editor.$blockScrolling = Infinity;
 
         langTools.addCompleter(xillCore);
 
