@@ -33,6 +33,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Pair;
 import me.biesaart.utils.FileUtils;
@@ -133,6 +134,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 
         // Add event listeners.
         this.addEventFilter(KeyEvent.KEY_PRESSED, this);
+        this.addEventFilter(MouseEvent.MOUSE_PRESSED, this);
 
         loadProjects();
         addContextMenu();
@@ -344,6 +346,12 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 
     @Override
     public void handle(Event event) {
+        // Request focus on mouse press.
+        if (event.getEventType() == MouseEvent.MOUSE_PRESSED) {
+            this.requestFocus();
+        }
+
+        // Key presses.
         if (event.getEventType() == KeyEvent.KEY_PRESSED) {
             KeyEvent keyEvent = (KeyEvent) event;
 
