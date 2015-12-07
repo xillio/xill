@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Returns the trimmed version of the string.
-        If the optional boolean parameter internal is set to true, the routine will also replace slack white space
-        inside the string with a single space.
+Returns the trimmed version of the string.  
+
+If the optional boolean parameter internal is set to true, the routine will also replace slack white space inside the string with a single space.
     </description>
     <examples>
         <example title="Usage">

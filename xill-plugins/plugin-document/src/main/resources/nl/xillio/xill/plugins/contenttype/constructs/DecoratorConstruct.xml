@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Temporarily store a decorator definition in the UDM cache.
-        This construct will not push and persist the definition this can be done using the ContentType.save construct.
-        Every field inside the decorator must contain 3 values: the name, the type and the optionality. In the examples
-        below you can see how to build up these decorators.
+Temporarily store a decorator definition in the UDM cache.  
 
-        Supported decorator types: BOOLEAN, STRING, NUMBER, DATE, LIST
+This construct will not push and persist the definition this can be done using the ContentType.save construct.  
+Every field inside the decorator must contain 3 values: the name, the type and the optionality. In the examples
+below you can see how to build up these decorators.  
+
+Supported decorator types: BOOLEAN, STRING, NUMBER, DATE, LIST
     </description>
     <examples>
         <example title="Usage">

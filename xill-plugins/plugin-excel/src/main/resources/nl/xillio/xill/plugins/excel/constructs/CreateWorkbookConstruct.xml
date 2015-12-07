@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Creates a new Excel workbook at the given path.
+Creates a new Excel workbook at the given path.
     </description>
     <examples>
         <example title="Creation">

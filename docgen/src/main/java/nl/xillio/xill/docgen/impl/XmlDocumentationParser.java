@@ -9,6 +9,8 @@ import nl.xillio.xill.docgen.exceptions.ParsingException;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.pegdown.Extensions;
+import org.pegdown.PegDownProcessor;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -39,6 +41,7 @@ public class XmlDocumentationParser implements DocumentationParser {
 	private XPathExpression tagXPathQuery;
 	private XPathExpression exampleNodesXPathQuery;
 	private XPathExpression referenceXPathQuery;
+	private static PegDownProcessor markdownProcessor = new PegDownProcessor(Extensions.TABLES);
 
 	/**
 	 * The constructor for the parser when we hand it a factory.
@@ -104,7 +107,7 @@ public class XmlDocumentationParser implements DocumentationParser {
 
 	String parseDescription(final Document doc) throws ParsingException {
 		try {
-			return StringEscapeUtils.escapeHtml3((String) descriptionXPathQuery.evaluate(doc, XPathConstants.STRING));
+			return markdownProcessor.markdownToHtml((String) descriptionXPathQuery.evaluate(doc, XPathConstants.STRING));
 		} catch (XPathExpressionException e) {
 			throw new ParsingException("Failed to parse description", e);
 		}

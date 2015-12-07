@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
@@ -17,7 +18,7 @@ import org.testng.annotations.Test;
 /**
  * Test the {@link HungarianAlgorithmConstruct}.
  */
-public class HungarianAlgorithmConstructTest extends ExpressionBuilderHelper {
+public class HungarianAlgorithmConstructTest extends TestUtils {
 
 	/**
 	 * <p>

@@ -20,7 +20,7 @@ import nl.xillio.xill.plugins.web.services.web.WebService;
 import org.testng.annotations.Test;
 
 /**
- * test the {@link StringToPageConstruct}.
+ * test the {@link FromString}.
  *
  */
 public class StringToPageConstructTest {
@@ -52,7 +52,7 @@ public class StringToPageConstructTest {
 		when(webService.getPageFromPool(any(), any())).thenReturn(pageVariable);
 
 		// run
-		StringToPageConstruct.process(content, optionsFactory, fileService, webService);
+		FromString.process(content, optionsFactory, fileService, webService);
 
 		// verify
 		verify(fileService, times(1)).createTempFile(anyString(), anyString());
@@ -81,7 +81,7 @@ public class StringToPageConstructTest {
 		when(fileService.createTempFile(anyString(), anyString())).thenThrow(new IOException());
 
 		// run
-		StringToPageConstruct.process(content, optionsFactory, fileService, webService);
+		FromString.process(content, optionsFactory, fileService, webService);
 	}
 
 	/**
@@ -105,6 +105,6 @@ public class StringToPageConstructTest {
 		when(fileService.createTempFile(anyString(), anyString())).thenThrow(new RobotRuntimeException("error"));
 
 		// run
-		StringToPageConstruct.process(content, optionsFactory, fileService, webService);
+		FromString.process(content, optionsFactory, fileService, webService);
 	}
 }

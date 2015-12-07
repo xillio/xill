@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Changes the value of a given cell to the provided value.
+Changes the value of a given cell to the provided value.
     </description>
     <examples>
         <example title="Usage">

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
 	<description>
-		Escapes a string and returns it.
-		The escaping depends on the database type, so in order to escape a string a connection to a database must first be established.
+Escapes a string and returns it.  
+
+The escaping depends on the database type, so in order to escape a string a connection to a database must first be established.
 	</description>
 	<examples>
 		<example title="Usage">

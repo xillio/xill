@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Load an Excel sheet from a workbook.
+Load an Excel sheet from a workbook.
     </description>
     <examples>
         <example title="Loading a sheet">
