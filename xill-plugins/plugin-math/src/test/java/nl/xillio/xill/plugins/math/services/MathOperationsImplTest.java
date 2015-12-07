@@ -6,7 +6,6 @@ import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.plugins.math.services.math.MathOperationsImpl;
 
 import java.time.ZonedDateTime;
-import nl.xillio.xill.plugins.date.data.Date;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -36,7 +35,7 @@ public class MathOperationsImplTest extends TestUtils {
                 {emptyObject(), false},
                 {fromValue(initializeTestList()), false},
                 {fromValue(initializeTestObject()), false},
-                {fromValue(new Date(ZonedDateTime.now()).toString()), false}
+                {fromValue(ZonedDateTime.now().toString()), false}
         };
     }
 
