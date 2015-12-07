@@ -137,7 +137,6 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 		this.tab = tab;
 		controls = new RobotControls(tab, btnRun, btnPause, btnStop, btnStepIn, btnStepOver, cmiError);
 		editor.setTab(tab);
-		editor.addKeywords(tab.getProcessor());
 		editorReplaceBar.getOnClose().addListener(clear -> {
 			if (clear){
 				this.requestFocus();
