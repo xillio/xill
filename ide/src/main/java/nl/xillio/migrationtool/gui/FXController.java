@@ -133,6 +133,9 @@ public class FXController implements Initializable, EventHandler<Event> {
     @Override
     public void initialize(final URL url, final ResourceBundle bundle) {
 
+        // Add listener for license change.
+        LicenseUtils.getOnLicenseChange().add(this::checkLicenseNearExpiry);
+
         // Register most of the internal settings
         registerSettings();
 
@@ -253,14 +256,6 @@ public class FXController implements Initializable, EventHandler<Event> {
                 closeApplication();
             }
 
-            // Check if the licence is about to expire.
-            long daysLeft = LicenseUtils.daysToExpiration();
-            if (daysLeft <= LicenseUtils.DAYS_NEAR_EXPIRATION) {
-                btnNearExpiry.setText(daysLeft + " Days until license expires.");
-            } else {
-                btnNearExpiry.setVisible(false);
-            }
-
             try {
                 showReleaseNotes();
             } catch (IOException e) {
@@ -275,6 +270,17 @@ public class FXController implements Initializable, EventHandler<Event> {
                         .forEach(tab -> tpnBots.getSelectionModel().select(tab));
             }
         });
+    }
+
+    private void checkLicenseNearExpiry() {
+        // Check if the licence is about to expire.
+        long daysLeft = LicenseUtils.daysToExpiration();
+        if (daysLeft <= LicenseUtils.DAYS_NEAR_EXPIRATION) {
+            btnNearExpiry.setText(daysLeft + " Day" + (daysLeft > 1 ? "s" : "") + " until license expires.");
+            btnNearExpiry.setVisible(true);
+        } else {
+            btnNearExpiry.setVisible(false);
+        }
     }
 
     /**

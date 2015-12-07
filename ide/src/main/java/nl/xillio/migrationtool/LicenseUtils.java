@@ -1,6 +1,8 @@
 package nl.xillio.migrationtool;
 
 
+import me.biesaart.event.Event;
+import me.biesaart.event.EventDispatcher;
 import nl.xillio.license.License;
 import nl.xillio.license.LicenseFactory;
 import nl.xillio.license.LicenseValidator;
@@ -26,6 +28,7 @@ public class LicenseUtils {
     public static final File LICENSE_FILE = new File(XillioHomeFolder.forXillIDE(), "license.json");
     public static final int DAYS_NEAR_EXPIRATION = 10;
     private static LicenseFactory licenseFactory;
+    private final static EventDispatcher<License> licenseChangeEvent = new EventDispatcher<>();
 
     /**
      * Get the currently active license.
@@ -123,7 +126,11 @@ public class LicenseUtils {
     }
 
     private static boolean isValid(License license) {
-        return license.isValid() && license.getLicenseDetails().isValidForSoftwareModule(SoftwareModule.IDE);
+        boolean valid = license.isValid() && license.getLicenseDetails().isValidForSoftwareModule(SoftwareModule.IDE);
+        if (valid) {
+            licenseChangeEvent.fire(license);
+        }
+        return valid;
     }
 
     private static LicenseFactory getFactory() throws IOException, PublicKeyReaderUtil.PublicKeyParseException {
@@ -141,5 +148,9 @@ public class LicenseUtils {
 
     private static InputStream openPublicKeyString() {
         return License.class.getResourceAsStream("/publickey");
+    }
+
+    public static Event<License> getOnLicenseChange() {
+        return licenseChangeEvent.getEvent();
     }
 }
