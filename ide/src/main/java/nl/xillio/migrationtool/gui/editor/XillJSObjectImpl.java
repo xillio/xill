@@ -6,11 +6,14 @@ import nl.xillio.xill.api.XillProcessor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Objects;
+
 public class XillJSObjectImpl implements XillJSObject {
     private static final Logger LOGGER = LogManager.getLogger();
     private final XillProcessor processor;
 
     public XillJSObjectImpl(XillProcessor processor) {
+        Objects.requireNonNull(processor);
         this.processor = processor;
     }
 

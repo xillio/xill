@@ -40,17 +40,20 @@
             return ["ATOMIC", "LIST", "NaN", "OBJECT", "argument", "null", "true", "false"]
         },
         getCompletions: function (state, session, pos, prefix, aceCallback) {
-            xillCoreOverride.getCompletions({
-                state: state,
-                session: session,
-                prefix: prefix,
-                column: pos.column,
-                row: pos.row,
-                currentLine: session.getLine(pos.row),
-                callback: function (name, value, score, meta) {
-                    aceCallback(null, {name: name, caption: name, snippet: value, score: score, meta: meta});
-                }
-            });
+            if (xillCoreOverride) {
+
+                xillCoreOverride.getCompletions({
+                    state: state,
+                    session: session,
+                    prefix: prefix,
+                    column: pos.column,
+                    row: pos.row,
+                    currentLine: session.getLine(pos.row),
+                    callback: function (name, value, score, meta) {
+                        aceCallback(null, {name: name, caption: name, snippet: value, score: score, meta: meta});
+                    }
+                });
+            }
         },
         getDocTooltip: function (item) {
             item.docHTML = "<b>Test</b>";
@@ -61,6 +64,10 @@
     var javaEditor = {
         setAce: function (obj) {
 
+        },
+        codeChanged: function () {
+        },
+        breakpointsChanged: function () {
         }
     };
     var xillCoreOverride = null;
@@ -93,6 +100,10 @@
             javaEditor.codeChanged(editor.getValue());
         });
 
+        editor.session.on('changeBreakpoint', function () {
+            javaEditor.breakpointsChanged(editor.session.getBreakpoints());
+        });
+
 
         /**
          * This function is a workaround for pasting from JavaFX.
@@ -112,7 +123,6 @@
         };
 
         javaEditor.setAce(editor);
-
     }
 </script>
 </body>

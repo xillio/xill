@@ -193,6 +193,26 @@ ace.define("ace/mode/xill_highlight_rules", function (require, exports) {
 });
 
 /**
+ * This block defines the error markings.
+ */
+ace.define("ace/mode/xill_marker", function (require) {
+    var Range = require('ace/range').Range;
+
+    var highlights = [];
+    editor.highlight = function (line, type) {
+        var hl = editor.getSession().addMarker(new Range(line, 0, line, 1), "ace_" + type, "fullLine");
+        highlights.push(hl);
+        editor.scrollToLine(line, true);
+    };
+
+    editor.clearHighlight = function () {
+        highlights.forEach(function (entry) {
+            editor.getSession().removeMarker(entry);
+        });
+        highlights = [];
+    }
+});
+/**
  * This block defines the xill mode.
  */
 ace.define("ace/mode/xill", function (require, exports) {
@@ -202,6 +222,7 @@ ace.define("ace/mode/xill", function (require, exports) {
     var HighlightRules = require("./xill_highlight_rules").HighlightRules;
     var CStyleFoldMode = require("./folding/cstyle").FoldMode;
     var breakpoints = require("ace/ext/breakpoints");
+    var errorHightlighting = require("./xill_marker");
 
     var Mode = function () {
         this.HighlightRules = HighlightRules;

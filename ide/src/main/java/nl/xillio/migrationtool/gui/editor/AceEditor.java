@@ -24,12 +24,9 @@ import nl.xillio.migrationtool.gui.FXController;
 import nl.xillio.migrationtool.gui.HelpPane;
 import nl.xillio.migrationtool.gui.ReplaceBar;
 import nl.xillio.migrationtool.gui.RobotTab;
-import nl.xillio.xill.api.XillProcessor;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.preview.Replaceable;
-import nl.xillio.xill.util.HighlightSettings;
 import nl.xillio.xill.util.HotkeysHandler.Hotkeys;
-import nl.xillio.xill.util.settings.Settings;
 import nl.xillio.xill.util.settings.SettingsHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -57,10 +54,8 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
     private final EventHost<Boolean> onDocumentLoaded = new EventHost<>();
     private HelpPane helppane;
     private JSObject ace;
-    private XillProcessor processor;
     private RobotTab tab;
     private ContextMenu rightClickMenu;
-    private HighlightSettings highlightSettings;
 
     static {
         try {
@@ -100,7 +95,6 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
      */
     public AceEditor(final WebView editor) {
         this.editor = editor;
-        this.highlightSettings = new HighlightSettings();
         // Add our own context menu.
         editor.setContextMenuEnabled(false);
         createContextMenu();
@@ -153,7 +147,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
     /**
      * Set the {@link RobotTab}
      *
-     * @param tab
+     * @param tab the tab that should be used by this editor
      */
     public void setTab(final RobotTab tab) {
         this.tab = tab;
@@ -169,38 +163,6 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
         }
         // get focus
         callOnAce("focus");
-    }
-
-    /**
-     * Pulls all built-ins and keywords from a processor
-     *
-     * @param processor
-     */
-    public void addKeywords(final XillProcessor processor) {
-        this.processor = processor;
-
-        // Read the zoom
-        settings.simple().register(Settings.LAYOUT, Settings.AceZoom_ + processor.getRobotID().getPath().getAbsolutePath(), "1.0", "The zoom factor of the code editor.");
-        String zoomString = settings.simple().get(Settings.LAYOUT, Settings.AceZoom_ + processor.getRobotID().getPath().getAbsolutePath());
-        if (zoomString != null) {
-            double zoom = Double.parseDouble(zoomString);
-            editor.setZoom(zoom);
-        }
-
-        // If the document has not been loaded yet load the robot later
-        if (!documentLoaded.get()) {
-            documentLoaded.addListener(
-                    (obs, oldVal, newVal) -> {
-                        if (newVal != null) {
-                            addKeywords(processor);
-                        }
-                    });
-
-            return;
-        }
-
-        highlightSettings.addKeywords(processor.listPackages());
-        highlightSettings.addBuiltins(processor.getReservedKeywords());
     }
 
     /**
@@ -289,18 +251,8 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 
             if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.PASTE)).match(ke)) {
                 paste();
-            } else if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.RESET_ZOOM)).match(ke)) {
-                zoomTo(1);
             } else if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.DUPLICATELINES)).match(ke)) {
                 callOnAce("duplicateCurrentLines");
-            }
-        }
-
-        // Scrolling
-        if (event instanceof ScrollEvent) {
-            ScrollEvent se = (ScrollEvent) event;
-            if (se.isMetaDown() || se.isControlDown()) {
-                zoomTo(editor.getZoom() * (1 + Math.signum(se.getDeltaY()) * ZOOM_SENSITIVITY / 1000.f));
             }
         }
 
@@ -314,14 +266,6 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
         // Mouse click, close context menu.
         if (event instanceof MouseEvent) {
             rightClickMenu.hide();
-        }
-    }
-
-    private void zoomTo(final double value) {
-        editor.setZoom(value);
-
-        if (processor != null) {
-            settings.simple().save(Settings.LAYOUT, Settings.AceZoom_ + processor.getRobotID().getPath().getAbsolutePath(), Double.toString(value));
         }
     }
 
@@ -363,7 +307,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
      * @see WebView#requestFocus()
      */
     public void requestFocus() {
-        Platform.runLater(() -> editor.requestFocus());
+        Platform.runLater(editor::requestFocus);
     }
 
     /**
@@ -397,7 +341,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
      */
     public void refreshBreakpoints(final RobotID robot) {
         List<Integer> bps = BreakpointPool.INSTANCE.get(robot).stream().map(bp -> bp - 1).collect(Collectors.toList());
-        callOnAce((s) -> ((JSObject) s).call("setBreakpointAtRows", bps), "getSession");
+        callOnAce((s) -> ((JSObject) s).call("setBreakpoints", bps), "getSession");
     }
 
     /**
@@ -439,7 +383,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
     private void bindToWindow() {
         // Do not use executeJS here, it needs to be done immediately
         JSObject jsobj = (JSObject) executeJSBlocking("window");
-        jsobj.setMember("xillCoreOverride", new XillJSObjectImpl(processor));
+        jsobj.setMember("xillCoreOverride", new XillJSObjectImpl(tab.getProcessor()));
         jsobj.setMember("javaEditor", this);
 
         executeJSBlocking("init();");
@@ -448,7 +392,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
     /**
      * This method is called by the javascript editor whenever the code has been changed
      *
-     * @param newCode
+     * @param newCode the current code
      */
     public void codeChanged(final String newCode) {
         code.setValue(newCode);
@@ -457,14 +401,14 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
     /**
      * This method is called by the javascript editor whenever the list of breakpoints has changed
      *
-     * @param jsObject
+     * @param jsBreakpoints the breakpoints to set
      */
-    public void breakpointsChanged(final JSObject jsObject) {
-        int length = ((Number) jsObject.getMember("length")).intValue();
+    public void breakpointsChanged(JSObject jsBreakpoints) {
+        int length = ((Number) jsBreakpoints.getMember("length")).intValue();
 
         List<Integer> breakpoints = new ArrayList<>(length);
         for (int i = 0; i < length; i++) {
-            if (Boolean.parseBoolean(jsObject.getSlot(i).toString())) {
+            if (!jsBreakpoints.getSlot(i).toString().isEmpty()) {
                 breakpoints.add(i + 1);
             }
         }
