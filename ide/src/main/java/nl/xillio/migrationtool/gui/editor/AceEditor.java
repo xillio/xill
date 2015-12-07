@@ -340,23 +340,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
      */
     public void paste() {
         String clipboardContent = (String) clipboard.getContent(DataFormat.PLAIN_TEXT);
-        if (clipboardContent != null) {
-            Platform.runLater(() -> {
-                JSObject session = (JSObject) callOnAceBlocking("getSession");
-                JSObject selection = (JSObject) callOnAceBlocking("getSelection");
-                JSObject r = (JSObject) session.call("replace", selection.call("getRange"), clipboardContent);
-                int row = (int) r.getMember("row");
-                int column = (int) r.getMember("column");
-                JSObject range = (JSObject) executeJSBlocking(String.format("new Range(%d, %d, %d, %d)", row, column, row, column));
-                selection.call("setSelectionRange", range);
-            });
-        }
-
-		/*
-         * The editor.setSelectionRange makes sure the caret gets move to the end of the pasted text.
-		 * Otherwise when pasting text over equal text (e.g.: copy-paste-paste) it would stay selected
-		 * and thus keep pasting over it.
-		 */
+        callOnAceBlocking("pasteWorkaround", clipboardContent);
     }
 
     /**

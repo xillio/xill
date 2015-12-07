@@ -201,10 +201,13 @@ ace.define("ace/mode/xill", function (require, exports) {
     // Get dependencies
     var HighlightRules = require("./xill_highlight_rules").HighlightRules;
     var CStyleFoldMode = require("./folding/cstyle").FoldMode;
+    var breakpoints = require("ace/ext/breakpoints");
 
     var Mode = function () {
         this.HighlightRules = HighlightRules;
         this.foldingRules = new CStyleFoldMode();
+        this.lineCommentStart = "//";
+        this.blockComment = {start: "/*", end: "*/"};
     };
 
     oop.inherits(Mode, require("./text").Mode);

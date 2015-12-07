@@ -167,7 +167,7 @@
 .ace_gutter-cell {
 	position: relative;
 }
-.ace_gutter-cell.true:before {
+.ace_gutter-cell.ace_breakpoint:before {
 	background: #DC042B;
 	border-radius: 100%;
 	content: '';

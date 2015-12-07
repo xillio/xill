@@ -11,6 +11,7 @@
 
 <script src="${jarFile}ace/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="${jarFile}ace/ext-language_tools.js" type="text/javascript" charset="utf-8"></script>
+<script src="${jarFile}ace/ext-breakpoints.js" type="text/javascript" charset="utf-8"></script>
 <script>
     /**
      * This object represents a communication interface to the xill back-end.
@@ -65,15 +66,11 @@
     var xillCoreOverride = null;
 
     function init() {
-        if (xillCoreOverride !== null) {
-        }
-
-        console.log = function (message) {
-            xillCoreOverride.info(message + "");
+        console.log = function () {
+            xillCoreOverride.info(JSON.stringify(arguments));
         };
-        console.error = function (message) {
-            xillCoreOverride.info(message + "");
-        };
+        console.error = console.log;
+        console.warn = console.log;
 
         editor = ace.edit('editor');
 
@@ -96,7 +93,26 @@
             javaEditor.codeChanged(editor.getValue());
         });
 
+
+        /**
+         * This function is a workaround for pasting from JavaFX.
+         * @param pasteText
+         */
+        editor.pasteWorkaround = function (pasteText) {
+            if (!pasteText) {
+                return;
+            }
+
+            var Range = ace.require("ace/range").Range;
+
+            var session = editor.getSession();
+            var selection = editor.getSelection();
+            var range = session.replace(selection.getRange(), pasteText);
+            selection.setSelectionRange(new Range(range.row, range.column, range.row, range.column));
+        };
+
         javaEditor.setAce(editor);
+
     }
 </script>
 </body>
