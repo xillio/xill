@@ -133,7 +133,5 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
 	}
 
 	@Override
-	public void close() {
-
-	}
+	public void close() throws Exception {}
 }
