@@ -10,12 +10,14 @@ var themeData = [
     ["Dreamweaver"    ],
     ["Eclipse"        ],
     ["GitHub"         ],
+    ["IPlastic"       ],
     ["Solarized Light"],
     ["TextMate"       ],
     ["Tomorrow"       ],
     ["XCode"          ],
     ["Kuroir"],
     ["KatzenMilch"],
+    ["SQL Server"           ,"sqlserver"               , "light"],
     ["Ambiance"             ,"ambiance"                ,  "dark"],
     ["Chaos"                ,"chaos"                   ,  "dark"],
     ["Clouds Midnight"      ,"clouds_midnight"         ,  "dark"],
@@ -34,7 +36,8 @@ var themeData = [
     ["Tomorrow Night Bright","tomorrow_night_bright"   ,  "dark"],
     ["Tomorrow Night 80s"   ,"tomorrow_night_eighties" ,  "dark"],
     ["Twilight"             ,"twilight"                ,  "dark"],
-    ["Vibrant Ink"          ,"vibrant_ink"             ,  "dark"]
+    ["Vibrant Ink"          ,"vibrant_ink"             ,  "dark"],
+    ["Xillio"               ,"xillio"                   ,"light"]
 ];
 
 

@@ -7,5 +7,5 @@ dependencies {
     compile 'commons-io:commons-io:2.4'
     compile 'org.apache.logging.log4j:log4j-api:2.3'
     compile 'com.google.code.gson:gson:2.3.1'
-    compile 'org.markdownj:markdownj:0.3.0-1.0.2b4'
+    compile 'org.pegdown:pegdown:1.6.0'
 }

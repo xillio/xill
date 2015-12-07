@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <function>
   <description>
-Connect to an Oracle database. Returns a connection object.  
+Connect to an Oracle database. Returns a connection object.
 
-The host parameter is the name of the host.  
-The default port is 1521 but can be set to a different port is necessary.  
-The database parameter is the name of the database you want to connect to.  
-The user and pass parameter are for the username and password. Both are optional.  
-The options parameter is optional. It is used to set Oracle specific options. These can be found here:  
+| Parameter  | Description |
+| ---------- | ----------- |
+| `host`     | The host parameter wants the name of the host. |
+| `port`     | The default port is 3306 but can be set to a different port is necessary. |
+| `database` | The database parameter wants the name of the database you want to connect to. |
+| `user`     | The user parameter is for the username. This is optional.
+| `pass`     | The pass parameter is for the password. This is optional.
+| `options`  | The options parameter is optional. It is used for setting Oracle specific options. |
 
-	http://docs.oracle.com/cd/E13222_01/wls/docs92/jdbc_drivers/oracle.html#wp1066413
+More information on the options parameter can be found on [http://docs.oracle.com/cd/E13222_01/wls/docs92/jdbc_drivers/oracle.html#wp1066413](http://docs.oracle.com/cd/E13222_01/wls/docs92/jdbc_drivers/oracle.html#wp1066413)
   </description>
   <examples>
     <example>

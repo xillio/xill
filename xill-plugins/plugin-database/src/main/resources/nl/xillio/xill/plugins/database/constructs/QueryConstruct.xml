@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Execute a query (prepared statement). Queries are parametrized using this format: "SELECT * from table WHERE
-column=:name". In this case the parameter "name" can be set by passing query an object containing the key
-"name".  
+Execute a query (prepared statement). Queries are parametrized using this format:
+
+    "SELECT * from table WHERE column=:name".
+
+In this case the parameter "name" can be set by passing query an object containing the key "name".
 The colon signifies a parameter. Parameters names can contain upper and lower case letters, underscores and
 numbers. A colon which should not start a parameter in a query can be escaped with a double backslash.  
 A list of objects can be passed in the parameters argument and a batch query will be executed. Passing a list of
