@@ -24,6 +24,7 @@ window.xillCore = {
         if (xillCoreOverride) {
             return xillCoreOverride.getPluginNames();
         }
+        return ["System"];
     },
     getLanguageConstants: function () {
         return ["ATOMIC", "LIST", "NaN", "OBJECT", "argument", "null", "true", "false"]
@@ -45,8 +46,8 @@ window.xillCore = {
         }
     }
 };
-window.initConsole = function() {
-    if(xillCoreOverride != null) {
+window.initConsole = function () {
+    if (xillCoreOverride != null) {
         console.log = function () {
             var output = "[JAVASCRIPT]";
             for (var key in arguments) {

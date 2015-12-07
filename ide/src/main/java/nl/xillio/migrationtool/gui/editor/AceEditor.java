@@ -408,7 +408,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 
         List<Integer> breakpoints = new ArrayList<>(length);
         for (int i = 0; i < length; i++) {
-            if (!jsBreakpoints.getSlot(i).toString().isEmpty()) {
+            if (!"undefined".equals(jsBreakpoints.getSlot(i).toString())) {
                 breakpoints.add(i + 1);
             }
         }
