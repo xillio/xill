@@ -1,5 +1,7 @@
 package nl.xillio.xill.api.components;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import nl.xillio.util.IdentityArrayList;
 import nl.xillio.util.MathUtils;
 import nl.xillio.xill.api.Debugger;
@@ -12,7 +14,6 @@ import nl.xillio.xill.api.data.DateFactory;
 import nl.xillio.xill.api.data.MetadataExpression;
 import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.services.inject.InjectorUtils;
 import nl.xillio.xill.services.json.JsonException;
 import nl.xillio.xill.services.json.JsonParser;
 
@@ -24,7 +25,11 @@ import java.util.stream.Collectors;
  * This class represents a general expression in the Xill language.
  */
 public abstract class MetaExpression implements Expression, Processable {
+    @Inject
     private static JsonParser jsonParser;
+    @Inject
+    private static Injector injector;
+
     private final MetadataExpressionPool<MetadataExpression> metadataPool = new MetadataExpressionPool<>();
     private Object value;
     private ExpressionDataType type = ExpressionDataType.ATOMIC;
@@ -196,9 +201,6 @@ public abstract class MetaExpression implements Expression, Processable {
      */
     @Override
     public String toString() {
-        if (jsonParser == null) {
-            jsonParser = InjectorUtils.get(JsonParser.class);
-        }
         try {
             return toString(jsonParser);
         } catch (JsonException e) {
@@ -603,7 +605,7 @@ public abstract class MetaExpression implements Expression, Processable {
         }
 
         if (root instanceof java.util.Date) {
-            Date date = InjectorUtils.get(DateFactory.class).from(((java.util.Date) root).toInstant());
+            Date date = injector.getInstance(DateFactory.class).from(((java.util.Date) root).toInstant());
             MetaExpression result = ExpressionBuilderHelper.fromValue(date.toString());
             result.storeMeta(Date.class, date);
             return result;

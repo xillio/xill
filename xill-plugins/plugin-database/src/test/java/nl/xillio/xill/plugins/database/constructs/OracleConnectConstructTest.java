@@ -6,10 +6,11 @@ import static org.mockito.Mockito.when;
 
 import java.util.LinkedHashMap;
 
+import nl.xillio.xill.TestUtils;
+import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import nl.xillio.xill.ConstructTest;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.plugins.database.services.DatabaseService;
@@ -19,7 +20,7 @@ import nl.xillio.xill.plugins.database.services.DatabaseServiceFactory;
  * Test the {@link OracleConnectConstruct}.
  *
  */
-public class OracleConnectConstructTest extends ConstructTest {
+public class OracleConnectConstructTest extends TestUtils {
 	/**
 	 * <p>
 	 * Test the process's normal usage whilst using SID.
