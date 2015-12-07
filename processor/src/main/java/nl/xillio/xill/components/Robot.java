@@ -137,7 +137,7 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
 	}
 
 	@Override
-	public void close() throws Exception {
+	public void close() {
 		super.close();
 
 		if (closingRobots.contains(this)) {
