@@ -71,11 +71,11 @@
 						</ToolBar>
 						<ToolBar fx:id="tlbRight" focusTraversable="false" HBox.hgrow="NEVER">
 							<items>
-                                <Label fx:id="lblNearExpiry" styleClass="msgWarning" text="">
+                                <Button fx:id="btnNearExpiry" mnemonicParsing="false" onAction="#buttonNearExpiry" styleClass="msgWarning" text="">
 									<graphic>
 										<Pane styleClass="icon" />
 									</graphic>
-								</Label>
+								</Button>
 								<Button fx:id="btnSettings" mnemonicParsing="false" onAction="#buttonSettings" styleClass="iconButton" text="Settings">
 									<graphic>
 										<Pane styleClass="icon" />
