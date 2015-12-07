@@ -11,6 +11,7 @@ import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * This {@link Instruction} represents the foreach looping context.
@@ -70,18 +71,7 @@ public class ForeachInstruction extends CompoundInstruction {
             case ATOMIC:
                 if (result.getMeta(MetaExpressionIterator.class) == null) {
                     //This is an atomic value with no MetaExpressionIterator. So we just iterate over the single value
-
-                    valueVar.pushVariable(result);
-                    if (keyVar != null) {
-                        keyVar.pushVariable(ExpressionBuilderHelper.fromValue(0));
-                    }
-
-                    foreachResult = instructionSet.process(debugger);
-
-                    valueVar.releaseVariable();
-                    if (keyVar != null) {
-                        keyVar.releaseVariable();
-                    }
+                    foreachResult = processIteration(() -> ExpressionBuilderHelper.fromValue(0), result, debugger);
                 } else {
                     //We have a MetaExpressionIterator in this value, this means we should iterate over that
                     MetaExpressionIterator iterator = result.getMeta(MetaExpressionIterator.class);
@@ -89,18 +79,12 @@ public class ForeachInstruction extends CompoundInstruction {
                     while (iterator.hasNext()) {
                         MetaExpression value = iterator.next();
 
-                        valueVar.pushVariable(value);
-                        if (keyVar != null) {
-                            keyVar.pushVariable(ExpressionBuilderHelper.fromValue(i++));
-                        }
-
-                        InstructionFlow<MetaExpression> instructionResult = instructionSet.process(debugger);
-
-                        // Release
-                        valueVar.releaseVariable();
-                        if (keyVar != null) {
-                            keyVar.releaseVariable();
-                        }
+                        int keyValue = i++;
+                        InstructionFlow<MetaExpression> instructionResult = processIteration(
+                                () -> ExpressionBuilderHelper.fromValue(keyValue),
+                                value,
+                                debugger
+                        );
 
                         if (instructionResult.skips()) {
                             continue;
@@ -124,18 +108,10 @@ public class ForeachInstruction extends CompoundInstruction {
                 try {
                     int i = 0;
                     for (MetaExpression value : (List<MetaExpression>) result.getValue()) {
-                        valueVar.pushVariable(value);
-                        if (keyVar != null) {
-                            keyVar.pushVariable(ExpressionBuilderHelper.fromValue(i++));
-                        }
 
-                        InstructionFlow<MetaExpression> instructionResult = instructionSet.process(debugger);
-
-                        // Release
-                        valueVar.releaseVariable();
-                        if (keyVar != null) {
-                            keyVar.releaseVariable();
-                        }
+                        int keyValue = i++;
+                        InstructionFlow<MetaExpression> instructionResult = processIteration(
+                                () -> ExpressionBuilderHelper.fromValue(keyValue), value, debugger);
 
 
                         if (instructionResult.skips()) {
@@ -160,19 +136,9 @@ public class ForeachInstruction extends CompoundInstruction {
             case OBJECT:
                 try {
                     for (Map.Entry<String, MetaExpression> value : ((Map<String, MetaExpression>) result.getValue()).entrySet()) {
-                        valueVar.pushVariable(value.getValue());
-                        if (keyVar != null) {
-                            keyVar.pushVariable(ExpressionBuilderHelper.fromValue(value.getKey()));
-                        }
 
-                        InstructionFlow<MetaExpression> instructionResult = instructionSet.process(debugger);
 
-                        // Release
-                        valueVar.releaseVariable();
-                        if (keyVar != null) {
-                            keyVar.releaseVariable();
-                        }
-
+                        InstructionFlow<MetaExpression> instructionResult = processIteration(() -> ExpressionBuilderHelper.fromValue(value.getKey()), value.getValue(), debugger);
                         if (instructionResult.skips()) {
                             continue;
                         }
@@ -198,6 +164,36 @@ public class ForeachInstruction extends CompoundInstruction {
         }
 
         return foreachResult;
+    }
+
+    private InstructionFlow<MetaExpression> processIteration(Supplier<MetaExpression> key, MetaExpression value, Debugger debugger) {
+        valueVar.pushVariable(value);
+        if (keyVar != null) {
+            keyVar.pushVariable(key.get());
+        }
+
+        InstructionFlow<MetaExpression> instructionResult = instructionSet.process(debugger);
+
+        if (instructionResult.returns() && instructionResult.hasValue()) {
+            instructionResult.get().preventDisposal();
+
+            // Release
+            releaseVariables();
+
+
+            instructionResult.get().allowDisposal();
+        } else {
+            releaseVariables();
+        }
+
+        return instructionResult;
+    }
+
+    private void releaseVariables() {
+        valueVar.releaseVariable();
+        if (keyVar != null) {
+            keyVar.releaseVariable();
+        }
     }
 
     @Override
