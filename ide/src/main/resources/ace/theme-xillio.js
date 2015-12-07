@@ -101,7 +101,10 @@ exports.cssText = "\
 .ace-xillio .ace_plugin { \
     color: rgb(150,150,150);\
 }\
-.ace-xillio .ace_paren { \
+.ace-xillio .ace_lparen { \
+    color: #DC042B; \
+}\
+.ace-xillio .ace_rparen { \
     color: #DC042B; \
 }\
 \
