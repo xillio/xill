@@ -11,8 +11,10 @@ import nl.xillio.xill.api.data.DateFactory;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
+import java.nio.file.NoSuchFileException;
 
 /**
  * Construct for accessing creating time (ctime) on a file system.
@@ -50,7 +52,9 @@ public class GetLastModifiedDate extends Construct {
             result.storeMeta(Date.class, date);
             return result;
         } catch (InvalidPathException e) {
-            throw new RobotRuntimeException("No such file: " + expr.getStringValue());
+            throw new RobotRuntimeException("No such file: " + expr.getStringValue(), e);
+        } catch (NoSuchFileException | FileNotFoundException e) {
+            throw new RobotRuntimeException("File '" + e.getMessage() + "' not found", e);
         } catch (IOException e) {
             throw new RobotRuntimeException("Failed to read attributes: " + e.getMessage(), e);
         }

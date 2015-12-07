@@ -11,7 +11,10 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.Iterator;
 
@@ -103,22 +106,12 @@ public class FileUtilitiesImpl implements FileUtilities {
 
     @Override
     public FileTime getCreationDate(File file) throws IOException {
-        try {
-            return Files.getLastModifiedTime(file.toPath());
-        } catch (IOException e) {
-            LOGGER.info("Failed to read attributes: " + e.getMessage(), e);
-        }
-        return null;
+        return stat(file).creationTime();
     }
 
     @Override
     public FileTime getLastModifiedDate(File file) throws IOException {
-        try {
-            return Files.getLastModifiedTime(file.toPath());
-        } catch (IOException e) {
-            LOGGER.info("Failed to read attributes: " + e.getMessage(), e);
-        }
-        return null;
+        return stat(file).lastModifiedTime();
     }
 
     public boolean canRead(File file) throws FileNotFoundException {
@@ -148,4 +141,9 @@ public class FileUtilitiesImpl implements FileUtilities {
             throw new FileNotFoundException("The specified file folder does not exist.");
         }
     }
+
+    private static BasicFileAttributes stat(File file) throws IOException {
+        return Files.readAttributes(file.toPath(), BasicFileAttributes.class);
+    }
+
 }
