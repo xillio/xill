@@ -10,6 +10,9 @@ import nl.xillio.xill.api.LanguageFactory;
 import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.api.components.Robot;
 import nl.xillio.xill.api.components.RobotID;
+import nl.xillio.xill.api.construct.Construct;
+import nl.xillio.xill.api.construct.ConstructContext;
+import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.XillParsingException;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.emf.common.util.URI;
@@ -29,10 +32,7 @@ import xill.lang.xill.IncludeStatement;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -53,6 +53,7 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
     private final File projectFolder;
     private final PluginLoader<XillPlugin> pluginLoader;
     private final Debugger debugger;
+    private final Map<Construct, String> argumentSignatures = new HashMap<>();
 
     private final List<Resource> compiledResources = new ArrayList<>();
 
@@ -73,6 +74,7 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
         this.debugger = debugger;
         Injector injector = new XillStandaloneSetup(projectFolder).createInjectorAndDoEMFRegistration();
         injector.injectMembers(this);
+
 
         // obtain a resource set
         resourceSet = injector.getInstance(XtextResourceSet.class);
@@ -245,5 +247,90 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
     @Override
     public String[] getReservedKeywords() {
         return XillValidator.RESERVED_KEYWORDS;
+    }
+
+    @Override
+    public Map<String, List<String>> getCompletions(String currentLine, String prefix, int column, int row) {
+        List<XillPlugin> plugins = pluginLoader.getPluginManager().getPlugins();
+
+        Map<String, List<String>> result = new HashMap<>();
+        getConstructCompletions(result, currentLine, column, prefix);
+
+        if (result.isEmpty()) {
+            result.put("keyword", Arrays.asList(XillValidator.RESERVED_KEYWORDS));
+            result.put("package", plugins.stream().map(XillPlugin::getName)
+                    .filter(name -> name.toLowerCase().startsWith(prefix.toLowerCase()))
+                    .collect(Collectors.toList()));
+        }
+
+
+        return result;
+    }
+
+    /**
+     * This method will fill the result map with construct advice based on the test in front of the cursor.
+     *
+     * @param result      the result map to fill
+     * @param currentLine the current line
+     * @param column      the cursor position
+     * @param prefix      the piece of text in front of the cursor
+     */
+    private void getConstructCompletions(Map<String, List<String>> result, String currentLine, int column, String prefix) {
+        if (column <= 0) {
+            return;
+        }
+
+        int lastPeriod = currentLine.lastIndexOf(".");
+
+        if (lastPeriod >= 0 && lastPeriod == column - prefix.length() - 1) {
+            String tillColumn = currentLine.substring(0, lastPeriod);
+
+            // Test all plugins
+            for (XillPlugin xillPlugin : pluginLoader.getPluginManager().getPlugins()) {
+
+                // Test if the plugin name is a match
+                if (tillColumn.endsWith(xillPlugin.getName())) {
+                    List<String> constructs = new ArrayList<>();
+
+                    // Test all constructs
+                    for (Construct construct : xillPlugin.getConstructs()) {
+
+                        // Test if constructs are a match
+                        if (prefix.isEmpty() || construct.getName().startsWith(prefix)) {
+                            constructs.add(getSignature(construct));
+                        }
+                    }
+
+                    // If there are results put them in the map
+                    if (!constructs.isEmpty()) {
+                        result.put(xillPlugin.getName(), constructs);
+                    }
+                }
+            }
+        }
+
+    }
+
+    /**
+     * This method will build a signature that matches the construct.
+     *
+     * @param construct the construct
+     * @return the signature
+     */
+    private String getSignature(Construct construct) {
+        if (!argumentSignatures.containsKey(construct)) {
+            ConstructProcessor processor = construct.prepareProcess(new ConstructContext(getRobotID(), getRobotID(), construct, null, null));
+
+            List<String> args = new ArrayList<>();
+            for (int i = 0; i < processor.getNumberOfArguments(); i++) {
+                String arg = processor.getArgumentName(i);
+                args.add("${" + (i + 1) + ":" + arg + "}");
+            }
+
+            String signature = construct.getName() + "(" + StringUtils.join(args, ", ") + ")";
+            argumentSignatures.put(construct, signature);
+        }
+
+        return argumentSignatures.get(construct);
     }
 }

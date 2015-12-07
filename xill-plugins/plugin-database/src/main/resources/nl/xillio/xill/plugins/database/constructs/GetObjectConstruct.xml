@@ -6,7 +6,7 @@ Finds the first entry in a table with the values from the given object.
 The database parameter is optional. The last made connection will be used if no database is given.
 This function returns a new object with all its values.
 
-NOTE: Fields with null values are ignored in the search of objects.
+__NOTE__: Fields with `null` values are ignored in the search of objects.
   </description>
   <examples>
     <example>
