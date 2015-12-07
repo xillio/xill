@@ -2,7 +2,6 @@ package nl.xillio.xill.api.components;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import nl.xillio.util.IdentityArrayList;
 import nl.xillio.util.MathUtils;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.behavior.BooleanBehavior;
@@ -25,6 +24,9 @@ import java.util.stream.Collectors;
  * This class represents a general expression in the Xill language.
  */
 public abstract class MetaExpression implements Expression, Processable {
+    private static int counter = 0;
+    public static Map<Integer, MetaExpression> expresisons = new HashMap<>();
+
     @Inject
     private static JsonParser jsonParser;
     @Inject
@@ -36,6 +38,16 @@ public abstract class MetaExpression implements Expression, Processable {
     private boolean isClosed;
     private int referenceCount;
     private boolean preventDispose;
+    private int id = counter++;
+
+    public MetaExpression() {
+        expresisons.put(id, this);
+        printData();
+    }
+
+    private void printData() {
+        System.out.println("Open: " + expresisons.size());
+    }
 
     /**
      * Get a value from the {@link MetadataExpressionPool}
@@ -220,11 +232,7 @@ public abstract class MetaExpression implements Expression, Processable {
      * @return JSON representation
      */
     public String toString(final JsonParser jsonParser) throws JsonException {
-        MetaExpression cleaned = removeCircularReference(this, new IdentityArrayList<>(),
-                ExpressionBuilderHelper.fromValue("<<CIRCULAR REFERENCE>>"));
-        String result = jsonParser.toJson(extractValue(cleaned));
-        cleaned.close();
-        return result;
+        return jsonParser.toJson(extractValue(this));
     }
 
     /**
@@ -491,6 +499,8 @@ public abstract class MetaExpression implements Expression, Processable {
             return;
         }
 
+        expresisons.remove(id);
+        printData();
         isClosed = true;
         closeMetaPool();
 
