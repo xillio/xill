@@ -196,6 +196,11 @@ ace.define("ace/mode/xill_highlight_rules", function (require, exports) {
  * This block defines the error markings.
  */
 ace.define("ace/mode/xill_marker", function (require) {
+    // Only do this if we have an editor
+    if (typeof(editor) == 'undefined') {
+        return;
+    }
+
     var Range = require('ace/range').Range;
 
     var highlights = [];

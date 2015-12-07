@@ -8,80 +8,26 @@
 </head>
 <body>
 <div id="editor"></div>
-
+<script src="${jarFile}xillCore.js" type="text/javascript" charset="utf-8"></script>
 <script src="${jarFile}ace/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="${jarFile}ace/ext-language_tools.js" type="text/javascript" charset="utf-8"></script>
 <script src="${jarFile}ace/ext-breakpoints.js" type="text/javascript" charset="utf-8"></script>
 <script>
-    /**
-     * This object represents a communication interface to the xill back-end.
-     * This here you can see a default implementation to allow running in the browser
-     */
-    var xillCore = {
-        debug: function (message) {
-            this.log("DEBUG", message);
-        },
-        info: function (message) {
-            this.log("INFO", message);
-        },
-        warn: function (message) {
-            this.log("WARN", message);
-        },
-        error: function (message) {
-            this.log("ERROR", message);
-        },
-        getKeywords: function () {
-            return ["as", "break", "callbot", "continue", "else", "filter", "foreach", "function", "if", "in", "include", "map", "private", "return", "use", "var", "while"]
-        },
-        getPluginNames: function () {
-            return ["System"]
-        },
-        getLanguageConstants: function () {
-            return ["ATOMIC", "LIST", "NaN", "OBJECT", "argument", "null", "true", "false"]
-        },
-        getCompletions: function (state, session, pos, prefix, aceCallback) {
-            if (xillCoreOverride) {
 
-                xillCoreOverride.getCompletions({
-                    state: state,
-                    session: session,
-                    prefix: prefix,
-                    column: pos.column,
-                    row: pos.row,
-                    currentLine: session.getLine(pos.row),
-                    callback: function (name, value, score, meta) {
-                        aceCallback(null, {name: name, caption: name, snippet: value, score: score, meta: meta});
-                    }
-                });
-            }
-        },
-        getDocTooltip: function (item) {
-            item.docHTML = "<b>Test</b>";
-        }
-    };
     var editor = null;
 
     var javaEditor = {
         setAce: function (obj) {
-
         },
         codeChanged: function () {
         },
         breakpointsChanged: function () {
         }
     };
-    var xillCoreOverride = null;
 
     function init() {
-        console.log = function () {
-            var output = "[JAVASCRIPT]";
-            for(var key in arguments) {
-                output += " " + arguments[key];
-            }
-            xillCoreOverride.info(output);
-        };
-        console.error = console.log;
-        console.warn = console.log;
+
+        initConsole();
 
         editor = ace.edit('editor');
 

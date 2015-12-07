@@ -383,7 +383,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
     private void bindToWindow() {
         // Do not use executeJS here, it needs to be done immediately
         JSObject jsobj = (JSObject) executeJSBlocking("window");
-        jsobj.setMember("xillCoreOverride", new XillJSObjectImpl(tab.getProcessor()));
+        jsobj.setMember("xillCoreOverride", new XillJSObject(tab.getProcessor()));
         jsobj.setMember("javaEditor", this);
 
         executeJSBlocking("init();");
