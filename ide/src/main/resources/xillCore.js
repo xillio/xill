@@ -43,9 +43,6 @@ window.xillCore = {
                 }
             });
         }
-    },
-    getDocTooltip: function (item) {
-        item.docHTML = "<b>Test</b>";
     }
 };
 window.initConsole = function() {
