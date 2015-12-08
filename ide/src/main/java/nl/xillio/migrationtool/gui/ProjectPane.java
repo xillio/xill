@@ -436,6 +436,11 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         items.stream().forEach(t -> {
             File f = t.getValue().getKey();
             controller.closeTab(controller.findTab(f));
+
+            // Recursively delete all children.
+            deleteItems(t.getChildren(), hardDeleteProjects);
+
+            // Delete the file or directory.
             try {
                 if (f.isDirectory()) {
                     FileUtils.deleteDirectory(f);
