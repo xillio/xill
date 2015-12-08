@@ -6,8 +6,6 @@ import nl.xillio.xill.api.components.*;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -25,12 +23,21 @@ public final class Add extends BinaryNumberOperator {
         MetaExpression leftValue = left.process(debugger).get();
         MetaExpression rightValue = right.process(debugger).get();
 
-        // If both entries are a list, then add them as such
-        if (leftValue.getType() == rightValue.getType() && leftValue.getType() == ExpressionDataType.LIST) {
-            return InstructionFlow.doResume(processList((List<MetaExpression>) leftValue.getValue(), (List<MetaExpression>) rightValue.getValue(), debugger));
-        }
+        leftValue.registerReference();
+        rightValue.registerReference();
 
-        return super.process(leftValue, rightValue);
+        try {
+            // If both entries are a list, then add them as such
+            if (leftValue.getType() == rightValue.getType() && leftValue.getType() == ExpressionDataType.LIST) {
+
+                return InstructionFlow.doResume(processList((List<MetaExpression>) leftValue.getValue(), (List<MetaExpression>) rightValue.getValue(), debugger));
+            }
+
+            return super.process(leftValue, rightValue);
+        } finally {
+            rightValue.releaseReference();
+            leftValue.releaseReference();
+        }
 
     }
 
