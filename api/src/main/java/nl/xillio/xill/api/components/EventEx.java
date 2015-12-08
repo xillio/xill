@@ -25,7 +25,7 @@ public class EventEx<T> {
 	 */
 	public synchronized void addListener(final Consumer<T> listener) {
 		if (listener == null) {
-			throw new NullPointerException("Cannot add null listeners.");
+			throw new IllegalArgumentException("Cannot add null listeners.");
 		}
 
 		listeners.add(listener);

@@ -78,7 +78,6 @@ public abstract class BaseDatabaseService implements DatabaseService {
                     try {
                         stmt.cancel();
                     } catch (SQLException ex) {
-                        System.err.println("== STMT Cancel error");
                         LOGGER.warn("Cannot cancel running SQL statement!", ex);
                     }
                 }
