@@ -431,12 +431,20 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
      * @param hardDeleteProjects Whether to delete the projects from disk.
      */
     private void deleteItems(ObservableList<TreeItem<Pair<File, String>>> items, boolean hardDeleteProjects) {
-        // Stop and delete all robots, close the tabs.
+        // Stop and delete all folders and robots, close tabs from deleted robots.
         checkRobotsRunning(items, true);
         items.stream().forEach(t -> {
             File f = t.getValue().getKey();
             controller.closeTab(controller.findTab(f));
-            f.delete();
+            try {
+                if (f.isDirectory()) {
+                    FileUtils.deleteDirectory(f);
+                } else {
+                    f.delete();
+                }
+            } catch (IOException e) {
+                LOGGER.error("Could not delete " + f.toString(), e);
+            }
         });
 
         // Delete all projects.
