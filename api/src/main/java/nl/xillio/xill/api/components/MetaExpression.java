@@ -482,7 +482,7 @@ public abstract class MetaExpression implements Expression, Processable {
         if (isClosed || this == ExpressionBuilderHelper.NULL) {
             return;
         }
-        
+
         isClosed = true;
         closeMetaPool();
 
