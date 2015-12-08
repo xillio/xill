@@ -23,17 +23,21 @@ public final class Add extends BinaryNumberOperator {
         MetaExpression leftValue = left.process(debugger).get();
         MetaExpression rightValue = right.process(debugger).get();
 
-        // If both entries are a list, then add them as such
-        if (leftValue.getType() == rightValue.getType() && leftValue.getType() == ExpressionDataType.LIST) {
-            leftValue.registerReference();
-            rightValue.registerReference();
-            InstructionFlow<MetaExpression> result = InstructionFlow.doResume(processList((List<MetaExpression>) leftValue.getValue(), (List<MetaExpression>) rightValue.getValue(), debugger));
-            rightValue.releaseReference();
-            leftValue.registerReference();
-            return result;
-        }
+        leftValue.registerReference();
+        rightValue.registerReference();
 
-        return super.process(leftValue, rightValue);
+        try {
+            // If both entries are a list, then add them as such
+            if (leftValue.getType() == rightValue.getType() && leftValue.getType() == ExpressionDataType.LIST) {
+
+                return InstructionFlow.doResume(processList((List<MetaExpression>) leftValue.getValue(), (List<MetaExpression>) rightValue.getValue(), debugger));
+            }
+
+            return super.process(leftValue, rightValue);
+        } finally {
+            rightValue.releaseReference();
+            leftValue.releaseReference();
+        }
 
     }
 

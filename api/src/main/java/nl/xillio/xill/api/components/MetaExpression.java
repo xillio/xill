@@ -437,11 +437,7 @@ public abstract class MetaExpression implements Expression, Processable {
         referenceCount--;
 
         if (!preventDispose && referenceCount <= 0) {
-            try {
-                close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            close();
         }
     }
 
@@ -515,7 +511,7 @@ public abstract class MetaExpression implements Expression, Processable {
             default:
                 break;
         }
-        value = null;
+        //value = null;
     }
 
     /**
