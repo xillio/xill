@@ -92,7 +92,7 @@ public class BaseDatabaseServiceTest {
 		when(statement.getUpdateCount()).thenReturn(-1);
 
 		// run
-		service.preparedQuery(connection, "query", Arrays.asList(parameters), 20);
+		service.preparedQuery(connection, "query", Arrays.asList(parameters), 20, null);
 
 		// verify
 		verify(service, times(2)).parseNamedParameters(connection, "query");
@@ -125,7 +125,7 @@ public class BaseDatabaseServiceTest {
 		when(service.extractParameterNames("query")).thenReturn(Arrays.asList());
 		when(statement.getUpdateCount()).thenReturn(5);
 		// run
-		service.preparedQuery(connection, "query", null, 20);
+		service.preparedQuery(connection, "query", null, 20, null);
 
 		// verify
 		verify(service, times(2)).parseNamedParameters(connection, "query");
@@ -156,7 +156,7 @@ public class BaseDatabaseServiceTest {
 		when(service.parseNamedParameters(connection, "query")).thenReturn(statement);
 		when(service.extractParameterNames("query")).thenReturn(Arrays.asList("a parameter name"));
 		// run
-		service.preparedQuery(connection, "query", null, 20);
+		service.preparedQuery(connection, "query", null, 20, null);
 	}
 
 	/**

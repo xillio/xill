@@ -2,7 +2,6 @@ package nl.xillio.xill.plugins.database.constructs;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.MetaExpressionIterator;
-import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
@@ -28,7 +27,7 @@ public class QueryConstruct extends BaseDatabaseConstruct {
     @Override
     public ConstructProcessor doPrepareProcess(final ConstructContext context) {
         return new ConstructProcessor(
-                (query, parameters, timeout, database) -> process(query, parameters, database, timeout, factory, context.getRootRobot()),
+                (query, parameters, timeout, database) -> process(query, parameters, database, timeout, factory, context),
                 new Argument("query", ATOMIC),
                 new Argument("parameters", emptyObject(), LIST, OBJECT),
                 new Argument("timeout", fromValue(30), ATOMIC),
@@ -37,12 +36,12 @@ public class QueryConstruct extends BaseDatabaseConstruct {
 
     @SuppressWarnings("unchecked")
     static MetaExpression process(final MetaExpression query, final MetaExpression parameters, final MetaExpression database, final MetaExpression timeout, final DatabaseServiceFactory factory,
-                                  final RobotID robotID) {
+                                  final ConstructContext context) {
         String sql = query.getStringValue();
         ConnectionMetadata metaData;
 
         if (database.isNull()) {
-            metaData = getLastConnection(robotID);
+            metaData = getLastConnection(context.getRootRobot());
         } else {
             metaData = assertMeta(database, "database", ConnectionMetadata.class, "variable with a connection");
         }
@@ -72,7 +71,7 @@ public class QueryConstruct extends BaseDatabaseConstruct {
 
         Object result;
         try {
-            result = factory.getService(metaData.getDatabaseName()).preparedQuery(connection, sql, parameterObjects, timeoutValue);
+            result = factory.getService(metaData.getDatabaseName()).preparedQuery(connection, sql, parameterObjects, timeoutValue, context.getOnRobotInterrupt());
 
             return returnValue(result, sql);
         } catch (ReflectiveOperationException | ClassCastException e) {

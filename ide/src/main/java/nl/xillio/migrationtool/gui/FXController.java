@@ -624,7 +624,7 @@ public class FXController implements Initializable, EventHandler<Event> {
      * @return JavaScript code
      */
     public String createEditorOptionsJSCode() {
-        String jsCode = "var editor = contenttools.getAce();\neditor.setOptions({\n";
+        String jsCode = "var editor = javaEditor.getAce();\neditor.setOptions({\n";
         String jsSettings = "";
 
         String s = settings.simple().get(Settings.SETTINGS_EDITOR, Settings.FontSize);
@@ -654,7 +654,7 @@ public class FXController implements Initializable, EventHandler<Event> {
         jsCode += String.format("editor.session.setWrapLimit(%1$s);%n", settings.simple().get(Settings.SETTINGS_EDITOR, Settings.WrapLimit));
         jsCode += String.format("editor.setHighlightSelectedWord(%1$s);%n", settings.simple().getBoolean(Settings.SETTINGS_EDITOR, Settings.HighlightSelectedWord));
 
-        return jsCode;
+        return jsCode; //return jsCode;
     }
 
 

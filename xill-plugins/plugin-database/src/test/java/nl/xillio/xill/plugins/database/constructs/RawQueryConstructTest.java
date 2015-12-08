@@ -20,6 +20,7 @@ import java.util.List;
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
+import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.database.BaseDatabaseConstruct;
 import nl.xillio.xill.plugins.database.services.DatabaseService;
@@ -82,14 +83,14 @@ public class RawQueryConstructTest extends TestUtils {
 		DatabaseService databaseService = mock(DatabaseService.class);
 		when(factory.getService(anyString())).thenReturn(databaseService);
 
-		// the robotID
-		RobotID robotID = mock(RobotID.class);
+        // context
+        ConstructContext context = mock(ConstructContext.class);
 
 		// run
-		QueryConstruct.process(query, parameters, database, timeout, factory, robotID);
+		QueryConstruct.process(query, parameters, database, timeout, factory, context);
 
 		// verify
-		verify(databaseService, times(1)).preparedQuery(any(), anyString(), anyList(), anyInt());
+		verify(databaseService, times(1)).preparedQuery(any(), anyString(), anyList(), anyInt(), any());
 	}
 
 	/**
@@ -145,11 +146,15 @@ public class RawQueryConstructTest extends TestUtils {
 		RobotID robotID = mock(RobotID.class);
 		BaseDatabaseConstruct.setLastConnection(robotID, connectionMetadata);
 
+        // context
+        ConstructContext context = mock(ConstructContext.class);
+        when(context.getRootRobot()).thenReturn(robotID);
+
 		// run
-		QueryConstruct.process(query, parameters, database, timeout, factory, robotID);
+		QueryConstruct.process(query, parameters, database, timeout, factory, context);
 
 		// verify
-		verify(databaseService, times(1)).preparedQuery(any(), anyString(), anyList(), anyInt());
+		verify(databaseService, times(1)).preparedQuery(any(), anyString(), anyList(), anyInt(), any());
 	}
 
 	/**
@@ -210,11 +215,11 @@ public class RawQueryConstructTest extends TestUtils {
 		DatabaseServiceFactory factory = mock(DatabaseServiceFactory.class);
 		when(factory.getService(anyString())).thenThrow(e);
 
-		// the robotID
-		RobotID robotID = mock(RobotID.class);
+        // context
+        ConstructContext context = mock(ConstructContext.class);
 
 		// run
-		QueryConstruct.process(query, parameters, database, timeout, factory, robotID);
+		QueryConstruct.process(query, parameters, database, timeout, factory, context);
 	}
 
 	/**
@@ -280,13 +285,13 @@ public class RawQueryConstructTest extends TestUtils {
 		DatabaseServiceFactory factory = mock(DatabaseServiceFactory.class);
 		DatabaseService databaseService = mock(DatabaseService.class);
 		when(factory.getService(anyString())).thenReturn(databaseService);
-		when(databaseService.preparedQuery(any(), anyString(), anyList(), anyInt())).thenThrow(e);
+		when(databaseService.preparedQuery(any(), anyString(), anyList(), anyInt(), any())).thenThrow(e);
 
-		// the robotID
-		RobotID robotID = mock(RobotID.class);
+        // context
+        ConstructContext context = mock(ConstructContext.class);
 
 		// run
-		QueryConstruct.process(query, parameters, database, timeout, factory, robotID);
+		QueryConstruct.process(query, parameters, database, timeout, factory, context);
 	}
 
 	/**
