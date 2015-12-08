@@ -910,7 +910,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 
 		// Check argument count by mocking the input
 		ConstructProcessor processor = construct
-			.prepareProcess(new ConstructContext(robotID.get(token.eResource()), rootRobot, construct, robotStartedEvent, robotStoppedEvent));
+			.prepareProcess(new ConstructContext(robotID.get(token.eResource()), rootRobot, construct, debugger, robotStartedEvent, robotStoppedEvent));
 		for (int i = 0; i < arguments.size(); i++) {
 			if (!processor.setArgument(i, ExpressionBuilderHelper.NULL) &&
 					!processor.setArgument(i, ExpressionBuilderHelper.emptyList()) &&

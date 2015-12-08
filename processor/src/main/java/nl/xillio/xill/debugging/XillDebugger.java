@@ -37,6 +37,7 @@ public class XillDebugger implements Debugger {
     private final EventHost<RobotStoppedAction> onRobotStopped = new EventHost<>();
     private final EventHost<RobotPausedAction> onRobotPaused = new EventHost<>();
     private final EventHost<RobotContinuedAction> onRobotContinued = new EventHost<>();
+    private final EventHostEx<Object> onRobotInterrupt = new EventHostEx<>();
     private ErrorHandlingPolicy handler = new NullDebugger();
     private final Stack<Instruction> currentStack = new Stack<>();
     private Mode mode = Mode.RUNNING;
@@ -56,6 +57,7 @@ public class XillDebugger implements Debugger {
     @Override
     public void stop() {
         mode = Mode.STOPPED;
+        onRobotInterrupt.invoke(null);
     }
 
     @Override
@@ -166,6 +168,7 @@ public class XillDebugger implements Debugger {
 
     @Override
     public void robotStarted(final Robot robot) {
+        onRobotInterrupt.getListeners().clear();
         onRobotStarted.invoke(new RobotStartedAction(robot));
         resume();
         currentStack.clear();
@@ -201,6 +204,11 @@ public class XillDebugger implements Debugger {
     @Override
     public Event<RobotContinuedAction> getOnRobotContinue() {
         return onRobotContinued.getEvent();
+    }
+
+    @Override
+    public EventEx<Object> getOnRobotInterrupt() {
+        return onRobotInterrupt.getEvent();
     }
 
     @Override
