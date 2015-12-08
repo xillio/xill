@@ -38,7 +38,7 @@ public class FromList implements Processable {
             return process(listMeta, indexMeta, debugger);
         } finally {
             listMeta.releaseReference();
-            indexMeta.registerReference();
+            indexMeta.releaseReference();
         }
     }
 
@@ -46,10 +46,9 @@ public class FromList implements Processable {
     private InstructionFlow<MetaExpression> process(MetaExpression listMeta, MetaExpression indexMeta, Debugger debugger) {
 
         if (indexMeta.getType() != ExpressionDataType.ATOMIC || indexMeta.isNull()) {
-            listMeta.releaseReference();
-            indexMeta.registerReference();
             return InstructionFlow.doResume(ExpressionBuilderHelper.NULL);
         }
+
         switch (listMeta.getType()) {
             case LIST:
                 try {

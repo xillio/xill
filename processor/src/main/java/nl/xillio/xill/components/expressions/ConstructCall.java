@@ -63,11 +63,6 @@ public class ConstructCall implements Processable {
             // Process
             InstructionFlow<MetaExpression> result = InstructionFlow.doResume(processor.process());
 
-            // Release all argument references
-            for (MetaExpression argumentResult : argumentResults) {
-                argumentResult.releaseReference();
-            }
-
             // Clear arguments
             processor.close();
 
