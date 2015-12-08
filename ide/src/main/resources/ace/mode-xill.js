@@ -167,8 +167,8 @@ ace.define("ace/mode/xill_highlight_rules", function (require, exports) {
                 {token: "string", regex: '"', next: "qqString"},
                 {token: "string", regex: "'", next: "qString"},
                 {token: "constant.numeric", regex: "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"},
-                {token: "lparen", regex: "[\\[({]"},
-                {token: "rparen", regex: "[\\])}]"},
+                {token: "paren.lparen", regex: "[\\[({]"},
+                {token: "paren.rparen", regex: "[\\])}]"},
                 {token: "keyword", regex: "\\b(?:" + keywords + ")\\b"},
                 {token: "plugin", regex: "\\b(?:" + plugins + ")\\b"},
                 {token: "constant.language", regex: "\\b(?:" + languageConstants + ")\\b"}
