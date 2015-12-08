@@ -319,7 +319,7 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
      */
     private String getSignature(Construct construct) {
         if (!argumentSignatures.containsKey(construct)) {
-            ConstructProcessor processor = construct.prepareProcess(new ConstructContext(getRobotID(), getRobotID(), construct, null, null));
+            ConstructProcessor processor = construct.prepareProcess(new ConstructContext(getRobotID(), getRobotID(), construct, null, null, null));
 
             List<String> args = new ArrayList<>();
             for (int i = 0; i < processor.getNumberOfArguments(); i++) {
