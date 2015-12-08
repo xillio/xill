@@ -181,22 +181,21 @@ public class XillInitializer extends Thread {
      * @param entity    the entity to push the signature into
      */
     private void generateParameters(Construct construct, ConstructDocumentationEntity entity) {
-        ConstructContext context = new ConstructContext(RobotID.dummyRobot(), RobotID.dummyRobot(), construct, null, null);
+		ConstructContext context = new ConstructContext(RobotID.dummyRobot(), RobotID.dummyRobot(), construct, null, null, null);
+        ConstructProcessor proc = construct.prepareProcess(context);
         List<Parameter> parameters = new ArrayList<>();
-        try(ConstructProcessor proc = construct.prepareProcess(context)) {
 
-            for (int i = 0; i < proc.getNumberOfArguments(); i++) {
-                String name = proc.getArgumentName(i);
-                String type = proc.getArgumentType(i);
-                String defaultValue = proc.getArgumentDefault(i);
+        for (int i = 0; i < proc.getNumberOfArguments(); i++) {
+            String name = proc.getArgumentName(i);
+            String type = proc.getArgumentType(i);
+            String defaultValue = proc.getArgumentDefault(i);
 
-                Parameter parameter = new Parameter(type, name);
-                if (defaultValue != null) {
-                    parameter.setDefault(defaultValue);
-                }
-
-                parameters.add(parameter);
+            Parameter parameter = new Parameter(type, name);
+            if (defaultValue != null) {
+                parameter.setDefault(defaultValue);
             }
+
+            parameters.add(parameter);
         }
 
         entity.setParameters(parameters);
