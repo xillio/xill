@@ -10,14 +10,20 @@ The database string should be in these formats:
 	Oracle Service: "host:port/service"  
 	MSSQL: "host:port/database"  
 	SQLite: "file"  
-	SQLite In-Memory: ":memory:"  
+	SQLite In-Memory: ":memory:"
 
+Valid database types are:
+
+- mysql
+- mssql
+- oracle
+- sqlite
+
+
+The `user` and `pass` parameter are for the username and password of the user.
+The `options` parameter takes an object with database specific options. See the examples.
   
-Valid database types are: "mysql", "mssql", "oracle" and "sqlite".  
-The user and pass parameter are for the username and password of the user.  
-The options parameter takes an object with database specific options. See the examples.  
-  
-The user, pass and options parameters are optional.  
+The `user`, `pass` and `options` parameters are optional.
   </description>
   <examples>
     <example>
