@@ -104,6 +104,11 @@ public class LicenseUtils {
      * Get the amount of days until the license expires.
      */
     public static long daysToExpiration() {
+        // Check if the license file exists.
+        if (!LICENSE_FILE.exists()) {
+            return 0;
+        }
+
         // Subtract the epoch days of now from the expiry date.
         long expiry = getLicense().getLicenseDetails().getExpiryDate().toEpochDay();
         long now = LocalDate.now().toEpochDay();
