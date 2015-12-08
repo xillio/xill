@@ -30,6 +30,6 @@ public class ToUpperConstruct extends Construct {
 
 	static MetaExpression process(final MetaExpression string, final StringUtilityService stringService) {
 
-		return fromValue(stringService.toUpperCase(string.getStringValue()));
+		return string.isNull() ? NULL : fromValue(stringService.toUpperCase(string.getStringValue()));
 	}
 }
