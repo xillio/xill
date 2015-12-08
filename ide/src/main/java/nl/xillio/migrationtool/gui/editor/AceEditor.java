@@ -176,9 +176,9 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
      * Clears the history by loading a new UndoManager
      */
     public void clearHistory() {
-        /*executeJS("new UndoManager();", (u) ->
+        executeJS("new UndoManager();", (u) ->
                 ((JSObject) callOnAceBlocking("getSession"))
-                        .call("setUndoManager", u));*/
+                        .call("setUndoManager", u));
     }
 
     /**
