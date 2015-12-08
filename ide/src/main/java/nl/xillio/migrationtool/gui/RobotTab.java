@@ -37,6 +37,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.LinkedList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -69,6 +70,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
     private final FXController globalController;
     private RobotID currentRobot;
+    private LinkedList<RobotTab> relatedHighlightTabs = new LinkedList<>(); // This list contains the tabs that have been highlighted from this tab (e.g. compile error of included bot)
 
     /**
      * Create a new robottab that holds a currentRobot
@@ -480,7 +482,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
             errorPopup(-1, e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling.");
             return;
         } catch (XillParsingException e) {
-            errorPopup(e.getLine(), e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling " + e.getRobot().getPath().getAbsolutePath());
+            handleXillParsingError(e);
             return;
         } finally {
             apnStatusBar.setCompiling(false);
@@ -508,6 +510,40 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
         robotThread.start();
 
+    }
+
+    /**
+     * Show alert dialog and highlight the line with error in the correct robottab
+     * There are 3 options - when the error is: 1. in current robottab, 2. in included which is already opened, 3. in included which is not currently open
+     *
+     * @param e caught XillParsingException
+     */
+    private void handleXillParsingError(final XillParsingException e) {
+        if (currentRobot == e.getRobot()) {// Parse error in this robot
+            errorPopup(e.getLine(), e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling " + e.getRobot().getPath().getAbsolutePath());
+        } else {// Parse error in different (e.g. included) robot
+            RobotTab tab = (RobotTab) globalController.findTab(e.getRobot().getPath());
+            if (tab != null) {// RobotTab is open in editor
+                tab.requestFocus();
+                tab.errorPopup(e.getLine(), e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling " + e.getRobot().getPath().getAbsolutePath());
+                relatedHighlightTabs.add(tab);
+            } else {// RobotTab is not open in editor
+                // Let's open the RobotTab where error occurred
+                Platform.runLater(() -> {
+                    RobotTab newTab = globalController.openFile(e.getRobot().getPath());
+                    newTab.getEditorPane().getEditor().getOnDocumentLoaded().addListener((success) ->
+                        // We queue this for later execution because the tab has to display before we can scroll to the right location.
+                        Platform.runLater(() -> {
+                            if (success) {
+                                // Highlight the tab
+                                newTab.errorPopup(e.getLine(), e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling " + e.getRobot().getPath().getAbsolutePath());
+                                relatedHighlightTabs.add(newTab);
+                            }
+                        })
+                    );
+                });
+            }
+        }
     }
 
     private void errorPopup(final int line, final String message, final String title, final String context) {
@@ -634,5 +670,18 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * Clear all highlights in the current tab and in the tabs that have been highlighted from this tab (e.g. include robot error highlight)
+     */
+    public void clearHighlight() {
+        getEditorPane().getEditor().clearHighlight(); // Clear all highlights in current robottab
 
+        // Clear all highlights in all related robottabs
+        relatedHighlightTabs.forEach(tab -> {
+            if (globalController.findTab(tab.getDocument()) != null) {// Select just still opened tabs
+                tab.clearHighlight();
+            }
+        });
+        relatedHighlightTabs.clear();
+    }
 }

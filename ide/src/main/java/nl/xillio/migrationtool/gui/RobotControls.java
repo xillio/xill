@@ -192,7 +192,7 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 		pause.setDisable(true);
 		stepin.setDisable(true);
 		stepover.setDisable(true);
-		tab.getEditorPane().getEditor().clearHighlight();
+		tab.clearHighlight();
 	}
 
 	private Debugger getDebugger() {
