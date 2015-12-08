@@ -60,6 +60,16 @@ public class ForeachInstruction extends CompoundInstruction {
 
         MetaExpression result = flow.get();
 
+
+        try {
+            result.registerReference();
+            return process(result, debugger);
+        } finally {
+            result.releaseReference();
+        }
+    }
+
+    private InstructionFlow<MetaExpression> process(MetaExpression result, Debugger debugger) {
         InstructionFlow<MetaExpression> foreachResult = InstructionFlow.doResume();
 
         if (result.isNull()) {

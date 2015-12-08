@@ -2,7 +2,7 @@ package nl.xillio.xill.api.components;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import nl.xillio.util.IdentityArrayList;
+import me.biesaart.utils.Log;
 import nl.xillio.util.MathUtils;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.behavior.BooleanBehavior;
@@ -16,6 +16,8 @@ import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.services.json.JsonException;
 import nl.xillio.xill.services.json.JsonParser;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -25,6 +27,16 @@ import java.util.stream.Collectors;
  * This class represents a general expression in the Xill language.
  */
 public abstract class MetaExpression implements Expression, Processable {
+
+    /**
+     * Enable this to get debug information
+     */
+    private static final boolean DEBUG = false;
+    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Map<Integer, MetaExpression> expressions = new HashMap<>();
+    private static int counter;
+    private int id;
+
     @Inject
     private static JsonParser jsonParser;
     @Inject
@@ -36,6 +48,19 @@ public abstract class MetaExpression implements Expression, Processable {
     private boolean isClosed;
     private int referenceCount;
     private boolean preventDispose;
+
+
+    public MetaExpression() {
+        id = counter++;
+        if (DEBUG) {
+            expressions.put(id, this);
+            printDebug();
+        }
+    }
+
+    private void printDebug() {
+        LOGGER.debug("Open Expressions: {}", expressions.size());
+    }
 
     /**
      * Get a value from the {@link MetadataExpressionPool}
@@ -220,11 +245,7 @@ public abstract class MetaExpression implements Expression, Processable {
      * @return JSON representation
      */
     public String toString(final JsonParser jsonParser) throws JsonException {
-        MetaExpression cleaned = removeCircularReference(this, new IdentityArrayList<>(),
-                ExpressionBuilderHelper.fromValue("<<CIRCULAR REFERENCE>>"));
-        String result = jsonParser.toJson(extractValue(cleaned));
-        cleaned.close();
-        return result;
+        return jsonParser.toJson(extractValue(this));
     }
 
     /**
@@ -429,11 +450,7 @@ public abstract class MetaExpression implements Expression, Processable {
         referenceCount--;
 
         if (!preventDispose && referenceCount <= 0) {
-            try {
-                close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            close();
         }
     }
 
@@ -505,8 +522,14 @@ public abstract class MetaExpression implements Expression, Processable {
             default:
                 break;
         }
-        value = null;
+        if (DEBUG) {
+            expressions.remove(id);
+            printDebug();
+        } else {
+            value = null;
+        }
     }
+
 
     /**
      * Dispose all items in the {@link MetadataExpressionPool}

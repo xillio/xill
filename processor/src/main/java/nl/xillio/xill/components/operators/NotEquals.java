@@ -10,8 +10,10 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
+import static nl.xillio.xill.api.construct.ExpressionBuilderHelper.fromValue;
+
 /**
- * This class represents the == operator
+ * This class represents the != operator
  */
 public class NotEquals implements Processable {
 
@@ -30,9 +32,18 @@ public class NotEquals implements Processable {
 
 	@Override
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-		boolean result = !left.process(debugger).get().equals(right.process(debugger).get());
+		MetaExpression leftValue = left.process(debugger).get();
+		leftValue.registerReference();
 
-		return InstructionFlow.doResume(new AtomicExpression(result));
+		MetaExpression rightValue = right.process(debugger).get();
+		rightValue.registerReference();
+
+		boolean result = !rightValue.equals(leftValue);
+
+		rightValue.releaseReference();
+		leftValue.releaseReference();
+
+		return InstructionFlow.doResume(fromValue(result));
 	}
 
 	@Override

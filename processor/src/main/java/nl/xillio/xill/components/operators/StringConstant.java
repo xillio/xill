@@ -24,8 +24,11 @@ public final class StringConstant implements Processable {
 
     @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-        InstructionFlow<MetaExpression> resultExpression = value.process(debugger);
-        String result = resultExpression.get().getStringValue();
+        MetaExpression resultExpression = value.process(debugger).get();
+        resultExpression.registerReference();
+
+        String result = resultExpression.getStringValue();
+        resultExpression.releaseReference();
 
         // Return this value is a constant
         return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(result, true));
