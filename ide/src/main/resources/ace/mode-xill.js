@@ -177,10 +177,16 @@ ace.define("ace/mode/xill_highlight_rules", function (require, exports) {
                 {token: "comment", regex: ".*?\\*\\/", next: "start"},
                 {token: "comment", regex: ".+"}
             ],
+            "qqString": [
+                {token: "constant.language.escape", regex: escapedRe},
+                {token: "string", regex: "\\\\$", next: "qqString"},
+                {token: "string", regex: '"', next: "start"},
+                {defaultToken: "string"}
+            ],
             "qString": [
                 {token: "constant.language.escape", regex: escapedRe},
                 {token: "string", regex: "\\\\$", next: "qString"},
-                {token: "string", regex: '"', next: "start"},
+                {token: "string", regex: '\'', next: "start"},
                 {defaultToken: "string"}
             ]
         };
