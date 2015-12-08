@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        This function checks whether a given value is a number or not.
+        A boolean is returned as a result.
+
+        Note that strings representing numbers and boolean values are considered numbers.
+    </description>
+    <examples>
+        <example title="Usage">
+            <code>
+                use Math;
+
+                var number = 3.1;
+                var stringNumber = "25";
+                var stringText = "Some Text";
+                var object = { "a": 2 };
+                var boolValue = true;
+
+                Math.isNumber(number);          // Results true
+                Math.isNumber(stringNumber);    // Results true
+                Math.isNumber(stringText);      // Results false
+                Math.isNumber(object);          // Results false
+                Math.isNumber(boolValue);       // Results true
+            </code>
+        </example>
+    </examples>
+</function>

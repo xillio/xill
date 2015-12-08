@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.math.services.math;
 
 import com.google.inject.ImplementedBy;
 
+import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.plugins.math.MathXillPlugin;
 
 /**
@@ -46,4 +47,14 @@ public interface MathOperations {
 	 *         A long between 0 and max value.
 	 */
 	public long random(long value);
+
+	/**
+	 * Returns true or false depending on if the given value is a number or not.
+	 *
+	 * @param value
+	 *        The given object to check.
+	 * @return
+	 *         A boolean which is true if value is a number, otherwise false.
+	 */
+	public boolean isNumber(MetaExpression value);
 }
