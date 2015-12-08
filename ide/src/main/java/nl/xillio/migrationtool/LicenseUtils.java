@@ -104,8 +104,8 @@ public class LicenseUtils {
      * Get the amount of days until the license expires.
      */
     public static long daysToExpiration() {
-        // Check if the license file exists.
-        if (!LICENSE_FILE.exists()) {
+        // Check if the license file exists and the expiry date is not null.
+        if (!LICENSE_FILE.exists() || getLicense().getLicenseDetails().getExpiryDate() == null) {
             return 0;
         }
 
