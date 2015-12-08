@@ -853,7 +853,13 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
             btnAddFolder.setDisable(true);
         }
 
-        // TODO: Check if a project is selected, disable the cut and copy menu items.
+        // If a project is selected disable the cut menu item.
+        menuCut.setDisable(false);
+        getAllCurrentItems().forEach(i -> {
+            if (i != null && i == getProject(i)) {
+                menuCut.setDisable(true);
+            }
+        });
     }
 
     /**
