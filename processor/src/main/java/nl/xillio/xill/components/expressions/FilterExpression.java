@@ -17,16 +17,16 @@ import nl.xillio.xill.components.instructions.FunctionDeclaration;
  */
 public class FilterExpression implements Processable, FunctionParameterExpression {
 
-	private final List<Processable> arguments;
+	private final Processable argument;
 	private FunctionDeclaration functionDeclaration;
 
 	/**
 	 * Create a new {@link FilterExpression}
 	 * 
-	 * @param arguments
+	 * @param argument
 	 */
-	public FilterExpression(final List<Processable> arguments) {
-		this.arguments = arguments;
+	public FilterExpression(final Processable argument) {
+		this.argument = argument;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -35,45 +35,43 @@ public class FilterExpression implements Processable, FunctionParameterExpressio
 		List<MetaExpression> listResults = new ArrayList<>();
 		LinkedHashMap<String, MetaExpression> objectResults = new LinkedHashMap<>();
 
-		// Call the function for all arguments
-		for (Processable argument : arguments) {
-			MetaExpression result = argument.process(debugger).get();
+		// Call the function for the argument
+		MetaExpression result = argument.process(debugger).get();
 
-			switch (result.getType()) {
-				case ATOMIC:
-					// Process the one argument
-					MetaExpression expressionValue = functionDeclaration.run(debugger, Arrays.asList(result)).get();
-					if (expressionValue.getBooleanValue()) {
-						return InstructionFlow.doResume(result);
-					} else {
-						return InstructionFlow.doResume(ExpressionBuilderHelper.emptyList());
-					}
-				case LIST:
-					// Pass every argument
-					for (MetaExpression expression : (List<MetaExpression>) result.getValue()) {
-						MetaExpression value = functionDeclaration.run(debugger, Arrays.asList(expression)).get();
-						if (value.getBooleanValue()) {
-							listResults.add(expression);
-						}
-					}
+		switch (result.getType()) {
+			case ATOMIC:
+				// Process the one argument
+				MetaExpression expressionValue = functionDeclaration.run(debugger, Arrays.asList(result)).get();
+				if (expressionValue.getBooleanValue()) {
+					listResults.add(result);
 					return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(listResults));
-				case OBJECT:
-					// Pass every argument but with key
-					for (Entry<String, MetaExpression> expression : ((Map<String, MetaExpression>) result.getValue())
+				} else {
+					return InstructionFlow.doResume(ExpressionBuilderHelper.emptyList());
+				}
+			case LIST:
+				// Pass every argument
+				for (MetaExpression expression : (List<MetaExpression>) result.getValue()) {
+					MetaExpression value = functionDeclaration.run(debugger, Arrays.asList(expression)).get();
+					if (value.getBooleanValue()) {
+						listResults.add(expression);
+					}
+				}
+				return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(listResults));
+			case OBJECT:
+				// Pass every argument but with key
+				for (Entry<String, MetaExpression> expression : ((Map<String, MetaExpression>) result.getValue())
 						.entrySet()) {
-						MetaExpression value = functionDeclaration.run(debugger,
+					MetaExpression value = functionDeclaration.run(debugger,
 							Arrays.asList(ExpressionBuilderHelper.fromValue(expression.getKey()), expression.getValue()))
 							.get();
-						if (value.getBooleanValue()) {
-							objectResults.put(expression.getKey(), expression.getValue());
-						}
+					if (value.getBooleanValue()) {
+						objectResults.put(expression.getKey(), expression.getValue());
 					}
-					return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(objectResults));
-				default:
-					throw new NotImplementedException("This MetaExpression has not been defined yet.");
-			}
+				}
+				return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(objectResults));
+			default:
+				throw new NotImplementedException("This MetaExpression has not been defined yet.");
 		}
-		return InstructionFlow.doResume(ExpressionBuilderHelper.emptyList());
 	}
 
 	@Override

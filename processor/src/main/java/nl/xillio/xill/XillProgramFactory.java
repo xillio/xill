@@ -979,13 +979,9 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @throws XillParsingException
 	 */
 	Processable parseToken(final xill.lang.xill.MapExpression token) throws XillParsingException {
-		List<Processable> arguments = new ArrayList<>();
+		Processable argument = parse(token.getArguments().get(0));
 
-		for (Expression expression : token.getArguments()) {
-			arguments.add(parse(expression));
-		}
-
-		MapExpression map = new MapExpression(arguments);
+		MapExpression map = new MapExpression(argument);
 
 		functionParameterExpressions.push(new SimpleEntry<>(token.getFunction(), map));
 
@@ -1000,13 +996,9 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 	 * @throws XillParsingException
 	 */
 	Processable parseToken(final xill.lang.xill.FilterExpression token) throws XillParsingException {
-		List<Processable> arguments = new ArrayList<>();
+		Processable argument = parse(token.getArguments().get(0));
 
-		for (Expression expression : token.getArguments()) {
-			arguments.add(parse(expression));
-		}
-
-		FilterExpression filter = new FilterExpression(arguments);
+		FilterExpression filter = new FilterExpression(argument);
 
 		functionParameterExpressions.push(new SimpleEntry<>(token.getFunction(), filter));
 
