@@ -10,6 +10,9 @@ import java.nio.file.WatchEvent;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import javax.swing.filechooser.FileFilter;
 
 import javafx.event.Event;
@@ -78,7 +81,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 
     // Context menu items.
     private MenuItem menuCut, menuCopy, menuPaste;
-    private List<TreeItem<Pair<File, String>>> bulkFiles; // Files to copy or cut.
+    private List<File> bulkFiles; // Files to copy or cut.
     private boolean copy = false; // True: copy, false: cut.
 
     /**
@@ -174,12 +177,16 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 
     private void cut() {
         copy = false;
-        bulkFiles = FXCollections.observableArrayList(getAllCurrentItems());
+        getBulkFiles();
     }
 
     private void copy() {
         copy = true;
-        bulkFiles = FXCollections.observableArrayList(getAllCurrentItems());
+        getBulkFiles();
+    }
+
+    private void getBulkFiles() {
+        bulkFiles = getAllCurrentItems().stream().map(t -> t.getValue().getKey()).collect(Collectors.toList());
     }
 
     private void paste() {
@@ -188,9 +195,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         final File destDir = pasteLoc.isDirectory() ? pasteLoc : pasteLoc.getParentFile();
 
 
-        for (TreeItem<Pair<File, String>> treeItem : bulkFiles) {
-            File oldFile = treeItem.getValue().getKey();
-
+        for (File oldFile : bulkFiles) {
             // Check if the file already exists.
             File destFile = new File(destDir, oldFile.getName());
             if (destFile.exists()) {
