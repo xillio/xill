@@ -379,6 +379,11 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
                             paste();
                         }
                         break;
+                    case RENAME:
+                        if (!btnRename.isDisable()) {
+                            renameButtonPressed();
+                        }
+                        break;
                 }
             }
 
