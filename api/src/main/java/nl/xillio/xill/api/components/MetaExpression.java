@@ -24,8 +24,6 @@ import java.util.stream.Collectors;
  * This class represents a general expression in the Xill language.
  */
 public abstract class MetaExpression implements Expression, Processable {
-    private static int counter = 0;
-    public static Map<Integer, MetaExpression> expresisons = new HashMap<>();
 
     @Inject
     private static JsonParser jsonParser;
@@ -38,16 +36,6 @@ public abstract class MetaExpression implements Expression, Processable {
     private boolean isClosed;
     private int referenceCount;
     private boolean preventDispose;
-    private int id = counter++;
-
-    public MetaExpression() {
-        expresisons.put(id, this);
-        printData();
-    }
-
-    private void printData() {
-        System.out.println("Open: " + expresisons.size());
-    }
 
     /**
      * Get a value from the {@link MetadataExpressionPool}
@@ -494,9 +482,7 @@ public abstract class MetaExpression implements Expression, Processable {
         if (isClosed || this == ExpressionBuilderHelper.NULL) {
             return;
         }
-
-        expresisons.remove(id);
-        printData();
+        
         isClosed = true;
         closeMetaPool();
 
