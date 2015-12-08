@@ -24,6 +24,6 @@ public class LengthConstruct extends Construct {
 	}
 
 	static MetaExpression process(final MetaExpression value) {
-		return value.isNull() ? NULL : fromValue(value.getStringValue().length());
+		return value.isNull() ? fromValue(0) : fromValue(value.getStringValue().length());
 	}
 }
