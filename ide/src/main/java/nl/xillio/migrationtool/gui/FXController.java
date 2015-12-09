@@ -349,17 +349,20 @@ public class FXController implements Initializable, EventHandler<Event> {
         if (btnOpenFile.isDisabled())
             return;
 
+        // If the last picked folder exists, set the initial directory to that.
         FileChooser fileChooser = new FileChooser();
-        String lastfolder = settings.simple().get(Settings.FILE, Settings.LastFolder);
-        if (lastfolder != null) {
-            fileChooser.setInitialDirectory(new File(lastfolder));
+        File lastFolder = new File(settings.simple().get(Settings.FILE, Settings.LastFolder));
+        if (lastFolder.exists()) {
+            fileChooser.setInitialDirectory(lastFolder);
         }
+
+        // Only show Xill scripts, show the dialog and open the file.
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
                 "Xillio scripts (*" + "." + Xill.FILE_EXTENSION + ")", "*" + "." + Xill.FILE_EXTENSION));
-        File newfile = fileChooser.showOpenDialog(btnOpenFile.getScene().getWindow());
+        File newFile = fileChooser.showOpenDialog(btnOpenFile.getScene().getWindow());
 
-        if (newfile != null) {
-            openFile(newfile);
+        if (newFile != null) {
+            openFile(newFile);
         }
     }
 
