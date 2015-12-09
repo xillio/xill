@@ -1,6 +1,8 @@
 package nl.xillio.migrationtool;
 
 
+import me.biesaart.event.Event;
+import me.biesaart.event.EventDispatcher;
 import nl.xillio.license.License;
 import nl.xillio.license.LicenseFactory;
 import nl.xillio.license.LicenseValidator;
@@ -16,6 +18,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 
 /**
  * This class is responsible for performing a license check.
@@ -23,7 +26,9 @@ import java.io.InputStream;
 public class LicenseUtils {
     private static final Logger LOGGER = LogManager.getLogger();
     public static final File LICENSE_FILE = new File(XillioHomeFolder.forXillIDE(), "license.json");
+    public static final int DAYS_NEAR_EXPIRATION = 10;
     private static LicenseFactory licenseFactory;
+    private final static EventDispatcher<License> licenseChangeEvent = new EventDispatcher<>();
 
     /**
      * Get the currently active license.
@@ -95,6 +100,21 @@ public class LicenseUtils {
         return isValid();
     }
 
+    /**
+     * Get the amount of days until the license expires.
+     */
+    public static long daysToExpiration() {
+        // Check if the license file exists and the expiry date is not null.
+        if (!LICENSE_FILE.exists() || getLicense().getLicenseDetails().getExpiryDate() == null) {
+            return 0;
+        }
+
+        // Subtract the epoch days of now from the expiry date.
+        long expiry = getLicense().getLicenseDetails().getExpiryDate().toEpochDay();
+        long now = LocalDate.now().toEpochDay();
+        return expiry - now;
+    }
+
     private static License getLicense(InputStream stream) throws IOException {
         try {
             return getFactory().fetchLicense(stream);
@@ -111,7 +131,11 @@ public class LicenseUtils {
     }
 
     private static boolean isValid(License license) {
-        return license.isValid() && license.getLicenseDetails().isValidForSoftwareModule(SoftwareModule.IDE);
+        boolean valid = license.isValid() && license.getLicenseDetails().isValidForSoftwareModule(SoftwareModule.IDE);
+        if (valid) {
+            licenseChangeEvent.fire(license);
+        }
+        return valid;
     }
 
     private static LicenseFactory getFactory() throws IOException, PublicKeyReaderUtil.PublicKeyParseException {
@@ -129,5 +153,9 @@ public class LicenseUtils {
 
     private static InputStream openPublicKeyString() {
         return License.class.getResourceAsStream("/publickey");
+    }
+
+    public static Event<License> getOnLicenseChange() {
+        return licenseChangeEvent.getEvent();
     }
 }

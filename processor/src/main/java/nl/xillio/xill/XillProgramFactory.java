@@ -881,8 +881,15 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
         }
 
         // Check argument count by mocking the input
-        ConstructProcessor processor = construct
-                .prepareProcess(new ConstructContext(robotID.get(token.eResource()), rootRobot, construct, debugger, robotStartedEvent, robotStoppedEvent));
+        ConstructContext constructContext = new ConstructContext(robotID.get(token.eResource()), rootRobot, construct, debugger, robotStartedEvent, robotStoppedEvent);
+
+        try (ConstructProcessor processor = construct.prepareProcess(constructContext)) {
+            return buildCall(construct, processor, arguments, constructContext, pos);
+        }
+    }
+
+    private ConstructCall buildCall(Construct construct, ConstructProcessor processor, List<Processable> arguments, ConstructContext context, CodePosition pos) throws XillParsingException {
+
         for (int i = 0; i < arguments.size(); i++) {
             if (!processor.setArgument(i, ExpressionBuilderHelper.NULL) &&
                     !processor.setArgument(i, ExpressionBuilderHelper.emptyList()) &&
@@ -900,11 +907,8 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
                     pos.getLineNumber(), pos.getRobotID());
         }
 
-        // Prepare th processor for use
-        processor.reset();
 
-        return new ConstructCall(construct, arguments,
-                processor);
+        return new ConstructCall(construct, arguments, context);
     }
 
     /**
