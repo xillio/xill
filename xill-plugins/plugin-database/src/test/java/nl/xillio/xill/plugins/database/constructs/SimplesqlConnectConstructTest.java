@@ -16,10 +16,10 @@ import nl.xillio.xill.plugins.database.services.DatabaseService;
 import nl.xillio.xill.plugins.database.services.DatabaseServiceFactory;
 
 /**
- * Test the {@link SimpleSQLConnectConstruct}.
+ * Test the {@link SimplesqlConnectConstruct}.
  *
  */
-public class SimpleSQLConnectConstructTest extends TestUtils {
+public class SimplesqlConnectConstructTest extends TestUtils {
 
 	/**
 	 * <p>
@@ -54,7 +54,7 @@ public class SimpleSQLConnectConstructTest extends TestUtils {
 				options
 		};
 		// run
-		MetaExpression output = SimpleSQLConnectConstruct.process(args, "database", factory, robotID);
+		MetaExpression output = SimplesqlConnectConstruct.process(args, "database", factory, robotID);
 
 		// assert
 		Assert.assertEquals(output.getStringValue(), "host:1531/database");

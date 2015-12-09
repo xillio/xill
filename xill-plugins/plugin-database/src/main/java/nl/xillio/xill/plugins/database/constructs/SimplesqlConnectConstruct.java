@@ -15,16 +15,16 @@ import java.util.Map;
 /**
  * Base implementation for connect constructs. Individual implementations can override this if they have different needs.
  */
-public abstract class SimpleSQLConnectConstruct extends BaseDatabaseConstruct {
+public abstract class SimplesqlConnectConstruct extends BaseDatabaseConstruct {
 
     private String databaseName;
 
     /**
-     * The constructor for the {@link SimpleSQLConnectConstruct}.
+     * The constructor for the {@link SimplesqlConnectConstruct}.
      *
      * @param databaseName The name of the database.
      */
-    public SimpleSQLConnectConstruct(String databaseName) {
+    public SimplesqlConnectConstruct(String databaseName) {
         this.databaseName = databaseName;
     }
 
