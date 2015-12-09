@@ -5,6 +5,7 @@ import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.construct.Construct;
+import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
@@ -19,26 +20,30 @@ import java.util.List;
 public class ConstructCall implements Processable {
 
     private final Construct construct;
+    private final ConstructContext context;
     private final Processable[] arguments;
-    private final ConstructProcessor processor;
 
     /**
      * Create a new {@link ConstructCall}
      *
      * @param construct the construct to call
      * @param arguments the arguments to insert into the construct
-     * @param processor the context to pass to the constructs
      */
-    public ConstructCall(final Construct construct, final List<Processable> arguments, final ConstructProcessor processor) {
+    public ConstructCall(final Construct construct, final List<Processable> arguments, ConstructContext context) {
         this.construct = construct;
+        this.context = context;
         this.arguments = arguments.toArray(new Processable[arguments.size()]);
-        this.processor = processor;
     }
 
     @Override
-    @SuppressWarnings("squid:S1181") // catch Throwable
     public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-        MetaExpression[] argumentResults = new MetaExpression[arguments.length];
+        try (ConstructProcessor processor = construct.prepareProcess(context)) {
+            return process(processor, debugger);
+        }
+    }
+
+    @SuppressWarnings("squid:S1181") // catch Throwable
+    private InstructionFlow<MetaExpression> process(ConstructProcessor processor, Debugger debugger) {
 
         // Process arguments
         for (int i = 0; i < arguments.length; i++) {
@@ -51,7 +56,6 @@ public class ConstructCall implements Processable {
 
             // Reference for unnamed variable
             result.registerReference();
-            argumentResults[i] = result;
 
             if (!processor.setArgument(i, result)) {
                 throw new RobotRuntimeException("Wrong type for argument `" + processor.getArgumentName(i) + "` in " + processor.toString(construct.getName()) + " expected [" + processor.getArgumentType(i) + "] but received [" + result.getType() + "]");
@@ -61,12 +65,8 @@ public class ConstructCall implements Processable {
         try {
 
             // Process
-            InstructionFlow<MetaExpression> result = InstructionFlow.doResume(processor.process());
 
-            // Clear arguments
-            processor.close();
-
-            return result;
+            return InstructionFlow.doResume(processor.process());
 
 
         } catch (Throwable e) {
@@ -77,7 +77,6 @@ public class ConstructCall implements Processable {
 
         // If something goes wrong and the debugger thinks it's okay, then we return null
         return InstructionFlow.doResume(ExpressionBuilderHelper.NULL);
-
     }
 
     @Override

@@ -6,7 +6,7 @@ import nl.xillio.xill.plugins.database.util.Database;
  * The connect construct for the MYsql database.
  *
  */
-public class MysqlConnectConstruct extends SimplesqlConnectConstruct {
+public class MysqlConnectConstruct extends SimpleSQLConnectConstruct {
 
 	/**
 	 * The constructor for the {@link MysqlConnectConstruct}.
