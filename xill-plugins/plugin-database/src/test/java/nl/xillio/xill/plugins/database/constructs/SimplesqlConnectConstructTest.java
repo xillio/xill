@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 import java.util.LinkedHashMap;
 
 import nl.xillio.xill.TestUtils;
-import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -17,10 +16,10 @@ import nl.xillio.xill.plugins.database.services.DatabaseService;
 import nl.xillio.xill.plugins.database.services.DatabaseServiceFactory;
 
 /**
- * Test the {@link SimplesqlConnectConstruct}.
+ * Test the {@link SimpleSQLConnectConstruct}.
  *
  */
-public class SimplesqlConnectConstructTest extends TestUtils {
+public class SimpleSQLConnectConstructTest extends TestUtils {
 
 	/**
 	 * <p>
@@ -55,7 +54,7 @@ public class SimplesqlConnectConstructTest extends TestUtils {
 				options
 		};
 		// run
-		MetaExpression output = SimplesqlConnectConstruct.process(args, "database", factory, robotID);
+		MetaExpression output = SimpleSQLConnectConstruct.process(args, "database", factory, robotID);
 
 		// assert
 		Assert.assertEquals(output.getStringValue(), "host:1531/database");

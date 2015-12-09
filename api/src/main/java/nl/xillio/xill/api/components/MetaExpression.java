@@ -31,7 +31,7 @@ public abstract class MetaExpression implements Expression, Processable {
     /**
      * Enable this to get debug information
      */
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Map<Integer, MetaExpression> expressions = new HashMap<>();
     private static int counter;
