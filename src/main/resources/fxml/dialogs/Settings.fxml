@@ -12,7 +12,7 @@
 			<children>
 				<AnchorPane styleClass="dialogContent" VBox.vgrow="ALWAYS">
 					<children>
-						<TabPane styleClass="tpnSettings" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+						<TabPane fx:id="tpnSettings" styleClass="tpnSettings" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 							<tabs>
 								<Tab closable="false" text="General">
 									<content>
