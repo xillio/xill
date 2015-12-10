@@ -955,7 +955,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
      * @throws XillParsingException
      */
     Processable parseToken(final xill.lang.xill.MapExpression token) throws XillParsingException {
-        if (token.getArguments().size() > 1){
+        if (token.getArguments().size() > 1) {
             CodePosition pos = pos(token);
             throw new XillParsingException("Too many arguments were provided.", pos.getLineNumber(), pos.getRobotID());
         }

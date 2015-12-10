@@ -29,7 +29,6 @@ public class FilterExpression implements Processable, FunctionParameterExpressio
 		this.argument = argument;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		// Call the function for the argument
@@ -38,49 +37,81 @@ public class FilterExpression implements Processable, FunctionParameterExpressio
 		try {
 			result.registerReference();
 			return process(result, debugger);
+		} catch (ConcurrentModificationException e) {
+			throw new RobotRuntimeException("You can not change the expression upon which you are iterating.", e);
 		} finally {
 			result.releaseReference();
 		}
 	}
 
 	private InstructionFlow<MetaExpression> process(MetaExpression result, Debugger debugger){
-		List<MetaExpression> listResults = new ArrayList<>();
-		LinkedHashMap<String, MetaExpression> objectResults = new LinkedHashMap<>();
-
 		switch (result.getType()) {
 			case ATOMIC:
 				// Process the one argument
-				if (functionDeclaration.run(debugger, Arrays.asList(result)).get().getBooleanValue()) {
-					listResults.add(result);
-					return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(listResults));
-				} else {
-					return InstructionFlow.doResume(ExpressionBuilderHelper.emptyList());
-				}
+				atomicProcess(result, debugger);
 			case LIST:
 				// Pass every argument
-				for (MetaExpression expression : (List<MetaExpression>) result.getValue()) {
-					if (functionDeclaration.run(debugger, Arrays.asList(expression)).get().getBooleanValue()) {
-						listResults.add(expression);
-					}
-				}
-				return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(listResults));
+				listProcess(result, debugger);
 			case OBJECT:
 				// Pass every argument but with key
-				for (Entry<String, MetaExpression> expression : ((Map<String, MetaExpression>) result.getValue())
-						.entrySet()) {
-					MetaExpression value = functionDeclaration.run(debugger,
-							Arrays.asList(ExpressionBuilderHelper.fromValue(expression.getKey()), expression.getValue()))
-							.get();
-					value.registerReference();
-					if (value.getBooleanValue()) {
-						objectResults.put(expression.getKey(), expression.getValue());
-					}
-					value.releaseReference();
-				}
-				return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(objectResults));
+				objectProcess(result, debugger);
 			default:
 				throw new NotImplementedException("This MetaExpression has not been defined yet.");
 		}
+	}
+
+	private InstructionFlow<MetaExpression> atomicProcess(MetaExpression result, Debugger debugger){
+		if (result.isNull()) {
+			return InstructionFlow.doResume(ExpressionBuilderHelper.emptyList());
+		}
+
+		List<MetaExpression> atomicResults = new ArrayList<>(1);
+		MetaExpression valueAtomic = functionDeclaration.run(debugger, Collections.singletonList(result)).get();
+		valueAtomic.registerReference();
+
+		if (valueAtomic.getBooleanValue()) {
+			atomicResults.add(result);
+			valueAtomic.releaseReference();
+			return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(atomicResults));
+		} else {
+			valueAtomic.releaseReference();
+			return InstructionFlow.doResume(ExpressionBuilderHelper.emptyList());
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private InstructionFlow<MetaExpression> listProcess(MetaExpression result, Debugger debugger){
+		List<MetaExpression> listResults = new ArrayList<>();
+
+		for (MetaExpression expression : (List<MetaExpression>) result.getValue()) {
+			MetaExpression valueList = functionDeclaration.run(debugger, Collections.singletonList(expression)).get();
+			valueList.registerReference();
+
+			if (valueList.getBooleanValue()) {
+				listResults.add(expression);
+			}
+
+			valueList.releaseReference();
+		}
+		return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(listResults));
+	}
+
+	@SuppressWarnings("unchecked")
+	private InstructionFlow<MetaExpression> objectProcess(MetaExpression result, Debugger debugger){
+		LinkedHashMap<String, MetaExpression> objectResults = new LinkedHashMap<>();
+
+		for (Entry<String, MetaExpression> expression : ((Map<String, MetaExpression>) result.getValue()).entrySet()) {
+			MetaExpression valueObject = functionDeclaration.run(debugger,
+					Arrays.asList(ExpressionBuilderHelper.fromValue(expression.getKey()), expression.getValue())).get();
+			valueObject.registerReference();
+
+			if (valueObject.getBooleanValue()) {
+				objectResults.put(expression.getKey(), expression.getValue());
+			}
+
+			valueObject.releaseReference();
+		}
+		return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(objectResults));
 	}
 
 	@Override
