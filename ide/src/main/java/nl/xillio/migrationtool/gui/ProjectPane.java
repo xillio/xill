@@ -10,8 +10,6 @@ import java.nio.file.WatchEvent;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import javax.swing.filechooser.FileFilter;
 
@@ -28,7 +26,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
@@ -57,7 +54,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
     private static final String DEFAULT_PROJECT_NAME = "Samples";
     private static final String DEFAULT_PROJECT_PATH = "./samples";
     private static final Logger LOGGER = LogManager.getLogger();
-    private final BotFileFilter robotFileFilter = new BotFileFilter();
+    private static WatchDir watcher;
 
     @FXML
     private TreeView<Pair<File, String>> trvProjects;
@@ -70,12 +67,8 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
     private Button btnRename;
     @FXML
     private Button btnDelete;
-    /**
-     * A file filter filtering on the FXController.BOT_EXTENSION extension. Protected to avoid synthetic accessors.
-     */
-    protected final BotFileFilter fileFilter = new BotFileFilter();
-    private static WatchDir watcher;
 
+    private final BotFileFilter robotFileFilter = new BotFileFilter();
     private final TreeItem<Pair<File, String>> root = new TreeItem<>(new Pair<>(new File("."), "Projects"));
     private FXController controller;
 
@@ -280,7 +273,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         RenameDialog dlg = new RenameDialog(getCurrentItem());
         dlg.showAndWait();
         String newName = getCurrentItem().getValue().getValue();
-        if (oldName != newName) {// name has changed
+        if (!oldName.equals(newName)) {// name has changed
             if (orgTab != null) {// if tab with the org file is opened then close it and open new one
                 Tab selectedTab = controller.getSelectedTab();
                 if (orgTab == selectedTab) {
@@ -463,6 +456,8 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
                 });
     }
 
+    /* Projects */
+
     private void loadProjects() {
         Platform.runLater(() -> {
             List<ProjectSettings> projects = settings.project().getAll();
@@ -470,7 +465,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
                 disableAllButtons(true);
                 return;
             }
-            ;
+
             projects.forEach(this::addProject);
             if (settings.simple().get(Settings.LICENSE, Settings.License) == null && new File(DEFAULT_PROJECT_PATH).exists()) {
                 newProject(DEFAULT_PROJECT_NAME, DEFAULT_PROJECT_PATH, "");
@@ -553,13 +548,17 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         select(projectNode);
     }
 
+    /* End of projects */
+
+    /* Selection of TreeItems */
+
     /**
      * Selects an item in the treeview corresponding to given a path.
      *
-     * @param path the path of the item to select
+     * @param path The path of the item to select.
      */
     public void select(final String path) {
-        select(findItemByPath(root, path));
+        select(path != null ? findItemByPath(root, path) : null);
     }
 
     private TreeItem<Pair<File, String>> findItemByPath(final TreeItem<Pair<File, String>> parent, final String path) {
@@ -578,34 +577,18 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
     }
 
     /**
-     * Refreshes the selection in the treeview.
+     * Select an item from the treeview.
      *
-     * @param item the clicked item
+     * @param item The item to select.
      */
     public void select(final TreeItem<Pair<File, String>> item) {
+        trvProjects.getSelectionModel().clearSelection();
         if (item != null) {
-            trvProjects.getSelectionModel().clearSelection();
             trvProjects.getSelectionModel().select(item);
-            trvProjects.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                if (observable.getValue() != null) {
-                    controller.disableNewFileButton(false);
-                    controller.disableOpenFileButton(false);
-                } else {
-                    controller.disableNewFileButton(true);
-                    controller.disableOpenFileButton(true);
-                }
-            });
         }
     }
 
-    /**
-     * Gets the selectionmodel from the treeview.
-     *
-     * @return the selectionmodel
-     */
-    public MultipleSelectionModel<TreeItem<Pair<File, String>>> getSelectionModel() {
-        return trvProjects.getSelectionModel();
-    }
+    /* End of selection. */
 
     /**
      * Called when the outside change to the robot file has been done
@@ -636,18 +619,15 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         tab.requestFocus();
 
         // This must be done in the FX application thread.
-        final Runnable showDialog = new Runnable() {
-            @Override
-            public void run() {
-                // Create and show an alert dialog saying the content has been changed.
-                AlertDialog alert = new AlertDialog(Alert.AlertType.WARNING, "Robot file content change",
-                        "The robot file has been modified outside the editor.", "Do you want reload the robot file?",
-                        ButtonType.YES, ButtonType.NO);
+        final Runnable showDialog = () -> {
+            // Create and show an alert dialog saying the content has been changed.
+            AlertDialog alert = new AlertDialog(Alert.AlertType.WARNING, "Robot file content change",
+                    "The robot file has been modified outside the editor.", "Do you want reload the robot file?",
+                    ButtonType.YES, ButtonType.NO);
 
-                final Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.YES) {
-                    tab.reload();
-                }
+            final Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.YES) {
+                tab.reload();
             }
         };
         Platform.runLater(showDialog);
@@ -697,7 +677,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
     /**
      * Gets the first project node above the childItem.
      *
-     * @param childItem
+     * @param childItem The childItem to find the project for.
      * @return the project node
      */
     public TreeItem<Pair<File, String>> getProject(final TreeItem<Pair<File, String>> childItem) {
@@ -726,7 +706,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
     /**
      * Gets the project path of a node.
      *
-     * @param file
+     * @param file The file to get the project path for.
      * @return The project path if it exists
      */
     public Optional<String> getProjectPath(final File file) {
@@ -780,10 +760,6 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         private boolean isFirstTimeChildren = true;
         private boolean isFirstTimeLeaf = true;
 
-        /**
-         * @param file
-         * @param name
-         */
         public ProjectTreeItem(final File file, final String name) {
             super(new Pair<>(file, name));
         }
