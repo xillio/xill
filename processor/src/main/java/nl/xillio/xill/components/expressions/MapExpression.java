@@ -33,11 +33,20 @@ public class MapExpression implements Processable, FunctionParameterExpression {
 	@SuppressWarnings("unchecked")
 	@Override
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-		List<MetaExpression> listResults = new ArrayList<>();
-		LinkedHashMap<String, MetaExpression> objectResults = new LinkedHashMap<>();
-
 		// Call the function for all arguments
 		MetaExpression result = argument.process(debugger).get();
+
+		try {
+			result.registerReference();
+			return process(result, debugger);
+		} finally {
+			result.releaseReference();
+		}
+	}
+
+	private InstructionFlow<MetaExpression> process(MetaExpression result, Debugger debugger){
+		List<MetaExpression> listResults = new ArrayList<>();
+		LinkedHashMap<String, MetaExpression> objectResults = new LinkedHashMap<>();
 
 		switch (result.getType()) {
 			case ATOMIC:
@@ -58,7 +67,6 @@ public class MapExpression implements Processable, FunctionParameterExpression {
 				return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(objectResults));
 			default:
 				throw new NotImplementedException("This MetaExpression has not been implemented yet");
-
 		}
 	}
 

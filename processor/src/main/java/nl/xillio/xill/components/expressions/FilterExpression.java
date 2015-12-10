@@ -32,17 +32,25 @@ public class FilterExpression implements Processable, FunctionParameterExpressio
 	@SuppressWarnings("unchecked")
 	@Override
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-		List<MetaExpression> listResults = new ArrayList<>();
-		LinkedHashMap<String, MetaExpression> objectResults = new LinkedHashMap<>();
-
 		// Call the function for the argument
 		MetaExpression result = argument.process(debugger).get();
+
+		try {
+			result.registerReference();
+			return process(result, debugger);
+		} finally {
+			result.releaseReference();
+		}
+	}
+
+	private InstructionFlow<MetaExpression> process(MetaExpression result, Debugger debugger){
+		List<MetaExpression> listResults = new ArrayList<>();
+		LinkedHashMap<String, MetaExpression> objectResults = new LinkedHashMap<>();
 
 		switch (result.getType()) {
 			case ATOMIC:
 				// Process the one argument
-				MetaExpression expressionValue = functionDeclaration.run(debugger, Arrays.asList(result)).get();
-				if (expressionValue.getBooleanValue()) {
+				if (functionDeclaration.run(debugger, Arrays.asList(result)).get().getBooleanValue()) {
 					listResults.add(result);
 					return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(listResults));
 				} else {
@@ -51,8 +59,7 @@ public class FilterExpression implements Processable, FunctionParameterExpressio
 			case LIST:
 				// Pass every argument
 				for (MetaExpression expression : (List<MetaExpression>) result.getValue()) {
-					MetaExpression value = functionDeclaration.run(debugger, Arrays.asList(expression)).get();
-					if (value.getBooleanValue()) {
+					if (functionDeclaration.run(debugger, Arrays.asList(expression)).get().getBooleanValue()) {
 						listResults.add(expression);
 					}
 				}
@@ -64,9 +71,11 @@ public class FilterExpression implements Processable, FunctionParameterExpressio
 					MetaExpression value = functionDeclaration.run(debugger,
 							Arrays.asList(ExpressionBuilderHelper.fromValue(expression.getKey()), expression.getValue()))
 							.get();
+					value.registerReference();
 					if (value.getBooleanValue()) {
 						objectResults.put(expression.getKey(), expression.getValue());
 					}
+					value.releaseReference();
 				}
 				return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(objectResults));
 			default:
