@@ -30,10 +30,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Pair;
 import me.biesaart.utils.FileUtils;
@@ -104,29 +101,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
             LOGGER.error("IOException when creating the WatchDir.", e);
         }
 
-        trvProjects.setCellFactory(treeView -> new TreeCell<Pair<File, String>>() {
-            @Override
-            protected void updateItem(final Pair<File, String> pair, final boolean empty) {
-                super.updateItem(pair, empty);
-
-                if (pair == null || pair.getValue() == null) {
-                    setText("");
-                    return;
-                }
-
-                setText(pair.getValue());
-
-                setOnMouseClicked(event -> {
-                    // Double click
-                    if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() > 1) {
-                        if (pair.getKey() != null && pair.getKey().exists() && pair.getKey().isFile()) {
-                            // Open new tab from file
-                            controller.openFile(pair.getKey());
-                        }
-                    }
-                });
-            }
-        });
+        trvProjects.setCellFactory(treeView -> new CustomTreeCell());
 
         // Add event listeners.
         this.addEventFilter(KeyEvent.KEY_PRESSED, this);
@@ -170,25 +145,26 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 
     private void cut() {
         copy = false;
-        getBulkFiles();
+        bulkFiles = getAllCurrentFiles();
     }
 
     private void copy() {
         copy = true;
-        getBulkFiles();
-    }
-
-    private void getBulkFiles() {
-        bulkFiles = getAllCurrentItems().stream().map(t -> t.getValue().getKey()).collect(Collectors.toList());
+        bulkFiles = getAllCurrentFiles();
     }
 
     private void paste() {
+        paste(getCurrentItem().getValue().getKey(), bulkFiles);
+        // If the files were moved (not copied), clear the bulk files.
+        if (!copy) {
+            bulkFiles = null;
+        }
+    }
+    protected void paste(File pasteLoc, List<File> files) {
         // Get the directory to paste in.
-        File pasteLoc = getCurrentItem().getValue().getKey();
         final File destDir = pasteLoc.isDirectory() ? pasteLoc : pasteLoc.getParentFile();
 
-
-        for (File oldFile : bulkFiles) {
+        for (File oldFile : files) {
             // Check if the file already exists.
             File destFile = new File(destDir, oldFile.getName());
             if (destFile.exists()) {
@@ -203,6 +179,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
                 if (result.isPresent() && result.get() == ButtonType.CANCEL) {
                     break;
                 }
+                continue;
             }
 
             try {
@@ -221,13 +198,18 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
                     }
                 }
             } catch (IOException e) {
-                LOGGER.error("IOException while moving robot files.", e);
-            }
-        }
+                // Show the error.
+                LOGGER.error("IOException while moving files.", e);
+                AlertDialog error = new AlertDialog(Alert.AlertType.ERROR, "Error while pasting files.", "",
+                        "An error occurred while pasting files. Press OK to continue or Cancel to abort.\n" + e.getMessage(),
+                        ButtonType.OK, ButtonType.CANCEL);
+                final Optional<ButtonType> result = error.showAndWait();
 
-        // If the files were moved (not copied), clear the bulk files.
-        if (!copy) {
-            bulkFiles = null;
+                // If cancel was pressed, abort.
+                if (result.isPresent() && result.get() == ButtonType.CANCEL) {
+                    break;
+                }
+            }
         }
     }
 
@@ -674,6 +656,10 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         return trvProjects.getSelectionModel().getSelectedItems();
     }
 
+    public List<File> getAllCurrentFiles() {
+        return getAllCurrentItems().stream().map(t -> t.getValue().getKey()).collect(Collectors.toList());
+    }
+
     /**
      * Gets the first project node above the childItem.
      *
@@ -889,5 +875,74 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
      */
     public int getProjectsCount() {
         return settings.project().getAll().size();
+    }
+
+    /**
+     * A custom tree cell which opens a robot tab on double-click and supports drag&drop.
+     */
+    private class CustomTreeCell extends TreeCell<Pair<File, String>> implements EventHandler<Event> {
+
+        public CustomTreeCell() {
+            this.setOnDragDetected(this);
+            this.setOnDragOver(this);
+            this.setOnDragDropped(this);
+        }
+
+        @Override
+        protected void updateItem(final Pair<File, String> pair, final boolean empty) {
+            super.updateItem(pair, empty);
+
+            // Check if the pair or the string is null, set the text.
+            if (pair == null || pair.getValue() == null) {
+                setText("");
+                return;
+            }
+            this.setText(pair.getValue());
+
+            setOnMouseClicked(event -> {
+                // Double click.
+                if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() > 1) {
+                    if (pair.getKey() != null && pair.getKey().exists() && pair.getKey().isFile()) {
+                        // Open new tab from file.
+                        controller.openFile(pair.getKey());
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void handle(Event event) {
+            if (event instanceof MouseEvent) {
+                MouseEvent mouseEvent = (MouseEvent) event;
+
+                if (mouseEvent.getEventType() == MouseEvent.DRAG_DETECTED) {
+                    // Start dragging.
+                    Dragboard board = this.startDragAndDrop(TransferMode.MOVE);
+
+                    // Set the clipboard content.
+                    ClipboardContent content = new ClipboardContent();
+                    content.putFiles(getAllCurrentFiles());
+                    board.setContent(content);
+
+                    event.consume();
+                }
+            } else if (event instanceof DragEvent) {
+                DragEvent dragEvent = (DragEvent) event;
+
+                if (dragEvent.getEventType() == DragEvent.DRAG_OVER) {
+                    // Dragging over.
+                    dragEvent.acceptTransferModes(TransferMode.MOVE);
+                } else if (dragEvent.getEventType() == DragEvent.DRAG_DROPPED) {
+                    // Dropping.
+                    Dragboard board = dragEvent.getDragboard();
+                    if (board.hasFiles()) {
+                        paste(this.getItem().getKey(), board.getFiles());
+                        dragEvent.setDropCompleted(true);
+                    }
+
+                    event.consume();
+                }
+            }
+        }
     }
 }
