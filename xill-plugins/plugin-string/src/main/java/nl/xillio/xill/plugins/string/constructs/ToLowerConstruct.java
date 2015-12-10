@@ -28,6 +28,6 @@ public class ToLowerConstruct extends Construct {
 
 	static MetaExpression process(final MetaExpression string, final StringUtilityService stringService) {
 
-		return fromValue(stringService.toLowerCase(string.getStringValue()));
+		return string.isNull() ? NULL : fromValue(stringService.toLowerCase(string.getStringValue()));
 	}
 }

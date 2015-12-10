@@ -24,8 +24,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 
@@ -38,6 +36,8 @@ public class SettingsDialog extends FXMLDialog {
 
     private static final Logger LOGGER = LogManager.getLogger(SettingsDialog.class);
 
+    @FXML
+    private TabPane tpnSettings;
     @FXML
     private TextField tfprojectfolder;
     @FXML
@@ -417,6 +417,10 @@ public class SettingsDialog extends FXMLDialog {
 
     public void setOnApply(ApplyHandler applyHandler) {
         this.onApply = applyHandler;
+    }
+
+    public void selectLicenceTab() {
+        tpnSettings.getSelectionModel().select(licenseTab);
     }
 
     private class ValidationException extends Exception {
