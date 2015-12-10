@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 import java.util.LinkedHashMap;
 
 import nl.xillio.xill.TestUtils;
-import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

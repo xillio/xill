@@ -19,53 +19,63 @@ import java.util.Map;
  */
 public class FromList implements Processable {
 
-	private final Processable list;
-	private final Processable index;
+    private final Processable list;
+    private final Processable index;
 
-	/**
-	 * @param list
-	 * @param index
-	 */
-	public FromList(final Processable list, final Processable index) {
-		this.list = list;
-		this.index = index;
-	}
+    public FromList(final Processable list, final Processable index) {
+        this.list = list;
+        this.index = index;
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-		MetaExpression listMeta = this.list.process(debugger).get();
-		MetaExpression indexMeta = this.index.process(debugger).get();
-		if(indexMeta.getType() != ExpressionDataType.ATOMIC || indexMeta.isNull()){
-			return InstructionFlow.doResume(ExpressionBuilderHelper.NULL);
-		}
-		switch (listMeta.getType()) {
-			case LIST:
-				try {
-					if(Double.isNaN(indexMeta.getNumberValue().doubleValue())){
-						throw new RobotRuntimeException("The list does not contain any element called '" + indexMeta.getStringValue() + "' (a list does not have named elements).");
-					}
-					MetaExpression result = ((List<MetaExpression>) listMeta.getValue()).get(indexMeta.getNumberValue().intValue());
-					return InstructionFlow.doResume(result);
-				} catch (IndexOutOfBoundsException e) {
-					return InstructionFlow.doResume(ExpressionBuilderHelper.NULL);
-				}
-			case OBJECT:
-				MetaExpression result = ((Map<String, MetaExpression>) listMeta.getValue()).get(indexMeta.getStringValue());
-				if (result == null) {
-					return InstructionFlow.doResume(ExpressionBuilderHelper.NULL);
-				}
-				return InstructionFlow.doResume(result);
-			case ATOMIC:
-				throw new RobotRuntimeException("Cannot get member of ATOMIC value.");
-			default:
-				throw new NotImplementedException("This type has not been implemented.");
-		}
-	}
+    @Override
+    public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 
-	@Override
-	public Collection<Processable> getChildren() {
-		return Arrays.asList(list, index);
-	}
+        MetaExpression listMeta = this.list.process(debugger).get();
+        MetaExpression indexMeta = this.index.process(debugger).get();
+        try {
+            listMeta.registerReference();
+            indexMeta.registerReference();
+            return process(listMeta, indexMeta, debugger);
+        } finally {
+            listMeta.releaseReference();
+            indexMeta.releaseReference();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private InstructionFlow<MetaExpression> process(MetaExpression listMeta, MetaExpression indexMeta, Debugger debugger) {
+
+        if (indexMeta.getType() != ExpressionDataType.ATOMIC || indexMeta.isNull()) {
+            return InstructionFlow.doResume(ExpressionBuilderHelper.NULL);
+        }
+
+        switch (listMeta.getType()) {
+            case LIST:
+                try {
+                    if (Double.isNaN(indexMeta.getNumberValue().doubleValue())) {
+                        throw new RobotRuntimeException("The list does not contain any element called '" + indexMeta.getStringValue() + "' (a list does not have named elements).");
+                    }
+                    MetaExpression result = ((List<MetaExpression>) listMeta.getValue()).get(indexMeta.getNumberValue().intValue());
+                    return InstructionFlow.doResume(result);
+                } catch (IndexOutOfBoundsException e) {
+                    return InstructionFlow.doResume(ExpressionBuilderHelper.NULL);
+                }
+            case OBJECT:
+                MetaExpression result = ((Map<String, MetaExpression>) listMeta.getValue()).get(indexMeta.getStringValue());
+                if (result == null) {
+                    return InstructionFlow.doResume(ExpressionBuilderHelper.NULL);
+                }
+                return InstructionFlow.doResume(result);
+            case ATOMIC:
+                throw new RobotRuntimeException("Cannot get member of ATOMIC value.");
+            default:
+                throw new NotImplementedException("This type has not been implemented.");
+        }
+    }
+
+    @Override
+    public Collection<Processable> getChildren() {
+        return Arrays.asList(list, index);
+    }
 
 }

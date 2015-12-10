@@ -34,10 +34,16 @@ abstract class BinaryNumberComparisonOperator implements Processable {
     }
 
     protected InstructionFlow<MetaExpression> process(MetaExpression left, MetaExpression right) {
+        left.registerReference();
+        right.registerReference();
+
         Number leftValue = left.getNumberValue();
         Number rightValue = right.getNumberValue();
         int comparisonResult = MathUtils.compare(leftValue, rightValue);
         MetaExpression result = ExpressionBuilder.fromValue(translate(comparisonResult));
+
+        left.releaseReference();
+        right.releaseReference();
         return InstructionFlow.doResume(result);
     }
 
