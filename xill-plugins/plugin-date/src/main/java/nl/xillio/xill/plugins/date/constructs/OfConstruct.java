@@ -29,6 +29,7 @@ public class OfConstruct extends BaseDateConstruct {
 		return new ConstructProcessor((a) -> process(a, getDateService()), args);
 	}
 
+	@SuppressWarnings("squid:S1166")
 	static MetaExpression process(final MetaExpression[] input, DateService dateService) {
 		Date date;
 		ZoneId zone;
