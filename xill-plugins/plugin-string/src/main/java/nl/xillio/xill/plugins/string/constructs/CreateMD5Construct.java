@@ -29,6 +29,7 @@ public class CreateMD5Construct extends Construct {
         		new Argument("value", ATOMIC));
     }
 
+    @SuppressWarnings("squid:S1166")
     static MetaExpression process(final MetaExpression value, final StringUtilityService stringService) {
         assertNotNull(value, "value");
         try {
