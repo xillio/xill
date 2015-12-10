@@ -1,5 +1,8 @@
 package nl.xillio.migrationtool.gui;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import static java.nio.file.StandardWatchEventKinds.*;
 
@@ -26,6 +29,8 @@ public class WatchDir implements Runnable {
 	private volatile Map<FolderListener, List<Path>> listeners;
 
 	private boolean stop = false;
+
+	private static final Logger LOGGER = LogManager.getLogger(WatchDir.class);
 
 	/**
 	 * Creates a WatchService and registers the given directory
@@ -56,7 +61,9 @@ public class WatchDir implements Runnable {
 		stop = true;
 		try {
 			watcher.close();
-		} catch (IOException e) {}
+		} catch (IOException e) {
+			LOGGER.error(e.getMessage(), e);
+		}
 	}
 
 	private void fireEvent(final Path dir, final Path child, final WatchEvent<Path> event) {
@@ -98,6 +105,7 @@ public class WatchDir implements Runnable {
 		});
 	}
 
+	@SuppressWarnings("squid:S1166")
 	@Override
 	public void run() {
 		while (!stop) {
@@ -138,7 +146,9 @@ public class WatchDir implements Runnable {
 						if (Files.isDirectory(child, NOFOLLOW_LINKS)) {
 							registerAll(child);
 						}
-					} catch (IOException x) {}
+					} catch (IOException x) {
+						LOGGER.error(x.getMessage());
+					}
 				}
 			}
 

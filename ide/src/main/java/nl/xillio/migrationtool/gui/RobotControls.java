@@ -110,6 +110,7 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 	/**
 	 * Start/Resume the robot
 	 */
+	@SuppressWarnings("squid:S1166")
 	public void start() {
 		if (running) {
 			continu();

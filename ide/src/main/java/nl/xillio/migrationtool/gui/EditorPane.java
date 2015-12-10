@@ -48,7 +48,7 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 		SAVED
 	}
 
-	private static final Logger log = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger(EditorPane.class);
 
 	@FXML
 	private Button btnUndo;
@@ -115,7 +115,7 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 		try {
 			getChildren().add(Loader.load(getClass().getResource("/fxml/EditorPane.fxml"), this));
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		}
 
 		editor = new AceEditor((WebView) lookup("#webCode"));
@@ -185,7 +185,7 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 				}
 				break;
 			default:
-				log.debug("Unimplemented loglevel: " + message.getLevel());
+				LOGGER.debug("Unimplemented loglevel: " + message.getLevel());
 				break;
 		}
 	}
