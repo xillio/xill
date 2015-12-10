@@ -50,6 +50,7 @@ public class FormatConstruct extends Construct {
 			new Argument("values", LIST));
 	}
 
+	@SuppressWarnings("squid:S1166")
 	static MetaExpression process(final MetaExpression textVar, final MetaExpression valueVar, final RegexService regexService, final StringUtilityService stringService) {
 		assertNotNull(textVar, "text");
 
