@@ -11,6 +11,8 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This {@link Instruction} represents the end of a value holding scope.
@@ -18,6 +20,8 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 public class ReturnInstruction extends Instruction {
 
 	private final Processable value;
+
+	private static final Logger LOGGER = LogManager.getLogger(ReturnInstruction.class);
 
 	/**
 	 * Create a new {@link ReturnInstruction}
@@ -35,6 +39,7 @@ public class ReturnInstruction extends Instruction {
 		this(null);
 	}
 
+	@SuppressWarnings("squid:S1166")
 	@Override
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		if (value == null) {

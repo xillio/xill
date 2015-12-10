@@ -54,6 +54,7 @@ public class CallbotExpression implements Processable {
 		resolver = new FileResolverImpl();
 	}
 
+	@SuppressWarnings("squid:S1166")
 	@Override
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		MetaExpression pathExpression = path.process(debugger).get();

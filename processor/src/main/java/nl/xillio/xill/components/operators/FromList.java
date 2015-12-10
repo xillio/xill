@@ -42,7 +42,7 @@ public class FromList implements Processable {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "squid:S1166" })
     private InstructionFlow<MetaExpression> process(MetaExpression listMeta, MetaExpression indexMeta, Debugger debugger) {
 
         if (indexMeta.getType() != ExpressionDataType.ATOMIC || indexMeta.isNull()) {
