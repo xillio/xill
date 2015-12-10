@@ -538,7 +538,7 @@ public abstract class MetaExpression implements Expression, Processable {
         try {
             metadataPool.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
     }
 

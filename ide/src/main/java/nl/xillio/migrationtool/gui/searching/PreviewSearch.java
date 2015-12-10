@@ -9,6 +9,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.util.Pair;
 import nl.xillio.xill.api.preview.Searchable;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,8 @@ import java.util.regex.PatternSyntaxException;
  * @author Zbynek Hochmann
  */
 public class PreviewSearch implements Searchable {
+
+    private static final Logger LOGGER = LogManager.getLogger(PreviewSearch.class);
 
     private class SearchTextOccurrence {
         private final int start;
@@ -70,6 +74,7 @@ public class PreviewSearch implements Searchable {
         this.apnPreviewPane = apnPreviewPane;
     }
 
+    @SuppressWarnings("squid:S1166")
     @Override
     public void searchPattern(String pattern, boolean caseSensitive) {
         // Clear selection

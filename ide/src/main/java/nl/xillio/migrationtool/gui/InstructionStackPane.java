@@ -23,11 +23,15 @@ import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.events.RobotPausedAction;
 import nl.xillio.xill.api.events.RobotStoppedAction;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This pane can show the current position in the stack
  */
 public class InstructionStackPane extends AnchorPane implements RobotTabComponent, ChangeListener<Instruction> {
+
+	private static final Logger LOGGER = LogManager.getLogger(InstructionStackPane.class);
 	private static final int MAX_STACK = 40;
 	@FXML
 	private ComboBox<Instruction> cbxStackPos;
@@ -41,7 +45,7 @@ public class InstructionStackPane extends AnchorPane implements RobotTabComponen
 			Node ui = loader.load();
 			getChildren().add(ui);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		}
 
 		cbxStackPos.getSelectionModel().selectedItemProperty().addListener(this);

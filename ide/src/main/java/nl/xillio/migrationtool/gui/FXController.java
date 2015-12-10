@@ -46,7 +46,6 @@ import java.util.stream.Collectors;
  * This class is the global controller for the application
  */
 public class FXController implements Initializable, EventHandler<Event> {
-    private static final Logger log = LogManager.getLogger(FXController.class);
 
     /**
      * Instance of settings handler
@@ -404,7 +403,7 @@ public class FXController implements Initializable, EventHandler<Event> {
     public RobotTab doOpenFile(final File newfile) {
         // Skip if the file doesn't exist
         if (!newfile.exists() || !newfile.isFile()) {
-            log.error("Failed to open file `" + newfile.getAbsolutePath() + "`. File not found.");
+            LOGGER.error("Failed to open file `" + newfile.getAbsolutePath() + "`. File not found.");
             return null;
         }
 
@@ -423,7 +422,7 @@ public class FXController implements Initializable, EventHandler<Event> {
                     return editor;
                 }
             } catch (IOException e) {
-                log.error("Error while opening file: " + e.getMessage());
+                LOGGER.error("Error while opening file: " + e.getMessage(), e);
                 return null;
             }
         }
@@ -598,7 +597,7 @@ public class FXController implements Initializable, EventHandler<Event> {
             try {
                 plugin.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage(), e);
             }
         }
 
