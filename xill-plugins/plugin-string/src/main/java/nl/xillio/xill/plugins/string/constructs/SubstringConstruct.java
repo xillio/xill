@@ -38,6 +38,7 @@ public class SubstringConstruct extends Construct {
 			new Argument("end", fromValue(0), ATOMIC));
 	}
 
+	@SuppressWarnings("squid:S1166")
 	static MetaExpression process(final MetaExpression string, final MetaExpression startVar, final MetaExpression endVar, final StringUtilityService stringService) {
 		assertNotNull(string, "string");
 		assertNotNull(startVar, "start");
