@@ -38,6 +38,7 @@ public class Base64DecodeConstruct extends Construct {
 			new Argument("filename", ATOMIC));
 	}
 
+	@SuppressWarnings("squid:S1166")
 	static MetaExpression process(final MetaExpression contentVar, final MetaExpression filenameVar, final StringUtilityService stringService, final UrlUtilityService urlUtilityService, final ConstructContext context) {
 
 		assertNotNull(contentVar, "content");
