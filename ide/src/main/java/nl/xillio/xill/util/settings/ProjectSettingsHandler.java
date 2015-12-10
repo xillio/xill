@@ -1,5 +1,8 @@
 package nl.xillio.xill.util.settings;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,6 +23,8 @@ public class ProjectSettingsHandler {
 
 	private ContentHandler content;
 
+	private static final Logger LOGGER = LogManager.getLogger(ProjectSettingsHandler.class);
+
 	ProjectSettingsHandler(ContentHandler content) {// Can be instantiated within package only
 		this.content = content;
 	}
@@ -38,7 +43,7 @@ public class ProjectSettingsHandler {
 
 			this.content.set(CATEGORY, itemContent, KEYNAME, project.getName());
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 
@@ -54,7 +59,7 @@ public class ProjectSettingsHandler {
 				list.add(new ProjectSettings(item.get(NAME).toString(), item.get(FOLDER).toString(), item.get(DESCRIPTION).toString()));
 			}
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			LOGGER.error(e.getMessage(), e);
 		}
 		return list;
 	}
@@ -68,7 +73,7 @@ public class ProjectSettingsHandler {
 		try {
 			this.content.delete(CATEGORY, KEYNAME, name);
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 }

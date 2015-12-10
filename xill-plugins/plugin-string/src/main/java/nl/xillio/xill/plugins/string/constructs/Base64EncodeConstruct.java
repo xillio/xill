@@ -36,6 +36,7 @@ public class Base64EncodeConstruct extends Construct {
 			new Argument("file", ATOMIC));
 	}
 
+	@SuppressWarnings("squid:S1166")
 	static MetaExpression process(final MetaExpression file, final StringUtilityService stringService, final UrlUtilityService urlUtilityService, final ConstructContext context) {
 		assertNotNull(file, "file");
 

@@ -52,6 +52,7 @@ public class XillWorkbookFactory {
 	 * @return the XillWorkbook
 	 * @throws InvalidObjectException when the file cannot be opened
 	 */
+	@SuppressWarnings("squid:S1166")
 	Workbook makeLegacyWorkbook(FileInputStream stream) throws InvalidObjectException {
 		HSSFWorkbook workbook;
 		try {
@@ -69,6 +70,7 @@ public class XillWorkbookFactory {
 	 * @return the XillWorkbook
 	 * @throws InvalidObjectException when the file cannot be loaded
 	 */
+	@SuppressWarnings("squid:S1166")
 	Workbook makeModernWorkbook(FileInputStream stream) throws InvalidObjectException {
 		XSSFWorkbook workbook;
 		try {

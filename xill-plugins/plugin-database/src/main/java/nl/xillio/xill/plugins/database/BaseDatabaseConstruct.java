@@ -86,6 +86,7 @@ public abstract class BaseDatabaseConstruct extends Construct {
 	 * @return
 	 *         The last used ConnectionMetadata.
 	 */
+	@SuppressWarnings("squid:S1166")
 	public static ConnectionMetadata getLastConnection(RobotID id) {
 		// Determine that there is a connection that can be used
 		if (!lastConnections.containsKey(id)) {
@@ -110,6 +111,7 @@ public abstract class BaseDatabaseConstruct extends Construct {
 	/**
 	 * Check for validity of all lastConnections and remove the invalid ones
 	 */
+	@SuppressWarnings("squid:S1166")
 	public static void cleanLastConnections() {
 		for (Entry<RobotID, ConnectionMetadata> entry : new ArrayList<>(lastConnections.entrySet())) {
 			Connection connection = entry.getValue().getConnection();

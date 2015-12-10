@@ -36,6 +36,7 @@ public class ContainsConstruct extends Construct {
 	 *        the value that is going to be checked.
 	 * @return true if the list or object contains the value.
 	 */
+	@SuppressWarnings("squid:S1166")
 	static MetaExpression process(final MetaExpression input, final MetaExpression value) {
 		boolean result = false;
 		switch (input.getType()) {

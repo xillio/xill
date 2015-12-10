@@ -1,5 +1,8 @@
 package nl.xillio.xill.util;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -20,6 +23,7 @@ import java.util.zip.ZipInputStream;
  */
 public class IOUtil {
 	private static Map<String, List<URL>> urlCache = new Hashtable<>();
+	private static final Logger LOGGER = LogManager.getLogger(IOUtil.class);
 
 	/**
 	 * Returns a list of files inside the application's jar file, or if there is none, from the filesystem
@@ -30,6 +34,7 @@ public class IOUtil {
 	 *        The folder to look for
 	 * @return A list of filenames; directories are skipped
 	 */
+	@SuppressWarnings("squid:S1166")
 	public static List<URL> readFolder(final Class<?> clazz, final String folder) {
 		// The urlCache dramatically increases performance of jar-files, as they only have to be scanned once for each folder, instead of with every request
 		if (urlCache.containsKey(folder)) {
@@ -55,7 +60,9 @@ public class IOUtil {
 						return result;
 					})
 					.filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
-			} catch (Exception e) {}
+			} catch (Exception e) {
+				LOGGER.error(e.getMessage(), e);
+			}
 		}
 		urlCache.put(folder, urls);
 		return urls;
@@ -68,6 +75,7 @@ public class IOUtil {
 	 *        The folder to be looked up
 	 * @return A list of filenames; directories are skipped
 	 */
+	@SuppressWarnings("squid:S1166")
 	private static List<URL> readJarFolder(final Class<?> clazz, final String folder) {
 		CodeSource src = clazz.getProtectionDomain().getCodeSource();
 		List<URL> list = new ArrayList<>();
@@ -84,7 +92,6 @@ public class IOUtil {
 					}
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
 				return null;
 			}
 		} else {
@@ -108,7 +115,7 @@ public class IOUtil {
 				.filter(path -> path.endsWith("Construct.class"))
 				.collect(Collectors.toList());
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		}
 		return constructNames;
 	}

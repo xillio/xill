@@ -36,6 +36,7 @@ public class AllMatchesConstruct extends Construct {
                 new Argument("timeout", fromValue(RegexConstruct.REGEX_TIMEOUT), ATOMIC));
     }
 
+    @SuppressWarnings("squid:S1166")
     static MetaExpression process(final MetaExpression textVar, final MetaExpression regexVar, final MetaExpression timeoutVar,
                                   final RegexService regexService) {
 

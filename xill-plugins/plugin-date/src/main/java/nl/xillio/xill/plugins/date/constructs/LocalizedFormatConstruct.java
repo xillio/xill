@@ -33,6 +33,7 @@ public class LocalizedFormatConstruct extends BaseDateConstruct {
 						new Argument("timestyle", NULL));
 	}
 
+	@SuppressWarnings("squid:S1166")
 	static MetaExpression process(final MetaExpression dateVar,
 					final MetaExpression localeVar, final MetaExpression dateStyleVar, final MetaExpression timeStyleVar, DateService dateService) {
 

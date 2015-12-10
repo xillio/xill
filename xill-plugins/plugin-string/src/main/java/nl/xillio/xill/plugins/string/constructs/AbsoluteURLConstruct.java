@@ -28,6 +28,7 @@ public class AbsoluteURLConstruct extends Construct {
                 new Argument("relativeUrl", ATOMIC));
     }
 
+    @SuppressWarnings("squid:S1166")
     static MetaExpression process(final MetaExpression pageUrlVar, final MetaExpression relativeUrlVar, final UrlUtilityService urlUtilityService) {
         String pageUrl = pageUrlVar.getStringValue().trim();
         String relativeUrl = relativeUrlVar.getStringValue().trim();

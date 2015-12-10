@@ -27,7 +27,7 @@ public class ChangeConstruct extends BaseDateConstruct {
 		return new ConstructProcessor((date, change) -> process(context.getRootLogger(), date, change, getDateService()), new Argument("date"), new Argument("change", OBJECT));
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "squid:S1166" })
 	static MetaExpression process(final Logger logger, final MetaExpression dateVar, final MetaExpression changeVar, DateService dateService) {
 		Date date = getDate(dateVar, "date");
 

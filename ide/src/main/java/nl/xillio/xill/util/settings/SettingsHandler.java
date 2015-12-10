@@ -1,5 +1,8 @@
 package nl.xillio.xill.util.settings;
 import nl.xillio.util.XillioHomeFolder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.File;
 
 /**
@@ -17,6 +20,8 @@ public class SettingsHandler {
     private SimpleVariableHandler simple;
     private ProjectSettingsHandler project;
 
+    private static final Logger LOGGER = LogManager.getLogger(SettingsHandler.class);
+
     /**
      * @return The instance of settings handler
      */
@@ -30,7 +35,7 @@ public class SettingsHandler {
         try {
             this.content.init();
         } catch (Exception e) {
-            System.err.println("Cannot initialize settings handler for reason: " + e.getMessage());
+            LOGGER.error("Cannot initialize settings handler for reason: " + e.getMessage(), e);
         }
 
         this.simple = new SimpleVariableHandler(this.content);
@@ -60,7 +65,7 @@ public class SettingsHandler {
         try {
             this.content.setManualCommit(manual);
         } catch (Exception e) {
-            System.err.println("Cannot set manual commit for reason: " + e.getMessage());
+            LOGGER.error("Cannot set manual commit for reason: " + e.getMessage(), e);
         }
     }
 
@@ -71,7 +76,7 @@ public class SettingsHandler {
         try {
             this.content.commit();
         } catch (Exception e) {
-            System.err.println("Cannot do commit for reason: " + e.getMessage());
+            LOGGER.error("Cannot do commit for reason: " + e.getMessage(), e);
         }
     }
 }

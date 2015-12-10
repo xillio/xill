@@ -48,6 +48,7 @@ public class DownloadConstruct extends PhantomJSConstruct {
      * @return
      *        null variable
      */
+    @SuppressWarnings("squid:S1166")
     public static MetaExpression process(final MetaExpression urlVar, final MetaExpression fileNameVar, final MetaExpression webContextVar, final MetaExpression timeoutVar, final WebService webService, final ConstructContext context) {
 
         String url = urlVar.getStringValue();

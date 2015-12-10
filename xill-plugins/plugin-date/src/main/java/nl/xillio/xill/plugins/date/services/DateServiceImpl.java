@@ -35,6 +35,7 @@ public class DateServiceImpl implements DateService, DateFactory {
         return new nl.xillio.xill.plugins.date.data.Date(ZonedDateTime.now());
     }
 
+    @SuppressWarnings("squid:S1166")
     @Override
     public Date constructDate(int year, int month, int day, int hour, int minute, int second, int nano, ZoneId zone) {
         return new nl.xillio.xill.plugins.date.data.Date(ZonedDateTime.of(year, month, day, hour, minute, second, nano, zone));

@@ -50,6 +50,7 @@ public class ReplaceConstruct extends Construct {
 
 	}
 
+	@SuppressWarnings("squid:S1166")
 	static MetaExpression process(final MetaExpression[] input, final RegexService regexService, final StringUtilityService stringService) {
 
 		for (int i = 0; i < 5; i++) {
