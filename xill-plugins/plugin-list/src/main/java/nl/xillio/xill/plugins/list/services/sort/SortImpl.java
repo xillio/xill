@@ -107,7 +107,7 @@ public class SortImpl implements Sort {
 		}
 
 		@Override
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings({ "unchecked", "squid:S1166" })
 		public int compare(final Object objectA, final Object objectB) {
 			int priorityA = getPriorityIndex(objectA);
 			int priorityB = getPriorityIndex(objectB);
