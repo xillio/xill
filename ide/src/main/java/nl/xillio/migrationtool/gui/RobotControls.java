@@ -252,7 +252,7 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 			RobotTab newTab = tab.getGlobalController().openFile(id.getPath());
 
 			// Wait for the editor to load
-			newTab.getEditorPane().getEditor().getOnDocumentLoaded().addListener((success) ->
+			newTab.getEditorPane().getEditor().getOnDocumentLoaded().addListener(success ->
 				// We queue this for later execution because the tab has to display before we can scroll to the right location.
 				Platform.runLater(() -> {
                     if (success) {
