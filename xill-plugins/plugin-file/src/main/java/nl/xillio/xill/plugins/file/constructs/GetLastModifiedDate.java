@@ -40,7 +40,7 @@ public class GetLastModifiedDate extends Construct {
     @Override
     public ConstructProcessor prepareProcess(final ConstructContext c) {
         return new ConstructProcessor(
-                (file) -> process(c, date, fileUtils, file),
+                file -> process(c, date, fileUtils, file),
                 new Argument("file", ATOMIC)
         );
     }
