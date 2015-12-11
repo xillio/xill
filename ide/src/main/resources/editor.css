@@ -1,10 +1,13 @@
 /* General editor css */
+
+
+
 #editor {
     margin: 0;
     position: absolute;
     top: 0;
     bottom: 0;
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas',  'source-code-pro', monospace;
+    font-family:  xilliomono, 'Ubuntu Mono', 'Consolas', 'Monaco', 'Menlo', 'source-code-pro', monospace;
     left: 0;
     right: 0;
 }
