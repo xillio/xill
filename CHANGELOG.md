@@ -1,6 +1,44 @@
 # Xill IDE - Change Log
 All notable changes to this project will be documented in this file
 
+## [3.0.23] - 11-12-2015
+### Stories done
+- CTC-1152	Excel.getCell incorrectly retrieves numbers without decimals
+- CTC-1151	Fix two inconsistent construct names
+- CTC-1149	String package should handle null as null value not as string "null"
+- CTC-1142	Extend REST return results
+- CTC-1138	Add header support to the REST plugin package
+- CTC-1137	camelCase properties of Date & Excel packages
+- CTC-1136	Improve Date.diff() help
+- CTC-1127	Rename Database.query() and Database.preparedStatement()
+- CTC-1120	index missing exception when running xill IDE
+- CTC-1116	Revise UDM transaction management
+- CTC-1115	Constructs: canRead() canWrite() canExecute() isHidden()
+- CTC-1114	Constructs: getCreationDate() getLastModifiedDate()
+- CTC-1113	Construct: File.getMimeType()
+- XSVR-18	Mail module
+- CTC-1110	Database service does not sanitize table names.
+- CTC-1105	Database.getObject does not work correctly when one of the search values is null
+- CTC-1103	Code error highlighting in includes does not work
+- CTC-1097	Notification when open robot is modfied outside of Xill
+- XSVR-15	Implement uploading a resource file through the rest api
+- CTC-1084	Construct, e.g. isNumber, that returns if a value is a number
+- CTC-1070	License expiration
+- CTC-1061	Debugger step over is skipping loops and if statements
+- XSVR-7	Implement Robot Runner
+- XSVR-4	Implement angular scheduling service
+- CTC-1037	Hotkeys to (un)comment single and multiple lines of code
+- CTC-957	Avoid "Missing EOF at 'use'" messages
+- CTC-956	Code completion for plugins
+- CTC-955	Resize help textbox
+- CTC-954	Review out of date help entries
+- CTC-921	Debugging skips lines after stepping into function
+- CTC-874	Web.download() construct
+- CTC-800	Add escape method for strings to database plug-in
+- CTC-791	Method names do not contain parameters in "see also" section of help panel
+- CTC-785	Use markdown for formatting the description
+- CTC-351	Stopping a bot that runs a query doesn't interrupt that query
+
 ## [3.0.22] - 19-11-2015
 ### Changed
 - Number/String/Boolean behaviour determines how a variable is exported.

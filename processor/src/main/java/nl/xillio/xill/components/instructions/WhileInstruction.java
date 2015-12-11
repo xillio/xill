@@ -55,8 +55,12 @@ public class WhileInstruction extends CompoundInstruction {
     private boolean check(Debugger debugger) {
         debugger.startInstruction(condition);
         InstructionFlow<MetaExpression> result = condition.process(debugger);
+        MetaExpression expression = result.get();
+        expression.registerReference();
+        boolean isValue = expression.getBooleanValue();
         debugger.endInstruction(condition, result);
-        return result.get().getBooleanValue();
+        expression.releaseReference();
+        return isValue;
     }
 
     @Override
