@@ -1,20 +1,22 @@
 package nl.xillio.xill.plugins.database.services;
 
-import java.sql.*;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import com.google.common.collect.Iterators;
-
+import nl.xillio.xill.api.components.EventEx;
 import nl.xillio.xill.plugins.database.util.StatementIterator;
 import nl.xillio.xill.plugins.database.util.Tuple;
 import nl.xillio.xill.plugins.database.util.TypeConverter;
 import nl.xillio.xill.plugins.database.util.TypeConverter.ConversionException;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.sql.*;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The base service for any databaseService.
@@ -23,6 +25,7 @@ import nl.xillio.xill.plugins.database.util.TypeConverter.ConversionException;
 public abstract class BaseDatabaseService implements DatabaseService {
 
 	private static final Pattern PARAMETER_PATTERN = Pattern.compile("(?<!\\\\):([a-zA-Z_\\d]+)");
+    private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * Cache for delimiters, prevents from constantly getting the metadata
@@ -65,8 +68,31 @@ public abstract class BaseDatabaseService implements DatabaseService {
 		return createQueryResult(stmt);
 	}
 
+    private void interruptibleExec(final PreparedStatement stmt, final EventEx<Object> interruptEvent) throws SQLException {
+        if (interruptEvent == null) {
+            stmt.execute();
+        } else {
+            Consumer<Object> stopStmt = new Consumer<Object>() {
+                @Override
+                public void accept(Object o) {
+                    try {
+                        stmt.cancel();
+                    } catch (SQLException ex) {
+                        LOGGER.warn("Cannot cancel running SQL statement!", ex);
+                    }
+                }
+            };
+            interruptEvent.addListener(stopStmt);
+            try {
+                stmt.execute();
+            } finally {
+                interruptEvent.removeListener(stopStmt);
+            }
+        }
+    }
+
 	@Override
-	public Object preparedQuery(final Connection connection, final String query, final List<LinkedHashMap<String, Object>> parameters, final int timeout) throws SQLException {
+	public Object preparedQuery(final Connection connection, final String query, final List<LinkedHashMap<String, Object>> parameters, final int timeout, final EventEx<Object> interruptEvent) throws SQLException {
 		PreparedStatement stmt = parseNamedParameters(connection, query);
 		stmt.setQueryTimeout(timeout);
 
@@ -74,11 +100,11 @@ public abstract class BaseDatabaseService implements DatabaseService {
 			if (!extractParameterNames(query).isEmpty()) {
 				throw new IllegalArgumentException("Parameters is empty for parametrised query.");
 			}
-			stmt.execute();
+            interruptibleExec(stmt, interruptEvent);
 		} else if (parameters.size() == 1) {
 			LinkedHashMap<String, Object> parameter = parameters.get(0);
 			fillStatement(parameter, stmt, 1);
-			stmt.execute();
+            interruptibleExec(stmt, interruptEvent);
 		} else {
 			// convert int[] to Integer[] to be able to create an iterator.
 			Integer[] updateCounts = ArrayUtils.toObject(executeBatch(stmt, extractParameterNames(query), parameters));
@@ -86,7 +112,7 @@ public abstract class BaseDatabaseService implements DatabaseService {
 			return (Arrays.asList(updateCounts)).iterator();
 		}
 
-		return createQueryResult(stmt);
+        return createQueryResult(stmt);
 	}
 
 	/**

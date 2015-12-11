@@ -14,7 +14,7 @@ import java.util.Collection;
  */
 public class IfInstruction extends CompoundInstruction {
 
-    private final ExpressionInstruction condition;
+    private final Processable condition;
     private final InstructionSet instructionSet;
 
     /**
@@ -24,7 +24,7 @@ public class IfInstruction extends CompoundInstruction {
      * @param instructionSet
      */
     public IfInstruction(final Processable condition, final InstructionSet instructionSet) {
-        this.condition = new ExpressionInstruction(condition);
+        this.condition = condition;
         this.instructionSet = instructionSet;
     }
 
@@ -35,10 +35,14 @@ public class IfInstruction extends CompoundInstruction {
      * @return true if and only if the condition of this statement evaluates to true
      */
     public boolean isTrue(final Debugger debugger) {
-        debugger.startInstruction(condition);
-        InstructionFlow<MetaExpression> result = condition.process(debugger);
-        debugger.endInstruction(condition, result);
-        return result.get().getBooleanValue();
+        try (ExpressionInstruction conditionInstruction = new ExpressionInstruction(condition)) {
+            conditionInstruction.setPosition(getPosition());
+            debugger.startInstruction(conditionInstruction);
+            InstructionFlow<MetaExpression> result = conditionInstruction.process(debugger);
+            result.get().registerReference();
+            debugger.endInstruction(conditionInstruction, result);
+            return result.get().getBooleanValue();
+        }
     }
 
     @Override
@@ -49,7 +53,6 @@ public class IfInstruction extends CompoundInstruction {
     @Override
     public void setPosition(CodePosition position) {
         super.setPosition(position);
-        condition.setPosition(position);
     }
 
     @Override

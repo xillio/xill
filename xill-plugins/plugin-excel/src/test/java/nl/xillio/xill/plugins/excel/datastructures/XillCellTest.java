@@ -65,12 +65,11 @@ public class XillCellTest {
 		assertEquals(d.compareTo(resultDate), 0);
 
 		doReturn(false).when(testCell).isDateFormatted();
-		Double num = 2.0;
-		DataFormatter df = mock(DataFormatter.class);
+		Double num = 2.5;
 
-		when(df.formatCellValue(cell)).thenReturn("2.0");
-		when(testCell.getValue()).thenReturn(2.0);
-		assertEquals(testCell.getValue(), num.toString());
+		when(cell.getNumericCellValue()).thenReturn(2.5);
+		when(testCell.getValue()).thenReturn(2.5);
+		assertEquals(testCell.getValue(), num);
 
 		doReturn(true).when(testCell).isNull();
 		assertEquals(testCell.getValue(), null);

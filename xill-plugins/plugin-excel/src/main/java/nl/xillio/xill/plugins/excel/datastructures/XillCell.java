@@ -4,13 +4,10 @@ import nl.xillio.xill.api.errors.NotImplementedException;
 import org.apache.poi.ss.formula.FormulaParseException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.DateUtil;
-
-import java.text.NumberFormat;
 import java.time.ZonedDateTime;
 import java.util.Date;
-import java.util.Locale;
+
 
 /**
  * Representation of an Excel cell.
@@ -67,11 +64,12 @@ public class XillCell {
 					if (isDateFormatted()) {
 						toReturn = new DateImpl(cell.getDateCellValue());
 					} else {
-						DataFormatter d = new DataFormatter(Locale.ENGLISH);
-						d.setDefaultNumberFormat(d.getDefaultFormat(cell));
-						toReturn = d.formatCellValue(cell);
-
-
+						Double temp =  cell.getNumericCellValue();
+                        if(Math.floor(temp) == temp){
+                            toReturn = temp.intValue();
+                        }else{
+                            toReturn = temp;
+                        }
 					}
 					break;
 				case Cell.CELL_TYPE_BLANK:
