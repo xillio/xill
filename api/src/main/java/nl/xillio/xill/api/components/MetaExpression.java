@@ -2,7 +2,6 @@ package nl.xillio.xill.api.components;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import me.biesaart.utils.Log;
 import nl.xillio.util.MathUtils;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.behavior.BooleanBehavior;
@@ -42,7 +41,7 @@ public abstract class MetaExpression implements Expression, Processable {
     @Inject
     private static Injector injector;
 
-    private final MetadataExpressionPool<MetadataExpression> metadataPool = new MetadataExpressionPool<>();
+    private MetadataExpressionPool<MetadataExpression> metadataPool;
     private Object value;
     private ExpressionDataType type = ExpressionDataType.ATOMIC;
     private boolean isClosed;
@@ -74,6 +73,10 @@ public abstract class MetaExpression implements Expression, Processable {
         if (isClosed()) {
             throw new IllegalStateException("This expression has already been closed.");
         }
+        if (metadataPool == null) {
+            return null;
+        }
+
         return metadataPool.get(clazz);
     }
 
@@ -104,6 +107,9 @@ public abstract class MetaExpression implements Expression, Processable {
     public <T extends MetadataExpression> T storeMeta(final Class<T> clazz, final T object) {
         if (isClosed()) {
             throw new IllegalStateException("This expression has already been closed.");
+        }
+        if (metadataPool == null) {
+            metadataPool = new MetadataExpressionPool<>();
         }
         return metadataPool.put(clazz, object);
     }
@@ -535,10 +541,8 @@ public abstract class MetaExpression implements Expression, Processable {
      * Dispose all items in the {@link MetadataExpressionPool}
      */
     protected void closeMetaPool() {
-        try {
+        if (metadataPool != null) {
             metadataPool.close();
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
         }
     }
 
