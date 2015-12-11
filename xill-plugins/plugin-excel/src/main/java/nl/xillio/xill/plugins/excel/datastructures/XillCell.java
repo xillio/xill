@@ -5,9 +5,9 @@ import org.apache.poi.ss.formula.FormulaParseException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DateUtil;
-
 import java.time.ZonedDateTime;
 import java.util.Date;
+
 
 /**
  * Representation of an Excel cell.
@@ -64,7 +64,12 @@ public class XillCell {
 					if (isDateFormatted()) {
 						toReturn = new DateImpl(cell.getDateCellValue());
 					} else {
-						toReturn = cell.getNumericCellValue();
+						Double temp =  cell.getNumericCellValue();
+                        if(Math.floor(temp) == temp){
+                            toReturn = temp.intValue();
+                        }else{
+                            toReturn = temp;
+                        }
 					}
 					break;
 				case Cell.CELL_TYPE_BLANK:

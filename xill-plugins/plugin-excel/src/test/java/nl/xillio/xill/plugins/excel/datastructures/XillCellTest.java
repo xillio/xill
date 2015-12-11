@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.excel.datastructures;
 
 import nl.xillio.xill.api.errors.NotImplementedException;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.testng.annotations.Test;
 
@@ -64,8 +65,10 @@ public class XillCellTest {
 		assertEquals(d.compareTo(resultDate), 0);
 
 		doReturn(false).when(testCell).isDateFormatted();
-		Double num = 2d;
-		when(cell.getNumericCellValue()).thenReturn(num);
+		Double num = 2.5;
+
+		when(cell.getNumericCellValue()).thenReturn(2.5);
+		when(testCell.getValue()).thenReturn(2.5);
 		assertEquals(testCell.getValue(), num);
 
 		doReturn(true).when(testCell).isNull();

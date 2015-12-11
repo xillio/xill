@@ -80,6 +80,7 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 	private static XillInitializer initializer;
 
 	@Override
+    @SuppressWarnings("squid:S1147") // Exit methods should not be called.
 	public void start(final Stage primaryStage, final Xill xill) {
 		try {
 			checkJRE();
@@ -107,7 +108,8 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 			Font.loadFont(this.getClass().getResourceAsStream("/fonts/Glober SemiBold.ttf"), 10);
 			Font.loadFont(this.getClass().getResourceAsStream("/fonts/Glober xBold.ttf"), 10);
 			Font.loadFont(this.getClass().getResourceAsStream("/fonts/UbuntuMono Regular.ttf"), 10);
-			
+			Font.loadFont(this.getClass().getResourceAsStream("/fonts/UbuntuMono Bold.ttf"), 10);
+
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/contenttools.fxml"));
 			root = loader.load();
 
@@ -126,6 +128,7 @@ public class Loader implements nl.xillio.plugins.ContenttoolsPlugin {
 
 		} catch (IOException e) {
 			LOGGER.error("Loader.initGUI(): Fatal error occurred during launch: " + e.getMessage(), e);
+			// System.exit is appropriate here since there is a fatal error.
 			System.exit(1);
 		}
 		

@@ -1,187 +1,145 @@
 package nl.xillio.xill.plugins.document.services;
 
-import java.util.List;
-import java.util.Map;
-
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.mongodb.DBObject;
+import com.mongodb.MongoException;
+import com.mongodb.util.JSON;
 import nl.xillio.udm.DocumentID;
+import nl.xillio.udm.builders.DocumentBuilder;
+import nl.xillio.udm.exceptions.ModelException;
 import nl.xillio.udm.exceptions.PersistenceException;
-import nl.xillio.xill.services.XillService;
-
+import nl.xillio.udm.interfaces.FindResult;
+import nl.xillio.udm.services.DocumentDefinitionService;
+import nl.xillio.udm.services.UDMService;
+import nl.xillio.udm.util.TransformationIterable;
+import nl.xillio.xill.plugins.document.data.UDMDocument;
+import nl.xillio.xill.plugins.document.exceptions.PersistException;
+import nl.xillio.xill.plugins.document.exceptions.ValidationException;
 import org.bson.Document;
 
+import java.util.Iterator;
+import java.util.Map;
+
 /**
- * Service for doing operations on the UDM from Xill.
+ * This class is responsible for communicating with the udm.
  *
- * @author Geert Konijnendijk
- * @author Luca Scalzotto
+ * @author Thomas Biesaart
  */
-public interface XillUDMService extends XillService {
-	/**
-	 * Enum with entries for the source and target sections of a document.
-	 *
-	 */
-	enum Section {
-		TARGET, SOURCE;
+@Singleton
+public class XillUDMService implements XillUDMPersistence, XillUDMQueryService {
+    private static final String DEFAULT_IDENTITY = "default";
+    private final ConnectionPool connectionPool;
 
-		@Override
-		public String toString() {
-			return super.toString().toLowerCase();
-		}
+    @Inject
+    public XillUDMService(ConnectionPool connectionPool) {
+        this.connectionPool = connectionPool;
+    }
 
-		/**
-		 * Get the section that belongs to a certain name.
-		 *
-		 * @param name
-		 *        the name of the section
-		 * @return the section
-		 * @throws IllegalArgumentException
-		 *         if no valid name was provided.
-		 */
-		public static Section of(final String name) {
-			if (name.isEmpty() || "target".equalsIgnoreCase(name)) {
-				return TARGET;
-			} else if ("source".equalsIgnoreCase(name)) {
-				return SOURCE;
-			}
-			throw new IllegalArgumentException("No valid section found for [" + name + "] choose either \"target\" or \"source\"");
-		}
-	}
+    @Override
+    public String save(UDMDocument document) throws PersistException, ValidationException {
+        if (document.isNew()) {
+            return create(document);
+        } else {
+            return update(document);
+        }
+    }
 
-	/**
-	 * Get all versions for a specific document.
-	 * This lists all versions on the target revisions.
-	 *
-	 * @param documentID
-	 *        the id of the document
-	 * @return a list of version ids
-	 */
-	List<String> getVersions(String documentID);
+    @Override
+    public Map<?, ?> getMap(String id) {
+        UDMService service = getUdmService(DEFAULT_IDENTITY);
+        DocumentID docId = service.get(id);
+        String json = service.toJSON(docId);
+        DBObject obj = (DBObject) JSON.parse(json);
+        service.release(docId);
+        return obj.toMap();
+    }
 
-	/**
-	 * Get all versions for a specific document.
-	 *
-	 * @param documentID
-	 *        the id of the document
-	 * @param section
-	 *        "target" or "source"
-	 * @return a list of version ids
-	 */
-	List<String> getVersions(String documentID, Section section);
+    @Override
+    public void delete(String stringValue) throws PersistenceException {
+        UDMService service = getUdmService(DEFAULT_IDENTITY);
+        service.delete(new Document("_id", stringValue));
+    }
 
-	/**
-	 * Get all decorators of a specific document version.
-	 * @param documentId
-	 *        ID of the document
-	 * @param versionId
-	 *        ID of the version
-	 * @param section
-	 *        "target" or "source"
-	 * @return A map with the keys being decorator names and the values being a map mapping from field names to field values
-	 */
-	Map<String, Map<String, Object>> get(String documentId, String versionId, Section section);
+    @Override
+    public void loadDecorators(String json) {
+        UDMService service = getUdmService(DEFAULT_IDENTITY);
+        service.getDefinitionService().loadDecorators(json);
+    }
 
-	/**
-	 * Remove all documents that match a certain filter.
-	 *
-	 * @param filter
-	 * @return the number of edited entries
-	 * @throws PersistenceException
-	 *         if the query fails
-	 */
-	long removeWhere(Document filter) throws PersistenceException;
+    @Override
+    public void persistContentType(String contentType, String json) throws PersistenceException {
+        UDMService service = getUdmService(DEFAULT_IDENTITY);
+        DocumentDefinitionService definitionService = service.getDefinitionService();
+        definitionService.loadContentTypes(json);
+        definitionService.persist(contentType);
+    }
 
-	/**
-	 * Remove all versions with id in section of entry that matches a certain filter.
-	 *
-	 * @param filter
-	 *        the filter
-	 * @param version
-	 *        the version
-	 * @param section
-	 *        the section
-	 * @return the number of edited entries
-	 * @throws PersistenceException
-	 *         if the query fails
-	 */
-	long removeWhere(Document filter, String version, Section section) throws PersistenceException;
+    String create(UDMDocument document) throws PersistException, ValidationException {
+        DocumentBuilder builder = getUdmService(DEFAULT_IDENTITY).create();
+        document.applyTo(builder);
+        return persist(builder);
+    }
 
-	/**
-	 * Update all versions with version id in section of entry that matches a certain filter.
-	 * 
-	 * @param filter
-	 *        The filter that determines which documents to update
-	 * @param body
-	 *        The body to update the document version with
-	 * @return The number of updated entries
-	 */
-	long updateWhere(Document filter, Map<String, Map<String, Object>> body) throws PersistenceException;
+    String update(UDMDocument document) throws PersistException, ValidationException {
+        UDMService service = getUdmService(DEFAULT_IDENTITY);
+        DocumentID id = service.get(document.getId());
+        DocumentBuilder builder = service.document(id);
+        document.applyTo(builder);
+        return persist(builder);
+    }
 
-	/**
-	 * Update all versions with version id in section of entry that matches a certain filter.
-	 * 
-	 * @param filter
-	 *        The filter that determines which documents to update
-	 * @param body
-	 *        The body to update the document version with
-	 * @param versionId
-	 *        The version to update
-	 * @param section
-	 *        The section to update
-	 * @return The number of updated entries
-	 */
-	long updateWhere(Document filter, Map<String, Map<String, Object>> body, String versionId, Section section) throws PersistenceException;
+    String persist(DocumentBuilder builder) throws PersistException, ValidationException {
+        DocumentID id = builder.commit();
+        UDMService service = getUdmService(DEFAULT_IDENTITY);
 
-	/**
-	 * Update a specific version of a document by setting it to the given body.
-	 *
-	 * @param documentId
-	 *        The ID of the document to update
-	 * @param body
-	 *        The contents of the update
-	 * @param versionId
-	 *        The ID of the version to update
-	 * @param section
-	 *        The name of the section to update
-	 * @throws PersistenceException
-	 *         if the update fails
-	 */
-	public void update(String documentId, Map<String, Map<String, Object>> body, String versionId, Section section) throws PersistenceException;
-	
-	/**
-	 * Insert a document into the database.
-	 * 
-	 * @param contentType
-	 *        The content type of the document.
-	 * @param body
-	 *        The body of the document.
-	 * @param versionId
-	 *        The initial version ID
-	 * @return The ID of the inserted document.
-	 * @throws PersistenceException
-	 */
-	public DocumentID create(String contentType, Map<String, Map<String, Object>> body, String versionId) throws PersistenceException;
+        try {
+            service.persist(id);
+        } catch (PersistenceException e) {
+            throw new PersistException("Failed to persist document " + id.toString() + " to the database", e);
+        } catch (ModelException e) {
+            service.release(id);
+            throw new ValidationException("Validation failed: " + e.getMessage(), e);
+        }
 
-	/**
-	 * Remove a document or a specific version of a document.
-	 *
-	 * @param documentId
-	 *        ID of the document
-	 * @param versionId
-	 *        ID of the version
-	 * @param section
-	 *        "target" or "source"
-	 * @throws PersistenceException
-	 *         if the document could not be persisted
-	 */
-	public void remove(String documentId, String versionId, Section section) throws PersistenceException;
+        return id.get();
+    }
 
-	/**
-	 * Get all documents matching a certain filter.
-	 *
-	 * @param filter  the filter
-	 * @param version the version of the document to grab
-	 * @param section the section to check for the version
-	 * @return the requested revision
-	 */
-	Iterable<Map<String, Map<String, Object>>> findWhere(Document filter, String version, Section section) throws PersistenceException;
+    /**
+     * This method is here for future changes.
+     * At some point we might want to allow multiple databases (for multiple projects).
+     *
+     * @param identity the project identity
+     * @return the connection
+     */
+    UDMService getUdmService(String identity) {
+        return connectionPool.get(identity);
+    }
+
+
+    @Override
+    public Iterator<Map<?, ?>> findMapWhere(Document filter) throws PersistenceException {
+        UDMService service = getUdmService(DEFAULT_IDENTITY);
+        try {
+            FindResult result = service.find(filter);
+            return buildResult(result, service);
+        } catch (MongoException e) {
+            throw new PersistenceException(e.getMessage(), e);
+        }
+    }
+
+    private TransformationIterable<DocumentID, Map<?, ?>> buildResult(FindResult result, UDMService service) {
+        return new TransformationIterable<>(
+                result.iterator(),
+                id -> {
+                    String json = service.toJSON(id);
+                    DBObject obj = (DBObject) JSON.parse(json);
+                    service.release(id);
+                    return obj.toMap();
+                },
+                noCleanUp -> {
+
+                }
+        );
+    }
 }

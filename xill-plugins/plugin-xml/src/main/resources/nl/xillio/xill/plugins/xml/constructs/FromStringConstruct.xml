@@ -1,30 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Loads the specified text as XML. Useful to generate (parts of) XML documents inline.
+Loads the specified text as XML.  
+
+Useful to generate (parts of) XML documents inline.
     </description>
     <examples>
         <example title="Usage">
             <header>Assuming we have an XML file note.xml which contains the following IVOREDIT:</header>
             <code> <![CDATA[
-var content = "<note id="1">
-  <to>Tove< /to>
-  <from>Jani< /from>
-  <heading>Reminder< /heading>
-  <comment>This was sent to James as well< /comment>
-  <comment>John has not responded to the invitation< /comment>
-  <body>Don't forget me this weekend!< /body>
-</note>";
-var xml = Xml.fromString(content);
-var comments = Xml.xpath (xml, "//comment");
-System.print(comments); ]]>
+
+                use System;
+                use XML;
+
+                var content = "<note id=\"1\">
+                  <to>Tove</to>
+                  <from>Jani</from>
+                  <heading>Reminder</heading>
+                  <comment>This was sent to James as well</comment>
+                  <comment>John has not responded to the invitation</comment>
+                  <body>Don't forget me this weekend!</body>
+                </note>";
+
+                var xml = XML.fromString(content);
+                var comments = XML.xpath (xml, "//comment/text()");
+                foreach (comment in comments) {
+                     System.print(comment);
+                } ]]>
             </code>
-            <header>Will execute just fine and will print:</header>
+            <header>will execute just fine and will print:</header>
             <code>
-["
-&lt; ?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;&lt; comment&gt;This was sent to James as well&lt; /comment&gt;","
-&lt; ?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;&lt; comment&gt;John has not responded to the invitation&lt; /comment&gt;"
-]
+                "This was sent to James as well"
+                "John has not responded to the invitation"
             </code>
         </example>
     </examples>

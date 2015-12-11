@@ -30,7 +30,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolicy {
 
-	private static final Logger LOG = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	private final Button start;
 	private final Button stop;
@@ -81,7 +81,7 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 		getDebugger().getOnRobotPause().addListener(this::onPause);
 		getDebugger().getOnRobotStop().addListener(e -> onStop());
 
-		getDebugger().setErrorHander(this);
+		getDebugger().setErrorHandler(this);
 	}
 	
 	/**
@@ -192,7 +192,7 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 		pause.setDisable(true);
 		stepin.setDisable(true);
 		stepover.setDisable(true);
-		tab.getEditorPane().getEditor().clearHighlight();
+		tab.clearHighlight();
 	}
 
 	private Debugger getDebugger() {
@@ -246,25 +246,22 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 			return;
 		}
 
-		// Seems like the tab wasn't open so we open it. This has to be done in
-		// the JavaFX Thread.
+		// Seems like the tab wasn't open so we open it. This has to be done in the JavaFX Thread.
 		Platform.runLater(() -> {
 			RobotTab newTab = tab.getGlobalController().openFile(id.getPath());
 
 			// Wait for the editor to load
-			newTab.getEditorPane().getEditor().getOnDocumentLoaded().addListener((success) -> {
-
-				// We queue this for later execution because the tab has to
-				// display before we can scroll to the right location
+			newTab.getEditorPane().getEditor().getOnDocumentLoaded().addListener((success) ->
+				// We queue this for later execution because the tab has to display before we can scroll to the right location.
 				Platform.runLater(() -> {
-					if (success) {
-						// Highlight the tab
-					newTab.getEditorPane().getEditor().clearHighlight();
-					newTab.getEditorPane().getEditor().highlightLine(line, highlightType);
-					newTab.requestFocus();
-				}
-			});
-			});
+                    if (success) {
+                        // Highlight the tab
+                        newTab.getEditorPane().getEditor().clearHighlight();
+                        newTab.getEditorPane().getEditor().highlightLine(line, highlightType);
+                        newTab.requestFocus();
+                    }
+                })
+			);
 		});
 
 	}
@@ -275,12 +272,11 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 
 		Throwable root = ExceptionUtils.getRootCause(e);
 
+		LOGGER.error("Exception occurred in robot", e);
 		if (root instanceof RobotRuntimeException) {
 			log.error(root.getMessage());
-			LOG.error("Exception occurred in robot", e);
 		} else if (e instanceof RobotRuntimeException) {
 			log.error(e.getMessage());
-			LOG.error("Exception occurred in robot", e);
 		} else if (root == null) {
 			log.error("An error occurred in a robot: " + e.getMessage(), e);
 		} else {

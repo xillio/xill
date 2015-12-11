@@ -6,6 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import nl.xillio.events.Event;
+import nl.xillio.xill.api.components.EventEx;
 import nl.xillio.xill.plugins.database.util.StatementIterator;
 import nl.xillio.xill.plugins.database.util.Tuple;
 import nl.xillio.xill.plugins.database.util.TypeConverter.ConversionException;
@@ -65,7 +67,7 @@ public interface DatabaseService extends XillService {
 	 * @throws SQLException
 	 *         When the query fails
 	 */
-	Object preparedQuery(Connection connection, String query, List<LinkedHashMap<String, Object>> parameters, int timeout) throws SQLException;
+	Object preparedQuery(Connection connection, String query, List<LinkedHashMap<String, Object>> parameters, int timeout, EventEx<Object> interruptEvent) throws SQLException;
 
 	/**
 	 * Gets an object from a database.
@@ -105,4 +107,10 @@ public interface DatabaseService extends XillService {
 	 */
 	void storeObject(Connection connection, String table, LinkedHashMap<String, Object> newObject, List<String> keys, boolean allowUpdate) throws SQLException;
 
+	/**
+	 * Escapes a sql string.
+	 * @param unescaped The unescaped sql string.
+     * @return The escaped sql string.
+     */
+	String escapeString(String unescaped);
 }

@@ -1,9 +1,9 @@
 package nl.xillio.xill.plugins.excel.constructs;
 
+import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.plugins.excel.datastructures.XillCellRef;
 import nl.xillio.xill.plugins.excel.datastructures.XillSheet;
-import nl.xillio.xill.services.inject.InjectorUtils;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -16,12 +16,7 @@ import static org.testng.Assert.assertEquals;
  *
  * @author Daan Knoope
  */
-public class GetCellConstructTest {
-
-	@BeforeClass
-	public void initializeInjector() {
-		InjectorUtils.getGlobalInjector();
-	}
+public class GetCellConstructTest extends TestUtils {
 
 	/**
 	 * Creates a mock for a XillSheet that will return the same for each cell in the sheet

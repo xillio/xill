@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
+import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
 import org.elasticsearch.action.count.CountRequestBuilder;
 import org.elasticsearch.action.count.CountResponse;
 import org.elasticsearch.action.index.IndexRequestBuilder;
@@ -43,9 +44,9 @@ public class ESConsoleClient implements AutoCloseable {
 	}
 
 	public class SearchFilter {
-		public String text = ""; // needle or pattern
-		public boolean regExp;
-		public Map<LogType, Boolean> types;
+		private String text = ""; // needle or pattern
+		private boolean regExp;
+		private Map<LogType, Boolean> types;
 
 		private String getWildcardNeedle() {
 			return String.format("*%1$s*", text);
@@ -263,6 +264,9 @@ public class ESConsoleClient implements AutoCloseable {
 		if (searchFilter != null) {
 			searchFilter.setCountRequestFilter(request);
 		}
+		if (!getClient().admin().indices().prepareExists(normalizedId).execute().actionGet().isExists()) {
+			return 0; //if no indices exist return 0;
+		}
 
 		CountResponse response = null;
 		try {
@@ -272,7 +276,6 @@ public class ESConsoleClient implements AutoCloseable {
 			response = request.execute().actionGet();
 		} catch (SearchPhaseExecutionException | IndexMissingException e) {
 			LOGGER.error(e.getMessage(), e);
-			return 0;
 		}
 
 		// Return the count
@@ -297,7 +300,9 @@ public class ESConsoleClient implements AutoCloseable {
 	}
 
 	private ArrayList<Map<String, Object>> getEntries(final String normalizedId, final SearchRequestBuilder request) {
-
+		if (!getClient().admin().indices().prepareExists(normalizedId).execute().actionGet().isExists()) {
+			return new ArrayList<>(0); //if no indices exist return empty list
+		}
 		SearchResponse response = null;
 		try {
 			// Refresh the index to make sure everything is properly indexed etc
@@ -306,8 +311,6 @@ public class ESConsoleClient implements AutoCloseable {
 			response = request.execute().actionGet();
 		} catch (SearchPhaseExecutionException | IndexMissingException e) {
 			LOGGER.error("Failed to get entries: " + e.getMessage(), e);
-			// If an exception is thrown, return an empty list
-			return new ArrayList<>(0);
 		}
 
 		// Return the hits as a list of maps

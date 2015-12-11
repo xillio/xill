@@ -28,9 +28,6 @@ public class NumberBehavior implements Expression {
 	}
 
 	@Override
-	public void close() throws Exception {}
-
-	@Override
 	public Number getNumberValue() {
 		return value;
 	}

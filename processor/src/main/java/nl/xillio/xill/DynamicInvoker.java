@@ -19,10 +19,14 @@ public class DynamicInvoker<I> {
 	/**
 	 * If set to true the invocation process will be logged more verbose.
 	 */
-	public boolean VERBOSE = false;
+	private boolean VERBOSE = false;
 
 	private final String methodName;
 	private final Object invokeObject;
+
+	public void setVERBOSE(boolean value){
+		VERBOSE = value;
+	}
 
 	/**
 	 * Create a new {@link DynamicInvoker} for a specific method name.

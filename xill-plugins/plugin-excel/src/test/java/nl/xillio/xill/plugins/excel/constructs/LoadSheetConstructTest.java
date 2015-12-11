@@ -1,10 +1,10 @@
 package nl.xillio.xill.plugins.excel.constructs;
 
+import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.excel.datastructures.XillSheet;
 import nl.xillio.xill.plugins.excel.datastructures.XillWorkbook;
-import nl.xillio.xill.services.inject.InjectorUtils;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -19,12 +19,7 @@ import static org.testng.Assert.assertEquals;
  *
  * @author Daan Knoope
  */
-public class LoadSheetConstructTest {
-
-	@BeforeClass
-	public void initializeInjector() {
-		InjectorUtils.getGlobalInjector();
-	}
+public class LoadSheetConstructTest extends TestUtils {
 
 	/**
 	 * Checks if a RobotRuntimeException is thrown when no valid workbook is supplied.
@@ -79,7 +74,7 @@ public class LoadSheetConstructTest {
 		MetaExpression result = LoadSheetConstruct.process(input, fromValue("Sheet"));
 
 		//Check results
-		assertEquals(result.getStringValue(), "{\"Sheet name\":\"SheetName\",\"Rows\":3,\"Columns\":5}");
+		assertEquals(result.getStringValue(), "{\"sheetName\":\"SheetName\",\"rows\":3,\"columns\":5}");
 		XillSheet resultSheet = result.getMeta(XillSheet.class);
 		assertEquals(resultSheet, sheet);
 	}

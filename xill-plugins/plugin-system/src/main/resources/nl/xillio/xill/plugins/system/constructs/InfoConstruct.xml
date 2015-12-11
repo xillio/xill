@@ -1,21 +1,24 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Get a list with various pieces of information about your system.
-        This list contains information about the file system, the running robot and the current runtime.
+Get a list with various pieces of information about your system.  
+
+This list contains information about the file system, the running robot and the current runtime.
     </description>
     <examples>
         <example title="Usage">
             <code>
-                System.info();
+                use System;
+
+                System.print(System.info());
 
                 /*
                     Outputs:
                         {
-                            "robotpath":"D:\\Code\\CT\\Xill 3.0\\projects\\tmp.xill",
-                            "rootrobotpath":"D:\\Code\\CT\\Xill 3.0\\projects\\tmp.xill",
-                            "projectpath":"D:\\Code\\CT\\Xill 3.0",
-                            "availableprocessors":8,
+                            "robotPath":"D:\\Code\\CT\\Xill 3.0\\projects\\tmp.xill",
+                            "rootRobotPath":"D:\\Code\\CT\\Xill 3.0\\projects\\tmp.xill",
+                            "projectPath":"D:\\Code\\CT\\Xill 3.0",
+                            "availableProcessors":8,
                             "memory":{
                                 "free":281276656,
                                 "total":468713472,

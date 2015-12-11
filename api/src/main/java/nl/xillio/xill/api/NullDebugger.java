@@ -5,11 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import nl.xillio.events.Event;
-import nl.xillio.xill.api.components.Instruction;
-import nl.xillio.xill.api.components.InstructionFlow;
-import nl.xillio.xill.api.components.InstructionSet;
-import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.components.Robot;
+import nl.xillio.xill.api.components.*;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.ErrorHandlingPolicy;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
@@ -70,7 +66,10 @@ public class NullDebugger implements Debugger {
 		return null;
 	}
 
-	@Override
+    @Override
+    public EventEx<Object> getOnRobotInterrupt() { return null; }
+
+    @Override
 	public void addBreakpoint(final Breakpoint breakpoint) {}
 
 	@Override
@@ -115,7 +114,7 @@ public class NullDebugger implements Debugger {
 	}
 
 	@Override
-	public void setErrorHander(final ErrorHandlingPolicy handler) {}
+	public void setErrorHandler(final ErrorHandlingPolicy handler) {}
 
 	@Override
 	public List<Instruction> getStackTrace() {

@@ -1,33 +1,33 @@
 package nl.xillio.xill.plugins.web.services.web;
 
+import com.google.inject.Singleton;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.web.data.*;
+import org.apache.commons.io.FileUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.CookieStore;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.cookie.BasicClientCookie;
+import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
+
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
-import nl.xillio.xill.plugins.web.data.CookieVariable;
-import nl.xillio.xill.plugins.web.data.NodeVariable;
-import nl.xillio.xill.plugins.web.data.Options;
-import nl.xillio.xill.plugins.web.data.PageVariable;
-import nl.xillio.xill.plugins.web.data.PhantomJSPool;
-import nl.xillio.xill.plugins.web.data.WebVariable;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.Cookie;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.InvalidSelectorException;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.SearchContext;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
-
-import com.google.inject.Singleton;
 
 /**
  * The implementation of the {@link WebService} interface.
@@ -276,5 +276,65 @@ public class WebServiceImpl implements WebService {
 	@Override
 	public WebVariable getPageFromPool(final PhantomJSPool pool, final Options options) {
 		return pool.get(pool.createIdentifier(options), this).getPage();
+	}
+
+    CookieStore createCookieStore(Set<Cookie> seleniumCookieSet) {
+        CookieStore cookieStore = new BasicCookieStore();
+
+        for (Cookie seleniumCookie : seleniumCookieSet) {
+            BasicClientCookie cookie = new BasicClientCookie(seleniumCookie.getName(), seleniumCookie.getValue());
+            cookie.setDomain(seleniumCookie.getDomain());
+            cookie.setPath(seleniumCookie.getPath());
+            cookie.setExpiryDate(seleniumCookie.getExpiry());
+            cookie.setSecure(seleniumCookie.isSecure());
+            cookieStore.addCookie(cookie);
+        }
+        return cookieStore;
+    }
+
+    void copyInputStreamToFile(final InputStream stream, final  File targetFile) throws IOException {
+        FileUtils.copyInputStreamToFile(stream, targetFile);
+    }
+
+	@Override
+	public void download(final String url, final File targetFile, final WebVariable webContext, int timeout) throws IOException {
+
+        // Check URL
+        URL newURL = new URL(url);
+        if(!checkSupportedURL(newURL)){
+            throw new MalformedURLException();
+        }
+
+        // Set timeout
+        RequestConfig requestConfig = RequestConfig.custom().setConnectionRequestTimeout(timeout).setConnectTimeout(timeout).setSocketTimeout(timeout).build();
+
+        HttpClientBuilder builder;
+
+        if (webContext != null) {
+            // Takeover cookies from web context
+            CookieStore cookieStore = createCookieStore(webContext.getDriver().manage().getCookies());
+            HttpClientContext context = HttpClientContext.create();
+            context.setCookieStore(cookieStore);
+
+            // Create httpclient
+            builder = HttpClients.custom().setDefaultRequestConfig(requestConfig).setDefaultCookieStore(cookieStore).setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE);
+        } else {
+            // Create httpclient
+            builder = HttpClients.custom().setDefaultRequestConfig(requestConfig).setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE);
+        }
+
+        HttpGet httpget = new HttpGet(url);
+
+        try ( CloseableHttpResponse response = builder.build().execute(httpget) ) {
+            HttpEntity entity = response.getEntity();
+
+            if (entity != null) {
+                try (InputStream stream = entity.getContent()) {
+                    copyInputStreamToFile(stream, targetFile);
+                }
+            } else {
+                throw new RobotRuntimeException("Cannot do a http request!");
+            }
+        }
 	}
 }

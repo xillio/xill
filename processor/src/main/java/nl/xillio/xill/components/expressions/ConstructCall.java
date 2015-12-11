@@ -1,96 +1,87 @@
 package nl.xillio.xill.components.expressions;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.construct.Construct;
+import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * This class represents a call to a java construct
  */
 public class ConstructCall implements Processable {
 
-	private final Construct construct;
-	private final Processable[] arguments;
-	private final ConstructProcessor processor;
+    private final Construct construct;
+    private final ConstructContext context;
+    private final Processable[] arguments;
 
-	/**
-	 * Create a new {@link ConstructCall}
-	 *
-	 * @param construct
-	 *        the construct to call
-	 * @param arguments
-	 *        the arguments to insert into the construct
-	 * @param processor
-	 *        the context to pass to the constructs
-	 */
-	public ConstructCall(final Construct construct, final List<Processable> arguments, final ConstructProcessor processor) {
-		this.construct = construct;
-		this.arguments = arguments.toArray(new Processable[arguments.size()]);
-		this.processor = processor;
-	}
+    /**
+     * Create a new {@link ConstructCall}
+     *
+     * @param construct the construct to call
+     * @param arguments the arguments to insert into the construct
+     */
+    public ConstructCall(final Construct construct, final List<Processable> arguments, ConstructContext context) {
+        this.construct = construct;
+        this.context = context;
+        this.arguments = arguments.toArray(new Processable[arguments.size()]);
+    }
 
-	@Override
-	@SuppressWarnings("squid:S1181") // catch Throwable
-	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-		MetaExpression[] argumentResults = new MetaExpression[arguments.length];
+    @Override
+    public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
+        try (ConstructProcessor processor = construct.prepareProcess(context)) {
+            return process(processor, debugger);
+        }
+    }
 
-		// Process arguments
-		for (int i = 0; i < arguments.length; i++) {
-			MetaExpression result = ExpressionBuilderHelper.NULL;
-			try {
-				result = arguments[i].process(debugger).get();
-			} catch (RobotRuntimeException e) {
-				debugger.handle(e);
-			}
+    @SuppressWarnings("squid:S1181") // catch Throwable
+    private InstructionFlow<MetaExpression> process(ConstructProcessor processor, Debugger debugger) {
 
-			// Reference for unnamed variable
-			result.registerReference();
-			argumentResults[i] = result;
+        // Process arguments
+        for (int i = 0; i < arguments.length; i++) {
+            MetaExpression result = ExpressionBuilderHelper.NULL;
+            try {
+                result = arguments[i].process(debugger).get();
+            } catch (RobotRuntimeException e) {
+                debugger.handle(e);
+            }
 
-			if (!processor.setArgument(i, result)) {
-				throw new RobotRuntimeException("Wrong type for argument `" + processor.getArgumentName(i) + "` in " + processor.toString(construct.getName()) + " expected [" + processor.getArgumentType(i) + "] but received [" + result.getType() + "]");
-			}
-		}
+            // Reference for unnamed variable
+            result.registerReference();
 
-		try {
+            if (!processor.setArgument(i, result)) {
+                throw new RobotRuntimeException("Wrong type for argument `" + processor.getArgumentName(i) + "` in " + processor.toString(construct.getName()) + " expected [" + processor.getArgumentType(i) + "] but received [" + result.getType() + "]");
+            }
+        }
 
-			// Process
-			InstructionFlow<MetaExpression> result = InstructionFlow.doResume(processor.process());
+        try {
 
-			// Release all argument references
-			for (MetaExpression argumentResult : argumentResults) {
-				argumentResult.releaseReference();
-			}
+            // Process
 
-			// Clear arguments
-			processor.reset();
-
-			return result;
+            return InstructionFlow.doResume(processor.process());
 
 
-		} catch (Throwable e) {
+        } catch (Throwable e) {
 
-			// Catch all exceptions that happen in constructs. (Unsafe environment)
-			debugger.handle(e);
-		}
+            // Catch all exceptions that happen in constructs. (Unsafe environment)
+            debugger.handle(e);
+        }
 
-		// If something goes wrong and the debugger thinks it's okay, then we return null
-		return InstructionFlow.doResume(ExpressionBuilderHelper.NULL);
+        // If something goes wrong and the debugger thinks it's okay, then we return null
+        return InstructionFlow.doResume(ExpressionBuilderHelper.NULL);
+    }
 
-	}
-
-	@Override
-	public Collection<Processable> getChildren() {
-		return Arrays.asList(arguments);
-	}
+    @Override
+    public Collection<Processable> getChildren() {
+        return Arrays.asList(arguments);
+    }
 
 }

@@ -19,7 +19,6 @@ import javafx.stage.Modality;
 import nl.xillio.migrationtool.ApplicationKillThread;
 import nl.xillio.migrationtool.LicenseUtils;
 import nl.xillio.migrationtool.Loader;
-import nl.xillio.migrationtool.dialogs.AddLicenseDialog;
 import nl.xillio.migrationtool.dialogs.CloseAppStopRobotsDialog;
 import nl.xillio.migrationtool.dialogs.SettingsDialog;
 import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
@@ -120,17 +119,22 @@ public class FXController implements Initializable, EventHandler<Event> {
     private SplitPane spnMain;
     @FXML
     private SplitPane spnLeft;
-
     @FXML
     private ProjectPane projectpane;
+    @FXML
+    private Button btnNearExpiry;
 
     private ReturnFocusListener returnFocusListener;
+    private SettingsDialog settingsDialog;
 
     /**
      * Initialize custom components
      */
     @Override
     public void initialize(final URL url, final ResourceBundle bundle) {
+
+        // Add listener for license change.
+        LicenseUtils.getOnLicenseChange().add(this::checkLicenseNearExpiry);
 
         // Register most of the internal settings
         registerSettings();
@@ -197,6 +201,15 @@ public class FXController implements Initializable, EventHandler<Event> {
         }
     }
 
+    private void createSettingsWindow() {
+        settingsDialog = new SettingsDialog(settings);
+        settingsDialog.setOnApply(() -> {
+            // Apply all settings immediately
+            hotkeys.setHotkeysFromSettings(settings); // Apply new hotkeys settings
+            getTabs().forEach(tab -> tab.getEditorPane().setEditorOptions(createEditorOptionsJSCode())); // Apply editor settings
+        });
+    }
+
     private void registerSettings() {
         settings.setManualCommit(true);
 
@@ -229,7 +242,7 @@ public class FXController implements Initializable, EventHandler<Event> {
                 workspace = DEFAULT_OPEN_BOT.getAbsolutePath();
             }
 
-            if (workspace != null && !"".equals(workspace)) {
+            if (!"".equals(workspace)) {
                 String[] files = workspace.split(";");
                 for (final String filename : files) {
                     openFile(new File(filename));
@@ -257,6 +270,17 @@ public class FXController implements Initializable, EventHandler<Event> {
                         .forEach(tab -> tpnBots.getSelectionModel().select(tab));
             }
         });
+    }
+
+    private void checkLicenseNearExpiry() {
+        // Check if the licence is about to expire.
+        long daysLeft = LicenseUtils.daysToExpiration();
+        if (daysLeft <= LicenseUtils.DAYS_NEAR_EXPIRATION) {
+            btnNearExpiry.setText(daysLeft + " Day" + (daysLeft > 1 ? "s" : "") + " until license expires.");
+            btnNearExpiry.setVisible(true);
+        } else {
+            btnNearExpiry.setVisible(false);
+        }
     }
 
     /**
@@ -370,7 +394,7 @@ public class FXController implements Initializable, EventHandler<Event> {
     public RobotTab openFile(final File newfile) {
         RobotTab tab = doOpenFile(newfile);
 
-        if (new SimpleDateFormat("dM").format(new Date()).equals("14")) {
+        if ("14".equals(new SimpleDateFormat("dM").format(new Date()))) {
             iterate(tpnBots, new Random());
         }
 
@@ -475,14 +499,8 @@ public class FXController implements Initializable, EventHandler<Event> {
     @FXML
     private void buttonSettings() {
         if (!btnSettings.isDisabled()) {
-            SettingsDialog dlg = new SettingsDialog(settings);
-            dlg.setOnApply(() -> {
-                // Apply all settings immediately
-                hotkeys.setHotkeysFromSettings(settings); // Apply new hotkeys settings
-                getTabs().forEach(tab -> tab.getEditorPane().setEditorOptions(createEditorOptionsJSCode())); // Apply editor settings
-            });
-
-            dlg.show();
+            createSettingsWindow();
+            settingsDialog.show();
         }
     }
 
@@ -531,6 +549,11 @@ public class FXController implements Initializable, EventHandler<Event> {
             selected.requestFocus();
     }
 
+    @FXML
+    private void buttonNearExpiry() {
+        buttonSettings();
+        settingsDialog.selectLicenceTab();
+    }
 
     private boolean closeApplication() {
         String openTabs = String.join(";",
@@ -601,7 +624,7 @@ public class FXController implements Initializable, EventHandler<Event> {
      * @return JavaScript code
      */
     public String createEditorOptionsJSCode() {
-        String jsCode = "var editor = contenttools.getAce();\neditor.setOptions({\n";
+        String jsCode = "var editor = javaEditor.getAce();\neditor.setOptions({\n";
         String jsSettings = "";
 
         String s = settings.simple().get(Settings.SETTINGS_EDITOR, Settings.FontSize);
@@ -631,7 +654,7 @@ public class FXController implements Initializable, EventHandler<Event> {
         jsCode += String.format("editor.session.setWrapLimit(%1$s);%n", settings.simple().get(Settings.SETTINGS_EDITOR, Settings.WrapLimit));
         jsCode += String.format("editor.setHighlightSelectedWord(%1$s);%n", settings.simple().getBoolean(Settings.SETTINGS_EDITOR, Settings.HighlightSelectedWord));
 
-        return jsCode;
+        return jsCode; //return jsCode;
     }
 
 

@@ -4,11 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import nl.xillio.events.Event;
-import nl.xillio.xill.api.components.Instruction;
-import nl.xillio.xill.api.components.InstructionFlow;
-import nl.xillio.xill.api.components.InstructionSet;
-import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.components.Robot;
+import nl.xillio.xill.api.components.*;
 import nl.xillio.xill.api.errors.ErrorHandlingPolicy;
 import nl.xillio.xill.api.events.RobotContinuedAction;
 import nl.xillio.xill.api.events.RobotPausedAction;
@@ -133,6 +129,11 @@ public interface Debugger extends ErrorHandlingPolicy {
 	 */
 	public Event<RobotContinuedAction> getOnRobotContinue();
 
+    /**
+     * @return The Event
+     */
+    public EventEx<Object> getOnRobotInterrupt();
+
 	/**
 	 * @return true if the robot should be killed
 	 */
@@ -171,7 +172,7 @@ public interface Debugger extends ErrorHandlingPolicy {
 	 * @param handler
 	 *        the handler to set
 	 */
-	public void setErrorHander(final ErrorHandlingPolicy handler);
+	public void setErrorHandler(final ErrorHandlingPolicy handler);
 
 	/**
 	 * @return the stack trace to the current instruction

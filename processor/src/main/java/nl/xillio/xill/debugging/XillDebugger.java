@@ -1,326 +1,302 @@
 package nl.xillio.xill.debugging;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.EmptyStackException;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Stack;
-import java.util.stream.Collectors;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-
 import nl.xillio.events.Event;
 import nl.xillio.events.EventHost;
 import nl.xillio.xill.api.Breakpoint;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.NullDebugger;
+import nl.xillio.xill.api.components.*;
 import nl.xillio.xill.api.components.Instruction;
-import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.InstructionSet;
-import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.components.Robot;
 import nl.xillio.xill.api.errors.ErrorHandlingPolicy;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.events.RobotContinuedAction;
 import nl.xillio.xill.api.events.RobotPausedAction;
 import nl.xillio.xill.api.events.RobotStartedAction;
 import nl.xillio.xill.api.events.RobotStoppedAction;
-import nl.xillio.xill.components.instructions.VariableDeclaration;
+import nl.xillio.xill.components.instructions.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import xill.lang.xill.Target;
 
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
 /**
- * This class contains all information and controls required for debugging
+ * This class contains all information and controls required for debugging.
+ *
+ * @author Thomas Biesaart
  */
 public class XillDebugger implements Debugger {
-	private static final Logger log = LogManager.getLogger();
-	private final List<Breakpoint> breakpoints;
-	private Instruction previousInstruction;
-	private Instruction currentInstruction;
-	private boolean stepIn = false;
-	private DebugInfo debugInfo = new DebugInfo();
+    private static final Logger LOGGER = LogManager.getLogger();
+    private final List<Breakpoint> breakpoints;
+    private DebugInfo debugInfo = new DebugInfo();
+    private Instruction pausedOnInstruction = null;
+    private final EventHost<RobotStartedAction> onRobotStarted = new EventHost<>();
+    private final EventHost<RobotStoppedAction> onRobotStopped = new EventHost<>();
+    private final EventHost<RobotPausedAction> onRobotPaused = new EventHost<>();
+    private final EventHost<RobotContinuedAction> onRobotContinued = new EventHost<>();
+    private final EventHostEx<Object> onRobotInterrupt = new EventHostEx<>();
+    private ErrorHandlingPolicy handler = new NullDebugger();
+    private final Stack<Instruction> currentStack = new Stack<>();
+    private Mode mode = Mode.RUNNING;
 
-	/**
-	 * Here we put the instruction we want to step over. (Aka pause after)
-	 */
-	private Instruction stepOver = null;
-	private Instruction pausedOnInstruction = null;
-	private boolean paused = false;
-	private final EventHost<RobotStartedAction> onRobotStarted = new EventHost<>();
-	private final EventHost<RobotStoppedAction> onRobotStopped = new EventHost<>();
-	private final EventHost<RobotPausedAction> onRobotPaused = new EventHost<>();
-	private final EventHost<RobotContinuedAction> onRobotContinued = new EventHost<>();
-	private boolean shouldStop = false;
-	private ErrorHandlingPolicy handler = new NullDebugger();
-	private final Stack<Instruction> currentStack = new Stack<>();
+    /**
+     * Create a new {@link XillDebugger}.
+     */
+    public XillDebugger() {
+        breakpoints = new ArrayList<>();
+    }
 
-	/**
-	 * Create a new {@link XillDebugger}
-	 */
-	public XillDebugger() {
-		breakpoints = new ArrayList<>();
-	}
+    @Override
+    public void pause() {
+        mode = Mode.PAUSED;
+    }
 
-	/**
-	 * Create a child {@link XillDebugger} that will use the same breakpoints as
-	 * it's parents
-	 * 
-	 * @param breakpoints
-	 */
-	public XillDebugger(final List<Breakpoint> breakpoints) {
-		this.breakpoints = breakpoints;
+    @Override
+    public void stop() {
+        mode = Mode.STOPPED;
+        onRobotInterrupt.invoke(null);
+    }
 
-	}
+    @Override
+    public void resume() {
+        mode = Mode.RUNNING;
+    }
 
-	@Override
-	public void pause() {
-		paused = true;
-	}
+    @Override
+    public void stepIn() {
+        resume();
+        mode = Mode.STEP_IN;
+    }
 
-	@Override
-	public void stop() {
-		resume();
-		shouldStop = true;
-	}
+    @Override
+    public void stepOver() {
+        resume();
+        mode = Mode.STEP_OVER;
+    }
 
-	/**
-	 * Resume running
-	 */
-	@Override
-	public void resume() {
-		paused = false;
-		stepIn = false;
-		stepOver = null;
-		shouldStop = false;
-	}
+    @Override
+    public void startInstruction(final Instruction instruction) {
+        currentStack.add(instruction);
+        checkBreakpoints(instruction);
+        checkStepIn();
+        checkPause(instruction);
+    }
 
-	@Override
-	public void stepIn() {
-		paused = false;
-		stepIn = true;
-		stepOver = null;
-	}
+    private void checkStepIn() {
+        if (mode == Mode.STEP_IN) {
+            mode = Mode.PAUSED;
+        }
+    }
 
-	@Override
-	public void stepOver() {
-		paused = false;
-		stepIn = false;
-		stepOver = currentInstruction;
-	}
+    private void checkBreakpoints(Instruction instruction) {
+        breakpoints.forEach(bp -> {
+            if (bp.matches(instruction)) {
+                mode = Mode.PAUSED;
+            }
+        });
+    }
 
-	@Override
-	public void startInstruction(final Instruction instruction) {
-		currentInstruction = instruction;
-		currentStack.push(instruction);
-		Optional<Breakpoint> breakpoint = breakpoints.stream()
-			.filter(bp -> bp.matches(previousInstruction, instruction)).findAny();
+    @Override
+    public void endInstruction(final Instruction instruction, final InstructionFlow<MetaExpression> result) {
+        checkPause(instruction);
+        checkStepOver(instruction);
+        currentStack.pop();
+    }
 
-		if (stepIn || breakpoint.isPresent()) {
-			paused = true;
-		}
+    private void checkStepOver(Instruction instruction) {
+        if (mode == Mode.STEP_OVER) {
+            if (isCompoundInstruction(pausedOnInstruction)) {
+                mode = Mode.PAUSED;
+            } else if (instruction == pausedOnInstruction) {
+                mode = Mode.PAUSED;
+            }
+        }
+    }
 
-		checkPause(instruction);
+    /**
+     * Check if this instruction is a compound instruction.
+     * @param instruction the instruction to check
+     * @return true if and only if the instruction is a compound instruction AND not a FunctionCall
+     */
+    private boolean isCompoundInstruction(Instruction instruction) {
+        return instruction instanceof CompoundInstruction;
+    }
 
-	}
+    /**
+     * Check if the robot should pause.
+     *
+     * @param instruction The instruction to pause on (i.e. pass to the pause event)
+     */
+    private void checkPause(final Instruction instruction) {
+        if (mode == Mode.PAUSED) {
+            pausedOnInstruction = instruction;
+            onRobotPaused.invoke(new RobotPausedAction(instruction));
+            while (mode == Mode.PAUSED) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    LOGGER.error("Interrupted while sleeping", e);
+                }
+            }
+            onRobotContinued.invoke(new RobotContinuedAction(instruction));
+        }
+    }
 
-	@Override
-	public void endInstruction(final Instruction instruction, final InstructionFlow<MetaExpression> result) {
-		checkPause(instruction);
+    @Override
+    public void returning(final InstructionSet instructionSet, final InstructionFlow<MetaExpression> result) {
+    }
 
-		if (!currentStack.isEmpty()) {
-			currentStack.pop();
-		}
+    /**
+     * Add breakpoint to this debugger.
+     *
+     * @param breakpoint the breakpoint
+     */
+    @Override
+    public void addBreakpoint(final Breakpoint breakpoint) {
+        breakpoints.add(breakpoint);
+    }
 
-		previousInstruction = instruction;
+    /**
+     * Remove all breakpoints from this debugger.
+     */
+    public void clearBreakpoints() {
+        breakpoints.clear();
+    }
 
-		if (stepOver == instruction) {
-			paused = true;
-		}
-	}
+    @Override
+    public void robotStarted(final Robot robot) {
+        onRobotInterrupt.getListeners().clear();
+        onRobotStarted.invoke(new RobotStartedAction(robot));
+        resume();
+        currentStack.clear();
+    }
 
-	/**
-	 * Check if the robot should pause
-	 * 
-	 * @param instruction
-	 *        The instruction to pause on (i.e. pass to the pause event
-	 */
-	private void checkPause(final Instruction instruction) {
-		if (paused && !shouldStop) {
-			pausedOnInstruction = instruction;
-			onRobotPaused.invoke(new RobotPausedAction(instruction));
-			while (paused) {
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			pausedOnInstruction = null;
-			onRobotContinued.invoke(new RobotContinuedAction(instruction));
-		}
-	}
+    @Override
+    public void robotFinished(final Robot robot) {
+        onRobotStopped.invoke(new RobotStoppedAction(robot));
 
-	@Override
-	public void returning(final InstructionSet instructionSet, final InstructionFlow<MetaExpression> result) {}
+        LOGGER.info("Robot finished.");
+    }
 
-	/**
-	 * Add breakpoints to this debugger
-	 *
-	 * @param breakpoints
-	 */
-	public void addBreakpoints(final Collection<Breakpoint> breakpoints) {
-		this.breakpoints.addAll(breakpoints);
-	}
+    @Override
+    public void addDebugInfo(final nl.xillio.xill.api.DebugInfo info) {
+        debugInfo.add((DebugInfo) info);
+    }
 
-	/**
-	 * Add breakpoint to this debugger
-	 *
-	 * @param breakpoint
-	 */
-	@Override
-	public void addBreakpoint(final Breakpoint breakpoint) {
-		breakpoints.add(breakpoint);
-	}
+    @Override
+    public Event<RobotStartedAction> getOnRobotStart() {
+        return onRobotStarted.getEvent();
+    }
 
-	/**
-	 * Remove all breakpoints from this debugger
-	 */
-	public void clearBreakpoints() {
-		breakpoints.clear();
-	}
+    @Override
+    public Event<RobotStoppedAction> getOnRobotStop() {
+        return onRobotStopped.getEvent();
+    }
 
-	/**
-	 * @return the currentInstruction
-	 */
-	public Instruction getCurrentInstruction() {
-		return currentInstruction;
-	}
+    @Override
+    public Event<RobotPausedAction> getOnRobotPause() {
+        return onRobotPaused.getEvent();
+    }
 
-	@Override
-	public void robotStarted(final Robot robot) {
-		onRobotStarted.invoke(new RobotStartedAction(robot));
-		resume();
-		previousInstruction = null;
-		paused = false;
-		currentStack.clear();
-	}
+    @Override
+    public Event<RobotContinuedAction> getOnRobotContinue() {
+        return onRobotContinued.getEvent();
+    }
 
-	@Override
-	public void robotFinished(final Robot robot) {
-		onRobotStopped.invoke(new RobotStoppedAction(robot));
+    @Override
+    public EventEx<Object> getOnRobotInterrupt() {
+        return onRobotInterrupt.getEvent();
+    }
 
-		log.info("Robot finished.");
-	}
+    @Override
+    public void setBreakpoints(final List<Breakpoint> breakpoints) {
+        clearBreakpoints();
+        this.breakpoints.addAll(breakpoints);
+    }
 
-	@Override
-	public void addDebugInfo(final nl.xillio.xill.api.DebugInfo info) {
-		debugInfo.add((DebugInfo) info);
-	}
+    @Override
+    public boolean shouldStop() {
+        return mode == Mode.STOPPED;
+    }
 
-	@Override
-	public Event<RobotStartedAction> getOnRobotStart() {
-		return onRobotStarted.getEvent();
-	}
+    @Override
+    public Collection<Object> getVariables() {
+        if (mode != Mode.PAUSED) {
+            throw new IllegalStateException("Cannot get variables if not paused.");
+        }
+        List<Object> filtered = new ArrayList<>();
 
-	@Override
-	public Event<RobotStoppedAction> getOnRobotStop() {
-		return onRobotStopped.getEvent();
-	}
+        for (Entry<Target, VariableDeclaration> pair : debugInfo.getVariables().entrySet().stream()
+                .sorted((a, b) -> Integer.compare(a.getValue().getLineNumber(), b.getValue().getLineNumber())).collect(Collectors.toList())) {
 
-	@Override
-	public Event<RobotPausedAction> getOnRobotPause() {
-		return onRobotPaused.getEvent();
-	}
+            try {
+                if (pair.getValue().getVariable() != null && isVisible(pair.getKey(), pausedOnInstruction)) {
+                    filtered.add(pair.getKey());
+                }
+            } catch (EmptyStackException ignored) {
+            }
+        }
 
-	@Override
-	public Event<RobotContinuedAction> getOnRobotContinue() {
-		return onRobotContinued.getEvent();
-	}
+        return filtered;
+    }
 
-	@Override
-	public void setBreakpoints(final List<Breakpoint> breakpoints) {
-		clearBreakpoints();
-		this.breakpoints.addAll(breakpoints);
-	}
+    private boolean isVisible(final Target target, final Instruction instruction) {
+        VariableDeclaration dec = debugInfo.getVariables().get(target);
 
-	@Override
-	public boolean shouldStop() {
-		return shouldStop;
-	}
+        // Has to be in the same robot
+        return dec.getRobotID() == instruction.getRobotID();
 
-	@Override
-	public Collection<Object> getVariables() {
-		if (!paused) {
-			throw new IllegalStateException("Cannot get variables if not paused.");
-		}
-		List<Object> filtered = new ArrayList<>();
+    }
 
-		for (Entry<Target, VariableDeclaration> pair : debugInfo.getVariables().entrySet().stream()
-			.sorted((a, b) -> Integer.compare(a.getValue().getLineNumber(), b.getValue().getLineNumber())).collect(Collectors.toList())) {
+    @Override
+    public MetaExpression getVariableValue(final Object identifier) {
+        VariableDeclaration dec = debugInfo.getVariables().get(identifier);
 
-			try {
-				if (pair.getValue().getVariable() != null && isVisible(pair.getKey(), pausedOnInstruction)) {
-					filtered.add(pair.getKey());
-				}
-			} catch (EmptyStackException e) {}
-		}
+        return dec.getVariable();
+    }
 
-		return filtered;
-	}
+    @Override
+    public String getVariableName(final Object identifier) {
+        if (!(identifier instanceof Target)) {
+            return null;
+        }
 
-	private boolean isVisible(final Target target, final Instruction instruction) {
-		VariableDeclaration dec = debugInfo.getVariables().get(target);
+        return ((Target) identifier).getName();
+    }
 
-		// Has to be in the same robot
-		if (dec.getRobotID() != instruction.getRobotID()) {
-			return false;
-		}
+    @Override
+    public void reset() {
+        debugInfo = new DebugInfo();
+    }
 
-		return true;
-	}
+    @Override
+    public void handle(final Throwable e) throws RobotRuntimeException {
+        handler.handle(e);
+    }
 
-	@Override
-	public MetaExpression getVariableValue(final Object identifier) {
-		VariableDeclaration dec = debugInfo.getVariables().get(identifier);
+    @Override
+    public void setErrorHandler(final ErrorHandlingPolicy handler) {
+        this.handler = handler;
+    }
 
-		return dec.getVariable();
-	}
+    @Override
+    public List<Instruction> getStackTrace() {
+        return currentStack;
+    }
 
-	@Override
-	public String getVariableName(final Object identifier) {
-		if (!(identifier instanceof Target)) {
-			return null;
-		}
+    @Override
+    public Debugger createChild() {
+        return new NullDebugger();
+    }
 
-		return ((Target) identifier).getName();
-	}
-
-	@Override
-	public void reset() {
-		debugInfo = new DebugInfo();
-	}
-
-	@Override
-	public void handle(final Throwable e) throws RobotRuntimeException {
-		handler.handle(e);
-	}
-
-	@Override
-	public void setErrorHander(final ErrorHandlingPolicy handler) {
-		this.handler = handler;
-	}
-
-	@Override
-	public List<Instruction> getStackTrace() {
-		return currentStack;
-	}
-
-	@Override
-	public Debugger createChild() {
-		return new NullDebugger();
-	}
-
+    private enum Mode {
+        RUNNING,
+        STEP_IN,
+        STEP_OVER,
+        PAUSED,
+        STOPPED
+    }
 }

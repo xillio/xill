@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Remove all the cookies associated with the loaded page.
+Remove all the cookies associated with the loaded page.
     </description>
     <examples>
         <example title="Usage">

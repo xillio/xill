@@ -3,12 +3,16 @@ package nl.xillio.migrationtool.gui;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.WatchEvent;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 import javax.swing.filechooser.FileFilter;
 import javafx.scene.control.*;
 import javafx.stage.StageStyle;
@@ -39,6 +43,8 @@ import nl.xillio.xill.util.settings.Settings;
 import nl.xillio.xill.util.settings.SettingsHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 
 public class ProjectPane extends AnchorPane implements FolderListener, ChangeListener<TreeItem<Pair<File, String>>> {
 	private static final SettingsHandler settings = SettingsHandler.getSettingsHandler();
@@ -343,13 +349,65 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 		return trvProjects.getSelectionModel();
 	}
 
+    /**
+     * Called when the outside change to the robot file has been done
+     * Check if the outside change to the robot file should lead to asking user about loading new content and if so then do it
+     *
+     * @param child The path to the robot file
+     */
+    private void robotFileChanged(final Path child) {
+
+        File file = child.toFile();
+        RobotTab tab = (RobotTab)controller.findTab(file);
+        if (tab == null) {
+            return;
+        }
+
+        // Test of content change
+        String newContent = "";
+        try {
+            newContent = new String(Files.readAllBytes(child));
+        } catch (IOException e) {
+            LOGGER.warn("Failed to read changed robot content", e);
+        }
+
+        if (!tab.getEditorPane().checkChangedCode(newContent)) {
+            return;
+        }
+
+        tab.requestFocus();
+
+	    // This must be done in the FX application thread.
+	    final Runnable showDialog = new Runnable() {
+		    @Override
+		    public void run() {
+			    // Create and show an alert dialog saying the content has been changed.
+			    AlertDialog alert = new AlertDialog(Alert.AlertType.WARNING, "Robot file content change",
+					    "The robot file has been modified outside the editor.", "Do you want reload the robot file?",
+					    ButtonType.YES, ButtonType.NO);
+
+			    final Optional<ButtonType> result = alert.showAndWait();
+			    if (result.get() == ButtonType.YES) {
+				    tab.reload();
+			    }
+		    }
+	    };
+	    Platform.runLater(showDialog);
+    }
+
 	@Override
 	public void folderChanged(final Path dir, final Path child, final WatchEvent<Path> event) {
 		for (TreeItem<Pair<File, String>> item : root.getChildren()) {
 			if (item instanceof ProjectTreeItem) {
 				ProjectTreeItem project = (ProjectTreeItem) item;
 				if (dir.startsWith(project.getValue().getKey().getAbsolutePath())) {
-					project.refresh();
+					if (event.kind() == ENTRY_MODIFY) {
+                        // The content of file in project directory has been changed
+                        robotFileChanged(child);
+					} else { // ENTRY_CREATE
+                        // The files in project directory has changed (i.e. some file(s) has been removed / renamed / added)
+						project.refresh();
+					}
 				}
 			}
 		}

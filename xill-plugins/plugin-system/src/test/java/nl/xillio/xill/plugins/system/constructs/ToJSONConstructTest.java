@@ -4,23 +4,25 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import nl.xillio.xill.TestUtils;
+import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
+import nl.xillio.xill.services.json.JsonException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import nl.xillio.xill.ConstructTest;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.services.json.JsonParser;
 
 /**
  * Test the {@link ToJSONConstruct}
  */
-public class ToJSONConstructTest extends ConstructTest {
+public class ToJSONConstructTest extends TestUtils {
 
 	/**
 	 * Test the process method under normal circumstances
 	 */
 	@Test
-	public void testProcess() {
+	public void testProcess() throws JsonException {
 		// Mock context
 		String output = "This is the output";
 		MetaExpression input = mockExpression(ATOMIC);
@@ -44,7 +46,7 @@ public class ToJSONConstructTest extends ConstructTest {
 	 * Test the process method under normal circumstances with pretty printing
 	 */
 	@Test
-	public void testProcessPretty() {
+	public void testProcessPretty() throws JsonException {
 		// Mock context
 		String output = "This is the output";
 		MetaExpression input = mockExpression(ATOMIC);

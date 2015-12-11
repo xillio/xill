@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Wraps a single line of text, identifying words by ' '.
-        If wrapLongWords is true then words are split aswell.
-        Leading spaces on a new line are stripped. Trailing spaces are not stripped.
+Wraps a single line of text, identifying words by ' '.  
+
+If wrapLongWords is true then words are split as well.  
+Leading spaces on a new line are stripped. Trailing spaces are not stripped.
     </description>
     <examples>
         <example description="Usage">
