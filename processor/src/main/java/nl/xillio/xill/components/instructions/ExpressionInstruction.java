@@ -50,7 +50,7 @@ public class ExpressionInstruction extends Instruction {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         // Close all results
         while (!results.isEmpty()) {
             try {
