@@ -30,7 +30,7 @@ public class DuplicateConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(input) -> process(input,duplicate),
+			input -> process(input,duplicate),
 			new Argument("list", LIST, OBJECT));
 	}
 
