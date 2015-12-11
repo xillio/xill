@@ -118,7 +118,13 @@ public class StringUtilityServiceImpl implements StringUtilityService {
 
     @Override
     public String trim(final String toTrim) {
-        return toTrim.trim();
+        // Ensure unicode non breaking space is converted also
+        return replaceAll(toTrim, "\u00A0", " ").trim();
+    }
+
+    @Override
+    public String trimInternal(final String toTrim) {
+        return StringUtils.replacePattern(trim(toTrim), "\\s+", " ");
     }
 
     @Override
