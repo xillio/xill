@@ -453,17 +453,17 @@ public class FXController implements Initializable, EventHandler<Event> {
         node.applyCss();
 
         node.lookupAll(".button")
-                .forEach((n) ->
+                .forEach(n ->
                         n.focusedProperty().addListener(
                                 returnFocusListener));
 
         // MenuButtons do not seem to get children, only items. Handle them as a special case.
-        node.lookupAll(".menu-button").forEach((mb) -> {
+        node.lookupAll(".menu-button").forEach(mb -> {
             if (mb instanceof MenuButton) {
                 ((MenuButton) mb).showingProperty().not().addListener(returnFocusListener);
             }
         });
-        node.lookupAll(".toggle-button").forEach((tb) -> tb.focusedProperty().addListener(returnFocusListener));
+        node.lookupAll(".toggle-button").forEach(tb -> tb.focusedProperty().addListener(returnFocusListener));
 
         //maybe need to add more here... since some things do not yet return focus.
     }

@@ -24,7 +24,7 @@ public class LengthConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(list) -> process(list),
+			list -> process(list),
 			new Argument("list", LIST, OBJECT));
 	}
 

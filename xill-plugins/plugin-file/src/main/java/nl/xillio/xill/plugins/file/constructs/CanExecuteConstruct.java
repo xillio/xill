@@ -27,7 +27,7 @@ public class CanExecuteConstruct extends Construct {
     @Override
     public ConstructProcessor prepareProcess(final ConstructContext context) {
         return new ConstructProcessor(
-                (uri) -> process(context, fileUtilities, uri),
+                uri -> process(context, fileUtilities, uri),
                 new Argument("uri", ATOMIC)
         );
     }

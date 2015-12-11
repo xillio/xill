@@ -24,7 +24,7 @@ public class GetSizeConstruct extends Construct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor((uri) -> process(context, fileUtils, uri), new Argument("uri", ATOMIC));
+		return new ConstructProcessor(uri -> process(context, fileUtils, uri), new Argument("uri", ATOMIC));
 	}
 
 	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri) {
