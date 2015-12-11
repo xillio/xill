@@ -27,3 +27,5 @@ task copyToPluginsDir(type: Sync) {
 
     into new File(pluginsDir, project.name)
 }
+
+rootProject.run.dependsOn prepare
