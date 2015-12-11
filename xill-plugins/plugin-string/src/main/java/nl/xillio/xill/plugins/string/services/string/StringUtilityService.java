@@ -184,6 +184,13 @@ public interface StringUtilityService {
     String trim(String toTrim);
 
     /**
+     * Trim a string and replace all in between whitespace groups by single spaces.
+     * @param toTrim the string to trim
+     * @return the trimmed version of the string
+     */
+    String trimInternal(final String toTrim);
+
+    /**
      * wraps a single line of text, identifying words by ' '
      *
      * @param text          The text we're wrapping, may be null.
