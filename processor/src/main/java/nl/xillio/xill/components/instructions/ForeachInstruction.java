@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 public class ForeachInstruction extends CompoundInstruction {
 
     private final InstructionSet instructionSet;
-    private final ExpressionInstruction list;
+    private final Processable list;
     private final VariableDeclaration valueVar;
     private final VariableDeclaration keyVar;
 
@@ -33,7 +33,7 @@ public class ForeachInstruction extends CompoundInstruction {
      */
     public ForeachInstruction(final InstructionSet instructionSet, final Processable list, final VariableDeclaration valueVar, final VariableDeclaration keyVar) {
         this.instructionSet = instructionSet;
-        this.list = new ExpressionInstruction(list);
+        this.list = list;
         this.valueVar = valueVar;
         this.keyVar = keyVar;
     }
@@ -54,9 +54,12 @@ public class ForeachInstruction extends CompoundInstruction {
     @SuppressWarnings("unchecked")
     @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-        debugger.startInstruction(list);
-        InstructionFlow<MetaExpression> flow = list.process(debugger);
-        debugger.endInstruction(list, flow);
+        ExpressionInstruction listInstruction = new ExpressionInstruction(list);
+        listInstruction.setPosition(getPosition());
+        debugger.startInstruction(listInstruction);
+        InstructionFlow<MetaExpression> flow = listInstruction.process(debugger);
+        debugger.endInstruction(listInstruction, flow);
+
 
         MetaExpression result = flow.get();
 
@@ -65,8 +68,7 @@ public class ForeachInstruction extends CompoundInstruction {
             result.registerReference();
             return process(result, debugger);
         } finally {
-            result.releaseReference();
-            list.close();
+            listInstruction.close();
         }
     }
 
@@ -210,7 +212,6 @@ public class ForeachInstruction extends CompoundInstruction {
     @Override
     public void setPosition(CodePosition position) {
         super.setPosition(position);
-        list.setPosition(position);
     }
 
     @Override
