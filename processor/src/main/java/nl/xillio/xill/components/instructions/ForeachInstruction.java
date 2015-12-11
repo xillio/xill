@@ -66,6 +66,7 @@ public class ForeachInstruction extends CompoundInstruction {
             return process(result, debugger);
         } finally {
             result.releaseReference();
+            list.close();
         }
     }
 
