@@ -531,7 +531,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
                 // Let's open the RobotTab where error occurred
                 Platform.runLater(() -> {
                     RobotTab newTab = globalController.openFile(e.getRobot().getPath());
-                    newTab.getEditorPane().getEditor().getOnDocumentLoaded().addListener((success) ->
+                    newTab.getEditorPane().getEditor().getOnDocumentLoaded().addListener(success ->
                         // We queue this for later execution because the tab has to display before we can scroll to the right location.
                         Platform.runLater(() -> {
                             if (success) {
