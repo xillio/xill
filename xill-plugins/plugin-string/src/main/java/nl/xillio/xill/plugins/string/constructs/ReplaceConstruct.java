@@ -46,7 +46,7 @@ public class ReplaceConstruct extends Construct {
 				new Argument("replaceall", TRUE, ATOMIC),
 				new Argument("timeout", fromValue(RegexConstruct.REGEX_TIMEOUT), ATOMIC)};
 
-		return new ConstructProcessor((a) -> process(a, regexService, stringService), args);
+		return new ConstructProcessor(a -> process(a, regexService, stringService), args);
 
 	}
 
