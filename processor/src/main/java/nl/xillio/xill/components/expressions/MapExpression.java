@@ -71,7 +71,7 @@ public class MapExpression implements Processable, FunctionParameterExpression {
 			atomicResults.add(functionDeclaration.run(debugger,
 					Arrays.asList(ExpressionBuilderHelper.fromValue(0), result)).get());
 		} else {
-			throw new RobotRuntimeException("The given function does not accept only one argument.");
+			throw new RobotRuntimeException("The given function does not accept one or two arguments.");
 		}
 
 		return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(atomicResults));
