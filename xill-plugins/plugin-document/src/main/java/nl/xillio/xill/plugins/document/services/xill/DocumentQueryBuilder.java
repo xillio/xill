@@ -2,7 +2,6 @@ package nl.xillio.xill.plugins.document.services.xill;
 
 import com.google.inject.ImplementedBy;
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.plugins.mongodb.services.MongoConverter;
 import org.bson.Document;
 
 /**
@@ -10,7 +9,7 @@ import org.bson.Document;
  *
  * @author Thomas Biesaart
  */
-@ImplementedBy(MongoConverter.class)
+@ImplementedBy(UDMQueryBuilder.class)
 public interface DocumentQueryBuilder {
     /**
      * Parse a {@link MetaExpression} to a query.
