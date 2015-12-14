@@ -4,10 +4,7 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import nl.xillio.xill.api.Debugger;
-import nl.xillio.xill.api.components.ExpressionBuilder;
-import nl.xillio.xill.api.components.InstructionFlow;
-import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.components.Processable;
+import nl.xillio.xill.api.components.*;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
@@ -61,32 +58,63 @@ public class MapExpression implements Processable, FunctionParameterExpression {
 				throw new NotImplementedException("This MetaExpression has not been implemented yet");
 		}
 	}
-
+//Implemented key-value argument for map
 	private InstructionFlow<MetaExpression> atomicProcess(MetaExpression result, Debugger debugger){
 		if (result.isNull()) {
 			return InstructionFlow.doResume(ExpressionBuilderHelper.emptyList());
 		}
 		List<MetaExpression> atomicResults = new ArrayList<>(1);
-		atomicResults.add(functionDeclaration.run(debugger, Collections.singletonList(result)).get());
+
+		if (functionDeclaration.getParametersSize() == 1){
+			atomicResults.add(functionDeclaration.run(debugger, Collections.singletonList(result)).get());
+		} else if (functionDeclaration.getParametersSize() == 2){
+			atomicResults.add(functionDeclaration.run(debugger,
+					Arrays.asList(ExpressionBuilderHelper.fromValue(0), result)).get());
+		} else {
+			throw new RobotRuntimeException("The given function does not accept only one argument.");
+		}
+
 		return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(atomicResults));
 	}
 
 	@SuppressWarnings("unchecked")
 	private InstructionFlow<MetaExpression> listProcess(MetaExpression result, Debugger debugger){
 		List<MetaExpression> listResults = new ArrayList<>(result.getNumberValue().intValue());
-		for (MetaExpression expression : (List<MetaExpression>) result.getValue()) {
-			listResults.add(functionDeclaration.run(debugger, Collections.singletonList(expression)).get());
+
+		if (functionDeclaration.getParametersSize() == 1) {
+			for (MetaExpression expression : (List<MetaExpression>) result.getValue()) {
+				listResults.add(functionDeclaration.run(debugger, Collections.singletonList(expression)).get());
+			}
+		} else if (functionDeclaration.getParametersSize() == 2) {
+			List<MetaExpression> expressions = (List<MetaExpression>)result.getValue();
+			for (int i = 0; i < expressions.size() ; i++) {
+				listResults.add(functionDeclaration.run(debugger,
+						Arrays.asList(ExpressionBuilderHelper.fromValue(i), expressions.get(i))).get());
+			}
+		} else {
+			throw new RobotRuntimeException("The given function does not accept one or two arguments.");
 		}
+
 		return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(listResults));
 	}
 
 	@SuppressWarnings("unchecked")
 	private InstructionFlow<MetaExpression> objectProcess(MetaExpression result, Debugger debugger){
 		LinkedHashMap<String, MetaExpression> objectResults = new LinkedHashMap<>(result.getNumberValue().intValue());
-		for (Entry<String, MetaExpression> expression : ((Map<String, MetaExpression>) result.getValue()).entrySet()) {
-			objectResults.put(expression.getKey(), functionDeclaration.run(debugger,
-					Arrays.asList(ExpressionBuilderHelper.fromValue(expression.getKey()), expression.getValue())).get());
+
+		if (functionDeclaration.getParametersSize() == 1) {
+			for (Entry<String, MetaExpression> expression : ((Map<String, MetaExpression>) result.getValue()).entrySet()) {
+				objectResults.put(expression.getKey(), functionDeclaration.run(debugger, Collections.singletonList(expression.getValue())).get());
+			}
+		} else if (functionDeclaration.getParametersSize() == 2) {
+			for (Entry<String, MetaExpression> expression : ((Map<String, MetaExpression>) result.getValue()).entrySet()) {
+				objectResults.put(expression.getKey(), functionDeclaration.run(debugger,
+						Arrays.asList(ExpressionBuilderHelper.fromValue(expression.getKey()), expression.getValue())).get());
+			}
+		} else {
+			throw new RobotRuntimeException("The given function does not accept one or two arguments.");
 		}
+
 		return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(objectResults));
 	}
 

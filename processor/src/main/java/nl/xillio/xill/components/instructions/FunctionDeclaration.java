@@ -97,4 +97,8 @@ public class FunctionDeclaration extends Instruction {
     public void close() throws Exception {
     }
 
+    public int getParametersSize() {
+        return parameters.size();
+    }
+
 }
