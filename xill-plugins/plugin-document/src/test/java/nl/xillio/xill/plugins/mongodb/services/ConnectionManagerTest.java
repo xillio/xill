@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.mongodb.services;
 
+import com.mongodb.MongoClient;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
 import org.testng.annotations.Test;
@@ -28,7 +29,7 @@ public class ConnectionManagerTest {
 
     @Test
     public void testGetConnectionRecreateClosed() {
-        ConnectionFactory factory = mockFactory(new Connection(null), new Connection(null));
+        ConnectionFactory factory = mockFactory(new Connection(mock(MongoClient.class)), new Connection(null));
         ConnectionManager manager = new ConnectionManager(factory);
         ConnectionInfo info = new ConnectionInfo("localhost", 2345, "database", "username", "password");
         ConstructContext context = context(RobotID.dummyRobot(), RobotID.dummyRobot());
