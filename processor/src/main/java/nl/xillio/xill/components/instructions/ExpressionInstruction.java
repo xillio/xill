@@ -56,6 +56,13 @@ public class ExpressionInstruction extends Instruction {
         }
     }
 
+    /**
+     * Clear the result stack.
+     */
+    public void clear() {
+        results.clear();
+    }
+
     @Override
     public String toString() {
         return super.toString() + ": " + expression.getClass().getSimpleName();
