@@ -60,6 +60,7 @@ public class WhileInstruction extends CompoundInstruction {
         boolean isValue = expression.getBooleanValue();
         debugger.endInstruction(condition, result);
         expression.releaseReference();
+        condition.clear();
         return isValue;
     }
 
