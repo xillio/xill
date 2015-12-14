@@ -40,8 +40,4 @@ public class ElseInstruction extends CompoundInstruction {
         return false;
     }
 
-    @Override
-    public void close() throws Exception {
-    }
-
 }

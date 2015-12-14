@@ -68,8 +68,4 @@ public class WhileInstruction extends CompoundInstruction {
     public Collection<Processable> getChildren() {
         return Arrays.asList(condition, instructionSet);
     }
-
-    @Override
-    public void close() throws Exception {
-    }
 }
