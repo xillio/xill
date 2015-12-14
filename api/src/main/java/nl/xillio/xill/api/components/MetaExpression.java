@@ -194,11 +194,12 @@ public abstract class MetaExpression implements Expression, Processable {
      * @return the value according to the {@link ExpressionDataType} specification
      * @throws IllegalStateException if this expression has been closed
      */
-    public Object getValue() {
+    @SuppressWarnings("unchecked")
+    public <T> T getValue() {
         if (isClosed()) {
             throw new IllegalStateException("This expression has already been closed.");
         }
-        return value;
+        return (T)value;
     }
 
     /**
@@ -251,7 +252,7 @@ public abstract class MetaExpression implements Expression, Processable {
      * @return JSON representation
      */
     public String toString(final JsonParser jsonParser) throws JsonException {
-        return jsonParser.toJson(extractValue(this));
+        return jsonParser.toJson((Object)extractValue(this));
     }
 
     /**
@@ -379,12 +380,12 @@ public abstract class MetaExpression implements Expression, Processable {
      * Map&lt;String, Object&gt;} where {@link Object} is the result of a recursive call of this method.</li>
      * </ul>
      */
-    public static Object extractValue(final MetaExpression expression) {
-        return extractValue(expression, new IdentityHashMap<>());
+    @SuppressWarnings("unchecked")
+    public static <T> T extractValue(final MetaExpression expression) {
+        return (T) extractValue(expression, new IdentityHashMap<>());
 
     }
 
-    @SuppressWarnings("unchecked")
     private static Object extractValue(final MetaExpression expression, final Map<MetaExpression, Object> results) {
 
         if (results.containsKey(expression)) {
