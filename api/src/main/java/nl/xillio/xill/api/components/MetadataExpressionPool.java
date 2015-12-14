@@ -89,7 +89,7 @@ public class MetadataExpressionPool<T> implements AutoCloseable {
 	 *
 	 */
 	@Override
-	public void close() throws Exception {
+	public void close() {
 		for (T closable : metadataMap.values()) {
 			if (closable instanceof AutoCloseable) {
 				try {
