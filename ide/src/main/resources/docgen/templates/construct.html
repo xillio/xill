@@ -5,6 +5,18 @@
     <title>${packageName}.${identity}</title>
     <link rel="stylesheet" type="text/css" href="${jarFile}editor.css">
     <link rel="stylesheet" type="text/css" href="${jarFile}docgen/resources/_assets/css/style.css">
+
+    <style>
+        /*
+        CTC-1180: Fix for monotype font not working on non-windows systems.
+        Create our own fontface based on ttf in jar file. "xilliomono" is referenced in style.css and editor.css
+        */
+        @font-face {
+        font-family: 'xilliomono';
+        src: url('${jarFile}fonts/UbuntuMono Regular.ttf') format('truetype');
+        }
+    </style>
+
 </head>
 <body>
 <main>
