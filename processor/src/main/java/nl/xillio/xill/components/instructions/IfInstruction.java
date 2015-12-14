@@ -60,8 +60,4 @@ public class IfInstruction extends CompoundInstruction {
         return new ArrayList<>();
     }
 
-    @Override
-    public void close() throws Exception {
-    }
-
 }

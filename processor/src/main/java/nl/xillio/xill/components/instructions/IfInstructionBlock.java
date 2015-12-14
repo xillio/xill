@@ -55,8 +55,4 @@ public class IfInstructionBlock extends CompoundInstruction {
 
         return children;
     }
-
-    @Override
-    public void close() throws Exception {
-    }
 }

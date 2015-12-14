@@ -52,4 +52,8 @@ public abstract class Instruction implements nl.xillio.xill.api.components.Instr
 		return false;
 	}
 
+	@Override
+	public void close() throws Exception {
+
+	}
 }
