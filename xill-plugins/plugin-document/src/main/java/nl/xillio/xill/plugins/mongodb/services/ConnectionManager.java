@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.mongodb.services;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
@@ -24,6 +25,7 @@ public class ConnectionManager {
      *
      * @param connectionFactory the factory that should be used to create connections
      */
+    @Inject
     public ConnectionManager(ConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;
     }
