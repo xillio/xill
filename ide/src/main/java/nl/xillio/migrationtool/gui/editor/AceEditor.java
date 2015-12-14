@@ -341,7 +341,9 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
      */
     public void refreshBreakpoints(final RobotID robot) {
         List<Integer> bps = BreakpointPool.INSTANCE.get(robot).stream().map(bp -> bp - 1).collect(Collectors.toList());
-        callOnAce((s) -> ((JSObject) s).call("setBreakpoints", bps), "getSession");
+        bps.forEach((br)->{
+            callOnAce((s) -> ((JSObject) s).call("setBreakpoint", br), "getSession");
+        });
     }
 
     /**
