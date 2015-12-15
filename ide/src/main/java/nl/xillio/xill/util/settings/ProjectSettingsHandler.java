@@ -3,6 +3,7 @@ package nl.xillio.xill.util.settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,28 +24,24 @@ public class ProjectSettingsHandler {
 
 	private ContentHandler content;
 
-	private static final Logger LOGGER = LogManager.getLogger(ProjectSettingsHandler.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	ProjectSettingsHandler(ContentHandler content) {// Can be instantiated within package only
 		this.content = content;
 	}
 
 	/**
-	 * It stores the given project to settings
+	 * Store the given project to settings.
 	 * 
 	 * @param project The project data
 	 */
 	public void save(ProjectSettings project) {
-		try {
-			HashMap<String, Object> itemContent = new HashMap<>();
-			itemContent.put(NAME, project.getName());
-			itemContent.put(FOLDER, project.getFolder());
-			itemContent.put(DESCRIPTION, project.getDescription());
+		HashMap<String, Object> itemContent = new HashMap<>();
+		itemContent.put(NAME, project.getName());
+		itemContent.put(FOLDER, project.getFolder());
+		itemContent.put(DESCRIPTION, project.getDescription());
 
-			this.content.set(CATEGORY, itemContent, KEYNAME, project.getName());
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
-		}
+		this.content.set(CATEGORY, itemContent, KEYNAME, project.getName());
 	}
 
 	/**
@@ -58,8 +55,8 @@ public class ProjectSettingsHandler {
 			for (Map<String, Object> item : result) {
 				list.add(new ProjectSettings(item.get(NAME).toString(), item.get(FOLDER).toString(), item.get(DESCRIPTION).toString()));
 			}
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
+		} catch (IOException e) {
+			LOGGER.error("Invalid file structure for settings file", e);
 		}
 		return list;
 	}
@@ -70,10 +67,6 @@ public class ProjectSettingsHandler {
 	 * @param name The name of the project
 	 */
 	public void delete(final String name) {
-		try {
-			this.content.delete(CATEGORY, KEYNAME, name);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
-		}
+		this.content.delete(CATEGORY, KEYNAME, name);
 	}
 }

@@ -10,7 +10,10 @@ import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -27,6 +30,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  * This is XML file content handler implementation
@@ -44,7 +48,7 @@ import org.w3c.dom.NodeList;
  */
 public class ContentHandlerImpl implements ContentHandler {
 
-	private static final Logger LOGGER = LogManager.getLogger(ContentHandlerImpl.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	private File storage;
 	private boolean manualCommit = false;
@@ -72,14 +76,13 @@ public class ContentHandlerImpl implements ContentHandler {
 		this.storage = file;
 	}
 
-	@SuppressWarnings("squid:S1166")
 	@Override
-	public void init() throws Exception {
+	public void init() throws IOException {
 		// Open existing XML file with settings
 		// If file does not exist it will create new one with the basic structure (i.e. just root node)
 		try {
 			DocumentBuilderFactory docFactory  = DocumentBuilderFactory.newInstance();
-			DocumentBuilder docBuilder = docFactory .newDocumentBuilder();
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
 			if (!storage.exists()) {
 				this.document = docBuilder.newDocument();
@@ -88,8 +91,8 @@ public class ContentHandlerImpl implements ContentHandler {
 			} else {
 				this.document = docBuilder.parse(FileUtils.openInputStream(storage));
 			}
-		} catch (Exception e) {
-			throw new Exception("Cannot open settings file for reason: " + e.getMessage());
+		} catch (ParserConfigurationException | SAXException | IOException e) {
+            throw new IOException("Cannot open or parse file.", e);
 		}
 	}
 
@@ -104,7 +107,7 @@ public class ContentHandlerImpl implements ContentHandler {
 	 * @param force false means that save is done only if manualCommit = false, true means save is done always 
 	 * @throws Exception when error occurs during saving to file
 	 */
-	private void save(boolean force) throws Exception {
+	private void save(boolean force) {
 		if ((!force) && (this.manualCommit)) {
 			return;
 		}
@@ -115,18 +118,23 @@ public class ContentHandlerImpl implements ContentHandler {
 				DOMSource source = new DOMSource(this.document);
 				StreamResult result = new StreamResult(this.storage);
 				transformer.transform(source, result);
-			} catch (Exception e) {
-				throw new Exception("Cannot save settings file for reason: " + e.getMessage());
+			} catch (IOException | TransformerException e) {
+				LOGGER.error("Error saving file.", e);
 			}
 		}
 	}
 
 	@Override
-	public Map<String, Object> get(final String category, final String keyValue) throws Exception {
+	public Map<String, Object> get(final String category, final String keyValue) throws IOException {
 		synchronized(lock) {
 			// Tries to iterate all items in given category
 			String path = String.format("%1$s/item", category);
-			Object result = xpathFactory.newXPath().compile(path).evaluate(this.document.getFirstChild(), XPathConstants.NODESET); 
+			Object result = null;
+			try {
+				result = xpathFactory.newXPath().compile(path).evaluate(this.document.getFirstChild(), XPathConstants.NODESET);
+			} catch (XPathExpressionException e) {
+				throw new IllegalArgumentException("Given category contains illegal characters.");
+			}
 			if (result == null) {
 				return null;
 			}
@@ -151,7 +159,7 @@ public class ContentHandlerImpl implements ContentHandler {
 				return map;
 			}
 		}
-		throw new Exception("Invalid content structure of settings file!");
+		throw new IOException("Invalid content structure of settings file!");
 	}
 
 	private boolean keyValueMatch(final Node item, final String keyName, final String keyValue) {
@@ -169,10 +177,15 @@ public class ContentHandlerImpl implements ContentHandler {
 	}
 
 	@Override
-	public List<Map<String, Object>> getAll(final String category) throws Exception {
+	public List<Map<String, Object>> getAll(final String category) throws IOException {
 		synchronized(lock) {
 			String path = String.format("%1$s/item", category);
-			Object result = xpathFactory.newXPath().compile(path).evaluate(this.document.getFirstChild(), XPathConstants.NODESET);
+			Object result = null;
+			try {
+				result = xpathFactory.newXPath().compile(path).evaluate(this.document.getFirstChild(), XPathConstants.NODESET);
+			} catch (XPathExpressionException e) {
+				throw new IllegalArgumentException("Given category contains illegal characters.");
+			}
 			if (result == null) {
 				return null;
 			}
@@ -193,17 +206,26 @@ public class ContentHandlerImpl implements ContentHandler {
 				return output;
 			}
 		}
-		throw new Exception("Invalid content structure of settings file!");
+		throw new IOException("Invalid content structure of settings file!");
 	}
 
 	@Override
-	public boolean set(final String category, final Map<String, Object> itemContent, final String keyName, final String keyValue) throws Exception {
+	public boolean set(final String category, final Map<String, Object> itemContent, final String keyName, final String keyValue) {
 		boolean created = false;
 		synchronized(lock) {
-			Node categoryNode = this.getCategoryNode(category);
+			Node categoryNode = null;
+			try {
+				categoryNode = this.getCategoryNode(category);
+			} catch (XPathExpressionException e) {
+				throw new IllegalArgumentException("Given category contains illegal characters.");
+			}
 			Element itemNode[] = {null};
 			if (keyName != null) {
-				itemNode[0] = this.getItemNode(categoryNode, keyName, keyValue);
+				try {
+					itemNode[0] = this.getItemNode(categoryNode, keyName, keyValue);
+				} catch (XPathExpressionException e) {
+					throw new IllegalArgumentException("Given key or value contains illegal characters.");
+				}
 			}
 			if (itemNode[0] == null) {
 				// creates new item node
@@ -223,19 +245,34 @@ public class ContentHandlerImpl implements ContentHandler {
 	}
 
 	@Override
-	public boolean exist(final String category, final String keyName, final String keyValue) throws Exception {
+	public boolean exist(final String category, final String keyName, final String keyValue) {
 		String path = String.format("%1$s/item[@key='%2$s'][%2$s/text()='%3$s']", category, keyName, keyValue);
 		synchronized(lock) {
-			Object result = xpathFactory.newXPath().compile(path).evaluate(this.document.getFirstChild(), XPathConstants.NODE);
+			Object result = null;
+			try {
+				result = xpathFactory.newXPath().compile(path).evaluate(this.document.getFirstChild(), XPathConstants.NODE);
+			} catch (XPathExpressionException e) {
+				throw new IllegalArgumentException("Given category contains illegal characters.");
+			}
 			return (result != null);
 		}
 	}
 
 	@Override
-	public boolean delete(final String category, final String keyName, final String keyValue) throws Exception {
+	public boolean delete(final String category, final String keyName, final String keyValue) {
 		synchronized(lock) {
-			Node categoryNode = this.getCategoryNode(category);
-			Element itemNode = this.getItemNode(categoryNode, keyName, keyValue);
+			Node categoryNode = null;
+			try {
+				categoryNode = this.getCategoryNode(category);
+			} catch (XPathExpressionException e) {
+				throw new IllegalArgumentException("Given category contains illegal characters.");
+			}
+			Element itemNode = null;
+			try {
+				itemNode = this.getItemNode(categoryNode, keyName, keyValue);
+			} catch (XPathExpressionException e) {
+				throw new IllegalArgumentException("Given key or value contains illegal characters.");
+			}
 			if (itemNode == null) {
 				return false;
 			}
@@ -332,13 +369,13 @@ public class ContentHandlerImpl implements ContentHandler {
 	}
 
 	@Override
-	public boolean setManualCommit(boolean manual) throws Exception {
+	public boolean setManualCommit(boolean manual) {
 		this.manualCommit = manual;
 		return true;
 	}
 
 	@Override
-	public boolean commit() throws Exception {
+	public boolean commit() {
 		this.save(true);
 		return true;
 	}

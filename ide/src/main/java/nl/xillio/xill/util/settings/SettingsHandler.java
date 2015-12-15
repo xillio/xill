@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Class that is main point for dealing with settings in Xill IDE
@@ -34,8 +35,8 @@ public class SettingsHandler {
         this.content = new ContentHandlerImpl(SETTINGS_FILE);
         try {
             this.content.init();
-        } catch (Exception e) {
-            LOGGER.error("Cannot initialize settings handler for reason: " + e.getMessage(), e);
+        } catch (IOException e) {
+            LOGGER.error("Cannot initialize settings handler.", e);
         }
 
         this.simple = new SimpleVariableHandler(this.content);
@@ -57,26 +58,18 @@ public class SettingsHandler {
     }
 
     /**
-     * It set the save mechanism (see {@link nl.xillio.xill.util.settings.ContentHandler#setManualCommit(boolean)})
+     * Set the save mechanism (see {@link nl.xillio.xill.util.settings.ContentHandler#setManualCommit(boolean)})
      *
      * @param manual true = manual commit, false = auto commit (default)
      */
     public void setManualCommit(boolean manual) {
-        try {
-            this.content.setManualCommit(manual);
-        } catch (Exception e) {
-            LOGGER.error("Cannot set manual commit for reason: " + e.getMessage(), e);
-        }
+        this.content.setManualCommit(manual);
     }
 
     /**
-     * It save all changes from last commit() if manual commit is on (see {@link nl.xillio.xill.util.settings.ContentHandler#commit()})
+     * Save all changes from last commit() if manual commit is on (see {@link nl.xillio.xill.util.settings.ContentHandler#commit()})
      */
     public void commit() {
-        try {
-            this.content.commit();
-        } catch (Exception e) {
-            LOGGER.error("Cannot do commit for reason: " + e.getMessage(), e);
-        }
+        this.content.commit();
     }
 }
