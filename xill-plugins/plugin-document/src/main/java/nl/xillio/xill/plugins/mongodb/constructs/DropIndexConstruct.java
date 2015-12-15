@@ -7,10 +7,10 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import org.bson.Document;
 
 /**
- * This construct represents the drop method on MongoDB.
+ * This construct represents the dropIndex method on MongoDB.
  *
  * @author Thomas Biesaart
- * @see <a href="https://docs.mongodb.org/v3.0/reference/method/db.collection.drop/#db.collection.drop">db.collection.drop</a>
+ * @see <a href="https://docs.mongodb.org/v3.0/reference/method/db.collection.dropIndex/#db.collection.dropIndex">db.collection.dropIndex</a>
  */
 public class DropIndexConstruct extends AbstractCollectionApiConstruct {
 

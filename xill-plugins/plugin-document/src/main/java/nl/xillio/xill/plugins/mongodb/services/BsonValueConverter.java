@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.mongodb.constructs;
+package nl.xillio.xill.plugins.mongodb.services;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
