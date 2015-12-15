@@ -46,7 +46,7 @@ public class ExpressionInstruction extends Instruction {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         // Close all results
         while (!results.isEmpty()) {
             try {
@@ -54,6 +54,13 @@ public class ExpressionInstruction extends Instruction {
             } catch (Exception e) {
             }
         }
+    }
+
+    /**
+     * Clear the result stack.
+     */
+    public void clear() {
+        results.clear();
     }
 
     @Override

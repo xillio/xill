@@ -23,7 +23,4 @@ public class ContinueInstruction extends Instruction {
 		return new ArrayList<>();
 	}
 
-	@Override
-	public void close() throws Exception {}
-
 }

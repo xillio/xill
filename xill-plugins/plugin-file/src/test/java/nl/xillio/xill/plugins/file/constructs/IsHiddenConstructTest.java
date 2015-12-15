@@ -1,14 +1,16 @@
 package nl.xillio.xill.plugins.file.constructs;
 
+import junit.framework.Assert;
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
-import org.apache.logging.log4j.Logger;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import static org.mockito.Mockito.*;
@@ -20,6 +22,19 @@ import static org.mockito.Mockito.*;
  */
 public class IsHiddenConstructTest extends TestUtils {
 
+    private ConstructContext constructContext;
+    private FileUtilities fileUtilities;
+    private MetaExpression metaExpression;
+
+    /**
+     * Initialization method for mocked objects used in all methods.
+     */
+    @BeforeMethod
+    public void initialize() {
+        constructContext = mock(ConstructContext.class);
+        fileUtilities = mock(FileUtilities.class);
+        metaExpression = mock(MetaExpression.class);
+    }
 
     /**
      *
@@ -28,42 +43,25 @@ public class IsHiddenConstructTest extends TestUtils {
      */
     @Test
     public void testProcess() throws IOException {
-
-        ConstructContext constructContext = mock(ConstructContext.class);
-
-        FileUtilities fileUtilities = mock(FileUtilities.class);
-
-        MetaExpression metaExpression = mock(MetaExpression.class);
-        when(metaExpression.getStringValue()).thenReturn("");
-
         setFileResolverReturnValue(new File(""));
 
-        IsHiddenConstruct.process(constructContext, fileUtilities, metaExpression);
+        when(metaExpression.getStringValue()).thenReturn("");
+        when(fileUtilities.isHidden(any())).thenReturn(true);
 
+        MetaExpression result = IsHiddenConstruct.process(constructContext, fileUtilities, metaExpression);
+
+        Assert.assertTrue(result.getBooleanValue());
         verify(fileUtilities, times(1)).isHidden(any());
     }
 
-    @Test
+    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "File not found, or not accessible")
     public void testProcessIOException() throws Exception {
 
-        MetaExpression metaExpression = mock(MetaExpression.class);
+        doThrow(new FileNotFoundException("")).when(fileUtilities).isHidden(any(File.class));
 
-        Logger logger = mock(Logger.class);
-        RobotID robotID = mock(RobotID.class);
-        ConstructContext context = mock(ConstructContext.class);
-        when(context.getRobotID()).thenReturn(robotID);
-        when(context.getRootLogger()).thenReturn(logger);
+        IsHiddenConstruct.process(constructContext, fileUtilities, metaExpression);
 
-        setFileResolverReturnValue(new File(""));
-
-        FileUtilities fileUtils = mock(FileUtilities.class);
-        doThrow(new IOException("")).when(fileUtils).isHidden(any(File.class));
-
-        // Run the method
-        IsHiddenConstruct.process(context, fileUtils, metaExpression);
-
-        // Verify the error that was logged
-        verify(logger).error(contains(""), any(IOException.class));
+        verify(fileUtilities, times(1)).isHidden(any(File.class));
 
     }
 }

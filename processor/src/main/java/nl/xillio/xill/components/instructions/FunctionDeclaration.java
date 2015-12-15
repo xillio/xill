@@ -93,8 +93,4 @@ public class FunctionDeclaration extends Instruction {
         return children;
     }
 
-    @Override
-    public void close() throws Exception {
-    }
-
 }

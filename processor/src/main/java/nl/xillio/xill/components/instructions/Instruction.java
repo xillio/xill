@@ -34,6 +34,10 @@ public abstract class Instruction implements nl.xillio.xill.api.components.Instr
 		this.position = position;
 	}
 
+	protected CodePosition getPosition() {
+		return position;
+	}
+
 	@Override
 	public String toString() {
 		String path = getRobotID().getProjectPath().toURI().relativize(getRobotID().getPath().toURI()).getPath();
@@ -48,4 +52,8 @@ public abstract class Instruction implements nl.xillio.xill.api.components.Instr
 		return false;
 	}
 
+	@Override
+	public void close() throws Exception {
+
+	}
 }
