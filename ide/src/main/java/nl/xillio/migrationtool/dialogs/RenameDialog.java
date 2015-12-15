@@ -21,14 +21,12 @@ import org.apache.logging.log4j.Logger;
  * A dialog to remove an item in the project view.
  */
 public class RenameDialog extends FXMLDialog {
+    private static final Logger LOGGER = LogManager.getLogger(RenameDialog.class);
 
 	@FXML
 	private TextField tfname;
+
 	private final TreeItem<Pair<File, String>> treeItem;
-
-	private final Alert error = new Alert(AlertType.ERROR);
-
-	private static final Logger LOGGER = LogManager.getLogger(RenameDialog.class);
 
 	/**
 	 * Default constructor.
@@ -50,6 +48,7 @@ public class RenameDialog extends FXMLDialog {
 
 	@FXML
 	private void okayBtnPressed(final ActionEvent event) {
+        // Get the old file, new file name and new file.
 		final File oldFile = treeItem.getValue().getKey();
 		String fileName = tfname.getText();
 		if (oldFile.isFile() && !fileName.endsWith(Xill.FILE_EXTENSION)) {
@@ -57,25 +56,19 @@ public class RenameDialog extends FXMLDialog {
 		}
 		final File newFile = new File(oldFile.getParent(), fileName);
 
-		error.initModality(Modality.APPLICATION_MODAL);
-
-		if (newFile.exists()) {
-			error.setContentText("Cannot rename file or folder. The target path already exists.");
-			error.show();
-		} else {
-			try {
-				if (oldFile.isDirectory()) {
-					FileUtils.moveDirectory(oldFile, newFile);
-				} else {
-					FileUtils.moveFile(oldFile, newFile);
-				}
-				treeItem.setValue(new Pair<File, String>(newFile, tfname.getText()));
-				close();
-			} catch (IOException e) {
-				LOGGER.error(e.getMessage(), e);
-				error.setContentText("Something went wrong while renaming a file/folder.\n" + e.getMessage());
-				error.show();
-			}
-		}
+        try {
+            // Rename the item and update the tree item.
+            if (oldFile.isDirectory()) {
+                FileUtils.moveDirectory(oldFile, newFile);
+            } else {
+                FileUtils.moveFile(oldFile, newFile);
+            }
+            treeItem.setValue(new Pair<>(newFile, tfname.getText()));
+            close();
+        } catch (IOException e) {
+            LOGGER.error("IOException while renaming file.", e);
+            new AlertDialog(AlertType.ERROR, "Failed to rename file/folder", "",
+                    "Something went wrong while renaming a file/folder.\n" + e.getMessage()).showAndWait();
+        }
 	}
 }

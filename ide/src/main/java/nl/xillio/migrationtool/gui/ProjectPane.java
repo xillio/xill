@@ -161,7 +161,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         final File destDir = pasteLoc.isDirectory() ? pasteLoc : pasteLoc.getParentFile();
 
         for (File oldFile : files) {
-            // Check if the file already exists.
+            // Check if the file already exists. (This does not throw an IOException in FileUtils, so we need to check it here.)
             File destFile = new File(destDir, oldFile.getName());
             if (destFile.exists()) {
                 // Show a dialog.
@@ -171,7 +171,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
                         ButtonType.OK, ButtonType.CANCEL);
                 final Optional<ButtonType> result = dialog.showAndWait();
 
-                // If cancel was pressed, abort.
+                // Skip this file or abort if cancel was pressed.
                 if (result.isPresent() && result.get() == ButtonType.CANCEL) {
                     break;
                 }
@@ -428,13 +428,6 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
                 LOGGER.error("Could not delete " + file.toString(), e);
             }
         });
-    }
-    
-    private void forEachTreeItem(TreeItem<Pair<File, String>> item, Consumer<TreeItem<Pair<File, String>>> action) {
-        action.accept(item);
-        for (TreeItem<Pair<File, String>> sub : item.getChildren()) {
-            forEachTreeItem(sub, action);
-        }
     }
 
     /* Projects */
