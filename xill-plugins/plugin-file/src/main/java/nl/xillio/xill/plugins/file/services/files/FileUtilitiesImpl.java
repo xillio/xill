@@ -112,17 +112,17 @@ public class FileUtilitiesImpl implements FileUtilities {
         return stat(file).lastModifiedTime();
     }
 
-    public boolean canRead(File file) throws FileNotFoundException {
+    public boolean canRead(File file) throws IOException {
         return fileCheck(file, Files.isReadable(file.toPath()));
     }
 
     @Override
-    public boolean canWrite(File file) throws FileNotFoundException {
+    public boolean canWrite(File file) throws IOException {
         return fileCheck(file, Files.isWritable(file.toPath()));
     }
 
     @Override
-    public boolean canExecute(File file) throws FileNotFoundException {
+    public boolean canExecute(File file) throws IOException {
 
         return fileCheck(file, Files.isExecutable(file.toPath()));
     }
@@ -130,6 +130,21 @@ public class FileUtilitiesImpl implements FileUtilities {
     @Override
     public boolean isHidden(File file) throws IOException {
         return fileCheck(file, Files.isHidden(file.toPath()));
+    }
+
+    @Override
+    public boolean isFile(File file) throws IOException {
+        return fileCheck(file, Files.isRegularFile(file.toPath()));
+    }
+
+    @Override
+    public boolean isFolder(File file) throws IOException {
+        return  fileCheck(file, Files.isDirectory(file.toPath()));
+    }
+
+    @Override
+    public boolean isLink(File file) throws IOException {
+        return fileCheck(file, Files.isSymbolicLink(file.toPath()));
     }
 
     private boolean fileCheck(File file, boolean statement) throws FileNotFoundException {
