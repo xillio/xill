@@ -73,10 +73,10 @@ public class PreviewPane extends AnchorPane implements RobotTabComponent {
 
         apnPreviewPane.getChildren().clear();
 
-        Node node = getPreview(getDebugger().getVariableValue(observableVariable), apnPreviewSearchBar);
+        Node node = getPreview(getDebugger().getVariableValue(observableVariable.getSource()), apnPreviewSearchBar);
 
         if (node == null) {
-            node = buildTree(getDebugger().getVariableValue(observableVariable));
+            node = buildTree(getDebugger().getVariableValue(observableVariable.getSource()));
         }
 
         if (node instanceof Text) {
