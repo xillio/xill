@@ -2,6 +2,7 @@ package nl.xillio.xill.components.expressions;
 
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.components.MetaExpressionIterator;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.components.instructions.FunctionDeclaration;
@@ -27,13 +28,38 @@ public class MapFilterHandler {
     protected List<MetaExpression> atomicHandler(MetaExpression input, Debugger debugger){
         List<MetaExpression> result = new ArrayList<>(1);
 
-        if (functionDeclaration.getParametersSize() == 1){
-            result.add(functionDeclaration.run(debugger, Collections.singletonList(input)).get());
-        } else if (functionDeclaration.getParametersSize() == 2){
-            result.add(functionDeclaration.run(debugger,
-                    Arrays.asList(ExpressionBuilderHelper.fromValue(0), input)).get());
+        if (input.getMeta(MetaExpressionIterator.class) == null) {
+            //This is an atomic value with no MetaExpressionIterator. So we just use the single value
+            if (functionDeclaration.getParametersSize() == 1){
+                result.add(functionDeclaration.run(debugger, Collections.singletonList(input)).get());
+            } else if (functionDeclaration.getParametersSize() == 2){
+                result.add(functionDeclaration.run(debugger,
+                        Arrays.asList(ExpressionBuilderHelper.fromValue(0), input)).get());
+            } else {
+                throw new RobotRuntimeException("The given function does not accept one or two arguments.");
+            }
         } else {
-            throw new RobotRuntimeException("The given function does not accept one or two arguments.");
+            //We have a MetaExpressionIterator in this value, this means we should iterate over that
+            MetaExpressionIterator iterator = input.getMeta(MetaExpressionIterator.class);
+
+            if (functionDeclaration.getParametersSize() == 1) {
+                while (iterator.hasNext()) {
+                    MetaExpression value = iterator.next();
+                    value.registerReference();
+                    result.add(functionDeclaration.run(debugger, Collections.singletonList(value)).get());
+                }
+            } else if (functionDeclaration.getParametersSize() == 2) {
+                int i = -1;
+                while (iterator.hasNext()) {
+                    MetaExpression value = iterator.next();
+                    value.registerReference();
+                    int keyValue = i++;
+                    result.add(functionDeclaration.run(debugger,
+                            Arrays.asList(ExpressionBuilderHelper.fromValue(keyValue), value)).get());
+                }
+            } else {
+                throw new RobotRuntimeException("The given function does not accept one or two arguments.");
+            }
         }
 
         return result;

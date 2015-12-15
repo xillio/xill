@@ -72,15 +72,15 @@ public class FilterExpression extends MapFilterHandler implements Processable, F
 		if (input.isNull()) {
 			return InstructionFlow.doResume(ExpressionBuilderHelper.emptyList());
 		}
-		List<MetaExpression> boolValue = atomicHandler(input, debugger);
+		List<MetaExpression> boolValues = atomicHandler(input, debugger);
 		List<MetaExpression> atomicResults = new ArrayList<>(1);
 
-		if (boolValue.get(0).getBooleanValue()) {
-			atomicResults.add(input);
-			return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(atomicResults));
-		} else {
-			return InstructionFlow.doResume(ExpressionBuilderHelper.emptyList());
-		}
+        for (MetaExpression value : boolValues){
+            if (value.getBooleanValue()) {
+                atomicResults.add(input);
+            }
+        }
+        return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(atomicResults));
 	}
 
     /**
@@ -112,12 +112,18 @@ public class FilterExpression extends MapFilterHandler implements Processable, F
 	@SuppressWarnings("unchecked")
 	private InstructionFlow<MetaExpression> objectProcess(MetaExpression input, Debugger debugger){
 		LinkedHashMap<String, MetaExpression> objectResults = new LinkedHashMap<>();
+        Set<Entry<String, MetaExpression>> inputs = ((Map<String, MetaExpression>) input.getValue()).entrySet();
 		Set<Entry<String, MetaExpression>> boolValues = objectHandler(input, debugger).entrySet();
 
 		for (Entry<String, MetaExpression> expression : boolValues) {
-			if (expression.getValue().getBooleanValue()) {
-				objectResults.put(expression.getKey(), expression.getValue());
-			}
+            if (expression.getValue().getBooleanValue()){
+                for (Iterator<Entry<String, MetaExpression>> it = inputs.iterator(); it.hasNext(); ) {
+                    Entry<String, MetaExpression> f = it.next();
+                    if (f.getKey().equals(expression.getKey())){
+                        objectResults.put(f.getKey(), f.getValue());
+                    }
+                }
+            }
 		}
 		return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(objectResults));
 	}
