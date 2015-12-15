@@ -48,7 +48,7 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 		SAVED
 	}
 
-	private static final Logger LOGGER = LogManager.getLogger(EditorPane.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	@FXML
 	private Button btnUndo;
@@ -115,7 +115,7 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
 		try {
 			getChildren().add(Loader.load(getClass().getResource("/fxml/EditorPane.fxml"), this));
 		} catch (IOException e) {
-			LOGGER.error(e.getMessage(), e);
+			LOGGER.error("Error loading editor pane: " + e.getMessage(), e);
 		}
 
 		editor = new AceEditor((WebView) lookup("#webCode"));

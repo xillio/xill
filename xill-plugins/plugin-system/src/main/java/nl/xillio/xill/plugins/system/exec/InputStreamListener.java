@@ -1,6 +1,7 @@
 package nl.xillio.xill.plugins.system.exec;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
@@ -17,7 +18,7 @@ public class InputStreamListener implements Runnable {
 	private final EventHost<String> onLineComplete = new EventHost<>();
 	private Thread thread;
 
-	private static final Logger LOGGER = LogManager.getLogger(InputStreamListener.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * Create a new {@link InputStreamListener}
@@ -49,8 +50,8 @@ public class InputStreamListener implements Runnable {
 			String line = "";
 			try {
 				line = input.readLine();
-			} catch (Exception e) {
-				LOGGER.error(e.getMessage(), e);
+			} catch (IOException e) {
+				LOGGER.error("Error while listening to input stream: " + e.getMessage(), e);
 			}
 
 			if (line == null) {

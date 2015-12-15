@@ -29,13 +29,12 @@ public class CreateMD5Construct extends Construct {
         		new Argument("value", ATOMIC));
     }
 
-    @SuppressWarnings("squid:S1166")
     static MetaExpression process(final MetaExpression value, final StringUtilityService stringService) {
         assertNotNull(value, "value");
         try {
             return fromValue(stringService.createMD5Construct(value.getStringValue()));
         } catch (NoSuchAlgorithmException e) {
-            throw new RobotRuntimeException("No such algorithm");
+            throw new RobotRuntimeException("No such algorithm: " + e.getMessage(), e);
         }
     }
 }

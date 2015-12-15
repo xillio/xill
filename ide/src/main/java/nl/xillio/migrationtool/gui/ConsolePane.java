@@ -59,7 +59,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class ConsolePane extends AnchorPane implements Searchable, EventHandler<KeyEvent>, RobotTabComponent {
 
-	private static final Logger LOGGER = LogManager.getLogger(ConsolePane.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	@FXML
 	private SearchBar apnConsoleSearchBar;
@@ -129,7 +129,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 			Node ui = loader.load();
 			getChildren().add(ui);
 		} catch (IOException e) {
-			LOGGER.error(e.getMessage(), e);
+			LOGGER.error("Error loading console pane: " + e.getMessage(), e);
 		}
 
 		// Search bar

@@ -105,8 +105,8 @@ public class WatchDir implements Runnable {
 		});
 	}
 
-	@SuppressWarnings("squid:S1166")
 	@Override
+	@SuppressWarnings("squid:S1166") // InterruptedException thrown by watcher.take() is handled correctly
 	public void run() {
 		while (!stop) {
 
@@ -114,7 +114,7 @@ public class WatchDir implements Runnable {
 			WatchKey key;
 			try {
 				key = watcher.take();
-			} catch (Exception x) {
+			} catch (InterruptedException e) {
 				return;
 			}
 
@@ -146,8 +146,8 @@ public class WatchDir implements Runnable {
 						if (Files.isDirectory(child, NOFOLLOW_LINKS)) {
 							registerAll(child);
 						}
-					} catch (IOException x) {
-						LOGGER.error(x.getMessage());
+					} catch (IOException e) {
+						LOGGER.error(e.getMessage(), e);
 					}
 				}
 			}

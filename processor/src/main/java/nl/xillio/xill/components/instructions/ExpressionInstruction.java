@@ -21,7 +21,7 @@ public class ExpressionInstruction extends Instruction {
     private final Processable expression;
     private final Stack<MetaExpression> results = new Stack<>();
 
-    private static final Logger LOGGER = LogManager.getLogger(ExpressionInstruction.class);
+    private static final Logger LOGGER = LogManager.getLogger();
 
     /**
      * Create a new {@link ExpressionInstruction}.

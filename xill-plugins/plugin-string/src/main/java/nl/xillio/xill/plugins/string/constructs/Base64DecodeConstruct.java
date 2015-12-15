@@ -38,7 +38,6 @@ public class Base64DecodeConstruct extends Construct {
 			new Argument("filename", ATOMIC));
 	}
 
-	@SuppressWarnings("squid:S1166")
 	static MetaExpression process(final MetaExpression contentVar, final MetaExpression filenameVar, final StringUtilityService stringService, final UrlUtilityService urlUtilityService, final ConstructContext context) {
 
 		assertNotNull(contentVar, "content");
@@ -52,9 +51,9 @@ public class Base64DecodeConstruct extends Construct {
 		try {
 			urlUtilityService.write(file, data);
 		} catch (FileNotFoundException e) {
-			throw new RobotRuntimeException("The file could not be found or the filename is invalid");
+			throw new RobotRuntimeException("The file could not be found or the filename is invalid: " + e.getMessage(), e);
 		} catch (IOException e) {
-			throw new RobotRuntimeException("IO Exception");
+			throw new RobotRuntimeException("Error writing to file: " + e.getMessage(), e);
 		}
 		return NULL;
 	}

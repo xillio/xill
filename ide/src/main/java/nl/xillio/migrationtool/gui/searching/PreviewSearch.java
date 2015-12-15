@@ -26,7 +26,7 @@ import java.util.regex.PatternSyntaxException;
  */
 public class PreviewSearch implements Searchable {
 
-    private static final Logger LOGGER = LogManager.getLogger(PreviewSearch.class);
+    private static final Logger LOGGER = LogManager.getLogger();
 
     private class SearchTextOccurrence {
         private final int start;
@@ -74,7 +74,7 @@ public class PreviewSearch implements Searchable {
         this.apnPreviewPane = apnPreviewPane;
     }
 
-    @SuppressWarnings("squid:S1166")
+    @SuppressWarnings("squid:S1166") // PatternSyntaxException is handled correctly
     @Override
     public void searchPattern(String pattern, boolean caseSensitive) {
         // Clear selection

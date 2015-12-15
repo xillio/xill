@@ -7,6 +7,7 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.data.Date;
 import nl.xillio.xill.plugins.date.BaseDateConstruct;
 import nl.xillio.xill.plugins.date.services.DateService;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.time.ZoneId;
@@ -27,12 +28,13 @@ public class ChangeConstruct extends BaseDateConstruct {
 		return new ConstructProcessor((date, change) -> process(context.getRootLogger(), date, change, getDateService()), new Argument("date"), new Argument("change", OBJECT));
 	}
 
-	@SuppressWarnings({ "unchecked", "squid:S1166" })
+	@SuppressWarnings("squid:S1166") // IllegalArgumentException is an internal robot exception, which is handled correctly
 	static MetaExpression process(final Logger logger, final MetaExpression dateVar, final MetaExpression changeVar, DateService dateService) {
 		Date date = getDate(dateVar, "date");
 
 		// First we need the zone
 		ZoneId zone = null;
+		@SuppressWarnings("unchecked")
 		Map<String, MetaExpression> map = (Map<String, MetaExpression>) changeVar.getValue();
 		if (map.containsKey("zone")) {
 			zone = ZoneId.of(map.get("zone").getStringValue());

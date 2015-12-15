@@ -2,6 +2,8 @@ package nl.xillio.xill.plugins.excel.datastructures;
 
 import nl.xillio.xill.api.errors.NotImplementedException;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -15,6 +17,8 @@ import java.io.*;
  */
 
 public class XillWorkbookFactory {
+
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	//For unit testing
 	FileInputStream getStream(File file) throws FileNotFoundException {
@@ -52,12 +56,12 @@ public class XillWorkbookFactory {
 	 * @return the XillWorkbook
 	 * @throws InvalidObjectException when the file cannot be opened
 	 */
-	@SuppressWarnings("squid:S1166")
 	Workbook makeLegacyWorkbook(FileInputStream stream) throws InvalidObjectException {
 		HSSFWorkbook workbook;
 		try {
 			workbook = new HSSFWorkbook(stream);
 		} catch (IOException e) {
+			LOGGER.debug(e);
 			throw new InvalidObjectException("File cannot be opened as Excel Workbook");
 		}
 		return workbook;
@@ -70,12 +74,12 @@ public class XillWorkbookFactory {
 	 * @return the XillWorkbook
 	 * @throws InvalidObjectException when the file cannot be loaded
 	 */
-	@SuppressWarnings("squid:S1166")
 	Workbook makeModernWorkbook(FileInputStream stream) throws InvalidObjectException {
 		XSSFWorkbook workbook;
 		try {
 			workbook = new XSSFWorkbook(stream);
 		} catch (IOException e) {
+			LOGGER.debug(e);
 			throw new InvalidObjectException("File cannot be opened as Excel Workbook");
 		}
 		return workbook;

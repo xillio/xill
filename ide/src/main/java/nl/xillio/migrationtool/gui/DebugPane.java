@@ -21,7 +21,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class DebugPane extends AnchorPane implements EventHandler<KeyEvent>, RobotTabComponent {
 	private static final SettingsHandler settings = SettingsHandler.getSettingsHandler();
-	private static final Logger LOGGER = LogManager.getLogger(DebugPane.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	@FXML
 	private VariablePane variablepane;
@@ -45,7 +45,7 @@ public class DebugPane extends AnchorPane implements EventHandler<KeyEvent>, Rob
 			getChildren().add(ui);
 
 		} catch (IOException e) {
-			LOGGER.error(e.getMessage(), e);
+			LOGGER.error("Error loading debug pane: " + e.getMessage(), e);
 		}
 
 		variablepane.setPreviewPane(previewpane);

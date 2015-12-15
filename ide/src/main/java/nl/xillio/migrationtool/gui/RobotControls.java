@@ -110,7 +110,7 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 	/**
 	 * Start/Resume the robot
 	 */
-	@SuppressWarnings("squid:S1166")
+	@SuppressWarnings("squid:S1166") // XillParsingException is handled correctly here
 	public void start() {
 		if (running) {
 			continu();

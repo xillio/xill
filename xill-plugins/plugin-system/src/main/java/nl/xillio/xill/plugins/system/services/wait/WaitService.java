@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class WaitService implements XillService {
 
-	private static final Logger LOGGER = LogManager.getLogger(WaitService.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * Wait for a time
@@ -21,7 +21,7 @@ public class WaitService implements XillService {
 		try {
 			Thread.sleep(delay);
 		} catch (InterruptedException e) {
-			LOGGER.error(e.getMessage(), e);
+			LOGGER.error("Wait interrupted: " + e.getMessage(), e);
 		}
 	}
 }

@@ -19,7 +19,6 @@ public class SortImpl implements Sort {
 		return asSorted(input, recursive, onKeys, reverse, new IdentityHashMap<>());
 	}
 
-	@SuppressWarnings("unchecked")
 	private Object asSorted(final Object input, final boolean recursive, final boolean onKeys, final boolean reverse, final IdentityHashMap<Object, Object> results) {
 		if (results.containsKey(input)) {
 			return results.get(input);
@@ -27,6 +26,7 @@ public class SortImpl implements Sort {
 		Sorter sorter = reverse ? Sorter.REVERSE : Sorter.NORMAL;
 
 		if (input instanceof List) {
+			@SuppressWarnings("unchecked")
 			List<?> list = (List<?>) input;
 			List<Object> sorted = list.stream().sorted(sorter).collect(Collectors.toList());
 			results.put(list, sorted);
@@ -42,6 +42,7 @@ public class SortImpl implements Sort {
 			return sorted;
 		} else if (input instanceof Map) {
 			// Sort the map by extracting single entries and sorting them either by key or
+			@SuppressWarnings("unchecked")
 			Map.Entry<String, Object>[] sortedEntries = ((Map<String, Object>) input)
 					.entrySet()
 					.stream()

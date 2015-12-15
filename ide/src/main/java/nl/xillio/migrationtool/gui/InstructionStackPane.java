@@ -31,7 +31,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class InstructionStackPane extends AnchorPane implements RobotTabComponent, ChangeListener<Instruction> {
 
-	private static final Logger LOGGER = LogManager.getLogger(InstructionStackPane.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 	private static final int MAX_STACK = 40;
 	@FXML
 	private ComboBox<Instruction> cbxStackPos;
@@ -45,7 +45,7 @@ public class InstructionStackPane extends AnchorPane implements RobotTabComponen
 			Node ui = loader.load();
 			getChildren().add(ui);
 		} catch (IOException e) {
-			LOGGER.error(e.getMessage(), e);
+			LOGGER.error("Error while loading instruction stack pane: " + e.getMessage(), e);
 		}
 
 		cbxStackPos.getSelectionModel().selectedItemProperty().addListener(this);

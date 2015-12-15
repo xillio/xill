@@ -175,7 +175,7 @@ public class FXController implements Initializable, EventHandler<Event> {
         // Add window handler
         Platform.runLater(() -> apnRoot.getScene().getWindow().setOnCloseRequest(event -> {
             this.cancelClose = false;
-            LOGGER.info("Shutting down application");
+            LOGGER.info("Shutting down application.");
             if (!closeApplication()) {
                 event.consume(); // this cancel the process of the application closing
             }
@@ -258,7 +258,7 @@ public class FXController implements Initializable, EventHandler<Event> {
             try {
                 showReleaseNotes();
             } catch (IOException e) {
-                LOGGER.error("Failed to show release notes", e);
+                LOGGER.error("Failed to show release notes: " + e.getMessage(), e);
             }
 
             // Select the last opened tab.
@@ -347,7 +347,7 @@ public class FXController implements Initializable, EventHandler<Event> {
                 tpnBots.getTabs().add(tab);
                 tab.requestFocus();
             } catch (IOException e) {
-                LOGGER.error("Failed to perform operation.", e);
+                LOGGER.error("Failed to perform operation: " + e.getMessage(), e);
             }
         } else {
             // The created file is not in the project
@@ -437,7 +437,7 @@ public class FXController implements Initializable, EventHandler<Event> {
             tab.requestFocus();
             return tab;
         } catch (IOException e) {
-            LOGGER.error("Failed to perform operation.", e);
+            LOGGER.error("Failed to perform operation: " + e.getMessage(), e);
         }
         return null;
     }
@@ -597,7 +597,7 @@ public class FXController implements Initializable, EventHandler<Event> {
             try {
                 plugin.close();
             } catch (Exception e) {
-                LOGGER.error(e.getMessage(), e);
+                LOGGER.error("Error while closing plugin: " + e.getMessage(), e);
             }
         }
 

@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class PowerConstuct extends Construct {
 
-	private static final Logger LOGGER = LogManager.getLogger(PowerConstuct.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	@Override
 	public String getName() {

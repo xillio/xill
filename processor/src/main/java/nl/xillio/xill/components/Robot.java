@@ -35,7 +35,7 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
 	private final List<nl.xillio.xill.api.components.Robot> libraries = new ArrayList<>();
 	private MetaExpression callArgument = ExpressionBuilder.NULL;
 
-	private static final Logger LOGGER = LogManager.getLogger(Robot.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * Events for signalling that a robot has started or stopped

@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 public class ReplaceBar extends SearchBar {
 
-	private static final Logger LOGGER = LogManager.getLogger(ReplaceBar.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	@FXML
 	private TextField tfEditorReplaceString;
@@ -28,7 +28,7 @@ public class ReplaceBar extends SearchBar {
 			Node ui = loader.load();
 			((VBox) getChildren().get(0)).getChildren().add(ui);
 		} catch (IOException e) {
-			LOGGER.error(e.getMessage(), e);
+			LOGGER.error("Error loading replace bar: " + e.getMessage(), e);
 		}
 	}
 

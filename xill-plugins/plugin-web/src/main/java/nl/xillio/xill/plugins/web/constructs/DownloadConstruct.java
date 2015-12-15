@@ -48,7 +48,6 @@ public class DownloadConstruct extends PhantomJSConstruct {
      * @return
      *        null variable
      */
-    @SuppressWarnings("squid:S1166")
     public static MetaExpression process(final MetaExpression urlVar, final MetaExpression fileNameVar, final MetaExpression webContextVar, final MetaExpression timeoutVar, final WebService webService, final ConstructContext context) {
 
         String url = urlVar.getStringValue();
@@ -81,9 +80,9 @@ public class DownloadConstruct extends PhantomJSConstruct {
         try {
             webService.download(url, targetFile, webContext, timeout);
         } catch (MalformedURLException e) {
-            throw new RobotRuntimeException("Invalid URL! " + e.getMessage());
+            throw new RobotRuntimeException("Invalid URL: " + e.getMessage(), e);
         } catch (IOException e) {
-            throw new RobotRuntimeException("Error occured during the download! " + e.getMessage());
+            throw new RobotRuntimeException("Error during download: " + e.getMessage(), e);
         }
 
         return NULL;

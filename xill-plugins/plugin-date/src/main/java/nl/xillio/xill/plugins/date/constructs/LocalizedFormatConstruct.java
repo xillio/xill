@@ -33,7 +33,6 @@ public class LocalizedFormatConstruct extends BaseDateConstruct {
 						new Argument("timestyle", NULL));
 	}
 
-	@SuppressWarnings("squid:S1166")
 	static MetaExpression process(final MetaExpression dateVar,
 					final MetaExpression localeVar, final MetaExpression dateStyleVar, final MetaExpression timeStyleVar, DateService dateService) {
 
@@ -48,7 +47,7 @@ public class LocalizedFormatConstruct extends BaseDateConstruct {
 			try {
 				dateStyle = FormatStyle.valueOf(dateStyleVar.getStringValue().toUpperCase());
 			} catch (IllegalArgumentException e) {
-				throw new RobotRuntimeException("Datestyle has to be 'full','long','medium' or 'short'.");
+				throw new RobotRuntimeException("Datestyle has to be 'full','long','medium' or 'short'.", e);
 			}
 		}
 
@@ -58,12 +57,12 @@ public class LocalizedFormatConstruct extends BaseDateConstruct {
 			try {
 				timeStyle = FormatStyle.valueOf(timeStyleVar.getStringValue().toUpperCase());
 			} catch (IllegalArgumentException e) {
-				throw new RobotRuntimeException("Timestyle has to be 'full','long','medium' or 'short'.");
+				throw new RobotRuntimeException("Timestyle has to be 'full','long','medium' or 'short'.", e);
 			}
 		}
 
 		Locale locale = localeVar.isNull() ? null : Locale.forLanguageTag(localeVar.getStringValue());
-		MetaExpression result = null;
+		MetaExpression result;
 		try {
 			result = fromValue(dateService.formatDateLocalized(date, dateStyle, timeStyle, locale));
 		} catch (DateTimeException | IllegalArgumentException e) {

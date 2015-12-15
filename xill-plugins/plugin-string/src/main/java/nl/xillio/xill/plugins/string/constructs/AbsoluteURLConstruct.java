@@ -28,7 +28,6 @@ public class AbsoluteURLConstruct extends Construct {
                 new Argument("relativeUrl", ATOMIC));
     }
 
-    @SuppressWarnings("squid:S1166")
     static MetaExpression process(final MetaExpression pageUrlVar, final MetaExpression relativeUrlVar, final UrlUtilityService urlUtilityService) {
         String pageUrl = pageUrlVar.getStringValue().trim();
         String relativeUrl = relativeUrlVar.getStringValue().trim();
@@ -53,7 +52,7 @@ public class AbsoluteURLConstruct extends Construct {
                 throw new RobotRuntimeException("The page url is invalid.");
             }
         } catch (IllegalArgumentException e) {
-            throw new RobotRuntimeException("Illegal argument was handed to the matcher when trying to convert the URL");
+            throw new RobotRuntimeException("Illegal argument was handed to the matcher when trying to convert the URL: " + e.getMessage() , e);
         }
 
     }

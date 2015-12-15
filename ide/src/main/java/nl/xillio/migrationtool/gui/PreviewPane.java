@@ -43,7 +43,7 @@ public class PreviewPane extends AnchorPane implements RobotTabComponent {
 	private final TextArea textView = new TextArea();
 	private PreviewSearch previewSearch;
 
-	private static final Logger LOGGER = LogManager.getLogger(PreviewPane.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * Create a new PreviewPane
@@ -55,7 +55,7 @@ public class PreviewPane extends AnchorPane implements RobotTabComponent {
 			loader.setController(this);
 			getChildren().add(loader.load());
 		} catch (IOException e) {
-			LOGGER.error(e.getMessage(), e);
+			LOGGER.error("Error loading Preview pane: " + e.getMessage(), e);
 		}
 
 		previewSearch = new PreviewSearch(apnPreviewPane);

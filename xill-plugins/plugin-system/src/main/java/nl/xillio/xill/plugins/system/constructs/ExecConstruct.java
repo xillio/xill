@@ -29,7 +29,7 @@ import nl.xillio.xill.services.inject.FactoryBuilderException;
  */
 public class ExecConstruct extends Construct {
 
-	private static final Logger LOGGER = LogManager.getLogger(ExecConstruct.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	private final ProcessFactory processFactory = new ProcessFactory();
 
@@ -61,7 +61,7 @@ public class ExecConstruct extends Construct {
 		try {
 			process.waitFor();
 		} catch (InterruptedException e) {
-			LOGGER.error(e.getMessage(), e);
+			LOGGER.error("Execution interrupted: " + e.getMessage(), e);
 		}
 
 		while (output.isAlive()) {

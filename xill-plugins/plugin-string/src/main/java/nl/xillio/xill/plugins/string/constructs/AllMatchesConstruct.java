@@ -36,7 +36,6 @@ public class AllMatchesConstruct extends Construct {
                 new Argument("timeout", fromValue(RegexConstruct.REGEX_TIMEOUT), ATOMIC));
     }
 
-    @SuppressWarnings("squid:S1166")
     static MetaExpression process(final MetaExpression textVar, final MetaExpression regexVar, final MetaExpression timeoutVar,
                                   final RegexService regexService) {
 
@@ -53,9 +52,9 @@ public class AllMatchesConstruct extends Construct {
                 list.add(fromValue(s));
             }
         } catch (PatternSyntaxException e) {
-            throw new RobotRuntimeException("Invalid pattern handed.");
+            throw new RobotRuntimeException("Invalid pattern: " + e.getMessage(), e);
         } catch (IllegalArgumentException | FailedToGetMatcherException e) {
-            throw new RobotRuntimeException("Illegal argument handed.");
+            throw new RobotRuntimeException("Illegal argument: " + e.getMessage(), e);
         }
         return fromValue(list);
     }

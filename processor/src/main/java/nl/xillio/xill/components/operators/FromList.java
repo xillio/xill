@@ -24,8 +24,6 @@ public class FromList implements Processable {
     private final Processable list;
     private final Processable index;
 
-    private static final Logger LOGGER = LogManager.getLogger();
-
     public FromList(final Processable list, final Processable index) {
         this.list = list;
         this.index = index;

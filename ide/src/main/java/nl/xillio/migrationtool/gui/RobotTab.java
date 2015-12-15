@@ -467,7 +467,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
     /**
      * Automatically saves robot and runs it if the save is successful
      */
-    @SuppressWarnings({ "squid:S1166", "squid:S1148" })
+    @SuppressWarnings("squid:S1166") // XillParsingException is handled correctly here
     private void autoSaveAndRunRobot() {
         save();
 
@@ -558,7 +558,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
     }
 
     /**
-     * <b>NOTE: </b> Do not save this processor over a long period as it will be swapped out often.
+     * <b>NOTE: </b> Do not save this processor over a long period as it will be spped out often.
      *
      * @return the processor for this tab
      */

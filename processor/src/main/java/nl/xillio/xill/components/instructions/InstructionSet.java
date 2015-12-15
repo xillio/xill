@@ -22,7 +22,7 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
 	private final List<Instruction> instructions = new LinkedList<>();
 	private final Debugger debugger;
 
-	private static final Logger LOGGER = LogManager.getLogger(InstructionSet.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * Create a new {@link InstructionSet} in debugging mode

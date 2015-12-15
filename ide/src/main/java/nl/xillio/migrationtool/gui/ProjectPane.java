@@ -84,7 +84,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 			Node ui = loader.load();
 			getChildren().add(ui);
 		} catch (IOException e) {
-			LOGGER.error(e.getMessage(), e);
+			LOGGER.error("Error loading project pane: " + e.getMessage(), e);
 		}
 
 		trvProjects.setRoot(root);
@@ -96,7 +96,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 			watcher = new WatchDir();
 			new Thread(watcher).start();
 		} catch (IOException e) {
-			LOGGER.error(e.getMessage(), e);
+			LOGGER.error("Error while opening project directory: " + e.getMessage(), e);
 		}
 
 		trvProjects.setCellFactory(treeView -> new TreeCell<Pair<File, String>>() {
