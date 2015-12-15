@@ -73,7 +73,7 @@ public class RenameDialog extends FXMLDialog {
 				close();
 			} catch (IOException e) {
 				LOGGER.error(e.getMessage(), e);
-				error.setContentText("Something went wrong while renaming a file/folder: " + e.getMessage());
+				error.setContentText("Something went wrong while renaming a file/folder.\n" + e.getMessage());
 				error.show();
 			}
 		}

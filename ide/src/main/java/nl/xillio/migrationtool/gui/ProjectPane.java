@@ -7,9 +7,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.WatchEvent;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javax.swing.filechooser.FileFilter;
 
@@ -26,7 +25,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -230,38 +228,40 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
     }
 
     private void renameButtonPressed() {
-        RobotTab orgTab = (RobotTab) controller.findTab(getCurrentItem().getValue().getKey());
+        TreeItem<Pair<File, String>> item = getCurrentItem();
+        RobotTab tab = (RobotTab) controller.findTab(item.getValue().getKey());
 
-        // Test if robot is still running
-        if (orgTab != null && orgTab.getEditorPane().getControls().robotRunning()) {
+        // Check if a robot is still running, show a dialog to stop them.
+        if (checkRobotsRunning(Collections.singletonList(item), false, false)) {
             AlertDialog dialog = new AlertDialog(Alert.AlertType.WARNING,
                     "Rename running robot",
-                    "You are trying to rename running robot!",
+                    "You are trying to rename a running robot or a folder containing running robots.",
                     "Do you want to stop the robot so you can rename it?",
                     ButtonType.YES, ButtonType.NO
             );
             final Optional<ButtonType> result = dialog.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.YES) {
-                orgTab.getEditorPane().getControls().stop();// Stop robot before renaming
-            } else {
+            if (!result.isPresent() || result.get() != ButtonType.YES) {
                 return;
             }
         }
 
-        String oldName = getCurrentItem().getValue().getValue();
-        RenameDialog dlg = new RenameDialog(getCurrentItem());
-        dlg.showAndWait();
-        String newName = getCurrentItem().getValue().getValue();
-        if (!oldName.equals(newName)) {// name has changed
-            if (orgTab != null) {// if tab with the org file is opened then close it and open new one
-                Tab selectedTab = controller.getSelectedTab();
-                if (orgTab == selectedTab) {
-                    selectedTab = null;
-                }
-                controller.closeTab(orgTab);
-                controller.openFile(getCurrentItem().getValue().getKey());
-                if (selectedTab != null) {
-                    controller.showTab((RobotTab) selectedTab);
+        // Get the old name, show the rename dialog, get the new name.
+        String oldName = item.getValue().getValue();
+        new RenameDialog(item).showAndWait();
+        String newName = item.getValue().getValue();
+
+        // Check if the name changed.
+        if (!oldName.equals(newName)) {
+            // Stop any running robots, close tabs.
+            checkRobotsRunning(Collections.singletonList(item), true, true);
+
+            // If the tab was previously open, close and reopen it.
+            if (tab != null) {
+                boolean wasSelected = controller.getSelectedTab() == tab;
+                controller.closeTab(tab);
+                RobotTab newTab = controller.openFile(item.getValue().getKey());
+                if (wasSelected) {
+                    controller.showTab(newTab);
                 }
             }
         }
@@ -271,7 +271,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         ObservableList<TreeItem<Pair<File, String>>> selectedItems = getAllCurrentItems();
 
         // First check if there are any robots running, and count the amount of projects and robot files.
-        boolean running = checkRobotsRunning(selectedItems, false);
+        boolean running = checkRobotsRunning(selectedItems, false, false);
         int robotFiles = 0;
         int projects = 0;
         for (TreeItem<Pair<File, String>> item : selectedItems) {
@@ -370,26 +370,29 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
      *
      * @param items The items to check.
      * @param stop Whether to stop the running robots.
+     * @param closeTab Whether to close open robot tabs.
      * @return True if any items or sub-items are running robots.
      */
-    private boolean checkRobotsRunning(List<TreeItem<Pair<File, String>>> items, boolean stop) {
+    private boolean checkRobotsRunning(List<TreeItem<Pair<File, String>>> items, boolean stop, boolean closeTab) {
         boolean running = false;
 
         for (TreeItem<Pair<File, String>> item : items) {
-            if (item != null && item == getProject(item)) {
-                // If the item is a project, recursively check all sub-items.
-                running |= checkRobotsRunning(item.getChildren(), stop);
-            } else {
-                // Check if the robot tab is open and the robot is running.
-                RobotTab tab = (RobotTab) controller.findTab(item.getValue().getKey());
-                if (tab != null && tab.getEditorPane().getControls().robotRunning()) {
-                    running = true;
-                    // Stop the robot.
-                    if (stop) {
-                        tab.getEditorPane().getControls().stop();
-                    }
+            // Check if the robot tab is open and the robot is running.
+            RobotTab tab = (RobotTab) controller.findTab(item.getValue().getKey());
+            if (tab != null) {
+                running |= tab.getEditorPane().getControls().robotRunning();
+                // Stop the robot.
+                if (stop) {
+                    tab.getEditorPane().getControls().stop();
+                }
+                // Close the tab.
+                if (closeTab) {
+                    controller.closeTab(controller.findTab(item.getValue().getKey()));
                 }
             }
+
+            // Recursively check all children of the item.
+            running |= checkRobotsRunning(item.getChildren(), stop, closeTab);
         }
 
         return running;
@@ -401,37 +404,37 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
      * @param items              The items to delete.
      * @param hardDeleteProjects Whether to delete the projects from disk.
      */
-    private void deleteItems(ObservableList<TreeItem<Pair<File, String>>> items, boolean hardDeleteProjects) {
-        // Stop and delete all folders and robots, close tabs from deleted robots.
-        checkRobotsRunning(items, true);
-        items.stream().forEach(t -> {
-            File f = t.getValue().getKey();
-            controller.closeTab(controller.findTab(f));
+    private void deleteItems(List<TreeItem<Pair<File, String>>> items, boolean hardDeleteProjects) {
+        // First stop all robots and close the tabs.
+        checkRobotsRunning(items, true, true);
 
-            // Recursively delete all children.
-            deleteItems(t.getChildren(), hardDeleteProjects);
+        items.forEach(item -> {
+            File file = item.getValue().getKey();
 
-            // Delete the file or directory.
+            // Delete the file or folder. If the folder is a project check if we should hard delete it and remove it.
             try {
-                if (f.isDirectory()) {
-                    FileUtils.deleteDirectory(f);
+                if (file.isDirectory()) {
+                    if (item != getProject(item) || hardDeleteProjects) {
+                        FileUtils.deleteDirectory(file);
+                    }
+                    if (item == getProject(item)) {
+                        removeProject(item);
+                    }
+
                 } else {
-                    f.delete();
+                    file.delete();
                 }
             } catch (IOException e) {
-                LOGGER.error("Could not delete " + f.toString(), e);
+                LOGGER.error("Could not delete " + file.toString(), e);
             }
         });
-
-        // Delete all projects.
-        items.stream().filter(i -> i != null && i == getProject(i))
-                .forEach(p -> {
-                    if (hardDeleteProjects) {
-                        deleteProject(p);
-                    } else {
-                        removeProject(p);
-                    }
-                });
+    }
+    
+    private void forEachTreeItem(TreeItem<Pair<File, String>> item, Consumer<TreeItem<Pair<File, String>>> action) {
+        action.accept(item);
+        for (TreeItem<Pair<File, String>> sub : item.getChildren()) {
+            forEachTreeItem(sub, action);
+        }
     }
 
     /* Projects */
@@ -462,24 +465,6 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
     public void removeProject(final TreeItem<Pair<File, String>> item) {
         root.getChildren().remove(item);
         settings.project().delete(item.getValue().getValue());
-        if (getProjectsCount() == 0) {
-            disableFileButtons(true);
-            disableAllButtons(true);
-        }
-    }
-
-    /**
-     * Deletes a project and it's files.
-     *
-     * @param item a project item
-     */
-    public void deleteProject(final TreeItem<Pair<File, String>> item) {
-        try {
-            FileUtils.deleteDirectory(item.getValue().getKey());
-        } catch (IOException e) {
-            LOGGER.error("Failed to delete project", e);
-        }
-        removeProject(item);
     }
 
     /**
