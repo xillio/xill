@@ -1,14 +1,6 @@
 package nl.xillio.xill.components;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
 import nl.xillio.events.EventHost;
 import nl.xillio.xill.api.Debugger;
@@ -41,16 +33,19 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
 
 	private final static List<nl.xillio.xill.api.components.Robot> initializingRobots = new ArrayList<>();
 	private final static List<nl.xillio.xill.api.components.Robot> closingRobots = new ArrayList<>();
+	private final UUID compilerSerialId;
 
 	/**
 	 * @param robotID
 	 * @param debugger
+	 * @param compilerSerialId
 	 */
-	public Robot(final RobotID robotID, final Debugger debugger, EventHost<RobotStartedAction> startEvent, EventHost<RobotStoppedAction> endEvent) {
+	public Robot(final RobotID robotID, final Debugger debugger, EventHost<RobotStartedAction> startEvent, EventHost<RobotStoppedAction> endEvent, UUID compilerSerialId) {
 		super(debugger);
 		this.robotID = robotID;
 		this.startEvent = startEvent;
 		this.endEvent = endEvent;
+		this.compilerSerialId = compilerSerialId;
 	}
 
 	/**
@@ -71,7 +66,7 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
 
 		InstructionFlow<MetaExpression> result = super.process(debugger);
 
-		endEvent.invoke(new RobotStoppedAction(this));
+		endEvent.invoke(new RobotStoppedAction(this, compilerSerialId));
 		getDebugger().robotFinished(this);
 
 		return result;
@@ -174,6 +169,11 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
 	@Override
 	public MetaExpression getArgument() {
 		return callArgument;
+	}
+
+	@Override
+	public UUID getCompilerSerialId() {
+		return compilerSerialId;
 	}
 
 	@Override

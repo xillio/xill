@@ -2,11 +2,16 @@ package nl.xillio.xill.plugins.mongodb.services;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 
 /**
@@ -17,7 +22,15 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Singleton
 public class ConnectionManager {
-    private final Map<RobotID, Connection> connectionCache = new ConcurrentHashMap<>();
+    private static final Logger LOGGER = LogManager.getLogger();
+    /**
+     * This cache keeps track of the last created connection in a running instance.
+     */
+    private final Map<UUID, Connection> connectionCache = new ConcurrentHashMap<>();
+    /**
+     * This map keeps track of the connection info used to build a connection.
+     */
+    private final Map<Connection, ConnectionInfo> connectionInfoMap = new ConcurrentHashMap<>();
     private final ConnectionFactory connectionFactory;
 
     /**
@@ -40,17 +53,59 @@ public class ConnectionManager {
      */
     public Connection getConnection(ConstructContext context, ConnectionInfo info) {
         synchronized (connectionCache) {
-
             Connection connection = getOpen(context);
 
+            // Check if the connection info is different
+            if (connection != null) {
+                ConnectionInfo initInfo = connectionInfoMap.get(connection);
+                if (!initInfo.equals(info)) {
+                    // Pretend we don't have a connection yet because the connection info is different
+                    connection = null;
+                }
+            }
+
             if (connection == null) {
+                LOGGER.info("Creating connection for {}", info);
+                // We have to create a new connection
                 connection = connectionFactory.build(info);
-                connectionCache.put(context.getRootRobot(), connection);
+                connectionCache.put(context.getCompilerSerialId(), connection);
+                connectionInfoMap.put(connection, info);
+
+                // Add a listener to close the connection
+                Connection connectionReference = connection;
+                context.addRobotStoppedListener(action -> {
+                    connectionReference.close();
+                    clean();
+                });
             }
 
             return connection;
-
         }
+    }
+
+    /**
+     * Clean the manager maps to make them ready for garbage collection.
+     */
+    private void clean() {
+        LOGGER.info("Cleaning up connections");
+
+        // Remove all closed elements from the cache
+        List<UUID> closed = connectionCache.entrySet().stream()
+                .filter(e -> e.getValue().isClosed())
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+
+        closed.forEach(connectionCache::remove);
+
+        // Remove all connection info mappings for connections that do not exist
+        Collection<Connection> availableConnections = connectionCache.values();
+
+        List<Connection> toBeRemoved = connectionInfoMap.keySet().stream()
+                .filter(c -> !availableConnections.contains(c))
+                .collect(Collectors.toList());
+
+        toBeRemoved.forEach(connectionInfoMap::remove);
+
     }
 
     /**
@@ -71,7 +126,7 @@ public class ConnectionManager {
     }
 
     private Connection getOpen(ConstructContext context) {
-        Connection connection = connectionCache.get(context.getRootRobot());
+        Connection connection = connectionCache.get(context.getCompilerSerialId());
         if (connection == null || connection.isClosed()) {
             return null;
         }

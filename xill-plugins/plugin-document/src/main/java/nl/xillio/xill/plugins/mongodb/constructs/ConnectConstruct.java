@@ -1,11 +1,16 @@
 package nl.xillio.xill.plugins.mongodb.constructs;
 
 import com.google.inject.Inject;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoOptions;
+import com.mongodb.MongoSocketException;
+import com.mongodb.MongoTimeoutException;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.mongodb.services.Connection;
 import nl.xillio.xill.plugins.mongodb.services.ConnectionInfo;
 import nl.xillio.xill.plugins.mongodb.services.ConnectionManager;
@@ -22,35 +27,37 @@ public class ConnectConstruct extends Construct {
     @Override
     public ConstructProcessor prepareProcess(ConstructContext context) {
         return new ConstructProcessor(
-                (host, port, database, username, password) ->
-                        process(host, port, database, username, password, context),
-                new Argument("host", ATOMIC),
-                new Argument("port", ATOMIC),
+                (database, host, port, username, password) ->
+                        process(database, host, port, username, password, context),
                 new Argument("database", ATOMIC),
+                new Argument("host", fromValue("localhost"), ATOMIC),
+                new Argument("port", fromValue(27017), ATOMIC),
                 new Argument("username", NULL, ATOMIC),
                 new Argument("password", NULL, ATOMIC)
         );
     }
 
-    MetaExpression process(MetaExpression hostExpression, MetaExpression portExpression, MetaExpression databaseExpression, MetaExpression usernameExpression, MetaExpression passwordExpression, ConstructContext context) {
+    MetaExpression process(MetaExpression databaseExpression, MetaExpression hostExpression, MetaExpression portExpression, MetaExpression usernameExpression, MetaExpression passwordExpression, ConstructContext context) {
+        // Get the information
         String host = hostExpression.getStringValue();
         int port = portExpression.getNumberValue().intValue();
         String database = databaseExpression.getStringValue();
-        String username = usernameExpression.getStringValue();
-        String password = passwordExpression.getStringValue();
+        String username = usernameExpression.isNull() ? null : usernameExpression.getStringValue();
+        String password = passwordExpression.isNull() ? null : passwordExpression.getStringValue();
         ConnectionInfo info = new ConnectionInfo(host, port, database, username, password);
 
-        MetaExpression result = fromValue(getConnectionString(username, host, port, database));
+        // Create/Get the connection
+        MetaExpression result = fromValue(info.toString());
         Connection connection = connectionManager.getConnection(context, info);
         result.storeMeta(Connection.class, connection);
 
-        return result;
-    }
-
-    private String getConnectionString(String username, String host, int port, String database) {
-        if (username == null) {
-            return String.format("Mongo[%s:%d/%s]", host, port, database);
+        try {
+            // Validate the connection
+            connection.getClient().getAddress();
+        } catch(MongoTimeoutException e) {
+            throw new RobotRuntimeException("Failed to connect to mongo server at " + info);
         }
-        return String.format("Mongo[%s@%s:%d/%s]", username, host, port, database);
+
+        return result;
     }
 }

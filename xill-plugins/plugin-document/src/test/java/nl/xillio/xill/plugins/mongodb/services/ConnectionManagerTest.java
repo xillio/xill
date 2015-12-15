@@ -6,6 +6,7 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import org.testng.annotations.Test;
 
 import java.io.File;
+import java.util.UUID;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
@@ -20,7 +21,7 @@ public class ConnectionManagerTest {
         ConnectionFactory factory = mockFactory(new Connection(null));
         ConnectionManager manager = new ConnectionManager(factory);
         ConnectionInfo info = new ConnectionInfo("localhost", 2345, "database", "username", "password");
-        ConstructContext context = context(RobotID.dummyRobot(), RobotID.dummyRobot());
+        ConstructContext context = context();
 
         Connection connection = manager.getConnection(context, info);
 
@@ -32,7 +33,7 @@ public class ConnectionManagerTest {
         ConnectionFactory factory = mockFactory(new Connection(mock(MongoClient.class)), new Connection(null));
         ConnectionManager manager = new ConnectionManager(factory);
         ConnectionInfo info = new ConnectionInfo("localhost", 2345, "database", "username", "password");
-        ConstructContext context = context(RobotID.dummyRobot(), RobotID.dummyRobot());
+        ConstructContext context = context();
 
         // Close the connection
         Connection connection = manager.getConnection(context, info);
@@ -48,7 +49,7 @@ public class ConnectionManagerTest {
     @Test(expectedExceptions = NoSuchConnectionException.class)
     public void testGetNotExistingConnectionWithoutInfo() throws NoSuchConnectionException {
         ConnectionManager manager = new ConnectionManager(null);
-        ConstructContext context = context(RobotID.dummyRobot(), RobotID.dummyRobot());
+        ConstructContext context = context();
 
         manager.getConnection(context);
     }
@@ -59,7 +60,7 @@ public class ConnectionManagerTest {
 
         ConnectionManager manager = new ConnectionManager(factory);
         ConnectionInfo info = new ConnectionInfo("localhost", 2345, "database", "username", "password");
-        ConstructContext context = context(RobotID.dummyRobot(), RobotID.dummyRobot());
+        ConstructContext context = context(UUID.randomUUID());
 
         // Create the connection
         Connection newConnection = manager.getConnection(context, info);
@@ -70,14 +71,13 @@ public class ConnectionManagerTest {
         assertSame(otherConnection, newConnection);
 
         // Get the connection as a sub robot
-        ConstructContext subRobot = context(RobotID.getInstance(new File("."), new File("Other Robot")), context.getRootRobot());
+        ConstructContext subRobot = context(context.getCompilerSerialId());
         Connection subRobotConnection = manager.getConnection(subRobot);
 
         assertSame(subRobotConnection, newConnection);
 
         // Get the connection as an other robot
-        RobotID weirdID = RobotID.getInstance(new File("Unit Test"), new File("Special Robot"));
-        Connection otherRobot = manager.getConnection(context(weirdID, weirdID), info);
+        Connection otherRobot = manager.getConnection(context(), info);
 
         assertNotSame(otherRobot, newConnection);
     }
@@ -89,7 +89,11 @@ public class ConnectionManagerTest {
         return factory;
     }
 
-    private ConstructContext context(RobotID robot, RobotID rootRobot) {
-        return new ConstructContext(robot, rootRobot, null, null, null, null);
+    private ConstructContext context() {
+        return context(UUID.randomUUID());
+    }
+
+    private ConstructContext context(UUID id) {
+        return new ConstructContext(RobotID.dummyRobot(), RobotID.dummyRobot(), null, null, id, null, null);
     }
 }
