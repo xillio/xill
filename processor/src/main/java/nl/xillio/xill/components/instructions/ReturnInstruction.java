@@ -58,7 +58,4 @@ public class ReturnInstruction extends Instruction {
 	public Collection<Processable> getChildren() {
 		return Collections.singletonList(value);
 	}
-
-	@Override
-	public void close() throws Exception {}
 }
