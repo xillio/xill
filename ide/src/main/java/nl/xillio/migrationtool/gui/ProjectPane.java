@@ -152,13 +152,13 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
     }
 
     private void paste() {
-        paste(getCurrentItem().getValue().getKey(), bulkFiles);
+        paste(getCurrentItem().getValue().getKey(), bulkFiles, copy);
         // If the files were moved (not copied), clear the bulk files.
         if (!copy) {
             bulkFiles = null;
         }
     }
-    protected void paste(File pasteLoc, List<File> files) {
+    protected void paste(File pasteLoc, List<File> files, boolean copy) {
         // Get the directory to paste in.
         final File destDir = pasteLoc.isDirectory() ? pasteLoc : pasteLoc.getParentFile();
 
@@ -940,7 +940,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
                     // Dropping.
                     Dragboard board = dragEvent.getDragboard();
                     if (board.hasFiles()) {
-                        paste(this.getItem().getKey(), board.getFiles());
+                        paste(this.getItem().getKey(), board.getFiles(), false);
                         dragEvent.setDropCompleted(true);
                     }
 
