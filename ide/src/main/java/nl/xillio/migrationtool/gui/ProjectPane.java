@@ -815,7 +815,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
     public void changed(final ObservableValue<? extends TreeItem<Pair<File, String>>> arg0, final TreeItem<Pair<File, String>> oldObject, final TreeItem<Pair<File, String>> newObject) {
         // Update all buttons to their default state.
         disableAllButtons(false);
-        disableFileButtons(true);
+        disableFileButtons(false);
 
         if (newObject == null) {
             // No item is selected.
@@ -824,13 +824,13 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         } else if (newObject == getProject(newObject)) {
             // This is a project.
             menuRename.setDisable(true);
-            disableFileButtons(false);
         }
 
         // Check if more than 1 item is selected.
         if (getAllCurrentItems().size() > 1) {
             menuRename.setDisable(true);
             btnAddFolder.setDisable(true);
+            disableFileButtons(true);
         }
 
         // If a project is selected disable the cut menu item.
