@@ -176,7 +176,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
      * Clears the history by loading a new UndoManager
      */
     public void clearHistory() {
-        executeJS("new UndoManager();", (u) ->
+        executeJS("new UndoManager();", u ->
                 ((JSObject) callOnAceBlocking("getSession"))
                         .call("setUndoManager", u));
     }
@@ -228,7 +228,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
      * Clears all breakpoints.
      */
     public void clearBreakpoints() {
-        callOnAce((session) -> ((JSObject) session).call("clearBreakpoints"), "getSession");
+        callOnAce(session -> ((JSObject) session).call("clearBreakpoints"), "getSession");
     }
 
     /**
@@ -342,7 +342,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
     public void refreshBreakpoints(final RobotID robot) {
         List<Integer> bps = BreakpointPool.INSTANCE.get(robot).stream().map(bp -> bp - 1).collect(Collectors.toList());
         clearBreakpoints();
-        bps.forEach((br)-> callOnAce((s) -> ((JSObject) s).call("setBreakpoint", br), "getSession"));
+        bps.forEach(br-> callOnAce(s -> ((JSObject) s).call("setBreakpoint", br), "getSession"));
     }
 
     /**
@@ -468,7 +468,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
      * @see JSObject#call(String, Object...)
      */
     private void callOnAce(String method, Object... args) {
-        callOnAce((o) -> {
+        callOnAce(o -> {
         }, method, args);
     }
 
