@@ -25,45 +25,6 @@ public class MapFilterHandler {
      * When function has one argument give the meta expression.
      * When the function has two arguments give an key (index) as well.
      */
-    protected List<MetaExpression> atomicHandler(MetaExpression input, Debugger debugger){
-        List<MetaExpression> result = new ArrayList<>(1);
-
-        if (input.getMeta(MetaExpressionIterator.class) == null) {
-            //This is an atomic value with no MetaExpressionIterator. So we just use the single value
-            if (functionDeclaration.getParametersSize() == 1){
-                result.add(functionDeclaration.run(debugger, Collections.singletonList(input)).get());
-            } else if (functionDeclaration.getParametersSize() == 2){
-                result.add(functionDeclaration.run(debugger,
-                        Arrays.asList(ExpressionBuilderHelper.fromValue(0), input)).get());
-            } else {
-                throw new RobotRuntimeException("The given function does not accept one or two arguments.");
-            }
-        } else {
-            //We have a MetaExpressionIterator in this value, this means we should iterate over that
-            MetaExpressionIterator iterator = input.getMeta(MetaExpressionIterator.class);
-
-            if (functionDeclaration.getParametersSize() == 1) {
-                while (iterator.hasNext()) {
-                    MetaExpression value = iterator.next();
-                    value.registerReference();
-                    result.add(functionDeclaration.run(debugger, Collections.singletonList(value)).get());
-                }
-            } else if (functionDeclaration.getParametersSize() == 2) {
-                int i = -1;
-                while (iterator.hasNext()) {
-                    MetaExpression value = iterator.next();
-                    value.registerReference();
-                    int keyValue = i++;
-                    result.add(functionDeclaration.run(debugger,
-                            Arrays.asList(ExpressionBuilderHelper.fromValue(keyValue), value)).get());
-                }
-            } else {
-                throw new RobotRuntimeException("The given function does not accept one or two arguments.");
-            }
-        }
-
-        return result;
-    }
 
     /**
      * Instruction set for the process of lists.
@@ -71,26 +32,6 @@ public class MapFilterHandler {
      * When function has one argument give the meta expression.
      * When the function has two arguments give an key (index) as well.
      */
-    @SuppressWarnings("unchecked")
-    protected List<MetaExpression> listHandler(MetaExpression input, Debugger debugger){
-        List<MetaExpression> listResults = new ArrayList<>(input.getNumberValue().intValue());
-
-        if (functionDeclaration.getParametersSize() == 1) {
-            for (MetaExpression expression : (List<MetaExpression>) input.getValue()) {
-                listResults.add(functionDeclaration.run(debugger, Collections.singletonList(expression)).get());
-            }
-        } else if (functionDeclaration.getParametersSize() == 2) {
-            List<MetaExpression> expressions = (List<MetaExpression>)input.getValue();
-            for (int i = 0; i < expressions.size() ; i++) {
-                listResults.add(functionDeclaration.run(debugger,
-                        Arrays.asList(ExpressionBuilderHelper.fromValue(i), expressions.get(i))).get());
-            }
-        } else {
-            throw new RobotRuntimeException("The given function does not accept one or two arguments.");
-        }
-
-        return listResults;
-    }
 
     /**
      * Instruction set for the process of objects.
@@ -98,22 +39,4 @@ public class MapFilterHandler {
      * When function has one argument give the value of the object
      * When the function has two arguments give the key as well.
      */
-    @SuppressWarnings("unchecked")
-    protected LinkedHashMap<String, MetaExpression> objectHandler(MetaExpression input, Debugger debugger){
-        LinkedHashMap<String, MetaExpression> objectResults = new LinkedHashMap<>(input.getNumberValue().intValue());
-
-        if (functionDeclaration.getParametersSize() == 1) {
-            for (Map.Entry<String, MetaExpression> expression : ((Map<String, MetaExpression>) input.getValue()).entrySet()) {
-                objectResults.put(expression.getKey(), functionDeclaration.run(debugger, Collections.singletonList(expression.getValue())).get());
-            }
-        } else if (functionDeclaration.getParametersSize() == 2) {
-            for (Map.Entry<String, MetaExpression> expression : ((Map<String, MetaExpression>) input.getValue()).entrySet()) {
-                objectResults.put(expression.getKey(), functionDeclaration.run(debugger,
-                        Arrays.asList(ExpressionBuilderHelper.fromValue(expression.getKey()), expression.getValue())).get());
-            }
-        } else {
-            throw new RobotRuntimeException("The given function does not accept one or two arguments.");
-        }
-        return objectResults;
-    }
 }
