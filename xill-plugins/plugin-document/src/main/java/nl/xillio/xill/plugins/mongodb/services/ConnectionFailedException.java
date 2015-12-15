@@ -5,11 +5,15 @@ package nl.xillio.xill.plugins.mongodb.services;
  */
 public class ConnectionFailedException extends MongoDBPluginException {
 
-    public ConnectionFailedException(String message, Throwable cause) {
+    private final Connection connection;
+
+    public ConnectionFailedException(String message, Connection connection, Throwable cause) {
         super(message, cause);
+
+        this.connection = connection;
     }
 
-    public ConnectionFailedException(String message) {
-        super(message);
+    public Connection getConnection() {
+        return connection;
     }
 }

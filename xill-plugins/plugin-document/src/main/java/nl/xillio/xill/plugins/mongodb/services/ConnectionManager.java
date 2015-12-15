@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.mongodb.services;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.mongodb.MongoTimeoutException;
 import nl.xillio.xill.api.construct.ConstructContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -51,7 +52,7 @@ public class ConnectionManager {
      * @return the connection
      * @see ConnectionManager#getConnection(ConstructContext)
      */
-    public Connection getConnection(ConstructContext context, ConnectionInfo info) {
+    public Connection getConnection(ConstructContext context, ConnectionInfo info) throws ConnectionFailedException {
         synchronized (connectionCache) {
             Connection connection = getOpen(context);
 
@@ -68,6 +69,11 @@ public class ConnectionManager {
                 LOGGER.info("Creating connection for {}", info);
                 // We have to create a new connection
                 connection = connectionFactory.build(info);
+
+                // Validate the connection
+                validate(connection);
+                connection.getClient().getAddress();
+
                 connectionCache.put(context.getCompilerSerialId(), connection);
                 connectionInfoMap.put(connection, info);
 
@@ -80,6 +86,14 @@ public class ConnectionManager {
             }
 
             return connection;
+        }
+    }
+
+    private void validate(Connection connection) throws ConnectionFailedException {
+        try {
+            connection.getClient().getAddress();
+        } catch(MongoTimeoutException e){
+            throw new ConnectionFailedException("Could not connect to mongodb", connection, e);
         }
     }
 

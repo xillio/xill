@@ -1,9 +1,6 @@
 package nl.xillio.xill.plugins.mongodb.constructs;
 
 import com.google.inject.Inject;
-import com.mongodb.MongoClientOptions;
-import com.mongodb.MongoOptions;
-import com.mongodb.MongoSocketException;
 import com.mongodb.MongoTimeoutException;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
@@ -12,6 +9,7 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.mongodb.services.Connection;
+import nl.xillio.xill.plugins.mongodb.services.ConnectionFailedException;
 import nl.xillio.xill.plugins.mongodb.services.ConnectionInfo;
 import nl.xillio.xill.plugins.mongodb.services.ConnectionManager;
 
@@ -48,16 +46,17 @@ public class ConnectConstruct extends Construct {
 
         // Create/Get the connection
         MetaExpression result = fromValue(info.toString());
-        Connection connection = connectionManager.getConnection(context, info);
+        Connection connection = connect(context, info);
         result.storeMeta(Connection.class, connection);
 
-        try {
-            // Validate the connection
-            connection.getClient().getAddress();
-        } catch(MongoTimeoutException e) {
-            throw new RobotRuntimeException("Failed to connect to mongo server at " + info);
-        }
-
         return result;
+    }
+
+    private Connection connect(ConstructContext context, ConnectionInfo info) {
+        try {
+            return connectionManager.getConnection(context, info);
+        } catch (ConnectionFailedException e) {
+            throw new RobotRuntimeException("Failed to connect to " + info, e);
+        }
     }
 }

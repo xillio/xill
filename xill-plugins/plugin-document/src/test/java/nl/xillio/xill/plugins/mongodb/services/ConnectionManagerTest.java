@@ -5,20 +5,17 @@ import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
 import org.testng.annotations.Test;
 
-import java.io.File;
 import java.util.UUID;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 
 
 public class ConnectionManagerTest {
     @Test
-    public void testGetConnectionWithInfo() {
-        ConnectionFactory factory = mockFactory(new Connection(null));
+    public void testGetConnectionWithInfo() throws ConnectionFailedException {
+        ConnectionFactory factory = mockFactory(1);
         ConnectionManager manager = new ConnectionManager(factory);
         ConnectionInfo info = new ConnectionInfo("localhost", 2345, "database", "username", "password");
         ConstructContext context = context();
@@ -29,8 +26,8 @@ public class ConnectionManagerTest {
     }
 
     @Test
-    public void testGetConnectionRecreateClosed() {
-        ConnectionFactory factory = mockFactory(new Connection(mock(MongoClient.class)), new Connection(null));
+    public void testGetConnectionRecreateClosed() throws ConnectionFailedException {
+        ConnectionFactory factory = mockFactory(2);
         ConnectionManager manager = new ConnectionManager(factory);
         ConnectionInfo info = new ConnectionInfo("localhost", 2345, "database", "username", "password");
         ConstructContext context = context();
@@ -55,8 +52,8 @@ public class ConnectionManagerTest {
     }
 
     @Test
-    public void testGetCachedConnection() throws NoSuchConnectionException {
-        ConnectionFactory factory = mockFactory(new Connection(null), new Connection(null));
+    public void testGetCachedConnection() throws NoSuchConnectionException, ConnectionFailedException {
+        ConnectionFactory factory = mockFactory(2);
 
         ConnectionManager manager = new ConnectionManager(factory);
         ConnectionInfo info = new ConnectionInfo("localhost", 2345, "database", "username", "password");
@@ -80,6 +77,16 @@ public class ConnectionManagerTest {
         Connection otherRobot = manager.getConnection(context(), info);
 
         assertNotSame(otherRobot, newConnection);
+    }
+
+    private ConnectionFactory mockFactory(int numberOfConnections) {
+        Connection[] returnValues = new Connection[numberOfConnections - 1];
+
+        for (int i = 0; i < returnValues.length; i++) {
+            returnValues[i] = new Connection(mock(MongoClient.class, RETURNS_DEEP_STUBS));
+        }
+
+        return mockFactory(new Connection(mock(MongoClient.class, RETURNS_DEEP_STUBS)), returnValues);
     }
 
     private ConnectionFactory mockFactory(Connection firstResult, Connection... result) {
