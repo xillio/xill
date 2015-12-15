@@ -21,7 +21,7 @@ public class ReturnInstruction extends Instruction {
 
 	private final Processable value;
 
-	private static final Logger LOGGER = LogManager.getLogger(ReturnInstruction.class);
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * Create a new {@link ReturnInstruction}
@@ -39,21 +39,19 @@ public class ReturnInstruction extends Instruction {
 		this(null);
 	}
 
-	@SuppressWarnings("squid:S1166")
 	@Override
-	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
+	public InstructionFlow<MetaExpression> process(final Debugger debugger) {
 		if (value == null) {
 			return InstructionFlow.doReturn(ExpressionBuilderHelper.NULL);
 		}
 
-		try {
-			MetaExpression result = value.process(debugger).get();
+		InstructionFlow<MetaExpression> result = value.process(debugger);
 
-			return InstructionFlow.doReturn(result);
-		} catch (NoSuchElementException e) {
-			// No value was provided
-			return InstructionFlow.doReturn(ExpressionBuilderHelper.NULL);
+		if(result.hasValue()) {
+			return InstructionFlow.doResume(result.get());
 		}
+
+		return InstructionFlow.doReturn(ExpressionBuilderHelper.NULL);
 	}
 
 	@Override
