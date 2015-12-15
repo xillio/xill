@@ -10,7 +10,8 @@ import nl.xillio.xill.api.components.RobotID;
 /**
  * This class is responsible for the administration of breakpoints
  */
-public class BreakpointPool {
+public enum BreakpointPool {
+	INSTANCE;
 	private final Map<RobotID, List<Integer>> breakpoints = new HashMap<>();
 
 	/**
@@ -65,13 +66,6 @@ public class BreakpointPool {
 	public void clear(final RobotID robot) {
 		breakpoints.remove(robot);
 	}
-
-	/**
-	 * The singleton instance of {@link BreakpointPool}
-	 */
-	public static final BreakpointPool INSTANCE = new BreakpointPool();
-
-	private BreakpointPool() {}
 
 	/**
 	 * Remove all breakpoints
