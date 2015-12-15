@@ -65,9 +65,9 @@ public class FormatConstruct extends Construct {
 				formatList.add(fromValue(s));
 			}
 		} catch (PatternSyntaxException e) {
-			throw new RobotRuntimeException("SyntaxError in the by the system provided pattern.");
+			throw new RobotRuntimeException("SyntaxError in the by the system provided pattern: " + e.getMessage(), e);
 		} catch (IllegalArgumentException | FailedToGetMatcherException e) {
-			throw new RobotRuntimeException("Illegal argument handed when trying to match.");
+			throw new RobotRuntimeException("Illegal argument handed when trying to match: " + e.getMessage(), e);
 		}
 
 		// Cast the MetaExpressions to the right type.
@@ -122,9 +122,9 @@ public class FormatConstruct extends Construct {
 		try {
 			return fromValue(stringService.format(textVar.getStringValue(), list));
 		} catch (MissingFormatArgumentException e) {
-			throw new RobotRuntimeException("Not enough arguments.");
+			throw new RobotRuntimeException("Not enough arguments: " + e.getMessage(), e);
 		} catch (IllegalFormatException e) {
-			throw new RobotRuntimeException("Illegal format handed.");
+			throw new RobotRuntimeException("Illegal format handed: " + e.getMessage(), e);
 		}
 	}
 }

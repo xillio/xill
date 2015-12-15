@@ -24,6 +24,8 @@ import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.preview.PreviewComponent;
 import nl.xillio.xill.api.preview.Searchable;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This pane can show a visual representation of the Xill IDE Variable
@@ -41,6 +43,8 @@ public class PreviewPane extends AnchorPane implements RobotTabComponent {
 	private final TextArea textView = new TextArea();
 	private PreviewSearch previewSearch;
 
+	private static final Logger LOGGER = LogManager.getLogger();
+
 	/**
 	 * Create a new PreviewPane
 	 */
@@ -51,7 +55,7 @@ public class PreviewPane extends AnchorPane implements RobotTabComponent {
 			loader.setController(this);
 			getChildren().add(loader.load());
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Error loading Preview pane: " + e.getMessage(), e);
 		}
 
 		previewSearch = new PreviewSearch(apnPreviewPane);

@@ -34,7 +34,7 @@ public class ReturnFocusListener implements ChangeListener<Boolean> {
 
             //set the focus on a new editor when changing robot.
             if (oldValue instanceof WebView && newValue instanceof TabPane) {
-                ((TabPane) newValue).getTabs().forEach((tab) -> {
+                ((TabPane) newValue).getTabs().forEach(tab -> {
                     if (tab.isSelected()) {
                         ((RobotTab) tab).requestFocus();
                     }

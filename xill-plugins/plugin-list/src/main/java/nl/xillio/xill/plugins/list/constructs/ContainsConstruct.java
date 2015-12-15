@@ -37,7 +37,7 @@ public class ContainsConstruct extends Construct {
 	 * @return true if the list or object contains the value.
 	 */
 	static MetaExpression process(final MetaExpression input, final MetaExpression value) {
-		boolean result = false;
+		boolean result;
 		switch (input.getType()) {
 			case OBJECT:
 				@SuppressWarnings("unchecked")
@@ -45,7 +45,7 @@ public class ContainsConstruct extends Construct {
 				try {
 					result = m.containsValue(value);
 				} catch (ClassCastException | NullPointerException e) {
-					throw new RobotRuntimeException("The value handed was no valid MetaExpression");
+					throw new RobotRuntimeException("The value handed was no valid MetaExpression", e);
 				}
 				break;
 			case LIST:
@@ -54,7 +54,7 @@ public class ContainsConstruct extends Construct {
 				try {
 					result = l.contains(value);
 				} catch (ClassCastException | NullPointerException e) {
-					throw new RobotRuntimeException("The value handed was no valid MetaExpression");
+					throw new RobotRuntimeException("The value handed was no valid MetaExpression", e);
 				}
 				break;
 			default:
