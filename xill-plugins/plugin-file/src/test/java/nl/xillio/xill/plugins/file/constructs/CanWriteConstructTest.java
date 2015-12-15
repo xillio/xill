@@ -1,18 +1,17 @@
 package nl.xillio.xill.plugins.file.constructs;
 
+import junit.framework.Assert;
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
-import opennlp.tools.parser.Cons;
-import org.aspectj.lang.annotation.Before;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -44,14 +43,16 @@ public class CanWriteConstructTest extends TestUtils {
      * Test the regular flow of the CanWriteConstruct class.
      */
     @Test
-    public void testProcess() throws FileNotFoundException {
+    public void testProcess() throws IOException {
 
         setFileResolverReturnValue(new File(""));
 
         when(metaExpression.getStringValue()).thenReturn("");
+        when(fileUtilities.canWrite(any())).thenReturn(true);
 
-        CanWriteConstruct.process(constructContext, fileUtilities, metaExpression);
+        MetaExpression result = CanWriteConstruct.process(constructContext, fileUtilities, metaExpression);
 
+        Assert.assertTrue(result.getBooleanValue());
         verify(fileUtilities, times(1)).canWrite(any(File.class));
 
     }
@@ -61,8 +62,8 @@ public class CanWriteConstructTest extends TestUtils {
      *
      * @throws FileNotFoundException If the file is not found.
      */
-    @Test(expectedExceptions = RobotRuntimeException.class)
-    public void testProcessException() throws FileNotFoundException {
+    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "File not found, or not accessible")
+    public void testProcessException() throws IOException {
 
         doThrow(new FileNotFoundException("")).when(fileUtilities).canWrite(any(File.class));
 
