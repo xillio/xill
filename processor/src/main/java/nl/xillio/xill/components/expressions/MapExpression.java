@@ -15,16 +15,14 @@ import nl.xillio.xill.components.instructions.FunctionDeclaration;
  *
  * @author Pieter Soels, Thomas Biesaart
  */
-public class MapExpression extends MapFilterHandler implements Processable, FunctionParameterExpression {
-	private final Processable argument;
-
+public class MapExpression extends MapFilterHandler {
 	/**
 	 * Create a new {@link MapExpression}
 	 * 
 	 * @param argument
 	 */
 	public MapExpression(final Processable argument) {
-		this.argument = argument;
+		super(argument);
 	}
 
     /**
@@ -72,7 +70,8 @@ public class MapExpression extends MapFilterHandler implements Processable, Func
      * Map process of an atomic value
      * Result empty list when input is null
      */
-	private InstructionFlow<MetaExpression> atomicProcessNoIterator(MetaExpression input, Debugger debugger) {
+    @Override
+	protected InstructionFlow<MetaExpression> atomicProcessNoIterator(MetaExpression input, Debugger debugger) {
         List<MetaExpression> atomicResults = new ArrayList<>(1);
         if (functionDeclaration.getParametersSize() == 1) {
             atomicResults.add(functionDeclaration.run(debugger, Collections.singletonList(input)).get());
@@ -85,7 +84,7 @@ public class MapExpression extends MapFilterHandler implements Processable, Func
         return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(atomicResults));
     }
 
-    private InstructionFlow<MetaExpression> atomicProcessIterator(MetaExpression input, Debugger debugger) {
+    protected InstructionFlow<MetaExpression> atomicProcessIterator(MetaExpression input, Debugger debugger) {
         MetaExpressionIterator iterator = input.getMeta(MetaExpressionIterator.class);
         List<MetaExpression> atomicResults = new ArrayList<>(1);
         int i = -1;
@@ -112,7 +111,7 @@ public class MapExpression extends MapFilterHandler implements Processable, Func
      * Perform function on all elements of the list (one layer deep).
      */
     @SuppressWarnings("unchecked")
-    private InstructionFlow<MetaExpression> listProcess(MetaExpression result, Debugger debugger) {
+    protected InstructionFlow<MetaExpression> listProcess(MetaExpression result, Debugger debugger) {
         List<MetaExpression> listResults = new ArrayList<>(result.getNumberValue().intValue());
 
         if (functionDeclaration.getParametersSize() == 1) {
@@ -137,7 +136,7 @@ public class MapExpression extends MapFilterHandler implements Processable, Func
      * Perform function on all elements in object (one layer deep).
      */
     @SuppressWarnings("unchecked")
-	private InstructionFlow<MetaExpression> objectProcess(MetaExpression result, Debugger debugger) {
+    protected InstructionFlow<MetaExpression> objectProcess(MetaExpression result, Debugger debugger) {
         LinkedHashMap<String, MetaExpression> objectResults = new LinkedHashMap<>(result.getNumberValue().intValue());
 
         if (functionDeclaration.getParametersSize() == 1) {
@@ -168,7 +167,7 @@ public class MapExpression extends MapFilterHandler implements Processable, Func
 	 */
 	@Override
 	public void setFunction(final FunctionDeclaration functionDeclaration) {
-		this.functionDeclaration = functionDeclaration;
+		super.functionDeclaration = functionDeclaration;
 	}
 
 }

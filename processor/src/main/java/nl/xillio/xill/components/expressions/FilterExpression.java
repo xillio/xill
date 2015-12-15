@@ -15,64 +15,22 @@ import nl.xillio.xill.components.instructions.FunctionDeclaration;
  *
  * @author Pieter Soels, Thomas Biesaart
  */
-public class FilterExpression extends MapFilterHandler implements Processable, FunctionParameterExpression {
-    private final Processable argument;
-
+public class FilterExpression extends MapFilterHandler {
     /**
      * Create a new {@link FilterExpression}
      *
      * @param argument
      */
     public FilterExpression(final Processable argument) {
-        this.argument = argument;
-    }
-
-    /**
-     * Start of instructions for the filter expression.
-     */
-    @Override
-    public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-        // Call the function for the argument
-        MetaExpression result = argument.process(debugger).get();
-
-        try {
-            result.registerReference();
-            return process(result, debugger);
-        } catch (ConcurrentModificationException e) {
-            throw new RobotRuntimeException("You can not change the expression upon which you are iterating.", e);
-        } finally {
-            result.releaseReference();
-        }
-    }
-
-    /**
-     * Depending on type of MetaExpression (result) process individually.
-     */
-    private InstructionFlow<MetaExpression> process(MetaExpression result, Debugger debugger) {
-        switch (result.getType()) {
-            case ATOMIC:
-                if (result.isNull()) {
-                    return InstructionFlow.doResume(ExpressionBuilderHelper.emptyList());
-                }
-                if (result.getMeta(MetaExpressionIterator.class) == null){
-                    return atomicProcessNoIterator(result, debugger);
-                } else {
-                    return atomicProcessIterator(result, debugger);
-                }
-            case LIST:
-                return listProcess(result, debugger);
-            case OBJECT:
-                return objectProcess(result, debugger);
-            default:
-                throw new NotImplementedException("This MetaExpression has not been defined yet.");
-        }
+        super(argument);
     }
 
     /**
      * Filter process of an atomic value
      * Result empty list when input is null
      */
-    private InstructionFlow<MetaExpression> atomicProcessNoIterator(MetaExpression input, Debugger debugger) {
+    @Override
+    protected InstructionFlow<MetaExpression> atomicProcessNoIterator(MetaExpression input, Debugger debugger) {
         MetaExpression boolValue;
         List<MetaExpression> atomicResults = new ArrayList<>(1);
         if (functionDeclaration.getParametersSize() == 1){
@@ -94,7 +52,8 @@ public class FilterExpression extends MapFilterHandler implements Processable, F
         return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(atomicResults));
     }
 
-    private InstructionFlow<MetaExpression> atomicProcessIterator(MetaExpression input, Debugger debugger) {
+    @Override
+    protected InstructionFlow<MetaExpression> atomicProcessIterator(MetaExpression input, Debugger debugger) {
         MetaExpressionIterator iterator = input.getMeta(MetaExpressionIterator.class);
         MetaExpression boolValue;
         List<MetaExpression> atomicResults = new ArrayList<>(1);
@@ -128,7 +87,8 @@ public class FilterExpression extends MapFilterHandler implements Processable, F
      * Perform filter function on all elements of the list (one layer deep).
      */
     @SuppressWarnings("unchecked")
-    private InstructionFlow<MetaExpression> listProcess(MetaExpression input, Debugger debugger) {
+    @Override
+    protected InstructionFlow<MetaExpression> listProcess(MetaExpression input, Debugger debugger) {
         List<MetaExpression> listResults = new ArrayList<>();
         List<MetaExpression> expressions = (List<MetaExpression>) input.getValue();
 
@@ -159,8 +119,9 @@ public class FilterExpression extends MapFilterHandler implements Processable, F
      * Filter process of an object value.
      * Perform filter on all elements in object (one layer deep).
      */
+    @Override
     @SuppressWarnings("unchecked")
-    private InstructionFlow<MetaExpression> objectProcess(MetaExpression input, Debugger debugger) {
+    protected InstructionFlow<MetaExpression> objectProcess(MetaExpression input, Debugger debugger) {
         LinkedHashMap<String, MetaExpression> objectResults = new LinkedHashMap<>();
         Set<Entry<String, MetaExpression>> expressions = ((Map<String, MetaExpression>) input.getValue()).entrySet();
 
@@ -197,7 +158,7 @@ public class FilterExpression extends MapFilterHandler implements Processable, F
 	 */
 	@Override
 	public void setFunction(final FunctionDeclaration functionDeclaration) {
-		this.functionDeclaration = functionDeclaration;
+		super.functionDeclaration = functionDeclaration;
 	}
 
 }
