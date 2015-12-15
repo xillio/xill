@@ -37,7 +37,7 @@ public class PreviewPane extends AnchorPane implements RobotTabComponent {
 	private SearchBar apnPreviewSearchBar;
 	@FXML
 	private ToggleButton tbnPreviewSearch;
-	private Debugger debugger;
+	private RobotTab tab;
 	private final TextArea textView = new TextArea();
 	private PreviewSearch previewSearch;
 
@@ -71,7 +71,7 @@ public class PreviewPane extends AnchorPane implements RobotTabComponent {
         apnPreviewSearchBar.reset(false);
         previewSearch.clearSearch();
 
-        MetaExpression value = debugger.getVariableValue(observableVariable.getSource());
+        MetaExpression value = tab.getProcessor().getDebugger().getVariableValue(observableVariable.getSource());
 
         apnPreviewPane.getChildren().clear();
 
@@ -209,7 +209,7 @@ public class PreviewPane extends AnchorPane implements RobotTabComponent {
 
 	@Override
 	public void initialize(final RobotTab tab) {
-		debugger = tab.getProcessor().getDebugger();
-		debugger.getOnRobotStop().addListener(action -> clear());
+		this.tab = tab;
+		tab.getProcessor().getDebugger().getOnRobotStop().addListener(action -> clear());
 	}
 }

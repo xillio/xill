@@ -61,23 +61,22 @@ public class InstructionStackPane extends AnchorPane implements RobotTabComponen
 	 */
 	public void refresh() {
 		Platform.runLater(() -> {
-			List<Instruction> stackTrace = tab.getProcessor().getDebugger().getStackTrace();
 			List<Instruction> items = null;
 
-			if (stackTrace.size() > MAX_STACK) {
+			if (getStacktrace().size() > MAX_STACK) {
 				// The stack is too large to display, show a smaller one
 				items = new ArrayList<>(MAX_STACK);
 
 				// Dummy instruction for info line
-				items.add(new DummyInstruction(tab.getProcessor().getRobotID(), stackTrace.size() - MAX_STACK));
+				items.add(new DummyInstruction(tab.getProcessor().getRobotID(), getStacktrace().size() - MAX_STACK));
 
 				// Top MAX
 				for (int i = 0; i < MAX_STACK; i++) {
-					items.add(stackTrace.get(stackTrace.size() - MAX_STACK + i));
+					items.add(getStacktrace().get(getStacktrace().size() - MAX_STACK + i));
 				}
 
 			} else {
-				items = stackTrace;
+				items = getStacktrace();
 			}
 
 			cbxStackPos.setItems(FXCollections.observableArrayList(items));
@@ -147,5 +146,11 @@ public class InstructionStackPane extends AnchorPane implements RobotTabComponen
 		public String toString() {
 			return size + " more entries...";
 		}
+
+
+	}
+
+	private List<Instruction> getStacktrace(){
+		return tab.getProcessor().getDebugger().getStackTrace();
 	}
 }

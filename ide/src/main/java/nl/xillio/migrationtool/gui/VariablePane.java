@@ -37,7 +37,7 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
 	@FXML
 	private TableColumn<ObservableVariable, Boolean> colVariableGlobal;
 
-	private Debugger debugger;
+	private RobotTab tab;
 
 	private PreviewPane previewpane;
 
@@ -81,9 +81,9 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
 	public synchronized void refresh() {
 		clear();
 
-		debugger.getVariables().forEach(var -> {
-			String name = debugger.getVariableName(var);
-			MetaExpression value = debugger.getVariableValue(var);
+		getDebugger().getVariables().forEach(var -> {
+			String name = getDebugger().getVariableName(var);
+			MetaExpression value = getDebugger().getVariableValue(var);
 			ObservableVariable observable = new ObservableVariable(name, value, var);
 			observableStateList.add(observable);
 
@@ -101,9 +101,9 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
 
 	@Override
 	public void initialize(final RobotTab tab) {
-		debugger = tab.getProcessor().getDebugger();
-		debugger.getOnRobotPause().addListener(e -> refresh());
-		debugger.getOnRobotStop().addListener(e -> clear());
+		this.tab = tab;
+		getDebugger().getOnRobotPause().addListener(e -> refresh());
+		getDebugger().getOnRobotStop().addListener(e -> clear());
 	}
 
 	/**
@@ -114,6 +114,10 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
 	public void setPreviewPane(final PreviewPane previewpane) {
 		this.previewpane = previewpane;
 
+	}
+
+	public Debugger getDebugger(){
+		return this.tab.getProcessor().getDebugger();
 	}
 
 	@Override
