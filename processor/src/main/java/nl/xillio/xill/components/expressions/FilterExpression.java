@@ -15,11 +15,11 @@ import nl.xillio.xill.components.instructions.FunctionDeclaration;
 
 /**
  * Filter a collection of expressions using a function parameter
+ *
+ * @author Pieter Soels, Thomas Biesaart
  */
-public class FilterExpression implements Processable, FunctionParameterExpression {
-
+public class FilterExpression extends MapFilterHandler implements Processable, FunctionParameterExpression {
 	private final Processable argument;
-	private FunctionDeclaration functionDeclaration;
 
 	/**
 	 * Create a new {@link FilterExpression}
@@ -30,6 +30,9 @@ public class FilterExpression implements Processable, FunctionParameterExpressio
 		this.argument = argument;
 	}
 
+    /**
+     * Start of instructions for the filter expression.
+     */
 	@Override
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 		// Call the function for the argument
@@ -45,103 +48,76 @@ public class FilterExpression implements Processable, FunctionParameterExpressio
 		}
 	}
 
+    /**
+     * Depending on type of MetaExpression (result) process individually.
+     */
 	private InstructionFlow<MetaExpression> process(MetaExpression result, Debugger debugger){
 		switch (result.getType()) {
 			case ATOMIC:
-				// Process the one argument
 				return atomicProcess(result, debugger);
 			case LIST:
-				// Pass every argument
 				return listProcess(result, debugger);
 			case OBJECT:
-				// Pass every argument but with key
 				return objectProcess(result, debugger);
 			default:
 				throw new NotImplementedException("This MetaExpression has not been defined yet.");
 		}
 	}
 
-	private InstructionFlow<MetaExpression> atomicProcess(MetaExpression result, Debugger debugger){
-		if (result.isNull()) {
+    /**
+     * Filter process of an atomic value
+     * Result empty list when input is null
+     */
+	private InstructionFlow<MetaExpression> atomicProcess(MetaExpression input, Debugger debugger){
+		if (input.isNull()) {
 			return InstructionFlow.doResume(ExpressionBuilderHelper.emptyList());
 		}
-		MetaExpression valueAtomic;
+		List<MetaExpression> boolValue = atomicHandler(input, debugger);
 		List<MetaExpression> atomicResults = new ArrayList<>(1);
 
-		if (functionDeclaration.getParametersSize() == 1){
-			valueAtomic = functionDeclaration.run(debugger, Collections.singletonList(result)).get();
-			valueAtomic.registerReference();
-		} else if (functionDeclaration.getParametersSize() == 2) {
-			valueAtomic = functionDeclaration.run(debugger,
-					Arrays.asList(ExpressionBuilderHelper.fromValue(0), result)).get();
-			valueAtomic.registerReference();
-		} else {
-			throw new RobotRuntimeException("The given function does not accept one or two arguments.");
-		}
-
-		if (valueAtomic.getBooleanValue()) {
-			atomicResults.add(result);
-			valueAtomic.releaseReference();
+		if (boolValue.get(0).getBooleanValue()) {
+			atomicResults.add(input);
 			return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(atomicResults));
 		} else {
-			valueAtomic.releaseReference();
 			return InstructionFlow.doResume(ExpressionBuilderHelper.emptyList());
 		}
 	}
 
+    /**
+     * Filter process of an list value.
+     * Perform filter function on all elements of the list (one layer deep).
+     */
 	@SuppressWarnings("unchecked")
-	private InstructionFlow<MetaExpression> listProcess(MetaExpression result, Debugger debugger){
-		List<MetaExpression> listResults = new ArrayList<>();
-		List<MetaExpression> expressions = (List<MetaExpression>) result.getValue();
+	private InstructionFlow<MetaExpression> listProcess(MetaExpression input, Debugger debugger){
+        List<MetaExpression> listInput = (List<MetaExpression>)input.getValue();
+        List<MetaExpression> boolValues = listHandler(input, debugger);
+        List<MetaExpression> listResults = new ArrayList<>();
 
-		for (int i = 0; i < expressions.size(); i++) {
-			MetaExpression valueList;
-
-			if (functionDeclaration.getParametersSize() == 1){
-				valueList = functionDeclaration.run(debugger, Collections.singletonList(expressions.get(i))).get();
-				valueList.registerReference();
-			} else if (functionDeclaration.getParametersSize() == 2) {
-				valueList = functionDeclaration.run(debugger,
-						Arrays.asList(ExpressionBuilderHelper.fromValue(i), expressions.get(i))).get();
-				valueList.registerReference();
-			} else {
-				throw new RobotRuntimeException("The given function does not accept one or two arguments.");
-			}
+		for (int i = 0; i < boolValues.size(); i++) {
+			MetaExpression valueList = boolValues.get(i);
+            valueList.registerReference();
 
 			if (valueList.getBooleanValue()) {
-				listResults.add(expressions.get(i));
+                listResults.add(listInput.get(i));
 			}
-
 			valueList.releaseReference();
 		}
 		return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(listResults));
 	}
 
+    /**
+     * Filter process of an object value.
+     * Perform filter on all elements in object (one layer deep).
+     */
 	@SuppressWarnings("unchecked")
-	private InstructionFlow<MetaExpression> objectProcess(MetaExpression result, Debugger debugger){
+	private InstructionFlow<MetaExpression> objectProcess(MetaExpression input, Debugger debugger){
 		LinkedHashMap<String, MetaExpression> objectResults = new LinkedHashMap<>();
-		Set<Entry<String, MetaExpression>> expressions = ((Map<String, MetaExpression>) result.getValue()).entrySet();
+		Set<Entry<String, MetaExpression>> boolValues = objectHandler(input, debugger).entrySet();
 
-		for (Iterator<Entry<String, MetaExpression>> it = expressions.iterator(); it.hasNext();) {
-			Entry<String, MetaExpression> expression = it.next();
-			MetaExpression valueObject;
-
-			if (functionDeclaration.getParametersSize() == 1){
-				valueObject = functionDeclaration.run(debugger, Collections.singletonList(expression.getValue())).get();
-				valueObject.registerReference();
-			} else if (functionDeclaration.getParametersSize() == 2){
-				valueObject = functionDeclaration.run(debugger,
-						Arrays.asList(ExpressionBuilderHelper.fromValue(expression.getKey()), expression.getValue())).get();
-				valueObject.registerReference();
-			} else {
-				throw new RobotRuntimeException("The given function does not accept one or two arguments.");
-			}
-
-			if (valueObject.getBooleanValue()) {
+		for (Entry<String, MetaExpression> expression : boolValues) {
+			if (expression.getValue().getBooleanValue()) {
 				objectResults.put(expression.getKey(), expression.getValue());
 			}
-
-			valueObject.releaseReference();
 		}
 		return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(objectResults));
 	}
