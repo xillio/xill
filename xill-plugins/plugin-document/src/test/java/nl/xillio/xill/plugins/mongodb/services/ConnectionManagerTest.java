@@ -83,10 +83,10 @@ public class ConnectionManagerTest {
         Connection[] returnValues = new Connection[numberOfConnections - 1];
 
         for (int i = 0; i < returnValues.length; i++) {
-            returnValues[i] = new Connection(mock(MongoClient.class, RETURNS_DEEP_STUBS));
+            returnValues[i] = new Connection(mock(MongoClient.class, RETURNS_DEEP_STUBS), "");
         }
 
-        return mockFactory(new Connection(mock(MongoClient.class, RETURNS_DEEP_STUBS)), returnValues);
+        return mockFactory(new Connection(mock(MongoClient.class, RETURNS_DEEP_STUBS), ""), returnValues);
     }
 
     private ConnectionFactory mockFactory(Connection firstResult, Connection... result) {

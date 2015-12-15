@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.mongodb.services;
 
 
 import com.mongodb.MongoClient;
+import com.mongodb.client.MongoDatabase;
 import nl.xillio.xill.api.data.MetadataExpression;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 public class Connection implements MetadataExpression {
     private static final Logger LOGGER = LogManager.getLogger();
     private final MongoClient client;
+    private final String database;
     private boolean closed;
 
     /**
@@ -22,8 +24,9 @@ public class Connection implements MetadataExpression {
      *
      * @param client the client to wrap
      */
-    public Connection(MongoClient client) {
+    public Connection(MongoClient client, String database) {
         this.client = client;
+        this.database = database;
     }
 
     /**
@@ -47,12 +50,11 @@ public class Connection implements MetadataExpression {
         return closed;
     }
 
-    /**
-     * Get the client for the connection.
-     *
-     * @return the client
-     */
-    public MongoClient getClient() {
-        return client;
+    public void requireValid() {
+        client.getAddress();
+    }
+
+    public MongoDatabase getDatabase() {
+        return client.getDatabase(database);
     }
 }

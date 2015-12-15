@@ -15,7 +15,7 @@ public class ConnectionFactoryTest {
         Connection connection = connectionFactory.build(info);
 
         assertNotNull(connection);
-        assertNotNull(connection.getClient());
+        assertNotNull(connection.getDatabase());
         assertFalse(connection.isClosed());
     }
 }

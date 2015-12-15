@@ -72,7 +72,6 @@ public class ConnectionManager {
 
                 // Validate the connection
                 validate(connection);
-                connection.getClient().getAddress();
 
                 connectionCache.put(context.getCompilerSerialId(), connection);
                 connectionInfoMap.put(connection, info);
@@ -91,7 +90,7 @@ public class ConnectionManager {
 
     private void validate(Connection connection) throws ConnectionFailedException {
         try {
-            connection.getClient().getAddress();
+            connection.requireValid();
         } catch(MongoTimeoutException e){
             throw new ConnectionFailedException("Could not connect to mongodb", connection, e);
         }

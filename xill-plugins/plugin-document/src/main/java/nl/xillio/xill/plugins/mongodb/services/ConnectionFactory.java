@@ -22,7 +22,7 @@ public class ConnectionFactory {
      * @return the connection
      */
     public Connection build(ConnectionInfo info) {
-        return new Connection(createClient(info));
+        return new Connection(createClient(info), info.getDatabase());
     }
 
     private MongoClient createClient(ConnectionInfo info) {

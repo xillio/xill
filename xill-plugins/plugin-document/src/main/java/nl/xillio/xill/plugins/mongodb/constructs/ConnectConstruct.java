@@ -1,7 +1,6 @@
 package nl.xillio.xill.plugins.mongodb.constructs;
 
 import com.google.inject.Inject;
-import com.mongodb.MongoTimeoutException;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
@@ -13,7 +12,12 @@ import nl.xillio.xill.plugins.mongodb.services.ConnectionFailedException;
 import nl.xillio.xill.plugins.mongodb.services.ConnectionInfo;
 import nl.xillio.xill.plugins.mongodb.services.ConnectionManager;
 
-
+/**
+ * This construct will connect to a MongoDB server.
+ *
+ * @author Thomas Biesaart
+ * @author Titus Nachbauer
+ */
 public class ConnectConstruct extends Construct {
     private final ConnectionManager connectionManager;
 
