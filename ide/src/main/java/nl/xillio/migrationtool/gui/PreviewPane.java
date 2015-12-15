@@ -73,10 +73,10 @@ public class PreviewPane extends AnchorPane implements RobotTabComponent {
 
         apnPreviewPane.getChildren().clear();
 
-        Node node = getPreview(getVarValue(observableVariable), apnPreviewSearchBar);
+        Node node = getPreview(getDebugger().getVariableValue(observableVariable), apnPreviewSearchBar);
 
         if (node == null) {
-            node = buildTree(getVarValue(observableVariable));
+            node = buildTree(getDebugger().getVariableValue(observableVariable));
         }
 
         if (node instanceof Text) {
@@ -89,8 +89,8 @@ public class PreviewPane extends AnchorPane implements RobotTabComponent {
         apnPreviewSearchBar.refresh();
     }
 
-	private MetaExpression getVarValue(final ObservableVariable observableVariable){
-		return tab.getProcessor().getDebugger().getVariableValue(observableVariable.getSource());
+	private Debugger getDebugger(){
+		return tab.getProcessor().getDebugger();
 	}
 
 	private void clear() {
@@ -212,6 +212,6 @@ public class PreviewPane extends AnchorPane implements RobotTabComponent {
 	@Override
 	public void initialize(final RobotTab tab) {
 		this.tab = tab;
-		tab.getProcessor().getDebugger().getOnRobotStop().addListener(action -> clear());
+		getDebugger().getOnRobotStop().addListener(action -> clear());
 	}
 }

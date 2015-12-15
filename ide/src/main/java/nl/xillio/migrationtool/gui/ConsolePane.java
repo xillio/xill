@@ -45,6 +45,7 @@ import nl.xillio.migrationtool.elasticconsole.Counter;
 import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
 import nl.xillio.migrationtool.elasticconsole.ESConsoleClient.LogType;
 import nl.xillio.migrationtool.elasticconsole.LogEntry;
+import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.preview.Searchable;
 import nl.xillio.xill.util.HotkeysHandler.Hotkeys;
@@ -566,13 +567,16 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 	public void initialize(final RobotTab tab) {
 		this.tab = tab;
 		if (new Boolean(FXController.settings.simple().get(Settings.SETTINGS_GENERAL, Settings.OpenBotWithCleanConsole)).booleanValue()) {
-			ESConsoleClient.getInstance().clearLog(tab.getProcessor().getRobotID().toString());
+			ESConsoleClient.getInstance().clearLog(getRobotID().toString());
 		}
-		this.tab.getProcessor().getDebugger().getOnRobotStart().addListener(start -> updateLog(Scroll.TOTALEND, false));
-		ESConsoleClient.getLogEvent(tab.getProcessor().getRobotID()).addListener(msg -> updateTimeline.play());
+		getDebugger().getOnRobotStart().addListener(start -> updateLog(Scroll.TOTALEND, false));
+		ESConsoleClient.getLogEvent(getRobotID()).addListener(msg -> updateTimeline.play());
 	}
 
 	private RobotID getRobotID() {
 		return tab.getProcessor().getRobotID();
+	}
+	private Debugger getDebugger(){
+		return tab.getProcessor().getDebugger();
 	}
 }

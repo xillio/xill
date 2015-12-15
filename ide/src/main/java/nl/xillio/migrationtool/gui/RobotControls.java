@@ -198,6 +198,9 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 	private Debugger getDebugger() {
 		return tab.getProcessor().getDebugger();
 	}
+	private RobotID getRobotID(){
+		return tab.getProcessor().getRobotID();
+	}
 
 	@Override
 	public void handle(final KeyEvent event) {
@@ -228,7 +231,7 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 		// Get all breakpoints
 		List<Breakpoint> breakpoints = BreakpointPool.INSTANCE.get();
 
-		tab.getProcessor().getDebugger().setBreakpoints(breakpoints);
+		getDebugger().setBreakpoints(breakpoints);
 	}
 
 	private void highlight(final RobotID id, final int line, final String highlightType) {
@@ -268,7 +271,7 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 
 	@Override
 	public void handle(final Throwable e) throws RobotRuntimeException {
-		Logger log = RobotAppender.getLogger(tab.getProcessor().getRobotID());
+		Logger log = RobotAppender.getLogger(getRobotID());
 
 		Throwable root = ExceptionUtils.getRootCause(e);
 
