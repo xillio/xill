@@ -65,7 +65,7 @@ public class FormatConstruct extends Construct {
 				formatList.add(fromValue(s));
 			}
 		} catch (PatternSyntaxException e) {
-			throw new RobotRuntimeException("SyntaxError in the by the system provided pattern: " + e.getMessage(), e);
+			throw new RobotRuntimeException("SyntaxError in the system provided pattern: " + e.getMessage(), e);
 		} catch (IllegalArgumentException | FailedToGetMatcherException e) {
 			throw new RobotRuntimeException("Illegal argument handed when trying to match: " + e.getMessage(), e);
 		}
