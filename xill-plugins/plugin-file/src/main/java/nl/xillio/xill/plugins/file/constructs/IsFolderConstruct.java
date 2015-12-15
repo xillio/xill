@@ -13,11 +13,11 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Determines whether a file or folder is readable or not.
+ * Tests whether the file denoted by this abstract pathname is a folder.
  *
- * Created by Anwar on 11/30/2015.
+ * @author Paul van der Zandt, Xillio
  */
-public class CanReadConstruct extends Construct {
+public class IsFolderConstruct extends Construct {
 
     @Inject
     private FileUtilities fileUtilities;
@@ -34,10 +34,9 @@ public class CanReadConstruct extends Construct {
                                   final MetaExpression uri) {
         try {
             File file = getFile(constructContext, uri.getStringValue());
-            return fromValue(fileUtilities.canRead(file));
+            return fromValue(fileUtilities.isFolder(file));
         } catch (IOException e) {
             throw new RobotRuntimeException("File not found, or not accessible", e);
         }
     }
-
 }
