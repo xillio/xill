@@ -16,11 +16,13 @@ import nl.xillio.xill.plugins.mongodb.services.ConnectionManager;
 import nl.xillio.xill.plugins.mongodb.services.MongoConverter;
 import nl.xillio.xill.plugins.mongodb.services.NoSuchConnectionException;
 import org.apache.commons.lang3.StringUtils;
+import org.bson.BsonValue;
 import org.bson.Document;
 
 abstract class AbstractCollectionApiConstruct extends Construct {
     private ConnectionManager connectionManager;
     private MongoConverter mongoConverter;
+    private BsonValueConverter bsonValueConverter;
 
     @Inject
     void setConnectionManager(ConnectionManager connectionManager) {
@@ -30,6 +32,11 @@ abstract class AbstractCollectionApiConstruct extends Construct {
     @Inject
     void setMongoConverter(MongoConverter mongoConverter) {
         this.mongoConverter = mongoConverter;
+    }
+
+    @Inject
+    void setBsonValueConverter(BsonValueConverter bsonValueConverter) {
+        this.bsonValueConverter = bsonValueConverter;
     }
 
     @Override
@@ -112,6 +119,24 @@ abstract class AbstractCollectionApiConstruct extends Construct {
         result.storeMeta(MetaExpressionIterator.class, new MetaExpressionIterator<>(
                 source.iterator(),
                 this::getMeta
+        ));
+
+        return result;
+    }
+
+    /**
+     * Create a result expression from a MongoIterable.
+     *
+     * @param source    the iterable
+     * @param arguments the arguments that should be included in the string representation
+     * @return the expression
+     */
+    protected MetaExpression fromValueRaw(MongoIterable<BsonValue> source, MongoCollection<Document> collection, MetaExpression... arguments) {
+
+        MetaExpression result = fromValue(String.format("db.%s.%s(%s)", collection.getNamespace().getCollectionName(), getName(), StringUtils.join(arguments, ",")));
+        result.storeMeta(MetaExpressionIterator.class, new MetaExpressionIterator<>(
+                source.iterator(),
+                bsonValueConverter::convert
         ));
 
         return result;
