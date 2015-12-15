@@ -7,12 +7,12 @@ import nl.xillio.xill.api.construct.Argument;
 import org.bson.Document;
 
 /**
- * This construct represents the find method on MongoDB.
+ * This construct represents the findOne method on MongoDB.
  *
  * @author Thomas Biesaart
- * @see <a href="https://docs.mongodb.org/v3.0/reference/method/db.collection.find/#db.collection.find">db.collection.find</a>
+ * @see <a href="https://docs.mongodb.org/v3.0/reference/method/db.collection.findOne/#db.collection.findOne">db.collection.findOne</a>
  */
-public class FindConstruct extends AbstractCollectionApiConstruct {
+public class FindOneConstruct extends AbstractCollectionApiConstruct {
 
 
     @Override
@@ -29,8 +29,6 @@ public class FindConstruct extends AbstractCollectionApiConstruct {
         Document projection = getQuery(arguments[1]);
 
         FindIterable<Document> mongoResult = collection.find(filter).projection(projection);
-
-
-        return fromValue(mongoResult, collection, arguments);
+        return getMeta(mongoResult.first());
     }
 }
