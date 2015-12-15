@@ -63,20 +63,20 @@ public class InstructionStackPane extends AnchorPane implements RobotTabComponen
 		Platform.runLater(() -> {
 			List<Instruction> items = null;
 
-			if (getStacktrace().size() > MAX_STACK) {
+			if (getDebugger().getStackTrace().size() > MAX_STACK) {
 				// The stack is too large to display, show a smaller one
 				items = new ArrayList<>(MAX_STACK);
 
 				// Dummy instruction for info line
-				items.add(new DummyInstruction(tab.getProcessor().getRobotID(), getStacktrace().size() - MAX_STACK));
+				items.add(new DummyInstruction(tab.getProcessor().getRobotID(), getDebugger().getStackTrace().size() - MAX_STACK));
 
 				// Top MAX
 				for (int i = 0; i < MAX_STACK; i++) {
-					items.add(getStacktrace().get(getStacktrace().size() - MAX_STACK + i));
+					items.add(getDebugger().getStackTrace().get(getDebugger().getStackTrace().size() - MAX_STACK + i));
 				}
 
 			} else {
-				items = getStacktrace();
+				items = getDebugger().getStackTrace();
 			}
 
 			cbxStackPos.setItems(FXCollections.observableArrayList(items));
@@ -97,8 +97,8 @@ public class InstructionStackPane extends AnchorPane implements RobotTabComponen
 	public void initialize(final RobotTab tab) {
 		this.tab = tab;
 
-		tab.getProcessor().getDebugger().getOnRobotPause().addListener(this::onRobotPause);
-		tab.getProcessor().getDebugger().getOnRobotStop().addListener(this::onRobotStop);
+		getDebugger().getOnRobotPause().addListener(this::onRobotPause);
+		getDebugger().getOnRobotStop().addListener(this::onRobotStop);
 	}
 
 	@Override
@@ -150,7 +150,7 @@ public class InstructionStackPane extends AnchorPane implements RobotTabComponen
 
 	}
 
-	private List<Instruction> getStacktrace(){
-		return tab.getProcessor().getDebugger().getStackTrace();
+	private Debugger getDebugger(){
+		return tab.getProcessor().getDebugger();
 	}
 }
