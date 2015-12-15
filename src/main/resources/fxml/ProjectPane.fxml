@@ -39,22 +39,6 @@
 										<Tooltip text="Upload" />
 									</tooltip>
 								</Button>
-								<Button fx:id="btnRename" mnemonicParsing="false" onAction="#renameButtonPressed" styleClass="iconButton" text="Rename">
-									<graphic>
-										<Pane styleClass="icon" />
-									</graphic>
-									<tooltip>
-										<Tooltip text="Rename" />
-									</tooltip>
-								</Button>
-								<Button fx:id="btnDelete" mnemonicParsing="false" onAction="#deleteButtonPressed" styleClass="iconButton" text="Delete">
-									<graphic>
-										<Pane styleClass="icon" />
-									</graphic>
-									<tooltip>
-										<Tooltip text="Delete" />
-									</tooltip>
-								</Button>
 							</items>
 						</ToolBar>
 					</children>

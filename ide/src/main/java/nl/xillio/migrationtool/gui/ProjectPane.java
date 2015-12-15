@@ -60,17 +60,13 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
     private Button btnAddFolder;
     @FXML
     private Button btnUpload;
-    @FXML
-    private Button btnRename;
-    @FXML
-    private Button btnDelete;
 
     private final BotFileFilter robotFileFilter = new BotFileFilter();
     private final TreeItem<Pair<File, String>> root = new TreeItem<>(new Pair<>(new File("."), "Projects"));
     private FXController controller;
 
     // Context menu items.
-    private MenuItem menuCut, menuCopy, menuPaste;
+    private MenuItem menuCut, menuCopy, menuPaste, menuRename, menuDelete;
     private List<File> bulkFiles; // Files to copy or cut.
     private boolean copy = false; // True: copy, false: cut.
 
@@ -125,17 +121,19 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         menuPaste.setOnAction(e -> paste());
 
         // Rename.
-        MenuItem menuRename = new MenuItem("Rename");
+        menuRename = new MenuItem("Rename");
         menuRename.setOnAction(e -> renameButtonPressed());
-        btnRename.disabledProperty().addListener((obs, old, newValue) -> menuRename.setDisable(newValue));
 
         // Delete.
-        MenuItem menuDelete = new MenuItem("Delete");
+        menuDelete = new MenuItem("Delete");
         menuDelete.setOnAction(e -> deleteButtonPressed());
-        btnDelete.disabledProperty().addListener((obs, old, newValue) -> menuDelete.setDisable(newValue));
+
+        // Upload.
+        MenuItem menuUpload = new MenuItem("Upload");
+        menuUpload.setOnAction(e -> uploadButtonPressed());
 
         // Create the context menu.
-        ContextMenu menu = new ContextMenu(menuCut, menuCopy, menuPaste, menuRename, menuDelete);
+        ContextMenu menu = new ContextMenu(menuCut, menuCopy, menuPaste, menuRename, menuDelete, menuUpload);
         trvProjects.setContextMenu(menu);
         // Only paste when there is just 1 item selected (the paste location) and there are files to paste.
         trvProjects.setOnContextMenuRequested(e -> menuPaste.setDisable(getAllCurrentItems().size() != 1 || bulkFiles == null || bulkFiles.isEmpty()));
@@ -231,7 +229,6 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         new UploadToServerDialog(this, getAllCurrentItems()).show();
     }
 
-    @FXML
     private void renameButtonPressed() {
         RobotTab orgTab = (RobotTab) controller.findTab(getCurrentItem().getValue().getKey());
 
@@ -270,7 +267,6 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         }
     }
 
-    @FXML
     private void deleteButtonPressed() {
         ObservableList<TreeItem<Pair<File, String>>> selectedItems = getAllCurrentItems();
 
@@ -355,7 +351,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
                         }
                         break;
                     case RENAME:
-                        if (!btnRename.isDisable()) {
+                        if (!menuRename.isDisable()) {
                             renameButtonPressed();
                         }
                         break;
@@ -363,7 +359,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
             }
 
             // Keypresses.
-            if (keyEvent.getCode() == KeyCode.DELETE && !btnDelete.isDisable()) {
+            if (keyEvent.getCode() == KeyCode.DELETE && !menuDelete.isDisable()) {
                 deleteButtonPressed();
             }
         }
@@ -827,13 +823,13 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
             disableFileButtons(true);
         } else if (newObject == getProject(newObject)) {
             // This is a project.
-            btnRename.setDisable(true);
+            menuRename.setDisable(true);
             disableFileButtons(false);
         }
 
         // Check if more than 1 item is selected.
         if (getAllCurrentItems().size() > 1) {
-            btnRename.setDisable(true);
+            menuRename.setDisable(true);
             btnAddFolder.setDisable(true);
         }
 
@@ -853,9 +849,9 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
      */
     private void disableAllButtons(boolean disable) {
         btnAddFolder.setDisable(disable);
-        btnDelete.setDisable(disable);
-        btnRename.setDisable(disable);
         btnUpload.setDisable(disable);
+        menuDelete.setDisable(disable);
+        menuRename.setDisable(disable);
     }
 
     /**
