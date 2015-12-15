@@ -1,5 +1,6 @@
 package nl.xillio.migrationtool.gui;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -8,7 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.WatchEvent;
 import java.util.*;
-import java.util.function.Consumer;
+import java.util.List;
 import java.util.stream.Collectors;
 import javax.swing.filechooser.FileFilter;
 
@@ -25,6 +26,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -64,7 +66,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
     private FXController controller;
 
     // Context menu items.
-    private MenuItem menuCut, menuCopy, menuPaste, menuRename, menuDelete;
+    private MenuItem menuCut, menuCopy, menuPaste, menuRename, menuDelete, menuOpenFolder;
     private List<File> bulkFiles; // Files to copy or cut.
     private boolean copy = false; // True: copy, false: cut.
 
@@ -130,8 +132,21 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         MenuItem menuUpload = new MenuItem("Upload");
         menuUpload.setOnAction(e -> uploadButtonPressed());
 
+        menuOpenFolder = new MenuItem("Open containing folder");
+        menuOpenFolder.setOnAction(e -> {
+            try {
+                Desktop.getDesktop().open(getCurrentItem().getValue().getKey().getParentFile());
+            } catch (IOException ex) {
+                LOGGER.error("Failed to open containing folder.", ex);
+            }
+        });
+
         // Create the context menu.
         ContextMenu menu = new ContextMenu(menuCut, menuCopy, menuPaste, menuRename, menuDelete, menuUpload);
+        if (Desktop.isDesktopSupported()) {
+            menu.getItems().add(menuOpenFolder);
+        }
+
         trvProjects.setContextMenu(menu);
         // Only paste when there is just 1 item selected (the paste location) and there are files to paste.
         trvProjects.setOnContextMenuRequested(e -> menuPaste.setDisable(getAllCurrentItems().size() != 1 || bulkFiles == null || bulkFiles.isEmpty()));
@@ -808,6 +823,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         if (getAllCurrentItems().size() > 1) {
             menuRename.setDisable(true);
             btnAddFolder.setDisable(true);
+            menuOpenFolder.setDisable(true);
             disableFileButtons(true);
         }
 
@@ -830,6 +846,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         btnUpload.setDisable(disable);
         menuDelete.setDisable(disable);
         menuRename.setDisable(disable);
+        menuOpenFolder.setDisable(disable);
     }
 
     /**
