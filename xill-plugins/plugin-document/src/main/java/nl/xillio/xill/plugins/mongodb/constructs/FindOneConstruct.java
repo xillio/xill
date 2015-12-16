@@ -25,10 +25,10 @@ public class FindOneConstruct extends AbstractCollectionApiConstruct {
 
     @Override
     MetaExpression process(MetaExpression[] arguments, MongoCollection<Document> collection) {
-        Document filter = getQuery(arguments[0]);
-        Document projection = getQuery(arguments[1]);
+        Document filter = toDocument(arguments[0]);
+        Document projection = toDocument(arguments[1]);
 
         FindIterable<Document> mongoResult = collection.find(filter).projection(projection);
-        return getMeta(mongoResult.first());
+        return toExpression(mongoResult.first());
     }
 }

@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.mongodb.constructs;
 
 import com.google.inject.Inject;
 import com.mongodb.MongoQueryException;
+import com.mongodb.MongoSocketOpenException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoIterable;
 import nl.xillio.xill.api.components.MetaExpression;
@@ -11,7 +12,11 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.mongodb.services.*;
+import nl.xillio.xill.plugins.mongodb.NoSuchConnectionException;
+import nl.xillio.xill.plugins.mongodb.services.BsonValueConverter;
+import nl.xillio.xill.plugins.mongodb.services.Connection;
+import nl.xillio.xill.plugins.mongodb.services.ConnectionManager;
+import nl.xillio.xill.plugins.mongodb.services.MongoConverter;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.BsonValue;
 import org.bson.Document;
@@ -68,6 +73,8 @@ abstract class AbstractCollectionApiConstruct extends Construct {
             return process(customArguments, collection);
         } catch (MongoQueryException e) {
             throw new RobotRuntimeException("Could not parse query: " + e.getErrorMessage(), e);
+        } catch (MongoSocketOpenException e) {
+            throw new RobotRuntimeException("Could not connect to the database at " + e.getServerAddress() + "\nError: " + e.getMessage(), e);
         }
     }
 
@@ -95,11 +102,11 @@ abstract class AbstractCollectionApiConstruct extends Construct {
         }
     }
 
-    protected Document getQuery(MetaExpression query) {
+    protected Document toDocument(MetaExpression query) {
         return mongoConverter.parse(query);
     }
 
-    protected MetaExpression getMeta(Document document) {
+    protected MetaExpression toExpression(Document document) {
         return mongoConverter.parse(document);
     }
 
@@ -115,7 +122,7 @@ abstract class AbstractCollectionApiConstruct extends Construct {
         MetaExpression result = fromValue(String.format("db.%s.%s(%s)", collection.getNamespace().getCollectionName(), getName(), StringUtils.join(arguments, ",")));
         result.storeMeta(MetaExpressionIterator.class, new MetaExpressionIterator<>(
                 source.iterator(),
-                this::getMeta
+                this::toExpression
         ));
 
         return result;

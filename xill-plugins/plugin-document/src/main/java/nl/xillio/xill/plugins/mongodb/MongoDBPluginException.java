@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.mongodb.services;
+package nl.xillio.xill.plugins.mongodb;
 
 /**
  * Created by Thomas Biesaart on 14-12-2015.

@@ -4,6 +4,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mongodb.MongoTimeoutException;
 import nl.xillio.xill.api.construct.ConstructContext;
+import nl.xillio.xill.plugins.mongodb.ConnectionFailedException;
+import nl.xillio.xill.plugins.mongodb.NoSuchConnectionException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

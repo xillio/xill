@@ -26,7 +26,7 @@ public class DistinctConstruct extends AbstractCollectionApiConstruct {
     @Override
     MetaExpression process(MetaExpression[] arguments, MongoCollection<Document> collection) {
         String field = arguments[0].getStringValue();
-        Document query = getQuery(arguments[1]);
+        Document query = toDocument(arguments[1]);
 
         DistinctIterable<BsonValue> mongoResult = collection.distinct(field, BsonValue.class).filter(query);
 

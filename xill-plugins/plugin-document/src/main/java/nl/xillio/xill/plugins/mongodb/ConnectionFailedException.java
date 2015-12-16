@@ -1,4 +1,6 @@
-package nl.xillio.xill.plugins.mongodb.services;
+package nl.xillio.xill.plugins.mongodb;
+
+import nl.xillio.xill.plugins.mongodb.services.Connection;
 
 /**
  * This exception is generally thrown when a connection to a server fails.

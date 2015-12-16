@@ -22,7 +22,7 @@ public class CountConstruct extends AbstractCollectionApiConstruct {
 
     @Override
     MetaExpression process(MetaExpression[] arguments, MongoCollection<Document> collection) {
-        Document query = getQuery(arguments[0]);
+        Document query = toDocument(arguments[0]);
 
         long count = collection.count(query);
 

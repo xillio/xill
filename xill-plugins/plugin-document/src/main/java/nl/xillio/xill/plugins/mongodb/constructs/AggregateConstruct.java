@@ -20,17 +20,15 @@ public class AggregateConstruct extends AbstractCollectionApiConstruct {
     @Override
     protected Argument[] getApiArguments() {
         return new Argument[]{
-                new Argument("pipeline", LIST),
-                new Argument("options", emptyObject(), OBJECT)
+                new Argument("pipeline", LIST)
         };
     }
 
     @Override
     MetaExpression process(MetaExpression[] arguments, MongoCollection<Document> collection) {
         List<Document> pipeline = arguments[0].<List<MetaExpression>>getValue().stream()
-                .map(this::getQuery)
+                .map(this::toDocument)
                 .collect(Collectors.toList());
-        Document options = getQuery(arguments[1]);
 
         AggregateIterable<Document> mongoResult = collection.aggregate(pipeline);
 

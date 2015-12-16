@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.mongodb.services;
 
+import com.google.inject.Singleton;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.plugins.document.services.xill.DocumentQueryBuilder;
@@ -13,9 +14,9 @@ import java.util.Map;
  * @author Thomas Biesaart
  * @author Titus Nachbauer
  */
+@Singleton
 public class MongoConverter implements DocumentQueryBuilder {
 
-    @SuppressWarnings("unchecked")
     public Document parse(MetaExpression expression) {
 
         if (expression.getType() != ExpressionDataType.OBJECT) {

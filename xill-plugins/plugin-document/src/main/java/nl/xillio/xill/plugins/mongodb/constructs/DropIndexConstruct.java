@@ -30,7 +30,7 @@ public class DropIndexConstruct extends AbstractCollectionApiConstruct {
                 collection.dropIndex(arguments[0].getStringValue());
                 break;
             case OBJECT:
-                Document index = getQuery(arguments[0]);
+                Document index = toDocument(arguments[0]);
                 collection.dropIndex(index);
                 break;
             default:

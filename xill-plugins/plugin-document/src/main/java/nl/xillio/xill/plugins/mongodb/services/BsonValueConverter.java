@@ -16,6 +16,11 @@ import java.util.stream.Collectors;
 import static nl.xillio.xill.api.components.ExpressionBuilder.NULL;
 import static nl.xillio.xill.api.components.ExpressionBuilder.fromValue;
 
+/**
+ * This class is responsible for converting a {@link BsonValue} to a {@link MetaExpression}.
+ *
+ * @author Thomas Biesaart
+ */
 @Singleton
 public class BsonValueConverter {
 

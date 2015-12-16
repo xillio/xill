@@ -3,6 +3,8 @@ package nl.xillio.xill.plugins.mongodb.services;
 import com.mongodb.MongoClient;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
+import nl.xillio.xill.plugins.mongodb.ConnectionFailedException;
+import nl.xillio.xill.plugins.mongodb.NoSuchConnectionException;
 import org.testng.annotations.Test;
 
 import java.util.UUID;

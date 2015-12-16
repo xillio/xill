@@ -8,7 +8,7 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.mongodb.services.Connection;
-import nl.xillio.xill.plugins.mongodb.services.ConnectionFailedException;
+import nl.xillio.xill.plugins.mongodb.ConnectionFailedException;
 import nl.xillio.xill.plugins.mongodb.services.ConnectionInfo;
 import nl.xillio.xill.plugins.mongodb.services.ConnectionManager;
 

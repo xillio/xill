@@ -34,7 +34,7 @@ public class CreateIndexConstruct extends AbstractCollectionApiConstruct {
 
     @Override
     MetaExpression process(MetaExpression[] arguments, MongoCollection<Document> collection) {
-        Document keys = getQuery(arguments[0]);
+        Document keys = toDocument(arguments[0]);
 
         IndexOptions options = indexOptionsFactory.build(arguments[1]);
         String result = collection.createIndex(keys,options);
