@@ -59,11 +59,6 @@ public class WatchDir implements Runnable {
 
 	public void stop() {
 		stop = true;
-		try {
-			watcher.close();
-		} catch (IOException e) {
-			LOGGER.error(e.getMessage(), e);
-		}
 	}
 
 	private void fireEvent(final Path dir, final Path child, final WatchEvent<Path> event) {
@@ -115,7 +110,7 @@ public class WatchDir implements Runnable {
 			try {
 				key = watcher.take();
 			} catch (InterruptedException e) {
-				return;
+				break;
 			}
 
 			Path dir = keys.get(key);
@@ -162,6 +157,12 @@ public class WatchDir implements Runnable {
 					break;
 				}
 			}
+		}
+
+		try {
+			watcher.close();
+		} catch (IOException e) {
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 

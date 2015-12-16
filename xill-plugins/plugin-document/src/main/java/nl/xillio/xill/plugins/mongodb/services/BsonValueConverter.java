@@ -73,7 +73,7 @@ public class BsonValueConverter {
         }
 
         if (value.isDateTime()) {
-            Instant instant = Instant.ofEpochMilli(value.asDateTime().getValue());
+            Instant instant = Instant.ofEpochSecond(value.asDateTime().getValue());
             return parseDate(instant);
         }
 
