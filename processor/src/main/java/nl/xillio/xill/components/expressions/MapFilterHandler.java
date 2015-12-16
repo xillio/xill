@@ -66,28 +66,25 @@ public abstract class MapFilterHandler implements Processable, FunctionParameter
         }
     }
 
-    abstract InstructionFlow<MetaExpression> atomicProcessNoIterator(MetaExpression result, Debugger debugger);
-    abstract InstructionFlow<MetaExpression> atomicProcessIterator(MetaExpression result, Debugger debugger);
-    abstract InstructionFlow<MetaExpression> listProcess(MetaExpression result, Debugger debugger);
-    abstract InstructionFlow<MetaExpression> objectProcess(MetaExpression result, Debugger debugger);
-    /**
-     * Instruction set for the process of atomics.
-     * Run the function and return the result.
-     * When function has one argument give the meta expression.
-     * When the function has two arguments give an key (index) as well.
-     */
+
+
+    protected abstract InstructionFlow<MetaExpression> atomicProcessNoIterator(MetaExpression result, Debugger debugger);
+    protected abstract InstructionFlow<MetaExpression> atomicProcessIterator(MetaExpression result, Debugger debugger);
+    protected abstract InstructionFlow<MetaExpression> listProcess(MetaExpression result, Debugger debugger);
+    protected abstract InstructionFlow<MetaExpression> objectProcess(MetaExpression result, Debugger debugger);
+
+
+
+
+
 
     /**
-     * Instruction set for the process of lists.
-     * Run the function on each element and return the result.
-     * When function has one argument give the meta expression.
-     * When the function has two arguments give an key (index) as well.
+     * Set the function parameter
+     *
+     * @param functionDeclaration
      */
-
-    /**
-     * Instruction set for the process of objects.
-     * Run the functions on each element and return the result.
-     * When function has one argument give the value of the object
-     * When the function has two arguments give the key as well.
-     */
+    @Override
+    public void setFunction(final FunctionDeclaration functionDeclaration) {
+        this.functionDeclaration = functionDeclaration;
+    }
 }

@@ -1,77 +1,35 @@
 package nl.xillio.xill.components.expressions;
 
-import java.util.*;
-import java.util.Map.Entry;
-
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.*;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
-import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.components.instructions.FunctionDeclaration;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
- * Call a function for every value in a collection
+ * Call a function for every value in a collection.
  *
- * @author Pieter Soels, Thomas Biesaart
+ * @author Pieter Soels
+ * @author Thomas Biesaart
  */
 public class MapExpression extends MapFilterHandler {
-	/**
-	 * Create a new {@link MapExpression}
-	 * 
-	 * @param argument
-	 */
-	public MapExpression(final Processable argument) {
-		super(argument);
-	}
-
     /**
-     * Start of instructions for the map expression.
+     * Create a new {@link MapExpression}.
+     *
+     * @param argument the input for this expression
      */
-	@Override
-	public InstructionFlow<MetaExpression> process(final Debugger debugger) {
-		// Call the function for all arguments
-		MetaExpression result = argument.process(debugger).get();
-
-		try {
-			result.registerReference();
-			return process(result, debugger);
-		} catch (ConcurrentModificationException e) {
-			throw new RobotRuntimeException("You can not change the expression upon which you are iterating.", e);
-		} finally {
-			result.releaseReference();
-		}
-	}
-
-    /**
-     * Depending on type of MetaExpression (result) process individually.
-     */
-	private InstructionFlow<MetaExpression> process(MetaExpression result, Debugger debugger){
-		switch (result.getType()) {
-			case ATOMIC:
-                if (result.isNull()) {
-                    return InstructionFlow.doResume(ExpressionBuilderHelper.emptyList());
-                }
-                if (result.getMeta(MetaExpressionIterator.class) == null){
-                    return atomicProcessNoIterator(result, debugger);
-                } else {
-                    return atomicProcessIterator(result, debugger);
-                }
-			case LIST:
-				return listProcess(result, debugger);
-			case OBJECT:
-				return objectProcess(result, debugger);
-			default:
-				throw new NotImplementedException("This MetaExpression has not been implemented yet");
-		}
-	}
+    public MapExpression(final Processable argument) {
+        super(argument);
+    }
 
     /**
      * Map process of an atomic value
      * Result empty list when input is null
      */
     @Override
-	protected InstructionFlow<MetaExpression> atomicProcessNoIterator(MetaExpression input, Debugger debugger) {
+    protected InstructionFlow<MetaExpression> atomicProcessNoIterator(MetaExpression input, Debugger debugger) {
         List<MetaExpression> atomicResults = new ArrayList<>(1);
         if (functionDeclaration.getParametersSize() == 1) {
             atomicResults.add(functionDeclaration.run(debugger, Collections.singletonList(input)).get());
@@ -93,9 +51,9 @@ public class MapExpression extends MapFilterHandler {
             MetaExpression value = iterator.next();
             value.registerReference();
 
-            if (functionDeclaration.getParametersSize() == 1){
+            if (functionDeclaration.getParametersSize() == 1) {
                 atomicResults.add(functionDeclaration.run(debugger, Collections.singletonList(value)).get());
-            } else if (functionDeclaration.getParametersSize() == 2){
+            } else if (functionDeclaration.getParametersSize() == 2) {
                 int keyValue = i++;
                 atomicResults.add(functionDeclaration.run(debugger,
                         Arrays.asList(ExpressionBuilderHelper.fromValue(keyValue), value)).get());
@@ -116,7 +74,9 @@ public class MapExpression extends MapFilterHandler {
 
         if (functionDeclaration.getParametersSize() == 1) {
             for (MetaExpression expression : (List<MetaExpression>) result.getValue()) {
-                listResults.add(functionDeclaration.run(debugger, Collections.singletonList(expression)).get());
+                InstructionFlow<MetaExpression> functionResult = functionDeclaration.run(debugger, Collections.singletonList(expression));
+                MetaExpression resultValue = functionResult.get();
+                listResults.add(resultValue);
             }
         } else if (functionDeclaration.getParametersSize() == 2) {
             List<MetaExpression> expressions = (List<MetaExpression>) result.getValue();
@@ -155,19 +115,9 @@ public class MapExpression extends MapFilterHandler {
         return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(objectResults));
     }
 
-	@Override
-	public Collection<Processable> getChildren() {
-		return null;
-	}
-
-	/**
-	 * Set the function parameter
-	 * 
-	 * @param functionDeclaration
-	 */
-	@Override
-	public void setFunction(final FunctionDeclaration functionDeclaration) {
-		super.functionDeclaration = functionDeclaration;
-	}
+    @Override
+    public Collection<Processable> getChildren() {
+        return null;
+    }
 
 }
