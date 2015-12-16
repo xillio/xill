@@ -46,7 +46,7 @@ abstract class AbstractCollectionApiConstruct extends Construct {
         Argument[] apiArguments = getApiArguments();
         Argument[] arguments = new Argument[apiArguments.length + 2];
 
-        arguments[0] = new Argument("collection", ATOMIC);
+        arguments[0] = new Argument("collectionName", ATOMIC);
         arguments[arguments.length - 1] = new Argument("database", NULL, ATOMIC);
 
         System.arraycopy(apiArguments, 0, arguments, 1, arguments.length - 2);
@@ -57,7 +57,7 @@ abstract class AbstractCollectionApiConstruct extends Construct {
         );
     }
 
-    private MetaExpression process(MetaExpression[] arguments, ConstructContext context) {
+    MetaExpression process(MetaExpression[] arguments, ConstructContext context) {
         // Parse arguments
         MetaExpression[] customArguments = new MetaExpression[arguments.length - 2];
         System.arraycopy(arguments, 1, customArguments, 0, arguments.length - 2);
@@ -89,7 +89,7 @@ abstract class AbstractCollectionApiConstruct extends Construct {
 
         Connection connection = connectionExpression.getMeta(Connection.class);
         if (connection == null) {
-            throw new RobotRuntimeException("The passed connection variable is not a valid MongoDB connection. Please connect using the Mongo.connect construct");
+            throw new RobotRuntimeException("The passed database parameter is not a valid MongoDB database. Please connect using the Mongo.connect construct");
         }
         return connection;
     }

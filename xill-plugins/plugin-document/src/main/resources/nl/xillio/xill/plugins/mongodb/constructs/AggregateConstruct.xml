@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Provides a wrapper around the MongoDB [db.collection.aggregate](https://docs.mongodb.org/v3.0/reference/method/db.collection.aggregate/#db.collection.aggregate) method.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Count how many documents have what content types.</header>
+            <code>
+                use Mongo;
+                use System;
+                Mongo.connect("udm_default");
+
+                var contentTypes = Mongo.aggregate(
+                    "documents",
+                    [
+                        {
+                            "$group": {
+                                "_id": "$contenttype",
+                                "count": {
+                                    "$sum": 1
+                                }
+                            }
+                        }
+                    ]
+                );
+
+                foreach(result in contentTypes) {
+                    System.print(result._id :: ": " :: result.count);
+                }
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>connect</reference>
+    </references>
+    <tags>
+        mongodb
+    </tags>
+</function>
