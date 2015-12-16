@@ -132,7 +132,7 @@ public class SetCellConstructTest {
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Expected parameter 'sheet' to be a result of loadSheet or createSheet")
 	public void testProcessIncorrectSheet() throws Exception {
 		MetaExpression sheetInput = fromValue("sheetinput");
-		sheetInput.storeMeta(XillSheet.class, null);
+		sheetInput.storeMeta(null);
 		SetCellConstruct.process(sheetInput, fromValue("A"), fromValue("B"), fromValue("value"));
 	}
 
@@ -145,7 +145,7 @@ public class SetCellConstructTest {
 	public void testProcessReadOnly() throws Exception {
 		MetaExpression sheetInput = fromValue("sheetinput");
 		XillSheet sheet = mock(XillSheet.class);
-		sheetInput.storeMeta(XillSheet.class, sheet);
+		sheetInput.storeMeta(sheet);
 
 		when(sheet.isReadonly()).thenReturn(true);
 		SetCellConstruct.process(sheetInput, fromValue("A"), fromValue("B"), fromValue("value"));
@@ -159,7 +159,7 @@ public class SetCellConstructTest {
 		MetaExpression sheetInput = fromValue("sheetinput");
 		XillSheet sheet = mock(XillSheet.class);
 		when(sheet.isReadonly()).thenReturn(false);
-		sheetInput.storeMeta(XillSheet.class, sheet);
+		sheetInput.storeMeta(sheet);
 		SetCellConstruct.process(sheetInput, fromValue("AB"), fromValue("A"), fromValue("value"));
 	}
 
@@ -173,7 +173,7 @@ public class SetCellConstructTest {
 		MetaExpression sheetInput = fromValue("sheetinput");
 		XillSheet sheet = mock(XillSheet.class);
 		when(sheet.isReadonly()).thenReturn(false);
-		sheetInput.storeMeta(XillSheet.class, sheet);
+		sheetInput.storeMeta(sheet);
 		SetCellConstruct.process(sheetInput, fromValue("AB2"), fromValue(3), fromValue("value"));
 	}
 
@@ -186,7 +186,7 @@ public class SetCellConstructTest {
 		MetaExpression sheetInput = fromValue("sheetInput");
 		XillSheet sheet = mock(XillSheet.class);
 		when(sheet.isReadonly()).thenReturn(false);
-		sheetInput.storeMeta(XillSheet.class, sheet);
+		sheetInput.storeMeta(sheet);
 		assertTrue(SetCellConstruct.process(sheetInput, fromValue("AB"), fromValue(5), fromValue("value")).getBooleanValue());
 	}
 

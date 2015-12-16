@@ -60,7 +60,7 @@ public class LoadWorkbookConstruct extends Construct {
 			context.getRootLogger().warn("Opened in read-only mode.");
 
 		MetaExpression returnValue = fromValue(workbookText);
-		returnValue.storeMeta(XillWorkbook.class, workbook);
+		returnValue.storeMeta(workbook);
 		return returnValue;
 	}
 
