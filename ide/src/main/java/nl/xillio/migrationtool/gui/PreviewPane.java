@@ -17,6 +17,8 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.preview.HtmlPreview;
 import nl.xillio.xill.api.preview.TextPreview;
 import org.apache.commons.lang3.text.WordUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -39,6 +41,8 @@ public class PreviewPane extends AnchorPane implements RobotTabComponent {
     private final TextArea textView = new TextArea();
     private PreviewSearch previewSearch;
 
+    private static final Logger LOGGER = LogManager.getLogger();
+
     /**
      * Create a new PreviewPane
      */
@@ -49,7 +53,7 @@ public class PreviewPane extends AnchorPane implements RobotTabComponent {
             loader.setController(this);
             getChildren().add(loader.load());
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Error loading Preview pane: " + e.getMessage(), e);
         }
 
         previewSearch = new PreviewSearch(apnPreviewPane);
@@ -62,11 +66,6 @@ public class PreviewPane extends AnchorPane implements RobotTabComponent {
         AnchorPane.setRightAnchor(textView, 0.0);
     }
 
-    /**
-     * Create a preview for a variable.
-     *
-     * @param observableVariable the variable
-     */
     public void preview(final ObservableVariable observableVariable) {
         apnPreviewSearchBar.reset(false);
         previewSearch.clearSearch();

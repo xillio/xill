@@ -110,7 +110,7 @@
 					</children>
 				</AnchorPane>
 				<SearchBar fx:id="apnConsoleSearchBar" VBox.vgrow="NEVER" />
-				<AnchorPane fx:id="apnConsoleBody" styleClass="paneBody">
+				<AnchorPane fx:id="apnConsoleBody" styleClass="paneBody" VBox.vgrow="ALWAYS">
 					<children>
 						<TableView fx:id="tblConsoleOut" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 							<columns>

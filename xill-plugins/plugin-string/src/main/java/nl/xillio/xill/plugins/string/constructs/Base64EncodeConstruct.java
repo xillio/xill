@@ -32,10 +32,11 @@ public class Base64EncodeConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(file) -> process(file, stringService, urlUtilityService, context),
+			file -> process(file, stringService, urlUtilityService, context),
 			new Argument("file", ATOMIC));
 	}
 
+	@SuppressWarnings("squid:S1166")
 	static MetaExpression process(final MetaExpression file, final StringUtilityService stringService, final UrlUtilityService urlUtilityService, final ConstructContext context) {
 		assertNotNull(file, "file");
 

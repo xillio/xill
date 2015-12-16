@@ -1,9 +1,11 @@
 package nl.xillio.xill.util.settings;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class that contains common methods for using simple settings
@@ -73,7 +75,7 @@ public class SimpleVariableHandler {
 					// need to add name (as a key)
 					itemContent.put(NAME, name);
 				} else {
-					throw new Exception(String.format("Settings [%1$s] has not been registered", name));
+					throw new IllegalArgumentException(String.format("Settings [%1$s] has not been registered", name));
 				}
 			} else {
 				Object o = this.content.get(category, name).get(ENCRYPTED);
@@ -85,13 +87,13 @@ public class SimpleVariableHandler {
 			itemContent.put(VALUE, valueStr);
 
 			this.content.set(category, itemContent, KEYNAME, name);
-		} catch (Exception e) {
-			LOGGER.error("Cannot save simple settings variable!", e);
+		} catch (IOException e) {
+			LOGGER.error("Cannot save simple settings variable.", e);
 		}
 	}
 
 	/**
-	 * Sets basic definition of simple variable
+	 * Set basic definition of simple variable
 	 * 
 	 * @param category The category name (e.g. "Layout")
 	 * @param name The name of simple variable (e.g. "LeftPanelWidth")
@@ -114,7 +116,7 @@ public class SimpleVariableHandler {
 	}
 
 	/**
-	 * Sets basic definition of simple variable (not encrypted)
+	 * Set basic definition of simple variable (not encrypted)
 	 * 
 	 * @param category The category name (e.g. "Layout")
 	 * @param name The name of simple variable (e.g. "LeftPanelWidth")
@@ -146,7 +148,7 @@ public class SimpleVariableHandler {
 				// no value defined - using default value
 				o = map.get(DEFAULT);
 				if (o == null) {
-					throw new Exception("Invalid structure of settings file!");
+					throw new IOException("Invalid structure of settings file.");
 				}
 			}
 
@@ -158,8 +160,8 @@ public class SimpleVariableHandler {
 			}
 			return result;
 
-		} catch (Exception e) {
-            LOGGER.error("Cannot get simple settings variable!", e);
+		} catch (IOException e) {
+            LOGGER.error("Cannot get simple settings variable.", e);
 			return null;
 		}
 	}
@@ -183,10 +185,6 @@ public class SimpleVariableHandler {
 	 * @param name The name of variable to be deleted
 	 */
 	public void delete(final String category, final String name) {
-		try {
-			this.content.delete(category, KEYNAME, name);
-		} catch (Exception e) {
-            LOGGER.error("Cannot delete simple settings variable!", e);
-		}
+		this.content.delete(category, KEYNAME, name);
 	}
 }

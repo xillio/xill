@@ -46,7 +46,6 @@ import java.util.stream.Collectors;
  * This class is the global controller for the application
  */
 public class FXController implements Initializable, EventHandler<Event> {
-    private static final Logger log = LogManager.getLogger(FXController.class);
 
     /**
      * Instance of settings handler
@@ -176,7 +175,7 @@ public class FXController implements Initializable, EventHandler<Event> {
         // Add window handler
         Platform.runLater(() -> apnRoot.getScene().getWindow().setOnCloseRequest(event -> {
             this.cancelClose = false;
-            LOGGER.info("Shutting down application");
+            LOGGER.info("Shutting down application.");
             if (!closeApplication()) {
                 event.consume(); // this cancel the process of the application closing
             }
@@ -259,7 +258,7 @@ public class FXController implements Initializable, EventHandler<Event> {
             try {
                 showReleaseNotes();
             } catch (IOException e) {
-                LOGGER.error("Failed to show release notes", e);
+                LOGGER.error("Failed to show release notes: " + e.getMessage(), e);
             }
 
             // Select the last opened tab.
@@ -348,7 +347,7 @@ public class FXController implements Initializable, EventHandler<Event> {
                 tpnBots.getTabs().add(tab);
                 tab.requestFocus();
             } catch (IOException e) {
-                LOGGER.error("Failed to perform operation.", e);
+                LOGGER.error("Failed to perform operation: " + e.getMessage(), e);
             }
         } else {
             // The created file is not in the project
@@ -404,7 +403,7 @@ public class FXController implements Initializable, EventHandler<Event> {
     public RobotTab doOpenFile(final File newfile) {
         // Skip if the file doesn't exist
         if (!newfile.exists() || !newfile.isFile()) {
-            log.error("Failed to open file `" + newfile.getAbsolutePath() + "`. File not found.");
+            LOGGER.error("Failed to open file `" + newfile.getAbsolutePath() + "`. File not found.");
             return null;
         }
 
@@ -423,7 +422,7 @@ public class FXController implements Initializable, EventHandler<Event> {
                     return editor;
                 }
             } catch (IOException e) {
-                log.error("Error while opening file: " + e.getMessage());
+                LOGGER.error("Error while opening file: " + e.getMessage(), e);
                 return null;
             }
         }
@@ -438,7 +437,7 @@ public class FXController implements Initializable, EventHandler<Event> {
             tab.requestFocus();
             return tab;
         } catch (IOException e) {
-            LOGGER.error("Failed to perform operation.", e);
+            LOGGER.error("Failed to perform operation: " + e.getMessage(), e);
         }
         return null;
     }
@@ -454,17 +453,17 @@ public class FXController implements Initializable, EventHandler<Event> {
         node.applyCss();
 
         node.lookupAll(".button")
-                .forEach((n) ->
+                .forEach(n ->
                         n.focusedProperty().addListener(
                                 returnFocusListener));
 
         // MenuButtons do not seem to get children, only items. Handle them as a special case.
-        node.lookupAll(".menu-button").forEach((mb) -> {
+        node.lookupAll(".menu-button").forEach(mb -> {
             if (mb instanceof MenuButton) {
                 ((MenuButton) mb).showingProperty().not().addListener(returnFocusListener);
             }
         });
-        node.lookupAll(".toggle-button").forEach((tb) -> tb.focusedProperty().addListener(returnFocusListener));
+        node.lookupAll(".toggle-button").forEach(tb -> tb.focusedProperty().addListener(returnFocusListener));
 
         //maybe need to add more here... since some things do not yet return focus.
     }
@@ -598,7 +597,7 @@ public class FXController implements Initializable, EventHandler<Event> {
             try {
                 plugin.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                LOGGER.error("Error while closing plugin: " + e.getMessage(), e);
             }
         }
 

@@ -1,11 +1,14 @@
 package nl.xillio.xill.plugins.system.exec;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import nl.xillio.events.Event;
 import nl.xillio.events.EventHost;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This class will listen for lines and call an event when data is found
@@ -14,6 +17,8 @@ public class InputStreamListener implements Runnable {
 	private final BufferedReader input;
 	private final EventHost<String> onLineComplete = new EventHost<>();
 	private Thread thread;
+
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * Create a new {@link InputStreamListener}
@@ -45,8 +50,8 @@ public class InputStreamListener implements Runnable {
 			String line = "";
 			try {
 				line = input.readLine();
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (IOException e) {
+				LOGGER.error("Error while listening to input stream: " + e.getMessage(), e);
 			}
 
 			if (line == null) {

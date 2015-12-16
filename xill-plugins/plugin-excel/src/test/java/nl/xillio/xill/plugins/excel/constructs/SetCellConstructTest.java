@@ -132,7 +132,6 @@ public class SetCellConstructTest {
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Expected parameter 'sheet' to be a result of loadSheet or createSheet")
 	public void testProcessIncorrectSheet() throws Exception {
 		MetaExpression sheetInput = fromValue("sheetinput");
-		sheetInput.storeMeta(null);
 		SetCellConstruct.process(sheetInput, fromValue("A"), fromValue("B"), fromValue("value"));
 	}
 

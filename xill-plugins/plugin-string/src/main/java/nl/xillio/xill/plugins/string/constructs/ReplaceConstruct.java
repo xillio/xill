@@ -46,10 +46,11 @@ public class ReplaceConstruct extends Construct {
 				new Argument("replaceall", TRUE, ATOMIC),
 				new Argument("timeout", fromValue(RegexConstruct.REGEX_TIMEOUT), ATOMIC)};
 
-		return new ConstructProcessor((a) -> process(a, regexService, stringService), args);
+		return new ConstructProcessor(a -> process(a, regexService, stringService), args);
 
 	}
 
+	@SuppressWarnings("squid:S1166")
 	static MetaExpression process(final MetaExpression[] input, final RegexService regexService, final StringUtilityService stringService) {
 
 		for (int i = 0; i < 5; i++) {

@@ -25,9 +25,7 @@ public class LoadSheetConstructTest extends TestUtils {
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Expected parameter 'workbook' to be a result of loadWorkbook or createWorkbook")
 	public void testProcessNoWorkbook() throws Exception {
-		XillWorkbook workbook = null;
 		MetaExpression input = fromValue("workbook object");
-		input.storeMeta(workbook);
 
 		LoadSheetConstruct.process(input, fromValue("Sheet"));
 	}

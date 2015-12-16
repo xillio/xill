@@ -8,6 +8,8 @@ import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -42,7 +44,9 @@ public class FromList implements Processable {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({
+        "unchecked"
+    })
     private InstructionFlow<MetaExpression> process(MetaExpression listMeta, MetaExpression indexMeta, Debugger debugger) {
 
         if (indexMeta.getType() != ExpressionDataType.ATOMIC || indexMeta.isNull()) {
@@ -51,21 +55,22 @@ public class FromList implements Processable {
 
         switch (listMeta.getType()) {
             case LIST:
-                try {
-                    if (Double.isNaN(indexMeta.getNumberValue().doubleValue())) {
-                        throw new RobotRuntimeException("The list does not contain any element called '" + indexMeta.getStringValue() + "' (a list does not have named elements).");
-                    }
-                    MetaExpression result = ((List<MetaExpression>) listMeta.getValue()).get(indexMeta.getNumberValue().intValue());
-                    return InstructionFlow.doResume(result);
-                } catch (IndexOutOfBoundsException e) {
-                    return InstructionFlow.doResume(ExpressionBuilderHelper.NULL);
+                if (Double.isNaN(indexMeta.getNumberValue().doubleValue())) {
+                    throw new RobotRuntimeException("The list does not contain any element called '" + indexMeta.getStringValue() + "' (a list does not have named elements).");
                 }
+                List<MetaExpression> list = (List<MetaExpression>) listMeta.getValue();
+                int index = indexMeta.getNumberValue().intValue();
+                if (index < 0 || index >= list.size()) {
+                    throw new RobotRuntimeException("Illegal value for list index: " + index);
+                }
+                MetaExpression listResult = list.get(index);
+                return InstructionFlow.doResume(listResult);
             case OBJECT:
-                MetaExpression result = ((Map<String, MetaExpression>) listMeta.getValue()).get(indexMeta.getStringValue());
-                if (result == null) {
+                MetaExpression objectResult = ((Map<String, MetaExpression>) listMeta.getValue()).get(indexMeta.getStringValue());
+                if (objectResult == null) {
                     return InstructionFlow.doResume(ExpressionBuilderHelper.NULL);
                 }
-                return InstructionFlow.doResume(result);
+                return InstructionFlow.doResume(objectResult);
             case ATOMIC:
                 throw new RobotRuntimeException("Cannot get member of ATOMIC value.");
             default:

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Determines if the currently authenticated user has read rights to the specified file/folder.
-        The absolute path of the specified file/folder is printed in combination with a property that indicates
-        read access.
+Determines if the currently authenticated user has read rights to the specified file/folder. The test returns `true` if
+`uri` can be read.
     </description>
     <examples>
         <example title="Usage">
@@ -13,8 +12,7 @@
                 use System;
 
                 System.print(File.canRead("file.txt"));
-
-                // This will print: {"file/folder: ":"file.txt","can read: ":true}
+                // This will print: true
 
             </code>
         </example>
@@ -22,8 +20,10 @@
     <references>
         <reference>canExecute</reference>
         <reference>canWrite</reference>
+        <reference>isFile</reference>
+        <reference>isFolder</reference>
         <reference>isHidden</reference>
-        <reference>print</reference>
+        <reference>isLink</reference>
     </references>
     <tags>
         read, write, execute, hidden
