@@ -22,7 +22,7 @@ public class ToLowerConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(string) -> process(string, stringService),
+			string -> process(string, stringService),
 			new Argument("string", ATOMIC));
 	}
 

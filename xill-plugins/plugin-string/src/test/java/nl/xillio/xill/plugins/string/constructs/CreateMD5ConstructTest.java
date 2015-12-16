@@ -47,7 +47,7 @@ public class CreateMD5ConstructTest {
      *
      * @throws NoSuchAlgorithmException
      */
-    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "No such algorithm")
+    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "No such algorithm: .*")
     public void processNoAlgorithmError() throws NoSuchAlgorithmException {
         // Mock
         String text = "string";

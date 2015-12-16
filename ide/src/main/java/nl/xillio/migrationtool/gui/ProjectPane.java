@@ -1,35 +1,18 @@
 package nl.xillio.migrationtool.gui;
 
-import java.awt.*;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.WatchEvent;
-import java.util.*;
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.swing.filechooser.FileFilter;
-
-import javafx.event.Event;
-import javafx.event.EventHandler;
-import javafx.scene.control.*;
-
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TreeCell;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Pair;
@@ -43,6 +26,21 @@ import nl.xillio.xill.util.settings.Settings;
 import nl.xillio.xill.util.settings.SettingsHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.swing.filechooser.FileFilter;
+import java.awt.*;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.WatchEvent;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 
@@ -81,7 +79,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
             Node ui = loader.load();
             getChildren().add(ui);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Error loading project pane: " + e.getMessage(), e);
         }
 
         trvProjects.setRoot(root);
@@ -171,6 +169,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
             bulkFiles = null;
         }
     }
+
     protected void paste(File pasteLoc, List<File> files, boolean copy) {
         // Get the directory to paste in.
         final File destDir = pasteLoc.isDirectory() ? pasteLoc : pasteLoc.getParentFile();
@@ -383,8 +382,8 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
     /**
      * Check if there are any robots running.
      *
-     * @param items The items to check.
-     * @param stop Whether to stop the running robots.
+     * @param items    The items to check.
+     * @param stop     Whether to stop the running robots.
      * @param closeTab Whether to close open robot tabs.
      * @return True if any items or sub-items are running robots.
      */
@@ -437,7 +436,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
                     }
 
                 } else {
-                    file.delete();
+                    FileUtils.forceDelete(file);
                 }
             } catch (IOException e) {
                 LOGGER.error("Could not delete " + file.toString(), e);
@@ -512,7 +511,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
             try {
                 watcher.addFolderListener(this, Paths.get(project.getFolder()));
             } catch (IOException e) {
-                LOGGER.error("IOException while adding a folder listener.", e);
+                LOGGER.error(e.getMessage(), e);
             }
         }
         projectNode.setExpanded(false);
