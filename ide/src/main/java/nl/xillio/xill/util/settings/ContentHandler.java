@@ -74,7 +74,6 @@ public interface ContentHandler {
 	 * @param keyName Specifies what item value is the key for the item
 	 * @param keyValue Specifies the value of that key
 	 * @return true if item was found (i.e. exists), false if item was not found (i.e. does not exist)
-	 * @throws Exception when some problem occurs
 	 * @throws IllegalArgumentException if category, key or value contain illegal XPath characters
 	 */
 	boolean exist(final String category, final String keyName, final String keyValue);

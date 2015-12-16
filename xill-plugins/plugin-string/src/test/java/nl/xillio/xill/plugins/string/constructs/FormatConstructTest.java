@@ -51,7 +51,7 @@ public class FormatConstructTest {
 	 * @throws IllegalArgumentException
 	 * @throws PatternSyntaxException
 	 */
-	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "SyntaxError in the by the system provided pattern.")
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "SyntaxError in the system provided pattern: .*")
 	public void processPatternSyntaxException() throws IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String fileNameValue = "decimal %d%n";
@@ -86,7 +86,7 @@ public class FormatConstructTest {
 	 * @throws IllegalArgumentException
 	 * @throws PatternSyntaxException
 	 */
-	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Illegal argument handed when trying to match.")
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Illegal argument handed when trying to match: .*")
 	public void processIllegalArgumentException() throws IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String fileNameValue = "decimal %d%n";
@@ -197,7 +197,7 @@ public class FormatConstructTest {
 	 * @throws IllegalArgumentException
 	 * @throws PatternSyntaxException
 	 */
-	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Not enough arguments.")
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Not enough arguments: .*")
 	public void processMissingFormatException() throws IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String textValue = "decimal";
@@ -235,7 +235,7 @@ public class FormatConstructTest {
 	 * @throws IllegalArgumentException
 	 * @throws PatternSyntaxException
 	 */
-	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Illegal format handed.")
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Illegal format handed: .*")
 	public void processIllegalFormatException() throws IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String textValue = "decimal";

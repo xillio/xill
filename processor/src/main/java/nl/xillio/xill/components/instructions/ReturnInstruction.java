@@ -48,7 +48,7 @@ public class ReturnInstruction extends Instruction {
 		InstructionFlow<MetaExpression> result = value.process(debugger);
 
 		if(result.hasValue()) {
-			return InstructionFlow.doResume(result.get());
+			return InstructionFlow.doReturn(result.get());
 		}
 
 		return InstructionFlow.doReturn(ExpressionBuilderHelper.NULL);
