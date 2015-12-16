@@ -19,7 +19,7 @@ public class InfoConstruct extends BaseDateConstruct {
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor((dateVar) -> process(dateVar, getDateService()), new Argument("date"));
+		return new ConstructProcessor(dateVar -> process(dateVar, getDateService()), new Argument("date"));
 
 	}
 
