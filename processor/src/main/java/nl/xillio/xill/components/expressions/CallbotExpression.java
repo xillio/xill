@@ -40,9 +40,9 @@ public class CallbotExpression implements Processable {
 	/**
 	 * Create a new {@link CallbotExpression}
 	 *
-	 * @param path
-	 * @param robotID      The root robot of this tree
-	 * @param pluginLoader
+	 * @param path 		   the path of the called bot
+	 * @param robotID      the root robot of this tree
+	 * @param pluginLoader the current plugin loader
 	 */
 	public CallbotExpression(final Processable path, final RobotID robotID, final PluginLoader<XillPlugin> pluginLoader) {
 		this.path = path;
@@ -53,7 +53,7 @@ public class CallbotExpression implements Processable {
 	}
 
 	@Override
-	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
+	public InstructionFlow<MetaExpression> process(final Debugger debugger) {
 		MetaExpression pathExpression = path.process(debugger).get();
 
 		File otherRobot = resolver.buildFile(new ConstructContext(robotID, robotID, null, null, null, null, null), pathExpression.getStringValue());
@@ -100,7 +100,7 @@ public class CallbotExpression implements Processable {
 			}
 
 		} catch (IOException e) {
-			throw new RobotRuntimeException("Error while calling robot: " + e.getMessage());
+			throw new RobotRuntimeException("Error while calling robot: " + e.getMessage(), e);
 		} catch (XillParsingException e) {
 			throw new RobotRuntimeException("Error while parsing robot: " + e.getMessage(), e);
 		} catch (Exception e) {

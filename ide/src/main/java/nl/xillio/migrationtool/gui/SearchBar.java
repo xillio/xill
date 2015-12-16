@@ -18,11 +18,15 @@ import javafx.scene.layout.Pane;
 import nl.xillio.events.Event;
 import nl.xillio.events.EventHost;
 import nl.xillio.xill.api.preview.Searchable;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * A search bar, with the defined options and behavior.
  */
 public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
+
+	private static final Logger LOGGER = LogManager.getLogger(SearchBar.class);
 
 	private Searchable searchable;
 	private String currentSearch = "";
@@ -59,7 +63,7 @@ public class SearchBar extends AnchorPane implements EventHandler<KeyEvent> {
 			Node ui = loader.load();
 			getChildren().add(ui);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		}
         reset(true);
 		enableSearchAsYouType();

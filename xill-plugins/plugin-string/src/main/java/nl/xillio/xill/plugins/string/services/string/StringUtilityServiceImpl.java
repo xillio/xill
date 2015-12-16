@@ -93,7 +93,7 @@ public class StringUtilityServiceImpl implements StringUtilityService {
 
     @Override
     public String[] split(final String haystack, final String needle) {
-        return haystack.split(needle);
+        return haystack.split(needle,-1);
     }
 
     @Override

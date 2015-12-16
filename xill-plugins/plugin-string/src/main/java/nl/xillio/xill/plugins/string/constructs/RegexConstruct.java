@@ -51,6 +51,7 @@ public class RegexConstruct extends Construct {
 			new Argument("timeout", fromValue(REGEX_TIMEOUT), ATOMIC));
 	}
 
+	@SuppressWarnings("squid:S1166")
 	static MetaExpression process(final MetaExpression valueVar, final MetaExpression regexVar, final MetaExpression timeoutVar, final RegexService regexService) {
 
 		String regex = regexVar.getStringValue();

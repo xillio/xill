@@ -93,4 +93,8 @@ public class FunctionDeclaration extends Instruction {
         return children;
     }
 
+    public int getParametersSize() {
+        return parameters.size();
+    }
+
 }

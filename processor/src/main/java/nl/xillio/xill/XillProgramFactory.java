@@ -957,13 +957,13 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
      * @throws XillParsingException
      */
     Processable parseToken(final xill.lang.xill.MapExpression token) throws XillParsingException {
-        List<Processable> arguments = new ArrayList<>();
-
-        for (Expression expression : token.getArguments()) {
-            arguments.add(parse(expression));
+        if (token.getArguments().size() > 1) {
+            CodePosition pos = pos(token);
+            throw new XillParsingException("Too many arguments were provided.", pos.getLineNumber(), pos.getRobotID());
         }
+        Processable argument = parse(token.getArguments().get(0));
 
-        MapExpression map = new MapExpression(arguments);
+        MapExpression map = new MapExpression(argument);
 
         functionParameterExpressions.push(new SimpleEntry<>(token.getFunction(), map));
 
@@ -978,13 +978,13 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
      * @throws XillParsingException
      */
     Processable parseToken(final xill.lang.xill.FilterExpression token) throws XillParsingException {
-        List<Processable> arguments = new ArrayList<>();
-
-        for (Expression expression : token.getArguments()) {
-            arguments.add(parse(expression));
+        if (token.getArguments().size() > 1){
+            CodePosition pos = pos(token);
+            throw new XillParsingException("Too many arguments were provided.", pos.getLineNumber(), pos.getRobotID());
         }
+        Processable argument = parse(token.getArguments().get(0));
 
-        FilterExpression filter = new FilterExpression(arguments);
+        FilterExpression filter = new FilterExpression(argument);
 
         functionParameterExpressions.push(new SimpleEntry<>(token.getFunction(), filter));
 
