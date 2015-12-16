@@ -222,6 +222,7 @@ public class XillDebugger implements Debugger {
         return mode == Mode.STOPPED;
     }
 
+    @SuppressWarnings("squid:S1166") // Ignored exception is correct here
     @Override
     public Collection<Object> getVariables() {
         if (mode != Mode.PAUSED) {

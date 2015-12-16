@@ -121,7 +121,7 @@ public class SubstringConstructTest {
 	/**
 	 * Test the process method under normal circumstances.
 	 */
-	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Index out of bounds.")
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Index out of bounds: .*")
 	public void processErrorThrown() {
 		// Mock
 		String stringValue = "testing";

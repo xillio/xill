@@ -72,7 +72,7 @@ public enum Database {
 	 * @return The service belonging to the DBMS with the given name
 	 */
 	public static Class<? extends BaseDatabaseService> findServiceClass(String name) {
-		Optional<Database> db = Arrays.stream(values()).filter((d) -> d.getName().equals(name)).findAny();
+		Optional<Database> db = Arrays.stream(values()).filter(d -> d.getName().equals(name)).findAny();
 		if (!db.isPresent())
 		  throw new IllegalArgumentException("DBMS type is not supported");
 		return db.get().getServiceClass();

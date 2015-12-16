@@ -70,7 +70,7 @@ public class DownloadConstructTest extends ExpressionBuilderHelper {
      *
      * @throws IOException
      */
-    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid URL! ")
+    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid URL")
     public void testMalformedURL() throws IOException {
         // mock
         WebService webService = mock(WebService.class);
@@ -109,7 +109,7 @@ public class DownloadConstructTest extends ExpressionBuilderHelper {
      *
      * @throws IOException
      */
-    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Error occured during the download! ")
+    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Error during download")
     public void testDownloadFailed() throws IOException {
         // mock
         WebService webService = mock(WebService.class);
@@ -148,7 +148,7 @@ public class DownloadConstructTest extends ExpressionBuilderHelper {
      *
      * @throws IOException
      */
-    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid variable value. Url is empty!")
+    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid variable value. URL is empty.")
     public void testNullURL() throws IOException {
         // mock
         WebService webService = mock(WebService.class);
@@ -167,7 +167,7 @@ public class DownloadConstructTest extends ExpressionBuilderHelper {
      *
      * @throws IOException
      */
-    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid variable value. Filename is empty!")
+    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid variable value. Filename is empty.")
     public void testNullFilename() throws IOException {
         // mock
         WebService webService = mock(WebService.class);
