@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Returns the reverse of the given list or object.  
+
+If recursive is true it will also reverse lists and objects inside the given list or object.
+    </description>
+    <examples>
+        <example title="Usage">
+            <code>
+                var list1 = [1,2,3,4,5];
+                var list2 = [1,[1,2,3],2,3];
+                Collection.reverse(list1);
+                
+                // Result: [5,4,3,2,1]
+
+                Collection.reverse(list2,false);
+                
+                // Result: [3,2,[1,2,3],1]
+
+                Collection.reverse(list2,true);
+                
+                // Result: [3,2,[3,2,1],1]
+            </code>
+        </example>
+    </examples>
+</function>
