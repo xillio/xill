@@ -47,6 +47,18 @@ public final class Add extends BinaryNumberOperator {
                                 (LinkedHashMap<String, MetaExpression>) rightValue.getValue(), debugger));
             }
 
+            if (leftValue.getType() == ExpressionDataType.LIST && rightValue.getType() == ExpressionDataType.OBJECT){
+                return InstructionFlow.doResume(
+                        processListObject((List<MetaExpression>) leftValue.getValue(),
+                                (LinkedHashMap<String, MetaExpression>) rightValue.getValue(), debugger));
+            }
+
+            if (leftValue.getType() == ExpressionDataType.OBJECT && rightValue.getType() == ExpressionDataType.LIST){
+                return InstructionFlow.doResume(
+                        processObjectList((LinkedHashMap<String, MetaExpression>) leftValue.getValue(),
+                                (List<MetaExpression>) rightValue.getValue(), debugger));
+            }
+
             return super.process(leftValue, rightValue);
         } finally {
             rightValue.releaseReference();
@@ -80,7 +92,7 @@ public final class Add extends BinaryNumberOperator {
     }
 
     private static MetaExpression processObjectList(final LinkedHashMap<String, MetaExpression> leftValue, final List<MetaExpression> rightValue, final Debugger debugger) throws RobotRuntimeException {
-        LinkedHashMap<String, MetaExpression> result = leftValue;
+        LinkedHashMap<String, MetaExpression> result = new LinkedHashMap<>(leftValue);
         for (int i = leftValue.size(); i < leftValue.size() + rightValue.size(); i++) {
             result.put(Integer.toString(i), rightValue.get(i - leftValue.size()));
         }
