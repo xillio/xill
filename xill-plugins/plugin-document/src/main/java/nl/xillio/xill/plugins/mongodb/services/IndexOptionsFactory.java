@@ -91,7 +91,7 @@ public class IndexOptionsFactory {
             case "max":
                 options.max(value.getNumberValue().doubleValue());
                 break;
-            case "backetSize":
+            case "bucketSize":
                 options.bucketSize(value.getNumberValue().doubleValue());
                 break;
         }

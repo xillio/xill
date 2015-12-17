@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Finds a single document using the specified query and options and deletes it.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Log and delete the first element in collection `documents`</header>
+            <code>
+                use Mongo;
+                use System;
+                Mongo.connect("udm_default");
+
+                var result = Mongo.findOne("documents");
+
+                System.print (result);
+
+                Mongo.findOneAndDelete("documents", {"_id":result["_id"]}, );
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>connect</reference>
+    </references>
+    <tags>
+        mongodb, query, search, fields, filter
+    </tags>
+</function>
