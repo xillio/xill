@@ -318,6 +318,10 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
             LOGGER.error("Failed to save robot", e);
         }
 
+        if (showDialog) {
+            globalController.doOpenFile(document);
+        }
+
         loadProcessor(document, projectPath);
 
         return true;
