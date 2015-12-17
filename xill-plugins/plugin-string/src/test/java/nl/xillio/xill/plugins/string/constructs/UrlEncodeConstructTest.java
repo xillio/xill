@@ -16,12 +16,12 @@ import static org.mockito.Mockito.*;
  */
 public class UrlEncodeConstructTest extends TestUtils {
 
-	/**
-	 * Test the process method under normal circumstances.
-	 */
-	@Test
-	public void processNormalUsage() throws UnsupportedEncodingException {
-		// Mock
+    /**
+     * Test the process method under normal circumstances.
+     */
+    @Test
+    public void processNormalUsage() throws UnsupportedEncodingException {
+        // Mock
         String inputValue = "this+-is / test";
         String resultValue = "this%2B-is%20%2F%20test";
 
@@ -35,15 +35,15 @@ public class UrlEncodeConstructTest extends TestUtils {
         StringUtilityService stringService = mock(StringUtilityService.class);
         when(stringService.urlEncode(inputValue, false)).thenReturn(resultValue);
 
-		// Run
-		MetaExpression result = UrlEncodeConstruct.process(textVar, xWwwFormVar, stringService);
+        // Run
+        MetaExpression result = UrlEncodeConstruct.process(textVar, xWwwFormVar, stringService);
 
-		// Verify
-		verify(stringService, times(1)).urlEncode(inputValue, false);
+        // Verify
+        verify(stringService, times(1)).urlEncode(inputValue, false);
 
-		// Assert
+        // Assert
         Assert.assertEquals(result.getStringValue(), resultValue);
-	}
+    }
 
     /**
      * Test the process method when URL encoding fails.
