@@ -40,6 +40,7 @@ public class DateServiceImpl implements DateService, DateFactory {
         return new nl.xillio.xill.plugins.date.data.Date(ZonedDateTime.of(year, month, day, hour, minute, second, nano, zone));
     }
 
+    @SuppressWarnings("squid:S1166") // DateTimeException is handled correctly
     ZonedDateTime getValueOrDefaultZDT(TemporalAccessor parsed) {
         ZonedDateTime now = ZonedDateTime.now();
         ZonedDateTime _default = ZonedDateTime.of(now.toLocalDate(), LocalTime.MIN, now.getZone());

@@ -74,11 +74,10 @@ public class FormatConstruct extends Construct {
 		int count = 0;
 		String typeString;
 		for (int j = 0; j < numberList.size() - count; j++) {
-			try {
-				typeString = formatList.get(j).getStringValue();
-			} catch (IndexOutOfBoundsException e) {
+			if (j >= formatList.size()) {
 				break;
 			}
+			typeString = formatList.get(j).getStringValue();
 			switch (typeString.charAt(typeString.length() - 1)) {
 				case 'd':
 				case 'o':
