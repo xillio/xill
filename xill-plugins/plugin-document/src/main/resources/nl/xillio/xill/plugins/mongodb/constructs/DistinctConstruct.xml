@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Provides a wrapper around the MongoDB [db.collection.distinct](https://docs.mongodb.org/v3.0/reference/method/db.collection.distinct/#db.collection.distinct) method.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Get all used values of a certain field.</header>
+            <code>
+                use Mongo;
+                use System;
+                Mongo.connect("udm_default");
+
+                var result = Mongo.distinct(
+                    "documents",
+                    "myCustomField"
+                );
+
+                foreach(value in result) {
+                    System.print(value);
+                }
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>connect</reference>
+    </references>
+    <tags>
+        mongodb
+    </tags>
+</function>

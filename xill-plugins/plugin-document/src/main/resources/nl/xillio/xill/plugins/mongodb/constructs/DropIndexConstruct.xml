@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Provides a wrapper around the MongoDB [db.collection.dropIndex](https://docs.mongodb.org/v3.0/reference/method/db.collection.dropIndex/#db.collection.dropIndex) method.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Drop an index by name.</header>
+            <code>
+                use Mongo;
+                use System;
+                Mongo.connect("udm_default");
+
+                Mongo.dropIndex("documents", "contenttype_1");
+            </code>
+            <header>Drop an index by object.</header>
+            <code>
+                use Mongo;
+                use System;
+                Mongo.connect("udm_default");
+
+                var keys = {
+                    "myField": 1
+                };
+
+                Mongo.createIndex("documents", keys);
+
+                Mongo.dropIndex("documents", keys);
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>connect</reference>
+        <reference>dropIndexes</reference>
+        <reference>createIndex</reference>
+    </references>
+    <tags>
+        mongodb, drop, key, primary
+    </tags>
+</function>
