@@ -824,9 +824,6 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
             // No item is selected.
             disableAllButtons(true);
             disableFileButtons(true);
-        } else if (newObject == getProject(newObject)) {
-            // This is a project.
-            menuRename.setDisable(true);
         }
 
         // Check if more than 1 item is selected.
@@ -838,12 +835,22 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         }
 
         // If a project is selected disable the cut menu item.
-        menuCut.setDisable(false);
-        getAllCurrentItems().forEach(i -> {
+        if (projectSelected()) {
+            menuCut.setDisable(true);
+            menuRename.setDisable(true);
+        }
+    }
+
+    /**
+     * Whether the current selection contains one or more projects.
+     */
+    private boolean projectSelected() {
+        for (TreeItem<Pair<File, String>> i : getAllCurrentItems()) {
             if (i != null && i == getProject(i)) {
-                menuCut.setDisable(true);
+                return true;
             }
-        });
+        }
+        return false;
     }
 
     /**
@@ -857,6 +864,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         menuDelete.setDisable(disable);
         menuRename.setDisable(disable);
         menuOpenFolder.setDisable(disable);
+        menuCut.setDisable(disable);
     }
 
     /**
@@ -885,7 +893,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         private final String dragOverClass = "drag-over";
 
         public CustomTreeCell() {
-            // Subscribe to events.
+            // Subscribe to drag events.
             this.setOnDragDetected(this);
             this.setOnDragOver(this);
             this.setOnDragDropped(this);
@@ -920,7 +928,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
             if (event instanceof MouseEvent) {
                 MouseEvent mouseEvent = (MouseEvent) event;
 
-                if (mouseEvent.getEventType() == MouseEvent.DRAG_DETECTED) {
+                if (mouseEvent.getEventType() == MouseEvent.DRAG_DETECTED && canDrag()) {
                     // Start dragging.
                     Dragboard board = this.startDragAndDrop(TransferMode.MOVE);
 
@@ -932,6 +940,10 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
                     event.consume();
                 }
             } else if (event instanceof DragEvent) {
+                if (!canDrop()) {
+                    return;
+                }
+
                 DragEvent dragEvent = (DragEvent) event;
 
                 if (dragEvent.getEventType() == DragEvent.DRAG_OVER) {
@@ -952,6 +964,14 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
                     event.consume();
                 }
             }
+        }
+
+        private boolean canDrag() {
+            // Projects cannot be moved.
+            return !projectSelected();
+        }
+        private boolean canDrop() {
+            return this.getTreeItem() != null;
         }
     }
 }
