@@ -36,7 +36,7 @@ public class GetPermissionsConstruct extends Construct {
         );
     }
 
-    private MetaExpression process(MetaExpression path, ConstructContext context) {
+    MetaExpression process(MetaExpression path, ConstructContext context) {
         File file = getFile(context, path.getStringValue());
 
         FilePermissions permissions = getPermissions(file);

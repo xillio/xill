@@ -23,8 +23,8 @@ public class FilePermissions {
         setOn(users, user, new FileOperations(readable, writable, executable));
     }
 
-    public void setGroup(String user, boolean readable, boolean writable, boolean executable) {
-        setOn(groups, user, new FileOperations(readable, writable, executable));
+    public void setGroup(String group, boolean readable, boolean writable, boolean executable) {
+        setOn(groups, group, new FileOperations(readable, writable, executable));
     }
 
     /**
