@@ -1,16 +1,17 @@
 package nl.xillio.xill.plugins.file.constructs;
 
+import junit.framework.Assert;
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
-import opennlp.tools.parser.Cons;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import static org.mockito.Mockito.*;
 
@@ -43,14 +44,16 @@ public class CanReadConstructTest extends TestUtils {
      * @throws FileNotFoundException If the file is not found.
      */
     @Test
-    public void testProcess() throws FileNotFoundException {
+    public void testProcess() throws IOException {
 
         setFileResolverReturnValue(new File(""));
 
         when(metaExpression.getStringValue()).thenReturn("");
+        when(fileUtilities.canRead(any())).thenReturn(true);
 
-        CanReadConstruct.process(constructContext, fileUtilities, metaExpression);
+        MetaExpression result = CanReadConstruct.process(constructContext, fileUtilities, metaExpression);
 
+        Assert.assertTrue(result.getBooleanValue());
         verify(fileUtilities, times(1)).canRead(any(File.class));
     }
 
@@ -59,10 +62,10 @@ public class CanReadConstructTest extends TestUtils {
      *
      * @throws FileNotFoundException If the file is not found.
      */
-    @Test(expectedExceptions = RobotRuntimeException.class)
-    public void testProcessException() throws FileNotFoundException {
+    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "File not found, or not accessible")
+    public void testProcessException() throws IOException {
 
-        doThrow(new FileNotFoundException("File does not exist.")).when(fileUtilities).canRead(any(File.class));
+        doThrow(new FileNotFoundException("")).when(fileUtilities).canRead(any(File.class));
 
         CanReadConstruct.process(constructContext, fileUtilities, metaExpression);
 

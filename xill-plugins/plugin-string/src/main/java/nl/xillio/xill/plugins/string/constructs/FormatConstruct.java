@@ -65,20 +65,19 @@ public class FormatConstruct extends Construct {
 				formatList.add(fromValue(s));
 			}
 		} catch (PatternSyntaxException e) {
-			throw new RobotRuntimeException("SyntaxError in the by the system provided pattern.");
+			throw new RobotRuntimeException("SyntaxError in the system provided pattern: " + e.getMessage(), e);
 		} catch (IllegalArgumentException | FailedToGetMatcherException e) {
-			throw new RobotRuntimeException("Illegal argument handed when trying to match.");
+			throw new RobotRuntimeException("Illegal argument handed when trying to match: " + e.getMessage(), e);
 		}
 
 		// Cast the MetaExpressions to the right type.
 		int count = 0;
 		String typeString;
 		for (int j = 0; j < numberList.size() - count; j++) {
-			try {
-				typeString = formatList.get(j).getStringValue();
-			} catch (IndexOutOfBoundsException e) {
+			if (j >= formatList.size()) {
 				break;
 			}
+			typeString = formatList.get(j).getStringValue();
 			switch (typeString.charAt(typeString.length() - 1)) {
 				case 'd':
 				case 'o':
@@ -122,9 +121,9 @@ public class FormatConstruct extends Construct {
 		try {
 			return fromValue(stringService.format(textVar.getStringValue(), list));
 		} catch (MissingFormatArgumentException e) {
-			throw new RobotRuntimeException("Not enough arguments.");
+			throw new RobotRuntimeException("Not enough arguments: " + e.getMessage(), e);
 		} catch (IllegalFormatException e) {
-			throw new RobotRuntimeException("Illegal format handed.");
+			throw new RobotRuntimeException("Illegal format handed: " + e.getMessage(), e);
 		}
 	}
 }

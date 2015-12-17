@@ -13,14 +13,19 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
- * Tests the CanExecuteConstruct class.
+ * Tests the IsFolderConstruct
  *
- * Created by Anwar on 12/1/2015.
+ * @author Paul van der Zandt, Xillio
  */
-public class CanExecuteConstructTest extends TestUtils {
+public class IsFileConstructTest extends TestUtils {
 
     private ConstructContext constructContext;
     private FileUtilities fileUtilities;
@@ -32,43 +37,36 @@ public class CanExecuteConstructTest extends TestUtils {
     @BeforeMethod
     public void initialize() {
         constructContext = mock(ConstructContext.class);
-
         fileUtilities = mock(FileUtilities.class);
-
         metaExpression = mock(MetaExpression.class);
     }
 
     /**
-     * Test the regular process flow of the CanExecute construct.
      *
-     * @throws FileNotFoundException If the file does not exist.
+     *
+     * @throws IOException
      */
     @Test
     public void testProcess() throws IOException {
-
         setFileResolverReturnValue(new File(""));
 
         when(metaExpression.getStringValue()).thenReturn("");
-        when(fileUtilities.canExecute(any())).thenReturn(true);
+        when(fileUtilities.isFolder(any())).thenReturn(true);
 
-        MetaExpression result = CanExecuteConstruct.process(constructContext, fileUtilities, metaExpression);
+        MetaExpression result = IsFolderConstruct.process(constructContext, fileUtilities, metaExpression);
 
         Assert.assertTrue(result.getBooleanValue());
-        verify(fileUtilities, times(1)).canExecute(any());
+        verify(fileUtilities, times(1)).isFolder(any());
     }
 
-    /**
-     * Test the exception flow of the process method in the CanExecuteConstruct class.
-     *
-     * @throws FileNotFoundException If the file is not found.
-     */
     @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "File not found, or not accessible")
-    public void testProcessException() throws IOException {
+    public void testProcessIOException() throws Exception {
 
-        doThrow(new FileNotFoundException("")).when(fileUtilities).canExecute(any(File.class));
+        doThrow(new FileNotFoundException("")).when(fileUtilities).isFolder(any(File.class));
 
-        CanExecuteConstruct.process(constructContext, fileUtilities, metaExpression);
+        IsFolderConstruct.process(constructContext, fileUtilities, metaExpression);
 
-        verify(fileUtilities, times(1)).canExecute(any(File.class));
+        verify(fileUtilities, times(1)).isFolder(any(File.class));
+
     }
 }
