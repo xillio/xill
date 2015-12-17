@@ -34,11 +34,12 @@ public class ToHexConstruct extends Construct {
                 new Argument("charset", fromValue("UTF-8"), ATOMIC));
     }
 
+    @SuppressWarnings("squid:UnusedPrivateMethod")
     private MetaExpression process(MetaExpression inputString, MetaExpression toLowerCase, MetaExpression charsetName) {
         try {
             return inputString.isNull() ? NULL : fromValue(encoderService.toHex(inputString.getStringValue(), toLowerCase.getBooleanValue(), charsetName.getStringValue()));
         } catch (UnsupportedCharsetException e) {
-            throw new RobotRuntimeException("Unknown character set: " + charsetName.getStringValue());
+            throw new RobotRuntimeException("Unknown character set: " + charsetName.getStringValue(), e);
         }
     }
 }

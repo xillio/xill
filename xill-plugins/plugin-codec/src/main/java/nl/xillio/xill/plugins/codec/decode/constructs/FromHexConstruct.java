@@ -34,13 +34,14 @@ public class FromHexConstruct extends Construct {
                 new Argument("charset", fromValue("UTF-8"), ATOMIC));
     }
 
+    @SuppressWarnings("squid:UnusedPrivateMethod")
     private MetaExpression process(MetaExpression hexString, MetaExpression charsetName) {
         try {
             return hexString.isNull() ? NULL : fromValue(decoderService.fromHex(hexString.getStringValue(), charsetName.getStringValue()));
         } catch (DecoderException e) {
             throw new RobotRuntimeException("Could not convert hex to normal: " + e.getMessage(), e);
         } catch (UnsupportedCharsetException e) {
-            throw new RobotRuntimeException("Unknown character set: " + charsetName.getStringValue());
+            throw new RobotRuntimeException("Unknown character set: " + charsetName.getStringValue(), e);
         }
     }
 }
