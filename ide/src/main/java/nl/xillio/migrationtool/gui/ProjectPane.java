@@ -300,36 +300,43 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
                 + (robotFiles > 0 && projects > 0 ? " and " : "")
                 + (projects > 0 ? projects + " project(s)." : ".");
 
-        // Create and show the dialog.
-        AlertDialog dialog = new AlertDialog(Alert.AlertType.WARNING,
-                titleText,
-                running ? "One or more robots are still running, deleting will terminate them." : "",
-                "Do you want to delete all selected items from your drive?",
-                ButtonType.YES, ButtonType.NO
-        );
-        Optional<ButtonType> result = dialog.showAndWait();
+        // If you are deleting robots show a confirmation dialog.
+        boolean giveRunningWarning = running;
+        if (robotFiles > 0) {
+            AlertDialog dialog = new AlertDialog(Alert.AlertType.WARNING,
+                    titleText,
+                    giveRunningWarning ? "One or more robots are still running, deleting will terminate them." : "",
+                    "Do you want to delete all selected items from your disk?",
+                    ButtonType.YES, ButtonType.NO
+            );
+            Optional<ButtonType> result = dialog.showAndWait();
 
-        if (result.isPresent() && result.get() == ButtonType.YES) {
-            // If there are projects to be deleted, ask whether to remove them or delete them on disk.
-            boolean hardDelete = false;
-            if (projects > 0) {
-                AlertDialog projectDelete = new AlertDialog(Alert.AlertType.WARNING,
-                        "Delete projects from disk?", "",
-                        "Deleting projects will remove them from your workspace. Do you also want to delete all files from your disk?",
-                        ButtonType.YES, ButtonType.NO, ButtonType.CANCEL
-                );
-
-                Optional<ButtonType> res = projectDelete.showAndWait();
-                if (res.isPresent() && res.get() == ButtonType.YES) {
-                    hardDelete = true;
-                } else if (res.isPresent() && res.get() == ButtonType.CANCEL) {
-                    return;
-                }
+            if (!result.isPresent() || result.get() != ButtonType.YES) {
+                return;
             }
-
-            // Delete the items.
-            deleteItems(selectedItems, hardDelete);
+            giveRunningWarning = false;
         }
+
+        // If there are projects to be deleted, ask whether to remove them or delete them on disk.
+        boolean hardDelete = false;
+        if (projects > 0) {
+            AlertDialog projectDelete = new AlertDialog(Alert.AlertType.WARNING,
+                    "Delete projects from disk?",
+                    giveRunningWarning ? "One or more robots are still running, deleting will terminate them." : "",
+                    "Deleting projects will remove them from your workspace. Do you also want to delete all files from your disk?",
+                    ButtonType.YES, ButtonType.NO, ButtonType.CANCEL
+            );
+
+            Optional<ButtonType> res = projectDelete.showAndWait();
+            if (res.isPresent() && res.get() == ButtonType.YES) {
+                hardDelete = true;
+            } else if (res.isPresent() && res.get() == ButtonType.CANCEL) {
+                return;
+            }
+        }
+
+        // Delete the items.
+        deleteItems(selectedItems, hardDelete);
     }
 
     @Override
