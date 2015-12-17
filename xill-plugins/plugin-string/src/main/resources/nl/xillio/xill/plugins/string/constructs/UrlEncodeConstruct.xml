@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Returns the URL-encoded (percent-encoded) version of string text.
+
+Essential for creating URL’s with GET variables in them.  
+When parameter `xWwwForm` is true then it replaces space character by `+` character, otherwise by %20. Default is false. 
+    </description>
+    <examples>
+        <example title="Usage">
+            <code>
+                use System;
+                use String;
+                
+                System.print(String.urlEncode("Together, we spent $50.95"));
+
+                // Result: Together%2C%20we%20spent%20%2450.95
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>base64Encode</reference>
+    </references>
+    <searchTags>
+        URL, encode, encoding
+    </searchTags>
+</function>

@@ -3,6 +3,7 @@ package nl.xillio.xill.plugins.string.services.string;
 import com.google.inject.ImplementedBy;
 import nl.xillio.xill.plugins.string.StringXillPlugin;
 
+import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.IllegalFormatException;
 import java.util.List;
@@ -200,4 +201,13 @@ public interface StringUtilityService {
      */
     String wrap(String text, int width, boolean wrapLongWords);
 
+    /**
+     * Do URL encode of provided text
+     *
+     * @param text input string
+     * @param xWwwForm the output format (true means that spaces will be + otherwise %20)
+     * @return urlencoded string
+     * @throws UnsupportedEncodingException If something goes wrong during the encoding
+     */
+    String urlEncode(String text, boolean xWwwForm) throws UnsupportedEncodingException;
 }

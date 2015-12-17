@@ -6,7 +6,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 
 import javax.xml.bind.DatatypeConverter;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -130,5 +132,11 @@ public class StringUtilityServiceImpl implements StringUtilityService {
     @Override
     public String wrap(final String text, final int width, final boolean wrapLongWords) {
         return WordUtils.wrap(text, width, "\n", wrapLongWords);
+    }
+
+    @Override
+    public String urlEncode(final String text, final boolean xWwwForm) throws UnsupportedEncodingException {
+        String encText = URLEncoder.encode(text.toString(), "UTF-8");
+        return xWwwForm ? encText : encText.replace("+", "%20");
     }
 }
