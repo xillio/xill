@@ -36,10 +36,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.WatchEvent;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
@@ -759,31 +757,32 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         }
 
         public void refresh() {
-            Platform.runLater(() -> {
-                if (trvProjects.getScene() != null && trvProjects.getSelectionModel().getSelectedItem() != null) {
-                    File selection = trvProjects.getSelectionModel().getSelectedItem().getValue().getKey();
-                    ProjectTreeItem.super.getChildren().setAll(buildChildren(ProjectTreeItem.this));
-                    select(selection.getAbsolutePath());
-                }
-            });
+            // Update all children.
+            Platform.runLater(() -> getChildren().setAll(buildChildren(this)));
         }
 
-        private ObservableList<TreeItem<Pair<File, String>>> buildChildren(final TreeItem<Pair<File, String>> TreeItem) {
-            File f = TreeItem.getValue().getKey();
-            ObservableList<TreeItem<Pair<File, String>>> children = FXCollections.observableArrayList();
+        /**
+         * Build the children of a tree item.
+         *
+         * @param treeItem The root item to build the children for.
+         * @return A list of tree items that are the children of the given tree item.
+         */
+        private List<TreeItem<Pair<File, String>>> buildChildren(final TreeItem<Pair<File, String>> treeItem) {
+            File f = treeItem.getValue().getKey();
+            List<TreeItem<Pair<File, String>>> children = new ArrayList<>();
 
             if (f != null && f.isDirectory()) {
-                // Get a list with all files (folders and robots)
+                // Get a list with all files in the directory.
                 File[] files = f.listFiles(robotFileFilter);
 
-                // Sort the list of files
+                // Sort the list of files.
                 Arrays.sort(files, (o1, o2) -> {
-                    // Put directories above files
+                    // Put directories above files.
                     if (o1.isDirectory() && o2.isFile()) {
                         return -1;
                     } else if (o1.isFile() && o2.isDirectory()) {
                         return 1;
-                        // Both are the same type, compare them normally
+                        // Both are the same type, compare them normally.
                     } else {
                         return o1.compareTo(o2);
                     }
@@ -791,8 +790,8 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 
                 // Create tree items from all files, add them to the list
                 for (File file : files) {
-                    ProjectTreeItem treeItem = new ProjectTreeItem(file, file.getName());
-                    children.add(treeItem);
+                    ProjectTreeItem sub = new ProjectTreeItem(file, file.getName());
+                    children.add(sub);
                 }
             }
 
