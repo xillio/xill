@@ -94,7 +94,9 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 
 		try {
 			watcher = new WatchDir();
-			new Thread(watcher).start();
+			Thread thread = new Thread(watcher, "projectpane-watchdir");
+			thread.setDaemon(true);
+			thread.start();
 		} catch (IOException e) {
 			LOGGER.error("Error while opening project directory: " + e.getMessage(), e);
 		}

@@ -8,7 +8,6 @@ Provides a wrapper around the MongoDB [db.collection.dropIndexes](https://docs.m
             <header>Drop all indexes on the documents collection.</header>
             <code>
                 use Mongo;
-                use System;
                 Mongo.connect("udm_default");
 
                 Mongo.dropIndexes();

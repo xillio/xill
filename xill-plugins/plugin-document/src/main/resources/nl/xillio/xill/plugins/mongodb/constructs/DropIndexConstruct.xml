@@ -8,7 +8,6 @@ Provides a wrapper around the MongoDB [db.collection.dropIndex](https://docs.mon
             <header>Drop an index by name.</header>
             <code>
                 use Mongo;
-                use System;
                 Mongo.connect("udm_default");
 
                 Mongo.dropIndex("documents", "contenttype_1");
@@ -16,7 +15,6 @@ Provides a wrapper around the MongoDB [db.collection.dropIndex](https://docs.mon
             <header>Drop an index by object.</header>
             <code>
                 use Mongo;
-                use System;
                 Mongo.connect("udm_default");
 
                 var keys = {

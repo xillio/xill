@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Provides a wrapper around the MongoDB [db.collection.find](https://docs.mongodb.org/v3.0/reference/method/db.collection.find/#db.collection.find) method.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Iterate over all documents.</header>
+            <code>
+                use Mongo;
+                use System;
+                Mongo.connect("udm_default");
+
+                var documents = Mongo.find("documents");
+
+                foreach(document in documents) {
+                    System.print(document._id);
+                }
+            </code>
+            <header>Iterate over documents by filter.</header>
+            <code>
+                use Mongo;
+                use System;
+                Mongo.connect("udm_default");
+
+                var documents = Mongo.find(
+                    "documents",
+                    {
+                        "contenttype": "page"
+                    }
+                );
+
+                foreach(document in documents) {
+                    System.print(document._id);
+                }
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>connect</reference>
+    </references>
+    <tags>
+        mongodb, query, search, fields, filter
+    </tags>
+</function>
