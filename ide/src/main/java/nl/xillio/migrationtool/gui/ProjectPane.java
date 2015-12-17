@@ -420,19 +420,19 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
     /**
      * Delete multiple items from the tree view.
      *
-     * @param items              The items to delete.
+     * @param toDelete              The items to delete.
      * @param hardDeleteProjects Whether to delete the projects from disk.
      */
-    private void deleteItems(List<TreeItem<Pair<File, String>>> items, boolean hardDeleteProjects) {
+    private void deleteItems(List<TreeItem<Pair<File, String>>> toDelete, boolean hardDeleteProjects) {
+        // Copy the list (because javafx will select other items when some are deleted, screwing things over.
+        List<TreeItem<Pair<File, String>>> items = new ArrayList<>(toDelete);
+
         // First stop all robots and close the tabs.
         checkRobotsRunning(items, true, true);
 
-        // Reverse iterate, because removing projects will also remove them from the items list.
-        for (int i = items.size() - 1; i >= 0; i--) {
-            TreeItem<Pair<File, String>> item = items.get(i);
-            File file = item.getValue().getKey();
-
+        items.forEach(item -> {
             // Delete the file or folder. If the folder is a project check if we should hard delete it and remove it.
+            File file = item.getValue().getKey();
             try {
                 if (file.isDirectory()) {
                     if (item != getProject(item) || hardDeleteProjects) {
@@ -448,7 +448,10 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
             } catch (IOException e) {
                 LOGGER.error("Could not delete " + file.toString(), e);
             }
-        }
+        });
+
+        // Clear the selection.
+        trvProjects.getSelectionModel().clearSelection();
     }
 
     /* Projects */
