@@ -30,7 +30,7 @@ public class MetadataExpressionPool<T> implements AutoCloseable {
         return (C) data.stream()
                 .filter(element -> clazz.isAssignableFrom(element.getClass()))
                 .findAny()
-                .orElseThrow(() -> new NoSuchElementException("No " + clazz + " found in this expression."));
+                .orElse(null);
     }
 
     /**
