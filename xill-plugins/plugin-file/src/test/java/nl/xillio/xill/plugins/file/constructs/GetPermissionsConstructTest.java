@@ -7,7 +7,7 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.NoSuchElementException;
+import java.nio.file.NoSuchFileException;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -19,7 +19,7 @@ public class GetPermissionsConstructTest extends TestUtils {
     @Test(expectedExceptions = RobotRuntimeException.class)
     public void testProcessWithIOException() throws IOException {
         FilePermissionsProvider provider = mock(FilePermissionsProvider.class);
-        when(provider.readPermissions(any())).thenThrow(new IOException("Somethen went wrong"));
+        when(provider.readPermissions(any())).thenThrow(new IOException("Something went wrong"));
 
         setFileResolverReturnValue(new File(""));
 
@@ -30,7 +30,7 @@ public class GetPermissionsConstructTest extends TestUtils {
     @Test(expectedExceptions = RobotRuntimeException.class)
     public void testProcessWithFileNotFound() throws IOException {
         FilePermissionsProvider provider = mock(FilePermissionsProvider.class);
-        when(provider.readPermissions(any())).thenThrow(new NoSuchElementException("Somethen went wrong"));
+        when(provider.readPermissions(any())).thenThrow(new NoSuchFileException("Something went wrong"));
 
         setFileResolverReturnValue(new File(""));
 
