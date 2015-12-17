@@ -422,14 +422,16 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         // First stop all robots and close the tabs.
         checkRobotsRunning(items, true, true);
 
-        items.forEach(item -> {
+        // Reverse iterate, because removing projects will also remove them from the items list.
+        for (int i = items.size() - 1; i >= 0; i--) {
+            TreeItem<Pair<File, String>> item = items.get(i);
             File file = item.getValue().getKey();
 
             // Delete the file or folder. If the folder is a project check if we should hard delete it and remove it.
             try {
                 if (file.isDirectory()) {
                     if (item != getProject(item) || hardDeleteProjects) {
-                        FileUtils.deleteDirectory(file);
+                        FileUtils.forceDelete(file);
                     }
                     if (item == getProject(item)) {
                         removeProject(item);
@@ -441,7 +443,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
             } catch (IOException e) {
                 LOGGER.error("Could not delete " + file.toString(), e);
             }
-        });
+        }
     }
 
     /* Projects */
