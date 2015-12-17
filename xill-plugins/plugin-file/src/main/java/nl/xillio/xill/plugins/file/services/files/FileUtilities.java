@@ -120,7 +120,7 @@ public interface FileUtilities extends XillService {
      * @return True if an authenticated user has read access to the specified file. Otherwise, false.
      * @throws FileNotFoundException If the file does not exist.
      */
-    boolean canRead(File file) throws FileNotFoundException;
+    boolean canRead(File file) throws IOException;
 
     /**
      * Verifies whether an authenticated user has write access to a specified file/folder.
@@ -128,7 +128,7 @@ public interface FileUtilities extends XillService {
      * @param file The associated file object.
      * @return True if an authenticated user has write access to a specified file. Otherwise, false.
      */
-    boolean canWrite(File file) throws FileNotFoundException;
+    boolean canWrite(File file) throws IOException;
 
     /**
      * Verifies whether an authenticated user has executability rights to the specified file/folder.
@@ -137,7 +137,7 @@ public interface FileUtilities extends XillService {
      * @return True if an authenticated user has executability rights to a specified file. Otherwise, false.
      * @throws FileNotFoundException If the file does not exist.
      */
-    boolean canExecute(File file) throws FileNotFoundException;
+    boolean canExecute(File file) throws IOException;
 
     /**
      * Verifies whether a file/folder is hidden or not.
@@ -147,4 +147,34 @@ public interface FileUtilities extends XillService {
      * @throws IOException
      */
     boolean isHidden(File file) throws IOException;
+
+    /**
+     * Tests whether the file denoted by this abstract pathname is a normal file. A file is normal if it is not a
+     * directory and, in addition, satisfies other system-dependent criteria. Any non-directory file created by a Java
+     * application is guaranteed to be a normal file. This method does follow symbolic links.
+     *
+     * @param file The associated file object.
+     * @return true if and only if the file denoted by this abstract pathname exists and is a normal file; false otherwise
+     * @throws IOException
+     */
+    boolean isFile(File file) throws IOException;
+
+    /**
+     * Tests whether the file denoted by this abstract pathname is a folder. This method does follow symbolic links.
+     *
+     * @param file The associated file object.
+     * @return true if and only if the file denoted by this abstract pathname exists and is a directory; false otherwise
+     * @throws IOException
+     */
+    boolean isFolder(File file) throws IOException;
+
+    /**
+     * Tests whether a file is a symbolic link.
+     *
+     * @param file The associated file object.
+     * @return true if the file is a symbolic link; false if the file does not exist, is not a symbolic link, or it
+     * cannot be determined if the file is a symbolic link or not.
+     * @throws IOException
+     */
+    boolean isLink(File file) throws IOException;
 }

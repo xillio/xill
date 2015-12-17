@@ -93,8 +93,8 @@ public class FunctionDeclaration extends Instruction {
         return children;
     }
 
-    @Override
-    public void close() throws Exception {
+    public int getParametersSize() {
+        return parameters.size();
     }
 
 }

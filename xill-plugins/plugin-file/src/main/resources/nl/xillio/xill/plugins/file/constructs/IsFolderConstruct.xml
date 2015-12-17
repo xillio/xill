@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Tests whether the file identified by uri is a folder. The test returns `true` if `uri` is a folder.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Determine if the specified uri is a folder or not.</header>
+            <code>
+                use File;
+                use System;
+
+                System.print(File.isFolder("file.txt"));
+                // This will print: false
+
+                System.print(File.isFolder("C:\\Windows"));
+                // This will print: true
+
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>canExecute</reference>
+        <reference>canRead</reference>
+        <reference>canWrite</reference>
+        <reference>isFile</reference>
+        <reference>isHidden</reference>
+        <reference>isLink</reference>
+    </references>
+    <tags>
+        read, write, execute, hidden
+    </tags>
+</function>

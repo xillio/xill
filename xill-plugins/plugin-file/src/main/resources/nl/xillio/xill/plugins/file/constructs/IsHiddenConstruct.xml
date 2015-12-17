@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Determines if the specified file/folder is hidden or not.
+Determines if the specified file/folder is hidden or not. The test returns `true` if `uri` is a hidden file or folder.
     </description>
     <examples>
         <example title="Usage">
@@ -11,17 +11,18 @@
                 use System;
 
                 System.print(File.isHidden("file.txt"));
-
-                // This will print: {"file/folder: ":"file.txt","can read: ":true}
+                // This will print: true
 
             </code>
         </example>
     </examples>
     <references>
         <reference>canExecute</reference>
-        <reference>canWrite</reference>
         <reference>canRead</reference>
-        <reference>print</reference>
+        <reference>canWrite</reference>
+        <reference>isFile</reference>
+        <reference>isFolder</reference>
+        <reference>isLink</reference>
     </references>
     <tags>
         read, write, execute, hidden

@@ -56,8 +56,8 @@ a:hover {
 }
 
 code {
-	-fx-font-family: 'Ubunt Mono';
-	font-family: 'Ubuntu Mono';
+	-fx-font-family: 'Ubuntu Mono';
+	font-family: xilliomono, 'Ubuntu Mono', "Lucida Console", Monaco, monospace;
 }
 
 em {
@@ -126,7 +126,8 @@ th {
 
 /* ------ Signature ------ */
 #signature .signature-content {
-	font-family: 'Ubuntu Mono';
+	-fx-font-family: 'Ubuntu Mono';
+	font-family: xilliomono, 'Ubuntu Mono', 'Consolas',  'source-code-pro', Monaco, Menlo, monospace;
 	font-size: 1.2em;
 	color: #2F2F99;
 	font-weight: bold;

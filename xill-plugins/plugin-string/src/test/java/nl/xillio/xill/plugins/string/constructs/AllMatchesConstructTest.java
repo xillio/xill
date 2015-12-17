@@ -70,7 +70,7 @@ public class AllMatchesConstructTest extends ExpressionBuilderHelper {
 	 * @throws IllegalArgumentException
 	 * @throws PatternSyntaxException
 	 */
-	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid pattern handed.")
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid pattern: .*")
 	public void processInvalidPattern() throws IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String text = "abc def ghi jkl. Mno";
@@ -103,7 +103,7 @@ public class AllMatchesConstructTest extends ExpressionBuilderHelper {
 	 * @throws IllegalArgumentException
 	 * @throws PatternSyntaxException
 	 */
-	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Illegal argument handed.")
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Illegal argument: .*")
 	public void processIllegalArgument() throws IllegalArgumentException, FailedToGetMatcherException {
 		// Mock
 		String text = "abc def ghi jkl. Mno";

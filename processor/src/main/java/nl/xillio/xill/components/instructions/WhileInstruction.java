@@ -60,15 +60,12 @@ public class WhileInstruction extends CompoundInstruction {
         boolean isValue = expression.getBooleanValue();
         debugger.endInstruction(condition, result);
         expression.releaseReference();
+        condition.clear();
         return isValue;
     }
 
     @Override
     public Collection<Processable> getChildren() {
         return Arrays.asList(condition, instructionSet);
-    }
-
-    @Override
-    public void close() throws Exception {
     }
 }

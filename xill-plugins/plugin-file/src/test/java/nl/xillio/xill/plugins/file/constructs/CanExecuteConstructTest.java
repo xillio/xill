@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.file.constructs;
 
+import junit.framework.Assert;
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ConstructContext;
@@ -10,6 +11,7 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import static org.mockito.Mockito.*;
 
@@ -42,14 +44,16 @@ public class CanExecuteConstructTest extends TestUtils {
      * @throws FileNotFoundException If the file does not exist.
      */
     @Test
-    public void testProcess() throws FileNotFoundException {
+    public void testProcess() throws IOException {
 
         setFileResolverReturnValue(new File(""));
 
         when(metaExpression.getStringValue()).thenReturn("");
+        when(fileUtilities.canExecute(any())).thenReturn(true);
 
         MetaExpression result = CanExecuteConstruct.process(constructContext, fileUtilities, metaExpression);
 
+        Assert.assertTrue(result.getBooleanValue());
         verify(fileUtilities, times(1)).canExecute(any());
     }
 
@@ -58,10 +62,10 @@ public class CanExecuteConstructTest extends TestUtils {
      *
      * @throws FileNotFoundException If the file is not found.
      */
-    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "The specified file does not exist.")
-    public void testProcessException() throws FileNotFoundException {
+    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "File not found, or not accessible")
+    public void testProcessException() throws IOException {
 
-        doThrow(new FileNotFoundException("The specified file does not exist.")).when(fileUtilities).canExecute(any(File.class));
+        doThrow(new FileNotFoundException("")).when(fileUtilities).canExecute(any(File.class));
 
         CanExecuteConstruct.process(constructContext, fileUtilities, metaExpression);
 

@@ -26,9 +26,10 @@ public class OfConstruct extends BaseDateConstruct {
 						new Argument("minute"), new Argument("second"),
 						new Argument("nano", fromValue(0)), new Argument("zone", fromValue(ZoneId.systemDefault().getId()))};
 
-		return new ConstructProcessor((a) -> process(a, getDateService()), args);
+		return new ConstructProcessor(a -> process(a, getDateService()), args);
 	}
 
+	@SuppressWarnings("squid:S1166")
 	static MetaExpression process(final MetaExpression[] input, DateService dateService) {
 		Date date;
 		ZoneId zone;

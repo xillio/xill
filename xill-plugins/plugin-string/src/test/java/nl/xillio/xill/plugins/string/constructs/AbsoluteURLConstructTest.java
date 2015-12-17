@@ -103,7 +103,7 @@ public class AbsoluteURLConstructTest {
 	/**
 	 * Tests the process when it fails to return a value.
 	 */
-	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Illegal argument was handed to the matcher when trying to convert the URL")
+	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Illegal argument was handed to the matcher when trying to convert the URL: .*")
 	public void processErrorOnConvert()
 	{
 		// Mock

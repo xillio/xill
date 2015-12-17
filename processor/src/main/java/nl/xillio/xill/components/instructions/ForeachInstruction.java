@@ -222,8 +222,4 @@ public class ForeachInstruction extends CompoundInstruction {
         return Arrays.asList(valueVar, list, instructionSet);
     }
 
-    @Override
-    public void close() throws Exception {
-    }
-
 }

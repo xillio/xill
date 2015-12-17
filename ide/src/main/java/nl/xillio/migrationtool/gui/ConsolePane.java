@@ -51,11 +51,16 @@ import nl.xillio.xill.util.HotkeysHandler.Hotkeys;
 import nl.xillio.xill.util.settings.Settings;
 
 import com.sun.javafx.scene.control.behavior.CellBehaviorBase;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This pane displays the console log stored in elasticsearch
  */
 public class ConsolePane extends AnchorPane implements Searchable, EventHandler<KeyEvent>, RobotTabComponent {
+
+	private static final Logger LOGGER = LogManager.getLogger();
+
 	@FXML
 	private SearchBar apnConsoleSearchBar;
 	@FXML
@@ -124,7 +129,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 			Node ui = loader.load();
 			getChildren().add(ui);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Error loading console pane: " + e.getMessage(), e);
 		}
 
 		// Search bar
