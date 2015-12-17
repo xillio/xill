@@ -320,6 +320,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
         loadProcessor(document, projectPath);
         currentRobot = getProcessor().getRobotID();
+        setText(getName());
 
         return true;
     }
