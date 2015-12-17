@@ -12,6 +12,7 @@ import nl.xillio.xill.plugins.file.services.permissions.FilePermissionsProvider;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.util.LinkedHashMap;
 
 /**
@@ -51,6 +52,8 @@ public class GetPermissionsConstruct extends Construct {
     private FilePermissions getPermissions(File file) {
         try {
             return permissionsProvider.readPermissions(file);
+        } catch (NoSuchFileException e) {
+            throw new RobotRuntimeException("Could not find " + file.getAbsolutePath(), e);
         } catch (IOException e) {
             throw new RobotRuntimeException("Failed to read permissions for " + file.getAbsolutePath() + ": " + e.getMessage(), e);
         }
