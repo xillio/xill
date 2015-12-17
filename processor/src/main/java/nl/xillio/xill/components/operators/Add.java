@@ -35,8 +35,15 @@ public final class Add extends BinaryNumberOperator {
             }
 
             //If you try to add a list to an atomic value it should give an error since this is unwanted behaviour.
-            if (leftValue.getType() == ExpressionDataType.ATOMIC && rightValue.getType() == ExpressionDataType.LIST) {
-                throw new RobotRuntimeException("You can not add a list to an atomic value.");
+            if ((leftValue.getType() == ExpressionDataType.ATOMIC || rightValue.getType() == ExpressionDataType.ATOMIC)
+                    && (leftValue.getType() == ExpressionDataType.OBJECT || rightValue.getType() == ExpressionDataType.OBJECT)){
+                throw new RobotRuntimeException("You should not add an atomic to an object this way. Use  instead.");
+            }
+
+            //If you try to add a list to an atomic value it should give an error since this is unwanted behaviour.
+            if ((leftValue.getType() == ExpressionDataType.ATOMIC || rightValue.getType() == ExpressionDataType.ATOMIC)
+                    && (leftValue.getType() == ExpressionDataType.LIST || rightValue.getType() == ExpressionDataType.LIST)){
+                throw new RobotRuntimeException("You should not add an atomic to a list this way. Use  instead.");
             }
 
             //If you try to add an object to an atomic value it should give an error since this is unwanted behaviour.
@@ -57,17 +64,7 @@ public final class Add extends BinaryNumberOperator {
                         processObjects((LinkedHashMap<String, MetaExpression>) leftValue.getValue(),
                                 (LinkedHashMap<String, MetaExpression>) rightValue.getValue(), debugger));
             }
-            // If the left entry is a list and the right entry is an atomic value, Add the atomic value to the list.
 
-            if (leftValue.getType() == ExpressionDataType.LIST && rightValue.getType() == ExpressionDataType.ATOMIC) {
-                return InstructionFlow.doResume(
-                        addToList((List<MetaExpression>) leftValue.getValue(), rightValue, debugger));
-            }
-            // If the left entry is an object and the right entry is an atomic value, Add the atomic value to the object.
-            if (leftValue.getType() == ExpressionDataType.OBJECT && rightValue.getType() == ExpressionDataType.ATOMIC) {
-                return InstructionFlow.doResume(
-                        addToObject((LinkedHashMap<String, MetaExpression>) leftValue.getValue(), rightValue, debugger));
-            }
             // If the left entry is a list and the right entry is an object,
             // then convert the list to an object and put it in front of the object.
             if (leftValue.getType() == ExpressionDataType.LIST && rightValue.getType() == ExpressionDataType.OBJECT) {
@@ -119,22 +116,10 @@ public final class Add extends BinaryNumberOperator {
 
     private static MetaExpression processObjectList(final LinkedHashMap<String, MetaExpression> leftValue, final List<MetaExpression> rightValue, final Debugger debugger) throws RobotRuntimeException {
         LinkedHashMap<String, MetaExpression> result = new LinkedHashMap<>(leftValue);
-        for (int i = leftValue.size(); i < leftValue.size() + rightValue.size(); i++) {
-            result.put(Integer.toString(i), rightValue.get(i - leftValue.size()));
+        for (int i = 0; i < rightValue.size(); i++) {
+            result.put(Integer.toString(i), rightValue.get(i));
         }
 
-        return ExpressionBuilderHelper.fromValue(result);
-    }
-
-    private static MetaExpression addToList(final List<MetaExpression> leftValue, final MetaExpression rightValue, final Debugger debugger) throws RobotRuntimeException {
-        List<MetaExpression> result = new ArrayList<>(leftValue);
-        result.add(rightValue);
-        return ExpressionBuilderHelper.fromValue(result);
-    }
-
-    private static MetaExpression addToObject(final LinkedHashMap<String, MetaExpression> leftValue,final MetaExpression rightValue,final Debugger debugger) throws RobotRuntimeException {
-        LinkedHashMap<String, MetaExpression> result = new LinkedHashMap<>(leftValue);
-        result.put(Integer.toString(leftValue.size()), rightValue);
         return ExpressionBuilderHelper.fromValue(result);
     }
 }
