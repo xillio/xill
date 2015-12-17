@@ -133,7 +133,7 @@ public class ContentHandlerImpl implements ContentHandler {
 			try {
 				result = xpathFactory.newXPath().compile(path).evaluate(this.document.getFirstChild(), XPathConstants.NODESET);
 			} catch (XPathExpressionException e) {
-				throw new IllegalArgumentException("Given category contains illegal characters.");
+				throw new IllegalArgumentException("Given category contains illegal characters.", e);
 			}
 			if (result == null) {
 				return null;
@@ -184,7 +184,7 @@ public class ContentHandlerImpl implements ContentHandler {
 			try {
 				result = xpathFactory.newXPath().compile(path).evaluate(this.document.getFirstChild(), XPathConstants.NODESET);
 			} catch (XPathExpressionException e) {
-				throw new IllegalArgumentException("Given category contains illegal characters.");
+				throw new IllegalArgumentException("Given category contains illegal characters.", e);
 			}
 			if (result == null) {
 				return null;
@@ -217,14 +217,14 @@ public class ContentHandlerImpl implements ContentHandler {
 			try {
 				categoryNode = this.getCategoryNode(category);
 			} catch (XPathExpressionException e) {
-				throw new IllegalArgumentException("Given category contains illegal characters.");
+				throw new IllegalArgumentException("Given category contains illegal characters.", e);
 			}
 			Element itemNode[] = {null};
 			if (keyName != null) {
 				try {
 					itemNode[0] = this.getItemNode(categoryNode, keyName, keyValue);
 				} catch (XPathExpressionException e) {
-					throw new IllegalArgumentException("Given key or value contains illegal characters.");
+					throw new IllegalArgumentException("Given key or value contains illegal characters.", e);
 				}
 			}
 			if (itemNode[0] == null) {
@@ -252,7 +252,7 @@ public class ContentHandlerImpl implements ContentHandler {
 			try {
 				result = xpathFactory.newXPath().compile(path).evaluate(this.document.getFirstChild(), XPathConstants.NODE);
 			} catch (XPathExpressionException e) {
-				throw new IllegalArgumentException("Given category contains illegal characters.");
+				throw new IllegalArgumentException("Given category contains illegal characters.", e);
 			}
 			return (result != null);
 		}
@@ -265,13 +265,13 @@ public class ContentHandlerImpl implements ContentHandler {
 			try {
 				categoryNode = this.getCategoryNode(category);
 			} catch (XPathExpressionException e) {
-				throw new IllegalArgumentException("Given category contains illegal characters.");
+				throw new IllegalArgumentException("Given category contains illegal characters.", e);
 			}
 			Element itemNode = null;
 			try {
 				itemNode = this.getItemNode(categoryNode, keyName, keyValue);
 			} catch (XPathExpressionException e) {
-				throw new IllegalArgumentException("Given key or value contains illegal characters.");
+				throw new IllegalArgumentException("Given key or value contains illegal characters.", e);
 			}
 			if (itemNode == null) {
 				return false;
