@@ -21,6 +21,6 @@ public class FileXillPlugin extends XillPlugin {
             AclFilePermissionsProvider acl,
             PosixFilePermissionsProvider posix) {
 
-        return Arrays.asList(posix, acl);
+        return Arrays.asList(acl, posix);
     }
 }
