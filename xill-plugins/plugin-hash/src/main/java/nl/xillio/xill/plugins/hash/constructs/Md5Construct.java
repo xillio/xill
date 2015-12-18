@@ -18,25 +18,27 @@ import java.security.NoSuchAlgorithmException;
  * @author Zbynek Hochmann
  */
 public class Md5Construct extends Construct {
+    private final HashService hashService;
+
     @Inject
-    private HashService hashService;
+    public Md5Construct(HashService hashService) {
+        this.hashService = hashService;
+    }
 
     @Override
     public ConstructProcessor prepareProcess(final ConstructContext context) {
         return new ConstructProcessor(
-                (value, fromFile) -> process(value, fromFile, hashService),
+                this::process,
         		new Argument("value", ATOMIC),
                 new Argument("fromFile", FALSE, ATOMIC));
     }
 
-    static MetaExpression process(final MetaExpression value, final MetaExpression fromFile, final HashService hashService) {
+    MetaExpression process(final MetaExpression value, final MetaExpression fromFile) {
         assertNotNull(value, "value");
         assertNotNull(fromFile, "fromFile");
         try {
             return fromValue(hashService.md5(value.getStringValue(), fromFile.getBooleanValue()));
-        } catch (NoSuchAlgorithmException e) {
-            throw new RobotRuntimeException("Cannot do md5 hash: " + e.getMessage(), e);
-        } catch (IOException e) {
+        } catch (NoSuchAlgorithmException | IOException e) {
             throw new RobotRuntimeException("Cannot do md5 hash: " + e.getMessage(), e);
         }
     }

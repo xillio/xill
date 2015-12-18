@@ -4,6 +4,7 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 import nl.xillio.xill.plugins.hash.services.HashService;
+import nl.xillio.xill.plugins.hash.services.HashServiceImpl;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -35,15 +36,12 @@ public class Md5ConstructTest {
         when(fromFile.getBooleanValue()).thenReturn(false);
 
         String returnValue = "b45cffe084dd3d20d928bee85e7b0f21";
-        HashService hashService = mock(HashService.class);
-        when(hashService.md5(text, false)).thenReturn(returnValue);
+        HashService hashService = new HashServiceImpl();
+
+        Md5Construct construct = new Md5Construct(hashService);
 
         // Run
-        MetaExpression result = Md5Construct.process(value, fromFile, hashService);
-
-        // Verify
-
-        verify(hashService, times(1)).md5(text, false);
+        MetaExpression result = construct.process(value, fromFile);
 
         // Assert
         Assert.assertEquals(result.getStringValue(), returnValue);
@@ -69,31 +67,9 @@ public class Md5ConstructTest {
         HashService hashService = mock(HashService.class);
         when(hashService.md5(text, false)).thenThrow(new NoSuchAlgorithmException("Error occurred"));
 
-        // Run
-        Md5Construct.process(value, fromFile, hashService);
-    }
-
-    /**
-     * Test the process when it throws an error.
-     *
-     * @throws NoSuchAlgorithmException
-     * @throws IOException
-     */
-    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Cannot do md5 hash: Cannot open file")
-    public void processIOException() throws IOException, NoSuchAlgorithmException {
-        // Mock
-        String text = "string";
-        MetaExpression value = mock(MetaExpression.class);
-        when(value.getStringValue()).thenReturn(text);
-
-        MetaExpression fromFile = mock(MetaExpression.class);
-        when(fromFile.isNull()).thenReturn(false);
-        when(fromFile.getBooleanValue()).thenReturn(false);
-
-        HashService hashService = mock(HashService.class);
-        when(hashService.md5(text, false)).thenThrow(new IOException("Cannot open file"));
+        Md5Construct construct = new Md5Construct(hashService);
 
         // Run
-        Md5Construct.process(value, fromFile, hashService);
+        construct.process(value, fromFile);
     }
 }
