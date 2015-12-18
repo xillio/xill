@@ -133,7 +133,7 @@ public class Assign implements Processable {
                 assign((Map<String, MetaExpression>) currentValue.getValue(), pathID + 1, value, debugger);
                 break;
             default:
-                throw new IllegalStateException("Can only assign to children of Object and List types.");
+                throw new IllegalStateException("Can only assign to children of OBJECT and LIST types.");
         }
     }
 

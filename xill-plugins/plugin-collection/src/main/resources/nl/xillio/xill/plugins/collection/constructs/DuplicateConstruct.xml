@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+	<description>
+Duplicates the given list. Changes to the first list will not change the duplicated list.
+	</description>
+	<examples>
+		<example title="Usage">
+			<header>Duplicating a list</header>
+			<code>
+				use System;
+				use Collection;
+				
+				var listA = [1,2,3];
+				var listB = Collection.duplicate(listA);
+				listA[] = 4;
+				listA[0] = "test";
+				
+				System.print(listA); //this will print ["test",2,3,4]
+				System.print(listB); //this will print [1,2,3]
+				
+				
+			</code>
+		</example>
+	</examples>
+	<searchTags>
+		list, duplicate, copy
+	</searchTags>
+</function>
