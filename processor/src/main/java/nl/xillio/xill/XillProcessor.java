@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import xill.lang.XillStandaloneSetup;
 import xill.lang.validation.XillValidator;
 import xill.lang.xill.IncludeStatement;
+import xill.lang.xill.UseStatement;
 
 import java.io.File;
 import java.io.IOException;
@@ -125,7 +126,7 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
         Optional<Issue> error = issues.stream().filter(issue -> issue.getSeverity() == Issue.Type.ERROR).findFirst();
 
         if (error.isPresent()) {
-            throw new XillParsingException(error.get().getMessage(), error.get().getLine(), robotID);
+            throw new XillParsingException(error.get().getMessage(), error.get().getLine(), error.get().getRobot());
         }
 
         xill.lang.xill.Robot mainRobotToken = null;
@@ -158,7 +159,10 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
             gatherResources(resource);
         } catch (XillParsingException e) {
             LOGGER.error("Could not find a robot", e);
-            Issue issue = new Issue(e.getMessage(), e.getLine(), Issue.Type.ERROR);
+            File errorFile = new File(resource.getURI().toFileString());
+            RobotID robotID = RobotID.getInstance(errorFile, projectFolder);
+
+            Issue issue = new Issue(e.getMessage(), e.getLine(), Issue.Type.ERROR, robotID);
             return Collections.singletonList(issue);
         }
 
@@ -224,12 +228,31 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
                             break;
                     }
 
-                    return new Issue(impl.getMessage(), impl.getLineNumber(), type);
+                    return new Issue(impl.getMessage(), impl.getLineNumber(), type, robotID);
                 }).collect(Collectors.toList());
 
         // Add warnings to issues
-        resource.getWarnings().forEach(warning -> issues.add(new Issue(warning.getMessage(), warning.getLine(), Issue.Type.WARNING)));
+        resource.getWarnings().forEach(warning -> issues.add(new Issue(warning.getMessage(), warning.getLine(), Issue.Type.WARNING, robotID)));
 
+        // Check for the existence of the plugins
+        for (EObject object : resource.getContents()) {
+            xill.lang.xill.Robot robot = (xill.lang.xill.Robot) object;
+
+            for (UseStatement useStatement : robot.getUses()) {
+                String name = useStatement.getPlugin() == null ? useStatement.getName() : useStatement.getPlugin();
+
+                boolean found = pluginLoader.getPluginManager()
+                        .getPlugins()
+                        .stream()
+                        .anyMatch(plugin -> plugin.getName().equals(name));
+
+                if (!found) {
+                    INode node = NodeModelUtils.getNode(object);
+
+                    issues.add(new Issue("No plugin with name " + name + " was found.", node.getStartLine(), Issue.Type.ERROR, robotID));
+                }
+            }
+        }
         return issues;
     }
 

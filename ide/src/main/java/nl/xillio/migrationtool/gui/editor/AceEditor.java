@@ -597,7 +597,9 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
     }
 
     public void annotate(List<Issue> issues) {
-        List<String> annotations = issues.stream().map(this::toJavaScript).collect(Collectors.toList());
+        List<String> annotations = issues.stream()
+                .map(this::toJavaScript)
+                .collect(Collectors.toList());
         String param = StringUtils.join(annotations, ",");
         executeJS("editor.session.setAnnotations([ " + param + "]);");
     }

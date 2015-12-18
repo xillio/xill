@@ -43,6 +43,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 /**
  * A tab containing the editor, console and debug panel attached to a specific currentRobot.
@@ -330,7 +331,11 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
     }
 
     private void validate() {
-        List<Issue> issues = getProcessor().validate();
+        List<Issue> issues = getProcessor().validate()
+                .stream()
+                .filter(issue -> issue.getRobot() == getCurrentRobot())
+                .collect(Collectors.toList());
+
         getEditorPane().getEditor().annotate(issues);
     }
 
@@ -494,6 +499,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
             return;
         } catch (XillParsingException e) {
             handleXillParsingError(e);
+            LOGGER.error(e.getMessage(), e);
             return;
         } finally {
             apnStatusBar.setCompiling(false);
