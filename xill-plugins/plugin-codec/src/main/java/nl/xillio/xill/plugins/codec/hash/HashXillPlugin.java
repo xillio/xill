@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.hash;
+package nl.xillio.xill.plugins.codec.hash;
 
 import nl.xillio.plugins.XillPlugin;
 

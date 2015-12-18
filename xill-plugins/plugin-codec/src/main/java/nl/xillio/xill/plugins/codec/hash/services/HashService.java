@@ -1,7 +1,7 @@
-package nl.xillio.xill.plugins.hash.services;
+package nl.xillio.xill.plugins.codec.hash.services;
 
 import com.google.inject.ImplementedBy;
-import nl.xillio.xill.plugins.hash.HashXillPlugin;
+import nl.xillio.xill.plugins.codec.hash.HashXillPlugin;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;

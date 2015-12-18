@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.hash.services;
+package nl.xillio.xill.plugins.codec.hash.services;
 
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
