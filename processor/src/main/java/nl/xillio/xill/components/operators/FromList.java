@@ -33,7 +33,7 @@ public class FromList implements Processable {
         MetaExpression listMeta = this.list.process(debugger).get();
         MetaExpression indexMeta = this.index.process(debugger).get();
         listMeta.registerReference();
-        indexMeta.releaseReference();
+        indexMeta.registerReference();
 
         InstructionFlow<MetaExpression> result = process(listMeta, indexMeta, debugger);
 
