@@ -16,11 +16,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
+import netscape.javascript.JSObject;
 import nl.xillio.migrationtool.Loader;
 import nl.xillio.migrationtool.dialogs.CloseTabStopRobotDialog;
 import nl.xillio.migrationtool.dialogs.SaveBeforeClosingDialog;
 import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
 import nl.xillio.migrationtool.gui.EditorPane.DocumentState;
+import nl.xillio.xill.api.Issue;
 import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.api.XillProcessor;
 import nl.xillio.xill.api.components.Robot;
@@ -38,6 +40,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -320,7 +323,15 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
         loadProcessor(document, projectPath);
 
+        // Validate
+        validate();
+
         return true;
+    }
+
+    private void validate() {
+        List<Issue> issues = getProcessor().validate();
+        getEditorPane().getEditor().annotate(issues);
     }
 
     /**
