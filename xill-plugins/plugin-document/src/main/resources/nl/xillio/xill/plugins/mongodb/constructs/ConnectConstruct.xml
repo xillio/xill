@@ -3,7 +3,7 @@
     <description>
 Connect to a MongoDB database.
 
-All parameters except *database* are optional. The defaults will connect you to a default local mongodb database.
+All parameters except `database` are optional. The defaults will connect you to a default local mongodb database at the standard port.
     </description>
     <examples>
         <example title="Usage">

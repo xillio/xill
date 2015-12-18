@@ -37,7 +37,7 @@ public class FindOneAndDeleteConstruct extends AbstractCollectionApiConstruct {
 
         FindOneAndDeleteOptions options = findOneAndDeleteOptionsFactory.build(arguments[1]);
 
-        collection.findOneAndDelete(filter, options);
-        return NULL;
+        Document result = collection.findOneAndDelete(filter, options);
+        return toExpression(result);
     }
 }

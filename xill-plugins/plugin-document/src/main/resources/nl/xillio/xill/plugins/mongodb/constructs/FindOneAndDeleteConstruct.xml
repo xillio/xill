@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Finds a single document using the specified query and options and deletes it.
+Finds a single document using the specified `query` and `options` and deletes it. Also returns the document that was deleted. If multiple documents match the query, then the first document in the result will be deleted. If you do not use the `sort` option the selected document will be undefined.
+The `options` parameter may contain the following options:
+
+| Option     | Description |
+| ---------- | ----------- |
+| `projection` | A document describing the fields to return for the matching document.
+| `sort`     | A document with sort criteria to apply to the query. The default is `null`, which means that the documents will be returned in an undefined order.
+| `maxTime`  | The maximum execution time in milliseconds for this operation.
     </description>
     <examples>
         <example title="Usage">
@@ -18,11 +25,32 @@ Finds a single document using the specified query and options and deletes it.
                 Mongo.findOneAndDelete("documents", {"_id":result["_id"]}, );
             </code>
         </example>
+        <example>
+            <header>Log and delete an element in collection `documents` with a certain projection and sorting</header>
+            <code>
+                use Mongo;
+                use System;
+                Mongo.connect("udm_default");
+
+                System.print (result);
+
+                //return only the id and target properties
+                var projection = {"id":true, "target":true};
+
+                //sort by timestamp (latest first)
+                var sort {"target.timestamp": -1}};
+
+                //delete the latest document and return the projected properties
+                result = Mongo.findOneAndDelete("documents", {}, {"projection":projection, "sort":sort);
+
+                System.print ("Deleted document with id: " :: result._id :: " timestamp: " :: result.target.timestamp);            </code>
+        </example>>
     </examples>
     <references>
         <reference>connect</reference>
+        <reference>find</reference>
     </references>
     <tags>
-        mongodb, query, search, fields, filter
+        mongodb, query, delete, filter
     </tags>
 </function>
