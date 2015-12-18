@@ -19,7 +19,7 @@ When parameter `xWwwForm` is true then it replaces space character by `+` charac
         </example>
     </examples>
     <references>
-        <reference>base64Encode</reference>
+        <reference>String.base64Encode</reference>
     </references>
     <searchTags>
         URL, percent, xwwwform
