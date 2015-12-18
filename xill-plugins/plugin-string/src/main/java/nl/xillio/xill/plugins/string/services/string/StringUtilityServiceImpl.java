@@ -133,10 +133,4 @@ public class StringUtilityServiceImpl implements StringUtilityService {
     public String wrap(final String text, final int width, final boolean wrapLongWords) {
         return WordUtils.wrap(text, width, "\n", wrapLongWords);
     }
-
-    @Override
-    public String urlEncode(final String text, final boolean xWwwForm) throws UnsupportedEncodingException {
-        String encText = URLEncoder.encode(text.toString(), "UTF-8");
-        return xWwwForm ? encText : encText.replace("+", "%20");
-    }
 }

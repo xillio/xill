@@ -200,14 +200,4 @@ public interface StringUtilityService {
      * @return Returns the wrapped text.
      */
     String wrap(String text, int width, boolean wrapLongWords);
-
-    /**
-     * Do URL encode of provided text
-     *
-     * @param text input string
-     * @param xWwwForm the output format (true means that spaces will be + otherwise %20)
-     * @return urlencoded string
-     * @throws UnsupportedEncodingException If something goes wrong during the encoding
-     */
-    String urlEncode(String text, boolean xWwwForm) throws UnsupportedEncodingException;
 }
