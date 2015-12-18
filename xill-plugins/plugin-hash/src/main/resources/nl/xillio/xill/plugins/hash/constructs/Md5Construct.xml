@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Returns a MD5 hash of the provided text or file.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Doing md5 hash from text and file</header>
+            <code>
+                use System;
+                use Hash;
+
+                var hashFromText = Hash.md5("test");
+                var hashFromFile = Hash.md5("c:/tmp/somefile.dat", true);
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference></reference>
+    </references>
+	    <tags>
+        md5, hash, text, file, conversion
+    </tags>
+</function>
