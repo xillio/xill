@@ -43,7 +43,7 @@ public class LoadSheetConstruct extends Construct {
 		sheetObject.put("columns", fromValue(sheet.getColumnLength()));
 
 		MetaExpression returnValue = fromValue(sheetObject);
-		returnValue.storeMeta(XillSheet.class, sheet);
+		returnValue.storeMeta(sheet);
 
 		return returnValue;
 	}
