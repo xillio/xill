@@ -436,22 +436,26 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         checkRobotsRunning(items, true, true);
 
         items.forEach(item -> {
-            // Delete the file or folder. If the folder is a project check if we should hard delete it and remove it.
             File file = item.getValue().getKey();
-            try {
-                if (file.isDirectory()) {
-                    if (item != getProject(item) || hardDeleteProjects) {
+
+            // Check if the file exists.
+            if (file.exists()) {
+                try {
+                    //If it is a file, remove it. If it is a folder only remove it if it is not a project or we should hard delete projects.
+                    if (file.isFile() || file.isDirectory() && (item != getProject(item) || hardDeleteProjects)) {
                         FileUtils.forceDelete(file);
                     }
-                    if (item == getProject(item)) {
-                        removeProject(item);
-                    }
-
-                } else {
-                    FileUtils.forceDelete(file);
+                } catch (IOException e) {
+                    LOGGER.error("Could not delete " + file.toString(), e);
+                    AlertDialog error = new AlertDialog(Alert.AlertType.ERROR, "Error while deleting files.", "",
+                            "An error occurred while deleting files.\n" + e.getMessage(), ButtonType.OK);
+                    error.showAndWait();
                 }
-            } catch (IOException e) {
-                LOGGER.error("Could not delete " + file.toString(), e);
+            }
+
+            // If the item is a project, remove it.
+            if (item == getProject(item)) {
+                removeProject(item);
             }
         });
 
@@ -674,13 +678,11 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         if (item == root) {
             return null;
         }
-        if (item != null) {
-            while (item.getParent() != root) {
-                item = item.getParent();
-            }
-            return item;
+
+        while (item != null && item.getParent() != root) {
+            item = item.getParent();
         }
-        return null;
+        return item;
     }
 
     /**
