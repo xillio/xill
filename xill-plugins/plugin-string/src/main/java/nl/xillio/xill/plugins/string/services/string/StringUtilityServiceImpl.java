@@ -6,7 +6,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 
 import javax.xml.bind.DatatypeConverter;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -93,7 +95,7 @@ public class StringUtilityServiceImpl implements StringUtilityService {
 
     @Override
     public String[] split(final String haystack, final String needle) {
-        return haystack.split(needle);
+        return haystack.split(needle,-1);
     }
 
     @Override

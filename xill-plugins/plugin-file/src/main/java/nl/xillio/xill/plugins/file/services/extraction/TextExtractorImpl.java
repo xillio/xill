@@ -26,7 +26,7 @@ public class TextExtractorImpl implements TextExtractor {
             Future<String> future = executor.submit(() -> tika.parseToString(file));
             return future.get();
         } catch (InterruptedException | ExecutionException e) {
-            throw new RobotRuntimeException("Failed to extract text from " + file.getAbsolutePath());
+            throw new RobotRuntimeException("Failed to extract text from " + file.getAbsolutePath(), e);
         }
     }
 

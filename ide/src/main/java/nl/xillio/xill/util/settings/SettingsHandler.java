@@ -1,6 +1,10 @@
 package nl.xillio.xill.util.settings;
 import nl.xillio.util.XillioHomeFolder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Class that is main point for dealing with settings in Xill IDE
@@ -17,6 +21,8 @@ public class SettingsHandler {
     private SimpleVariableHandler simple;
     private ProjectSettingsHandler project;
 
+    private static final Logger LOGGER = LogManager.getLogger(SettingsHandler.class);
+
     /**
      * @return The instance of settings handler
      */
@@ -29,8 +35,8 @@ public class SettingsHandler {
         this.content = new ContentHandlerImpl(SETTINGS_FILE);
         try {
             this.content.init();
-        } catch (Exception e) {
-            System.err.println("Cannot initialize settings handler for reason: " + e.getMessage());
+        } catch (IOException e) {
+            LOGGER.error("Cannot initialize settings handler.", e);
         }
 
         this.simple = new SimpleVariableHandler(this.content);
@@ -52,26 +58,18 @@ public class SettingsHandler {
     }
 
     /**
-     * It set the save mechanism (see {@link nl.xillio.xill.util.settings.ContentHandler#setManualCommit(boolean)})
+     * Set the save mechanism (see {@link nl.xillio.xill.util.settings.ContentHandler#setManualCommit(boolean)})
      *
      * @param manual true = manual commit, false = auto commit (default)
      */
     public void setManualCommit(boolean manual) {
-        try {
-            this.content.setManualCommit(manual);
-        } catch (Exception e) {
-            System.err.println("Cannot set manual commit for reason: " + e.getMessage());
-        }
+        this.content.setManualCommit(manual);
     }
 
     /**
-     * It save all changes from last commit() if manual commit is on (see {@link nl.xillio.xill.util.settings.ContentHandler#commit()})
+     * Save all changes from last commit() if manual commit is on (see {@link nl.xillio.xill.util.settings.ContentHandler#commit()})
      */
     public void commit() {
-        try {
-            this.content.commit();
-        } catch (Exception e) {
-            System.err.println("Cannot do commit for reason: " + e.getMessage());
-        }
+        this.content.commit();
     }
 }

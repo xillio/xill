@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Converts a string into a string of characters representing the hexadecimal values of each byte in order. Some character
+sets use double bytes to represent diacritic characters. You can use the `toLowerCase` parameter to convert the
+resulting string to lower case.
+
+The returned string will be at least double the length of the passed string, as it takes (a multiple of) two characters
+to represent any given character.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Convert a String to a hex value</header>
+            <code>
+                use Encode;
+                use System
+
+                System.print(Encode.toHex("äëÄ"));
+                // prints C3A4C3ABC384
+                System.print(Encode.toHex("äëÄ", true, "ISO-8859-1"));
+                // prints e4ebc4
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>Decode.fromHex</reference>
+    </references>
+    <tags>
+        encoding, decoding, hex
+    </tags>
+</function>

@@ -101,14 +101,14 @@ public abstract class BaseDatabaseConstruct extends Construct {
 			}
 		} catch (SQLException e) {
 			lastConnections.remove(id);
-			throw new RobotRuntimeException("The last connection can not be used: " + e.getMessage(), e);
+			throw new RobotRuntimeException("The last connection cannot be used: " + e.getMessage(), e);
 		}
 		
 		return metadata;
 	}
 
 	/**
-	 * Check for validity of all lastConnections and remove the invalid ones
+	 * Check for validity of all lastConnections and remove the invalid ones.
 	 */
 	public static void cleanLastConnections() {
 		for (Entry<RobotID, ConnectionMetadata> entry : new ArrayList<>(lastConnections.entrySet())) {
@@ -121,6 +121,7 @@ public abstract class BaseDatabaseConstruct extends Construct {
 				}
 			} catch (SQLException e) {
 				// When an operation on the connection fails also assume it is invalid
+				LOGGER.debug("Operation on connection failed.", e);
 				lastConnections.remove(id);
 			}
 		}

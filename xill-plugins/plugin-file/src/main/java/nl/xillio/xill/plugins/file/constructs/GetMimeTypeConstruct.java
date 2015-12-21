@@ -19,7 +19,7 @@ public class GetMimeTypeConstruct extends Construct {
     @Override
     public ConstructProcessor prepareProcess(final ConstructContext context) {
         return new ConstructProcessor(
-                (uri) -> process(this, context, uri),
+                uri -> process(this, context, uri),
                 new Argument("uri", ATOMIC)
         );
     }

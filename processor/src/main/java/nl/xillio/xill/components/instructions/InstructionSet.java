@@ -11,6 +11,8 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This class represents the InstructionSet language component: any number of
@@ -19,6 +21,8 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 public class InstructionSet implements nl.xillio.xill.api.components.InstructionSet {
 	private final List<Instruction> instructions = new LinkedList<>();
 	private final Debugger debugger;
+
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * Create a new {@link InstructionSet} in debugging mode
@@ -77,12 +81,16 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
 		for (Instruction instruction : processedInstructions) {
 			try {
 				instruction.close();
-			} catch (Exception e) {}
+			} catch (Exception e) {
+				LOGGER.error(e.getMessage(), e);
+			}
 		}
 		// Done so dispose of this
 		try {
 			close();
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+		}
 
 		if (processResult != null) {
 			// Restore disposal state

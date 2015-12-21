@@ -23,7 +23,7 @@ public class ExistsConstruct extends Construct {
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-						(uri) -> process(context, fileUtils, uri),
+						uri -> process(context, fileUtils, uri),
 						new Argument("uri", ATOMIC));
 	}
 
