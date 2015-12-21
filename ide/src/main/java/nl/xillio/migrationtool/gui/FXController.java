@@ -16,6 +16,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
+import javafx.util.Pair;
 import nl.xillio.migrationtool.ApplicationKillThread;
 import nl.xillio.migrationtool.LicenseUtils;
 import nl.xillio.migrationtool.Loader;
@@ -294,7 +295,11 @@ public class FXController implements Initializable, EventHandler<Event> {
         // Select project path
         File projectfile;
         if (projectpane.getCurrentProject() != null) {
-            projectfile = projectpane.getCurrentProject().getValue().getKey();
+            TreeItem<Pair<File, String>> proj = projectpane.getCurrentProject();
+            projectfile = proj.getValue().getKey();
+
+            // If the folder to create the new file in does not exist, create it.
+            projectpane.makeDirIfNotExists(proj);
         } else {
             projectfile = new File(System.getProperty("user.home"));
         }

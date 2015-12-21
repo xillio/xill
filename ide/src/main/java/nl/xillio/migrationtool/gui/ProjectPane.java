@@ -580,6 +580,29 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
     /* End of selection. */
 
     /**
+     * Create a directory if it does not exist.
+     *
+     * @param item The tree item for which to create the directory.
+     */
+    public void makeDirIfNotExists(TreeItem<Pair<File, String>> item) {
+        File dir = item.getValue().getKey();
+
+        if (!dir.exists()) {
+            try {
+                // Create the directory.
+                org.apache.commons.io.FileUtils.forceMkdir(dir);
+            }
+            catch (IOException e) {
+                LOGGER.error(e.getMessage(), e);
+                // Show an error.
+                AlertDialog error = new AlertDialog(Alert.AlertType.ERROR, "Could not create folder", "",
+                        e.getMessage(), ButtonType.OK);
+                error.show();
+            }
+        }
+    }
+
+    /**
      * Called when the outside change to the robot file has been done
      * Check if the outside change to the robot file should lead to asking user about loading new content and if so then do it
      *

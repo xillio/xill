@@ -42,6 +42,9 @@ public class NewFolderDialog extends FXMLDialog {
         this.setTitle("Add Folder");
 		this.projectPane = projectPane;
 		this.treeItem = treeItem;
+
+		// If the folder to create the new folder in does not exist, create it.
+		projectPane.makeDirIfNotExists(treeItem);
 	}
 
 	@FXML
