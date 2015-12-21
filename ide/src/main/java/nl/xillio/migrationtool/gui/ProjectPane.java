@@ -3,7 +3,6 @@ package nl.xillio.migrationtool.gui;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -591,13 +590,19 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
             try {
                 // Create the directory.
                 org.apache.commons.io.FileUtils.forceMkdir(dir);
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 LOGGER.error(e.getMessage(), e);
                 // Show an error.
                 AlertDialog error = new AlertDialog(Alert.AlertType.ERROR, "Could not create folder", "",
                         e.getMessage(), ButtonType.OK);
                 error.show();
+            }
+
+            // Re-add the folder listener.
+            try {
+                watcher.addFolderListener(this, Paths.get(dir.getPath()));
+            } catch (IOException e) {
+                LOGGER.error(e.getMessage(), e);
             }
         }
     }
