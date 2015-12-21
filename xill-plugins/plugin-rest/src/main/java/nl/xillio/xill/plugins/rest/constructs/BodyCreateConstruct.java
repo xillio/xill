@@ -28,7 +28,7 @@ public class BodyCreateConstruct extends Construct {
     static MetaExpression process(final RestService service) {
         MultipartBody body = service.bodyCreate();
         MetaExpression output = fromValue(body.toString());
-        output.storeMeta(MultipartBody.class, body);
+        output.storeMeta(body);
         return output;
     }
 

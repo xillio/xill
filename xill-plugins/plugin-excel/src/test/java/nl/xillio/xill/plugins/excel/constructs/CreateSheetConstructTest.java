@@ -6,7 +6,6 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.excel.datastructures.XillSheet;
 import nl.xillio.xill.plugins.excel.datastructures.XillWorkbook;
 import nl.xillio.xill.plugins.excel.services.ExcelService;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static nl.xillio.xill.api.construct.ExpressionBuilderHelper.fromValue;
@@ -33,7 +32,7 @@ public class CreateSheetConstructTest extends TestUtils {
 		//Mocking workbook
 		MetaExpression workbookInput = fromValue("workbook");
 		XillWorkbook workbook = mock(XillWorkbook.class);
-		workbookInput.storeMeta(XillWorkbook.class, workbook);
+		workbookInput.storeMeta(workbook);
 
 		//Throw exception
 		when(service.createSheet(any(XillWorkbook.class), anyString())).thenThrow(new NullPointerException("Sheet name contains illegal characters: cannot contain 0x0000, 0x0003"));
@@ -55,7 +54,7 @@ public class CreateSheetConstructTest extends TestUtils {
 		//Mocking workbook
 		MetaExpression workbookInput = fromValue("workbook");
 		XillWorkbook workbook = mock(XillWorkbook.class);
-		workbookInput.storeMeta(XillWorkbook.class, workbook);
+		workbookInput.storeMeta(workbook);
 
 		//Throw Exception
 		when(service.createSheet(workbook, "name")).thenThrow(new IllegalArgumentException("illegal"));
@@ -75,7 +74,7 @@ public class CreateSheetConstructTest extends TestUtils {
 		ExcelService service = mock(ExcelService.class);
 		MetaExpression workbookInput = fromValue("workbook");
 		XillWorkbook workbook = mock(XillWorkbook.class);
-		workbookInput.storeMeta(XillWorkbook.class, workbook);
+		workbookInput.storeMeta(workbook);
 
 		//Mocking the sheet object
 		XillSheet sheet = mock(XillSheet.class);
