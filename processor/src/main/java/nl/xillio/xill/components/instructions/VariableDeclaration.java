@@ -121,7 +121,6 @@ public class VariableDeclaration extends Instruction {
 	}
 
 	public MetaExpression peek(int index) {
-		System.out.println(getName() + " >> " + index);
 		return valueStack.elementAt(index);
 	}
 }
