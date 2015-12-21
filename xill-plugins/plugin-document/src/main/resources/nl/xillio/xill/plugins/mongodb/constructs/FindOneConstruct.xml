@@ -34,6 +34,10 @@ Provides a wrapper around the MongoDB [db.collection.findOne](https://docs.mongo
     </examples>
     <references>
         <reference>connect</reference>
+        <reference>find</reference>
+        <reference>findOneAndDelete</reference>
+        <reference>findOneAndReplace</reference>
+        <reference>findOneAndUpdate</reference>
     </references>
     <tags>
         mongodb, query, search, fields, filter

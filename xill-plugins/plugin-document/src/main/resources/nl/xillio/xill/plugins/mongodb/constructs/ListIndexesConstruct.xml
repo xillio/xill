@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Provides a wrapper around the MongoDB [db.collection.dropIndexes](https://docs.mongodb.org/v3.0/reference/method/db.collection.dropIndexes/#db.collection.dropIndexes) method.
+Returns an array that holds a list of documents that identify and describe the existing indexes on the collection.
     </description>
     <examples>
         <example title="Usage">
-            <header>Drop all indexes on the documents collection.</header>
+            <header>List all indexes in the user collection.</header>
             <code>
                 use Mongo;
-                Mongo.connect("udm_default");
+                use System;
+                Mongo.connect("xillserver");
 
-                Mongo.dropIndexes();
+                var results = Mongo.listIndexes("user");
+
+                foreach (result in results) {
+                    System.print(result);
+                }
             </code>
         </example>
     </examples>
@@ -20,6 +25,6 @@ Provides a wrapper around the MongoDB [db.collection.dropIndexes](https://docs.m
         <reference>createIndex</reference>
     </references>
     <tags>
-        mongodb, drop, key, primary
+        mongodb, list, index
     </tags>
 </function>

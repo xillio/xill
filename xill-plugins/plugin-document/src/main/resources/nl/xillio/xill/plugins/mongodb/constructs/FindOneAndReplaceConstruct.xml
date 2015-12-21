@@ -52,6 +52,9 @@ The `options` parameter may contain the following options:
     <references>
         <reference>connect</reference>
         <reference>find</reference>
+        <reference>findOne</reference>
+        <reference>findOneAndDelete</reference>
+        <reference>findOneAndUpdate</reference>
     </references>
     <tags>
         mongodb, query, delete, filter

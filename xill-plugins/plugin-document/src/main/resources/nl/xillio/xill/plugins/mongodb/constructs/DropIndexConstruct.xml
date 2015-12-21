@@ -30,6 +30,7 @@ Provides a wrapper around the MongoDB [db.collection.dropIndex](https://docs.mon
     <references>
         <reference>connect</reference>
         <reference>dropIndexes</reference>
+        <reference>listIndexes</reference>
         <reference>createIndex</reference>
     </references>
     <tags>

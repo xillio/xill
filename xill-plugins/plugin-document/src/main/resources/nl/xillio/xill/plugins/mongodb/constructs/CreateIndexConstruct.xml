@@ -29,6 +29,7 @@ Provides a wrapper around the MongoDB [db.collection.createIndex](https://docs.m
         <reference>connect</reference>
         <reference>dropIndex</reference>
         <reference>dropIndexes</reference>
+        <reference>listIndexes</reference>
     </references>
     <tags>
         mongodb, index, unique, key, primary

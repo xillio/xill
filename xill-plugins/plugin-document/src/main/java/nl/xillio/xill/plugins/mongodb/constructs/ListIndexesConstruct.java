@@ -7,7 +7,7 @@ import nl.xillio.xill.api.construct.Argument;
 import org.bson.Document;
 
 /**
- * This construct represents the getIndexes method on MongoDB
+ * This construct represents the getIndexes method on MongoDB (implemented in the Java API as <code>listIndexes()</code>)
  *
  * @author Titus Nachbauer
  * @see <a href="https://docs.mongodb.org/v3.0/reference/method/db.collection.getindexes/#db.collection.getIndexes">db.collection.getIndexes</a>
@@ -16,7 +16,8 @@ public class ListIndexesConstruct extends AbstractCollectionApiConstruct {
 
     @Override
     protected Argument[] getApiArguments() {
-        return null;
+        return new Argument[]{
+        };
     }
 
     @Override

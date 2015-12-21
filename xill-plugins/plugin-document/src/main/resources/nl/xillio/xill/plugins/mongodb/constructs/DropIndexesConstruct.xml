@@ -16,7 +16,8 @@ Provides a wrapper around the MongoDB [db.collection.dropIndexes](https://docs.m
     </examples>
     <references>
         <reference>connect</reference>
-        <reference>dropIndexes</reference>
+        <reference>dropIndex</reference>
+        <reference>listIndexes</reference>
         <reference>createIndex</reference>
     </references>
     <tags>
