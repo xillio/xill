@@ -36,7 +36,11 @@ public class ForeachInstruction extends CompoundInstruction {
         instructionSet.setParentInstruction(this);
         this.list = list;
         this.valueVar = valueVar;
+        valueVar.setHostInstruction(instructionSet);
         this.keyVar = keyVar;
+        if(keyVar != null) {
+            keyVar.setHostInstruction(instructionSet);
+        }
     }
 
     /**
