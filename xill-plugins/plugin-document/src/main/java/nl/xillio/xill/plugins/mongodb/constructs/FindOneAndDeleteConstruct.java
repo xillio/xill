@@ -13,6 +13,8 @@ import org.bson.Document;
  * API of MongoDB and therefore not documented in the online javascript API documentation. It replaces the
  * <code>FindAndModify()</code> method.
  *
+ * <code>FindOneAndDelete()</code> in MongoDB deletes the first document returned by <code>query</code>.
+ *
  * @author Titus Nachbauer
  */
 public class FindOneAndDeleteConstruct extends AbstractCollectionApiConstruct {

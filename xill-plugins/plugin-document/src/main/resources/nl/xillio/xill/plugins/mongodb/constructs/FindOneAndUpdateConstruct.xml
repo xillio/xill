@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Finds a single document using the specified `query` and `options` and updates it with `update`. Also returns the document that was . If multiple documents match the query, then the first document in the result will be updated. In that case, if you do not specify the `sort` option, the selected document will be undefined.
+Finds a single document using the specified `query` and `options` and updates it with `update`. Also returns the document that was . If multiple documents match the query, then the first document in the result will be updated. In that case, if you do not specify the `sort` option, the selected document will be undefined. If no documents matched the `query` filter, then `null` will be returned.
 The `options` parameter may contain the following options:
 
 | Option     | Description |

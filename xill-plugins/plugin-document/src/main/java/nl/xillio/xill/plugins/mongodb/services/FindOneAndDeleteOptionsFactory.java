@@ -10,7 +10,9 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Provides a factory method that creates options objects for the {@link nl.xillio.xill.plugins.mongodb.constructs.FindOneAndDeleteConstruct FindOneAndDeleteConstruct}
  *
+ * @author Titus Nachbauer
  */
 public class FindOneAndDeleteOptionsFactory {
     private final MongoConverter converter;

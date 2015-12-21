@@ -13,6 +13,8 @@ import org.bson.Document;
  * API of MongoDB and therefore not documented in the online javascript API documentation. It replaces the
  * <code>FindAndModify()</code> method.
  *
+ * <code>FindOneAndUpdate()</code> in MongoDB updates the first document returned by a <code>query</code> with an <code>update</code> document.
+ *
  * @author Titus Nachbauer
  */
 public class FindOneAndUpdateConstruct extends AbstractCollectionApiConstruct {
