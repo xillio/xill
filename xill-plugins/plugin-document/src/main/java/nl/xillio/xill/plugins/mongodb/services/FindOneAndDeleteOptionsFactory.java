@@ -21,10 +21,10 @@ public class FindOneAndDeleteOptionsFactory {
     }
 
     /**
-     * Build IndexOptions from a MetaExpression.
+     * Build {@link FindOneAndDeleteOptions} from a MetaExpression.
      *
      * @param argument the expression. This must be an {@link ExpressionDataType#OBJECT}
-     * @return the IndexOptions
+     * @return the FindOneAndDeleteOptions
      */
     public FindOneAndDeleteOptions build(MetaExpression argument) {
         if (argument.getType() != ExpressionDataType.OBJECT) {
@@ -45,7 +45,7 @@ public class FindOneAndDeleteOptionsFactory {
             case "projection":
                 options.projection(converter.parse(value));
                 break;
-            case "sort":
+            case "sortBy":
                 options.sort(converter.parse(value));
                 break;
             case "maxTime":

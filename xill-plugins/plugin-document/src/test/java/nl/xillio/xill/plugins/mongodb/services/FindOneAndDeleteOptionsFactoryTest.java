@@ -31,17 +31,15 @@ public class FindOneAndDeleteOptionsFactoryTest extends TestUtils {
         assertNull(options.getSort());
         LinkedHashMap<String, MetaExpression> sort = new LinkedHashMap<>();
         sort.put("target.timestamp", fromValue(-1));
-        projection.put("target", TRUE);
-        object.put("sort", fromValue(projection));
+        object.put("sortBy", fromValue(sort));
         options = findOneAndDeleteOptionsFactory.build(fromValue(object));
         assertNotNull(options.getSort());
-        assertEquals(MetaExpression.parseObject(options.getSort()), object.get("sort"));
+        assertEquals(MetaExpression.parseObject(options.getSort()), object.get("sortBy"));
 
         assertEquals(options.getMaxTime(TimeUnit.MILLISECONDS), 0);
         object.put("maxTime", fromValue(2000));
         options = findOneAndDeleteOptionsFactory.build(fromValue(object));
         assertNotNull(options.getMaxTime(TimeUnit.MILLISECONDS));
         assertEquals(MetaExpression.parseObject(options.getMaxTime(TimeUnit.MILLISECONDS)), object.get("maxTime"));
-
     }
 }
