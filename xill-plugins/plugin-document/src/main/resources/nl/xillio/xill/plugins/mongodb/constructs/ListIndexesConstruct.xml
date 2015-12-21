@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Provides a wrapper around the MongoDB [db.collection.dropIndexes](https://docs.mongodb.org/v3.0/reference/method/db.collection.dropIndexes/#db.collection.dropIndexes) method.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Drop all indexes on the documents collection.</header>
+            <code>
+                use Mongo;
+                Mongo.connect("udm_default");
+
+                Mongo.dropIndexes();
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>connect</reference>
+        <reference>dropIndexes</reference>
+        <reference>createIndex</reference>
+    </references>
+    <tags>
+        mongodb, drop, key, primary
+    </tags>
+</function>
