@@ -46,9 +46,9 @@ public class OracleConnectConstructTest extends TestUtils {
 		when(options.getValue()).thenReturn(new LinkedHashMap<>());
 
 		MetaExpression[] args = {
+				mockExpression(ATOMIC, false, 0, "database"),
 				mockExpression(ATOMIC, false, 0, "host"),
 				mockExpression(ATOMIC, false, 1531, "port"),
-				mockExpression(ATOMIC, false, 0, "database"),
 				mockExpression(ATOMIC, true, 0, "useSID"),
 				mockExpression(ATOMIC, false, 0, "user"),
 				mockExpression(ATOMIC, false, 0, "pass"),
@@ -87,9 +87,9 @@ public class OracleConnectConstructTest extends TestUtils {
 		when(options.getValue()).thenReturn(new LinkedHashMap<>());
 
 		MetaExpression[] args = {
+				mockExpression(ATOMIC, false, 0, "database"),
 				mockExpression(ATOMIC, false, 0, "host"),
 				mockExpression(ATOMIC, false, 1531, "port"),
-				mockExpression(ATOMIC, false, 0, "database"),
 				mockExpression(ATOMIC, false, 0, "useSID"),
 				mockExpression(ATOMIC, false, 0, "user"),
 				mockExpression(ATOMIC, false, 0, "pass"),
