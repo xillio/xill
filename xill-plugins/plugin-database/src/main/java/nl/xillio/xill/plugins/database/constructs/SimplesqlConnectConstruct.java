@@ -17,33 +17,36 @@ import java.util.Map;
  */
 public abstract class SimplesqlConnectConstruct extends BaseDatabaseConstruct {
 
-    private String databaseName;
+    private final String databaseName;
+    private final int defaultPort;
 
     /**
      * The constructor for the {@link SimplesqlConnectConstruct}.
      *
      * @param databaseName The name of the database.
      */
-    public SimplesqlConnectConstruct(String databaseName) {
+    public SimplesqlConnectConstruct(String databaseName, int defaultPort) {
         this.databaseName = databaseName;
+        this.defaultPort = defaultPort;
     }
 
     @Override
     public ConstructProcessor doPrepareProcess(ConstructContext context) {
         Argument[] args =
-                {new Argument("host", ATOMIC),
-                        new Argument("port", fromValue(3306), ATOMIC),
+                {
                         new Argument("database", ATOMIC),
+                        new Argument("host", fromValue("localhost"), ATOMIC),
+                        new Argument("port", fromValue(defaultPort), ATOMIC),
                         new Argument("user", NULL, ATOMIC),
                         new Argument("pass", NULL, ATOMIC),
-                        new Argument("options", new ObjectExpression(new LinkedHashMap<>()), OBJECT)};
+                        new Argument("options", emptyObject(), OBJECT)};
         return new ConstructProcessor(a -> process(a, databaseName, factory, context.getRootRobot()), args);
     }
 
     @SuppressWarnings("unchecked")
     static MetaExpression process(MetaExpression[] args, String databaseName, DatabaseServiceFactory factory, RobotID robotID) {
         // Re-order the arguments and call the generic connect construct
-        String database = String.format("%s:%d/%s", args[0].getStringValue(), args[1].getNumberValue().intValue(), args[2].getStringValue());
+        String database = String.format("%s:%d/%s", args[1].getStringValue(), args[2].getNumberValue().intValue(), args[0].getStringValue());
 
         String user = args[3].isNull() ? null : args[3].getStringValue();
         String pass = args[4].isNull() ? null : args[4].getStringValue();

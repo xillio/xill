@@ -12,7 +12,7 @@ public class MysqlConnectConstruct extends SimplesqlConnectConstruct {
 	 * The constructor for the {@link MysqlConnectConstruct}.
 	 */
 	public MysqlConnectConstruct() {
-		super(Database.MYSQL.getName());
+		super(Database.MYSQL.getName(), 3306);
 	}
 
 }
