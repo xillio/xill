@@ -76,9 +76,14 @@ public class DebugPane extends AnchorPane implements EventHandler<KeyEvent>, Rob
 	 * @param tab currently active RobotTab
 	 */
 	private void initializeChildren(final RobotTab tab) {
-		variablepane.initialize(tab);
-		previewpane.initialize(tab);
 		instructionstackpane.initialize(tab);
+		instructionstackpane.setDebugPane(this);
+		variablepane.initialize(tab);
+		variablepane.initialize(instructionstackpane);
+		previewpane.initialize(tab);
 	}
 
+	public VariablePane getVariablepane() {
+		return variablepane;
+	}
 }

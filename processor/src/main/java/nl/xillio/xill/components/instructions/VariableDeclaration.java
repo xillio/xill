@@ -46,10 +46,13 @@ public class VariableDeclaration extends Instruction {
 	}
 
 	/**
-	 * @return the expression of the variable
+	 * @return the expression of the variable or null
 	 */
 	public MetaExpression getVariable() {
-		return valueStack.peek();
+		if(valueStack.size() > 0) {
+			return valueStack.peek();
+		}
+		return null;
 	}
 
 	/**
@@ -113,4 +116,12 @@ public class VariableDeclaration extends Instruction {
 		return name;
 	}
 
+	public boolean hasValue() {
+		return !valueStack.empty();
+	}
+
+	public MetaExpression peek(int index) {
+		System.out.println(getName() + " >> " + index);
+		return valueStack.elementAt(index);
+	}
 }

@@ -75,7 +75,7 @@ public class PreviewPane extends AnchorPane implements RobotTabComponent {
         apnPreviewSearchBar.reset(false);
         previewSearch.clearSearch();
 
-        MetaExpression value = debugger.getVariableValue(observableVariable.getSource());
+        MetaExpression value = observableVariable.getExpression();
 
         apnPreviewPane.getChildren().clear();
 
