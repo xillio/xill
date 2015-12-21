@@ -3,6 +3,7 @@ package nl.xillio.xill.plugins.string.services.string;
 import com.google.inject.ImplementedBy;
 import nl.xillio.xill.plugins.string.StringXillPlugin;
 
+import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.IllegalFormatException;
 import java.util.List;
@@ -199,5 +200,4 @@ public interface StringUtilityService {
      * @return Returns the wrapped text.
      */
     String wrap(String text, int width, boolean wrapLongWords);
-
 }
