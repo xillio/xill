@@ -173,6 +173,11 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         final File destDir = pasteLoc.isDirectory() ? pasteLoc : pasteLoc.getParentFile();
 
         for (File oldFile : files) {
+            // Check if the source file exists. If not is is probably already copied by moving a parent folder.
+            if (!oldFile.exists()) {
+                continue;
+            }
+
             // Check if the file already exists. (This does not throw an IOException in FileUtils, so we need to check it here.)
             File destFile = new File(destDir, oldFile.getName());
             if (destFile.exists()) {
