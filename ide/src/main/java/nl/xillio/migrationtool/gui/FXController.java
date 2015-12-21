@@ -295,11 +295,7 @@ public class FXController implements Initializable, EventHandler<Event> {
         // Select project path
         File projectfile;
         if (projectpane.getCurrentProject() != null) {
-            TreeItem<Pair<File, String>> proj = projectpane.getCurrentProject();
-            projectfile = proj.getValue().getKey();
-
-            // If the folder to create the new file in does not exist, create it.
-            projectpane.makeDirIfNotExists(proj);
+            projectfile = projectpane.getCurrentProject().getValue().getKey();
         } else {
             projectfile = new File(System.getProperty("user.home"));
         }
@@ -307,7 +303,11 @@ public class FXController implements Initializable, EventHandler<Event> {
         // Select initial directory
         File initialFolder;
         if (projectpane.getCurrentItem() != null) {
-            initialFolder = projectpane.getCurrentItem().getValue().getKey();
+            TreeItem<Pair<File, String>> curr = projectpane.getCurrentItem();
+            initialFolder = curr.getValue().getKey();
+
+            // If the folder to create the new file in does not exist, create it.
+            projectpane.makeDirIfNotExists(curr);
         } else {
             initialFolder = projectfile;
         }

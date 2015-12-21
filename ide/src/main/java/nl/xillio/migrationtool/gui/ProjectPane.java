@@ -589,7 +589,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         if (!dir.exists()) {
             try {
                 // Create the directory.
-                org.apache.commons.io.FileUtils.forceMkdir(dir);
+                FileUtils.forceMkdir(dir);
             } catch (IOException e) {
                 LOGGER.error(e.getMessage(), e);
                 // Show an error.
@@ -600,7 +600,8 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 
             // Re-add the folder listener.
             try {
-                watcher.addFolderListener(this, Paths.get(dir.getPath()));
+
+                watcher.addFolderListener(this, Paths.get(getProject(item).getValue().getKey().getPath()));
             } catch (IOException e) {
                 LOGGER.error(e.getMessage(), e);
             }
