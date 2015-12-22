@@ -498,11 +498,25 @@ public abstract class MetaExpression implements Expression, Processable {
      * @throws IllegalArgumentException when the value cannot be parsed
      */
     public static MetaExpression parseObject(final Object value) throws IllegalArgumentException {
-        return parseObject(value, new IdentityHashMap<>());
+        return parseObject(value, new IdentityHashMap<>(), new MetaExpressionDeserializer.Identity());
+    }
+
+
+
+    /**
+     * Attempt to parse an object into a MetaExpression
+     *
+     * @param value the object to parse
+     * @param metaExpressionDeserializer a specialized deserializer for plugin specific MetaExpressions
+     * @return a {@link MetaExpression}, not null
+     * @throws IllegalArgumentException when the value cannot be parsed
+     */
+    public static MetaExpression parseObject(final Object value, MetaExpressionDeserializer metaExpressionDeserializer) throws IllegalArgumentException {
+        return parseObject(value, new IdentityHashMap<>(), metaExpressionDeserializer);
     }
 
     @SuppressWarnings("unchecked")
-    private static MetaExpression parseObject(final Object root, final Map<Object, MetaExpression> cache) throws IllegalArgumentException {
+    private static MetaExpression parseObject(final Object root, final Map<Object, MetaExpression> cache, final MetaExpressionDeserializer metaExpressionDeserializer) throws IllegalArgumentException {
         // Check the cache (Don't use key because we need REFERENCE equality not CONTENT)
         for (Map.Entry<Object, MetaExpression> entry : cache.entrySet()) {
             if (entry.getKey() == root) {
@@ -523,7 +537,7 @@ public abstract class MetaExpression implements Expression, Processable {
 
             // Parse children
             for (Object child : (List<?>) root) {
-                MetaExpression current = parseObject(child, cache);
+                MetaExpression current = parseObject(child, cache, metaExpressionDeserializer);
                 values.add(current);
                 current.registerReference();
             }
@@ -542,7 +556,7 @@ public abstract class MetaExpression implements Expression, Processable {
 
             // Parse children
             for (Entry<?, ?> child : ((Map<?, ?>) root).entrySet()) {
-                MetaExpression current = parseObject(child.getValue(), cache);
+                MetaExpression current = parseObject(child.getValue(), cache, metaExpressionDeserializer);
                 values.put(child.getKey().toString(), current);
                 current.registerReference();
             }
@@ -575,6 +589,6 @@ public abstract class MetaExpression implements Expression, Processable {
             return result;
         }
 
-        throw new IllegalArgumentException("The class type " + root.getClass().getName() + " has not been implemented by parseObject");
+        return metaExpressionDeserializer.parseObject(root);
     }
 }
