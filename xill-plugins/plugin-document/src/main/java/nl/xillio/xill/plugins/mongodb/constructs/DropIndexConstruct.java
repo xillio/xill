@@ -3,6 +3,7 @@ package nl.xillio.xill.plugins.mongodb.constructs;
 import com.mongodb.client.MongoCollection;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
+import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import org.bson.Document;
 
@@ -23,7 +24,7 @@ public class DropIndexConstruct extends AbstractCollectionApiConstruct {
     }
 
     @Override
-    MetaExpression process(MetaExpression[] arguments, MongoCollection<Document> collection) {
+    MetaExpression process(MetaExpression[] arguments, MongoCollection<Document> collection, ConstructContext context) {
 
         switch (arguments[0].getType()) {
             case ATOMIC:

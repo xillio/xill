@@ -4,6 +4,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoIterable;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
+import nl.xillio.xill.api.construct.ConstructContext;
 import org.bson.Document;
 
 /**
@@ -21,7 +22,7 @@ public class ListIndexesConstruct extends AbstractCollectionApiConstruct {
     }
 
     @Override
-    MetaExpression process(MetaExpression[] arguments, MongoCollection<Document> collection) {
+    MetaExpression process(MetaExpression[] arguments, MongoCollection<Document> collection, ConstructContext context) {
 
         MongoIterable<Document> result = collection.listIndexes();
 

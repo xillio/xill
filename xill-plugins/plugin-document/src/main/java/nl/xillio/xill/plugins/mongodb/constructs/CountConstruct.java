@@ -4,6 +4,7 @@ package nl.xillio.xill.plugins.mongodb.constructs;
 import com.mongodb.client.MongoCollection;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
+import nl.xillio.xill.api.construct.ConstructContext;
 import org.bson.Document;
 
 /**
@@ -21,7 +22,7 @@ public class CountConstruct extends AbstractCollectionApiConstruct {
     }
 
     @Override
-    MetaExpression process(MetaExpression[] arguments, MongoCollection<Document> collection) {
+    MetaExpression process(MetaExpression[] arguments, MongoCollection<Document> collection, ConstructContext context) {
         Document query = toDocument(arguments[0]);
 
         long count = collection.count(query);

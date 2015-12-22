@@ -5,6 +5,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.FindOneAndDeleteOptions;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
+import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.plugins.mongodb.services.FindOneAndDeleteOptionsFactory;
 import org.bson.Document;
 
@@ -34,7 +35,7 @@ public class FindOneAndDeleteConstruct extends AbstractCollectionApiConstruct {
     }
 
     @Override
-    MetaExpression process(MetaExpression[] arguments, MongoCollection<Document> collection) {
+    MetaExpression process(MetaExpression[] arguments, MongoCollection<Document> collection, ConstructContext context) {
         Document filter = toDocument(arguments[0]);
 
         FindOneAndDeleteOptions options = findOneAndDeleteOptionsFactory.build(arguments[1]);

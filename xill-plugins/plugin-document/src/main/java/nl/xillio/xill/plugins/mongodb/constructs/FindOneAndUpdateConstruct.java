@@ -5,6 +5,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
+import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.plugins.mongodb.services.FindOneAndUpdateOptionsFactory;
 import org.bson.Document;
 
@@ -35,7 +36,7 @@ public class FindOneAndUpdateConstruct extends AbstractCollectionApiConstruct {
     }
 
     @Override
-    MetaExpression process(MetaExpression[] arguments, MongoCollection<Document> collection) {
+    MetaExpression process(MetaExpression[] arguments, MongoCollection<Document> collection, ConstructContext context) {
         Document filter = toDocument(arguments[0]);
         Document update = toDocument(arguments[1]);
         FindOneAndUpdateOptions options = findOneAndUpdateOptionsFactory.build(arguments[2]);

@@ -70,7 +70,7 @@ abstract class AbstractCollectionApiConstruct extends Construct {
         MongoCollection<Document> collection = connection.getDatabase().getCollection(collectionName);
 
         try {
-            return process(customArguments, collection);
+            return process(customArguments, collection, context);
         } catch (MongoQueryException e) {
             throw new RobotRuntimeException("Could not parse query: " + e.getErrorMessage(), e);
         } catch (MongoSocketOpenException e) {
@@ -80,7 +80,7 @@ abstract class AbstractCollectionApiConstruct extends Construct {
 
     protected abstract Argument[] getApiArguments();
 
-    abstract MetaExpression process(MetaExpression[] arguments, MongoCollection<Document> collection);
+    abstract MetaExpression process(MetaExpression[] arguments, MongoCollection<Document> collection, ConstructContext context);
 
     private Connection getConnection(ConstructContext context, MetaExpression connectionExpression) {
         if (connectionExpression.isNull()) {

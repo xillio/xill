@@ -4,6 +4,7 @@ import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.MongoCollection;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
+import nl.xillio.xill.api.construct.ConstructContext;
 import org.bson.BsonValue;
 import org.bson.Document;
 
@@ -24,7 +25,7 @@ public class DistinctConstruct extends AbstractCollectionApiConstruct {
     }
 
     @Override
-    MetaExpression process(MetaExpression[] arguments, MongoCollection<Document> collection) {
+    MetaExpression process(MetaExpression[] arguments, MongoCollection<Document> collection, ConstructContext context) {
         String field = arguments[0].getStringValue();
         Document query = toDocument(arguments[1]);
 

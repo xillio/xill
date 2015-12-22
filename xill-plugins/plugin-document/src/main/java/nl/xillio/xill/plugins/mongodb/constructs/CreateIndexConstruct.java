@@ -6,6 +6,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.IndexOptions;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
+import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.plugins.mongodb.services.IndexOptionsFactory;
 import org.bson.Document;
 
@@ -33,7 +34,7 @@ public class CreateIndexConstruct extends AbstractCollectionApiConstruct {
     }
 
     @Override
-    MetaExpression process(MetaExpression[] arguments, MongoCollection<Document> collection) {
+    MetaExpression process(MetaExpression[] arguments, MongoCollection<Document> collection, ConstructContext context) {
         Document keys = toDocument(arguments[0]);
 
         IndexOptions options = indexOptionsFactory.build(arguments[1]);
