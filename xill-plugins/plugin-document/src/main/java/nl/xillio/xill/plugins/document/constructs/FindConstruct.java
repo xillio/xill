@@ -54,7 +54,7 @@ public class FindConstruct extends Construct {
 
         // Build the result
         MetaExpression result = fromValue("Document.find(" + filter + ")");
-        result.storeMeta(MetaExpressionIterator.class, iterator);
+        result.storeMeta(iterator);
         return result;
     }
 
