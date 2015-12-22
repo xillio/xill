@@ -83,7 +83,7 @@ public class BsonValueConverter {
     private MetaExpression parseDate(Instant instant) {
         Date date = dateFactory.from(instant);
         MetaExpression result = fromValue(date.toString());
-        result.storeMeta(Date.class, date);
+        result.storeMeta(date);
         return result;
     }
 }

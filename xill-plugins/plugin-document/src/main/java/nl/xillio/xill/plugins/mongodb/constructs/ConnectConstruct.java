@@ -51,7 +51,7 @@ public class ConnectConstruct extends Construct {
         // Create/Get the connection
         MetaExpression result = fromValue(info.toString());
         Connection connection = connect(context, info);
-        result.storeMeta(Connection.class, connection);
+        result.storeMeta(connection);
 
         return result;
     }

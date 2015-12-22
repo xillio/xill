@@ -120,7 +120,7 @@ abstract class AbstractCollectionApiConstruct extends Construct {
     protected MetaExpression fromValue(MongoIterable<Document> source, MongoCollection<Document> collection, MetaExpression... arguments) {
 
         MetaExpression result = fromValue(String.format("db.%s.%s(%s)", collection.getNamespace().getCollectionName(), getName(), StringUtils.join(arguments, ",")));
-        result.storeMeta(MetaExpressionIterator.class, new MetaExpressionIterator<>(
+        result.storeMeta(new MetaExpressionIterator<>(
                 source.iterator(),
                 this::toExpression
         ));
@@ -138,7 +138,7 @@ abstract class AbstractCollectionApiConstruct extends Construct {
     protected MetaExpression fromValueRaw(MongoIterable<BsonValue> source, MongoCollection<Document> collection, MetaExpression... arguments) {
 
         MetaExpression result = fromValue(String.format("db.%s.%s(%s)", collection.getNamespace().getCollectionName(), getName(), StringUtils.join(arguments, ",")));
-        result.storeMeta(MetaExpressionIterator.class, new MetaExpressionIterator<>(
+        result.storeMeta(new MetaExpressionIterator<>(
                 source.iterator(),
                 bsonValueConverter::convert
         ));
