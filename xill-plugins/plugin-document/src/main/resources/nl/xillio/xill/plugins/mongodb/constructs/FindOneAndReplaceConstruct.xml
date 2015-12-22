@@ -57,6 +57,6 @@ The `options` parameter may contain the following options:
         <reference>findOneAndUpdate</reference>
     </references>
     <tags>
-        mongodb, query, delete, filter
+        mongodb, query, replace, filter
     </tags>
 </function>

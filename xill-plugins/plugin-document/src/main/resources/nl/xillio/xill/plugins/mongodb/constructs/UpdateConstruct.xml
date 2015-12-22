@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Modifies existing documents in a collection. The method can modify specific fields of an existing document or documents or replace an existing document entirely, depending on the update parameter. Returns the number of modified documents if any. Will return 0 when no documents were modified or a Mongo server prior to version 2.6 is used. A robot exception will be generated if the update failed.
+The `options` parameter may contain the following option:
+
+| Option     | Description |
+| ---------- | ----------- |
+| `upsert`   | If set to true, creates a new document if no document matches the query, or if documents match the query, performs an update. To avoid multiple upserts, ensure that the query fields are uniquely indexed. The default is false.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Update all documents in a collection.</header>
+            <code>
+                use Mongo;
+                use System;
+                Mongo.connect("draft-2");
+
+                //update all documents in collection asset
+                var result = Mongo.update(
+                "asset",
+                {},
+                { "$set" :
+                {"metaData.meta2":"seasonal greetings"}
+                },
+                {"upsert":false}
+                );
+
+                System.print ("Updated " :: result :: " documents.");
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>connect</reference>
+        <reference>findOne</reference>
+        <reference>findOneAndDelete</reference>
+        <reference>findOneAndReplace</reference>
+        <reference>findOneAndUpdate</reference>
+    </references>
+    <tags>
+        mongodb, query, update, filter
+    </tags>
+</function>

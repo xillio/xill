@@ -24,9 +24,6 @@ The `options` parameter may contain the following options:
                 //return only the _id, contenttype and target properties
                 var projection = {"_id": true, "contenttype": true,  "target":true};
 
-                //return the document after it was updated
-                var options = {"returnNew":true};
-
                 //sort by timestamp (oldest first)
                 var sort = {"target.timestamp": 1};
 
@@ -50,12 +47,13 @@ The `options` parameter may contain the following options:
         </example>
     </examples>
     <references>
+        <reference>update</reference>
         <reference>connect</reference>
         <reference>find</reference>
         <reference>findOneAndDelete</reference>
         <reference>findOneAndReplace</reference>
     </references>
     <tags>
-        mongodb, query, delete, filter
+        mongodb, query, update, filter
     </tags>
 </function>

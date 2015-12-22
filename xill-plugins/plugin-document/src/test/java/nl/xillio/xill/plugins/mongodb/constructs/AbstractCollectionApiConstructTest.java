@@ -54,7 +54,7 @@ public class AbstractCollectionApiConstructTest extends TestUtils {
         }
 
         @Override
-        MetaExpression process(MetaExpression[] arguments, MongoCollection<Document> collection) {
+        MetaExpression process(MetaExpression[] arguments, MongoCollection<Document> collection, ConstructContext context) {
             Argument[] args = getApiArguments();
 
             assertEquals(args.length, arguments.length);
