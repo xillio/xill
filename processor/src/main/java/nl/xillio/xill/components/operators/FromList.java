@@ -8,8 +8,6 @@ import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -34,18 +32,23 @@ public class FromList implements Processable {
 
         MetaExpression listMeta = this.list.process(debugger).get();
         MetaExpression indexMeta = this.index.process(debugger).get();
-        try {
-            listMeta.registerReference();
-            indexMeta.registerReference();
-            return process(listMeta, indexMeta, debugger);
-        } finally {
-            listMeta.releaseReference();
-            indexMeta.releaseReference();
-        }
+        listMeta.registerReference();
+        indexMeta.registerReference();
+
+        InstructionFlow<MetaExpression> result = process(listMeta, indexMeta, debugger);
+
+        result.get().preventDisposal();
+
+        listMeta.releaseReference();
+        indexMeta.releaseReference();
+
+        result.get().allowDisposal();
+
+        return result;
     }
 
     @SuppressWarnings({
-        "unchecked"
+            "unchecked"
     })
     private InstructionFlow<MetaExpression> process(MetaExpression listMeta, MetaExpression indexMeta, Debugger debugger) {
 

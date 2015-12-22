@@ -5,9 +5,9 @@ Connect to an Oracle database. Returns a connection object.
 
 | Parameter  | Description |
 | ---------- | ----------- |
+| `database` | The database parameter wants the name of the database you want to connect to. |
 | `host`     | The host parameter wants the name of the host. |
 | `port`     | The default port is 3306 but can be set to a different port is necessary. |
-| `database` | The database parameter wants the name of the database you want to connect to. |
 | `user`     | The user parameter is for the username. This is optional.
 | `pass`     | The pass parameter is for the password. This is optional.
 | `options`  | The options parameter is optional. It is used for setting Oracle specific options. |
@@ -20,7 +20,7 @@ More information on the options parameter can be found on [http://docs.oracle.co
       </header>
       <code>
 	
-	var connection = Database.oracleConnect("localhost",3306,"testdb",false,"user","pass");
+	var connection = Database.oracleConnect("testdb","localhost",3306,false,"user","pass");
 	
       </code>
     </example> 

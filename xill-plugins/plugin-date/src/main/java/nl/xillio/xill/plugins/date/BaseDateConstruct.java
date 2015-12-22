@@ -52,7 +52,7 @@ public abstract class BaseDateConstruct extends Construct {
 	 */
 	protected static MetaExpression fromValue(final Date date) {
 		MetaExpression value = fromValue(date.toString());
-		value.storeMeta(Date.class, date);
+		value.storeMeta(date);
 		return value;
 	}
 

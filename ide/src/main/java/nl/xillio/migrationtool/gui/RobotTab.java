@@ -201,7 +201,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
                 editorPane.setLastSavedCode(code);
                 editorPane.getEditor().setCode(code);
             } catch (IOException e) {
-                LOGGER.info("Could not open " + document.getAbsolutePath());
+                LOGGER.info("Could not open " + document.getAbsolutePath(), e);
             }
         }
 
@@ -319,6 +319,8 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
         }
 
         loadProcessor(document, projectPath);
+        currentRobot = getProcessor().getRobotID();
+        setText(getName());
 
         return true;
     }

@@ -30,7 +30,7 @@ public class RowCountConstructTest {
 		when(sheet.getRowLength()).thenReturn(11);
 		LinkedHashMap<String, MetaExpression> sheetObject = new LinkedHashMap<>();
 		MetaExpression sheetInput = fromValue(sheetObject);
-		sheetInput.storeMeta(XillSheet.class, sheet);
+		sheetInput.storeMeta(sheet);
 		MetaExpression result = RowCountConstruct.process(sheetInput);
 		assertEquals(11, result.getNumberValue().intValue());
 	}
@@ -44,7 +44,7 @@ public class RowCountConstructTest {
 	public void testProcessThrowsException() throws Exception {
 		LinkedHashMap<String, MetaExpression> sheetObject = new LinkedHashMap<>();
 		MetaExpression sheetInput = fromValue(sheetObject);
-		sheetInput.storeMeta(XillSheet.class, null);
+		sheetInput.storeMeta(null);
 		RowCountConstruct.process(fromValue(sheetObject));
 	}
 }

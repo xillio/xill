@@ -30,7 +30,7 @@ public class ColumnCountConstructTest {
 		when(sheet.getColumnLength()).thenReturn(11);
 		LinkedHashMap<String, MetaExpression> sheetObject = new LinkedHashMap<>();
 		MetaExpression sheetInput = fromValue(sheetObject);
-		sheetInput.storeMeta(XillSheet.class, sheet);
+		sheetInput.storeMeta(sheet);
 		MetaExpression result = ColumnCountConstruct.process(sheetInput);
 		assertEquals(11, result.getNumberValue().intValue());
 	}
@@ -44,7 +44,7 @@ public class ColumnCountConstructTest {
 	public void testProcessThrowsException() throws Exception {
 		LinkedHashMap<String, MetaExpression> sheetObject = new LinkedHashMap<>();
 		MetaExpression sheetInput = fromValue(sheetObject);
-		sheetInput.storeMeta(XillSheet.class, null);
+		sheetInput.storeMeta(null);
 		ColumnCountConstruct.process(fromValue(sheetObject));
 	}
 }

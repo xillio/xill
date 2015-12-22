@@ -20,9 +20,9 @@ public class OracleConnectConstruct extends BaseDatabaseConstruct {
 	public ConstructProcessor doPrepareProcess(ConstructContext context) {
 		Argument[] args =
 		{
-				new Argument("host", ATOMIC),
-				new Argument("port", fromValue(1521), ATOMIC),
 				new Argument("database", ATOMIC),
+				new Argument("host", fromValue("localhost"), ATOMIC),
+				new Argument("port", fromValue(1521), ATOMIC),
 				new Argument("useSID", fromValue(true), ATOMIC),
 				new Argument("user", NULL, ATOMIC),
 				new Argument("pass", NULL, ATOMIC),
@@ -33,13 +33,14 @@ public class OracleConnectConstruct extends BaseDatabaseConstruct {
 	static MetaExpression process(MetaExpression[] args, DatabaseServiceFactory factory, final RobotID robotID) {
 		// Re-order the arguments and call the generic connect construct
 		boolean useSID = args[3].getBooleanValue();
-		String formatString = null;
+		String formatString;
 		// Connect URL format differs depending on the use of SID or Service Name for a connection
-		if (useSID)
+		if (useSID) {
 			formatString = "%s:%d:%s";
-		else
+		} else {
 			formatString = "%s:%d/%s";
-		String database = String.format(formatString, args[0].getStringValue(), args[1].getNumberValue().intValue(), args[2].getStringValue());
+		}
+		String database = String.format(formatString, args[1].getStringValue(), args[2].getNumberValue().intValue(), args[0].getStringValue());
 		MetaExpression[] newArgs = {fromValue(database), fromValue(Database.ORACLE.getName()), args[4], args[5], args[6]};
 		return ConnectConstruct.process(newArgs, factory, robotID);
 

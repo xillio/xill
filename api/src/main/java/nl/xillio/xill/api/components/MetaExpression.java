@@ -83,35 +83,29 @@ public abstract class MetaExpression implements Expression, Processable {
     /**
      * Store a value in the {@link MetadataExpressionPool} and default the key to the class of the object as returned by {@link Object#getClass()}
      *
-     * @param <T>    the type key to store the object as
      * @param object The object to store
-     * @return The previous stored value in the pool or null if no value was
-     * stored.
      * @throws IllegalStateException if this expression has been closed
      */
     @SuppressWarnings("unchecked")
-    public <T extends MetadataExpression> T storeMeta(final T object) {
-        return storeMeta((Class<T>) object.getClass(), object);
-    }
-
-    /**
-     * Store a value in the {@link MetadataExpressionPool}
-     *
-     * @param <T>    the type key to store the object as
-     * @param clazz  The object type to store
-     * @param object the object to store
-     * @return The previous stored value in the pool or null if no value was
-     * stored.
-     * @throws IllegalStateException if this expression has been closed
-     */
-    public <T extends MetadataExpression> T storeMeta(final Class<T> clazz, final T object) {
+    public void storeMeta(final MetadataExpression object) {
         if (isClosed()) {
             throw new IllegalStateException("This expression has already been closed.");
         }
         if (metadataPool == null) {
             metadataPool = new MetadataExpressionPool<>();
         }
-        return metadataPool.put(clazz, object);
+
+        metadataPool.put(object);
+    }
+
+    /**
+     * Check if this expression has a class in its metadata.
+     *
+     * @param clazz the class to check
+     * @return true if and only if a class has been found that implements or extends the class to check
+     */
+    public boolean hasMeta(Class<? extends MetadataExpression> clazz) {
+        return metadataPool != null && metadataPool.hasValue(clazz);
     }
 
     /**
@@ -253,64 +247,6 @@ public abstract class MetaExpression implements Expression, Processable {
      */
     public String toString(final JsonParser jsonParser) throws JsonException {
         return jsonParser.toJson((Object)extractValue(this));
-    }
-
-    /**
-     * Remove all circular references to prepare for serialisation
-     *
-     * @param metaExpression      the expression to remove references from
-     * @param currentlyProcessing the currently processing expressions
-     * @param replacement         The replacement for circular references
-     * @return a copy of the passed expression without any circular references
-     */
-    @SuppressWarnings("unchecked")
-    private static MetaExpression removeCircularReference(final MetaExpression metaExpression,
-                                                          final List<MetaExpression> currentlyProcessing, final MetaExpression replacement) {
-        MetaExpression result;
-        currentlyProcessing.add(metaExpression);
-
-        switch (metaExpression.getType()) {
-            case LIST:
-                List<MetaExpression> resultListValue = new ArrayList<>();
-
-                for (MetaExpression child : (List<MetaExpression>) metaExpression.getValue()) {
-                    if (currentlyProcessing.stream().anyMatch(metaExp -> metaExp == child)) {
-                        // Circular reference
-                        resultListValue.add(replacement);
-                    } else {
-                        // No Circular reference
-                        resultListValue.add(removeCircularReference(child, currentlyProcessing, replacement));
-                    }
-                }
-
-                result = ExpressionBuilderHelper.fromValue(resultListValue);
-
-                break;
-            case OBJECT:
-                LinkedHashMap<String, MetaExpression> resultMapValue = new LinkedHashMap<>();
-
-                for (Map.Entry<String, MetaExpression> pair : ((Map<String, MetaExpression>) metaExpression.getValue())
-                        .entrySet()) {
-
-                    if (currentlyProcessing.stream().anyMatch(metaExp -> metaExp == pair.getValue())) {
-                        // Circular reference
-                        resultMapValue.put(pair.getKey(), replacement);
-                    } else {
-                        resultMapValue.put(pair.getKey(), removeCircularReference(pair.getValue(), currentlyProcessing, replacement));
-                    }
-                }
-                result = ExpressionBuilderHelper.fromValue(resultMapValue);
-                break;
-
-            case ATOMIC:
-                result = new AtomicExpression((Expression) metaExpression.getValue());
-                break;
-            default:
-                throw new NotImplementedException("This type has not been implemented.");
-        }
-
-        currentlyProcessing.remove(metaExpression);
-        return result;
     }
 
     @Override
@@ -635,7 +571,7 @@ public abstract class MetaExpression implements Expression, Processable {
         if (root instanceof java.util.Date) {
             Date date = injector.getInstance(DateFactory.class).from(((java.util.Date) root).toInstant());
             MetaExpression result = ExpressionBuilderHelper.fromValue(date.toString());
-            result.storeMeta(Date.class, date);
+            result.storeMeta(date);
             return result;
         }
 

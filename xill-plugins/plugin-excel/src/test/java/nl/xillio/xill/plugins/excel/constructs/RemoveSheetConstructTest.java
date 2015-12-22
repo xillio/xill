@@ -30,7 +30,7 @@ public class RemoveSheetConstructTest {
 	private MetaExpression createWorkbook() {
 		MetaExpression workbookInput = fromValue("Workbook");
 		XillWorkbook workbook = mock(XillWorkbook.class);
-		workbookInput.storeMeta(XillWorkbook.class, workbook);
+		workbookInput.storeMeta(workbook);
 		return workbookInput;
 	}
 
