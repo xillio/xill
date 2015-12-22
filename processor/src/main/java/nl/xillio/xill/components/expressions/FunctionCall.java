@@ -52,4 +52,8 @@ public class FunctionCall implements Processable {
 		children.add(function);
 		return children;
 	}
+
+	public FunctionDeclaration getDeclaration() {
+		return function;
+	}
 }

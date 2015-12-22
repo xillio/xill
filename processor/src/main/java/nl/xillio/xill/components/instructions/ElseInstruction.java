@@ -22,6 +22,7 @@ public class ElseInstruction extends CompoundInstruction {
      */
     public ElseInstruction(final InstructionSet elseInstructions) {
         this.elseInstructions = elseInstructions;
+        elseInstructions.setParentInstruction(this);
 
     }
 
