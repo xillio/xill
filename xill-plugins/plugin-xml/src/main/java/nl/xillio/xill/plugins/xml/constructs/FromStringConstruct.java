@@ -30,7 +30,7 @@ public class FromStringConstruct extends Construct {
 	static MetaExpression process(MetaExpression xmlStrVar, NodeService service) {
 		XmlNode xmlNode = service.fromString(xmlStrVar.getStringValue());
 		MetaExpression result = fromValue(xmlNode.toString());
-		result.storeMeta(XmlNode.class, xmlNode);
+		result.storeMeta(xmlNode);
 		return result;
 	}
 

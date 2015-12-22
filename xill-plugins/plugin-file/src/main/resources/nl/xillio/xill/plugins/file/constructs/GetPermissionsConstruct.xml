@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Fetch read/write/execute permissions for a specific file or folder on a group and user basis.
+The output structure of this construct will be the same on all operating systems. It will output all the declared
+permissions for the file. So __not__ the effective permissions (i.e. automatic inheritance of of the group/user tree).
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Get the permissions</header>
+            <code>
+                use System;
+                use File;
+
+                var permissions = File.getPermissions("file.txt");
+                var json = System.toJSON(permissions, true);
+                System.print(json);
+
+                /* This will output:
+                {
+                    "groups": {
+                        "myGroupName": {
+                            "read": true,
+                            "write": false,
+                            "execute": false
+                        }
+                    },
+                    "user" : {
+                        "me": {
+                            "read": true,
+                            "write": true,
+                            "execute": false,
+                        }
+                    }
+                }
+                */
+            </code>
+        </example>
+    </examples>
+    <tags>
+        permissions, read, write, execute
+    </tags>
+</function>

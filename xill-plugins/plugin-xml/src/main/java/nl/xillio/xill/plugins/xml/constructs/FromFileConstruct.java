@@ -32,7 +32,7 @@ public class FromFileConstruct extends Construct {
 		File xmlSource = getFile(context, fileNameVar.getStringValue());
 		XmlNode xmlNode = service.fromFile(xmlSource);
 		MetaExpression result = fromValue(xmlNode.toString());
-		result.storeMeta(XmlNode.class, xmlNode);
+		result.storeMeta(xmlNode);
 		return result;
 	}
 
