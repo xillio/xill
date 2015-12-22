@@ -7,6 +7,7 @@ import java.util.Set;
 
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.components.instructions.VariableDeclaration;
+import xill.lang.xill.PluginCall;
 import xill.lang.xill.Target;
 import xill.lang.xill.UseStatement;
 
@@ -16,7 +17,7 @@ import xill.lang.xill.UseStatement;
 public class DebugInfo implements nl.xillio.xill.api.DebugInfo {
 
 	private Map<Target, VariableDeclaration> variables = new HashMap<>();
-	private Map<UseStatement, XillPlugin> using = new HashMap<>();
+	private Map<PluginCall, XillPlugin> using = new HashMap<>();
 
 	/**
 	 * Add all information from into to this
@@ -46,7 +47,7 @@ public class DebugInfo implements nl.xillio.xill.api.DebugInfo {
 	/**
 	 * @return the using
 	 */
-	public Map<UseStatement, XillPlugin> getUsing() {
+	public Map<PluginCall, XillPlugin> getUsing() {
 		return using;
 	}
 
@@ -54,7 +55,7 @@ public class DebugInfo implements nl.xillio.xill.api.DebugInfo {
 	 * @param using
 	 *        the using to set
 	 */
-	public void setUsing(final Map<UseStatement, XillPlugin> using) {
+	public void setUsing(final Map<PluginCall, XillPlugin> using) {
 		this.using = using;
 	}
 
