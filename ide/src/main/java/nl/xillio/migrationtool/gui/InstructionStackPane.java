@@ -102,8 +102,8 @@ public class InstructionStackPane extends AnchorPane implements RobotTabComponen
 	public void initialize(final RobotTab tab) {
 		this.tab = tab;
 
-		tab.getProcessor().getDebugger().getOnRobotPause().addListener(this::onRobotPause);
-		tab.getProcessor().getDebugger().getOnRobotStop().addListener(this::onRobotStop);
+		getDebugger().getOnRobotPause().addListener(this::onRobotPause);
+		getDebugger().getOnRobotStop().addListener(this::onRobotStop);
 	}
 
 	@Override
@@ -156,7 +156,18 @@ public class InstructionStackPane extends AnchorPane implements RobotTabComponen
 		public String toString() {
 			return size + " more entries...";
 		}
+
+
 	}
+
+	private Debugger getDebugger(){
+		return tab.getProcessor().getDebugger();
+	}
+
+	private RobotID getRobotID(){
+		return tab.getProcessor().getRobotID();
+	}
+
 
 	public static class Wrapper<T> {
 		private final T value;

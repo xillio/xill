@@ -41,7 +41,7 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
 	@FXML
 	private TableColumn<ObservableVariable, Boolean> colVariableGlobal;
 
-	private Debugger debugger;
+	private RobotTab tab;
 
 	private PreviewPane previewpane;
 	private InstructionStackPane stackPane;
@@ -86,10 +86,10 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
 	public synchronized void refresh() {
 		clear();
 
-		debugger.getVariables(stackPane.getInstructionBox().getValue().getValue()).forEach(var -> {
-			String name = debugger.getVariableName(var);
+		getDebugger().getVariables(stackPane.getInstructionBox().getValue().getValue()).forEach(var -> {
+			String name = getDebugger().getVariableName(var);
 			int selected = stackPane.getInstructionBox().getSelectionModel().getSelectedIndex();
-			MetaExpression value = debugger.getVariableValue(var, stackPane.getInstructionBox().getItems().size() - selected);
+			MetaExpression value = getDebugger().getVariableValue(var, stackPane.getInstructionBox().getItems().size() - selected);
 			ObservableVariable observable = new ObservableVariable(name, value, var);
 			observableStateList.add(observable);
 
@@ -107,10 +107,10 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
 
 	@Override
 	public void initialize(final RobotTab tab) {
-		debugger = tab.getProcessor().getDebugger();
-		debugger.getOnRobotPause().addListener(e -> Platform.runLater(this::refresh));
-		debugger.getOnRobotStop().addListener(e -> Platform.runLater(this::clear));
-	}
+		this.tab = tab;
+		getDebugger().getOnRobotPause().addListener(e -> refresh());
+		getDebugger().getOnRobotStop().addListener(e -> clear());
+    }
 
 	public void initialize(final InstructionStackPane pane) {
 		this.stackPane = pane;
@@ -124,6 +124,10 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
 	public void setPreviewPane(final PreviewPane previewpane) {
 		this.previewpane = previewpane;
 
+	}
+
+	public Debugger getDebugger(){
+		return this.tab.getProcessor().getDebugger();
 	}
 
 	@Override
