@@ -2,6 +2,7 @@ package nl.xillio.exiftool.process;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * This interface represents an instance of an exiftool process.
@@ -21,5 +22,5 @@ public interface ExifToolProcess extends AutoCloseable {
 
     void close();
 
-    List<String> run(String... arguments) throws IOException;
+    Stream<String> run(String... arguments) throws IOException;
 }

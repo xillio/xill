@@ -11,7 +11,7 @@ public class Test {
 
         try(ExifTool tool = pool.getAvailable()) {
 
-            Map<String, String> data = tool.readFields(new File("D:\\Libraries\\OneDrive\\Branding\\Logo_light.psd"));
+            Map<String, String> data = tool.readFields(new File("D:\\Libraries\\OneDrive\\Branding\\"));
 
             data.forEach((key,value) -> System.out.println(key + " >> " + value));
 

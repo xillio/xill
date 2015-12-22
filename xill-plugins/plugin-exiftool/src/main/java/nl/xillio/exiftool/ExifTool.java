@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +43,14 @@ public class ExifTool implements AutoCloseable {
     public Map<String, String> readFields(File file) {
         LOGGER.info("Reading all fields of " + file);
 
-        List<String> lines = tryRun(file.getAbsolutePath());
+        List<String> arguments = new ArrayList<>();
+
+        if(file.isDirectory()) {
+            arguments.add("-r");
+        }
+        arguments.add(file.getAbsolutePath());
+
+        List<String> lines = tryRun(arguments);
         Map<String, String> result = new HashMap<>();
 
         for(String line : lines) {
@@ -62,9 +70,9 @@ public class ExifTool implements AutoCloseable {
         return result;
     }
 
-    private List<String> tryRun(String... arguments) {
+    private List<String> tryRun(List<String> arguments) {
         try {
-            return process.run(arguments);
+            return process.run(arguments.toArray(new String[arguments.size()]));
         } catch (IOException e) {
             throw new IllegalStateException("Failed to run arguments", e);
         }
