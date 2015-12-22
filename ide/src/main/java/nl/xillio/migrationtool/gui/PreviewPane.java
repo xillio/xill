@@ -11,7 +11,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.util.Pair;
 import nl.xillio.migrationtool.gui.searching.PreviewSearch;
-import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.preview.HtmlPreview;
@@ -70,13 +69,14 @@ public class PreviewPane extends AnchorPane implements RobotTabComponent {
         apnPreviewSearchBar.reset(false);
         previewSearch.clearSearch();
 
+        MetaExpression value = observableVariable.getExpression();
 
         apnPreviewPane.getChildren().clear();
 
-        Node node = getPreview(getVariable(observableVariable), apnPreviewSearchBar);
+        Node node = getPreview(value, apnPreviewSearchBar);
 
         if (node == null) {
-            node = buildTree(getVariable(observableVariable));
+            node = buildTree(value);
         }
 
         if (node instanceof Text) {
@@ -87,10 +87,6 @@ public class PreviewPane extends AnchorPane implements RobotTabComponent {
         }
 
         apnPreviewSearchBar.refresh();
-    }
-
-    public MetaExpression getVariable(ObservableVariable observableVariable){
-        return tab.getProcessor().getDebugger().getVariableValue(observableVariable.getSource());
     }
 
     private void clear() {

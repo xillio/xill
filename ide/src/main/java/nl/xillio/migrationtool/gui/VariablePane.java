@@ -44,6 +44,7 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
 	private RobotTab tab;
 
 	private PreviewPane previewpane;
+	private InstructionStackPane stackPane;
 
 	/**
 	 * Create a new {@link VariablePane}
@@ -85,9 +86,10 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
 	public synchronized void refresh() {
 		clear();
 
-		getDebugger().getVariables().forEach(var -> {
+		getDebugger().getVariables(stackPane.getInstructionBox().getValue().getValue()).forEach(var -> {
 			String name = getDebugger().getVariableName(var);
-			MetaExpression value = getDebugger().getVariableValue(var);
+			int selected = stackPane.getInstructionBox().getSelectionModel().getSelectedIndex();
+			MetaExpression value = getDebugger().getVariableValue(var, stackPane.getInstructionBox().getItems().size() - selected);
 			ObservableVariable observable = new ObservableVariable(name, value, var);
 			observableStateList.add(observable);
 
@@ -108,6 +110,10 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
 		this.tab = tab;
 		getDebugger().getOnRobotPause().addListener(e -> refresh());
 		getDebugger().getOnRobotStop().addListener(e -> clear());
+    }
+
+	public void initialize(final InstructionStackPane pane) {
+		this.stackPane = pane;
 	}
 
 	/**
