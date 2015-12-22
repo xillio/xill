@@ -66,4 +66,11 @@ public class DebugInfo implements nl.xillio.xill.api.DebugInfo {
 		return new HashSet<>(using.values());
 	}
 
+	public Target getTarget(VariableDeclaration declaration) {
+		return variables.entrySet().stream()
+				.filter(entry -> entry.getValue() == declaration)
+				.map(Map.Entry::getKey)
+				.findAny()
+				.orElse(null);
+	}
 }

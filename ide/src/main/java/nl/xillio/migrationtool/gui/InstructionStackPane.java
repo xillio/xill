@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -29,13 +30,14 @@ import org.apache.logging.log4j.Logger;
 /**
  * This pane can show the current position in the stack
  */
-public class InstructionStackPane extends AnchorPane implements RobotTabComponent, ChangeListener<Instruction> {
+public class InstructionStackPane extends AnchorPane implements RobotTabComponent, ChangeListener<InstructionStackPane.Wrapper<Instruction>> {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final int MAX_STACK = 40;
 	@FXML
-	private ComboBox<Instruction> cbxStackPos;
+	private ComboBox<Wrapper<Instruction>> cbxStackPos;
 	private RobotTab tab;
+	private DebugPane debugPane;
 
 	public InstructionStackPane() {
 		try {
@@ -56,7 +58,7 @@ public class InstructionStackPane extends AnchorPane implements RobotTabComponen
 	 *
 	 * @return A ComboBox with the string representations of the instructions.
 	 */
-	public ComboBox<Instruction> getInstructionBox() {
+	public ComboBox<Wrapper<Instruction>> getInstructionBox() {
 		return cbxStackPos;
 	}
 
@@ -64,34 +66,32 @@ public class InstructionStackPane extends AnchorPane implements RobotTabComponen
 	 * Refresh the position
 	 */
 	public void refresh() {
-		Platform.runLater(() -> {
-			List<Instruction> stackTrace = tab.getProcessor().getDebugger().getStackTrace();
-			List<Instruction> items = null;
+		List<Instruction> stackTrace = tab.getProcessor().getDebugger().getStackTrace();
+		List<Instruction> items;
 
-			if (stackTrace.size() > MAX_STACK) {
-				// The stack is too large to display, show a smaller one
-				items = new ArrayList<>(MAX_STACK);
+		if (stackTrace.size() > MAX_STACK) {
+			// The stack is too large to display, show a smaller one
+			items = new ArrayList<>(MAX_STACK);
 
-				// Dummy instruction for info line
-				items.add(new DummyInstruction(tab.getProcessor().getRobotID(), stackTrace.size() - MAX_STACK));
+			// Dummy instruction for info line
+			items.add(new DummyInstruction(tab.getProcessor().getRobotID(), stackTrace.size() - MAX_STACK));
 
-				// Top MAX
-				for (int i = 0; i < MAX_STACK; i++) {
-					items.add(stackTrace.get(stackTrace.size() - MAX_STACK + i));
-				}
-
-			} else {
-				items = stackTrace;
+			// Top MAX
+			for (int i = 0; i < MAX_STACK; i++) {
+				items.add(stackTrace.get(stackTrace.size() - MAX_STACK + i));
 			}
 
-			cbxStackPos.setItems(FXCollections.observableArrayList(items));
-			cbxStackPos.getSelectionModel().clearSelection();
-			cbxStackPos.getSelectionModel().selectLast();
-		});
+		} else {
+			items = stackTrace;
+		}
+
+		cbxStackPos.setItems(FXCollections.observableArrayList(items.stream().map(Wrapper::new).collect(Collectors.toList())));
+		cbxStackPos.getSelectionModel().clearSelection();
+		cbxStackPos.getSelectionModel().selectLast();
 	}
 
 	private void onRobotPause(final RobotPausedAction action) {
-		refresh();
+		Platform.runLater(this::refresh);
 	}
 
 	private void onRobotStop(final RobotStoppedAction action) {
@@ -102,16 +102,21 @@ public class InstructionStackPane extends AnchorPane implements RobotTabComponen
 	public void initialize(final RobotTab tab) {
 		this.tab = tab;
 
-		tab.getProcessor().getDebugger().getOnRobotPause().addListener(this::onRobotPause);
-		tab.getProcessor().getDebugger().getOnRobotStop().addListener(this::onRobotStop);
+		getDebugger().getOnRobotPause().addListener(this::onRobotPause);
+		getDebugger().getOnRobotStop().addListener(this::onRobotStop);
 	}
 
 	@Override
-	public void changed(final ObservableValue<? extends Instruction> observable, final Instruction oldValue,
-					final Instruction newValue) {
+	public void changed(final ObservableValue<? extends Wrapper<Instruction>> observable, final Wrapper<Instruction> oldValue,
+						final Wrapper<Instruction> newValue) {
 		if (newValue != null) {
-			tab.display(newValue.getRobotID(), newValue.getLineNumber());
+			tab.display(newValue.getValue().getRobotID(), newValue.getValue().getLineNumber());
+			debugPane.getVariablepane().refresh();
 		}
+	}
+
+	public void setDebugPane(DebugPane debugPane) {
+		this.debugPane = debugPane;
 	}
 
 	private class DummyInstruction implements Instruction {
@@ -150,6 +155,34 @@ public class InstructionStackPane extends AnchorPane implements RobotTabComponen
 		@Override
 		public String toString() {
 			return size + " more entries...";
+		}
+
+
+	}
+
+	private Debugger getDebugger(){
+		return tab.getProcessor().getDebugger();
+	}
+
+	private RobotID getRobotID(){
+		return tab.getProcessor().getRobotID();
+	}
+
+
+	public static class Wrapper<T> {
+		private final T value;
+
+		public Wrapper(T value) {
+			this.value = value;
+		}
+
+		@Override
+		public String toString() {
+			return value.toString();
+		}
+
+		public T getValue() {
+			return value;
 		}
 	}
 }

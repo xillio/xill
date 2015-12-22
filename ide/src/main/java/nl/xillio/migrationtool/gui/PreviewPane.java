@@ -11,7 +11,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.util.Pair;
 import nl.xillio.migrationtool.gui.searching.PreviewSearch;
-import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.preview.HtmlPreview;
@@ -37,7 +36,7 @@ public class PreviewPane extends AnchorPane implements RobotTabComponent {
     private SearchBar apnPreviewSearchBar;
     @FXML
     private ToggleButton tbnPreviewSearch;
-    private Debugger debugger;
+    private RobotTab tab;
     private final TextArea textView = new TextArea();
     private PreviewSearch previewSearch;
 
@@ -70,7 +69,7 @@ public class PreviewPane extends AnchorPane implements RobotTabComponent {
         apnPreviewSearchBar.reset(false);
         previewSearch.clearSearch();
 
-        MetaExpression value = debugger.getVariableValue(observableVariable.getSource());
+        MetaExpression value = observableVariable.getExpression();
 
         apnPreviewPane.getChildren().clear();
 
@@ -210,7 +209,7 @@ public class PreviewPane extends AnchorPane implements RobotTabComponent {
 
     @Override
     public void initialize(final RobotTab tab) {
-        debugger = tab.getProcessor().getDebugger();
-        debugger.getOnRobotStop().addListener(action -> clear());
+        this.tab = tab;
+        this.tab.getProcessor().getDebugger().getOnRobotStop().addListener(action -> clear());
     }
 }
