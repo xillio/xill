@@ -12,7 +12,10 @@ import nl.xillio.xill.plugins.mongodb.services.UpdateOptionsFactory;
 import org.bson.Document;
 
 /**
+ * This construct represents the update method on MongoDB.
  *
+ * @author Thomas Biesaart
+ * @see <a href="https://docs.mongodb.org/v3.0/reference/method/db.collection.update/#db.collection.update">db.collection.update</a>
  */
 public class UpdateConstruct extends AbstractCollectionApiConstruct{
 
