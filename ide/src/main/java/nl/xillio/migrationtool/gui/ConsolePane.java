@@ -245,8 +245,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
 	@FXML
 	private void buttonClearConsole() {
 		// Clear the log in elasticsearch
-		String robotId = getRobotID().toString();
-		ESConsoleClient.getInstance().clearLog(robotId);
+		ESConsoleClient.getInstance().clearLog(getRobotID().toString());
 
 		// Clear the log entries
 		masterLog.clear();

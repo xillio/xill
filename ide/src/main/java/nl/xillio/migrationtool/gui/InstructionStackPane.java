@@ -72,7 +72,7 @@ public class InstructionStackPane extends AnchorPane implements RobotTabComponen
 				items = new ArrayList<>(MAX_STACK);
 
 				// Dummy instruction for info line
-				items.add(new DummyInstruction(tab.getProcessor().getRobotID(), getDebugger().getStackTrace().size() - MAX_STACK));
+				items.add(new DummyInstruction(getRobotID(), getDebugger().getStackTrace().size() - MAX_STACK));
 
 				// Top MAX
 				for (int i = 0; i < MAX_STACK; i++) {
@@ -157,4 +157,9 @@ public class InstructionStackPane extends AnchorPane implements RobotTabComponen
 	private Debugger getDebugger(){
 		return tab.getProcessor().getDebugger();
 	}
+
+	private RobotID getRobotID(){
+		return tab.getProcessor().getRobotID();
+	}
+
 }
