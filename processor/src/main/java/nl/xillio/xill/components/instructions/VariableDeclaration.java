@@ -49,7 +49,7 @@ public class VariableDeclaration extends Instruction {
 	 * @return the expression of the variable or null
 	 */
 	public MetaExpression getVariable() {
-		if(valueStack.size() > 0) {
+		if(!valueStack.isEmpty()) {
 			return valueStack.peek();
 		}
 		return null;
