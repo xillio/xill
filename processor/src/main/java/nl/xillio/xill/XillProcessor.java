@@ -16,6 +16,7 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.XillParsingException;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -29,7 +30,9 @@ import org.eclipse.xtext.validation.Issue.IssueImpl;
 import org.slf4j.Logger;
 import xill.lang.XillStandaloneSetup;
 import xill.lang.validation.XillValidator;
+import xill.lang.xill.ConstructCall;
 import xill.lang.xill.IncludeStatement;
+import xill.lang.xill.InstructionSet;
 import xill.lang.xill.UseStatement;
 
 import java.io.File;
@@ -239,7 +242,7 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
             xill.lang.xill.Robot robot = (xill.lang.xill.Robot) object;
 
             for (UseStatement useStatement : robot.getUses()) {
-                String name = useStatement.getPlugin() == null ? useStatement.getName() : useStatement.getPlugin();
+                String name = getName(useStatement);
 
                 boolean found = pluginLoader.getPluginManager()
                         .getPlugins()
@@ -253,7 +256,47 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
                 }
             }
         }
+
+        // Check for the existence of the constructs
+        if (issues.isEmpty()) {
+            for (EObject object : resource.getContents()) {
+                xill.lang.xill.Robot robot = (xill.lang.xill.Robot) object;
+                Issue issue = checkConstructs(robot.getInstructionSet(), robotID);
+                if (issue != null) {
+                    issues.add(issue);
+                }
+            }
+        }
         return issues;
+    }
+
+    private Issue checkConstructs(InstructionSet instructionSet, RobotID robotID) {
+        TreeIterator<EObject> iterator = instructionSet.eAllContents();
+
+        while (iterator.hasNext()) {
+            EObject object = iterator.next();
+
+            if(object instanceof ConstructCall) {
+                ConstructCall call = (ConstructCall) object;
+                String plugin = getName(call.getPackage());
+                XillPlugin xillPlugin = pluginLoader.getPluginManager()
+                        .getPlugins()
+                        .stream()
+                        .filter(p -> p.getName().equals(plugin))
+                        .findAny()
+                        .orElse(null);
+
+                if(xillPlugin.getConstruct(call.getFunction()) == null) {
+                    INode node = NodeModelUtils.getNode(object);
+                    return new Issue("No construct with name " + call.getFunction() + " was found in package " + plugin, node.getStartLine(), Issue.Type.ERROR, robotID);
+                }
+            }
+        }
+        return null;
+    }
+
+    private String getName(UseStatement statement) {
+        return statement.getPlugin() == null ? statement.getName() : statement.getPlugin();
     }
 
     /**
