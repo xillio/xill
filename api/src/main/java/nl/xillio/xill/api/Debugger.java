@@ -145,21 +145,21 @@ public interface Debugger extends ErrorHandlingPolicy {
 	 *
 	 * @return The variables
 	 */
-	public Collection<Object> getVariables();
+	public Collection<Object> getVariables(Instruction instruction);
 
 	/**
 	 * @param identifier
-	 *        the identifier returned by {@link Debugger#getVariables()}
+	 *        the identifier returned by {@link Debugger#getVariables(Instruction)}
 	 * @return The current value in a variable
-	 * @see Debugger#getVariables()
+	 * @see Debugger#getVariables(Instruction)
 	 */
-	public MetaExpression getVariableValue(final Object identifier);
+	public MetaExpression getVariableValue(final Object identifier, int stackPosition);
 
 	/**
 	 * @param identifier
-	 *        the identifier returned by {@link Debugger#getVariables()}
+	 *        the identifier returned by {@link Debugger#getVariables(Instruction)}
 	 * @return The name of a variable
-	 * @see Debugger#getVariables()
+	 * @see Debugger#getVariables(Instruction)
 	 */
 	public String getVariableName(final Object identifier);
 
@@ -185,4 +185,16 @@ public interface Debugger extends ErrorHandlingPolicy {
 	 * @return the debugger
 	 */
 	public Debugger createChild();
+
+	/**
+	 * Start processing a function call.
+	 * @param functionDeclaration the function
+     */
+	void startFunction(Processable functionDeclaration);
+
+	/**
+	 * End the function.
+	 * @param functionDeclaration the function
+     */
+	void endFunction(Processable functionDeclaration);
 }

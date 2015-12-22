@@ -87,12 +87,12 @@ public class NullDebugger implements Debugger {
 	}
 
 	@Override
-	public Collection<Object> getVariables() {
+	public Collection<Object> getVariables(Instruction instruction) {
 		return new ArrayList<>();
 	}
 
 	@Override
-	public MetaExpression getVariableValue(final Object identifier) {
+	public MetaExpression getVariableValue(final Object identifier, int stackPosition) {
 		return ExpressionBuilderHelper.fromValue(false);
 	}
 
@@ -124,6 +124,16 @@ public class NullDebugger implements Debugger {
 	@Override
 	public Debugger createChild() {
 		return this;
+	}
+
+	@Override
+	public void startFunction(Processable functionDeclaration) {
+
+	}
+
+	@Override
+	public void endFunction(Processable functionDeclaration) {
+
 	}
 
 }
