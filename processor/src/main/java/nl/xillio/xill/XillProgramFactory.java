@@ -863,7 +863,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
                 pluginName = token.getPackage().getName();
             }
 
-            throw new XillParsingException("Could not resolvea package `" + pluginName + "`", pos.getLineNumber(),
+            throw new XillParsingException("Could not resolve package `" + pluginName + "`", pos.getLineNumber(),
                     pos.getRobotID());
 
         }
