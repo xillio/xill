@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Creates a Mongo ObjectId based on a 24 character hexadecimal string. This ObjectId can then be used to identify Mongo documents.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Iterate over all documents.</header>
+            <code>
+                use Mongo;
+                use System;
+                Mongo.connect("udm_default");
+
+                var documents = Mongo.find("documents");
+
+                foreach(document in documents) {
+                    System.print(document._id);
+                }
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>connect</reference>
+        <reference>find</reference>
+        <reference>update</reference>
+    </references>
+    <tags>
+        mongodb, query, search, fields, filter
+    </tags>
+</function>

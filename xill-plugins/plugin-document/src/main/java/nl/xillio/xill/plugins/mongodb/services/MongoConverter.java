@@ -1,10 +1,13 @@
 package nl.xillio.xill.plugins.mongodb.services;
 
 import com.google.inject.Singleton;
+import com.mongodb.Mongo;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.plugins.document.services.xill.DocumentQueryBuilder;
+import nl.xillio.xill.plugins.mongodb.data.MongoObjectId;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.util.Map;
 
@@ -30,6 +33,10 @@ public class MongoConverter implements DocumentQueryBuilder {
 
     public MetaExpression parse(Document document) {
         return MetaExpression.parseObject(document);
+    }
+
+    public MetaExpression parse(MongoObjectId objectId) {
+        return MetaExpression.parseObject(objectId, new ObjectIdDeserializer());
     }
 
     @Override
