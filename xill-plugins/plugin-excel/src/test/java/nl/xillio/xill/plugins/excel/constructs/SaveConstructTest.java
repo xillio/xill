@@ -7,13 +7,11 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.excel.datastructures.XillWorkbook;
 import nl.xillio.xill.plugins.excel.services.ExcelService;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
 
-import static nl.xillio.xill.api.construct.ExpressionBuilderHelper.NULL;
 import static nl.xillio.xill.api.construct.ExpressionBuilderHelper.fromValue;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
@@ -49,7 +47,7 @@ public class SaveConstructTest extends TestUtils {
 
 		//Mock workbook
 		MetaExpression workbookInput = fromValue("workbook");
-		workbookInput.storeMeta(XillWorkbook.class, workbook);
+		workbookInput.storeMeta(workbook);
 
 		when(service.save(any(XillWorkbook.class))).thenReturn("overridden");
 		assertEquals(SaveConstruct.process(service, context, workbookInput, NULL).getStringValue(), "overridden");
@@ -76,7 +74,7 @@ public class SaveConstructTest extends TestUtils {
 		//mock workbook
 		XillWorkbook workbook = mock(XillWorkbook.class);
 		MetaExpression workbookInput = fromValue("workbook");
-		workbookInput.storeMeta(XillWorkbook.class, workbook);
+		workbookInput.storeMeta(workbook);
 
 		XillWorkbook returnbook = mock(XillWorkbook.class);
 		when(returnbook.getLocation()).thenReturn("path");

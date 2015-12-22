@@ -58,7 +58,7 @@ public class CreateWorkbookConstruct extends Construct {
 
 		String returnString = workbook.getFileString();
 		MetaExpression returnValue = fromValue(returnString);
-		returnValue.storeMeta(XillWorkbook.class, workbook);
+		returnValue.storeMeta(workbook);
 		return returnValue;
 	}
 

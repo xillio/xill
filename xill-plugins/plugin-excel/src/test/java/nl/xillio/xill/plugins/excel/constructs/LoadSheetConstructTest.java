@@ -5,7 +5,6 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.excel.datastructures.XillSheet;
 import nl.xillio.xill.plugins.excel.datastructures.XillWorkbook;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static nl.xillio.xill.api.construct.ExpressionBuilderHelper.fromValue;
@@ -26,9 +25,7 @@ public class LoadSheetConstructTest extends TestUtils {
 	 */
 	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Expected parameter 'workbook' to be a result of loadWorkbook or createWorkbook")
 	public void testProcessNoWorkbook() throws Exception {
-		XillWorkbook workbook = null;
 		MetaExpression input = fromValue("workbook object");
-		input.storeMeta(XillWorkbook.class, workbook);
 
 		LoadSheetConstruct.process(input, fromValue("Sheet"));
 	}
@@ -41,7 +38,7 @@ public class LoadSheetConstructTest extends TestUtils {
 	public void testProcessThrowsRobotRuntime() throws Exception {
 		XillWorkbook workbook = mock(XillWorkbook.class);
 		MetaExpression input = fromValue("workbook object");
-		input.storeMeta(XillWorkbook.class, workbook);
+		input.storeMeta(workbook);
 
 		when(workbook.getSheet("sheet")).thenThrow(new IllegalArgumentException(""));
 
@@ -62,7 +59,7 @@ public class LoadSheetConstructTest extends TestUtils {
 		XillWorkbook workbook = mock(XillWorkbook.class);
 		XillSheet sheet = mock(XillSheet.class);
 		MetaExpression input = fromValue("workbook object");
-		input.storeMeta(XillWorkbook.class, workbook);
+		input.storeMeta(workbook);
 
 		//Mock sheet object
 		when(workbook.getSheet(anyString())).thenReturn(sheet);
