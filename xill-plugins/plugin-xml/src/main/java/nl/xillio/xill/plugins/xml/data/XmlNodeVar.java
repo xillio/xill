@@ -40,14 +40,13 @@ public class XmlNodeVar implements nl.xillio.xill.api.data.XmlNode, TextPreview 
      * @throws XmlParseException when XML format is invalid
      */
     public XmlNodeVar(final String xmlString, final boolean treatAsDocument) throws Exception, XmlParseException {
-        String xmlStringValue = xmlCharacterWhitelist(xmlString);
         this.treatAsDocument = treatAsDocument;
 
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             dbf.setNamespaceAware(true);
             DocumentBuilder db = dbf.newDocumentBuilder();
-            Document document = db.parse(new InputSource(new StringReader(xmlStringValue)));
+            Document document = db.parse(new InputSource(new StringReader(xmlString)));
 
             // Normalize whitespace nodes
             removeEmptyTextNodes(document);
@@ -137,27 +136,6 @@ public class XmlNodeVar implements nl.xillio.xill.api.data.XmlNode, TextPreview 
                 i--;
             }
         }
-    }
-
-    private static String xmlCharacterWhitelist(final String inputString) {
-        if (inputString == null) {
-            return null;
-        }
-
-        StringBuilder output = new StringBuilder();
-        char ch;
-
-        for (int i = 0; i < inputString.length(); i++) {
-            ch = inputString.charAt(i);
-            if ((ch >= 0x0020 && ch <= 0xD7FF) ||
-                    (ch >= 0xE000 && ch <= 0xFFFD) ||
-                    ch == 0x0009 ||
-                    ch == 0x000A ||
-                    ch == 0x000D) {
-                output.append(ch);
-            }
-        }
-        return output.toString();
     }
 
     @Override

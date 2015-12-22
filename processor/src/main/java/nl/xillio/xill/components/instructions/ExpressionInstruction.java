@@ -49,6 +49,10 @@ public class ExpressionInstruction extends Instruction {
         return Arrays.asList(expression);
     }
 
+    public Processable getExpression() {
+        return expression;
+    }
+
     @Override
     public void close() {
         // Close all results
