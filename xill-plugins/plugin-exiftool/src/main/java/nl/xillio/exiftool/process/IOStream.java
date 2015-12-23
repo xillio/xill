@@ -51,10 +51,4 @@ class IOStream implements AutoCloseable {
         }
         LOGGER.debug("IOStream closed");
     }
-
-    public void flushReader() throws IOException {
-        while (true) {
-            if (getReader().readLine() == null) break;
-        }
-    }
 }

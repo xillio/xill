@@ -1,16 +1,17 @@
 package nl.xillio.exiftool;
 
 import me.biesaart.utils.Log;
+import nl.xillio.exiftool.process.ExecutionResult;
 import nl.xillio.exiftool.process.ExifToolProcess;
 import nl.xillio.exiftool.process.WindowsExifToolProcess;
 import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -40,23 +41,26 @@ public class ExifTool implements AutoCloseable {
         return new ProcessPool(() -> new WindowsExifToolProcess(new File("D:\\TMP\\exif.exe")));
     }
 
-    public Map<String, String> readFields(File file) {
-        LOGGER.info("Reading all fields of " + file);
+    public ExifTags readFieldsForFile(Path path) throws IOException {
+        LOGGER.info("Reading all fields of " + path);
 
-        List<String> arguments = new ArrayList<>();
-
-        if(file.isDirectory()) {
-            arguments.add("-r");
+        if(!Files.exists(path)) {
+            throw new NoSuchFileException("Could not find file " + path);
         }
-        arguments.add(file.getAbsolutePath());
 
-        List<String> lines = tryRun(arguments);
-        Map<String, String> result = new HashMap<>();
+        if(!Files.isRegularFile(path)) {
+            throw new IllegalArgumentException(path + " is not a file");
+        }
 
-        for(String line : lines) {
+        Iterator<String> lines = tryRun(Collections.singletonList(path.toAbsolutePath().toString()));
+        ExifTags result = new ExifTagsImpl();
+
+        while(lines.hasNext()) {
+            String line = lines.next();
+
             int separator = line.indexOf(TAG_SEPARATOR);
 
-            if(separator == -1) {
+            if (separator == -1) {
                 LOGGER.error("Failed to parse [{}] as a field", line);
                 continue;
             }
@@ -70,11 +74,27 @@ public class ExifTool implements AutoCloseable {
         return result;
     }
 
-    private List<String> tryRun(List<String> arguments) {
+    private ExecutionResult tryRun(List<String> arguments) {
         try {
             return process.run(arguments.toArray(new String[arguments.size()]));
         } catch (IOException e) {
             throw new IllegalStateException("Failed to run arguments", e);
         }
+    }
+
+    public ExifReadResult readFieldsForFolder(Path path, boolean recursive) throws IOException {
+        LOGGER.info("Reading all fields of files in " + path);
+
+        if(!Files.exists(path)) {
+            throw new NoSuchFileException("Could not find folder " + path);
+        }
+
+        if(!Files.isDirectory(path)) {
+            throw new IllegalArgumentException(path + " is not a folder");
+        }
+
+        ExecutionResult lines = tryRun(Arrays.asList(path.toAbsolutePath().toString(), "-r"));
+
+        return new ExifReadResultImpl(lines, 10);
     }
 }

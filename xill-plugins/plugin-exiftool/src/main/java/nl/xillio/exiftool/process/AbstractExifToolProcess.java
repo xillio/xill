@@ -11,9 +11,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * This class represents the base implementation of the ExifToolProcess.
@@ -51,8 +49,10 @@ abstract class AbstractExifToolProcess implements ExifToolProcess {
 
     @Override
     public void close() {
+        status = Status.CLOSING;
         streams.close();
         process.destroy();
+        status = Status.CLOSED;
     }
 
     @Override
@@ -81,7 +81,7 @@ abstract class AbstractExifToolProcess implements ExifToolProcess {
     }
 
     @Override
-    public List<String> run(String... arguments) throws IOException {
+    public ExecutionResult run(String... arguments) throws IOException {
         requireRunning();
 
         LOGGER.debug("Running exiftool {}", Arrays.toString(arguments));
@@ -99,29 +99,7 @@ abstract class AbstractExifToolProcess implements ExifToolProcess {
         streams.getWriter().write("-execute\n");
         streams.getWriter().flush();
 
-        // Read all output
-        List<String> result = readAllOutput();
-
-
-        status = Status.IDLE;
-
-        return result;
-    }
-
-    private List<String> readAllOutput() throws IOException {
-        List<String> result = new ArrayList<>();
-
-        String line;
-        while ((line = streams.getReader().readLine()) != null) {
-
-            if (line.equals("{ready}")) {
-                break;
-            }
-
-            result.add(line);
-        }
-
-        return result;
+        return new ExecutionResult(streams.getReader(), () -> status = Status.IDLE, "{ready}");
     }
 
     private void requireRunning() throws IOException {
