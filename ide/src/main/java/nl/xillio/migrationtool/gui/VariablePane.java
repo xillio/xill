@@ -16,6 +16,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import nl.xillio.xill.api.Debugger;
+import nl.xillio.xill.api.components.Instruction;
 import nl.xillio.xill.api.components.MetaExpression;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -86,7 +87,13 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
 	public synchronized void refresh() {
 		clear();
 
-		getDebugger().getVariables(stackPane.getInstructionBox().getValue().getValue()).forEach(var -> {
+		InstructionStackPane.Wrapper<Instruction> wrapper = stackPane.getInstructionBox().getValue();
+
+		if(wrapper == null) {
+			return;
+		}
+
+		getDebugger().getVariables(wrapper.getValue()).forEach(var -> {
 			String name = getDebugger().getVariableName(var);
 			int selected = stackPane.getInstructionBox().getSelectionModel().getSelectedIndex();
 			MetaExpression value = getDebugger().getVariableValue(var, stackPane.getInstructionBox().getItems().size() - selected);
