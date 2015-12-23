@@ -11,6 +11,7 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.debugging.ErrorBlockDebugger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -41,6 +42,12 @@ public class ReturnInstruction extends Instruction {
 
 	@Override
 	public InstructionFlow<MetaExpression> process(final Debugger debugger) {
+		Instruction parent = this.getHostInstruction().getParentInstruction();
+		if(parent instanceof ErrorInstruction) {
+			((ErrorInstruction)parent).getFinally().process(debugger);
+			((ErrorInstruction)parent).setReturns(true);
+		}
+
 		if (value == null) {
 			return InstructionFlow.doReturn(ExpressionBuilderHelper.NULL);
 		}
