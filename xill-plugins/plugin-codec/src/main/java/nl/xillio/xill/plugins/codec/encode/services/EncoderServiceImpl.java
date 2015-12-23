@@ -11,7 +11,8 @@ import java.util.Base64;
 /**
  * Implementation of encoding methods.
  *
- * @author Paul van der Zandt, Pieter Soels
+ * @author Paul van der Zandt
+ * @author Pieter Soels
  * @since 3.0
  */
 public class EncoderServiceImpl implements EncoderService {
@@ -21,7 +22,7 @@ public class EncoderServiceImpl implements EncoderService {
         final Charset charset = charsetName == null ? StandardCharsets.UTF_8 : Charset.forName(charsetName);
         return new String(Hex.encodeHex(inputString.getBytes(charset), toLowerCase));
     }
-    
+
     @Override
     public String urlEncode(final String text, final boolean xWwwForm) throws UnsupportedEncodingException {
         String encText = URLEncoder.encode(text, "UTF-8");
