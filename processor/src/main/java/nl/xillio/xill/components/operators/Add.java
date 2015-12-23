@@ -37,13 +37,13 @@ public final class Add extends BinaryNumberOperator {
             //If you try to add a list to an atomic value it should give an error since this is unwanted behaviour.
             if ((leftValue.getType() == ExpressionDataType.ATOMIC || rightValue.getType() == ExpressionDataType.ATOMIC)
                     && (leftValue.getType() == ExpressionDataType.OBJECT || rightValue.getType() == ExpressionDataType.OBJECT)){
-                throw new RobotRuntimeException("You should not add an atomic to an object this way. Use  instead.");
+                throw new RobotRuntimeException("You should not add an atomic to an object this way. Use object.newKey = newValue instead.");
             }
 
             //If you try to add a list to an atomic value it should give an error since this is unwanted behaviour.
-            if ((leftValue.getType() == ExpressionDataType.ATOMIC || rightValue.getType() == ExpressionDataType.ATOMIC)
-                    && (leftValue.getType() == ExpressionDataType.LIST || rightValue.getType() == ExpressionDataType.LIST)){
-                throw new RobotRuntimeException("You should not add an atomic to a list this way. Use  instead.");
+            if ((leftValue.getType() == ExpressionDataType.ATOMIC && rightValue.getType() == ExpressionDataType.LIST)
+                    || (leftValue.getType() == ExpressionDataType.LIST || rightValue.getType() == ExpressionDataType.ATOMIC)){
+                throw new RobotRuntimeException("You should not add an atomic to a list this way. Use 'list[] = atomic' instead.");
             }
 
             //If you try to add an object to an atomic value it should give an error since this is unwanted behaviour.
