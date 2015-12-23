@@ -17,8 +17,8 @@ The `options` parameter may contain the following option:
                 Mongo.connect("udm_default");
 
                 var documents = [
-                {"name":"Walter", "metadata": {"age":"65"}},
-                {"name":"John", "metadata": {"age":"40"}}
+                    {"name":"Walter", "metadata": {"age":"65"}},
+                    {"name":"John", "metadata": {"age":"40"}}
                 ];
 
                 //insert a list of documents into collection asset
@@ -28,10 +28,10 @@ The `options` parameter may contain the following option:
     </examples>
     <references>
         <reference>connect</reference>
+        <reference>update</reference>
+        <reference>remove</reference>
+        <reference>find</reference>
         <reference>findOne</reference>
-        <reference>findOneAndDelete</reference>
-        <reference>findOneAndReplace</reference>
-        <reference>findOneAndUpdate</reference>
     </references>
     <tags>
         mongodb, insert

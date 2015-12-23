@@ -35,6 +35,8 @@ Provides a wrapper around the MongoDB [db.collection.findOne](https://docs.mongo
     <references>
         <reference>connect</reference>
         <reference>find</reference>
+        <reference>delete</reference>
+        <reference>update</reference>
         <reference>findOneAndDelete</reference>
         <reference>findOneAndReplace</reference>
         <reference>findOneAndUpdate</reference>

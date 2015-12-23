@@ -23,7 +23,7 @@ The `options` parameter may contain the following option:
                 { "$set" :
                 {"metaData.meta2":"seasonal greetings"}
                 },
-                {"upsert":false}
+                    {"upsert":false}
                 );
 
                 System.print ("Updated " :: result :: " documents.");
@@ -32,9 +32,9 @@ The `options` parameter may contain the following option:
     </examples>
     <references>
         <reference>connect</reference>
-        <reference>findOne</reference>
-        <reference>findOneAndDelete</reference>
-        <reference>findOneAndReplace</reference>
+        <reference>remove</reference>
+        <reference>insert</reference>
+        <reference>find</reference>
         <reference>findOneAndUpdate</reference>
     </references>
     <tags>

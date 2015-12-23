@@ -52,6 +52,8 @@ The `options` parameter may contain the following options:
     <references>
         <reference>connect</reference>
         <reference>find</reference>
+        <reference>delete</reference>
+        <reference>update</reference>
         <reference>findOne</reference>
         <reference>findOneAndDelete</reference>
         <reference>findOneAndUpdate</reference>
