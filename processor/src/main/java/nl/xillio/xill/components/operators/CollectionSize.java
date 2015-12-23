@@ -5,7 +5,6 @@ import nl.xillio.xill.api.components.*;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -23,7 +22,8 @@ public final class CollectionSize implements Processable {
         this.collection = collection;
     }
 
-    public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
+    @Override
+    public InstructionFlow<MetaExpression> process(final Debugger debugger) {
         MetaExpression metaCollection = collection.process(debugger).get();
         metaCollection.registerReference();
 
@@ -38,6 +38,7 @@ public final class CollectionSize implements Processable {
         }
     }
 
+    @Override
     public Collection<Processable> getChildren() {
         return Collections.singletonList(collection);
     }

@@ -21,7 +21,7 @@ public final class Add extends BinaryNumberOperator {
 
     @SuppressWarnings("unchecked")
     @Override
-    public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
+    public InstructionFlow<MetaExpression> process(final Debugger debugger) {
         MetaExpression leftValue = left.process(debugger).get();
         MetaExpression rightValue = right.process(debugger).get();
 
@@ -50,14 +50,14 @@ public final class Add extends BinaryNumberOperator {
             if (leftValue.getType() == rightValue.getType() && leftValue.getType() == ExpressionDataType.LIST) {
                 return InstructionFlow.doResume(
                         processLists((List<MetaExpression>) leftValue.getValue(),
-                                (List<MetaExpression>) rightValue.getValue(), debugger));
+                                (List<MetaExpression>) rightValue.getValue()));
             }
 
             // If both entries are an object, then add them as such
             if (leftValue.getType() == rightValue.getType() && leftValue.getType() == ExpressionDataType.OBJECT) {
                 return InstructionFlow.doResume(
                         processObjects((LinkedHashMap<String, MetaExpression>) leftValue.getValue(),
-                                (LinkedHashMap<String, MetaExpression>) rightValue.getValue(), debugger));
+                                (LinkedHashMap<String, MetaExpression>) rightValue.getValue()));
             }
 
             // If the left entry is a list and the right entry is an object,
@@ -65,7 +65,7 @@ public final class Add extends BinaryNumberOperator {
             if (leftValue.getType() == ExpressionDataType.LIST && rightValue.getType() == ExpressionDataType.OBJECT) {
                 return InstructionFlow.doResume(
                         processListObject((List<MetaExpression>) leftValue.getValue(),
-                                (LinkedHashMap<String, MetaExpression>) rightValue.getValue(), debugger));
+                                (LinkedHashMap<String, MetaExpression>) rightValue.getValue()));
             }
 
             // If the left entry is an object and the right entry is a list,
@@ -73,7 +73,7 @@ public final class Add extends BinaryNumberOperator {
             if (leftValue.getType() == ExpressionDataType.OBJECT && rightValue.getType() == ExpressionDataType.LIST) {
                 return InstructionFlow.doResume(
                         processObjectList((LinkedHashMap<String, MetaExpression>) leftValue.getValue(),
-                                (List<MetaExpression>) rightValue.getValue(), debugger));
+                                (List<MetaExpression>) rightValue.getValue()));
             }
 
             // The left and right entries are atomics so add them as numbers.
@@ -85,21 +85,21 @@ public final class Add extends BinaryNumberOperator {
 
     }
 
-    private static MetaExpression processLists(final List<MetaExpression> leftValue, final List<MetaExpression> rightValue, final Debugger debugger) throws RobotRuntimeException {
+    private static MetaExpression processLists(final List<MetaExpression> leftValue, final List<MetaExpression> rightValue) {
         List<MetaExpression> result = new ArrayList<>(leftValue);
         result.addAll(rightValue);
 
         return new ListExpression(result);
     }
 
-    private static MetaExpression processObjects(final LinkedHashMap<String, MetaExpression> leftValue, final LinkedHashMap<String, MetaExpression> rightValue, final Debugger debugger) throws RobotRuntimeException {
+    private static MetaExpression processObjects(final LinkedHashMap<String, MetaExpression> leftValue, final LinkedHashMap<String, MetaExpression> rightValue) {
         LinkedHashMap<String, MetaExpression> result = new LinkedHashMap<>(leftValue);
         result.putAll(rightValue);
 
         return ExpressionBuilderHelper.fromValue(result);
     }
 
-    private static MetaExpression processListObject(final List<MetaExpression> leftValue, final LinkedHashMap<String, MetaExpression> rightValue, final Debugger debugger) throws RobotRuntimeException {
+    private static MetaExpression processListObject(final List<MetaExpression> leftValue, final LinkedHashMap<String, MetaExpression> rightValue) {
         LinkedHashMap<String, MetaExpression> result = new LinkedHashMap<>();
         for (int i = 0; i < leftValue.size(); i++) {
             result.put(Integer.toString(i), leftValue.get(i));
@@ -109,7 +109,7 @@ public final class Add extends BinaryNumberOperator {
         return ExpressionBuilderHelper.fromValue(result);
     }
 
-    private static MetaExpression processObjectList(final LinkedHashMap<String, MetaExpression> leftValue, final List<MetaExpression> rightValue, final Debugger debugger) throws RobotRuntimeException {
+    private static MetaExpression processObjectList(final LinkedHashMap<String, MetaExpression> leftValue, final List<MetaExpression> rightValue) {
         LinkedHashMap<String, MetaExpression> result = new LinkedHashMap<>(leftValue);
         for (int i = 0; i < rightValue.size(); i++) {
             result.put(Integer.toString(i), rightValue.get(i));
