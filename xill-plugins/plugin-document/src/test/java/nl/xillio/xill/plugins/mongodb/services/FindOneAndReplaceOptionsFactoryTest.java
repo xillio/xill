@@ -14,7 +14,7 @@ import static org.testng.Assert.*;
 public class FindOneAndReplaceOptionsFactoryTest extends TestUtils {
     @Test
     public void testBuildOptions() {
-        MongoConverter mongoConverter = new MongoConverter();
+        MongoConverter mongoConverter = new MongoConverter(null);
         FindOneAndReplaceOptionsFactory FindOneAndReplaceOptionsFactory = new FindOneAndReplaceOptionsFactory(mongoConverter);
         LinkedHashMap<String, MetaExpression> object = new LinkedHashMap<>();
 
