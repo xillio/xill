@@ -7,6 +7,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * This class is to retrieve the size of a collection (list or object).
@@ -24,15 +25,20 @@ public final class CollectionSize implements Processable {
 
     public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
         MetaExpression metaCollection = collection.process(debugger).get();
+        metaCollection.registerReference();
 
         if (metaCollection.getType() == ExpressionDataType.ATOMIC){
+            metaCollection.releaseReference();
             throw new RobotRuntimeException("You can not retrieve a size of an atomic");
         } else {
-            return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(metaCollection.getNumberValue()));
+            InstructionFlow<MetaExpression> instructionFlow = InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(metaCollection.getNumberValue()));
+            metaCollection.releaseReference();
+            return instructionFlow;
+
         }
     }
 
     public Collection<Processable> getChildren() {
-        return Arrays.asList(collection);
+        return Collections.singletonList(collection);
     }
 }
