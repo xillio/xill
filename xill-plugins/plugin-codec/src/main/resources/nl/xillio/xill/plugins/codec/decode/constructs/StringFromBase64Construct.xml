@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+This function decodes an encoded string to its decoded value.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Convert an encoded base64 String to its representative string.</header>
+            <code>
+                use Decode;
+                use System
+
+                System.print(Decode.stringFromBase64("VGhpcyBpcyBhIHRlc3Qtc3RyaW5nLg=="));
+                // prints: This is a test-string.
+                System.print(Decode.stringFromBase64("QW5kIGFub3RoZXIgb25lIGZvciBjb21wYXJpc29uLg=="));
+                // prints And another one for comparison.
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>Encode.stringToBase64</reference>
+    </references>
+    <tags>
+        encoding, decoding, base64
+    </tags>
+</function>

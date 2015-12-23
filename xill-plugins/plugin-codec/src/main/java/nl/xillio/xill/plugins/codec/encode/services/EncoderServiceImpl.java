@@ -6,11 +6,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 /**
  * Implementation of encoding methods.
  *
- * @author Paul van der Zandt
+ * @author Paul van der Zandt, Pieter Soels
  * @since 3.0
  */
 public class EncoderServiceImpl implements EncoderService {
@@ -25,5 +26,11 @@ public class EncoderServiceImpl implements EncoderService {
     public String urlEncode(final String text, final boolean xWwwForm) throws UnsupportedEncodingException {
         String encText = URLEncoder.encode(text, "UTF-8");
         return xWwwForm ? encText : encText.replace("+", "%20");
+    }
+
+    @Override
+    public String stringToBase64(final String stringInput) throws UnsupportedEncodingException {
+        byte[] data = stringInput.getBytes("UTF-8");
+        return Base64.getEncoder().encodeToString(data);
     }
 }
