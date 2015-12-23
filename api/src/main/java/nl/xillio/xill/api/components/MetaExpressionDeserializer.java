@@ -1,16 +1,16 @@
 package nl.xillio.xill.api.components;
 
 /**
+ * This interface represents an object that can convert an Object to a MetaExpression.
  *
+ * @author Thomas Biesaart
+ * @author Titus Nachbauer
  */
 public interface MetaExpressionDeserializer {
     MetaExpression parseObject (Object object);
 
-    class Identity implements MetaExpressionDeserializer{
-
-        @Override
-        public MetaExpression parseObject(Object object) {
-            throw new IllegalArgumentException("The class type " + object.getClass().getName() + " has not been implemented by " + getClass().getName());
-        }
-    }
+    /**
+     *  Provides a null implementation.
+     */
+    MetaExpressionDeserializer NULL = a -> null;
 }
