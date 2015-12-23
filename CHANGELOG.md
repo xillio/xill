@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file
 ### Add
 - Option to declare multiple usages in one statement: use System, String;
 - Functionality to add any combination of LIST and OBJECT expressions
+- Bulk operations and multiple select on robots and projects in the project view
 
 
 ## [3.0.23] - 11-12-2015
