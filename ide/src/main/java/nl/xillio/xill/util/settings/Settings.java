@@ -225,5 +225,8 @@ public class Settings {
 
 	/** */
 	public static final String OpenSettings = "OpenSettings";
+
+	/** */
+	public static final String Rename = "Rename";
 	// =============================================================================
 }
