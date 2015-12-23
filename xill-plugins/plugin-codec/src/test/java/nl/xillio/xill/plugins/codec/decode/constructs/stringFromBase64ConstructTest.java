@@ -2,7 +2,6 @@ package nl.xillio.xill.plugins.codec.decode.constructs;
 
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.codec.decode.services.DecoderService;
 import nl.xillio.xill.plugins.codec.decode.services.DecoderServiceImpl;
@@ -16,10 +15,8 @@ import org.testng.annotations.Test;
  */
 public class stringFromBase64ConstructTest extends TestUtils {
 
-    private ConstructProcessor processor;
-
     @Test
-    public void testNormalUsage(){
+    public void testNormalUsage() {
         //Initialize
         MetaExpression input = fromValue("VW5pdFRlc3RpbmdJc0Z1bg==");
         MetaExpression wantedResult = fromValue("UnitTestingIsFun");
@@ -34,7 +31,7 @@ public class stringFromBase64ConstructTest extends TestUtils {
     }
 
     @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = ".*null.*")
-    public void testNullValue(){
+    public void testNullValue() {
         //Initialize
         MetaExpression input = NULL;
         DecoderService service = new DecoderServiceImpl();
