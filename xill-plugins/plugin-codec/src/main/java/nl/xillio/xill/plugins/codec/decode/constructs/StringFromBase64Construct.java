@@ -31,8 +31,7 @@ public class StringFromBase64Construct extends Construct {
                 new Argument("inputString", ATOMIC));
     }
 
-    @SuppressWarnings("squid:UnusedPrivateMethod")
-    private MetaExpression process(MetaExpression inputString) {
+    MetaExpression process(MetaExpression inputString) {
         if (inputString.isNull()) {
             throw new RobotRuntimeException("You cannot encode a null value");
         }
