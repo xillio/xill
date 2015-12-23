@@ -35,7 +35,7 @@ public class ReplaceNodeConstruct extends Construct {
 		XmlNode newNode = service.replaceNode(orgXmlNode, replXmlStr);
 
 		MetaExpression result = fromValue(newNode.toString());
-		result.storeMeta(XmlNode.class, newNode);
+		result.storeMeta(newNode);
 		return result;
 	}
 

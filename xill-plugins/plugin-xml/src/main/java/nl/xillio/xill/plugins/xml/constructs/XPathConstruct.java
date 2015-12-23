@@ -68,7 +68,7 @@ public class XPathConstruct extends Construct {
 		} else if (value instanceof XmlNode) {
 			XmlNode outputNode = (XmlNode) value;
 			MetaExpression output = fromValue(outputNode.toString());
-			output.storeMeta(XmlNode.class, outputNode);
+			output.storeMeta(outputNode);
 			return output;
 		} else {
 			throw new RobotRuntimeException("Invalid XPath type!");

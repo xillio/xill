@@ -37,7 +37,7 @@ public class InsertNodeConstruct extends Construct {
 		XmlNode newNode = service.insertNode(baseNode, newNodeStr, beforeChildNode);
 
 		MetaExpression result = fromValue(newNode.toString());
-		result.storeMeta(XmlNode.class, newNode);
+		result.storeMeta(newNode);
 		return result;
 	}
 

@@ -4,7 +4,6 @@ import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.plugins.excel.datastructures.XillCellRef;
 import nl.xillio.xill.plugins.excel.datastructures.XillSheet;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static nl.xillio.xill.api.construct.ExpressionBuilderHelper.fromValue;
@@ -27,7 +26,7 @@ public class GetCellConstructTest extends TestUtils {
 	private MetaExpression createSheetInput(String cellContent) {
 		XillSheet sheet = mock(XillSheet.class);
 		MetaExpression sheetInput = fromValue("Sheet");
-		sheetInput.storeMeta(XillSheet.class, sheet);
+		sheetInput.storeMeta(sheet);
 		when(sheet.getCellValue(any(XillCellRef.class))).thenReturn(cellContent);
 		return sheetInput;
 	}

@@ -1,3 +1,5 @@
+import com.sun.org.apache.xalan.internal.xsltc.cmdline.Compile
+
 /**
  * This file will be applied to all projects.
  */
@@ -29,3 +31,10 @@ task copyToPluginsDir(type: Sync) {
 }
 
 rootProject.run.dependsOn prepare
+
+/**
+ * Make sur UTF-8 is used during compiling using gradle
+ */
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}

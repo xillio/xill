@@ -49,7 +49,7 @@ public class GetCreationDate extends Construct {
         try {
             Date date = dateFactory.from(io.getCreationDate(getFile(c, expr.getStringValue())).toInstant());
             MetaExpression result = fromValue(date.toString());
-            result.storeMeta(Date.class, date);
+            result.storeMeta(date);
             return result;
         } catch (InvalidPathException e) {
             throw new RobotRuntimeException("No such file: " + expr.getStringValue(), e);

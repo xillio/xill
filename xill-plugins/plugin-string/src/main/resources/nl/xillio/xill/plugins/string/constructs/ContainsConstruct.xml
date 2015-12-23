@@ -12,7 +12,7 @@ Returns a boolean whether the string haystack contains the element needle.
         </example>
     </examples>
     <references>
-        <reference>List.contains</reference>
+        <reference>Collection.contains</reference>
     </references>
     <searchTags>
         search, list

@@ -53,7 +53,7 @@ public class CreateSheetConstruct extends Construct {
 		sheetObject.put("columns", fromValue(0));
 		MetaExpression toReturn = fromValue(sheetObject);
 
-		toReturn.storeMeta(XillSheet.class, sheet);
+		toReturn.storeMeta(sheet);
 
 		return toReturn;
 	}

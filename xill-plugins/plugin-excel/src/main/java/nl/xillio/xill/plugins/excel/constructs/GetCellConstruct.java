@@ -41,7 +41,7 @@ public class GetCellConstruct extends Construct {
         if(cellValue instanceof DateImpl){
             DateImpl date = (DateImpl) cellValue;
             MetaExpression toReturn = fromValue(date.getZoned().toString());
-            toReturn.storeMeta(nl.xillio.xill.api.data.Date.class, date);
+            toReturn.storeMeta(date);
             return toReturn;
         }
 		return parseObject(cellValue);

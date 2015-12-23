@@ -7,11 +7,11 @@ import nl.xillio.xill.plugins.database.util.Database;
  */
 public class MssqlConnectConstruct extends SimplesqlConnectConstruct {
 
-	/**
-	 * The constructor of the {@link MssqlConnectConstruct}.
-	 */
-	public MssqlConnectConstruct() {
-		super(Database.MSSQL.getName());
-	}
+    /**
+     * The constructor of the {@link MssqlConnectConstruct}.
+     */
+    public MssqlConnectConstruct() {
+        super(Database.MSSQL.getName(), 1433);
+    }
 
 }
