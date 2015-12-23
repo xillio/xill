@@ -1,13 +1,9 @@
 package nl.xillio.xill.plugins.collection.services.duplicate;
 
-import java.util.ArrayList;
-import java.util.IdentityHashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import com.google.inject.Singleton;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * This is the main implementation of {@link Duplicate}.
@@ -49,7 +45,7 @@ public class DuplicateImpl implements Duplicate {
 		
 		return dup;
 		} else if (input instanceof Map) {
-			Map.Entry<String, Object>[] sortedEntries = ((Map<String, Object>) input)
+			Entry<String, Object>[] sortedEntries = ((Map<String, Object>) input)
 					.entrySet()
 					.stream()
 					.toArray(Entry[]::new);

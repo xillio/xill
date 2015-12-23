@@ -1,14 +1,14 @@
 package nl.xillio.xill.plugins.collection.constructs;
 
-import java.util.List;
-import java.util.Map;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  *

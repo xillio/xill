@@ -43,7 +43,7 @@ public class SortImpl implements Sort {
 		} else if (input instanceof Map) {
 			// Sort the map by extracting single entries and sorting them either by key or
 			@SuppressWarnings("unchecked")
-			Map.Entry<String, Object>[] sortedEntries = ((Map<String, Object>) input)
+			Entry<String, Object>[] sortedEntries = ((Map<String, Object>) input)
 					.entrySet()
 					.stream()
 					.sorted((a, b) -> {

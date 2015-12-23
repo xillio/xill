@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.collection.constructs;
 
+import com.google.inject.Inject;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
@@ -7,8 +8,6 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.plugins.collection.services.reverse.Reverse;
-
-import com.google.inject.Inject;
 
 /**
  * <p>

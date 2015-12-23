@@ -28,6 +28,6 @@ public interface Sort extends XillService {
 	 *    
 	 * @return the sorted list
 	 */
-	public Object asSorted(Object input, boolean recursive, boolean onKeys,boolean reverse);
+	public Object asSorted(Object input, boolean recursive, boolean onKeys, boolean reverse);
 
 }
