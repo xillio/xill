@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 /**
  * This construct represents the insert method on MongoDB.
  *
- * @author Thomas Biesaart
+ * @author Titus Nachbauer
  * @see <a href="https://docs.mongodb.org/v3.0/reference/method/db.collection.insert/#db.collection.insert">db.collection.insert</a>
  */
 public class InsertConstruct extends AbstractCollectionApiConstruct {
@@ -45,7 +45,7 @@ public class InsertConstruct extends AbstractCollectionApiConstruct {
         
         List<Document>documents = list.stream().map(this::toDocument).collect(Collectors.toList());
         tryInsertMany(collection, documents, options);
-        return null;
+        return NULL;
     }
 
     private void tryInsertMany(MongoCollection<Document> collection, List<Document> documents, InsertManyOptions options) {

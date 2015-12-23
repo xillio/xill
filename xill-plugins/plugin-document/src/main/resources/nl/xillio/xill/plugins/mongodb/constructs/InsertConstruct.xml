@@ -14,7 +14,7 @@ The `options` parameter may contain the following option:
             <code>
                 use Mongo;
                 use System;
-                Mongo.connect("draft-2");
+                Mongo.connect("udm_default");
 
                 var documents = [
                 {"name":"Walter", "metadata": {"age":"65"}},
