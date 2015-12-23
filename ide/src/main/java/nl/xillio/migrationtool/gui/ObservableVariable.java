@@ -58,4 +58,8 @@ public class ObservableVariable {
 	public Object getSource() {
 		return source;
 	}
+
+	public MetaExpression getExpression() {
+		return value;
+	}
 }

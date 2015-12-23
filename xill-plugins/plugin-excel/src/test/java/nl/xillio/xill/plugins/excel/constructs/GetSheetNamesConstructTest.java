@@ -29,7 +29,7 @@ public class GetSheetNamesConstructTest {
 	private MetaExpression createWorkbookInput(List<String> sheetNames) {
 		XillWorkbook workbook = mock(XillWorkbook.class);
 		MetaExpression workbookInput = fromValue("workbook");
-		workbookInput.storeMeta(XillWorkbook.class, workbook);
+		workbookInput.storeMeta(workbook);
 		when(workbook.getSheetNames()).thenReturn(sheetNames);
 		return workbookInput;
 	}

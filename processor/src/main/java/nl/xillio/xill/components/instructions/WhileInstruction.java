@@ -27,6 +27,13 @@ public class WhileInstruction extends CompoundInstruction {
     public WhileInstruction(final Processable condition, final InstructionSet instructionSet) {
         this.condition = new ExpressionInstruction(condition);
         this.instructionSet = instructionSet;
+        instructionSet.setParentInstruction(this);
+    }
+
+    @Override
+    public void setHostInstruction(InstructionSet hostInstruction) {
+        super.setHostInstruction(hostInstruction);
+        this.condition.setHostInstruction(hostInstruction);
     }
 
     @Override

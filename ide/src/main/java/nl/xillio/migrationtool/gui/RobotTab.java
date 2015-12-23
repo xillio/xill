@@ -16,11 +16,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
+import netscape.javascript.JSObject;
 import nl.xillio.migrationtool.Loader;
 import nl.xillio.migrationtool.dialogs.CloseTabStopRobotDialog;
 import nl.xillio.migrationtool.dialogs.SaveBeforeClosingDialog;
 import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
 import nl.xillio.migrationtool.gui.EditorPane.DocumentState;
+import nl.xillio.xill.api.Issue;
 import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.api.XillProcessor;
 import nl.xillio.xill.api.components.Robot;
@@ -38,8 +40,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 /**
  * A tab containing the editor, console and debug panel attached to a specific currentRobot.
@@ -319,8 +323,22 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
         }
 
         loadProcessor(document, projectPath);
+        currentRobot = getProcessor().getRobotID();
+        setText(getName());
+
+        // Validate
+        validate();
 
         return true;
+    }
+
+    private void validate() {
+        List<Issue> issues = getProcessor().validate()
+                .stream()
+                .filter(issue -> issue.getRobot() == getCurrentRobot())
+                .collect(Collectors.toList());
+
+        getEditorPane().getEditor().annotate(issues);
     }
 
     /**
@@ -483,6 +501,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
             return;
         } catch (XillParsingException e) {
             handleXillParsingError(e);
+            LOGGER.error(e.getMessage(), e);
             return;
         } finally {
             apnStatusBar.setCompiling(false);

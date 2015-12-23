@@ -118,7 +118,7 @@ public class NodeServiceImpl implements NodeService {
 		String content;
 
 		try {
-			content = FileUtils.readFileToString(xmlSource).replaceAll("[^\\x20-\\x7e]", "");
+			content = FileUtils.readFileToString(xmlSource);
 		} catch (IOException e) {
 			throw new RobotRuntimeException("Read file error.", e);
 		}
