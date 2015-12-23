@@ -34,21 +34,16 @@ public final class Add extends BinaryNumberOperator {
                 throw new RobotRuntimeException("An addition has been tried upon a null value");
             }
 
-            //If you try to add a list to an atomic value it should give an error since this is unwanted behaviour.
-            if ((leftValue.getType() == ExpressionDataType.ATOMIC || rightValue.getType() == ExpressionDataType.ATOMIC)
-                    && (leftValue.getType() == ExpressionDataType.OBJECT || rightValue.getType() == ExpressionDataType.OBJECT)){
+            //If you try to add an atomic to an object it should give an error since this has to be done differently.
+            if ((leftValue.getType() == ExpressionDataType.ATOMIC && rightValue.getType() == ExpressionDataType.OBJECT)
+                    || (leftValue.getType() == ExpressionDataType.OBJECT && rightValue.getType() == ExpressionDataType.ATOMIC)){
                 throw new RobotRuntimeException("You should not add an atomic to an object this way. Use object.newKey = newValue instead.");
             }
 
-            //If you try to add a list to an atomic value it should give an error since this is unwanted behaviour.
+            //If you try to add an atomic to a list it should give an error since this has to be done differently.
             if ((leftValue.getType() == ExpressionDataType.ATOMIC && rightValue.getType() == ExpressionDataType.LIST)
-                    || (leftValue.getType() == ExpressionDataType.LIST || rightValue.getType() == ExpressionDataType.ATOMIC)){
+                    || (leftValue.getType() == ExpressionDataType.LIST && rightValue.getType() == ExpressionDataType.ATOMIC)){
                 throw new RobotRuntimeException("You should not add an atomic to a list this way. Use 'list[] = atomic' instead.");
-            }
-
-            //If you try to add an object to an atomic value it should give an error since this is unwanted behaviour.
-            if (leftValue.getType() == ExpressionDataType.ATOMIC && rightValue.getType() == ExpressionDataType.OBJECT) {
-                throw new RobotRuntimeException("You can not add an object to an atomic value.");
             }
 
             // If both entries are a list, then add them as such
