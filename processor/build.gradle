@@ -14,5 +14,9 @@ jar{
 	}
 }
 
+dependencies {
+	testCompile project(':testutils')
+}
+
 // To prepare for execution we need to copy the plugins to the plugin directory
 prepare.dependsOn copyToPluginsDir
