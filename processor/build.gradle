@@ -5,7 +5,7 @@ dependencies{
 	compile 'org.apache.commons:commons-lang3:3.4'
 	compile 'commons-io:commons-io:2.4'
 	compile project(':api')
-	compile 'nl.xillio.xill:xill.lang.Xill:3.0.22-4-g6d4c41c'
+	compile 'nl.xillio.xill:xill.lang.Xill:3.0.22-5-g3b483c8'
 }
 
 jar{

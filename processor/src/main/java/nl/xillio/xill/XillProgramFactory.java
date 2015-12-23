@@ -323,20 +323,11 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
     }
 
     ErrorInstruction parseToken(final xill.lang.xill.ErrorInstruction token) throws XillParsingException{
-        HashMap<String,InstructionSet> instructions = new HashMap<>();
-
-        instructions.put("DO",parseToken(token.getDoBlocks().getInstructionSet()));
-
-        if(token.getErrorBlocks() != null){
-            instructions.put("ERROR",parseToken(token.getErrorBlocks().getInstructionSet()));
-        }
-        if(token.getSuccesBlocks() != null){
-            instructions.put("SUCCES",parseToken(token.getSuccesBlocks().getInstructionSet()));
-        }
-        if(token.getFinallyBlock() != null){
-            instructions.put("FINALLY",parseToken(token.getFinallyBlock().getInstructionSet()));
-        }
-        return new ErrorInstruction(instructions);
+        return new ErrorInstruction(
+                        token.getDoBlock() == null ? null : parseToken(token.getDoBlock().getInstructionSet()),
+                        token.getSuccesBlock() == null ? null : parseToken(token.getSuccesBlock().getInstructionSet()),
+                        token.getErrorBlock() == null ? null : parseToken(token.getErrorBlock().getInstructionSet()),
+                        token.getFinallyBlock() == null ? null : parseToken(token.getFinallyBlock().getInstructionSet()));
     }
 
     /**
