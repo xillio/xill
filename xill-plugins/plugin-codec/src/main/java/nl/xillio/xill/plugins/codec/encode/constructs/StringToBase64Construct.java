@@ -9,6 +9,8 @@ import nl.xillio.xill.plugins.codec.encode.services.EncoderService;
 import java.io.UnsupportedEncodingException;
 
 /**
+ * Implementation of encoding a string to base64.
+ *
  * @author Pieter Soels
  */
 public class StringToBase64Construct extends Construct {
@@ -29,6 +31,7 @@ public class StringToBase64Construct extends Construct {
         if (inputString.isNull()) {
             throw new RobotRuntimeException("You cannot encode a null value");
         }
+
         try {
             return fromValue(encoderService.stringToBase64(inputString.getStringValue()));
         } catch (UnsupportedEncodingException e) {

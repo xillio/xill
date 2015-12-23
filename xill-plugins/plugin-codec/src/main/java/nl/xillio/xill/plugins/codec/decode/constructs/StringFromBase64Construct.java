@@ -12,6 +12,8 @@ import nl.xillio.xill.plugins.codec.decode.services.DecoderService;
 import java.io.UnsupportedEncodingException;
 
 /**
+ * Implementation of decoding a base64-encoded string to its decoded value.
+ *
  * @author Pieter Soels
  */
 public class StringFromBase64Construct extends Construct {
@@ -32,6 +34,7 @@ public class StringFromBase64Construct extends Construct {
         if (inputString.isNull()) {
             throw new RobotRuntimeException("You cannot encode a null value");
         }
+
         try {
             return fromValue(decoderService.stringFromBase64(inputString.getStringValue()));
         } catch (UnsupportedEncodingException e) {

@@ -30,7 +30,7 @@ public class EncoderServiceImpl implements EncoderService {
 
     @Override
     public String stringToBase64(final String stringInput) throws UnsupportedEncodingException {
-        byte[] data = stringInput.getBytes("UTF-8");
+        byte[] data = stringInput.getBytes(StandardCharsets.UTF_8);
         return Base64.getEncoder().encodeToString(data);
     }
 }

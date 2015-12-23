@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-This function encodes a string to the representing Base64 value.
+This function encodes a string to its representing Base64 value.
     </description>
     <examples>
         <example title="Usage">
-            <header>Convert a String to a base64 value</header>
             <code>
                 use Encode;
                 use System
