@@ -26,7 +26,6 @@ public interface XillProcessor {
      * Test a robot for syntax errors.
      *
      * @return a list of issues
-     * @throws IOException if some file could not be read
      */
     List<Issue> validate();
 
