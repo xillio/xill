@@ -70,7 +70,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
     private final Stack<Map.Entry<xill.lang.xill.FunctionDeclaration, FunctionParameterExpression>> functionParameterExpressions = new Stack<>();
     private final Stack<Map.Entry<xill.lang.xill.FunctionCall, FunctionCall>> functionCalls = new Stack<>();
     private final Map<xill.lang.xill.FunctionCall, List<Processable>> functionCallArguments = new HashMap<>();
-    private final Map<xill.lang.xill.PluginCall, XillPlugin> useStatements = new HashMap<>();
+    private final Map<xill.lang.xill.UseStatement, XillPlugin> useStatements = new HashMap<>();
     private final Map<Resource, RobotID> robotID = new HashMap<>();
     private final PluginLoader<XillPlugin> pluginLoader;
     private final Debugger debugger;
@@ -120,9 +120,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
         info.setVariables(variables);
         info.setUsing(useStatements);
 
-        for (UseStatement using : robot.getUses()) {
-            List<PluginCall> plugins = using.getPlugins(); //get the plugins for that line
-            for(PluginCall plugin : plugins){ //for each plugin
+        for (UseStatement plugin : robot.getUses()) {
                 String pluginName = plugin.getPlugin();
                     if (pluginName == null) { // In case of non-qualified name: use MySQL;
                         pluginName = plugin.getName();
@@ -135,13 +133,12 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
                             .filter(pckage -> pckage.getName().equals(searchName)).findAny();
 
                     if (!ActualPlugin.isPresent()) {
-                        CodePosition pos = pos(using);
+                        CodePosition pos = pos(plugin);
                         throw new XillParsingException("Could not find plugin " + pluginName, pos.getLineNumber(),
                                 pos.getRobotID());
                     }
 
                     useStatements.put(plugin, ActualPlugin.get());
-                }
             }
 
 
@@ -871,7 +868,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 
         if (construct == null) {
             throw new XillParsingException("The construct " + token.getFunction() + " does not exist in package "
-                    + token.getPackage().getName(),
+                    + pluginPackage.getName(),
                     pos.getLineNumber(), pos.getRobotID());
         }
 
