@@ -725,7 +725,8 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
             } else if (extraction.getChild() != null) {
                 result.add(new ExpressionBuilder(extraction.getChild()));
             } else {
-                result.add(new Add(parse(extraction.getValue()), new ExpressionBuilder(0)));
+                Processable size = new CollectionSize(parse(extraction.getValue()));
+                result.add(size);
             }
 
             if (extraction.getValue() instanceof ListExtraction) {
@@ -761,7 +762,8 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 
         // We used neither: listVariable[]. Interpret as
         // listVariable[listVariable + 0]
-        return new FromList(expression, new Add(expression, new ExpressionBuilder(0)));
+        Processable size = new CollectionSize(expression);
+        return new FromList(expression, size);
     }
 
     /**

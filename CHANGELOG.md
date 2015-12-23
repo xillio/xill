@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file
 ## [3.0.BC2] - unreleased
 ### Add
 - Option to declare multiple usages in one statement: use System, String;
+- Functionality to add any combination of LIST and OBJECT expressions
 
 
 ## [3.0.23] - 11-12-2015
