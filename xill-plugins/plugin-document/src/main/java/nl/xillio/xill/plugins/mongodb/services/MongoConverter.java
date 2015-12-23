@@ -1,14 +1,13 @@
 package nl.xillio.xill.plugins.mongodb.services;
 
 import com.google.inject.Singleton;
-import com.mongodb.Mongo;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.plugins.document.services.xill.DocumentQueryBuilder;
 import nl.xillio.xill.plugins.mongodb.data.MongoObjectId;
 import org.bson.Document;
-import org.bson.types.ObjectId;
 
+import javax.inject.Inject;
 import java.util.Map;
 
 /**
@@ -20,23 +19,27 @@ import java.util.Map;
 @Singleton
 public class MongoConverter implements DocumentQueryBuilder {
 
+    private final ObjectIdSerializer objectIdSerializer;
+
+    @Inject
+    public MongoConverter(ObjectIdSerializer objectIdSerializer) {
+        this.objectIdSerializer = objectIdSerializer;
+    }
+
+
     public Document parse(MetaExpression expression) {
 
         if (expression.getType() != ExpressionDataType.OBJECT) {
             throw new IllegalArgumentException("Can only parse OBJECT to a query");
         }
 
-        Map<String, Object> value = MetaExpression.extractValue(expression);
+        Map<String, Object> value = MetaExpression.extractValue(expression, objectIdSerializer);
 
         return new Document(value);
     }
 
     public MetaExpression parse(Document document) {
-        return MetaExpression.parseObject(document);
-    }
-
-    public MetaExpression parse(MongoObjectId objectId) {
-        return MetaExpression.parseObject(objectId, new ObjectIdDeserializer());
+        return MetaExpression.parseObject(document, objectIdSerializer);
     }
 
     @Override

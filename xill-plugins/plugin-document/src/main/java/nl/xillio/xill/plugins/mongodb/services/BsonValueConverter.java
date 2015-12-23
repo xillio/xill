@@ -3,6 +3,7 @@ package nl.xillio.xill.plugins.mongodb.services;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.components.MetaExpressionSerializer;
 import nl.xillio.xill.api.data.Date;
 import nl.xillio.xill.api.data.DateFactory;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
@@ -25,10 +26,12 @@ import static nl.xillio.xill.api.components.ExpressionBuilder.fromValue;
 public class BsonValueConverter {
 
     private final DateFactory dateFactory;
+    private final ObjectIdSerializer objectIdSerializer;
 
     @Inject
-    public BsonValueConverter(DateFactory dateFactory) {
+    public BsonValueConverter(DateFactory dateFactory, ObjectIdSerializer objectIdSerializer) {
         this.dateFactory = dateFactory;
+        this.objectIdSerializer = objectIdSerializer;
     }
 
     public MetaExpression convert(BsonValue value) {
@@ -75,6 +78,10 @@ public class BsonValueConverter {
         if (value.isDateTime()) {
             Instant instant = Instant.ofEpochSecond(value.asDateTime().getValue());
             return parseDate(instant);
+        }
+
+        if (value.isObjectId()) {
+            return objectIdSerializer.parseObject(value.asObjectId().getValue());
         }
 
         throw new RobotRuntimeException("No conversion codex found for bson type " + value.getClass().getSimpleName());

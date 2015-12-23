@@ -9,13 +9,13 @@ import nl.xillio.xill.plugins.mongodb.data.MongoObjectId;
 
 /**
  * Creates a Mongo ObjectId from a 24 character hexadecimal string
+ *
+ * @author Titus Nachbauer
  */
 public class ObjectIdConstruct extends Construct{
     @Override
     public ConstructProcessor prepareProcess(ConstructContext context) {
-        return new ConstructProcessor((string) -> {
-            return process(string);
-        }, new Argument("string", ATOMIC));
+        return new ConstructProcessor(this::process, new Argument("string", ATOMIC));
     }
 
     private MetaExpression process(MetaExpression string) {

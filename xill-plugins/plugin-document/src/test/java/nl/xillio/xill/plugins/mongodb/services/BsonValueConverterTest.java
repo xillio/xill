@@ -1,10 +1,13 @@
 package nl.xillio.xill.plugins.mongodb.services;
 
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.components.MetaExpressionSerializer;
 import nl.xillio.xill.api.data.Date;
 import nl.xillio.xill.api.data.DateFactory;
+import nl.xillio.xill.plugins.mongodb.data.MongoObjectId;
 import nl.xillio.xill.services.json.JacksonParser;
 import org.bson.*;
+import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
 
 import java.time.Instant;
@@ -22,7 +25,7 @@ public class BsonValueConverterTest {
 
     @Test
     public void testConvert() throws Exception {
-        BsonValueConverter converter = new BsonValueConverter(null);
+        BsonValueConverter converter = new BsonValueConverter(null, null);
         JacksonParser parser = new JacksonParser(false);
 
         assertEquals(converter.convert(new BsonString("Hello")), fromValue("Hello"));
@@ -39,7 +42,7 @@ public class BsonValueConverterTest {
     @Test
     public void testConvertDates() throws Exception {
         DateFactory dateFactory = mock(DateFactory.class, RETURNS_DEEP_STUBS);
-        BsonValueConverter converter = new BsonValueConverter(dateFactory);
+        BsonValueConverter converter = new BsonValueConverter(dateFactory, null);
 
         MetaExpression timestampDate = converter.convert(new BsonTimestamp(1000,0));
         assertNotNull(timestampDate.getMeta(Date.class));
@@ -50,5 +53,14 @@ public class BsonValueConverterTest {
         verify(dateFactory).from(eq(Instant.ofEpochSecond(120)));
     }
 
+    @Test
+    public void testConvertObjectId() throws Exception {
+        ObjectIdSerializer objectIdSerializer = new ObjectIdSerializer();
+        BsonValueConverter converter = new BsonValueConverter(null, objectIdSerializer);
+        ObjectId objectId = new ObjectId();
+        MetaExpression expression = converter.convert(new BsonObjectId(objectId));
+        assertNotNull(expression.getMeta(MongoObjectId.class));
+        assertEquals(expression.getMeta(MongoObjectId.class).getObjectId(), objectId);
+    }
 
 }

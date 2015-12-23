@@ -1,21 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Creates a Mongo ObjectId based on a 24 character hexadecimal string. This ObjectId can then be used to identify Mongo documents.
+        Creates a Mongo ObjectId based on a 24 character hexadecimal string. This ObjectId can then be used to identify
+        Mongo documents.
     </description>
     <examples>
         <example title="Usage">
-            <header>Iterate over all documents.</header>
+            <header>Find a document with a known objectId.</header>
             <code>
                 use Mongo;
                 use System;
                 Mongo.connect("udm_default");
 
-                var documents = Mongo.find("documents");
+                var documents = Mongo.find("asset", {"_id": Mongo.objectId("567a73d9cfa9040e40700949")});
 
                 foreach(document in documents) {
-                    System.print(document._id);
+                    System.print(document.name);
                 }
+            </code>
+        </example>
+        <example title="Usage">
+            <header>Update a document with a known objectId.</header>
+            <code>
+                use Mongo;
+                use System;
+                Mongo.connect("udm_default");
+
+                var result = Mongo.update(
+                    "asset",
+                    {"_id": Mongo.objectId("567a73d9cfa9040e40700949")},
+                    { "$set" :
+                        {"metaData.meta2":"seasonal greetings"}
+                    },
+                    {"upsert":false}
+                );
+
+                System.print ("Updated " :: result :: " documents.");
             </code>
         </example>
     </examples>
