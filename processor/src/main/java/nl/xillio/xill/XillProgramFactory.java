@@ -28,6 +28,7 @@ import nl.xillio.xill.components.expressions.MapExpression;
 import nl.xillio.xill.components.instructions.BreakInstruction;
 import nl.xillio.xill.components.instructions.ContinueInstruction;
 import nl.xillio.xill.components.instructions.*;
+import nl.xillio.xill.components.instructions.ErrorInstruction;
 import nl.xillio.xill.components.instructions.ExpressionInstruction;
 import nl.xillio.xill.components.instructions.FunctionDeclaration;
 import nl.xillio.xill.components.instructions.IfInstruction;
@@ -319,6 +320,23 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
     WhileInstruction parseToken(final xill.lang.xill.WhileInstruction token) throws XillParsingException {
         return new WhileInstruction(parse(token.getCondition()),
                 parseToken(token.getInstructionBlock().getInstructionSet()));
+    }
+
+    ErrorInstruction parseToken(final xill.lang.xill.ErrorInstruction token) throws XillParsingException{
+        HashMap<String,InstructionSet> instructions = new HashMap<>();
+
+        instructions.put("DO",parseToken(token.getDoBlocks().getInstructionSet()));
+
+        if(token.getErrorBlocks() != null){
+            instructions.put("ERROR",parseToken(token.getErrorBlocks().getInstructionSet()));
+        }
+        if(token.getSuccesBlocks() != null){
+            instructions.put("SUCCES",parseToken(token.getSuccesBlocks().getInstructionSet()));
+        }
+        if(token.getFinallyBlock() != null){
+            instructions.put("FINALLY",parseToken(token.getFinallyBlock().getInstructionSet()));
+        }
+        return new ErrorInstruction(instructions);
     }
 
     /**
