@@ -25,11 +25,13 @@ public class StringFromBase64Construct extends Construct {
         this.decoderService = decoderService;
     }
 
+    @Override
     public ConstructProcessor prepareProcess(ConstructContext context) {
         return new ConstructProcessor(this::process,
                 new Argument("inputString", ATOMIC));
     }
 
+    @SuppressWarnings("squid:UnusedPrivateMethod")
     private MetaExpression process(MetaExpression inputString) {
         if (inputString.isNull()) {
             throw new RobotRuntimeException("You cannot encode a null value");

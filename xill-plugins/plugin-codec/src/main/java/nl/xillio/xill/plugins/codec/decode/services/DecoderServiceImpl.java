@@ -23,6 +23,7 @@ public class DecoderServiceImpl implements DecoderService {
         return new String(hex.decode(hexString.getBytes()), charset);
     }
 
+    @Override
     public String stringFromBase64(final String stringInput) throws UnsupportedEncodingException {
         byte[] data = stringInput.getBytes(StandardCharsets.UTF_8);
         byte[] result = Base64.getDecoder().decode(data);
