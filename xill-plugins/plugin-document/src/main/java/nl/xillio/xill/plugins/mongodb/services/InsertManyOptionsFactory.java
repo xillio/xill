@@ -27,15 +27,13 @@ public class InsertManyOptionsFactory {
      * @return the InsertManyOptions
      */
     public InsertManyOptions build(MetaExpression argument) {
-        if (argument.getType() != ExpressionDataType.OBJECT) {
-            throw new IllegalArgumentException("The options argument has to be an object");
+        if (argument.getType() != ExpressionDataType.ATOMIC) {
+            throw new IllegalArgumentException("The options argument has to be an ATOMIC");
         }
-
-        Map<String, MetaExpression> options = argument.getValue();
 
         InsertManyOptions result = new InsertManyOptions();
 
-        options.forEach((option, value) -> processOption(option, value, result));
+        processOption("ordered", argument, result);
 
         return result;
     }

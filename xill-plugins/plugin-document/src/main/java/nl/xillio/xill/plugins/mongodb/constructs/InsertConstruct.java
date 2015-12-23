@@ -32,8 +32,8 @@ public class InsertConstruct extends AbstractCollectionApiConstruct {
     @Override
     protected Argument[] getApiArguments() {
         return new Argument[] {
-                new Argument("documents", emptyList(), LIST),
-                new Argument("options", emptyObject(), OBJECT)
+                new Argument("documents", LIST),
+                new Argument("ordered", TRUE, ATOMIC)
         };
     }
 
