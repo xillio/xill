@@ -23,6 +23,14 @@ public interface XillProcessor {
     List<Issue> compile() throws IOException, XillParsingException;
 
     /**
+     * Test a robot for syntax errors.
+     *
+     * @return a list of issues
+     * @throws IOException if some file could not be read
+     */
+    List<Issue> validate();
+
+    /**
      * Run {@link XillProcessor#compile()} first
      *
      * @return the compiled robot.
