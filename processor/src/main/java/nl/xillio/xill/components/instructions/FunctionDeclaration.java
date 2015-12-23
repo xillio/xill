@@ -28,7 +28,9 @@ public class FunctionDeclaration extends Instruction {
      */
     public FunctionDeclaration(final InstructionSet instructions, final List<VariableDeclaration> parameters) {
         this.instructions = instructions;
+        instructions.setParentInstruction(this);
         this.parameters = parameters;
+        parameters.forEach(param -> param.setHostInstruction(instructions));
     }
 
     @Override
@@ -62,9 +64,12 @@ public class FunctionDeclaration extends Instruction {
             parametersItt.next().replaceVariable(expression);
         }
 
+        debugger.startFunction(this);
+
         // Run the actual code
         InstructionFlow<MetaExpression> result = instructions.process(debugger);
 
+        debugger.endFunction(this);
         if (result.hasValue()) {
             result.get().preventDisposal();
 

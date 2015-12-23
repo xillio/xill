@@ -8,52 +8,64 @@ import nl.xillio.xill.api.components.RobotID;
  */
 public abstract class Instruction implements nl.xillio.xill.api.components.Instruction {
 
-	private CodePosition position;
+    private CodePosition position;
+    private InstructionSet hostInstruction;
 
-	@Override
-	public RobotID getRobotID() {
-		return position.getRobotID();
-	}
+    @Override
+    public RobotID getRobotID() {
+        return position.getRobotID();
+    }
 
-	@Override
-	public int getLineNumber() {
-		return position.getLineNumber();
-	}
+    @Override
+    public int getLineNumber() {
+        return position.getLineNumber();
+    }
 
-	/**
-	 * Set the code position of this instruction.
-	 * <b>Note!</b> This value can only be set once!
-	 *
-	 * @param position
-	 */
-	public void setPosition(final CodePosition position) {
-		if (this.position != null) {
-			return;
-		}
+    /**
+     * Set the code position of this instruction.
+     * <b>Note!</b> This value can only be set once!
+     *
+     * @param position
+     */
+    public void setPosition(final CodePosition position) {
+        if (this.position != null) {
+            return;
+        }
 
-		this.position = position;
-	}
+        this.position = position;
+    }
 
-	protected CodePosition getPosition() {
-		return position;
-	}
+    protected CodePosition getPosition() {
+        return position;
+    }
 
-	@Override
-	public String toString() {
-		String path = getRobotID().getProjectPath().toURI().relativize(getRobotID().getPath().toURI()).getPath();
+    @Override
+    public String toString() {
+        String path = getRobotID().getProjectPath().toURI().relativize(getRobotID().getPath().toURI()).getPath();
 
-		return path + ":" + getLineNumber() + " > " + getClass().getSimpleName();
-	}
+        return path + ":" + getLineNumber() + " > " + getClass().getSimpleName();
+    }
 
-	/**
-	 * @return true if debugging should be prevented
-	 */
-	public boolean preventDebugging() {
-		return false;
-	}
+    /**
+     * @return true if debugging should be prevented
+     */
+    public boolean preventDebugging() {
+        return false;
+    }
 
-	@Override
-	public void close() throws Exception {
+    @Override
+    public void close() throws Exception {
 
-	}
+    }
+
+    public InstructionSet getHostInstruction() {
+        return hostInstruction;
+    }
+
+    public void setHostInstruction(InstructionSet hostInstruction) {
+        if (this.hostInstruction != null) {
+            throw new IllegalStateException("The host instruction set has already been set!");
+        }
+        this.hostInstruction = hostInstruction;
+    }
 }

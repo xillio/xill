@@ -45,13 +45,17 @@
 }
 
 .ace_gutter-cell.ace_breakpoint:before {
-    background: #DC042B;
     border-radius: 100%;
     content: '';
     display: block;
     height: 8px;
-    left: 4px;
+    left: 20px;
     position: absolute;
     top: 4px;
     width: 8px;
+    background: #DC042B;
+}
+
+.ace_gutter .ace_gutter-layer {
+    width: 70px !important;
 }

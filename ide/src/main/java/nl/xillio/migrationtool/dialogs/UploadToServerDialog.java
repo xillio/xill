@@ -1,5 +1,6 @@
 package nl.xillio.migrationtool.dialogs;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeItem;
@@ -14,18 +15,18 @@ import java.io.File;
  */
 public class UploadToServerDialog extends FXMLDialog {
 
-	private final TreeItem<Pair<File, String>> treeItem;
+	private final ObservableList<TreeItem<Pair<File, String>>> treeItems;
 	private final ProjectPane projectPane;
 
 	/**
 	 * Default constructor.
 	 *
 	 * @param projectPane the projectPane to which this dialog is attached to.
-	 * @param treeItem    the tree item on which the item will be deleted
+	 * @param treeItems   the tree item on which the item will be deleted
 	 */
-	public UploadToServerDialog(final ProjectPane projectPane, final TreeItem<Pair<File, String>> treeItem) {
+	public UploadToServerDialog(final ProjectPane projectPane, final ObservableList<TreeItem<Pair<File, String>>> treeItems) {
 		super("/fxml/dialogs/UploadToServer.fxml");
-		this.treeItem = treeItem;
+		this.treeItems = treeItems;
 		this.projectPane = projectPane;
 
 		setTitle("Upload to server");

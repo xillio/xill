@@ -26,6 +26,7 @@ public class IfInstruction extends CompoundInstruction {
     public IfInstruction(final Processable condition, final InstructionSet instructionSet) {
         this.condition = condition;
         this.instructionSet = instructionSet;
+        instructionSet.setParentInstruction(this);
     }
 
     /**
@@ -36,6 +37,7 @@ public class IfInstruction extends CompoundInstruction {
      */
     public boolean isTrue(final Debugger debugger) {
         try (ExpressionInstruction conditionInstruction = new ExpressionInstruction(condition)) {
+            conditionInstruction.setHostInstruction(getHostInstruction());
             conditionInstruction.setPosition(getPosition());
             debugger.startInstruction(conditionInstruction);
             InstructionFlow<MetaExpression> result = conditionInstruction.process(debugger);

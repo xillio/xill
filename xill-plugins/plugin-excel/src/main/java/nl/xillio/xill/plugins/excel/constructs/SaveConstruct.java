@@ -85,7 +85,7 @@ public class SaveConstruct extends Construct {
 		}
 		String savedString = "Saved [" + returnValue.getLocation() + "]";
 		MetaExpression toReturn = fromValue(savedString);
-		toReturn.storeMeta(XillWorkbook.class, returnValue);
+		toReturn.storeMeta(returnValue);
 		return toReturn;
 	}
 

@@ -420,15 +420,24 @@
                                                             <Label styleClass="lblSettingsHeader" text="Other" />
                                                          </children>
                                                       </HBox>
+														<HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+															<children>
+																<Label prefWidth="200.0" text="Rename selected item" />
+																<TextField fx:id="tfrename" alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+															</children>
+															<padding>
+																<Insets />
+															</padding>
+														</HBox>
                                                       <HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
-                                                         <children>
-                                                            <Label prefWidth="200.0" text="Open settings dialog" />
-                                                            <TextField fx:id="tfopensettings" alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
-                                                         </children>
-                                                         <padding>
-                                                            <Insets />
-                                                         </padding>
-                                                      </HBox>
+																		<children>
+																			<Label prefWidth="200.0" text="Open settings dialog" />
+																			<TextField fx:id="tfopensettings" alignment="TOP_LEFT" depthTest="INHERIT" promptText="" HBox.hgrow="ALWAYS" />
+																		</children>
+																		<padding>
+																			<Insets />
+																		</padding>
+																	</HBox>
 																	</children>
 																</VBox>
 															</children>
