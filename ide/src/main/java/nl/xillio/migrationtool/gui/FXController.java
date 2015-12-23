@@ -16,6 +16,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
+import javafx.util.Pair;
 import nl.xillio.migrationtool.ApplicationKillThread;
 import nl.xillio.migrationtool.LicenseUtils;
 import nl.xillio.migrationtool.Loader;
@@ -302,7 +303,11 @@ public class FXController implements Initializable, EventHandler<Event> {
         // Select initial directory
         File initialFolder;
         if (projectpane.getCurrentItem() != null) {
-            initialFolder = projectpane.getCurrentItem().getValue().getKey();
+            TreeItem<Pair<File, String>> curr = projectpane.getCurrentItem();
+            initialFolder = curr.getValue().getKey();
+
+            // If the folder to create the new file in does not exist, create it.
+            projectpane.makeDirIfNotExists(curr);
         } else {
             initialFolder = projectfile;
         }
@@ -372,17 +377,20 @@ public class FXController implements Initializable, EventHandler<Event> {
         if (btnOpenFile.isDisabled())
             return;
 
+        // If the last picked folder exists, set the initial directory to that.
         FileChooser fileChooser = new FileChooser();
-        String lastfolder = settings.simple().get(Settings.FILE, Settings.LastFolder);
-        if (lastfolder != null) {
-            fileChooser.setInitialDirectory(new File(lastfolder));
+        File lastFolder = new File(settings.simple().get(Settings.FILE, Settings.LastFolder));
+        if (lastFolder.exists()) {
+            fileChooser.setInitialDirectory(lastFolder);
         }
+
+        // Only show Xill scripts, show the dialog and open the file.
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
                 "Xillio scripts (*" + "." + Xill.FILE_EXTENSION + ")", "*" + "." + Xill.FILE_EXTENSION));
-        File newfile = fileChooser.showOpenDialog(btnOpenFile.getScene().getWindow());
+        File newFile = fileChooser.showOpenDialog(btnOpenFile.getScene().getWindow());
 
-        if (newfile != null) {
-            openFile(newfile);
+        if (newFile != null) {
+            openFile(newFile);
         }
     }
 

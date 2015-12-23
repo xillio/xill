@@ -7,15 +7,8 @@ import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import static java.nio.file.StandardWatchEventKinds.*;
 
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.WatchEvent;
+import java.nio.file.*;
 import java.nio.file.WatchEvent.Kind;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -59,6 +52,11 @@ public class WatchDir implements Runnable {
 
 	public void stop() {
 		stop = true;
+		try {
+			watcher.close();
+		} catch (IOException e) {
+			LOGGER.error(e.getMessage(), e);
+		}
 	}
 
 	private void fireEvent(final Path dir, final Path child, final WatchEvent<Path> event) {
@@ -109,8 +107,8 @@ public class WatchDir implements Runnable {
 			WatchKey key;
 			try {
 				key = watcher.take();
-			} catch (InterruptedException e) {
-				break;
+			} catch (InterruptedException | ClosedWatchServiceException e) {
+				return;
 			}
 
 			Path dir = keys.get(key);
@@ -157,12 +155,6 @@ public class WatchDir implements Runnable {
 					break;
 				}
 			}
-		}
-
-		try {
-			watcher.close();
-		} catch (IOException e) {
-			LOGGER.error(e.getMessage(), e);
 		}
 	}
 

@@ -33,9 +33,14 @@ public class ForeachInstruction extends CompoundInstruction {
      */
     public ForeachInstruction(final InstructionSet instructionSet, final Processable list, final VariableDeclaration valueVar, final VariableDeclaration keyVar) {
         this.instructionSet = instructionSet;
+        instructionSet.setParentInstruction(this);
         this.list = list;
         this.valueVar = valueVar;
+        valueVar.setHostInstruction(instructionSet);
         this.keyVar = keyVar;
+        if(keyVar != null) {
+            keyVar.setHostInstruction(instructionSet);
+        }
     }
 
     /**
@@ -55,6 +60,7 @@ public class ForeachInstruction extends CompoundInstruction {
     @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
         ExpressionInstruction listInstruction = new ExpressionInstruction(list);
+        listInstruction.setHostInstruction(getHostInstruction());
         listInstruction.setPosition(getPosition());
         debugger.startInstruction(listInstruction);
         InstructionFlow<MetaExpression> flow = listInstruction.process(debugger);

@@ -62,23 +62,30 @@ public class DebugPane extends AnchorPane implements EventHandler<KeyEvent>, Rob
 
 	@Override
 	public void initialize(final RobotTab tab) {
-		String fullPath = tab.getProcessor().getRobotID().getPath().getAbsolutePath();
-		settings.simple().register(Settings.LAYOUT, Settings.PreviewHeight_ + fullPath, "0.6", "The height of the preview panel");
+		settings.simple().register(Settings.LAYOUT, Settings.PreviewHeight_ + getFullPath(tab), "0.6", "The height of the preview panel");
 		// Load the divider position
-		spnBotRight.setDividerPosition(0, Double.parseDouble(settings.simple().get(Settings.LAYOUT, Settings.PreviewHeight_ + fullPath)));
-		spnBotRight.getDividers().get(0).positionProperty().addListener((observable, prevPos, newPos) -> settings.simple().save(Settings.LAYOUT, Settings.PreviewHeight_ + fullPath, Double.toString(newPos.doubleValue())));
+		spnBotRight.setDividerPosition(0, Double.parseDouble(settings.simple().get(Settings.LAYOUT, Settings.PreviewHeight_ + getFullPath(tab))));
+		spnBotRight.getDividers().get(0).positionProperty().addListener((observable, prevPos, newPos) -> settings.simple().save(Settings.LAYOUT, Settings.PreviewHeight_ + getFullPath(tab), Double.toString(newPos.doubleValue())));
 		
 		initializeChildren(tab);
 	}
-	
+
+	public String getFullPath(RobotTab tab){
+		return tab.getProcessor().getRobotID().getPath().getAbsolutePath();
+	}
 	/**
 	 * Initialize graphical FX items that belongs to DebugPane (it's because of problem with Tab.getContent() on Linux, see CTC-713)  
 	 * @param tab currently active RobotTab
 	 */
 	private void initializeChildren(final RobotTab tab) {
-		variablepane.initialize(tab);
-		previewpane.initialize(tab);
 		instructionstackpane.initialize(tab);
+		instructionstackpane.setDebugPane(this);
+		variablepane.initialize(tab);
+		variablepane.initialize(instructionstackpane);
+		previewpane.initialize(tab);
 	}
 
+	public VariablePane getVariablepane() {
+		return variablepane;
+	}
 }
