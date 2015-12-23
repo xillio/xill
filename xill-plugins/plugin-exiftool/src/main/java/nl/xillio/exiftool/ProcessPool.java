@@ -13,7 +13,7 @@ import java.util.function.Supplier;
  *
  * @author Thomas Biesaart
  */
-public class ProcessPool {
+public class ProcessPool implements AutoCloseable {
     private static final Logger LOGGER = Log.get();
     /**
      * These are all the processes that have been built.
@@ -32,13 +32,16 @@ public class ProcessPool {
     public synchronized ExifTool getAvailable() {
         ExifToolProcess process = processes.stream()
                 .filter(proc -> !leasedProcesses.contains(proc))
-                .filter(ExifToolProcess::isAvailable)
                 .findAny()
                 .orElse(null);
 
         if (process == null) {
             process = createNew();
         }
+
+        leasedProcesses.add(process);
+
+        LOGGER.info("Giving out {}", process);
 
         return new ExifTool(process, this::release);
     }
@@ -51,6 +54,12 @@ public class ProcessPool {
     }
 
     private void release(ExifToolProcess process) {
+        LOGGER.info("Releasing {}", process);
+        leasedProcesses.remove(process);
+    }
 
+    @Override
+    public void close() {
+        processes.forEach(ExifToolProcess::close);
     }
 }

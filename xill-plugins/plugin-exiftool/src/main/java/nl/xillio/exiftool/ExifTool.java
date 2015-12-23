@@ -34,7 +34,7 @@ public class ExifTool implements AutoCloseable {
     @Override
     public void close() {
         LOGGER.debug("Releasing exiftool process");
-        releaseMethod.accept(process);
+        //releaseMethod.accept(process);
     }
 
     public static ProcessPool buildPool() {
@@ -93,8 +93,8 @@ public class ExifTool implements AutoCloseable {
             throw new IllegalArgumentException(path + " is not a folder");
         }
 
-        ExecutionResult lines = tryRun(Arrays.asList(path.toAbsolutePath().toString(), "-r"));
+        ExecutionResult lines = tryRun(Arrays.asList(path.toAbsolutePath().toString(), "-r", "-ext", "*"));
 
-        return new ExifReadResultImpl(lines, 10);
+        return new ExifReadResultImpl(lines, 100);
     }
 }
