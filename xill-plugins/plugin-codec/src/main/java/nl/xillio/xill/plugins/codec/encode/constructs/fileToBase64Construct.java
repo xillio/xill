@@ -37,9 +37,9 @@ public class FileToBase64Construct extends Construct {
     @Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
         return new ConstructProcessor(
-                (file, path) -> process(file, path, context),
-                new Argument("file", ATOMIC),
-                new Argument("path", ATOMIC));
+                (input, output) -> process(input, output, context),
+                new Argument("input", ATOMIC),
+                new Argument("output", ATOMIC));
     }
 
 	MetaExpression process(final MetaExpression pathInput, final MetaExpression pathOutput, final ConstructContext context) {
@@ -49,19 +49,7 @@ public class FileToBase64Construct extends Construct {
         File fileInput = getFile(context, pathInput.getStringValue());
         File fileOutput = getFile(context, pathOutput.getStringValue());
 
-        try {
-            fileUtilsService.forceMkdir(fileOutput.getParentFile());
-        } catch (IOException e) {
-            throw new RobotRuntimeException("Error writing to file: " + e.getMessage(), e);
-        }
-
-		try(InputStream in = new FileInputStream(fileInput); OutputStream out = new Base64OutputStream(new FileOutputStream(fileOutput))) {
-            IOUtils.copy(in, out);
-		} catch (FileNotFoundException e) {
-            throw new RobotRuntimeException("The file could not be found or the filename is invalid: " + e.getMessage(), e);
-        } catch (IOException e) {
-            throw new RobotRuntimeException("Error writing to file: " + e.getMessage(), e);
-        }
+        encoderService.encodeFileBase64(fileInput, fileOutput, fileUtilsService);
 
 		return NULL;
 
