@@ -3,8 +3,7 @@
     <description>
 Makes a base64-encoded file of the given file.
 
-Commonly used to encode binary data for transfer over a text channel (such as attachments in e-mails).  
-The parameter file is expected to be either a valid file name, or a binary variable.
+Commonly used to encode binary data to send it over a text channel (such as attachments in e-mails).
     </description>
     <examples>
         <example title="Usage">

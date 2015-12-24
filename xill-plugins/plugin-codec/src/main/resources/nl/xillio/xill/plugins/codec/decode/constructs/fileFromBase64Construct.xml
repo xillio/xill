@@ -3,7 +3,7 @@
     <description>
 Base-64 decode a given file, and store it in an other file.
 
-Commonly used to decode binary data transferred over a text channel (such as attachments in e-mails).
+Commonly used to decode the recieved data from a text channel to get the binary data (such as attachments in e-mails).
     </description>
     <examples>
         <example title="Usage">
