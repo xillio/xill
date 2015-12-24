@@ -7,9 +7,11 @@ import org.apache.commons.codec.binary.Base64InputStream;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.IOUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 /**
  * Implementation of Decoding methods.
@@ -42,5 +44,12 @@ public class DecoderServiceImpl implements DecoderService {
         } catch (IOException e) {
             throw new RobotRuntimeException("Error writing to file: " + e.getMessage(), e);
         }
+    }
+
+    @Override
+    public String stringFromBase64(final String stringInput) throws UnsupportedEncodingException {
+        byte[] data = stringInput.getBytes(StandardCharsets.UTF_8);
+        byte[] result = Base64.getDecoder().decode(data);
+        return new String(result ,StandardCharsets.UTF_8);
     }
 }

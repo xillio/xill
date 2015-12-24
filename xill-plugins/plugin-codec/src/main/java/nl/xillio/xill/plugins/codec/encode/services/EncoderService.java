@@ -46,4 +46,6 @@ public interface EncoderService {
      * @param fileUtilsService A service we use to handle file allocation.
      */
     void encodeFileBase64(File input, File output, FileUtilsService fileUtilsService);
+
+    String stringToBase64(String stringInput) throws UnsupportedEncodingException;
 }

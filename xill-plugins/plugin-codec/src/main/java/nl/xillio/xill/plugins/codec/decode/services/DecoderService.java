@@ -6,6 +6,8 @@ import org.apache.commons.codec.DecoderException;
 
 import java.io.File;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * Interface defining behavior of decoding constructs.
  *
@@ -41,4 +43,6 @@ public interface DecoderService {
      */
     void decodeFileBase64(File input, File output, FileUtilsService fileUtilsService);
 
+
+    String stringFromBase64(String inputString) throws UnsupportedEncodingException;
 }

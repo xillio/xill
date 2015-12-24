@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+This function encodes a string to its representing Base64 value.
+    </description>
+    <examples>
+        <example title="Usage">
+            <code>
+                use Encode;
+                use System;
+
+                System.print(Encode.stringToBase64("This is a test-string."));
+                // prints VGhpcyBpcyBhIHRlc3Qtc3RyaW5nLg==
+                System.print(Encode.stringToBase64("And another one for comparison."));
+                // prints QW5kIGFub3RoZXIgb25lIGZvciBjb21wYXJpc29uLg==
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>Decode.stringFromBase64</reference>
+    </references>
+    <tags>
+        encoding, decoding, base64
+    </tags>
+</function>

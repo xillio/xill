@@ -10,6 +10,7 @@ import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 /**
  * Implementation of encoding methods.
@@ -25,7 +26,7 @@ public class EncoderServiceImpl implements EncoderService {
         final Charset charset = charsetName == null ? StandardCharsets.UTF_8 : Charset.forName(charsetName);
         return new String(Hex.encodeHex(inputString.getBytes(charset), toLowerCase));
     }
-    
+
     @Override
     public String urlEncode(final String text, final boolean xWwwForm) throws UnsupportedEncodingException {
         String encText = URLEncoder.encode(text, "UTF-8");
@@ -47,5 +48,11 @@ public class EncoderServiceImpl implements EncoderService {
         } catch (IOException e) {
             throw new RobotRuntimeException("Error writing to file: " + e.getMessage(), e);
         }
+    }
+
+    @Override
+    public String stringToBase64(final String stringInput) throws UnsupportedEncodingException {
+        byte[] data = stringInput.getBytes(StandardCharsets.UTF_8);
+        return Base64.getEncoder().encodeToString(data);
     }
 }
