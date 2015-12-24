@@ -30,7 +30,7 @@ public class MongoConverterTest extends TestUtils {
 
     @Test
     public void testParseMetaExpression() throws JsonException {
-        MongoConverter mongoConverter = new MongoConverter(null);
+        MongoConverter mongoConverter = new MongoConverter(new ObjectIdSerializer());
         MetaExpression expression = parse("{ \"$set\": { \"test\" : 2 } }");
         Document document = mongoConverter.parse(expression);
 

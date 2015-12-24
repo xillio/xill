@@ -14,18 +14,18 @@ import static org.testng.Assert.*;
 public class FindOneAndUpdateOptionsFactoryTest extends TestUtils {
     @Test
     public void testBuildOptions () {
-        MongoConverter mongoConverter = new MongoConverter(null);
-        FindOneAndUpdateOptionsFactory FindOneAndUpdateOptionsFactory = new FindOneAndUpdateOptionsFactory(mongoConverter);
+        MongoConverter mongoConverter = new MongoConverter(new ObjectIdSerializer());
+        FindOneAndUpdateOptionsFactory findOneAndUpdateOptionsFactory = new FindOneAndUpdateOptionsFactory(mongoConverter);
         LinkedHashMap<String, MetaExpression> object = new LinkedHashMap<>();
 
-        FindOneAndUpdateOptions options = FindOneAndUpdateOptionsFactory.build(fromValue(object));
+        FindOneAndUpdateOptions options = findOneAndUpdateOptionsFactory.build(fromValue(object));
         LinkedHashMap<String, MetaExpression> projection = new LinkedHashMap<>();
 
         assertNull(options.getProjection());
         projection.put("_id", FALSE);
         projection.put("target", TRUE);
         object.put("projection", fromValue(projection));
-        options = FindOneAndUpdateOptionsFactory.build(fromValue(object));
+        options = findOneAndUpdateOptionsFactory.build(fromValue(object));
         assertNotNull(options.getProjection());
         assertEquals(MetaExpression.parseObject(options.getProjection()), object.get("projection"));
 
@@ -33,23 +33,23 @@ public class FindOneAndUpdateOptionsFactoryTest extends TestUtils {
         LinkedHashMap<String, MetaExpression> sort = new LinkedHashMap<>();
         sort.put("target.timestamp", fromValue(-1));
         object.put("sortBy", fromValue(sort));
-        options = FindOneAndUpdateOptionsFactory.build(fromValue(object));
+        options = findOneAndUpdateOptionsFactory.build(fromValue(object));
         assertNotNull(options.getSort());
         assertEquals(MetaExpression.parseObject(options.getSort()), object.get("sortBy"));
 
         assertFalse(options.isUpsert());
         object.put("upsert", TRUE);
-        options = FindOneAndUpdateOptionsFactory.build(fromValue(object));
+        options = findOneAndUpdateOptionsFactory.build(fromValue(object));
         assertTrue(options.isUpsert());
 
         assertEquals(options.getReturnDocument(), ReturnDocument.BEFORE);
         object.put("returnNew", TRUE);
-        options = FindOneAndUpdateOptionsFactory.build(fromValue(object));
+        options = findOneAndUpdateOptionsFactory.build(fromValue(object));
         assertEquals(options.getReturnDocument(), ReturnDocument.AFTER);
 
         assertEquals(options.getMaxTime(TimeUnit.MILLISECONDS), 0);
         object.put("maxTime", fromValue(2000));
-        options = FindOneAndUpdateOptionsFactory.build(fromValue(object));
+        options = findOneAndUpdateOptionsFactory.build(fromValue(object));
         assertNotNull(options.getMaxTime(TimeUnit.MILLISECONDS));
         assertEquals(MetaExpression.parseObject(options.getMaxTime(TimeUnit.MILLISECONDS)), object.get("maxTime"));
     }

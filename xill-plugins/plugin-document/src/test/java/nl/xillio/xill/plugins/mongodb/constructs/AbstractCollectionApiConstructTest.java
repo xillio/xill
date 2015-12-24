@@ -16,6 +16,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
 
+@SuppressWarnings("unchecked")
 public class AbstractCollectionApiConstructTest extends TestUtils {
 
     @Test

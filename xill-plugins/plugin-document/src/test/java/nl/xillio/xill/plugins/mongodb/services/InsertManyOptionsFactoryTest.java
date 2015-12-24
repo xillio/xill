@@ -13,15 +13,13 @@ import static org.testng.Assert.assertTrue;
 public class InsertManyOptionsFactoryTest extends TestUtils {
     @Test
     public void testBuildOptions () {
-        MongoConverter mongoConverter = new MongoConverter(null);
+        MongoConverter mongoConverter = new MongoConverter(new ObjectIdSerializer());
         InsertManyOptionsFactory insertManyOptionsFactory = new InsertManyOptionsFactory(mongoConverter);
-        LinkedHashMap<String, MetaExpression> object = new LinkedHashMap<>();
 
-        InsertManyOptions options = insertManyOptionsFactory.build(fromValue(object));
+        InsertManyOptions options = insertManyOptionsFactory.build(TRUE);
 
         assertTrue(options.isOrdered());
-        object.put("ordered", FALSE);
-        options = insertManyOptionsFactory.build(fromValue(object));
+        options = insertManyOptionsFactory.build(FALSE);
         assertFalse(options.isOrdered());
     }
 }
