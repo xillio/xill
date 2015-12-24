@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Returns a MD5 hash of the provided string.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Get the md5 hash of a string</header>
+            <code>
+                use System;
+                use Hash;
+
+                var hashFromString = Hash.md5("example string");
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference></reference>
+    </references>
+    <tags>
+        md5, hash, string, text, conversion
+    </tags>
+</function>

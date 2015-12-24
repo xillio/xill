@@ -27,13 +27,14 @@ public class FileToMD5Construct extends Construct {
     public ConstructProcessor prepareProcess(final ConstructContext context) {
         return new ConstructProcessor(
                 this::process,
-                new Argument("value", ATOMIC));
+                new Argument("fileName", ATOMIC));
     }
 
-    MetaExpression process(final MetaExpression value) {
-        assertNotNull(value, "value");
+    MetaExpression process(final MetaExpression fileName) {
+        assertNotNull(fileName, "fileName");
+
         try {
-            return fromValue(hashService.fileToMD5(value.getStringValue()));
+            return fromValue(hashService.fileToMD5(fileName.getStringValue()));
         } catch (NoSuchAlgorithmException | IOException e) {
             throw new RobotRuntimeException("Cannot do md5 hash: " + e.getMessage(), e);
         }

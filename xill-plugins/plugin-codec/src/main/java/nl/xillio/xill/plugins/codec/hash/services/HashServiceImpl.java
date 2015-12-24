@@ -17,17 +17,6 @@ import java.security.NoSuchAlgorithmException;
  */
 public class HashServiceImpl implements HashService {
     @Override
-    public String md5(final String value, final boolean fromFile) throws NoSuchAlgorithmException, IOException {
-        if (fromFile) {
-            return Files.hash(new File(value), Hashing.md5()).toString();
-        } else {
-            MessageDigest md5 = MessageDigest.getInstance("MD5");
-            md5.update(StandardCharsets.UTF_8.encode(value));
-            return String.format("%032x", new BigInteger(1, md5.digest()));
-        }
-    }
-
-    @Override
     public String stringToMD5(final String value) throws NoSuchAlgorithmException,IOException {
         MessageDigest md5 = MessageDigest.getInstance("MD5");
         md5.update(StandardCharsets.UTF_8.encode(value));
