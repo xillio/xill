@@ -17,14 +17,14 @@ import java.security.NoSuchAlgorithmException;
  */
 public class HashServiceImpl implements HashService {
     @Override
-    public String stringToMD5(final String value) throws NoSuchAlgorithmException,IOException {
+    public String stringToMD5(final String value) throws NoSuchAlgorithmException, IOException {
         MessageDigest md5 = MessageDigest.getInstance("MD5");
         md5.update(StandardCharsets.UTF_8.encode(value));
         return String.format("%032x", new BigInteger(1, md5.digest()));
     }
 
     @Override
-    public String fileToMD5(final String file) throws NoSuchAlgorithmException,IOException {
+    public String fileToMD5(final String file) throws NoSuchAlgorithmException, IOException {
         return Files.hash(new File(file), Hashing.md5()).toString();
     }
 }

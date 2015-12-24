@@ -12,7 +12,6 @@ import java.security.NoSuchAlgorithmException;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.*;
 
 /**
  * Test the {@link StringToMD5Construct}

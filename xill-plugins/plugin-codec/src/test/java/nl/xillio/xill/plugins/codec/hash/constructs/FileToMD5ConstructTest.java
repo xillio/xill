@@ -7,13 +7,11 @@ import nl.xillio.xill.plugins.codec.hash.services.HashServiceImpl;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.*;
 
 /**
  * Test the {@link FileToMD5Construct}
@@ -28,7 +26,7 @@ public class FileToMD5ConstructTest {
     @Test
     public void processNormalUsage() throws IOException, NoSuchAlgorithmException {
         // Mock
-         String text = "/mock/path.file";
+        String text = "/mock/path.file";
         MetaExpression value = mock(MetaExpression.class);
         when(value.getStringValue()).thenReturn(text);
 
