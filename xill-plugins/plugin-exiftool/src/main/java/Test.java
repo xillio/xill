@@ -1,4 +1,5 @@
-import nl.xillio.exiftool.*;
+import nl.xillio.exiftool.ExifTool;
+import nl.xillio.exiftool.ProcessPool;
 import nl.xillio.exiftool.query.ExifReadResult;
 import nl.xillio.exiftool.query.ExifTags;
 import nl.xillio.exiftool.query.Projection;
@@ -9,8 +10,6 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 public class Test {
-
-
 
 
     public static void main(String... args) throws IOException, InterruptedException {
@@ -26,8 +25,8 @@ public class Test {
             StopWatch sw = new StopWatch();
             sw.start();
             Projection projection = new Projection();
-            projection.put("Sharpen Details", true);
-            ExifReadResult data = tool.readFieldsForFolder(Paths.get("D:\\Libraries\\OneDrive\\Afbeeldingen\\"), projection);
+            //projection.put("megaPixels", true);
+            ExifReadResult data = tool.readFieldsForFolder(Paths.get("D:\\Libraries\\OneDrive\\Afbeeldingen\\Wallpapers"), projection);
             int count = 0;
             int totalTagCount = 0;
 
@@ -39,10 +38,11 @@ public class Test {
                 ExifTags tags = data.next();
                 count++;
                 totalTagCount += tags.size();
-                System.out.println("\n\n");
-                for(Map.Entry<String, String> entry : tags.entrySet()) {
-                    System.out.println(entry.getKey() + ": " + entry.getValue());
+                System.out.println("\n" + tags.get("File Path"));
+                for (Map.Entry<String, String> entry : tags.entrySet()) {
+                    System.out.println("\t" + entry.getKey() + ": " + entry.getValue());
                 }
+                System.out.println();
             }
 
             sw.stop();

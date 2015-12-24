@@ -66,7 +66,7 @@ class ExifReadResultImpl implements ExifReadResult {
 
         while (executionResult.hasNext()) {
             String line = executionResult.next();
-            System.err.println("Line: " + line);
+
             if (line.startsWith("========")) {
                 // This is the start of a file.
                 push();
@@ -86,6 +86,8 @@ class ExifReadResultImpl implements ExifReadResult {
 
             put(key, value);
         }
+
+        push();
 
 
     }
