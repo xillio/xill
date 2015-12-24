@@ -9,6 +9,7 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.codec.decode.services.DecoderService;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 /**
@@ -33,13 +34,15 @@ public class StringFromBase64Construct extends Construct {
 
     MetaExpression process(MetaExpression inputString) {
         if (inputString.isNull()) {
-            throw new RobotRuntimeException("You cannot encode a null value");
+            throw new RobotRuntimeException("You cannot decode a null value");
         }
 
         try {
-            return fromValue(decoderService.stringFromBase64(inputString.getStringValue()));
+            return fromValue(decoderService.decodeStringBase64(inputString.getStringValue()));
         } catch (UnsupportedEncodingException e) {
             throw new RobotRuntimeException("Cannot decode the byte array in UTF-8", e);
+        } catch (IOException e) {
+            throw new RobotRuntimeException("Something went wrong when decoding: " + e.getMessage(), e);
         }
     }
 }

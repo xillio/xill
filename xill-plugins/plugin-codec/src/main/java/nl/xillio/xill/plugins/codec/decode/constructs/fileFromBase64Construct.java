@@ -8,6 +8,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.codec.decode.services.DecoderService;
 
 import com.google.inject.Inject;
@@ -44,10 +45,20 @@ public class FileFromBase64Construct extends Construct {
 		assertNotNull(pathInput, "input file");
 		assertNotNull(pathOutput, "output file");
 
+        if(pathInput.equals(pathOutput)){
+            throw new RobotRuntimeException("Input path should not be the same as output path.");
+        }
+
 		File fileInput = getFile(context, pathInput.getStringValue());
 		File fileOutput = getFile(context, pathOutput.getStringValue());
 
-        decoderService.decodeFileBase64(fileInput, fileOutput, fileUtilsService);
+        try {
+            decoderService.decodeFileBase64(fileInput, fileOutput);
+        } catch (FileNotFoundException e) {
+            throw new RobotRuntimeException("The file could not be found or the filename is invalid: " + e.getMessage(), e);
+        } catch (IOException e) {
+            throw new RobotRuntimeException("Error writing to file: " + e.getMessage(), e);
+        }
 
 		return NULL;
 
