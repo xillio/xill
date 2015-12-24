@@ -7,7 +7,7 @@ This function decodes a base64-encoded string to its decoded value.
         <example title="Usage">
             <code>
                 use Decode;
-                use System
+                use System;
 
                 System.print(Decode.stringFromBase64("VGhpcyBpcyBhIHRlc3Qtc3RyaW5nLg=="));
                 // prints: This is a test-string.
