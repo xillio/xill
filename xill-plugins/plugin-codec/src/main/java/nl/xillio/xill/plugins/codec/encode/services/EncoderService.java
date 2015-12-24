@@ -34,4 +34,6 @@ public interface EncoderService {
      * @throws UnsupportedEncodingException If something goes wrong during the encoding
      */
     String urlEncode(String text, boolean usePlusEncoding) throws UnsupportedEncodingException;
+
+    String stringToBase64(String stringInput) throws UnsupportedEncodingException;
 }
