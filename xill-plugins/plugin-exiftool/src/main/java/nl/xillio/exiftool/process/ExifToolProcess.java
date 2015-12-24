@@ -13,7 +13,9 @@ public interface ExifToolProcess extends AutoCloseable {
     void deploy() throws IOException;
 
     boolean isRunning();
+
     boolean isClosed();
+
     boolean isAvailable();
 
     void start() throws IOException;

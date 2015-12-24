@@ -2,6 +2,8 @@ package nl.xillio.exiftool;
 
 import me.biesaart.utils.Log;
 import nl.xillio.exiftool.process.ExecutionResult;
+import nl.xillio.exiftool.query.ExifReadResult;
+import nl.xillio.exiftool.query.ExifTags;
 import org.slf4j.Logger;
 
 import java.util.ArrayDeque;
@@ -12,8 +14,7 @@ import java.util.Queue;
  *
  * @author Thomas Biesaart
  */
-public class ExifReadResultImpl implements ExifReadResult {
-
+class ExifReadResultImpl implements ExifReadResult {
     private static final Logger LOGGER = Log.get();
     private final ExecutionResult executionResult;
     private final int cacheSize;
@@ -39,7 +40,7 @@ public class ExifReadResultImpl implements ExifReadResult {
         LOGGER.debug("Start processing");
         while (executionResult.hasNext()) {
             if (tagsQueue.size() < cacheSize) {
-                if(isReading) {
+                if (isReading) {
                     throw new IllegalStateException("The reader is already being used");
                 }
                 isReading = true;
@@ -58,33 +59,19 @@ public class ExifReadResultImpl implements ExifReadResult {
     }
 
     private void readOneDocument() {
-        if(tagsQueue.size() > cacheSize) {
+        if (tagsQueue.size() > cacheSize) {
             LOGGER.warn("Slightly exceed cache size: {}/{}", tagsQueue.size(), cacheSize);
         }
 
 
         while (executionResult.hasNext()) {
             String line = executionResult.next();
-
+            System.err.println("Line: " + line);
             if (line.startsWith("========")) {
-                // This is the start of a file. So skip to next
-                if (currentValue != null) {
-                    // Save parsed entry
-                    tagsQueue.add(currentValue);
-
-                    // Create new entry
-                    currentValue = new ExifTagsImpl();
-                    currentValue.put("File Path", line.replaceAll("^=+\\s*", ""));
-
-                    // Stop parsing
-                    return;
-                } else {
-
-                    // Create new entry
-                    currentValue = new ExifTagsImpl();
-                    currentValue.put("File Path", line.replaceAll("^=+\\s*", ""));
-                    continue;
-                }
+                // This is the start of a file.
+                push();
+                put("File Path", line.replaceAll("^=+\\s*", ""));
+                continue;
             }
 
             int separator = line.indexOf(":");
@@ -97,12 +84,26 @@ public class ExifReadResultImpl implements ExifReadResult {
             String key = line.substring(0, separator).trim();
             String value = line.substring(separator + 1).trim();
 
-            currentValue.put(key, value);
+            put(key, value);
         }
 
-        // Save the last item
-        tagsQueue.add(currentValue);
-        currentValue = null;
+
+    }
+
+    private void push() {
+        if (currentValue != null) {
+            // Save the last item
+            tagsQueue.add(currentValue);
+            currentValue = null;
+        }
+    }
+
+    private void put(String key, String value) {
+        if (currentValue == null) {
+            currentValue = new ExifTagsImpl();
+        }
+
+        currentValue.put(key, value);
     }
 
     @Override

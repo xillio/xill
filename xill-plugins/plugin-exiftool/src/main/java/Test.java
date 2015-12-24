@@ -1,8 +1,12 @@
 import nl.xillio.exiftool.*;
+import nl.xillio.exiftool.query.ExifReadResult;
+import nl.xillio.exiftool.query.ExifTags;
+import nl.xillio.exiftool.query.Projection;
 import org.apache.commons.lang3.time.StopWatch;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Map;
 
 public class Test {
 
@@ -21,7 +25,9 @@ public class Test {
         try (ExifTool tool = pool.getAvailable()) {
             StopWatch sw = new StopWatch();
             sw.start();
-            ExifReadResult data = tool.readFieldsForFolder(Paths.get("D:\\Libraries\\OneDrive\\Afbeeldingen\\"), true);
+            Projection projection = new Projection();
+            projection.put("Sharpen Details", true);
+            ExifReadResult data = tool.readFieldsForFolder(Paths.get("D:\\Libraries\\OneDrive\\Afbeeldingen\\"), projection);
             int count = 0;
             int totalTagCount = 0;
 
@@ -30,8 +36,13 @@ public class Test {
                 runTest(pool, numberOfOpenProcesses - 1);
             }
             while (data.hasNext()) {
+                ExifTags tags = data.next();
                 count++;
-                totalTagCount += data.next().size();
+                totalTagCount += tags.size();
+                System.out.println("\n\n");
+                for(Map.Entry<String, String> entry : tags.entrySet()) {
+                    System.out.println(entry.getKey() + ": " + entry.getValue());
+                }
             }
 
             sw.stop();

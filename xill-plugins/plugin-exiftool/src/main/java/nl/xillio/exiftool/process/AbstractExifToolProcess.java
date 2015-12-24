@@ -73,6 +73,7 @@ abstract class AbstractExifToolProcess implements ExifToolProcess {
         try {
             deploy();
             ProcessBuilder processBuilder = new ProcessBuilder();
+            processBuilder.redirectErrorStream(true);
             processBuilder.command(nativeBinary.toAbsolutePath().toString(), "-stay_open", "True", "-@", "-");
 
             this.process = buildProcess(processBuilder);

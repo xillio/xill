@@ -1,4 +1,4 @@
-package nl.xillio.exiftool;
+package nl.xillio.exiftool.query;
 
 import java.util.Iterator;
 
