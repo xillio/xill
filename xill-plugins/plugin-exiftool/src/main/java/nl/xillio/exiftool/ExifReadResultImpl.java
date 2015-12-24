@@ -4,6 +4,7 @@ import me.biesaart.utils.Log;
 import nl.xillio.exiftool.process.ExecutionResult;
 import nl.xillio.exiftool.query.ExifReadResult;
 import nl.xillio.exiftool.query.ExifTags;
+import nl.xillio.exiftool.query.TagNameConvention;
 import org.slf4j.Logger;
 
 import java.util.ArrayDeque;
@@ -18,15 +19,17 @@ class ExifReadResultImpl implements ExifReadResult {
     private static final Logger LOGGER = Log.get();
     private final ExecutionResult executionResult;
     private final int cacheSize;
+    private final TagNameConvention tagNameConvention;
     private static int counter;
     private final Queue<ExifTags> tagsQueue;
     private ExifTags currentValue;
     private boolean isDone = false;
     private boolean isReading = false;
 
-    public ExifReadResultImpl(ExecutionResult executionResult, int cacheSize) {
+    public ExifReadResultImpl(ExecutionResult executionResult, int cacheSize, TagNameConvention tagNameConvention) {
         this.executionResult = executionResult;
         this.cacheSize = cacheSize;
+        this.tagNameConvention = tagNameConvention;
         this.tagsQueue = new ArrayDeque<>(cacheSize + 3);
 
         // TODO:: Use a thread pool mechanism to process this
@@ -105,7 +108,7 @@ class ExifReadResultImpl implements ExifReadResult {
             currentValue = new ExifTagsImpl();
         }
 
-        currentValue.put(key, value);
+        currentValue.put(tagNameConvention.toConvention(key), value);
     }
 
     @Override
@@ -115,7 +118,7 @@ class ExifReadResultImpl implements ExifReadResult {
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
-                LOGGER.error("Interrupter", e);
+                LOGGER.error("Interrupted", e);
             }
         }
 

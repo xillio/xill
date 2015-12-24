@@ -5,6 +5,7 @@ import nl.xillio.exiftool.ExifTool;
 import nl.xillio.exiftool.ProcessPool;
 import nl.xillio.exiftool.query.ExifReadResult;
 import nl.xillio.exiftool.query.ExifTags;
+import nl.xillio.exiftool.query.FolderQueryOptions;
 import nl.xillio.exiftool.query.Projection;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.MetaExpressionIterator;
@@ -14,6 +15,7 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.exiftool.data.ExifQuery;
+import nl.xillio.xill.plugins.exiftool.services.OptionsFactory;
 import nl.xillio.xill.plugins.exiftool.services.ProjectionFactory;
 
 import java.io.IOException;
@@ -28,11 +30,13 @@ public class ScanFolderConstruct extends Construct {
 
     private final ProcessPool processPool;
     private final ProjectionFactory projectionFactory;
+    private final OptionsFactory optionsFactory;
 
     @Inject
-    public ScanFolderConstruct(ProcessPool processPool, ProjectionFactory projectionFactory) {
+    public ScanFolderConstruct(ProcessPool processPool, ProjectionFactory projectionFactory, OptionsFactory optionsFactory) {
         this.processPool = processPool;
         this.projectionFactory = projectionFactory;
+        this.optionsFactory = optionsFactory;
     }
 
     @Override
@@ -52,7 +56,9 @@ public class ScanFolderConstruct extends Construct {
         MetaExpression result = fromValue("exif[" + file.toAbsolutePath().toString() + "]");
         ExifTool tool = processPool.getAvailable();
 
-        ExifReadResult readResult = getResult(file, projection, tool);
+        FolderQueryOptions folderQueryOptions = optionsFactory.buildFolderOptions(options);
+
+        ExifReadResult readResult = getResult(file, projection, folderQueryOptions, tool);
 
         MetaExpressionIterator<ExifTags> iterator = new MetaExpressionIterator<>(readResult, MetaExpression::parseObject);
         result.storeMeta(iterator);
@@ -61,9 +67,9 @@ public class ScanFolderConstruct extends Construct {
         return result;
     }
 
-    private ExifReadResult getResult(Path file, Projection projection, ExifTool tool) {
+    private ExifReadResult getResult(Path file, Projection projection, FolderQueryOptions options, ExifTool tool) {
         try {
-            return tool.readFieldsForFolder(file, projection);
+            return tool.readFieldsForFolder(file, projection, options);
         } catch (IOException e) {
             throw new RobotRuntimeException("Could not read folder: " + e.getMessage(), e);
         }

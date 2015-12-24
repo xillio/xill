@@ -3,6 +3,7 @@ package nl.xillio.exiftool;
 import nl.xillio.exiftool.process.ExecutionResult;
 import nl.xillio.exiftool.process.ExifToolProcess;
 import nl.xillio.exiftool.query.ExifReadResult;
+import nl.xillio.exiftool.query.FolderQueryOptions;
 import nl.xillio.exiftool.query.Projection;
 import nl.xillio.exiftool.query.ScanFolderQuery;
 
@@ -22,10 +23,12 @@ public class ScanFolderQueryImpl implements ScanFolderQuery {
 
     private final Path folder;
     private final Projection projection;
+    private final FolderQueryOptions folderQueryOptions;
 
-    public ScanFolderQueryImpl(Path folder, Projection projection) throws NoSuchFileException {
+    public ScanFolderQueryImpl(Path folder, Projection projection, FolderQueryOptions folderQueryOptions) throws NoSuchFileException {
         this.folder = folder;
         this.projection = projection;
+        this.folderQueryOptions = folderQueryOptions;
 
         if (!Files.exists(folder)) {
             throw new NoSuchFileException("Could not find file " + folder);
@@ -40,9 +43,11 @@ public class ScanFolderQueryImpl implements ScanFolderQuery {
     public List<String> buildExifArguments() {
         List<String> result = new ArrayList<>();
         result.add(folder.toAbsolutePath().toString());
-        result.add("-r");
+        if (folderQueryOptions.isRecursive()) {
+            result.add("-r");
+        }
         result.add("-ext");
-        result.add("*");
+        result.add(folderQueryOptions.getExtensionFilter());
         result.addAll(projection.buildArguments());
 
         return result;
@@ -52,6 +57,6 @@ public class ScanFolderQueryImpl implements ScanFolderQuery {
     public ExifReadResult run(ExifToolProcess process) throws IOException {
         List<String> arguments = buildExifArguments();
         ExecutionResult executionResult = process.run(arguments.toArray(new String[arguments.size()]));
-        return new ExifReadResultImpl(executionResult, 100);
+        return new ExifReadResultImpl(executionResult, 100, folderQueryOptions.getTagNameConvention());
     }
 }

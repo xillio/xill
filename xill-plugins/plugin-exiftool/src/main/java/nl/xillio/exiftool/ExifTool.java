@@ -4,6 +4,7 @@ import me.biesaart.utils.Log;
 import nl.xillio.exiftool.process.ExifToolProcess;
 import nl.xillio.exiftool.process.WindowsExifToolProcess;
 import nl.xillio.exiftool.query.ExifReadResult;
+import nl.xillio.exiftool.query.FolderQueryOptions;
 import nl.xillio.exiftool.query.Projection;
 import nl.xillio.exiftool.query.ScanFolderQuery;
 import org.slf4j.Logger;
@@ -40,10 +41,10 @@ public class ExifTool implements AutoCloseable {
         return new ProcessPool(() -> new WindowsExifToolProcess(new File("D:\\TMP\\exif.exe")));
     }
 
-    public ExifReadResult readFieldsForFolder(Path path, Projection projection) throws IOException {
+    public ExifReadResult readFieldsForFolder(Path path, Projection projection, FolderQueryOptions folderQueryOptions) throws IOException {
         LOGGER.info("Reading all fields of files in " + path);
 
-        ScanFolderQuery scanFolderQuery = new ScanFolderQueryImpl(path, projection);
+        ScanFolderQuery scanFolderQuery = new ScanFolderQueryImpl(path, projection, folderQueryOptions);
 
         return scanFolderQuery.run(process);
     }
