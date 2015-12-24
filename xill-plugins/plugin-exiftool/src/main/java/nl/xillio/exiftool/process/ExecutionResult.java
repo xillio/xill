@@ -61,4 +61,11 @@ public class ExecutionResult implements Iterator<String> {
         cacheNext();
         return current;
     }
+
+    public void close() {
+        // Read all data
+        while (!shouldClose) {
+            cacheNext();
+        }
+    }
 }

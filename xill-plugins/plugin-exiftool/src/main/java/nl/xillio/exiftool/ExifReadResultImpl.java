@@ -126,4 +126,9 @@ class ExifReadResultImpl implements ExifReadResult {
     public ExifTags next() {
         return tagsQueue.remove();
     }
+
+    @Override
+    public void close() {
+        executionResult.close();
+    }
 }

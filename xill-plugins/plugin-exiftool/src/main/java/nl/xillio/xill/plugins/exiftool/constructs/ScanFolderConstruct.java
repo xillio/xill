@@ -1,6 +1,7 @@
 package nl.xillio.xill.plugins.exiftool.constructs;
 
 import com.google.inject.Inject;
+import nl.xillio.exiftool.ExifTool;
 import nl.xillio.exiftool.ProcessPool;
 import nl.xillio.exiftool.query.ExifReadResult;
 import nl.xillio.exiftool.query.ExifTags;
@@ -12,6 +13,8 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.exiftool.data.ExifQuery;
+import nl.xillio.xill.plugins.exiftool.services.ProjectionFactory;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -24,10 +27,12 @@ import java.nio.file.Path;
 public class ScanFolderConstruct extends Construct {
 
     private final ProcessPool processPool;
+    private final ProjectionFactory projectionFactory;
 
     @Inject
-    public ScanFolderConstruct(ProcessPool processPool) {
+    public ScanFolderConstruct(ProcessPool processPool, ProjectionFactory projectionFactory) {
         this.processPool = processPool;
+        this.projectionFactory = projectionFactory;
     }
 
     @Override
@@ -40,22 +45,25 @@ public class ScanFolderConstruct extends Construct {
         );
     }
 
-    MetaExpression process(MetaExpression folderPath, MetaExpression projection, MetaExpression options, ConstructContext context) {
+    MetaExpression process(MetaExpression folderPath, MetaExpression projectionExpression, MetaExpression options, ConstructContext context) {
         Path file = getFile(context, folderPath.getStringValue()).toPath();
+        Projection projection = projectionFactory.build(projectionExpression);
 
         MetaExpression result = fromValue("exif[" + file.toAbsolutePath().toString() + "]");
+        ExifTool tool = processPool.getAvailable();
 
-        ExifReadResult readResult = getResult(file);
+        ExifReadResult readResult = getResult(file, projection, tool);
 
         MetaExpressionIterator<ExifTags> iterator = new MetaExpressionIterator<>(readResult, MetaExpression::parseObject);
         result.storeMeta(iterator);
+        result.storeMeta(new ExifQuery(tool));
 
         return result;
     }
 
-    private ExifReadResult getResult(Path file) {
+    private ExifReadResult getResult(Path file, Projection projection, ExifTool tool) {
         try {
-            return processPool.getAvailable().readFieldsForFolder(file, new Projection());
+            return tool.readFieldsForFolder(file, projection);
         } catch (IOException e) {
             throw new RobotRuntimeException("Could not read folder: " + e.getMessage(), e);
         }

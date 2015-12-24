@@ -7,5 +7,6 @@ import java.util.Iterator;
  *
  * @author Thomas Biesaart
  */
-public interface ExifReadResult extends Iterator<ExifTags> {
+public interface ExifReadResult extends Iterator<ExifTags>, AutoCloseable {
+    void close();
 }
