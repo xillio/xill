@@ -7,7 +7,6 @@ import org.apache.commons.codec.binary.Base64InputStream;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.IOUtils;
 
-import javax.xml.bind.DatatypeConverter;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -16,6 +15,7 @@ import java.nio.charset.StandardCharsets;
  * Implementation of Decoding methods.
  *
  * @author Paul van der Zandt
+ * @author Pieter Dirk Soels
  * @since 3.0
  */
 public class DecoderServiceImpl implements DecoderService {

@@ -9,18 +9,14 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.codec.encode.services.EncoderService;
-
-import org.apache.commons.codec.binary.Base64OutputStream;
-import org.apache.commons.io.IOUtils;
 
 /**
  * <p>
  * Returns the base-64 encoded string of the provided file.
  * </p>
  *
- * @author Sander
+ * @author Pieter Dirk Soels
  *
  */
 public class FileToBase64Construct extends Construct {

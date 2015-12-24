@@ -10,6 +10,7 @@ import java.io.UnsupportedEncodingException;
  * Interface defining behavior of encoding constructs.
  *
  * @author Paul van der Zandt
+ * @author Pieter Dirk Soels
  * @since 3.0
  */
 @ImplementedBy(EncoderServiceImpl.class)

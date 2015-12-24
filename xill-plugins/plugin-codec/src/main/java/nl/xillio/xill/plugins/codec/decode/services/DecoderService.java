@@ -10,6 +10,7 @@ import java.io.File;
  * Interface defining behavior of decoding constructs.
  *
  * @author Paul van der Zandt
+ * @author Pieter Dirk Soels
  * @since 3.0
  */
 @ImplementedBy(DecoderServiceImpl.class)

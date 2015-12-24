@@ -8,13 +8,9 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.codec.decode.services.DecoderService;
 
 import com.google.inject.Inject;
-import nl.xillio.xill.plugins.codec.encode.services.EncoderService;
-import org.apache.commons.codec.binary.Base64InputStream;
-import org.apache.commons.io.IOUtils;
 
 /**
  *
@@ -22,7 +18,7 @@ import org.apache.commons.io.IOUtils;
  * Base-64 decode the provided string, and store it in the provided file.
  * </p>
  *
- * @author Sander
+ * @author Pieter Dirk Soels
  *
  */
 public class FileFromBase64Construct extends Construct {
