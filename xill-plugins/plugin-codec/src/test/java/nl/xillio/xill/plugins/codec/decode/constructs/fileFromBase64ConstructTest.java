@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.string.constructs;
+package nl.xillio.xill.plugins.codec.decode.constructs;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -16,15 +16,13 @@ import java.io.IOException;
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
-import nl.xillio.xill.plugins.string.services.string.UrlUtilityService;
 
 import org.testng.annotations.Test;
 
 /**
- * Test the {@link Base64DecodeConstruct}.
+ * Test the {@link FileFromBase64Construct}.
  */
-public class Base64DecodeConstructTest extends TestUtils {
+public class FileFromBase64ConstructTest extends TestUtils {
 
 	/**
 	 * Test the process method under normal circumstances.

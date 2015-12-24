@@ -1,10 +1,8 @@
-package nl.xillio.xill.plugins.string.constructs;
+package nl.xillio.xill.plugins.codec.encode.constructs;
 
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
-import nl.xillio.xill.plugins.string.services.string.UrlUtilityService;
 import org.testng.annotations.Test;
 
 import java.io.FileNotFoundException;
@@ -13,9 +11,9 @@ import java.io.IOException;
 import static org.mockito.Mockito.*;
 
 /**
- * Test the {@link Base64EncodeConstruct}.
+ * Test the {@link FileToBase64Construct}.
  */
-public class Base64EncodeConstructTest extends TestUtils {
+public class FileToBase64ConstructTest extends TestUtils {
 
 	/**
 	 * Test the process method under normal circumstances.

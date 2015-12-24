@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Returns the base-64 encoded string of file file.  
+Makes a base64-encoded file of the given file.
 
 Commonly used to encode binary data for transfer over a text channel (such as attachments in e-mails).  
 The parameter file is expected to be either a valid file name, or a binary variable.
@@ -10,16 +10,18 @@ The parameter file is expected to be either a valid file name, or a binary varia
         <example title="Usage">
             <p>Assuming we have a file 'note.xml' containing 'Hello World'</p>
             <code>
-                String.base64Encode("C:/tmp/note.xml");
+                Use Encode;
 
-                // Result: SGVsbG8gV29ybGQ=
+                Encode.fileToBase64("C:/tmp/note.xml", "C:/tmp/result.xml");
+
+                // Results in a file named 'result.xml' containing: SGVsbG8gV29ybGQ=
             </code>
         </example>
     </examples>
     <references>
-        <reference>base64Decode</reference>
+        <reference>Decode.fileFromBase64</reference>
     </references>
     <searchTags>
-        Base64, decode
+        base64, encode, file, decode
     </searchTags>
 </function>
