@@ -3,6 +3,8 @@ package nl.xillio.xill.plugins.codec.decode.services;
 import com.google.inject.ImplementedBy;
 import org.apache.commons.codec.DecoderException;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * Interface defining behavior of decoding constructs.
  *
@@ -27,4 +29,6 @@ public interface DecoderService {
      *             Thrown if an odd number of characters is supplied to this function
      */
     String fromHex(String hexString, String charsetName) throws DecoderException;
+
+    String stringFromBase64(String inputString) throws UnsupportedEncodingException;
 }
