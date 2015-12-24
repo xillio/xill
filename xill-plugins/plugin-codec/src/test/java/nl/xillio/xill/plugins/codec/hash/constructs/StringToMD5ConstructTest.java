@@ -2,7 +2,6 @@ package nl.xillio.xill.plugins.codec.hash.constructs;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-
 import nl.xillio.xill.plugins.codec.hash.services.HashService;
 import nl.xillio.xill.plugins.codec.hash.services.HashServiceImpl;
 import org.testng.Assert;
@@ -11,13 +10,14 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.*;
 
 /**
- * Test the {@link Md5Construct}.
+ * Test the {@link StringToMD5Construct}
  */
-public class Md5ConstructTest {
-
+public class StringToMD5ConstructTest {
     /**
      * Test the process method under normal circumstances.
      *
@@ -31,17 +31,13 @@ public class Md5ConstructTest {
         MetaExpression value = mock(MetaExpression.class);
         when(value.getStringValue()).thenReturn(text);
 
-        MetaExpression fromFile = mock(MetaExpression.class);
-        when(fromFile.isNull()).thenReturn(false);
-        when(fromFile.getBooleanValue()).thenReturn(false);
-
         String returnValue = "b45cffe084dd3d20d928bee85e7b0f21";
         HashService hashService = new HashServiceImpl();
 
-        Md5Construct construct = new Md5Construct(hashService);
+        StringToMD5Construct construct = new StringToMD5Construct(hashService);
 
         // Run
-        MetaExpression result = construct.process(value, fromFile);
+        MetaExpression result = construct.process(value);
 
         // Assert
         Assert.assertEquals(result.getStringValue(), returnValue);
@@ -60,16 +56,13 @@ public class Md5ConstructTest {
         MetaExpression value = mock(MetaExpression.class);
         when(value.getStringValue()).thenReturn(text);
 
-        MetaExpression fromFile = mock(MetaExpression.class);
-        when(fromFile.isNull()).thenReturn(false);
-        when(fromFile.getBooleanValue()).thenReturn(false);
-
         HashService hashService = mock(HashService.class);
-        when(hashService.md5(text, false)).thenThrow(new NoSuchAlgorithmException("Error occurred"));
+        when(hashService.stringToMD5(text)).thenThrow(new NoSuchAlgorithmException("Error occurred"));
 
-        Md5Construct construct = new Md5Construct(hashService);
+        StringToMD5Construct construct = new StringToMD5Construct(hashService);
 
         // Run
-        construct.process(value, fromFile);
+        construct.process(value);
     }
+
 }

@@ -13,15 +13,13 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * Returns a MD5 hash of the provided text or file (content)
- *
- * @author Zbynek Hochmann
+ * Returns a MD5 hash of the provided string
  */
-public class Md5Construct extends Construct {
+public class StringToMD5Construct extends Construct {
     private final HashService hashService;
 
     @Inject
-    public Md5Construct(HashService hashService) {
+    public StringToMD5Construct(HashService hashService) {
         this.hashService = hashService;
     }
 
@@ -29,15 +27,13 @@ public class Md5Construct extends Construct {
     public ConstructProcessor prepareProcess(final ConstructContext context) {
         return new ConstructProcessor(
                 this::process,
-        		new Argument("value", ATOMIC),
-                new Argument("fromFile", FALSE, ATOMIC));
+                new Argument("value", ATOMIC));
     }
 
-    MetaExpression process(final MetaExpression value, final MetaExpression fromFile) {
+    MetaExpression process(final MetaExpression value) {
         assertNotNull(value, "value");
-        assertNotNull(fromFile, "fromFile");
         try {
-            return fromValue(hashService.md5(value.getStringValue(), fromFile.getBooleanValue()));
+            return fromValue(hashService.stringToMD5(value.getStringValue()));
         } catch (NoSuchAlgorithmException | IOException e) {
             throw new RobotRuntimeException("Cannot do md5 hash: " + e.getMessage(), e);
         }

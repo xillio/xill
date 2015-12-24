@@ -22,5 +22,6 @@ public interface HashService {
      * @throws NoSuchAlgorithmException
      * @throws IOException
      */
-    String md5(String value, boolean fromFile) throws NoSuchAlgorithmException, IOException;
+    String fileToMD5(String file) throws NoSuchAlgorithmException, IOException;
+    String stringToMD5(String value) throws NoSuchAlgorithmException, IOException;
 }
