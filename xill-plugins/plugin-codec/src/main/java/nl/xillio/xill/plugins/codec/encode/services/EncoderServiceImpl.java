@@ -1,16 +1,15 @@
 package nl.xillio.xill.plugins.codec.encode.services;
 
+import com.google.inject.Inject;
 import me.biesaart.utils.FileUtilsService;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
+import me.biesaart.utils.IOUtilsService;
 import org.apache.commons.codec.binary.Base64OutputStream;
 import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 
 /**
  * Implementation of encoding methods.
@@ -20,6 +19,15 @@ import java.util.Base64;
  * @since 3.0
  */
 public class EncoderServiceImpl implements EncoderService {
+
+    private final FileUtilsService fileUtilsService;
+    private final IOUtilsService ioUtilsService;
+
+    @Inject
+    public EncoderServiceImpl(FileUtilsService fileUtilsService, IOUtilsService ioUtilsService) {
+        this.fileUtilsService = fileUtilsService;
+        this.ioUtilsService = ioUtilsService;
+    }
 
     @Override
     public String toHex(String inputString, boolean toLowerCase, String charsetName) {
@@ -33,26 +41,42 @@ public class EncoderServiceImpl implements EncoderService {
         return xWwwForm ? encText : encText.replace("+", "%20");
     }
 
-    @Override
-    public void encodeFileBase64(final File input, final File output, final FileUtilsService fileUtilsService) {
-        try {
-            fileUtilsService.forceMkdir(output.getParentFile());
-        } catch (IOException e) {
-            throw new RobotRuntimeException("Error writing to file: " + e.getMessage(), e);
-        }
-
-        try(InputStream in = new FileInputStream(input); OutputStream out = new Base64OutputStream(new FileOutputStream(output))) {
-            IOUtils.copy(in, out);
-        } catch (FileNotFoundException e) {
-            throw new RobotRuntimeException("The file could not be found or the filename is invalid: " + e.getMessage(), e);
-        } catch (IOException e) {
-            throw new RobotRuntimeException("Error writing to file: " + e.getMessage(), e);
+    /**
+     * Encode the given input from the input-stream and give it to the output-stream.
+     * @param in    The input stream to encode.
+     * @param out   The output stream for the encoded input.
+     * @throws IOException
+     */
+    void encodeBase64(InputStream in, OutputStream out) throws IOException {
+        try (OutputStream base64Out = new Base64OutputStream(out)) {
+            ioUtilsService.copy(in, base64Out);
         }
     }
 
     @Override
-    public String stringToBase64(final String stringInput) throws UnsupportedEncodingException {
-        byte[] data = stringInput.getBytes(StandardCharsets.UTF_8);
-        return Base64.getEncoder().encodeToString(data);
+    public void encodeFileBase64(final File input, final File output) throws IOException {
+        // Initialize folders
+        fileUtilsService.forceMkdir(output.getParentFile());
+
+        // Initialize streams
+        try (InputStream in = new FileInputStream(input); OutputStream out = new FileOutputStream(output)) {
+            // Encode
+            encodeBase64(in, out);
+        }
+    }
+
+    @Override
+    public String encodeStringBase64(final String stringInput) throws IOException {
+        // Initialize streams for encoding
+        try (InputStream inputStream = ioUtilsService.toInputStream(stringInput);
+             PipedOutputStream outputStream = new PipedOutputStream();
+             PipedInputStream pipedInputStream = new PipedInputStream(outputStream)) {
+
+            // Encode
+            encodeBase64(inputStream, outputStream);
+
+            // Read and return the output stream
+            return ioUtilsService.toString(pipedInputStream);
+        }
     }
 }

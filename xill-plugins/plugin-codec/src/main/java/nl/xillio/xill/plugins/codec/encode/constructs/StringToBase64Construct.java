@@ -6,6 +6,7 @@ import nl.xillio.xill.api.construct.*;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.codec.encode.services.EncoderService;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 /**
@@ -34,9 +35,11 @@ public class StringToBase64Construct extends Construct {
         }
 
         try {
-            return fromValue(encoderService.stringToBase64(inputString.getStringValue()));
+            return fromValue(encoderService.encodeStringBase64(inputString.getStringValue()));
         } catch (UnsupportedEncodingException e) {
             throw new RobotRuntimeException("Cannot encode the string in UTF-8", e);
+        } catch (IOException e) {
+            throw new RobotRuntimeException("Something went wrong when encoding: " + e.getMessage(), e);
         }
     }
 }

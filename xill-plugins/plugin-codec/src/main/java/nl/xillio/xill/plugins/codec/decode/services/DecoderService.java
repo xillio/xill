@@ -6,6 +6,7 @@ import org.apache.commons.codec.DecoderException;
 
 import java.io.File;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 /**
@@ -35,14 +36,19 @@ public interface DecoderService {
     String fromHex(String hexString, String charsetName) throws DecoderException;
 
     /**
-     * Converts the string argument into an array of bytes.
+     * Makes a file which represents the decoded version of a given base64-encoded file.
      *
-     * @param input The file we're converting back.
+     * @param input The file we want to convert to base64.
      * @param output The file to which we are writing the output
-     * @param fileUtilsService A service we use to handle file allocation.
      */
-    void decodeFileBase64(File input, File output, FileUtilsService fileUtilsService);
+    void decodeFileBase64(File input, File output) throws IOException;
 
-
-    String stringFromBase64(String inputString) throws UnsupportedEncodingException;
+    /**
+     * Returns a string which represents the decoded string given.
+     *
+     * @param inputString   The string to decode.
+     * @return String       The decoded string.
+     * @throws IOException
+     */
+    String decodeStringBase64(String inputString) throws IOException;
 }
