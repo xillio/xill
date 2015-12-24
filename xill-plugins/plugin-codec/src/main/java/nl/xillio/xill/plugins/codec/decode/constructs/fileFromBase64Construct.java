@@ -15,7 +15,7 @@ import com.google.inject.Inject;
 /**
  *
  * <p>
- * Base-64 decode the provided string, and store it in the provided file.
+ * Base-64 decode the file, and store it in the other given file.
  * </p>
  *
  * @author Pieter Dirk Soels

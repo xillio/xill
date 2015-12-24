@@ -13,7 +13,7 @@ import nl.xillio.xill.plugins.codec.encode.services.EncoderService;
 
 /**
  * <p>
- * Returns the base-64 encoded string of the provided file.
+ * Creates a base-64 encoded file from the provided file.
  * </p>
  *
  * @author Pieter Dirk Soels
