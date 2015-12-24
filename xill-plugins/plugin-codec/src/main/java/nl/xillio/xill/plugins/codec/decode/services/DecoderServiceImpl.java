@@ -3,6 +3,7 @@ package nl.xillio.xill.plugins.codec.decode.services;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
+import javax.xml.bind.DatatypeConverter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
@@ -19,5 +20,10 @@ public class DecoderServiceImpl implements DecoderService {
         final Charset charset = charsetName == null ? StandardCharsets.UTF_8 : Charset.forName(charsetName);
         final Hex hex = new Hex(charset);
         return new String(hex.decode(hexString.getBytes()), charset);
+    }
+
+    @Override
+    public byte[] parseBase64Binary(final String text) {
+        return DatatypeConverter.parseBase64Binary(text);
     }
 }

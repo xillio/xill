@@ -88,22 +88,6 @@ public interface StringUtilityService {
     String join(String[] input, String delimiter);
 
     /**
-     * Converts the string argument into an array of bytes.
-     *
-     * @param text The string we're convering.
-     * @return An array of bytes.
-     */
-    byte[] parseBase64Binary(String text);
-
-    /**
-     * Returns a string which represents the printed form of the data.
-     *
-     * @param data The data we want to convert.
-     * @return A string which can be printed.
-     */
-    String printBase64Binary(byte[] data);
-
-    /**
      * Recieves a string and returns repeated a few times.
      *
      * @param value  The string we're repeating.

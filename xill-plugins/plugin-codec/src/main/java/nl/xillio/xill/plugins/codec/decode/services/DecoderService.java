@@ -27,4 +27,13 @@ public interface DecoderService {
      *             Thrown if an odd number of characters is supplied to this function
      */
     String fromHex(String hexString, String charsetName) throws DecoderException;
+
+    /**
+     * Converts the string argument into an array of bytes.
+     *
+     * @param text The string we're convering.
+     * @return An array of bytes.
+     */
+    byte[] parseBase64Binary(String text);
+
 }

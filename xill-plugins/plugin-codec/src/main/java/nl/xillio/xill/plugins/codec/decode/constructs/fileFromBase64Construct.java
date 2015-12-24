@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.string.constructs;
+package nl.xillio.xill.plugins.codec.decode.constructs;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,8 +10,7 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
-import nl.xillio.xill.plugins.string.services.string.UrlUtilityService;
+import nl.xillio.xill.plugins.codec.decode.services.DecoderService;
 
 import com.google.inject.Inject;
 
@@ -24,21 +23,21 @@ import com.google.inject.Inject;
  * @author Sander
  *
  */
-public class Base64DecodeConstruct extends Construct {
+public class fileFromBase64Construct extends Construct {
 	@Inject
-	StringUtilityService stringService;
+	DecoderService decoderService;
 	@Inject
 	UrlUtilityService urlUtilityService;
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(content, filename) -> process(content, filename, stringService, urlUtilityService, context),
+			(content, filename) -> process(content, filename, decoderService, urlUtilityService, context),
 			new Argument("content", ATOMIC),
 			new Argument("filename", ATOMIC));
 	}
 
-	static MetaExpression process(final MetaExpression contentVar, final MetaExpression filenameVar, final StringUtilityService stringService, final UrlUtilityService urlUtilityService, final ConstructContext context) {
+	static MetaExpression process(final MetaExpression contentVar, final MetaExpression filenameVar, final DecoderService decoderService, final UrlUtilityService urlUtilityService, final ConstructContext context) {
 
 		assertNotNull(contentVar, "content");
 		assertNotNull(filenameVar, "filename");
@@ -46,7 +45,7 @@ public class Base64DecodeConstruct extends Construct {
 		String content = contentVar.getStringValue();
 		File file = getFile(context, filenameVar.getStringValue());
 
-		byte[] data = stringService.parseBase64Binary(content);
+		byte[] data = decoderService.parseBase64Binary(content);
 
 		try {
 			urlUtilityService.write(file, data);

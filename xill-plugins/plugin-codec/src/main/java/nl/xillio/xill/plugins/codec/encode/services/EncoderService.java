@@ -34,4 +34,12 @@ public interface EncoderService {
      * @throws UnsupportedEncodingException If something goes wrong during the encoding
      */
     String urlEncode(String text, boolean usePlusEncoding) throws UnsupportedEncodingException;
+
+    /**
+     * Returns a string which represents the printed form of the data.
+     *
+     * @param data The data we want to convert.
+     * @return A string which can be printed.
+     */
+    String printBase64Binary(byte[] data);
 }

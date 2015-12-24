@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.codec.encode.services;
 
 import org.apache.commons.codec.binary.Hex;
 
+import javax.xml.bind.DatatypeConverter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -25,5 +26,10 @@ public class EncoderServiceImpl implements EncoderService {
     public String urlEncode(final String text, final boolean xWwwForm) throws UnsupportedEncodingException {
         String encText = URLEncoder.encode(text, "UTF-8");
         return xWwwForm ? encText : encText.replace("+", "%20");
+    }
+
+    @Override
+    public String printBase64Binary(final byte[] data) {
+        return DatatypeConverter.printBase64Binary(data);
     }
 }
