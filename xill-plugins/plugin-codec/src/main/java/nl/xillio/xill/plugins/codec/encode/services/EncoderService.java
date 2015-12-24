@@ -1,7 +1,9 @@
 package nl.xillio.xill.plugins.codec.encode.services;
 
 import com.google.inject.ImplementedBy;
+import me.biesaart.utils.FileUtilsService;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 
 /**
@@ -38,8 +40,9 @@ public interface EncoderService {
     /**
      * Returns a string which represents the printed form of the data.
      *
-     * @param data The data we want to convert.
-     * @return A string which can be printed.
+     * @param input The file we want to convert to base64.
+     * @param output The file to which we are writing the output
+     * @param fileUtilsService A service we use to handle file allocation.
      */
-    String printBase64Binary(byte[] data);
+    void encodeFileBase64(File input, File output, FileUtilsService fileUtilsService);
 }

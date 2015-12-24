@@ -1,7 +1,10 @@
 package nl.xillio.xill.plugins.codec.decode.services;
 
 import com.google.inject.ImplementedBy;
+import me.biesaart.utils.FileUtilsService;
 import org.apache.commons.codec.DecoderException;
+
+import java.io.File;
 
 /**
  * Interface defining behavior of decoding constructs.
@@ -31,9 +34,10 @@ public interface DecoderService {
     /**
      * Converts the string argument into an array of bytes.
      *
-     * @param text The string we're convering.
-     * @return An array of bytes.
+     * @param input The file we're converting back.
+     * @param output The file to which we are writing the output
+     * @param fileUtilsService A service we use to handle file allocation.
      */
-    byte[] parseBase64Binary(String text);
+    void decodeFileBase64(File input, File output, FileUtilsService fileUtilsService);
 
 }

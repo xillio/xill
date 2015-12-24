@@ -1,23 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Base-64 decode the string content, and store it in the file *fileName*.  
+Base-64 decode a given file, and store it in an other file.
 
 Commonly used to decode binary data transferred over a text channel (such as attachments in e-mails).
     </description>
     <examples>
         <example title="Usage">
-            <header>Create a file at C:/tmp/test.txt</header>
+            <header>Assuming we have a file 'C:/tmp/note.xml' containing 'SGVsbG8gV29ybGQ='</header>
             <code>
-                String.base64Decode("SGVsbG8gV29ybGQ=", "C:/tmp/test.txt");
+                Use Decode;
+
+                Decode.fileFromBase64("C:/tmp/note.xml", "C:/tmp/output.txt");
+
+                // Results in a file named 'output.txt' containing: Hello World.
             </code>
-            <p>Will create a file containing the string 'Hello World'</p>
         </example>
     </examples>
     <references>
-        <reference>base64Encode</reference>
+        <reference>Encode.fileToBase64</reference>
     </references>
     <searchTags>
-        Base64, encode
+        base64, decode, file, encode
     </searchTags>
 </function>
