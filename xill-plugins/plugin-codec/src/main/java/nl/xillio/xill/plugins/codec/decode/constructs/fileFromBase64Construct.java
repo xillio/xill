@@ -1,9 +1,8 @@
 package nl.xillio.xill.plugins.codec.decode.constructs;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 
+import me.biesaart.utils.FileUtilsService;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
@@ -13,6 +12,9 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.codec.decode.services.DecoderService;
 
 import com.google.inject.Inject;
+import nl.xillio.xill.plugins.codec.encode.services.EncoderService;
+import org.apache.commons.codec.binary.Base64InputStream;
+import org.apache.commons.io.IOUtils;
 
 /**
  *
@@ -23,37 +25,47 @@ import com.google.inject.Inject;
  * @author Sander
  *
  */
-public class fileFromBase64Construct extends Construct {
+public class FileFromBase64Construct extends Construct {
 	@Inject
-	DecoderService decoderService;
+	private final DecoderService decoderService;
+	private final FileUtilsService fileUtilsService;
+
 	@Inject
-	UrlUtilityService urlUtilityService;
+	public FileFromBase64Construct(DecoderService decoderService, FileUtilsService fileUtilsService) {
+		this.decoderService = decoderService;
+		this.fileUtilsService = fileUtilsService;
+	}
 
 	@Override
 	public ConstructProcessor prepareProcess(final ConstructContext context) {
 		return new ConstructProcessor(
-			(content, filename) -> process(content, filename, decoderService, urlUtilityService, context),
-			new Argument("content", ATOMIC),
-			new Argument("filename", ATOMIC));
+				(file, path) -> process(file, path, decoderService, context),
+				new Argument("file", ATOMIC),
+				new Argument("path", ATOMIC));
 	}
 
-	static MetaExpression process(final MetaExpression contentVar, final MetaExpression filenameVar, final DecoderService decoderService, final UrlUtilityService urlUtilityService, final ConstructContext context) {
+	MetaExpression process(final MetaExpression pathInput, final MetaExpression pathOutput, final DecoderService decoderService, final ConstructContext context) {
+		assertNotNull(pathInput, "input file");
+		assertNotNull(pathOutput, "output file");
 
-		assertNotNull(contentVar, "content");
-		assertNotNull(filenameVar, "filename");
+		File fileInput = getFile(context, pathInput.getStringValue());
+		File fileOutput = getFile(context, pathOutput.getStringValue());
 
-		String content = contentVar.getStringValue();
-		File file = getFile(context, filenameVar.getStringValue());
+        try {
+            fileUtilsService.forceMkdir(fileOutput.getParentFile());
+        } catch (IOException e) {
+            throw new RobotRuntimeException("Error writing to file: " + e.getMessage(), e);
+        }
 
-		byte[] data = decoderService.parseBase64Binary(content);
-
-		try {
-			urlUtilityService.write(file, data);
+		try (InputStream in = new Base64InputStream(new FileInputStream(fileInput)); OutputStream out = new FileOutputStream(fileOutput)){
+			IOUtils.copy(in, out);
 		} catch (FileNotFoundException e) {
 			throw new RobotRuntimeException("The file could not be found or the filename is invalid: " + e.getMessage(), e);
 		} catch (IOException e) {
 			throw new RobotRuntimeException("Error writing to file: " + e.getMessage(), e);
 		}
+
 		return NULL;
+
 	}
 }
