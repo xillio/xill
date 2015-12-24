@@ -36,7 +36,6 @@ public class RenameCollectionConstruct extends AbstractCollectionApiConstruct {
     @Override
     MetaExpression process(MetaExpression[] arguments, MongoCollection<Document> collection, ConstructContext context) {
         MongoNamespace target = new MongoNamespace(collection.getNamespace().getDatabaseName() + "." + arguments[0].getStringValue());
-        boolean dropTarget = arguments[1].getBooleanValue();
         RenameCollectionOptions options = renameCollectionOptionsFactory.build(arguments[1]);
 
         tryRenameCollectionMany(collection, target, options);

@@ -98,7 +98,7 @@ abstract class AbstractCollectionApiConstruct extends Construct {
         try {
             return connectionManager.getConnection(context);
         } catch (NoSuchConnectionException e) {
-            throw new RobotRuntimeException("No active connection found for this robot. Please use Mongo.connect to create a connection");
+            throw new RobotRuntimeException("No active connection found for this robot. Please use Mongo.connect to create a connection", e);
         }
     }
 

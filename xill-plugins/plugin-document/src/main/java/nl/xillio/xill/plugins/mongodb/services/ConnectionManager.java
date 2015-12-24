@@ -94,7 +94,7 @@ public class ConnectionManager {
         try {
             connection.requireValid();
         } catch(MongoTimeoutException e){
-            throw new ConnectionFailedException("Could not connect to mongodb", connection, e);
+            throw new ConnectionFailedException("Could not connect to mongodb", e);
         }
     }
 
