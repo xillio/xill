@@ -76,7 +76,7 @@ public class EncoderServiceImpl implements EncoderService {
             encodeBase64(inputStream, outputStream);
 
             // Read and return the output stream
-            return ioUtilsService.toString(pipedInputStream);
+            return ioUtilsService.toString(pipedInputStream).trim();
         }
     }
 }
