@@ -1,6 +1,15 @@
 # Xill IDE - Change Log
 All notable changes to this project will be documented in this file
 
+## [3.0.BC2] - unreleased
+### Add
+- Option to declare multiple usages in one statement: use System, String;
+- Functionality to add any combination of LIST and OBJECT expressions
+- Bulk operations and multiple select on robots and projects in the project view
+- Encode.stringToBase64 construct
+- Decode.stringFromBase64 construct
+
+
 ## [3.0.23] - 11-12-2015
 ### Stories done
 - CTC-1152	Excel.getCell incorrectly retrieves numbers without decimals

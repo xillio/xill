@@ -1640,6 +1640,9 @@
 	.tree-cell:filled:hover {
 		-fx-background-color: -fx-cell-hover-background-color;
 	}
+	.drag-over {
+        -fx-background-color: -fx-cell-hover-background-color;
+    }
 	.tree-cell:filled:selected {
 		-fx-background-color: -fx-selected-background-color;
 		-fx-background-insets: 0;

@@ -3,14 +3,13 @@ package nl.xillio.migrationtool.dialogs;
 import java.io.File;
 import java.io.IOException;
 
-import javafx.stage.Modality;
+import javafx.scene.control.ButtonType;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
@@ -40,10 +39,12 @@ public class NewFolderDialog extends FXMLDialog {
 	 */
 	public NewFolderDialog(final ProjectPane projectPane, final TreeItem<Pair<File, String>> treeItem) {
 		super("/fxml/dialogs/NewFolder.fxml");
+        this.setTitle("Add Folder");
 		this.projectPane = projectPane;
 		this.treeItem = treeItem;
 
-		setTitle("Add Folder");
+		// If the folder to create the new folder in does not exist, create it.
+		projectPane.makeDirIfNotExists(treeItem);
 	}
 
 	@FXML
@@ -54,30 +55,18 @@ public class NewFolderDialog extends FXMLDialog {
 	@FXML
 	private void okayBtnPressed(final ActionEvent event) {
 		try {
-			File folder = getFolder(treeItem.getValue().getKey());
-
-			FileUtils.forceMkdir(new File(folder, tffolder.getText()));
-			treeItem.setExpanded(true);
-			projectPane.select(treeItem);
+			File newFolder = new File(getFolder(treeItem.getValue().getKey()), tffolder.getText());
+			FileUtils.forceMkdir(newFolder);
 		} catch (IOException e) {
-			treeItem.getParent().getChildren().remove(treeItem);
-			projectPane.getSelectionModel().clearSelection();
-
-			Alert error = new Alert(AlertType.ERROR);
-			error.initModality(Modality.APPLICATION_MODAL);
-			error.setContentText("Cannot create the new folder.");
+            LOGGER.error(e.getMessage(), e);
+            AlertDialog error = new AlertDialog(AlertType.ERROR, "Could not create folder", "",
+                    e.getMessage(), ButtonType.OK);
 			error.show();
-
-			LOGGER.error(e.getMessage(), e);
 		}
 		close();
 	}
 
 	private File getFolder(File key) {
-		if(key.isFile()) {
-			return key.getParentFile();
-		}
-
-		return key;
+        return key.isDirectory() ? key : key.getParentFile();
 	}
 }

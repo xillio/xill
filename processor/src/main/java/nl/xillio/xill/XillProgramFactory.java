@@ -121,28 +121,27 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
         info.setVariables(variables);
         info.setUsing(useStatements);
 
-        for (UseStatement using : robot.getUses()) {
-            String pluginName = using.getPlugin();
+        for (UseStatement plugin : robot.getUses()) {
+                String pluginName = plugin.getPlugin();
+                    if (pluginName == null) { // In case of non-qualified name: use MySQL;
+                        pluginName = plugin.getName();
+                    }
 
-            // In case of non-qualified name: use MySQL;
-            if (pluginName == null) {
-                pluginName = using.getName();
+                    // Really? Java...
+                    String searchName = pluginName;
+
+                    Optional<XillPlugin> ActualPlugin = pluginLoader.getPluginManager().getPlugins().stream()
+                            .filter(pckage -> pckage.getName().equals(searchName)).findAny();
+
+                    if (!ActualPlugin.isPresent()) {
+                        CodePosition pos = pos(plugin);
+                        throw new XillParsingException("Could not find plugin " + pluginName, pos.getLineNumber(),
+                                pos.getRobotID());
+                    }
+
+                    useStatements.put(plugin, ActualPlugin.get());
             }
 
-            // Really? Java...
-            String searchName = pluginName;
-
-            Optional<XillPlugin> plugin = pluginLoader.getPluginManager().getPlugins().stream()
-                    .filter(pckage -> pckage.getName().equals(searchName)).findAny();
-
-            if (!plugin.isPresent()) {
-                CodePosition pos = pos(using);
-                throw new XillParsingException("Could not find plugin " + pluginName, pos.getLineNumber(),
-                        pos.getRobotID());
-            }
-
-            useStatements.put(using, plugin.get());
-        }
 
         nl.xillio.xill.components.Robot instructionRobot = new nl.xillio.xill.components.Robot(robotID, debugger, robotStartedEvent, robotStoppedEvent);
         compiledRobots.put(robot, new SimpleEntry<>(robotID, instructionRobot));
@@ -735,7 +734,8 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
             } else if (extraction.getChild() != null) {
                 result.add(new ExpressionBuilder(extraction.getChild()));
             } else {
-                result.add(new Add(parse(extraction.getValue()), new ExpressionBuilder(0)));
+                Processable size = new CollectionSize(parse(extraction.getValue()));
+                result.add(size);
             }
 
             if (extraction.getValue() instanceof ListExtraction) {
@@ -771,7 +771,8 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 
         // We used neither: listVariable[]. Interpret as
         // listVariable[listVariable + 0]
-        return new FromList(expression, new Add(expression, new ExpressionBuilder(0)));
+        Processable size = new CollectionSize(expression);
+        return new FromList(expression, size);
     }
 
     /**
@@ -878,7 +879,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 
         if (construct == null) {
             throw new XillParsingException("The construct " + token.getFunction() + " does not exist in package "
-                    + token.getPackage().getName(),
+                    + pluginPackage.getName(),
                     pos.getLineNumber(), pos.getRobotID());
         }
 
