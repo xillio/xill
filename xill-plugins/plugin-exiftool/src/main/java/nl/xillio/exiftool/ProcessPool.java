@@ -15,10 +15,12 @@ import java.util.function.Supplier;
  */
 public class ProcessPool implements AutoCloseable {
     private static final Logger LOGGER = Log.get();
+
     /**
      * These are all the processes that have been built.
      */
     private List<ExifToolProcess> processes = new ArrayList<>();
+
     /**
      * These processes have been given away but not yet returned.
      */
@@ -55,6 +57,11 @@ public class ProcessPool implements AutoCloseable {
 
     private void release(ExifToolProcess process) {
         LOGGER.info("Releasing {}", process);
+        if(!process.isAvailable()) {
+            // This process is still busy. Kill it
+            processes.remove(process);
+            process.close();
+        }
         leasedProcesses.remove(process);
     }
 

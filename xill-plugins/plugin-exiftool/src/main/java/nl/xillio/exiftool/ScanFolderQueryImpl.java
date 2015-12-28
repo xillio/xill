@@ -19,19 +19,14 @@ import java.util.List;
  *
  * @author Thomas Biesaart
  */
-public class ScanFolderQueryImpl implements ScanFolderQuery {
+public class ScanFolderQueryImpl extends AbstractQuery<FolderQueryOptions, ExifReadResult> implements ScanFolderQuery {
 
-    private final Path folder;
-    private final Projection projection;
-    private final FolderQueryOptions folderQueryOptions;
 
     public ScanFolderQueryImpl(Path folder, Projection projection, FolderQueryOptions folderQueryOptions) throws NoSuchFileException {
-        this.folder = folder;
-        this.projection = projection;
-        this.folderQueryOptions = folderQueryOptions;
+        super(folder, projection, folderQueryOptions);
 
         if (!Files.exists(folder)) {
-            throw new NoSuchFileException("Could not find file " + folder);
+            throw new NoSuchFileException("Could not find folder " + folder);
         }
 
         if (!Files.isDirectory(folder)) {
@@ -40,23 +35,7 @@ public class ScanFolderQueryImpl implements ScanFolderQuery {
     }
 
     @Override
-    public List<String> buildExifArguments() {
-        List<String> result = new ArrayList<>();
-        result.add(folder.toAbsolutePath().toString());
-        if (folderQueryOptions.isRecursive()) {
-            result.add("-r");
-        }
-        result.add("-ext");
-        result.add(folderQueryOptions.getExtensionFilter());
-        result.addAll(projection.buildArguments());
-
-        return result;
-    }
-
-    @Override
-    public ExifReadResult run(ExifToolProcess process) throws IOException {
-        List<String> arguments = buildExifArguments();
-        ExecutionResult executionResult = process.run(arguments.toArray(new String[arguments.size()]));
-        return new ExifReadResultImpl(executionResult, 100, folderQueryOptions.getTagNameConvention());
+    protected ExifReadResult buildResult(ExecutionResult executionResult) {
+        return new ExifReadResultImpl(executionResult, 100, getOptions().getTagNameConvention());
     }
 }

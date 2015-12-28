@@ -1,7 +1,7 @@
 package nl.xillio.exiftool.query;
 
 /**
- * This interface represents a query that scans a folder and produces multiple documents
+ * This interface represents a query that scans a folder and produces multiple documents.
  *
  * @author Thomas Biesaart
  */

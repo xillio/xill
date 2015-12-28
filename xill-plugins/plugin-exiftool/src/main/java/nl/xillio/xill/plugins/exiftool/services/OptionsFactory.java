@@ -1,8 +1,10 @@
 package nl.xillio.xill.plugins.exiftool.services;
 
 import com.google.inject.Singleton;
+import nl.xillio.exiftool.FileQueryOptionsImpl;
 import nl.xillio.exiftool.FolderQueryOptionsImpl;
 import nl.xillio.exiftool.LowerCamelCaseNameConvention;
+import nl.xillio.exiftool.query.FileQueryOptions;
 import nl.xillio.exiftool.query.FolderQueryOptions;
 import nl.xillio.exiftool.query.QueryOptions;
 import nl.xillio.exiftool.query.TagNameConvention;
@@ -33,6 +35,20 @@ public class OptionsFactory {
         return folderQueryOptions;
     }
 
+    @SuppressWarnings("unchecked")
+    public FileQueryOptions buildFileOptions(MetaExpression options) {
+        if (options.getType() != ExpressionDataType.OBJECT) {
+            throw new IllegalArgumentException("Options must be of type OBJECT");
+        }
+
+        FileQueryOptions folderQueryOptions = new FileQueryOptionsImpl();
+        Map<String, MetaExpression> map = (Map<String, MetaExpression>) options.getValue();
+
+        map.forEach((key, value) -> processFile(folderQueryOptions, key, value));
+
+        return folderQueryOptions;
+    }
+
     private void processFolder(FolderQueryOptions folderQueryOptions, String option, MetaExpression value) {
         switch (option) {
             case "recursive":
@@ -43,6 +59,13 @@ public class OptionsFactory {
                 break;
             default:
                 process(folderQueryOptions, option, value);
+        }
+    }
+
+    private void processFile(FileQueryOptions fileQueryOptions, String option, MetaExpression value) {
+        switch (option) {
+            default:
+                process(fileQueryOptions, option, value);
         }
     }
 

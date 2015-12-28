@@ -1,6 +1,7 @@
 package nl.xillio.exiftool;
 
 import nl.xillio.exiftool.query.ExifTags;
+import nl.xillio.exiftool.query.TagNameConvention;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;

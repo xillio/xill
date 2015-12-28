@@ -3,10 +3,7 @@ package nl.xillio.exiftool;
 import me.biesaart.utils.Log;
 import nl.xillio.exiftool.process.ExifToolProcess;
 import nl.xillio.exiftool.process.WindowsExifToolProcess;
-import nl.xillio.exiftool.query.ExifReadResult;
-import nl.xillio.exiftool.query.FolderQueryOptions;
-import nl.xillio.exiftool.query.Projection;
-import nl.xillio.exiftool.query.ScanFolderQuery;
+import nl.xillio.exiftool.query.*;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -21,7 +18,6 @@ import java.util.function.Consumer;
  */
 public class ExifTool implements AutoCloseable {
     private static final Logger LOGGER = Log.get();
-    private static final String TAG_SEPARATOR = ":";
 
     private final ExifToolProcess process;
     private final Consumer<ExifToolProcess> releaseMethod;
@@ -42,10 +38,16 @@ public class ExifTool implements AutoCloseable {
     }
 
     public ExifReadResult readFieldsForFolder(Path path, Projection projection, FolderQueryOptions folderQueryOptions) throws IOException {
-        LOGGER.info("Reading all fields of files in " + path);
+        LOGGER.info("Reading tags for files in " + path);
 
         ScanFolderQuery scanFolderQuery = new ScanFolderQueryImpl(path, projection, folderQueryOptions);
 
         return scanFolderQuery.run(process);
+    }
+
+    public ExifTags readFieldsForFile(Path file, Projection projection, FileQueryOptions options) throws IOException {
+        LOGGER.info("Reading tags for " + file);
+        ScanFileQuery scanFileQuery = new ScanFileQueryImpl(file, projection, options);
+        return scanFileQuery.run(process);
     }
 }

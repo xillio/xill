@@ -1,18 +1,19 @@
 package nl.xillio.exiftool;
 
 import nl.xillio.exiftool.query.FolderQueryOptions;
-import nl.xillio.exiftool.query.TagNameConvention;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class represents the options needed for a query on a folder.
  *
  * @author Thomas Biesaart
  */
-public class FolderQueryOptionsImpl implements FolderQueryOptions {
+public class FolderQueryOptionsImpl extends AbstractQueryOptions implements FolderQueryOptions {
 
     private boolean recursive = true;
     private String extensionFilter = "*";
-    private TagNameConvention tagNameConvention = new LowerCamelCaseNameConvention();
 
     @Override
     public boolean isRecursive() {
@@ -35,12 +36,14 @@ public class FolderQueryOptionsImpl implements FolderQueryOptions {
     }
 
     @Override
-    public TagNameConvention getTagNameConvention() {
-        return tagNameConvention;
-    }
+    public List<String> buildArguments() {
+        List<String> result = new ArrayList<>();
+        if (isRecursive()) {
+            result.add("-r");
+        }
+        result.add("-ext");
 
-    @Override
-    public void setTagNameConvention(TagNameConvention tagNameConvention) {
-        this.tagNameConvention = tagNameConvention;
+        result.add(getExtensionFilter());
+        return result;
     }
 }
