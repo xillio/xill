@@ -7,13 +7,13 @@ All parameters except `database` are optional. The defaults will connect you to 
     </description>
     <examples>
         <example title="Usage">
-            <header>Connect to a database on a default local host.</header>
+            <header>Connect to a database on a default local host</header>
             <code>
                 use Mongo;
                 Mongo.connect("udm_default");
 
             </code>
-            <header>Connect to a specific remote database.</header>
+            <header>Connect to a specific remote database</header>
             <code>
                 use Mongo;
 

@@ -5,7 +5,7 @@ Provides a wrapper around the MongoDB [db.collection.distinct](https://docs.mong
     </description>
     <examples>
         <example title="Usage">
-            <header>Get all used values of a certain field.</header>
+            <header>Get all used values of a certain field</header>
             <code>
                 use Mongo;
                 use System;

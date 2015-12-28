@@ -5,12 +5,12 @@ Provides a wrapper around the MongoDB [db.collection.dropIndexes](https://docs.m
     </description>
     <examples>
         <example title="Usage">
-            <header>Drop all indexes on the documents collection.</header>
+            <header>Drop all indexes on the `assets` collection</header>
             <code>
                 use Mongo;
                 Mongo.connect("udm_default");
 
-                Mongo.dropIndexes();
+                Mongo.dropIndexes("assets");
             </code>
         </example>
     </examples>

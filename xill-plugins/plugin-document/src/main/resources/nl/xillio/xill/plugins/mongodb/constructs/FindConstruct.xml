@@ -5,7 +5,7 @@ Provides a wrapper around the MongoDB [db.collection.find](https://docs.mongodb.
     </description>
     <examples>
         <example title="Usage">
-            <header>Iterate over all documents.</header>
+            <header>Iterate over all documents</header>
             <code>
                 use Mongo;
                 use System;
@@ -17,7 +17,7 @@ Provides a wrapper around the MongoDB [db.collection.find](https://docs.mongodb.
                     System.print(document._id);
                 }
             </code>
-            <header>Iterate over documents by filter.</header>
+            <header>Iterate over documents by filter</header>
             <code>
                 use Mongo;
                 use System;

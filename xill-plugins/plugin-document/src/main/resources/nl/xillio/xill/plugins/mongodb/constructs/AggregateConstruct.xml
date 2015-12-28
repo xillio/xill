@@ -5,7 +5,7 @@ Provides a wrapper around the MongoDB [db.collection.aggregate](https://docs.mon
     </description>
     <examples>
         <example title="Usage">
-            <header>Count how many documents have what content types.</header>
+            <header>Display a count of assets per content type</header>
             <code>
                 use Mongo;
                 use System;

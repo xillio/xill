@@ -5,7 +5,7 @@ Provides a wrapper around the MongoDB [db.collection.createIndex](https://docs.m
     </description>
     <examples>
         <example title="Usage">
-            <header>Create unique index on a root field of a document.</header>
+            <header>Create unique index on a root field of a document</header>
             <code>
                 use Mongo;
                 use System;

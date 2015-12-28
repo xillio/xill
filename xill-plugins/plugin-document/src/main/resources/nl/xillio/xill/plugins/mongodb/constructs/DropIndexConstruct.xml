@@ -5,25 +5,16 @@ Provides a wrapper around the MongoDB [db.collection.dropIndex](https://docs.mon
     </description>
     <examples>
         <example title="Usage">
-            <header>Drop an index by name.</header>
-            <code>
-                use Mongo;
-                Mongo.connect("udm_default");
-
-                Mongo.dropIndex("documents", "contenttype_1");
-            </code>
-            <header>Drop an index by object.</header>
+            <header>Drop an index by name</header>
             <code>
                 use Mongo;
                 Mongo.connect("udm_default");
 
                 var keys = {
-                    "myField": 1
+                "metaData.meta2": 1
                 };
 
-                Mongo.createIndex("documents", keys);
-
-                Mongo.dropIndex("documents", keys);
+                Mongo.dropIndex("assets", keys);
             </code>
         </example>
     </examples>
