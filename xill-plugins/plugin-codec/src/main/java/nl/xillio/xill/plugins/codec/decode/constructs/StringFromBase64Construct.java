@@ -28,8 +28,10 @@ public class StringFromBase64Construct extends Construct {
 
     @Override
     public ConstructProcessor prepareProcess(ConstructContext context) {
-        return new ConstructProcessor(this::process,
-                new Argument("inputString", ATOMIC));
+        return new ConstructProcessor(
+                this::process,
+                new Argument("inputString", ATOMIC)
+        );
     }
 
     MetaExpression process(MetaExpression inputString) {
