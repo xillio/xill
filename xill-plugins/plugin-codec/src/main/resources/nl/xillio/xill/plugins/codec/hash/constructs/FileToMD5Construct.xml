@@ -10,7 +10,7 @@ Returns a MD5 hash of the provided file.
                 use System;
                 use Hash;
 
-                var hashFromFile = Hash.md5("c://tmp//somefile.dat");
+                var hashFromFile = Hash.fileToMD5("c://tmp//somefile.dat");
             </code>
         </example>
     </examples>

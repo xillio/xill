@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.codec.hash.constructs;
 
+import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.codec.hash.services.HashService;
@@ -16,7 +17,7 @@ import static org.mockito.Mockito.when;
 /**
  * Test the {@link FileToMD5Construct}
  */
-public class FileToMD5ConstructTest {
+public class FileToMD5ConstructTest extends TestUtils {
     /**
      * Test the process method under normal circumstances.
      *
@@ -27,8 +28,7 @@ public class FileToMD5ConstructTest {
     public void processNormalUsage() throws IOException, NoSuchAlgorithmException {
         // Mock
         String text = "/mock/path.file";
-        MetaExpression value = mock(MetaExpression.class);
-        when(value.getStringValue()).thenReturn(text);
+        MetaExpression value = fromValue(text);
 
         String returnValue = "8bb2564936980e92ceec8a5759ec34a8";
         HashService hashService = mock(HashServiceImpl.class);
@@ -53,8 +53,7 @@ public class FileToMD5ConstructTest {
     public void processNoSuchAlgorithmException() throws IOException, NoSuchAlgorithmException {
         // Mock
         String text = "string";
-        MetaExpression value = mock(MetaExpression.class);
-        when(value.getStringValue()).thenReturn(text);
+        MetaExpression value = fromValue(text);
 
         HashService hashService = mock(HashService.class);
         when(hashService.stringToMD5(text)).thenThrow(new NoSuchAlgorithmException("Error occurred"));

@@ -10,7 +10,7 @@
                 use System;
                 use Hash;
 
-                var hashFromString = Hash.md5("example string");
+                var hashFromString = Hash.stringToMD5("example string");
             </code>
         </example>
     </examples>
