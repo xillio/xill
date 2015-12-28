@@ -4,7 +4,6 @@ include 'api', 'ide', 'processor', 'xill-plugins', 'docgen', 'testutils'
 rootProject.name = 'xill'
 
 //Plugins
-include 'xill-plugins:plugin-system'
 include 'xill-plugins:plugin-string'
 include 'xill-plugins:plugin-date'
 include 'xill-plugins:plugin-web'
