@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Extract exif tags from a single file and returns an *OBJECT* containing the tags and their values.
+
+## Projection
+The projection parameter accepts an OBJECT containing exif tag names as keys and a boolean flag as a value. This value
+denotes whether or not the tag should be included in the result or not.
+Whenever you specify a tag in the projection all other tags will default to false.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Get all available tags on a file</header>
+            <code>
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>scanFolder</reference>
+    </references>
+    <tags>
+        meta, data, metadata, exif, exiftool, exiftools
+    </tags>
+</function>
