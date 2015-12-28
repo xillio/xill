@@ -19,17 +19,17 @@ public class GetMimeTypeConstruct extends Construct {
     @Override
     public ConstructProcessor prepareProcess(final ConstructContext context) {
         return new ConstructProcessor(
-                uri -> process(this, context, uri),
+                uri -> process(context, uri),
                 new Argument("uri", ATOMIC)
         );
     }
 
-    static MetaExpression process(final GetMimeTypeConstruct construct, final ConstructContext context, final MetaExpression uri) {
+    MetaExpression process(final ConstructContext context, final MetaExpression uri) {
         File file = getFile(context, uri.getStringValue());
 
         try {
             // The result is either null or a string containing the MIME type.
-            return MetaExpression.parseObject(construct.getMimeType(file.toPath()));
+            return MetaExpression.parseObject(getMimeType(file.toPath()));
         } catch (IOException | SecurityException e) {
             throw new RobotRuntimeException("Failed to read MIME type: " + e.getMessage(), e);
         }

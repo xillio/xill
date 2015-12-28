@@ -40,11 +40,11 @@ public class GetMimeTypeConstructTest {
 
 		// Construct
 		String type = "image/jpeg";
-		GetMimeTypeConstruct construct = mock(GetMimeTypeConstruct.class);
-		when(construct.getMimeType(any())).thenReturn(type);
+		GetMimeTypeConstruct construct = spy(new GetMimeTypeConstruct());
+		doReturn(type).when(construct).getMimeType(any());
 
 		// Run the Method
-		MetaExpression result = GetMimeTypeConstruct.process(construct, context, uri);
+		MetaExpression result = construct.process(context, uri);
 
 		// Verify
 		verify(construct, times(1)).getMimeType(any());
@@ -56,13 +56,13 @@ public class GetMimeTypeConstructTest {
 	@Test(expectedExceptions = RobotRuntimeException.class)
 	public void testProcessIOException() throws IOException {
 		// Construct
-		GetMimeTypeConstruct construct = mock(GetMimeTypeConstruct.class);
-		when(construct.getMimeType(any())).thenThrow(new IOException());
+		GetMimeTypeConstruct construct = spy(new GetMimeTypeConstruct());
+		doThrow(new IOException()).when(construct).getMimeType(any());
 
 		// File
 		when(TestUtils.CONSTRUCT_FILE_RESOLVER.buildFile(any(), anyString())).thenReturn(mock(File.class));
 
 		// Run the method
-		GetMimeTypeConstruct.process(construct, mock(ConstructContext.class), mock(MetaExpression.class));
+		construct.process(mock(ConstructContext.class), mock(MetaExpression.class));
 	}
 }
