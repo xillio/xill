@@ -82,6 +82,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
      */
     private final EventHost<RobotStartedAction> robotStartedEvent = new EventHost<>();
     private final EventHost<RobotStoppedAction> robotStoppedEvent = new EventHost<>();
+    private final UUID compilerSerialId = UUID.randomUUID();
 
     /**
      * Create a new {@link XillProgramFactory}
@@ -142,7 +143,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
             }
 
 
-        nl.xillio.xill.components.Robot instructionRobot = new nl.xillio.xill.components.Robot(robotID, debugger, robotStartedEvent, robotStoppedEvent);
+        nl.xillio.xill.components.Robot instructionRobot = new nl.xillio.xill.components.Robot(robotID, debugger, robotStartedEvent, robotStoppedEvent, compilerSerialId);
         compiledRobots.put(robot, new SimpleEntry<>(robotID, instructionRobot));
 
         for (xill.lang.xill.Instruction instruction : robot.getInstructionSet().getInstructions()) {
@@ -154,6 +155,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 
     @Override
     public void compile() throws XillParsingException {
+
         // Push all FunctionDeclarations after parsing
         while (!functionCalls.isEmpty()) {
             Entry<xill.lang.xill.FunctionCall, FunctionCall> pair = functionCalls.pop();
@@ -882,7 +884,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
         }
 
         // Check argument count by mocking the input
-        ConstructContext constructContext = new ConstructContext(robotID.get(token.eResource()), rootRobot, construct, debugger, robotStartedEvent, robotStoppedEvent);
+        ConstructContext constructContext = new ConstructContext(robotID.get(token.eResource()), rootRobot, construct, debugger, compilerSerialId, robotStartedEvent, robotStoppedEvent);
 
         try (ConstructProcessor processor = construct.prepareProcess(constructContext)) {
             return buildCall(construct, processor, arguments, constructContext, pos);

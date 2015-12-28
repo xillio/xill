@@ -180,7 +180,7 @@ public class XillDebugger implements Debugger {
 
     @Override
     public void robotFinished(final Robot robot) {
-        onRobotStopped.invoke(new RobotStoppedAction(robot));
+        onRobotStopped.invoke(new RobotStoppedAction(robot, robot.getCompilerSerialId()));
 
         LOGGER.info("Robot finished.");
     }

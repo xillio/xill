@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Connect to a MongoDB database.
+
+All parameters except `database` are optional. The defaults will connect you to a default local mongodb database at the standard port.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Connect to a database on a default local host</header>
+            <code>
+                use Mongo;
+                Mongo.connect("udm_default");
+
+            </code>
+            <header>Connect to a specific remote database</header>
+            <code>
+                use Mongo;
+
+                Mongo.connect(
+                    "search_cache"
+                    "74.125.224.72",
+                    8804,
+                    "larry",
+                    "password==safe4me"
+                );
+            </code>
+        </example>
+    </examples>
+    <tags>
+        mongodb
+    </tags>
+</function>

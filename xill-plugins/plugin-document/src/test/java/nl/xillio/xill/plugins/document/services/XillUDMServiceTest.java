@@ -116,7 +116,7 @@ public class XillUDMServiceTest {
         XillUDMService xillUDMService = spyService(udmService);
 
         // Call
-        Iterator<Map<?, ?>> returnValue = xillUDMService.findMapWhere(null);
+        Iterator<Map<String, Object>> returnValue = xillUDMService.findMapWhere(null);
 
         Map<String, String> expectedValue = new HashMap<>();
         expectedValue.put("test", "MyValue");

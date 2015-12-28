@@ -34,13 +34,14 @@ public class GetConstruct extends Construct {
         );
     }
 
+    @SuppressWarnings("squid:UnusedPrivateMethod") // Sonar doesn't understand method references
     private MetaExpression process(MetaExpression documentId) {
-        Map<?, ?> value = getDocument(documentId.getStringValue());
+        Map<String, Object> value = getDocument(documentId.getStringValue());
 
         return parseObject(value);
     }
 
-    private Map<?, ?> getDocument(String id) {
+    private Map<String, Object> getDocument(String id) {
         try {
             return persistence.getMap(id);
         } catch (DocumentNotFoundException e) {
