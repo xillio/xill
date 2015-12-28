@@ -23,7 +23,7 @@ public class ErrorInstruction extends CompoundInstruction {
     private final InstructionSet successsInstructions;
     private final InstructionSet errorInstructions;
     private final InstructionSet finallyInstructions;
-    private boolean returns = false;
+    private boolean doesReturn = false;
 
     /**
      * Instantiate an {@link ErrorInstruction}
@@ -61,19 +61,18 @@ public class ErrorInstruction extends CompoundInstruction {
 
         ErrorBlockDebugger errorBlockDebugger = new ErrorBlockDebugger();
         errorBlockDebugger.setDebug(debugger);
-
         try {
-            doInstructions.process(errorBlockDebugger);
+            this.doesReturn = doInstructions.process(errorBlockDebugger).returns();
             if (errorBlockDebugger.hasError() && errorInstructions != null) {
                 errorInstructions.process(debugger);
             } else {
-                if (successsInstructions != null && !returns) {
+                if (successsInstructions != null && !doesReturn) {
                     successsInstructions.process(debugger);
                 }
             }
             return InstructionFlow.doResume();
         } finally {
-            if (finallyInstructions != null && !returns) {
+            if (finallyInstructions != null && !doesReturn) {
                 finallyInstructions.process(debugger);
             }
         }
@@ -87,14 +86,13 @@ public class ErrorInstruction extends CompoundInstruction {
     public InstructionSet getFinally(){
         return this.finallyInstructions;
     }
+    public InstructionSet getDo(){
+        return this.doInstructions;
+    }
 
     @Override
     public Collection<Processable> getChildren() {
         return Arrays.asList(doInstructions);
-    }
-
-    public void setReturns(boolean returns) {
-        this.returns = returns;
     }
 
 }
