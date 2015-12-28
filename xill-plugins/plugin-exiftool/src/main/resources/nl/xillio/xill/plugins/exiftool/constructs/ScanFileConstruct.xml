@@ -6,7 +6,30 @@ Extract exif tags from a single file and returns an *OBJECT* containing the tags
 ## Projection
 The projection parameter accepts an OBJECT containing exif tag names as keys and a boolean flag as a value. This value
 denotes whether or not the tag should be included in the result or not.
-Whenever you specify a tag in the projection all other tags will default to false.
+Whenever you specify a tag that should be included in the projection all other tags will default to false.
+### Examples
+To get only the MIME Type tag:
+
+        {
+            "mimeType": true
+        }
+
+To get everything except the MIME Type:
+
+        {
+            "mimeType": false
+        }
+
+To get multiple tags:
+
+        {
+            "mimeType": true,
+            "megapixels": true,
+            "bitsPerSample": true
+        }
+
+## Options
+To provide options for this construct you should
     </description>
     <examples>
         <example title="Usage">
@@ -19,6 +42,6 @@ Whenever you specify a tag in the projection all other tags will default to fals
         <reference>scanFolder</reference>
     </references>
     <tags>
-        meta, data, metadata, exif, exiftool, exiftools
+        meta, data, metadata, exif, exiftool
     </tags>
 </function>
