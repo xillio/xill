@@ -65,9 +65,10 @@ public class XillCell {
 						toReturn = new DateImpl(cell.getDateCellValue());
 					} else {
 						Double temp =  cell.getNumericCellValue();
-                        if(Math.floor(temp) == temp){
+						// Check if temp is an integer or double.
+                        if(Double.doubleToRawLongBits(Math.floor(temp) - temp) == 0) {
                             toReturn = temp.intValue();
-                        }else{
+                        } else {
                             toReturn = temp;
                         }
 					}
