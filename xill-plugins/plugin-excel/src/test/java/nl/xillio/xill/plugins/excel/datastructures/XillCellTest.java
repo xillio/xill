@@ -70,10 +70,6 @@ public class XillCellTest {
 		when(testCell.getValue()).thenReturn(2.5);
 		assertEquals(testCell.getValue(), 2.5);
 
-		doReturn(3).when(cell.getNumericCellValue());
-		when(testCell.getValue()).thenReturn(3);
-		assertEquals(testCell.getValue(), 3);
-
 		doReturn(true).when(testCell).isNull();
 		assertEquals(testCell.getValue(), null);
 
