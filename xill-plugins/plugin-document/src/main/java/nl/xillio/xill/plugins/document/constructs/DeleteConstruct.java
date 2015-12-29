@@ -31,6 +31,7 @@ public class DeleteConstruct extends Construct {
         );
     }
 
+    @SuppressWarnings("squid:UnusedPrivateMethod") // Sonar doesn't understand method references
     private MetaExpression process(MetaExpression documentId) {
         try {
             persistence.delete(documentId.getStringValue());

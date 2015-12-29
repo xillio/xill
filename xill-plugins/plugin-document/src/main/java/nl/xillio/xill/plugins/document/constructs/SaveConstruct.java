@@ -40,7 +40,7 @@ public class SaveConstruct extends Construct {
         );
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("squid:UnusedPrivateMethod") // Sonar doesn't understand method references
     public MetaExpression process(MetaExpression document) {
 
         UDMDocument udmDocument = documentBuilder.build(document);
@@ -50,7 +50,7 @@ public class SaveConstruct extends Construct {
         MetaExpression idValue = fromValue(id);
         idValue.registerReference();
 
-        ((Map<String,MetaExpression>)document.getValue()).put("_id", idValue);
+        document.<Map<String,MetaExpression>>getValue().put("_id", idValue);
 
         /*
          Return a COPY for the scoping administration.

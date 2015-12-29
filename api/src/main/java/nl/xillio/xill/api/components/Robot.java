@@ -1,6 +1,7 @@
 package nl.xillio.xill.api.components;
 
 import java.util.List;
+import java.util.UUID;
 
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
@@ -37,4 +38,6 @@ public interface Robot extends InstructionSet {
 	 * @return The argument set by {@link Robot#setArgument(MetaExpression)}
 	 */
 	public MetaExpression getArgument();
+
+	UUID getCompilerSerialId();
 }

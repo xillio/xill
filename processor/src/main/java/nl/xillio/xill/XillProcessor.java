@@ -402,16 +402,18 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
      */
     private String getSignature(Construct construct) {
         if (!argumentSignatures.containsKey(construct)) {
-            ConstructProcessor processor = construct.prepareProcess(new ConstructContext(getRobotID(), getRobotID(), construct, null, null, null));
+            ConstructContext context = new ConstructContext(getRobotID(), getRobotID(), construct, null, null, null, null);
+            try(ConstructProcessor processor = construct.prepareProcess(context)) {
 
-            List<String> args = new ArrayList<>();
-            for (int i = 0; i < processor.getNumberOfArguments(); i++) {
-                String arg = processor.getArgumentName(i);
-                args.add("${" + (i + 1) + ":" + arg + "}");
+                List<String> args = new ArrayList<>();
+                for (int i = 0; i < processor.getNumberOfArguments(); i++) {
+                    String arg = processor.getArgumentName(i);
+                    args.add("${" + (i + 1) + ":" + arg + "}");
+                }
+
+                String signature = construct.getName() + "(" + StringUtils.join(args, ", ") + ")";
+                argumentSignatures.put(construct, signature);
             }
-
-            String signature = construct.getName() + "(" + StringUtils.join(args, ", ") + ")";
-            argumentSignatures.put(construct, signature);
         }
 
         return argumentSignatures.get(construct);

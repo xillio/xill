@@ -36,7 +36,7 @@ public class JacksonParser implements JsonParser, PrettyJsonParser {
 
     @Override
     public String toJson(MetaExpression metaExpression) throws JsonException {
-        return toJson(MetaExpression.extractValue(metaExpression));
+        return toJson((Object)MetaExpression.extractValue(metaExpression));
     }
 
     @Override
