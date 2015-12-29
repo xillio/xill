@@ -58,11 +58,24 @@ public class XillWorkbookTest {
      * asked for that does not exist in this workbook
      */
     @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testGetSheetNumThatDoesNotExist() throws Exception {
+    public void testGetSheetNumSmallerThanZero() throws Exception {
         Workbook workbook = mock(Workbook.class);
         File file = createFile("path", false);
         XillWorkbook testWorkbook = new XillWorkbook(workbook, file);
         testWorkbook.getSheetAt(-1);
+    }
+
+    /**
+     * Tests if an Exception is thrown when a sheet is
+     * asked for that does not exist in this workbook
+     */
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void testGetSheetNumThatDoesNotExist() throws Exception {
+        Workbook workbook = mock(Workbook.class);
+        when(workbook.getNumberOfSheets()).thenReturn(1);
+        File file = createFile("path", false);
+        XillWorkbook testWorkbook = new XillWorkbook(workbook, file);
+        testWorkbook.getSheetAt(5);
     }
 
     /**
@@ -80,6 +93,24 @@ public class XillWorkbookTest {
         when(workbook.getSheet("sheet")).thenReturn(sheet);
         when(sheet.getSheetName()).thenReturn("sheet");
         assertEquals("sheet", testWorkbook.getSheet("sheet").getName());
+        assertEquals("Excel Workbook [path]", testWorkbook.getFileString());
+    }
+
+    /**
+     * Tests if a sheet is correctly returned and
+     * if the string that appears in the debugger when a workbook is loaded
+     * is correct.
+     */
+    @Test
+    public void testGetSheetNumAndWorkbookName() throws Exception {
+        Workbook workbook = mock(Workbook.class);
+        File file = createFile("path", false);
+        XillWorkbook testWorkbook = new XillWorkbook(workbook, file);
+        when(workbook.getNumberOfSheets()).thenReturn(1);
+        Sheet sheet = mock(Sheet.class);
+        when(workbook.getSheetAt(0)).thenReturn(sheet);
+        when(sheet.getSheetName()).thenReturn("sheet");
+        assertEquals("sheet", testWorkbook.getSheetAt(0).getName());
         assertEquals("Excel Workbook [path]", testWorkbook.getFileString());
     }
 
