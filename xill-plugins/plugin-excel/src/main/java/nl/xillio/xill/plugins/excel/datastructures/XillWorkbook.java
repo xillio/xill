@@ -97,6 +97,20 @@ public class XillWorkbook implements MetadataExpression {
 	}
 
 	/**
+	 * Gets the {@link XillSheet} at the given index.
+	 *
+	 * @param index The index of the sheet which should be retrieved.
+     * @return The {@link XillSheet} which was retrieved from this workbook.
+	 * @throws IllegalArgumentException when the index is out of bounds.
+     */
+	public XillSheet getSheetAt(int index) {
+		if (index < 0 || index >= workbook.getNumberOfSheets()) {
+			throw new IllegalArgumentException("Sheet index must be greater than 0 and smaller than the amount of sheets.");
+		}
+		return new XillSheet(workbook.getSheetAt(index), readonly, this);
+	}
+
+	/**
 	 * Creates a new sheet in this workbook
 	 *
 	 * @param sheetName the name of the new sheet

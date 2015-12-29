@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.excel.constructs;
 
+import nl.xillio.xill.api.behavior.NumberBehavior;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
@@ -32,7 +33,10 @@ public class LoadSheetConstruct extends Construct {
 		XillWorkbook Workbook = assertMeta(workbook, "parameter 'workbook'", XillWorkbook.class, "result of loadWorkbook or createWorkbook");
 		XillSheet sheet;
 		try {
-			sheet = Workbook.getSheet(sheetName.getStringValue());
+			// If the sheetName is a number get the sheet at that index, else get the sheet with that name.
+			sheet = sheetName.getValue() instanceof NumberBehavior
+					? Workbook.getSheetAt(sheetName.getNumberValue().intValue())
+					: Workbook.getSheet(sheetName.getStringValue());
 		} catch (IllegalArgumentException e) {
 			throw new RobotRuntimeException(e.getMessage(), e);
 		}
@@ -52,7 +56,7 @@ public class LoadSheetConstruct extends Construct {
 	public ConstructProcessor prepareProcess(ConstructContext context) {
 		return new ConstructProcessor(
 						LoadSheetConstruct::process,
-						new Argument("workbook", ATOMIC), new Argument("sheetName", ATOMIC));
+						new Argument("workbook", ATOMIC), new Argument("sheet", ATOMIC));
 	}
 
 }
