@@ -1,15 +1,15 @@
 package nl.xillio.xill.plugins.exiftool.services;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import nl.xillio.exiftool.FileQueryOptionsImpl;
-import nl.xillio.exiftool.FolderQueryOptionsImpl;
-import nl.xillio.exiftool.LowerCamelCaseNameConvention;
+import nl.xillio.exiftool.*;
 import nl.xillio.exiftool.query.FileQueryOptions;
 import nl.xillio.exiftool.query.FolderQueryOptions;
 import nl.xillio.exiftool.query.QueryOptions;
 import nl.xillio.exiftool.query.TagNameConvention;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 import java.util.Map;
 
@@ -21,6 +21,13 @@ import java.util.Map;
 @Singleton
 public class OptionsFactory {
 
+    private final ProjectionFactory projectionFactory;
+
+    @Inject
+    public OptionsFactory(ProjectionFactory projectionFactory) {
+        this.projectionFactory = projectionFactory;
+    }
+
     @SuppressWarnings("unchecked")
     public FolderQueryOptions buildFolderOptions(MetaExpression options) {
         if (options.getType() != ExpressionDataType.OBJECT) {
@@ -28,7 +35,7 @@ public class OptionsFactory {
         }
 
         FolderQueryOptions folderQueryOptions = new FolderQueryOptionsImpl();
-        Map<String, MetaExpression> map = (Map<String, MetaExpression>) options.getValue();
+        Map<String, MetaExpression> map = options.getValue();
 
         map.forEach((key, value) -> processFolder(folderQueryOptions, key, value));
 
@@ -42,7 +49,7 @@ public class OptionsFactory {
         }
 
         FileQueryOptions folderQueryOptions = new FileQueryOptionsImpl();
-        Map<String, MetaExpression> map = (Map<String, MetaExpression>) options.getValue();
+        Map<String, MetaExpression> map = options.getValue();
 
         map.forEach((key, value) -> processFile(folderQueryOptions, key, value));
 
@@ -55,7 +62,11 @@ public class OptionsFactory {
                 folderQueryOptions.setRecursive(value.getBooleanValue());
                 break;
             case "extensions":
-                folderQueryOptions.setExtensionFilter(value.getStringValue());
+                try {
+                    folderQueryOptions.setExtensionFilter(projectionFactory.build(value));
+                } catch (IllegalArgumentException e) {
+                    throw new RobotRuntimeException("Invalid extension projection: " + e.getMessage(), e);
+                }
                 break;
             default:
                 process(folderQueryOptions, option, value);
@@ -79,6 +90,12 @@ public class OptionsFactory {
 
     private TagNameConvention getConvention(String tagName) {
         switch (tagName) {
+            case "capitalWord":
+            case "cw":
+                return new CapitalWordNameConvention();
+            case "upperCamelCase":
+            case "ucc":
+                return new UpperCamelCaseNameConvention();
             case "lowerCamelCase":
             case "lcc":
             default:

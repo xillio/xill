@@ -8,12 +8,10 @@ import nl.xillio.exiftool.query.FileQueryOptions;
 import nl.xillio.exiftool.query.Projection;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
-import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.exiftool.services.OptionsFactory;
-import nl.xillio.xill.plugins.exiftool.services.ProjectionFactory;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -23,16 +21,14 @@ import java.nio.file.Path;
  *
  * @author Thomas Biesaart
  */
-public class ScanFileConstruct extends Construct {
+public class ScanFileConstruct extends AbstractExifConstruct {
 
     private final ProcessPool processPool;
-    private final ProjectionFactory projectionFactory;
     private final OptionsFactory optionsFactory;
 
     @Inject
-    public ScanFileConstruct(ProcessPool processPool, ProjectionFactory projectionFactory, OptionsFactory optionsFactory) {
+    public ScanFileConstruct(ProcessPool processPool, OptionsFactory optionsFactory) {
         this.processPool = processPool;
-        this.projectionFactory = projectionFactory;
         this.optionsFactory = optionsFactory;
     }
 
@@ -48,7 +44,7 @@ public class ScanFileConstruct extends Construct {
 
     MetaExpression process(MetaExpression folderPath, MetaExpression projectionExpression, MetaExpression options, ConstructContext context) {
         Path file = getFile(context, folderPath.getStringValue()).toPath();
-        Projection projection = projectionFactory.build(projectionExpression);
+        Projection projection = getProjection(projectionExpression);
         FileQueryOptions fileQueryOptions = optionsFactory.buildFileOptions(options);
 
         ExifTags tags = run(file, projection, fileQueryOptions);

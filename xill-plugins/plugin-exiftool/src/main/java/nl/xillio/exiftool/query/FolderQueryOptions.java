@@ -11,7 +11,7 @@ public interface FolderQueryOptions extends QueryOptions {
 
     void setRecursive(boolean recursive);
 
-    String getExtensionFilter();
+    Projection getExtensionFilter();
 
-    void setExtensionFilter(String filter);
+    void setExtensionFilter(Projection filter);
 }

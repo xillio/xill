@@ -33,8 +33,12 @@ public class ExifTool implements AutoCloseable {
         releaseMethod.accept(process);
     }
 
+    public static ProcessPool buildPool(File binaryLocation) {
+        return new ProcessPool(() -> new WindowsExifToolProcess(new File("D:\\temp\\exif.exe")));
+    }
+
     public static ProcessPool buildPool() {
-        return new ProcessPool(() -> new WindowsExifToolProcess(new File("D:\\TMP\\exif.exe")));
+        return buildPool(new File("D:\\temp\\exif.exe"));
     }
 
     public ExifReadResult readFieldsForFolder(Path path, Projection projection, FolderQueryOptions folderQueryOptions) throws IOException {

@@ -36,7 +36,6 @@ class ExifReadResultImpl implements ExifReadResult {
         Thread thread = new Thread(this::run, "ExecutionResult-" + counter++);
         thread.setDaemon(true);
         thread.start();
-
     }
 
     private void run() {

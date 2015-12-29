@@ -1,6 +1,7 @@
 package nl.xillio.exiftool;
 
 import nl.xillio.exiftool.query.FolderQueryOptions;
+import nl.xillio.exiftool.query.Projection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
 public class FolderQueryOptionsImpl extends AbstractQueryOptions implements FolderQueryOptions {
 
     private boolean recursive = true;
-    private String extensionFilter = "*";
+    private Projection extensionFilter = new Projection();
 
     @Override
     public boolean isRecursive() {
@@ -26,12 +27,12 @@ public class FolderQueryOptionsImpl extends AbstractQueryOptions implements Fold
     }
 
     @Override
-    public String getExtensionFilter() {
+    public Projection getExtensionFilter() {
         return extensionFilter;
     }
 
     @Override
-    public void setExtensionFilter(String filter) {
+    public void setExtensionFilter(Projection filter) {
         this.extensionFilter = filter;
     }
 
@@ -41,9 +42,22 @@ public class FolderQueryOptionsImpl extends AbstractQueryOptions implements Fold
         if (isRecursive()) {
             result.add("-r");
         }
-        result.add("-ext");
 
-        result.add(getExtensionFilter());
+        if (extensionFilter.isEmpty()) {
+            result.add("-ext");
+            result.add("*");
+        } else {
+            extensionFilter.forEach(
+                    (extension, include) -> {
+                        if (include) {
+                            result.add("-ext");
+                        } else {
+                            result.add("--ext");
+                        }
+                        result.add(extension);
+                    }
+            );
+        }
         return result;
     }
 }
