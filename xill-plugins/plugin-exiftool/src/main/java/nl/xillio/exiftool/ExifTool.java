@@ -1,9 +1,12 @@
 package nl.xillio.exiftool;
 
 import me.biesaart.utils.Log;
+import me.biesaart.utils.SystemUtils;
 import nl.xillio.exiftool.process.ExifToolProcess;
+import nl.xillio.exiftool.process.OSXExifToolProcess;
 import nl.xillio.exiftool.process.WindowsExifToolProcess;
 import nl.xillio.exiftool.query.*;
+import nl.xillio.xill.api.errors.NotImplementedException;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -34,7 +37,15 @@ public class ExifTool implements AutoCloseable {
     }
 
     public static ProcessPool buildPool(File binaryLocation) {
-        return new ProcessPool(() -> new WindowsExifToolProcess(new File("D:\\temp\\exif.exe")));
+        if (SystemUtils.IS_OS_WINDOWS) {
+            return new ProcessPool(() -> new WindowsExifToolProcess(binaryLocation));
+        }
+
+        if (SystemUtils.IS_OS_MAC) {
+            return new ProcessPool(() -> new OSXExifToolProcess(binaryLocation));
+        }
+
+        throw new NotImplementedException("No implementation for " + SystemUtils.OS_NAME);
     }
 
     public static ProcessPool buildPool() {

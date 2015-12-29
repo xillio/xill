@@ -33,7 +33,7 @@ abstract class AbstractExifToolProcess implements ExifToolProcess {
 
     @Override
     public boolean isDeployed() {
-        return Files.exists(nativeBinary);
+        return embeddedBinaryPath == null || Files.exists(nativeBinary);
     }
 
     @Override
@@ -74,7 +74,6 @@ abstract class AbstractExifToolProcess implements ExifToolProcess {
             deploy();
             ProcessBuilder processBuilder = new ProcessBuilder();
             processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
-            processBuilder.command(nativeBinary.toAbsolutePath().toString(), "-stay_open", "True", "-@", "-");
 
             this.process = buildProcess(processBuilder);
             this.streams = new IOStream(process);

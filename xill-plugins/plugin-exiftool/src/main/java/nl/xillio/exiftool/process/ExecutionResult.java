@@ -39,7 +39,7 @@ public class ExecutionResult implements Iterator<String> {
         try {
             cachedLine = reader.readLine();
 
-            if (cachedLine.equals(killString)) {
+            if (cachedLine == null || cachedLine.equals(killString)) {
                 shouldClose = true;
                 statusCallback.releaseProcess();
             }
