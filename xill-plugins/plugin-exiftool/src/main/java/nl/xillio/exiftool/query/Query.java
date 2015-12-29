@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.List;
 
 /**
+ * This interface is implemented by every available query.
+ *
  * @author Thomas Biesaart
  */
 public interface Query<T> {

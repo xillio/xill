@@ -22,6 +22,7 @@ class ExifReadResultImpl implements ExifReadResult {
     private final TagNameConvention tagNameConvention;
     private static int counter;
     private final Queue<ExifTags> tagsQueue;
+    private final Thread thread;
     private ExifTags currentValue;
     private boolean isDone = false;
     private boolean isReading = false;
@@ -33,7 +34,7 @@ class ExifReadResultImpl implements ExifReadResult {
         this.tagsQueue = new ArrayDeque<>(cacheSize + 3);
 
         // TODO:: Use a thread pool mechanism to process this
-        Thread thread = new Thread(this::run, "ExecutionResult-" + counter++);
+        thread = new Thread(this::run, "ExecutionResult-" + counter++);
         thread.setDaemon(true);
         thread.start();
     }
@@ -90,8 +91,6 @@ class ExifReadResultImpl implements ExifReadResult {
         }
 
         push();
-
-
     }
 
     private void push() {

@@ -6,6 +6,11 @@ import nl.xillio.exiftool.ProcessPool;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * This is the Windows implementation of the {@link ExifToolProcess}.
+ *
+ * @author Thomas Biesaart
+ */
 public class WindowsExifToolProcess extends AbstractExifToolProcess {
 
     public WindowsExifToolProcess(File nativeBinary) {

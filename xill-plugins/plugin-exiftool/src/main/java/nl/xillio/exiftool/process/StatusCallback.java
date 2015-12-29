@@ -6,5 +6,8 @@ package nl.xillio.exiftool.process;
  * @author Thomas Biesaart
  */
 public interface StatusCallback {
+    /**
+     * Release the process.
+     */
     void releaseProcess();
 }
