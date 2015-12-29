@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Returns an array that holds a list of documents that identify and describe the existing indexes on the collection.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>List all indexes in the user collection.</header>
+            <code>
+                use Mongo;
+                use System;
+                Mongo.connect("xillserver");
+
+                var results = Mongo.listIndexes("user");
+
+                foreach (result in results) {
+                    System.print(result);
+                }
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>connect</reference>
+        <reference>dropIndexes</reference>
+        <reference>createIndex</reference>
+    </references>
+    <tags>
+        mongodb, list, index
+    </tags>
+</function>

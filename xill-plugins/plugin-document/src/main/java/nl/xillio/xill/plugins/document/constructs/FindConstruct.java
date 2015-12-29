@@ -39,15 +39,16 @@ public class FindConstruct extends Construct {
         );
     }
 
+    @SuppressWarnings("squid:UnusedPrivateMethod") // Sonar doesn't understand method references
     private MetaExpression process(MetaExpression filter) {
         // Parse the filter
         Document filterDoc = queryBuilder.parseQuery(filter);
 
         // Run the query
-        Iterator<Map<?, ?>> searchResult = getResult(filterDoc);
+        Iterator<Map<String, Object>> searchResult = getResult(filterDoc);
 
         // Transform the result
-        MetaExpressionIterator<Map<?, ?>> iterator = new MetaExpressionIterator<>(
+        MetaExpressionIterator<Map<String, Object>> iterator = new MetaExpressionIterator<>(
                 searchResult,
                 MetaExpression::parseObject
         );
@@ -58,7 +59,7 @@ public class FindConstruct extends Construct {
         return result;
     }
 
-    private Iterator<Map<?, ?>> getResult(Document filterDoc) {
+    private Iterator<Map<String, Object>> getResult(Document filterDoc) {
         try {
             return queryService.findMapWhere(filterDoc);
         } catch (PersistenceException e) {

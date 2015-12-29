@@ -32,7 +32,7 @@ public interface XillUDMPersistence {
      * @return the map
      * @throws nl.xillio.udm.exceptions.DocumentNotFoundException if the document did not exist in the persistence
      */
-    Map<?, ?> getMap(String id);
+    Map<String, Object> getMap(String id);
 
     /**
      * Remove a document from the persistence.
