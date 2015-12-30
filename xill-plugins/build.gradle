@@ -12,7 +12,7 @@ subprojects {
         }
     }
 
-    // To preprate for execution we need to copy the plugins to the plugin directory
+    // To prepare for execution we need to copy the plugins to the plugin directory
     prepare.dependsOn copyToPluginsDir
 
     dependencies {

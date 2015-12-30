@@ -1,22 +1,20 @@
 description = 'this project contains the core implementation of the xill language'
 
 dependencies{
+	compile project(':api')
 	compile 'com.google.code.gson:gson:2.3.1'
 	compile 'org.apache.commons:commons-lang3:3.4'
 	compile 'commons-io:commons-io:2.4'
-	compile project(':api')
 	compile 'nl.xillio.xill:xill.lang.Xill:3.0.42'
+	compile 'commons-codec:commons-codec:1.10'
+
+	testCompile project(':testutils')
 }
 
 jar{
 	manifest {
 		attributes  "Class-Path": configurations.runtime.files.collect {File file-> file.name }.join(" ")
 	}
-}
-
-dependencies {
-	testCompile project(':testutils')
-	compile 'commons-codec:commons-codec:1.10'
 }
 
 // To prepare for execution we need to copy the plugins to the plugin directory
