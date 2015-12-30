@@ -1,2 +1,3 @@
 nl.xillio.xill.plugins.codec.encode.EncodeXillPlugin
 nl.xillio.xill.plugins.codec.decode.DecodeXillPlugin
+nl.xillio.xill.plugins.codec.hash.HashXillPlugin

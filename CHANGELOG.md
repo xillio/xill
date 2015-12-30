@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file
 - Bulk operations and multiple select on robots and projects in the project view
 - Encode.stringToBase64 construct
 - Decode.stringFromBase64 construct
+- Hash construct package with md5 hashing constructs
 
 
 ## [3.0.23] - 11-12-2015
