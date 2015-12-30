@@ -25,10 +25,6 @@ class ScanFolderQueryImpl extends AbstractQuery<FolderQueryOptions, ExifReadResu
     public ScanFolderQueryImpl(Path folder, Projection projection, FolderQueryOptions folderQueryOptions) throws NoSuchFileException {
         super(folder, projection, folderQueryOptions);
 
-        if (!Files.exists(folder)) {
-            throw new NoSuchFileException("Could not find folder " + folder);
-        }
-
         if (!Files.isDirectory(folder)) {
             throw new IllegalArgumentException(folder + " is not a folder");
         }

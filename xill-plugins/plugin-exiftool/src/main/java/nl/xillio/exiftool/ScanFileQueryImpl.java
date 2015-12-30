@@ -5,6 +5,7 @@ import nl.xillio.exiftool.process.ExecutionResult;
 import nl.xillio.exiftool.query.*;
 import org.slf4j.Logger;
 
+import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 
@@ -19,6 +20,10 @@ class ScanFileQueryImpl extends AbstractQuery<FileQueryOptions, ExifTags> implem
 
     public ScanFileQueryImpl(Path path, Projection projection, FileQueryOptions options) throws NoSuchFileException {
         super(path, projection, options);
+
+        if(!Files.isRegularFile(path)) {
+            throw new IllegalArgumentException(path + " is not a file");
+        }
     }
 
     @Override
