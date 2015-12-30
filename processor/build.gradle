@@ -16,6 +16,7 @@ jar{
 
 dependencies {
 	testCompile project(':testutils')
+	compile 'commons-codec:commons-codec:1.10'
 }
 
 // To prepare for execution we need to copy the plugins to the plugin directory
