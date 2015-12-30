@@ -22,7 +22,7 @@ public class ProjectionFactory {
 
         Projection result = new Projection();
 
-        Map<String, MetaExpression> map = (Map<String, MetaExpression>) object.getValue();
+        Map<String, MetaExpression> map = object.getValue();
 
         map.forEach((key, value) -> result.put(key, value.getBooleanValue()));
 

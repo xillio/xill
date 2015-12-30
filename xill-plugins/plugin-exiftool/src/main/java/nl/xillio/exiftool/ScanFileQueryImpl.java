@@ -13,7 +13,7 @@ import java.nio.file.Path;
  *
  * @author Thomas Biesaart
  */
-public class ScanFileQueryImpl extends AbstractQuery<FileQueryOptions, ExifTags> implements ScanFileQuery {
+class ScanFileQueryImpl extends AbstractQuery<FileQueryOptions, ExifTags> implements ScanFileQuery {
 
     private static final Logger LOGGER = Log.get();
 
