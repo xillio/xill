@@ -16,6 +16,8 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.string.exceptions.FailedToGetMatcherException;
 import nl.xillio.xill.plugins.string.services.string.RegexService;
 
+import nl.xillio.xill.services.json.JacksonParser;
+import nl.xillio.xill.services.json.JsonException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -32,7 +34,7 @@ public class AllMatchesConstructTest extends ExpressionBuilderHelper {
 	 * @throws PatternSyntaxException
 	 */
 	@Test
-	public void processNormalUsage() throws IllegalArgumentException, FailedToGetMatcherException {
+	public void processNormalUsage() throws IllegalArgumentException, FailedToGetMatcherException, JsonException {
 		// Mock
 		String text = "abc def ghi jkl. Mno";
 		MetaExpression value = mock(MetaExpression.class);
@@ -60,7 +62,7 @@ public class AllMatchesConstructTest extends ExpressionBuilderHelper {
 
 		// Assert
 		Assert.assertEquals(result.getType(), LIST);
-		Assert.assertEquals(result.getStringValue(), ReturnValue);
+		Assert.assertEquals(result.toString(new JacksonParser(false)), ReturnValue);
 	}
 
 	/**

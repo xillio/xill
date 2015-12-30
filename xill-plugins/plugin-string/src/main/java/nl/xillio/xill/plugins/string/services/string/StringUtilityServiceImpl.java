@@ -69,16 +69,6 @@ public class StringUtilityServiceImpl implements StringUtilityService {
     }
 
     @Override
-    public byte[] parseBase64Binary(final String text) {
-        return DatatypeConverter.parseBase64Binary(text);
-    }
-
-    @Override
-    public String printBase64Binary(final byte[] data) {
-        return DatatypeConverter.printBase64Binary(data);
-    }
-
-    @Override
     public String repeat(final String value, final int repeat) {
         return StringUtils.repeat(value, repeat);
     }
