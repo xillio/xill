@@ -18,6 +18,6 @@
         <reference></reference>
     </references>
     <tags>
-        md5, hash, string, text, conversion
+       hash, string, text, conversion
     </tags>
 </function>
