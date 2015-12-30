@@ -12,7 +12,7 @@ public class OSXExifToolProcess extends AbstractExifToolProcess {
 
     @Override
     protected Process buildProcess(ProcessBuilder processBuilder) throws IOException {
-        processBuilder.command("exiftool", "-stay_open", "True", "-@", "-");
+        processBuilder.command("/usr/bin/exiftool", "-stay_open", "True", "-@", "-");
         return processBuilder.start();
     }
 
@@ -23,6 +23,6 @@ public class OSXExifToolProcess extends AbstractExifToolProcess {
 
     @Override
     public void init() throws IOException {
-
+        // No need to deploy. We just need the exiftool installed
     }
 }
