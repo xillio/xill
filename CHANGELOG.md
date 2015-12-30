@@ -11,6 +11,8 @@ All notable changes to this project will be documented in this file
 - Hash construct package with md5 hashing constructs
 - Constructs for base64 encode/decode from files and strings
 
+### Changed
+- Excel.getSheet now also accepts a sheet index to fetch the n-th sheet of a workbook
 
 ## [3.0.23] - 11-12-2015
 ### Stories done
