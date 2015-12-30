@@ -20,50 +20,50 @@ import java.util.LinkedHashMap;
  */
 public class CreateSheetConstruct extends Construct {
 
-	@Inject
-	private ExcelService excelService;
+    @Inject
+    private ExcelService excelService;
 
-	/**
-	 * Processes the xill code input to create a new XillSheet.
-	 *
-	 * @param service       ExcelService object
-	 * @param workbookInput {@link XillWorkbook} {@link MetaExpression}: a String with a workbook
-	 *                      stored inside
-	 * @param name          the name that the new sheet should be
-	 * @return returns a JSON-object containing the name, row length and column length properties
-	 * as well as the newly created {@link XillSheet} itself stored inside
-	 * @throws RobotRuntimeException when the provided workbook is incorrect (null), the name is
-	 *                               invalid or the workbook is read-only
-	 */
-	static MetaExpression process(ExcelService service, MetaExpression workbookInput, MetaExpression name) {
-		XillWorkbook workbook = assertMeta(workbookInput, "parameter 'workbook'", XillWorkbook.class, "result of loadWorkbook or createWorkbook");
-		String sheetName = name.getStringValue();
-		XillSheet sheet;
-		try {
-			sheet = service.createSheet(workbook, sheetName);
-		} catch (NullPointerException e) { //When the provided workbook is incorrect
-			throw new RobotRuntimeException(e.getMessage(), e);
-		} catch (IllegalArgumentException e) { //When something is wrong with the name or when the workbook is read-only
-			throw new RobotRuntimeException(e.getMessage(), e);
-		}
+    /**
+     * Processes the xill code input to create a new XillSheet.
+     *
+     * @param service       ExcelService object
+     * @param workbookInput {@link XillWorkbook} {@link MetaExpression}: a String with a workbook
+     *                      stored inside
+     * @param name          the name that the new sheet should be
+     * @return returns a JSON-object containing the name, row length and column length properties
+     * as well as the newly created {@link XillSheet} itself stored inside
+     * @throws RobotRuntimeException when the provided workbook is incorrect (null), the name is
+     *                               invalid or the workbook is read-only
+     */
+    static MetaExpression process(ExcelService service, MetaExpression workbookInput, MetaExpression name) {
+        XillWorkbook workbook = assertMeta(workbookInput, "parameter 'workbook'", XillWorkbook.class, "result of loadWorkbook or createWorkbook");
+        String sheetName = name.getStringValue();
+        XillSheet sheet;
+        try {
+            sheet = service.createSheet(workbook, sheetName);
+        } catch (NullPointerException e) { //When the provided workbook is incorrect
+            throw new RobotRuntimeException(e.getMessage(), e);
+        } catch (IllegalArgumentException e) { //When something is wrong with the name or when the workbook is read-only
+            throw new RobotRuntimeException(e.getMessage(), e);
+        }
 
-		LinkedHashMap<String, MetaExpression> sheetObject = new LinkedHashMap<>();
-		sheetObject.put("sheetName", fromValue(sheet.getName()));
-		sheetObject.put("rows", fromValue(0));
-		sheetObject.put("columns", fromValue(0));
-		MetaExpression toReturn = fromValue(sheetObject);
+        LinkedHashMap<String, MetaExpression> sheetObject = new LinkedHashMap<>();
+        sheetObject.put("sheetName", fromValue(sheet.getName()));
+        sheetObject.put("rows", fromValue(0));
+        sheetObject.put("columns", fromValue(0));
+        MetaExpression toReturn = fromValue(sheetObject);
 
-		toReturn.storeMeta(sheet);
+        toReturn.storeMeta(sheet);
 
-		return toReturn;
-	}
+        return toReturn;
+    }
 
-	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
-		return new ConstructProcessor(
-						(a, b) -> process(excelService, a, b),
-						new Argument("workbook", ATOMIC),
-						new Argument("name", ATOMIC));
-	}
+    @Override
+    public ConstructProcessor prepareProcess(ConstructContext context) {
+        return new ConstructProcessor(
+                (a, b) -> process(excelService, a, b),
+                new Argument("workbook", ATOMIC),
+                new Argument("name", ATOMIC));
+    }
 
 }
