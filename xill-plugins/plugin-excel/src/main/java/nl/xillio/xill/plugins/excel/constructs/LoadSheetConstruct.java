@@ -31,15 +31,7 @@ public class LoadSheetConstruct extends Construct {
      */
     static MetaExpression process(MetaExpression workbook, MetaExpression sheetName) {
         XillWorkbook xillWorkbook = assertMeta(workbook, "parameter 'workbook'", XillWorkbook.class, "result of loadWorkbook or createWorkbook");
-        XillSheet sheet;
-        try {
-            // If the sheetName is a number get the sheet at that index, else get the sheet with that name.
-            sheet = sheetName.getValue() instanceof NumberBehavior
-                    ? xillWorkbook.getSheetAt(sheetName.getNumberValue().intValue())
-                    : xillWorkbook.getSheet(sheetName.getStringValue());
-        } catch (IllegalArgumentException e) {
-            throw new RobotRuntimeException(e.getMessage(), e);
-        }
+        XillSheet sheet = tryGetSheet(sheetName, xillWorkbook);
 
         LinkedHashMap<String, MetaExpression> sheetObject = new LinkedHashMap<>();
         sheetObject.put("sheetName", fromValue(sheet.getName()));
@@ -50,6 +42,21 @@ public class LoadSheetConstruct extends Construct {
         returnValue.storeMeta(sheet);
 
         return returnValue;
+    }
+
+    private static XillSheet tryGetSheet(MetaExpression sheetName, XillWorkbook xillWorkbook) {
+        XillSheet sheet;
+        try {
+            // If the sheetName is a number get the sheet at that index, else get the sheet with that name.
+            if (sheetName.getValue() instanceof NumberBehavior) {
+                sheet = xillWorkbook.getSheetAt(sheetName.getNumberValue().intValue());
+            } else {
+                sheet = xillWorkbook.getSheet(sheetName.getStringValue());
+            }
+        } catch (IllegalArgumentException e) {
+            throw new RobotRuntimeException(e.getMessage(), e);
+        }
+        return sheet;
     }
 
     @Override
