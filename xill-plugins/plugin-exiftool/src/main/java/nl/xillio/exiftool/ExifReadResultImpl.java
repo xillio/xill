@@ -22,9 +22,7 @@ class ExifReadResultImpl implements ExifReadResult {
     private final TagNameConvention tagNameConvention;
     private static int counter;
     private final Queue<ExifTags> tagsQueue;
-    private final Thread thread;
     private ExifTags currentValue;
-    private boolean isDone = false;
     private boolean isReading = false;
 
     public ExifReadResultImpl(ExecutionResult executionResult, int cacheSize, TagNameConvention tagNameConvention) {
@@ -34,11 +32,12 @@ class ExifReadResultImpl implements ExifReadResult {
         this.tagsQueue = new ArrayDeque<>(cacheSize + 3);
 
         // TODO:: Use a thread pool mechanism to process this
-        thread = new Thread(this::run, "ExecutionResult-" + counter++);
+        Thread thread = new Thread(this::run, "ExecutionResult-" + counter++);
         thread.setDaemon(true);
         thread.start();
     }
 
+    @SuppressWarnings("squid:S1068") // Sonar doesn't do lambdas
     private void run() {
         LOGGER.debug("Start processing");
         while (executionResult.hasNext()) {
@@ -57,8 +56,6 @@ class ExifReadResultImpl implements ExifReadResult {
                 }
             }
         }
-
-        isDone = true;
     }
 
     private void readOneDocument() {
@@ -74,23 +71,28 @@ class ExifReadResultImpl implements ExifReadResult {
                 // This is the start of a file.
                 push();
                 put("File Path", line.replaceAll("^=+\\s*", ""));
-                continue;
+
+            } else {
+                processLine(line);
             }
 
-            int separator = line.indexOf(":");
 
-            if (separator == -1) {
-                LOGGER.error("Failed to parse [{}] as a field", line);
-                continue;
-            }
+        }
 
+        push();
+    }
+
+    private void processLine(String line) {
+        int separator = line.indexOf(":");
+
+        if (separator == -1) {
+            LOGGER.error("Failed to parse [{}] as a field", line);
+        } else {
             String key = line.substring(0, separator).trim();
             String value = line.substring(separator + 1).trim();
 
             put(key, value);
         }
-
-        push();
     }
 
     private void push() {

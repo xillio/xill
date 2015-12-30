@@ -56,7 +56,7 @@ abstract class AbstractExifToolProcess implements ExifToolProcess {
             streams.close();
             process.destroyForcibly();
         } catch (IOException e) {
-            LOGGER.error("Failed to send close command to process");
+            LOGGER.error("Failed to send close command to process", e);
         }
         status = Status.CLOSED;
     }
