@@ -4,13 +4,7 @@ package nl.xillio.exiftool.process;
 import me.biesaart.utils.Log;
 import org.slf4j.Logger;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 
 /**
@@ -20,32 +14,9 @@ import java.util.Arrays;
  */
 abstract class AbstractExifToolProcess implements ExifToolProcess {
     private static final Logger LOGGER = Log.get();
-    private final Path nativeBinary;
-    private final URL embeddedBinaryPath;
     private Status status = Status.NEW;
     private Process process;
     private IOStream streams;
-
-    protected AbstractExifToolProcess(File nativeBinary, URL embeddedBinaryPath) {
-        this.embeddedBinaryPath = embeddedBinaryPath;
-        this.nativeBinary = nativeBinary.toPath();
-    }
-
-    @Override
-    public boolean isDeployed() {
-        return embeddedBinaryPath == null || Files.exists(nativeBinary);
-    }
-
-    @Override
-    public void deploy() throws IOException {
-        if (isDeployed()) {
-            return;
-        }
-
-        try (InputStream stream = embeddedBinaryPath.openStream()) {
-            Files.copy(stream, nativeBinary, StandardCopyOption.REPLACE_EXISTING);
-        }
-    }
 
     @Override
     public void close() {
@@ -71,7 +42,7 @@ abstract class AbstractExifToolProcess implements ExifToolProcess {
         status = Status.STARTING;
 
         try {
-            deploy();
+            init();
             ProcessBuilder processBuilder = new ProcessBuilder();
             processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
 
@@ -134,10 +105,6 @@ abstract class AbstractExifToolProcess implements ExifToolProcess {
     @Override
     public boolean isAvailable() {
         return status == Status.IDLE;
-    }
-
-    protected Path getNativeBinary() {
-        return nativeBinary;
     }
 
     private enum Status {

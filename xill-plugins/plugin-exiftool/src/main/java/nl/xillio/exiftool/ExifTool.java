@@ -4,12 +4,12 @@ import me.biesaart.utils.Log;
 import me.biesaart.utils.SystemUtils;
 import nl.xillio.exiftool.process.ExifToolProcess;
 import nl.xillio.exiftool.process.OSXExifToolProcess;
+import nl.xillio.exiftool.process.UnixExifToolProcess;
 import nl.xillio.exiftool.process.WindowsExifToolProcess;
 import nl.xillio.exiftool.query.*;
 import nl.xillio.xill.api.errors.NotImplementedException;
 import org.slf4j.Logger;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.function.Consumer;
@@ -36,20 +36,24 @@ public class ExifTool implements AutoCloseable {
         releaseMethod.accept(process);
     }
 
-    public static ProcessPool buildPool(File binaryLocation) {
+    public static ProcessPool buildPool(Path windowsBinaryLocation) {
         if (SystemUtils.IS_OS_WINDOWS) {
-            return new ProcessPool(() -> new WindowsExifToolProcess(binaryLocation));
+            return new ProcessPool(() -> new WindowsExifToolProcess(windowsBinaryLocation));
         }
 
         if (SystemUtils.IS_OS_MAC) {
-            return new ProcessPool(() -> new OSXExifToolProcess(binaryLocation));
+            return new ProcessPool(OSXExifToolProcess::new);
+        }
+
+        if (SystemUtils.IS_OS_UNIX) {
+            return new ProcessPool(UnixExifToolProcess::new);
         }
 
         throw new NotImplementedException("No implementation for " + SystemUtils.OS_NAME);
     }
 
     public static ProcessPool buildPool() {
-        return buildPool(new File("D:\\temp\\exif.exe"));
+        return buildPool(null);
     }
 
     public ExifReadResult readFieldsForFolder(Path path, Projection projection, FolderQueryOptions folderQueryOptions) throws IOException {

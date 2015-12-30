@@ -9,18 +9,18 @@ import java.io.IOException;
  */
 public interface ExifToolProcess extends AutoCloseable {
     /**
-     * Check if this process needs deployment.
+     * Check if this process needs initialization.
      *
-     * @return true if this process required deployment
+     * @return true if this process required initialization
      */
-    boolean isDeployed();
+    boolean needInit();
 
     /**
-     * Deploy the program.
+     * Initialize the program.
      *
-     * @throws IOException if deployment fails
+     * @throws IOException if initialization fails
      */
-    void deploy() throws IOException;
+    void init() throws IOException;
 
     /**
      * Check if this process is currently running a query.

@@ -4,11 +4,11 @@ package nl.xillio.exiftool.process;
 import java.io.IOException;
 
 /**
- * This is the osx implementation of the {@link ExifToolProcess}.
+ * This is the linux implementation of the {@link ExifToolProcess}.
  *
  * @author Thomas Biesaart
  */
-public class OSXExifToolProcess extends AbstractExifToolProcess {
+public class UnixExifToolProcess extends AbstractExifToolProcess {
 
     @Override
     protected Process buildProcess(ProcessBuilder processBuilder) throws IOException {
