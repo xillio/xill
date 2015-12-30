@@ -21,5 +21,5 @@ public interface XillUDMQueryService {
      * @return a map iterator
      * @throws PersistenceException
      */
-    Iterator<Map<?, ?>> findMapWhere(Document filter) throws PersistenceException;
+    Iterator<Map<String, Object>> findMapWhere(Document filter) throws PersistenceException;
 }
