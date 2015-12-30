@@ -10,9 +10,11 @@ import nl.xillio.xill.api.components.RobotID;
 /**
  * This class is responsible for the administration of breakpoints
  */
-public enum BreakpointPool {
+public enum
+BreakpointPool {
 	INSTANCE;
-	private final Map<RobotID, List<Integer>> breakpoints = new HashMap<>();
+	//can be transient, because we do not serialize BreakpointPools
+	private final transient Map<RobotID, List<Integer>> breakpoints = new HashMap<>();
 
 	/**
 	 * Get all breakpoints in a certain robot
