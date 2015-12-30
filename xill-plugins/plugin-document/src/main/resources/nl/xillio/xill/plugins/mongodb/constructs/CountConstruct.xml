@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Provides a wrapper around the MongoDB [db.collection.count](https://docs.mongodb.org/v3.0/reference/method/db.collection.count/#db.collection.count) method.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Count how many documents have content type `page`</header>
+            <code>
+                use Mongo;
+                use System;
+                Mongo.connect("udm_default");
+
+                var count = Mongo.count(
+                    "documents",
+                    {
+                        "contenttype": "page"
+                    }
+                );
+
+                System.print("count: " :: count);
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>connect</reference>
+    </references>
+    <tags>
+        mongodb
+    </tags>
+</function>

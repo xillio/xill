@@ -46,7 +46,8 @@ public class XillUDMService implements XillUDMPersistence, XillUDMQueryService {
     }
 
     @Override
-    public Map<?, ?> getMap(String id) {
+    @SuppressWarnings("unchecked") // A document is always a string -> object structure
+    public Map<String, Object> getMap(String id) {
         UDMService service = getUdmService(DEFAULT_IDENTITY);
         DocumentID docId = service.get(id);
         String json = service.toJSON(docId);
@@ -118,7 +119,7 @@ public class XillUDMService implements XillUDMPersistence, XillUDMQueryService {
 
 
     @Override
-    public Iterator<Map<?, ?>> findMapWhere(Document filter) throws PersistenceException {
+    public Iterator<Map<String, Object>> findMapWhere(Document filter) throws PersistenceException {
         UDMService service = getUdmService(DEFAULT_IDENTITY);
         try {
             FindResult result = service.find(filter);
@@ -128,7 +129,7 @@ public class XillUDMService implements XillUDMPersistence, XillUDMQueryService {
         }
     }
 
-    private TransformationIterable<DocumentID, Map<?, ?>> buildResult(FindResult result, UDMService service) {
+    private TransformationIterable<DocumentID, Map<String, Object>> buildResult(FindResult result, UDMService service) {
         return new TransformationIterable<>(
                 result.iterator(),
                 id -> {
@@ -137,9 +138,7 @@ public class XillUDMService implements XillUDMPersistence, XillUDMQueryService {
                     service.release(id);
                     return obj.toMap();
                 },
-                noCleanUp -> {
-
-                }
+                noCleanUp -> {}
         );
     }
 }

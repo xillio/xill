@@ -34,6 +34,7 @@ public class DecoratorConstruct extends Construct {
         );
     }
 
+    @SuppressWarnings("squid:UnusedPrivateMethod") // Sonar doesn't understand method references
     private MetaExpression process(MetaExpression name, MetaExpression definition) {
         String decoratorName = name.getStringValue();
         LinkedHashMap<String, MetaExpression> decoratorWrapper = new LinkedHashMap<>();

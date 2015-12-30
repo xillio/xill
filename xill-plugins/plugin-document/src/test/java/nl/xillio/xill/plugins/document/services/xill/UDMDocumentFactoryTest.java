@@ -11,7 +11,7 @@ import java.util.Map;
 
 import static org.testng.Assert.*;
 
-
+@SuppressWarnings("unchecked")
 public class UDMDocumentFactoryTest extends TestUtils{
 
     @Test

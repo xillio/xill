@@ -34,6 +34,7 @@ public class SaveConstruct extends Construct {
         );
     }
 
+    @SuppressWarnings("squid:UnusedPrivateMethod") // Sonar doesn't understand method references
     private MetaExpression process(MetaExpression contentTypeName, MetaExpression decorators) {
         String contentType = contentTypeName.getStringValue();
 
