@@ -25,7 +25,7 @@ public class FromHexConstructTest extends TestUtils {
     @BeforeMethod
     public void initTest() {
         ConstructContext context = mock(ConstructContext.class);
-        FromHexConstruct construct = new FromHexConstruct(new DecoderServiceImpl());
+        FromHexConstruct construct = new FromHexConstruct(new DecoderServiceImpl(null, null));
         processor = construct.prepareProcess(context);
     }
 

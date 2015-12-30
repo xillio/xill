@@ -29,7 +29,7 @@ public class ToPercentConstructTest extends TestUtils {
         MetaExpression textVar = fromValue(inputValue);
         MetaExpression xWwwFormVar = NULL;
 
-        EncoderService stringService = new EncoderServiceImpl();
+        EncoderService stringService = new EncoderServiceImpl(null, null);
         ToPercentConstruct construct = new ToPercentConstruct(stringService);
 
         // Run

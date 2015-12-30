@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Makes a base64-encoded file of the given file.
+
+Commonly used to encode binary data to send it over a text channel (such as attachments in e-mails).
+    </description>
+    <examples>
+        <example title="Usage">
+            <p>Assuming we have a file 'note.xml' containing 'Hello World'</p>
+            <code>
+                Use Encode;
+
+                Encode.fileToBase64("C:/tmp/note.xml", "C:/tmp/result.xml");
+
+                // Results in a file named 'result.xml' containing: SGVsbG8gV29ybGQ=
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>Decode.fileFromBase64</reference>
+    </references>
+    <searchTags>
+        encode, file, decode
+    </searchTags>
+</function>
