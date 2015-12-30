@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Base-64 decode a given file, and store it in an other file.
+
+Commonly used to decode the recieved data from a text channel to get the binary data (such as attachments in e-mails).
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Assuming we have a file 'C:/tmp/note.xml' containing 'SGVsbG8gV29ybGQ='</header>
+            <code>
+                Use Decode;
+
+                Decode.fileFromBase64("C:/tmp/note.xml", "C:/tmp/output.txt");
+
+                // Results in a file named 'output.txt' containing: Hello World.
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>Encode.fileToBase64</reference>
+    </references>
+    <searchTags>
+        decode, file, encode
+    </searchTags>
+</function>

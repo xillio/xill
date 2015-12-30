@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Returns an integer higher or equal to startPos of the index of string2 in string1.  
+
+startPos defaults to 0.  
+Returns -1 if the index could not be found.
+    </description>
+    <examples>
+        <example description="Executing:">
+            String.indexOf("maxTestTest", "Test");      // Result: 3
+            String.indexOf("maxTestTest", "Test", 3);   // Result: 3
+            String.indexOf("maxTestTest", "Test", 5);   // Result: 7
+            String.indexOf("maxTestTest", "test");      // Result: -1
+        </example>
+    </examples>
+</function>
