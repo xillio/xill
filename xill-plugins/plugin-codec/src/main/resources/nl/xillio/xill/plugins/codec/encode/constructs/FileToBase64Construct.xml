@@ -21,6 +21,6 @@ Commonly used to encode binary data to send it over a text channel (such as atta
         <reference>Decode.fileFromBase64</reference>
     </references>
     <searchTags>
-        base64, encode, file, decode
+        encode, file, decode
     </searchTags>
 </function>

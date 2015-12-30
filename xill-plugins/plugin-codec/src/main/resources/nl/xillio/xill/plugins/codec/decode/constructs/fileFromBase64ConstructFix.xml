@@ -21,6 +21,6 @@ Commonly used to decode the recieved data from a text channel to get the binary 
         <reference>Encode.fileToBase64</reference>
     </references>
     <searchTags>
-        base64, decode, file, encode
+        decode, file, encode
     </searchTags>
 </function>

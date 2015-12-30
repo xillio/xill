@@ -26,6 +26,6 @@ to represent any given character.
         <reference>Decode.fromHex</reference>
     </references>
     <tags>
-        encoding, decoding, hex
+        encoding, decoding
     </tags>
 </function>

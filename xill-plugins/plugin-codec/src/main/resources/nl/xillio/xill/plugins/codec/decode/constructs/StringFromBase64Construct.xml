@@ -20,6 +20,6 @@ This function decodes a base64-encoded string to its decoded value.
         <reference>Encode.stringToBase64</reference>
     </references>
     <tags>
-        encoding, decoding, base64
+        encoding, decoding
     </tags>
 </function>

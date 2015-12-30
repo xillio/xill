@@ -25,6 +25,6 @@ An error occurs if the passed `hexString` has an odd number of characters or con
         <reference>Encode.toHex</reference>
     </references>
     <tags>
-        encoding, decoding, hex
+        encoding, decoding
     </tags>
 </function>
