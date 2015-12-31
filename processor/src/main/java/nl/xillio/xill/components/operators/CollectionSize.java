@@ -1,7 +1,10 @@
 package nl.xillio.xill.components.operators;
 
 import nl.xillio.xill.api.Debugger;
-import nl.xillio.xill.api.components.*;
+import nl.xillio.xill.api.components.ExpressionDataType;
+import nl.xillio.xill.api.components.InstructionFlow;
+import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
@@ -18,7 +21,7 @@ public final class CollectionSize implements Processable {
 
     private final Processable collection;
 
-    public CollectionSize(final Processable collection){
+    public CollectionSize(final Processable collection) {
         this.collection = collection;
     }
 
@@ -27,7 +30,7 @@ public final class CollectionSize implements Processable {
         MetaExpression metaCollection = collection.process(debugger).get();
         metaCollection.registerReference();
 
-        if (metaCollection.getType() == ExpressionDataType.ATOMIC){
+        if (metaCollection.getType() == ExpressionDataType.ATOMIC) {
             metaCollection.releaseReference();
             throw new RobotRuntimeException("You can not retrieve a size of an atomic");
         } else {

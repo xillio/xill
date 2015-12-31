@@ -138,7 +138,8 @@ public class XillUDMService implements XillUDMPersistence, XillUDMQueryService {
                     service.release(id);
                     return obj.toMap();
                 },
-                noCleanUp -> {}
+                noCleanUp -> {
+                }
         );
     }
 }

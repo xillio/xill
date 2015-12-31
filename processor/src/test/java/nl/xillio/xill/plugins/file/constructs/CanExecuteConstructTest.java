@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 
 /**
  * Tests the CanExecuteConstruct class.
- *
+ * <p>
  * Created by Anwar on 12/1/2015.
  */
 public class CanExecuteConstructTest extends TestUtils {

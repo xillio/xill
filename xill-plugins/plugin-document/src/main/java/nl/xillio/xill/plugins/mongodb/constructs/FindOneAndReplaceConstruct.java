@@ -13,7 +13,7 @@ import org.bson.Document;
  * This construct represents the <code>FindOneAndReplace()</code> method on MongoDB. That method is specific to the Java
  * API of MongoDB and therefore not documented in the online javascript API documentation. It replaces the
  * <code>FindAndModify()</code> method.
- *
+ * <p>
  * <code>FindOneAndReplace()</code> in MongoDB replaces the first document returned by a <code>query</code> with a <code>replacement</code> document.
  *
  * @author Titus Nachbauer

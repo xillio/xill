@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 
 /**
  * Tests the CanReadConstruct class.
- *
+ * <p>
  * Created by Anwar on 12/1/2015.
  */
 public class CanReadConstructTest extends TestUtils {

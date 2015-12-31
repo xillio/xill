@@ -4,6 +4,7 @@ import nl.xillio.xill.api.data.MetadataExpression;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,7 +13,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
 
 /**
  * This class is used for holding all parts of multipart mime body content
@@ -68,7 +68,7 @@ public class MultipartBody implements MetadataExpression {
         multipartContentList.stream().forEach(content -> content.addTo(entity)); // Feed the entitybuilder with all particular content parts
 
         HttpEntity httpEntity = entity.build();
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream((int)httpEntity.getContentLength());
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream((int) httpEntity.getContentLength());
         try {
             httpEntity.writeTo(outputStream);
         } catch (IOException e) {
@@ -83,7 +83,7 @@ public class MultipartBody implements MetadataExpression {
     /**
      * Add a content of file to a multipart data (as binary part)
      *
-     * @param name The content name
+     * @param name     The content name
      * @param fileName The filenamepath
      */
     public void addFile(final String name, final String fileName) {

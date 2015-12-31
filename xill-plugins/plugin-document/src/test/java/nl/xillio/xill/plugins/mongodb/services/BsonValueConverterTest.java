@@ -1,7 +1,6 @@
 package nl.xillio.xill.plugins.mongodb.services;
 
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.components.MetaExpressionSerializer;
 import nl.xillio.xill.api.data.Date;
 import nl.xillio.xill.api.data.DateFactory;
 import nl.xillio.xill.plugins.mongodb.data.MongoObjectId;
@@ -13,12 +12,11 @@ import org.testng.annotations.Test;
 import java.time.Instant;
 import java.util.Collections;
 
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.testng.Assert.*;
 import static nl.xillio.xill.api.components.ExpressionBuilder.*;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 
 public class BsonValueConverterTest {
@@ -44,7 +42,7 @@ public class BsonValueConverterTest {
         DateFactory dateFactory = mock(DateFactory.class, RETURNS_DEEP_STUBS);
         BsonValueConverter converter = new BsonValueConverter(dateFactory, null);
 
-        MetaExpression timestampDate = converter.convert(new BsonTimestamp(1000,0));
+        MetaExpression timestampDate = converter.convert(new BsonTimestamp(1000, 0));
         assertNotNull(timestampDate.getMeta(Date.class));
         verify(dateFactory).from(eq(Instant.ofEpochSecond(1000)));
 

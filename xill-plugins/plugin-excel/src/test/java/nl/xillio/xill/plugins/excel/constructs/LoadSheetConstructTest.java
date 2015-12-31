@@ -7,7 +7,6 @@ import nl.xillio.xill.plugins.excel.datastructures.XillSheet;
 import nl.xillio.xill.plugins.excel.datastructures.XillWorkbook;
 import org.testng.annotations.Test;
 
-import static nl.xillio.xill.api.construct.ExpressionBuilderHelper.fromValue;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;

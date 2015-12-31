@@ -1,32 +1,28 @@
 package nl.xillio.xill.plugins.database.util;
 
 /**
- * 
+ * @param <T> Key type
+ * @param <U> Value Type
  * @author Geert Konijnendijk
  * @author Sander Visser
- *
- * @param <T>
- *        Key type
- * @param <U>
- *        Value Type
  */
 @SuppressWarnings("javadoc")
 public class Tuple<T, U> {
 
-	private T key;
-	private U value;
+    private T key;
+    private U value;
 
-	public Tuple(T key, U value) {
-		super();
-		this.key = key;
-		this.value = value;
-	}
+    public Tuple(T key, U value) {
+        super();
+        this.key = key;
+        this.value = value;
+    }
 
-	public T getKey() {
-		return key;
-	}
+    public T getKey() {
+        return key;
+    }
 
-	public U getValue() {
-		return value;
-	}
+    public U getValue() {
+        return value;
+    }
 }

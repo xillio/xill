@@ -3,7 +3,6 @@ package nl.xillio.xill.plugins.string.services.string;
 import com.google.inject.ImplementedBy;
 import nl.xillio.xill.plugins.string.StringXillPlugin;
 
-import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.IllegalFormatException;
 import java.util.List;
@@ -170,6 +169,7 @@ public interface StringUtilityService {
 
     /**
      * Trim a string and replace all in between whitespace groups by single spaces.
+     *
      * @param toTrim the string to trim
      * @return the trimmed version of the string
      */

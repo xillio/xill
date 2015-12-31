@@ -7,7 +7,7 @@ import nl.xillio.xill.api.components.Expression;
  * <p>
  * This class represents the behavior of a string.
  * </p>
- *
+ * <p>
  * Values:
  * <ul>
  * <li><b>{@link String}: </b> actual value</li>
@@ -17,40 +17,39 @@ import nl.xillio.xill.api.components.Expression;
  */
 public class StringBehavior implements Expression {
 
-	private final String value;
+    private final String value;
 
-	/**
-	 * Create a new {@link StringBehavior}
-	 *
-	 * @param value
-	 *        the value to set
-	 */
-	public StringBehavior(final String value) {
-		this.value = value;
-	}
+    /**
+     * Create a new {@link StringBehavior}
+     *
+     * @param value the value to set
+     */
+    public StringBehavior(final String value) {
+        this.value = value;
+    }
 
-	@Override
-	public Number getNumberValue() {
-		return MathUtils.parse(value);
-	}
+    @Override
+    public Number getNumberValue() {
+        return MathUtils.parse(value);
+    }
 
-	@Override
-	public String getStringValue() {
-		return value;
-	}
+    @Override
+    public String getStringValue() {
+        return value;
+    }
 
-	@Override
-	public boolean getBooleanValue() {
-		return value != null && !value.isEmpty();
-	}
+    @Override
+    public boolean getBooleanValue() {
+        return value != null && !value.isEmpty();
+    }
 
-	@Override
-	public boolean isNull() {
-		return value == null;
-	}
+    @Override
+    public boolean isNull() {
+        return value == null;
+    }
 
-	@Override
-	public String toString() {
-		return getStringValue();
-	}
+    @Override
+    public String toString() {
+        return getStringValue();
+    }
 }

@@ -13,16 +13,17 @@ import java.util.stream.Collectors;
  * @since 12-8-2015
  */
 public interface PropertiesProvider {
-	Map<String, Object> getProperties();
+    Map<String, Object> getProperties();
 
-	/**
-	 * Extract the properties from a collection of PropertiesProviders
-	 * @param collection the properties collection
-	 * @return a list of sets of properties
-	 */
-	static List<Map<String, Object>> extractContent(Collection<? extends PropertiesProvider> collection) {
-		return collection.stream()
-			.map(PropertiesProvider::getProperties)
-			.collect(Collectors.toList());
-	}
+    /**
+     * Extract the properties from a collection of PropertiesProviders
+     *
+     * @param collection the properties collection
+     * @return a list of sets of properties
+     */
+    static List<Map<String, Object>> extractContent(Collection<? extends PropertiesProvider> collection) {
+        return collection.stream()
+                .map(PropertiesProvider::getProperties)
+                .collect(Collectors.toList());
+    }
 }

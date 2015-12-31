@@ -55,7 +55,7 @@ public class Assign implements Processable {
         double indexD = indexVal.getNumberValue().doubleValue();
         indexVal.releaseReference();
 
-        if(!Double.isFinite(indexD)) {
+        if (!Double.isFinite(indexD)) {
             throw new RobotRuntimeException("A list cannot have infinite elements.");
         }
         if (Double.isNaN(indexD)) {
@@ -94,7 +94,7 @@ public class Assign implements Processable {
 
     private void assign(final Map<String, MetaExpression> target, final int pathID, final MetaExpression value,
                         final Debugger debugger) throws RobotRuntimeException {
-        MetaExpression indexValue =  path.get(pathID).process(debugger).get();
+        MetaExpression indexValue = path.get(pathID).process(debugger).get();
         indexValue.registerReference();
         String index = indexValue.getStringValue();
         indexValue.releaseReference();

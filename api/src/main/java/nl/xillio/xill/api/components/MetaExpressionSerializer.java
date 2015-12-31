@@ -7,10 +7,10 @@ package nl.xillio.xill.api.components;
  * @author Titus Nachbauer
  */
 public interface MetaExpressionSerializer {
-    Object extractValue (MetaExpression metaExpression);
+    Object extractValue(MetaExpression metaExpression);
 
     /**
-     *  Provides a null implementation.
+     * Provides a null implementation.
      */
     MetaExpressionSerializer NULL = a -> null;
 }

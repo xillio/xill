@@ -15,23 +15,23 @@ import nl.xillio.xill.plugins.xml.services.NodeService;
  * @author Zbynek Hochmann
  */
 public class SetAttributeConstruct extends Construct {
-	@Inject
-	private NodeService nodeService;
+    @Inject
+    private NodeService nodeService;
 
-	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
-		return new ConstructProcessor(
-				(node, name, value) -> process(node, name, value, nodeService),
-				new Argument("node", ATOMIC),
-				new Argument("attrname", ATOMIC),
-				new Argument("attrvalue", NULL, ATOMIC)
-		);
-	}
+    @Override
+    public ConstructProcessor prepareProcess(ConstructContext context) {
+        return new ConstructProcessor(
+                (node, name, value) -> process(node, name, value, nodeService),
+                new Argument("node", ATOMIC),
+                new Argument("attrname", ATOMIC),
+                new Argument("attrvalue", NULL, ATOMIC)
+        );
+    }
 
-	static MetaExpression process(MetaExpression nodeVar, MetaExpression nameVar, MetaExpression valueVar, NodeService service) {
-		XmlNode xmlNode = assertMeta(nodeVar, "node", XmlNode.class, "XML node");
-		service.setAttribute(xmlNode, nameVar.getStringValue(), valueVar.getStringValue());
-		return NULL;
-	}
+    static MetaExpression process(MetaExpression nodeVar, MetaExpression nameVar, MetaExpression valueVar, NodeService service) {
+        XmlNode xmlNode = assertMeta(nodeVar, "node", XmlNode.class, "XML node");
+        service.setAttribute(xmlNode, nameVar.getStringValue(), valueVar.getStringValue());
+        return NULL;
+    }
 
 }

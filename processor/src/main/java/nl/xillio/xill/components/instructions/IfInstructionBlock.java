@@ -32,7 +32,7 @@ public class IfInstructionBlock extends CompoundInstruction {
     public void setHostInstruction(InstructionSet hostInstruction) {
         super.setHostInstruction(hostInstruction);
         conditionInstructions.forEach(inst -> inst.setHostInstruction(hostInstruction));
-        if(elseInstruction != null) {
+        if (elseInstruction != null) {
             elseInstruction.setHostInstruction(hostInstruction);
         }
     }

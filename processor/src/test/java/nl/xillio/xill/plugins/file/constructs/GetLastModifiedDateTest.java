@@ -24,35 +24,35 @@ import static org.testng.Assert.assertEquals;
  * @author Folkert van Verseveld
  */
 public class GetLastModifiedDateTest extends TestUtils {
-	@Test
-	public void now() throws IOException {
-		String path = "This is some dummy path";
-		MetaExpression expr = mock(MetaExpression.class);
-		when(expr.getStringValue()).thenReturn(path);
+    @Test
+    public void now() throws IOException {
+        String path = "This is some dummy path";
+        MetaExpression expr = mock(MetaExpression.class);
+        when(expr.getStringValue()).thenReturn(path);
 
-		// Context
-		RobotID robotID = mock(RobotID.class);
-		ConstructContext context = mock(ConstructContext.class);
-		when(context.getRobotID()).thenReturn(robotID);
-		// File
-		File file = new File("yay");
-		setFileResolverReturnValue(file);
+        // Context
+        RobotID robotID = mock(RobotID.class);
+        ConstructContext context = mock(ConstructContext.class);
+        when(context.getRobotID()).thenReturn(robotID);
+        // File
+        File file = new File("yay");
+        setFileResolverReturnValue(file);
 
-		// FileUtils
-		Instant now = Instant.now();
-		FileTime time = FileTime.from(now);
-		FileUtilities io = mock(FileUtilities.class);
-		when(io.getLastModifiedDate(file)).thenReturn(time);
+        // FileUtils
+        Instant now = Instant.now();
+        FileTime time = FileTime.from(now);
+        FileUtilities io = mock(FileUtilities.class);
+        when(io.getLastModifiedDate(file)).thenReturn(time);
 
-		ZonedDateTime ztime = ZonedDateTime.ofInstant(now, ZoneId.systemDefault());
-		Date d = mock(Date.class);
-		when(d.getZoned()).thenReturn(ztime);
-		DateFactory date = mock(DateFactory.class);
-		when(date.from(any())).thenReturn(d);
-		// evaluate
-		MetaExpression lvalue = GetLastModifiedDate.process(context, date, io, expr);
-		// confirm
-		verify(io, times(1)).getLastModifiedDate(file);
-		assertEquals(lvalue.getStringValue(), d.toString());
-	}
+        ZonedDateTime ztime = ZonedDateTime.ofInstant(now, ZoneId.systemDefault());
+        Date d = mock(Date.class);
+        when(d.getZoned()).thenReturn(ztime);
+        DateFactory date = mock(DateFactory.class);
+        when(date.from(any())).thenReturn(d);
+        // evaluate
+        MetaExpression lvalue = GetLastModifiedDate.process(context, date, io, expr);
+        // confirm
+        verify(io, times(1)).getLastModifiedDate(file);
+        assertEquals(lvalue.getStringValue(), d.toString());
+    }
 }

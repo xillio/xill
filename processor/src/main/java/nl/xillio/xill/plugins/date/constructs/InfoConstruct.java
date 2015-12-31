@@ -17,25 +17,25 @@ import java.util.LinkedHashMap;
  */
 public class InfoConstruct extends BaseDateConstruct {
 
-	@Override
-	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(dateVar -> process(dateVar, getDateService()), new Argument("date"));
+    @Override
+    public ConstructProcessor prepareProcess(final ConstructContext context) {
+        return new ConstructProcessor(dateVar -> process(dateVar, getDateService()), new Argument("date"));
 
-	}
+    }
 
-	static MetaExpression process(final MetaExpression dateVar, DateService dateService) {
-		Date date = getDate(dateVar, "date");
+    static MetaExpression process(final MetaExpression dateVar, DateService dateService) {
+        Date date = getDate(dateVar, "date");
 
-		LinkedHashMap<String, MetaExpression> info = new LinkedHashMap<>();
+        LinkedHashMap<String, MetaExpression> info = new LinkedHashMap<>();
 
-		// Get ChronoField values
-		dateService.getFieldValues(date).forEach((k, v) -> info.put(k, fromValue(v)));
+        // Get ChronoField values
+        dateService.getFieldValues(date).forEach((k, v) -> info.put(k, fromValue(v)));
 
-		info.put("TimeZone", fromValue(dateService.getTimezone(date).toString()));
-		info.put("IsInFuture", fromValue(dateService.isInFuture(date)));
-		info.put("IsInPast", fromValue(dateService.isInPast(date)));
+        info.put("TimeZone", fromValue(dateService.getTimezone(date).toString()));
+        info.put("IsInFuture", fromValue(dateService.isInFuture(date)));
+        info.put("IsInPast", fromValue(dateService.isInPast(date)));
 
-		return fromValue(info);
+        return fromValue(info);
 
-	}
+    }
 }

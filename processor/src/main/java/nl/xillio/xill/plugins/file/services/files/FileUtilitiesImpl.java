@@ -139,7 +139,7 @@ public class FileUtilitiesImpl implements FileUtilities {
 
     @Override
     public boolean isFolder(File file) throws IOException {
-        return  fileCheck(file, Files.isDirectory(file.toPath()));
+        return fileCheck(file, Files.isDirectory(file.toPath()));
     }
 
     @Override

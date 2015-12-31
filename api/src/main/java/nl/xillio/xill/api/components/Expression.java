@@ -33,5 +33,6 @@ public interface Expression extends AutoCloseable {
      */
     boolean isNull();
 
-    default void close() {}
+    default void close() {
+    }
 }

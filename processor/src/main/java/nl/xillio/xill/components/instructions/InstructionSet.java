@@ -47,7 +47,7 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
     }
 
     public void setParentInstruction(Instruction parentInstruction) {
-        if(this.parentInstruction != null) {
+        if (this.parentInstruction != null) {
             throw new IllegalStateException("The parent instruction has already been set!");
         }
         this.parentInstruction = parentInstruction;

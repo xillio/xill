@@ -13,39 +13,39 @@ import nl.xillio.xill.docgen.impl.XillDocGen;
  */
 @ImplementedBy(XillDocGen.class)
 public interface DocGen {
-	/**
-	 * Create a {@link DocumentationParser}
-	 *
-	 * @return the parser
-	 */
-	DocumentationParser getParser();
+    /**
+     * Create a {@link DocumentationParser}
+     *
+     * @return the parser
+     */
+    DocumentationParser getParser();
 
-	/**
-	 * Create a {@link DocumentationGenerator}
-	 *
-	 * @param collectionIdentity the name of this generator
-	 * @return the generator
-	 */
-	DocumentationGenerator getGenerator(String collectionIdentity);
+    /**
+     * Create a {@link DocumentationGenerator}
+     *
+     * @param collectionIdentity the name of this generator
+     * @return the generator
+     */
+    DocumentationGenerator getGenerator(String collectionIdentity);
 
-	/**
-	 * Create a {@link DocumentationSearcher}
-	 *
-	 * @return the searcher
-	 */
-	DocumentationSearcher getSearcher();
+    /**
+     * Create a {@link DocumentationSearcher}
+     *
+     * @return the searcher
+     */
+    DocumentationSearcher getSearcher();
 
-	/**
-	 * Get the configuration that was used to initialize this {@link DocGen}
-	 *
-	 * @return the configuration
-	 */
-	DocGenConfiguration getConfig();
+    /**
+     * Get the configuration that was used to initialize this {@link DocGen}
+     *
+     * @return the configuration
+     */
+    DocGenConfiguration getConfig();
 
-	/**
-	 * Generate the global index
-	 *
-	 * @throws ParsingException if generating the index fails
-	 */
-	void generateIndex() throws ParsingException;
+    /**
+     * Generate the global index
+     *
+     * @throws ParsingException if generating the index fails
+     */
+    void generateIndex() throws ParsingException;
 }

@@ -1,7 +1,6 @@
 package nl.xillio.xill.plugins.database.constructs;
 
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.components.ObjectExpression;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
@@ -9,7 +8,6 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.plugins.database.BaseDatabaseConstruct;
 import nl.xillio.xill.plugins.database.services.DatabaseServiceFactory;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**

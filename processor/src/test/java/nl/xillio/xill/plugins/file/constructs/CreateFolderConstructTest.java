@@ -20,66 +20,66 @@ import static org.mockito.Mockito.*;
  */
 public class CreateFolderConstructTest {
 
-	@Test
-	public void testProcessNormal() throws Exception {
+    @Test
+    public void testProcessNormal() throws Exception {
 
-		// Folder
-		String folderPath = "This is the path to the folder";
-		MetaExpression folder = mock(MetaExpression.class);
-		when(folder.getStringValue()).thenReturn(folderPath);
+        // Folder
+        String folderPath = "This is the path to the folder";
+        MetaExpression folder = mock(MetaExpression.class);
+        when(folder.getStringValue()).thenReturn(folderPath);
 
-		// Context
-		RobotID robotID = mock(RobotID.class);
-		ConstructContext context = mock(ConstructContext.class);
-		when(context.getRobotID()).thenReturn(robotID);
+        // Context
+        RobotID robotID = mock(RobotID.class);
+        ConstructContext context = mock(ConstructContext.class);
+        when(context.getRobotID()).thenReturn(robotID);
 
-		// File
-		File file = mock(File.class);
-		when(file.getAbsolutePath()).thenReturn("ABSPATH");
-		when(TestUtils.CONSTRUCT_FILE_RESOLVER.buildFile(any(), anyString())).thenReturn(file);
+        // File
+        File file = mock(File.class);
+        when(file.getAbsolutePath()).thenReturn("ABSPATH");
+        when(TestUtils.CONSTRUCT_FILE_RESOLVER.buildFile(any(), anyString())).thenReturn(file);
 
-		// FileUtilities
-		FileUtilities fileUtils = mock(FileUtilities.class);
+        // FileUtilities
+        FileUtilities fileUtils = mock(FileUtilities.class);
 
-		// Run the method
-		MetaExpression result = CreateFolderConstruct.process(context, fileUtils, folder);
+        // Run the method
+        MetaExpression result = CreateFolderConstruct.process(context, fileUtils, folder);
 
-		// Verify
-		verify(fileUtils, times(1)).createFolder(any());
+        // Verify
+        verify(fileUtils, times(1)).createFolder(any());
 
-		// Assert
-		assertEquals(result.getStringValue(), "ABSPATH");
-	}
+        // Assert
+        assertEquals(result.getStringValue(), "ABSPATH");
+    }
 
-	@Test
-	public void testProcessIOException() throws Exception {
+    @Test
+    public void testProcessIOException() throws Exception {
 
-		// Folder
-		MetaExpression folder = mock(MetaExpression.class);
+        // Folder
+        MetaExpression folder = mock(MetaExpression.class);
 
-		// Logger
-		Logger logger = mock(Logger.class);
+        // Logger
+        Logger logger = mock(Logger.class);
 
-		// Context
-		ConstructContext context = mock(ConstructContext.class);
-		when(context.getRootLogger()).thenReturn(logger);
+        // Context
+        ConstructContext context = mock(ConstructContext.class);
+        when(context.getRootLogger()).thenReturn(logger);
 
-		// File
-		File file = mock(File.class);
-		when(file.getAbsolutePath()).thenReturn("ABSPATH");
-		when(TestUtils.CONSTRUCT_FILE_RESOLVER.buildFile(any(), anyString())).thenReturn(file);
+        // File
+        File file = mock(File.class);
+        when(file.getAbsolutePath()).thenReturn("ABSPATH");
+        when(TestUtils.CONSTRUCT_FILE_RESOLVER.buildFile(any(), anyString())).thenReturn(file);
 
-		// FileUtilities
-		FileUtilities fileUtils = mock(FileUtilities.class);
-		doThrow(new IOException("Something Failed")).when(fileUtils).createFolder(file);
+        // FileUtilities
+        FileUtilities fileUtils = mock(FileUtilities.class);
+        doThrow(new IOException("Something Failed")).when(fileUtils).createFolder(file);
 
-		// Run the method
-		MetaExpression result = CreateFolderConstruct.process(context, fileUtils, folder);
+        // Run the method
+        MetaExpression result = CreateFolderConstruct.process(context, fileUtils, folder);
 
-		// Verify
-		verify(logger).error(eq("Failed to create ABSPATH"), any(IOException.class));
+        // Verify
+        verify(logger).error(eq("Failed to create ABSPATH"), any(IOException.class));
 
-		// Assert
-		assertEquals(result.getStringValue(), "ABSPATH");
-	}
+        // Assert
+        assertEquals(result.getStringValue(), "ABSPATH");
+    }
 }

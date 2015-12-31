@@ -6,16 +6,16 @@ import nl.xillio.xill.api.Breakpoint;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.NullDebugger;
 import nl.xillio.xill.api.components.*;
-import nl.xillio.xill.api.components.InstructionSet;
 import nl.xillio.xill.api.errors.ErrorHandlingPolicy;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.events.RobotContinuedAction;
 import nl.xillio.xill.api.events.RobotPausedAction;
 import nl.xillio.xill.api.events.RobotStartedAction;
 import nl.xillio.xill.api.events.RobotStoppedAction;
-import nl.xillio.xill.components.expressions.FunctionCall;
-import nl.xillio.xill.components.instructions.*;
+import nl.xillio.xill.components.instructions.CompoundInstruction;
+import nl.xillio.xill.components.instructions.FunctionDeclaration;
 import nl.xillio.xill.components.instructions.Instruction;
+import nl.xillio.xill.components.instructions.VariableDeclaration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xill.lang.xill.Target;
@@ -297,12 +297,12 @@ public class XillDebugger implements Debugger {
         int count = -1;
         FunctionDeclaration declaration = getParentFunction(dec);
 
-        if(declaration == null) {
+        if (declaration == null) {
             return 0;
         }
 
-        for(CounterWrapper wrapper : functionStack) {
-            if(wrapper.getProcessable() == declaration && wrapper.getStackSize() <= stackPosition) {
+        for (CounterWrapper wrapper : functionStack) {
+            if (wrapper.getProcessable() == declaration && wrapper.getStackSize() <= stackPosition) {
                 count++;
             }
         }

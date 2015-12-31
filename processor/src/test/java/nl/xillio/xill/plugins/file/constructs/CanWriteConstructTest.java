@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 
 /**
  * Tests the CanWrite construct.
- *
+ * <p>
  * Created by Anwar on 12/1/2015.
  */
 public class CanWriteConstructTest extends TestUtils {

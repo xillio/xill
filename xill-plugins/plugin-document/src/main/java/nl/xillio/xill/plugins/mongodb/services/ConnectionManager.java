@@ -93,7 +93,7 @@ public class ConnectionManager {
     private void validate(Connection connection) throws ConnectionFailedException {
         try {
             connection.requireValid();
-        } catch(MongoTimeoutException e){
+        } catch (MongoTimeoutException e) {
             throw new ConnectionFailedException("Could not connect to mongodb", e);
         }
     }

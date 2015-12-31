@@ -1,14 +1,13 @@
 package nl.xillio.xill.plugins.xml.constructs;
 
+import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.data.XmlNode;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.xml.services.NodeService;
 import org.testng.annotations.Test;
 
-import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.plugins.xml.services.NodeService;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
-
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Tests for the {@link RemoveNodeConstructTest}
@@ -17,41 +16,41 @@ import static org.testng.Assert.*;
  */
 public class RemoveNodeConstructTest {
 
-	/**
-	 * Test the process method under normal circumstances
-	 */
-	@Test
-	public void testProcess() {
-		// Mock
-		NodeService nodeService = mock(NodeService.class);
+    /**
+     * Test the process method under normal circumstances
+     */
+    @Test
+    public void testProcess() {
+        // Mock
+        NodeService nodeService = mock(NodeService.class);
 
-		XmlNode xmlNode = mock(XmlNode.class);
-		MetaExpression xmlNodeVar = mock(MetaExpression.class);
-		when(xmlNodeVar.getMeta(XmlNode.class)).thenReturn(xmlNode);
+        XmlNode xmlNode = mock(XmlNode.class);
+        MetaExpression xmlNodeVar = mock(MetaExpression.class);
+        when(xmlNodeVar.getMeta(XmlNode.class)).thenReturn(xmlNode);
 
-		// Run
-		MetaExpression result = RemoveNodeConstruct.process(xmlNodeVar, nodeService);
+        // Run
+        MetaExpression result = RemoveNodeConstruct.process(xmlNodeVar, nodeService);
 
-		// Verify
-		verify(nodeService).removeNode(any());
-		
-		// Assert
-		assertTrue(result.isNull());
-	}
+        // Verify
+        verify(nodeService).removeNode(any());
 
-	/**
-	 * Test the process when node input value is null
-	 */
-	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Expected node to be a XML node")
-	public void testProcessNodeNull() {
+        // Assert
+        assertTrue(result.isNull());
+    }
 
-		// Mock
-		NodeService nodeService = mock(NodeService.class);
+    /**
+     * Test the process when node input value is null
+     */
+    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Expected node to be a XML node")
+    public void testProcessNodeNull() {
 
-		MetaExpression xmlNodeVar = mock(MetaExpression.class);
-		when(xmlNodeVar.isNull()).thenReturn(true);
+        // Mock
+        NodeService nodeService = mock(NodeService.class);
 
-		// Run
-		RemoveNodeConstruct.process(xmlNodeVar, nodeService);
-	}
+        MetaExpression xmlNodeVar = mock(MetaExpression.class);
+        when(xmlNodeVar.isNull()).thenReturn(true);
+
+        // Run
+        RemoveNodeConstruct.process(xmlNodeVar, nodeService);
+    }
 }

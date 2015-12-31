@@ -1,195 +1,190 @@
 package nl.xillio.xill.plugins.web.constructs;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.Arrays;
-import java.util.List;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.data.PageVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;
-
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
 
 /**
  * Test the {@link RemoveCookieConstruct}.
  */
 public class RemoveCookieConstructTest extends ExpressionBuilderHelper {
 
-	/**
-	 * Test the process when a list of cookies to remove is handed.
-	 */
-	@Test
-	public void testProcessListUsage() {
-		// mock
-		WebService webService = mock(WebService.class);
+    /**
+     * Test the process when a list of cookies to remove is handed.
+     */
+    @Test
+    public void testProcessListUsage() {
+        // mock
+        WebService webService = mock(WebService.class);
 
-		// The values the input contains
-		MetaExpression first = mock(MetaExpression.class);
-		MetaExpression second = mock(MetaExpression.class);
-		when(first.getStringValue()).thenReturn("first cookie!");
-		when(second.getStringValue()).thenReturn("second cookie...");
-		List<MetaExpression> inputValue = Arrays.asList(first, second);
+        // The values the input contains
+        MetaExpression first = mock(MetaExpression.class);
+        MetaExpression second = mock(MetaExpression.class);
+        when(first.getStringValue()).thenReturn("first cookie!");
+        when(second.getStringValue()).thenReturn("second cookie...");
+        List<MetaExpression> inputValue = Arrays.asList(first, second);
 
-		// The page
-		PageVariable pageVariable = mock(PageVariable.class);
-		MetaExpression page = mock(MetaExpression.class);
-		when(page.getMeta(PageVariable.class)).thenReturn(pageVariable);
+        // The page
+        PageVariable pageVariable = mock(PageVariable.class);
+        MetaExpression page = mock(MetaExpression.class);
+        when(page.getMeta(PageVariable.class)).thenReturn(pageVariable);
 
-		// The cookie
-		MetaExpression cookie = mock(MetaExpression.class);
-		when(cookie.isNull()).thenReturn(false);
-		when(cookie.getValue()).thenReturn(inputValue);
-		when(cookie.getType()).thenReturn(LIST);
+        // The cookie
+        MetaExpression cookie = mock(MetaExpression.class);
+        when(cookie.isNull()).thenReturn(false);
+        when(cookie.getValue()).thenReturn(inputValue);
+        when(cookie.getType()).thenReturn(LIST);
 
-		// run
-		MetaExpression output = RemoveCookieConstruct.process(page, cookie, webService);
+        // run
+        MetaExpression output = RemoveCookieConstruct.process(page, cookie, webService);
 
-		// verify
+        // verify
 
-		// Wheter we ask for their values only once
-		verify(first, times(1)).getStringValue();
-		verify(second, times(1)).getStringValue();
+        // Wheter we ask for their values only once
+        verify(first, times(1)).getStringValue();
+        verify(second, times(1)).getStringValue();
 
-		// Wheter we parse the pageVariable only once
-		verify(page, times(2)).getMeta(PageVariable.class);
+        // Wheter we parse the pageVariable only once
+        verify(page, times(2)).getMeta(PageVariable.class);
 
-		// Wheter we parse the cookie only once
-		verify(cookie, times(1)).isNull();
-		verify(cookie, times(1)).getValue();
-		verify(cookie, times(1)).getType();
+        // Wheter we parse the cookie only once
+        verify(cookie, times(1)).isNull();
+        verify(cookie, times(1)).getValue();
+        verify(cookie, times(1)).getType();
 
-		// We had two items to delete
-		verify(webService, times(2)).deleteCookieNamed(eq(pageVariable), anyString());
+        // We had two items to delete
+        verify(webService, times(2)).deleteCookieNamed(eq(pageVariable), anyString());
 
-		// assert
-		Assert.assertEquals(output, NULL);
-	}
+        // assert
+        Assert.assertEquals(output, NULL);
+    }
 
-	/**
-	 * Test the process with null page given.
-	 */
-	@Test
-	public void testNullPage() {
-		// mock
-		WebService webService = mock(WebService.class);
-		MetaExpression input = mock(MetaExpression.class);
-		MetaExpression cookie = mock(MetaExpression.class);
-		when(input.isNull()).thenReturn(true);
+    /**
+     * Test the process with null page given.
+     */
+    @Test
+    public void testNullPage() {
+        // mock
+        WebService webService = mock(WebService.class);
+        MetaExpression input = mock(MetaExpression.class);
+        MetaExpression cookie = mock(MetaExpression.class);
+        when(input.isNull()).thenReturn(true);
 
-		// run
-		MetaExpression output = RemoveCookieConstruct.process(input, cookie, webService);
+        // run
+        MetaExpression output = RemoveCookieConstruct.process(input, cookie, webService);
 
-		// assert
-		Assert.assertEquals(output, NULL);
-	}
+        // assert
+        Assert.assertEquals(output, NULL);
+    }
 
-	/**
-	 * Test the process with null page given.
-	 */
-	@Test
-	public void testNullCookie() {
-		// mock
-		WebService webService = mock(WebService.class);
-		MetaExpression input = mock(MetaExpression.class);
-		MetaExpression cookie = mock(MetaExpression.class);
-		when(cookie.isNull()).thenReturn(true);
+    /**
+     * Test the process with null page given.
+     */
+    @Test
+    public void testNullCookie() {
+        // mock
+        WebService webService = mock(WebService.class);
+        MetaExpression input = mock(MetaExpression.class);
+        MetaExpression cookie = mock(MetaExpression.class);
+        when(cookie.isNull()).thenReturn(true);
 
-		// run
-		MetaExpression output = RemoveCookieConstruct.process(input, cookie, webService);
+        // run
+        MetaExpression output = RemoveCookieConstruct.process(input, cookie, webService);
 
-		// assert
-		Assert.assertEquals(output, NULL);
-	}
+        // assert
+        Assert.assertEquals(output, NULL);
+    }
 
-	/**
-	 * Test the process when a single cookie to delete is handed.
-	 */
-	@Test
-	public void testProcessAtomicUsage() {
-		// mock
-		WebService webService = mock(WebService.class);
+    /**
+     * Test the process when a single cookie to delete is handed.
+     */
+    @Test
+    public void testProcessAtomicUsage() {
+        // mock
+        WebService webService = mock(WebService.class);
 
-		// The page
-		PageVariable pageVariable = mock(PageVariable.class);
-		MetaExpression page = mock(MetaExpression.class);
-		when(page.getMeta(PageVariable.class)).thenReturn(pageVariable);
+        // The page
+        PageVariable pageVariable = mock(PageVariable.class);
+        MetaExpression page = mock(MetaExpression.class);
+        when(page.getMeta(PageVariable.class)).thenReturn(pageVariable);
 
-		// The cookie
-		MetaExpression cookie = mock(MetaExpression.class);
-		when(cookie.isNull()).thenReturn(false);
-		when(cookie.getStringValue()).thenReturn("deleteThisCookie");
-		when(cookie.getType()).thenReturn(ATOMIC);
+        // The cookie
+        MetaExpression cookie = mock(MetaExpression.class);
+        when(cookie.isNull()).thenReturn(false);
+        when(cookie.getStringValue()).thenReturn("deleteThisCookie");
+        when(cookie.getType()).thenReturn(ATOMIC);
 
-		// run
-		MetaExpression output = RemoveCookieConstruct.process(page, cookie, webService);
+        // run
+        MetaExpression output = RemoveCookieConstruct.process(page, cookie, webService);
 
-		// Wheter we parse the pageVariable only once
-		verify(page, times(2)).getMeta(PageVariable.class);
+        // Wheter we parse the pageVariable only once
+        verify(page, times(2)).getMeta(PageVariable.class);
 
-		// Wheter we parse the cookie only once
-		verify(cookie, times(1)).isNull();
-		verify(cookie, times(1)).getStringValue();
-		verify(cookie, times(1)).getType();
+        // Wheter we parse the cookie only once
+        verify(cookie, times(1)).isNull();
+        verify(cookie, times(1)).getStringValue();
+        verify(cookie, times(1)).getType();
 
-		// We had one item to delete
-		verify(webService, times(1)).deleteCookieNamed(eq(pageVariable), anyString());
+        // We had one item to delete
+        verify(webService, times(1)).deleteCookieNamed(eq(pageVariable), anyString());
 
-		// assert
-		Assert.assertEquals(output, NULL);
-	}
+        // assert
+        Assert.assertEquals(output, NULL);
+    }
 
-	/**
-	 * Test the process when the webService breaks
-	 */
-	@Test(expectedExceptions = RobotRuntimeException.class)
-	public void testProcessWhenWebServiceBreaks() {
-		// mock
-		WebService webService = mock(WebService.class);
+    /**
+     * Test the process when the webService breaks
+     */
+    @Test(expectedExceptions = RobotRuntimeException.class)
+    public void testProcessWhenWebServiceBreaks() {
+        // mock
+        WebService webService = mock(WebService.class);
 
-		// The page
-		PageVariable pageVariable = mock(PageVariable.class);
-		MetaExpression page = mock(MetaExpression.class);
-		when(page.getMeta(PageVariable.class)).thenReturn(pageVariable);
+        // The page
+        PageVariable pageVariable = mock(PageVariable.class);
+        MetaExpression page = mock(MetaExpression.class);
+        when(page.getMeta(PageVariable.class)).thenReturn(pageVariable);
 
-		// The cookie
-		MetaExpression cookie = mock(MetaExpression.class);
-		when(cookie.isNull()).thenReturn(false);
-		when(cookie.getValue()).thenReturn("deleteThisCookie");
-		when(cookie.getType()).thenReturn(ATOMIC);
+        // The cookie
+        MetaExpression cookie = mock(MetaExpression.class);
+        when(cookie.isNull()).thenReturn(false);
+        when(cookie.getValue()).thenReturn("deleteThisCookie");
+        when(cookie.getType()).thenReturn(ATOMIC);
 
-		// we make it break
-		doThrow(new RobotRuntimeException("Resistance is futile.")).when(webService).deleteCookieNamed(any(), anyString());
+        // we make it break
+        doThrow(new RobotRuntimeException("Resistance is futile.")).when(webService).deleteCookieNamed(any(), anyString());
 
-		RemoveCookieConstruct.process(page, cookie, webService);
-	}
+        RemoveCookieConstruct.process(page, cookie, webService);
+    }
 
-	/**
-	 * Test the process when no page is given.
-	 */
-	@Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid variable type. Node PAGE type expected!")
-	public void testProcessNoPageGiven() {
-		// mock
-		WebService webService = mock(WebService.class);
+    /**
+     * Test the process when no page is given.
+     */
+    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid variable type. Node PAGE type expected!")
+    public void testProcessNoPageGiven() {
+        // mock
+        WebService webService = mock(WebService.class);
 
-		// The page
-		MetaExpression page = mock(MetaExpression.class);
-		when(page.getMeta(PageVariable.class)).thenReturn(null);
+        // The page
+        MetaExpression page = mock(MetaExpression.class);
+        when(page.getMeta(PageVariable.class)).thenReturn(null);
 
-		// The cookie
-		MetaExpression cookie = mock(MetaExpression.class);
+        // The cookie
+        MetaExpression cookie = mock(MetaExpression.class);
 
-		// run
-		RemoveCookieConstruct.process(page, cookie, webService);
-	}
+        // run
+        RemoveCookieConstruct.process(page, cookie, webService);
+    }
 }

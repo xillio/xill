@@ -38,7 +38,7 @@ public class ForeachInstruction extends CompoundInstruction {
         this.valueVar = valueVar;
         valueVar.setHostInstruction(instructionSet);
         this.keyVar = keyVar;
-        if(keyVar != null) {
+        if (keyVar != null) {
             keyVar.setHostInstruction(instructionSet);
         }
     }

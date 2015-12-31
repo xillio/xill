@@ -17,7 +17,7 @@ import org.bson.Document;
  * @author Titus Nachbauer
  * @see <a href="https://docs.mongodb.org/v3.0/reference/method/db.collection.update/#db.collection.update">db.collection.update</a>
  */
-public class UpdateConstruct extends AbstractCollectionApiConstruct{
+public class UpdateConstruct extends AbstractCollectionApiConstruct {
 
     private final UpdateOptionsFactory updateOptionsFactory;
 
@@ -28,7 +28,7 @@ public class UpdateConstruct extends AbstractCollectionApiConstruct{
 
     @Override
     protected Argument[] getApiArguments() {
-        return new Argument[] {
+        return new Argument[]{
                 new Argument("query", emptyObject(), OBJECT),
                 new Argument("update", emptyObject(), OBJECT),
                 new Argument("options", emptyObject(), OBJECT)
