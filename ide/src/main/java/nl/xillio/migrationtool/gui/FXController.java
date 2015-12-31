@@ -64,11 +64,6 @@ public class FXController implements Initializable, EventHandler<Event> {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-	/*
-     * ******************************************************* Buttons, fields,
-	 * etc.
-	 */
-
     @FXML
     private Button btnNewFile;
     @FXML

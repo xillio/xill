@@ -14,7 +14,38 @@ import java.util.List;
 /**
  * This construct processes a matrix using the hungarian algorithm
  *
- * @author Ivor
+ * Hungarian Algorithm implementation by Konstantinos A. Nedas
+ * Credits and code below
+ * Created on Apr 25, 2005
+ *
+ * Munkres-Kuhn (Hungarian) Algorithm Clean Version: 0.11
+ *
+ * Konstantinos A. Nedas Department of Spatial Information Science &
+ * Engineering University of Maine, Orono, ME 04469-5711, USA
+ * kostas@spatial.maine.edu http://www.spatial.maine.edu/~kostas
+ *
+ * This Java class implements the Hungarian algorithm
+ *
+ * It takes 2 arguments: a. A 2-D array (could be rectangular or square). b.
+ * A string ("min" or "max") specifying whether you want the min or max
+ * assignment. [It returns an assignment matrix[array.length][2] that
+ * contains the row and col of the elements (in the original inputted array)
+ * that make up the optimum assignment.]
+ *
+ * Any comments, corrections, or additions would be much appreciated. Credit
+ * due to professor Bob Pilgrim for providing an online copy of the
+ * pseudo code for this algorithm
+ * (http://216.249.163.93/bob.pilgrim/445/munkres.html)
+ *
+ * Feel free to redistribute this source code, as long as this header--with
+ * the exception of sections in brackets--remains as part of the file.
+ *
+ * Requirements: JDK 1.5.0_01 or better.
+
+ *
+ * @author Ivor van der Hoog
+ * @author Ernst van Rheenen
+ * @author Konstantinos A. Nedas
  */
 public class HungarianAlgorithmConstruct extends Construct {
 
@@ -149,38 +180,6 @@ public class HungarianAlgorithmConstruct extends Construct {
         return Double.doubleToRawLongBits(value) == 0;
     }
 
-    // ///////////////////////////////////////////////////////////////
-    // Hungarian Alghoritm implementation by Konstantinos A. Nedas
-    // Credits and code below
-
-	/*
-     * Created on Apr 25, 2005
-	 * 
-	 * Munkres-Kuhn (Hungarian) Algorithm Clean Version: 0.11
-	 * 
-	 * Konstantinos A. Nedas Department of Spatial Information Science &
-	 * Engineering University of Maine, Orono, ME 04469-5711, USA
-	 * kostas@spatial.maine.edu http://www.spatial.maine.edu/~kostas
-	 * 
-	 * This Java class implements the Hungarian algorithm
-	 * 
-	 * It takes 2 arguments: a. A 2-D array (could be rectangular or square). b.
-	 * A string ("min" or "max") specifying whether you want the min or max
-	 * assignment. [It returns an assignment matrix[array.length][2] that
-	 * contains the row and col of the elements (in the original inputted array)
-	 * that make up the optimum assignment.]
-	 * 
-	 * Any comments, corrections, or additions would be much appreciated. Credit
-	 * due to professor Bob Pilgrim for providing an online copy of the
-	 * pseudocode for this algorithm
-	 * (http://216.249.163.93/bob.pilgrim/445/munkres.html)
-	 * 
-	 * Feel free to redistribute this source code, as long as this header--with
-	 * the exception of sections in brackets--remains as part of the file.
-	 * 
-	 * Requirements: JDK 1.5.0_01 or better.
-	 */
-
     /**
      * Finds the largest element in a positive array. Works for arrays where all
      * values are >= 0.
@@ -297,10 +296,10 @@ public class HungarianAlgorithmConstruct extends Construct {
 
         // If you want to return the min or max sum, in your own main method
         // instead of the assignment array, then use the following code:
-		/*
-		 * double sum = 0; for (int i=0; i<assignment.length; i++) { sum = sum +
-		 * array[assignment[i][0]][assignment[i][1]]; } return sum;
-		 */
+        /*
+         * double sum = 0; for (int i=0; i<assignment.length; i++) { sum = sum +
+         * array[assignment[i][0]][assignment[i][1]]; } return sum;
+         */
         // Of course you must also change the header of the method to:
         // public static double hgAlgorithm (double[][] array, String sumType)
 

@@ -129,27 +129,9 @@ public class BrowserPane extends AnchorPane {
         return presentationNode;
     }
 
-    // public String getSource() {
-    // return new SAX_XMLVariable(webView.getEngine().getDocument()).toString();
-    // }
-
     public String getUrl() {
         return webView.getEngine().getLocation();
     }
-
-	/*
-     * public void highLight(String query) {
-	 * query = query.replace("/TBODY/", "/tbody").replaceAll("(/+)", "$1html:").replaceAll("/html:\\w+\\(\\)", "/text()"); // FIXME: Hardcoded tbody replacement to deal with weird HtmlUnit TBODY
-	 * handling
-	 * Object result = evaluateXPath(presentationNode, query, XPathConstants.NODESET);
-	 * if (result != null) {
-	 * NodeList nodeList = (NodeList) result;
-	 * for(int i=0; i<nodeList.getLength(); i++) {
-	 * highLight(nodeList.item(i));
-	 * }
-	 * }
-	 * }
-	 */
 
     public void highLight(final Node node) {
         if (node == null) {

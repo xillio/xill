@@ -317,7 +317,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
         }
     }
 
-	/* Filters */
+    /* Filters */
 
     private void addFilterListeners() {
         // Add default filters
@@ -359,7 +359,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
         this.updateLog(Scroll.NONE, false);
     }
 
-	/* Filter labels */
+    /* Filter labels */
 
     private void resetLabels() {
         count.clear();
@@ -427,7 +427,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
         tblConsoleOut.getSelectionModel().clearSelection();
     }
 
-	/* Drag selection */
+    /* Drag selection */
 
     /**
      * The cell factory which creates DragSelectionCells for the console table.
