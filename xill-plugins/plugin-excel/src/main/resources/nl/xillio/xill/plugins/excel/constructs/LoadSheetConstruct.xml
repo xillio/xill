@@ -15,8 +15,7 @@ Load an Excel sheet from a workbook.
             <code>
                 use Excel;
                 var workbook = Excel.loadWorkbook("workbook.xlsx");
-                var sheetNames = Excel.getSheetNames(workbook);
-                var sheet = Excel.loadSheet(workbook, sheetNames[0]);
+                var sheet = Excel.loadSheet(workbook, 0);
             </code>
         </example>
         <example title="Printing sheet information">

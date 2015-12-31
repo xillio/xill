@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Returns the trimmed version of the string.  
+
+If the optional boolean parameter `internal` is set to `true`, the routine will also replace slack white spaces - including
+tabs, non-breakable spaces and line feeds - inside the string with a single space.
+    </description>
+    <examples>
+        <example title="Usage">
+            <code>
+                String.trim(" Xillio   Xillio  Xillio   Xillio
+                Xillio ");
+                // Result: Xillio   Xillio  Xillio   Xillio
+                //         Xillio
+
+                String.trim(" Xillio   Xillio  Xillio   Xillio
+                Xillio ", true);
+                // Result: Xillio Xillio Xillio Xillio Xillio
+            </code>
+        </example>
+    </examples>
+    <searchTags>
+        whitespace
+    </searchTags>
+</function>
