@@ -12,7 +12,7 @@ public class UnixExifToolProcess extends AbstractExifToolProcess {
 
     @Override
     protected Process buildProcess(ProcessBuilder processBuilder) throws IOException {
-        processBuilder.command("exiftool", "-stay_open", "True", "-@", "-");
+        processBuilder.command(System.getenv("exiftool_bin"), "-stay_open", "True", "-@", "-");
         return processBuilder.start();
     }
 
