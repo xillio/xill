@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * This class represents the abstract implementation of query. It provides some convenience methods that most queries need.
  *
- * @param <T1> The type of optios used by this query
+ * @param <T1> The type of options used by this query
  * @param <T2> The return type of the run method
  */
 abstract class AbstractQuery<T1 extends QueryOptions, T2> implements Query<T2> {

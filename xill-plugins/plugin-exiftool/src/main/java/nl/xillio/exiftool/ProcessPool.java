@@ -86,4 +86,8 @@ public class ProcessPool implements AutoCloseable {
     public void close() {
         processes.forEach(ExifToolProcess::close);
     }
+
+    public int size() {
+        return processes.size();
+    }
 }
