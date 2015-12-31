@@ -1,14 +1,16 @@
 package nl.xillio.xill.components.expressions;
 
-import java.util.*;
-import java.util.Map.Entry;
-
 import nl.xillio.xill.api.Debugger;
-import nl.xillio.xill.api.components.*;
+import nl.xillio.xill.api.components.InstructionFlow;
+import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.components.MetaExpressionIterator;
+import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
-import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.components.instructions.FunctionDeclaration;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Filter a collection of expressions using a function parameter
@@ -33,9 +35,9 @@ public class FilterExpression extends MapFilterHandler {
     protected InstructionFlow<MetaExpression> atomicProcessNoIterator(MetaExpression input, Debugger debugger) {
         MetaExpression boolValue;
         List<MetaExpression> atomicResults = new ArrayList<>(1);
-        if (functionDeclaration.getParametersSize() == 1){
+        if (functionDeclaration.getParametersSize() == 1) {
             boolValue = functionDeclaration.run(debugger, Collections.singletonList(input)).get();
-        } else if (functionDeclaration.getParametersSize() == 2){
+        } else if (functionDeclaration.getParametersSize() == 2) {
             boolValue = functionDeclaration.run(debugger,
                     Arrays.asList(ExpressionBuilderHelper.fromValue(0), input)).get();
         } else {
@@ -63,9 +65,9 @@ public class FilterExpression extends MapFilterHandler {
             MetaExpression value = iterator.next();
             value.registerReference();
 
-            if (functionDeclaration.getParametersSize() == 1){
+            if (functionDeclaration.getParametersSize() == 1) {
                 boolValue = (functionDeclaration.run(debugger, Collections.singletonList(value)).get());
-            } else if (functionDeclaration.getParametersSize() == 2){
+            } else if (functionDeclaration.getParametersSize() == 2) {
                 int keyValue = i++;
                 boolValue = (functionDeclaration.run(debugger,
                         Arrays.asList(ExpressionBuilderHelper.fromValue(keyValue), value)).get());
@@ -82,6 +84,7 @@ public class FilterExpression extends MapFilterHandler {
         }
         return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(atomicResults));
     }
+
     /**
      * Filter process of an list value.
      * Perform filter function on all elements of the list (one layer deep).
@@ -146,19 +149,19 @@ public class FilterExpression extends MapFilterHandler {
         return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(objectResults));
     }
 
-	@Override
-	public Collection<Processable> getChildren() {
-		return null;
-	}
+    @Override
+    public Collection<Processable> getChildren() {
+        return null;
+    }
 
-	/**
-	 * Set the function parameter
-	 * 
-	 * @param functionDeclaration
-	 */
-	@Override
-	public void setFunction(final FunctionDeclaration functionDeclaration) {
-		super.functionDeclaration = functionDeclaration;
-	}
+    /**
+     * Set the function parameter
+     *
+     * @param functionDeclaration
+     */
+    @Override
+    public void setFunction(final FunctionDeclaration functionDeclaration) {
+        super.functionDeclaration = functionDeclaration;
+    }
 
 }

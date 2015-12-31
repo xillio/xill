@@ -276,7 +276,7 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
         while (iterator.hasNext()) {
             EObject object = iterator.next();
 
-            if(object instanceof ConstructCall) {
+            if (object instanceof ConstructCall) {
                 ConstructCall call = (ConstructCall) object;
                 String plugin = getName(call.getPackage());
                 XillPlugin xillPlugin = pluginLoader.getPluginManager()
@@ -286,7 +286,7 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
                         .findAny()
                         .orElse(null);
 
-                if(xillPlugin.getConstruct(call.getFunction()) == null) {
+                if (xillPlugin.getConstruct(call.getFunction()) == null) {
                     INode node = NodeModelUtils.getNode(object);
                     return new Issue("No construct with name " + call.getFunction() + " was found in package " + plugin, node.getStartLine(), Issue.Type.ERROR, robotID);
                 }
@@ -403,7 +403,7 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
     private String getSignature(Construct construct) {
         if (!argumentSignatures.containsKey(construct)) {
             ConstructContext context = new ConstructContext(getRobotID(), getRobotID(), construct, null, null, null, null);
-            try(ConstructProcessor processor = construct.prepareProcess(context)) {
+            try (ConstructProcessor processor = construct.prepareProcess(context)) {
 
                 List<String> args = new ArrayList<>();
                 for (int i = 0; i < processor.getNumberOfArguments(); i++) {

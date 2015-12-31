@@ -15,26 +15,26 @@ import nl.xillio.xill.plugins.xml.services.NodeService;
  * @author Zbynek Hochmann
  */
 public class MoveNodeConstruct extends Construct {
-	@Inject
-	private NodeService nodeService;
+    @Inject
+    private NodeService nodeService;
 
-	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
-		return new ConstructProcessor(
-				(parentnode, subnode, beforenode) -> process(parentnode, subnode, beforenode, nodeService),
-				new Argument("parentnode", ATOMIC),
-				new Argument("subnode", ATOMIC),
-				new Argument("beforenode", NULL, ATOMIC)
-		);
-	}
+    @Override
+    public ConstructProcessor prepareProcess(ConstructContext context) {
+        return new ConstructProcessor(
+                (parentnode, subnode, beforenode) -> process(parentnode, subnode, beforenode, nodeService),
+                new Argument("parentnode", ATOMIC),
+                new Argument("subnode", ATOMIC),
+                new Argument("beforenode", NULL, ATOMIC)
+        );
+    }
 
-	static MetaExpression process(MetaExpression parentNodeVar, MetaExpression subNodeVar, MetaExpression beforeNodeVar, NodeService service) {
-		XmlNode parentXmlNode = assertMeta(parentNodeVar, "node", XmlNode.class, "XML node");
-		XmlNode subXmlNode = assertMeta(subNodeVar, "node", XmlNode.class, "XML node");
-		XmlNode beforeXmlNode = beforeNodeVar.isNull() ? null : assertMeta(beforeNodeVar, "node", XmlNode.class, "XML node");  
+    static MetaExpression process(MetaExpression parentNodeVar, MetaExpression subNodeVar, MetaExpression beforeNodeVar, NodeService service) {
+        XmlNode parentXmlNode = assertMeta(parentNodeVar, "node", XmlNode.class, "XML node");
+        XmlNode subXmlNode = assertMeta(subNodeVar, "node", XmlNode.class, "XML node");
+        XmlNode beforeXmlNode = beforeNodeVar.isNull() ? null : assertMeta(beforeNodeVar, "node", XmlNode.class, "XML node");
 
-		service.moveNode(parentXmlNode, subXmlNode, beforeXmlNode);
-		return NULL;
-	}
+        service.moveNode(parentXmlNode, subXmlNode, beforeXmlNode);
+        return NULL;
+    }
 
 }

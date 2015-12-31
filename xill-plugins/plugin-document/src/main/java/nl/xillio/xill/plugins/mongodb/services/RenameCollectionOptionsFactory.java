@@ -5,8 +5,6 @@ import com.mongodb.client.model.RenameCollectionOptions;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 
-import java.util.Map;
-
 /**
  * Provides a factory method that creates options objects for the {@link nl.xillio.xill.plugins.mongodb.constructs.FindOneAndUpdateConstruct FindOneAndUpdateConstruct}
  *

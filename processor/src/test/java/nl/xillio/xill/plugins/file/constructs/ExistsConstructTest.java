@@ -15,38 +15,38 @@ import static org.testng.Assert.assertSame;
  */
 public class ExistsConstructTest {
 
-	@Test
-	public void testProcessNormalTrueAndFalse() throws Exception {
-		// URI
-		String path = "This is the path";
-		MetaExpression uri = mock(MetaExpression.class);
-		when(uri.getStringValue()).thenReturn(path);
+    @Test
+    public void testProcessNormalTrueAndFalse() throws Exception {
+        // URI
+        String path = "This is the path";
+        MetaExpression uri = mock(MetaExpression.class);
+        when(uri.getStringValue()).thenReturn(path);
 
-		// Context
-		RobotID robotID = mock(RobotID.class);
-		ConstructContext context = mock(ConstructContext.class);
-		when(context.getRobotID()).thenReturn(robotID);
+        // Context
+        RobotID robotID = mock(RobotID.class);
+        ConstructContext context = mock(ConstructContext.class);
+        when(context.getRobotID()).thenReturn(robotID);
 
-		// FileUtils
-		FileUtilities fileUtils = mock(FileUtilities.class);
-		when(fileUtils.exists(any())).thenReturn(true, false);
+        // FileUtils
+        FileUtilities fileUtils = mock(FileUtilities.class);
+        when(fileUtils.exists(any())).thenReturn(true, false);
 
-		// Run the method once for true
-		MetaExpression result = ExistsConstruct.process(context, fileUtils, uri);
+        // Run the method once for true
+        MetaExpression result = ExistsConstruct.process(context, fileUtils, uri);
 
-		// Verify
-		verify(fileUtils).exists(any());
+        // Verify
+        verify(fileUtils).exists(any());
 
-		// Assert
-		assertSame(result, ExpressionBuilderHelper.TRUE);
+        // Assert
+        assertSame(result, ExpressionBuilderHelper.TRUE);
 
-		// Run the method again for false
-		result = ExistsConstruct.process(context, fileUtils, uri);
+        // Run the method again for false
+        result = ExistsConstruct.process(context, fileUtils, uri);
 
-		// Verify
-		verify(fileUtils, times(2)).exists(any());
+        // Verify
+        verify(fileUtils, times(2)).exists(any());
 
-		// Assert
-		assertSame(result, ExpressionBuilderHelper.FALSE);
-	}
+        // Assert
+        assertSame(result, ExpressionBuilderHelper.FALSE);
+    }
 }

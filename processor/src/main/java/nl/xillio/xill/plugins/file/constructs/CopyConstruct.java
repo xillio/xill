@@ -19,34 +19,34 @@ import java.util.LinkedHashMap;
 @Singleton
 public class CopyConstruct extends Construct {
 
-	@Inject
-	private FileUtilities fileUtils;
+    @Inject
+    private FileUtilities fileUtils;
 
-	@Override
-	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(
-						(source, target) -> process(context, fileUtils, source, target),
-						new Argument("source", ATOMIC),
-						new Argument("target", ATOMIC));
-	}
+    @Override
+    public ConstructProcessor prepareProcess(final ConstructContext context) {
+        return new ConstructProcessor(
+                (source, target) -> process(context, fileUtils, source, target),
+                new Argument("source", ATOMIC),
+                new Argument("target", ATOMIC));
+    }
 
-	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression source, final MetaExpression target) {
+    static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression source, final MetaExpression target) {
 
-		File sourceFile = getFile(context, source.getStringValue());
-		File targetFile = getFile(context, target.getStringValue());
-		boolean success = true;
-		try {
-			fileUtils.copy(sourceFile, targetFile);
-		} catch (IOException e) {
-			context.getRootLogger().error("Failed to copy " + sourceFile.getName() + " to " + targetFile.getName() + ": " + e.getMessage(), e);
-			success = false;
-		}
+        File sourceFile = getFile(context, source.getStringValue());
+        File targetFile = getFile(context, target.getStringValue());
+        boolean success = true;
+        try {
+            fileUtils.copy(sourceFile, targetFile);
+        } catch (IOException e) {
+            context.getRootLogger().error("Failed to copy " + sourceFile.getName() + " to " + targetFile.getName() + ": " + e.getMessage(), e);
+            success = false;
+        }
 
-		//Build the result
-		LinkedHashMap<String, MetaExpression> result = new LinkedHashMap<>();
-		result.put("from", fromValue(sourceFile.getAbsolutePath()));
-		result.put("into", fromValue(targetFile.getAbsolutePath()));
-		result.put("success", fromValue(success));
-		return fromValue(result);
-	}
+        //Build the result
+        LinkedHashMap<String, MetaExpression> result = new LinkedHashMap<>();
+        result.put("from", fromValue(sourceFile.getAbsolutePath()));
+        result.put("into", fromValue(targetFile.getAbsolutePath()));
+        result.put("success", fromValue(success));
+        return fromValue(result);
+    }
 }

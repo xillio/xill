@@ -10,7 +10,7 @@ import org.bson.types.ObjectId;
 /**
  * Provides a deserializer for a MongoObjectId.
  */
-public class ObjectIdSerializer implements MetaExpressionSerializer, MetaExpressionDeserializer  {
+public class ObjectIdSerializer implements MetaExpressionSerializer, MetaExpressionDeserializer {
 
     @Override
     public MetaExpression parseObject(Object object) {

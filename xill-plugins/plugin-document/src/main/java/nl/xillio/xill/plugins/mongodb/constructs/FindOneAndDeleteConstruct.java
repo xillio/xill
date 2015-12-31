@@ -13,7 +13,7 @@ import org.bson.Document;
  * This construct represents the <code>FindOneAndDelete()</code> method on MongoDB. That method is specific to the Java
  * API of MongoDB and therefore not documented in the online javascript API documentation. It replaces the
  * <code>FindAndModify()</code> method.
- *
+ * <p>
  * <code>FindOneAndDelete()</code> in MongoDB deletes the first document returned by <code>query</code>.
  *
  * @author Titus Nachbauer
@@ -22,13 +22,13 @@ public class FindOneAndDeleteConstruct extends AbstractCollectionApiConstruct {
     private final FindOneAndDeleteOptionsFactory findOneAndDeleteOptionsFactory;
 
     @Inject
-    public FindOneAndDeleteConstruct (FindOneAndDeleteOptionsFactory findOneAndDeleteOptionsFactory) {
+    public FindOneAndDeleteConstruct(FindOneAndDeleteOptionsFactory findOneAndDeleteOptionsFactory) {
         this.findOneAndDeleteOptionsFactory = findOneAndDeleteOptionsFactory;
     }
 
     @Override
     protected Argument[] getApiArguments() {
-        return new Argument[] {
+        return new Argument[]{
                 new Argument("query", emptyObject(), OBJECT),
                 new Argument("options", emptyObject(), OBJECT)
         };

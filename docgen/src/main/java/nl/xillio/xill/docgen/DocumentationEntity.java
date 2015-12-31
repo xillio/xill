@@ -12,33 +12,34 @@ import java.util.List;
  * @since 12-8-2015
  */
 public interface DocumentationEntity extends PropertiesProvider {
-	Comparator<DocumentationEntity> SORT_BY_IDENTITY = new IdentitySorter();
+    Comparator<DocumentationEntity> SORT_BY_IDENTITY = new IdentitySorter();
 
-	/**
-	 * Get the identity of this name.
-	 *
-	 * @return a single word identity that represents this entry. This would generally be a document name.
-	 */
-	String getIdentity();
+    /**
+     * Get the identity of this name.
+     *
+     * @return a single word identity that represents this entry. This would generally be a document name.
+     */
+    String getIdentity();
 
-	/**
-	 * Get the type of entity.
-	 *
-	 * @return a single word identifier that represents the entity type
-	 */
-	String getType();
+    /**
+     * Get the type of entity.
+     *
+     * @return a single word identifier that represents the entity type
+     */
+    String getType();
 
-	/**
-	 * Get a list of tags for this entity.
-	 * @return the tags
-	 */
-	List<String> getTags();
+    /**
+     * Get a list of tags for this entity.
+     *
+     * @return the tags
+     */
+    List<String> getTags();
 
-	class IdentitySorter implements Comparator<DocumentationEntity> {
+    class IdentitySorter implements Comparator<DocumentationEntity> {
 
-		@Override
-		public int compare(DocumentationEntity o1, DocumentationEntity o2) {
-			return o1.getIdentity().compareTo(o2.getIdentity());
-		}
-	}
+        @Override
+        public int compare(DocumentationEntity o1, DocumentationEntity o2) {
+            return o1.getIdentity().compareTo(o2.getIdentity());
+        }
+    }
 }

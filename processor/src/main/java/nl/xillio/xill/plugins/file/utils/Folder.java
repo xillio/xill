@@ -9,7 +9,7 @@ public class Folder extends File {
     /**
      * Create a new Folder object
      *
-     * @param pathname   the path to the folder
+     * @param pathname the path to the folder
      * @throws IllegalArgumentException if the passed path isn't a folder
      */
     public Folder(String pathname) {

@@ -43,8 +43,9 @@ public class EncoderServiceImpl implements EncoderService {
 
     /**
      * Encode the given input from the input-stream and give it to the output-stream.
-     * @param in    The input stream to encode.
-     * @param out   The output stream for the encoded input.
+     *
+     * @param in  The input stream to encode.
+     * @param out The output stream for the encoded input.
      * @throws IOException
      */
     void encodeBase64(InputStream in, OutputStream out) throws IOException {

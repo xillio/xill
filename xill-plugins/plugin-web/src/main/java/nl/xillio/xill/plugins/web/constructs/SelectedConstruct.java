@@ -14,36 +14,34 @@ import nl.xillio.xill.plugins.web.services.web.WebService;
  */
 public class SelectedConstruct extends PhantomJSConstruct {
 
-	@Override
-	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(
-			element -> process(element, webService),
-			new Argument("element", ATOMIC));
-	}
+    @Override
+    public ConstructProcessor prepareProcess(final ConstructContext context) {
+        return new ConstructProcessor(
+                element -> process(element, webService),
+                new Argument("element", ATOMIC));
+    }
 
-	/**
-	 * @param elementVar
-	 *        input variable (should be of a NODE type) - web element
-	 * @param webService
-	 *        the service we're using.
-	 * @return boolean variable (true=selected, false=not selected)
-	 */
-	public static MetaExpression process(final MetaExpression elementVar, final WebService webService) {
-		
-		if(elementVar.isNull()){
-			return NULL;
-		}
-			
-		if (!checkNodeType(elementVar)) {
-			throw new RobotRuntimeException("Invalid variable type. NODE type expected!");
-		}
+    /**
+     * @param elementVar input variable (should be of a NODE type) - web element
+     * @param webService the service we're using.
+     * @return boolean variable (true=selected, false=not selected)
+     */
+    public static MetaExpression process(final MetaExpression elementVar, final WebService webService) {
 
-		WebVariable element = getNode(elementVar);
+        if (elementVar.isNull()) {
+            return NULL;
+        }
 
-		try {
-			return fromValue(webService.isSelected(element));
-		} catch (Exception e) {
-			throw new RobotRuntimeException("Failed to access NODE correctly", e);
-		}
-	}
+        if (!checkNodeType(elementVar)) {
+            throw new RobotRuntimeException("Invalid variable type. NODE type expected!");
+        }
+
+        WebVariable element = getNode(elementVar);
+
+        try {
+            return fromValue(webService.isSelected(element));
+        } catch (Exception e) {
+            throw new RobotRuntimeException("Failed to access NODE correctly", e);
+        }
+    }
 }

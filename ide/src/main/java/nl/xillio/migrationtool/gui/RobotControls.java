@@ -1,8 +1,5 @@
 package nl.xillio.migrationtool.gui;
 
-import java.util.List;
-import java.util.Optional;
-
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -19,10 +16,12 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.errors.XillParsingException;
 import nl.xillio.xill.api.events.RobotPausedAction;
 import nl.xillio.xill.util.HotkeysHandler.Hotkeys;
-
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * This class handles the activating and deactivating of robot control buttons
@@ -30,265 +29,266 @@ import org.apache.logging.log4j.Logger;
  */
 public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolicy {
 
-	private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger();
 
-	private final Button start;
-	private final Button stop;
-	private final Button pause;
-	private final Button stepin;
-	private final Button stepover;
-	private final RobotTab tab;
-	private boolean running = false;
-	private final CheckMenuItem shouldStopOnError;
+    private final Button start;
+    private final Button stop;
+    private final Button pause;
+    private final Button stepin;
+    private final Button stepover;
+    private final RobotTab tab;
+    private boolean running = false;
+    private final CheckMenuItem shouldStopOnError;
 
-	/**
-	 * Create a new {@link RobotControls}
-	 * 
-	 * @param tab
-	 * @param start
-	 * @param pause
-	 * @param stop
-	 * @param stepin
-	 * @param stepover
-	 * @param cmiError
-	 */
-	public RobotControls(final RobotTab tab, final Button start, final Button pause, final Button stop,
-	    final Button stepin, final Button stepover, final CheckMenuItem cmiError) {
-		this.tab = tab;
-		this.start = start;
-		this.stop = stop;
-		this.pause = pause;
-		this.stepin = stepin;
-		this.stepover = stepover;
-		shouldStopOnError = cmiError;
+    /**
+     * Create a new {@link RobotControls}
+     *
+     * @param tab
+     * @param start
+     * @param pause
+     * @param stop
+     * @param stepin
+     * @param stepover
+     * @param cmiError
+     */
+    public RobotControls(final RobotTab tab, final Button start, final Button pause, final Button stop,
+                         final Button stepin, final Button stepover, final CheckMenuItem cmiError) {
+        this.tab = tab;
+        this.start = start;
+        this.stop = stop;
+        this.pause = pause;
+        this.stepin = stepin;
+        this.stepover = stepover;
+        shouldStopOnError = cmiError;
 
-		start.setDisable(false);
-		stop.setDisable(true);
-		pause.setDisable(true);
-		stepin.setDisable(true);
-		stepover.setDisable(true);
+        start.setDisable(false);
+        stop.setDisable(true);
+        pause.setDisable(true);
+        stepin.setDisable(true);
+        stepover.setDisable(true);
 
-		tab.getEditorPane().addEventHandler(KeyEvent.KEY_PRESSED, this);
+        tab.getEditorPane().addEventHandler(KeyEvent.KEY_PRESSED, this);
 
-		// Connect to buttons
-		start.setOnAction(e -> start());
-		stop.setOnAction(e -> stop());
-		pause.setOnAction(e -> pause());
-		stepin.setOnAction(e -> stepIn());
-		stepover.setOnAction(e -> stepOver());
+        // Connect to buttons
+        start.setOnAction(e -> start());
+        stop.setOnAction(e -> stop());
+        pause.setOnAction(e -> pause());
+        stepin.setOnAction(e -> stepIn());
+        stepover.setOnAction(e -> stepOver());
 
-		// Connect to debugger
-		getDebugger().getOnRobotPause().addListener(this::onPause);
-		getDebugger().getOnRobotStop().addListener(e -> onStop());
+        // Connect to debugger
+        getDebugger().getOnRobotPause().addListener(this::onPause);
+        getDebugger().getOnRobotStop().addListener(e -> onStop());
 
-		getDebugger().setErrorHandler(this);
-	}
-	
-	/**
-	 * Whether the robot is running.
-	 */
-	public boolean robotRunning() {
-		return running;
-	}
+        getDebugger().setErrorHandler(this);
+    }
 
-	/**
-	 * Stop the robot
-	 */
-	public void stop() {
-		onStop();
+    /**
+     * Whether the robot is running.
+     */
+    public boolean robotRunning() {
+        return running;
+    }
 
-		getDebugger().stop();
-	}
+    /**
+     * Stop the robot
+     */
+    public void stop() {
+        onStop();
 
-	private void onStop() {
-		resetAll();
-		running = false;
+        getDebugger().stop();
+    }
 
-		tab.resetCode();
-	}
+    private void onStop() {
+        resetAll();
+        running = false;
 
-	/**
-	 * Start/Resume the robot
-	 */
-	@SuppressWarnings("squid:S1166") // XillParsingException is handled correctly here
-	public void start() {
-		if (running) {
-			continu();
-			return;
-		}
+        tab.resetCode();
+    }
 
-		onStart();
-		applyBreakpoints();
-		try {
-			tab.runRobot();
-		} catch (XillParsingException e) {
-			onStop();
-			highlight(e.getRobot(), e.getLine(), "error");
-		}
+    /**
+     * Start/Resume the robot
+     */
+    @SuppressWarnings("squid:S1166") // XillParsingException is handled correctly here
+    public void start() {
+        if (running) {
+            continu();
+            return;
+        }
 
-	}
+        onStart();
+        applyBreakpoints();
+        try {
+            tab.runRobot();
+        } catch (XillParsingException e) {
+            onStop();
+            highlight(e.getRobot(), e.getLine(), "error");
+        }
 
-	private void onStart() {
-		resetAll();
+    }
 
-		start.setDisable(true);
-		stop.setDisable(false);
-		pause.setDisable(false);
-		running = true;
-	}
+    private void onStart() {
+        resetAll();
 
-	private void continu() {
-		onContinue();
+        start.setDisable(true);
+        stop.setDisable(false);
+        pause.setDisable(false);
+        running = true;
+    }
 
-		applyBreakpoints();
-		getDebugger().resume();
-	}
+    private void continu() {
+        onContinue();
 
-	private void onContinue() {
-		resetAll();
+        applyBreakpoints();
+        getDebugger().resume();
+    }
 
-		start.setDisable(true);
-		stop.setDisable(false);
-		pause.setDisable(false);
-	}
+    private void onContinue() {
+        resetAll();
 
-	/**
-	 * Pause the robot
-	 */
-	public void pause() {
-		onPause();
+        start.setDisable(true);
+        stop.setDisable(false);
+        pause.setDisable(false);
+    }
 
-		getDebugger().pause();
-	}
+    /**
+     * Pause the robot
+     */
+    public void pause() {
+        onPause();
 
-	private void onPause() {
-		resetAll();
+        getDebugger().pause();
+    }
 
-		stop.setDisable(false);
-		stepin.setDisable(false);
-		stepover.setDisable(false);
-	}
+    private void onPause() {
+        resetAll();
 
-	private void onPause(final RobotPausedAction action) {
-		onPause();
+        stop.setDisable(false);
+        stepin.setDisable(false);
+        stepover.setDisable(false);
+    }
 
-		tab.display(action.getRobotID(), action.getLineNumber());
-	}
+    private void onPause(final RobotPausedAction action) {
+        onPause();
 
-	public void stepIn() {
-		onPause();
+        tab.display(action.getRobotID(), action.getLineNumber());
+    }
 
-		getDebugger().stepIn();
-	}
+    public void stepIn() {
+        onPause();
 
-	public void stepOver() {
-		onPause();
+        getDebugger().stepIn();
+    }
 
-		getDebugger().stepOver();
-	}
+    public void stepOver() {
+        onPause();
 
-	private void resetAll() {
-		start.setDisable(false);
-		stop.setDisable(true);
-		pause.setDisable(true);
-		stepin.setDisable(true);
-		stepover.setDisable(true);
-		tab.clearHighlight();
-	}
+        getDebugger().stepOver();
+    }
 
-	private Debugger getDebugger() {
-		return tab.getProcessor().getDebugger();
-	}
-	private RobotID getRobotID(){
-		return tab.getProcessor().getRobotID();
-	}
+    private void resetAll() {
+        start.setDisable(false);
+        stop.setDisable(true);
+        pause.setDisable(true);
+        stepin.setDisable(true);
+        stepover.setDisable(true);
+        tab.clearHighlight();
+    }
 
-	@Override
-	public void handle(final KeyEvent event) {
+    private Debugger getDebugger() {
+        return tab.getProcessor().getDebugger();
+    }
 
-		// Run
-		if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.RUN)).match(event)) {
-			start();
-		}
-		// Step in
-		else if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.STEPIN)).match(event)) {
-			stepIn();
-		}
-		// Step over
-		else if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.STEPOVER)).match(event)) {
-			stepOver();
-		}
-		// Pause
-		else if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.PAUSE)).match(event)) {
-			pause();
-		}
-		// Stop
-		else if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.STOP)).match(event)) {
-			stop();
-		}
-	}
+    private RobotID getRobotID() {
+        return tab.getProcessor().getRobotID();
+    }
 
-	private void applyBreakpoints() {
-		// Get all breakpoints
-		List<Breakpoint> breakpoints = BreakpointPool.INSTANCE.get();
+    @Override
+    public void handle(final KeyEvent event) {
 
-		getDebugger().setBreakpoints(breakpoints);
-	}
+        // Run
+        if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.RUN)).match(event)) {
+            start();
+        }
+        // Step in
+        else if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.STEPIN)).match(event)) {
+            stepIn();
+        }
+        // Step over
+        else if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.STEPOVER)).match(event)) {
+            stepOver();
+        }
+        // Pause
+        else if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.PAUSE)).match(event)) {
+            pause();
+        }
+        // Stop
+        else if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.STOP)).match(event)) {
+            stop();
+        }
+    }
 
-	private void highlight(final RobotID id, final int line, final String highlightType) {
+    private void applyBreakpoints() {
+        // Get all breakpoints
+        List<Breakpoint> breakpoints = BreakpointPool.INSTANCE.get();
 
-		// First we find the right tab
-		Optional<RobotTab> correctTab = tab.getGlobalController().getTabs().stream()
-		  .filter(tb -> tb.getProcessor().getRobotID() == id).findAny();
+        getDebugger().setBreakpoints(breakpoints);
+    }
 
-		if (correctTab.isPresent()) {
-			// This tab is already open
-			RobotTab currentTab = correctTab.get();
-			currentTab.getEditorPane().getEditor().clearHighlight();
-			currentTab.getEditorPane().getEditor().highlightLine(line, highlightType);
-			currentTab.requestFocus();
-			return;
-		}
+    private void highlight(final RobotID id, final int line, final String highlightType) {
 
-		// Seems like the tab wasn't open so we open it. This has to be done in the JavaFX Thread.
-		Platform.runLater(() -> {
-			RobotTab newTab = tab.getGlobalController().openFile(id.getPath());
+        // First we find the right tab
+        Optional<RobotTab> correctTab = tab.getGlobalController().getTabs().stream()
+                .filter(tb -> tb.getProcessor().getRobotID() == id).findAny();
 
-			// Wait for the editor to load
-			newTab.getEditorPane().getEditor().getOnDocumentLoaded().addListener(success ->
-				// We queue this for later execution because the tab has to display before we can scroll to the right location.
-				Platform.runLater(() -> {
-                    if (success) {
-                        // Highlight the tab
-                        newTab.getEditorPane().getEditor().clearHighlight();
-                        newTab.getEditorPane().getEditor().highlightLine(line, highlightType);
-                        newTab.requestFocus();
-                    }
-                })
-			);
-		});
+        if (correctTab.isPresent()) {
+            // This tab is already open
+            RobotTab currentTab = correctTab.get();
+            currentTab.getEditorPane().getEditor().clearHighlight();
+            currentTab.getEditorPane().getEditor().highlightLine(line, highlightType);
+            currentTab.requestFocus();
+            return;
+        }
 
-	}
+        // Seems like the tab wasn't open so we open it. This has to be done in the JavaFX Thread.
+        Platform.runLater(() -> {
+            RobotTab newTab = tab.getGlobalController().openFile(id.getPath());
 
-	@Override
-	public void handle(final Throwable e) throws RobotRuntimeException {
-		Logger log = RobotAppender.getLogger(getRobotID());
+            // Wait for the editor to load
+            newTab.getEditorPane().getEditor().getOnDocumentLoaded().addListener(success ->
+                    // We queue this for later execution because the tab has to display before we can scroll to the right location.
+                    Platform.runLater(() -> {
+                        if (success) {
+                            // Highlight the tab
+                            newTab.getEditorPane().getEditor().clearHighlight();
+                            newTab.getEditorPane().getEditor().highlightLine(line, highlightType);
+                            newTab.requestFocus();
+                        }
+                    })
+            );
+        });
 
-		Throwable root = ExceptionUtils.getRootCause(e);
+    }
 
-		LOGGER.error("Exception occurred in robot", e);
-		if (root instanceof RobotRuntimeException) {
-			log.error(root.getMessage());
-		} else if (e instanceof RobotRuntimeException) {
-			log.error(e.getMessage());
-		} else if (root == null) {
-			log.error("An error occurred in a robot: " + e.getMessage(), e);
-		} else {
-			log.error("An error occurred in a robot: " + root.getMessage(), root);
-		}
+    @Override
+    public void handle(final Throwable e) throws RobotRuntimeException {
+        Logger log = RobotAppender.getLogger(getRobotID());
 
-		if (shouldStopOnError.isSelected()) {
-			pause();
-		}
-	}
+        Throwable root = ExceptionUtils.getRootCause(e);
+
+        LOGGER.error("Exception occurred in robot", e);
+        if (root instanceof RobotRuntimeException) {
+            log.error(root.getMessage());
+        } else if (e instanceof RobotRuntimeException) {
+            log.error(e.getMessage());
+        } else if (root == null) {
+            log.error("An error occurred in a robot: " + e.getMessage(), e);
+        } else {
+            log.error("An error occurred in a robot: " + root.getMessage(), root);
+        }
+
+        if (shouldStopOnError.isSelected()) {
+            pause();
+        }
+    }
 }

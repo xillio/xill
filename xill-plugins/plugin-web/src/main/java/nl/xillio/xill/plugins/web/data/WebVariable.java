@@ -11,14 +11,14 @@ import org.openqa.selenium.WebElement;
  */
 public interface WebVariable extends MetadataExpression, TextPreview {
 
-	/**
-	 * @return Returns a {@link WebElement}.
-	 */
-	WebElement getElement();
+    /**
+     * @return Returns a {@link WebElement}.
+     */
+    WebElement getElement();
 
-	/**
-	 * @return Returns a {@link WebDriver}.
-	 */
-	WebDriver getDriver();
+    /**
+     * @return Returns a {@link WebDriver}.
+     */
+    WebDriver getDriver();
 
 }

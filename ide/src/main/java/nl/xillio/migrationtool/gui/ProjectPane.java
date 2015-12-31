@@ -424,7 +424,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
     /**
      * Delete multiple items from the tree view.
      *
-     * @param toDelete              The items to delete.
+     * @param toDelete           The items to delete.
      * @param hardDeleteProjects Whether to delete the projects from disk.
      */
     private void deleteItems(List<TreeItem<Pair<File, String>>> toDelete, boolean hardDeleteProjects) {
@@ -1006,6 +1006,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
             // Projects cannot be moved.
             return !projectSelected();
         }
+
         private boolean canDrop() {
             return this.getTreeItem() != null;
         }

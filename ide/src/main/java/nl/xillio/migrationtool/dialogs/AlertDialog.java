@@ -3,7 +3,6 @@ package nl.xillio.migrationtool.dialogs;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.apache.logging.log4j.LogManager;
@@ -18,9 +17,10 @@ public class AlertDialog extends Alert {
 
     /**
      * Create a new alert dialog with the given alert type, title, header and content text, and a variable number of buttons.
-     * @param type The alert type of the dialog.
-     * @param title The text to display in the title bar of the dialog.
-     * @param header The text to display in the header of the dialog.
+     *
+     * @param type    The alert type of the dialog.
+     * @param title   The text to display in the title bar of the dialog.
+     * @param header  The text to display in the header of the dialog.
      * @param content The text to display in the dialog content area.
      * @param buttons The buttons to add to the button-bar area of the dialog.
      */
@@ -33,7 +33,7 @@ public class AlertDialog extends Alert {
         this.setHeaderText(header);
 
         // Set the icon.
-        Stage stage = (Stage)this.getDialogPane().getScene().getWindow();
+        Stage stage = (Stage) this.getDialogPane().getScene().getWindow();
         try (InputStream image = this.getClass().getResourceAsStream("/icon.png")) {
             if (image != null) {
                 stage.getIcons().add(new Image(image));

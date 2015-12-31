@@ -15,12 +15,12 @@ import java.io.File;
  */
 @ImplementedBy(FileResolverImpl.class)
 public interface FileResolver {
-	/**
-	 * Resolve a file using the general file system rules
-	 *
-	 * @param context the robot to resolve the file for
-	 * @param path    the path
-	 * @return the file
-	 */
-	File buildFile(ConstructContext context, String path);
+    /**
+     * Resolve a file using the general file system rules
+     *
+     * @param context the robot to resolve the file for
+     * @param path    the path
+     * @return the file
+     */
+    File buildFile(ConstructContext context, String path);
 }

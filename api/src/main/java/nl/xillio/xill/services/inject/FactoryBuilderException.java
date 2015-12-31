@@ -5,16 +5,17 @@ package nl.xillio.xill.services.inject;
  */
 public class FactoryBuilderException extends RuntimeException {
 
-	private static final long serialVersionUID = -2311064385511102301L;
+    private static final long serialVersionUID = -2311064385511102301L;
 
-	/**
-	 * Create a new {@link FactoryBuilderException}
-	 * @param message the message
-	 * @param e the cause
-	 */
-	public FactoryBuilderException(String message, Throwable e) {
-		super(message, e);
-	}
-	
+    /**
+     * Create a new {@link FactoryBuilderException}
+     *
+     * @param message the message
+     * @param e       the cause
+     */
+    public FactoryBuilderException(String message, Throwable e) {
+        super(message, e);
+    }
+
 
 }
