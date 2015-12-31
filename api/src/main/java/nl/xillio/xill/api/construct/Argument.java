@@ -104,7 +104,7 @@ public class Argument implements AutoCloseable {
      * Resets the argument to initial state.
      */
     public void clear() {
-        if(value != null) {
+        if (value != null) {
             value.releaseReference();
         }
         value = null;

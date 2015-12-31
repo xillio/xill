@@ -7,7 +7,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +55,7 @@ public class EncoderServiceImplTest {
 
     @AfterClass
     public void deleteTestFiles() throws IOException {
-        for(File file : deployedFiles) {
+        for (File file : deployedFiles) {
             FileUtils.forceDelete(file);
         }
     }

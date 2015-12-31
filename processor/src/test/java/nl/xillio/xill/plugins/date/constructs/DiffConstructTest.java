@@ -23,51 +23,51 @@ import static org.testng.Assert.assertEquals;
  */
 public class DiffConstructTest {
 
-	/**
-	 * @return Data containing two maps (which should be returned from the mock {@link DateService#difference(java.time.temporal.Temporal, java.time.temporal.Temporal, boolean)}) for testing absolute
-	 * and relative difference.
-	 */
-	@DataProvider(name = "differences")
-	private Object[][] mapProvider() {
-		Map<String, Double> absoluteDifference = new HashMap<>();
-		absoluteDifference.put("Unit1", 10.0);
-		absoluteDifference.put("Unit2", 20.0);
-		MetaExpression trueExpression = mockBoolExpression(true);
+    /**
+     * @return Data containing two maps (which should be returned from the mock {@link DateService#difference(java.time.temporal.Temporal, java.time.temporal.Temporal, boolean)}) for testing absolute
+     * and relative difference.
+     */
+    @DataProvider(name = "differences")
+    private Object[][] mapProvider() {
+        Map<String, Double> absoluteDifference = new HashMap<>();
+        absoluteDifference.put("Unit1", 10.0);
+        absoluteDifference.put("Unit2", 20.0);
+        MetaExpression trueExpression = mockBoolExpression(true);
 
-		Map<String, Double> relativeDifference = new HashMap<>();
-		relativeDifference.put("Unit1", -10.0);
-		relativeDifference.put("Unit2", 20.0);
-		MetaExpression falseExpression = mockBoolExpression(false);
+        Map<String, Double> relativeDifference = new HashMap<>();
+        relativeDifference.put("Unit1", -10.0);
+        relativeDifference.put("Unit2", 20.0);
+        MetaExpression falseExpression = mockBoolExpression(false);
 
-		return new Object[][] {{absoluteDifference, trueExpression}, {relativeDifference, falseExpression}};
-	}
+        return new Object[][]{{absoluteDifference, trueExpression}, {relativeDifference, falseExpression}};
+    }
 
-	/**
-	 * Test the process method
-	 *
-	 * @param differences Map with differences as could be returned by {@link DateService#difference(nl.xillio.xill.plugins.date.data.Date, nl.xillio.xill.plugins.date.data.Date, boolean)}.
-	 * @param absolute    Whether the difference should be absolute or relative
-	 */
-	@Test(dataProvider = "differences")
-	public void testProcess(Map<String, Double> differences, MetaExpression absolute) {
-		// Mock
-		ZonedDateTime date1 = ZonedDateTime.now();
-		ZonedDateTime date2 = ZonedDateTime.now();
+    /**
+     * Test the process method
+     *
+     * @param differences Map with differences as could be returned by {@link DateService#difference(nl.xillio.xill.plugins.date.data.Date, nl.xillio.xill.plugins.date.data.Date, boolean)}.
+     * @param absolute    Whether the difference should be absolute or relative
+     */
+    @Test(dataProvider = "differences")
+    public void testProcess(Map<String, Double> differences, MetaExpression absolute) {
+        // Mock
+        ZonedDateTime date1 = ZonedDateTime.now();
+        ZonedDateTime date2 = ZonedDateTime.now();
 
-		MetaExpression date1Expression = mockDateExpression(date1);
-		MetaExpression date2Expression = mockDateExpression(date2);
+        MetaExpression date1Expression = mockDateExpression(date1);
+        MetaExpression date2Expression = mockDateExpression(date2);
 
-		DateService dateService = mock(DateService.class);
-		when(dateService.difference(any(), any(), anyBoolean())).thenReturn(differences);
+        DateService dateService = mock(DateService.class);
+        when(dateService.difference(any(), any(), anyBoolean())).thenReturn(differences);
 
-		// Run
-		MetaExpression difference = DiffConstruct.process(date1Expression, date2Expression, absolute, dateService);
+        // Run
+        MetaExpression difference = DiffConstruct.process(date1Expression, date2Expression, absolute, dateService);
 
-		// Verify
-		verify(dateService).difference(any(), any(), anyBoolean());
+        // Verify
+        verify(dateService).difference(any(), any(), anyBoolean());
 
-		// Assert
-		((Map<String, MetaExpression>) difference.getValue()).forEach((k, v) -> assertEquals(differences.get(k), v.getNumberValue().doubleValue(), 10e-9));
+        // Assert
+        ((Map<String, MetaExpression>) difference.getValue()).forEach((k, v) -> assertEquals(differences.get(k), v.getNumberValue().doubleValue(), 10e-9));
 
-	}
+    }
 }

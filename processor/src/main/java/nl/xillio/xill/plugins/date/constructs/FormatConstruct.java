@@ -19,22 +19,22 @@ import java.time.DateTimeException;
  */
 public class FormatConstruct extends BaseDateConstruct {
 
-	@Override
-	public ConstructProcessor prepareProcess(final ConstructContext context) {
+    @Override
+    public ConstructProcessor prepareProcess(final ConstructContext context) {
 
-		return new ConstructProcessor((dateVar, formatVar) -> process(dateVar, formatVar, getDateService()), new Argument("date"), new Argument("format", NULL));
-	}
+        return new ConstructProcessor((dateVar, formatVar) -> process(dateVar, formatVar, getDateService()), new Argument("date"), new Argument("format", NULL));
+    }
 
-	static MetaExpression process(final MetaExpression dateVar,
-					final MetaExpression formatVar, DateService dateService) {
+    static MetaExpression process(final MetaExpression dateVar,
+                                  final MetaExpression formatVar, DateService dateService) {
 
-		Date date = getDate(dateVar, "date");
+        Date date = getDate(dateVar, "date");
 
-		try {
-			String formatString = formatVar.isNull() ? null : formatVar.getStringValue();
-			return fromValue(dateService.formatDate(date, formatString));
-		} catch (DateTimeException | IllegalArgumentException e) {
-			throw new RobotRuntimeException("Could not format date", e);
-		}
-	}
+        try {
+            String formatString = formatVar.isNull() ? null : formatVar.getStringValue();
+            return fromValue(dateService.formatDate(date, formatString));
+        } catch (DateTimeException | IllegalArgumentException e) {
+            throw new RobotRuntimeException("Could not format date", e);
+        }
+    }
 }

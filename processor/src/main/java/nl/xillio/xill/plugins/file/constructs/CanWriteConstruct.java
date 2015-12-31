@@ -14,7 +14,7 @@ import java.io.IOException;
 
 /**
  * Determines whether a file or folder is readable or not.
- *
+ * <p>
  * Created by Anwar on 11/30/2015.
  */
 public class CanWriteConstruct extends Construct {

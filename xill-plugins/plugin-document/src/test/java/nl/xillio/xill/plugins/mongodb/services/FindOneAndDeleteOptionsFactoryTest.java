@@ -12,7 +12,7 @@ import static org.testng.Assert.*;
 
 public class FindOneAndDeleteOptionsFactoryTest extends TestUtils {
     @Test
-    public void testBuildOptions () {
+    public void testBuildOptions() {
         MongoConverter mongoConverter = new MongoConverter(new ObjectIdSerializer());
         FindOneAndDeleteOptionsFactory findOneAndDeleteOptionsFactory = new FindOneAndDeleteOptionsFactory(mongoConverter);
         LinkedHashMap<String, MetaExpression> object = new LinkedHashMap<>();

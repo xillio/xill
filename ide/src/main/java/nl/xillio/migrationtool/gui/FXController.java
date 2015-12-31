@@ -64,11 +64,6 @@ public class FXController implements Initializable, EventHandler<Event> {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-	/*
-     * ******************************************************* Buttons, fields,
-	 * etc.
-	 */
-
     @FXML
     private Button btnNewFile;
     @FXML
@@ -252,7 +247,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 
         Platform.runLater(() -> {
             // Verify the license.
-            if(!LicenseUtils.performValidation(false)) {
+            if (!LicenseUtils.performValidation(false)) {
                 closeApplication();
             }
 

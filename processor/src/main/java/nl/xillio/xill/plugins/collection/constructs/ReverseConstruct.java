@@ -18,28 +18,27 @@ import nl.xillio.xill.plugins.collection.services.reverse.Reverse;
  * </p>
  *
  * @author Sander Visser
- *
  */
 public class ReverseConstruct extends Construct {
 
-	@Inject
-	private Reverse reverse;
+    @Inject
+    private Reverse reverse;
 
-	@Override
-	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(
-			(list, recursive) -> process(list, recursive, reverse),
-			new Argument("list", LIST, OBJECT),
-			new Argument("recursive", FALSE, ATOMIC));
-	}
+    @Override
+    public ConstructProcessor prepareProcess(final ConstructContext context) {
+        return new ConstructProcessor(
+                (list, recursive) -> process(list, recursive, reverse),
+                new Argument("list", LIST, OBJECT),
+                new Argument("recursive", FALSE, ATOMIC));
+    }
 
-	static MetaExpression process(final MetaExpression input, final MetaExpression recursiveVar, final Reverse reverse) {
+    static MetaExpression process(final MetaExpression input, final MetaExpression recursiveVar, final Reverse reverse) {
 
-		boolean reverseRecursive = recursiveVar.getBooleanValue();
+        boolean reverseRecursive = recursiveVar.getBooleanValue();
 
-		Object obj = extractValue(input);
-		obj = reverse.asReversed(obj, reverseRecursive);
-		return MetaExpression.parseObject(obj);
+        Object obj = extractValue(input);
+        obj = reverse.asReversed(obj, reverseRecursive);
+        return MetaExpression.parseObject(obj);
 
-	}
+    }
 }

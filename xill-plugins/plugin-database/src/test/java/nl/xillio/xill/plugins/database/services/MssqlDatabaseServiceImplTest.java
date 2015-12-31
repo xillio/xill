@@ -13,16 +13,16 @@ import org.testng.annotations.Test;
  */
 public class MssqlDatabaseServiceImplTest {
 
-	/**
-	 * Test whether the create select query returns a currect query
-	 */
-	@Test
-	public void testCreateSelectQuery() {
-		MssqlDatabaseServiceImpl service = new MssqlDatabaseServiceImpl();
-		String output = service.createSelectQuery("TABLE", "rownum > 2");
+    /**
+     * Test whether the create select query returns a currect query
+     */
+    @Test
+    public void testCreateSelectQuery() {
+        MssqlDatabaseServiceImpl service = new MssqlDatabaseServiceImpl();
+        String output = service.createSelectQuery("TABLE", "rownum > 2");
 
-		Assert.assertEquals(output, "SELECT TOP 1 * FROM TABLE WHERE rownum > 2");
+        Assert.assertEquals(output, "SELECT TOP 1 * FROM TABLE WHERE rownum > 2");
 
-	}
+    }
 
 }

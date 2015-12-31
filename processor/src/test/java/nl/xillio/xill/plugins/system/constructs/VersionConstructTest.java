@@ -1,142 +1,137 @@
 package nl.xillio.xill.plugins.system.constructs;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import nl.xillio.xill.TestUtils;
-import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
+import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.plugins.system.services.version.VersionProvider;
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.plugins.system.services.version.VersionProvider;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
 
 /**
  * Test {@link VersionConstruct}
  */
 public class VersionConstructTest extends TestUtils {
 
-	/**
-	 * Test getting the version
-	 */
-	@Test
-	public void testProcessGet() {
-		// Mock context
-		String version = "I am a version";
-		VersionProvider provider = mock(VersionProvider.class);
-		when(provider.getVersion()).thenReturn(version);
+    /**
+     * Test getting the version
+     */
+    @Test
+    public void testProcessGet() {
+        // Mock context
+        String version = "I am a version";
+        VersionProvider provider = mock(VersionProvider.class);
+        when(provider.getVersion()).thenReturn(version);
 
-		// Run
-		MetaExpression result = VersionConstruct.process(NULL, null, provider);
+        // Run
+        MetaExpression result = VersionConstruct.process(NULL, null, provider);
 
-		// Verify
+        // Verify
 
-		// Assert
-		Assert.assertSame(result.getStringValue(), version);
-	}
+        // Assert
+        Assert.assertSame(result.getStringValue(), version);
+    }
 
-	/**
-	 * Test required version under normal conditions
-	 */
-	@Test
-	public void testProcessNormal() {
-		// Mock context
-		String version = "1.2.3";
-		VersionProvider provider = mock(VersionProvider.class);
-		when(provider.getVersion()).thenReturn(version);
+    /**
+     * Test required version under normal conditions
+     */
+    @Test
+    public void testProcessNormal() {
+        // Mock context
+        String version = "1.2.3";
+        VersionProvider provider = mock(VersionProvider.class);
+        when(provider.getVersion()).thenReturn(version);
 
-		MetaExpression expression = mockExpression(ATOMIC);
-		when(expression.getStringValue()).thenReturn("1");
+        MetaExpression expression = mockExpression(ATOMIC);
+        when(expression.getStringValue()).thenReturn("1");
 
-		Logger log = mock(Logger.class);
+        Logger log = mock(Logger.class);
 
-		// Run
-		MetaExpression result = VersionConstruct.process(expression, log, provider);
+        // Run
+        MetaExpression result = VersionConstruct.process(expression, log, provider);
 
-		// Verify
-		verify(log, times(0)).error(anyString());
+        // Verify
+        verify(log, times(0)).error(anyString());
 
-		// Assert
-		Assert.assertSame(result.getStringValue(), version);
-	}
+        // Assert
+        Assert.assertSame(result.getStringValue(), version);
+    }
 
-	/**
-	 * Test required version under normal conditions with a not supported version number
-	 */
-	@Test
-	public void testProcessError() {
-		// Mock context
-		String version = "1.2.3";
-		VersionProvider provider = mock(VersionProvider.class);
-		when(provider.getVersion()).thenReturn(version);
+    /**
+     * Test required version under normal conditions with a not supported version number
+     */
+    @Test
+    public void testProcessError() {
+        // Mock context
+        String version = "1.2.3";
+        VersionProvider provider = mock(VersionProvider.class);
+        when(provider.getVersion()).thenReturn(version);
 
-		MetaExpression expression = mockExpression(ATOMIC);
-		when(expression.getStringValue()).thenReturn("2");
+        MetaExpression expression = mockExpression(ATOMIC);
+        when(expression.getStringValue()).thenReturn("2");
 
-		Logger log = mock(Logger.class);
+        Logger log = mock(Logger.class);
 
-		// Run
-		MetaExpression result = VersionConstruct.process(expression, log, provider);
+        // Run
+        MetaExpression result = VersionConstruct.process(expression, log, provider);
 
-		// Verify
-		verify(log).error(anyString());
+        // Verify
+        verify(log).error(anyString());
 
-		// Assert
-		Assert.assertSame(result.getStringValue(), version);
-	}
+        // Assert
+        Assert.assertSame(result.getStringValue(), version);
+    }
 
-	/**
-	 * Test required version with invalid version string
-	 */
-	@Test
-	public void testProcessInvalid() {
-		// Mock context
-		String version = "1.2.3";
-		VersionProvider provider = mock(VersionProvider.class);
-		when(provider.getVersion()).thenReturn(version);
+    /**
+     * Test required version with invalid version string
+     */
+    @Test
+    public void testProcessInvalid() {
+        // Mock context
+        String version = "1.2.3";
+        VersionProvider provider = mock(VersionProvider.class);
+        when(provider.getVersion()).thenReturn(version);
 
-		MetaExpression expression = mockExpression(ATOMIC);
-		when(expression.getStringValue()).thenReturn("not a version");
+        MetaExpression expression = mockExpression(ATOMIC);
+        when(expression.getStringValue()).thenReturn("not a version");
 
-		Logger log = mock(Logger.class);
+        Logger log = mock(Logger.class);
 
-		// Run
-		MetaExpression result = VersionConstruct.process(expression, log, provider);
+        // Run
+        MetaExpression result = VersionConstruct.process(expression, log, provider);
 
-		// Verify
-		verify(log).error(anyString(), any(Throwable.class));
+        // Verify
+        verify(log).error(anyString(), any(Throwable.class));
 
-		// Assert
-		Assert.assertSame(result.getStringValue(), version);
-	}
+        // Assert
+        Assert.assertSame(result.getStringValue(), version);
+    }
 
-	/**
-	 * Test required version with invalid version string
-	 */
-	@Test
-	public void testProcessDevelop() {
-		// Mock context
-		String version = VersionProvider.DEVELOP;
-		VersionProvider provider = mock(VersionProvider.class);
-		when(provider.getVersion()).thenReturn(version);
+    /**
+     * Test required version with invalid version string
+     */
+    @Test
+    public void testProcessDevelop() {
+        // Mock context
+        String version = VersionProvider.DEVELOP;
+        VersionProvider provider = mock(VersionProvider.class);
+        when(provider.getVersion()).thenReturn(version);
 
-		MetaExpression expression = mockExpression(ATOMIC);
-		when(expression.getStringValue()).thenReturn("not a version");
+        MetaExpression expression = mockExpression(ATOMIC);
+        when(expression.getStringValue()).thenReturn("not a version");
 
-		Logger log = mock(Logger.class);
+        Logger log = mock(Logger.class);
 
-		// Run
-		MetaExpression result = VersionConstruct.process(expression, log, provider);
+        // Run
+        MetaExpression result = VersionConstruct.process(expression, log, provider);
 
-		// Verify
-		verify(log).warn(anyString());
+        // Verify
+        verify(log).warn(anyString());
 
-		// Assert
-		Assert.assertSame(result.getStringValue(), version);
-	}
+        // Assert
+        Assert.assertSame(result.getStringValue(), version);
+    }
 }

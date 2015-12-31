@@ -2,17 +2,15 @@ package nl.xillio.xill.plugins.math.services;
 
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.plugins.math.services.math.MathOperationsImpl;
+import org.testng.Assert;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
 
 /**
  * Unit test class for the service MathOperationsImpl.
@@ -39,20 +37,20 @@ public class MathOperationsImplTest extends TestUtils {
         };
     }
 
-    private LinkedHashMap<String, MetaExpression> initializeTestObject(){
+    private LinkedHashMap<String, MetaExpression> initializeTestObject() {
         LinkedHashMap<String, MetaExpression> value = new LinkedHashMap<>();
         value.put("test", fromValue(1));
         return value;
     }
 
-    private List<MetaExpression> initializeTestList(){
+    private List<MetaExpression> initializeTestList() {
         List<MetaExpression> value = new ArrayList<>();
         value.add(fromValue(1));
         return value;
     }
 
     @Test(dataProvider = "isNumber")
-    public void testIsNumber(MetaExpression value, boolean result){
+    public void testIsNumber(MetaExpression value, boolean result) {
         // Initialize
         MathOperationsImpl math = new MathOperationsImpl();
 

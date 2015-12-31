@@ -12,7 +12,7 @@ import static org.testng.Assert.assertTrue;
 
 public class UpdateOptionsFactoryTest extends TestUtils {
     @Test
-    public void testBuildOptions () {
+    public void testBuildOptions() {
         MongoConverter mongoConverter = new MongoConverter(null);
         UpdateOptionsFactory UpdateOptionsFactory = new UpdateOptionsFactory(mongoConverter);
         LinkedHashMap<String, MetaExpression> object = new LinkedHashMap<>();

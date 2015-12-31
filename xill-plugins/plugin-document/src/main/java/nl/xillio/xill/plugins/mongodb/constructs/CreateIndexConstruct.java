@@ -38,7 +38,7 @@ public class CreateIndexConstruct extends AbstractCollectionApiConstruct {
         Document keys = toDocument(arguments[0]);
 
         IndexOptions options = indexOptionsFactory.build(arguments[1]);
-        String result = collection.createIndex(keys,options);
+        String result = collection.createIndex(keys, options);
         return fromValue(result);
     }
 }

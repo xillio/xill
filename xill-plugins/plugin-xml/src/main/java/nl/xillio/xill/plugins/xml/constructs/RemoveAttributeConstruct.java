@@ -15,21 +15,21 @@ import nl.xillio.xill.plugins.xml.services.NodeService;
  * @author Zbynek Hochmann
  */
 public class RemoveAttributeConstruct extends Construct {
-	@Inject
-	private NodeService nodeService;
+    @Inject
+    private NodeService nodeService;
 
-	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
-		return new ConstructProcessor(
-				(node, name) -> process(node, name, nodeService),
-				new Argument("node", ATOMIC),
-				new Argument("attrname", ATOMIC)
-		);
-	}
+    @Override
+    public ConstructProcessor prepareProcess(ConstructContext context) {
+        return new ConstructProcessor(
+                (node, name) -> process(node, name, nodeService),
+                new Argument("node", ATOMIC),
+                new Argument("attrname", ATOMIC)
+        );
+    }
 
-	static MetaExpression process(MetaExpression nodeVar, MetaExpression nameVar, NodeService service) {
-		XmlNode xmlNode = assertMeta(nodeVar, "node", XmlNode.class, "XML node");
-		return fromValue(service.removeAttribute(xmlNode, nameVar.getStringValue()));
-	}
+    static MetaExpression process(MetaExpression nodeVar, MetaExpression nameVar, NodeService service) {
+        XmlNode xmlNode = assertMeta(nodeVar, "node", XmlNode.class, "XML node");
+        return fromValue(service.removeAttribute(xmlNode, nameVar.getStringValue()));
+    }
 
 }

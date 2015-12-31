@@ -22,56 +22,56 @@ import static org.testng.Assert.assertEquals;
  */
 public class SaveConstructTest extends TestUtils {
 
-	@Test
-	public void testProcessNormal() throws IOException {
-		// Content
-		String contentString = "This is the content of the file";
-		MetaExpression content = mock(MetaExpression.class);
-		when(content.getStringValue()).thenReturn(contentString);
+    @Test
+    public void testProcessNormal() throws IOException {
+        // Content
+        String contentString = "This is the content of the file";
+        MetaExpression content = mock(MetaExpression.class);
+        when(content.getStringValue()).thenReturn(contentString);
 
-		// Uri
-		MetaExpression uri = mock(MetaExpression.class);
+        // Uri
+        MetaExpression uri = mock(MetaExpression.class);
 
-		// Context
-		RobotID robotID = mock(RobotID.class);
-		ConstructContext context = mock(ConstructContext.class);
-		when(context.getRobotID()).thenReturn(robotID);
+        // Context
+        RobotID robotID = mock(RobotID.class);
+        ConstructContext context = mock(ConstructContext.class);
+        when(context.getRobotID()).thenReturn(robotID);
 
-		// File
-		File file = mock(File.class);
-		when(file.getAbsolutePath()).thenReturn("ABSPATH");
-		when(TestUtils.CONSTRUCT_FILE_RESOLVER.buildFile(any(), anyString())).thenReturn(file);
+        // File
+        File file = mock(File.class);
+        when(file.getAbsolutePath()).thenReturn("ABSPATH");
+        when(TestUtils.CONSTRUCT_FILE_RESOLVER.buildFile(any(), anyString())).thenReturn(file);
 
-		// FileUtilities
-		FileUtilities fileUtils = mock(FileUtilities.class);
+        // FileUtilities
+        FileUtilities fileUtils = mock(FileUtilities.class);
 
-		// Run the Method
-		MetaExpression result = SaveConstruct.process(context, fileUtils, uri, content);
+        // Run the Method
+        MetaExpression result = SaveConstruct.process(context, fileUtils, uri, content);
 
-		// Verify
-		verify(fileUtils, times(1)).saveStringToFile(contentString, file);
+        // Verify
+        verify(fileUtils, times(1)).saveStringToFile(contentString, file);
 
-		// Assert
-		assertEquals(result.getStringValue(), file.getAbsolutePath());
+        // Assert
+        assertEquals(result.getStringValue(), file.getAbsolutePath());
 
-	}
+    }
 
-	@Test
-	public void testProcessIOException() throws IOException {
-		// Context
-		Logger logger = mock(Logger.class);
-		ConstructContext context = mock(ConstructContext.class);
-		when(context.getRootLogger()).thenReturn(logger);
+    @Test
+    public void testProcessIOException() throws IOException {
+        // Context
+        Logger logger = mock(Logger.class);
+        ConstructContext context = mock(ConstructContext.class);
+        when(context.getRootLogger()).thenReturn(logger);
 
-		// FileUtilities
-		FileUtilities fileUtils = mock(FileUtilities.class);
-		doThrow(new IOException("Failed to save")).when(fileUtils).saveStringToFile(anyString(), any(File.class));
+        // FileUtilities
+        FileUtilities fileUtils = mock(FileUtilities.class);
+        doThrow(new IOException("Failed to save")).when(fileUtils).saveStringToFile(anyString(), any(File.class));
 
-		// Run the Method
-		SaveConstruct.process(context, fileUtils, mock(MetaExpression.class), mock(MetaExpression.class));
+        // Run the Method
+        SaveConstruct.process(context, fileUtils, mock(MetaExpression.class), mock(MetaExpression.class));
 
-		// Verify
-		verify(logger).error(eq("Failed to write to file: Failed to save"), any(IOException.class));
+        // Verify
+        verify(logger).error(eq("Failed to write to file: Failed to save"), any(IOException.class));
 
-	}
+    }
 }

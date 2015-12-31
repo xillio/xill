@@ -8,7 +8,7 @@ import org.bson.types.ObjectId;
  *
  * @author Titus Nachbauer
  */
-public class MongoObjectId implements MetadataExpression{
+public class MongoObjectId implements MetadataExpression {
     private final ObjectId objectId;
 
     /**
@@ -20,13 +20,14 @@ public class MongoObjectId implements MetadataExpression{
 
     /**
      * Creates a new ObjectId based on a 24 character hexadecimal string
+     *
      * @param objectIdHex the id string
      */
     public MongoObjectId(String objectIdHex) {
         objectId = new ObjectId(objectIdHex);
     }
 
-    public String toString () {
+    public String toString() {
         return objectId.toString();
     }
 

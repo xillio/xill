@@ -11,12 +11,12 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
  */
 public class TypeOfConstruct extends Construct {
 
-	@Override
-	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(TypeOfConstruct::process, new Argument("value"));
-	}
+    @Override
+    public ConstructProcessor prepareProcess(final ConstructContext context) {
+        return new ConstructProcessor(TypeOfConstruct::process, new Argument("value"));
+    }
 
-	static MetaExpression process(final MetaExpression value) {
-		return fromValue(value.getType().toString());
-	}
+    static MetaExpression process(final MetaExpression value) {
+        return fromValue(value.getType().toString());
+    }
 }

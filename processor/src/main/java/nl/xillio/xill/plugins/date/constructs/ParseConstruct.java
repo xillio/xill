@@ -22,32 +22,32 @@ import java.time.DateTimeException;
  */
 public class ParseConstruct extends BaseDateConstruct {
 
-	private static final Logger log = LogManager.getLogger();
+    private static final Logger log = LogManager.getLogger();
 
-	@Override
-	public ConstructProcessor prepareProcess(final ConstructContext context) {
+    @Override
+    public ConstructProcessor prepareProcess(final ConstructContext context) {
 
-		return new ConstructProcessor((dateVar, formatVar) -> process(dateVar, formatVar, getDateService()), new Argument("date", NULL, ATOMIC),
-						new Argument("format", NULL, ATOMIC));
-	}
+        return new ConstructProcessor((dateVar, formatVar) -> process(dateVar, formatVar, getDateService()), new Argument("date", NULL, ATOMIC),
+                new Argument("format", NULL, ATOMIC));
+    }
 
-	static MetaExpression process(final MetaExpression dateVar, final MetaExpression formatVar, DateService dateService) {
-		// Process
-		Date result = null;
+    static MetaExpression process(final MetaExpression dateVar, final MetaExpression formatVar, DateService dateService) {
+        // Process
+        Date result = null;
 
-		if (dateVar.isNull()) {
-			result = dateService.now();
-		} else {
+        if (dateVar.isNull()) {
+            result = dateService.now();
+        } else {
 
-			try {
-				String formatString = formatVar.isNull() ? null : formatVar.getStringValue();
-				result = dateService.parseDate(dateVar.getStringValue(), formatString);
-			} catch (DateTimeException | IllegalArgumentException e) {
-				log.error("Exception while parsing date", e);
-				throw new RobotRuntimeException(String.format("Could not parse date %s", e.getMessage()), e);
-			}
-		}
+            try {
+                String formatString = formatVar.isNull() ? null : formatVar.getStringValue();
+                result = dateService.parseDate(dateVar.getStringValue(), formatString);
+            } catch (DateTimeException | IllegalArgumentException e) {
+                log.error("Exception while parsing date", e);
+                throw new RobotRuntimeException(String.format("Could not parse date %s", e.getMessage()), e);
+            }
+        }
 
-		return fromValue(result);
-	}
+        return fromValue(result);
+    }
 }

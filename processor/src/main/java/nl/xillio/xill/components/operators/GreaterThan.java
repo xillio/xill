@@ -7,13 +7,13 @@ import nl.xillio.xill.api.components.Processable;
  */
 public final class GreaterThan extends BinaryNumberComparisonOperator {
 
-	public GreaterThan(Processable left, Processable right) {
-		super(left, right);
-	}
+    public GreaterThan(Processable left, Processable right) {
+        super(left, right);
+    }
 
-	@Override
-	protected boolean translate(int comparisonResult) {
-		return comparisonResult > 0;
-	}
+    @Override
+    protected boolean translate(int comparisonResult) {
+        return comparisonResult > 0;
+    }
 
 }

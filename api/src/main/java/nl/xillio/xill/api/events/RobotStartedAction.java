@@ -8,12 +8,12 @@ import nl.xillio.xill.api.components.Robot;
  */
 public class RobotStartedAction {
 
-	/**
-	 * Create a new {@link RobotStartedAction}
-	 * 
-	 * @param robot
-	 *        the robot that started
-	 */
-	public RobotStartedAction(final Robot robot) {}
+    /**
+     * Create a new {@link RobotStartedAction}
+     *
+     * @param robot the robot that started
+     */
+    public RobotStartedAction(final Robot robot) {
+    }
 
 }

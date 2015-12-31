@@ -14,49 +14,49 @@ import java.time.ZonedDateTime;
  */
 public abstract class BaseDateConstruct extends Construct {
 
-	/**
-	 * Service used by all extending classes
-	 */
-	@Inject
-	private DateService dateService;
+    /**
+     * Service used by all extending classes
+     */
+    @Inject
+    private DateService dateService;
 
-	/**
-	 * Get the date from a variable
-	 *
-	 * @param dateVar The expression
-	 * @param name    The name of the parameter
-	 * @return
-	 */
-	protected static Date getDate(final MetaExpression dateVar, final String name) {
-		Date date = dateVar.getMeta(Date.class);
+    /**
+     * Get the date from a variable
+     *
+     * @param dateVar The expression
+     * @param name    The name of the parameter
+     * @return
+     */
+    protected static Date getDate(final MetaExpression dateVar, final String name) {
+        Date date = dateVar.getMeta(Date.class);
 
-		if (date == null) {
-			throw new RobotRuntimeException("Expected a date. Create a date using either Date.parse() or Date.of().");
-		}
+        if (date == null) {
+            throw new RobotRuntimeException("Expected a date. Create a date using either Date.parse() or Date.of().");
+        }
 
-		return date;
-	}
+        return date;
+    }
 
-	/**
-	 * @return the current {@link ZonedDateTime}
-	 */
-	protected static ZonedDateTime now() {
-		return ZonedDateTime.now();
-	}
+    /**
+     * @return the current {@link ZonedDateTime}
+     */
+    protected static ZonedDateTime now() {
+        return ZonedDateTime.now();
+    }
 
-	/**
-	 * Create a {@link MetaExpression} from {@link ZonedDateTime}
-	 *
-	 * @param date
-	 * @return
-	 */
-	protected static MetaExpression fromValue(final Date date) {
-		MetaExpression value = fromValue(date.toString());
-		value.storeMeta(date);
-		return value;
-	}
+    /**
+     * Create a {@link MetaExpression} from {@link ZonedDateTime}
+     *
+     * @param date
+     * @return
+     */
+    protected static MetaExpression fromValue(final Date date) {
+        MetaExpression value = fromValue(date.toString());
+        value.storeMeta(date);
+        return value;
+    }
 
-	public DateService getDateService() {
-		return dateService;
-	}
+    public DateService getDateService() {
+        return dateService;
+    }
 }

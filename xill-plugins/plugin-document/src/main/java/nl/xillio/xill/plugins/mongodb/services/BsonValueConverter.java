@@ -3,7 +3,6 @@ package nl.xillio.xill.plugins.mongodb.services;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.components.MetaExpressionSerializer;
 import nl.xillio.xill.api.data.Date;
 import nl.xillio.xill.api.data.DateFactory;
 import nl.xillio.xill.api.errors.RobotRuntimeException;

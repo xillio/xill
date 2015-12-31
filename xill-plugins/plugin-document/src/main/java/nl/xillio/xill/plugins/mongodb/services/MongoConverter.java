@@ -4,7 +4,6 @@ import com.google.inject.Singleton;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.plugins.document.services.xill.DocumentQueryBuilder;
-import nl.xillio.xill.plugins.mongodb.data.MongoObjectId;
 import org.bson.Document;
 
 import javax.inject.Inject;

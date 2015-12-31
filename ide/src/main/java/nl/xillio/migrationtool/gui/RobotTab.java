@@ -16,7 +16,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
-import netscape.javascript.JSObject;
 import nl.xillio.migrationtool.Loader;
 import nl.xillio.migrationtool.dialogs.CloseTabStopRobotDialog;
 import nl.xillio.migrationtool.dialogs.SaveBeforeClosingDialog;
@@ -551,14 +550,14 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
                 Platform.runLater(() -> {
                     RobotTab newTab = globalController.openFile(e.getRobot().getPath());
                     newTab.getEditorPane().getEditor().getOnDocumentLoaded().addListener(success ->
-                        // We queue this for later execution because the tab has to display before we can scroll to the right location.
-                        Platform.runLater(() -> {
-                            if (success) {
-                                // Highlight the tab
-                                newTab.errorPopup(e.getLine(), e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling " + e.getRobot().getPath().getAbsolutePath());
-                                relatedHighlightTabs.add(newTab);
-                            }
-                        })
+                            // We queue this for later execution because the tab has to display before we can scroll to the right location.
+                            Platform.runLater(() -> {
+                                if (success) {
+                                    // Highlight the tab
+                                    newTab.errorPopup(e.getLine(), e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling " + e.getRobot().getPath().getAbsolutePath());
+                                    relatedHighlightTabs.add(newTab);
+                                }
+                            })
                     );
                 });
             }

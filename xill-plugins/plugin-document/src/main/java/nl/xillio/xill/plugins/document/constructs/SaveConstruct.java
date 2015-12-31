@@ -50,7 +50,7 @@ public class SaveConstruct extends Construct {
         MetaExpression idValue = fromValue(id);
         idValue.registerReference();
 
-        document.<Map<String,MetaExpression>>getValue().put("_id", idValue);
+        document.<Map<String, MetaExpression>>getValue().put("_id", idValue);
 
         /*
          Return a COPY for the scoping administration.

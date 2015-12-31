@@ -20,21 +20,21 @@ import java.util.Map;
  */
 public class DiffConstruct extends BaseDateConstruct {
 
-	@Override
-	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor((dateVar, otherVar, absolute) -> process(dateVar, otherVar, absolute, getDateService()), new Argument("date"), new Argument("other"), new Argument("absolute", TRUE));
-	}
+    @Override
+    public ConstructProcessor prepareProcess(final ConstructContext context) {
+        return new ConstructProcessor((dateVar, otherVar, absolute) -> process(dateVar, otherVar, absolute, getDateService()), new Argument("date"), new Argument("other"), new Argument("absolute", TRUE));
+    }
 
-	static MetaExpression process(final MetaExpression dateVar, final MetaExpression otherVar, final MetaExpression absolute, DateService dateService) {
-		Date date = getDate(dateVar, "date");
-		Date other = getDate(otherVar, "other");
+    static MetaExpression process(final MetaExpression dateVar, final MetaExpression otherVar, final MetaExpression absolute, DateService dateService) {
+        Date date = getDate(dateVar, "date");
+        Date other = getDate(otherVar, "other");
 
-		LinkedHashMap<String, MetaExpression> result = new LinkedHashMap<>();
+        LinkedHashMap<String, MetaExpression> result = new LinkedHashMap<>();
 
-		Map<String, Double> diff = dateService.difference(date, other, absolute.getBooleanValue());
+        Map<String, Double> diff = dateService.difference(date, other, absolute.getBooleanValue());
 
-		diff.forEach((k, v) -> result.put(k, fromValue(v)));
+        diff.forEach((k, v) -> result.put(k, fromValue(v)));
 
-		return fromValue(result);
-	}
+        return fromValue(result);
+    }
 }

@@ -13,7 +13,7 @@ import static org.testng.Assert.*;
 
 public class FindOneAndUpdateOptionsFactoryTest extends TestUtils {
     @Test
-    public void testBuildOptions () {
+    public void testBuildOptions() {
         MongoConverter mongoConverter = new MongoConverter(new ObjectIdSerializer());
         FindOneAndUpdateOptionsFactory findOneAndUpdateOptionsFactory = new FindOneAndUpdateOptionsFactory(mongoConverter);
         LinkedHashMap<String, MetaExpression> object = new LinkedHashMap<>();

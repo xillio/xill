@@ -122,25 +122,25 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
         info.setUsing(useStatements);
 
         for (UseStatement plugin : robot.getUses()) {
-                String pluginName = plugin.getPlugin();
-                    if (pluginName == null) { // In case of non-qualified name: use MySQL;
-                        pluginName = plugin.getName();
-                    }
-
-                    // Really? Java...
-                    String searchName = pluginName;
-
-                    Optional<XillPlugin> ActualPlugin = pluginLoader.getPluginManager().getPlugins().stream()
-                            .filter(pckage -> pckage.getName().equals(searchName)).findAny();
-
-                    if (!ActualPlugin.isPresent()) {
-                        CodePosition pos = pos(plugin);
-                        throw new XillParsingException("Could not find plugin " + pluginName, pos.getLineNumber(),
-                                pos.getRobotID());
-                    }
-
-                    useStatements.put(plugin, ActualPlugin.get());
+            String pluginName = plugin.getPlugin();
+            if (pluginName == null) { // In case of non-qualified name: use MySQL;
+                pluginName = plugin.getName();
             }
+
+            // Really? Java...
+            String searchName = pluginName;
+
+            Optional<XillPlugin> ActualPlugin = pluginLoader.getPluginManager().getPlugins().stream()
+                    .filter(pckage -> pckage.getName().equals(searchName)).findAny();
+
+            if (!ActualPlugin.isPresent()) {
+                CodePosition pos = pos(plugin);
+                throw new XillParsingException("Could not find plugin " + pluginName, pos.getLineNumber(),
+                        pos.getRobotID());
+            }
+
+            useStatements.put(plugin, ActualPlugin.get());
+        }
 
 
         nl.xillio.xill.components.Robot instructionRobot = new nl.xillio.xill.components.Robot(robotID, debugger, robotStartedEvent, robotStoppedEvent, compilerSerialId);
@@ -979,7 +979,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
      * @throws XillParsingException
      */
     Processable parseToken(final xill.lang.xill.FilterExpression token) throws XillParsingException {
-        if (token.getArguments().size() > 1){
+        if (token.getArguments().size() > 1) {
             CodePosition pos = pos(token);
             throw new XillParsingException("Too many arguments were provided.", pos.getLineNumber(), pos.getRobotID());
         }

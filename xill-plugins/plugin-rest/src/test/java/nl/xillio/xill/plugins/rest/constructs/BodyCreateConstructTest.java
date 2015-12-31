@@ -15,25 +15,25 @@ import static org.testng.Assert.assertSame;
  */
 public class BodyCreateConstructTest {
 
-	/**
-	 * Test the process method under normal circumstances
-	 */
-	@Test
-	public void testProcess() {
-		// Mock
+    /**
+     * Test the process method under normal circumstances
+     */
+    @Test
+    public void testProcess() {
+        // Mock
         MultipartBody body = mock(MultipartBody.class);
         when(body.toString()).thenReturn("REST multipart body");
 
         RestService restService = mock(RestService.class);
         when(restService.bodyCreate()).thenReturn(body);
 
-		// Run
-		MetaExpression result = BodyCreateConstruct.process(restService);
+        // Run
+        MetaExpression result = BodyCreateConstruct.process(restService);
 
-		// Verify
-		verify(restService).bodyCreate();
+        // Verify
+        verify(restService).bodyCreate();
 
-		// Assert
-		assertSame(result.getMeta(MultipartBody.class), body);
-	}
+        // Assert
+        assertSame(result.getMeta(MultipartBody.class), body);
+    }
 }

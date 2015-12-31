@@ -19,42 +19,42 @@ import static org.testng.Assert.assertSame;
  */
 public class ParseConstructTest {
 
-	@DataProvider(name = "dateFormat")
-	private Object[][] generateDateAndFormat() {
-		MetaExpression formatString = mockStringExpression("yyyy-MM-dd");
-		MetaExpression dateString = mockStringExpression("2015-08-03");
-		MetaExpression nullExpression = mockNullExpression();
-		return new Object[][] {{dateString, formatString}, {nullExpression, formatString}, {dateString, nullExpression}, {nullExpression, nullExpression}};
-	}
+    @DataProvider(name = "dateFormat")
+    private Object[][] generateDateAndFormat() {
+        MetaExpression formatString = mockStringExpression("yyyy-MM-dd");
+        MetaExpression dateString = mockStringExpression("2015-08-03");
+        MetaExpression nullExpression = mockNullExpression();
+        return new Object[][]{{dateString, formatString}, {nullExpression, formatString}, {dateString, nullExpression}, {nullExpression, nullExpression}};
+    }
 
-	/**
-	 * Test the process method under normal circumstances
-	 *
-	 * @param dateString   Date variable
-	 * @param formatString Format variable
-	 */
-	@Test(dataProvider = "dateFormat")
-	public void testProcess(MetaExpression dateString, MetaExpression formatString) {
-		// Mock
-		DateService dateService = mock(DateService.class);
-		// ZonedDateTime is final, don't mock
-		Date parsed = mock(Date.class);
-		when(dateService.now()).thenReturn(parsed);
-		when(dateService.parseDate(any(), any())).thenReturn(parsed);
+    /**
+     * Test the process method under normal circumstances
+     *
+     * @param dateString   Date variable
+     * @param formatString Format variable
+     */
+    @Test(dataProvider = "dateFormat")
+    public void testProcess(MetaExpression dateString, MetaExpression formatString) {
+        // Mock
+        DateService dateService = mock(DateService.class);
+        // ZonedDateTime is final, don't mock
+        Date parsed = mock(Date.class);
+        when(dateService.now()).thenReturn(parsed);
+        when(dateService.parseDate(any(), any())).thenReturn(parsed);
 
-		// Run
-		MetaExpression parsedExpression = ParseConstruct.process(dateString, formatString, dateService);
+        // Run
+        MetaExpression parsedExpression = ParseConstruct.process(dateString, formatString, dateService);
 
-		// Verify
-		if (dateString.isNull()) {
-			verify(dateService).now();
-			verify(dateService, never()).parseDate(any(), any());
-		} else {
-			verify(dateService, never()).now();
-			verify(dateService).parseDate(dateString.getStringValue(), formatString.getStringValue());
-		}
+        // Verify
+        if (dateString.isNull()) {
+            verify(dateService).now();
+            verify(dateService, never()).parseDate(any(), any());
+        } else {
+            verify(dateService, never()).now();
+            verify(dateService).parseDate(dateString.getStringValue(), formatString.getStringValue());
+        }
 
-		// Assert
-		assertSame(parsedExpression.getMeta(Date.class), parsed);
-	}
+        // Assert
+        assertSame(parsedExpression.getMeta(Date.class), parsed);
+    }
 }

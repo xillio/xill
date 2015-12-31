@@ -23,78 +23,78 @@ import static org.testng.Assert.assertEquals;
  * @author Thomas Biesaart
  */
 public class AppendToConstructTest {
-	/**
-	 * Test the process method under normal circumstances
-	 */
-	@Test
-	public void testProcessNormal() throws IOException {
-		// Uri
-		String pathString = "this is a path";
-		MetaExpression path = mock(MetaExpression.class);
-		when(path.getStringValue()).thenReturn(pathString);
+    /**
+     * Test the process method under normal circumstances
+     */
+    @Test
+    public void testProcessNormal() throws IOException {
+        // Uri
+        String pathString = "this is a path";
+        MetaExpression path = mock(MetaExpression.class);
+        when(path.getStringValue()).thenReturn(pathString);
 
-		// RobotID
-		RobotID robotID = mock(RobotID.class);
+        // RobotID
+        RobotID robotID = mock(RobotID.class);
 
-		// buildFile
-		FileUtilities fileUtils = mock(FileUtilities.class);
+        // buildFile
+        FileUtilities fileUtils = mock(FileUtilities.class);
 
-		// Content
-		String textContent = "this is the content";
-		MetaExpression content = mock(MetaExpression.class);
-		when(content.getStringValue()).thenReturn(textContent);
+        // Content
+        String textContent = "this is the content";
+        MetaExpression content = mock(MetaExpression.class);
+        when(content.getStringValue()).thenReturn(textContent);
 
-		// Context
-		ConstructContext context = mock(ConstructContext.class);
-		when(context.getRobotID()).thenReturn(robotID);
+        // Context
+        ConstructContext context = mock(ConstructContext.class);
+        when(context.getRobotID()).thenReturn(robotID);
 
-		// File
-		File file = mock(File.class);
-		when(file.getAbsolutePath()).thenReturn("Absolute Path");
-		when(TestUtils.CONSTRUCT_FILE_RESOLVER.buildFile(any(), anyString())).thenReturn(file);
+        // File
+        File file = mock(File.class);
+        when(file.getAbsolutePath()).thenReturn("Absolute Path");
+        when(TestUtils.CONSTRUCT_FILE_RESOLVER.buildFile(any(), anyString())).thenReturn(file);
 
-		// Run the method
-		MetaExpression result = AppendToConstruct.process(context, fileUtils, path, content);
+        // Run the method
+        MetaExpression result = AppendToConstruct.process(context, fileUtils, path, content);
 
-		// Verify
-		verify(fileUtils, times(1)).appendStringToFile(textContent, file);
+        // Verify
+        verify(fileUtils, times(1)).appendStringToFile(textContent, file);
 
-		// Assert
-		assertEquals(result.getStringValue(), "Absolute Path");
-	}
+        // Assert
+        assertEquals(result.getStringValue(), "Absolute Path");
+    }
 
-	/**
-	 * Test the process method when the operation throws an IOException
-	 *
-	 * @throws Exception
-	 */
-	@Test()
-	public void testProcessIOException() throws Exception {
-		// Uri
-		MetaExpression path = mock(MetaExpression.class);
+    /**
+     * Test the process method when the operation throws an IOException
+     *
+     * @throws Exception
+     */
+    @Test()
+    public void testProcessIOException() throws Exception {
+        // Uri
+        MetaExpression path = mock(MetaExpression.class);
 
-		// fileUtils
-		FileUtilities fileUtils = mock(FileUtilities.class);
-		doThrow(new IOException("Something went wrong")).when(fileUtils).appendStringToFile(anyString(), any(File.class));
+        // fileUtils
+        FileUtilities fileUtils = mock(FileUtilities.class);
+        doThrow(new IOException("Something went wrong")).when(fileUtils).appendStringToFile(anyString(), any(File.class));
 
-		// Logger
-		Logger logger = mock(Logger.class);
+        // Logger
+        Logger logger = mock(Logger.class);
 
-		// Content
-		MetaExpression content = mock(MetaExpression.class);
+        // Content
+        MetaExpression content = mock(MetaExpression.class);
 
-		// File
-		File file = mock(File.class);
-		TestUtils.setFileResolverReturnValue(file);
+        // File
+        File file = mock(File.class);
+        TestUtils.setFileResolverReturnValue(file);
 
-		// Context
-		ConstructContext context = mock(ConstructContext.class);
-		when(context.getRootLogger()).thenReturn(logger);
+        // Context
+        ConstructContext context = mock(ConstructContext.class);
+        when(context.getRootLogger()).thenReturn(logger);
 
-		// Run the method
-		AppendToConstruct.process(context, fileUtils, path, content);
+        // Run the method
+        AppendToConstruct.process(context, fileUtils, path, content);
 
-		// Verify
-		verify(logger).error(eq("Failed to write to file: Something went wrong"), any(IOException.class));
-	}
+        // Verify
+        verify(logger).error(eq("Failed to write to file: Something went wrong"), any(IOException.class));
+    }
 }

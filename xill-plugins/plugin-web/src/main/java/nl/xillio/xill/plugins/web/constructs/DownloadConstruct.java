@@ -33,20 +33,13 @@ public class DownloadConstruct extends PhantomJSConstruct {
     }
 
     /**
-     * @param urlVar
-     *        The URL of the link that has to be downloaded
-     * @param fileNameVar
-     *        A file where the downloaded content is to be stored
-     * @param webContextVar
-     *        An optional page or node variable that is used for take-over the cookies and use is during the download
-     * @param timeoutVar
-     *        The timeout in miliseconds
-     * @param webService
-     *        Web service
-     * @param context
-     *        The context of this construct
-     * @return
-     *        null variable
+     * @param urlVar        The URL of the link that has to be downloaded
+     * @param fileNameVar   A file where the downloaded content is to be stored
+     * @param webContextVar An optional page or node variable that is used for take-over the cookies and use is during the download
+     * @param timeoutVar    The timeout in miliseconds
+     * @param webService    Web service
+     * @param context       The context of this construct
+     * @return null variable
      */
     public static MetaExpression process(final MetaExpression urlVar, final MetaExpression fileNameVar, final MetaExpression webContextVar, final MetaExpression timeoutVar, final WebService webService, final ConstructContext context) {
 
@@ -80,7 +73,7 @@ public class DownloadConstruct extends PhantomJSConstruct {
         try {
             webService.download(url, targetFile, webContext, timeout);
         } catch (MalformedURLException e) {
-            throw new RobotRuntimeException("Invalid URL" , e);
+            throw new RobotRuntimeException("Invalid URL", e);
         } catch (IOException e) {
             throw new RobotRuntimeException("Error during download", e);
         }

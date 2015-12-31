@@ -20,55 +20,55 @@ import static org.mockito.Mockito.*;
  */
 public class DeleteConstructTest {
 
-	@Test
-	public void testProcessNormal() throws Exception {
-		// URI
-		String filePath = "This is the file path";
-		MetaExpression uri = mock(MetaExpression.class);
-		when(uri.getStringValue()).thenReturn(filePath);
+    @Test
+    public void testProcessNormal() throws Exception {
+        // URI
+        String filePath = "This is the file path";
+        MetaExpression uri = mock(MetaExpression.class);
+        when(uri.getStringValue()).thenReturn(filePath);
 
-		// Context
-		RobotID robotID = mock(RobotID.class);
-		ConstructContext context = mock(ConstructContext.class);
-		when(context.getRobotID()).thenReturn(robotID);
+        // Context
+        RobotID robotID = mock(RobotID.class);
+        ConstructContext context = mock(ConstructContext.class);
+        when(context.getRobotID()).thenReturn(robotID);
 
-		// FileUtilities
-		FileUtilities fileUtils = mock(FileUtilities.class);
+        // FileUtilities
+        FileUtilities fileUtils = mock(FileUtilities.class);
 
-		// Run the method
-		DeleteConstruct.process(context, fileUtils, uri);
+        // Run the method
+        DeleteConstruct.process(context, fileUtils, uri);
 
-		// Verify
-		verify(fileUtils, times(1)).delete(any());
-	}
+        // Verify
+        verify(fileUtils, times(1)).delete(any());
+    }
 
-	@Test
-	public void testProcessIOException() throws Exception {
-		// URI
-		MetaExpression uri = mock(MetaExpression.class);
+    @Test
+    public void testProcessIOException() throws Exception {
+        // URI
+        MetaExpression uri = mock(MetaExpression.class);
 
-		// Logger
-		Logger logger = mock(Logger.class);
+        // Logger
+        Logger logger = mock(Logger.class);
 
-		// Context
-		RobotID robotID = mock(RobotID.class);
-		ConstructContext context = mock(ConstructContext.class);
-		when(context.getRobotID()).thenReturn(robotID);
-		when(context.getRootLogger()).thenReturn(logger);
+        // Context
+        RobotID robotID = mock(RobotID.class);
+        ConstructContext context = mock(ConstructContext.class);
+        when(context.getRobotID()).thenReturn(robotID);
+        when(context.getRootLogger()).thenReturn(logger);
 
-		// File
-		File file = mock(File.class);
-		when(file.getAbsolutePath()).thenReturn("FILE");
-		when(TestUtils.CONSTRUCT_FILE_RESOLVER.buildFile(any(), anyString())).thenReturn(file);
+        // File
+        File file = mock(File.class);
+        when(file.getAbsolutePath()).thenReturn("FILE");
+        when(TestUtils.CONSTRUCT_FILE_RESOLVER.buildFile(any(), anyString())).thenReturn(file);
 
-		// FileUtilities
-		FileUtilities fileUtils = mock(FileUtilities.class);
-		doThrow(new IOException("Something crashed")).when(fileUtils).delete(file);
+        // FileUtilities
+        FileUtilities fileUtils = mock(FileUtilities.class);
+        doThrow(new IOException("Something crashed")).when(fileUtils).delete(file);
 
-		// Run the method
-		DeleteConstruct.process(context, fileUtils, uri);
+        // Run the method
+        DeleteConstruct.process(context, fileUtils, uri);
 
-		// Verify
-		verify(logger).error(eq("Failed to delete " + file.getAbsolutePath()), any(IOException.class));
-	}
+        // Verify
+        verify(logger).error(eq("Failed to delete " + file.getAbsolutePath()), any(IOException.class));
+    }
 }

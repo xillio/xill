@@ -19,25 +19,25 @@ import java.io.IOException;
 @Singleton
 public class GetSizeConstruct extends Construct {
 
-	@Inject
-	private FileUtilities fileUtils;
+    @Inject
+    private FileUtilities fileUtils;
 
-	@Override
-	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(uri -> process(context, fileUtils, uri), new Argument("uri", ATOMIC));
-	}
+    @Override
+    public ConstructProcessor prepareProcess(final ConstructContext context) {
+        return new ConstructProcessor(uri -> process(context, fileUtils, uri), new Argument("uri", ATOMIC));
+    }
 
-	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri) {
-		// Check if the specified uri is not null.
-		if (uri.isNull())
-			throw new RobotRuntimeException("The specified uri cannot be null.");
-		
-		// Get the file and return the size.
-		File file = getFile(context, uri.getStringValue());
-		try {
-			return fromValue(fileUtils.getByteSize(file));
-		} catch (IOException e) {
-			throw new RobotRuntimeException("Failed to get size of file: " + e.getMessage(), e);
-		}
-	}
+    static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri) {
+        // Check if the specified uri is not null.
+        if (uri.isNull())
+            throw new RobotRuntimeException("The specified uri cannot be null.");
+
+        // Get the file and return the size.
+        File file = getFile(context, uri.getStringValue());
+        try {
+            return fromValue(fileUtils.getByteSize(file));
+        } catch (IOException e) {
+            throw new RobotRuntimeException("Failed to get size of file: " + e.getMessage(), e);
+        }
+    }
 }

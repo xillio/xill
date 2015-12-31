@@ -96,7 +96,7 @@ public class PreviewSearch implements Searchable {
 
         Node node = apnPreviewPane.getChildren().get(0);
         if (node instanceof TextArea) {
-            text = (TextArea)node;
+            text = (TextArea) node;
             tableView = null;
             searchText(); // Search in textarea
         } else {
@@ -153,13 +153,13 @@ public class PreviewSearch implements Searchable {
 
     private void selectText(final int occurrence) {
         if (occurrence >= 0 && occurrence < occurrences.size()) {
-            SearchTextOccurrence element = (SearchTextOccurrence)occurrences.get(occurrence);
+            SearchTextOccurrence element = (SearchTextOccurrence) occurrences.get(occurrence);
             text.selectRange(element.getStart(), element.getEnd());
         }
     }
 
     private void selectTreeItem(final int occurrence) {
-        SearchTreeOccurrence treeOccurrence = (SearchTreeOccurrence)occurrences.get(occurrence);
+        SearchTreeOccurrence treeOccurrence = (SearchTreeOccurrence) occurrences.get(occurrence);
 
         Node node = apnPreviewPane.getChildren().get(0);
         TreeTableView<Pair<String, Node>> nodeTableView = getTreeTableView(node);

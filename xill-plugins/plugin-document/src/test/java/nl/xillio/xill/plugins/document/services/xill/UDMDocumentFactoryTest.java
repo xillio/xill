@@ -9,10 +9,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 @SuppressWarnings("unchecked")
-public class UDMDocumentFactoryTest extends TestUtils{
+public class UDMDocumentFactoryTest extends TestUtils {
 
     @Test
     public void testBuildStructure() throws Exception {
@@ -29,7 +29,7 @@ public class UDMDocumentFactoryTest extends TestUtils{
         assertEquals(get(output, "target", "current"), versionBody);
 
         int counter = 0;
-        for(MetaExpression version : (List<MetaExpression>)get(output, "target", "versions").getValue()) {
+        for (MetaExpression version : (List<MetaExpression>) get(output, "target", "versions").getValue()) {
             assertEquals(version, versionBody);
             counter++;
         }
@@ -38,12 +38,12 @@ public class UDMDocumentFactoryTest extends TestUtils{
     }
 
     private MetaExpression get(MetaExpression output, String... path) {
-        if(path.length == 0) {
+        if (path.length == 0) {
             return output;
         }
 
         Map<String, MetaExpression> map = (Map<String, MetaExpression>) output.getValue();
-        return get(map.get(path[0]), Arrays.copyOfRange(path,1,path.length));
+        return get(map.get(path[0]), Arrays.copyOfRange(path, 1, path.length));
     }
 
     public static MetaExpression buildBody() {

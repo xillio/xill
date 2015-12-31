@@ -8,5 +8,5 @@ import nl.xillio.plugins.XillPlugin;
  * @author Paul van der Zandt
  * @since 3.0
  */
-public class EncodeXillPlugin extends XillPlugin{
+public class EncodeXillPlugin extends XillPlugin {
 }

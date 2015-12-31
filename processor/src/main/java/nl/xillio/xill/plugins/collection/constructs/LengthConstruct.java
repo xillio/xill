@@ -17,33 +17,31 @@ import java.util.Map;
  * </p>
  *
  * @author Sander Visser
- *
  */
 public class LengthConstruct extends Construct {
 
-	@Override
-	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(
-			list -> process(list),
-			new Argument("list", LIST, OBJECT));
-	}
+    @Override
+    public ConstructProcessor prepareProcess(final ConstructContext context) {
+        return new ConstructProcessor(
+                list -> process(list),
+                new Argument("list", LIST, OBJECT));
+    }
 
-	static MetaExpression process(final MetaExpression input) {
+    static MetaExpression process(final MetaExpression input) {
 
-		int elements = 0;
-		
-		if(input.getType() == LIST){
-			@SuppressWarnings("unchecked")
-			List<MetaExpression> list = (ArrayList<MetaExpression>) input.getValue();
-			elements = list.size();
-			
-		}
-		else{
-			//can suppress warning since the input only accepts LIST or OBJECT.
-			@SuppressWarnings("unchecked")
-			Map<String, MetaExpression> object = (Map<String, MetaExpression>) input.getValue();
-			elements = object.size();
-		}
-		return fromValue(elements);
-	}
+        int elements = 0;
+
+        if (input.getType() == LIST) {
+            @SuppressWarnings("unchecked")
+            List<MetaExpression> list = (ArrayList<MetaExpression>) input.getValue();
+            elements = list.size();
+
+        } else {
+            //can suppress warning since the input only accepts LIST or OBJECT.
+            @SuppressWarnings("unchecked")
+            Map<String, MetaExpression> object = (Map<String, MetaExpression>) input.getValue();
+            elements = object.size();
+        }
+        return fromValue(elements);
+    }
 }
