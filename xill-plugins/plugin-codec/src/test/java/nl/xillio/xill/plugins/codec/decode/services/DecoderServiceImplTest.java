@@ -57,7 +57,7 @@ public class DecoderServiceImplTest {
 
     @AfterClass
     public void deleteTestFiles() throws IOException {
-        for(File file : deployedFiles) {
+        for (File file : deployedFiles) {
             FileUtils.forceDelete(file);
         }
     }

@@ -1,7 +1,6 @@
 package nl.xillio.xill.plugins.math.constructs;
 
 import com.google.inject.Inject;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
@@ -14,24 +13,23 @@ import nl.xillio.xill.plugins.math.services.math.MathOperations;
  * number.
  *
  * @author Ivor
- *
  */
 public class AbsConstruct extends Construct {
 
-	@Inject
-	private MathOperations mathService;
-	
-	@Override
-	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(value -> process(value, mathService), new Argument("value", ATOMIC));
-	}
+    @Inject
+    private MathOperations mathService;
 
-	static MetaExpression process(final MetaExpression value, final MathOperations math) {
-		if (value == NULL) {
-			return NULL;
-		}
+    @Override
+    public ConstructProcessor prepareProcess(final ConstructContext context) {
+        return new ConstructProcessor(value -> process(value, mathService), new Argument("value", ATOMIC));
+    }
 
-		return fromValue(math.abs(value.getNumberValue()));
-	}
+    static MetaExpression process(final MetaExpression value, final MathOperations math) {
+        if (value == NULL) {
+            return NULL;
+        }
+
+        return fromValue(math.abs(value.getNumberValue()));
+    }
 
 }

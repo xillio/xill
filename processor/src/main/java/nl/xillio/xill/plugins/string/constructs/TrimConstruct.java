@@ -1,8 +1,6 @@
 package nl.xillio.xill.plugins.string.constructs;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.google.inject.Inject;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
@@ -11,10 +9,10 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 
-import com.google.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- *
  * <p>
  * Returns a trimmed string.
  * </p>
@@ -26,45 +24,44 @@ import com.google.inject.Inject;
  * </p>
  *
  * @author Sander
- *
  */
 public class TrimConstruct extends Construct {
-	@Inject
-	StringUtilityService stringService;
+    @Inject
+    StringUtilityService stringService;
 
-	@Override
-	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(
-			(string, internal) -> process(string, internal, stringService),
-			new Argument("string", ATOMIC, LIST),
-			new Argument("internal", FALSE, ATOMIC));
-	}
+    @Override
+    public ConstructProcessor prepareProcess(final ConstructContext context) {
+        return new ConstructProcessor(
+                (string, internal) -> process(string, internal, stringService),
+                new Argument("string", ATOMIC, LIST),
+                new Argument("internal", FALSE, ATOMIC));
+    }
 
-	static MetaExpression process(final MetaExpression string, final MetaExpression internal, final StringUtilityService stringService) {
-		assertNotNull(string, "string");
+    static MetaExpression process(final MetaExpression string, final MetaExpression internal, final StringUtilityService stringService) {
+        assertNotNull(string, "string");
 
-		if (string.getType() == ExpressionDataType.LIST) {
+        if (string.getType() == ExpressionDataType.LIST) {
 
-			List<MetaExpression> stringList = new ArrayList<>();
+            List<MetaExpression> stringList = new ArrayList<>();
 
-			@SuppressWarnings("unchecked")
-			List<MetaExpression> list = (List<MetaExpression>) string.getValue();
+            @SuppressWarnings("unchecked")
+            List<MetaExpression> list = (List<MetaExpression>) string.getValue();
 
-			list.forEach(str -> {
-				if (!str.isNull()) {
-					stringList.add(doTrimming(str, internal, stringService));
+            list.forEach(str -> {
+                if (!str.isNull()) {
+                    stringList.add(doTrimming(str, internal, stringService));
 
-				}
-			});
-			return fromValue(stringList);
+                }
+            });
+            return fromValue(stringList);
 
-		}
-		return fromValue(doTrimming(string, internal, stringService).getStringValue());
-	}
+        }
+        return fromValue(doTrimming(string, internal, stringService).getStringValue());
+    }
 
-	private static MetaExpression doTrimming(final MetaExpression string, final MetaExpression internal, final StringUtilityService stringService) {
-		final String text = string.getStringValue();
-		final String trimmedText = internal.getBooleanValue() ? stringService.trimInternal(text) : stringService.trim(text);
-		return fromValue(trimmedText);
-	}
+    private static MetaExpression doTrimming(final MetaExpression string, final MetaExpression internal, final StringUtilityService stringService) {
+        final String text = string.getStringValue();
+        final String trimmedText = internal.getBooleanValue() ? stringService.trimInternal(text) : stringService.trim(text);
+        return fromValue(trimmedText);
+    }
 }

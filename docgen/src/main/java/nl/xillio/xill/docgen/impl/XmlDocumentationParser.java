@@ -34,172 +34,172 @@ import java.util.*;
  * @since 12-8-2015
  */
 public class XmlDocumentationParser implements DocumentationParser {
-	private static final Logger LOGGER = LogManager.getLogger();
-	private final XPathFactory xpathFactory;
-	private final DocumentBuilderFactory documentBuilderFactory;
-	private XPathExpression descriptionXPathQuery;
-	private XPathExpression tagXPathQuery;
-	private XPathExpression exampleNodesXPathQuery;
-	private XPathExpression referenceXPathQuery;
-	private static PegDownProcessor markdownProcessor = new PegDownProcessor(Extensions.TABLES);
+    private static final Logger LOGGER = LogManager.getLogger();
+    private final XPathFactory xpathFactory;
+    private final DocumentBuilderFactory documentBuilderFactory;
+    private XPathExpression descriptionXPathQuery;
+    private XPathExpression tagXPathQuery;
+    private XPathExpression exampleNodesXPathQuery;
+    private XPathExpression referenceXPathQuery;
+    private static PegDownProcessor markdownProcessor = new PegDownProcessor(Extensions.TABLES);
 
-	/**
-	 * The constructor for the parser when we hand it a factory.
-	 *
-	 * @param xpathFactory           The {@link XPathFactory} we want the parser to use.
-	 * @param documentBuilderFactory the documentfactory that should be used.
-	 */
-	public XmlDocumentationParser(final XPathFactory xpathFactory, final DocumentBuilderFactory documentBuilderFactory) {
-		this.xpathFactory = xpathFactory;
-		this.documentBuilderFactory = documentBuilderFactory;
-		this.documentBuilderFactory.setCoalescing(true);
-		try {
-			buildQueries();
-		} catch (XPathExpressionException e) {
-			throw new IllegalStateException("Failed to build xPath queries", e);
-		}
-	}
+    /**
+     * The constructor for the parser when we hand it a factory.
+     *
+     * @param xpathFactory           The {@link XPathFactory} we want the parser to use.
+     * @param documentBuilderFactory the documentfactory that should be used.
+     */
+    public XmlDocumentationParser(final XPathFactory xpathFactory, final DocumentBuilderFactory documentBuilderFactory) {
+        this.xpathFactory = xpathFactory;
+        this.documentBuilderFactory = documentBuilderFactory;
+        this.documentBuilderFactory.setCoalescing(true);
+        try {
+            buildQueries();
+        } catch (XPathExpressionException e) {
+            throw new IllegalStateException("Failed to build xPath queries", e);
+        }
+    }
 
-	/**
-	 * Instantiate a new XmlDocumentationParser using the default factories
-	 */
-	public XmlDocumentationParser() {
-		this(XPathFactory.newInstance(), DocumentBuilderFactory.newInstance());
-	}
+    /**
+     * Instantiate a new XmlDocumentationParser using the default factories
+     */
+    public XmlDocumentationParser() {
+        this(XPathFactory.newInstance(), DocumentBuilderFactory.newInstance());
+    }
 
-	private void buildQueries() throws XPathExpressionException {
-		XPath xPath = xpathFactory.newXPath();
-		descriptionXPathQuery = xPath.compile("/function/description/text()");
-		tagXPathQuery = xPath.compile("/function/tags");
-		exampleNodesXPathQuery = xPath.compile("/function/examples/example");
-		referenceXPathQuery = xPath.compile("/function/references/reference");
-	}
+    private void buildQueries() throws XPathExpressionException {
+        XPath xPath = xpathFactory.newXPath();
+        descriptionXPathQuery = xPath.compile("/function/description/text()");
+        tagXPathQuery = xPath.compile("/function/tags");
+        exampleNodesXPathQuery = xPath.compile("/function/examples/example");
+        referenceXPathQuery = xPath.compile("/function/references/reference");
+    }
 
-	@Override
-	public DocumentationEntity parse(final URL resource, final String identity) throws ParsingException {
-		try {
-			DocumentBuilder docBuilder = documentBuilderFactory.newDocumentBuilder();
-			Document doc = docBuilder.parse(openStream(resource));
+    @Override
+    public DocumentationEntity parse(final URL resource, final String identity) throws ParsingException {
+        try {
+            DocumentBuilder docBuilder = documentBuilderFactory.newDocumentBuilder();
+            Document doc = docBuilder.parse(openStream(resource));
 
-			return doParse(doc, identity);
-		} catch (IllegalArgumentException | IOException e) {
-			throw new ParsingException("Failed to access XML for: " + identity, e);
-		} catch (ParserConfigurationException | SAXException e) {
-			throw new ParsingException("Failed to parse XML for: " + identity, e);
-		}
-	}
+            return doParse(doc, identity);
+        } catch (IllegalArgumentException | IOException e) {
+            throw new ParsingException("Failed to access XML for: " + identity, e);
+        } catch (ParserConfigurationException | SAXException e) {
+            throw new ParsingException("Failed to parse XML for: " + identity, e);
+        }
+    }
 
-	InputStream openStream(final URL url) throws IOException {
-		return url.openStream();
-	}
+    InputStream openStream(final URL url) throws IOException {
+        return url.openStream();
+    }
 
-	DocumentationEntity doParse(final Document doc, final String identity) throws ParsingException {
+    DocumentationEntity doParse(final Document doc, final String identity) throws ParsingException {
 
-		ConstructDocumentationEntity construct = new ConstructDocumentationEntity(identity);
+        ConstructDocumentationEntity construct = new ConstructDocumentationEntity(identity);
 
-		construct.setDescription(parseDescription(doc));
-		construct.setExamples(parseExamples(doc));
-		construct.setReferences(parseReferences(doc));
-		construct.setSearchTags(parseSearchTags(doc));
+        construct.setDescription(parseDescription(doc));
+        construct.setExamples(parseExamples(doc));
+        construct.setReferences(parseReferences(doc));
+        construct.setSearchTags(parseSearchTags(doc));
 
-		return construct;
-	}
+        return construct;
+    }
 
-	String parseDescription(final Document doc) throws ParsingException {
-		try {
-			return markdownProcessor.markdownToHtml((String) descriptionXPathQuery.evaluate(doc, XPathConstants.STRING));
-		} catch (XPathExpressionException e) {
-			throw new ParsingException("Failed to parse description", e);
-		}
-	}
+    String parseDescription(final Document doc) throws ParsingException {
+        try {
+            return markdownProcessor.markdownToHtml((String) descriptionXPathQuery.evaluate(doc, XPathConstants.STRING));
+        } catch (XPathExpressionException e) {
+            throw new ParsingException("Failed to parse description", e);
+        }
+    }
 
-	String getAttributeOrNull(final String name, final Node node) {
-		NamedNodeMap attributes = node.getAttributes();
-		Node attribute = attributes.getNamedItem(name);
-		if (attribute == null) {
-			return null;
-		}
+    String getAttributeOrNull(final String name, final Node node) {
+        NamedNodeMap attributes = node.getAttributes();
+        Node attribute = attributes.getNamedItem(name);
+        if (attribute == null) {
+            return null;
+        }
 
-		return attribute.getNodeValue();
-	}
+        return attribute.getNodeValue();
+    }
 
-	List<Example> parseExamples(final Document doc) throws ParsingException {
-		List<Example> examples = new ArrayList<>();
-		NodeList exampleNodes;
-		try {
-			exampleNodes = (NodeList) exampleNodesXPathQuery.evaluate(doc, XPathConstants.NODESET);
+    List<Example> parseExamples(final Document doc) throws ParsingException {
+        List<Example> examples = new ArrayList<>();
+        NodeList exampleNodes;
+        try {
+            exampleNodes = (NodeList) exampleNodesXPathQuery.evaluate(doc, XPathConstants.NODESET);
 
-			for (int t = 0; t < exampleNodes.getLength(); ++t) {
-				examples.add(parseExample(exampleNodes.item(t)));
-			}
-		} catch (XPathExpressionException | NullPointerException e) {
-			throw new ParsingException("Failed to parse examples", e);
-		}
+            for (int t = 0; t < exampleNodes.getLength(); ++t) {
+                examples.add(parseExample(exampleNodes.item(t)));
+            }
+        } catch (XPathExpressionException | NullPointerException e) {
+            throw new ParsingException("Failed to parse examples", e);
+        }
 
-		return examples;
-	}
+        return examples;
+    }
 
-	Example parseExample(final Node node) {
-		// Get the example title
-		Example example = new Example(getAttributeOrNull("title", node));
-		NodeList exampleContent = node.getChildNodes();
-		for (int t = 0; t < exampleContent.getLength(); ++t) {
-			Node item = exampleContent.item(t);
-			if (item.getNodeName() != null && !item.getNodeName().startsWith("#")) {
-				example.addContent(
-					new ExampleNode(exampleContent.item(t).getNodeName(),
-						StringEscapeUtils.escapeHtml3(exampleContent.item(t).getTextContent())));
-			}
-		}
-		return example;
-	}
+    Example parseExample(final Node node) {
+        // Get the example title
+        Example example = new Example(getAttributeOrNull("title", node));
+        NodeList exampleContent = node.getChildNodes();
+        for (int t = 0; t < exampleContent.getLength(); ++t) {
+            Node item = exampleContent.item(t);
+            if (item.getNodeName() != null && !item.getNodeName().startsWith("#")) {
+                example.addContent(
+                        new ExampleNode(exampleContent.item(t).getNodeName(),
+                                StringEscapeUtils.escapeHtml3(exampleContent.item(t).getTextContent())));
+            }
+        }
+        return example;
+    }
 
-	List<Reference> parseReferences(final Document doc) throws ParsingException {
-		List<Reference> references = new ArrayList<>();
-		NodeList exampleNodes;
-		try {
-			exampleNodes = (NodeList) referenceXPathQuery.evaluate(doc, XPathConstants.NODESET);
-		} catch (XPathExpressionException | IllegalArgumentException | NullPointerException e) {
-			throw new ParsingException("Failed to parse references", e);
-		}
+    List<Reference> parseReferences(final Document doc) throws ParsingException {
+        List<Reference> references = new ArrayList<>();
+        NodeList exampleNodes;
+        try {
+            exampleNodes = (NodeList) referenceXPathQuery.evaluate(doc, XPathConstants.NODESET);
+        } catch (XPathExpressionException | IllegalArgumentException | NullPointerException e) {
+            throw new ParsingException("Failed to parse references", e);
+        }
 
-		for (int t = 0; t < exampleNodes.getLength(); ++t) {
-			try {
-				references.add(parseReference(exampleNodes.item(t)));
-			} catch (ParsingException | NullPointerException e) {
-				LOGGER.error("Failed to parse reference", e);
-			}
-		}
+        for (int t = 0; t < exampleNodes.getLength(); ++t) {
+            try {
+                references.add(parseReference(exampleNodes.item(t)));
+            } catch (ParsingException | NullPointerException e) {
+                LOGGER.error("Failed to parse reference", e);
+            }
+        }
 
-		return references;
-	}
+        return references;
+    }
 
-	Reference parseReference(final Node node) throws ParsingException {
-		String[] reference = node.getTextContent().trim().split("\\.");
-		if (reference.length == 0) {
-			throw new ParsingException("Failed to parse reference because no content was found");
-		}
+    Reference parseReference(final Node node) throws ParsingException {
+        String[] reference = node.getTextContent().trim().split("\\.");
+        if (reference.length == 0) {
+            throw new ParsingException("Failed to parse reference because no content was found");
+        }
 
-		String packageName = null;
-		String constructName = reference[reference.length - 1];
-		if (reference.length > 1) {
-			packageName = reference[0];
-		}
+        String packageName = null;
+        String constructName = reference[reference.length - 1];
+        if (reference.length > 1) {
+            packageName = reference[0];
+        }
 
-		return new Reference(packageName, constructName);
-	}
+        return new Reference(packageName, constructName);
+    }
 
-	Set<String> parseSearchTags(final Document doc) throws ParsingException {
-		String[] searchTags = new String[0];
-		try {
-			Node searchTagNode = (Node) tagXPathQuery.evaluate(doc, XPathConstants.NODE);
-			if (searchTagNode != null) {
-				searchTags = searchTagNode.getTextContent().replaceAll("\\s", "").split(",");
-			}
-		} catch (XPathExpressionException | NullPointerException e) {
-			throw new ParsingException("Failed to parse tags", e);
-		}
+    Set<String> parseSearchTags(final Document doc) throws ParsingException {
+        String[] searchTags = new String[0];
+        try {
+            Node searchTagNode = (Node) tagXPathQuery.evaluate(doc, XPathConstants.NODE);
+            if (searchTagNode != null) {
+                searchTags = searchTagNode.getTextContent().replaceAll("\\s", "").split(",");
+            }
+        } catch (XPathExpressionException | NullPointerException e) {
+            throw new ParsingException("Failed to parse tags", e);
+        }
 
-		return new HashSet<>(Arrays.asList(searchTags));
-	}
+        return new HashSet<>(Arrays.asList(searchTags));
+    }
 }

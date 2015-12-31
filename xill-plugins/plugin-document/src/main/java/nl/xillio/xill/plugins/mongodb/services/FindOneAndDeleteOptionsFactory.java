@@ -2,7 +2,6 @@ package nl.xillio.xill.plugins.mongodb.services;
 
 import com.google.inject.Inject;
 import com.mongodb.client.model.FindOneAndDeleteOptions;
-import com.mongodb.client.model.IndexOptions;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 

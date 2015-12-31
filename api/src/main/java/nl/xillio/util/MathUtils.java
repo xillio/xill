@@ -97,8 +97,8 @@ public class MathUtils {
         NumberType type = NumberType.forClass(a.getClass(), b.getClass());
         switch (type) {
             case INT:
-                if(b.intValue() == 0) {
-                    if(a.intValue() == 0) {
+                if (b.intValue() == 0) {
+                    if (a.intValue() == 0) {
                         return Double.NaN;
                     }
 

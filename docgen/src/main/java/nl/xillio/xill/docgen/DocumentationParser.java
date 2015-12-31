@@ -6,6 +6,7 @@ import java.net.URL;
 
 /**
  * This interface represents an object that can parse a {@link DocumentationEntity} from a resource
+ *
  * @author Thomas Biesaart
  * @author Ivor van der Hoog
  * @since 12-8-2015

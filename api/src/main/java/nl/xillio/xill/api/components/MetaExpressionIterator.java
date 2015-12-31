@@ -12,34 +12,34 @@ import java.util.function.Function;
  * MetaExpressionIterator instead
  */
 public class MetaExpressionIterator<E> implements Iterator<MetaExpression>, MetadataExpression, AutoCloseable {
-	private final Iterator<E> iterator;
-	private final Function<E, MetaExpression> transformer;
+    private final Iterator<E> iterator;
+    private final Function<E, MetaExpression> transformer;
 
-	/**
-	 * Create a new MetaExpressionIterator from a source and a transformation
-	 *
-	 * @param source      the source Iterator
-	 * @param transformer the function used to transform the elements of the source to usable MetaExpression
-	 */
-	public MetaExpressionIterator(Iterator<E> source, Function<E, MetaExpression> transformer) {
-		this.iterator = source;
-		this.transformer = transformer;
-	}
+    /**
+     * Create a new MetaExpressionIterator from a source and a transformation
+     *
+     * @param source      the source Iterator
+     * @param transformer the function used to transform the elements of the source to usable MetaExpression
+     */
+    public MetaExpressionIterator(Iterator<E> source, Function<E, MetaExpression> transformer) {
+        this.iterator = source;
+        this.transformer = transformer;
+    }
 
-	@Override
-	public boolean hasNext() {
-		return iterator.hasNext();
-	}
+    @Override
+    public boolean hasNext() {
+        return iterator.hasNext();
+    }
 
-	@Override
-	public MetaExpression next() {
-		return transformer.apply(iterator.next());
-	}
+    @Override
+    public MetaExpression next() {
+        return transformer.apply(iterator.next());
+    }
 
-	@Override
-	public void close() throws Exception {
-		if (iterator instanceof AutoCloseable) {
-			((AutoCloseable) iterator).close();
-		}
-	}
+    @Override
+    public void close() throws Exception {
+        if (iterator instanceof AutoCloseable) {
+            ((AutoCloseable) iterator).close();
+        }
+    }
 }

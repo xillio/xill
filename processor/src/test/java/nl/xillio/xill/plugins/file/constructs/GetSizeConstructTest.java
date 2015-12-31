@@ -20,46 +20,46 @@ import static org.testng.Assert.assertEquals;
  */
 public class GetSizeConstructTest {
 
-	@Test
-	public void testProcessNormal() throws IOException {
-		// Uri
-		String path = "This is the path";
-		MetaExpression uri = mock(MetaExpression.class);
-		when(uri.getStringValue()).thenReturn(path);
+    @Test
+    public void testProcessNormal() throws IOException {
+        // Uri
+        String path = "This is the path";
+        MetaExpression uri = mock(MetaExpression.class);
+        when(uri.getStringValue()).thenReturn(path);
 
-		// Context
-		RobotID robotID = mock(RobotID.class);
-		ConstructContext context = mock(ConstructContext.class);
-		when(context.getRobotID()).thenReturn(robotID);
+        // Context
+        RobotID robotID = mock(RobotID.class);
+        ConstructContext context = mock(ConstructContext.class);
+        when(context.getRobotID()).thenReturn(robotID);
 
-		// File
-		File file = mock(File.class);
-		when(TestUtils.CONSTRUCT_FILE_RESOLVER.buildFile(any(), anyString())).thenReturn(file);
+        // File
+        File file = mock(File.class);
+        when(TestUtils.CONSTRUCT_FILE_RESOLVER.buildFile(any(), anyString())).thenReturn(file);
 
-		// FileUtilities
-		long size = 10;
-		FileUtilities fileUtils = mock(FileUtilities.class);
-		when(fileUtils.getByteSize(file)).thenReturn(size);
+        // FileUtilities
+        long size = 10;
+        FileUtilities fileUtils = mock(FileUtilities.class);
+        when(fileUtils.getByteSize(file)).thenReturn(size);
 
-		// Run the Method
-		MetaExpression result = GetSizeConstruct.process(context, fileUtils, uri);
+        // Run the Method
+        MetaExpression result = GetSizeConstruct.process(context, fileUtils, uri);
 
-		// Verify
-		verify(fileUtils, times(1)).getByteSize(file);
+        // Verify
+        verify(fileUtils, times(1)).getByteSize(file);
 
-		// Assert
-		assertEquals(result.getNumberValue().longValue(), size);
-	}
+        // Assert
+        assertEquals(result.getNumberValue().longValue(), size);
+    }
 
-	@Test(
-					expectedExceptions = RobotRuntimeException.class,
-					expectedExceptionsMessageRegExp = "Failed to get size of file: This is an error message")
-	public void testProcessIOException() throws IOException {
-		// FileUtils
-		FileUtilities fileUtils = mock(FileUtilities.class);
-		when(fileUtils.getByteSize(any())).thenThrow(new IOException("This is an error message"));
+    @Test(
+            expectedExceptions = RobotRuntimeException.class,
+            expectedExceptionsMessageRegExp = "Failed to get size of file: This is an error message")
+    public void testProcessIOException() throws IOException {
+        // FileUtils
+        FileUtilities fileUtils = mock(FileUtilities.class);
+        when(fileUtils.getByteSize(any())).thenThrow(new IOException("This is an error message"));
 
-		// Run the method
-		GetSizeConstruct.process(mock(ConstructContext.class), fileUtils, mock(MetaExpression.class));
-	}
+        // Run the method
+        GetSizeConstruct.process(mock(ConstructContext.class), fileUtils, mock(MetaExpression.class));
+    }
 }

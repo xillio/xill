@@ -19,45 +19,45 @@ import java.time.ZoneId;
  */
 public class OfConstruct extends BaseDateConstruct {
 
-	@Override
-	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		Argument args[] = {new Argument("year"), new Argument("month"),
-						new Argument("day"), new Argument("hour"),
-						new Argument("minute"), new Argument("second"),
-						new Argument("nano", fromValue(0)), new Argument("zone", fromValue(ZoneId.systemDefault().getId()))};
+    @Override
+    public ConstructProcessor prepareProcess(final ConstructContext context) {
+        Argument args[] = {new Argument("year"), new Argument("month"),
+                new Argument("day"), new Argument("hour"),
+                new Argument("minute"), new Argument("second"),
+                new Argument("nano", fromValue(0)), new Argument("zone", fromValue(ZoneId.systemDefault().getId()))};
 
-		return new ConstructProcessor(a -> process(a, getDateService()), args);
-	}
+        return new ConstructProcessor(a -> process(a, getDateService()), args);
+    }
 
-	@SuppressWarnings("squid:S1166")
-	static MetaExpression process(final MetaExpression[] input, DateService dateService) {
-		Date date;
-		ZoneId zone;
+    @SuppressWarnings("squid:S1166")
+    static MetaExpression process(final MetaExpression[] input, DateService dateService) {
+        Date date;
+        ZoneId zone;
 
-		for (MetaExpression m : input) {
-			assertNotNull(m, "input");
-		}
+        for (MetaExpression m : input) {
+            assertNotNull(m, "input");
+        }
 
-		int year = input[0].getNumberValue().intValue();
-		int month = input[1].getNumberValue().intValue();
-		int day = input[2].getNumberValue().intValue();
-		int hour = input[3].getNumberValue().intValue();
-		int minute = input[4].getNumberValue().intValue();
-		int second = input[5].getNumberValue().intValue();
-		int nano = input[6].getNumberValue().intValue();
+        int year = input[0].getNumberValue().intValue();
+        int month = input[1].getNumberValue().intValue();
+        int day = input[2].getNumberValue().intValue();
+        int hour = input[3].getNumberValue().intValue();
+        int minute = input[4].getNumberValue().intValue();
+        int second = input[5].getNumberValue().intValue();
+        int nano = input[6].getNumberValue().intValue();
 
-		try {
-			zone = ZoneId.of(input[7].getStringValue());
-		} catch (DateTimeException e) {
-			throw new RobotRuntimeException("Invalid zone ID");
-		}
-		try {
-			date = dateService.constructDate(year, month, day, hour, minute, second, nano, zone);
-		} catch (DateTimeException e) {
-			throw new RobotRuntimeException(e.getLocalizedMessage());
-		}
+        try {
+            zone = ZoneId.of(input[7].getStringValue());
+        } catch (DateTimeException e) {
+            throw new RobotRuntimeException("Invalid zone ID");
+        }
+        try {
+            date = dateService.constructDate(year, month, day, hour, minute, second, nano, zone);
+        } catch (DateTimeException e) {
+            throw new RobotRuntimeException(e.getLocalizedMessage());
+        }
 
-		return fromValue(date);
+        return fromValue(date);
 
-	}
+    }
 }

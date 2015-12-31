@@ -14,17 +14,17 @@ import nl.xillio.xill.api.data.XmlNode;
  */
 public class ToStringConstruct extends Construct {
 
-	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
-		return new ConstructProcessor(
-			node -> process(node),
-				new Argument("node", ATOMIC)
-		);
-	}
+    @Override
+    public ConstructProcessor prepareProcess(ConstructContext context) {
+        return new ConstructProcessor(
+                node -> process(node),
+                new Argument("node", ATOMIC)
+        );
+    }
 
-	static MetaExpression process(MetaExpression xmlNodeVar) {
-		XmlNode xmlNode = assertMeta(xmlNodeVar, "node", XmlNode.class, "XML node");
-		return fromValue(xmlNode.getXmlContent());
-	}
+    static MetaExpression process(MetaExpression xmlNodeVar) {
+        XmlNode xmlNode = assertMeta(xmlNodeVar, "node", XmlNode.class, "XML node");
+        return fromValue(xmlNode.getXmlContent());
+    }
 
 }

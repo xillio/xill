@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 
 /**
  * Tests the IsHidden construct.
- *
+ * <p>
  * Created by Anwar on 12/1/2015.
  */
 public class IsHiddenConstructTest extends TestUtils {
@@ -37,8 +37,6 @@ public class IsHiddenConstructTest extends TestUtils {
     }
 
     /**
-     *
-     *
      * @throws IOException
      */
     @Test

@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.attribute.PosixFileAttributeView;
 import java.nio.file.attribute.PosixFileAttributes;
-import static java.nio.file.attribute.PosixFilePermission.*;
-
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Set;
+
+import static java.nio.file.attribute.PosixFilePermission.*;
 
 /**
  * This provider can read posix permissions.
@@ -27,9 +27,9 @@ public class PosixFilePermissionsProvider implements FilePermissionsProvider {
 
         PosixFileAttributes attributes = posixView.readAttributes();
         Set<PosixFilePermission> permissionsSet = attributes.permissions();
-        
+
         FilePermissions permissions = new FilePermissions(file);
-        
+
         // Group
         boolean readGroup = permissionsSet.contains(GROUP_READ);
         boolean writeGroup = permissionsSet.contains(GROUP_WRITE);

@@ -5,8 +5,6 @@ import com.mongodb.client.model.InsertManyOptions;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 
-import java.util.Map;
-
 /**
  * This class is responsible for converting a {@link MetaExpression} to {@link InsertManyOptions}.
  *

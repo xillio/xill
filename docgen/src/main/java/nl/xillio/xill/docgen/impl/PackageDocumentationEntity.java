@@ -14,39 +14,39 @@ import java.util.*;
  */
 public class PackageDocumentationEntity implements DocumentationEntity {
 
-	private String name;
-	private final List<ConstructDocumentationEntity> children = new ArrayList<>();
+    private String name;
+    private final List<ConstructDocumentationEntity> children = new ArrayList<>();
 
 
-	@Override
-	public String getIdentity() {
-		return name;
-	}
+    @Override
+    public String getIdentity() {
+        return name;
+    }
 
-	@Override
-	public String getType() {
-		return "package";
-	}
+    @Override
+    public String getType() {
+        return "package";
+    }
 
-	@Override
-	public List<String> getTags() {
-		return Collections.emptyList();
-	}
+    @Override
+    public List<String> getTags() {
+        return Collections.emptyList();
+    }
 
-	@Override
-	public Map<String, Object> getProperties() {
-		children.sort(DocumentationEntity.SORT_BY_IDENTITY);
-		Map<String, Object> properties = new HashMap<>();
-		properties.put("packageName", name);
-		properties.put("constructs", PropertiesProvider.extractContent(children));
-		return properties;
-	}
+    @Override
+    public Map<String, Object> getProperties() {
+        children.sort(DocumentationEntity.SORT_BY_IDENTITY);
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("packageName", name);
+        properties.put("constructs", PropertiesProvider.extractContent(children));
+        return properties;
+    }
 
-	public void add(DocumentationEntity entity) {
-		children.add((ConstructDocumentationEntity) entity);
-	}
+    public void add(DocumentationEntity entity) {
+        children.add((ConstructDocumentationEntity) entity);
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 }

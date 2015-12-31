@@ -6,8 +6,6 @@ import com.mongodb.client.MongoCollection;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
 
 import java.util.List;
@@ -34,7 +32,7 @@ public class AggregateConstruct extends AbstractCollectionApiConstruct {
                 .collect(Collectors.toList());
 
         AggregateIterable<Document> mongoResult = collection.aggregate(pipeline);
-        
+
         return fromValue(mongoResult, collection, arguments[0]);
     }
 }

@@ -8,12 +8,12 @@ import nl.xillio.xill.api.components.Instruction;
  */
 public class RobotContinuedAction {
 
-	/**
-	 * Create a new {@link RobotContinuedAction}
-	 * 
-	 * @param instruction
-	 *        the instruction where the robot continued
-	 */
-	public RobotContinuedAction(final Instruction instruction) {}
+    /**
+     * Create a new {@link RobotContinuedAction}
+     *
+     * @param instruction the instruction where the robot continued
+     */
+    public RobotContinuedAction(final Instruction instruction) {
+    }
 
 }

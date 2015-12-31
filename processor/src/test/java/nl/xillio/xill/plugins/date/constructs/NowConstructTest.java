@@ -15,25 +15,25 @@ import static org.testng.Assert.assertSame;
  */
 public class NowConstructTest {
 
-	/**
-	 * Test the process method under the default circumstances
-	 */
-	@Test
-	public void testProcess() {
-		// Mock
+    /**
+     * Test the process method under the default circumstances
+     */
+    @Test
+    public void testProcess() {
+        // Mock
 
-		// ZonedDateTime is final, don't mock
-		Date mockDate = mock(Date.class);
-		DateService dateService = mock(DateService.class);
-		when(dateService.now()).thenReturn(mockDate);
+        // ZonedDateTime is final, don't mock
+        Date mockDate = mock(Date.class);
+        DateService dateService = mock(DateService.class);
+        when(dateService.now()).thenReturn(mockDate);
 
-		// Run
-		MetaExpression date = NowConstruct.process(dateService);
+        // Run
+        MetaExpression date = NowConstruct.process(dateService);
 
-		// Verify
-		verify(dateService).now();
+        // Verify
+        verify(dateService).now();
 
-		// Assert
-		assertSame(date.getMeta(Date.class), mockDate);
-	}
+        // Assert
+        assertSame(date.getMeta(Date.class), mockDate);
+    }
 }

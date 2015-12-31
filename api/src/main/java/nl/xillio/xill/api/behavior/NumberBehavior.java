@@ -15,40 +15,39 @@ import nl.xillio.xill.api.components.Expression;
  */
 public class NumberBehavior implements Expression {
 
-	private final Number value;
+    private final Number value;
 
-	/**
-	 * Create a new {@link NumberBehavior}
-	 *
-	 * @param value
-	 *        the value to set
-	 */
-	public NumberBehavior(final Number value) {
-		this.value = value;
-	}
+    /**
+     * Create a new {@link NumberBehavior}
+     *
+     * @param value the value to set
+     */
+    public NumberBehavior(final Number value) {
+        this.value = value;
+    }
 
-	@Override
-	public Number getNumberValue() {
-		return value;
-	}
+    @Override
+    public Number getNumberValue() {
+        return value;
+    }
 
-	@Override
-	public String getStringValue() {
-		return value.toString();
-	}
+    @Override
+    public String getStringValue() {
+        return value.toString();
+    }
 
-	@Override
-	public boolean getBooleanValue() {
+    @Override
+    public boolean getBooleanValue() {
         return Double.doubleToRawLongBits(value.doubleValue()) != 0;
     }
 
-	@Override
-	public boolean isNull() {
-		return false;
-	}
+    @Override
+    public boolean isNull() {
+        return false;
+    }
 
-	@Override
-	public String toString() {
-		return getStringValue();
-	}
+    @Override
+    public String toString() {
+        return getStringValue();
+    }
 }

@@ -2,7 +2,6 @@ package nl.xillio.xill.plugins.codec.encode.constructs;
 
 import com.google.inject.Inject;
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.construct.*;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.codec.encode.services.EncoderService;
 

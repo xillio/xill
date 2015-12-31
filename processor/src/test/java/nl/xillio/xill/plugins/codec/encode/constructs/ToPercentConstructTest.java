@@ -10,7 +10,8 @@ import org.testng.annotations.Test;
 
 import java.io.UnsupportedEncodingException;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Test the {@link ToPercentConstruct}.

@@ -12,7 +12,7 @@ import nl.xillio.xill.plugins.mongodb.data.MongoObjectId;
  *
  * @author Titus Nachbauer
  */
-public class ObjectIdConstruct extends Construct{
+public class ObjectIdConstruct extends Construct {
     @Override
     public ConstructProcessor prepareProcess(ConstructContext context) {
         return new ConstructProcessor(this::process, new Argument("string", ATOMIC));

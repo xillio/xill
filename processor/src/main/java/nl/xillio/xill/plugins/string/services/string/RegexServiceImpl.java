@@ -17,139 +17,139 @@ import java.util.stream.IntStream;
  */
 @Singleton
 public class RegexServiceImpl implements RegexService {
-	private RegexTimer regexTimer = null;
-	private static Logger logger = LogManager.getLogger();
+    private RegexTimer regexTimer = null;
+    private static Logger logger = LogManager.getLogger();
 
-	/**
-	 * The implementation of the {@link RegexService}
-	 */
-	public RegexServiceImpl() {
-		this.regexTimer = new RegexTimer();
-	}
+    /**
+     * The implementation of the {@link RegexService}
+     */
+    public RegexServiceImpl() {
+        this.regexTimer = new RegexTimer();
+    }
 
 
-	@Override
-	public Matcher getMatcher(final String regex, final String value, int timeout) throws FailedToGetMatcherException, IllegalArgumentException {
-		if (timeout < 0) {
-			timeout = RegexConstruct.REGEX_TIMEOUT;
-		}
-		regexTimer.setTimer(timeout);
-		return Pattern.compile(regex, Pattern.DOTALL).matcher(new TimeoutCharSequence(value));
-	}
+    @Override
+    public Matcher getMatcher(final String regex, final String value, int timeout) throws FailedToGetMatcherException, IllegalArgumentException {
+        if (timeout < 0) {
+            timeout = RegexConstruct.REGEX_TIMEOUT;
+        }
+        regexTimer.setTimer(timeout);
+        return Pattern.compile(regex, Pattern.DOTALL).matcher(new TimeoutCharSequence(value));
+    }
 
-	@Override
-	public boolean matches(final Matcher matcher) {
-		return matcher.matches();
-	}
+    @Override
+    public boolean matches(final Matcher matcher) {
+        return matcher.matches();
+    }
 
-	@Override
-	public String replaceAll(final Matcher matcher, final String replacement) {
-		return matcher.replaceAll(replacement);
-	}
+    @Override
+    public String replaceAll(final Matcher matcher, final String replacement) {
+        return matcher.replaceAll(replacement);
+    }
 
-	@Override
-	public String replaceFirst(final Matcher matcher, final String replacement) {
-		return matcher.replaceFirst(replacement);
-	}
+    @Override
+    public String replaceFirst(final Matcher matcher, final String replacement) {
+        return matcher.replaceFirst(replacement);
+    }
 
-	@Override
-	public List<String> tryMatch(final Matcher matcher) {
-		List<String> list = new ArrayList<>();
-		while (matcher.find()) {
-			list.add(matcher.group());
-		}
-		return list;
-	}
+    @Override
+    public List<String> tryMatch(final Matcher matcher) {
+        List<String> list = new ArrayList<>();
+        while (matcher.find()) {
+            list.add(matcher.group());
+        }
+        return list;
+    }
 
-	@Override
-	public List<String> tryMatchElseNull(final Matcher matcher) {
-		List<String> list = new ArrayList<>();
-		for (int i = 0; i <= matcher.groupCount(); i++) {
-			list.add(matcher.group(i));
-		}
-		return list;
-	}
+    @Override
+    public List<String> tryMatchElseNull(final Matcher matcher) {
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i <= matcher.groupCount(); i++) {
+            list.add(matcher.group(i));
+        }
+        return list;
+    }
 
-	private class RegexTimer implements Runnable {
-		private long targetTime = 0;
-		private boolean stop = false;
-		private boolean timeout = false;
+    private class RegexTimer implements Runnable {
+        private long targetTime = 0;
+        private boolean stop = false;
+        private boolean timeout = false;
 
-		public RegexTimer() {
-			Runtime.getRuntime().addShutdownHook(new Thread(this::stop));
-		}
+        public RegexTimer() {
+            Runtime.getRuntime().addShutdownHook(new Thread(this::stop));
+        }
 
-		@Override
-		public void run() {
-			while (!stop) {
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					logger.error("Exception while running timer.", e);
-				}
-				if (targetTime > 0 && targetTime < System.currentTimeMillis()) {
-					timeout = true;
-					targetTime = 0;
-					stop = true;
-				}
-			}
-		}
+        @Override
+        public void run() {
+            while (!stop) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    logger.error("Exception while running timer.", e);
+                }
+                if (targetTime > 0 && targetTime < System.currentTimeMillis()) {
+                    timeout = true;
+                    targetTime = 0;
+                    stop = true;
+                }
+            }
+        }
 
-		public void setTimer(final int millis) {
-			timeout = false;
-			targetTime = System.currentTimeMillis() + millis;
-		}
+        public void setTimer(final int millis) {
+            timeout = false;
+            targetTime = System.currentTimeMillis() + millis;
+        }
 
-		public void stop() {
-			stop = true;
-		}
+        public void stop() {
+            stop = true;
+        }
 
-		public synchronized boolean timeOut() {
-			return timeout;
-		}
-	}
+        public synchronized boolean timeOut() {
+            return timeout;
+        }
+    }
 
-	private class TimeoutCharSequence implements CharSequence {
+    private class TimeoutCharSequence implements CharSequence {
 
-		private final CharSequence inner;
+        private final CharSequence inner;
 
-		public TimeoutCharSequence(final CharSequence inner) {
-			super();
-			this.inner = inner;
-		}
+        public TimeoutCharSequence(final CharSequence inner) {
+            super();
+            this.inner = inner;
+        }
 
-		@Override
-		public char charAt(final int index) {
-			if (regexTimer.timeOut()) {
-				throw new RuntimeException("Pattern match timed out!");
-			}
-			return inner.charAt(index);
-		}
+        @Override
+        public char charAt(final int index) {
+            if (regexTimer.timeOut()) {
+                throw new RuntimeException("Pattern match timed out!");
+            }
+            return inner.charAt(index);
+        }
 
-		@Override
-		public IntStream chars() {
-			return inner.chars();
-		}
+        @Override
+        public IntStream chars() {
+            return inner.chars();
+        }
 
-		@Override
-		public IntStream codePoints() {
-			return inner.codePoints();
-		}
+        @Override
+        public IntStream codePoints() {
+            return inner.codePoints();
+        }
 
-		@Override
-		public int length() {
-			return inner.length();
-		}
+        @Override
+        public int length() {
+            return inner.length();
+        }
 
-		@Override
-		public CharSequence subSequence(final int start, final int end) {
-			return new TimeoutCharSequence(inner.subSequence(start, end));
-		}
+        @Override
+        public CharSequence subSequence(final int start, final int end) {
+            return new TimeoutCharSequence(inner.subSequence(start, end));
+        }
 
-		@Override
-		public String toString() {
-			return inner.toString();
-		}
-	}
+        @Override
+        public String toString() {
+            return inner.toString();
+        }
+    }
 
 }

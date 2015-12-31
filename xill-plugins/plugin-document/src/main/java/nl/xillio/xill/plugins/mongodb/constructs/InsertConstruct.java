@@ -31,7 +31,7 @@ public class InsertConstruct extends AbstractCollectionApiConstruct {
 
     @Override
     protected Argument[] getApiArguments() {
-        return new Argument[] {
+        return new Argument[]{
                 new Argument("documents", LIST),
                 new Argument("ordered", TRUE, ATOMIC)
         };
@@ -42,8 +42,8 @@ public class InsertConstruct extends AbstractCollectionApiConstruct {
         List<MetaExpression> list = arguments[0].getValue();
         InsertManyOptions options = insertManyOptionsFactory.build(arguments[1]);
 
-        
-        List<Document>documents = list.stream().map(this::toDocument).collect(Collectors.toList());
+
+        List<Document> documents = list.stream().map(this::toDocument).collect(Collectors.toList());
         tryInsertMany(collection, documents, options);
         return NULL;
     }

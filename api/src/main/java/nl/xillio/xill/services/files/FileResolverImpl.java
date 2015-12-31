@@ -14,13 +14,14 @@ import java.io.File;
  */
 public class FileResolverImpl implements FileResolver {
 
-	@Override public File buildFile(ConstructContext context, String path) {
-		//First check if the provided path is absolute
-		File file = new File(path);
-		if (!file.isAbsolute()) {
-			//It's not absolute so we make it relative to the robot
-			file = new File(context.getRootRobot().getPath().getParentFile(), file.getPath());
-		}
-		return file;
-	}
+    @Override
+    public File buildFile(ConstructContext context, String path) {
+        //First check if the provided path is absolute
+        File file = new File(path);
+        if (!file.isAbsolute()) {
+            //It's not absolute so we make it relative to the robot
+            file = new File(context.getRootRobot().getPath().getParentFile(), file.getPath());
+        }
+        return file;
+    }
 }

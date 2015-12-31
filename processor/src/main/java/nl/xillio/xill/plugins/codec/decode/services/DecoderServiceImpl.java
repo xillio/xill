@@ -6,6 +6,7 @@ import me.biesaart.utils.IOUtilsService;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64OutputStream;
 import org.apache.commons.codec.binary.Hex;
+
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -37,8 +38,9 @@ public class DecoderServiceImpl implements DecoderService {
 
     /**
      * Decode the given input from the input-stream and give it to the output-stream.
-     * @param in    The input stream to decode.
-     * @param out   The output stream for the decoded input.
+     *
+     * @param in  The input stream to decode.
+     * @param out The output stream for the decoded input.
      * @throws IOException
      */
     void decodeBase64(InputStream in, OutputStream out) throws IOException {

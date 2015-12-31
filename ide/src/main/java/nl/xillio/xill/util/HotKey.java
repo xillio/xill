@@ -16,10 +16,11 @@ class Hotkey {
 
     /**
      * Create a new Hotkey
-     * @param shortcut the hotkey pattern
-     * @param settingsid the id that should be used in the settings
+     *
+     * @param shortcut     the hotkey pattern
+     * @param settingsid   the id that should be used in the settings
      * @param settingsDscr the description that should be used in the settings
-     * @param fxid the id that is used in the fxml definition
+     * @param fxid         the id that is used in the fxml definition
      */
     public Hotkey(String shortcut, String settingsid, String settingsDscr, String fxid) {
         this.shortcut = shortcut;
@@ -61,6 +62,7 @@ class Hotkey {
 
     /**
      * Set the shortcut text.
+     *
      * @param shortcut the pattern
      */
     public void setShortcut(String shortcut) {

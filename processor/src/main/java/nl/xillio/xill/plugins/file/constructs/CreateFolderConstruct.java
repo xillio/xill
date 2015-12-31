@@ -18,25 +18,25 @@ import java.io.IOException;
 @Singleton
 public class CreateFolderConstruct extends Construct {
 
-	@Inject
-	private FileUtilities fileUtils;
+    @Inject
+    private FileUtilities fileUtils;
 
-	@Override
-	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(
-						uri -> process(context, fileUtils, uri),
-						new Argument("uri", ATOMIC));
-	}
+    @Override
+    public ConstructProcessor prepareProcess(final ConstructContext context) {
+        return new ConstructProcessor(
+                uri -> process(context, fileUtils, uri),
+                new Argument("uri", ATOMIC));
+    }
 
-	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri) {
+    static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri) {
 
-		File folder = getFile(context, uri.getStringValue());
+        File folder = getFile(context, uri.getStringValue());
 
-		try {
-			fileUtils.createFolder(folder);
-		} catch (IOException e) {
-			context.getRootLogger().error("Failed to create " + folder.getAbsolutePath(), e);
-		}
-		return fromValue(folder.getAbsolutePath());
-	}
+        try {
+            fileUtils.createFolder(folder);
+        } catch (IOException e) {
+            context.getRootLogger().error("Failed to create " + folder.getAbsolutePath(), e);
+        }
+        return fromValue(folder.getAbsolutePath());
+    }
 }

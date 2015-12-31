@@ -28,8 +28,8 @@ public class GetLastModifiedDate extends Construct {
     /**
      * Instantiate new creation time (ctime) construct using specified time conversion and file i/o utilities.
      *
-     * @param date The time conversion factory
-     * @param fileUtilities    The file i/o factory
+     * @param date          The time conversion factory
+     * @param fileUtilities The file i/o factory
      */
     @Inject
     public GetLastModifiedDate(final DateFactory date, final FileUtilities fileUtilities) {

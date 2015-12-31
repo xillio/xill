@@ -1,6 +1,5 @@
 package nl.xillio.xill.plugins.mongodb.services;
 
-import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -58,7 +57,7 @@ public class ConnectionInfo {
 
     @Override
     public boolean equals(Object obj) {
-        if(!(obj instanceof ConnectionInfo)) {
+        if (!(obj instanceof ConnectionInfo)) {
             return false;
         }
 

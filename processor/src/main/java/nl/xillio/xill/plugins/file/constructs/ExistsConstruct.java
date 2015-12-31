@@ -17,18 +17,18 @@ import java.io.File;
 @Singleton
 public class ExistsConstruct extends Construct {
 
-	@Inject
-	private FileUtilities fileUtils;
+    @Inject
+    private FileUtilities fileUtils;
 
-	@Override
-	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(
-						uri -> process(context, fileUtils, uri),
-						new Argument("uri", ATOMIC));
-	}
+    @Override
+    public ConstructProcessor prepareProcess(final ConstructContext context) {
+        return new ConstructProcessor(
+                uri -> process(context, fileUtils, uri),
+                new Argument("uri", ATOMIC));
+    }
 
-	static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri) {
-		File file = getFile(context, uri.getStringValue());
-		return fromValue(fileUtils.exists(file));
-	}
+    static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri) {
+        File file = getFile(context, uri.getStringValue());
+        return fromValue(fileUtils.exists(file));
+    }
 }

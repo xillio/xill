@@ -10,12 +10,12 @@ import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.components.instructions.FunctionDeclaration;
 
-import java.util.*;
+import java.util.ConcurrentModificationException;
 
 /**
  * @author Pieter Soels
- *
- * This class is for abstracting methods from the map- and filterexpression classes.
+ *         <p>
+ *         This class is for abstracting methods from the map- and filterexpression classes.
  */
 public abstract class MapFilterHandler implements Processable, FunctionParameterExpression {
     protected FunctionDeclaration functionDeclaration;
@@ -52,7 +52,7 @@ public abstract class MapFilterHandler implements Processable, FunctionParameter
                 if (result.isNull()) {
                     return InstructionFlow.doResume(ExpressionBuilderHelper.emptyList());
                 }
-                if (result.getMeta(MetaExpressionIterator.class) == null){
+                if (result.getMeta(MetaExpressionIterator.class) == null) {
                     return atomicProcessNoIterator(result, debugger);
                 } else {
                     return atomicProcessIterator(result, debugger);
@@ -67,15 +67,13 @@ public abstract class MapFilterHandler implements Processable, FunctionParameter
     }
 
 
-
     protected abstract InstructionFlow<MetaExpression> atomicProcessNoIterator(MetaExpression result, Debugger debugger);
+
     protected abstract InstructionFlow<MetaExpression> atomicProcessIterator(MetaExpression result, Debugger debugger);
+
     protected abstract InstructionFlow<MetaExpression> listProcess(MetaExpression result, Debugger debugger);
+
     protected abstract InstructionFlow<MetaExpression> objectProcess(MetaExpression result, Debugger debugger);
-
-
-
-
 
 
     /**

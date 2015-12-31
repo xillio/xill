@@ -22,47 +22,47 @@ import java.util.List;
  */
 public class ObjectExpression extends MetaExpression {
 
-	private final LinkedHashMap<String, MetaExpression> value;
+    private final LinkedHashMap<String, MetaExpression> value;
 
-	/**
-	 * @param object the value to set
-	 */
-	public ObjectExpression(final LinkedHashMap<String, MetaExpression> object) {
-		value = object;
+    /**
+     * @param object the value to set
+     */
+    public ObjectExpression(final LinkedHashMap<String, MetaExpression> object) {
+        value = object;
 
-		setValue(value);
-		object.values().forEach(MetaExpression::registerReference);
-	}
+        setValue(value);
+        object.values().forEach(MetaExpression::registerReference);
+    }
 
-	@Override
-	public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-		return InstructionFlow.doResume(this);
-	}
+    @Override
+    public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
+        return InstructionFlow.doResume(this);
+    }
 
-	@Override
-	public Collection<Processable> getChildren() {
-		List<Processable> children = new ArrayList<>(value.values());
+    @Override
+    public Collection<Processable> getChildren() {
+        List<Processable> children = new ArrayList<>(value.values());
 
-		return children;
-	}
+        return children;
+    }
 
-	@Override
-	public Number getNumberValue() {
-		return value.size();
-	}
+    @Override
+    public Number getNumberValue() {
+        return value.size();
+    }
 
-	@Override
-	public String getStringValue() {
-		return toString();
-	}
+    @Override
+    public String getStringValue() {
+        return toString();
+    }
 
-	@Override
-	public boolean getBooleanValue() {
-		return true;
-	}
+    @Override
+    public boolean getBooleanValue() {
+        return true;
+    }
 
-	@Override
-	public boolean isNull() {
-		return false;
-	}
+    @Override
+    public boolean isNull() {
+        return false;
+    }
 }

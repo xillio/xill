@@ -9,19 +9,18 @@ import org.apache.logging.log4j.Logger;
  */
 public class WaitService implements XillService {
 
-	private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger();
 
-	/**
-	 * Wait for a time
-	 * 
-	 * @param delay
-	 *        in milliseconds
-	 */
-	public void wait(final int delay) {
-		try {
-			Thread.sleep(delay);
-		} catch (InterruptedException e) {
-			LOGGER.error("Wait interrupted: " + e.getMessage(), e);
-		}
-	}
+    /**
+     * Wait for a time
+     *
+     * @param delay in milliseconds
+     */
+    public void wait(final int delay) {
+        try {
+            Thread.sleep(delay);
+        } catch (InterruptedException e) {
+            LOGGER.error("Wait interrupted: " + e.getMessage(), e);
+        }
+    }
 }

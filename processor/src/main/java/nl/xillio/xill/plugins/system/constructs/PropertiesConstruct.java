@@ -1,7 +1,6 @@
 package nl.xillio.xill.plugins.system.constructs;
 
 import com.google.inject.Inject;
-
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
@@ -14,22 +13,22 @@ import nl.xillio.xill.plugins.system.services.properties.SystemPropertiesService
  */
 public class PropertiesConstruct extends Construct {
 
-	@Inject
-	SystemPropertiesService propertiesService;
+    @Inject
+    SystemPropertiesService propertiesService;
 
-	@Override
-	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(
-			prop -> process(prop, propertiesService),
-			new Argument("property", NULL, ATOMIC));
-	}
+    @Override
+    public ConstructProcessor prepareProcess(final ConstructContext context) {
+        return new ConstructProcessor(
+                prop -> process(prop, propertiesService),
+                new Argument("property", NULL, ATOMIC));
+    }
 
-	static MetaExpression process(final MetaExpression property, final SystemPropertiesService properties) {
+    static MetaExpression process(final MetaExpression property, final SystemPropertiesService properties) {
 
-		if (property.isNull()) {
-			return parseObject(properties.getProperties());
-		}
+        if (property.isNull()) {
+            return parseObject(properties.getProperties());
+        }
 
-		return fromValue(properties.getProperty(property.getStringValue()));
-	}
+        return fromValue(properties.getProperty(property.getStringValue()));
+    }
 }
