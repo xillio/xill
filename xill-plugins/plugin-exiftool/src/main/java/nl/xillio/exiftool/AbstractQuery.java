@@ -16,15 +16,15 @@ import java.util.List;
 /**
  * This class represents the abstract implementation of query. It provides some convenience methods that most queries need.
  *
- * @param <T1> The type of options used by this query
- * @param <T2> The return type of the run method
+ * @param <T> The type of options used by this query
+ * @param <U> The return type of the run method
  */
-abstract class AbstractQuery<T1 extends QueryOptions, T2> implements Query<T2> {
+abstract class AbstractQuery<T extends QueryOptions, U> implements Query<U> {
     private final Path path;
-    private final T1 options;
+    private final T options;
     private final Projection projection;
 
-    protected AbstractQuery(Path path, Projection projection, T1 options) throws NoSuchFileException {
+    protected AbstractQuery(Path path, Projection projection, T options) throws NoSuchFileException {
         this.path = path;
         this.options = options;
         this.projection = projection;
@@ -44,10 +44,10 @@ abstract class AbstractQuery<T1 extends QueryOptions, T2> implements Query<T2> {
         return result;
     }
 
-    protected abstract T2 buildResult(ExecutionResult executionResult);
+    protected abstract U buildResult(ExecutionResult executionResult);
 
     @Override
-    public T2 run(ExifToolProcess process) throws IOException {
+    public U run(ExifToolProcess process) throws IOException {
         List<String> arguments = buildExifArguments();
         ExecutionResult executionResult = process.run(arguments.toArray(new String[arguments.size()]));
         return buildResult(executionResult);
@@ -57,7 +57,7 @@ abstract class AbstractQuery<T1 extends QueryOptions, T2> implements Query<T2> {
         return path;
     }
 
-    public T1 getOptions() {
+    public T getOptions() {
         return options;
     }
 
