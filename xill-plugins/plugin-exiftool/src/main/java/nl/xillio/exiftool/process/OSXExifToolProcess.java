@@ -12,7 +12,12 @@ public class OSXExifToolProcess extends AbstractExifToolProcess {
 
     @Override
     protected Process buildProcess(ProcessBuilder processBuilder) throws IOException {
-        processBuilder.command("/usr/bin/exiftool", "-stay_open", "True", "-@", "-");
+        String exifBin = System.getenv("exiftool_bin");
+        if (exifBin == null) {
+            exifBin = "/usr/local/bin/exiftool";
+        }
+
+        processBuilder.command(exifBin, "-stay_open", "True", "-@", "-");
         return processBuilder.start();
     }
 
