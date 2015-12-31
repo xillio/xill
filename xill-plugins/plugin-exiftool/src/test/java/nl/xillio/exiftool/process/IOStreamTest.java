@@ -1,6 +1,8 @@
 package nl.xillio.exiftool.process;
 
 import static org.mockito.Mockito.*;
+
+import nl.xillio.xill.TestUtils;
 import org.testng.annotations.Test;
 
 import java.io.BufferedReader;
@@ -14,7 +16,7 @@ import static org.testng.Assert.*;
  *
  * @author Pieter Dirk Soels
  */
-public class IOStreamTest {
+public class IOStreamTest extends TestUtils {
 
     @Test
     public void testCloseNormalConditions() throws IOException {
