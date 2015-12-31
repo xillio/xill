@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * This class represents a pool that can run low level actions on available processes.
@@ -57,12 +58,28 @@ public class ProcessPool implements AutoCloseable {
 
     private void release(ExifToolProcess process) {
         LOGGER.info("Releasing {}", process);
-        if(!process.isAvailable()) {
+        if (!process.isAvailable()) {
             // This process is still busy. Kill it
             processes.remove(process);
             process.close();
         }
         leasedProcesses.remove(process);
+    }
+
+    /**
+     * Close all idle processes.
+     */
+    public void clean() {
+        List<ExifToolProcess> processesToKill = processes.stream()
+                .filter(proc -> !leasedProcesses.contains(proc))
+                .filter(ExifToolProcess::isAvailable)
+                .collect(Collectors.toList());
+        processesToKill.forEach(this::close);
+    }
+
+    private void close(ExifToolProcess process) {
+        processes.remove(process);
+        process.close();
     }
 
     @Override

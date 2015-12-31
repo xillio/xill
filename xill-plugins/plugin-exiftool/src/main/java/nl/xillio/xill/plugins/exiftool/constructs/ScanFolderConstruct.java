@@ -41,6 +41,7 @@ public class ScanFolderConstruct extends Construct {
 
     @Override
     public ConstructProcessor prepareProcess(ConstructContext context) {
+        context.addRobotStoppedListener(action -> processPool.clean());
         return new ConstructProcessor(
                 (path, projection, options) -> process(path, projection, options, context),
                 new Argument("folderPath", ATOMIC),
