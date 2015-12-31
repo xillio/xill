@@ -10,23 +10,23 @@ Whenever you specify a tag that should be included in the projection all other t
 ### Examples
 To get only the MIME Type tag:
 
-        {
-            "mimeType": true
-        }
+    {
+        "mimeType": true
+    }
 
 To get everything except the MIME Type:
 
-        {
-            "mimeType": false
-        }
+    {
+        "mimeType": false
+    }
 
 To get multiple tags:
 
-        {
-            "mimeType": true,
-            "megapixels": true,
-            "bitsPerSample": true
-        }
+    {
+        "mimeType": true,
+        "megapixels": true,
+        "bitsPerSample": true
+    }
 
 ## Options
 To set options for this construct you can provide an *OBJECT* that contains the options as a key and values as the setting.
@@ -34,6 +34,23 @@ To set options for this construct you can provide an *OBJECT* that contains the 
 | Option     | Description | Value |
 | ---------- | ----------- | ----- |
 | nameConvention | The naming convention that should be applied to the tags | Default: *lowerCamelCase (lcc)*, upperCamelCase (ucc) or capitalWord (cw) |
+
+## Usage on a non-windows machine
+To use the Exiftool plugin on a non-windows machine some setup is required. Below you can find
+the steps to install the required files.
+
+### Linux
+* Download the exiftool perl source from *sno.phy.queensu.ca/~phil/exiftool/* (top link)
+* Extract the archive to your hard drive
+* Set your system's environmental variable *exiftool_bin* to the absolute path of the exiftool file
+* (Optional) Set your systems's envirionmental variable *perl_bin* to the path of the perl installation. (Defaults to */usr/bin/perl*)
+* Restart Xill IDE
+
+### Mac OSX
+* Download the exiftool osx executable from *sno.phy.queensu.ca/~phil/exiftool/* (bottom link)
+* Install the application
+* (Optional) Set your system's environmental variable *exiftool_bin* to the absolute path of the exiftool file. (Defaults to */usr/local/bin/exiftool*)
+* Restart Xill IDE
     </description>
     <examples>
         <example title="Usage">

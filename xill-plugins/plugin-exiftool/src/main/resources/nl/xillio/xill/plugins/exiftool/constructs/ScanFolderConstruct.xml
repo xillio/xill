@@ -15,7 +15,24 @@ To set options for this construct you can provide an *OBJECT* that contains the 
 | nameConvention | The naming convention that should be applied to the tags | Default: *lowerCamelCase (lcc)*, upperCamelCase (ucc) or capitalWord (cw) |
 | recursive | Scan the folder recursively | true / false. Default: *true* |
 | extensions | A filter that selects which extensions to scan or skip | A [projection](./scanFile.html) with file extensions as keys |
-    </description>
+
+## Usage on a non-windows machine
+To use the Exiftool plugin on a non-windows machine some setup is required. Below you can find
+the steps to install the required files.
+
+### Linux
+* Download the exiftool perl source from *sno.phy.queensu.ca/~phil/exiftool/* (top link)
+* Extract the archive to your hard drive
+* Set your system's environmental variable *exiftool_bin* to the absolute path of the exiftool file
+* (Optional) Set your systems's envirionmental variable *perl_bin* to the path of the perl installation. (Defaults to */usr/bin/perl*)
+* Restart Xill IDE
+
+### Mac OSX
+* Download the exiftool osx executable from *sno.phy.queensu.ca/~phil/exiftool/* (bottom link)
+* Install the application
+* (Optional) Set your system's environmental variable *exiftool_bin* to the absolute path of the exiftool file. (Defaults to */usr/local/bin/exiftool*)
+* Restart Xill IDE
+</description>
     <examples>
         <example title="Usage">
             <header>Get all available tags on all files in a folder</header>
