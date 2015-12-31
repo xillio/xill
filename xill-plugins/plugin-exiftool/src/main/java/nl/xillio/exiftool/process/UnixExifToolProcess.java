@@ -12,7 +12,18 @@ public class UnixExifToolProcess extends AbstractExifToolProcess {
 
     @Override
     protected Process buildProcess(ProcessBuilder processBuilder) throws IOException {
-        processBuilder.command(System.getenv("exiftool_bin"), "-stay_open", "True", "-@", "-");
+        String exifBin = System.getenv("exiftool_bin");
+        if (exifBin == null) {
+            throw new IOException("Please set your exiftool_bin environmental variable to the path to your exiftool installation.");
+        }
+
+        String perlBin = System.getenv("perl_bin");
+
+        if (perlBin == null) {
+            perlBin = "/usr/bin/perl";
+        }
+
+        processBuilder.command(perlBin, exifBin, "-stay_open", "True", "-@", "-");
         return processBuilder.start();
     }
 
