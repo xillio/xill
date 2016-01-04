@@ -56,6 +56,7 @@ public class ProcessPool implements AutoCloseable {
         return process;
     }
 
+    @SuppressWarnings("squid:UnusedPrivateMethod") // Sonar doesn't do lambdas
     private void release(ExifToolProcess process) {
         LOGGER.info("Releasing {}", process);
         if (!process.isAvailable()) {
@@ -77,6 +78,7 @@ public class ProcessPool implements AutoCloseable {
         processesToKill.forEach(this::close);
     }
 
+    @SuppressWarnings("squid:UnusedPrivateMethod") // Sonar doesn't do lambdas
     private void close(ExifToolProcess process) {
         processes.remove(process);
         process.close();

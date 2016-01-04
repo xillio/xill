@@ -65,9 +65,6 @@ abstract class AbstractExifToolProcess implements ExifToolProcess {
 
         status = Status.RUNNING;
 
-        // Remove all old data
-        //streams.flushReader();
-
         LOGGER.debug("Sending arguments");
         // Send arguments
         for (String argument : arguments) {

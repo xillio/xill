@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.exiftool.services;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import me.biesaart.utils.Log;
 import nl.xillio.exiftool.*;
 import nl.xillio.exiftool.query.FileQueryOptions;
 import nl.xillio.exiftool.query.FolderQueryOptions;
@@ -10,6 +11,7 @@ import nl.xillio.exiftool.query.TagNameConvention;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import org.slf4j.Logger;
 
 import java.util.Map;
 
@@ -20,7 +22,7 @@ import java.util.Map;
  */
 @Singleton
 public class OptionsFactory {
-
+    private static final Logger LOGGER = Log.get();
     private final ProjectionFactory projectionFactory;
 
     @Inject
@@ -37,7 +39,7 @@ public class OptionsFactory {
         FolderQueryOptions folderQueryOptions = new FolderQueryOptionsImpl();
         Map<String, MetaExpression> map = options.getValue();
 
-        map.forEach((key, value) -> processFolder(folderQueryOptions, key, value));
+        map.forEach((key, value) -> processFolder(folderQueryOptions, key.toLowerCase(), value));
 
         return folderQueryOptions;
     }
@@ -51,7 +53,7 @@ public class OptionsFactory {
         FileQueryOptions folderQueryOptions = new FileQueryOptionsImpl();
         Map<String, MetaExpression> map = options.getValue();
 
-        map.forEach((key, value) -> processFile(folderQueryOptions, key, value));
+        map.forEach((key, value) -> processFile(folderQueryOptions, key.toLowerCase(), value));
 
         return folderQueryOptions;
     }
@@ -82,21 +84,23 @@ public class OptionsFactory {
 
     private void process(QueryOptions queryOptions, String option, MetaExpression value) {
         switch (option) {
-            case "nameConvention":
+            case "nameconvention":
                 queryOptions.setTagNameConvention(getConvention(value.getStringValue()));
                 break;
+            default:
+                LOGGER.warn("Unknown option [" + option + "]");
         }
     }
 
     private TagNameConvention getConvention(String tagName) {
         switch (tagName) {
-            case "capitalWord":
+            case "capitalword":
             case "cw":
                 return new CapitalWordNameConvention();
-            case "upperCamelCase":
+            case "uppercamelcase":
             case "ucc":
                 return new UpperCamelCaseNameConvention();
-            case "lowerCamelCase":
+            case "lowercamelcase":
             case "lcc":
             default:
                 return new LowerCamelCaseNameConvention();

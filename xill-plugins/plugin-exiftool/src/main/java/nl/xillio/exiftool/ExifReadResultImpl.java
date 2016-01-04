@@ -31,13 +31,12 @@ class ExifReadResultImpl implements ExifReadResult {
         this.tagNameConvention = tagNameConvention;
         this.tagsQueue = new ArrayDeque<>(cacheSize + 3);
 
-        // TODO:: Use a thread pool mechanism to process this
         Thread thread = new Thread(this::run, "ExecutionResult-" + counter++);
         thread.setDaemon(true);
         thread.start();
     }
 
-    @SuppressWarnings("squid:S1068") // Sonar doesn't do lambdas
+    @SuppressWarnings("squid:UnusedPrivateMethod") // Sonar doesn't do lambdas
     private void run() {
         LOGGER.debug("Start processing");
         while (executionResult.hasNext()) {
@@ -126,6 +125,7 @@ class ExifReadResultImpl implements ExifReadResult {
     }
 
     @Override
+    @SuppressWarnings("squid:S2272") // tagsQueue.remove will throw this exception.
     public ExifTags next() {
         return tagsQueue.remove();
     }

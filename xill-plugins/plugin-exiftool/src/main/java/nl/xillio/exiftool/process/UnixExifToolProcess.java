@@ -34,6 +34,6 @@ public class UnixExifToolProcess extends AbstractExifToolProcess {
 
     @Override
     public void init() throws IOException {
-
+        // The user has to manually install Exiftool
     }
 }

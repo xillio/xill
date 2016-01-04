@@ -53,6 +53,7 @@ public interface ExifToolProcess extends AutoCloseable {
     /**
      * Close this process.
      */
+    @Override
     void close();
 
     /**

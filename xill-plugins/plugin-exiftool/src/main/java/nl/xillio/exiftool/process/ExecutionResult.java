@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * This class represents the result of a call to the process.
@@ -57,6 +58,10 @@ public class ExecutionResult implements Iterator<String> {
 
     @Override
     public String next() {
+        if (!hasNext()) {
+            throw new NoSuchElementException("No more elements in this result");
+        }
+
         String current = cachedLine;
         cacheNext();
         return current;
