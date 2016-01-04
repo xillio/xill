@@ -1,6 +1,5 @@
 package nl.xillio.xill.plugins.exiftool.services;
 
-import nl.xillio.exiftool.FolderQueryOptionsImpl;
 import nl.xillio.exiftool.LowerCamelCaseNameConvention;
 import nl.xillio.exiftool.query.FileQueryOptions;
 import nl.xillio.exiftool.query.FolderQueryOptions;
@@ -8,10 +7,10 @@ import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 public class OptionsFactoryTest {
 

@@ -10,7 +10,6 @@ import java.io.InputStream;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertSame;
 import static org.testng.AssertJUnit.assertTrue;
 
 

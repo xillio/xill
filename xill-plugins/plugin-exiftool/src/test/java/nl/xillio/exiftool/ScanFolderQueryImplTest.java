@@ -9,8 +9,6 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.testng.Assert.*;
-
 
 public class ScanFolderQueryImplTest {
 

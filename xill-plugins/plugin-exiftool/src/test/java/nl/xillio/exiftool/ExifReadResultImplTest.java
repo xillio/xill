@@ -14,7 +14,8 @@ public class ExifReadResultImplTest {
     @Test
     public void testReadResult() {
         BufferedReader bufferedReader = new BufferedReader(new StringReader("======== D:\\File\nTest Value: 5\nOther Value: 234tgr\n{ready}"));
-        ExecutionResult executionResult = new ExecutionResult(bufferedReader, ()->{}, "{ready}");
+        ExecutionResult executionResult = new ExecutionResult(bufferedReader, () -> {
+        }, "{ready}");
         ExifReadResultImpl readResult = new ExifReadResultImpl(executionResult, 10, a -> a);
 
         assertTrue(readResult.hasNext());

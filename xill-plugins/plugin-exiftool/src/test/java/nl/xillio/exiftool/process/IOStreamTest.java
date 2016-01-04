@@ -1,7 +1,5 @@
 package nl.xillio.exiftool.process;
 
-import static org.mockito.Mockito.*;
-
 import nl.xillio.xill.TestUtils;
 import org.testng.annotations.Test;
 
@@ -9,7 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-import static org.testng.Assert.*;
+import static org.mockito.Mockito.*;
 
 /**
  * Unit test for closing IO streams.

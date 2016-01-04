@@ -4,10 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import me.biesaart.utils.Log;
 import nl.xillio.exiftool.*;
-import nl.xillio.exiftool.query.FileQueryOptions;
-import nl.xillio.exiftool.query.FolderQueryOptions;
-import nl.xillio.exiftool.query.QueryOptions;
-import nl.xillio.exiftool.query.TagNameConvention;
+import nl.xillio.exiftool.query.*;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
@@ -64,11 +61,7 @@ public class OptionsFactory {
                 folderQueryOptions.setRecursive(value.getBooleanValue());
                 break;
             case "extensions":
-                try {
-                    folderQueryOptions.setExtensionFilter(projectionFactory.build(value));
-                } catch (IllegalArgumentException e) {
-                    throw new RobotRuntimeException("Invalid extension projection: " + e.getMessage(), e);
-                }
+                folderQueryOptions.setExtensionFilter(getProjection(value));
                 break;
             default:
                 process(folderQueryOptions, option, value);
@@ -104,6 +97,14 @@ public class OptionsFactory {
             case "lcc":
             default:
                 return new LowerCamelCaseNameConvention();
+        }
+    }
+
+    private Projection getProjection(MetaExpression value) {
+        try {
+            return projectionFactory.build(value);
+        } catch (IllegalArgumentException e) {
+            throw new RobotRuntimeException("Invalid extension projection: " + e.getMessage(), e);
         }
     }
 }

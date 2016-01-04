@@ -1,18 +1,14 @@
 package nl.xillio.exiftool;
 
 import nl.xillio.exiftool.process.ExecutionResult;
-import nl.xillio.exiftool.process.ExifToolProcess;
 import nl.xillio.exiftool.query.ExifReadResult;
 import nl.xillio.exiftool.query.FolderQueryOptions;
 import nl.xillio.exiftool.query.Projection;
 import nl.xillio.exiftool.query.ScanFolderQuery;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class represents the default implementation of the ScanFolderQuery.

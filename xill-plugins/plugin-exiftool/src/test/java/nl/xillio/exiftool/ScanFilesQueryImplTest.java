@@ -14,10 +14,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.*;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
 
 
 public class ScanFilesQueryImplTest {
@@ -47,9 +45,8 @@ public class ScanFilesQueryImplTest {
         ExifTags tags = query.buildResult(result);
 
         assertEquals(tags.size(), 4);
-        assertEquals(new ArrayList<>(tags.values()).subList(1,tags.size()), Arrays.asList("true", "false", "null"));
+        assertEquals(new ArrayList<>(tags.values()).subList(1, tags.size()), Arrays.asList("true", "false", "null"));
     }
-
 
 
 }

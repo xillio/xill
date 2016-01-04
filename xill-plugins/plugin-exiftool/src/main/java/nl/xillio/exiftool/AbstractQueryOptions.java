@@ -4,7 +4,6 @@ import nl.xillio.exiftool.query.QueryOptions;
 import nl.xillio.exiftool.query.TagNameConvention;
 
 /**
- *
  * @author Thomas Biesaart
  */
 abstract class AbstractQueryOptions implements QueryOptions {
