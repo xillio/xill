@@ -4,8 +4,8 @@
         Returns the sorted list or object.
 
         If recursive is true it will also sort the lists and object inside the given list or object.
-        If onKeys is true it will sort object by key instead of by value.
-        If reverse is true it will sort highest first.
+        If onKeys is true it will also sort object by key instead of by value.
+        If reverse is true it will also sort highest first.
 
         Input will be sorted in order of: Lists -> Objects -> Numbers -> Strings
         The given parameters will sort each of those segments.
