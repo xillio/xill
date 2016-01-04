@@ -4,6 +4,7 @@ import nl.xillio.events.Event;
 import nl.xillio.xill.api.Breakpoint;
 import nl.xillio.xill.api.DebugInfo;
 import nl.xillio.xill.api.Debugger;
+import nl.xillio.xill.api.NullDebugger;
 import nl.xillio.xill.api.components.*;
 import nl.xillio.xill.api.errors.ErrorHandlingPolicy;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
@@ -11,6 +12,9 @@ import nl.xillio.xill.api.events.RobotContinuedAction;
 import nl.xillio.xill.api.events.RobotPausedAction;
 import nl.xillio.xill.api.events.RobotStartedAction;
 import nl.xillio.xill.api.events.RobotStoppedAction;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 import java.util.List;
@@ -30,6 +34,7 @@ public class ErrorBlockDebugger extends DelegateDebugger {
     @Override
     public void handle(Throwable e) throws RobotRuntimeException {
         this.hasError = true;
+        throw new RobotRuntimeException(e.getMessage());
     }
 
     @Override

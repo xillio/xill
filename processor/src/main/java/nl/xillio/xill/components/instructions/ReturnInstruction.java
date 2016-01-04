@@ -38,13 +38,7 @@ public class ReturnInstruction extends Instruction {
 
     @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) {
-        Instruction parent = this.getHostInstruction().getParentInstruction();
-        if (parent instanceof ErrorInstruction) {
-            InstructionSet p = ((ErrorInstruction) parent).getDo();
-            if (p.equals(this.getHostInstruction())) {
-                return ((ErrorInstruction) parent).getFinally().process(debugger);
-            }
-        }
+
 
         if (value == null) {
             return InstructionFlow.doReturn(ExpressionBuilderHelper.NULL);
