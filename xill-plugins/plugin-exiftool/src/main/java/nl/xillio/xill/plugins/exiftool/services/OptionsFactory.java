@@ -50,7 +50,7 @@ public class OptionsFactory {
         FileQueryOptions folderQueryOptions = new FileQueryOptionsImpl();
         Map<String, MetaExpression> map = options.getValue();
 
-        map.forEach((key, value) -> processFile(folderQueryOptions, key.toLowerCase(), value));
+        map.forEach((key, value) -> process(folderQueryOptions, key.toLowerCase(), value));
 
         return folderQueryOptions;
     }
@@ -68,13 +68,7 @@ public class OptionsFactory {
         }
     }
 
-    private void processFile(FileQueryOptions fileQueryOptions, String option, MetaExpression value) {
-        switch (option) {
-            default:
-                process(fileQueryOptions, option, value);
-        }
-    }
-
+    @SuppressWarnings("squid:S1301") // Implemented like this for future expansion
     private void process(QueryOptions queryOptions, String option, MetaExpression value) {
         switch (option) {
             case "nameconvention":
