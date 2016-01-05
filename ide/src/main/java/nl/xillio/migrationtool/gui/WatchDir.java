@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.*;
-import java.nio.file.WatchEvent.Kind;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -16,30 +15,49 @@ import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import static java.nio.file.StandardWatchEventKinds.*;
 
 public class WatchDir implements Runnable {
+    private static final Logger LOGGER = LogManager.getLogger(WatchDir.class);
 
     private final WatchService watcher;
     private volatile Map<WatchKey, Path> keys;
     private volatile Map<FolderListener, List<Path>> listeners;
-
     private boolean stop = false;
 
-    private static final Logger LOGGER = LogManager.getLogger(WatchDir.class);
+    private static int threadCounter = 0;
 
     /**
-     * Creates a WatchService and registers the given directory
+     * Create a WatchService.
      */
-    WatchDir() throws IOException {
+    public WatchDir() throws IOException {
         watcher = FileSystems.getDefault().newWatchService();
-        keys = new HashMap<WatchKey, Path>();
-        listeners = new HashMap<FolderListener, List<Path>>();
+        keys = new HashMap<>();
+        listeners = new HashMap<>();
     }
 
+    /**
+     * Create a daemon thread with approprioate name from this WatchDir.
+     *
+     * @return The created thread.
+     */
+    public Thread createThread() {
+        Thread thread = new Thread(this);
+        thread.setDaemon(true);
+        thread.setName("watchdir-" + threadCounter++);
+        return thread;
+    }
+
+    /**
+     * Add a folder listener to the path.
+     *
+     * @param listener The folder listener to add.
+     * @param dir      The path to listen for changes.
+     * @throws IOException if an I/O error occurs while registering the dir.
+     */
     public void addFolderListener(final FolderListener listener, final Path dir) throws IOException {
         List<Path> paths;
         if (listeners.containsKey(listener)) {
             paths = listeners.get(listener);
         } else {
-            paths = new LinkedList<Path>();
+            paths = new LinkedList<>();
             listeners.put(listener, paths);
         }
 
@@ -50,32 +68,15 @@ public class WatchDir implements Runnable {
         registerAll(dir);
     }
 
+    /**
+     * Stop the WatchDir.
+     */
     public void stop() {
         stop = true;
-        try {
-            watcher.close();
-        } catch (IOException e) {
-            LOGGER.error(e.getMessage(), e);
-        }
-    }
-
-    private void fireEvent(final Path dir, final Path child, final WatchEvent<Path> event) {
-        for (FolderListener listener : listeners.keySet()) {
-            for (Path p : listeners.get(listener)) {
-                if (dir.startsWith(p)) {
-                    listener.folderChanged(dir, child, event);
-                }
-            }
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    static <T> WatchEvent<T> cast(final WatchEvent<?> event) {
-        return (WatchEvent<T>) event;
     }
 
     /**
-     * Register the given directory with the WatchService
+     * Register the given directory with the WatchService.
      */
     private void registerDir(final Path dir) throws IOException {
         WatchKey key = dir.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
@@ -83,83 +84,97 @@ public class WatchDir implements Runnable {
     }
 
     /**
-     * Register the given directory, and all its sub-directories, with the
-     * WatchService.
+     * Register the given directory and all its sub-directories with the WatchService.
+     *
+     * @param start The top path to register.
+     * @throws IOException if an I/O error occurs while registering one of the directories.
      */
     private void registerAll(final Path start) throws IOException {
-        // register directory and sub-directories
+        // Register directory and sub-directories.
         Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
             @Override
-            public FileVisitResult preVisitDirectory(final Path dir, final BasicFileAttributes attrs)
-                    throws IOException {
+            public FileVisitResult preVisitDirectory(final Path dir, final BasicFileAttributes att) throws IOException {
                 registerDir(dir);
                 return FileVisitResult.CONTINUE;
             }
         });
     }
 
+    @SuppressWarnings("unchecked")
+    private static <T> WatchEvent<T> cast(final WatchEvent<?> event) {
+        return (WatchEvent<T>) event;
+    }
+
     @Override
-    @SuppressWarnings("squid:S1166") // InterruptedException thrown by watcher.take() is handled correctly
+    @SuppressWarnings("squid:S1166") // InterruptedException thrown by watcher.take() is handled correctly.
     public void run() {
         while (!stop) {
-
-            // wait for key to be signalled
+            // Wait for key to be signalled.
             WatchKey key;
             try {
                 key = watcher.take();
             } catch (InterruptedException | ClosedWatchServiceException e) {
-                return;
+                break;
             }
 
+            // Get the path, if it is null ignore the event.
             Path dir = keys.get(key);
             if (dir == null) {
                 continue;
             }
 
-            for (WatchEvent<?> event : key.pollEvents()) {
-                Kind<?> kind = event.kind();
+            // Handle all events.
+            key.pollEvents().forEach(event -> handleEvent(dir, cast(event)));
 
-                // TBD - provide example of how OVERFLOW event is handled
-                if (kind == OVERFLOW) {
-                    continue;
-                }
-
-                // Context for directory entry event is the file name of entry
-                WatchEvent<Path> ev = cast(event);
-                Path name = ev.context();
-                Path child = dir.resolve(name);
-
-                // print out event
-                fireEvent(dir, child, ev);
-
-                // if directory is created, and watching recursively, then
-                // register it and its sub-directories
-                if (kind == ENTRY_CREATE) { // recursive &&
-                    try {
-                        if (Files.isDirectory(child, NOFOLLOW_LINKS)) {
-                            registerAll(child);
-                        }
-                    } catch (IOException e) {
-                        LOGGER.error(e.getMessage(), e);
-                    }
-                }
-            }
-
-            // reset key and remove from set if directory no longer accessible
-            boolean valid = key.reset();
-            if (!valid) {
+            // Reset the key, if it is invalid remove it from the keys.
+            if (!key.reset()) {
                 keys.remove(key);
 
-                // all directories are inaccessible
+                // All directories are inaccessible.
                 if (keys.isEmpty()) {
                     break;
                 }
             }
         }
+
+        closeWatcher();
+    }
+
+    private void handleEvent(final Path dir, final WatchEvent<Path> event) {
+        // Context for directory entry event is the file name of entry.
+        Path name = event.context();
+        Path child = dir.resolve(name);
+
+        // Call folderChanged for each path under dir for each listener.
+        for (Map.Entry<FolderListener, List<Path>> entry : listeners.entrySet()) {
+            entry.getValue().stream().filter(dir::startsWith).forEach(p -> entry.getKey().folderChanged(dir, child, event));
+        }
+
+        // Register new directories that were created in this event.
+        if (event.kind() == ENTRY_CREATE) {
+            registerNewDirectories(child);
+        }
+    }
+
+    private void registerNewDirectories(final Path child) {
+        try {
+            if (Files.isDirectory(child, NOFOLLOW_LINKS)) {
+                registerAll(child);
+            }
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
+
+    private void closeWatcher() {
+        try {
+            watcher.close();
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
     }
 
     public interface FolderListener {
-        public void folderChanged(final Path dir, final Path child, final WatchEvent<Path> event);
+        void folderChanged(final Path dir, final Path child, final WatchEvent<Path> event);
     }
-
 }
