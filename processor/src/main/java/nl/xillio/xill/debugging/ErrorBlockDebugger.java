@@ -34,7 +34,12 @@ public class ErrorBlockDebugger extends DelegateDebugger {
     @Override
     public void handle(Throwable e) throws RobotRuntimeException {
         this.hasError = true;
-        throw new RobotRuntimeException(e.getMessage());
+
+        if (e instanceof RobotRuntimeException) {
+            throw (RobotRuntimeException) e;
+        }
+
+        throw new RobotRuntimeException("Exception in robot.", e);
     }
 
     @Override

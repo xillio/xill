@@ -323,13 +323,19 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
                 parseToken(token.getInstructionBlock().getInstructionSet()));
     }
 
+    /**
+     * Parse a ErrorInstruction
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
     ErrorInstruction parseToken(final xill.lang.xill.ErrorInstruction token) throws XillParsingException{
 
-        Target t = token.getCause();
-        VariableDeclaration cause = null;
-        if(t != null) {
-            cause = VariableDeclaration.nullDeclaration(pos(token.getErrorBlock()),token.getCause().getName());
-            variables.put(token.getCause(), cause);
+        Target cause = token.getCause();
+        VariableDeclaration causeVar = null;
+        if(cause != null) {
+            causeVar = VariableDeclaration.nullDeclaration(pos(token.getErrorBlock()),cause.getName());
+            variables.put(cause, causeVar);
         }
 
         return new ErrorInstruction(
@@ -337,7 +343,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
                         token.getSuccesBlock() == null ? null : parseToken(token.getSuccesBlock().getInstructionSet()),
                         token.getErrorBlock() == null ? null : parseToken(token.getErrorBlock().getInstructionSet()),
                         token.getFinallyBlock() == null ? null : parseToken(token.getFinallyBlock().getInstructionSet()),
-                        cause);
+                        causeVar);
     }
 
     /**
