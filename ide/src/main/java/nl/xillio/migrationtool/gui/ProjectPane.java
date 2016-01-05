@@ -87,7 +87,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
 
         try {
             watcher = new WatchDir();
-            new Thread(watcher).start();
+            watcher.createThread().start();
         } catch (IOException e) {
             LOGGER.error("IOException when creating the WatchDir.", e);
         }
