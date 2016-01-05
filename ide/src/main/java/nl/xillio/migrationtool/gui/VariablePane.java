@@ -66,8 +66,8 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
         // Remove the default empty table text
         tblVariables.setPlaceholder(new Label(""));
 
-        colVariableName.setCellValueFactory(new PropertyValueFactory<ObservableVariable, String>("name"));
-        colVariableValue.setCellValueFactory(new PropertyValueFactory<ObservableVariable, String>("value"));
+        colVariableName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        colVariableValue.setCellValueFactory(new PropertyValueFactory<>("value"));
 
         tblVariables.getSelectionModel().getSelectedItems().addListener(this);
     }
@@ -129,9 +129,9 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
     }
 
     /**
-     * Set the preview pane
+     * Set the preview pane.
      *
-     * @param previewpane
+     * @param previewpane The given preview pane to set.
      */
     public void setPreviewPane(final PreviewPane previewpane) {
         this.previewpane = previewpane;
