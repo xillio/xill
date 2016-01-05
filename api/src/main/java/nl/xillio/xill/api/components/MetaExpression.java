@@ -250,6 +250,14 @@ public abstract class MetaExpression implements Expression, Processable {
     }
 
     @Override
+    public boolean equals(final Object obj) {
+        if (obj instanceof MetaExpression) {
+            return equals((MetaExpression) obj);
+        }
+        return super.equals(obj);
+    }
+
+    @Override
     public int hashCode() {
         if (getType().equals(ExpressionDataType.ATOMIC)) {
             return getStringValue().hashCode();
@@ -260,29 +268,23 @@ public abstract class MetaExpression implements Expression, Processable {
     /**
      * Check equality to other {@link MetaExpression}
      *
-     * @param obj the object to compare this to
+     * @param other the other
      * @return true if and only if the expressions have equal value
      */
-    @Override
-    public boolean equals(final Object obj) {
-        if (!(obj instanceof MetaExpression)) {
-            return super.equals(obj);
-        }
+    public boolean equals(final MetaExpression other) {
 
-        MetaExpression other = (MetaExpression) obj;
-
-        // Compare the types.
+        // Compare the type
         if (getType() != other.getType()) {
             return false;
         }
 
-        // Compare the values.
         switch (getType()) {
             case ATOMIC:
                 return getBooleanValue() == other.getBooleanValue() &&
                         getStringValue().equals(other.getStringValue()) &&
                         MathUtils.compare(getNumberValue(), other.getNumberValue()) == 0;
             case LIST:
+                return getValue().equals(other.getValue());
             case OBJECT:
                 return getValue().equals(other.getValue());
             default:
@@ -480,6 +482,7 @@ public abstract class MetaExpression implements Expression, Processable {
         }
     }
 
+
     /**
      * Dispose all items in the {@link MetadataExpressionPool}
      */
@@ -537,7 +540,7 @@ public abstract class MetaExpression implements Expression, Processable {
             // Push stub
             MetaExpression result = ExpressionBuilderHelper.emptyList();
             cache.put(root, result);
-            List<MetaExpression> values = result.getValue();
+            List<MetaExpression> values = (List<MetaExpression>) result.getValue();
 
             // Parse children
             for (Object child : (List<?>) root) {
@@ -556,7 +559,7 @@ public abstract class MetaExpression implements Expression, Processable {
             // Push stub
             MetaExpression result = ExpressionBuilderHelper.emptyObject();
             cache.put(root, result);
-            LinkedHashMap<String, MetaExpression> values = result.getValue();
+            LinkedHashMap<String, MetaExpression> values = (LinkedHashMap<String, MetaExpression>) result.getValue();
 
             // Parse children
             for (Entry<?, ?> child : ((Map<?, ?>) root).entrySet()) {
