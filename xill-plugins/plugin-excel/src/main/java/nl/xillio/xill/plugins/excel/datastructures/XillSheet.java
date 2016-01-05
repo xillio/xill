@@ -34,7 +34,6 @@ public class XillSheet implements MetadataExpression {
         calculateRowLength();
         columnLength = calculateColumnLength();
         name = sheet.getSheetName();
-        int i = 0;
 
         this.workbook = workbook;
     }
@@ -163,10 +162,7 @@ public class XillSheet implements MetadataExpression {
      */
     public void setCellValue(XillCellRef cellRef, String value) {
         getCell(cellRef).setCellValue(value);
-        calculateRowLength();
-        if (cellRef.getColumn() + 1 > columnLength)
-            columnLength = cellRef.getColumn() + 1;
-
+        calculateRowAndColumnLength(cellRef);
     }
 
     /**
@@ -177,10 +173,7 @@ public class XillSheet implements MetadataExpression {
      */
     public void setCellValue(XillCellRef cellRef, Double value) {
         getCell(cellRef).setCellValue(value);
-        calculateRowLength();
-        if (cellRef.getColumn() + 1 > columnLength)
-            columnLength = cellRef.getColumn() + 1;
-
+        calculateRowAndColumnLength(cellRef);
     }
 
     /**
@@ -191,10 +184,7 @@ public class XillSheet implements MetadataExpression {
      */
     public void setCellValue(XillCellRef cellRef, boolean value) {
         getCell(cellRef).setCellValue(value);
-        calculateRowLength();
-        if (cellRef.getColumn() + 1 > columnLength)
-            columnLength = cellRef.getColumn() + 1;
-
+        calculateRowAndColumnLength(cellRef);
     }
 
     /**
@@ -205,9 +195,24 @@ public class XillSheet implements MetadataExpression {
      */
     public void setCellValue(XillCellRef cellRef, ZonedDateTime value) {
         getCell(cellRef).setCellValue(value);
+        calculateRowAndColumnLength(cellRef);
+    }
+
+    /**
+     * Set the value of the cell to empty
+     *
+     * @param cellRef reference to the cell which should be changed
+     */
+    public void emptyCellValue(XillCellRef cellRef) {
+        getCell(cellRef).setNull();
+        calculateRowAndColumnLength(cellRef);
+    }
+
+    private void calculateRowAndColumnLength(final XillCellRef cellRef) {
         calculateRowLength();
-        if (cellRef.getColumn() + 1 > columnLength)
+        if (cellRef.getColumn() + 1 > columnLength) {
             columnLength = cellRef.getColumn() + 1;
+        }
     }
 
     /**
