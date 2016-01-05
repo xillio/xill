@@ -7,7 +7,7 @@ The `options` parameter may contain the following options:
 | Option     | Description |
 | ---------- | ----------- |
 | `projection` | A document describing the fields to return for the matching document.
-| `sortBy`   | A document with sort criteria to apply to the query. The default is `null`, which means that the documents will be returned in an undefined order.
+| `sort`   | A document with sort criteria to apply to the query. The default is `null`, which means that the documents will be returned in an undefined order.
 | `upsert`   | If set to true, creates a new document if no document matches the query, or if documents match the query, performs an update. To avoid multiple upserts, ensure that the query fields are uniquely indexed. The default is false.
 | `returnNew`| If set to true, returns the modified document rather than the original. The default is false.
 | `maxTime`  | The maximum execution time in milliseconds for this operation.
