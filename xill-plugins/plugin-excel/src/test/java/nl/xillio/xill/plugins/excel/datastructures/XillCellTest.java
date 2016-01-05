@@ -101,6 +101,9 @@ public class XillCellTest {
 
         testCell.setCellValue(true);
         verify(cell, times(1)).setCellValue(true);
+
+        testCell.setNull();
+        verify(cell, times(1)).setCellType(Cell.CELL_TYPE_BLANK);
     }
 
     //It is not possible to test what happens when a FormulaParseException is thrown in
