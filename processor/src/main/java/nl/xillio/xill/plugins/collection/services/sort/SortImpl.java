@@ -48,7 +48,7 @@ public class SortImpl implements Sort {
                     .stream()
                     .sorted((a, b) -> {
                         if (onKeys) {
-                            return a.getKey().compareTo(b.getKey());
+                            return sorter.compare(a.getKey(), b.getKey());
                         }
                         return sorter.compare(a.getValue(), b.getValue());
                     })
