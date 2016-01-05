@@ -3,6 +3,8 @@ package nl.xillio.xill.api.behavior;
 import nl.xillio.util.MathUtils;
 import nl.xillio.xill.api.components.Expression;
 
+import java.util.regex.Pattern;
+
 /**
  * <p>
  * This class represents the behavior of a string.
@@ -16,7 +18,8 @@ import nl.xillio.xill.api.components.Expression;
  * </ul>
  */
 public class StringBehavior implements Expression {
-
+    private static final Pattern NUMBER_PATTERN = Pattern.compile("\\d*(\\.\\d+)?(-?e\\d+)?");
+    private Number cachedNumber;
     private final String value;
 
     /**
@@ -30,7 +33,15 @@ public class StringBehavior implements Expression {
 
     @Override
     public Number getNumberValue() {
-        return MathUtils.parse(value);
+        if (cachedNumber == null) {
+            if (NUMBER_PATTERN.matcher(value).matches()) {
+                cachedNumber = MathUtils.parse(value);
+            } else {
+                cachedNumber = Double.NaN;
+            }
+        }
+
+        return cachedNumber;
     }
 
     @Override

@@ -282,15 +282,28 @@ public abstract class MetaExpression implements Expression, Processable {
         // Compare the values.
         switch (getType()) {
             case ATOMIC:
-                return getBooleanValue() == other.getBooleanValue() &&
-                        getStringValue().equals(other.getStringValue()) &&
-                        MathUtils.compare(getNumberValue(), other.getNumberValue()) == 0;
+                return compareAtomic(other);
             case LIST:
             case OBJECT:
                 return getValue().equals(other.getValue());
             default:
                 throw new NotImplementedException("This type has not been implemented.");
         }
+    }
+
+    private boolean compareAtomic(MetaExpression other) {
+        // Check if one xor the other is null.
+        if (isNull() != other.isNull()) {
+            return false;
+        }
+
+        // Compare the string values.
+        if (getStringValue().equals(other.getStringValue())) {
+            return true;
+        }
+
+        // If both atomics might be numbers, only compare their number values.
+        return MathUtils.compare(getNumberValue(), other.getNumberValue()) == 0;
     }
 
     @Override
