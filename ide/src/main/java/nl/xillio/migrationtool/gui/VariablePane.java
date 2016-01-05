@@ -92,9 +92,15 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
             return;
         }
 
+        int selected = stackPane.getInstructionBox().getSelectionModel().getSelectedIndex();
+
+        if (selected == -1) {
+            return;
+        }
+
         getDebugger().getVariables(wrapper.getValue()).forEach(var -> {
             String name = getDebugger().getVariableName(var);
-            int selected = stackPane.getInstructionBox().getSelectionModel().getSelectedIndex();
+
             MetaExpression value = getDebugger().getVariableValue(var, stackPane.getInstructionBox().getItems().size() - selected);
             ObservableVariable observable = new ObservableVariable(name, value, var);
             observableStateList.add(observable);
