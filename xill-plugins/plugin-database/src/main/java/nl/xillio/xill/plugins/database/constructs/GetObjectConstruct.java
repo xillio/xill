@@ -39,7 +39,7 @@ public class GetObjectConstruct extends BaseDatabaseConstruct {
         LinkedHashMap<String, Object> constraints = (LinkedHashMap<String, Object>) extractValue(object);
         ConnectionMetadata metaData;
         // if no database is given use the last made connection of this robot.
-        if (database.equals(NULL)) {
+        if (database.valueEquals(NULL)) {
             metaData = getLastConnection(robotID);
         } else {
             metaData = assertMeta(database, "database", ConnectionMetadata.class, "variable with a connection"); // check whether the given MetaExpression has the right Metadata.

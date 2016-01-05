@@ -252,7 +252,7 @@ public abstract class MetaExpression implements Expression, Processable {
     @Override
     public boolean equals(final Object obj) {
         if (obj instanceof MetaExpression) {
-            return equals((MetaExpression) obj);
+            return valueEquals((MetaExpression) obj);
         }
         return super.equals(obj);
     }
@@ -271,20 +271,19 @@ public abstract class MetaExpression implements Expression, Processable {
      * @param other the other
      * @return true if and only if the expressions have equal value
      */
-    public boolean equals(final MetaExpression other) {
-
-        // Compare the type
+    public boolean valueEquals(final MetaExpression other) {
+        // Compare the types.
         if (getType() != other.getType()) {
             return false;
         }
 
+        // Compare the values.
         switch (getType()) {
             case ATOMIC:
                 return getBooleanValue() == other.getBooleanValue() &&
                         getStringValue().equals(other.getStringValue()) &&
                         MathUtils.compare(getNumberValue(), other.getNumberValue()) == 0;
             case LIST:
-                return getValue().equals(other.getValue());
             case OBJECT:
                 return getValue().equals(other.getValue());
             default:

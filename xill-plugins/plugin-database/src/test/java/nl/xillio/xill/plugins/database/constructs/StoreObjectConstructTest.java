@@ -41,7 +41,7 @@ public class StoreObjectConstructTest extends TestUtils {
         DatabaseServiceFactory factory = mock(DatabaseServiceFactory.class);
         RobotID id = mock(RobotID.class);
 
-        when(database.equals(NULL)).thenReturn(true);
+        when(database.valueEquals(NULL)).thenReturn(true);
 
         DatabaseService dbService = mock(DatabaseService.class);
         when((factory).getService(any())).thenReturn(dbService);
@@ -70,7 +70,7 @@ public class StoreObjectConstructTest extends TestUtils {
         DatabaseServiceFactory factory = mock(DatabaseServiceFactory.class);
         RobotID id = mock(RobotID.class);
 
-        when(database.equals(NULL)).thenReturn(false);
+        when(database.valueEquals(NULL)).thenReturn(false);
 
         ConnectionMetadata conMetadata = mock(ConnectionMetadata.class);
         when((conMetadata).getDatabaseName()).thenReturn("databaseName");
@@ -123,7 +123,7 @@ public class StoreObjectConstructTest extends TestUtils {
         DatabaseServiceFactory factory = mock(DatabaseServiceFactory.class);
         RobotID id = mock(RobotID.class);
 
-        when(database.equals(NULL)).thenReturn(false);
+        when(database.valueEquals(NULL)).thenReturn(false);
 
         ConnectionMetadata conMetadata = mock(ConnectionMetadata.class);
         when((conMetadata).getDatabaseName()).thenReturn("databaseName");
@@ -159,7 +159,7 @@ public class StoreObjectConstructTest extends TestUtils {
         DatabaseServiceFactory factory = mock(DatabaseServiceFactory.class);
         RobotID id = mock(RobotID.class);
 
-        when(database.equals(NULL)).thenReturn(false);
+        when(database.valueEquals(NULL)).thenReturn(false);
 
         ConnectionMetadata conMetadata = mock(ConnectionMetadata.class);
         when((conMetadata).getDatabaseName()).thenReturn("databaseName");
