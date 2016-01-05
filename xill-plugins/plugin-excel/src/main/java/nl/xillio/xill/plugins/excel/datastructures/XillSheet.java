@@ -34,7 +34,6 @@ public class XillSheet implements MetadataExpression {
         calculateRowLength();
         columnLength = calculateColumnLength();
         name = sheet.getSheetName();
-        int i = 0;
 
         this.workbook = workbook;
     }
