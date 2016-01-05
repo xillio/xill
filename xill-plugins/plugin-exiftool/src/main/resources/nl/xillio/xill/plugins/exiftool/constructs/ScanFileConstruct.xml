@@ -125,6 +125,6 @@ the steps to install the required files.
         <reference>scanFolder</reference>
     </references>
     <tags>
-        meta, data, metadata, exif, exiftool
+        meta, data, metadata, exif
     </tags>
 </function>
