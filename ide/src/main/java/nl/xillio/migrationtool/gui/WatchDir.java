@@ -106,14 +106,11 @@ public class WatchDir implements Runnable {
     }
 
     @Override
-    @SuppressWarnings("squid:S1166") // InterruptedException thrown by watcher.take() is handled correctly.
     public void run() {
         while (!stop) {
             // Wait for key to be signalled.
-            WatchKey key;
-            try {
-                key = watcher.take();
-            } catch (InterruptedException | ClosedWatchServiceException e) {
+            WatchKey key = tryGetWatchKey();
+            if (key == null) {
                 break;
             }
 
@@ -122,8 +119,7 @@ public class WatchDir implements Runnable {
             if (dir == null) {
                 continue;
             }
-
-            // Handle all events.
+            
             key.pollEvents().forEach(event -> handleEvent(dir, cast(event)));
 
             // Reset the key, if it is invalid remove it from the keys.
@@ -138,6 +134,15 @@ public class WatchDir implements Runnable {
         }
 
         closeWatcher();
+    }
+
+    @SuppressWarnings("squid:S1166") // InterruptedException thrown by watcher.take() is handled correctly.
+    private WatchKey tryGetWatchKey() {
+        try {
+            return watcher.take();
+        } catch (InterruptedException | ClosedWatchServiceException e) {
+            return null;
+        }
     }
 
     private void handleEvent(final Path dir, final WatchEvent<Path> event) {
