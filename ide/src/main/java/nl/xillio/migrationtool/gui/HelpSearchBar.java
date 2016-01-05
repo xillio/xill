@@ -91,6 +91,9 @@ public class HelpSearchBar extends AnchorPane {
      */
     public void onKeyPressed(final KeyEvent keyEvent) {
         if (keyEvent.getCode() == KeyCode.ENTER) {
+            if (openSelected()) {
+                return;
+            }
             String content = searchField.getText();
 
             if (content.isEmpty()) {
@@ -128,16 +131,17 @@ public class HelpSearchBar extends AnchorPane {
     /**
      * Opens the selected item.
      */
-    void openSelected() {
+    boolean openSelected() {
         String selected = listView.getSelectionModel().getSelectedItem();
 
         if (selected == null) {
-            return;
+            return false;
         }
 
         String[] parts = selected.split("\\.");
         helpPane.display(parts[0], parts[1]);
         cleanup();
+        return true;
     }
 
     /**
