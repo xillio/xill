@@ -1,6 +1,5 @@
 package nl.xillio.migrationtool.gui;
 
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
