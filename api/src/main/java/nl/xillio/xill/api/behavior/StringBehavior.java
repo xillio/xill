@@ -18,12 +18,12 @@ import java.util.regex.Pattern;
  * </ul>
  */
 public class StringBehavior implements Expression {
-    private static final Pattern NUMBER_PATTERN = Pattern.compile("\\d*(\\.\\d+)?(-?e\\d+)?");
+    private static final Pattern NUMBER_PATTERN = Pattern.compile("-?\\d*(\\.\\d+)?(-?e\\d+)?");
     private Number cachedNumber;
     private final String value;
 
     /**
-     * Create a new {@link StringBehavior}
+     * Create a new {@link StringBehavior}.
      *
      * @param value the value to set
      */
