@@ -10,6 +10,7 @@ import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.services.files.FileResolver;
 import nl.xillio.xill.services.json.JacksonParser;
+import nl.xillio.xill.services.json.JsonException;
 import nl.xillio.xill.services.json.JsonParser;
 import nl.xillio.xill.services.json.PrettyJsonParser;
 
@@ -25,10 +26,15 @@ import static org.mockito.Mockito.*;
  */
 public class TestUtils extends ExpressionBuilderHelper {
     public static final FileResolver CONSTRUCT_FILE_RESOLVER;
+    private static final JsonParser jsonParser = new JacksonParser(true);
 
     static {
         CONSTRUCT_FILE_RESOLVER = mock(FileResolver.class);
         Guice.createInjector(new TestModule());
+    }
+
+    public static MetaExpression parseJson(String json) throws JsonException {
+        return parseObject(jsonParser.fromJson(json, Object.class));
     }
 
     static class TestModule extends AbstractModule {
