@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file
 - Excel.getSheet now also accepts a sheet index to fetch the n-th sheet of a workbook
 ### Fixed
 - Sorting on keys using Collection.sort now also works in reverse [CTC-1234](https://xillio.atlassian.net/browse/CTC-1234)
+- An issue where copying an excel sheet would cause changes to be lost. [CTC-1233](https://xillio.atlassian.net/browse/CTC-1233)
 
 ## [3.0.23] - 11-12-2015
 ### Stories done
