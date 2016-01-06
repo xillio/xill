@@ -1,6 +1,5 @@
 package nl.xillio.xill;
 
-import com.google.inject.Inject;
 import com.google.inject.Injector;
 import me.biesaart.utils.Log;
 import nl.xillio.plugins.PluginLoader;
@@ -65,9 +64,9 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
      * Create a new processor that can run a file.
      *
      * @param projectFolder the project folder
-     * @param robotFile the robot file
-     * @param pluginLoader the plugin loader
-     * @param debugger the debugger
+     * @param robotFile     the robot file
+     * @param pluginLoader  the plugin loader
+     * @param debugger      the debugger
      * @throws IOException
      */
     public XillProcessor(final File projectFolder, final File robotFile, final PluginLoader<XillPlugin> pluginLoader,
@@ -95,7 +94,6 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
         synchronized (XillValidator.LOCK) {
             XillValidator.setProjectFolder(projectFolder);
             XillScopeProvider.setProjectFolder(projectFolder);
-            compiledResources.clear();
             debugger.reset();
             Resource resource = resourceSet.getResource(URI.createFileURI(robotFile.getAbsolutePath()), true);
             return validate(resource);
@@ -113,7 +111,6 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
         synchronized (XillValidator.LOCK) {
             XillValidator.setProjectFolder(projectFolder);
             XillScopeProvider.setProjectFolder(projectFolder);
-            compiledResources.clear();
             debugger.reset();
             return compile(robotFile, rootRobot);
         }
