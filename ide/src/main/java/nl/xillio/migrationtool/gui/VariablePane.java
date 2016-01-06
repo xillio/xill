@@ -66,8 +66,8 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
         // Remove the default empty table text
         tblVariables.setPlaceholder(new Label(""));
 
-        colVariableName.setCellValueFactory(new PropertyValueFactory<ObservableVariable, String>("name"));
-        colVariableValue.setCellValueFactory(new PropertyValueFactory<ObservableVariable, String>("value"));
+        colVariableName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        colVariableValue.setCellValueFactory(new PropertyValueFactory<>("value"));
 
         tblVariables.getSelectionModel().getSelectedItems().addListener(this);
     }
@@ -92,9 +92,15 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
             return;
         }
 
+        int selected = stackPane.getInstructionBox().getSelectionModel().getSelectedIndex();
+
+        if (selected == -1) {
+            return;
+        }
+
         getDebugger().getVariables(wrapper.getValue()).forEach(var -> {
             String name = getDebugger().getVariableName(var);
-            int selected = stackPane.getInstructionBox().getSelectionModel().getSelectedIndex();
+
             MetaExpression value = getDebugger().getVariableValue(var, stackPane.getInstructionBox().getItems().size() - selected);
             ObservableVariable observable = new ObservableVariable(name, value, var);
             observableStateList.add(observable);
@@ -123,9 +129,9 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
     }
 
     /**
-     * Set the preview pane
+     * Set the preview pane.
      *
-     * @param previewpane
+     * @param previewpane The given preview pane to set.
      */
     public void setPreviewPane(final PreviewPane previewpane) {
         this.previewpane = previewpane;

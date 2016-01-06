@@ -10,11 +10,15 @@ All notable changes to this project will be documented in this file
 - Decode.stringFromBase64 construct
 - Hash construct package with md5 hashing constructs
 - Constructs for base64 encode/decode from files and strings
+- Exiftool plugin package
 ### Changed
-- Default tab size from 5 to 4=
+- Default tab size from 5 to 4
 - Excel.getSheet now also accepts a sheet index to fetch the n-th sheet of a workbook
+- Robots started by callbot will now by killed when the parent robot is stopped
 ### Fixed
 - Sorting on keys using Collection.sort now also works in reverse [CTC-1234](https://xillio.atlassian.net/browse/CTC-1234)
+- An issue where copying an excel sheet would cause changes to be lost. [CTC-1233](https://xillio.atlassian.net/browse/CTC-1233)
+- A specific crash when debugging recursive functions [CTC-1223](https://xillio.atlassian.net/browse/CTC-1223)
 
 ## [3.0.23] - 11-12-2015
 ### Stories done
