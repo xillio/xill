@@ -144,6 +144,10 @@ public class NullDebugger implements Debugger {
     }
 
     @Override
+    public void removeChild(Debugger debugger) {
+    }
+
+    @Override
     public void startFunction(Processable functionDeclaration) {
 
     }
