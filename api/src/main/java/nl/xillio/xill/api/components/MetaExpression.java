@@ -189,6 +189,7 @@ public abstract class MetaExpression implements Expression, Processable {
      *
      * @return the value according to the {@link ExpressionDataType} specification
      * @throws IllegalStateException if this expression has been closed
+     * @param <T> the return type
      */
     @SuppressWarnings("unchecked")
     public <T> T getValue() {
@@ -246,6 +247,7 @@ public abstract class MetaExpression implements Expression, Processable {
      *
      * @param jsonParser The gson parser that should be used
      * @return JSON representation
+     * @throws JsonException if the value cannot be parsed by the JsonParser
      */
     public String toString(final JsonParser jsonParser) throws JsonException {
         return jsonParser.toJson((Object) extractValue(this));
@@ -330,7 +332,8 @@ public abstract class MetaExpression implements Expression, Processable {
     /**
      * Extracts the actual Java Object value for this expression.
      *
-     * @param expression The {@link MetaExpression} to extract a value from.
+     * @param expression the {@link MetaExpression} to extract a value from
+     * @param <T> the return type
      * @return <ul>
      * <li>{@link ExpressionDataType#ATOMIC}: returns an {@link Object} This represents a singular value that is parsed in the folowing way:
      * <ol>
