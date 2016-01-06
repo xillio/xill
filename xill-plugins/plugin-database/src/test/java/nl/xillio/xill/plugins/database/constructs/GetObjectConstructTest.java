@@ -48,7 +48,7 @@ public class GetObjectConstructTest extends TestUtils {
         when(conMetadata.getConnection()).thenReturn(connection);
 
         // so we get the lastConnections
-        when(database.equals(NULL)).thenReturn(true);
+        when(database.valueEquals(NULL)).thenReturn(true);
         BaseDatabaseConstruct.setLastConnection(id, conMetadata);
 
         DatabaseService dbService = mock(DatabaseService.class);
@@ -87,7 +87,7 @@ public class GetObjectConstructTest extends TestUtils {
         ConnectionMetadata conMetadata = mock(ConnectionMetadata.class);
 
         // so we get the lastConnections
-        when(database.equals(NULL)).thenReturn(false);
+        when(database.valueEquals(NULL)).thenReturn(false);
         mock(LinkedHashMap.class);
         BaseDatabaseConstruct.setLastConnection(id, conMetadata);
 
@@ -143,7 +143,7 @@ public class GetObjectConstructTest extends TestUtils {
 
         BaseDatabaseConstruct.setLastConnection(id, conMetadata);
 
-        when(database.equals(NULL)).thenReturn(false);
+        when(database.valueEquals(NULL)).thenReturn(false);
         when((factory).getService(any())).thenThrow(e);
         when((conMetadata).getDatabaseName()).thenReturn("databaseName");
         when((dbService).getObject(any(), eq("table"), any())).thenReturn(resultMap);
@@ -180,7 +180,7 @@ public class GetObjectConstructTest extends TestUtils {
 
         BaseDatabaseConstruct.setLastConnection(id, conMetadata);
 
-        when(database.equals(NULL)).thenReturn(false);
+        when(database.valueEquals(NULL)).thenReturn(false);
         when((factory).getService(any())).thenReturn(dbService);
         when((conMetadata).getDatabaseName()).thenReturn("databaseName");
         when((dbService).getObject(any(), eq("table"), any())).thenThrow(new SQLException());

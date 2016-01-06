@@ -281,7 +281,7 @@ public class XillDebugger implements Debugger {
 
         // We have no parent... move on
         if (parentInstruction == null) {
-            LOGGER.warn("No parent instruction found for set around " + checkInstruction);
+            LOGGER.debug("No parent instruction found for set around " + checkInstruction);
             return false;
         }
 

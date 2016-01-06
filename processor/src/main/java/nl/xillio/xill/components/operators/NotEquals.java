@@ -37,7 +37,7 @@ public class NotEquals implements Processable {
         MetaExpression rightValue = right.process(debugger).get();
         rightValue.registerReference();
 
-        boolean result = !rightValue.equals(leftValue);
+        boolean result = !rightValue.valueEquals(leftValue);
 
         rightValue.releaseReference();
         leftValue.releaseReference();
