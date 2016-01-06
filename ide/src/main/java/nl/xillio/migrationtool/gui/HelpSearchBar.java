@@ -1,6 +1,5 @@
 package nl.xillio.migrationtool.gui;
 
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -74,7 +73,7 @@ public class HelpSearchBar extends AnchorPane {
         searchField.textProperty().addListener(this::searchTextChanged);
 
         // Close on focus lost
-        searchField.focusedProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
+        searchField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 showResults();
             } else {
@@ -87,10 +86,13 @@ public class HelpSearchBar extends AnchorPane {
      * Handles a key press.
      * Checks for an ENTER and then tries to open a page.
      *
-     * @param keyEvent
+     * @param keyEvent The key that has been pressed.
      */
     public void onKeyPressed(final KeyEvent keyEvent) {
         if (keyEvent.getCode() == KeyCode.ENTER) {
+            if (openSelected()) {
+                return;
+            }
             String content = searchField.getText();
 
             if (content.isEmpty()) {
@@ -128,16 +130,17 @@ public class HelpSearchBar extends AnchorPane {
     /**
      * Opens the selected item.
      */
-    void openSelected() {
+    boolean openSelected() {
         String selected = listView.getSelectionModel().getSelectedItem();
 
         if (selected == null) {
-            return;
+            return false;
         }
 
         String[] parts = selected.split("\\.");
         helpPane.display(parts[0], parts[1]);
         cleanup();
+        return true;
     }
 
     /**
