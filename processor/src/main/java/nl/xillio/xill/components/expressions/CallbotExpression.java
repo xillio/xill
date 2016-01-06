@@ -96,6 +96,8 @@ public class CallbotExpression implements Processable {
                     throw (RobotRuntimeException) e;
                 }
                 throw new RobotRuntimeException("An exception occurred while evaluating " + otherRobot.getAbsolutePath(), e);
+            } finally {
+                debugger.removeChild(childDebugger);
             }
 
         } catch (IOException e) {
