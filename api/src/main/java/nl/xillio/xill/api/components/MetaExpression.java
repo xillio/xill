@@ -253,6 +253,11 @@ public abstract class MetaExpression implements Expression, Processable {
 
     @Override
     public boolean equals(final Object obj) {
+        // First check if these objects are the same instance
+        if(obj == this) {
+            return true;
+        }
+
         if (obj instanceof MetaExpression) {
             return valueEquals((MetaExpression) obj);
         }
@@ -303,7 +308,18 @@ public abstract class MetaExpression implements Expression, Processable {
         }
 
         // If both atomics might be numbers, only compare their number values.
-        return MathUtils.compare(getNumberValue(), other.getNumberValue()) == 0;
+
+        // If one of them is not a number don't compare number value
+        Number number = getNumberValue();
+        if(Double.isNaN(number.doubleValue())) {
+            return false;
+        }
+        Number otherNumber = other.getNumberValue();
+        if(Double.isNaN(otherNumber.doubleValue())) {
+            return false;
+        }
+
+        return MathUtils.compare(number, otherNumber) == 0;
     }
 
     @Override
