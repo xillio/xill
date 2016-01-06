@@ -540,7 +540,7 @@ public abstract class MetaExpression implements Expression, Processable {
             // Push stub
             MetaExpression result = ExpressionBuilderHelper.emptyList();
             cache.put(root, result);
-            List<MetaExpression> values = (List<MetaExpression>) result.getValue();
+            List<MetaExpression> values = result.getValue();
 
             // Parse children
             for (Object child : (List<?>) root) {
@@ -559,7 +559,7 @@ public abstract class MetaExpression implements Expression, Processable {
             // Push stub
             MetaExpression result = ExpressionBuilderHelper.emptyObject();
             cache.put(root, result);
-            LinkedHashMap<String, MetaExpression> values = (LinkedHashMap<String, MetaExpression>) result.getValue();
+            LinkedHashMap<String, MetaExpression> values = result.getValue();
 
             // Parse children
             for (Entry<?, ?> child : ((Map<?, ?>) root).entrySet()) {
