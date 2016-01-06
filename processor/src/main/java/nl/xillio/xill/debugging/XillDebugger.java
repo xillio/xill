@@ -43,7 +43,7 @@ public class XillDebugger implements Debugger {
     private final Stack<nl.xillio.xill.api.components.Instruction> currentStack = new Stack<>();
     private final Stack<CounterWrapper> functionStack = new Stack<>();
     private Mode mode = Mode.RUNNING;
-    private LinkedList<Debugger> childDebuggers = new LinkedList<>();
+    private final LinkedList<Debugger> childDebuggers = new LinkedList<>();
 
 
     /**

@@ -144,7 +144,7 @@ public class NullDebugger implements Debugger {
     }
 
     @Override
-    public void removeChild(Debugger debugger) {
+    public void removeChild(final Debugger debugger) {
     }
 
     @Override
