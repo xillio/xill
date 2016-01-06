@@ -29,6 +29,7 @@ import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue.IssueImpl;
 import org.slf4j.Logger;
 import xill.lang.XillStandaloneSetup;
+import xill.lang.scoping.XillScopeProvider;
 import xill.lang.validation.XillValidator;
 import xill.lang.xill.ConstructCall;
 import xill.lang.xill.IncludeStatement;
@@ -50,8 +51,7 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
      */
     private final XtextResourceSet resourceSet;
 
-    @Inject
-    private IResourceValidator validator;
+    private final IResourceValidator validator;
 
     private Robot robot;
 
@@ -61,15 +61,13 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
     private final Debugger debugger;
     private final Map<Construct, String> argumentSignatures = new HashMap<>();
 
-    private final List<Resource> compiledResources = new ArrayList<>();
-
     /**
-     * Create a new processor that can run a file
+     * Create a new processor that can run a file.
      *
-     * @param projectFolder
-     * @param robotFile
-     * @param pluginLoader
-     * @param debugger
+     * @param projectFolder the project folder
+     * @param robotFile the robot file
+     * @param pluginLoader the plugin loader
+     * @param debugger the debugger
      * @throws IOException
      */
     public XillProcessor(final File projectFolder, final File robotFile, final PluginLoader<XillPlugin> pluginLoader,
@@ -78,12 +76,13 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
         this.robotFile = robotFile;
         this.pluginLoader = pluginLoader;
         this.debugger = debugger;
-        Injector injector = new XillStandaloneSetup(projectFolder).createInjectorAndDoEMFRegistration();
+        Injector injector = new XillStandaloneSetup().createInjectorAndDoEMFRegistration();
         injector.injectMembers(this);
 
 
         // obtain a resource set
         resourceSet = injector.getInstance(XtextResourceSet.class);
+        validator = injector.getInstance(IResourceValidator.class);
     }
 
     @Override
@@ -93,23 +92,31 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
 
     @Override
     public List<Issue> validate() {
-        compiledResources.clear();
-        debugger.reset();
-        Resource resource = resourceSet.getResource(URI.createFileURI(robotFile.getAbsolutePath()), true);
-        return validate(resource);
+        synchronized (XillValidator.LOCK) {
+            XillValidator.setProjectFolder(projectFolder);
+            XillScopeProvider.setProjectFolder(projectFolder);
+            compiledResources.clear();
+            debugger.reset();
+            Resource resource = resourceSet.getResource(URI.createFileURI(robotFile.getAbsolutePath()), true);
+            return validate(resource);
+        }
     }
 
     /**
-     * Compile as a subrobot
+     * Compile as a sub robot.
      *
      * @param rootRobot The Root robot
      * @return a list of issues
      * @throws XillParsingException
      */
     public List<Issue> compileAsSubRobot(final RobotID rootRobot) throws XillParsingException {
-        compiledResources.clear();
-        debugger.reset();
-        return compile(robotFile, rootRobot);
+        synchronized (XillValidator.LOCK) {
+            XillValidator.setProjectFolder(projectFolder);
+            XillScopeProvider.setProjectFolder(projectFolder);
+            compiledResources.clear();
+            debugger.reset();
+            return compile(robotFile, rootRobot);
+        }
     }
 
     private List<Issue> compile(final File robotPath, RobotID rootRobot) throws XillParsingException {
