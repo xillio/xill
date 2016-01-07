@@ -178,4 +178,9 @@ public class DelegateDebugger implements Debugger {
     public void handle(Throwable e) throws RobotRuntimeException {
         debugger.handle(e);
     }
+
+    @Override
+    public void removeChild(Debugger debug){
+        debugger.removeChild(debug);
+    }
 }

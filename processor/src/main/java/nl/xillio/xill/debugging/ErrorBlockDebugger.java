@@ -52,4 +52,5 @@ public class ErrorBlockDebugger extends DelegateDebugger {
     }
 
     public void setError(boolean error) {this.hasError = error;}
+
 }
