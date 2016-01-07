@@ -168,12 +168,12 @@ public class StatementIterator implements Iterator<Object>, AutoCloseable {
      * @throws Exception when error occurs during releasing resources
      */
     @Override
-    public void close() throws Exception {
-        if ( (stmt != null) && (!stmt.isClosed()) ) {
+    public void close() throws SQLException {
+        if (stmt != null && !stmt.isClosed()) {
             stmt.close();
         }
 
-        if ( (currentSet != null) && (!currentSet.isClosed()) ) {
+        if (currentSet != null && !currentSet.isClosed()) {
             currentSet.close();
         }
     }
