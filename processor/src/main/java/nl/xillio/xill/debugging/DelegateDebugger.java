@@ -6,7 +6,6 @@ import nl.xillio.xill.api.DebugInfo;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.*;
 import nl.xillio.xill.api.errors.ErrorHandlingPolicy;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.events.RobotContinuedAction;
 import nl.xillio.xill.api.events.RobotPausedAction;
 import nl.xillio.xill.api.events.RobotStartedAction;
@@ -168,7 +167,7 @@ public class DelegateDebugger implements Debugger {
     }
 
     @Override
-    public void handle(Throwable e) throws RobotRuntimeException {
+    public void handle(Throwable e) {
         debugger.handle(e);
     }
 

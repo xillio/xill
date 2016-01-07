@@ -1,7 +1,6 @@
 package nl.xillio.xill.components.instructions;
 
 import me.biesaart.utils.Log;
-import nl.xillio.xill.CodePosition;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
@@ -78,6 +77,11 @@ public class ErrorInstruction extends CompoundInstruction {
         return InstructionFlow.doResume();
     }
 
+    /**
+     * do the finally block.
+     *
+     * @param debugger the debugger
+     */
     private void processFinally(Debugger debugger) {
         //successBlock in finally because exceptions in these blocks should not be caught by errorBlockDebugger
         if (!hasReturn && !errorBlockDebugger.hasError() && successInstructions != null) {
@@ -89,6 +93,12 @@ public class ErrorInstruction extends CompoundInstruction {
         }
     }
 
+    /**
+     * process what happens if a exception is caught.
+     *
+     * @param debugger the debugger
+     * @param e        the exception
+     */
     private void processException(Debugger debugger, RobotRuntimeException e) {
         if (errorInstructions != null) {
 
@@ -100,13 +110,17 @@ public class ErrorInstruction extends CompoundInstruction {
         }
     }
 
-    public InstructionFlow<MetaExpression> tryDoBlock(){
+    /**
+     * do the do Block. return the result if there is one.
+     *
+     * @return
+     */
+    public InstructionFlow<MetaExpression> tryDoBlock() {
         InstructionFlow<MetaExpression> result = doInstructions.process(errorBlockDebugger);
         hasReturn = result.returns();
 
         if (hasReturn) {
-            InstructionFlow<MetaExpression> meta = InstructionFlow.doReturn(result.get());
-            return meta;
+            return InstructionFlow.doReturn(result.get());
         }
 
         return InstructionFlow.doResume();

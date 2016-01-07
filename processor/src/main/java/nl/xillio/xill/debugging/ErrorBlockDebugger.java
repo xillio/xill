@@ -17,7 +17,7 @@ public class ErrorBlockDebugger extends DelegateDebugger {
     }
 
     @Override
-    public void handle(Throwable e){
+    public void handle(Throwable e) {
         this.hasError = true;
 
         if (e instanceof RobotRuntimeException) {
