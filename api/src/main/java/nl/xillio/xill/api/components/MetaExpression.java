@@ -629,6 +629,11 @@ public abstract class MetaExpression implements Expression, Processable {
             return result;
         }
 
+        // Temporary fix for binary data until that is implemented properly.
+        if (root instanceof byte[]) {
+            return ExpressionBuilderHelper.fromValue("[Binary content]");
+        }
+
         MetaExpression result = metaExpressionDeserializer.parseObject(root);
         if (result != null) {
             return result;
