@@ -612,6 +612,10 @@ public class FXController implements Initializable, EventHandler<Event> {
         return true;
     }
 
+    private String formatEditorOptionJSRaw(final String optionJS, final String keyValue) {
+        return String.format("%1$s: %2$s,%n", optionJS, settings.simple().get(Settings.SETTINGS_EDITOR, keyValue));
+    }
+
     private String formatEditorOptionJS(final String optionJS, final String keyValue) {
         return String.format("%1$s: \"%2$s\",%n", optionJS, settings.simple().get(Settings.SETTINGS_EDITOR, keyValue));
     }
@@ -641,7 +645,7 @@ public class FXController implements Initializable, EventHandler<Event> {
         jsSettings += formatEditorOptionJS("printMarginColumn", Settings.PrintMarginColumn);
         jsSettings += formatEditorOptionJSBoolean("showGutter", Settings.ShowGutter);
         jsSettings += formatEditorOptionJSBoolean("showInvisibles", Settings.ShowInvisibles);
-        jsSettings += formatEditorOptionJS("tabSize", Settings.TabSize);
+        jsSettings += formatEditorOptionJSRaw("tabSize", Settings.TabSize);
         jsSettings += formatEditorOptionJSBoolean("useSoftTabs", Settings.UseSoftTabs);
         jsSettings += formatEditorOptionJSBoolean("wrap", Settings.WrapText);
         jsSettings += formatEditorOptionJSBoolean("showLineNumbers", Settings.ShowLineNumbers);
