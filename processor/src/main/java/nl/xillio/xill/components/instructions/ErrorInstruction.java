@@ -63,62 +63,54 @@ public class ErrorInstruction extends CompoundInstruction {
     }
 
     @Override
-    public void setHostInstruction(InstructionSet hostInstruction) {
-        super.setHostInstruction(hostInstruction);
-    }
-
-    @Override
-    public InstructionFlow<MetaExpression> process(final Debugger debugger){
+    public InstructionFlow<MetaExpression> process(final Debugger debugger) {
 
         errorBlockDebugger.setDebug(debugger); //we need the breakpoints from the old debugger.
 
-        InstructionFlow<MetaExpression> result = null;
-
         try {
-            result = doInstructions.process(errorBlockDebugger);
-            hasReturn = result.returns();
-
-            if (hasReturn) {
-                result.get().preventDisposal();
-            }
-
+            return tryDoBlock();
         } catch (RobotRuntimeException e) {
-            if (errorInstructions != null) {
-
-                if (cause != null) {
-                    cause.pushVariable(ExpressionBuilderHelper.fromValue(e.getMessage()));
-                }
-                LOGGER.error("Caught exception in error handler",e);
-                errorInstructions.process(debugger);
-            }
-
+            processException(debugger, e);
         } finally {
-            //successBlock in finally because exceptions in these blocks should not be caught by errorBlockDebugger
-            if (!hasReturn && !errorBlockDebugger.hasError() && successInstructions != null) {
-                successInstructions.process(debugger);
-            }
-
-            if (finallyInstructions != null) {
-                finallyInstructions.process(debugger);
-            }
-
-
-        }
-
-        if (hasReturn) {
-            InstructionFlow<MetaExpression> meta = InstructionFlow.doReturn(result.get());
-            result.get().allowDisposal();
-            return meta;
+            processFinally(debugger);
         }
 
         return InstructionFlow.doResume();
     }
 
-    @Override
-    public void setPosition(CodePosition position) {
-        super.setPosition(position);
+    private void processFinally(Debugger debugger) {
+        //successBlock in finally because exceptions in these blocks should not be caught by errorBlockDebugger
+        if (!hasReturn && !errorBlockDebugger.hasError() && successInstructions != null) {
+            successInstructions.process(debugger);
+        }
+
+        if (finallyInstructions != null) {
+            finallyInstructions.process(debugger);
+        }
     }
 
+    private void processException(Debugger debugger, RobotRuntimeException e) {
+        if (errorInstructions != null) {
+
+            if (cause != null) {
+                cause.pushVariable(ExpressionBuilderHelper.fromValue(e.getMessage()));
+            }
+            LOGGER.error("Caught exception in error handler", e);
+            errorInstructions.process(debugger);
+        }
+    }
+
+    public InstructionFlow<MetaExpression> tryDoBlock(){
+        InstructionFlow<MetaExpression> result = doInstructions.process(errorBlockDebugger);
+        hasReturn = result.returns();
+
+        if (hasReturn) {
+            InstructionFlow<MetaExpression> meta = InstructionFlow.doReturn(result.get());
+            return meta;
+        }
+
+        return InstructionFlow.doResume();
+    }
 
     @Override
     public Collection<Processable> getChildren() {

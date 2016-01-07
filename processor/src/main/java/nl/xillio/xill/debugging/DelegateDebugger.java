@@ -1,9 +1,9 @@
 package nl.xillio.xill.debugging;
 
 import nl.xillio.events.Event;
-import nl.xillio.events.EventHost;
-import nl.xillio.xill.api.*;
+import nl.xillio.xill.api.Breakpoint;
 import nl.xillio.xill.api.DebugInfo;
+import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.*;
 import nl.xillio.xill.api.errors.ErrorHandlingPolicy;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
@@ -11,16 +11,9 @@ import nl.xillio.xill.api.events.RobotContinuedAction;
 import nl.xillio.xill.api.events.RobotPausedAction;
 import nl.xillio.xill.api.events.RobotStartedAction;
 import nl.xillio.xill.api.events.RobotStoppedAction;
-import nl.xillio.xill.components.instructions.CompoundInstruction;
-import nl.xillio.xill.components.instructions.FunctionDeclaration;
-import nl.xillio.xill.components.instructions.Instruction;
-import nl.xillio.xill.components.instructions.VariableDeclaration;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import xill.lang.xill.Target;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * This class contains all information and controls required for debugging.
@@ -30,7 +23,7 @@ import java.util.stream.Collectors;
 public class DelegateDebugger implements Debugger {
     private Debugger debugger;
 
-    protected void setDebugger(Debugger debugger){
+    protected void setDebugger(Debugger debugger) {
         this.debugger = debugger;
     }
 
@@ -76,12 +69,12 @@ public class DelegateDebugger implements Debugger {
 
     @Override
     public void endInstruction(nl.xillio.xill.api.components.Instruction instruction, InstructionFlow<MetaExpression> result) {
-        debugger.endInstruction(instruction,result);
+        debugger.endInstruction(instruction, result);
     }
 
     @Override
     public void returning(InstructionSet instructionSet, InstructionFlow<MetaExpression> result) {
-        debugger.returning(instructionSet,result);
+        debugger.returning(instructionSet, result);
     }
 
     @Override
@@ -136,7 +129,7 @@ public class DelegateDebugger implements Debugger {
 
     @Override
     public MetaExpression getVariableValue(Object identifier, int stackPosition) {
-        return debugger.getVariableValue(identifier,stackPosition);
+        return debugger.getVariableValue(identifier, stackPosition);
     }
 
     @Override
@@ -180,7 +173,7 @@ public class DelegateDebugger implements Debugger {
     }
 
     @Override
-    public void removeChild(Debugger debug){
+    public void removeChild(Debugger debug) {
         debugger.removeChild(debug);
     }
 }

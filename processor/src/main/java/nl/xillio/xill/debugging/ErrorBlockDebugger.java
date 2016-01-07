@@ -1,23 +1,7 @@
 package nl.xillio.xill.debugging;
 
-import nl.xillio.events.Event;
-import nl.xillio.xill.api.Breakpoint;
-import nl.xillio.xill.api.DebugInfo;
 import nl.xillio.xill.api.Debugger;
-import nl.xillio.xill.api.NullDebugger;
-import nl.xillio.xill.api.components.*;
-import nl.xillio.xill.api.errors.ErrorHandlingPolicy;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.api.events.RobotContinuedAction;
-import nl.xillio.xill.api.events.RobotPausedAction;
-import nl.xillio.xill.api.events.RobotStartedAction;
-import nl.xillio.xill.api.events.RobotStoppedAction;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.Collection;
-import java.util.List;
 
 /**
  * This class contains all information and controls required for debugging.
@@ -26,14 +10,15 @@ import java.util.List;
  */
 public class ErrorBlockDebugger extends DelegateDebugger {
 
-    public void setDebug(Debugger debugger){
-        super.setDebugger(debugger);
-    }
     private boolean hasError = false;
 
+    public void setDebug(Debugger debugger) {
+        super.setDebugger(debugger);
+    }
+
     @Override
-    public void handle(Throwable e) throws RobotRuntimeException {
-        setError(true);
+    public void handle(Throwable e){
+        this.hasError = true;
 
         if (e instanceof RobotRuntimeException) {
             throw (RobotRuntimeException) e;
@@ -47,10 +32,8 @@ public class ErrorBlockDebugger extends DelegateDebugger {
         return false;
     }
 
-    public boolean hasError(){
+    public boolean hasError() {
         return this.hasError;
     }
-
-    public void setError(boolean error) {this.hasError = error;}
 
 }
