@@ -92,7 +92,7 @@ public class XillWorkbook implements MetadataExpression {
      * @throws IllegalArgumentException when the name of the sheet cannot
      *                                  be found in this workbook
      */
-    public XillSheet getSheet(String sheetName) {
+    public XillSheet getSheet(String sheetName) throws IllegalArgumentException{
         if (workbook.getSheetIndex(sheetName) == -1)
             throw new IllegalArgumentException("Sheet cannot be found in the supplied workbook");
         return new XillSheet(workbook.getSheet(sheetName), readonly, this);
@@ -105,7 +105,7 @@ public class XillWorkbook implements MetadataExpression {
      * @return The {@link XillSheet} which was retrieved from this workbook.
      * @throws IllegalArgumentException when the index is out of bounds.
      */
-    public XillSheet getSheetAt(int index) {
+    public XillSheet getSheetAt(int index) throws IllegalArgumentException {
         if (index < 0 || index >= workbook.getNumberOfSheets()) {
             throw new IllegalArgumentException("Sheet index must be greater than 0 and smaller than the amount of sheets.");
         }
