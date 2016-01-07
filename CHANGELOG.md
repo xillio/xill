@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file
 - Sorting on keys using Collection.sort now also works in reverse [CTC-1234](https://xillio.atlassian.net/browse/CTC-1234)
 - An issue where copying an excel sheet would cause changes to be lost. [CTC-1233](https://xillio.atlassian.net/browse/CTC-1233)
 - A specific crash when debugging recursive functions [CTC-1223](https://xillio.atlassian.net/browse/CTC-1223)
+- An issue where switching between projects would break the compiler. [CTC-1179](https://xillio.atlassian.net/browse/CTC-1179)
 
 ## [3.0.23] - 11-12-2015
 ### Stories done
