@@ -45,18 +45,11 @@ public class LoadSheetConstruct extends Construct {
     }
 
     private static XillSheet tryGetSheet(MetaExpression sheetName, XillWorkbook xillWorkbook) {
-        XillSheet sheet;
         try {
-            // If the sheetName is a number get the sheet at that index, else get the sheet with that name.
-            if (sheetName.getValue() instanceof NumberBehavior) {
-                sheet = xillWorkbook.getSheetAt(sheetName.getNumberValue().intValue());
-            } else {
-                sheet = xillWorkbook.getSheet(sheetName.getStringValue());
-            }
+            return xillWorkbook.getSheet(sheetName.getStringValue());
         } catch (IllegalArgumentException e) {
             throw new RobotRuntimeException(e.getMessage(), e);
         }
-        return sheet;
     }
 
     @Override
