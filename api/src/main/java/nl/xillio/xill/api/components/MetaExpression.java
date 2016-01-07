@@ -36,6 +36,8 @@ public abstract class MetaExpression implements Expression, Processable {
     private static int counter;
     private int id;
 
+    private static final String EXPRESSION_CLOSED = "This expression has already been closed.";
+
     @Inject
     private static JsonParser jsonParser;
     @Inject
@@ -71,7 +73,7 @@ public abstract class MetaExpression implements Expression, Processable {
      */
     public <T extends MetadataExpression> T getMeta(final Class<T> clazz) {
         if (isClosed()) {
-            throw new IllegalStateException("This expression has already been closed.");
+            throw new IllegalStateException(EXPRESSION_CLOSED);
         }
         if (metadataPool == null) {
             return null;
@@ -89,7 +91,7 @@ public abstract class MetaExpression implements Expression, Processable {
     @SuppressWarnings("unchecked")
     public void storeMeta(final MetadataExpression object) {
         if (isClosed()) {
-            throw new IllegalStateException("This expression has already been closed.");
+            throw new IllegalStateException(EXPRESSION_CLOSED);
         }
         if (metadataPool == null) {
             metadataPool = new MetadataExpressionPool<>();
@@ -117,7 +119,7 @@ public abstract class MetaExpression implements Expression, Processable {
      */
     protected MetaExpression setValue(final Expression value) {
         if (isClosed()) {
-            throw new IllegalStateException("This expression has already been closed.");
+            throw new IllegalStateException(EXPRESSION_CLOSED);
         }
         this.value = value;
         type = ExpressionDataType.ATOMIC;
@@ -133,7 +135,7 @@ public abstract class MetaExpression implements Expression, Processable {
      */
     protected MetaExpression setValue(final MetaExpression value) {
         if (isClosed()) {
-            throw new IllegalStateException("This expression has already been closed.");
+            throw new IllegalStateException(EXPRESSION_CLOSED);
         }
         this.value = value.getValue();
         type = value.getType();
@@ -149,7 +151,7 @@ public abstract class MetaExpression implements Expression, Processable {
      */
     protected MetaExpression setValue(final List<MetaExpression> value) {
         if (isClosed()) {
-            throw new IllegalStateException("This expression has already been closed.");
+            throw new IllegalStateException(EXPRESSION_CLOSED);
         }
         this.value = value;
         type = ExpressionDataType.LIST;
@@ -165,7 +167,7 @@ public abstract class MetaExpression implements Expression, Processable {
      */
     protected MetaExpression setValue(final LinkedHashMap<String, MetaExpression> value) {
         if (isClosed()) {
-            throw new IllegalStateException("This expression has already been closed.");
+            throw new IllegalStateException(EXPRESSION_CLOSED);
         }
         this.value = value;
         type = ExpressionDataType.OBJECT;
@@ -187,11 +189,12 @@ public abstract class MetaExpression implements Expression, Processable {
      *
      * @return the value according to the {@link ExpressionDataType} specification
      * @throws IllegalStateException if this expression has been closed
+     * @param <T> the return type
      */
     @SuppressWarnings("unchecked")
     public <T> T getValue() {
         if (isClosed()) {
-            throw new IllegalStateException("This expression has already been closed.");
+            throw new IllegalStateException(EXPRESSION_CLOSED);
         }
         return (T) value;
     }
@@ -211,7 +214,7 @@ public abstract class MetaExpression implements Expression, Processable {
      */
     public ExpressionDataType getType() {
         if (isClosed()) {
-            throw new IllegalStateException("This expression has already been closed.");
+            throw new IllegalStateException(EXPRESSION_CLOSED);
         }
         return type;
     }
@@ -244,6 +247,7 @@ public abstract class MetaExpression implements Expression, Processable {
      *
      * @param jsonParser The gson parser that should be used
      * @return JSON representation
+     * @throws JsonException if the value cannot be parsed by the JsonParser
      */
     public String toString(final JsonParser jsonParser) throws JsonException {
         return jsonParser.toJson((Object) extractValue(this));
@@ -251,8 +255,13 @@ public abstract class MetaExpression implements Expression, Processable {
 
     @Override
     public boolean equals(final Object obj) {
+        // First check if these objects are the same instance
+        if(obj == this) {
+            return true;
+        }
+
         if (obj instanceof MetaExpression) {
-            return equals((MetaExpression) obj);
+            return valueEquals((MetaExpression) obj);
         }
         return super.equals(obj);
     }
@@ -271,25 +280,48 @@ public abstract class MetaExpression implements Expression, Processable {
      * @param other the other
      * @return true if and only if the expressions have equal value
      */
-    public boolean equals(final MetaExpression other) {
-
-        // Compare the type
+    public boolean valueEquals(final MetaExpression other) {
+        // Compare the types.
         if (getType() != other.getType()) {
             return false;
         }
 
+        // Compare the values.
         switch (getType()) {
             case ATOMIC:
-                return getBooleanValue() == other.getBooleanValue() &&
-                        getStringValue().equals(other.getStringValue()) &&
-                        MathUtils.compare(getNumberValue(), other.getNumberValue()) == 0;
+                return compareAtomic(other);
             case LIST:
-                return getValue().equals(other.getValue());
             case OBJECT:
                 return getValue().equals(other.getValue());
             default:
                 throw new NotImplementedException("This type has not been implemented.");
         }
+    }
+
+    private boolean compareAtomic(MetaExpression other) {
+        // Check if one xor the other is null.
+        if (isNull() != other.isNull()) {
+            return false;
+        }
+
+        // Compare the string values.
+        if (getStringValue().equals(other.getStringValue())) {
+            return true;
+        }
+
+        // If both atomics might be numbers, only compare their number values.
+
+        // If one of them is not a number don't compare number value
+        Number number = getNumberValue();
+        if(Double.isNaN(number.doubleValue())) {
+            return false;
+        }
+        Number otherNumber = other.getNumberValue();
+        if(Double.isNaN(otherNumber.doubleValue())) {
+            return false;
+        }
+
+        return MathUtils.compare(number, otherNumber) == 0;
     }
 
     @Override
@@ -300,7 +332,8 @@ public abstract class MetaExpression implements Expression, Processable {
     /**
      * Extracts the actual Java Object value for this expression.
      *
-     * @param expression The {@link MetaExpression} to extract a value from.
+     * @param expression the {@link MetaExpression} to extract a value from
+     * @param <T> the return type
      * @return <ul>
      * <li>{@link ExpressionDataType#ATOMIC}: returns an {@link Object} This represents a singular value that is parsed in the folowing way:
      * <ol>
@@ -506,7 +539,7 @@ public abstract class MetaExpression implements Expression, Processable {
      * @return a {@link MetaExpression}, not null
      * @throws IllegalArgumentException when the value cannot be parsed
      */
-    public static MetaExpression parseObject(final Object value) throws IllegalArgumentException {
+    public static MetaExpression parseObject(final Object value) {
         return parseObject(value, MetaExpressionDeserializer.NULL);
     }
 
@@ -518,12 +551,12 @@ public abstract class MetaExpression implements Expression, Processable {
      * @return a {@link MetaExpression}, not null
      * @throws IllegalArgumentException when the value cannot be parsed
      */
-    public static MetaExpression parseObject(final Object value, MetaExpressionDeserializer metaExpressionDeserializer) throws IllegalArgumentException {
+    public static MetaExpression parseObject(final Object value, MetaExpressionDeserializer metaExpressionDeserializer) {
         return parseObject(value, new IdentityHashMap<>(), metaExpressionDeserializer);
     }
 
     @SuppressWarnings("unchecked")
-    private static MetaExpression parseObject(final Object root, final Map<Object, MetaExpression> cache, final MetaExpressionDeserializer metaExpressionDeserializer) throws IllegalArgumentException {
+    private static MetaExpression parseObject(final Object root, final Map<Object, MetaExpression> cache, final MetaExpressionDeserializer metaExpressionDeserializer) {
         // Check the cache (Don't use key because we need REFERENCE equality not CONTENT)
         for (Map.Entry<Object, MetaExpression> entry : cache.entrySet()) {
             if (entry.getKey() == root) {
