@@ -45,20 +45,6 @@ public class LoadSheetConstructTest extends TestUtils {
         LoadSheetConstruct.process(input, fromValue("sheet"));
     }
 
-    /**
-     * Checks if a RobotRuntimeException is thrown when index of the sheet is out of
-     * bounds of the provided workbook.
-     */
-    @Test(expectedExceptions = RobotRuntimeException.class)
-    public void testProcessThrowsRobotRuntimeNum() throws Exception {
-        XillWorkbook workbook = mock(XillWorkbook.class);
-        MetaExpression input = fromValue("workbook object");
-        input.storeMeta(workbook);
-
-        when(workbook.getSheetAt(4)).thenThrow(new IllegalArgumentException(""));
-
-        LoadSheetConstruct.process(input, fromValue(4));
-    }
 
     /**
      * Checks if the LoadSheet construct returns a
@@ -91,34 +77,4 @@ public class LoadSheetConstructTest extends TestUtils {
         assertEquals(resultSheet, sheet);
     }
 
-    /**
-     * Checks if the LoadSheet construct returns a
-     * <ul>
-     * <li>correctly formatted string, containing the sheet name, amount of rows and amount of columns</li>
-     * <li>the same XillSheet in the MetaExpression as the one it created.</li>
-     * </ul>
-     */
-    @Test
-    public void testProcessReturnsCorrectlyNum() throws Exception {
-
-        //Create basic vars
-        XillWorkbook workbook = mock(XillWorkbook.class);
-        XillSheet sheet = mock(XillSheet.class);
-        MetaExpression input = fromValue("workbook object");
-        input.storeMeta(workbook);
-
-        //Mock sheet object
-        when(workbook.getSheetAt(anyInt())).thenReturn(sheet);
-        when(sheet.getName()).thenReturn("SheetName");
-        when(sheet.getRowLength()).thenReturn(3);
-        when(sheet.getColumnLength()).thenReturn(5);
-
-        //Get result
-        MetaExpression result = LoadSheetConstruct.process(input, fromValue(0));
-
-        //Check results
-        assertEquals(result.getStringValue(), "{\"sheetName\":\"SheetName\",\"rows\":3,\"columns\":5}");
-        XillSheet resultSheet = result.getMeta(XillSheet.class);
-        assertEquals(resultSheet, sheet);
-    }
 }
