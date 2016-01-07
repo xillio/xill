@@ -405,7 +405,7 @@ public class SettingsDialog extends FXMLDialog {
         settings.simple().register(Settings.SETTINGS_EDITOR, Settings.ShowGutter, "true", "Show editor gutter");
         settings.simple().register(Settings.SETTINGS_EDITOR, Settings.ShowInvisibles, "false", "Show invisibles in editor");
         settings.simple().register(Settings.SETTINGS_EDITOR, Settings.TabSize, "4", "Tab size in editor");
-        settings.simple().register(Settings.SETTINGS_EDITOR, Settings.UseSoftTabs, "false", "Use soft tabs in editor");
+        settings.simple().register(Settings.SETTINGS_EDITOR, Settings.UseSoftTabs, "true", "Use soft tabs in editor");
         settings.simple().register(Settings.SETTINGS_EDITOR, Settings.WrapText, "false", "Wrap text in editor");
         settings.simple().register(Settings.SETTINGS_EDITOR, Settings.WrapLimit, "60", "Wrap limit in editor");
         settings.simple().register(Settings.SETTINGS_EDITOR, Settings.ShowPrintMargin, "false", "Show print margin in editor");
