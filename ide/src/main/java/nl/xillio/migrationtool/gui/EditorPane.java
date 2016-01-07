@@ -280,13 +280,14 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
     }
 
     /**
-     * Check if the last code in robot file that was changed outside the editor is different than both current code in editor and the last outside change
+     * Checks if the provided code is an update on what the editor thinks is on disk
      *
      * @param newChangedCode the source code that is currently saved in the robot file
-     * @return true if newChangedCode is very new (display gui dialog), false if the new content is not different from editor's content and not different from last changed content
+     * @return true if the provided code does not match what we have
      */
     public boolean checkChangedCode(final String newChangedCode) {
-        if (this.getEditor().getCodeProperty().get().equals(newChangedCode)) {
+
+        if (lastSavedCode.equals(newChangedCode)) {
             return false; // The new changed source code is the same as existing
         }
 
@@ -298,6 +299,7 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
             this.lastChangedCode = newChangedCode;
             return true;
         }
+
     }
 
     /**

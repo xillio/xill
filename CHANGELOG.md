@@ -7,18 +7,39 @@ All notable changes to this project will be documented in this file
 - Functionality to add any combination of LIST and OBJECT expressions
 - Bulk operations and multiple select on robots and projects in the project view
 - Encode.stringToBase64 construct
+- Encode.toPercent construct
 - Decode.stringFromBase64 construct
 - Hash construct package with md5 hashing constructs
 - Constructs for base64 encode/decode from files and strings
 - Exiftool plugin package
+- Code error highlighting on save
 ### Changed
 - Default tab size from 5 to 4
 - Excel.getSheet now also accepts a sheet index to fetch the n-th sheet of a workbook
 - Robots started by callbot will now by killed when the parent robot is stopped
 ### Fixed
 - Sorting on keys using Collection.sort now also works in reverse [CTC-1234](https://xillio.atlassian.net/browse/CTC-1234)
-- An issue where copying an excel sheet would cause changes to be lost. [CTC-1233](https://xillio.atlassian.net/browse/CTC-1233)
-- A specific crash when debugging recursive functions [CTC-1223](https://xillio.atlassian.net/browse/CTC-1223)
+- Copying an excel sheet would cause changes to be lost. [CTC-1233](https://xillio.atlassian.net/browse/CTC-1233)
+- Specific crash when debugging recursive functions [CTC-1223](https://xillio.atlassian.net/browse/CTC-1223)
+- Switching between projects would break the compiler. [CTC-1179](https://xillio.atlassian.net/browse/CTC-1179)
+- Floating point comparisons [CTC-1167](https://xillio.atlassian.net/browse/CTC-1167)
+- Equals operator for strings [CTC-1249](https://xillio.atlassian.net/browse/CTC-1249)
+- XML.fromFile() makes newlines disappear [CTC-1211](https://xillio.atlassian.net/browse/CTC-1211)
+- Step in causes robot to crash [CTC-1241](https://xillio.atlassian.net/browse/CTC-1241)
+- An issue where called bots cannot be stopped [CTC-1228](https://xillio.atlassian.net/browse/CTC-1228)
+- Performance issues with Excel.setCell() [CTC-1245](https://xillio.atlassian.net/browse/CTC-1245)
+- Include statement fails when switching between projects [CTC-1179](https://xillio.atlassian.net/browse/CTC-1179)
+- Excel.save with a different filepath doesn't save any data [CTC-1233](https://xillio.atlassian.net/browse/CTC-1233)
+- Reverse sorting on keys does not work [CTC-1234](https://xillio.atlassian.net/browse/CTC-1234)
+- Excel.setCell should set null values as empty strings, not 0. It now does. [CTC-1213](https://xillio.atlassian.net/browse/CTC-1213)
+- Error "This expression has already been closed" would be thrown on calling a construct with default values. [CTC-1169](https://xillio.atlassian.net/browse/CTC-1169)
+- Error "This expression has already been closed" would be thrown on list extraction. [CTC-1206](https://xillio.atlassian.net/browse/CTC-1206)
+- Pressing enter at the help search does not go to the selected resource [CTC-1098](https://xillio.atlassian.net/browse/CTC-1098)
+- New bot is not present in project pane [CTC-797](https://xillio.atlassian.net/browse/CTC-797)
+- Debugging a recursive function throws exceptions in certain cases [CTC-1242](https://xillio.atlassian.net/browse/CTC-1242)
+- Error "This expression has already been closed" is sometimes thrown on first iteration of loop. [CTC-1239](https://xillio.atlassian.net/browse/CTC-1239)
+- File change dialog could pop up erraticaly while editing code [CTC-1258](https://xillio.atlassian.net/browse/CTC-1258)
+- Deleting text sometimes deletes everything after the cursor [CTC-1042](https://xillio.atlassian.net/browse/CTC-1042)
 
 ## [3.0.23] - 11-12-2015
 ### Stories done
