@@ -1,5 +1,6 @@
 package nl.xillio.xill.components.instructions;
 
+import me.biesaart.utils.Log;
 import nl.xillio.xill.CodePosition;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.InstructionFlow;
@@ -8,6 +9,7 @@ import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.debugging.ErrorBlockDebugger;
+import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,7 +20,7 @@ import java.util.List;
  */
 public class ErrorInstruction extends CompoundInstruction {
 
-
+    private static final Logger LOGGER = Log.get();
     private final InstructionSet doInstructions;
     private final InstructionSet successInstructions;
     private final InstructionSet errorInstructions;
@@ -66,7 +68,7 @@ public class ErrorInstruction extends CompoundInstruction {
     }
 
     @Override
-    public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
+    public InstructionFlow<MetaExpression> process(final Debugger debugger){
 
         errorBlockDebugger.setDebug(debugger); //we need the breakpoints from the old debugger.
 
@@ -86,7 +88,7 @@ public class ErrorInstruction extends CompoundInstruction {
                 if (cause != null) {
                     cause.pushVariable(ExpressionBuilderHelper.fromValue(e.getMessage()));
                 }
-
+                LOGGER.error("Caught exception in error handler",e);
                 errorInstructions.process(debugger);
             }
 
@@ -100,11 +102,13 @@ public class ErrorInstruction extends CompoundInstruction {
                 finallyInstructions.process(debugger);
             }
 
-            if (hasReturn) {
-                InstructionFlow<MetaExpression> meta = InstructionFlow.doReturn(result.get());
-                result.get().allowDisposal();
-                return meta;
-            }
+
+        }
+
+        if (hasReturn) {
+            InstructionFlow<MetaExpression> meta = InstructionFlow.doReturn(result.get());
+            result.get().allowDisposal();
+            return meta;
         }
 
         return InstructionFlow.doResume();
