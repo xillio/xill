@@ -1,122 +1,86 @@
 package nl.xillio.xill.components.instructions;
 
-import nl.xillio.xill.api.Xill;
+import junit.framework.Assert;
 import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.debugging.DelegateDebugger;
 import nl.xillio.xill.debugging.ErrorBlockDebugger;
 import nl.xillio.xill.debugging.XillDebugger;
-import org.junit.Before;
-import org.mockito.Mock;
-import org.mockito.MockSettings;
-import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
+import org.testng.asserts.Assertion;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by Sander on 5-1-2016.
  */
-public class ErrorInstructionTest{
-/*
+public class ErrorInstructionTest {
+
     private XillDebugger xillDebugger;
     private InstructionSet doBlock;
     private InstructionSet errorBlock;
     private InstructionSet successBlock;
     private InstructionSet finallyBlock;
+    private ErrorBlockDebugger errorDebugger;
     private InstructionFlow<MetaExpression> result;
 
-    @Mock private ErrorBlockDebugger errorDebugger;
-
     @BeforeMethod
-    public void setUp(){
-        xillDebugger = mock(XillDebugger.class);
-        doBlock = mock(InstructionSet.class);
-        errorBlock = mock(InstructionSet.class);
-        successBlock = mock(InstructionSet.class);
-        finallyBlock = mock(InstructionSet.class);
+    public void setUp() {
+        xillDebugger = new XillDebugger();
+        doBlock = new InstructionSet(xillDebugger);
+        errorBlock = new InstructionSet(xillDebugger);
+        successBlock = new InstructionSet(xillDebugger);
+        finallyBlock = new InstructionSet(xillDebugger);
+        errorDebugger = new ErrorBlockDebugger();
 
+
+    }
+
+    @Test
+    public void testProcessSuccess() {
+
+        ErrorInstruction instruction = new ErrorInstruction(doBlock, successBlock, errorBlock, finallyBlock, null);
+
+        InstructionFlow<MetaExpression> returnedValue = instruction.process(xillDebugger);
+
+    }
+
+    @Test
+    public void testProcessReturn() {
         result = (InstructionFlow<MetaExpression>) mock(InstructionFlow.class);
+        InstructionSet mockDoBlock = mock(InstructionSet.class);
+        ErrorInstruction instruction = new ErrorInstruction(mockDoBlock, successBlock, errorBlock, finallyBlock, null);
 
+        when(mockDoBlock.process(any())).thenReturn(result);
+        when(result.returns()).thenReturn(true);
+
+        InstructionFlow<MetaExpression> returnedValue = instruction.process(xillDebugger);
+        Assert.assertNotSame(returnedValue,InstructionFlow.doResume());
     }
 
     @Test
-    public void testProcessSuccessNoReturn(){
+    public void testProcessFailNoCause() {
+        result = (InstructionFlow<MetaExpression>) mock(InstructionFlow.class);
+        InstructionSet mockDoBlock = mock(InstructionSet.class);
+        ErrorInstruction instruction = new ErrorInstruction(mockDoBlock, successBlock, errorBlock, finallyBlock, null);
+        when(mockDoBlock.process(any())).thenThrow(new RobotRuntimeException("fail"));
 
-        ErrorInstruction instruction = new ErrorInstruction(doBlock,successBlock,errorBlock,finallyBlock,null);
-        MetaExpression expression = mock(MetaExpression.class);
-
-        when(doBlock.process(any())).thenReturn(result);
-        when((result).returns()).thenReturn(false); //no return
-        when((result).get()).thenReturn(expression);
-        //run
         instruction.process(xillDebugger);
-
-        //verify
-        verify(doBlock, times(1)).process(any()); //do once
-        verify(result.get(), never()).preventDisposal(); //since there is no return.
-        verify(errorBlock,never()).process(xillDebugger); //errorBlock never called
-        verify(successBlock,times(1)).process(xillDebugger);
-        verify(finallyBlock,times(1)).process(xillDebugger);
     }
 
     @Test
-    public void testProcessSuccessReturn(){
-        //mock
+    public void testProcessFailWithCause()  {
+        result = (InstructionFlow<MetaExpression>) mock(InstructionFlow.class);
+        InstructionSet mockDoBlock = mock(InstructionSet.class);
+        Processable mockProcessable = mock(Processable.class);
+        VariableDeclaration cause = new VariableDeclaration(mockProcessable, "fail");
+        ErrorInstruction instruction = new ErrorInstruction(mockDoBlock, successBlock, errorBlock, finallyBlock, cause);
+        when(mockDoBlock.process(any())).thenThrow(new RobotRuntimeException("fail"));
 
-        ErrorInstruction instruction = new ErrorInstruction(doBlock,successBlock,errorBlock,finallyBlock,null);
-        MetaExpression expression = mock(MetaExpression.class);
-
-        when(doBlock.process(any())).thenReturn(result);
-        when((result).returns()).thenReturn(true); //we return
-        when((result).get()).thenReturn(expression);
-        //run
-        instruction.process(xillDebugger);
-
-        //verify
-        verify(doBlock, times(1)).process(any()); //do once
-        verify(expression,atLeastOnce()).preventDisposal(); //since we return
-        verify(errorBlock,never()).process(xillDebugger); //errorBlock never called
-        verify(successBlock,never()).process(xillDebugger); //no succes when returning
-        verify(finallyBlock,times(1)).process(xillDebugger); //finally block is called.
-        verify(expression,atLeastOnce()).allowDisposal();
-
+        InstructionFlow<MetaExpression> returnedValue = instruction.process(xillDebugger);
     }
-
-    @Test void testProcessFailure(){
-        ErrorInstruction instruction = new ErrorInstruction(doBlock,successBlock,errorBlock,finallyBlock,null);
-        MetaExpression expression = mock(MetaExpression.class);
-
-        when(doBlock.process(any())).thenThrow(new RobotRuntimeException("fail"));
-        when((result).returns()).thenReturn(false); //no return
-        when((result).get()).thenReturn(expression);
-        //run
-        instruction.process(xillDebugger);
-
-        //verify
-        verify(doBlock, times(1)).process(any()); //do once
-        verify(finallyBlock,times(1)).process(xillDebugger); //finallyBlock always called
-        verify(errorBlock,times(1)).process(xillDebugger); //errorBlock called
-    }
-
-    @Test void testProcessFailureWithCause(){
-        VariableDeclaration cause = mock(VariableDeclaration.class);
-        ErrorInstruction instruction = new ErrorInstruction(doBlock,successBlock,errorBlock,finallyBlock,cause);
-        MetaExpression expression = mock(MetaExpression.class);
-
-        when(doBlock.process(any())).thenThrow(new RobotRuntimeException("fail"));
-        when((result).returns()).thenReturn(false); //no return
-        when((result).get()).thenReturn(expression);
-        //run
-        instruction.process(xillDebugger);
-
-        //verify
-        verify(doBlock, times(1)).process(any()); //do once
-        verify(finallyBlock,times(1)).process(xillDebugger); //finallyBlock always called
-        verify(errorBlock,times(1)).process(xillDebugger); //errorBlock called
-        verify(cause,times(1)).pushVariable(any());
-    }*/
 }
