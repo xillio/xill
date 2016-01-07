@@ -58,6 +58,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
     private JSObject ace;
     private RobotTab tab;
     private ContextMenu rightClickMenu;
+    private JSObject undoManager;
 
     static {
         try {
@@ -178,9 +179,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
      * Clears the history by loading a new UndoManager
      */
     public void clearHistory() {
-        executeJS("new UndoManager();", u ->
-                ((JSObject) callOnAceBlocking("getSession"))
-                        .call("setUndoManager", u));
+        executeJSBlocking("editor.session.setUndoManager(new UndoManager())");
     }
 
     /**
@@ -320,7 +319,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
     public void setCode(final String code) {
         if (documentLoaded.get()) {
             if (ace != null) {
-                callOnAce("setCode", code);
+                callOnAceBlocking("setCode", code);
                 clearHistory();
             }
             this.code.setValue(code);
@@ -333,6 +332,16 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
                             setCode(code);
                         }
                     });
+        }
+    }
+
+    public void snapshotUndoManager() {
+        undoManager = (JSObject) executeJSBlocking("editor.session.getUndoManager()");
+    }
+
+    public void restoreUndoManager() {
+        if (undoManager != null) {
+            ((JSObject) ace.getMember("session")).call("setUndoManager", undoManager);
         }
     }
 
