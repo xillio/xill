@@ -24,6 +24,7 @@ public class ErrorInstruction extends CompoundInstruction {
     private final InstructionSet errorInstructions;
     private final InstructionSet finallyInstructions;
     private final VariableDeclaration cause;
+    private ErrorBlockDebugger errorBlockDebugger;
     private boolean hasReturn = false;
 
     /**
@@ -55,6 +56,8 @@ public class ErrorInstruction extends CompoundInstruction {
         if (finallyInstructions != null) {
             finallyInstructions.setParentInstruction(this);
         }
+
+        this.errorBlockDebugger = new ErrorBlockDebugger();
     }
 
     @Override
@@ -64,7 +67,7 @@ public class ErrorInstruction extends CompoundInstruction {
 
     @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-        ErrorBlockDebugger errorBlockDebugger = new ErrorBlockDebugger();
+
         errorBlockDebugger.setDebug(debugger); //we need the breakpoints from the old debugger.
 
         InstructionFlow<MetaExpression> result = null;
@@ -78,7 +81,7 @@ public class ErrorInstruction extends CompoundInstruction {
             }
 
         } catch (RobotRuntimeException e) {
-            if (errorBlockDebugger.hasError() && errorInstructions != null) {
+            if (errorInstructions != null) {
 
                 if (cause != null) {
                     cause.pushVariable(ExpressionBuilderHelper.fromValue(e.getMessage()));
@@ -88,7 +91,7 @@ public class ErrorInstruction extends CompoundInstruction {
             }
 
         } finally {
-            //succesBlock in finally because exceptions in these blocks should not be caught by errorBlockDebugger
+            //successBlock in finally because exceptions in these blocks should not be caught by errorBlockDebugger
             if (!hasReturn && !errorBlockDebugger.hasError() && successInstructions != null) {
                 successInstructions.process(debugger);
             }

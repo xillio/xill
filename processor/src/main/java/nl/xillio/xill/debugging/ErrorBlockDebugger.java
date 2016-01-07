@@ -33,7 +33,7 @@ public class ErrorBlockDebugger extends DelegateDebugger {
 
     @Override
     public void handle(Throwable e) throws RobotRuntimeException {
-        this.hasError = true;
+        setError(true);
 
         if (e instanceof RobotRuntimeException) {
             throw (RobotRuntimeException) e;
@@ -50,4 +50,6 @@ public class ErrorBlockDebugger extends DelegateDebugger {
     public boolean hasError(){
         return this.hasError;
     }
+
+    public void setError(boolean error) {this.hasError = error;}
 }
