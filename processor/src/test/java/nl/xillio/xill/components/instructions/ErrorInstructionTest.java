@@ -44,7 +44,7 @@ public class ErrorInstructionTest{
     }
 
     @Test
-    public void testProcessSuccessNoReturn() throws Exception {
+    public void testProcessSuccessNoReturn(){
 
         ErrorInstruction instruction = new ErrorInstruction(doBlock,successBlock,errorBlock,finallyBlock,null);
         MetaExpression expression = mock(MetaExpression.class);
@@ -64,7 +64,7 @@ public class ErrorInstructionTest{
     }
 
     @Test
-    public void testProcessSuccessReturn() throws Exception{
+    public void testProcessSuccessReturn(){
         //mock
 
         ErrorInstruction instruction = new ErrorInstruction(doBlock,successBlock,errorBlock,finallyBlock,null);
@@ -84,11 +84,10 @@ public class ErrorInstructionTest{
         verify(successBlock,never()).process(xillDebugger); //no succes when returning
         verify(finallyBlock,times(1)).process(xillDebugger); //finally block is called.
         verify(expression,atLeastOnce()).allowDisposal();
-        verify(flow).doReturn(expression);
 
     }
 
-    @Test void testProcessFailure() throws Exception{
+    @Test void testProcessFailure(){
         ErrorInstruction instruction = new ErrorInstruction(doBlock,successBlock,errorBlock,finallyBlock,null);
         MetaExpression expression = mock(MetaExpression.class);
 
@@ -104,7 +103,7 @@ public class ErrorInstructionTest{
         verify(errorBlock,times(1)).process(xillDebugger); //errorBlock called
     }
 
-    @Test void testProcessFailureWithCause() throws Exception{
+    @Test void testProcessFailureWithCause(){
         VariableDeclaration cause = mock(VariableDeclaration.class);
         ErrorInstruction instruction = new ErrorInstruction(doBlock,successBlock,errorBlock,finallyBlock,cause);
         MetaExpression expression = mock(MetaExpression.class);
