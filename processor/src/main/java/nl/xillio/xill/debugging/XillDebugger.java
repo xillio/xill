@@ -62,7 +62,7 @@ public class XillDebugger implements Debugger {
     public void stop() {
         mode = Mode.STOPPED;
         onRobotInterrupt.invoke(null);
-        childDebuggers.forEach(e -> e.stop());
+        childDebuggers.forEach(Debugger::stop);
     }
 
     @Override
