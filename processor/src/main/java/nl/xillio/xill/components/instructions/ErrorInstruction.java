@@ -59,6 +59,11 @@ public class ErrorInstruction extends CompoundInstruction {
         }
     }
 
+    /**
+     * start processing the blocks.
+     * @param debugger The debugger that should be used when processing this
+     * @return
+     */
     @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) {
         errorBlockDebugger = new ErrorBlockDebugger();
@@ -82,7 +87,7 @@ public class ErrorInstruction extends CompoundInstruction {
      */
     private void processFinally(Debugger debugger) {
         //successBlock in finally because exceptions in these blocks should not be caught by errorBlockDebugger
-        if (!hasReturn && !errorBlockDebugger.hasError() && successInstructions != null) {
+        if (!errorBlockDebugger.hasError() && successInstructions != null) {
             successInstructions.process(debugger);
         }
 
