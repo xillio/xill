@@ -36,6 +36,7 @@ public class ExpressionInstruction extends Instruction {
     public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
         try {
             MetaExpression result = expression.process(debugger).get();
+            result.registerReference();
             results.push(result);
             return InstructionFlow.doResume(result);
         } catch (Exception e) {
