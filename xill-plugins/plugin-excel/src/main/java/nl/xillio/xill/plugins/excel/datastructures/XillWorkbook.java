@@ -225,14 +225,12 @@ public class XillWorkbook implements MetadataExpression {
     public XillWorkbook createCopy(File file) throws IOException {
         String extension = FilenameUtils.getExtension(file.getName());
         String currentExtension = workbook instanceof HSSFWorkbook ? "xls" : "xlsx";
-        if (!(currentExtension.equals(extension)))
+        if (!(currentExtension.equals(extension))) {
             throw new IllegalArgumentException("New file should have the same extension as original (" + currentExtension + ", not " + extension + ")");
-
-        if (this.fileExists()) {
-            copy(this.file, file); // Overwrite existing file
-        } else {
-            this.save(file); // Create new file
         }
+
+        this.save(file);
+
         file.setWritable(true);
         XillWorkbookFactory factory = getFactory();
         return factory.loadWorkbook(file);

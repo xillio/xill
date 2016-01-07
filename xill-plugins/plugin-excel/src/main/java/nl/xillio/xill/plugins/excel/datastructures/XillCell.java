@@ -86,6 +86,15 @@ public class XillCell {
     }
 
     /**
+     * Set this cell to null value
+     */
+    public void setNull() {
+        if (!isNull()) {
+            cell.setCellType(Cell.CELL_TYPE_BLANK);
+        }
+    }
+
+    /**
      * Sets this cell's value to the provided String
      *
      * @param value the string value which should be stored in this cell. Can be made a formula by

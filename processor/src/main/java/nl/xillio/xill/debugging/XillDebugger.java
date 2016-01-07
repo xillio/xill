@@ -5,6 +5,7 @@ import nl.xillio.events.EventHost;
 import nl.xillio.xill.api.Breakpoint;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.NullDebugger;
+import nl.xillio.xill.api.StoppableDebugger;
 import nl.xillio.xill.api.components.*;
 import nl.xillio.xill.api.errors.ErrorHandlingPolicy;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
@@ -42,6 +43,8 @@ public class XillDebugger implements Debugger {
     private final Stack<nl.xillio.xill.api.components.Instruction> currentStack = new Stack<>();
     private final Stack<CounterWrapper> functionStack = new Stack<>();
     private Mode mode = Mode.RUNNING;
+    private final LinkedList<Debugger> childDebuggers = new LinkedList<>();
+
 
     /**
      * Create a new {@link XillDebugger}.
@@ -59,6 +62,7 @@ public class XillDebugger implements Debugger {
     public void stop() {
         mode = Mode.STOPPED;
         onRobotInterrupt.invoke(null);
+        childDebuggers.forEach(e -> e.stop());
     }
 
     @Override
@@ -277,7 +281,7 @@ public class XillDebugger implements Debugger {
 
         // We have no parent... move on
         if (parentInstruction == null) {
-            LOGGER.warn("No parent instruction found for set around " + checkInstruction);
+            LOGGER.debug("No parent instruction found for set around " + checkInstruction);
             return false;
         }
 
@@ -356,7 +360,14 @@ public class XillDebugger implements Debugger {
 
     @Override
     public Debugger createChild() {
-        return new NullDebugger();
+        Debugger debugger = new StoppableDebugger();
+        childDebuggers.add(debugger);
+        return debugger;
+    }
+
+    @Override
+    public void removeChild(final Debugger debugger) {
+        childDebuggers.remove(debugger);
     }
 
     @Override

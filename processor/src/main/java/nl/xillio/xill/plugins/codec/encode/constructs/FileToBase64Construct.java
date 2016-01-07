@@ -41,7 +41,7 @@ public class FileToBase64Construct extends Construct {
         assertNotNull(pathInput, "input file");
         assertNotNull(pathOutput, "output file");
 
-        if (pathInput.equals(pathOutput)) {
+        if (pathInput.valueEquals(pathOutput)) {
             throw new RobotRuntimeException("Input path should not be the same as output path.");
         }
 
