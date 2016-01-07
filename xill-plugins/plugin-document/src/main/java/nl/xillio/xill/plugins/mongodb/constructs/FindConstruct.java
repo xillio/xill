@@ -20,7 +20,8 @@ public class FindConstruct extends AbstractCollectionApiConstruct {
     protected Argument[] getApiArguments() {
         return new Argument[]{
                 new Argument("query", emptyObject(), OBJECT),
-                new Argument("projection", emptyObject(), OBJECT)
+                new Argument("projection", emptyObject(), OBJECT),
+                new Argument("sort", emptyObject(), OBJECT)
         };
     }
 
@@ -28,8 +29,9 @@ public class FindConstruct extends AbstractCollectionApiConstruct {
     MetaExpression process(MetaExpression[] arguments, MongoCollection<Document> collection, ConstructContext context) {
         Document filter = toDocument(arguments[0]);
         Document projection = toDocument(arguments[1]);
+        Document sort = toDocument(arguments[2]);
 
-        FindIterable<Document> mongoResult = collection.find(filter).projection(projection);
+        FindIterable<Document> mongoResult = collection.find(filter).projection(projection).sort(sort);
 
 
         return fromValue(mongoResult, collection, arguments);
