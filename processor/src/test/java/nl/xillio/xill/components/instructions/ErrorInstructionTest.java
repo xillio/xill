@@ -11,9 +11,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.Assertion;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by Sander on 5-1-2016.
@@ -82,5 +85,42 @@ public class ErrorInstructionTest {
         when(mockDoBlock.process(any())).thenThrow(new RobotRuntimeException("fail"));
 
         InstructionFlow<MetaExpression> returnedValue = instruction.process(xillDebugger);
+
+    }
+
+    @Test
+    public void testProcessOptionals(){
+        result = (InstructionFlow<MetaExpression>) mock(InstructionFlow.class);
+        InstructionSet mockSuccesBlock = mock(InstructionSet.class);
+        InstructionSet mockErrorBlock = mock(InstructionSet.class);
+        InstructionSet mockFinallyBlock = mock(InstructionSet.class);
+
+        ErrorInstruction instruction = new ErrorInstruction(doBlock, null, mockErrorBlock, null, null);
+
+        when(result.returns()).thenReturn(false);
+
+        InstructionFlow<MetaExpression> returnedValue = instruction.process(xillDebugger);
+
+        verify(mockSuccesBlock,never()).process(any());
+        verify(mockFinallyBlock,never()).process(any());
+
+    }
+
+    @Test
+    public void testGetChildren(){
+
+        Processable mockProcessable = mock(Processable.class);
+        VariableDeclaration cause = new VariableDeclaration(mockProcessable, "fail");
+
+        List<Processable> children = new ArrayList<>();
+        children.add(doBlock);
+        children.add(successBlock);
+        children.add(errorBlock);
+        children.add(finallyBlock);
+        children.add(cause);
+
+        ErrorInstruction instruction = new ErrorInstruction(doBlock, successBlock, errorBlock, finallyBlock, cause);
+
+        Collection<Processable> returnValue = instruction.getChildren();
     }
 }

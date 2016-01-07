@@ -127,11 +127,21 @@ public class ErrorInstruction extends CompoundInstruction {
     @Override
     public Collection<Processable> getChildren() {
         List<Processable> children = new ArrayList<>();
-        children.add(errorInstructions);
-        children.add(doInstructions);
-        children.add(finallyInstructions);
-        children.add(successInstructions);
-        children.add(cause);
+        if (errorInstructions != null) {
+            children.add(errorInstructions);
+        }
+        if (errorInstructions != null) {
+            children.add(doInstructions);
+        }
+        if (errorInstructions != null) {
+            children.add(finallyInstructions);
+        }
+        if (errorInstructions != null) {
+            children.add(successInstructions);
+        }
+        if (errorInstructions != null) {
+            children.add(cause);
+        }
         return children;
     }
 
