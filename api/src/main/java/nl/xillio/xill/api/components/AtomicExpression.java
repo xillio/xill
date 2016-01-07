@@ -1,9 +1,5 @@
 package nl.xillio.xill.api.components;
 
-import nl.xillio.xill.api.behavior.BooleanBehavior;
-import nl.xillio.xill.api.behavior.NumberBehavior;
-import nl.xillio.xill.api.behavior.StringBehavior;
-
 import java.util.ArrayList;
 import java.util.Collection;
 

@@ -1,9 +1,7 @@
 package nl.xillio.xill.plugins.web.constructs;
 
-import nl.xillio.xill.api.behavior.NumberBehavior;
-import nl.xillio.xill.api.behavior.StringBehavior;
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
+import nl.xillio.xill.api.components.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.data.NodeVariable;
 import nl.xillio.xill.plugins.web.data.PageVariable;
@@ -66,18 +64,12 @@ public class SwitchFrameConstructTest extends ExpressionBuilderHelper {
 
         // The frame
         int frameValue = 42;
-        MetaExpression frame = mock(MetaExpression.class);
-        when(frame.getValue()).thenReturn(new NumberBehavior(frameValue));
-        when(frame.getMeta(NodeVariable.class)).thenReturn(null);
-        when(frame.getType()).thenReturn(ATOMIC);
-        when(frame.getNumberValue()).thenReturn(frameValue);
+        MetaExpression frame = fromValue(frameValue);
 
         // run
         MetaExpression output = SwitchFrameConstruct.process(page, frame, webService);
 
         // verify
-        verify(page, times(2)).getMeta(PageVariable.class);
-        verify(frame, times(1)).getValue();
         verify(webService, times(1)).switchToFrame(pageVariable, frameValue);
 
         // assert
@@ -99,19 +91,12 @@ public class SwitchFrameConstructTest extends ExpressionBuilderHelper {
 
         // The frame
         String frameValue = "frame as a String";
-        MetaExpression frame = mock(MetaExpression.class);
-        when(frame.getValue()).thenReturn(new StringBehavior(frameValue));
-        when(frame.getMeta(NodeVariable.class)).thenReturn(null);
-        when(frame.getType()).thenReturn(ATOMIC);
-        when(frame.getStringValue()).thenReturn(frameValue);
-        when(frame.getNumberValue()).thenReturn(Double.NaN);
+        MetaExpression frame = fromValue(frameValue);
 
         // run
         MetaExpression output = SwitchFrameConstruct.process(page, frame, webService);
 
         // verify
-        verify(page, times(2)).getMeta(PageVariable.class);
-        verify(frame, times(1)).getValue();
         verify(webService, times(1)).switchToFrame(pageVariable, frameValue);
 
         // assert
@@ -159,11 +144,7 @@ public class SwitchFrameConstructTest extends ExpressionBuilderHelper {
 
         // The frame
         int frameValue = 404;
-        MetaExpression frame = mock(MetaExpression.class);
-        when(frame.getValue()).thenReturn(new NumberBehavior(frameValue));
-        when(frame.getMeta(NodeVariable.class)).thenReturn(null);
-        when(frame.getType()).thenReturn(ATOMIC);
-        when(frame.getNumberValue()).thenReturn(frameValue);
+        MetaExpression frame = fromValue(frameValue);
 
         // The exception
         doThrow(new NoSuchFrameException("error")).when(webService).switchToFrame(any(), anyInt());

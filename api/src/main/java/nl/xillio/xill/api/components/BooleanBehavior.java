@@ -1,6 +1,4 @@
-package nl.xillio.xill.api.behavior;
-
-import nl.xillio.xill.api.components.Expression;
+package nl.xillio.xill.api.components;
 
 /**
  * <p>
@@ -13,7 +11,7 @@ import nl.xillio.xill.api.components.Expression;
  * <li><b>{@link Number}: </b> if value equals true then 1 else 0</li>
  * </ul>
  */
-public class BooleanBehavior implements Expression {
+class BooleanBehavior implements Expression {
 
     private final boolean value;
 

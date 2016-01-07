@@ -1,4 +1,4 @@
-package nl.xillio.xill.api.behavior;
+package nl.xillio.xill.api.components;
 
 /**
  * <p>
@@ -12,7 +12,7 @@ package nl.xillio.xill.api.behavior;
  * <li><b>{@link Number}: </b> if the value is a number then that number as a {@link Double}, otherwise {@link Double#NaN}</li>
  * </ul>
  */
-public class StringConstantBehavior extends StringBehavior {
+class StringConstantBehavior extends StringBehavior {
 
     /**
      * Create a new {@link StringConstantBehavior}

@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
 
 import java.util.HashMap;
 
-import static nl.xillio.xill.api.construct.ExpressionBuilderHelper.NULL;
+import static nl.xillio.xill.api.components.ExpressionBuilderHelper.NULL;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertSame;
 
