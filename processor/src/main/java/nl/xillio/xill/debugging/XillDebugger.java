@@ -99,7 +99,7 @@ public class XillDebugger implements Debugger {
 
     private void checkBreakpoints(Instruction instruction) {
         breakpoints.forEach(bp -> {
-            if (bp.matches(instruction)) {
+            if (bp.matches(instruction) && mode != Mode.STOPPED) {
                 mode = Mode.PAUSED;
             }
         });
