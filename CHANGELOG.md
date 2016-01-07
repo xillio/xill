@@ -37,6 +37,7 @@ All notable changes to this project will be documented in this file
 - New bot is not present in project pane [CTC-797](https://xillio.atlassian.net/browse/CTC-797)
 - Debugging a recursive function throws exceptions in certain cases [CTC-1242](https://xillio.atlassian.net/browse/CTC-1242)
 - Error "This expression has already been closed" is sometimes thrown on first iteration of loop. [CTC-1239](https://xillio.atlassian.net/browse/CTC-1239)
+- File change dialog could pop up erraticaly while editing code [CTC-1258](https://xillio.atlassian.net/browse/CTC-1258)
 
 ## [3.0.23] - 11-12-2015
 ### Stories done
