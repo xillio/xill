@@ -35,6 +35,7 @@ All notable changes to this project will be documented in this file
 - Error "MetaExpression already closed" would be thrown on list extraction. [CTC-1206](https://xillio.atlassian.net/browse/CTC-1206)
 - Pressing enter at the help search does not go to the selected resource [CTC-1098](https://xillio.atlassian.net/browse/CTC-1098)
 - New bot is not present in Projects pane [CTC-797](https://xillio.atlassian.net/browse/CTC-797)
+- Debugging a recursive function throws exceptions in certain cases [CTC-1242](https://xillio.atlassian.net/browse/CTC-1242)
 
 ## [3.0.23] - 11-12-2015
 ### Stories done
