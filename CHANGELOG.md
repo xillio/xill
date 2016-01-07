@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file
 - Hash construct package with md5 hashing constructs
 - Constructs for base64 encode/decode from files and strings
 - Exiftool plugin package
+- Code error highlighting on save
 ### Changed
 - Default tab size from 5 to 4
 - Excel.getSheet now also accepts a sheet index to fetch the n-th sheet of a workbook
