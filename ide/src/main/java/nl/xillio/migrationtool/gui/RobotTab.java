@@ -684,17 +684,13 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
         this.consolePane.clear();
     }
 
-    private Exception Exception(String empty_fucking_button) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     /**
      * Clear all highlights in the current tab and in the tabs that have been highlighted from this tab (e.g. include robot error highlight)
      */
     public void clearHighlight() {
-        getEditorPane().getEditor().clearHighlight(); // Clear all highlights in current robottab
+        getEditorPane().getEditor().clearHighlight(); // Clear all highlights in current robot tab
 
-        // Clear all highlights in all related robottabs
+        // Clear all highlights in all related robot tabs
         relatedHighlightTabs.forEach(tab -> {
             if (globalController.findTab(tab.getDocument()) != null) {// Select just still opened tabs
                 tab.clearHighlight();
