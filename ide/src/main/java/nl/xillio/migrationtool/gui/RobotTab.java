@@ -526,26 +526,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
         robotThread.setUncaughtExceptionHandler((thread, e) -> {
             // This error can occur if, e.g. deep recursion, is performed.
             if(e instanceof StackOverflowError) {
-                // Release the robot resources.
-                try {
-                    robot.close();
-                } catch (Exception ex) {
-                    LOGGER.error(ex.getMessage(), ex);
-                }
-
-                //Platform.runLater(() -> );
-
-                // Notify the user of the error that occurred.
-                Platform.runLater(() -> {
-
-                    editorPane.getControls().stop();
-                    setGraphic(null);
-                    apnStatusBar.setStatus(StatusBar.Status.STATUS_STOPPED);
-
-                    stackOverflowErrorPopup(e.getClass().getSimpleName());
-
-
-                });
+                handleStackOverFlowError(robot, e.getClass().getName());
             }
         });
 
@@ -553,15 +534,30 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
     }
 
-    private void stackOverflowErrorPopup(String title) {
-        Alert error = new Alert(AlertType.ERROR);
-        error.initModality(Modality.APPLICATION_MODAL);
-        error.setTitle(title);
-        error.setHeaderText("Stack overflow");
-        error.setContentText("A stack overflow occurred.");
-        error.setResizable(true);
-        error.getDialogPane().setPrefWidth(540);
-        error.show();
+    private void handleStackOverFlowError(Robot robot, String dialogTitle) {
+        // Release the robot resources.
+        try {
+            robot.close();
+        } catch (Exception ex) {
+            LOGGER.error(ex.getMessage(), ex);
+        }
+
+        // Notify the user of the error that occurred.
+        Platform.runLater(() -> {
+
+            editorPane.getControls().stop();
+            setGraphic(null);
+            apnStatusBar.setStatus(StatusBar.Status.STATUS_STOPPED);
+
+            Alert error = new Alert(AlertType.ERROR);
+            error.initModality(Modality.APPLICATION_MODAL);
+            error.setTitle(dialogTitle);
+            error.setHeaderText("Stack overflow");
+            error.setContentText("A stack overflow occurred.");
+            error.setResizable(true);
+            error.getDialogPane().setPrefWidth(540);
+            error.show();
+        });
     }
 
     /**
