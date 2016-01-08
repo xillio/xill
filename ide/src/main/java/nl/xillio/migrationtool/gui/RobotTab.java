@@ -544,7 +544,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
                     Alert error = new Alert(AlertType.ERROR);
                     error.initModality(Modality.APPLICATION_MODAL);
                     error.setTitle(e.getClass().getSimpleName());
-                    error.setHeaderText("Stack overflow error");
+                    error.setHeaderText("Stack overflow");
                     error.setContentText("A stack overflow occurred.");
                     error.setResizable(true);
                     error.getDialogPane().setPrefWidth(540);
