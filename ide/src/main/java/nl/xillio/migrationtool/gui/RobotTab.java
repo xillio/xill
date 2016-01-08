@@ -659,6 +659,11 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
     @SuppressWarnings("squid:S1166")
     public void display(final RobotID robot, final int line) {
 
+        if (robot != getProcessor().getRobotID() && currentRobot == getProcessor().getRobotID()) {
+            // We are moving away from the main robot
+            getEditorPane().getEditor().snapshotUndoManager();
+        }
+
         // Update the code
         if (currentRobot != robot) {
 
@@ -672,6 +677,11 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
             // Load the code
             editorPane.getEditor().setCode(code);
             editorPane.getEditor().refreshBreakpoints(robot);
+
+            if (robot == getProcessor().getRobotID()) {
+                // We are moving back to the current robot
+                editorPane.getEditor().restoreUndoManager();
+            }
 
             // Blocker
             editorPane.getEditor().setEditable(currentRobot == getProcessor().getRobotID());
