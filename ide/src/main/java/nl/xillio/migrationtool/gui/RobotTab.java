@@ -38,10 +38,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -521,6 +518,36 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
                     error.setHeaderText("Exception while processing");
                     error.setResizable(true);
                     error.getDialogPane().setPrefWidth(1080);
+                    error.show();
+                });
+            }
+        });
+
+        robotThread.setUncaughtExceptionHandler((thread, e) -> {
+            // This error can occur if, e.g. deep recursion, is performed.
+            if(e instanceof StackOverflowError) {
+                // Call garbage collector so the JVM gets notified that, in this case, the stack needs to be cleared.
+                System.gc();
+
+                // Release the robot resources.
+                try {
+                    robot.close();
+                } catch (Exception ex) {
+                    LOGGER.error(ex.getMessage(), ex);
+                }
+
+                // Notify the user of the error that occurred.
+                Platform.runLater(() -> {
+                    editorPane.getControls().stop();
+                    setGraphic(null);
+
+                    Alert error = new Alert(AlertType.ERROR);
+                    error.initModality(Modality.APPLICATION_MODAL);
+                    error.setTitle(e.getClass().getSimpleName());
+                    error.setHeaderText("Stack overflow error");
+                    error.setContentText("A stack overflow occurred.");
+                    error.setResizable(true);
+                    error.getDialogPane().setPrefWidth(540);
                     error.show();
                 });
             }
