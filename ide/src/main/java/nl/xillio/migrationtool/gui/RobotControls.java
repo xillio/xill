@@ -103,7 +103,7 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
         resetAll();
         running = false;
 
-        tab.resetCode();
+        Platform.runLater(tab::resetCode);
     }
 
     /**
@@ -170,8 +170,6 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 
     private void onPause(final RobotPausedAction action) {
         onPause();
-
-        tab.display(action.getRobotID(), action.getLineNumber());
     }
 
     public void stepIn() {
