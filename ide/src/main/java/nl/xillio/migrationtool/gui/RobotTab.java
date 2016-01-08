@@ -526,9 +526,6 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
         robotThread.setUncaughtExceptionHandler((thread, e) -> {
             // This error can occur if, e.g. deep recursion, is performed.
             if(e instanceof StackOverflowError) {
-                // Call garbage collector so the JVM gets notified that, in this case, the stack needs to be cleared.
-                System.gc();
-
                 // Release the robot resources.
                 try {
                     robot.close();
@@ -541,20 +538,24 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
                     editorPane.getControls().stop();
                     setGraphic(null);
 
-                    Alert error = new Alert(AlertType.ERROR);
-                    error.initModality(Modality.APPLICATION_MODAL);
-                    error.setTitle(e.getClass().getSimpleName());
-                    error.setHeaderText("Stack overflow");
-                    error.setContentText("A stack overflow occurred.");
-                    error.setResizable(true);
-                    error.getDialogPane().setPrefWidth(540);
-                    error.show();
+                    stackOverflowErrorPopup(e.getClass().getSimpleName());
                 });
             }
         });
 
         robotThread.start();
 
+    }
+
+    private void stackOverflowErrorPopup(String title) {
+        Alert error = new Alert(AlertType.ERROR);
+        error.initModality(Modality.APPLICATION_MODAL);
+        error.setTitle(title);
+        error.setHeaderText("Stack overflow");
+        error.setContentText("A stack overflow occurred.");
+        error.setResizable(true);
+        error.getDialogPane().setPrefWidth(540);
+        error.show();
     }
 
     /**
