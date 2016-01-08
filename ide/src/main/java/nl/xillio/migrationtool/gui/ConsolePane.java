@@ -293,7 +293,13 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
                 // Get all properties
                 String time = timeFormat.format(new Date((long) entry.get("timestamp")));
                 LogType type = LogType.valueOf(entry.get("type").toString().toUpperCase());
-                String text = entry.get("message").toString();
+                String text;
+                if (entry.get("message") == null) {// This is protection against when message is null, otherwise the console would stop working..
+                    text = "null";
+                    LOGGER.error("Null message passed to console!");
+                } else {
+                    text = entry.get("message").toString();
+                }
                 addTableEntry(time, type, text, false);
             }
 
