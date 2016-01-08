@@ -99,7 +99,7 @@ public class XmlNodeVar implements nl.xillio.xill.api.data.XmlNode, TextPreview 
      * @return a string containing all text extracted from XML node or XML document
      */
     public String getText() {
-        return (this.treatAsDocument ? this.getDocument().getTextContent() : this.getNode().getTextContent());
+        return this.getNode().getTextContent();
     }
 
     /**
