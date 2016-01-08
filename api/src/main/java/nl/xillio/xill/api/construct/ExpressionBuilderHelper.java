@@ -69,7 +69,11 @@ public class ExpressionBuilderHelper {
      * @return expression
      */
     public static MetaExpression fromValue(final String value) {
-        return new AtomicExpression(new StringBehavior(value));
+        if (value == null) {
+            return ExpressionBuilder.NULL;
+        } else {
+            return new AtomicExpression(new StringBehavior(value));
+        }
     }
 
     /**
