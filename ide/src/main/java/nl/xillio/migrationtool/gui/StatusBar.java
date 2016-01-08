@@ -19,8 +19,25 @@ import java.io.IOException;
  */
 public class StatusBar extends AnchorPane {
 
-    private static final String STATUS_RUNNING = "Running", STATUS_STOPPED = "Stopped",
-            STATUS_PAUSED = "Paused", STATUS_COMPILING = "Compiling", STATUS_READY = "Ready";
+    // Used enum for statuses instead of the strings previously implemented
+    public enum Status {
+        STATUS_RUNNING("Running"),
+        STATUS_STOPPED("Stopped"),
+        STATUS_PAUSED("Paused"),
+        STATUS_COMPILING("Compiling"),
+        STATUS_READY("Ready");
+
+        private String representation;
+
+        Status(String representation) {
+            this.representation = representation;
+        }
+
+        @Override
+        public String toString() {
+            return representation;
+        }
+    }
 
     private static final Logger LOGGER = LogManager.getLogger(StatusBar.class);
 
@@ -52,21 +69,18 @@ public class StatusBar extends AnchorPane {
      * @param debugger The debugger to get the {@link Event Events} from
      */
     public void registerDebugger(Debugger debugger) {
-        debugger.getOnRobotStart().addListener(e -> setStatus(STATUS_RUNNING));
-        debugger.getOnRobotStop().addListener(e -> setStatus(STATUS_STOPPED));
-        debugger.getOnRobotPause().addListener(e -> setStatus(STATUS_PAUSED));
-        debugger.getOnRobotContinue().addListener(e -> setStatus(STATUS_RUNNING));
+        debugger.getOnRobotStart().addListener(e -> setStatus(Status.STATUS_RUNNING));
+        debugger.getOnRobotStop().addListener(e -> setStatus(Status.STATUS_STOPPED));
+        debugger.getOnRobotPause().addListener(e -> setStatus(Status.STATUS_PAUSED));
+        debugger.getOnRobotContinue().addListener(e -> setStatus(Status.STATUS_RUNNING));
     }
 
     /**
-     * Signal to the {@link StatusBar} that the robot is being compiled
+     * Set the status of the status bar based on the robot action
+     *
+     * @param status The actual status to be displayed on the status bar
      */
-    public void setCompiling(boolean compiling) {
-        setStatus(compiling ? STATUS_COMPILING : STATUS_READY);
+    public void setStatus(Status status) {
+        Platform.runLater(() -> lblStatusVal.setText(status.toString()));
     }
-
-    private void setStatus(String status) {
-        Platform.runLater(() -> lblStatusVal.setText(status));
-    }
-
 }
