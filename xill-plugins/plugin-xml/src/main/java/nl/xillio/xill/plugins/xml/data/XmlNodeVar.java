@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXParseException;
 
@@ -99,7 +100,18 @@ public class XmlNodeVar implements nl.xillio.xill.api.data.XmlNode, TextPreview 
      * @return a string containing all text extracted from XML node or XML document
      */
     public String getText() {
-        return this.getNode().getTextContent();
+        String itemText, text = "";
+        NodeList list = this.getNode().getChildNodes();
+        for(int i=0; i<list.getLength(); i++) {
+            itemText = list.item(i).getTextContent();
+            if (!itemText.isEmpty()) {
+                if (!text.isEmpty()) {
+                    text += "\n";
+                }
+                text += itemText;
+            }
+        }
+        return text;
     }
 
     /**
