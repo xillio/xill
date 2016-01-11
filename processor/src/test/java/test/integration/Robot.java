@@ -2,13 +2,12 @@ package test.integration;
 
 
 import nl.xillio.xill.RobotIntegrationTest;
-
-import java.net.URL;
+import org.testng.annotations.Test;
 
 public class Robot extends RobotIntegrationTest {
 
-    @Override
-    protected URL getRobot() {
-        return getClass().getResource("/tests/date.xill");
+    @Test
+    public void testRun() throws Exception {
+        runRobot(getClass().getResource("/tests/date.xill"));
     }
 }
