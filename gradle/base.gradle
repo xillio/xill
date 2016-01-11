@@ -47,7 +47,7 @@ test {
     }
 
     jacoco {
-        destinationFile = file("$buildDir/jacoco/jacoco-ut.exec")
+        destinationFile = file("$buildDir/jacoco-ut/jacoco-ut.exec")
     }
 }
 
@@ -61,7 +61,7 @@ task integrationTest(type: Test, dependsOn: prepare, group: 'xillio') {
     }
 
     jacoco {
-        destinationFile = file("$buildDir/jacoco/jacoco-it.exec")
+        destinationFile = file("$buildDir/jacoco-it/jacoco-it.exec")
     }
 }
 
