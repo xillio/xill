@@ -38,9 +38,7 @@ tasks.withType(JavaCompile) {
 }
 
 test {
-    filter {
-        includeTestsMatching "nl.xillio.*"
-    }
+    exclude "test/integration/**"
 
     binResultsDir = file("$buildDir/test-results/UT")
 
@@ -54,9 +52,7 @@ test {
 }
 
 task integrationTest(type: Test, dependsOn: prepare, group: 'xillio') {
-    filter {
-        includeTestsMatching "test.integration.*"
-    }
+    include "test/integration/**"
 
     binResultsDir = file("$buildDir/test-results/IT")
 
@@ -65,7 +61,7 @@ task integrationTest(type: Test, dependsOn: prepare, group: 'xillio') {
     }
 
     jacoco {
-        destinationFile = file("$buildDir/jacoco/jacoco-It.exec")
+        destinationFile = file("$buildDir/jacoco/jacoco-it.exec")
     }
 }
 
