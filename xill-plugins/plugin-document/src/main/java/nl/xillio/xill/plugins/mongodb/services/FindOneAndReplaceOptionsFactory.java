@@ -47,7 +47,7 @@ public class FindOneAndReplaceOptionsFactory {
             case "projection":
                 options.projection(converter.parse(value));
                 break;
-            case "sortBy":
+            case "sort":
                 options.sort(converter.parse(value));
                 break;
             case "upsert":
