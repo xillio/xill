@@ -13,7 +13,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  *
  * @author Thomas Biesaart
  */
-public class EqualsConstruct extends Construct {
+public class EqualConstruct extends Construct {
     @Override
     public ConstructProcessor prepareProcess(ConstructContext context) {
         return new ConstructProcessor(

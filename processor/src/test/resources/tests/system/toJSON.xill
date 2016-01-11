@@ -1,16 +1,16 @@
 use System, Assert;
 
 // Simple single values
-Assert.equals(System.toJSON(5), "5");
-Assert.equals(System.toJSON("Hello"), '"Hello"');
-Assert.equals(System.toJSON(null), "null");
-Assert.equals(System.toJSON(false), "false");
+Assert.equal(System.toJSON(5), "5");
+Assert.equal(System.toJSON("Hello"), '"Hello"');
+Assert.equal(System.toJSON(null), "null");
+Assert.equal(System.toJSON(false), "false");
 
 // Lists
-Assert.equals(System.toJSON([]), "[]");
-Assert.equals(System.toJSON([1,2,3]), "[1,2,3]");
-Assert.equals(System.toJSON([1,2,3], true), "[ 1, 2, 3 ]");
+Assert.equal(System.toJSON([]), "[]");
+Assert.equal(System.toJSON([1,2,3]), "[1,2,3]");
+Assert.equal(System.toJSON([1,2,3], true), "[ 1, 2, 3 ]");
 
 // Objects
-Assert.equals(System.toJSON({}), "{}");
-Assert.equals(System.toJSON({"hello": "world"}), '{"hello":"world"}');
+Assert.equal(System.toJSON({}), "{}");
+Assert.equal(System.toJSON({"hello": "world"}), '{"hello":"world"}');
