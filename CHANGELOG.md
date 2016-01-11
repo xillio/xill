@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file
 - Default tab size from 5 to 4
 - Excel.getSheet now also accepts a sheet index to fetch the n-th sheet of a workbook
 - Robots started by callbot will now by killed when the parent robot is stopped
+- Rename option sortBy in some Mongo constructs to sort
 ### Fixed
 - Sorting on keys using Collection.sort now also works in reverse [CTC-1234](https://xillio.atlassian.net/browse/CTC-1234)
 - Copying an excel sheet would cause changes to be lost. [CTC-1233](https://xillio.atlassian.net/browse/CTC-1233)
