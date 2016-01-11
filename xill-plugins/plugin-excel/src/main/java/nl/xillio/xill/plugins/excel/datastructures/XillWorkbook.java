@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.excel.datastructures;
 
 import com.google.common.io.Files;
 import nl.xillio.xill.api.data.MetadataExpression;
+import nl.xillio.xill.plugins.excel.NoSuchSheetException;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -40,10 +41,7 @@ public class XillWorkbook implements MetadataExpression {
         this.workbook = workbook;
         this.file = file;
         location = file.getCanonicalPath();
-        if (file.exists())
-            readonly = !file.canWrite();
-        else
-            readonly = false;
+        readonly = file.exists() && !file.canWrite();
     }
 
     /**
@@ -89,12 +87,12 @@ public class XillWorkbook implements MetadataExpression {
      *
      * @param sheetName the name of the sheet which should be retrieved
      * @return the {@link XillSheet} which was retrieved from this workbook
-     * @throws IllegalArgumentException when the name of the sheet cannot
-     *                                  be found in this workbook
+     * @throws NoSuchSheetException when the name of the sheet cannot
+     *                              be found in this workbook
      */
-    public XillSheet getSheet(String sheetName) {
+    public XillSheet getSheet(String sheetName) throws NoSuchSheetException {
         if (workbook.getSheetIndex(sheetName) == -1)
-            throw new IllegalArgumentException("Sheet cannot be found in the supplied workbook");
+            throw new NoSuchSheetException("Sheet [" + sheetName + "] cannot be found in the supplied workbook");
         return new XillSheet(workbook.getSheet(sheetName), readonly, this);
     }
 
@@ -103,11 +101,11 @@ public class XillWorkbook implements MetadataExpression {
      *
      * @param index The index of the sheet which should be retrieved.
      * @return The {@link XillSheet} which was retrieved from this workbook.
-     * @throws IllegalArgumentException when the index is out of bounds.
+     * @throws NoSuchSheetException when the index is out of bounds.
      */
-    public XillSheet getSheetAt(int index) {
+    public XillSheet getSheetAt(int index) throws NoSuchSheetException {
         if (index < 0 || index >= workbook.getNumberOfSheets()) {
-            throw new IllegalArgumentException("Sheet index must be greater than 0 and smaller than the amount of sheets.");
+            throw new NoSuchSheetException("Sheet index must be greater than 0 and smaller than the amount of sheets.");
         }
         return new XillSheet(workbook.getSheetAt(index), readonly, this);
     }
