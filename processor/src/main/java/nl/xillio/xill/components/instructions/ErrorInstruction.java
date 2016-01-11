@@ -25,8 +25,6 @@ public class ErrorInstruction extends CompoundInstruction {
     private final InstructionSet errorInstructions;
     private final InstructionSet finallyInstructions;
     private final VariableDeclaration cause;
-    private ErrorBlockDebugger errorBlockDebugger;
-    private boolean hasReturn = false;
 
     /**
      * Instantiate an {@link ErrorInstruction}
@@ -66,18 +64,26 @@ public class ErrorInstruction extends CompoundInstruction {
      */
     @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) {
-        errorBlockDebugger = new ErrorBlockDebugger();
+        ErrorBlockDebugger errorBlockDebugger = new ErrorBlockDebugger();
         errorBlockDebugger.setDebug(debugger); //we need the breakpoints from the old debugger.
 
-        try {
-            return tryDoBlock();
-        } catch (RobotRuntimeException e) {
-            processException(debugger, e);
-        } finally {
-            processFinally(debugger);
+        InstructionFlow<MetaExpression> result = doInstructions.process(errorBlockDebugger);
+
+        if(result.hasValue()) {
+            result.get().preventDisposal();
         }
 
-        return InstructionFlow.doResume();
+        if(errorBlockDebugger.hasError()){
+            processException(debugger,errorBlockDebugger.getError());
+        }
+
+        processFinally(debugger, errorBlockDebugger.hasError());
+
+        if(result.hasValue()) {
+            result.get().allowDisposal();
+        }
+
+        return result;
     }
 
     /**
@@ -85,14 +91,18 @@ public class ErrorInstruction extends CompoundInstruction {
      *
      * @param debugger the debugger
      */
-    private void processFinally(Debugger debugger) {
+    private void processFinally(Debugger debugger, boolean hadError) {
         //successBlock in finally because exceptions in these blocks should not be caught by errorBlockDebugger
-        if (!errorBlockDebugger.hasError() && successInstructions != null) {
-            successInstructions.process(debugger);
+        if (!hadError && successInstructions != null) {
+            if(successInstructions.process(debugger).hasValue()){
+                throw new RobotRuntimeException("A return is not allowed in the success block.");
+            }
         }
 
         if (finallyInstructions != null) {
-            finallyInstructions.process(debugger);
+            if(finallyInstructions.process(debugger).hasValue()){
+                throw new RobotRuntimeException("A return is now allowed in the finally block");
+            }
         }
     }
 
@@ -102,31 +112,18 @@ public class ErrorInstruction extends CompoundInstruction {
      * @param debugger the debugger
      * @param e        the exception
      */
-    private void processException(Debugger debugger, RobotRuntimeException e) {
+    private void processException(Debugger debugger, Throwable e) {
         if (errorInstructions != null) {
 
             if (cause != null) {
                 cause.pushVariable(ExpressionBuilderHelper.fromValue(e.getMessage()));
             }
             LOGGER.error("Caught exception in error handler", e);
-            errorInstructions.process(debugger);
+
+            if(errorInstructions.process(debugger).hasValue()){
+                throw new RobotRuntimeException("A return is now allowed in the error block");
+            }
         }
-    }
-
-    /**
-     * do the do Block. return the result if there is one.
-     *
-     * @return
-     */
-    private InstructionFlow<MetaExpression> tryDoBlock() {
-        InstructionFlow<MetaExpression> result = doInstructions.process(errorBlockDebugger);
-        hasReturn = result.returns();
-
-        if (hasReturn) {
-            return InstructionFlow.doReturn(result.get());
-        }
-
-        return InstructionFlow.doResume();
     }
 
     @Override

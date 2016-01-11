@@ -10,6 +10,8 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  */
 public class ErrorBlockDebugger extends DelegateDebugger {
 
+    private Throwable error;
+
     private boolean hasError = false;
 
     public void setDebug(Debugger debugger) {
@@ -19,21 +21,23 @@ public class ErrorBlockDebugger extends DelegateDebugger {
     @Override
     public void handle(Throwable e) {
         this.hasError = true;
+        this.error = e;
 
-        if (e instanceof RobotRuntimeException) {
-            throw (RobotRuntimeException) e;
-        }
-
-        throw new RobotRuntimeException("Exception in robot.", e);
     }
-
     @Override
     public boolean shouldStop() {
-        return false;
+        return hasError();
     }
 
     public boolean hasError() {
         return this.hasError;
+    }
+
+    public Throwable getError(){
+        if(hasError){
+            return this.error;
+        }
+        return null;
     }
 
 }
