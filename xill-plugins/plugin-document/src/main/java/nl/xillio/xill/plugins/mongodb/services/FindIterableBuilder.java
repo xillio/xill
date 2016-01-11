@@ -21,11 +21,11 @@ public class FindIterableBuilder {
     }
 
     /**
-     * This function parses the given arguments to BSON-documents and runs the query on the collection
+     * This function parses the given arguments to BSON-documents and runs the query on the collection.
      *
-     * @param collection The collection of data to do the query on.
-     * @param arguments  The given parts of the query (filter, projection, sort)
-     * @return <code>FindIterable&lt;Document&gt;</code>, an iterable containing the result of the query.
+     * @param collection the collection of data to execute the query on
+     * @param arguments  the parts of the query in this particular order: filter, projection, sort
+     * @return the iterable containing the result of the query
      */
     public FindIterable<Document> getIterable(
             MongoCollection<Document> collection,
