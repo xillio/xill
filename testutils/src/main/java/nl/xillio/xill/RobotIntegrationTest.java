@@ -28,7 +28,6 @@ import java.util.ServiceLoader;
  */
 public abstract class RobotIntegrationTest {
 
-    private int counter = 0;
     private Xill xill;
     private File projectPath = new File("integration-test");
     private File pluginPath = new File("../plugins");
@@ -70,14 +69,12 @@ public abstract class RobotIntegrationTest {
         return reflections
                 .getResources(a -> true)
                 .stream()
-                .map(resource -> "/" + resource)
-                .map(getClass()::getResource)
-                .map(url -> new Object[]{url})
+                .map(resource -> new Object[]{getClass().getResource("/" + resource), resource})
                 .toArray(Object[][]::new);
     }
 
-    public void runRobot(URL robot) throws Exception {
-        File robotFile = new File(projectPath, getClass().getName() + "-" + counter++ + ".xill");
+    public void runRobot(URL robot, String name) throws Exception {
+        File robotFile = new File(projectPath, getClass().getName() + "/" + name);
 
         FileUtils.copyInputStreamToFile(robot.openStream(), robotFile);
 

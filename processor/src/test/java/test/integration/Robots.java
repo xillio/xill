@@ -16,7 +16,7 @@ public class Robots extends RobotIntegrationTest {
 
     @Test(dataProvider = "myRobots")
     @Override
-    public void runRobot(URL robot) throws Exception {
-        super.runRobot(robot);
+    public void runRobot(URL robot, String name) throws Exception {
+        super.runRobot(robot, name);
     }
 }

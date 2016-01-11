@@ -1,2 +1,3 @@
-use System;
-System.info();
+use System, Assert;
+
+Assert.fail("NOPE");
