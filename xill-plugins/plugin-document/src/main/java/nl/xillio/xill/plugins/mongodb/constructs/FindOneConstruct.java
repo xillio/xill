@@ -9,10 +9,10 @@ import org.bson.Document;
 /**
  * This construct represents the findOne method on MongoDB using the findConstruct.
  * It extends the findConstruct since the arguments and the services are identical.
- * @see FindConstruct
  *
  * @author Thomas Biesaart
  * @author Pieter Dirk Soels
+ * @see FindConstruct
  * @see <a href="https://docs.mongodb.org/v3.0/reference/method/db.collection.findOne/#db.collection.findOne">db.collection.findOne</a>
  */
 public class FindOneConstruct extends FindConstruct {
