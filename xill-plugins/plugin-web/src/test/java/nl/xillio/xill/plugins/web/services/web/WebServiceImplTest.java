@@ -111,26 +111,55 @@ public class WebServiceImplTest {
     }
 
     /**
-     * Test the getText function.
+     * Test the getText function for NODE variable.
      */
     @Test
-    public void testGetText() {
+    public void testGetTextNode() {
+        String text = "just some text";
+
         // mock
         WebElement element = mock(WebElement.class);
         WebVariable webVariable = mock(WebVariable.class);
         when(webVariable.getElement()).thenReturn(element);
-        when(element.getText()).thenReturn("text");
+        when(element.getText()).thenReturn(text);
 
         // run
         WebServiceImpl implementation = new WebServiceImpl();
         String tagName = implementation.getText(webVariable);
 
-
         // verify
         verify(element, times(1)).getText();
 
         // assert
-        Assert.assertEquals(tagName, "text");
+        Assert.assertEquals(tagName, text);
+    }
+
+    /**
+     * Test the getText function for PAGE variable.
+     */
+    @Test
+    public void testGetTextPage() {
+        String text = "just some text";
+
+        // mock
+        WebElement element = mock(WebElement.class);
+        PageVariable pageVariable = mock(PageVariable.class);
+
+        WebDriver driver = mock(WebDriver.class);
+        when(pageVariable.getDriver()).thenReturn(driver);
+        when(driver.findElement(any())).thenReturn(element);
+        when(element.getText()).thenReturn(text);
+
+        // run
+        WebServiceImpl implementation = new WebServiceImpl();
+        String tagName = implementation.getText(pageVariable);
+
+        // verify
+        verify(element, times(1)).getText();
+        verify(driver, times(1)).findElement(any());
+
+        // assert
+        Assert.assertEquals(tagName, text);
     }
 
     /**
