@@ -30,7 +30,11 @@ public class SaveConstructTest extends TestUtils {
     public void testProcessNoValidWorkbook() throws Exception {
         ExcelService service = mock(ExcelService.class);
         ConstructContext context = mock(ConstructContext.class);
-        SaveConstruct.process(service, context, fromValue((String) null), fromValue("path"));
+
+        MetaExpression nullExpression = mock(MetaExpression.class);
+        when(nullExpression.isNull()).thenReturn(true);
+
+        SaveConstruct.process(service, context, nullExpression, fromValue("path"));
     }
 
     /**
