@@ -4,6 +4,7 @@ import junit.framework.Assert;
 import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
+import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.debugging.ErrorBlockDebugger;
 import nl.xillio.xill.debugging.XillDebugger;
@@ -68,9 +69,12 @@ public class ErrorInstructionTest {
     @Test
     public void testProcessFailNoCause() {
         result = (InstructionFlow<MetaExpression>) mock(InstructionFlow.class);
+        MetaExpression metaExpressionResult = mock(MetaExpression.class);
+
         InstructionSet mockDoBlock = mock(InstructionSet.class);
         ErrorInstruction instruction = new ErrorInstruction(mockDoBlock, successBlock, errorBlock, finallyBlock, null);
-        when(mockDoBlock.process(any())).thenThrow(new RobotRuntimeException("fail"));
+        when(mockDoBlock.process(any())).thenReturn(result);
+        when(result.hasValue()).thenReturn(false);
 
         instruction.process(xillDebugger);
     }
@@ -82,7 +86,8 @@ public class ErrorInstructionTest {
         Processable mockProcessable = mock(Processable.class);
         VariableDeclaration cause = new VariableDeclaration(mockProcessable, "fail");
         ErrorInstruction instruction = new ErrorInstruction(mockDoBlock, successBlock, errorBlock, finallyBlock, cause);
-        when(mockDoBlock.process(any())).thenThrow(new RobotRuntimeException("fail"));
+        when(mockDoBlock.process(any())).thenReturn(result);
+
 
         InstructionFlow<MetaExpression> returnedValue = instruction.process(xillDebugger);
 
