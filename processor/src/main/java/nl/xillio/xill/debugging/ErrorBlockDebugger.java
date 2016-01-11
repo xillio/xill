@@ -1,7 +1,6 @@
 package nl.xillio.xill.debugging;
 
 import nl.xillio.xill.api.Debugger;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
  * This class contains all information and controls required for debugging.
@@ -24,6 +23,7 @@ public class ErrorBlockDebugger extends DelegateDebugger {
         this.error = e;
 
     }
+
     @Override
     public boolean shouldStop() {
         return hasError();
@@ -33,8 +33,8 @@ public class ErrorBlockDebugger extends DelegateDebugger {
         return this.hasError;
     }
 
-    public Throwable getError(){
-        if(hasError){
+    public Throwable getError() {
+        if (hasError) {
             return this.error;
         }
         return null;

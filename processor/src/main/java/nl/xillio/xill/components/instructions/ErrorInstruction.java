@@ -59,6 +59,7 @@ public class ErrorInstruction extends CompoundInstruction {
 
     /**
      * start processing the blocks.
+     *
      * @param debugger The debugger that should be used when processing this
      * @return
      */
@@ -69,17 +70,17 @@ public class ErrorInstruction extends CompoundInstruction {
 
         InstructionFlow<MetaExpression> result = doInstructions.process(errorBlockDebugger);
 
-        if(result.hasValue()) {
+        if (result.hasValue()) {
             result.get().preventDisposal();
         }
 
-        if(errorBlockDebugger.hasError()){
-            processException(debugger,errorBlockDebugger.getError());
+        if (errorBlockDebugger.hasError()) {
+            processException(debugger, errorBlockDebugger.getError());
         }
 
         processFinally(debugger, errorBlockDebugger.hasError());
 
-        if(result.hasValue()) {
+        if (result.hasValue()) {
             result.get().allowDisposal();
         }
 
@@ -93,16 +94,12 @@ public class ErrorInstruction extends CompoundInstruction {
      */
     private void processFinally(Debugger debugger, boolean hadError) {
         //successBlock in finally because exceptions in these blocks should not be caught by errorBlockDebugger
-        if (!hadError && successInstructions != null) {
-            if(successInstructions.process(debugger).hasValue()){
-                throw new RobotRuntimeException("A return is not allowed in the success block.");
-            }
+        if (!hadError && successInstructions != null && successInstructions.process(debugger).hasValue()) {
+            throw new RobotRuntimeException("A return is not allowed in the success block.");
         }
 
-        if (finallyInstructions != null) {
-            if(finallyInstructions.process(debugger).hasValue()){
-                throw new RobotRuntimeException("A return is now allowed in the finally block");
-            }
+        if (finallyInstructions != null && finallyInstructions.process(debugger).hasValue()) {
+            throw new RobotRuntimeException("A return is now allowed in the finally block");
         }
     }
 
@@ -120,7 +117,7 @@ public class ErrorInstruction extends CompoundInstruction {
             }
             LOGGER.error("Caught exception in error handler", e);
 
-            if(errorInstructions.process(debugger).hasValue()){
+            if (errorInstructions.process(debugger).hasValue()) {
                 throw new RobotRuntimeException("A return is now allowed in the error block");
             }
         }
