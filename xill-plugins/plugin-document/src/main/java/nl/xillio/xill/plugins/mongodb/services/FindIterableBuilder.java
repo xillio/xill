@@ -25,7 +25,7 @@ public class FindIterableBuilder {
      *
      * @param collection The collection of data to do the query on.
      * @param arguments  The given parts of the query (filter, projection, sort)
-     * @return FindIterable<Document>, an iterable containing the result of the query.
+     * @return <code>FindIterable&lt;Document&gt;</code>, an iterable containing the result of the query.
      */
     public FindIterable<Document> getIterable(
             MongoCollection<Document> collection,
