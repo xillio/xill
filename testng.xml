@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="IntegrationTests">
+    <test name="robots">
+        <packages>
+            <package name="test.integration"/>
+        </packages>
+    </test>
+</suite>
