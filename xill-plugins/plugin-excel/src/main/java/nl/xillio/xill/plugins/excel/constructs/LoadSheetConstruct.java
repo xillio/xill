@@ -7,6 +7,7 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.excel.NoSuchSheetException;
 import nl.xillio.xill.plugins.excel.datastructures.XillSheet;
 import nl.xillio.xill.plugins.excel.datastructures.XillWorkbook;
 
@@ -45,18 +46,11 @@ public class LoadSheetConstruct extends Construct {
     }
 
     private static XillSheet tryGetSheet(MetaExpression sheetName, XillWorkbook xillWorkbook) {
-        XillSheet sheet;
         try {
-            // If the sheetName is a number get the sheet at that index, else get the sheet with that name.
-            if (sheetName.getValue() instanceof NumberBehavior) {
-                sheet = xillWorkbook.getSheetAt(sheetName.getNumberValue().intValue());
-            } else {
-                sheet = xillWorkbook.getSheet(sheetName.getStringValue());
-            }
-        } catch (IllegalArgumentException e) {
+            return xillWorkbook.getSheet(sheetName.getStringValue());
+        } catch (NoSuchSheetException e) {
             throw new RobotRuntimeException(e.getMessage(), e);
         }
-        return sheet;
     }
 
     @Override
