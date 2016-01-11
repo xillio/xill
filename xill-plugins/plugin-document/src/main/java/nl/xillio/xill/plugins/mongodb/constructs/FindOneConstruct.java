@@ -1,37 +1,21 @@
 package nl.xillio.xill.plugins.mongodb.constructs;
 
-import com.google.inject.Inject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
-import nl.xillio.xill.plugins.mongodb.services.FindIterableBuilder;
 import org.bson.Document;
 
 /**
- * This construct represents the findOne method on MongoDB.
+ * This construct represents the findOne method on MongoDB using the findConstruct.
+ * It extends the findConstruct since the arguments and the services are identical.
+ * @see FindConstruct
  *
  * @author Thomas Biesaart
+ * @author Pieter Dirk Soels
  * @see <a href="https://docs.mongodb.org/v3.0/reference/method/db.collection.findOne/#db.collection.findOne">db.collection.findOne</a>
  */
-public class FindOneConstruct extends AbstractCollectionApiConstruct {
-
-    private FindIterableBuilder findIterableBuilder;
-
-    @Inject
-    void setFindIterableBuilder(FindIterableBuilder findIterableBuilder) {
-        this.findIterableBuilder = findIterableBuilder;
-    }
-
-    @Override
-    protected Argument[] getApiArguments() {
-        return new Argument[]{
-                new Argument("query", emptyObject(), OBJECT),
-                new Argument("projection", emptyObject(), OBJECT),
-                new Argument("sort", emptyObject(), OBJECT)
-        };
-    }
+public class FindOneConstruct extends FindConstruct {
 
     @Override
     MetaExpression process(MetaExpression[] arguments, MongoCollection<Document> collection, ConstructContext context) {

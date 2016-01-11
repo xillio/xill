@@ -17,7 +17,7 @@ import org.bson.Document;
  */
 public class FindConstruct extends AbstractCollectionApiConstruct {
 
-    private FindIterableBuilder findIterableBuilder;
+    protected FindIterableBuilder findIterableBuilder;
 
     @Inject
     void setFindIterableBuilder(FindIterableBuilder findIterableBuilder) {
