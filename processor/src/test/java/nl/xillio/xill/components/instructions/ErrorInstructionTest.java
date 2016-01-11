@@ -4,13 +4,10 @@ import junit.framework.Assert;
 import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
-import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.debugging.ErrorBlockDebugger;
 import nl.xillio.xill.debugging.XillDebugger;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.testng.asserts.Assertion;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,62 +36,96 @@ public class ErrorInstructionTest {
         errorBlock = new InstructionSet(xillDebugger);
         successBlock = new InstructionSet(xillDebugger);
         finallyBlock = new InstructionSet(xillDebugger);
-        errorDebugger = new ErrorBlockDebugger();
+        errorDebugger = mock(ErrorBlockDebugger.class);
 
 
     }
 
     @Test
     public void testProcessSuccess() {
+        result = (InstructionFlow<MetaExpression>) mock(InstructionFlow.class);
+        InstructionSet mockDoBlock = mock(InstructionSet.class);
+        MetaExpression mockMeta = mock(MetaExpression.class);
+        ErrorInstruction instruction = new ErrorInstruction(mockDoBlock, successBlock, errorBlock, finallyBlock, null);
 
-        ErrorInstruction instruction = new ErrorInstruction(doBlock, successBlock, errorBlock, finallyBlock, null);
+        when(result.hasValue()).thenReturn(false);
+        when(result.get()).thenReturn(mockMeta);
+        when(errorDebugger.hasError()).thenReturn(false);
+        when(mockDoBlock.process(errorDebugger)).thenReturn(result);
 
-        InstructionFlow<MetaExpression> returnedValue = instruction.process(xillDebugger);
+        InstructionFlow<MetaExpression> returnedValue = instruction.process(xillDebugger, errorDebugger);
+
+        verify(errorDebugger, times(1)).setDebug(xillDebugger);
+        verify(result, times(2)).hasValue();
 
     }
 
     @Test
     public void testProcessReturn() {
         result = (InstructionFlow<MetaExpression>) mock(InstructionFlow.class);
+        MetaExpression mockMeta = mock(MetaExpression.class);
         InstructionSet mockDoBlock = mock(InstructionSet.class);
         ErrorInstruction instruction = new ErrorInstruction(mockDoBlock, successBlock, errorBlock, finallyBlock, null);
 
-        when(mockDoBlock.process(any())).thenReturn(result);
-        when(result.returns()).thenReturn(true);
+        when(mockDoBlock.process(errorDebugger)).thenReturn(result);
+        when(result.hasValue()).thenReturn(true);
+        when(result.get()).thenReturn(mockMeta);
 
-        InstructionFlow<MetaExpression> returnedValue = instruction.process(xillDebugger);
-        Assert.assertNotSame(returnedValue,InstructionFlow.doResume());
+        InstructionFlow<MetaExpression> returnedValue = instruction.process(xillDebugger, errorDebugger);
+
+        verify(result, times(2)).get();
+
+        Assert.assertNotSame(returnedValue, InstructionFlow.doResume());
     }
 
     @Test
     public void testProcessFailNoCause() {
         result = (InstructionFlow<MetaExpression>) mock(InstructionFlow.class);
+        InstructionFlow<MetaExpression> resultError = (InstructionFlow<MetaExpression>) mock(InstructionFlow.class);
         MetaExpression metaExpressionResult = mock(MetaExpression.class);
 
         InstructionSet mockDoBlock = mock(InstructionSet.class);
-        ErrorInstruction instruction = new ErrorInstruction(mockDoBlock, successBlock, errorBlock, finallyBlock, null);
-        when(mockDoBlock.process(any())).thenReturn(result);
-        when(result.hasValue()).thenReturn(false);
+        InstructionSet mockErrorBlock = mock(InstructionSet.class);
+        ErrorInstruction instruction = new ErrorInstruction(mockDoBlock, successBlock, mockErrorBlock, finallyBlock, null);
 
-        instruction.process(xillDebugger);
+        when(mockDoBlock.process(errorDebugger)).thenReturn(result);
+        when(mockErrorBlock.process(xillDebugger)).thenReturn(resultError);
+
+        when(result.hasValue()).thenReturn(false);
+        when(errorDebugger.hasError()).thenReturn(true);
+
+        instruction.process(xillDebugger, errorDebugger);
+
+        verify(resultError, times(1)).hasValue();
+        verify(errorDebugger, times(1)).getError();
+
     }
 
     @Test
-    public void testProcessFailWithCause()  {
+    public void testProcessFailWithCause() {
         result = (InstructionFlow<MetaExpression>) mock(InstructionFlow.class);
+        InstructionFlow<MetaExpression> resultError = (InstructionFlow<MetaExpression>) mock(InstructionFlow.class);
+        Throwable throwableMock = mock(Throwable.class);
         InstructionSet mockDoBlock = mock(InstructionSet.class);
+        InstructionSet mockErrorBlock = mock(InstructionSet.class);
         Processable mockProcessable = mock(Processable.class);
         VariableDeclaration cause = new VariableDeclaration(mockProcessable, "fail");
+
         ErrorInstruction instruction = new ErrorInstruction(mockDoBlock, successBlock, errorBlock, finallyBlock, cause);
-        when(mockDoBlock.process(any())).thenReturn(result);
+        when(mockDoBlock.process(errorDebugger)).thenReturn(result);
+        when(mockErrorBlock.process(xillDebugger)).thenReturn(resultError);
+        when(errorDebugger.getError()).thenReturn(throwableMock);
+        when(result.hasValue()).thenReturn(false);
+        when(errorDebugger.hasError()).thenReturn(true);
 
+        instruction.process(xillDebugger, errorDebugger);
 
-        InstructionFlow<MetaExpression> returnedValue = instruction.process(xillDebugger);
+        verify(throwableMock, times(2)).getMessage();
 
     }
 
     @Test
-    public void testProcessOptionals(){
+    public void testProcessOptionals() {
         result = (InstructionFlow<MetaExpression>) mock(InstructionFlow.class);
         InstructionSet mockSuccesBlock = mock(InstructionSet.class);
         InstructionSet mockErrorBlock = mock(InstructionSet.class);
@@ -106,13 +137,13 @@ public class ErrorInstructionTest {
 
         InstructionFlow<MetaExpression> returnedValue = instruction.process(xillDebugger);
 
-        verify(mockSuccesBlock,never()).process(any());
-        verify(mockFinallyBlock,never()).process(any());
+        verify(mockSuccesBlock, never()).process(any());
+        verify(mockFinallyBlock, never()).process(any());
 
     }
 
     @Test
-    public void testGetChildren(){
+    public void testGetChildren() {
 
         Processable mockProcessable = mock(Processable.class);
         VariableDeclaration cause = new VariableDeclaration(mockProcessable, "fail");
