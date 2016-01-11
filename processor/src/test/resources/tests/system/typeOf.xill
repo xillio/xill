@@ -1,0 +1,13 @@
+use System, Assert;
+
+// Check object
+Assert.equals(System.typeOf({}), OBJECT);
+
+// Check list
+Assert.equals(System.typeOf([]), LIST);
+
+// Check all types of atomic
+Assert.equals(System.typeOf(true), ATOMIC);
+Assert.equals(System.typeOf(null), ATOMIC);
+Assert.equals(System.typeOf(123), ATOMIC);
+Assert.equals(System.typeOf("Hello World"), ATOMIC);

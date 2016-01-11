@@ -1,3 +1,0 @@
-use System, Assert;
-
-Assert.fail("NOPE");

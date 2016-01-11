@@ -29,7 +29,7 @@ import java.util.ServiceLoader;
 public abstract class RobotIntegrationTest {
 
     private Xill xill;
-    private File projectPath = new File("integration-test");
+    private File projectPath = new File("integration-test", getClass().getName());
     private File pluginPath = new File("../plugins");
     private PluginLoader<XillPlugin> pluginLoader;
 
@@ -74,7 +74,7 @@ public abstract class RobotIntegrationTest {
     }
 
     public void runRobot(URL robot, String name) throws Exception {
-        File robotFile = new File(projectPath, getClass().getName() + "/" + name);
+        File robotFile = new File(projectPath, name);
 
         FileUtils.copyInputStreamToFile(robot.openStream(), robotFile);
 

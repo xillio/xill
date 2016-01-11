@@ -8,6 +8,11 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
+/**
+ * This construct throws an error.
+ *
+ * @author Thomas Biesaart
+ */
 public class FailConstruct extends Construct {
     @Override
     public ConstructProcessor prepareProcess(ConstructContext context) {

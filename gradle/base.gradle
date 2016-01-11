@@ -51,13 +51,7 @@ test {
     }
 }
 
-task installTestUtils(type: Copy) {
-    from project(":testutils").configurations.runtime
-    into new File(pluginsDir, "testing");
-}
-
 task integrationTest(type: Test, dependsOn: prepare, group: 'xillio') {
-    dependsOn installTestUtils
     include "**/integration/**"
     workingDir rootProject.buildDir
     rootProject.buildDir.mkdirs()
