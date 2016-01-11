@@ -15,8 +15,6 @@ import nl.xillio.xill.services.inject.DefaultInjectorModule;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,9 +61,12 @@ public abstract class RobotIntegrationTest {
         pluginLoader.getPluginManager().getPlugins().forEach(XillPlugin::initialize);
     }
 
-    @DataProvider(name = "robots")
+    protected String getPackage() {
+        return "tests";
+    }
+
     public Object[][] getRobots() {
-        Reflections reflections = new Reflections("tests", new ResourcesScanner());
+        Reflections reflections = new Reflections(getPackage(), new ResourcesScanner());
         return reflections
                 .getResources(a -> true)
                 .stream()
@@ -75,7 +76,6 @@ public abstract class RobotIntegrationTest {
                 .toArray(Object[][]::new);
     }
 
-    @Test(dataProvider = "robots")
     public void runRobot(URL robot) throws Exception {
         File robotFile = new File(projectPath, getClass().getName() + "-" + counter++ + ".xill");
 
