@@ -32,10 +32,10 @@ public class FindOneAndUpdateOptionsFactoryTest extends TestUtils {
         assertNull(options.getSort());
         LinkedHashMap<String, MetaExpression> sort = new LinkedHashMap<>();
         sort.put("target.timestamp", fromValue(-1));
-        object.put("sortBy", fromValue(sort));
+        object.put("sort", fromValue(sort));
         options = findOneAndUpdateOptionsFactory.build(fromValue(object));
         assertNotNull(options.getSort());
-        assertEquals(MetaExpression.parseObject(options.getSort()), object.get("sortBy"));
+        assertEquals(MetaExpression.parseObject(options.getSort()), object.get("sort"));
 
         assertFalse(options.isUpsert());
         object.put("upsert", TRUE);
