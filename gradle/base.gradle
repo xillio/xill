@@ -1,5 +1,3 @@
-import com.sun.org.apache.xalan.internal.xsltc.cmdline.Compile
-
 /**
  * This file will be applied to all projects.
  */
@@ -39,16 +37,35 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
-
 test {
+    filter {
+        includeTestsMatching "nl.xillio.*"
+    }
+
+    binResultsDir = file("$buildDir/test-results/UT")
+
     useTestNG() {
-        suites rootProject.file('testng2.xml')
+        outputDirectory = file("$buildDir/test-output/UT")
+    }
+
+    jacoco {
+        destinationFile = file("$buildDir/jacoco/jacoco-ut.exec")
     }
 }
-// Integration test
-task integrationTest(type: Test, group: 'xillio', dependsOn: prepare) {
+
+task integrationTest(type: Test, dependsOn: prepare, group: 'xillio') {
+    filter {
+        includeTestsMatching "test.integration.*"
+    }
+
+    binResultsDir = file("$buildDir/test-results/IT")
+
     useTestNG() {
-        suites rootProject.file('testng.xml')
+        outputDirectory = file("$buildDir/test-output/IT")
+    }
+
+    jacoco {
+        destinationFile = file("$buildDir/jacoco/jacoco-It.exec")
     }
 }
 
