@@ -54,7 +54,7 @@ test {
 task integrationTest(type: Test, dependsOn: prepare, group: 'xillio') {
     dependsOn test
     include "test/integration/**"
-
+    workingDir rootProject.buildDir
     binResultsDir = file("$buildDir/test-results/IT")
 
     useTestNG() {
