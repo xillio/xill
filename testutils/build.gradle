@@ -2,4 +2,5 @@ dependencies {
     compile project(':api')
     compile 'org.testng:testng:6.9.4'
     compile "org.mockito:mockito-core:1.+"
+    compile 'org.reflections:reflections:0.9.10'
 }

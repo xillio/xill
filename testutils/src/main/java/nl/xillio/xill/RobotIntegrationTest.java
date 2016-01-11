@@ -12,7 +12,11 @@ import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.api.XillProcessor;
 import nl.xillio.xill.services.inject.DefaultInjectorModule;
+import org.reflections.Reflections;
+import org.reflections.scanners.ResourcesScanner;
 import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +30,7 @@ import java.util.ServiceLoader;
  */
 public abstract class RobotIntegrationTest {
 
+    private int counter = 0;
     private Xill xill;
     private File projectPath = new File("integration-test");
     private File pluginPath = new File("../plugins");
@@ -58,8 +63,21 @@ public abstract class RobotIntegrationTest {
         pluginLoader.getPluginManager().getPlugins().forEach(XillPlugin::initialize);
     }
 
-    protected void runRobot(URL robot) throws Exception {
-        File robotFile = new File(projectPath, getClass().getName() + ".xill");
+    @DataProvider(name = "robots")
+    public Object[][] getRobots() {
+        Reflections reflections = new Reflections("tests", new ResourcesScanner());
+        return reflections
+                .getResources(a -> true)
+                .stream()
+                .map(resource -> "/" + resource)
+                .map(getClass()::getResource)
+                .map(url -> new Object[]{url})
+                .toArray(Object[][]::new);
+    }
+
+    @Test(dataProvider = "robots")
+    public void runRobot(URL robot) throws Exception {
+        File robotFile = new File(projectPath, getClass().getName() + "-" + counter++ + ".xill");
 
         FileUtils.copyInputStreamToFile(robot.openStream(), robotFile);
 
