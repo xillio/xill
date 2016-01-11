@@ -38,3 +38,18 @@ rootProject.run.dependsOn prepare
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
+
+
+test {
+    useTestNG() {
+        suites rootProject.file('testng2.xml')
+    }
+}
+// Integration test
+task integrationTest(type: Test, group: 'xillio', dependsOn: prepare) {
+    useTestNG() {
+        suites rootProject.file('testng.xml')
+    }
+}
+
+check.dependsOn integrationTest

@@ -38,17 +38,3 @@ clean {
     delete pluginsDir
     delete file('ESConsole'), file('helpfiles'), file('xilliosettings.cfg')
 }
-
-test {
-    useTestNG() {
-        suites 'testng2.xml'
-    }
-}
-// Integration test
-task integrationTest(type: Test, group: 'xillio', dependsOn: prepare) {
-    useTestNG() {
-        suites 'testng.xml'
-    }
-}
-
-check.dependsOn integrationTest
