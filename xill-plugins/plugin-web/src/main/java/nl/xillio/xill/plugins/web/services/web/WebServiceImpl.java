@@ -64,11 +64,21 @@ public class WebServiceImpl implements WebService {
     public String getText(final WebVariable var) {
         String text;
         if (var instanceof PageVariable) {
-            text = var.getDriver().getPageSource();
+            try {
+                WebElement element = var.getDriver().findElement(By.xpath("//body"));
+                text = element.getText();
+            } catch (NoSuchElementException e) {
+                throw new RobotRuntimeException("Cannot find <body> tag!");
+            }
         } else {
             text = var.getElement().getText();
         }
         return text;
+    }
+
+    @Override
+    public String getSource(final PageVariable page) {
+        return page.getDriver().getPageSource();
     }
 
     @Override

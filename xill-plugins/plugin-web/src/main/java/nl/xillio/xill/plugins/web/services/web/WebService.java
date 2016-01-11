@@ -61,6 +61,15 @@ public interface WebService {
      */
     String getText(WebVariable var);
 
+
+    /**
+     * Returns the HTML content of the web page.
+     *
+     * @param page The web page.
+     * @return HTML content of the web page.
+     */
+    String getSource(final PageVariable page);
+
     /**
      * Returns the title of a {@link WebVariable}.
      *
