@@ -134,6 +134,27 @@ public class WebServiceImplTest {
     }
 
     /**
+     * Test the getSource function.
+     */
+    @Test
+    public void testGetSource() {
+        String html = "HTML source";
+
+        // mock
+        PageVariable pageVariable = mock(PageVariable.class);
+        WebDriver driver = mock(WebDriver.class);
+        when(pageVariable.getDriver()).thenReturn(driver);
+        when(driver.getPageSource()).thenReturn(html);
+
+        // run
+        WebServiceImpl implementation = new WebServiceImpl();
+        String source = implementation.getSource(pageVariable);
+
+        // assert
+        Assert.assertEquals(source, html);
+    }
+
+    /**
      * Test the findElementsWithCssPath function.
      *
      * @param webvar the webVariable (we try both types).
