@@ -52,5 +52,3 @@ task integrationTest(type: Test, group: 'xillio', dependsOn: prepare) {
 }
 
 check.dependsOn integrationTest
-
-println project."sonar.jacoco.reportPath"
