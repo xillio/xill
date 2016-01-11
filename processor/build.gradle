@@ -5,7 +5,7 @@ dependencies{
 	compile 'com.google.code.gson:gson:2.3.1'
 	compile 'org.apache.commons:commons-lang3:3.4'
 	compile 'commons-io:commons-io:2.4'
-	compile 'nl.xillio.xill:xill.lang.Xill:3.0.42-11-gef77404'
+	compile 'nl.xillio.xill:xill.lang.Xill:3.0.42-13-g559c569'
 	compile 'commons-codec:commons-codec:1.10'
 
 	testCompile project(':testutils')
