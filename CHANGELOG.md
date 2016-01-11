@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file
 - Hash construct package with md5 hashing constructs
 - Constructs for base64 encode/decode from files and strings
 - Exiftool plugin package
+- Code error highlighting on save
 ### Changed
 - Default tab size from 5 to 4
 - Excel.getSheet now also accepts a sheet index to fetch the n-th sheet of a workbook
@@ -37,6 +38,9 @@ All notable changes to this project will be documented in this file
 - New bot is not present in project pane [CTC-797](https://xillio.atlassian.net/browse/CTC-797)
 - Debugging a recursive function throws exceptions in certain cases [CTC-1242](https://xillio.atlassian.net/browse/CTC-1242)
 - Error "This expression has already been closed" is sometimes thrown on first iteration of loop. [CTC-1239](https://xillio.atlassian.net/browse/CTC-1239)
+- File change dialog could pop up erraticaly while editing code [CTC-1258](https://xillio.atlassian.net/browse/CTC-1258)
+- Deleting text sometimes deletes everything after the cursor [CTC-1042](https://xillio.atlassian.net/browse/CTC-1042)
+- Unable to revert changes when an included robot throws an error [CTC-1215](https://xillio.atlassian.net/browse/CTC-1215)
 
 ## [3.0.23] - 11-12-2015
 ### Stories done
