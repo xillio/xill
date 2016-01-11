@@ -165,7 +165,7 @@ public class StatementIterator implements Iterator<Object>, AutoCloseable {
      * Ensure to close database prepared statement and result set objects when the iterator is about to be disposed.
      * This avoids memory leaks.
      *
-     * @throws Exception when error occurs during releasing resources
+     * @throws SQLException when error occurs during releasing resources
      */
     @Override
     public void close() throws SQLException {
