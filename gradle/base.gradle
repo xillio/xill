@@ -52,6 +52,7 @@ test {
 }
 
 task integrationTest(type: Test, dependsOn: prepare, group: 'xillio') {
+    dependsOn test
     include "test/integration/**"
 
     binResultsDir = file("$buildDir/test-results/IT")
