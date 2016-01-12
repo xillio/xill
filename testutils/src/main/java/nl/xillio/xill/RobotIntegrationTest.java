@@ -11,6 +11,7 @@ import nl.xillio.plugins.PluginLoader;
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.api.XillProcessor;
+import nl.xillio.xill.api.errors.XillParsingException;
 import nl.xillio.xill.services.inject.DefaultInjectorModule;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
@@ -34,7 +35,7 @@ public abstract class RobotIntegrationTest {
     private PluginLoader<XillPlugin> pluginLoader;
 
     @BeforeSuite
-    public void loadXill() throws IOException, CircularReferenceException {
+    public void loadXill() throws IOException {
         ServiceLoader<ContenttoolsPlugin> loader = ServiceLoader.load(ContenttoolsPlugin.class);
         for (ContenttoolsPlugin plugin : loader) {
             Object object = plugin.serve();
@@ -51,7 +52,11 @@ public abstract class RobotIntegrationTest {
 
         pluginLoader = PluginLoader.load(XillPlugin.class);
         pluginLoader.addFolder(pluginPath);
-        pluginLoader.load();
+        try {
+            pluginLoader.load();
+        } catch (CircularReferenceException e) {
+            throw new IOException("Could not load plugins", e);
+        }
 
         List<Module> modules = new ArrayList<>(pluginLoader.getPluginManager().getPlugins());
         modules.add(new DefaultInjectorModule());
@@ -73,14 +78,18 @@ public abstract class RobotIntegrationTest {
                 .toArray(Object[][]::new);
     }
 
-    public void runRobot(URL robot, String name) throws Exception {
+    public void runRobot(URL robot, String name) throws IOException {
         File robotFile = new File(projectPath, name);
 
         FileUtils.copyInputStreamToFile(robot.openStream(), robotFile);
 
         XillProcessor processor = xill.createProcessor(robotFile, projectPath, pluginLoader);
 
-        processor.compile();
+        try {
+            processor.compile();
+        } catch (XillParsingException e) {
+            throw new IOException("Failed to parse xill robot", e);
+        }
         processor.getRobot().process(processor.getDebugger());
     }
 }
