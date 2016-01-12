@@ -98,12 +98,29 @@ public class ErrorInstruction extends CompoundInstruction {
      */
     private void processFinally(Debugger debugger, boolean hadError) {
         //successBlock in finally because exceptions in these blocks should not be caught by errorBlockDebugger
-        if (!hadError && successInstructions != null && successInstructions.process(debugger).hasValue()) {
-            throw new RobotRuntimeException("A return is not allowed in the success block.");
+
+        if (!hadError && successInstructions != null) {
+            InstructionFlow<MetaExpression> result = successInstructions.process(debugger);
+            checkFlowValues(result, "success");
         }
 
         if (finallyInstructions != null && finallyInstructions.process(debugger).hasValue()) {
-            throw new RobotRuntimeException("A return is now allowed in the finally block");
+            InstructionFlow<MetaExpression> result = finallyInstructions.process(debugger);
+            checkFlowValues(result, "finally");
+        }
+    }
+
+    private void checkFlowValues(InstructionFlow<MetaExpression> result, String blockName) {
+        if(result.returns()) {
+            throw new RobotRuntimeException("A return is not allowed in the " + blockName + " block.");
+        }
+
+        if(result.breaks()) {
+            throw new RobotRuntimeException("A break is not allowed in the " + blockName + " block.");
+        }
+
+        if(result.skips()) {
+            throw new RobotRuntimeException("A continue is not allowed in the " + blockName + " block.");
         }
     }
 
@@ -121,9 +138,8 @@ public class ErrorInstruction extends CompoundInstruction {
             }
             LOGGER.error("Caught exception in error handler", e);
 
-            if (errorInstructions.process(debugger).hasValue()) {
-                throw new RobotRuntimeException("A return is now allowed in the error block");
-            }
+            InstructionFlow<MetaExpression> result = finallyInstructions.process(debugger);
+            checkFlowValues(result, "error");
         }
     }
 
