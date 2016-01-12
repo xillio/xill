@@ -38,10 +38,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -493,7 +490,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
         }
 
         try {
-            apnStatusBar.setCompiling(true);
+            apnStatusBar.setStatus(StatusBar.Status.COMPILING);
             processor.compile();
         } catch (IOException e) {
             errorPopup(-1, e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling.");
@@ -503,7 +500,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
             LOGGER.error(e.getMessage(), e);
             return;
         } finally {
-            apnStatusBar.setCompiling(false);
+            apnStatusBar.setStatus(StatusBar.Status.READY);
         }
 
         Robot robot = processor.getRobot();
@@ -526,8 +523,41 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
             }
         });
 
+        robotThread.setUncaughtExceptionHandler((thread, e) -> {
+            // This error can occur if, e.g. deep recursion, is performed.
+            if(e instanceof StackOverflowError) {
+                handleStackOverFlowError(robot, e.getClass().getName());
+            }
+        });
+
         robotThread.start();
 
+    }
+
+    private void handleStackOverFlowError(Robot robot, String dialogTitle) {
+        // Release the robot resources.
+        try {
+            robot.close();
+        } catch (Exception ex) {
+            LOGGER.error(ex.getMessage(), ex);
+        }
+
+        // Notify the user of the error that occurred.
+        Platform.runLater(() -> {
+
+            editorPane.getControls().stop();
+            setGraphic(null);
+            apnStatusBar.setStatus(StatusBar.Status.STOPPED);
+
+            Alert error = new Alert(AlertType.ERROR);
+            error.initModality(Modality.APPLICATION_MODAL);
+            error.setTitle(dialogTitle);
+            error.setHeaderText("Stack overflow");
+            error.setContentText("A stack overflow occurred.");
+            error.setResizable(true);
+            error.getDialogPane().setPrefWidth(540);
+            error.show();
+        });
     }
 
     /**
