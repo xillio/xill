@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file
 - Constructs for base64 encode/decode from files and strings
 - Exiftool plugin package
 - Code error highlighting on save
+- Add Mongo construct package for mongodb operations
 ### Changed
 - Default tab size from 5 to 4
 - Excel.getSheet now also accepts a sheet index to fetch the n-th sheet of a workbook
