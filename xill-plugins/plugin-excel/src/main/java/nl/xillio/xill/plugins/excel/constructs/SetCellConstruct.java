@@ -1,6 +1,5 @@
 package nl.xillio.xill.plugins.excel.constructs;
 
-import nl.xillio.xill.api.behavior.BooleanBehavior;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
@@ -65,9 +64,10 @@ public class SetCellConstruct extends Construct {
             sheet.emptyCellValue(cellRef);
         } else {
             nl.xillio.xill.api.data.Date date = value.getMeta(nl.xillio.xill.api.data.Date.class);
+            String stringValue = value.getStringValue();
             if (date != null) {
                 sheet.setCellValue(cellRef, date.getZoned());
-            } else if (value.getValue() instanceof BooleanBehavior) { // DO NOT REPEAT ANYWHERE ELSE, WAS UNAVOIDABLE :-(
+            } else if ("true".equals(stringValue) || "false".equals(stringValue)) {
                 sheet.setCellValue(cellRef, value.getBooleanValue());
             } else if (isNumeric(value)) {
                 sheet.setCellValue(cellRef, value.getNumberValue().doubleValue());

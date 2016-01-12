@@ -6,7 +6,7 @@ import org.testng.annotations.Test;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import static nl.xillio.xill.api.construct.ExpressionBuilderHelper.fromValue;
+import static nl.xillio.xill.api.components.ExpressionBuilderHelper.fromValue;
 import static org.testng.Assert.*;
 
 public class JacksonParserTest {

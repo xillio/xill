@@ -3,7 +3,7 @@ package nl.xillio.xill.plugins.file.constructs;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
-import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
+import nl.xillio.xill.api.components.ExpressionBuilderHelper;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 import org.testng.annotations.Test;
 

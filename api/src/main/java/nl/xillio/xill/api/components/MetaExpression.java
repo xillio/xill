@@ -4,10 +4,6 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import nl.xillio.util.MathUtils;
 import nl.xillio.xill.api.Debugger;
-import nl.xillio.xill.api.behavior.BooleanBehavior;
-import nl.xillio.xill.api.behavior.NumberBehavior;
-import nl.xillio.xill.api.behavior.StringBehavior;
-import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.data.Date;
 import nl.xillio.xill.api.data.DateFactory;
 import nl.xillio.xill.api.data.MetadataExpression;
@@ -187,9 +183,9 @@ public abstract class MetaExpression implements Expression, Processable {
      * Map&lt;String, MetaExpression&gt;}</li>
      * </ul>
      *
+     * @param <T> the return type
      * @return the value according to the {@link ExpressionDataType} specification
      * @throws IllegalStateException if this expression has been closed
-     * @param <T> the return type
      */
     @SuppressWarnings("unchecked")
     public <T> T getValue() {
@@ -256,7 +252,7 @@ public abstract class MetaExpression implements Expression, Processable {
     @Override
     public boolean equals(final Object obj) {
         // First check if these objects are the same instance
-        if(obj == this) {
+        if (obj == this) {
             return true;
         }
 
@@ -313,11 +309,11 @@ public abstract class MetaExpression implements Expression, Processable {
 
         // If one of them is not a number don't compare number value
         Number number = getNumberValue();
-        if(Double.isNaN(number.doubleValue())) {
+        if (Double.isNaN(number.doubleValue())) {
             return false;
         }
         Number otherNumber = other.getNumberValue();
-        if(Double.isNaN(otherNumber.doubleValue())) {
+        if (Double.isNaN(otherNumber.doubleValue())) {
             return false;
         }
 
@@ -333,7 +329,7 @@ public abstract class MetaExpression implements Expression, Processable {
      * Extracts the actual Java Object value for this expression.
      *
      * @param expression the {@link MetaExpression} to extract a value from
-     * @param <T> the return type
+     * @param <T>        the return type
      * @return <ul>
      * <li>{@link ExpressionDataType#ATOMIC}: returns an {@link Object} This represents a singular value that is parsed in the folowing way:
      * <ol>

@@ -46,7 +46,6 @@ public class LoadSheetConstructTest extends TestUtils {
         LoadSheetConstruct.process(input, fromValue("sheet"));
     }
 
-
     /**
      * Checks if the LoadSheet construct returns a
      * <ul>
@@ -77,5 +76,4 @@ public class LoadSheetConstructTest extends TestUtils {
         XillSheet resultSheet = result.getMeta(XillSheet.class);
         assertEquals(resultSheet, sheet);
     }
-
 }
