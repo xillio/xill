@@ -3,6 +3,7 @@ package nl.xillio.xill.plugins.excel.constructs;
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.excel.NoSuchSheetException;
 import nl.xillio.xill.plugins.excel.datastructures.XillSheet;
 import nl.xillio.xill.plugins.excel.datastructures.XillWorkbook;
 import org.testng.annotations.Test;
@@ -40,7 +41,7 @@ public class LoadSheetConstructTest extends TestUtils {
         MetaExpression input = fromValue("workbook object");
         input.storeMeta(workbook);
 
-        when(workbook.getSheet("sheet")).thenThrow(new IllegalArgumentException(""));
+        when(workbook.getSheet("sheet")).thenThrow(new NoSuchSheetException(""));
 
         LoadSheetConstruct.process(input, fromValue("sheet"));
     }
