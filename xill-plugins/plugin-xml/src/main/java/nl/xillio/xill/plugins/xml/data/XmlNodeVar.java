@@ -40,7 +40,10 @@ public class XmlNodeVar implements nl.xillio.xill.api.data.XmlNode, TextPreview 
      * Creates XmlNode from XML string
      *
      * @param xmlString XML document
-     * @throws Exception         when any unspecified error occurs
+     * @param treatAsDocument true if parsing XML document, false if this meant to be just XML node
+     * @throws ParserConfigurationException when parser configuration is invalid
+     * @throws IOException when read error occurs
+     * @throws SAXException when parsing error occurs
      * @throws XmlParseException when XML format is invalid
      */
     public XmlNodeVar(final String xmlString, final boolean treatAsDocument) throws ParserConfigurationException, IOException, SAXException, XmlParseException {
