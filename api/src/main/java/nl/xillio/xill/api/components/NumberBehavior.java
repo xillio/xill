@@ -1,6 +1,4 @@
-package nl.xillio.xill.api.behavior;
-
-import nl.xillio.xill.api.components.Expression;
+package nl.xillio.xill.api.components;
 
 /**
  * <p>
@@ -13,7 +11,7 @@ import nl.xillio.xill.api.components.Expression;
  * <li><b>{@link Number}: </b> the acual value</li>
  * </ul>
  */
-public class NumberBehavior implements Expression {
+class NumberBehavior implements Expression {
 
     private final Number value;
 

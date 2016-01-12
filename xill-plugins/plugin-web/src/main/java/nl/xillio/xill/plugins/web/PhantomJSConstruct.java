@@ -3,7 +3,7 @@ package nl.xillio.xill.plugins.web;
 import com.google.inject.Inject;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Construct;
-import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
+import nl.xillio.xill.api.components.ExpressionBuilderHelper;
 import nl.xillio.xill.plugins.web.data.NodeVariable;
 import nl.xillio.xill.plugins.web.data.PageVariable;
 import nl.xillio.xill.plugins.web.data.WebVariable;

@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static nl.xillio.xill.api.construct.ExpressionBuilderHelper.fromValue;
+import static nl.xillio.xill.api.components.ExpressionBuilderHelper.fromValue;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertTrue;
 

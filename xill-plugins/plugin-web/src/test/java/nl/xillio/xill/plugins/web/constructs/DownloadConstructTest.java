@@ -2,7 +2,7 @@ package nl.xillio.xill.plugins.web.constructs;
 
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
+import nl.xillio.xill.api.components.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.data.PageVariable;
 import nl.xillio.xill.plugins.web.services.web.WebService;

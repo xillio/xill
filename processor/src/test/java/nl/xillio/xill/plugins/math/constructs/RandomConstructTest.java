@@ -1,7 +1,7 @@
 package nl.xillio.xill.plugins.math.constructs;
 
+import nl.xillio.xill.api.components.ExpressionBuilderHelper;
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.plugins.math.services.math.MathOperations;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -88,6 +88,6 @@ public class RandomConstructTest extends ExpressionBuilderHelper {
         verify(math, times(1)).random(3);
 
         // Assert
-        Assert.assertEquals(result, nl.xillio.xill.api.construct.ExpressionBuilderHelper.fromValue("Command"));
+        Assert.assertEquals(result, ExpressionBuilderHelper.fromValue("Command"));
     }
 }
