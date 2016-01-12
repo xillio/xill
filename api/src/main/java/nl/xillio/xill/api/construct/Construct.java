@@ -2,6 +2,7 @@ package nl.xillio.xill.api.construct;
 
 import com.google.inject.Inject;
 import nl.xillio.plugins.XillPlugin;
+import nl.xillio.xill.api.components.ExpressionBuilderHelper;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.data.MetadataExpression;
 import nl.xillio.xill.api.errors.RobotRuntimeException;

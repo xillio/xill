@@ -1,7 +1,7 @@
 package nl.xillio.xill.plugins.collection.constructs;
 
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
+import nl.xillio.xill.api.components.ExpressionBuilderHelper;
 import nl.xillio.xill.plugins.collection.services.sort.Sort;
 import org.testng.Assert;
 import org.testng.annotations.Test;

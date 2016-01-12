@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.rest.constructs;
 
+import nl.xillio.xill.api.components.ExpressionBuilderHelper;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.data.XmlNode;
@@ -10,7 +11,6 @@ import org.testng.annotations.Test;
 
 import java.util.HashMap;
 
-import static nl.xillio.xill.api.construct.ExpressionBuilderHelper.NULL;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertSame;
 
@@ -49,7 +49,7 @@ public class PutConstructTest {
         when(restService.put(anyString(), any(), any())).thenReturn(content);
 
         // Run
-        MetaExpression result = new PutConstruct(restService, null, null).processMeta(urlVar, optionsVar, bodyVar, NULL);
+        MetaExpression result = new PutConstruct(restService, null, null).processMeta(urlVar, optionsVar, bodyVar, ExpressionBuilderHelper.NULL);
 
         // Verify
         verify(restService).put(anyString(), any(), any());
@@ -75,7 +75,7 @@ public class PutConstructTest {
         MetaExpression bodyVar = mock(MetaExpression.class);
 
         // Run
-        new PutConstruct(restService, null, null).processMeta(urlVar, optionsVar, bodyVar, NULL);
+        new PutConstruct(restService, null, null).processMeta(urlVar, optionsVar, bodyVar, ExpressionBuilderHelper.NULL);
     }
 
     /**
@@ -101,6 +101,6 @@ public class PutConstructTest {
         MetaExpression bodyVar = mock(MetaExpression.class);
 
         // Run
-        new PutConstruct(restService, null, null).processMeta(urlVar, optionsVar, bodyVar, NULL);
+        new PutConstruct(restService, null, null).processMeta(urlVar, optionsVar, bodyVar, ExpressionBuilderHelper.NULL);
     }
 }

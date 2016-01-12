@@ -7,7 +7,7 @@ import org.testng.annotations.Test;
 
 import java.util.LinkedHashMap;
 
-import static nl.xillio.xill.api.construct.ExpressionBuilderHelper.fromValue;
+import static nl.xillio.xill.api.components.ExpressionBuilderHelper.fromValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;

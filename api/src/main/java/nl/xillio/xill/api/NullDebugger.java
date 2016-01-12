@@ -2,7 +2,6 @@ package nl.xillio.xill.api;
 
 import nl.xillio.events.Event;
 import nl.xillio.xill.api.components.*;
-import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.ErrorHandlingPolicy;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.events.RobotContinuedAction;
