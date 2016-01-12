@@ -22,7 +22,7 @@ import java.util.NoSuchElementException;
  * @author Geert Konijnendijk
  * @author Sander Visser
  */
-public class StatementIterator implements Iterator<Object> {
+public class StatementIterator implements Iterator<Object>, AutoCloseable {
 
     private Statement stmt;
 
@@ -159,6 +159,23 @@ public class StatementIterator implements Iterator<Object> {
         // Move to the next result when the set is empty
         if (currentSet.isAfterLast() || currentSet.getRow() == 0)
             nextResult();
+    }
+
+    /**
+     * Ensure to close database prepared statement and result set objects when the iterator is about to be disposed.
+     * This avoids memory leaks.
+     *
+     * @throws SQLException when error occurs during releasing resources
+     */
+    @Override
+    public void close() throws SQLException {
+        if (stmt != null && !stmt.isClosed()) {
+            stmt.close();
+        }
+
+        if (currentSet != null && !currentSet.isClosed()) {
+            currentSet.close();
+        }
     }
 
     /**

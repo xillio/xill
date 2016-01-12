@@ -34,6 +34,24 @@ Provides a wrapper around the MongoDB [db.collection.find](https://docs.mongodb.
                     System.print(document._id);
                 }
             </code>
+            <header>Iterate over sorted documents</header>
+            <code>
+                use Mongo;
+                use System;
+                Mongo.connect("udm_default");
+
+                var documents = Mongo.find(
+                "documents", {}, {},
+                {
+                    // Positive for ascending order, negative for descending order.
+                    "_id": 1
+                }
+                );
+
+                foreach(document in documents) {
+                System.print(document._id);
+                }
+            </code>
         </example>
     </examples>
     <references>
