@@ -340,7 +340,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 
         return new ErrorInstruction(
                         token.getDoBlock() == null ? null : parseToken(token.getDoBlock().getInstructionSet()),
-                        token.getSuccesBlock() == null ? null : parseToken(token.getSuccesBlock().getInstructionSet()),
+                        token.getSuccessBlock() == null ? null : parseToken(token.getSuccessBlock().getInstructionSet()),
                         token.getErrorBlock() == null ? null : parseToken(token.getErrorBlock().getInstructionSet()),
                         token.getFinallyBlock() == null ? null : parseToken(token.getFinallyBlock().getInstructionSet()),
                         causeVar);
@@ -362,11 +362,11 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
             variables.put(token.getKeyVar(), keyDec);
 
             return new ForeachInstruction(parseToken(token.getInstructionBlock().getInstructionSet()),
-                    parse(token.getItterator()), valueDec, keyDec);
+                    parse(token.getIterator()), valueDec, keyDec);
         }
 
         return new ForeachInstruction(parseToken(token.getInstructionBlock().getInstructionSet()),
-                parse(token.getItterator()), valueDec);
+                parse(token.getIterator()), valueDec);
     }
 
     /**
