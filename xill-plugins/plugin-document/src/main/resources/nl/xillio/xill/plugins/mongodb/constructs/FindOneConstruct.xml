@@ -30,6 +30,22 @@ Provides a wrapper around the MongoDB [db.collection.findOne](https://docs.mongo
 
                 System.print(document);
             </code>
+            <header>Get a document by lowest ID.</header>
+            <code>
+                use Mongo;
+                use System;
+                Mongo.connect("udm_default");
+
+                var document = Mongo.find(
+                "documents", {}, {}
+                {
+                    // Positive for ascending order, negative for descending order.
+                    "_id": 1
+                }
+                );
+
+                System.print(document);
+            </code>
         </example>
     </examples>
     <references>

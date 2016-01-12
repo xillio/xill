@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.excel.datastructures;
 
+import nl.xillio.xill.plugins.excel.NoSuchSheetException;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -43,8 +44,7 @@ public class XillWorkbookTest {
      * Tests if an Exception is thrown when a sheet is
      * asked for that does not exist in this workbook
      */
-    @Test(expectedExceptions = IllegalArgumentException.class,
-            expectedExceptionsMessageRegExp = "Sheet cannot be found in the supplied workbook")
+    @Test(expectedExceptions = NoSuchSheetException.class)
     public void testGetSheetThatDoesNotExist() throws Exception {
         Workbook workbook = mock(Workbook.class);
         File file = createFile("path", false);
@@ -57,7 +57,7 @@ public class XillWorkbookTest {
      * Tests if an Exception is thrown when a sheet is
      * asked for that does not exist in this workbook
      */
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = NoSuchSheetException.class)
     public void testGetSheetNumSmallerThanZero() throws Exception {
         Workbook workbook = mock(Workbook.class);
         File file = createFile("path", false);
@@ -69,7 +69,7 @@ public class XillWorkbookTest {
      * Tests if an Exception is thrown when a sheet is
      * asked for that does not exist in this workbook
      */
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = NoSuchSheetException.class)
     public void testGetSheetNumThatDoesNotExist() throws Exception {
         Workbook workbook = mock(Workbook.class);
         when(workbook.getNumberOfSheets()).thenReturn(1);
