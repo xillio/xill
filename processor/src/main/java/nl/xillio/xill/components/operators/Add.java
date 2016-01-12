@@ -3,7 +3,7 @@ package nl.xillio.xill.components.operators;
 import nl.xillio.util.MathUtils;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.*;
-import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
+import nl.xillio.xill.api.components.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 import java.util.ArrayList;

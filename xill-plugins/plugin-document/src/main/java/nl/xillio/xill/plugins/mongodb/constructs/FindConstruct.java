@@ -1,10 +1,12 @@
 package nl.xillio.xill.plugins.mongodb.constructs;
 
+import com.google.inject.Inject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
+import nl.xillio.xill.plugins.mongodb.services.FindIterableBuilder;
 import org.bson.Document;
 
 /**
@@ -15,23 +17,25 @@ import org.bson.Document;
  */
 public class FindConstruct extends AbstractCollectionApiConstruct {
 
+    protected FindIterableBuilder findIterableBuilder;
+
+    @Inject
+    void setFindIterableBuilder(FindIterableBuilder findIterableBuilder) {
+        this.findIterableBuilder = findIterableBuilder;
+    }
 
     @Override
     protected Argument[] getApiArguments() {
         return new Argument[]{
                 new Argument("query", emptyObject(), OBJECT),
-                new Argument("projection", emptyObject(), OBJECT)
+                new Argument("projection", emptyObject(), OBJECT),
+                new Argument("sort", emptyObject(), OBJECT)
         };
     }
 
     @Override
     MetaExpression process(MetaExpression[] arguments, MongoCollection<Document> collection, ConstructContext context) {
-        Document filter = toDocument(arguments[0]);
-        Document projection = toDocument(arguments[1]);
-
-        FindIterable<Document> mongoResult = collection.find(filter).projection(projection);
-
-
+        FindIterable<Document> mongoResult = findIterableBuilder.getIterable(collection, arguments);
         return fromValue(mongoResult, collection, arguments);
     }
 }

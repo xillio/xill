@@ -1,10 +1,4 @@
-package nl.xillio.xill.api.construct;
-
-import nl.xillio.xill.api.behavior.BooleanBehavior;
-import nl.xillio.xill.api.behavior.NumberBehavior;
-import nl.xillio.xill.api.behavior.StringBehavior;
-import nl.xillio.xill.api.behavior.StringConstantBehavior;
-import nl.xillio.xill.api.components.*;
+package nl.xillio.xill.api.components;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
