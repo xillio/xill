@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.system.constructs;
 
+import nl.xillio.xill.api.components.Expression;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
@@ -97,7 +98,7 @@ public class ExecConstruct extends Construct {
             if (args.isEmpty()) {
                 throw new RobotRuntimeException("input cannot be empty");
             }
-            String[] commands = args.stream().map(exp -> exp.getStringValue()).toArray(i -> new String[i]);
+            String[] commands = args.stream().map(Expression::getStringValue).toArray(String[]::new);
             description = new ProcessDescription(workingDir, commands);
             description.setFriendlyName(FilenameUtils.getName(args.get(0).getStringValue()));
 

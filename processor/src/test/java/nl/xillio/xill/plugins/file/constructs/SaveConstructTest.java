@@ -4,6 +4,7 @@ import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 import org.apache.logging.log4j.Logger;
 import org.testng.annotations.Test;
@@ -56,12 +57,10 @@ public class SaveConstructTest extends TestUtils {
 
     }
 
-    @Test
+    @Test(expectedExceptions = RobotRuntimeException.class)
     public void testProcessIOException() throws IOException {
         // Context
-        Logger logger = mock(Logger.class);
         ConstructContext context = mock(ConstructContext.class);
-        when(context.getRootLogger()).thenReturn(logger);
 
         // FileUtilities
         FileUtilities fileUtils = mock(FileUtilities.class);
@@ -69,9 +68,6 @@ public class SaveConstructTest extends TestUtils {
 
         // Run the Method
         SaveConstruct.process(context, fileUtils, mock(MetaExpression.class), mock(MetaExpression.class));
-
-        // Verify
-        verify(logger).error(eq("Failed to write to file: Failed to save"), any(IOException.class));
 
     }
 }
