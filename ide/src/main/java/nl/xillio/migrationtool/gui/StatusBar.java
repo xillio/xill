@@ -21,11 +21,11 @@ public class StatusBar extends AnchorPane {
 
     // Used enum for statuses instead of the strings previously implemented
     public enum Status {
-        STATUS_RUNNING("Running"),
-        STATUS_STOPPED("Stopped"),
-        STATUS_PAUSED("Paused"),
-        STATUS_COMPILING("Compiling"),
-        STATUS_READY("Ready");
+        RUNNING("Running"),
+        STOPPED("Stopped"),
+        PAUSED("Paused"),
+        COMPILING("Compiling"),
+        READY("Ready");
 
         private String representation;
 
@@ -69,10 +69,10 @@ public class StatusBar extends AnchorPane {
      * @param debugger The debugger to get the {@link Event Events} from
      */
     public void registerDebugger(Debugger debugger) {
-        debugger.getOnRobotStart().addListener(e -> setStatus(Status.STATUS_RUNNING));
-        debugger.getOnRobotStop().addListener(e -> setStatus(Status.STATUS_STOPPED));
-        debugger.getOnRobotPause().addListener(e -> setStatus(Status.STATUS_PAUSED));
-        debugger.getOnRobotContinue().addListener(e -> setStatus(Status.STATUS_RUNNING));
+        debugger.getOnRobotStart().addListener(e -> setStatus(Status.RUNNING));
+        debugger.getOnRobotStop().addListener(e -> setStatus(Status.STOPPED));
+        debugger.getOnRobotPause().addListener(e -> setStatus(Status.PAUSED));
+        debugger.getOnRobotContinue().addListener(e -> setStatus(Status.RUNNING));
     }
 
     /**

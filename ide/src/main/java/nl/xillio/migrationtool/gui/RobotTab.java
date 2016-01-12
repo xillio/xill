@@ -490,7 +490,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
         }
 
         try {
-            apnStatusBar.setStatus(StatusBar.Status.STATUS_COMPILING);
+            apnStatusBar.setStatus(StatusBar.Status.COMPILING);
             processor.compile();
         } catch (IOException e) {
             errorPopup(-1, e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling.");
@@ -500,7 +500,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
             LOGGER.error(e.getMessage(), e);
             return;
         } finally {
-            apnStatusBar.setStatus(StatusBar.Status.STATUS_READY);
+            apnStatusBar.setStatus(StatusBar.Status.READY);
         }
 
         Robot robot = processor.getRobot();
@@ -547,7 +547,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
             editorPane.getControls().stop();
             setGraphic(null);
-            apnStatusBar.setStatus(StatusBar.Status.STATUS_STOPPED);
+            apnStatusBar.setStatus(StatusBar.Status.STOPPED);
 
             Alert error = new Alert(AlertType.ERROR);
             error.initModality(Modality.APPLICATION_MODAL);
