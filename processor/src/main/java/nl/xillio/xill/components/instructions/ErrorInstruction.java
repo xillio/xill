@@ -139,7 +139,7 @@ public class ErrorInstruction extends CompoundInstruction {
             LOGGER.error("Caught exception in error handler", e);
 
             InstructionFlow<MetaExpression> result = errorInstructions.process(debugger);
-            checkFlowValues(result, "error");
+            checkFlowValues(result, "fail");
         }
     }
 
