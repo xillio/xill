@@ -8,15 +8,18 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 
@@ -40,7 +43,7 @@ public class XmlNodeVar implements nl.xillio.xill.api.data.XmlNode, TextPreview 
      * @throws Exception         when any unspecified error occurs
      * @throws XmlParseException when XML format is invalid
      */
-    public XmlNodeVar(final String xmlString, final boolean treatAsDocument) throws Exception, XmlParseException {
+    public XmlNodeVar(final String xmlString, final boolean treatAsDocument) throws ParserConfigurationException, IOException, SAXException, XmlParseException {
         this.treatAsDocument = treatAsDocument;
 
         try {
@@ -73,6 +76,7 @@ public class XmlNodeVar implements nl.xillio.xill.api.data.XmlNode, TextPreview 
      *
      * @return org.w3c.dom.Document of this node
      */
+    @Override
     public Document getDocument() {
         return this.node.getOwnerDocument();
     }
@@ -80,6 +84,7 @@ public class XmlNodeVar implements nl.xillio.xill.api.data.XmlNode, TextPreview 
     /**
      * @return org.w3c.dom.Node data specifying this node
      */
+    @Override
     public Node getNode() {
         return this.node;
     }
@@ -99,6 +104,7 @@ public class XmlNodeVar implements nl.xillio.xill.api.data.XmlNode, TextPreview 
     /**
      * @return a string containing all text extracted from XML node or XML document
      */
+    @Override
     public String getText() {
         String itemText, text = "";
         NodeList list = this.getNode().getChildNodes();
@@ -119,6 +125,7 @@ public class XmlNodeVar implements nl.xillio.xill.api.data.XmlNode, TextPreview 
      *
      * @return XML content in string format
      */
+    @Override
     public String getXmlContent() {
         if (this.node == null) {
             return "null";
