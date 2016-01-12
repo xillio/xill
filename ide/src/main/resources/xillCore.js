@@ -18,7 +18,7 @@ window.xillCore = {
         this.log("ERROR", message);
     },
     getKeywords: function () {
-        return ["as", "break", "callbot", "continue", "else", "filter", "foreach", "function", "if", "in", "include", "map", "private", "return", "use", "var", "while","do","error","success","finally"]
+        return ["as", "break", "callbot", "continue", "else", "filter", "foreach", "function", "if", "in", "include", "map", "private", "return", "use", "var", "while","do","fail","success","finally"]
     },
     getPluginNames: function () {
         if (xillCoreOverride) {
