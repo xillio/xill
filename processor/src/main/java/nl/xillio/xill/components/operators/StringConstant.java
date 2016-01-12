@@ -4,11 +4,12 @@ import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
-import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 import java.util.Collection;
 import java.util.Collections;
+
+import static nl.xillio.xill.api.components.ExpressionBuilderHelper.fromValue;
 
 /**
  * This class represents the @ operation.
@@ -31,7 +32,7 @@ public final class StringConstant implements Processable {
         resultExpression.releaseReference();
 
         // Return this value is a constant
-        return InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(result, true));
+        return InstructionFlow.doResume(fromValue(result, true));
     }
 
     @Override

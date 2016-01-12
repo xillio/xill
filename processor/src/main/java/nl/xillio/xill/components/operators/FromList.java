@@ -1,11 +1,7 @@
 package nl.xillio.xill.components.operators;
 
 import nl.xillio.xill.api.Debugger;
-import nl.xillio.xill.api.components.ExpressionDataType;
-import nl.xillio.xill.api.components.InstructionFlow;
-import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.components.Processable;
-import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
+import nl.xillio.xill.api.components.*;
 import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
@@ -61,7 +57,7 @@ public class FromList implements Processable {
                 if (Double.isNaN(indexMeta.getNumberValue().doubleValue())) {
                     throw new RobotRuntimeException("The list does not contain any element called '" + indexMeta.getStringValue() + "' (a list does not have named elements).");
                 }
-                List<MetaExpression> list = (List<MetaExpression>) listMeta.getValue();
+                List<MetaExpression> list = listMeta.getValue();
                 int index = indexMeta.getNumberValue().intValue();
                 if (index < 0 || index >= list.size()) {
                     throw new RobotRuntimeException("Illegal value for list index: " + index);

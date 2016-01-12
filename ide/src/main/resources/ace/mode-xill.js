@@ -166,12 +166,13 @@ ace.define("ace/mode/xill_highlight_rules", function (require, exports) {
                 {token: "comment", regex: "\\/\\*", next: "comment"},
                 {token: "string", regex: '"', next: "qqString"},
                 {token: "string", regex: "'", next: "qString"},
-                {token: "constant.numeric", regex: "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"},
+                {token: "constant.numeric", regex: "-?\\d+(?:(?:\\.\\d*)?)?\\b"},
                 {token: "paren.lparen", regex: "[\\[({]"},
                 {token: "paren.rparen", regex: "[\\])}]"},
                 {token: "keyword", regex: "\\b(?:" + keywords + ")\\b"},
                 {token: "plugin", regex: "\\b(?:" + plugins + ")\\b"},
-                {token: "constant.language", regex: "\\b(?:" + languageConstants + ")\\b"}
+                {token: "constant.language", regex: "\\b(?:" + languageConstants + ")\\b"},
+                {token : "text", regex : "\\w+", next : "start"}
             ],
             "comment": [
                 {token: "comment", regex: ".*?\\*\\/", next: "start"},
