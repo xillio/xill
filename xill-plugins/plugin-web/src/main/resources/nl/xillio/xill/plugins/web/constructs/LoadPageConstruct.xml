@@ -6,6 +6,9 @@ Loads the web page and returns it as a page object.
 The Web.loadPage() function can also be used for local HTML files.  
 Usually it is a good idea to reduce loading time by setting up the options to ({"loadimages"=false, "enablejs"=false}) when calling Web.loadPage().   
 This deactivates JavaScript and loading the images and it can reduce long waits for script timeouts.
+
+## Usage on non-windows machines
+To use the Web.loadPage() function on a non-windows machine an installation of PhantomJS is required. Downloads and documentation can be found at *phantomjs.org/download.html*.
     </description>
     <examples>
         <example title="Usage">
