@@ -7,7 +7,7 @@ import org.testng.annotations.Test;
 
 import java.net.URL;
 
-public class Robots extends RobotIntegrationTest {
+public class Excel extends RobotIntegrationTest {
     @DataProvider(name = "myRobots")
     @Override
     public Object[][] getRobots() {
