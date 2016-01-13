@@ -22,6 +22,8 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * This class represents a XML node MetadataExpression
@@ -109,18 +111,13 @@ public class XmlNodeVar implements nl.xillio.xill.api.data.XmlNode, TextPreview 
      */
     @Override
     public String getText() {
-        String itemText, text = "";
         NodeList list = this.getNode().getChildNodes();
-        for(int i=0; i<list.getLength(); i++) {
-            itemText = list.item(i).getTextContent();
-            if (!itemText.isEmpty()) {
-                if (!text.isEmpty()) {
-                    text += "\n";
-                }
-                text += itemText;
-            }
-        }
-        return text;
+
+        return IntStream.range(0, list.getLength())
+            .mapToObj(list::item)
+            .map(Node::getTextContent)
+            .filter(text -> !text.isEmpty())
+            .collect(Collectors.joining("\n"));
     }
 
     /**
