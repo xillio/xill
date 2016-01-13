@@ -137,7 +137,6 @@ public class ErrorInstruction extends CompoundInstruction {
             if (cause != null) {
                 cause.pushVariable(fromValue(e.getMessage()));
             }
-            LOGGER.error("Caught exception in error handler", e);
 
             InstructionFlow<MetaExpression> result = errorInstructions.process(debugger);
             checkFlowValues(result, "fail");

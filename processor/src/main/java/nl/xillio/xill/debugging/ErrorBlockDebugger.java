@@ -1,6 +1,8 @@
 package nl.xillio.xill.debugging;
 
+import me.biesaart.utils.Log;
 import nl.xillio.xill.api.Debugger;
+import org.slf4j.Logger;
 
 /**
  * This class contains all information and controls required for debugging.
@@ -9,6 +11,7 @@ import nl.xillio.xill.api.Debugger;
  */
 public class ErrorBlockDebugger extends DelegateDebugger {
 
+    private static final Logger LOGGER = Log.get();
     private Throwable error;
 
     private boolean hasError = false;
@@ -22,6 +25,7 @@ public class ErrorBlockDebugger extends DelegateDebugger {
         this.hasError = true;
         this.error = e;
 
+        LOGGER.error("Caught exception in error handler", e);
     }
 
     @Override
