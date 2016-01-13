@@ -26,7 +26,7 @@ public class ErrorBlockDebugger extends DelegateDebugger {
 
     @Override
     public boolean shouldStop() {
-        return hasError();
+        return super.shouldStop() || hasError();
     }
 
     public boolean hasError() {

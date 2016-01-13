@@ -5,7 +5,6 @@ import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
-import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.debugging.ErrorBlockDebugger;
 import org.slf4j.Logger;
@@ -13,6 +12,8 @@ import org.slf4j.Logger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import static nl.xillio.xill.api.components.ExpressionBuilderHelper.fromValue;
 
 /**
  * This {@link Instruction} represents the error mechanism
@@ -111,15 +112,15 @@ public class ErrorInstruction extends CompoundInstruction {
     }
 
     private void checkFlowValues(InstructionFlow<MetaExpression> result, String blockName) {
-        if(result.returns()) {
+        if (result.returns()) {
             throw new RobotRuntimeException("A return is not allowed in the " + blockName + " block.");
         }
 
-        if(result.breaks()) {
+        if (result.breaks()) {
             throw new RobotRuntimeException("A break is not allowed in the " + blockName + " block.");
         }
 
-        if(result.skips()) {
+        if (result.skips()) {
             throw new RobotRuntimeException("A continue is not allowed in the " + blockName + " block.");
         }
     }
@@ -134,7 +135,7 @@ public class ErrorInstruction extends CompoundInstruction {
         if (errorInstructions != null) {
 
             if (cause != null) {
-                cause.pushVariable(ExpressionBuilderHelper.fromValue(e.getMessage()));
+                cause.pushVariable(fromValue(e.getMessage()));
             }
             LOGGER.error("Caught exception in error handler", e);
 
