@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.xml.data;
 
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.preview.TextPreview;
 import nl.xillio.xill.plugins.xml.exceptions.XmlParseException;
 import org.apache.logging.log4j.LogManager;
@@ -43,12 +44,9 @@ public class XmlNodeVar implements nl.xillio.xill.api.data.XmlNode, TextPreview 
      *
      * @param xmlString XML document
      * @param treatAsDocument true if parsing XML document, false if this meant to be just XML node
-     * @throws ParserConfigurationException when parser configuration is invalid
-     * @throws IOException when read error occurs
-     * @throws SAXException when parsing error occurs
      * @throws XmlParseException when XML format is invalid
      */
-    public XmlNodeVar(final String xmlString, final boolean treatAsDocument) throws ParserConfigurationException, IOException, SAXException, XmlParseException {
+    public XmlNodeVar(final String xmlString, final boolean treatAsDocument) throws XmlParseException {
         this.treatAsDocument = treatAsDocument;
 
         try {
@@ -61,9 +59,10 @@ public class XmlNodeVar implements nl.xillio.xill.api.data.XmlNode, TextPreview 
             removeEmptyTextNodes(document);
             document.normalize();
             this.node = document.getFirstChild();
-
         } catch (SAXParseException e) {
             throw new XmlParseException(e.getMessage(), e);
+        } catch (SAXException | IOException | ParserConfigurationException e) {
+            throw new RobotRuntimeException(e.getMessage(), e);
         }
     }
 
