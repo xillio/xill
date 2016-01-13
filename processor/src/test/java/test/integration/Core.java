@@ -9,13 +9,14 @@ import java.io.IOException;
 import java.net.URL;
 
 public class Core extends RobotIntegrationTest {
-    @DataProvider(name = "myRobots")
+
+    @DataProvider(name = "robots")
     @Override
     public Object[][] getRobots() {
         return super.getRobots();
     }
 
-    @Test(dataProvider = "myRobots")
+    @Test(dataProvider = "robots")
     @Override
     public void runRobot(URL robot, String name) throws IOException {
         super.runRobot(robot, name);
