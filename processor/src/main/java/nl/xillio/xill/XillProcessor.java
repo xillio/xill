@@ -17,6 +17,7 @@ import nl.xillio.xill.api.errors.XillParsingException;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.nodemodel.INode;
@@ -212,7 +213,16 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
     }
 
     private List<Issue> validate(final Resource resource, final RobotID robotID) {
+        try {
+            return doValidate(resource, robotID);
+        } catch (WrappedException e) {
+            // xText throws an exception when a reserved keyword is used as identifier. At this point, that is all the info we have.
+            LOGGER.error("Exception during validation.", e);
+            return Collections.singletonList(new Issue("A variable cannot have a reserved keyword as identifier.", 1, Issue.Type.ERROR, robotID));
+        }
+    }
 
+    private List<Issue> doValidate(final Resource resource, final RobotID robotID) {
         // Validate
         List<Issue> issues = validator.validate(resource, CheckMode.ALL, CancelIndicator.NullImpl).stream()
                 .map(issue -> {
