@@ -16,8 +16,8 @@ public class ErrorBlockDebugger extends DelegateDebugger {
     private static final Logger LOGGER = Log.get();
     private Throwable error;
 
-    public void setDebug(Debugger debugger) {
-        super.setDebugger(debugger);
+    public ErrorBlockDebugger(Debugger parentDebugger) {
+        super(parentDebugger);
     }
 
     @Override

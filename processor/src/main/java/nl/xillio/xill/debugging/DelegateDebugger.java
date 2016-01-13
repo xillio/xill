@@ -20,9 +20,9 @@ import java.util.List;
  * @author Thomas Biesaart
  */
 public class DelegateDebugger implements Debugger {
-    private Debugger debugger;
+    private final Debugger debugger;
 
-    protected void setDebugger(Debugger debugger) {
+    public DelegateDebugger(Debugger debugger) {
         this.debugger = debugger;
     }
 
