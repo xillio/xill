@@ -4,6 +4,8 @@ import me.biesaart.utils.Log;
 import nl.xillio.xill.api.Debugger;
 import org.slf4j.Logger;
 
+import java.util.NoSuchElementException;
+
 /**
  * This class contains all information and controls required for debugging.
  *
@@ -14,17 +16,13 @@ public class ErrorBlockDebugger extends DelegateDebugger {
     private static final Logger LOGGER = Log.get();
     private Throwable error;
 
-    private boolean hasError = false;
-
     public void setDebug(Debugger debugger) {
         super.setDebugger(debugger);
     }
 
     @Override
     public void handle(Throwable e) {
-        this.hasError = true;
         this.error = e;
-
         LOGGER.error("Caught exception in error handler", e);
     }
 
@@ -34,14 +32,14 @@ public class ErrorBlockDebugger extends DelegateDebugger {
     }
 
     public boolean hasError() {
-        return this.hasError;
+        return error != null;
     }
 
     public Throwable getError() {
-        if (hasError) {
+        if (hasError()) {
             return this.error;
         }
-        return null;
+        throw new NoSuchElementException("No error was caught");
     }
 
 }
