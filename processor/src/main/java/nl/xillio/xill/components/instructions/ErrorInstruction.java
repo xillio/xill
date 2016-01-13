@@ -66,12 +66,11 @@ public class ErrorInstruction extends CompoundInstruction {
      */
     @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) {
-        ErrorBlockDebugger errorBlockDebugger = new ErrorBlockDebugger();
+        ErrorBlockDebugger errorBlockDebugger = new ErrorBlockDebugger(debugger);
         return process(debugger, errorBlockDebugger);
     }
 
     public InstructionFlow<MetaExpression> process(final Debugger debugger, final ErrorBlockDebugger errorBlockDebugger) {
-        errorBlockDebugger.setDebug(debugger); //we need the breakpoints from the old debugger.
 
         InstructionFlow<MetaExpression> result = doInstructions.process(errorBlockDebugger);
 
