@@ -339,9 +339,17 @@ public class FXController implements Initializable, EventHandler<Event> {
 
             RobotTab tab;
             try {
-                if (!chosen.exists()) {
-                    chosen.createNewFile();
+                // Delete the existing file for replacement.
+                if (chosen.exists()) {
+                    if(!chosen.delete()){
+                        throw new IOException("Could not delete existing file");
+                    }
                 }
+
+                if(!chosen.createNewFile()){
+                    throw new IOException("Could not create new file");
+                }
+
 
                 tab = new RobotTab(projectfile.getAbsoluteFile(), chosen, this);
                 tpnBots.getTabs().add(tab);
