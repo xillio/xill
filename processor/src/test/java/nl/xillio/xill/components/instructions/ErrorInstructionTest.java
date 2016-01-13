@@ -119,7 +119,6 @@ public class ErrorInstructionTest {
         instruction.process(xillDebugger, errorDebugger);
 
         verify(throwableMock, times(1)).getMessage();
-
     }
 
     @Test
