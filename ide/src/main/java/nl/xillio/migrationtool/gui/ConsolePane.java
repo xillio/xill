@@ -293,14 +293,7 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
                 // Get all properties
                 String time = timeFormat.format(new Date((long) entry.get("timestamp")));
                 LogType type = LogType.valueOf(entry.get("type").toString().toUpperCase());
-                String text;
-                if (entry.get("message") == null) {// This is protection against when message is null, otherwise the console would stop working..
-                    text = "null";
-                    LOGGER.error("Null message passed to console!");
-                } else {
-                    text = entry.get("message").toString();
-                }
-                addTableEntry(time, type, text, false);
+                addTableEntry(time, type, getMessageText(entry.get("message")), false);
             }
 
             // Do scroll
@@ -313,6 +306,15 @@ public class ConsolePane extends AnchorPane implements Searchable, EventHandler<
             updateLabels();
             this.sliderChanged = false;
         });
+    }
+
+    private String getMessageText(final Object message) {
+        if (message == null) {// This is protection against when message is null, otherwise the console would stop working..
+            LOGGER.error("Null message passed to console!");
+            return "null";
+        } else {
+            return message.toString();
+        }
     }
 
     private void addTableEntry(final String time, final LogType type, final String line, final boolean newLine) {
