@@ -28,10 +28,9 @@ public class GetSourceConstructTest extends ExpressionBuilderHelper {
         // mock
         WebService webService = mock(WebService.class);
 
-        MetaExpression page = mock(MetaExpression.class);
+        MetaExpression page = fromValue("MyPage");
         PageVariable pageVariable = mock(PageVariable.class);
-        when(page.getMeta(NodeVariable.class)).thenReturn(null);
-        when(page.getMeta(PageVariable.class)).thenReturn(pageVariable);
+        page.storeMeta(pageVariable);
 
         when(webService.getSource(pageVariable)).thenReturn(html);
 
@@ -54,11 +53,9 @@ public class GetSourceConstructTest extends ExpressionBuilderHelper {
     public void testNullInput() {
         // mock
         WebService webService = mock(WebService.class);
-        MetaExpression input = mock(MetaExpression.class);
-        when(input.isNull()).thenReturn(true);
 
         // run
-        MetaExpression output = GetSourceConstruct.process(input, webService);
+        MetaExpression output = GetSourceConstruct.process(NULL, webService);
 
         // assert
         Assert.assertEquals(output, NULL);
@@ -72,8 +69,7 @@ public class GetSourceConstructTest extends ExpressionBuilderHelper {
         // mock
         WebService webService = mock(WebService.class);
         // the input
-        MetaExpression input = mock(MetaExpression.class);
-        when(input.getMeta(NodeVariable.class)).thenReturn(null);
+        MetaExpression input = fromValue("No Page");
 
         // run
         GetSourceConstruct.process(input, webService);

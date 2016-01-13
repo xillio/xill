@@ -31,10 +31,7 @@ public class SaveConstructTest extends TestUtils {
         ExcelService service = mock(ExcelService.class);
         ConstructContext context = mock(ConstructContext.class);
 
-        MetaExpression nullExpression = mock(MetaExpression.class);
-        when(nullExpression.isNull()).thenReturn(true);
-
-        SaveConstruct.process(service, context, nullExpression, fromValue("path"));
+        SaveConstruct.process(service, context, NULL, fromValue("path"));
     }
 
     /**
