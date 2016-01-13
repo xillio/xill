@@ -17,5 +17,6 @@ subprojects {
 
     dependencies {
         testCompile project(':testutils')
+        testCompile project(':processor')
     }
 }
