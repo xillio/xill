@@ -350,17 +350,18 @@ public class FXController implements Initializable, EventHandler<Event> {
                         if (robotTab.getProcessor().getRobotID().equals(id)) {
                             robotTab.reload();
                             robotTab.requestFocus();
+                            return;
                         }
                     }
                 } else {
                     if (!chosen.createNewFile()) {
                         throw new IOException("Could not create new file");
                     }
-
-                    RobotTab tab = new RobotTab(projectfile.getAbsoluteFile(), chosen, this);
-                    tpnBots.getTabs().add(tab);
-                    tab.requestFocus();
                 }
+
+                RobotTab tab = new RobotTab(projectfile.getAbsoluteFile(), chosen, this);
+                tpnBots.getTabs().add(tab);
+                tab.requestFocus();
             } catch (IOException e) {
                 LOGGER.error("Failed to perform operation: " + e.getMessage(), e);
             }
