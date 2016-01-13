@@ -25,6 +25,7 @@ import nl.xillio.migrationtool.dialogs.SettingsDialog;
 import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.api.Xill;
+import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.util.HotkeysHandler;
 import nl.xillio.xill.util.HotkeysHandler.Hotkeys;
 import nl.xillio.xill.util.settings.Settings;
@@ -337,23 +338,29 @@ public class FXController implements Initializable, EventHandler<Event> {
                 chosen = new File(chosen.getPath() + xillExt);
             }
 
-            RobotTab tab;
             try {
-                // Delete the existing file for replacement.
                 if (chosen.exists()) {
-                    if(!chosen.delete()){
-                        throw new IOException("Could not delete existing file");
+                    // Overwrite existing file with an empty string and reset tab.
+                    FileUtils.write(chosen, "", false);
+
+                    RobotID id = RobotID.getInstance(chosen, projectfile);
+
+                    for (Tab tab : tpnBots.getTabs()) {
+                        RobotTab robotTab = (RobotTab) tab;
+                        if (robotTab.getProcessor().getRobotID().equals(id)) {
+                            robotTab.reload();
+                            robotTab.requestFocus();
+                        }
                     }
+                } else {
+                    if (!chosen.createNewFile()) {
+                        throw new IOException("Could not create new file");
+                    }
+
+                    RobotTab tab = new RobotTab(projectfile.getAbsoluteFile(), chosen, this);
+                    tpnBots.getTabs().add(tab);
+                    tab.requestFocus();
                 }
-
-                if(!chosen.createNewFile()){
-                    throw new IOException("Could not create new file");
-                }
-
-
-                tab = new RobotTab(projectfile.getAbsoluteFile(), chosen, this);
-                tpnBots.getTabs().add(tab);
-                tab.requestFocus();
             } catch (IOException e) {
                 LOGGER.error("Failed to perform operation: " + e.getMessage(), e);
             }
