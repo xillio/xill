@@ -55,7 +55,6 @@ public class ErrorInstructionTest {
 
         InstructionFlow<MetaExpression> returnedValue = instruction.process(xillDebugger, errorDebugger);
 
-        verify(errorDebugger, times(1)).setDebug(xillDebugger);
         verify(result, times(2)).hasValue();
 
     }
@@ -96,7 +95,6 @@ public class ErrorInstructionTest {
 
         instruction.process(xillDebugger, errorDebugger);
 
-        verify(resultError, times(1)).hasValue();
         verify(errorDebugger, times(1)).getError();
 
     }
@@ -120,7 +118,7 @@ public class ErrorInstructionTest {
 
         instruction.process(xillDebugger, errorDebugger);
 
-        verify(throwableMock, times(2)).getMessage();
+        verify(throwableMock, times(1)).getMessage();
 
     }
 
