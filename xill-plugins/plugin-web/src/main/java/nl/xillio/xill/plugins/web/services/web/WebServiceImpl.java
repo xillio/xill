@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 public class WebServiceImpl implements WebService {
 
     @Override
-    public void click(final WebVariable node) throws StaleElementReferenceException {
+    public void click(final WebVariable node) {
         WebElement webElement = node.getElement();
         webElement.click();
     }
@@ -64,7 +64,12 @@ public class WebServiceImpl implements WebService {
     public String getText(final WebVariable var) {
         String text;
         if (var instanceof PageVariable) {
-            text = var.getDriver().getPageSource();
+            try {
+                WebElement element = var.getDriver().findElement(By.xpath("//body"));
+                text = element.getText();
+            } catch (NoSuchElementException e) {
+                throw new RobotRuntimeException("Cannot find <body> tag!", e);
+            }
         } else {
             text = var.getElement().getText();
         }
@@ -72,7 +77,12 @@ public class WebServiceImpl implements WebService {
     }
 
     @Override
-    public List<WebVariable> findElementsWithCssPath(final WebVariable var, final String cssPath) throws InvalidSelectorException {
+    public String getSource(final PageVariable page) {
+        return page.getDriver().getPageSource();
+    }
+
+    @Override
+    public List<WebVariable> findElementsWithCssPath(final WebVariable var, final String cssPath) {
         SearchContext node;
         if (var instanceof PageVariable) {
             node = var.getDriver();
@@ -86,7 +96,7 @@ public class WebServiceImpl implements WebService {
     }
 
     @Override
-    public List<WebVariable> findElementsWithXpath(final WebVariable var, final String xpath) throws InvalidSelectorException {
+    public List<WebVariable> findElementsWithXpath(final WebVariable var, final String xpath) {
         SearchContext node;
         if (var instanceof PageVariable) {
             node = var.getDriver();
@@ -212,7 +222,7 @@ public class WebServiceImpl implements WebService {
     }
 
     @Override
-    public void httpGet(final WebVariable var, final String url) throws ClassCastException, MalformedURLException {
+    public void httpGet(final WebVariable var, final String url) throws MalformedURLException {
         PhantomJSDriver driver = getJSDriver(var.getDriver());
         if (getRef(url) != null) {
             driver.get("about:blank");

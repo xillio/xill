@@ -13,7 +13,7 @@ Returns a string containing all text extracted from XML-node (without any markup
                   <heading>Reminder</heading>
                   <comment>This was sent to James as well</comment>
                   <comment>John has not responded to the invitation</comment>
-                   body>Don't forget me this weekend!</body>
+                  <body>Don't forget me this weekend!</body>
                 </note>
                 ]]>
             </code>
@@ -23,7 +23,7 @@ Returns a string containing all text extracted from XML-node (without any markup
                 use XML;
 
                 var note = XML.fromFile("C:/tmp/note.xml");
-                var from = XML.xpath(note, "//note/from");
+                var from = XML.xPath(note, "//note/from");
                 System.print(XML.getText(from));
             </code>
             <header>

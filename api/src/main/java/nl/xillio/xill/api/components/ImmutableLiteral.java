@@ -1,5 +1,7 @@
 package nl.xillio.xill.api.components;
 
+import nl.xillio.xill.api.data.MetadataExpression;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -52,5 +54,10 @@ public class ImmutableLiteral extends MetaExpression {
 
         // Make sure the reference count doesn't drop below 0
         resetReferences();
+    }
+
+    @Override
+    public void storeMeta(MetadataExpression object) {
+        // No OP
     }
 }

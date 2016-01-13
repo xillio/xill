@@ -209,6 +209,7 @@ public class LoadWorkbookConstructTest extends TestUtils {
         ExcelService service = mock(ExcelService.class);
         ConstructContext context = mock(ConstructContext.class);
         XillWorkbook workbook = mock(XillWorkbook.class);
+        when(workbook.getFileString()).thenReturn("something");
         when(service.loadWorkbook(any(File.class))).thenReturn(workbook);
 
         //Mock RobotID
