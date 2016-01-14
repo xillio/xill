@@ -143,7 +143,7 @@ public class GetTextConstructTest extends ExpressionBuilderHelper {
     /**
      * test the construct when no node is given.
      */
-    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid variable type. NODE type expected!")
+    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid variable type. NODE or PAGE expected.")
     public void testProcessNoNodeGiven() {
         // mock
         WebService webService = mock(WebService.class);
@@ -152,6 +152,6 @@ public class GetTextConstructTest extends ExpressionBuilderHelper {
         when(input.getMeta(NodeVariable.class)).thenReturn(null);
 
         // run
-        ClickConstruct.process(input, webService);
+        GetTextConstruct.process(input, webService);
     }
 }

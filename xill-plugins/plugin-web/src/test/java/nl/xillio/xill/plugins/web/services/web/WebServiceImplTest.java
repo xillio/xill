@@ -1,12 +1,14 @@
 package nl.xillio.xill.plugins.web.services.web;
 
 
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.data.*;
 import nl.xillio.xill.plugins.web.data.PhantomJSPool.Entity;
 import nl.xillio.xill.plugins.web.data.PhantomJSPool.Identifier;
 import org.apache.http.client.CookieStore;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.openqa.selenium.Cookie;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.Options;
 import org.openqa.selenium.WebDriver.TargetLocator;
@@ -111,26 +113,91 @@ public class WebServiceImplTest {
     }
 
     /**
-     * Test the getText function.
+     * Test the getText function for NODE variable.
      */
     @Test
-    public void testGetText() {
+    public void testGetTextNode() {
+        String text = "just some text";
+
         // mock
         WebElement element = mock(WebElement.class);
         WebVariable webVariable = mock(WebVariable.class);
         when(webVariable.getElement()).thenReturn(element);
-        when(element.getText()).thenReturn("text");
+        when(element.getText()).thenReturn(text);
 
         // run
         WebServiceImpl implementation = new WebServiceImpl();
         String tagName = implementation.getText(webVariable);
 
-
         // verify
         verify(element, times(1)).getText();
 
         // assert
-        Assert.assertEquals(tagName, "text");
+        Assert.assertEquals(tagName, text);
+    }
+
+    /**
+     * Test the getText function for PAGE variable.
+     */
+    @Test
+    public void testGetTextPage() {
+        String text = "just some text";
+
+        // mock
+        WebElement element = mock(WebElement.class);
+        PageVariable pageVariable = mock(PageVariable.class);
+
+        WebDriver driver = mock(WebDriver.class);
+        when(pageVariable.getDriver()).thenReturn(driver);
+        when(driver.findElement(any())).thenReturn(element);
+        when(element.getText()).thenReturn(text);
+
+        // run
+        WebServiceImpl implementation = new WebServiceImpl();
+        String tagName = implementation.getText(pageVariable);
+
+        // verify
+        verify(element, times(1)).getText();
+        verify(driver, times(1)).findElement(any());
+
+        // assert
+        Assert.assertEquals(tagName, text);
+    }
+
+    /**
+     * Test the getText function for PAGE variable when the body tag is not found.
+     */
+    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Cannot find <body> tag!")
+    public void testGetTextPageException() {
+        // mock
+        PageVariable pageVariable = mock(PageVariable.class);
+        WebDriver driver = mock(WebDriver.class);
+        when(pageVariable.getDriver()).thenReturn(driver);
+        when(driver.findElement(any())).thenThrow(new NoSuchElementException("Element not found"));
+
+        // run
+        WebServiceImpl implementation = new WebServiceImpl();
+        implementation.getText(pageVariable);
+    }
+    /**
+     * Test the getSource function.
+     */
+    @Test
+    public void testGetSource() {
+        String html = "HTML source";
+
+        // mock
+        PageVariable pageVariable = mock(PageVariable.class);
+        WebDriver driver = mock(WebDriver.class);
+        when(pageVariable.getDriver()).thenReturn(driver);
+        when(driver.getPageSource()).thenReturn(html);
+
+        // run
+        WebServiceImpl implementation = new WebServiceImpl();
+        String source = implementation.getSource(pageVariable);
+
+        // assert
+        Assert.assertEquals(source, html);
     }
 
     /**
