@@ -216,9 +216,10 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
         try {
             return doValidate(resource, robotID);
         } catch (WrappedException e) {
-            // xText throws an exception when a reserved keyword is used as identifier. At this point, that is all the info we have.
+            // In rare cases xText throws an exception. That means we have no information except the robot with which it happened.
             LOGGER.error("Exception during validation.", e);
-            return Collections.singletonList(new Issue("A variable cannot have a reserved keyword as identifier.", 1, Issue.Type.ERROR, robotID));
+            return Collections.singletonList(new Issue("An unexpected exception occurred during compilation." +
+                    "\nThis can be caused by two reserved keywords incorrectly following each other.", 1, Issue.Type.ERROR, robotID));
         }
     }
 
