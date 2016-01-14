@@ -47,6 +47,7 @@ All notable changes to this project will be documented in this file
 - Fix issue where numbers on the end of keywords/strings would be highlighted as numeric constants [CTC-1202](https://xillio.atlassian.net/browse/CTC-1202)
 - Fix Memory leak in Database.query() [CTC-1244](https://xillio.atlassian.net/browse/CTC-1244)
 - Deep recursive functions could throw a stackoverflow exception in the backend [CTC-1243](https://xillio.atlassian.net/browse/CTC-1243)
+- IllegalArgumentException when fetching binary from database [CTC-1217](https://xillio.atlassian.net/browse/CTC-1217)
 
 ## [3.0.23] - 11-12-2015
 ### Stories done
