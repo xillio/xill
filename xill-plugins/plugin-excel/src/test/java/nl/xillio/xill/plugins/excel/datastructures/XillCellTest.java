@@ -3,6 +3,8 @@ package nl.xillio.xill.plugins.excel.datastructures;
 import nl.xillio.xill.api.errors.NotImplementedException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.RichTextString;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.testng.annotations.Test;
 
 import java.time.Instant;
@@ -104,6 +106,16 @@ public class XillCellTest {
 
         testCell.setNull();
         verify(cell, times(1)).setCellType(Cell.CELL_TYPE_BLANK);
+
+        XillWorkbook xillworkbook = mock(XillWorkbook.class);
+        when(sheet.getParentWorkbook()).thenReturn(xillworkbook);
+        XSSFWorkbook workbook = mock(XSSFWorkbook.class);
+        when(xillworkbook.getWorkbook()).thenReturn(workbook);
+        XSSFCellStyle style = mock(XSSFCellStyle.class);
+        when(workbook.createCellStyle()).thenReturn(style);
+        testCell.setCellValue("=1", false);
+        verify(cell, times(1)).setCellValue("=1");
+        verify(cell, times(1)).setCellStyle(any());
     }
 
     //It is not possible to test what happens when a FormulaParseException is thrown in

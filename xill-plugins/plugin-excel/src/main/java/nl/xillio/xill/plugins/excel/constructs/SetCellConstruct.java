@@ -42,8 +42,8 @@ public class SetCellConstruct extends Construct {
      * @throws RobotRuntimeException when a wrong notation for the column has been used (should be numeric or alphabetic)
      */
     static MetaExpression process(MetaExpression sheet, MetaExpression column, MetaExpression row, MetaExpression value, MetaExpression formula) {
-        XillSheet Sheet = assertMeta(sheet, "parameter 'sheet'", XillSheet.class, "result of loadSheet or createSheet");
-        if (Sheet.isReadonly())
+        XillSheet xillSheet = assertMeta(sheet, "parameter 'sheet'", XillSheet.class, "result of loadSheet or createSheet");
+        if (xillSheet.isReadonly())
             throw new RobotRuntimeException("Cannot write on sheet: sheet is read-only. First save as new file.");
         if (!isNumeric(row))
             throw new RobotRuntimeException("Wrong notation for row \"" + row.getStringValue() + "\", should be numeric (e.g. 12)");
@@ -56,7 +56,7 @@ public class SetCellConstruct extends Construct {
             throw new RobotRuntimeException(e.getMessage(), e);
         }
         try {
-            setValue(Sheet, cellRef, value, formula);
+            setValue(xillSheet, cellRef, value, formula);
         } catch (IllegalArgumentException e) {
             throw new RobotRuntimeException(e.getMessage(), e);
         }

@@ -104,27 +104,31 @@ public class XillCell {
      */
     public void setCellValue(String value, boolean isFormula) {
         if (value.startsWith("=")) {
-            if (isFormula) {
-                try {
-                    cell.setCellFormula(value.substring(1));
-                } catch (FormulaParseException e) {
-                    throw new IllegalArgumentException(e.getMessage(), e);
-                }
-            } else {
-                if (value.startsWith("=")) {
-                    Workbook workbook = sheet.getParentWorkbook().getWorkbook();
-                    if (workbook instanceof  XSSFWorkbook) {
-                        XSSFWorkbook book = (XSSFWorkbook) workbook;
-                        XSSFCellStyle style = book.createCellStyle();
-                        style.setDataFormat((short) BuiltinFormats.getBuiltinFormat("text"));
-                        cell.setCellStyle(style);
-                    } else {
-                        throw new RobotRuntimeException("Setting cell text starting with equal character is supported on .xlsx workbooks only!");
-                    }
-                }
-                cell.setCellValue(value);
+            setCellValueEqualSign(value, isFormula);
+        } else {
+            cell.setCellValue(value);
+        }
+    }
+
+    private void setCellValueEqualSign(String value, boolean isFormula) {
+        if (isFormula) {
+            try {
+                cell.setCellFormula(value.substring(1));
+            } catch (FormulaParseException e) {
+                throw new IllegalArgumentException(e.getMessage(), e);
             }
         } else {
+            if (value.startsWith("=")) {
+                Workbook workbook = sheet.getParentWorkbook().getWorkbook();
+                if (workbook instanceof  XSSFWorkbook) {
+                    XSSFWorkbook book = (XSSFWorkbook) workbook;
+                    XSSFCellStyle style = book.createCellStyle();
+                    style.setDataFormat((short) BuiltinFormats.getBuiltinFormat("text"));
+                    cell.setCellStyle(style);
+                } else {
+                    throw new RobotRuntimeException("Setting cell text starting with equal character is supported on .xlsx workbooks only!");
+                }
+            }
             cell.setCellValue(value);
         }
     }
