@@ -2,12 +2,8 @@ package nl.xillio.xill.docgen.impl;
 
 import nl.xillio.xill.docgen.DocumentationEntity;
 import nl.xillio.xill.docgen.DocumentationSearcher;
-import org.elasticsearch.common.lang3.ArrayUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -22,9 +18,10 @@ public class InMemoryDocumentationSearcher implements DocumentationSearcher {
     @Override
     public String[] search(String query) {
 
-        String[] nameResults = searchByName(query);
-        String[] tagResults = searchByTags(query);
-        return ArrayUtils.addAll(nameResults, tagResults);
+        Set<String> results = new LinkedHashSet<>();
+        Collections.addAll(results, searchByName(query));
+        Collections.addAll(results, searchByTags(query));
+        return results.toArray(new String[results.size()]);
     }
 
     String[] searchByTags(String query) {
