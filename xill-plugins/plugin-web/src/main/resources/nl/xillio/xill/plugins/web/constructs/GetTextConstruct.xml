@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Returns a string containing all text extracted from HTML node(s) (without any markup).  
+Returns a string containing all text extracted from *HTML* node(s) (without any markup).  
 
 Any HTML-entities (like the copyright entity) contained in the text will be converted to characters.  
-It returns web page source content if the PAGE variable is provided. 
+
+*Remark 1:* If the PAGE variable is provided as an input, it tries to look for `body` tag and returns the extracted texts from all `body` child tags on the page.  
+
+*Remark 2:* This function supports HTML only content. If you get XML content then you have to use XML plugin for getting the texts.
     </description>
     <examples>
         <example title="Usage">
+            <header>Get text from a web page.</header>
+            <code>
+                use Web;
+                use System;
+
+                var page = Web.loadPage("http://www.xillio.com");
+                System.print(Web.getText(page));
+
+            </code>
+        </example>
+        
+        <example>
             <header>Get text from an element.</header>
             <code>
                 use Web;
@@ -24,18 +39,31 @@ It returns web page source content if the PAGE variable is provided.
                 } else {
                     System.print("no page");
                 }
-                /*
-                    To get all text on a page, do the following:
+            </code>
+        </example>
+        
+        <example>
+            <header>Get text from a XML web page.</header>
+            <code>
+use Web;
+use System;
+use XML;
 
-                    var body = Web.xPath(page, "//body");
-                    var content = Web.getText(body);
-                */
+var page = Web.loadPage("http://www.w3schools.com/xml/cd_catalog.xml"); // Load the web page with XML content
+var xml_source = Web.getSource(page); // Get the XML source (i.e. page source)
+
+var xml = XML.fromString(xml_source); // Parse XML source using XML plugin
+
+System.print(XML.getText(xml));
             </code>
         </example>
     </examples>
     <references>
         <reference>loadPage</reference>
         <reference>xPath</reference>
+        <reference>getSource</reference>
+        <reference>XML.xPath</reference>
+        <reference>XML.fromString</reference>
     </references>
     <tags>
         load, page, web, text, xpath

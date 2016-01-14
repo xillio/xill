@@ -37,7 +37,7 @@ public class SaveConstruct extends Construct {
      */
     static MetaExpression process(ExcelService service, ConstructContext context, MetaExpression workbookInput, MetaExpression path) {
         XillWorkbook workbook = assertMeta(workbookInput, "parameter 'workbook'", XillWorkbook.class, "result of loadWorkbook or createWorkbook");
-        if (path == NULL) //default
+        if (path.isNull()) //default
             return processOverwrite(service, workbook);
         else {
             File file = getFile(context, path.getStringValue());
