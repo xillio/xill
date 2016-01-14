@@ -33,6 +33,7 @@ public class FromHexConstructTest extends TestUtils {
     public void testPrepareProcess() throws Exception {
         processor.setArgument(0, fromValue("C3A4C3ABC384"));
         MetaExpression expression = processor.process();
+        
         assertEquals(expression.getStringValue(), "äëÄ");
     }
 

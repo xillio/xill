@@ -43,7 +43,11 @@ public class ExpressionBuilderHelper {
      * @return expression
      */
     public static MetaExpression fromValue(final Number value) {
-        return new AtomicExpression(new NumberBehavior(value));
+        if (value == null) {
+            return ExpressionBuilder.NULL;
+        } else {
+            return new AtomicExpression(new NumberBehavior(value));
+        }
     }
 
     /**
@@ -63,7 +67,11 @@ public class ExpressionBuilderHelper {
      * @return expression
      */
     public static MetaExpression fromValue(final String value) {
-        return new AtomicExpression(new StringBehavior(value));
+        if (value == null) {
+            return ExpressionBuilder.NULL;
+        } else {
+            return new AtomicExpression(new StringBehavior(value));
+        }
     }
 
     /**
@@ -74,10 +82,14 @@ public class ExpressionBuilderHelper {
      * @return the expression
      */
     public static MetaExpression fromValue(final String value, final boolean isConstant) {
-        if (!isConstant) {
-            return fromValue(value);
+        if (value == null) {
+            return ExpressionBuilder.NULL;
+        } else {
+            if (!isConstant) {
+                return fromValue(value);
+            }
+            return new AtomicExpression(new StringConstantBehavior(value));
         }
-        return new AtomicExpression(new StringConstantBehavior(value));
     }
 
     /**
@@ -87,7 +99,11 @@ public class ExpressionBuilderHelper {
      * @return the expression
      */
     public static MetaExpression fromValue(final List<MetaExpression> value) {
-        return new ListExpression(value);
+        if (value == null) {
+            return ExpressionBuilder.NULL;
+        } else {
+            return new ListExpression(value);
+        }
     }
 
     /**
@@ -97,7 +113,11 @@ public class ExpressionBuilderHelper {
      * @return the expression
      */
     public static MetaExpression fromValue(final LinkedHashMap<String, MetaExpression> value) {
-        return new ObjectExpression(value);
+        if (value == null) {
+            return ExpressionBuilder.NULL;
+        } else {
+            return new ObjectExpression(value);
+        }
     }
 
     /**

@@ -10,6 +10,7 @@ import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
 
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 
 import static nl.xillio.xill.api.components.ExpressionBuilder.*;
@@ -39,11 +40,14 @@ public class BsonValueConverterTest {
 
     @Test
     public void testConvertDates() throws Exception {
-        DateFactory dateFactory = mock(DateFactory.class, RETURNS_DEEP_STUBS);
+        DateFactory dateFactory = mock(DateFactory.class);
+        Date result = new nl.xillio.xill.plugins.date.data.Date(ZonedDateTime.now());
+        when(dateFactory.from(any())).thenReturn(result);
+
         BsonValueConverter converter = new BsonValueConverter(dateFactory, null);
 
         MetaExpression timestampDate = converter.convert(new BsonTimestamp(1000, 0));
-        assertNotNull(timestampDate.getMeta(Date.class));
+        assertEquals(timestampDate.getMeta(Date.class), result);
         verify(dateFactory).from(eq(Instant.ofEpochSecond(1000)));
 
         MetaExpression dateTimeDate = converter.convert(new BsonDateTime(120));

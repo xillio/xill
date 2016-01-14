@@ -1,23 +1,30 @@
 package nl.xillio.xill.plugins.xml.data;
 
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.preview.TextPreview;
 import nl.xillio.xill.plugins.xml.exceptions.XmlParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * This class represents a XML node MetadataExpression
@@ -36,10 +43,10 @@ public class XmlNodeVar implements nl.xillio.xill.api.data.XmlNode, TextPreview 
      * Creates XmlNode from XML string
      *
      * @param xmlString XML document
-     * @throws Exception         when any unspecified error occurs
+     * @param treatAsDocument true if parsing XML document, false if this meant to be just XML node
      * @throws XmlParseException when XML format is invalid
      */
-    public XmlNodeVar(final String xmlString, final boolean treatAsDocument) throws Exception, XmlParseException {
+    public XmlNodeVar(final String xmlString, final boolean treatAsDocument) throws XmlParseException {
         this.treatAsDocument = treatAsDocument;
 
         try {
@@ -52,9 +59,10 @@ public class XmlNodeVar implements nl.xillio.xill.api.data.XmlNode, TextPreview 
             removeEmptyTextNodes(document);
             document.normalize();
             this.node = document.getFirstChild();
-
         } catch (SAXParseException e) {
             throw new XmlParseException(e.getMessage(), e);
+        } catch (SAXException | IOException | ParserConfigurationException e) {
+            throw new RobotRuntimeException(e.getMessage(), e);
         }
     }
 
@@ -72,6 +80,7 @@ public class XmlNodeVar implements nl.xillio.xill.api.data.XmlNode, TextPreview 
      *
      * @return org.w3c.dom.Document of this node
      */
+    @Override
     public Document getDocument() {
         return this.node.getOwnerDocument();
     }
@@ -79,6 +88,7 @@ public class XmlNodeVar implements nl.xillio.xill.api.data.XmlNode, TextPreview 
     /**
      * @return org.w3c.dom.Node data specifying this node
      */
+    @Override
     public Node getNode() {
         return this.node;
     }
@@ -98,8 +108,15 @@ public class XmlNodeVar implements nl.xillio.xill.api.data.XmlNode, TextPreview 
     /**
      * @return a string containing all text extracted from XML node or XML document
      */
+    @Override
     public String getText() {
-        return (this.treatAsDocument ? this.getDocument().getTextContent() : this.getNode().getTextContent());
+        NodeList list = this.getNode().getChildNodes();
+
+        return IntStream.range(0, list.getLength())
+            .mapToObj(list::item)
+            .map(Node::getTextContent)
+            .filter(text -> !text.isEmpty())
+            .collect(Collectors.joining("\n"));
     }
 
     /**
@@ -107,6 +124,7 @@ public class XmlNodeVar implements nl.xillio.xill.api.data.XmlNode, TextPreview 
      *
      * @return XML content in string format
      */
+    @Override
     public String getXmlContent() {
         if (this.node == null) {
             return "null";
