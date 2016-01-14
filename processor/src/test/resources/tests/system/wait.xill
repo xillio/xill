@@ -1,0 +1,7 @@
+use System, Date, Assert;
+
+var start = Date.now();
+System.wait(200);
+var diff = Date.diff(start, Date.now());
+
+Assert.isTrue(diff.totalMicros > 200);

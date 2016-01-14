@@ -7,23 +7,24 @@ Returns a new page object based on the string content.
         <example title="Usage">
             <header>Convert a string to a web page.</header>
             <code>
+                use System;
+                use Web;
+                
                 var page = Web.fromString("
-                        <html>
-                            <head>
-                                <title> Strict DTD XHTML Example </title>
-                            </head>
-                            <body>
-                                <p>Please Choose a Day:
-                                    <br />
-                                    <br />
-                                    <select name="day">
-                                        <option selected="selected">Monday</option>
-                                        <option>Tuesday</option>
-                                        <option>Wednesday</option>
-                                    </select>
-                                </p>
-                            </body>
-                        </html>");
+                        &lt;html&gt;
+                            &lt;head&gt;
+                                &lt;title&gt; Strict DTD XHTML Example &lt;/title&gt;
+                            &lt;/head&gt;
+                            &lt;body&gt;
+                                &lt;p&gt;Please Choose a Day:
+                                    &lt;select name=\"day\"&gt;
+                                        &lt;option&gt;Monday&lt;/option&gt;
+                                        &lt;option&gt;Tuesday&lt;/option&gt;
+                                        &lt;option&gt;Wednesday&lt;/option&gt;
+                                    &lt;/select&gt;
+                                &lt;/p&gt;
+                            &lt;/body&gt;
+                        &lt;/html&gt;");
 
                 var options = Web.xPath(page, "//option/text()");
 

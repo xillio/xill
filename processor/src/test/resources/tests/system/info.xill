@@ -1,0 +1,10 @@
+use System, Math, Assert;
+
+var info = System.info();
+
+Assert.isTrue(info.availableProcessors > 1);
+Assert.equal(System.typeOf(info.filesystem), LIST);
+Assert.isTrue(Math.isNumber(info.memory.free));
+Assert.isTrue(Math.isNumber(info.memory.total));
+Assert.isTrue(Math.isNumber(info.memory.max));
+Assert.isTrue(Math.isNumber(info.memory.used));
