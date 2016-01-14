@@ -253,27 +253,40 @@ public class XillDebugger implements Debugger {
     }
 
     private List<Object> getVariableTokens(Instruction instruction) {
-        return debugInfo.getVariables()
+        List<ScopeCheckResult> variables = debugInfo.getVariables()
                 .entrySet()
                 .stream()
                 .map(Map.Entry::getValue)
                 .filter(dec -> isVisible(dec, instruction))
-                .sorted((a, b) -> Integer.compare(a.getLineNumber(), b.getLineNumber()))
-                .map(debugInfo::getTarget)
+                .map(dec -> checkScope(dec, instruction, 0))
+                .filter(ScopeCheckResult::isInScope)
+                .collect(Collectors.toList());
+
+        Map<String, ScopeCheckResult> result = new HashMap<>();
+
+        for (ScopeCheckResult dec : variables) {
+            String name = dec.getDeclaration().getName();
+            if (!result.containsKey(name)) {
+                result.put(name, dec);
+            } else if (result.get(name).getScopeDepth() > dec.getScopeDepth()) {
+                result.put(name, dec);
+            }
+        }
+
+        return result.values()
+                .stream()
+                .sorted((a, b) -> Integer.compare(a.getDeclaration().getLineNumber(), b.getDeclaration().getLineNumber()))
                 .collect(Collectors.toList());
     }
 
     private boolean isVisible(VariableDeclaration variableDeclaration, Instruction instruction) {
-        return variableDeclaration.getRobotID() == instruction.getRobotID() && isInScope(variableDeclaration, instruction);
+        return variableDeclaration.getRobotID() == instruction.getRobotID();
     }
 
-    private boolean isInScope(VariableDeclaration variableDeclaration, Instruction checkInstruction) {
-        if (variableDeclaration.getHostInstruction() instanceof Robot) {
-            return variableDeclaration.hasValue();
-        }
-
-        if (variableDeclaration.getHostInstruction() == checkInstruction.getHostInstruction()) {
-            return variableDeclaration.hasValue();
+    private ScopeCheckResult checkScope(VariableDeclaration variableDeclaration, Instruction checkInstruction, int checkDepth) {
+        if (variableDeclaration.getHostInstruction() instanceof Robot ||
+                variableDeclaration.getHostInstruction() == checkInstruction.getHostInstruction()) {
+            return new ScopeCheckResult(checkDepth, variableDeclaration.hasValue(), variableDeclaration);
         }
 
         nl.xillio.xill.components.instructions.InstructionSet instructionSet = checkInstruction.getHostInstruction();
@@ -281,11 +294,10 @@ public class XillDebugger implements Debugger {
 
         // We have no parent... move on
         if (parentInstruction == null) {
-            LOGGER.debug("No parent instruction found for set around " + checkInstruction);
-            return false;
+            return new ScopeCheckResult(checkDepth, false, variableDeclaration);
         }
 
-        return isInScope(variableDeclaration, parentInstruction);
+        return checkScope(variableDeclaration, parentInstruction, checkDepth + 1);
     }
 
     @Override
@@ -403,6 +415,30 @@ public class XillDebugger implements Debugger {
 
         public int getStackSize() {
             return stackSize;
+        }
+    }
+
+    private class ScopeCheckResult {
+        private final int scopeDepth;
+        private final boolean inScope;
+        private final VariableDeclaration declaration;
+
+        private ScopeCheckResult(int scopeDepth, boolean inScope, VariableDeclaration declaration) {
+            this.scopeDepth = scopeDepth;
+            this.inScope = inScope;
+            this.declaration = declaration;
+        }
+
+        public int getScopeDepth() {
+            return scopeDepth;
+        }
+
+        public boolean isInScope() {
+            return inScope;
+        }
+
+        public VariableDeclaration getDeclaration() {
+            return declaration;
         }
     }
 }
