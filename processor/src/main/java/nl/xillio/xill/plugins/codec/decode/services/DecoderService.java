@@ -5,6 +5,7 @@ import org.apache.commons.codec.DecoderException;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Interface defining behavior of decoding constructs.
@@ -28,6 +29,15 @@ public interface DecoderService {
      * @throws DecoderException Thrown if an odd number of characters is supplied to this function
      */
     String fromHex(String hexString, String charsetName) throws DecoderException;
+
+    /**
+     * Do URL decode of provided text
+     *
+     * @param text input string
+     * @return urlDecoded string
+     * @throws UnsupportedEncodingException If something goes wrong during the decoding
+     */
+    String urlDecode(String text) throws UnsupportedEncodingException;
 
     /**
      * Makes a file which represents the decoded version of a given base64-encoded file.

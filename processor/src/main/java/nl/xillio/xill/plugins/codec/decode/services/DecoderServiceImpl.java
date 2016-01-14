@@ -8,6 +8,7 @@ import org.apache.commons.codec.binary.Base64OutputStream;
 import org.apache.commons.codec.binary.Hex;
 
 import java.io.*;
+import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
@@ -34,6 +35,11 @@ public class DecoderServiceImpl implements DecoderService {
         final Charset charset = charsetName == null ? StandardCharsets.UTF_8 : Charset.forName(charsetName);
         final Hex hex = new Hex(charset);
         return new String(hex.decode(hexString.getBytes()), charset);
+    }
+
+    @Override
+    public String urlDecode(String text) throws UnsupportedEncodingException {
+        return URLDecoder.decode(text, "UTF-8");
     }
 
     /**

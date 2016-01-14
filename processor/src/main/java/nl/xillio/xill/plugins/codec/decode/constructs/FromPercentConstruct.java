@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.codec.encode.constructs;
+package nl.xillio.xill.plugins.codec.decode.constructs;
 
 import com.google.inject.Inject;
 import nl.xillio.xill.api.components.MetaExpression;
@@ -7,26 +7,24 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.codec.encode.services.EncoderService;
+import nl.xillio.xill.plugins.codec.decode.services.DecoderService;
 
 import java.io.UnsupportedEncodingException;
 
 /**
- * Do URL encoding of the provided string.
- *
- * @author Zbynek Hochmann
+ * @author Pieter Dirk Soels
  */
-public class ToPercentConstruct extends Construct {
+public class FromPercentConstruct extends Construct {
 
-    private final EncoderService encoderService;
+    private final DecoderService decoderService;
 
     @Inject
-    public ToPercentConstruct(EncoderService encoderService) {
-        this.encoderService = encoderService;
+    public FromPercentConstruct(DecoderService decoderService) {
+        this.decoderService = decoderService;
     }
 
     @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
+    public ConstructProcessor prepareProcess(ConstructContext context) {
         return new ConstructProcessor(
                 this::process,
                 new Argument("string", ATOMIC),
@@ -35,9 +33,9 @@ public class ToPercentConstruct extends Construct {
 
     MetaExpression process(final MetaExpression string, final MetaExpression xWwwFormVar) {
         try {
-            return string.isNull() ? NULL : fromValue(encoderService.urlEncode(string.getStringValue(), !xWwwFormVar.isNull() && xWwwFormVar.getBooleanValue()));
+            return fromValue(decoderService.urlDecode(string.getStringValue()));
         } catch (UnsupportedEncodingException e) {
-            throw new RobotRuntimeException("Cannot URL encode the string", e);
+            throw new RobotRuntimeException("Cannot URL decode the string", e);
         }
     }
 }
