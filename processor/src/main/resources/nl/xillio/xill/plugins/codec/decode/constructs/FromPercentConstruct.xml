@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Returns the URL-decoded (percent-decoded) version of an encoded string.
-
-        Essential for converting URL’s back with GET variables in them.
+Returns the URL-decoded (percent-decoded) version of an encoded string. Essential for converting URL’s back with GET variables in them.
     </description>
     <examples>
         <example title="Usage">
