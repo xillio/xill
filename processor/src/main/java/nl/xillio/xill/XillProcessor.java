@@ -68,10 +68,9 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
      * @param robotFile     the robot file
      * @param pluginLoader  the plugin loader
      * @param debugger      the debugger
-     * @throws IOException
      */
     public XillProcessor(final File projectFolder, final File robotFile, final PluginLoader<XillPlugin> pluginLoader,
-                         final Debugger debugger) throws IOException {
+                         final Debugger debugger) {
         this.projectFolder = projectFolder;
         this.robotFile = robotFile;
         this.pluginLoader = pluginLoader;
