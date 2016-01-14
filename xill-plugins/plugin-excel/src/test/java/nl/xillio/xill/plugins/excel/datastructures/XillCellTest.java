@@ -1,6 +1,8 @@
 package nl.xillio.xill.plugins.excel.datastructures;
 
 import nl.xillio.xill.api.errors.NotImplementedException;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -122,4 +124,20 @@ public class XillCellTest {
     //setCellValue(String value) since that exception (and everything that raises it) is
     //protected.
 
+    /**
+     * Tests if the text starting with equal sign is set into the .xls workbook
+     */
+    @Test(expectedExceptions = RobotRuntimeException.class)
+    public void setCellValueEqualSignExceptionText() throws Exception {
+        Cell cell = mock(Cell.class);
+        XillSheet sheet = mock(XillSheet.class);
+        XillCell testCell = new XillCell(cell, sheet);
+
+        XillWorkbook xillworkbook = mock(XillWorkbook.class);
+        when(sheet.getParentWorkbook()).thenReturn(xillworkbook);
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        when(xillworkbook.getWorkbook()).thenReturn(workbook);
+
+        testCell.setCellValue("=1", false);
+    }
 }
