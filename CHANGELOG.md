@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file
 - Excel.getSheet now also accepts a sheet index to fetch the n-th sheet of a workbook
 - Robots started by callbot will now by killed when the parent robot is stopped
 - Rename option sortBy in some Mongo constructs to sort
+- Functionality of Web.getText to be more consistent
 ### Fixed
 - Sorting on keys using Collection.sort now also works in reverse [CTC-1234](https://xillio.atlassian.net/browse/CTC-1234)
 - Copying an excel sheet would cause changes to be lost [CTC-1233](https://xillio.atlassian.net/browse/CTC-1233)
@@ -46,6 +47,7 @@ All notable changes to this project will be documented in this file
 - Fix issue where numbers on the end of keywords/strings would be highlighted as numeric constants [CTC-1202](https://xillio.atlassian.net/browse/CTC-1202)
 - Fix Memory leak in Database.query() [CTC-1244](https://xillio.atlassian.net/browse/CTC-1244)
 - Deep recursive functions could throw a stackoverflow exception in the backend [CTC-1243](https://xillio.atlassian.net/browse/CTC-1243)
+- IllegalArgumentException when fetching binary from database [CTC-1217](https://xillio.atlassian.net/browse/CTC-1217)
 
 ## [3.0.23] - 11-12-2015
 ### Stories done
