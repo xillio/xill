@@ -61,7 +61,7 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
         for (Instruction instruction : instructions) {
 
             if (debugger.shouldStop()) {
-                processResult = InstructionFlow.doResume(ExpressionBuilderHelper.NULL);
+                processResult = InstructionFlow.doReturn(ExpressionBuilderHelper.NULL);
                 break;
             }
 

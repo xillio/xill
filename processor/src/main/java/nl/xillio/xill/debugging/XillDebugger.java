@@ -63,6 +63,8 @@ public class XillDebugger implements Debugger {
         mode = Mode.STOPPED;
         onRobotInterrupt.invoke(null);
         childDebuggers.forEach(Debugger::stop);
+        currentStack.clear();
+        functionStack.clear();
     }
 
     @Override

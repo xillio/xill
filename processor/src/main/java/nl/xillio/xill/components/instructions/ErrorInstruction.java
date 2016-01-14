@@ -100,27 +100,11 @@ public class ErrorInstruction extends CompoundInstruction {
         //successBlock in finally because exceptions in these blocks should not be caught by errorBlockDebugger
 
         if (!hadError && successInstructions != null) {
-            InstructionFlow<MetaExpression> result = successInstructions.process(debugger);
-            checkFlowValues(result, "success");
+            successInstructions.process(debugger);
         }
 
         if (finallyInstructions != null && finallyInstructions.process(debugger).hasValue()) {
-            InstructionFlow<MetaExpression> result = finallyInstructions.process(debugger);
-            checkFlowValues(result, "finally");
-        }
-    }
-
-    private void checkFlowValues(InstructionFlow<MetaExpression> result, String blockName) {
-        if (result.returns()) {
-            throw new RobotRuntimeException("A return is not allowed in the " + blockName + " block.");
-        }
-
-        if (result.breaks()) {
-            throw new RobotRuntimeException("A break is not allowed in the " + blockName + " block.");
-        }
-
-        if (result.skips()) {
-            throw new RobotRuntimeException("A continue is not allowed in the " + blockName + " block.");
+            finallyInstructions.process(debugger);
         }
     }
 
@@ -136,9 +120,7 @@ public class ErrorInstruction extends CompoundInstruction {
             if (cause != null) {
                 cause.pushVariable(fromValue(e.getMessage()));
             }
-
-            InstructionFlow<MetaExpression> result = errorInstructions.process(debugger);
-            checkFlowValues(result, "fail");
+            errorInstructions.process(debugger);
         }
     }
 
