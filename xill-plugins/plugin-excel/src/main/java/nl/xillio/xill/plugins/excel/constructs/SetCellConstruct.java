@@ -18,6 +18,17 @@ import java.util.regex.Pattern;
  */
 public class SetCellConstruct extends Construct {
 
+    @Override
+    public ConstructProcessor prepareProcess(ConstructContext context) {
+        return new ConstructProcessor(
+                SetCellConstruct::process,
+                new Argument("sheet", OBJECT),
+                new Argument("column", ATOMIC),
+                new Argument("row", ATOMIC),
+                new Argument("value", ATOMIC),
+                new Argument("formula", NULL, ATOMIC));
+    }
+
     /**
      * Processes xill code to change the value of a given cell
      *
@@ -30,7 +41,7 @@ public class SetCellConstruct extends Construct {
      * @throws RobotRuntimeException when a wrong notation for the row has been used (should be numeric)
      * @throws RobotRuntimeException when a wrong notation for the column has been used (should be numeric or alphabetic)
      */
-    static MetaExpression process(MetaExpression sheet, MetaExpression column, MetaExpression row, MetaExpression value) {
+    static MetaExpression process(MetaExpression sheet, MetaExpression column, MetaExpression row, MetaExpression value, MetaExpression formula) {
         XillSheet Sheet = assertMeta(sheet, "parameter 'sheet'", XillSheet.class, "result of loadSheet or createSheet");
         if (Sheet.isReadonly())
             throw new RobotRuntimeException("Cannot write on sheet: sheet is read-only. First save as new file.");
@@ -45,7 +56,7 @@ public class SetCellConstruct extends Construct {
             throw new RobotRuntimeException(e.getMessage(), e);
         }
         try {
-            setValue(Sheet, cellRef, value);
+            setValue(Sheet, cellRef, value, formula);
         } catch (IllegalArgumentException e) {
             throw new RobotRuntimeException(e.getMessage(), e);
         }
@@ -59,7 +70,12 @@ public class SetCellConstruct extends Construct {
      * @param cellRef a {@link XillCellRef} pointing to the cell which should be changed
      * @param value   a {@link MetaExpression} containing the value which the cell should contain
      */
-    static void setValue(XillSheet sheet, XillCellRef cellRef, MetaExpression value) {
+    static void setValue(XillSheet sheet, XillCellRef cellRef, MetaExpression value, MetaExpression formula) {
+        boolean isFormula = false;
+        if (!formula.isNull()) {
+            isFormula = formula.getBooleanValue();
+        }
+
         if (value.isNull()) {
             sheet.emptyCellValue(cellRef);
         } else {
@@ -72,7 +88,7 @@ public class SetCellConstruct extends Construct {
             } else if (isNumeric(value)) {
                 sheet.setCellValue(cellRef, value.getNumberValue().doubleValue());
             } else {
-                sheet.setCellValue(cellRef, value.getStringValue());
+                sheet.setCellValue(cellRef, value.getStringValue(), isFormula);
             }
         }
     }
@@ -110,15 +126,5 @@ public class SetCellConstruct extends Construct {
      */
     static boolean isNumericXORAlphabetic(MetaExpression expression) {
         return Pattern.matches("[a-zA-Z]*|[0-9]*", expression.getStringValue());
-    }
-
-    @Override
-    public ConstructProcessor prepareProcess(ConstructContext context) {
-        return new ConstructProcessor(
-                SetCellConstruct::process,
-                new Argument("sheet", OBJECT),
-                new Argument("column", ATOMIC),
-                new Argument("row", ATOMIC),
-                new Argument("value", ATOMIC));
     }
 }

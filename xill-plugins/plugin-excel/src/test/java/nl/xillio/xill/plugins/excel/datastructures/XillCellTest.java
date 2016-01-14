@@ -90,10 +90,10 @@ public class XillCellTest {
         XillSheet sheet = mock(XillSheet.class);
         XillCell testCell = new XillCell(cell, sheet);
 
-        testCell.setCellValue("=1");
+        testCell.setCellValue("=1", true);
         verify(cell, times(1)).setCellFormula("1");
 
-        testCell.setCellValue("a");
+        testCell.setCellValue("a", false);
         verify(cell, times(1)).setCellValue("a");
 
         testCell.setCellValue(2d);

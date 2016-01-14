@@ -1,10 +1,11 @@
 package nl.xillio.xill.plugins.excel.datastructures;
 
 import nl.xillio.xill.api.errors.NotImplementedException;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import org.apache.poi.ss.formula.FormulaParseException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -99,16 +100,33 @@ public class XillCell {
      *
      * @param value the string value which should be stored in this cell. Can be made a formula by
      *              staring the string off with an equals sign (=).
+     * @param isFormula true if the value is treated as formula, otherwise the value is stored as string
      */
-    public void setCellValue(String value) {
-        if (value.startsWith("="))
-            try {
-                cell.setCellFormula(value.substring(1));
-            } catch (FormulaParseException e) {
-                throw new IllegalArgumentException(e.getMessage(), e);
+    public void setCellValue(String value, boolean isFormula) {
+        if (value.startsWith("=")) {
+            if (isFormula) {
+                try {
+                    cell.setCellFormula(value.substring(1));
+                } catch (FormulaParseException e) {
+                    throw new IllegalArgumentException(e.getMessage(), e);
+                }
+            } else {
+                if (value.startsWith("=")) {
+                    Workbook workbook = sheet.getParentWorkbook().getWorkbook();
+                    if (workbook instanceof  XSSFWorkbook) {
+                        XSSFWorkbook book = (XSSFWorkbook) workbook;
+                        XSSFCellStyle style = book.createCellStyle();
+                        style.setDataFormat((short) BuiltinFormats.getBuiltinFormat("text"));
+                        cell.setCellStyle(style);
+                    } else {
+                        throw new RobotRuntimeException("Setting cell text starting with equal character is supported on .xlsx workbooks only!");
+                    }
+                }
+                cell.setCellValue(value);
             }
-        else
+        } else {
             cell.setCellValue(value);
+        }
     }
 
     /**

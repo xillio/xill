@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Changes the value of a given cell to the provided value.
+Changes the value of a given cell to the provided value.  
+
+If the parameter `formula` is true then the `value` is treated and stored as formula, otherwise the `value` is stored as text. Default is false. 
     </description>
     <examples>
         <example title="Usage">
