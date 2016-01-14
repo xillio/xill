@@ -27,11 +27,10 @@ public class FromPercentConstruct extends Construct {
     public ConstructProcessor prepareProcess(ConstructContext context) {
         return new ConstructProcessor(
                 this::process,
-                new Argument("string", ATOMIC),
-                new Argument("xWwwForm", FALSE, ATOMIC));
+                new Argument("inputString", ATOMIC));
     }
 
-    MetaExpression process(final MetaExpression string, final MetaExpression xWwwFormVar) {
+    MetaExpression process(final MetaExpression string) {
         try {
             return fromValue(decoderService.urlDecode(string.getStringValue()));
         } catch (UnsupportedEncodingException e) {
