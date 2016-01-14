@@ -275,7 +275,9 @@ public class XillDebugger implements Debugger {
 
         return result.values()
                 .stream()
-                .sorted((a, b) -> Integer.compare(a.getDeclaration().getLineNumber(), b.getDeclaration().getLineNumber()))
+                .map(ScopeCheckResult::getDeclaration)
+                .sorted((a, b) -> Integer.compare(a.getLineNumber(), b.getLineNumber()))
+                .map(debugInfo::getTarget)
                 .collect(Collectors.toList());
     }
 
