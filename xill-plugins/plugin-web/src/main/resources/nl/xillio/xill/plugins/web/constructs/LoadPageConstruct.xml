@@ -9,6 +9,7 @@ This deactivates JavaScript and loading the images and it can reduce long waits 
 
 ## Usage on non-windows machines
 To use the Web.loadPage() function on a non-windows machine an installation of PhantomJS is required. Downloads and documentation can be found at *phantomjs.org/download.html*.
+Make sure you add the binary to your *PATH* environment variable.
     </description>
     <examples>
         <example title="Usage">
