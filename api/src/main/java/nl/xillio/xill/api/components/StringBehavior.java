@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  * </ul>
  */
 class StringBehavior implements Expression {
-    private static final Pattern NUMBER_PATTERN = Pattern.compile("-?\\d*(\\.\\d+)?(-?e\\d+)?");
+    private static final Pattern NUMBER_PATTERN = Pattern.compile("((-?\\d*\\.\\d+(E[-\\+]\\d+)?)|(-?\\d+))");
     private Number cachedNumber;
     private final String value;
 
@@ -33,10 +33,10 @@ class StringBehavior implements Expression {
     @Override
     public Number getNumberValue() {
         if (cachedNumber == null) {
-            if (NUMBER_PATTERN.matcher(value).matches()) {
-                cachedNumber = MathUtils.parse(value);
-            } else {
+            if (value == null || value.isEmpty() || !NUMBER_PATTERN.matcher(value).matches()) {
                 cachedNumber = Double.NaN;
+            } else {
+                cachedNumber = MathUtils.parse(value);
             }
         }
 
