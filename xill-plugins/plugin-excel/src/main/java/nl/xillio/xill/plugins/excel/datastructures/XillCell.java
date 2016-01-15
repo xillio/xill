@@ -2,6 +2,8 @@ package nl.xillio.xill.plugins.excel.datastructures;
 
 import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.formula.FormulaParseException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -125,8 +127,13 @@ public class XillCell {
                     XSSFCellStyle style = book.createCellStyle();
                     style.setDataFormat((short) BuiltinFormats.getBuiltinFormat("text"));
                     cell.setCellStyle(style);
+                } else if (workbook instanceof HSSFWorkbook) {
+                    HSSFWorkbook book = (HSSFWorkbook) workbook;
+                    HSSFCellStyle style = book.createCellStyle();
+                    style.setDataFormat((short) BuiltinFormats.getBuiltinFormat("text"));
+                    cell.setCellStyle(style);
                 } else {
-                    throw new RobotRuntimeException("Setting cell text starting with equal character is supported on .xlsx workbooks only!");
+                    throw new RobotRuntimeException("Setting cell text starting with equal character is not supported on this workbook type!");
                 }
             }
             cell.setCellValue(value);
