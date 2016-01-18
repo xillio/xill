@@ -1,7 +1,18 @@
 # Xill IDE - Change Log
 All notable changes to this project will be documented in this file
 
-## [3.0.BC2] - unreleased
+##[3.0.RC3]
+###Added
+- Decode.fromPercent construct
+
+###Fixed
+
+
+##[3.0.RC2]
+###Fixed
+- Major performance issue comparison operators with an empty string [CTC-1287](https://xillio.atlassian.net/browse/CTC-1287)
+
+## [3.0.RC1]
 ### Added
 - Option to declare multiple usages in one statement: use System, String;
 - Functionality to add any combination of LIST and OBJECT expressions

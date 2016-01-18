@@ -30,6 +30,14 @@ public interface DecoderService {
     String fromHex(String hexString, String charsetName) throws DecoderException;
 
     /**
+     * Do URL decode of provided text
+     *
+     * @param text input string
+     * @return urlDecoded string
+     */
+    String urlDecode(String text);
+
+    /**
      * Makes a file which represents the decoded version of a given base64-encoded file.
      *
      * @param input  The file we want to convert to base64.
