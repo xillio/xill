@@ -3,6 +3,7 @@ package nl.xillio.xill.plugins.codec.decode.services;
 import com.google.inject.Inject;
 import me.biesaart.utils.FileUtilsService;
 import me.biesaart.utils.IOUtilsService;
+import nl.xillio.xill.api.errors.NotImplementedException;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64OutputStream;
 import org.apache.commons.codec.binary.Hex;
@@ -38,8 +39,13 @@ public class DecoderServiceImpl implements DecoderService {
     }
 
     @Override
-    public String urlDecode(String text) throws UnsupportedEncodingException {
-        return URLDecoder.decode(text, "UTF-8");
+    public String urlDecode(String text) {
+        try {
+            return URLDecoder.decode(text, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new NotImplementedException("The UTF-8 charset is not supported. " +
+                    "If this happens please contact the development team." + e.getMessage(), e);
+        }
     }
 
     /**

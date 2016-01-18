@@ -6,10 +6,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.codec.decode.services.DecoderService;
-
-import java.io.UnsupportedEncodingException;
 
 /**
  * Do URL decoding of the provided string.
@@ -33,10 +30,6 @@ public class FromPercentConstruct extends Construct {
     }
 
     MetaExpression process(final MetaExpression string) {
-        try {
-            return fromValue(decoderService.urlDecode(string.getStringValue()));
-        } catch (UnsupportedEncodingException e) {
-            throw new RobotRuntimeException("Cannot URL decode the string", e);
-        }
+        return fromValue(decoderService.urlDecode(string.getStringValue()));
     }
 }

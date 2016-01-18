@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.codec.decode.services;
 
 import me.biesaart.utils.FileUtilsService;
 import me.biesaart.utils.IOUtilsService;
+import nl.xillio.xill.TestUtils;
 import org.apache.commons.io.FileUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -15,11 +16,11 @@ import java.util.List;
 import static org.testng.Assert.assertEquals;
 
 /**
- * This is the test class for the DecoderService.
+ * This is the test class for the
  *
  * @author Pieter Dirk Soels
  */
-public class DecoderServiceImplTest {
+public class DecoderServiceImplTest extends TestUtils {
 
     private final String EXPECTED_TEXT = "Th!s is my inp|_|t string \\/\\/!th s0/\\/\\e weird ch@r@cters :D";
     private final String DEPLOY_BASE64 = "VGghcyBpcyBteSBpbnB8X3x0IHN0cmluZyBcL1wvIXRoIHMwL1wvXGUgd2VpcmQgY2hAckBjdGVycyA6RA==";
@@ -50,13 +51,6 @@ public class DecoderServiceImplTest {
         String result = decoderService.decodeStringBase64(DEPLOY_BASE64);
 
         assertEquals(result.trim(), EXPECTED_TEXT);
-    }
-
-    @Test
-    public void testDecodeFromPercent() throws IOException {
-        String result = decoderService.urlDecode(DEPLOY_PERCENT);
-
-        assertEquals(result, EXPECTED_TEXT);
     }
 
     private File createTmp() throws IOException {
