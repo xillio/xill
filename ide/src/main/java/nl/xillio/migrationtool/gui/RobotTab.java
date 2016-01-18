@@ -109,7 +109,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
         // Add the context menu.
         addContextMenu(globalController);
-
+      
         timeline = new Timeline(new KeyFrame(
                 Duration.millis(2000),
                 ae -> save(false)));
