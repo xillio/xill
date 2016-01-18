@@ -12,9 +12,6 @@ subprojects {
         }
     }
 
-    // To prepare for execution we need to copy the plugins to the plugin directory
-    prepare.dependsOn copyToPluginsDir
-
     dependencies {
         testCompile project(':testutils')
         testCompile project(':processor')

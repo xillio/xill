@@ -2,34 +2,6 @@
  * This file will be applied to all projects.
  */
 
-// Set some base dependencies
-dependencies {
-    testCompile 'org.testng:testng:6.9.8'
-    testCompile 'org.mockito:mockito-all:1.10.19'
-
-    // Of course skip the api on the api project
-    if (project.name != 'api') {
-        compile project(':api')
-    }
-}
-
-/**
- * Most project need to be copied to the plugins directory so we create a task for that here.
- */
-task copyToPluginsDir(type: Sync) {
-    dependsOn jar
-    from jar
-    from configurations.runtime
-
-    // We exclude anything from the packaging that's already in the root project
-    def rootProjectRuntime = rootProject.configurations.runtime.files
-    exclude { details -> rootProjectRuntime.contains(details.file) }
-
-    into new File(pluginsDir, project.name)
-}
-
-rootProject.run.dependsOn prepare
-
 /**
  * Make sur UTF-8 is used during compiling using gradle
  */

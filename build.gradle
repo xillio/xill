@@ -11,12 +11,6 @@ buildscript {
     }
 }
 
-
-// First we set some global constants
-ext {
-    pluginsDir = file('plugins')
-}
-
 // Then we apply the xillio plugin to all projects
 apply plugin: 'nl.xillio.gradle-config'
 subprojects {
@@ -24,17 +18,7 @@ subprojects {
     apply plugin: 'nl.xillio.gradle-config'
 }
 
-// Apply the javafx build
-apply from: file('gradle/dist.gradle')
-apply from: file('gradle/javafx.gradle')
-
 // Then we apply the base configuration to all projects
-allprojects {
+subprojects {
     apply from: rootProject.file('gradle/base.gradle')
-}
-
-// When cleaning up we want to delete all runtime files too
-clean {
-    delete pluginsDir
-    delete file('ESConsole'), file('helpfiles'), file('xilliosettings.cfg')
 }

@@ -1,4 +1,4 @@
-include 'api', 'ide', 'processor', 'xill-plugins', 'testutils'
+include 'api', 'processor', 'xill-plugins', 'testutils'
 
 // Set the root name of the project (do not use the name of the current directory. Jenkins needs this)
 rootProject.name = 'xill'
