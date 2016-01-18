@@ -1711,9 +1711,9 @@ ace.define("ace/autocomplete/text_completer",["require","exports","module","ace/
     var Range = require("../range").Range;
     
     var splitRegex = /[^a-zA-Z_0-9\$\-\u00C0-\u1FFF\u2C00-\uD7FF\w]+/;
-    var filterRegex = /^[0-9]*$/;
+    var numberRegex = /^[0-9]*$/;
 
-    function notANumber(value){return !value.match(filterRegex);
+    function notANumber(value){return !value.match(numberRegex);
             }
     function getWordIndex(doc, pos) {
         var textBefore = doc.getTextRange(Range.fromPoints({row: 0, column:0}, pos));
