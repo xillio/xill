@@ -73,22 +73,20 @@ public class SaveConstructTest extends TestUtils {
         // Verify
         verify(logger).error(eq("Failed to write to file: Failed to save"), any(IOException.class));
 
-        assertEquals(result,FALSE);
+        assertEquals(result, FALSE);
     }
 
     @Test
     public void testProcessNull() throws IOException {
-        String contentString = null;
-        MetaExpression content = mock(MetaExpression.class);
+
+        MetaExpression content = NULL;
 
         // Uri
-        MetaExpression uri = mock(MetaExpression.class);
+        MetaExpression uri = fromValue("uri");
 
         // Context
         RobotID robotID = mock(RobotID.class);
         ConstructContext context = mock(ConstructContext.class);
-        when(context.getRobotID()).thenReturn(robotID);
-        when(content.isNull()).thenReturn(true);
 
         // File
         File file = mock(File.class);
@@ -103,12 +101,8 @@ public class SaveConstructTest extends TestUtils {
 
         // Verify
         verify(fileUtils, times(1)).saveStringToFile(null, file);
-        verify(content,never()).getStringValue();
-        verify(content,times(1)).isNull();
-
 
         // Assert
         assertEquals(result.getStringValue(), file.getAbsolutePath());
     }
-
 }
