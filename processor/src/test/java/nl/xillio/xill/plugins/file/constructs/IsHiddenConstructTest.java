@@ -1,6 +1,5 @@
 package nl.xillio.xill.plugins.file.constructs;
 
-import junit.framework.Assert;
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ConstructContext;
@@ -14,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import static org.mockito.Mockito.*;
+import static org.testng.AssertJUnit.assertTrue;
 
 /**
  * Tests the IsHidden construct.
@@ -44,12 +44,12 @@ public class IsHiddenConstructTest extends TestUtils {
         setFileResolverReturnValue(new File(""));
 
         when(metaExpression.getStringValue()).thenReturn("");
-        when(fileUtilities.isHidden(any())).thenReturn(true);
+        when(fileUtilities.isHidden(any(File.class))).thenReturn(true);
 
         MetaExpression result = IsHiddenConstruct.process(constructContext, fileUtilities, metaExpression);
 
-        Assert.assertTrue(result.getBooleanValue());
-        verify(fileUtilities, times(1)).isHidden(any());
+        assertTrue(result.getBooleanValue());
+        verify(fileUtilities, times(1)).isHidden(any(File.class));
     }
 
     @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "File not found, or not accessible")

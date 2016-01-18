@@ -13,6 +13,8 @@ subprojects {
     }
 
     dependencies {
+        compile project(':api')
+
         testCompile project(':testutils')
         testCompile project(':processor')
     }

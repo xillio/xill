@@ -9,6 +9,12 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
+dependencies {
+    testCompile 'org.testng:testng:6.9.10'
+    testCompile 'org.mockito:mockito-all:1.10.19'
+}
+
+
 test {
     exclude "test/integration/**"
 
