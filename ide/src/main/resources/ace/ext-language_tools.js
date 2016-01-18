@@ -1710,10 +1710,9 @@ exports.FilteredList = FilteredList;
 ace.define("ace/autocomplete/text_completer",["require","exports","module","ace/range"], function(require, exports, module) {
     var Range = require("../range").Range;
     
-    var splitRegex = /[^a-zA-Z_0-9\$\-\u00C0-\u1FFF\u2C00-\uD7FF\w]+/;
-    var numberRegex = /^[0-9]*$/;
+    const splitRegex = /[^a-zA-Z_0-9\$\-\u00C0-\u1FFF\u2C00-\uD7FF\w]+/;
 
-    function notANumber(value){return !value.match(numberRegex);
+    function notANumber(value){return !value.match(/^[0-9]*$/);
             }
     function getWordIndex(doc, pos) {
         var textBefore = doc.getTextRange(Range.fromPoints({row: 0, column:0}, pos));
