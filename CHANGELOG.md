@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file
 
 ##[3.0.RC3]
+###Added
+- Decode.fromPercent construct
+
 ###Fixed
 
 
@@ -57,6 +60,7 @@ All notable changes to this project will be documented in this file
 - Deep recursive functions could throw a stackoverflow exception in the backend [CTC-1243](https://xillio.atlassian.net/browse/CTC-1243)
 - IllegalArgumentException when fetching binary from database [CTC-1217](https://xillio.atlassian.net/browse/CTC-1217)
 - New robot file does not replace existing robot [CTC-1261](https://xillio.atlassian.net/browse/CTC-1261)
+- Major performance issue comparison operators with an empty string [CTC-1287](https://xillio.atlassian.net/browse/CTC-1287)
 
 ## [3.0.23] - 11-12-2015
 ### Stories done
