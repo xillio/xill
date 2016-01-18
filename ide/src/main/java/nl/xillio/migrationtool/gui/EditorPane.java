@@ -266,6 +266,7 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
             this.getDocumentState().setValue(DocumentState.SAVED);
         } else {
             this.getDocumentState().setValue(DocumentState.CHANGED);
+            this.tab.resetAutoSave();
         }
     }
 
