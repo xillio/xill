@@ -73,34 +73,16 @@ public class HelpPane extends AnchorPane {
             helpSearchBar.setSearcher(init.getSearcher());
         });
 
+        // Add an event listener to <a> tags to load external urls in a browser
         webFunctionDoc.getEngine().getLoadWorker().stateProperty().addListener((observable, o, n) -> {
-            // Add an event listener to <a> tags to load external urls in a browser
             if (Worker.State.SUCCEEDED.equals(n)) {
                 NodeList nodeList = webFunctionDoc.getEngine().getDocument().getElementsByTagName("a");
                 for (int i = 0; i < nodeList.getLength(); i++) {
                     org.w3c.dom.Node node = nodeList.item(i);
                     EventTarget eventTarget = (EventTarget) node;
-                    eventTarget.addEventListener("click", new EventListener() {
-                        @Override
-                        public void handleEvent(Event evt) {
-                            EventTarget target = evt.getCurrentTarget();
-                            HTMLAnchorElement anchorElement = (HTMLAnchorElement) target;
-                            String href = anchorElement.getHref();
-                            try {
-                                URI u = new URI(href);
-                                if (u.getHost() != null) {
-                                    if (Desktop.isDesktopSupported()) {
-                                        evt.preventDefault();
-                                        Desktop.getDesktop().browse(u);
-                                    } else {
-                                        LOGGER.info("Could not open a browser, opening the page in the help pane.");
-                                    }
-                                }
-                            } catch (Exception e) {
-                                LOGGER.error("Could not load requested help file " + href, e);
-                            }
-                        }
-                    }, false);
+
+                    // Add the click event listener
+                    eventTarget.addEventListener("click", new urlClickEventListener(), false);
                 }
             }
         });
@@ -258,6 +240,34 @@ public class HelpPane extends AnchorPane {
          */
         private void touch(final File file) throws IOException {
             FileUtils.touch(file);
+        }
+    }
+
+    /**
+     * EventListener for handling clicks on <a>-elements
+     */
+    private class urlClickEventListener implements EventListener {
+        @Override
+        public void handleEvent(Event evt) {
+            EventTarget target = evt.getCurrentTarget();
+            HTMLAnchorElement anchorElement = (HTMLAnchorElement) target;
+            String href = anchorElement.getHref();
+            try {
+                URI requestedPage = new URI(href);
+
+                // Check if page is a local path or external resource
+                if (requestedPage.getHost() != null) {
+                    if (Desktop.isDesktopSupported()) {
+                        // Prevent default behaviour and open browser
+                        evt.preventDefault();
+                        Desktop.getDesktop().browse(requestedPage);
+                    } else {
+                        LOGGER.info("Could not open a browser (Desktop API is not supported)");
+                    }
+                }
+            } catch (Exception e) {
+                LOGGER.error("Could not load requested help file " + href, e);
+            }
         }
     }
 }
