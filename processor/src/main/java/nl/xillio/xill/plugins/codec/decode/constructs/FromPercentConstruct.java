@@ -12,6 +12,8 @@ import nl.xillio.xill.plugins.codec.decode.services.DecoderService;
 import java.io.UnsupportedEncodingException;
 
 /**
+ * Do URL decoding of the provided string.
+ *
  * @author Pieter Dirk Soels
  */
 public class FromPercentConstruct extends Construct {
