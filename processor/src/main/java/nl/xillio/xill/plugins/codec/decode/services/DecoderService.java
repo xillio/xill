@@ -5,7 +5,6 @@ import org.apache.commons.codec.DecoderException;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 /**
  * Interface defining behavior of decoding constructs.
@@ -35,9 +34,8 @@ public interface DecoderService {
      *
      * @param text input string
      * @return urlDecoded string
-     * @throws UnsupportedEncodingException If something goes wrong during the decoding
      */
-    String urlDecode(String text) throws UnsupportedEncodingException;
+    String urlDecode(String text);
 
     /**
      * Makes a file which represents the decoded version of a given base64-encoded file.
