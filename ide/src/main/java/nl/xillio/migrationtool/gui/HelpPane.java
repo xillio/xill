@@ -266,7 +266,7 @@ public class HelpPane extends AnchorPane {
                     }
                 }
             } catch (Exception e) {
-                LOGGER.error("Could not load requested help file " + href, e);
+                LOGGER.error("Could not load requested help file into browser (" + href + ")", e);
             }
         }
     }
