@@ -2,7 +2,7 @@ description = 'this project contains all UI logic for the Xill IDE application'
 
 dependencies {
     compile project(':api')
-    compile project(':docgen')
+    compile 'nl.xillio:docgen:3.0.23'
     compile 'org.elasticsearch:elasticsearch:1.6.0'
     compile 'org.jasypt:jasypt:1.9.1'
     compile 'nl.xillio.license:model:1.1.1'
