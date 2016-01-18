@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file
 ###Added
 - Decode.fromPercent construct
 
+###Changed
+- Links to external resources in help panel open in external web browser
+
 ###Fixed
 
 
