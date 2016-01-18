@@ -82,7 +82,7 @@ public class HelpPane extends AnchorPane {
                     EventTarget eventTarget = (EventTarget) node;
 
                     // Add the click event listener
-                    eventTarget.addEventListener("click", new urlClickEventListener(), false);
+                    eventTarget.addEventListener("click", new UrlClickEventListener(), false);
                 }
             }
         });
@@ -246,7 +246,7 @@ public class HelpPane extends AnchorPane {
     /**
      * EventListener for handling clicks on <a>-elements
      */
-    private class urlClickEventListener implements EventListener {
+    private class UrlClickEventListener implements EventListener {
         @Override
         public void handleEvent(Event evt) {
             EventTarget target = evt.getCurrentTarget();
