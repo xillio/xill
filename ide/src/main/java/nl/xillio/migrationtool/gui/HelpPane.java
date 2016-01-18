@@ -4,6 +4,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import javafx.application.Platform;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
@@ -17,11 +18,18 @@ import nl.xillio.xill.docgen.DocGenConfiguration;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.events.Event;
+import org.w3c.dom.events.EventListener;
+import org.w3c.dom.events.EventTarget;
+import org.w3c.dom.html.HTMLAnchorElement;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -65,9 +73,39 @@ public class HelpPane extends AnchorPane {
             helpSearchBar.setSearcher(init.getSearcher());
         });
 
+        webFunctionDoc.getEngine().getLoadWorker().stateProperty().addListener((observable, o, n) -> {
+            // Add an event listener to <a> tags to load external urls in a browser
+            if (Worker.State.SUCCEEDED.equals(n)) {
+                NodeList nodeList = webFunctionDoc.getEngine().getDocument().getElementsByTagName("a");
+                for (int i = 0; i < nodeList.getLength(); i++) {
+                    org.w3c.dom.Node node = nodeList.item(i);
+                    EventTarget eventTarget = (EventTarget) node;
+                    eventTarget.addEventListener("click", new EventListener() {
+                        @Override
+                        public void handleEvent(Event evt) {
+                            EventTarget target = evt.getCurrentTarget();
+                            HTMLAnchorElement anchorElement = (HTMLAnchorElement) target;
+                            String href = anchorElement.getHref();
+                            try {
+                                URI u = new URI(href);
+                                if (u.getHost() != null) {
+                                    if (Desktop.isDesktopSupported()) {
+                                        evt.preventDefault();
+                                        Desktop.getDesktop().browse(u);
+                                    } else {
+                                        LOGGER.info("Could not open a browser, opening the page in the help pane.");
+                                    }
+                                }
+                            } catch (Exception e) {
+                                LOGGER.error("Could not load requested help file " + href, e);
+                            }
+                        }
+                    }, false);
+                }
+            }
+        });
+
         // Fill the highlight settings with keywords and builtins
-
-
         webFunctionDoc.getEngine().documentProperty().addListener((observable, o, n) -> {
             // Set the highlight settings
             JSObject window = (JSObject) webFunctionDoc.getEngine().executeScript("window");
@@ -84,6 +122,8 @@ public class HelpPane extends AnchorPane {
             // Load the Ace editors if present
             webFunctionDoc.getEngine().executeScript("if (typeof loadEditors !== 'undefined') {loadEditors()}");
 
+            // Disable context menu
+            webFunctionDoc.setContextMenuEnabled(false);
         });
 
         heightProperty().addListener((observable, oldValue, newValue) -> helpSearchBar.handleHeightChange());
