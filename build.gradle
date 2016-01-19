@@ -6,7 +6,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'nl.xillio:gradle-config:1.2.0-SNAPSHOT'
+        classpath 'nl.xillio:gradle-config:1.2.0'
         classpath 'com.google.gradle:osdetector-gradle-plugin:1.4.0'
     }
 }
