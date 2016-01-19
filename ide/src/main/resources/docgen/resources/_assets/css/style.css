@@ -175,6 +175,6 @@ th {
 }
 
 /* ------ Package index ------ */
-.package li {
+#content li {
 	margin: 0.5em 0 0.5em 0;
 }
