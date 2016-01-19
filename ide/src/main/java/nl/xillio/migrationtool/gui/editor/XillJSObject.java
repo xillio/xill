@@ -35,7 +35,7 @@ public class XillJSObject {
                             item -> {
                                 int parPos = item.lastIndexOf("(");
                                 String caption = parPos > 0 ? item.substring(0, parPos) : item;
-                                query.call("callback", caption, item, 10, key);
+                                query.call("callback", caption, item, 1000, key);
                             }
                     )
             );
