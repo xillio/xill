@@ -286,8 +286,7 @@ public class XillDebugger implements Debugger {
     }
 
     private ScopeCheckResult checkScope(VariableDeclaration variableDeclaration, Instruction checkInstruction, int checkDepth) {
-        if (variableDeclaration.getHostInstruction() instanceof Robot ||
-                variableDeclaration.getHostInstruction() == checkInstruction.getHostInstruction()) {
+        if (variableDeclaration.getHostInstruction() == checkInstruction.getHostInstruction()) {
             return new ScopeCheckResult(checkDepth, variableDeclaration.hasValue(), variableDeclaration);
         }
 
