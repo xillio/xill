@@ -5,7 +5,6 @@ import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.debugging.ErrorBlockDebugger;
 import org.slf4j.Logger;
 
@@ -86,6 +85,10 @@ public class ErrorInstruction extends CompoundInstruction {
 
         if (result.hasValue()) {
             result.get().allowDisposal();
+        }
+
+        if (errorBlockDebugger.hasError()) {
+            return InstructionFlow.doResume();
         }
 
         return result;
