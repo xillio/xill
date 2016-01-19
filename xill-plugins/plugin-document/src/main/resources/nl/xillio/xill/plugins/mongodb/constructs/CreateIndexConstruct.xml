@@ -9,10 +9,10 @@ The options are all optional. The options that can be specified are:
 
 | Option name          | Description |
 | -------------------- | ----------- |
-| `background`         | Whether the index should be built in the background, thus not blocking other database activities. The default value is false. |
-| `unique`             | Creates a unique index so that the collection will not accept insertion of documents where the index key(s) match an existing value in the index. The default value is false. |
+| `background`         | Whether the index should be built in the background, thus not blocking other database activities. The default value is `false`. |
+| `unique`             | Creates a unique index so that the collection will not accept insertion of documents where the index key(s) match an existing value in the index. The default value is `false`. |
 | `name`               | The name of the index. If unspecified, MongoDB generates an index name. |
-| `sparse`             | If true, the index only references documents with the specified field. These indexes use less space but behave differently in some situations. The default value is false. |
+| `sparse`             | If `true`, the index only references documents with the specified field. These indexes use less space but behave differently in some situations. The default value is `false`. |
 | `expireAfterSeconds` | Specifies a value, in seconds, as a time-to-live to control how long documents are retained in the collection. This applies only to TTL indexes. |
 | `v`                  | The index version number. A different index version should only be specified in unusual situations. |
 | `storageEngine`      | Specifies a configuration to the storage engine for this index. This should be an object in the following form: { storage-engine-name: options }. |

@@ -2,7 +2,7 @@
 <function>
     <description>
 Finds the distinct values for a specified field across a single collection.
-If `query` is null or not specified it will match all documents, otherwise it will only retrieve the distinct values from documents which match `query`.
+If `query` is `null` or not specified it will match all documents, otherwise it will only retrieve the distinct values from documents which match `query`.
     </description>
     <examples>
         <example title="Usage">

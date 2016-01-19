@@ -3,7 +3,7 @@
     <description>
 Finds a single document using the specified `query` and `options` and deletes it. Also returns the document that was deleted.
 If multiple documents match the query, the first document in the result will be deleted.
-If no documents match the `query` it will return null.
+If no documents match the `query` it will return `null`.
 
 The `options` parameter may contain the following options:
 
@@ -15,7 +15,7 @@ The `options` parameter may contain the following options:
     </description>
     <examples>
         <example>
-            <header>Delete the newest document from the `documents` collection</header>
+            <header>Delete the newest document from the documents collection</header>
             <code>
                 use Mongo;
                 use System;

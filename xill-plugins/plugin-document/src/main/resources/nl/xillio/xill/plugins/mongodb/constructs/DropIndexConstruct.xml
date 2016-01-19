@@ -5,7 +5,7 @@ Removes the specified index from a collection. For the `index` you can either us
     </description>
     <examples>
         <example title="Usage">
-            <header>Drop the index `old` from the `assets` collection</header>
+            <header>Drop the index old from the assets collection</header>
             <code>
                 use Mongo;
                 Mongo.connect("udm_default");

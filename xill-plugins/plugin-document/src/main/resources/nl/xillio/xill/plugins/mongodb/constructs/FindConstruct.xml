@@ -7,7 +7,7 @@ Using the `projection` parameter you can select fields to include or exclude. By
     </description>
     <examples>
         <example title="Usage">
-            <header>Iterate over all documents which have the contenttype page.</header>
+            <header>Iterate over all documents which have the contenttype "page".</header>
             <code>
                 use Mongo;
                 use System;

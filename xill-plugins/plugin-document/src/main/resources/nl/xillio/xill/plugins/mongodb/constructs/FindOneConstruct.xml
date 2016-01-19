@@ -3,11 +3,11 @@
     <description>
 Finds a single document that matches the specified `query`.
 If multiple documents match the query, the first document in the result will be returned.
-If no documents match the `query` it will return null.
+If no documents match the `query` it will return `null`.
     </description>
     <examples>
         <example title="Usage">
-            <header>Get the first document in the `documents` collection</header>
+            <header>Get the first document in the documents collection</header>
             <code>
                 use Mongo;
                 use System;

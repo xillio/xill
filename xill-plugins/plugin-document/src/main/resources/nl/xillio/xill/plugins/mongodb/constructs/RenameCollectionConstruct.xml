@@ -2,8 +2,8 @@
 <function>
     <description>
 Renames an existing collection.
-A robot exception will be generated if you provide a `target` that is the name of an existing collection and `dropTarget` is false, or if `collection` is the name of a collection that doesn't exist.
-If `dropTarget` is true, mongod drops the target collection prior to renaming the collection.
+A robot exception will be generated if you provide a `target` that is the name of an existing collection and `dropTarget` is `false`, or if `collection` is the name of a collection that doesn't exist.
+If `dropTarget` is `true`, mongod drops the target collection prior to renaming the collection.
     </description>
     <examples>
         <example title="Usage">

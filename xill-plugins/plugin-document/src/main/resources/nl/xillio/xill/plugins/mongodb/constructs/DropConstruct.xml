@@ -2,11 +2,11 @@
 <function>
     <description>
 Removes a collection from the database. This also removes any indexes associated with the dropped collection.
-Returns true if the collection was successfully dropped, or false otherwise.
+Returns `true` if the collection was successfully dropped, or `false` otherwise.
     </description>
     <examples>
         <example title="Usage">
-            <header>Drop the collection `assets`</header>
+            <header>Drop the assets collection</header>
             <code>
                 use Mongo;
                 Mongo.connect("udm_default");

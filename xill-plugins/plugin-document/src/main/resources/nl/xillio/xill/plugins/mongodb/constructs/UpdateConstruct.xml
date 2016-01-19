@@ -9,7 +9,7 @@ The `options` parameter may contain the following option:
 
 | Option   | Description |
 | -------- | ----------- |
-| `upsert` | If set to true, creates a new document if no document matches the query, or if documents match the query, performs an update. To avoid multiple upserts, ensure that the query fields are uniquely indexed. The default is false. |
+| `upsert` | If set to `true`, creates a new document if no document matches the query, or if documents match the query, performs an update. To avoid multiple upserts, ensure that the query fields are uniquely indexed. The default is `false`. |
     </description>
     <examples>
         <example title="Usage">
@@ -25,7 +25,7 @@ The `options` parameter may contain the following option:
 
                 var result = Mongo.update("assets", {}, update);
 
-                System.print ("Updated " :: result :: " documents.");
+                System.print("Updated " :: result :: " documents.");
             </code>
         </example>
     </examples>

@@ -5,7 +5,7 @@ Removes all indexes from a collection.
     </description>
     <examples>
         <example title="Usage">
-            <header>Drop all indexes from the `assets` collection</header>
+            <header>Drop all indexes from the assets collection</header>
             <code>
                 use Mongo;
                 Mongo.connect("udm_default");

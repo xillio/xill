@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Count the amount of documents that match a query.
+Count the amount of documents that match the `query`.
     </description>
     <examples>
         <example title="Usage">
-            <header>Count how many documents content type `page` has</header>
+            <header>Count how many documents content type "page" has</header>
             <code>
                 use Mongo;
                 use System;
