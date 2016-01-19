@@ -55,11 +55,11 @@ public class Assign implements Processable {
         double indexD = indexVal.getNumberValue().doubleValue();
         indexVal.releaseReference();
 
-        if (!Double.isFinite(indexD)) {
-            throw new RobotRuntimeException("A list cannot have infinite elements.");
-        }
         if (Double.isNaN(indexD)) {
             throw new RobotRuntimeException("A list cannot have named elements.");
+        }
+        if (!Double.isFinite(indexD)) {
+            throw new RobotRuntimeException("A list cannot have infinite elements.");
         }
         if (path.size() - 1 == pathID) {
             // This is the value to write to
