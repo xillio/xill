@@ -25,6 +25,7 @@ import nl.xillio.migrationtool.dialogs.SettingsDialog;
 import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.api.Xill;
+import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.util.HotkeysHandler;
 import nl.xillio.xill.util.HotkeysHandler.Hotkeys;
 import nl.xillio.xill.util.settings.Settings;
@@ -337,24 +338,18 @@ public class FXController implements Initializable, EventHandler<Event> {
                 chosen = new File(chosen.getPath() + xillExt);
             }
 
-            RobotTab tab;
             try {
-                if (!chosen.exists()) {
-                    chosen.createNewFile();
-                }
+                // Overwrite existing file with an empty string and reset tab.
+                FileUtils.write(chosen, "", false);
 
-                tab = new RobotTab(projectfile.getAbsoluteFile(), chosen, this);
-                tpnBots.getTabs().add(tab);
-                tab.requestFocus();
+                RobotID id = RobotID.getInstance(chosen, projectfile);
+
+                viewOrOpenRobot(id);
+
             } catch (IOException e) {
                 LOGGER.error("Failed to perform operation: " + e.getMessage(), e);
             }
         } else {
-            // The created file is not in the project
-
-            // Delete the created robot since it is not in a project
-            chosen.getAbsoluteFile().delete();
-
             // Inform the user about the file being created outside of a project
             Alert projectPathErrorAlert = new Alert(AlertType.ERROR);
             projectPathErrorAlert.initModality(Modality.APPLICATION_MODAL);
@@ -364,6 +359,48 @@ public class FXController implements Initializable, EventHandler<Event> {
             projectPathErrorAlert.show();
         }
         // End fix for files being created out of projects
+    }
+
+    /**
+     * Switch focus to an existing tab for a certain robot or create it.
+     *
+     * @param robotID the robot that should be viewed
+     */
+    private void viewOrOpenRobot(RobotID robotID) {
+        RobotTab tab = tpnBots.getTabs().stream()
+                .map(bot -> (RobotTab) bot)
+                .filter(robotTab -> robotTab.getProcessor().getRobotID().equals(robotID))
+                .map(this::reloadTab)
+                .findAny()
+                .orElseGet(() -> createTab(robotID.getPath(), robotID.getProjectPath()));
+
+        if (tab != null) {
+            tab.requestFocus();
+        }
+
+    }
+
+    /**
+     * Try to make a tab and add it to the view.
+     *
+     * @param robotFile     the file that should be visible in the tab
+     * @param projectFolder the project folder for the robot
+     * @return the tab or null if it could not be created
+     */
+    private RobotTab createTab(File robotFile, File projectFolder) {
+        try {
+            RobotTab robotTab = new RobotTab(projectFolder, robotFile, this);
+            tpnBots.getTabs().add(robotTab);
+            return robotTab;
+        } catch (IOException e) {
+            LOGGER.error("Could not create robot tab", e);
+            return null;
+        }
+    }
+
+    private RobotTab reloadTab(RobotTab robotTab) {
+        robotTab.reload();
+        return robotTab;
     }
 
     @FXML

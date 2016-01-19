@@ -1,37 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-This field should contain a description on what the construct does an what it generally returns.  
-More information can be provided in the examples.
+Saves the `content` to a file specified by `uri`.  
+
+It returns the absolute path of the affected file if the file was created, otherwise false.  
+If the file already exists, it's always overwritten.  
+
+*Remark:* The `content` can be of any variable type. This function always gets string value of provided variable as a content that is saved into the file.  
     </description>
     <examples>
         <example title="Usage">
-            <header>This is a header in the example</header>
+            <header>Save the text of the webpage to a file.</header>
             <code>
-                use System;
-                System.print("Because this is in a code tag it will be inside a code editor");
-                if(true) {
-                System.print("Indentation is preserved...");
-                }
+use File;
+use Web;
+
+var uri = "c:/tmp/test.txt";
+var page = Web.loadPage("http://www.xillio.com");
+
+File.save(uri, Web.getText(page));            
             </code>
-            <header>Some more information</header>
-            <p>
-                You can simply add some tags here to add more information to the page
-            </p>
         </example>
     </examples>
     <references>
-        <!-- Reference a construct inside this package -->
-        <reference>otherConstruct</reference>
-        <!-- Reference a construct in another package -->
-        <reference>Other.construct</reference>
+        <reference>delete</reference>
+        <reference>exists</reference>
+        <reference>copy</reference>
     </references>
-    <!--
-        These tags will be used by the search system.
-        Whenever a user types a word from this list
-        it will be added to the results
-    -->
     <tags>
-        write, text, new, create, append, add
+        save, write, text, content, file
     </tags>
 </function>
