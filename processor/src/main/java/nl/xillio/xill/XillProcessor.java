@@ -219,7 +219,7 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
             // In rare cases xText throws an exception. That means we have no information except the robot with which it happened.
             LOGGER.error("Exception during validation.", e);
             return Collections.singletonList(new Issue("An unexpected exception occurred during compilation." +
-                    "\nThis can be caused by two reserved keywords incorrectly following each other somewhere in this robot.", 1, Issue.Type.ERROR, robotID));
+                    "\nThis can be caused by two reserved keywords incorrectly following each other somewhere in this robot.", -1, Issue.Type.ERROR, robotID));
         }
     }
 
