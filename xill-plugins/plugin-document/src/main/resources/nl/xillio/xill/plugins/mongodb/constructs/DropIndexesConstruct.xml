@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Provides a wrapper around the MongoDB [db.collection.dropIndexes](https://docs.mongodb.org/v3.0/reference/method/db.collection.dropIndexes/#db.collection.dropIndexes) method.
+Removes all indexes from a collection.
     </description>
     <examples>
         <example title="Usage">
-            <header>Drop all indexes on the `assets` collection</header>
+            <header>Drop all indexes from the `assets` collection</header>
             <code>
                 use Mongo;
                 Mongo.connect("udm_default");

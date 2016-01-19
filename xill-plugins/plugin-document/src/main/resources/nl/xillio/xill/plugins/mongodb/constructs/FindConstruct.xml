@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Provides a wrapper around the MongoDB [db.collection.find](https://docs.mongodb.org/v3.0/reference/method/db.collection.find/#db.collection.find) method.
+Selects all documents in a collection and returns an iterator with the selected documents.
+If `query` is not empty it will only select documents that match the query.
+Using the `projection` parameter you can select fields to include or exclude. By default all fields are included.
     </description>
     <examples>
         <example title="Usage">
-            <header>Iterate over all documents</header>
-            <code>
-                use Mongo;
-                use System;
-                Mongo.connect("udm_default");
-
-                var documents = Mongo.find("documents");
-
-                foreach(document in documents) {
-                    System.print(document._id);
-                }
-            </code>
-            <header>Iterate over documents by filter</header>
+            <header>Iterate over all documents which have the contenttype page.</header>
             <code>
                 use Mongo;
                 use System;
@@ -41,15 +31,32 @@ Provides a wrapper around the MongoDB [db.collection.find](https://docs.mongodb.
                 Mongo.connect("udm_default");
 
                 var documents = Mongo.find(
-                "documents", {}, {},
-                {
-                    // Positive for ascending order, negative for descending order.
-                    "_id": 1
-                }
+                    "documents", {}, {},
+                    {
+                        // Positive for ascending order, negative for descending order.
+                        "_id": 1
+                    }
                 );
 
                 foreach(document in documents) {
-                System.print(document._id);
+                    System.print(document._id);
+                }
+            </code>
+            <header>Iterate over all documents, excluding the contenttype field</header>
+            <code>
+                use Mongo;
+                use System;
+                Mongo.connect("udm_default");
+
+                var documents = Mongo.find(
+                    "documents", {},
+                    {
+                        "contenttype": false
+                    }
+                );
+
+                foreach(document in documents) {
+                    System.print(document._id);
                 }
             </code>
         </example>

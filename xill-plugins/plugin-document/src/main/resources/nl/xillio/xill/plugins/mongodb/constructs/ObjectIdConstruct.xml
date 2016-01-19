@@ -1,48 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-        Creates a Mongo ObjectId based on a 24 character hexadecimal string. This ObjectId can then be used to identify
-        Mongo documents.
+Creates a Mongo ObjectId based on a 24 character hexadecimal string. This ObjectId can then be used to identify Mongo documents.
     </description>
     <examples>
         <example title="Usage">
-            <header>Find a document with a known objectId.</header>
+            <header>Find a document with a known objectId</header>
             <code>
                 use Mongo;
                 use System;
                 Mongo.connect("udm_default");
 
-                var documents = Mongo.find("asset", {"_id": Mongo.objectId("567a73d9cfa9040e40700949")});
+                var id = { "_id": Mongo.objectId("567a73d9cfa9040e40700949") };
+                var document = Mongo.findOne("assets", id);
 
-                foreach(document in documents) {
-                    System.print(document.name);
-                }
-            </code>
-        </example>
-        <example title="Usage">
-            <header>Update a document with a known objectId.</header>
-            <code>
-                use Mongo;
-                use System;
-                Mongo.connect("udm_default");
-
-                var result = Mongo.update(
-                    "asset",
-                    {"_id": Mongo.objectId("567a73d9cfa9040e40700949")},
-                    { "$set" :
-                        {"metaData.meta2":"seasonal greetings"}
-                    },
-                    {"upsert":false}
-                );
-
-                System.print ("Updated " :: result :: " documents.");
+                System.print(document.name);
             </code>
         </example>
     </examples>
     <references>
         <reference>connect</reference>
-        <reference>find</reference>
-        <reference>update</reference>
+        <reference>findOne</reference>
     </references>
     <tags>
         mongodb, query, search, fields, filter

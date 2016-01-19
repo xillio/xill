@@ -1,22 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Provides a wrapper around the MongoDB [db.collection.count](https://docs.mongodb.org/v3.0/reference/method/db.collection.count/#db.collection.count) method.
+Count the amount of documents that match a query.
     </description>
     <examples>
         <example title="Usage">
-            <header>Count how many documents have content type `page`</header>
+            <header>Count how many documents content type `page` has</header>
             <code>
                 use Mongo;
                 use System;
                 Mongo.connect("udm_default");
 
-                var count = Mongo.count(
-                    "documents",
-                    {
-                        "contenttype": "page"
-                    }
-                );
+                var query = { "contenttype": "page" };
+                var count = Mongo.count("documents", query);
 
                 System.print("count: " :: count);
             </code>
