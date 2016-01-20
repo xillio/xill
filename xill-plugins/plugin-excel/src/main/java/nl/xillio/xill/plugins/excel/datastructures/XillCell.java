@@ -106,13 +106,13 @@ public class XillCell {
      */
     public void setCellValue(String value, boolean isFormula) {
         if (value.startsWith("=")) {
-            setCellValueEqualSign(value, isFormula);
+            trySetCellFormula(value, isFormula);
         } else {
             cell.setCellValue(value);
         }
     }
 
-    private void setCellValueEqualSign(String value, boolean isFormula) {
+    private void trySetCellFormula(String value, boolean isFormula) {
         if (isFormula) {
             try {
                 cell.setCellFormula(value.substring(1));
