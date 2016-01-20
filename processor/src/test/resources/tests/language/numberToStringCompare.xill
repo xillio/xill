@@ -1,0 +1,17 @@
+use System, Assert;
+
+Assert.equal(3, 3.0);
+Assert.equal(5, "5");
+Assert.equal(4.0, "004");
+Assert.equal(0.1, ".1");
+Assert.equal("10", "1.0E+1");
+Assert.equal(0.01, "1.0E-2");
+Assert.equal(true, "true");
+Assert.equal(false, "false");
+Assert.equal("ATOMIC", ATOMIC);
+
+Assert.notEqual(null, "null");
+Assert.notEqual("nope ", "nope");
+Assert.notEqual(3,4);
+Assert.notEqual(3.00000001, 3);
+Assert.notEqual("", "-");

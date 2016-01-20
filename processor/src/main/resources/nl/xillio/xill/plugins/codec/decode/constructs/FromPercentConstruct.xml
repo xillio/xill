@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Returns the URL-decoded (percent-decoded) version of an encoded string. Essential for converting URL’s back with GET variables in them.
+    </description>
+    <examples>
+        <example title="Usage">
+            <code>
+                use System;
+                use Decode;
+
+                System.print(Decode.fromPercent("Together%2C%20we%20spent%20%2450.95"));
+
+                // Result: Together, we spent $50.95
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>Encode.toPercent</reference>
+    </references>
+    <searchTags>
+        URL
+    </searchTags>
+</function>
