@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Provides a wrapper around the MongoDB [db.collection.drop](https://docs.mongodb.org/v3.0/reference/method/db.collection.drop/#db.collection.drop) method.
+Removes a collection from the database. This also removes any indexes associated with the dropped collection.
+Returns `true` if the collection was successfully dropped, or `false` otherwise.
     </description>
     <examples>
         <example title="Usage">
-            <header>Drop the collection `assets`</header>
+            <header>Drop the assets collection</header>
             <code>
                 use Mongo;
                 Mongo.connect("udm_default");
 
-                Mongo.dropIndexes("assets");
+                Mongo.drop("assets");
             </code>
         </example>
     </examples>

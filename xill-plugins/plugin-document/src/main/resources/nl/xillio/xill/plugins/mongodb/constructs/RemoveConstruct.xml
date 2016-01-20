@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Removes selected documents from a collection. Returns the number of deleted documents or 0 if none were deleted. A robot exception will be generated if the remove failed.
+Removes selected documents from a collection and returns the number of deleted documents.
     </description>
     <examples>
         <example title="Usage">
-            <header>Delete a document from collection asset</header>
+            <header>Delete all letters from the assets collection</header>
             <code>
                 use Mongo;
                 use System;
-
                 Mongo.connect("udm_default");
 
-                var result = Mongo.remove("asset", {"_id": Mongo.objectId("567a6f35cfa90423ac88865e")});
+                var query = { "contenttype": "letter" };
+                var result = Mongo.remove("assets", query);
 
-                System.print ("Deleted " :: result :: " document.");
+                System.print("Deleted " :: result :: " documents.");
             </code>
         </example>
     </examples>
