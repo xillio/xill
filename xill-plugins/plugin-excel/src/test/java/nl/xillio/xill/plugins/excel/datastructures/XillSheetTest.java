@@ -146,7 +146,7 @@ public class XillSheetTest {
         XillCell cell = mock(XillCell.class);
         doReturn(cell).when(testSheet).getCell(any(XillCellRef.class));
 
-        testSheet.setCellValue(cellRef, value);
+        testSheet.setCellValue(cellRef, value, false);
         testSheet.setCellValue(cellRef, 3d);
         testSheet.setCellValue(cellRef, false);
 
@@ -188,7 +188,7 @@ public class XillSheetTest {
 
         //Testing string signature
         when(cellRef.getColumn()).thenReturn(11);
-        sheet.setCellValue(cellRef, "string");
+        sheet.setCellValue(cellRef, "string", false);
         assertEquals(12, sheet.getColumnLength());
 
         //Testing double signature
