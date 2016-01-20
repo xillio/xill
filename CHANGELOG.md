@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file
 
 ###Fixed
 - Incorrect behavior of File.save() [CTC-1277](https://xillio.atlassian.net/browse/CTC-1277)
+- Variable stack should not show shadowed variables [CTC-1224](https://xillio.atlassian.net/browse/CTC-1224)
 
 ##[3.0.RC2]
 ###Fixed
