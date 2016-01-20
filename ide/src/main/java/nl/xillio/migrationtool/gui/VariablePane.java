@@ -19,6 +19,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -98,11 +99,20 @@ public class VariablePane extends AnchorPane implements RobotTabComponent, ListC
             return;
         }
 
-        getDebugger().getVariables(wrapper.getValue()).forEach(var -> {
-            String name = getDebugger().getVariableName(var);
+        HashMap<String, ObservableVariable> previousVars = new HashMap<>();
 
+        getDebugger().getVariables(wrapper.getValue()).forEach(var -> {
+
+            String name = getDebugger().getVariableName(var);
             MetaExpression value = getDebugger().getVariableValue(var, stackPane.getInstructionBox().getItems().size() - selected);
             ObservableVariable observable = new ObservableVariable(name, value, var);
+
+            // Delete shadowed variable for view
+            if (previousVars.containsKey(name)) {
+                observableStateList.remove(previousVars.get(name));
+            }
+
+            previousVars.put(name, observable);
             observableStateList.add(observable);
 
             // Re-select an item if it was selected before

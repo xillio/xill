@@ -5,7 +5,7 @@ dependencies {
     compile 'org.reflections:reflections:0.9.10'
 }
 
-task installAssertPlugin(type: Copy) {
+task installAssertPlugin(type: Sync) {
     dependsOn jar
     from configurations.runtime
     from jar

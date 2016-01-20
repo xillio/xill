@@ -32,8 +32,9 @@ public class SaveConstruct extends Construct {
 
     static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri, final MetaExpression content) {
         File file = getFile(context, uri.getStringValue());
+        String contentString = content.isNull() ? null : content.getStringValue();
         try {
-            fileUtils.saveStringToFile(content.getStringValue(), file);
+            fileUtils.saveStringToFile(contentString, file);
         } catch (IOException e) {
             context.getRootLogger().error("Failed to write to file: " + e.getMessage(), e);
             return FALSE;

@@ -35,7 +35,7 @@ public class ToPercentConstruct extends Construct {
 
     MetaExpression process(final MetaExpression string, final MetaExpression xWwwFormVar) {
         try {
-            return string.isNull() ? NULL : fromValue(encoderService.urlEncode(string.getStringValue(), xWwwFormVar.isNull() ? false : xWwwFormVar.getBooleanValue()));
+            return string.isNull() ? NULL : fromValue(encoderService.urlEncode(string.getStringValue(), !xWwwFormVar.isNull() && xWwwFormVar.getBooleanValue()));
         } catch (UnsupportedEncodingException e) {
             throw new RobotRuntimeException("Cannot URL encode the string", e);
         }

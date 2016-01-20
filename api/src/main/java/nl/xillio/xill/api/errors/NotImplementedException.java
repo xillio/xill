@@ -14,4 +14,8 @@ public class NotImplementedException extends RuntimeException {
     public NotImplementedException(final String message) {
         super(message);
     }
+
+    public NotImplementedException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
 }
