@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file
 ###Added
 - Decode.fromPercent construct
 - Add flag to support formulas in Excel.setCell()
+- A list of keywords to the top of the help section
 
 ###Changed
 - Links to external resources in help panel open in external web browser
