@@ -4,6 +4,7 @@ import me.biesaart.utils.FileUtils;
 import me.biesaart.utils.IOUtils;
 import nl.xillio.util.XillioHomeFolder;
 import nl.xillio.xill.api.data.MetadataExpression;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.web.WebXillPlugin;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
@@ -222,7 +223,11 @@ public class Options implements MetadataExpression {
      * @return newly created PhantomJS process
      */
     public WebDriver createDriver() {
-        return createPhantomJSDriver();
+        try {
+            return createPhantomJSDriver();
+        } catch (IllegalStateException e) {
+            throw new RobotRuntimeException("Could not create a PhantomJS driver, please check your PhantomJS installation. See the Web.loadPage() function help page for installation details.", e);
+        }
     }
 
     /**

@@ -1,20 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Provides a wrapper around the MongoDB [db.collection.dropIndex](https://docs.mongodb.org/v3.0/reference/method/db.collection.dropIndex/#db.collection.dropIndex) method.
+Removes the specified index from a collection. For the `index` you can either use the name of the index or the index specification.
     </description>
     <examples>
         <example title="Usage">
-            <header>Drop an index by name</header>
+            <header>Drop the index old from the assets collection</header>
             <code>
                 use Mongo;
                 Mongo.connect("udm_default");
-
-                var keys = {
-                "metaData.meta2": 1
+				
+                Mongo.dropIndex("assets", "old");
+            </code>
+			<header>Drop an index by index specification</header>
+            <code>
+                use Mongo;
+                Mongo.connect("udm_default");
+				
+                var index = {
+                    "metaData.meta2": 1
                 };
-
-                Mongo.dropIndex("assets", keys);
+                Mongo.dropIndex("assets", index);
             </code>
         </example>
     </examples>

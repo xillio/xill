@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Renames an existing collection. Returns `NULL`. A robot exception will be generated if you provide a `target` that is the name of an existing collection and `dropTarget` is `false`, or if `collection` is the name of a collection that doesn't exist.
-The `dropTarget` parameter may contain the following value:
-
-| Option     | Description |
-| ---------- | ----------- |
-| `dropTarget` | If `true`, mongod drops the target collection prior to renaming the collection. The default value is `false`.
+Renames an existing collection.
+A robot exception will be generated if you provide a `target` that is the name of an existing collection and `dropTarget` is `false`, or if `collection` is the name of a collection that doesn't exist.
+If `dropTarget` is `true`, mongod drops the target collection prior to renaming the collection.
     </description>
     <examples>
         <example title="Usage">
-            <header>Rename collection asset to assets</header>
+            <header>Rename the "asset" collection to "assets"</header>
             <code>
                 use Mongo;
                 use System;
-
                 Mongo.connect("udm_default");
 
-                var result = Mongo.renameCollection("asset", "assets", true);
+                Mongo.renameCollection("asset", "assets", true);
             </code>
         </example>
     </examples>
