@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file
 ###Changed
 - Links to external resources in help panel open in external web browser
 - Error message for non-windows system using PhantomJS [CTC-714](https://xillio.atlassian.net/browse/CTC-714)
+- Improved error message when trying to add key:value pair to list [CTC-1226](https://xillio.atlassian.net/browse/CTC-1226)
 
 ###Fixed
 - Incorrect behavior of File.save() [CTC-1277](https://xillio.atlassian.net/browse/CTC-1277)
