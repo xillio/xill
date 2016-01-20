@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Provides a wrapper around the MongoDB [db.collection.aggregate](https://docs.mongodb.org/v3.0/reference/method/db.collection.aggregate/#db.collection.aggregate) method.
+Calculates aggregate values for data in a collection.
+The `pipeline` is a list of data aggregation operations or stages.
     </description>
     <examples>
         <example title="Usage">
@@ -11,19 +12,18 @@ Provides a wrapper around the MongoDB [db.collection.aggregate](https://docs.mon
                 use System;
                 Mongo.connect("udm_default");
 
-                var contentTypes = Mongo.aggregate(
-                    "documents",
-                    [
-                        {
-                            "$group": {
-                                "_id": "$contenttype",
-                                "count": {
-                                    "$sum": 1
-                                }
+                var pipeline = [
+                    {
+                        "$group": {
+                            "_id": "$contenttype",
+                            "count": {
+                                "$sum": 1
                             }
                         }
-                    ]
-                );
+                    }
+                ];
+
+                var contentTypes = Mongo.aggregate("documents", pipeline);
 
                 foreach(result in contentTypes) {
                     System.print(result._id :: ": " :: result.count);
