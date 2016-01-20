@@ -159,9 +159,10 @@ public class XillSheet implements MetadataExpression {
      *
      * @param cellRef reference to the cell which should be changed
      * @param value   string value (could be formula) which should be put in the cell
+     * @param isFormula true if the value is treated as formula, otherwise the value is stored as string
      */
-    public void setCellValue(XillCellRef cellRef, String value) {
-        getCell(cellRef).setCellValue(value);
+    public void setCellValue(XillCellRef cellRef, String value, boolean isFormula) {
+        getCell(cellRef).setCellValue(value, isFormula);
         calculateRowAndColumnLength(cellRef);
     }
 

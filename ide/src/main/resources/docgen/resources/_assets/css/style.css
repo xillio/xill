@@ -95,6 +95,12 @@ pre {
 	overflow-x: auto;
 }
 
+a[href^="http://"]:after,
+a[href^="https://"]:after {
+    content: url(../ide/src/main/resources/icons/link.png);
+    margin: 0 0 0 5px;
+}
+
 /* ------ Table ------ */
 table {
 	border-radius: 8px;
@@ -169,6 +175,6 @@ th {
 }
 
 /* ------ Package index ------ */
-.package li {
+#content li {
 	margin: 0.5em 0 0.5em 0;
 }
