@@ -277,7 +277,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
      * @param type type of highlighting to be used( "error" or "highlight" )
      */
     public void highlightLine(final int line, final String type) {
-        callOnAce("highlight", line - 1, type);
+        callOnAce("highlight", (line > 0 ? line - 1 : 0), type);
     }
 
     /**
@@ -614,6 +614,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
     }
 
     private String toJavaScript(Issue issue) {
-        return String.format("{row:%d,column:0,text:\"%s\",type:\"%s\"}", issue.getLine() - 1, escape(issue.getMessage()), issue.getSeverity().toString().toLowerCase());
+        return String.format("{row:%d,column:0,text:\"%s\",type:\"%s\"}", (issue.getLine() > 0 ? issue.getLine() - 1 : 0),
+                escape(issue.getMessage()), issue.getSeverity().toString().toLowerCase());
     }
 }
