@@ -19,7 +19,7 @@ public class XillParsingException extends Exception {
      * @param robot   the robot that couldn't be parsed
      */
     public XillParsingException(final String message, final int line, final RobotID robot) {
-        super(message + " (line " + line + ")");
+        super(message + (line > 0 ? " (line " + line + ")" : "")); // Only show the line number if it is > 0.
         this.line = line;
         this.robot = robot;
     }

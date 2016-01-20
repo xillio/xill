@@ -17,6 +17,7 @@ import nl.xillio.xill.api.errors.XillParsingException;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.nodemodel.INode;
@@ -212,26 +213,32 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
     }
 
     private List<Issue> validate(final Resource resource, final RobotID robotID) {
+        try {
+            return doValidate(resource, robotID);
+        } catch (WrappedException e) {
+            // In rare cases xText throws an exception. That means we have no information except the robot with which it happened.
+            LOGGER.error("Exception during validation.", e);
+            return Collections.singletonList(new Issue("An unexpected exception occurred during compilation." +
+                    "\nThis can be caused by two reserved keywords incorrectly following each other somewhere in this robot.", -1, Issue.Type.ERROR, robotID));
+        }
+    }
 
+    private List<Issue> doValidate(final Resource resource, final RobotID robotID) {
         // Validate
         List<Issue> issues = validator.validate(resource, CheckMode.ALL, CancelIndicator.NullImpl).stream()
                 .map(issue -> {
                     IssueImpl impl = (IssueImpl) issue;
-
                     Issue.Type type = null;
 
                     switch (impl.getSeverity()) {
                         case ERROR:
                             type = Issue.Type.ERROR;
                             break;
-                        case IGNORE:
-                            type = Issue.Type.INFO;
-                            break;
-                        case INFO:
-                            type = Issue.Type.INFO;
-                            break;
                         case WARNING:
                             type = Issue.Type.WARNING;
+                            break;
+                        default:
+                            type = Issue.Type.INFO;
                             break;
                     }
 
@@ -243,9 +250,9 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
 
         // Check for the existence of the plugins
         for (EObject object : resource.getContents()) {
-            xill.lang.xill.Robot robot = (xill.lang.xill.Robot) object;
+            xill.lang.xill.Robot bot = (xill.lang.xill.Robot) object;
 
-            for (UseStatement useStatement : robot.getUses()) {
+            for (UseStatement useStatement : bot.getUses()) {
                 String name = getName(useStatement);
 
                 boolean found = pluginLoader.getPluginManager()
@@ -264,8 +271,8 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
         // Check for the existence of the constructs
         if (issues.isEmpty()) {
             for (EObject object : resource.getContents()) {
-                xill.lang.xill.Robot robot = (xill.lang.xill.Robot) object;
-                Issue issue = checkConstructs(robot.getInstructionSet(), robotID);
+                xill.lang.xill.Robot bot = (xill.lang.xill.Robot) object;
+                Issue issue = checkConstructs(bot.getInstructionSet(), robotID);
                 if (issue != null) {
                     issues.add(issue);
                 }
@@ -372,28 +379,20 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
         if (lastPeriod >= 0 && lastPeriod == column - prefix.length() - 1) {
             String tillColumn = currentLine.substring(0, lastPeriod);
 
-            // Test all plugins
-            for (XillPlugin xillPlugin : pluginLoader.getPluginManager().getPlugins()) {
+            pluginLoader.getPluginManager().getPlugins().stream()
+                    // Test if the plugin name is a match.
+                    .filter(xillPlugin ->tillColumn.endsWith(xillPlugin.getName()))
+                    .forEach(xillPlugin -> {
+                        // Test all constructs.
+                        List<String> constructs = xillPlugin.getConstructs().stream()
+                                .filter(construct -> prefix.isEmpty() || construct.getName().startsWith(prefix))
+                                .map(this::getSignature).collect(Collectors.toList());
 
-                // Test if the plugin name is a match
-                if (tillColumn.endsWith(xillPlugin.getName())) {
-                    List<String> constructs = new ArrayList<>();
-
-                    // Test all constructs
-                    for (Construct construct : xillPlugin.getConstructs()) {
-
-                        // Test if constructs are a match
-                        if (prefix.isEmpty() || construct.getName().startsWith(prefix)) {
-                            constructs.add(getSignature(construct));
+                        // If there are results put them in the map.
+                        if (!constructs.isEmpty()) {
+                            result.put(xillPlugin.getName(), constructs);
                         }
-                    }
-
-                    // If there are results put them in the map
-                    if (!constructs.isEmpty()) {
-                        result.put(xillPlugin.getName(), constructs);
-                    }
-                }
-            }
+                    });
         }
 
     }
