@@ -40,6 +40,7 @@ public class XillRow {
      * Creates a new cell at the same location (overwriting the old cell) if one already exists.
      *
      * @param columnNr the number of the column where the new cell should be located
+     * @param sheet    the {@link XillSheet} where the new cell should be located
      * @return the newly created {@link XillCell}
      * @throws IllegalArgumentException if columnIndex &lt; 0 or greater
      *                                  than the maximum number of supported columns (255 for *.xls, 1048576

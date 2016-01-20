@@ -68,10 +68,41 @@ public class SaveConstructTest extends TestUtils {
         doThrow(new IOException("Failed to save")).when(fileUtils).saveStringToFile(anyString(), any(File.class));
 
         // Run the Method
-        SaveConstruct.process(context, fileUtils, mock(MetaExpression.class), mock(MetaExpression.class));
+        MetaExpression result = SaveConstruct.process(context, fileUtils, mock(MetaExpression.class), mock(MetaExpression.class));
 
         // Verify
         verify(logger).error(eq("Failed to write to file: Failed to save"), any(IOException.class));
 
+        assertEquals(result, FALSE);
+    }
+
+    @Test
+    public void testProcessNull() throws IOException {
+
+        MetaExpression content = NULL;
+
+        // Uri
+        MetaExpression uri = fromValue("uri");
+
+        // Context
+        RobotID robotID = mock(RobotID.class);
+        ConstructContext context = mock(ConstructContext.class);
+
+        // File
+        File file = mock(File.class);
+        when(file.getAbsolutePath()).thenReturn("ABSPATH");
+        when(TestUtils.CONSTRUCT_FILE_RESOLVER.buildFile(any(), anyString())).thenReturn(file);
+
+        // FileUtilities
+        FileUtilities fileUtils = mock(FileUtilities.class);
+
+        // Run the Method
+        MetaExpression result = SaveConstruct.process(context, fileUtils, uri, content);
+
+        // Verify
+        verify(fileUtils, times(1)).saveStringToFile(null, file);
+
+        // Assert
+        assertEquals(result.getStringValue(), file.getAbsolutePath());
     }
 }

@@ -4,12 +4,13 @@ All notable changes to this project will be documented in this file
 ##[3.0.RC3]
 ###Added
 - Decode.fromPercent construct
+- Add flag to support formulas in Excel.setCell()
 
 ###Changed
 - Links to external resources in help panel open in external web browser
 
 ###Fixed
-
+- Incorrect behavior of File.save() [CTC-1277](https://xillio.atlassian.net/browse/CTC-1277)
 
 ##[3.0.RC2]
 ###Fixed
