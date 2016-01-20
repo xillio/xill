@@ -61,7 +61,7 @@ public class SetCellConstructTest {
     }
 
     /**
-     * Tests if {@link SetCellConstruct#setValue(XillSheet, XillCellRef, MetaExpression)} uses the numeric method
+     * Tests if {@link SetCellConstruct#setValue(XillSheet, XillCellRef, MetaExpression, MetaExpression)} uses the numeric method
      * when the input is numeric.
      */
     @Test
@@ -70,14 +70,14 @@ public class SetCellConstructTest {
         XillSheet sheet = mock(XillSheet.class);
         XillCellRef cellRef = mock(XillCellRef.class);
 
-        SetCellConstruct.setValue(sheet, cellRef, fromValue(3));
+        SetCellConstruct.setValue(sheet, cellRef, fromValue(3), fromValue(false));
 
         verify(sheet, times(1)).setCellValue(any(XillCellRef.class), captor.capture());
         assertEquals(captor.getValue(), 3d);
     }
 
     /**
-     * Tests if {@link SetCellConstruct#setValue(XillSheet, XillCellRef, MetaExpression)} uses the boolean method
+     * Tests if {@link SetCellConstruct#setValue(XillSheet, XillCellRef, MetaExpression, MetaExpression)} uses the boolean method
      * when the input is boolean
      */
     @Test
@@ -86,14 +86,14 @@ public class SetCellConstructTest {
         XillSheet sheet = mock(XillSheet.class);
         XillCellRef cellRef = mock(XillCellRef.class);
 
-        SetCellConstruct.setValue(sheet, cellRef, fromValue(true));
+        SetCellConstruct.setValue(sheet, cellRef, fromValue(true), fromValue(false));
 
         verify(sheet, times(1)).setCellValue(any(XillCellRef.class), captor.capture());
         assertTrue(captor.getValue());
     }
 
     /**
-     * Tests if {@link SetCellConstruct#setValue(XillSheet, XillCellRef, MetaExpression)} uses the String method when the input is
+     * Tests if {@link SetCellConstruct#setValue(XillSheet, XillCellRef, MetaExpression, MetaExpression)} uses the String method when the input is
      * a string value
      */
     @Test
@@ -102,9 +102,9 @@ public class SetCellConstructTest {
         XillSheet sheet = mock(XillSheet.class);
         XillCellRef cellRef = mock(XillCellRef.class);
 
-        SetCellConstruct.setValue(sheet, cellRef, fromValue("inputString"));
+        SetCellConstruct.setValue(sheet, cellRef, fromValue("inputString"), fromValue(false));
 
-        verify(sheet, times(1)).setCellValue(any(XillCellRef.class), captor.capture());
+        verify(sheet, times(1)).setCellValue(any(XillCellRef.class), captor.capture(), eq(false));
         assertEquals(captor.getValue(), "inputString");
     }
 
@@ -132,7 +132,7 @@ public class SetCellConstructTest {
     @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Expected parameter 'sheet' to be a result of loadSheet or createSheet")
     public void testProcessIncorrectSheet() throws Exception {
         MetaExpression sheetInput = fromValue("sheetinput");
-        SetCellConstruct.process(sheetInput, fromValue("A"), fromValue("B"), fromValue("value"));
+        SetCellConstruct.process(sheetInput, fromValue("A"), fromValue("B"), fromValue("value"), fromValue(false));
     }
 
     /**
@@ -147,7 +147,7 @@ public class SetCellConstructTest {
         sheetInput.storeMeta(sheet);
 
         when(sheet.isReadonly()).thenReturn(true);
-        SetCellConstruct.process(sheetInput, fromValue("A"), fromValue("B"), fromValue("value"));
+        SetCellConstruct.process(sheetInput, fromValue("A"), fromValue("B"), fromValue("value"), fromValue(false));
     }
 
     /**
@@ -159,7 +159,7 @@ public class SetCellConstructTest {
         XillSheet sheet = mock(XillSheet.class);
         when(sheet.isReadonly()).thenReturn(false);
         sheetInput.storeMeta(sheet);
-        SetCellConstruct.process(sheetInput, fromValue("AB"), fromValue("A"), fromValue("value"));
+        SetCellConstruct.process(sheetInput, fromValue("AB"), fromValue("A"), fromValue("value"), fromValue(false));
     }
 
     /**
@@ -173,7 +173,7 @@ public class SetCellConstructTest {
         XillSheet sheet = mock(XillSheet.class);
         when(sheet.isReadonly()).thenReturn(false);
         sheetInput.storeMeta(sheet);
-        SetCellConstruct.process(sheetInput, fromValue("AB2"), fromValue(3), fromValue("value"));
+        SetCellConstruct.process(sheetInput, fromValue("AB2"), fromValue(3), fromValue("value"), fromValue(false));
     }
 
     /**
@@ -186,7 +186,7 @@ public class SetCellConstructTest {
         XillSheet sheet = mock(XillSheet.class);
         when(sheet.isReadonly()).thenReturn(false);
         sheetInput.storeMeta(sheet);
-        assertTrue(SetCellConstruct.process(sheetInput, fromValue("AB"), fromValue(5), fromValue("value")).getBooleanValue());
+        assertTrue(SetCellConstruct.process(sheetInput, fromValue("AB"), fromValue(5), fromValue("value"), fromValue(false)).getBooleanValue());
     }
 
 }

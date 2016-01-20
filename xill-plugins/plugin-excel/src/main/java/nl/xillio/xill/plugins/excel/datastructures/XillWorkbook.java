@@ -22,7 +22,7 @@ import java.util.List;
  * @author Daan Knoope
  */
 public class XillWorkbook implements MetadataExpression {
-    protected Workbook workbook;
+    private Workbook workbook;
     private File file;
     private boolean readonly = false;
     private String location;
@@ -245,5 +245,13 @@ public class XillWorkbook implements MetadataExpression {
         return new XillWorkbookFactory();
     }
 
+    /**
+     * @return current workbook
+     *
+     * The method scope is intentionally set for package-private
+     */
+    Workbook getWorkbook() {
+        return workbook;
+    }
 }
 
