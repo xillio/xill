@@ -1,16 +1,17 @@
-package nl.xillio.xill.plugins.string.constructs;
+package nl.xillio.xill.plugins.codec.decode.constructs;
 
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
+import nl.xillio.xill.plugins.codec.decode.services.DecoderService;
+import nl.xillio.xill.plugins.codec.decode.services.DecoderServiceImpl;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
 
 /**
- * Test the {@link AmpersandDecodeConstruct}.
+ * Test the {@link FromAmpersandConstruct}.
  */
-public class AmpersandDecodeConstructTest {
+public class FromAmpersandConstructTest {
 
     /**
      * Test the process method under normal circumstances.
@@ -27,13 +28,14 @@ public class AmpersandDecodeConstructTest {
         when(passes.getNumberValue()).thenReturn(passesValue);
 
         String returnValue = "Money <> Health";
-        StringUtilityService stringUtils = mock(StringUtilityService.class);
-        when(stringUtils.unescapeXML(stringValue, passesValue)).thenReturn(returnValue);
+        DecoderService decoderService = mock(DecoderServiceImpl.class);
+        FromAmpersandConstruct construct = new FromAmpersandConstruct(decoderService);
+        when(decoderService.unescapeXML(stringValue, passesValue)).thenReturn(returnValue);
         // Run
-        MetaExpression result = AmpersandDecodeConstruct.process(string, passes, stringUtils);
+        MetaExpression result = construct.process(string, passes);
 
         // Verify
-        verify(stringUtils, times(1)).unescapeXML(stringValue, passesValue);
+        verify(decoderService, times(1)).unescapeXML(stringValue, passesValue);
 
         // Assert
         Assert.assertEquals(result.getStringValue(), returnValue);

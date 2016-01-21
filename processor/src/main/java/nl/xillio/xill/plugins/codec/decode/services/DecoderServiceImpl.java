@@ -7,6 +7,7 @@ import nl.xillio.xill.api.errors.NotImplementedException;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64OutputStream;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.*;
 import java.net.URLDecoder;
@@ -86,5 +87,13 @@ public class DecoderServiceImpl implements DecoderService {
             // Read and return the output stream
             return ioUtilsService.toString(pipedInputStream);
         }
+    }
+
+    @Override
+    public String unescapeXML(String text, final int passes) {
+        for (int i = 0; i < passes; i++) {
+            text = StringEscapeUtils.unescapeXml(text);
+        }
+        return text;
     }
 }

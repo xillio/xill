@@ -1,16 +1,18 @@
-package nl.xillio.xill.plugins.string.constructs;
+package nl.xillio.xill.plugins.codec.encode.constructs;
 
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
+import nl.xillio.xill.plugins.codec.decode.constructs.FromAmpersandConstruct;
+import nl.xillio.xill.plugins.codec.encode.services.EncoderService;
+import nl.xillio.xill.plugins.codec.encode.services.EncoderServiceImpl;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
 
 /**
- * Test the {@link AmpersandDecodeConstruct}.
+ * Test the {@link FromAmpersandConstruct}.
  */
-public class AmpersandEncodeConstructTest {
+public class ToAmpersandConstructTest {
 
     /**
      * Test the process method under normal circumstances.
@@ -23,13 +25,14 @@ public class AmpersandEncodeConstructTest {
         when(string.getStringValue()).thenReturn(stringValue);
 
         String returnValue = "&lt;p&gt;&lt;a href=&quot;default.asp&quot;&gt;HTML Tutorial&lt;/a&gt; This is a link to a page on this website.&lt;/p&gt";
-        StringUtilityService stringUtils = mock(StringUtilityService.class);
-        when(stringUtils.escapeXML(stringValue)).thenReturn(returnValue);
+        EncoderService encoderService = mock(EncoderServiceImpl.class);
+        ToAmpersandConstruct construct = new ToAmpersandConstruct(encoderService);
+        when(encoderService.escapeXML(stringValue)).thenReturn(returnValue);
         // Run
-        MetaExpression result = AmpersandEncodeConstruct.process(string, stringUtils);
+        MetaExpression result = construct.process(string);
 
         // Verify
-        verify(stringUtils, times(1)).escapeXML(stringValue);
+        verify(encoderService, times(1)).escapeXML(stringValue);
 
         // Assert
         Assert.assertEquals(result.getStringValue(), returnValue);
