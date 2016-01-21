@@ -984,7 +984,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
      * A custom tree cell which opens a robot tab on double-click and supports drag&drop.
      */
     private class CustomTreeCell extends TreeCell<Pair<File, String>> implements EventHandler<Event> {
-        private final String dragOverClass = "drag-over";
+        private static final String dragOverClass = "drag-over";
 
         public CustomTreeCell() {
             // Subscribe to drag events.

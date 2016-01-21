@@ -267,8 +267,6 @@ public class FXController implements Initializable, EventHandler<Event> {
         });
     }
 
-    @SuppressWarnings("squid:UnusedPrivateMethod ")
-    // Used in: LicenseUtils.getOnLicenseChange().add(this::checkLicenseNearExpiry);
     private void checkLicenseNearExpiry() {
         // Check if the licence is about to expire.
         long daysLeft = LicenseUtils.daysToExpiration();
@@ -321,7 +319,6 @@ public class FXController implements Initializable, EventHandler<Event> {
         return robotTab;
     }
 
-    @SuppressWarnings("squid:UnusedPrivateMethod") // Used in [...].map(this::reloadTab)
     private RobotTab reloadTab(RobotTab robotTab) {
         robotTab.reload();
         return robotTab;
@@ -485,7 +482,6 @@ public class FXController implements Initializable, EventHandler<Event> {
     }
 
     @FXML
-    @SuppressWarnings("squid:UnusedPrivateMethod") // Called by javafx.
     private void buttonNearExpiry() {
         buttonSettings();
         settingsDialog.selectLicenceTab();
