@@ -91,9 +91,10 @@ public class DecoderServiceImpl implements DecoderService {
 
     @Override
     public String unescapeXML(String text, final int passes) {
+        String result = text;
         for (int i = 0; i < passes; i++) {
-            text = StringEscapeUtils.unescapeXml(text);
+            result = StringEscapeUtils.unescapeXml(result);
         }
-        return text;
+        return result;
     }
 }
