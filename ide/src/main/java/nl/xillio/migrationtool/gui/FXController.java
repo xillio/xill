@@ -191,7 +191,7 @@ public class FXController implements Initializable, EventHandler<Event> {
             btnNewFile.setDisable(true);
             btnOpenFile.setDisable(true);
         }
-        if (getTabs().size() == 0) {
+        if (getTabs().isEmpty()) {
             disableSaveButtons(true);
         }
     }
@@ -267,6 +267,8 @@ public class FXController implements Initializable, EventHandler<Event> {
         });
     }
 
+    @SuppressWarnings("squid:UnusedPrivateMethod ")
+    // Used in: LicenseUtils.getOnLicenseChange().add(this::checkLicenseNearExpiry);
     private void checkLicenseNearExpiry() {
         // Check if the licence is about to expire.
         long daysLeft = LicenseUtils.daysToExpiration();
@@ -324,6 +326,7 @@ public class FXController implements Initializable, EventHandler<Event> {
         }
     }
 
+    @SuppressWarnings("squid:UnusedPrivateMethod") // Used in [...].map(this::reloadTab)
     private RobotTab reloadTab(RobotTab robotTab) {
         robotTab.reload();
         return robotTab;
@@ -468,26 +471,6 @@ public class FXController implements Initializable, EventHandler<Event> {
     }
 
     @FXML
-    private void buttonSearch() {
-    }
-
-    @FXML
-    private void buttonBrowser() {
-    }
-
-    @FXML
-    private void buttonRegexTester() {
-    }
-
-    @FXML
-    private void buttonPreviewOpenBrowser() {
-    }
-
-    @FXML
-    private void buttonPreviewOpenRegex() {
-    }
-
-    @FXML
     private void btnHideLeftPane() {
         settings.simple().save(Settings.LAYOUT, Settings.LeftPanelWidth, "" + spnMain.getDividerPositions()[0]);
         settings.simple().save(Settings.LAYOUT, Settings.LeftPanelCollapsed, "true");
@@ -513,6 +496,7 @@ public class FXController implements Initializable, EventHandler<Event> {
     }
 
     @FXML
+    @SuppressWarnings("squid:UnusedPrivateMethod") // Called by javafx.
     private void buttonNearExpiry() {
         buttonSettings();
         settingsDialog.selectLicenceTab();
@@ -526,7 +510,7 @@ public class FXController implements Initializable, EventHandler<Event> {
         settings.simple().save(Settings.WORKSPACE, Settings.OpenTabs, openTabs, true);
 
         // Save active tab
-        final String activeTab[] = {null};
+        final String[] activeTab = {null};
         getTabs().stream().filter(Tab::isSelected).forEach(tab -> activeTab[0] = tab.getDocument().getAbsolutePath());
         if (activeTab[0] != null) {
             settings.simple().save(Settings.WORKSPACE, Settings.ActiveTab, activeTab[0], true);
@@ -536,7 +520,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 
         // Check if there are tabs whose robots are running.
         List<RobotTab> running = getTabs().stream().filter(tab -> tab.getEditorPane().getControls().robotRunning()).collect(Collectors.toList());
-        if (running.size() > 0) {
+        if (running.isEmpty()) {
             // Show the dialog.
             CloseAppStopRobotsDialog dlg = new CloseAppStopRobotsDialog(running);
             dlg.showAndWait();
@@ -621,7 +605,7 @@ public class FXController implements Initializable, EventHandler<Event> {
         jsCode += String.format("editor.session.setWrapLimit(%1$s);%n", settings.simple().get(Settings.SETTINGS_EDITOR, Settings.WrapLimit));
         jsCode += String.format("editor.setHighlightSelectedWord(%1$s);%n", settings.simple().getBoolean(Settings.SETTINGS_EDITOR, Settings.HighlightSelectedWord));
 
-        return jsCode; //return jsCode;
+        return jsCode;
     }
 
 
