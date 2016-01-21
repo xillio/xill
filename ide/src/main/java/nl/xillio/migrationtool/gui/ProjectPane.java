@@ -607,18 +607,17 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
     }
 
     private TreeItem<Pair<File, String>> findItemByPath(final TreeItem<Pair<File, String>> parent, final String path) {
-        TreeItem<Pair<File, String>> resultItem = null;
         for (TreeItem<Pair<File, String>> item : parent.getChildren()) {
             if (path.equals(item.getValue().getKey().getPath())) {
-                resultItem = item;
+                return item;
             } else {
                 TreeItem<Pair<File, String>> child = findItemByPath(item, path);
                 if (child != null) {
-                    resultItem = child;
+                    return child;
                 }
             }
         }
-        return resultItem;
+        return null;
     }
 
     /**
@@ -719,12 +718,9 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
                         robotFileChanged(child);
                     } else {
                         // The files in project directory has changed (i.e. some file(s) has been removed / renamed / added).
-                        String selected = null;
-                        if (getCurrentItem() != null) {
-                            selected = getCurrentItem().getValue().getKey().getPath();
-                        }
+                        final String selected = getCurrentItem() == null ? null : getCurrentItem().getValue().getKey().getPath();
                         project.refresh();
-                        select(selected);
+                        Platform.runLater(() -> select(selected));
                     }
                 }
             }

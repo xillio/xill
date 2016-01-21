@@ -332,8 +332,9 @@ public class FXController implements Initializable, EventHandler<Event> {
     @FXML
     private void buttonOpenFile() {
         // Check if the button is enabled.
-        if (btnOpenFile.isDisabled())
+        if (btnOpenFile.isDisabled()) {
             return;
+        }
 
         // If the last picked folder exists, set the initial directory to that.
         FileChooser fileChooser = new FileChooser();
@@ -343,8 +344,7 @@ public class FXController implements Initializable, EventHandler<Event> {
         }
 
         // Only show Xill scripts, show the dialog and open the file.
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
-                "Xillio scripts (*" + "." + Xill.FILE_EXTENSION + ")", "*" + "." + Xill.FILE_EXTENSION));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Xillio scripts (*" + "." + Xill.FILE_EXTENSION + ")", "*" + "." + Xill.FILE_EXTENSION));
         File newFile = fileChooser.showOpenDialog(btnOpenFile.getScene().getWindow());
 
         if (newFile != null) {
@@ -377,13 +377,11 @@ public class FXController implements Initializable, EventHandler<Event> {
         for (Tab tab : tpnBots.getTabs()) {
             RobotTab editor = (RobotTab) tab;
             try {
-                if (editor.getDocument() != null
-                        && editor.getDocument().getCanonicalPath().equals(newfile.getCanonicalPath())) {
+                if (editor.getDocument() != null && editor.getDocument().getCanonicalPath().equals(newfile.getCanonicalPath())) {
                     tpnBots.getSelectionModel().select(editor);
 
                     showTab(editor);
                     editor.requestFocus();
-
 
                     return editor;
                 }
