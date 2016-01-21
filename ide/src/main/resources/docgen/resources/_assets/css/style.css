@@ -97,7 +97,7 @@ pre {
 
 a[href^="http://"]:after,
 a[href^="https://"]:after {
-    content: url(../ide/src/main/resources/icons/link.png);
+    content: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAHBJREFUeNpi/P//PwMuwMjICJdkYsAPzIH4NRD/AnH2AvF/JHwSaosZED8HYg+oOJhwAknCMJIiJyQxEI2h6AkQ26CJYyhcDcSWUPZhmDgjVCEjLl/D5Aj5mgEleIA6PbCYhiG2HS14kPF2mBsBAgwAHnpgZQ8cT2MAAAAASUVORK5CYII=');
     margin: 0 0 0 5px;
 }
 
