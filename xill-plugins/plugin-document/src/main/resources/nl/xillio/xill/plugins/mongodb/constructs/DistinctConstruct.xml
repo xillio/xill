@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Provides a wrapper around the MongoDB [db.collection.distinct](https://docs.mongodb.org/v3.0/reference/method/db.collection.distinct/#db.collection.distinct) method.
+Finds the distinct values for a specified field across a single collection.
+If `query` is `null` or not specified it will match all documents, otherwise it will only retrieve the distinct values from documents which match `query`.
     </description>
     <examples>
         <example title="Usage">
@@ -11,10 +12,7 @@ Provides a wrapper around the MongoDB [db.collection.distinct](https://docs.mong
                 use System;
                 Mongo.connect("udm_default");
 
-                var result = Mongo.distinct(
-                    "documents",
-                    "myCustomField"
-                );
+                var result = Mongo.distinct("documents", "myCustomField");
 
                 foreach(value in result) {
                     System.print(value);

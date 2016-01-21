@@ -1,8 +1,13 @@
 package nl.xillio.xill.plugins.excel.datastructures;
 
 import nl.xillio.xill.api.errors.NotImplementedException;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.RichTextString;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.testng.annotations.Test;
 
 import java.time.Instant;
@@ -90,10 +95,10 @@ public class XillCellTest {
         XillSheet sheet = mock(XillSheet.class);
         XillCell testCell = new XillCell(cell, sheet);
 
-        testCell.setCellValue("=1");
+        testCell.setCellValue("=1", true);
         verify(cell, times(1)).setCellFormula("1");
 
-        testCell.setCellValue("a");
+        testCell.setCellValue("a", false);
         verify(cell, times(1)).setCellValue("a");
 
         testCell.setCellValue(2d);
@@ -110,4 +115,60 @@ public class XillCellTest {
     //setCellValue(String value) since that exception (and everything that raises it) is
     //protected.
 
+    /**
+     * Tests setting the cell's value looking as a formula but being the text (in .xlsx worksheet)
+     */
+    @Test
+    public void setCellValueXSSFText() throws Exception {
+        Cell cell = mock(Cell.class);
+        XillSheet sheet = mock(XillSheet.class);
+        XillCell testCell = new XillCell(cell, sheet);
+
+        XillWorkbook xillworkbook = mock(XillWorkbook.class);
+        when(sheet.getParentWorkbook()).thenReturn(xillworkbook);
+        XSSFWorkbook workbook = mock(XSSFWorkbook.class);
+        when(xillworkbook.getWorkbook()).thenReturn(workbook);
+        XSSFCellStyle style = mock(XSSFCellStyle.class);
+        when(workbook.createCellStyle()).thenReturn(style);
+        testCell.setCellValue("=1", false);
+        verify(cell, times(1)).setCellValue("=1");
+        verify(cell, times(1)).setCellStyle(any());
+    }
+
+    /**
+     * Tests setting the cell's value looking as a formula but being the text (in .xls worksheet)
+     */
+    @Test
+    public void setCellValueHSSFText() throws Exception {
+        Cell cell = mock(Cell.class);
+        XillSheet sheet = mock(XillSheet.class);
+        XillCell testCell = new XillCell(cell, sheet);
+
+        XillWorkbook xillworkbook = mock(XillWorkbook.class);
+        when(sheet.getParentWorkbook()).thenReturn(xillworkbook);
+
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        when(xillworkbook.getWorkbook()).thenReturn(workbook);
+
+        testCell.setCellValue("=1", false);
+        verify(cell, times(1)).setCellValue("=1");
+        verify(cell, times(1)).setCellStyle(any());
+    }
+
+    /**
+     * Tests if the text starting with equal sign is set into not supported workbook
+     */
+    @Test(expectedExceptions = RobotRuntimeException.class)
+    public void setCellValueEqualSignExceptionText() throws Exception {
+        Cell cell = mock(Cell.class);
+        XillSheet sheet = mock(XillSheet.class);
+        XillCell testCell = new XillCell(cell, sheet);
+
+        XillWorkbook xillworkbook = mock(XillWorkbook.class);
+        when(sheet.getParentWorkbook()).thenReturn(xillworkbook);
+        SXSSFWorkbook workbook = new SXSSFWorkbook();
+        when(xillworkbook.getWorkbook()).thenReturn(workbook);
+
+        testCell.setCellValue("=1", false);
+    }
 }

@@ -22,7 +22,7 @@ All parameters except `database` are optional. The defaults will connect you to 
                     "74.125.224.72",
                     8804,
                     "larry",
-                    "password==safe4me"
+                    "Welcome01"
                 );
             </code>
         </example>
