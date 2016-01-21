@@ -529,7 +529,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
             try {
                 watcher.addFolderListener(this, Paths.get(project.getFolder()));
             } catch (IOException e) {
-                LOGGER.error(e.getMessage(), e);
+                LOGGER.error("Could not register project: " + project.getFolder() + ". Did you remove or rename the project folder?");
             }
         }
         projectNode.setExpanded(false);
