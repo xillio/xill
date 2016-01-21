@@ -22,10 +22,13 @@ public class StatusBar extends AnchorPane {
     // Used enum for statuses instead of the strings previously implemented
     public enum Status {
         RUNNING("Running"),
+        STOPPING("Stopping..."),
         STOPPED("Stopped"),
+        PAUSING("Pausing..."),
         PAUSED("Paused"),
         COMPILING("Compiling"),
         READY("Ready");
+
 
         private String representation;
 

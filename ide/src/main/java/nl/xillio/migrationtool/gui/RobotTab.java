@@ -718,6 +718,12 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
     }
 
     /**
+     *
+     * @return the Statusbar
+     */
+    public StatusBar getStatusBar(){return this.apnStatusBar;}
+
+    /**
      * Clear the console content related to this robot
      */
     public void clearConsolePane() {
