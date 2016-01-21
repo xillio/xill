@@ -316,14 +316,9 @@ public class FXController implements Initializable, EventHandler<Event> {
      * @return the tab or null if it could not be created
      */
     private RobotTab createTab(File robotFile, File projectFolder) {
-        try {
-            RobotTab robotTab = new RobotTab(projectFolder, robotFile, this);
-            tpnBots.getTabs().add(robotTab);
-            return robotTab;
-        } catch (IOException e) {
-            LOGGER.error("Could not create robot tab", e);
-            return null;
-        }
+        RobotTab robotTab = new RobotTab(projectFolder, robotFile, this);
+        tpnBots.getTabs().add(robotTab);
+        return robotTab;
     }
 
     @SuppressWarnings("squid:UnusedPrivateMethod") // Used in [...].map(this::reloadTab)
@@ -397,16 +392,10 @@ public class FXController implements Initializable, EventHandler<Event> {
         // Tab is not open yet: open new tab
         settings.simple().save(Settings.FILE, Settings.LastFolder, newfile.getParent());
 
-        RobotTab tab;
-        try {
-            tab = new RobotTab(new File(projectpane.getProjectPath(newfile).orElse("")), newfile.getAbsoluteFile(), this);
-            tpnBots.getTabs().add(tab);
-            tab.requestFocus();
-            return tab;
-        } catch (IOException e) {
-            LOGGER.error("Failed to perform operation: " + e.getMessage(), e);
-        }
-        return null;
+        RobotTab tab = new RobotTab(new File(projectpane.getProjectPath(newfile).orElse("")), newfile.getAbsoluteFile(), this);
+        tpnBots.getTabs().add(tab);
+        tab.requestFocus();
+        return tab;
     }
 
     /**
@@ -520,7 +509,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 
         // Check if there are tabs whose robots are running.
         List<RobotTab> running = getTabs().stream().filter(tab -> tab.getEditorPane().getControls().robotRunning()).collect(Collectors.toList());
-        if (running.isEmpty()) {
+        if (!running.isEmpty()) {
             // Show the dialog.
             CloseAppStopRobotsDialog dlg = new CloseAppStopRobotsDialog(running);
             dlg.showAndWait();
