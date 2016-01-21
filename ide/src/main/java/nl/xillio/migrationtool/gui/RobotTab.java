@@ -109,18 +109,21 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
         // Add the context menu.
         addContextMenu(globalController);
-      
+
         timeline = new Timeline(new KeyFrame(
-                Duration.millis(2000),
+                Duration.millis(1000),
                 ae -> save(false)));
+
+
     }
 
     /*
     * reset the timeline.
      */
     public void resetAutoSave(){
-        this.timeline.playFromStart();
-
+        if(Boolean.valueOf(settings.simple().get("SettingsGeneral", "EnableAutoSave"))){
+            this.timeline.playFromStart();
+        }
     }
 
     private static void initializeSettings(final File documentPath) {
@@ -343,7 +346,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
         return true;
     }
-
+    
     private void validate() {
         List<Issue> issues = getProcessor().validate()
                 .stream()
