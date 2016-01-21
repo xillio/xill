@@ -41,7 +41,10 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 /**
@@ -120,8 +123,8 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
     /*
     * reset the timeline.
      */
-    public void resetAutoSave(){
-        if(Boolean.valueOf(settings.simple().get("SettingsGeneral", "EnableAutoSave"))){
+    public void resetAutoSave() {
+        if (Boolean.valueOf(settings.simple().get(Settings.SETTINGS_GENERAL, Settings.EnableAutoSave))) {
             this.autoSaveTimeline.playFromStart();
         }
     }
@@ -444,7 +447,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
      */
     public void runRobot() throws XillParsingException {
         // Read the current setting in the configuration
-        boolean autoSaveBotBeforeRun = Boolean.valueOf(settings.simple().get("SettingsGeneral", "AutoSaveBotBeforeRun"));
+        boolean autoSaveBotBeforeRun = Boolean.valueOf(settings.simple().get(Settings.SETTINGS_GENERAL, Settings.AutoSaveBotBeforeRun));
 
         if (autoSaveBotBeforeRun) {
             if (editorPane.getDocumentState().getValue() == DocumentState.CHANGED) {
@@ -462,11 +465,11 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
                 Label l = new Label("The robot " + currentRobot.getPath().getName() + " needs to be saved before running. Do you want to continue?");
                 CheckBox cb = new CheckBox("Don't ask me again.");
                 cb.addEventHandler(ActionEvent.ACTION, event -> {
-                    boolean currentSettingValue = Boolean.valueOf(settings.simple().get("SettingsGeneral", "AutoSaveBotBeforeRun"));
+                    boolean currentSettingValue = Boolean.valueOf(settings.simple().get(Settings.SETTINGS_GENERAL, Settings.AutoSaveBotBeforeRun));
                     if (currentSettingValue) {
-                        settings.simple().save("SettingsGeneral", "AutoSaveBotBeforeRun", false);
+                        settings.simple().save(Settings.SETTINGS_GENERAL, Settings.AutoSaveBotBeforeRun, false);
                     } else {
-                        settings.simple().save("SettingsGeneral", "AutoSaveBotBeforeRun", true);
+                        settings.simple().save(Settings.SETTINGS_GENERAL, Settings.AutoSaveBotBeforeRun, true);
                     }
                 });
 
@@ -544,7 +547,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
         robotThread.setUncaughtExceptionHandler((thread, e) -> {
             // This error can occur if, e.g. deep recursion, is performed.
-            if(e instanceof StackOverflowError) {
+            if (e instanceof StackOverflowError) {
                 handleStackOverFlowError(robot, e.getClass().getName());
             }
         });
@@ -599,14 +602,14 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
                 Platform.runLater(() -> {
                     RobotTab newTab = globalController.openFile(e.getRobot().getPath());
                     newTab.getEditorPane().getEditor().getOnDocumentLoaded().addListener(success ->
-                            // We queue this for later execution because the tab has to display before we can scroll to the right location.
-                            Platform.runLater(() -> {
-                                if (success) {
-                                    // Highlight the tab
-                                    newTab.errorPopup(e.getLine(), e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling " + e.getRobot().getPath().getAbsolutePath());
-                                    relatedHighlightTabs.add(newTab);
-                                }
-                            })
+                                    // We queue this for later execution because the tab has to display before we can scroll to the right location.
+                                    Platform.runLater(() -> {
+                                        if (success) {
+                                            // Highlight the tab
+                                            newTab.errorPopup(e.getLine(), e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling " + e.getRobot().getPath().getAbsolutePath());
+                                            relatedHighlightTabs.add(newTab);
+                                        }
+                                    })
                     );
                 });
             }
