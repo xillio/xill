@@ -16,7 +16,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
-import javafx.util.Pair;
 import nl.xillio.migrationtool.ApplicationKillThread;
 import nl.xillio.migrationtool.LicenseUtils;
 import nl.xillio.migrationtool.Loader;
@@ -284,81 +283,8 @@ public class FXController implements Initializable, EventHandler<Event> {
      */
     @FXML
     private void buttonNewFile() {
-        // Check if the button is enabled.
-        if (btnNewFile.isDisabled())
-            return;
-
-        // Select project path
-        File projectfile;
-        if (projectpane.getCurrentProject() != null) {
-            projectfile = projectpane.getCurrentProject().getValue().getKey();
-        } else {
-            projectfile = new File(System.getProperty("user.home"));
-        }
-
-        // Select initial directory
-        File initialFolder;
-        if (projectpane.getCurrentItem() != null) {
-            TreeItem<Pair<File, String>> curr = projectpane.getCurrentItem();
-            initialFolder = curr.getValue().getKey();
-
-            // If the folder to create the new file in does not exist, create it.
-            projectpane.makeDirIfNotExists(curr);
-        } else {
-            initialFolder = projectfile;
-        }
-
-        if (initialFolder.isFile()) {
-            initialFolder = initialFolder.getParentFile();
-        }
-
-        // Select robot file
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setInitialDirectory(initialFolder);
-
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
-                "Xill Robot (*." + Xill.FILE_EXTENSION + ")", "*." + Xill.FILE_EXTENSION));
-        fileChooser.setTitle("New Robot");
-
-        File chosen = fileChooser.showSaveDialog(tpnBots.getScene().getWindow());
-
-        if (chosen == null) {
-            // No file was chosen so we abort
-            return;
-        }
-
-        // Fix for files being created out of projects
-        if (chosen.getParent().startsWith(projectfile.getAbsolutePath())) {
-            // The created file is in the project
-
-            // This code is because of different behaviour of FileChooser in Linux and Windows
-            // On Linux the FileChooser does not automatically add xill extension
-            String xillExt = "." + Xill.FILE_EXTENSION;
-            if (!chosen.getName().endsWith(xillExt)) {
-                chosen = new File(chosen.getPath() + xillExt);
-            }
-
-            try {
-                // Overwrite existing file with an empty string and reset tab.
-                FileUtils.write(chosen, "", false);
-
-                RobotID id = RobotID.getInstance(chosen, projectfile);
-
-                viewOrOpenRobot(id);
-
-            } catch (IOException e) {
-                LOGGER.error("Failed to perform operation: " + e.getMessage(), e);
-            }
-        } else {
-            // Inform the user about the file being created outside of a project
-            Alert projectPathErrorAlert = new Alert(AlertType.ERROR);
-            projectPathErrorAlert.initModality(Modality.APPLICATION_MODAL);
-            projectPathErrorAlert.setTitle("Project path error");
-            projectPathErrorAlert.setHeaderText("Error");
-            projectPathErrorAlert.setContentText("Robots can only be created inside projects.");
-            projectPathErrorAlert.show();
-        }
-        // End fix for files being created out of projects
+        if (!btnNewFile.isDisabled())
+            projectpane.newFile();
     }
 
     /**
@@ -366,7 +292,7 @@ public class FXController implements Initializable, EventHandler<Event> {
      *
      * @param robotID the robot that should be viewed
      */
-    private void viewOrOpenRobot(RobotID robotID) {
+    public void viewOrOpenRobot(RobotID robotID) {
         RobotTab tab = tpnBots.getTabs().stream()
                 .map(bot -> (RobotTab) bot)
                 .filter(robotTab -> robotTab.getProcessor().getRobotID().equals(robotID))
@@ -472,7 +398,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 
         RobotTab tab;
         try {
-            tab = new RobotTab(new File(projectpane.getProjectPath(newfile).get()), newfile.getAbsoluteFile(), this);
+            tab = new RobotTab(new File(projectpane.getProjectPath(newfile).orElse("")), newfile.getAbsoluteFile(), this);
             tpnBots.getTabs().add(tab);
             tab.requestFocus();
             return tab;

@@ -17,6 +17,7 @@ import javafx.scene.shape.SVGPath;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import nl.xillio.migrationtool.Loader;
+import nl.xillio.migrationtool.dialogs.AlertDialog;
 import nl.xillio.migrationtool.dialogs.CloseTabStopRobotDialog;
 import nl.xillio.migrationtool.dialogs.SaveBeforeClosingDialog;
 import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
@@ -38,7 +39,10 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 /**
@@ -287,6 +291,9 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
         File document = getDocument();
         File projectPath = getProjectPath();
+        if (!projectPath.exists()) {
+            projectPath = document.getParentFile();
+        }
 
         if (showDialog) {
             // Show file picker
@@ -308,13 +315,8 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
             FileUtils.write(document, code);
             editorPane.setLastSavedCode(code);
             LOGGER.info("Saved currentRobot to " + document.getAbsolutePath());
-
         } catch (IOException e) {
-            Alert errorAlert = new Alert(AlertType.ERROR);
-            errorAlert.initModality(Modality.APPLICATION_MODAL);
-            errorAlert.setTitle("Error");
-            errorAlert.setContentText(e.getMessage());
-            errorAlert.show();
+            new AlertDialog(AlertType.ERROR, "Failed to save robot", "", e.getMessage()).show();
             LOGGER.error("Failed to save robot", e);
         }
 
@@ -525,7 +527,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
         robotThread.setUncaughtExceptionHandler((thread, e) -> {
             // This error can occur if, e.g. deep recursion, is performed.
-            if(e instanceof StackOverflowError) {
+            if (e instanceof StackOverflowError) {
                 handleStackOverFlowError(robot, e.getClass().getName());
             }
         });
