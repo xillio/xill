@@ -191,6 +191,10 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
         tab.clearHighlight();
     }
 
+    /**
+     * disable all the buttons and change the status
+     * @param status the status to change the statusBar
+     */
     private void disableAll(StatusBar.Status status){
         start.setDisable(true);
         stop.setDisable(true);
