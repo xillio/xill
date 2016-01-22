@@ -165,22 +165,22 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
         switch (message.getLevel()) {
             case "debug":
                 if (cmiDebug.isSelected()) {
-                    controls.pause();
+                    controls.pause(false);
                 }
                 break;
             case "info":
                 if (cmiInfo.isSelected()) {
-                    controls.pause();
+                    controls.pause(false);
                 }
                 break;
             case "warn":
                 if (cmiWarning.isSelected()) {
-                    controls.pause();
+                    controls.pause(false);
                 }
                 break;
             case "error":
                 if (cmiError.isSelected()) {
-                    controls.pause();
+                    controls.pause(false);
                 }
                 break;
             default:

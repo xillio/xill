@@ -778,7 +778,7 @@ public class FXController implements Initializable, EventHandler<Event> {
                         break;
                     case PAUSE:
                         tpnBots.getTabs().filtered(Tab::isSelected).forEach(tab -> {
-                            ((RobotTab) tab).getEditorPane().getControls().pause();
+                            ((RobotTab) tab).getEditorPane().getControls().pause(true);
                             keyEvent.consume();
                         });
                         break;

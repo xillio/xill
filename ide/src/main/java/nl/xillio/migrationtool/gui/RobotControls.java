@@ -72,7 +72,7 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
         // Connect to buttons
         start.setOnAction(e -> start());
         stop.setOnAction(e -> stop());
-        pause.setOnAction(e -> pause());
+        pause.setOnAction(e -> pause(true));
         stepin.setOnAction(e -> stepIn());
         stepover.setOnAction(e -> stepOver());
 
@@ -153,11 +153,13 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
 
     /**
      * Pause the robot
+     *
+     * @param userAction true when the pause has been invoked by the user stop, false if the reason was caught error/warn
      */
-    public void pause() {
+    public void pause(boolean userAction) {
         onPause();
 
-        getDebugger().pause();
+        getDebugger().pause(userAction);
     }
 
     private void onPause() {
@@ -218,7 +220,7 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
         }
         // Pause
         else if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.PAUSE)).match(event)) {
-            pause();
+            pause(true);
         }
         // Stop
         else if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.STOP)).match(event)) {
@@ -286,7 +288,7 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
         }
 
         if (shouldStopOnError.isSelected()) {
-            pause();
+            pause(true);
         }
     }
 }

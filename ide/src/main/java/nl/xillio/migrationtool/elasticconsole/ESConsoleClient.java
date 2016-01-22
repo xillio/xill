@@ -211,7 +211,7 @@ public class ESConsoleClient implements AutoCloseable {
      *
      * @param index The index to create.
      */
-    private void createIndex(final String index) {
+    private synchronized void createIndex(final String index) {
         // Check if the index exists
         if (getClient().admin().indices().prepareExists(index).execute().actionGet().isExists()) {
             return;
