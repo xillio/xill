@@ -5,11 +5,11 @@ Returns an array that holds a list of documents that identify and describe the e
     </description>
     <examples>
         <example title="Usage">
-            <header>List all indexes in the user collection.</header>
+            <header>List all indexes in the user collection</header>
             <code>
                 use Mongo;
                 use System;
-                Mongo.connect("xillserver");
+                Mongo.connect("udm_default");
 
                 var results = Mongo.listIndexes("user");
 

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Provides a wrapper around the MongoDB [db.collection.findOne](https://docs.mongodb.org/v3.0/reference/method/db.collection.findOne/#db.collection.findOne) method.
+Finds a single document that matches the specified `query`.
+If multiple documents match the query, the first document in the result will be returned.
+If no documents match the `query` it will return `null`.
     </description>
     <examples>
         <example title="Usage">
-            <header>Get the first document in a collection.</header>
+            <header>Get the first document in the documents collection</header>
             <code>
                 use Mongo;
                 use System;
@@ -15,34 +17,18 @@ Provides a wrapper around the MongoDB [db.collection.findOne](https://docs.mongo
 
                 System.print(document);
             </code>
-            <header>Get a document by ID.</header>
+            <header>Get a the newest document</header>
             <code>
                 use Mongo;
                 use System;
                 Mongo.connect("udm_default");
 
-                var document = Mongo.find(
-                    "documents",
-                    {
-                        "_id": "f8cbcb03-fb98-4093-8fd5-244b8667afde"
-                    }
-                );
+                // Sort by timestamp (newest first).
+                var sort = {
+                    "target.timestamp": -1
+                };
 
-                System.print(document);
-            </code>
-            <header>Get a document by lowest ID.</header>
-            <code>
-                use Mongo;
-                use System;
-                Mongo.connect("udm_default");
-
-                var document = Mongo.find(
-                "documents", {}, {}
-                {
-                    // Positive for ascending order, negative for descending order.
-                    "_id": 1
-                }
-                );
+                var document = Mongo.findOne("documents", {}, {}, sort);
 
                 System.print(document);
             </code>
