@@ -1,9 +1,11 @@
 package nl.xillio.xill.api;
 
 import com.google.inject.Injector;
+import nl.xillio.plugins.XillPlugin;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 
 /**
  * This interface represents an object that can assemble {@link XillProcessor}.
@@ -44,4 +46,11 @@ public interface XillEnvironment {
      * @return the processor
      */
     XillProcessor buildProcessor(Path projectRoot, Path robotPath) throws IOException;
+
+    /**
+     * Get a list of all loaded plugins.
+     *
+     * @return the list
+     */
+    List<XillPlugin> getPlugins();
 }

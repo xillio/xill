@@ -88,6 +88,11 @@ public class XillEnvironmentImpl implements XillEnvironment {
         return new nl.xillio.xill.XillProcessor(projectRoot.toFile(), robotPath.toFile(), new ArrayList<>(loadedPlugins.values()), new XillDebugger());
     }
 
+    @Override
+    public List<XillPlugin> getPlugins() {
+        return new ArrayList<>(loadedPlugins.values());
+    }
+
     private void loadClasspathPlugins() {
         loadPlugins(ServiceLoader.load(XillPlugin.class));
     }
