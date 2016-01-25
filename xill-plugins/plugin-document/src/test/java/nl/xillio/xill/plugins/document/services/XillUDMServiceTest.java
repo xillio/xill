@@ -110,7 +110,7 @@ public class XillUDMServiceTest {
 
         // Service
         UDMService udmService = mock(UDMService.class);
-        when(udmService.find(any())).thenReturn(result);
+        when(udmService.find(any(), any())).thenReturn(result);
         when(udmService.toJSON(any())).thenReturn("{ \"test\": \"MyValue\"}");
 
         // Spy
@@ -134,7 +134,7 @@ public class XillUDMServiceTest {
     public void testFindWhereException() throws PersistenceException {
         // Service
         UDMService udmService = mock(UDMService.class);
-        when(udmService.find(any())).thenThrow(new MongoException(""));
+        when(udmService.find(any(), any())).thenThrow(new MongoException(""));
 
         // Spy
         XillUDMService xillUDMService = spyService(udmService);
