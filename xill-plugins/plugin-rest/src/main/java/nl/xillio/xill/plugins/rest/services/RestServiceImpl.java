@@ -6,7 +6,6 @@ import nl.xillio.xill.plugins.rest.data.Content;
 import nl.xillio.xill.plugins.rest.data.MultipartBody;
 import nl.xillio.xill.plugins.rest.data.Options;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
@@ -27,7 +26,7 @@ public class RestServiceImpl implements RestService {
 
     Executor createExecutor(boolean isInsecure) {
         CloseableHttpClient httpClient = null;
-        if(isInsecure){
+        if (isInsecure) {
             //create custom httpClient that basically turns hostname verification off.
             httpClient = HttpClients.custom().setSSLHostnameVerifier(new NoopHostnameVerifier()).build();
         }

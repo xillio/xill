@@ -1,8 +1,8 @@
 package nl.xillio.xill.plugins.rest.data;
 
+import nl.xillio.xill.api.components.ExpressionBuilderHelper;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.components.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import org.apache.http.HttpHost;
 import org.apache.http.client.fluent.Executor;
@@ -130,9 +130,10 @@ public class Options {
 
     /**
      * whether this only accepts secure SSL connections or not.
+     *
      * @return
      */
-    public boolean isInsecure(){
+    public boolean isInsecure() {
         return this.insecure;
     }
 
