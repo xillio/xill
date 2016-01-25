@@ -41,7 +41,7 @@ public class XillLoader implements Xill, ContenttoolsPlugin {
     @Override
     public XillProcessor createProcessor(final File robotFile, final File projectFolder, final PluginLoader<XillPlugin> pluginLoader, final Debugger debugger) {
         try {
-            return new nl.xillio.xill.XillProcessor(projectFolder, robotFile, pluginLoader, debugger);
+            return new nl.xillio.xill.XillProcessor(projectFolder, robotFile, pluginLoader.getPluginManager().getPlugins(), debugger);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

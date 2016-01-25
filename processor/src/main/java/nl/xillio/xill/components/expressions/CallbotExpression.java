@@ -1,6 +1,5 @@
 package nl.xillio.xill.components.expressions;
 
-import nl.xillio.plugins.PluginLoader;
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.XillProcessor;
 import nl.xillio.xill.api.Debugger;
@@ -19,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * This class represents calling another robot
@@ -28,21 +28,21 @@ public class CallbotExpression implements Processable {
     private final Logger robotLogger;
     private final Processable path;
     private final RobotID robotID;
-    private final PluginLoader<XillPlugin> pluginLoader;
+    private final List<XillPlugin> plugins;
     private Processable argument;
     private final FileResolver resolver;
 
     /**
      * Create a new {@link CallbotExpression}
      *
-     * @param path         the path of the called bot
-     * @param robotID      the root robot of this tree
-     * @param pluginLoader the current plugin loader
+     * @param path    the path of the called bot
+     * @param robotID the root robot of this tree
+     * @param plugins the current plugin loader
      */
-    public CallbotExpression(final Processable path, final RobotID robotID, final PluginLoader<XillPlugin> pluginLoader) {
+    public CallbotExpression(final Processable path, final RobotID robotID, final List<XillPlugin> plugins) {
         this.path = path;
         this.robotID = robotID;
-        this.pluginLoader = pluginLoader;
+        this.plugins = plugins;
         robotLogger = RobotAppender.getLogger(robotID);
         resolver = new FileResolverImpl();
     }
@@ -69,7 +69,7 @@ public class CallbotExpression implements Processable {
         // Process the robot
         try {
             Debugger childDebugger = debugger.createChild();
-            XillProcessor processor = new XillProcessor(robotID.getProjectPath(), otherRobot, pluginLoader, childDebugger);
+            XillProcessor processor = new XillProcessor(robotID.getProjectPath(), otherRobot, plugins, childDebugger);
 
             processor.compileAsSubRobot(robotID);
 

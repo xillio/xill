@@ -2,7 +2,6 @@ package nl.xillio.xill;
 
 import com.google.inject.Injector;
 import me.biesaart.utils.Log;
-import nl.xillio.plugins.PluginLoader;
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.Issue;
@@ -57,7 +56,7 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
 
     private final File robotFile;
     private final File projectFolder;
-    private final PluginLoader<XillPlugin> pluginLoader;
+    private final List<XillPlugin> plugins;
     private final Debugger debugger;
     private final Map<Construct, String> argumentSignatures = new HashMap<>();
 
@@ -66,15 +65,15 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
      *
      * @param projectFolder the project folder
      * @param robotFile     the robot file
-     * @param pluginLoader  the plugin loader
+     * @param plugins       the plugins
      * @param debugger      the debugger
      * @throws IOException
      */
-    public XillProcessor(final File projectFolder, final File robotFile, final PluginLoader<XillPlugin> pluginLoader,
+    public XillProcessor(final File projectFolder, final File robotFile, final List<XillPlugin> plugins,
                          final Debugger debugger) throws IOException {
         this.projectFolder = projectFolder;
         this.robotFile = robotFile;
-        this.pluginLoader = pluginLoader;
+        this.plugins = plugins;
         this.debugger = debugger;
         Injector injector = new XillStandaloneSetup().createInjectorAndDoEMFRegistration();
         injector.injectMembers(this);
@@ -125,7 +124,7 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
             rootRobot = robotID;
         }
 
-        LanguageFactory<xill.lang.xill.Robot> factory = new XillProgramFactory(pluginLoader, getDebugger(), rootRobot);
+        LanguageFactory<xill.lang.xill.Robot> factory = new XillProgramFactory(plugins, getDebugger(), rootRobot);
 
 
         List<Issue> issues = validate(resource);
@@ -255,8 +254,7 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
             for (UseStatement useStatement : bot.getUses()) {
                 String name = getName(useStatement);
 
-                boolean found = pluginLoader.getPluginManager()
-                        .getPlugins()
+                boolean found = plugins
                         .stream()
                         .anyMatch(plugin -> plugin.getName().equals(name));
 
@@ -290,9 +288,7 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
             if (object instanceof ConstructCall) {
                 ConstructCall call = (ConstructCall) object;
                 String plugin = getName(call.getPackage());
-                XillPlugin xillPlugin = pluginLoader.getPluginManager()
-                        .getPlugins()
-                        .stream()
+                XillPlugin xillPlugin = plugins.stream()
                         .filter(p -> p.getName().equals(plugin))
                         .findAny()
                         .orElse(null);
@@ -334,7 +330,8 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
 
     @Override
     public Collection<String> listPackages() {
-        return pluginLoader.getPluginManager().getPlugins().stream().map(XillPlugin::getName)
+        return plugins.stream()
+                .map(XillPlugin::getName)
                 .collect(Collectors.toList());
     }
 
@@ -345,7 +342,6 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
 
     @Override
     public Map<String, List<String>> getCompletions(String currentLine, String prefix, int column, int row) {
-        List<XillPlugin> plugins = pluginLoader.getPluginManager().getPlugins();
 
         Map<String, List<String>> result = new HashMap<>();
         getConstructCompletions(result, currentLine, column, prefix);
@@ -379,9 +375,9 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
         if (lastPeriod >= 0 && lastPeriod == column - prefix.length() - 1) {
             String tillColumn = currentLine.substring(0, lastPeriod);
 
-            pluginLoader.getPluginManager().getPlugins().stream()
+            plugins.stream()
                     // Test if the plugin name is a match.
-                    .filter(xillPlugin ->tillColumn.endsWith(xillPlugin.getName()))
+                    .filter(xillPlugin -> tillColumn.endsWith(xillPlugin.getName()))
                     .forEach(xillPlugin -> {
                         // Test all constructs.
                         List<String> constructs = xillPlugin.getConstructs().stream()

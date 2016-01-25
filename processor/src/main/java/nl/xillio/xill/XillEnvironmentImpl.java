@@ -2,11 +2,14 @@ package nl.xillio.xill;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Module;
 import me.biesaart.utils.Log;
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.util.XillioHomeFolder;
 import nl.xillio.xill.api.XillEnvironment;
 import nl.xillio.xill.api.XillProcessor;
+import nl.xillio.xill.debugging.XillDebugger;
+import nl.xillio.xill.services.inject.DefaultInjectorModule;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -68,9 +71,21 @@ public class XillEnvironmentImpl implements XillEnvironment {
             loadClasspathPlugins();
             loadPlugins(folders);
             needLoad = false;
+
+            List<Module> modules = new ArrayList<>(loadedPlugins.values());
+            modules.add(new DefaultInjectorModule());
+            Injector configuredInjector = rootInjector.createChildInjector(modules);
+
+            LOGGER.info("Injecting plugin members");
+            // Inject members
+            loadedPlugins.values().forEach(configuredInjector::injectMembers);
+
+            LOGGER.info("Loading constructs");
+            // Load constructs
+            loadedPlugins.values().forEach(XillPlugin::initialize);
         }
 
-        return null;
+        return new nl.xillio.xill.XillProcessor(projectRoot.toFile(), robotPath.toFile(), new ArrayList<>(loadedPlugins.values()), new XillDebugger());
     }
 
     private void loadClasspathPlugins() {
