@@ -24,6 +24,7 @@ public class Options {
     private String proxyPass = "";
     private String authUser = "";
     private String authPass = "";
+    private boolean insecure = false;
 
     /**
      * @param optionsVar the map of options and their values for request operation
@@ -83,6 +84,10 @@ public class Options {
                 this.processHeaders(value);
                 break;
 
+            case "insecure":
+                this.insecure = value.getBooleanValue();
+                break;
+
             default:
                 throw new RobotRuntimeException(String.format("Option [%1$s] is invalid!", option));
         }
@@ -121,6 +126,14 @@ public class Options {
      */
     public int getTimeout() {
         return this.timeout;
+    }
+
+    /**
+     * whether this only accepts secure SSL connections or not.
+     * @return
+     */
+    public boolean isInsecure(){
+        return this.insecure;
     }
 
     /**
