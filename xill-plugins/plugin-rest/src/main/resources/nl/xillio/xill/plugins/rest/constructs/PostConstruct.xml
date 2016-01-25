@@ -8,27 +8,28 @@ The body for request can be one of the following types:
 	* XML (XmlNode)
 	* JSON (Object)
 	* String [with custom content type]
-	* REST multipart body (bodyCreate() function) 
+	* REST multipart body (bodyCreate() function)
 
 The response.body can be one of the following types:
 
 	* XML (XmlNode)
 	* JSON (Object)
-	* String 
+	* String
 
 Options:
 
 	* timeout - processing timeout in ms (default = 5000)
 	* proxyhost - proxy server URL
 	* proxyport - port of the proxy server
-	* user - user name for server authentication         
+	* user - user name for server authentication
 	* pass - password for server authentication
+    * insecure - if set to true, insecure SSL connections and transfers are allowed (default = false)
 	* headers - the object of name and value pair strings added as a parts of HTTP request header
 
 The proxy and server authentication options can be combined as follows:
 
 	proxyhost
-	proxyhost+proxyport 
+	proxyhost+proxyport
 	proxyhost+proxyport+user+pass
 	user+pass
     </description>
@@ -56,7 +57,7 @@ var contentType = "application/vnd.emc.documentum+json";
 var response = REST.post("http://whatever.com/uri", {"timeout" : 3000}, body, contentType);
 System.print(response);
 </code>
-        </example>        
+        </example>
     </examples>
     <references>
         <reference>delete</reference>
