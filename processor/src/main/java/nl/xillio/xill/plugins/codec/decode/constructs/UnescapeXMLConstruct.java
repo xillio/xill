@@ -15,12 +15,12 @@ import nl.xillio.xill.plugins.codec.decode.services.DecoderService;
  *
  * @author Sander Visser
  */
-public class FromAmpersandConstruct extends Construct {
+public class UnescapeXMLConstruct extends Construct {
 
     private DecoderService decoderService;
 
     @Inject
-    public FromAmpersandConstruct(DecoderService decoderService) {
+    public UnescapeXMLConstruct(DecoderService decoderService) {
         this.decoderService = decoderService;
     }
 

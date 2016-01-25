@@ -15,12 +15,12 @@ import nl.xillio.xill.plugins.codec.encode.services.EncoderService;
  *
  * @author Sander Visser
  */
-public class ToAmpersandConstruct extends Construct {
+public class EscapeXMLConstruct extends Construct {
 
     private final EncoderService encoderService;
 
     @Inject
-    public ToAmpersandConstruct(EncoderService encoderService) {
+    public EscapeXMLConstruct(EncoderService encoderService) {
         this.encoderService = encoderService;
     }
 

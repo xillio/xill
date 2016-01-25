@@ -9,9 +9,9 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.*;
 
 /**
- * Test the {@link FromAmpersandConstruct}.
+ * Test the {@link UnescapeXMLConstruct}.
  */
-public class FromAmpersandConstructTest {
+public class UnescapeXMLConstructTest {
 
     /**
      * Test the process method under normal circumstances.
@@ -29,7 +29,7 @@ public class FromAmpersandConstructTest {
 
         String returnValue = "Money <> Health";
         DecoderService decoderService = mock(DecoderServiceImpl.class);
-        FromAmpersandConstruct construct = new FromAmpersandConstruct(decoderService);
+        UnescapeXMLConstruct construct = new UnescapeXMLConstruct(decoderService);
         when(decoderService.unescapeXML(stringValue, passesValue)).thenReturn(returnValue);
         // Run
         MetaExpression result = construct.process(string, passes);
