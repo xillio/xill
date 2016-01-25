@@ -18,7 +18,7 @@ public interface XillUDMQueryService {
      * Find all document that match a filter.
      *
      * @param filter the filter
-     * @param sort the sort query
+     * @param sort   the sort query
      * @return a map iterator
      * @throws PersistenceException
      */
