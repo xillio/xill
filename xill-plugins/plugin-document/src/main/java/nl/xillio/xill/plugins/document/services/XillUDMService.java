@@ -120,15 +120,15 @@ public class XillUDMService implements XillUDMPersistence, XillUDMQueryService {
     @Override
     public Iterator<Map<String, Object>> findMapWhere(Document filter, Document sort) throws PersistenceException {
         UDMService service = getUdmService(DEFAULT_IDENTITY);
-        try {
-            FindResult result;
-            if(sort == null){
-                result = service.find(filter);
-            } else {
-                result = service.find(filter, sort);
-            }
+        Document sortObj = sort == null ? new Document() : sort;
+        FindResult result = getResult(filter, sortObj, service);
 
-            return buildResult(result, service);
+        return buildResult(result, service);
+    }
+
+    private FindResult getResult(Document filter, Document sortObj, UDMService service) throws PersistenceException {
+        try {
+            return service.find(filter, sortObj);
         } catch (MongoException e) {
             throw new PersistenceException(e.getMessage(), e);
         }
