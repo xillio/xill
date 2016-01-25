@@ -35,17 +35,19 @@ public class FindConstruct extends Construct {
     public ConstructProcessor prepareProcess(ConstructContext context) {
         return new ConstructProcessor(
                 this::process,
-                new Argument("filter", emptyObject(), OBJECT)
+                new Argument("filter", emptyObject(), OBJECT),
+                new Argument("sort", emptyObject(), OBJECT)
         );
     }
 
     @SuppressWarnings("squid:UnusedPrivateMethod") // Sonar doesn't understand method references
-    private MetaExpression process(MetaExpression filter) {
+    private MetaExpression process(MetaExpression filter, MetaExpression sort) {
         // Parse the filter
         Document filterDoc = queryBuilder.parseQuery(filter);
+        Document sortDoc = queryBuilder.parseQuery(sort);
 
         // Run the query
-        Iterator<Map<String, Object>> searchResult = getResult(filterDoc);
+        Iterator<Map<String, Object>> searchResult = getResult(filterDoc, sortDoc);
 
         // Transform the result
         MetaExpressionIterator<Map<String, Object>> iterator = new MetaExpressionIterator<>(
@@ -59,9 +61,9 @@ public class FindConstruct extends Construct {
         return result;
     }
 
-    private Iterator<Map<String, Object>> getResult(Document filterDoc) {
+    private Iterator<Map<String, Object>> getResult(Document filterDoc, Document sortDoc) {
         try {
-            return queryService.findMapWhere(filterDoc);
+            return queryService.findMapWhere(filterDoc, sortDoc);
         } catch (PersistenceException e) {
             throw new RobotRuntimeException(e.getMessage(), e);
         }

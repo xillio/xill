@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Find all documents that match a filter.  
+Find all documents that match a filter and/or a sort query.
 
-This construct expects a mongo filter. It will iterate over all documents that match that filter.  
-If no filter is provided this construct will iterate over all constructs.
+This construct expects a mongo filter and a mongo sort query. It will iterate over all documents that match that filter.
+It will then be sorted afterwards. If no filter is provided this construct will iterate over all results.
+If no sort query is provided this construct will iterate without sorting it.
     </description>
     <examples>
         <example title="Usage">
@@ -15,9 +16,10 @@ If no filter is provided this construct will iterate over all constructs.
                 use System;
 
                 // Run the query
-                var pages = Document.find({
-                    "contenttype": "CustomPage"
-                });
+                var filterObj = {"contenttype": "CustomPage"};
+                var sortObj = {"_id": 1};
+
+                var pages = Document.find(filterObj, sortObj);
 
                 foreach(page in pages) {
                     System.print(page._id);
@@ -31,6 +33,6 @@ If no filter is provided this construct will iterate over all constructs.
         <reference>deleteWhere</reference>
     </references>
     <tags>
-        udm, define, build, create, remove, bulk, filter
+        udm, define, build, create, remove, bulk, filter, sort
     </tags>
 </function>
