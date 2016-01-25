@@ -10,6 +10,7 @@ import nl.xillio.udm.services.UDMService;
 import nl.xillio.xill.plugins.document.data.UDMDocument;
 import nl.xillio.xill.plugins.document.exceptions.PersistException;
 import nl.xillio.xill.plugins.document.exceptions.ValidationException;
+import org.bson.Document;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
@@ -116,7 +117,7 @@ public class XillUDMServiceTest {
         XillUDMService xillUDMService = spyService(udmService);
 
         // Call
-        Iterator<Map<String, Object>> returnValue = xillUDMService.findMapWhere(null);
+        Iterator<Map<String, Object>> returnValue = xillUDMService.findMapWhere(null, null);
 
         Map<String, String> expectedValue = new HashMap<>();
         expectedValue.put("test", "MyValue");
@@ -138,7 +139,7 @@ public class XillUDMServiceTest {
         // Spy
         XillUDMService xillUDMService = spyService(udmService);
 
-        xillUDMService.findMapWhere(null);
+        xillUDMService.findMapWhere(null, null);
 
     }
 

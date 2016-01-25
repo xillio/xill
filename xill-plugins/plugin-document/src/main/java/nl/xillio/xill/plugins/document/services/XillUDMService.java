@@ -117,12 +117,17 @@ public class XillUDMService implements XillUDMPersistence, XillUDMQueryService {
         return connectionPool.get(identity);
     }
 
-
     @Override
     public Iterator<Map<String, Object>> findMapWhere(Document filter, Document sort) throws PersistenceException {
         UDMService service = getUdmService(DEFAULT_IDENTITY);
         try {
-            FindResult result = service.find(filter, sort);
+            FindResult result;
+            if(sort == null){
+                result = service.find(filter);
+            } else {
+                result = service.find(filter, sort);
+            }
+
             return buildResult(result, service);
         } catch (MongoException e) {
             throw new PersistenceException(e.getMessage(), e);
