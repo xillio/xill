@@ -235,9 +235,7 @@ public class TypeConverterTest {
      * @return
      */
     private Date mockDate() {
-        Date d = mock(Date.class);
-        when(d.getTime()).thenReturn(1441092758696l);
-        return d;
+        return new Date(1441092758696l);
     }
 
     /**
