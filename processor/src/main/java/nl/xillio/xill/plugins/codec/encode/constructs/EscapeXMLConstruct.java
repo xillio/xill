@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.string.constructs;
+package nl.xillio.xill.plugins.codec.encode.constructs;
 
 import com.google.inject.Inject;
 import nl.xillio.xill.api.components.MetaExpression;
@@ -6,32 +6,37 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
+import nl.xillio.xill.plugins.codec.encode.services.EncoderService;
 
 /**
  * <p>
  * Encodes all special XML characters (&lt;,&gt;,&amp;,&quot;,&#39;) to their respective xml entities.
  * </p>
  *
- * @author Sander
+ * @author Sander Visser
  */
-public class AmpersandEncodeConstruct extends Construct {
+public class EscapeXMLConstruct extends Construct {
+
+    private final EncoderService encoderService;
+
     @Inject
-    private StringUtilityService stringUtils;
+    public EscapeXMLConstruct(EncoderService encoderService) {
+        this.encoderService = encoderService;
+    }
 
     @Override
     public ConstructProcessor prepareProcess(final ConstructContext context) {
         return new ConstructProcessor(
-                string -> process(string, stringUtils),
+                this::process,
                 new Argument("String", ATOMIC));
     }
 
-    static MetaExpression process(final MetaExpression stringVar, final StringUtilityService stringUtils) {
+    MetaExpression process(final MetaExpression stringVar) {
         assertNotNull(stringVar, "string");
 
         String text = stringVar.getStringValue();
 
-        return fromValue(stringUtils.escapeXML(text));
+        return fromValue(encoderService.escapeXML(text));
 
     }
 

@@ -9,6 +9,9 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 
 import java.io.IOException;
 
@@ -21,8 +24,13 @@ import java.io.IOException;
 @Singleton
 public class RestServiceImpl implements RestService {
 
-    Executor createExecutor() {
-        return Executor.newInstance();
+    Executor createExecutor(boolean isInsecure) {
+        CloseableHttpClient httpClient = null;
+        if (isInsecure) {
+            //create custom httpClient that basically turns hostname verification off.
+            httpClient = HttpClients.custom().setSSLHostnameVerifier(new NoopHostnameVerifier()).build();
+        }
+        return Executor.newInstance(httpClient);
     }
 
     Content processRequest(final Request request, final Options options, final Content body) {
@@ -37,7 +45,7 @@ public class RestServiceImpl implements RestService {
             options.setHeaders(request);
 
             // create executor
-            Executor executor = createExecutor();
+            Executor executor = createExecutor(options.isInsecure());
 
             // set authentication
             options.setAuth(executor);

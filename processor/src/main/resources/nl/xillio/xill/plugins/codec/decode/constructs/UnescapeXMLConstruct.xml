@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Decodes all ampersand-encoded characters in the provided string.  
+Decodes all xml-escaped (ampersand) characters in the provided string.
 
 Mainly used to decode XML characters to their original characters.  
 Optionally you can provide the number of passes the decoder should run (defaults to 1).
@@ -10,13 +10,13 @@ Optionally you can provide the number of passes the decoder should run (defaults
         <example title="Usage">
             <header>Single pass</header>
             <code><![CDATA[
-                String.ampersandDecode("Money &amp;lt;&amp;amp;gt; Health");
+                Decode.unescapeXML("Money &amp;lt;&amp;amp;gt; Health");
 
                 // Result: "Money &lt;&amp;gt; Health"
             ]]></code>
             <header>Multiple passes</header>
             <code><![CDATA[
-                String.ampersandDecode("Money &amp;lt;&amp;amp;gt; Health", 2);
+                Decode.unescapeXML("Money &amp;lt;&amp;amp;gt; Health", 2);
 
                 // Result: "Money <&gt; Health"
                 ]]>
@@ -25,10 +25,10 @@ Optionally you can provide the number of passes the decoder should run (defaults
     </examples>
     <references>
         <reference>
-            ampersandEncode
+            Encode.escapeXML
         </reference>
     </references>
     <searchTags>
-        ampersand, decode, encrypt
+        ampersand, decode, XML
     </searchTags>
 </function>

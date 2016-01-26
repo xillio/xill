@@ -1,4 +1,4 @@
-package nl.xillio.xill.plugins.string.constructs;
+package nl.xillio.xill.plugins.codec.decode.constructs;
 
 import com.google.inject.Inject;
 import nl.xillio.xill.api.components.MetaExpression;
@@ -6,29 +6,33 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
+import nl.xillio.xill.plugins.codec.decode.services.DecoderService;
 
 /**
  * <p>
  * Decodes all ampersand-encoded characters in the provided text.
  * </p>
  *
- * @author Sander
+ * @author Sander Visser
  */
-public class AmpersandDecodeConstruct extends Construct {
+public class UnescapeXMLConstruct extends Construct {
+
+    private DecoderService decoderService;
 
     @Inject
-    private StringUtilityService stringUtils;
+    public UnescapeXMLConstruct(DecoderService decoderService) {
+        this.decoderService = decoderService;
+    }
 
     @Override
     public ConstructProcessor prepareProcess(final ConstructContext context) {
         return new ConstructProcessor(
-                (string, passes) -> process(string, passes, stringUtils),
+                this::process,
                 new Argument("string", ATOMIC),
                 new Argument("passes", fromValue(1), ATOMIC));
     }
 
-    static MetaExpression process(final MetaExpression stringVar, final MetaExpression passesVar, final StringUtilityService stringUtils) {
+    MetaExpression process(final MetaExpression stringVar, final MetaExpression passesVar) {
         assertNotNull(stringVar, "string");
         assertNotNull(passesVar, "passes");
 
@@ -36,6 +40,6 @@ public class AmpersandDecodeConstruct extends Construct {
 
         int passes = passesVar.getNumberValue().intValue();
 
-        return fromValue(stringUtils.unescapeXML(text, passes));
+        return fromValue(decoderService.unescapeXML(text, passes));
     }
 }

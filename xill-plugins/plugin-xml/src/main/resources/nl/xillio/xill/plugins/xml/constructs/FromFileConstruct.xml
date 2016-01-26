@@ -22,7 +22,7 @@ Loads the XML file filename and returns an XML node object.
                 use XML;
 
                 var note = XML.fromFile("C:/tmp/note.xml");
-                var comments = XML.xpath(note, "//comment/text()");
+                var comments = XML.xPath(note, "//comment/text()");
                 foreach (comment in comments) {
                   System.print(comment);
                 }

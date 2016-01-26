@@ -34,7 +34,7 @@ public class RandomConstruct extends Construct {
 
     @Override
     public ConstructProcessor prepareProcess(final ConstructContext context) {
-        return new ConstructProcessor(value -> process(value, mathService), new Argument("value", LIST, ATOMIC));
+        return new ConstructProcessor(value -> process(value, mathService), new Argument("value", NULL, LIST, ATOMIC));
     }
 
     static MetaExpression process(final MetaExpression value, final MathOperations math) {

@@ -24,7 +24,7 @@ Replace the provided XML node with the new node which must be a string containin
                 use XML;
 
                 var note = XML.fromFile("C:/tmp/note.xml");
-                var heading = XML.xpath(note, "//heading");
+                var heading = XML.xPath(note, "//heading");
                 XML.replaceNode(heading, "&lt; heading&gt;Invitation&lt;/heading&gt;");
                 System.print(XML.toString(note));
             </code>
