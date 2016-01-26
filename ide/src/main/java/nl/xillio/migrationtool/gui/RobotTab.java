@@ -20,6 +20,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.util.Duration;
 import nl.xillio.migrationtool.Loader;
+import nl.xillio.migrationtool.dialogs.AlertDialog;
 import nl.xillio.migrationtool.dialogs.CloseTabStopRobotDialog;
 import nl.xillio.migrationtool.dialogs.SaveBeforeClosingDialog;
 import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
@@ -82,12 +83,11 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
     /**
      * Create a new robottab that holds a currentRobot
      *
-     * @param projectPath
+     * @param projectPath      The project path
      * @param documentPath     The full path to the currentRobot (absolute)
-     * @param globalController
-     * @throws IOException
+     * @param globalController The FXController
      */
-    public RobotTab(final File projectPath, final File documentPath, final FXController globalController) throws IOException {
+    public RobotTab(final File projectPath, final File documentPath, final FXController globalController) {
         this.globalController = globalController;
 
         if (!documentPath.isAbsolute()) {
@@ -309,6 +309,9 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
         File document = getDocument();
         File projectPath = getProjectPath();
+        if (!projectPath.exists()) {
+            projectPath = document.getParentFile();
+        }
 
         if (showDialog) {
             // Show file picker
@@ -330,13 +333,8 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
             FileUtils.write(document, code);
             editorPane.setLastSavedCode(code);
             LOGGER.info("Saved currentRobot to " + document.getAbsolutePath());
-
         } catch (IOException e) {
-            Alert errorAlert = new Alert(AlertType.ERROR);
-            errorAlert.initModality(Modality.APPLICATION_MODAL);
-            errorAlert.setTitle("Error");
-            errorAlert.setContentText(e.getMessage());
-            errorAlert.show();
+            new AlertDialog(AlertType.ERROR, "Failed to save robot", "", e.getMessage()).show();
             LOGGER.error("Failed to save robot", e);
         }
 
@@ -400,9 +398,6 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
         return globalController;
     }
 
-    /**
-     * @param event
-     */
     private void onClose(final Event event) {
         // Check if the robot is saved, else show the save before closing dialog.
         if (editorPane.getDocumentState().getValue() == DocumentState.CHANGED) {
@@ -571,14 +566,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
             setGraphic(null);
             apnStatusBar.setStatus(StatusBar.Status.STOPPED);
 
-            Alert error = new Alert(AlertType.ERROR);
-            error.initModality(Modality.APPLICATION_MODAL);
-            error.setTitle(dialogTitle);
-            error.setHeaderText("Stack overflow");
-            error.setContentText("A stack overflow occurred.");
-            error.setResizable(true);
-            error.getDialogPane().setPrefWidth(540);
-            error.show();
+            new AlertDialog(AlertType.ERROR, dialogTitle, "", "A stack overflow exception occurred.").show();
         });
     }
 
@@ -678,8 +666,8 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
     /**
      * Show a different currentRobot in this tab and highlight the line
      *
-     * @param robot
-     * @param line
+     * @param robot The ID of the robot
+     * @param line  The line number to highlight
      */
     @SuppressWarnings("squid:S1166")
     public void display(final RobotID robot, final int line) {
@@ -740,14 +728,16 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
     }
 
     /**
+     *
+     * @return the Statusbar
+     */
+    public StatusBar getStatusBar(){return this.apnStatusBar;}
+
+    /**
      * Clear the console content related to this robot
      */
     public void clearConsolePane() {
         this.consolePane.clear();
-    }
-
-    private Exception Exception(String empty_fucking_button) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**

@@ -1,6 +1,15 @@
 # Xill IDE - Change Log
 All notable changes to this project will be documented in this file
 
+##[3.1]
+###Added
+- Insecure option to the REST call constructs
+- (Un)escape XML constructs
+- More descriptive information in the robot status bar
+
+###Fixed
+- Issue where focus would be lost on the project view [CTC-1254](https://xillio.atlassian.net/browse/CTC-1254)
+
 ##[3.0-Aristotle]
 ###Added
 

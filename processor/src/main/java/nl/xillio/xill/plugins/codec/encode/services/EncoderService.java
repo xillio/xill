@@ -41,17 +41,25 @@ public interface EncoderService {
     /**
      * Makes a file which represents the given file in Base64-encoding.
      *
-     * @param input  The file we want to convert to base64.
+     * @param input  The file we want to convert to base64
      * @param output The file to which we are writing the output
      */
     void encodeFileBase64(File input, File output) throws IOException;
 
     /**
-     * Returns a string which represents the
+     * Returns a string which represents the base-64-encoded value of the given string.
      *
-     * @param stringInput The string to encode.
-     * @return String       The encoded string.
+     * @param stringInput The string to encode
+     * @return String       The encoded string
      * @throws IOException
      */
     String encodeStringBase64(String stringInput) throws IOException;
+
+    /**
+     * Escapes the XML.
+     *
+     * @param text The text that requires escaping
+     * @return An escaped text
+     */
+    String escapeXML(String text);
 }
