@@ -24,7 +24,7 @@ Removes the provided XML-node.
                 use XML;
 
                 var note = XML.fromFile("C:/tmp/note.xml");
-                var body = XML.xpath(note, "//body");
+                var body = XML.xPath(note, "//body");
                 XML.removeNode(body);
                 System.print(XML.toString(note));
             </code>

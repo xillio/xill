@@ -26,7 +26,7 @@ Returns false if attribute does not exist, otherwise true.
                 use XML;
 
                 var note = XML.fromFile("C:/tmp/note.xml");
-                var parent = XML.xpath(note, "//note");
+                var parent = XML.xPath(note, "//note");
                 XML.removeAttribute(parent, "id");
                 System.print(XML.toString(note));
             </code>

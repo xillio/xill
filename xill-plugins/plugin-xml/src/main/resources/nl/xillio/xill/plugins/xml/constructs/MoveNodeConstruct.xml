@@ -24,9 +24,8 @@ Moves the XML-node 'subnode' to the XML-node 'parentnode', optionally before 'be
                 use XML;
 
                 var note = XML.fromFile("C:/tmp/note.xml");
-                var parent = XML.xpath(note, "//note");
-                var body = XML.xpath(note, "//body");
-                var heading = XML.xpath(note, "//heading");
+                var body = XML.xPath(note, "//body");
+                var heading = XML.xPath(note, "//heading");
                 XML.moveNode(body, heading);
                 System.print(XML.toString(note));
             </code>
@@ -35,13 +34,14 @@ Moves the XML-node 'subnode' to the XML-node 'parentnode', optionally before 'be
             </header>
             <code>
                 <![CDATA[
+                    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
                     <note id="1">
-                      <to>Tove</to>
-                      <from>Jani</from>
-                      <heading>Reminder</heading>
-                      <comment>This was sent to James as well</comment>
-                      <comment>John has not responded to the invitation</comment>
-                      <body>Don't forget me this weekend!</body>
+                    <to>Tove</to>
+                    <from>Jani</from>
+                    <comment>This was sent to James as well</comment>
+                    <comment>John has not responded to the invitation</comment>
+                    <body>Don't forget me this weekend!<heading>Reminder</heading>
+                    </body>
                     </note>
                 ]]>
            </code>

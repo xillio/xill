@@ -24,7 +24,7 @@ Adds the attribute to the XML-node and assigns it the value.
                 use XML;
 
                 var note = XML.fromFile("C:/tmp/note.xml");
-                var comments = XML.xpath(note, "//comment");
+                var comments = XML.xPath(note, "//comment");
                 var value = 0;
                 foreach (comment in comments) {
                     XML.setAttribute(comment, "id", value);
