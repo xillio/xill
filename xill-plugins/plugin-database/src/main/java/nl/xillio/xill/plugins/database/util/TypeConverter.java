@@ -9,6 +9,7 @@ import java.sql.Array;
 import java.sql.Clob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -114,9 +115,16 @@ public enum TypeConverter {
      * Converts a {@link Date} to a String representation
      */
     DATE(Date.class) {
+        private ThreadLocal<DateFormat> TS_DATE_FORMAT = new ThreadLocal<DateFormat>() {
+            @Override
+            protected DateFormat initialValue() {
+                return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            }
+        };
+
         @Override
         protected Object convert(Object o) {
-            return DATE_FORMAT.format((Date) o);
+            return TS_DATE_FORMAT.get().format((Date) o);
         }
     },
     /**
@@ -153,9 +161,6 @@ public enum TypeConverter {
 
     // The index of the value in an Array ResultSet
     private static final int ARRAY_RESULTSET_VALUE = 2;
-
-    // Formatter to use when formatting Dates
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     // A convertor should be able to convert this class and all extending classes
     private Class<?> accepts;
