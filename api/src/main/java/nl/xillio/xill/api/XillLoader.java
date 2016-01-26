@@ -25,7 +25,7 @@ public class XillLoader {
         Files.walkFileTree(coreFolder, finder);
 
         for (Path jarFile : finder.getJarFiles()) {
-            if (!jarFile.toString().contains("processor")) {
+            if (jarFile.toString().contains("processor")) {
                 // This check if to improve performance. We only load from processor jars
                 URL url = jarFile.toUri().toURL();
                 URLClassLoader classLoader = new URLClassLoader(new URL[]{url});
