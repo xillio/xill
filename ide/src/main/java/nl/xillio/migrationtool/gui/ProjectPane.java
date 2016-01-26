@@ -573,6 +573,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         return projectDoesntExist;
     }
 
+    @SuppressWarnings("squid:S1166") // The error message thrown is minimalistic (as wanted) but has all the necessary information.
     private void addProject(final ProjectSettings project) {
         // Check if the project still exists
         if (project.getFolder() == null) {
@@ -586,7 +587,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
             try {
                 watcher.addFolderListener(this, Paths.get(project.getFolder()));
             } catch (IOException e) {
-                LOGGER.error(e.getMessage(), e);
+                LOGGER.error("Could not register project: " + project.getFolder() + ". Did you remove or rename the project folder?");
             }
         }
         projectNode.setExpanded(false);
