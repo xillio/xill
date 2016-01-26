@@ -1,5 +1,7 @@
 package nl.xillio.migrationtool.gui;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -16,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
+import javafx.util.Duration;
 import nl.xillio.migrationtool.Loader;
 import nl.xillio.migrationtool.dialogs.AlertDialog;
 import nl.xillio.migrationtool.dialogs.CloseTabStopRobotDialog;
@@ -56,6 +59,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
     private static final String PATH_STATUSICON_PAUSED = "M256,92.481c44.433,0,86.18,17.068,117.553,48.064C404.794,171.411,422,212.413,422,255.999 s-17.206,84.588-48.448,115.455c-31.372,30.994-73.12,48.064-117.552,48.064s-86.179-17.07-117.552-48.064 C107.206,340.587,90,299.585,90,255.999s17.206-84.588,48.448-115.453C169.821,109.55,211.568,92.481,256,92.481 M256,52.481 c-113.771,0-206,91.117-206,203.518c0,112.398,92.229,203.52,206,203.52c113.772,0,206-91.121,206-203.52 C462,143.599,369.772,52.481,256,52.481L256,52.481z M240.258,346h-52.428V166h52.428V346z M326.17,346h-52.428V166h52.428V346z";
     private final Group STATUSICON_RUNNING = createIcon(PATH_STATUSICON_RUNNING);
     private final Group STATUSICON_PAUSED = createIcon(PATH_STATUSICON_PAUSED);
+    private Timeline autoSaveTimeline;
 
     @FXML
     private HBox hbxBot;
@@ -108,6 +112,21 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
         // Add the context menu.
         addContextMenu(globalController);
+
+        autoSaveTimeline = new Timeline(new KeyFrame(
+                Duration.millis(1000),
+                ae -> save(false)));
+
+
+    }
+
+    /*
+    * reset the timeline.
+     */
+    public void resetAutoSave() {
+        if (Boolean.valueOf(settings.simple().get(Settings.SETTINGS_GENERAL, Settings.EnableAutoSave))) {
+            this.autoSaveTimeline.playFromStart();
+        }
     }
 
     private static void initializeSettings(final File documentPath) {
@@ -423,7 +442,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
      */
     public void runRobot() throws XillParsingException {
         // Read the current setting in the configuration
-        boolean autoSaveBotBeforeRun = Boolean.valueOf(settings.simple().get("SettingsGeneral", "AutoSaveBotBeforeRun"));
+        boolean autoSaveBotBeforeRun = Boolean.valueOf(settings.simple().get(Settings.SETTINGS_GENERAL, Settings.AutoSaveBotBeforeRun));
 
         if (autoSaveBotBeforeRun) {
             if (editorPane.getDocumentState().getValue() == DocumentState.CHANGED) {
@@ -441,11 +460,11 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
                 Label l = new Label("The robot " + currentRobot.getPath().getName() + " needs to be saved before running. Do you want to continue?");
                 CheckBox cb = new CheckBox("Don't ask me again.");
                 cb.addEventHandler(ActionEvent.ACTION, event -> {
-                    boolean currentSettingValue = Boolean.valueOf(settings.simple().get("SettingsGeneral", "AutoSaveBotBeforeRun"));
+                    boolean currentSettingValue = Boolean.valueOf(settings.simple().get(Settings.SETTINGS_GENERAL, Settings.AutoSaveBotBeforeRun));
                     if (currentSettingValue) {
-                        settings.simple().save("SettingsGeneral", "AutoSaveBotBeforeRun", false);
+                        settings.simple().save(Settings.SETTINGS_GENERAL, Settings.AutoSaveBotBeforeRun, false);
                     } else {
-                        settings.simple().save("SettingsGeneral", "AutoSaveBotBeforeRun", true);
+                        settings.simple().save(Settings.SETTINGS_GENERAL, Settings.AutoSaveBotBeforeRun, true);
                     }
                 });
 
@@ -571,14 +590,14 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
                 Platform.runLater(() -> {
                     RobotTab newTab = globalController.openFile(e.getRobot().getPath());
                     newTab.getEditorPane().getEditor().getOnDocumentLoaded().addListener(success ->
-                            // We queue this for later execution because the tab has to display before we can scroll to the right location.
-                            Platform.runLater(() -> {
-                                if (success) {
-                                    // Highlight the tab
-                                    newTab.errorPopup(e.getLine(), e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling " + e.getRobot().getPath().getAbsolutePath());
-                                    relatedHighlightTabs.add(newTab);
-                                }
-                            })
+                                    // We queue this for later execution because the tab has to display before we can scroll to the right location.
+                                    Platform.runLater(() -> {
+                                        if (success) {
+                                            // Highlight the tab
+                                            newTab.errorPopup(e.getLine(), e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling " + e.getRobot().getPath().getAbsolutePath());
+                                            relatedHighlightTabs.add(newTab);
+                                        }
+                                    })
                     );
                 });
             }
