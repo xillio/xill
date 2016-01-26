@@ -24,7 +24,7 @@ public interface DecoderService {
      *
      * @param hexString   A String containing hexadecimal digits
      * @param charsetName the charset name. Default is UTF-8
-     * @return A String containing binary data decoded from the supplied hexString (representing characters).
+     * @return A String containing binary data decoded from the supplied hexString (representing characters)
      * @throws DecoderException Thrown if an odd number of characters is supplied to this function
      */
     String fromHex(String hexString, String charsetName) throws DecoderException;
@@ -48,9 +48,18 @@ public interface DecoderService {
     /**
      * Returns a string which represents the decoded string given.
      *
-     * @param inputString The string to decode.
-     * @return String       The decoded string.
+     * @param inputString The string to decode
+     * @return String       The decoded string
      * @throws IOException
      */
     String decodeStringBase64(String inputString) throws IOException;
+
+    /**
+     * Unescapes a text containing an XML entity.
+     *
+     * @param text   The text that requires unescaping
+     * @param passes The number of passes the decoder runs
+     * @return An unescaped text
+     */
+    String unescapeXML(String text, int passes);
 }
