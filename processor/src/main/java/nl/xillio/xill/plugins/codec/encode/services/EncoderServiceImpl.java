@@ -5,6 +5,7 @@ import me.biesaart.utils.FileUtilsService;
 import me.biesaart.utils.IOUtilsService;
 import org.apache.commons.codec.binary.Base64OutputStream;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.*;
 import java.net.URLEncoder;
@@ -80,4 +81,10 @@ public class EncoderServiceImpl implements EncoderService {
             return ioUtilsService.toString(pipedInputStream).trim();
         }
     }
+
+    @Override
+    public String escapeXML(final String text) {
+        return StringEscapeUtils.escapeXml11(text);
+    }
+
 }
