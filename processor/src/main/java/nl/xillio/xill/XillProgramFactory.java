@@ -1,11 +1,9 @@
 package nl.xillio.xill;
 
 import nl.xillio.events.EventHost;
-import nl.xillio.plugins.PluginLoader;
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.LanguageFactory;
-import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.api.components.*;
 import nl.xillio.xill.api.components.Robot;
 import nl.xillio.xill.api.construct.Construct;
@@ -177,7 +175,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
             // Get includes
             for (IncludeStatement include : robotToken.getIncludes()) {
                 // Build robotID
-                String path = StringUtils.join(include.getName(), File.separator) + "." + Xill.FILE_EXTENSION;
+                String path = StringUtils.join(include.getName(), File.separator) + ".xill";
                 RobotID expectedID = RobotID.getInstance(new File(id.getProjectPath(), path),
                         id.getProjectPath());
                 CodePosition pos = pos(include);

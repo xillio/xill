@@ -1,68 +1,31 @@
 package nl.xillio.xill;
 
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Module;
-import me.biesaart.utils.FileUtils;
-import nl.xillio.plugins.CircularReferenceException;
-import nl.xillio.plugins.ContenttoolsPlugin;
-import nl.xillio.plugins.PluginLoader;
-import nl.xillio.plugins.XillPlugin;
-import nl.xillio.xill.api.Xill;
+import nl.xillio.xill.api.XillEnvironment;
 import nl.xillio.xill.api.XillProcessor;
 import nl.xillio.xill.api.errors.XillParsingException;
-import nl.xillio.xill.services.inject.DefaultInjectorModule;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 import org.testng.annotations.BeforeSuite;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ServiceLoader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * This class represents a test case that will run a robot.
  */
 public abstract class RobotIntegrationTest {
 
-    private Xill xill;
-    private File projectPath = new File("integration-test", getClass().getName());
-    private File pluginPath = new File("../plugins");
-    private PluginLoader<XillPlugin> pluginLoader;
+    private XillEnvironment xill;
+    private Path projectPath = Paths.get("integration-test", getClass().getName());
 
     @BeforeSuite
     public void loadXill() throws IOException {
-        ServiceLoader<ContenttoolsPlugin> loader = ServiceLoader.load(ContenttoolsPlugin.class);
-        for (ContenttoolsPlugin plugin : loader) {
-            Object object = plugin.serve();
-
-            if (object != null) {
-                this.xill = (Xill) object;
-                break;
-            }
-        }
-
-        if (xill == null) {
-            throw new IOException("Could not find xill in classpath");
-        }
-
-        pluginLoader = PluginLoader.load(XillPlugin.class);
-        pluginLoader.addFolder(pluginPath);
-        try {
-            pluginLoader.load();
-        } catch (CircularReferenceException e) {
-            throw new IOException("Could not load plugins", e);
-        }
-
-        List<Module> modules = new ArrayList<>(pluginLoader.getPluginManager().getPlugins());
-        modules.add(new DefaultInjectorModule());
-        Injector injector = Guice.createInjector(modules);
-        pluginLoader.getPluginManager().getPlugins().forEach(injector::injectMembers);
-        pluginLoader.getPluginManager().getPlugins().forEach(XillPlugin::initialize);
+        xill = new XillEnvironmentImpl();
+        xill.addFolder(Paths.get("../plugins"));
     }
 
     protected String getPackage() {
@@ -79,11 +42,11 @@ public abstract class RobotIntegrationTest {
     }
 
     public void runRobot(URL robot, String name) throws IOException {
-        File robotFile = new File(projectPath, name);
+        Path robotFile = projectPath.resolve(name);
 
-        FileUtils.copyInputStreamToFile(robot.openStream(), robotFile);
+        Files.copy(robot.openStream(), robotFile);
 
-        XillProcessor processor = xill.createProcessor(robotFile, projectPath, pluginLoader);
+        XillProcessor processor = xill.buildProcessor(robotFile, projectPath);
 
         try {
             processor.compile();

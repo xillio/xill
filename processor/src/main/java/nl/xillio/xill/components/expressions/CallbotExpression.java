@@ -1,10 +1,10 @@
 package nl.xillio.xill.components.expressions;
 
 import nl.xillio.plugins.XillPlugin;
+import nl.xillio.xill.Xill;
 import nl.xillio.xill.XillProcessor;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.RobotAppender;
-import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.api.components.*;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
@@ -55,9 +55,6 @@ public class CallbotExpression implements Processable {
 
         LOGGER.debug("Evaluating callbot for " + otherRobot.getAbsolutePath());
 
-        if (debugger.getStackTrace().size() > Xill.MAX_STACK_SIZE) {
-            throw new RobotRuntimeException("Callbot went into too many recursions.");
-        }
         if (!otherRobot.exists()) {
             throw new RobotRuntimeException("Called robot " + otherRobot.getAbsolutePath() + " does not exist.");
         }

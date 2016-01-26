@@ -6,7 +6,6 @@ import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.Issue;
 import nl.xillio.xill.api.LanguageFactory;
-import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.api.components.Robot;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.Construct;
@@ -204,7 +203,7 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
     }
 
     private URI getURI(final IncludeStatement include) {
-        String subPath = StringUtils.join(include.getName(), File.separator) + "." + Xill.FILE_EXTENSION;
+        String subPath = StringUtils.join(include.getName(), File.separator) + ".xill";
         File libPath = new File(projectFolder, subPath);
         String fullPath = libPath.getAbsolutePath();
 

@@ -51,12 +51,6 @@ public class XillEnvironmentImpl implements XillEnvironment {
         return this;
     }
 
-    public static void main(String... args) throws IOException {
-        new XillEnvironmentImpl()
-                .addFolder(Paths.get("C:\\Library\\Code\\Xillio\\xill\\plugins"))
-                .buildProcessor(Paths.get("."), Paths.get("."));
-    }
-
     @Override
     public XillProcessor buildProcessor(Path projectRoot, Path robotPath) throws IOException {
         if (needLoad) {
