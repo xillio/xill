@@ -94,8 +94,7 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
      * Stop the robot
      */
     public void stop() {
-        onStop();
-
+        disableAll(StatusBar.Status.STOPPING);
         getDebugger().stop();
     }
 
@@ -155,8 +154,7 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
      * Pause the robot
      */
     public void pause() {
-        onPause();
-
+        disableAll(StatusBar.Status.PAUSING);
         getDebugger().pause();
     }
 
@@ -191,6 +189,19 @@ public class RobotControls implements EventHandler<KeyEvent>, ErrorHandlingPolic
         stepin.setDisable(true);
         stepover.setDisable(true);
         tab.clearHighlight();
+    }
+
+    /**
+     * disable all the buttons and change the status
+     * @param status the status to change the statusBar
+     */
+    private void disableAll(StatusBar.Status status){
+        start.setDisable(true);
+        stop.setDisable(true);
+        pause.setDisable(true);
+        stepin.setDisable(true);
+        stepover.setDisable(true);
+        tab.getStatusBar().setStatus(status);
     }
 
     private Debugger getDebugger() {

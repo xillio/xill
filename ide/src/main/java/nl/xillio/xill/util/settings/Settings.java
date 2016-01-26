@@ -175,6 +175,9 @@ public class Settings {
     /** */
     public static final String RunBotWithCleanConsole = "RunBotWithCleanConsole";
 
+    /** */
+    public static final String EnableAutoSave = "EnableAutoSave";
+
     // =============================================================================
     /**
      * Editor settings dialog
