@@ -1,6 +1,5 @@
 package nl.xillio.xill.plugins.file.constructs;
 
-import junit.framework.Assert;
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ConstructContext;
@@ -14,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Tests the CanReadConstruct class.
@@ -49,11 +49,11 @@ public class CanReadConstructTest extends TestUtils {
         setFileResolverReturnValue(new File(""));
 
         when(metaExpression.getStringValue()).thenReturn("");
-        when(fileUtilities.canRead(any())).thenReturn(true);
+        when(fileUtilities.canRead(any(File.class))).thenReturn(true);
 
         MetaExpression result = CanReadConstruct.process(constructContext, fileUtilities, metaExpression);
 
-        Assert.assertTrue(result.getBooleanValue());
+        assertTrue(result.getBooleanValue());
         verify(fileUtilities, times(1)).canRead(any(File.class));
     }
 
