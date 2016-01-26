@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.codec.decode.services;
 
 import me.biesaart.utils.FileUtilsService;
 import me.biesaart.utils.IOUtilsService;
+import me.biesaart.utils.StringEscapeUtils;
 import nl.xillio.xill.TestUtils;
 import org.apache.commons.io.FileUtils;
 import org.testng.annotations.AfterClass;
@@ -51,6 +52,17 @@ public class DecoderServiceImplTest extends TestUtils {
         String result = decoderService.decodeStringBase64(DEPLOY_BASE64);
 
         assertEquals(result.trim(), EXPECTED_TEXT);
+    }
+
+    @Test
+    public void testUnescapeXML(){
+        String text = "&lt;test&gt;&quot;&amp;";
+        int passes = 5;
+
+        String result = decoderService.unescapeXML(text,passes);
+
+        String expectedOutput = "<test>\"&";
+        assertEquals(expectedOutput, result);
     }
 
     private File createTmp() throws IOException {

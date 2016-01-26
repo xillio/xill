@@ -23,7 +23,7 @@ Useful to generate (parts of) XML documents inline.
                 </note>";
 
                 var xml = XML.fromString(content);
-                var comments = XML.xpath (xml, "//comment/text()");
+                var comments = XML.xPath (xml, "//comment/text()");
                 foreach (comment in comments) {
                      System.print(comment);
                 } ]]>

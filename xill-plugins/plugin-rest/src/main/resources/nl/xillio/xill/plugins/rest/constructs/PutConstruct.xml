@@ -23,6 +23,7 @@ Options:
 	* proxyport - port of the proxy server
 	* user - user name for server authentication         
 	* pass - password for server authentication
+    * insecure - if set to true, insecure SSL connections and transfers are allowed (default = false)
 	* headers - the object of name and value pair strings added as a parts of HTTP request header
 
 The proxy and server authentication options can be combined as follows:

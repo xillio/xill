@@ -14,23 +14,6 @@ import java.util.List;
 public interface StringUtilityService {
 
     /**
-     * Escapes the XML.
-     *
-     * @param text The text that requires escaping.
-     * @return An escaped text.
-     */
-    String escapeXML(String text);
-
-    /**
-     * Unescapes a text containing an XML entity.
-     *
-     * @param text   The text that requires unescaping.
-     * @param passes The number of passes the decoder runs.
-     * @return An unescaped text.
-     */
-    String unescapeXML(String text, int passes);
-
-    /**
      * Hashes the input with the MD5 hash.
      *
      * @param input The string to be hashed.

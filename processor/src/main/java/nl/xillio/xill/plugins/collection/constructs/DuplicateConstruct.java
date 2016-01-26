@@ -22,7 +22,7 @@ public class DuplicateConstruct extends Construct {
     public ConstructProcessor prepareProcess(final ConstructContext context) {
         return new ConstructProcessor(
                 input -> process(input, duplicate),
-                new Argument("list", LIST, OBJECT));
+                new Argument("collection", LIST, OBJECT));
     }
 
     /**

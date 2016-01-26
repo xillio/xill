@@ -26,7 +26,7 @@ public class SortConstruct extends Construct {
     public ConstructProcessor prepareProcess(final ConstructContext context) {
         return new ConstructProcessor(
                 (list, recursive, onKeys, reverse) -> process(list, recursive, onKeys, reverse, sort),
-                new Argument("list", LIST, OBJECT),
+                new Argument("collection", LIST, OBJECT),
                 new Argument("recursive", FALSE, ATOMIC),
                 new Argument("onKeys", FALSE, ATOMIC),
                 new Argument("reverse", FALSE, ATOMIC));

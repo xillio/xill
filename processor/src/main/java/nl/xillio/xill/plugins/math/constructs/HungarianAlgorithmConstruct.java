@@ -50,7 +50,7 @@ public class HungarianAlgorithmConstruct extends Construct {
 
     @Override
     public ConstructProcessor prepareProcess(final ConstructContext context) {
-        return new ConstructProcessor(HungarianAlgorithmConstruct::process, new Argument("matrix", LIST), new Argument("max", ATOMIC));
+        return new ConstructProcessor(HungarianAlgorithmConstruct::process, new Argument("matrix", LIST), new Argument("max", TRUE, ATOMIC));
 
     }
 
