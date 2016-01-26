@@ -1,19 +1,26 @@
 # Xill IDE - Change Log
 All notable changes to this project will be documented in this file
 
-##[3.1]
-###Added
-- Insecure option to the REST call constructs
-- (Un)escape XML constructs
-###Fixed
-- Issue where focus would be lost on the project view [CTC-1254](https://xillio.atlassian.net/browse/CTC-1254)
-
 ##[3.0-Aristotle]
 ###Added
 
 ###Changed
 
 ###Fixed
+
+##[3.0.RC4]
+###Added
+- Insecure option in the REST constructs
+- (Un)escape XML constructs (formerly known as ampersandEncode)
+- Auto-save in GUI
+
+###Changed
+- More informative messages in robot status bar
+- Ctrl-F no longer closes the search bar, but moves focus to it
+
+###Fixed
+- Issue where focus would be lost on the project view [CTC-1254](https://xillio.atlassian.net/browse/CTC-1254)
+- Stack trace on startup when project folder is missing [CTC-1295](https://xillio.atlassian.net/browse/CTC-1295)
 
 
 ##[3.0.RC3]
