@@ -14,11 +14,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
 import javafx.util.Pair;
 import me.biesaart.utils.FileUtils;
 import nl.xillio.migrationtool.dialogs.*;
 import nl.xillio.migrationtool.gui.WatchDir.FolderListener;
 import nl.xillio.xill.api.Xill;
+import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.util.HotkeysHandler;
 import nl.xillio.xill.util.settings.ProjectSettings;
 import nl.xillio.xill.util.settings.Settings;
@@ -343,6 +345,61 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
         deleteItems(selectedItems, hardDelete);
     }
 
+    public void newFile() {
+        // New file can only be created under a project.
+        if (getCurrentProject() == null || getCurrentItem() == null) {
+            return;
+        }
+        File projectfile = getCurrentProject().getValue().getKey();
+
+        // Select initial directory.
+        File initialFolder = getCurrentItem().getValue().getKey();
+        if (initialFolder.isFile()) {
+            initialFolder = initialFolder.getParentFile();
+        }
+
+        // Open a file chooser to save the robot file.
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(initialFolder);
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Xill Robot (*." + Xill.FILE_EXTENSION + ")", "*." + Xill.FILE_EXTENSION));
+        fileChooser.setTitle("New Robot");
+        File chosen = fileChooser.showSaveDialog(this.getScene().getWindow());
+
+        // Check if no file was chosen.
+        if (chosen == null) {
+            return;
+        }
+
+        // Check if the new file is in the project.
+        if (chosen.getParent().startsWith(projectfile.getAbsolutePath())) {
+            // On Linux the FileChooser does not automatically add xill extension.
+            String xillExt = "." + Xill.FILE_EXTENSION;
+            if (!chosen.getName().endsWith(xillExt)) {
+                chosen = new File(chosen.getPath() + xillExt);
+            }
+
+            if (!createOrOverwrite(chosen))
+                return;
+
+            RobotID id = RobotID.getInstance(chosen, projectfile);
+            controller.viewOrOpenRobot(id);
+        } else {
+            // Inform the user about the file being created outside of a project.
+            new AlertDialog(Alert.AlertType.ERROR, "Project path error", "", "Robots can only be created inside projects.").show();
+        }
+    }
+
+    private boolean createOrOverwrite(File file) {
+        // Overwrite existing file with an empty string and reset tab.
+        try {
+            FileUtils.write(file, "", false);
+        } catch (IOException e) {
+            LOGGER.error("Failed to create robot file.", e);
+            return false;
+        }
+        return true;
+    }
+
     @Override
     public void handle(Event event) {
         // Request focus on mouse press.
@@ -551,18 +608,17 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
     }
 
     private TreeItem<Pair<File, String>> findItemByPath(final TreeItem<Pair<File, String>> parent, final String path) {
-        TreeItem<Pair<File, String>> resultItem = null;
         for (TreeItem<Pair<File, String>> item : parent.getChildren()) {
             if (path.equals(item.getValue().getKey().getPath())) {
-                resultItem = item;
+                return item;
             } else {
                 TreeItem<Pair<File, String>> child = findItemByPath(item, path);
                 if (child != null) {
-                    resultItem = child;
+                    return child;
                 }
             }
         }
-        return resultItem;
+        return null;
     }
 
     /**
@@ -659,11 +715,13 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
                 ProjectTreeItem project = (ProjectTreeItem) item;
                 if (dir.startsWith(project.getValue().getKey().getAbsolutePath())) {
                     if (event.kind() == ENTRY_MODIFY) {
-                        // The content of file in project directory has been changed
+                        // The content of file in project directory has been changed.
                         robotFileChanged(child);
-                    } else { // ENTRY_CREATE
-                        // The files in project directory has changed (i.e. some file(s) has been removed / renamed / added)
+                    } else {
+                        // The files in project directory has changed (i.e. some file(s) has been removed / renamed / added).
+                        final String selected = getCurrentItem() == null ? null : getCurrentItem().getValue().getKey().getPath();
                         project.refresh();
+                        Platform.runLater(() -> select(selected));
                     }
                 }
             }
@@ -927,7 +985,7 @@ public class ProjectPane extends AnchorPane implements FolderListener, ChangeLis
      * A custom tree cell which opens a robot tab on double-click and supports drag&drop.
      */
     private class CustomTreeCell extends TreeCell<Pair<File, String>> implements EventHandler<Event> {
-        private final String dragOverClass = "drag-over";
+        private static final String dragOverClass = "drag-over";
 
         public CustomTreeCell() {
             // Subscribe to drag events.
