@@ -61,7 +61,16 @@
                                                             <Insets />
                                                          </padding>
                                                       </HBox>
-																	</children>
+                                                                        <HBox alignment="CENTER_LEFT" disable="false" focusTraversable="false" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" snapToPixel="true" spacing="4.0" visible="true">
+																			<children>
+																				<Label prefWidth="200.0" text="Auto-save after edit" />
+																				<CheckBox fx:id="cbEnableAutoSave" mnemonicParsing="false" />
+																			</children>
+																			<padding>
+																				<Insets />
+																			</padding>
+																		</HBox>
+                                                                    </children>
 																</VBox>
 															</children>
 														</AnchorPane>

@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToolBar;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -206,10 +207,14 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
         if (KeyCombination.valueOf(FXController.hotkeys.getShortcut(Hotkeys.FIND)).match(event)) {
             event.consume();
             if (editorReplaceBar.isOpen()) {
-                editorReplaceBar.close(false);
+                editorReplaceBar.requestFocus();
             } else {
                 editorReplaceBar.open(1);
             }
+        }
+
+        if (editorReplaceBar.isOpen() && event.getCode() == KeyCode.ESCAPE) {
+            editorReplaceBar.close(false);
         }
     }
 
@@ -266,6 +271,7 @@ public class EditorPane extends AnchorPane implements EventHandler<KeyEvent>, Ro
             this.getDocumentState().setValue(DocumentState.SAVED);
         } else {
             this.getDocumentState().setValue(DocumentState.CHANGED);
+            this.tab.resetAutoSave();
         }
     }
 
