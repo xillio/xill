@@ -1,7 +1,6 @@
 package nl.xillio.xill.plugins.string.services.string;
 
 import com.google.inject.Singleton;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 
@@ -39,20 +38,6 @@ public class StringUtilityServiceImpl implements StringUtilityService {
         MessageDigest md5 = MessageDigest.getInstance("MD5");
         md5.update(StandardCharsets.UTF_8.encode(input));
         return String.format("%032x", new BigInteger(1, md5.digest()));
-    }
-
-    @Override
-    public String escapeXML(final String text) {
-        return StringEscapeUtils.escapeXml11(text);
-    }
-
-
-    @Override
-    public String unescapeXML(String text, final int passes) {
-        for (int i = 0; i < passes; i++) {
-            text = StringEscapeUtils.unescapeXml(text);
-        }
-        return text;
     }
 
     @Override
