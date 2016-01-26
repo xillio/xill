@@ -13,7 +13,6 @@ All notable changes to this project will be documented in this file
 ###Added
 - Insecure option in the REST constructs
 - (Un)escape XML constructs (formerly known as ampersandEncode)
-- Auto-save in GUI
 
 ###Changed
 - More informative messages in robot status bar
