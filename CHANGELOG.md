@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file
 
 ###Fixed
 
+
 ##[3.0.RC4]
 ###Added
 - Insecure option in the REST constructs
@@ -21,6 +22,7 @@ All notable changes to this project will be documented in this file
 ###Fixed
 - Issue where focus would be lost on the project view [CTC-1254](https://xillio.atlassian.net/browse/CTC-1254)
 - Stack trace on startup when project folder is missing [CTC-1295](https://xillio.atlassian.net/browse/CTC-1295)
+- Random date corruption in database objects with multiple running robots [CTC-1317](https://xillio.atlassian.net/browse/CTC-1317)
 
 
 ##[3.0.RC3]
