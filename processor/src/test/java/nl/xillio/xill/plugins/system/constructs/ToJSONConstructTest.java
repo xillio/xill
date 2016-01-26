@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.system.constructs;
 
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.services.json.JsonException;
 import nl.xillio.xill.services.json.JsonParser;
 import org.testng.Assert;
@@ -60,5 +61,19 @@ public class ToJSONConstructTest extends TestUtils {
 
         // Assert
         Assert.assertSame(result.getStringValue(), output);
+    }
+
+    /**
+     * Test the process when a StackOverflowError occurs
+     */
+    @Test(expectedExceptions = {RobotRuntimeException.class})
+    public void testProcessCircularReference() throws JsonException {
+        // Mock context
+        MetaExpression input = mockExpression(LIST);
+        JsonParser parser = mock(JsonParser.class);
+        when(parser.toJson(input)).thenThrow(new StackOverflowError());
+
+        // Run
+        ToJSONConstruct.process(input, fromValue(false), parser, null);
     }
 }

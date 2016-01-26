@@ -35,6 +35,8 @@ public class ToJSONConstruct extends Construct {
             return fromValue(jsonParser.toJson(expression));
         } catch (JsonException e) {
             throw new RobotRuntimeException(e.getMessage(), e);
+        } catch (StackOverflowError e) {
+            throw new RobotRuntimeException("A stack overflow error occurred while parsing the JSON, this is likely due a circular reference.", e);
         }
     }
 }

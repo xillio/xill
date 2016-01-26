@@ -30,20 +30,4 @@ public class JacksonParserTest {
         assertEquals(result.get(0), 42);
         assertTrue(result.get(0) instanceof Integer);
     }
-
-    /**
-     * Test if this json parser handles circular references correctly.
-     */
-    @Test
-    public void testCircularReference() throws Exception {
-        JsonParser parser = new JacksonParser(false);
-
-        MetaExpression list = fromValue(new ArrayList<>());
-        ((List<MetaExpression>) list.getValue()).add(list);
-
-        String expected = "[\\\"<<CIRCULAR REFERENCE>>\\\"]";
-        String json = parser.toJson(list);
-
-        assertEquals(json, expected);
-    }
 }
