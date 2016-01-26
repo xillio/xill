@@ -6,6 +6,7 @@ import com.google.inject.Module;
 import me.biesaart.utils.Log;
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.util.XillioHomeFolder;
+import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.XillEnvironment;
 import nl.xillio.xill.api.XillProcessor;
 import nl.xillio.xill.debugging.XillDebugger;
@@ -52,34 +53,46 @@ public class XillEnvironmentImpl implements XillEnvironment {
     }
 
     @Override
-    public XillProcessor buildProcessor(Path projectRoot, Path robotPath) throws IOException {
-        if (needLoad) {
-            if (rootInjector == null) {
-                rootInjector = Guice.createInjector();
-            }
-
-            List<Path> folders = new ArrayList<>(this.folders);
-            if (loadHome && Files.exists(HOME_PLUGIN_DIR)) {
-                folders.add(HOME_PLUGIN_DIR);
-            }
-            loadClasspathPlugins();
-            loadPlugins(folders);
-            needLoad = false;
-
-            List<Module> modules = new ArrayList<>(loadedPlugins.values());
-            modules.add(new DefaultInjectorModule());
-            Injector configuredInjector = rootInjector.createChildInjector(modules);
-
-            LOGGER.info("Injecting plugin members");
-            // Inject members
-            loadedPlugins.values().forEach(configuredInjector::injectMembers);
-
-            LOGGER.info("Loading constructs");
-            // Load constructs
-            loadedPlugins.values().forEach(XillPlugin::initialize);
+    public XillEnvironment loadPlugins() throws IOException {
+        if (rootInjector == null) {
+            rootInjector = Guice.createInjector();
         }
 
-        return new nl.xillio.xill.XillProcessor(projectRoot.toFile(), robotPath.toFile(), new ArrayList<>(loadedPlugins.values()), new XillDebugger());
+        List<Path> folders = new ArrayList<>(this.folders);
+        if (loadHome && Files.exists(HOME_PLUGIN_DIR)) {
+            folders.add(HOME_PLUGIN_DIR);
+        }
+        loadClasspathPlugins();
+        loadPlugins(folders);
+        needLoad = false;
+
+        List<Module> modules = new ArrayList<>(loadedPlugins.values());
+        modules.add(new DefaultInjectorModule());
+        Injector configuredInjector = rootInjector.createChildInjector(modules);
+
+        LOGGER.info("Injecting plugin members");
+        // Inject members
+        loadedPlugins.values().forEach(configuredInjector::injectMembers);
+
+        LOGGER.info("Loading constructs");
+        // Load constructs
+        loadedPlugins.values().forEach(XillPlugin::initialize);
+
+        return this;
+    }
+
+    @Override
+    public XillProcessor buildProcessor(Path projectRoot, Path robotPath) throws IOException {
+        return buildProcessor(projectRoot, robotPath, new XillDebugger());
+    }
+
+    @Override
+    public XillProcessor buildProcessor(Path projectRoot, Path robotPath, Debugger debugger) throws IOException {
+        if (needLoad) {
+            loadPlugins();
+        }
+
+        return new nl.xillio.xill.XillProcessor(projectRoot.toFile(), robotPath.toFile(), new ArrayList<>(loadedPlugins.values()), debugger);
     }
 
     @Override

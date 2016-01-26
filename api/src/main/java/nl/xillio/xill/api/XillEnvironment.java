@@ -39,6 +39,13 @@ public interface XillEnvironment {
     XillEnvironment setRootInjector(Injector injector);
 
     /**
+     * Load plugins from the added folders.
+     *
+     * @return self
+     */
+    XillEnvironment loadPlugins() throws IOException;
+
+    /**
      * Build a processor for a specific execution.
      *
      * @param projectRoot the root folder of the project
@@ -46,6 +53,17 @@ public interface XillEnvironment {
      * @return the processor
      */
     XillProcessor buildProcessor(Path projectRoot, Path robotPath) throws IOException;
+
+    /**
+     * Build a processor for a specific execution.
+     *
+     * @param projectRoot the root folder of the project
+     * @param robotPath   the path to the main robot
+     * @param debugger    the debugger that should be used
+     * @return the processor
+     */
+    XillProcessor buildProcessor(Path projectRoot, Path robotPath, Debugger debugger) throws IOException;
+
 
     /**
      * Get a list of all loaded plugins.
