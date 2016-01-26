@@ -43,14 +43,14 @@ public class RestServiceImplTest {
         RestServiceImpl implementation = spy(new RestServiceImpl());
 
         Executor executor = mock(Executor.class);
-        doReturn(executor).when(implementation).createExecutor();
+        doReturn(executor).when(implementation).createExecutor(false);
         when(executor.execute(request)).thenReturn(response);
 
         // run
         Content content = implementation.processRequest(request, options, body);
 
         // verify
-        verify(implementation, times(1)).createExecutor();
+        verify(implementation, times(1)).createExecutor(false);
         verify(options, times(3)).getTimeout();
         verify(options, times(1)).setHeaders(request);
         verify(options, times(1)).setAuth(any());

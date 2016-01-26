@@ -47,6 +47,8 @@ public class SettingsDialog extends FXMLDialog {
     @FXML
     private CheckBox cbdisplayindentguides;
     @FXML
+    private CheckBox cbEnableAutoSave;
+    @FXML
     private TextField tffontsize;
     private RangeValidator tffontsizeValidator = new RangeValidator(5, 26, "px", false);
     @FXML
@@ -304,6 +306,7 @@ public class SettingsDialog extends FXMLDialog {
         saveCheckBox(cbopenbotwcleanconsole, Settings.SETTINGS_GENERAL, Settings.OpenBotWithCleanConsole);
         saveCheckBox(cbrunbotwcleanconsole, Settings.SETTINGS_GENERAL, Settings.RunBotWithCleanConsole);
         saveCheckBox(cbautosavebotbeforerun, Settings.SETTINGS_GENERAL, Settings.AutoSaveBotBeforeRun);
+        saveCheckBox(cbEnableAutoSave, Settings.SETTINGS_GENERAL,Settings.EnableAutoSave);
 
         // Editor
         saveCheckBox(cbdisplayindentguides, Settings.SETTINGS_EDITOR, Settings.DisplayIndentGuides);
@@ -333,6 +336,7 @@ public class SettingsDialog extends FXMLDialog {
         setCheckBox(cbopenbotwcleanconsole, Settings.SETTINGS_GENERAL, Settings.OpenBotWithCleanConsole);
         setCheckBox(cbrunbotwcleanconsole, Settings.SETTINGS_GENERAL, Settings.RunBotWithCleanConsole);
         setCheckBox(cbautosavebotbeforerun, Settings.SETTINGS_GENERAL, Settings.AutoSaveBotBeforeRun);
+        setCheckBox(cbEnableAutoSave,Settings.SETTINGS_GENERAL,Settings.EnableAutoSave);
 
         // Editor
         setCheckBox(cbdisplayindentguides, Settings.SETTINGS_EDITOR, Settings.DisplayIndentGuides);
@@ -395,6 +399,7 @@ public class SettingsDialog extends FXMLDialog {
         settings.simple().register(Settings.SETTINGS_GENERAL, Settings.OpenBotWithCleanConsole, "true", "If the console is cleared when the bot is open");
         settings.simple().register(Settings.SETTINGS_GENERAL, Settings.RunBotWithCleanConsole, "false", "If the console is cleared when the bot is about to run");
         settings.simple().register(Settings.SETTINGS_GENERAL, Settings.AutoSaveBotBeforeRun, "true", "Save the robot before it's run");
+        settings.simple().register(Settings.SETTINGS_GENERAL, Settings.EnableAutoSave,"true","Save the robot after 2 seconds of no edits");
 
         // Editor
         settings.simple().register(Settings.SETTINGS_EDITOR, Settings.DisplayIndentGuides, "false", "Displays indent guides");
