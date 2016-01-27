@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Throws an error when the provided input is true.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Checking a result</header>
+            <code>
+                use Assert;
+
+                var result = perform();
+
+                // Throw an error
+                Assert.isFalse(result);
+
+                function perform() {
+                    return true;
+                }
+            </code>
+        </example>
+    </examples>
+</function>

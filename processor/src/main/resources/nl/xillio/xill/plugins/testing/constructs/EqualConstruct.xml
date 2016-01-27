@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Throws an error if the two input parameters don't match. This can be used to test input or robots.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Checking for input type</header>
+            <code>
+                use System, Assert;
+
+                function echo(input) {
+                    // Only allow atomic input
+                    Assert.equal(System.typeOf(input), ATOMIC);
+                }
+
+                echo("Hello World");
+                echo([]); // This throws an error
+            </code>
+        </example>
+    </examples>
+</function>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Throws an error when the provided input is not null. Use this to test your functions that should return null.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Checking a result</header>
+            <code>
+                use Assert;
+
+                // This expression is successful
+                Assert.isNull(perform(false));
+
+                // This expression fails
+                Assert.isNull(perform(true));
+
+                function perform(input) {
+                    if(input) {
+                        return "Hello!";
+                    }
+
+                    return null;
+                }
+            </code>
+        </example>
+    </examples>
+</function>
