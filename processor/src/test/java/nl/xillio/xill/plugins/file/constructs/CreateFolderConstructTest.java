@@ -12,9 +12,9 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
 
 /**
  * Test the CreateFolderConstruct
@@ -37,7 +37,7 @@ public class CreateFolderConstructTest {
         // File
         File file = mock(File.class);
         when(file.getAbsolutePath()).thenReturn("ABSPATH");
-        when(TestUtils.CONSTRUCT_FILE_RESOLVER.buildFile(any(), anyString())).thenReturn(file);
+        when(TestUtils.CONSTRUCT_FILE_RESOLVER.buildFile(any(ConstructContext.class), anyString())).thenReturn(file);
 
         // FileUtilities
         FileUtilities fileUtils = mock(FileUtilities.class);
@@ -46,7 +46,7 @@ public class CreateFolderConstructTest {
         MetaExpression result = CreateFolderConstruct.process(context, fileUtils, folder);
 
         // Verify
-        verify(fileUtils, times(1)).createFolder(any());
+        verify(fileUtils, times(1)).createFolder(any(File.class));
 
         // Assert
         assertEquals(result.getStringValue(), "ABSPATH");
@@ -64,7 +64,7 @@ public class CreateFolderConstructTest {
         // File
         File file = mock(File.class);
         when(file.getAbsolutePath()).thenReturn("ABSPATH");
-        when(TestUtils.CONSTRUCT_FILE_RESOLVER.buildFile(any(), anyString())).thenReturn(file);
+        when(TestUtils.CONSTRUCT_FILE_RESOLVER.buildFile(any(ConstructContext.class), anyString())).thenReturn(file);
 
         // FileUtilities
         FileUtilities fileUtils = mock(FileUtilities.class);

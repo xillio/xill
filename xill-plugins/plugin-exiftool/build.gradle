@@ -1,3 +1,0 @@
-dependencies {
-    compile "nl.xillio:exiftool:1.1.0"
-}
