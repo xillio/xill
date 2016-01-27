@@ -1,7 +1,6 @@
 package nl.xillio.xill.components.expressions;
 
 import nl.xillio.xill.api.Debugger;
-import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
@@ -22,9 +21,6 @@ public class FunctionCall implements Processable {
 
     @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-        if (debugger.getStackTrace().size() > Xill.MAX_STACK_SIZE) {
-            throw new RobotRuntimeException("The robot went in too many recursions. The language currently supports up to " + Xill.MAX_STACK_SIZE + " recursions");
-        }
 
         // Process arguments
         List<MetaExpression> expressions = new ArrayList<>();

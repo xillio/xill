@@ -4,7 +4,6 @@ import com.google.common.reflect.ClassPath;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import nl.xillio.plugins.interfaces.Loadable;
 import nl.xillio.xill.api.construct.Construct;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.logging.log4j.LogManager;
@@ -20,7 +19,7 @@ import java.util.Optional;
 /**
  * This class represents the base for all Xill plugins
  */
-public abstract class XillPlugin extends AbstractModule implements Loadable<XillPlugin>, AutoCloseable {
+public abstract class XillPlugin extends AbstractModule implements AutoCloseable {
     private static final Logger LOGGER = LogManager.getLogger();
     private final List<Construct> constructs = new ArrayList<>();
     private final String defaultName;
@@ -146,10 +145,6 @@ public abstract class XillPlugin extends AbstractModule implements Loadable<Xill
     @Override
     public void close() throws Exception {
         purge();
-    }
-
-    @Override
-    public void load(final XillPlugin[] dependencies) {
     }
 
     /**
