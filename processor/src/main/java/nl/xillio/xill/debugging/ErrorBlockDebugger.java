@@ -25,7 +25,9 @@ public class ErrorBlockDebugger extends DelegateDebugger {
     public void handle(Throwable e) {
         this.error = e;
         LOGGER.error("Caught exception in error handler", e);
-        erroredInstruction = getStackTrace().get(0);
+        if (!getStackTrace().isEmpty()) {
+            erroredInstruction = getStackTrace().get(getStackTrace().size() - 1);
+        }
     }
 
     @Override
