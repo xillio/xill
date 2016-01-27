@@ -1,6 +1,5 @@
 package nl.xillio.xill.components.instructions;
 
-import junit.framework.Assert;
 import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
@@ -15,10 +14,8 @@ import java.util.List;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertNotSame;
 
-/**
- * Created by Sander on 5-1-2016.
- */
 public class ErrorInstructionTest {
 
     private XillDebugger xillDebugger;
@@ -74,7 +71,7 @@ public class ErrorInstructionTest {
 
         verify(result, times(2)).get();
 
-        Assert.assertNotSame(returnedValue, InstructionFlow.doResume());
+        assertNotSame(returnedValue, InstructionFlow.doResume());
     }
 
     @Test
@@ -95,8 +92,7 @@ public class ErrorInstructionTest {
 
         instruction.process(xillDebugger, errorDebugger);
 
-        verify(errorDebugger, times(1)).getError();
-
+        // This test is to make sure there are no NPEs even though there is no cause
     }
 
     @Test

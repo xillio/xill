@@ -1,15 +1,14 @@
 package nl.xillio.xill.components.instructions;
 
-import me.biesaart.utils.Log;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.debugging.ErrorBlockDebugger;
-import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static nl.xillio.xill.api.components.ExpressionBuilderHelper.fromValue;
@@ -18,8 +17,6 @@ import static nl.xillio.xill.api.components.ExpressionBuilderHelper.fromValue;
  * This {@link Instruction} represents the error mechanism
  */
 public class ErrorInstruction extends CompoundInstruction {
-
-    private static final Logger LOGGER = Log.get();
     private final InstructionSet doInstructions;
     private final InstructionSet successInstructions;
     private final InstructionSet errorInstructions;
@@ -61,7 +58,7 @@ public class ErrorInstruction extends CompoundInstruction {
      * start processing the blocks.
      *
      * @param debugger The debugger that should be used when processing this
-     * @return
+     * @return the result flow
      */
     @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) {
@@ -78,7 +75,7 @@ public class ErrorInstruction extends CompoundInstruction {
         }
 
         if (errorBlockDebugger.hasError()) {
-            processException(debugger, errorBlockDebugger.getError());
+            processException(debugger, errorBlockDebugger);
         }
 
         processFinally(debugger, errorBlockDebugger.hasError());
@@ -114,17 +111,31 @@ public class ErrorInstruction extends CompoundInstruction {
     /**
      * process what happens if a exception is caught.
      *
-     * @param debugger the debugger
-     * @param e        the exception
+     * @param debugger           the debugger
+     * @param errorBlockDebugger the error debugger that holds an exception
      */
-    private void processException(Debugger debugger, Throwable e) {
+    private void processException(Debugger debugger, ErrorBlockDebugger errorBlockDebugger) {
         if (errorInstructions != null) {
 
             if (cause != null) {
-                cause.pushVariable(fromValue(e.getMessage()));
+
+                LinkedHashMap<String, MetaExpression> errorVar = new LinkedHashMap<>();
+                errorVar.put("message", fromValue(getMessage(errorBlockDebugger.getError())));
+
+                if (errorBlockDebugger.getErroredInstruction() != null) {
+                    errorVar.put("line", fromValue(errorBlockDebugger.getErroredInstruction().getLineNumber()));
+                    errorVar.put("robot", fromValue(errorBlockDebugger.getErroredInstruction().getRobotID().getPath().toString()));
+                }
+
+                cause.pushVariable(fromValue(errorVar));
             }
+
             errorInstructions.process(debugger);
         }
+    }
+
+    private String getMessage(Throwable e) {
+        return e.getMessage() == null ? "Unknown internal error" : e.getMessage();
     }
 
     @Override

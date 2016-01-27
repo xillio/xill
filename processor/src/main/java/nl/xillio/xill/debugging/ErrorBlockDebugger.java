@@ -15,6 +15,7 @@ public class ErrorBlockDebugger extends DelegateDebugger {
 
     private static final Logger LOGGER = Log.get();
     private Throwable error;
+    private nl.xillio.xill.api.components.Instruction erroredInstruction;
 
     public ErrorBlockDebugger(Debugger parentDebugger) {
         super(parentDebugger);
@@ -24,6 +25,7 @@ public class ErrorBlockDebugger extends DelegateDebugger {
     public void handle(Throwable e) {
         this.error = e;
         LOGGER.error("Caught exception in error handler", e);
+        erroredInstruction = getStackTrace().get(0);
     }
 
     @Override
@@ -42,4 +44,7 @@ public class ErrorBlockDebugger extends DelegateDebugger {
         throw new NoSuchElementException("No error was caught");
     }
 
+    public nl.xillio.xill.api.components.Instruction getErroredInstruction() {
+        return erroredInstruction;
+    }
 }
