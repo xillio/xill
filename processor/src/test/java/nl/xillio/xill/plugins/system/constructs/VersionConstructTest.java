@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.system.constructs;
 
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.system.services.version.VersionProvider;
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
@@ -63,7 +64,7 @@ public class VersionConstructTest extends TestUtils {
     /**
      * Test required version under normal conditions with a not supported version number
      */
-    @Test
+    @Test(expectedExceptions = RobotRuntimeException.class)
     public void testProcessError() {
         // Mock context
         String version = "1.2.3";
@@ -76,13 +77,7 @@ public class VersionConstructTest extends TestUtils {
         Logger log = mock(Logger.class);
 
         // Run
-        MetaExpression result = VersionConstruct.process(expression, log, provider);
-
-        // Verify
-        verify(log).error(anyString());
-
-        // Assert
-        Assert.assertSame(result.getStringValue(), version);
+        VersionConstruct.process(expression, log, provider);
     }
 
     /**

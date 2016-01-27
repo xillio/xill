@@ -23,6 +23,7 @@ import nl.xillio.xill.components.expressions.MapExpression;
 import nl.xillio.xill.components.instructions.BreakInstruction;
 import nl.xillio.xill.components.instructions.ContinueInstruction;
 import nl.xillio.xill.components.instructions.*;
+import nl.xillio.xill.components.instructions.ErrorInstruction;
 import nl.xillio.xill.components.instructions.ExpressionInstruction;
 import nl.xillio.xill.components.instructions.FunctionDeclaration;
 import nl.xillio.xill.components.instructions.IfInstruction;
@@ -319,6 +320,29 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
     }
 
     /**
+     * Parse a ErrorInstruction
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    ErrorInstruction parseToken(final xill.lang.xill.ErrorInstruction token) throws XillParsingException{
+
+        Target cause = token.getCause();
+        VariableDeclaration causeVar = null;
+        if(cause != null) {
+            causeVar = VariableDeclaration.nullDeclaration(pos(token.getErrorBlock()),cause.getName());
+            variables.put(cause, causeVar);
+        }
+
+        return new ErrorInstruction(
+                        token.getDoBlock() == null ? null : parseToken(token.getDoBlock().getInstructionSet()),
+                        token.getSuccessBlock() == null ? null : parseToken(token.getSuccessBlock().getInstructionSet()),
+                        token.getErrorBlock() == null ? null : parseToken(token.getErrorBlock().getInstructionSet()),
+                        token.getFinallyBlock() == null ? null : parseToken(token.getFinallyBlock().getInstructionSet()),
+                        causeVar);
+    }
+
+    /**
      * Parse a Foreach Instruction
      *
      * @param token
@@ -334,11 +358,11 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
             variables.put(token.getKeyVar(), keyDec);
 
             return new ForeachInstruction(parseToken(token.getInstructionBlock().getInstructionSet()),
-                    parse(token.getItterator()), valueDec, keyDec);
+                    parse(token.getIterator()), valueDec, keyDec);
         }
 
         return new ForeachInstruction(parseToken(token.getInstructionBlock().getInstructionSet()),
-                parse(token.getItterator()), valueDec);
+                parse(token.getIterator()), valueDec);
     }
 
     /**

@@ -6,6 +6,7 @@ import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.debugging.ErrorBlockDebugger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -59,14 +60,16 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
 
         for (Instruction instruction : instructions) {
 
-            if (!instruction.preventDebugging()) {
-                debugger.startInstruction(instruction);
-            }
-
             if (debugger.shouldStop()) {
                 processResult = InstructionFlow.doReturn(ExpressionBuilderHelper.NULL);
                 break;
             }
+
+            if (!instruction.preventDebugging()) {
+                debugger.startInstruction(instruction);
+            }
+
+
 
             InstructionFlow<MetaExpression> result = processInstruction(instruction, debugger);
             processedInstructions.add(instruction);

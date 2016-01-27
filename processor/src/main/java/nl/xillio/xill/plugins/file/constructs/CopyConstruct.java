@@ -7,6 +7,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 
 import java.io.File;
@@ -34,19 +35,16 @@ public class CopyConstruct extends Construct {
 
         File sourceFile = getFile(context, source.getStringValue());
         File targetFile = getFile(context, target.getStringValue());
-        boolean success = true;
         try {
             fileUtils.copy(sourceFile, targetFile);
         } catch (IOException e) {
-            context.getRootLogger().error("Failed to copy " + sourceFile.getName() + " to " + targetFile.getName() + ": " + e.getMessage(), e);
-            success = false;
+            throw new RobotRuntimeException("Failed to copy " + sourceFile.getName() + " to " + targetFile.getName() + ": " + e.getMessage(), e);
         }
 
         //Build the result
         LinkedHashMap<String, MetaExpression> result = new LinkedHashMap<>();
         result.put("from", fromValue(sourceFile.getAbsolutePath()));
         result.put("into", fromValue(targetFile.getAbsolutePath()));
-        result.put("success", fromValue(success));
         return fromValue(result);
     }
 }

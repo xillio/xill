@@ -4,6 +4,7 @@ import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 import org.apache.logging.log4j.Logger;
 import org.testng.annotations.Test;
@@ -51,18 +52,14 @@ public class CreateFolderConstructTest {
         assertEquals(result.getStringValue(), "ABSPATH");
     }
 
-    @Test
+    @Test(expectedExceptions = RobotRuntimeException.class)
     public void testProcessIOException() throws Exception {
 
         // Folder
         MetaExpression folder = mock(MetaExpression.class);
 
-        // Logger
-        Logger logger = mock(Logger.class);
-
         // Context
         ConstructContext context = mock(ConstructContext.class);
-        when(context.getRootLogger()).thenReturn(logger);
 
         // File
         File file = mock(File.class);
@@ -75,11 +72,5 @@ public class CreateFolderConstructTest {
 
         // Run the method
         MetaExpression result = CreateFolderConstruct.process(context, fileUtils, folder);
-
-        // Verify
-        verify(logger).error(eq("Failed to create ABSPATH"), any(IOException.class));
-
-        // Assert
-        assertEquals(result.getStringValue(), "ABSPATH");
     }
 }

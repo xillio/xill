@@ -4,7 +4,9 @@ import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
+import nl.xillio.xill.plugins.system.services.info.RobotRuntimeInfo;
 import org.apache.logging.log4j.Logger;
 import org.testng.annotations.Test;
 
@@ -68,7 +70,7 @@ public class AppendToConstructTest {
      *
      * @throws Exception
      */
-    @Test()
+    @Test(expectedExceptions = RobotRuntimeException.class)
     public void testProcessIOException() throws Exception {
         // Uri
         MetaExpression path = mock(MetaExpression.class);
@@ -76,9 +78,6 @@ public class AppendToConstructTest {
         // fileUtils
         FileUtilities fileUtils = mock(FileUtilities.class);
         doThrow(new IOException("Something went wrong")).when(fileUtils).appendStringToFile(anyString(), any(File.class));
-
-        // Logger
-        Logger logger = mock(Logger.class);
 
         // Content
         MetaExpression content = mock(MetaExpression.class);
@@ -89,12 +88,8 @@ public class AppendToConstructTest {
 
         // Context
         ConstructContext context = mock(ConstructContext.class);
-        when(context.getRootLogger()).thenReturn(logger);
 
         // Run the method
         AppendToConstruct.process(context, fileUtils, path, content);
-
-        // Verify
-        verify(logger).error(eq("Failed to write to file: Something went wrong"), any(IOException.class));
     }
 }

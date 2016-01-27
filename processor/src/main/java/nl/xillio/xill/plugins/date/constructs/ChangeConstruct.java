@@ -35,7 +35,7 @@ public class ChangeConstruct extends BaseDateConstruct {
         // First we need the zone
         ZoneId zone = null;
         @SuppressWarnings("unchecked")
-        Map<String, MetaExpression> map = (Map<String, MetaExpression>) changeVar.getValue();
+        Map<String, MetaExpression> map = changeVar.getValue();
         if (map.containsKey("zone")) {
             zone = ZoneId.of(map.get("zone").getStringValue());
         } else if (map.containsKey("timezone")) {

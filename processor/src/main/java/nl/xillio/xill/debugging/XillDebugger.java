@@ -180,6 +180,7 @@ public class XillDebugger implements Debugger {
         onRobotStarted.invoke(new RobotStartedAction(robot));
         resume();
         currentStack.clear();
+        functionStack.clear();
     }
 
     @Override
