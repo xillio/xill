@@ -1,9 +1,12 @@
 package nl.xillio.xill.components.expressions;
 
-import nl.xillio.plugins.PluginLoader;
 import nl.xillio.plugins.XillPlugin;
+import nl.xillio.xill.Xill;
 import nl.xillio.xill.XillProcessor;
-import nl.xillio.xill.api.*;
+import nl.xillio.xill.api.Debugger;
+import nl.xillio.xill.api.NullDebugger;
+import nl.xillio.xill.api.RobotAppender;
+import nl.xillio.xill.api.StoppableDebugger;
 import nl.xillio.xill.api.components.*;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
@@ -28,7 +31,7 @@ public class RunBulkExpression implements Processable {
     private final Logger robotLogger;
     private final Processable path;
     private final RobotID robotID;
-    private final PluginLoader<XillPlugin> pluginLoader;
+    private final List<XillPlugin> plugins;
     private Processable argument;
     private final FileResolver resolver;
     private Processable options;
@@ -85,10 +88,10 @@ public class RunBulkExpression implements Processable {
 
         @Override
         public void run() {
-            while(source.hasNext() && !control.shouldStop()) {
+            while (source.hasNext() && !control.shouldStop()) {
                 try {
                     MetaExpression item = source.next();
-                    while(!queue.offer(item, 100, TimeUnit.MILLISECONDS)) {
+                    while (!queue.offer(item, 100, TimeUnit.MILLISECONDS)) {
                         if (control.shouldStop()) {
                             return;
                         }
@@ -113,7 +116,7 @@ public class RunBulkExpression implements Processable {
 
         @Override
         public void run() {
-            while(!control.shouldStop()) {
+            while (!control.shouldStop()) {
                 try {
                     processQueueItem(queue.poll(100, TimeUnit.MILLISECONDS));
                 } catch (InterruptedException e) {
@@ -146,7 +149,7 @@ public class RunBulkExpression implements Processable {
                 StoppableDebugger childDebugger = (StoppableDebugger) debugger.createChild();
                 childDebugger.setStopOnError(stopOnError);
 
-                XillProcessor processor = new XillProcessor(robotID.getProjectPath(), calledRobotFile, pluginLoader, childDebugger);
+                XillProcessor processor = new XillProcessor(robotID.getProjectPath(), calledRobotFile, plugins, childDebugger);
 
                 processor.compileAsSubRobot(robotID);
 
@@ -157,11 +160,7 @@ public class RunBulkExpression implements Processable {
                     processor.getRobot().process(childDebugger);
                     // Ignoring the returned value from the bot as it won't be processed anyway
 
-                    if ( stopOnError && (childDebugger instanceof StoppableDebugger) && childDebugger.hasErrorOccurred() ) {
-                        return false; // If error occurred during the run of the called robot
-                    }
-
-                    return true;
+                    return !(stopOnError && childDebugger.hasErrorOccurred());
 
                 } catch (Exception e) {
                     if (e instanceof RobotRuntimeException) {
@@ -187,14 +186,14 @@ public class RunBulkExpression implements Processable {
     /**
      * Create a new {@link RunBulkExpression}
      *
-     * @param path         the path of the called bot
-     * @param robotID      the root robot of this tree
-     * @param pluginLoader the current plugin loader
+     * @param path    the path of the called bot
+     * @param robotID the root robot of this tree
+     * @param plugins the current plugin loader
      */
-    public RunBulkExpression(final Processable path, final RobotID robotID, final PluginLoader<XillPlugin> pluginLoader) {
+    public RunBulkExpression(final Processable path, final RobotID robotID, final List<XillPlugin> plugins) {
         this.path = path;
         this.robotID = robotID;
-        this.pluginLoader = pluginLoader;
+        this.plugins = plugins;
         robotLogger = RobotAppender.getLogger(robotID);
         resolver = new FileResolverImpl();
         maxThreadsVal = 0;
@@ -208,9 +207,6 @@ public class RunBulkExpression implements Processable {
 
         LOGGER.debug("Evaluating runBulk for " + otherRobot.getAbsolutePath());
 
-        if (debugger.getStackTrace().size() > Xill.MAX_STACK_SIZE) {
-            throw new RobotRuntimeException("RunBulk went into too many recursions.");
-        }
         if (!otherRobot.exists()) {
             throw new RobotRuntimeException("Called robot " + otherRobot.getAbsolutePath() + " does not exist.");
         }
@@ -232,7 +228,7 @@ public class RunBulkExpression implements Processable {
 
         switch (result.getType()) {
             case ATOMIC:
-                if (result.getMeta(MetaExpressionIterator.class) == null) {
+                if (!result.hasMeta(MetaExpressionIterator.class)) {
                     List<MetaExpression> list = new LinkedList<>();
                     list.add(result);
                     return list.iterator();
@@ -269,7 +265,7 @@ public class RunBulkExpression implements Processable {
             return 0;
         }
 
-        BlockingQueue<MetaExpression> queue = new ArrayBlockingQueue<MetaExpression>(maxThreadsVal);
+        BlockingQueue<MetaExpression> queue = new ArrayBlockingQueue<>(maxThreadsVal);
         Control control = new Control(debugger, calledRobotFile);
 
         // Start master thread
@@ -278,7 +274,7 @@ public class RunBulkExpression implements Processable {
 
         // Start working threads
         List<Thread> workingThreads = new LinkedList<>();
-        for(int i=0; i<maxThreadsVal; i++) {
+        for (int i = 0; i < maxThreadsVal; i++) {
             Thread worker = new WorkerThread(queue, control);
             worker.start();
             workingThreads.add(worker);
@@ -360,11 +356,10 @@ public class RunBulkExpression implements Processable {
             throw new RobotRuntimeException("Invalid max. threads value");
         }
 
-        @SuppressWarnings("unchecked")
-        Map<String, MetaExpression> optionParameters = (Map<String, MetaExpression>) optionVar.getValue();
+        Map<String, MetaExpression> optionParameters = optionVar.getValue();
 
         for (Map.Entry<String, MetaExpression> entry : optionParameters.entrySet()) {
-            switch(entry.getKey()) {
+            switch (entry.getKey()) {
                 case "maxThreads":
                     maxThreadsVal = entry.getValue().getNumberValue().intValue();
                     if (maxThreadsVal < 1) {
