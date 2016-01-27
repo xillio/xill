@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Throws an error with the provided message.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Throwing an error</header>
+            <code>
+                use Assert;
+
+                // Throw an error
+                Assert.fail("Something went wrong");
+            </code>
+        </example>
+    </examples>
+</function>
