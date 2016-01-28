@@ -12,27 +12,28 @@ import java.util.IllegalFormatException;
  * @since 12-8-2015
  */
 public interface DocumentationGenerator extends AutoCloseable {
-	/**
-	 * Generate a documentation file from a {@link DocumentationEntity}
-	 *
-	 * @param entity the {@link DocumentationEntity} to generate the output for
-	 * @throws ParsingException      if parsing the entity failed
-	 * @throws IllegalStateException if this DocumentationGenerator has already been closed
-	 */
-	void generate(DocumentationEntity entity) throws ParsingException, IllegalFormatException;
+    /**
+     * Generate a documentation file from a {@link DocumentationEntity}
+     *
+     * @param entity the {@link DocumentationEntity} to generate the output for
+     * @throws ParsingException      if parsing the entity failed
+     * @throws IllegalStateException if this DocumentationGenerator has already been closed
+     */
+    void generate(DocumentationEntity entity) throws ParsingException, IllegalFormatException;
 
-	/**
-	 * Generate the index of all packages
-	 *
-	 * @throws ParsingException if parsing wasn't successful
-	 */
-	void generateIndex() throws ParsingException;
+    /**
+     * Generate the index of all packages
+     *
+     * @throws ParsingException if parsing wasn't successful
+     */
+    void generateIndex() throws ParsingException;
 
-	void setProperty(String name, String value);
+    void setProperty(String name, String value);
 
-	/**
-	 * Get the name of this generator.
-	 * @return the name
-	 */
-	String getIdentity();
+    /**
+     * Get the name of this generator.
+     *
+     * @return the name
+     */
+    String getIdentity();
 }

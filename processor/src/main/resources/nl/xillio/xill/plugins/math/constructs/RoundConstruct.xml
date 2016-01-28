@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Rounds the provided value to the nearest whole number.
+    </description>
+    <examples>
+        <example title="Usage">
+            <code>
+                use Math;
+
+                Math.round(6); // Result: 6
+                Math.round(3.14); // Result: 3
+                Math.round(-3.78); // Result: -4
+                Math.round(0.5); // Result: 1
+            </code>
+        </example>
+    </examples>
+</function>

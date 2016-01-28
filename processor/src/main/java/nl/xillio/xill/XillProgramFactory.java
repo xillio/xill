@@ -6,14 +6,11 @@ import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.LanguageFactory;
 import nl.xillio.xill.api.Xill;
-import nl.xillio.xill.api.components.ExpressionBuilder;
-import nl.xillio.xill.api.components.Processable;
+import nl.xillio.xill.api.components.*;
 import nl.xillio.xill.api.components.Robot;
-import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.XillParsingException;
 import nl.xillio.xill.api.events.RobotStartedAction;
@@ -47,6 +44,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import xill.lang.xill.*;
+import xill.lang.xill.Expression;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -82,6 +80,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
      */
     private final EventHost<RobotStartedAction> robotStartedEvent = new EventHost<>();
     private final EventHost<RobotStoppedAction> robotStoppedEvent = new EventHost<>();
+    private final UUID compilerSerialId = UUID.randomUUID();
 
     /**
      * Create a new {@link XillProgramFactory}
@@ -120,30 +119,29 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
         info.setVariables(variables);
         info.setUsing(useStatements);
 
-        for (UseStatement using : robot.getUses()) {
-            String pluginName = using.getPlugin();
-
-            // In case of non-qualified name: use MySQL;
-            if (pluginName == null) {
-                pluginName = using.getName();
+        for (UseStatement plugin : robot.getUses()) {
+            String pluginName = plugin.getPlugin();
+            if (pluginName == null) { // In case of non-qualified name: use MySQL;
+                pluginName = plugin.getName();
             }
 
             // Really? Java...
             String searchName = pluginName;
 
-            Optional<XillPlugin> plugin = pluginLoader.getPluginManager().getPlugins().stream()
+            Optional<XillPlugin> ActualPlugin = pluginLoader.getPluginManager().getPlugins().stream()
                     .filter(pckage -> pckage.getName().equals(searchName)).findAny();
 
-            if (!plugin.isPresent()) {
-                CodePosition pos = pos(using);
+            if (!ActualPlugin.isPresent()) {
+                CodePosition pos = pos(plugin);
                 throw new XillParsingException("Could not find plugin " + pluginName, pos.getLineNumber(),
                         pos.getRobotID());
             }
 
-            useStatements.put(using, plugin.get());
+            useStatements.put(plugin, ActualPlugin.get());
         }
 
-        nl.xillio.xill.components.Robot instructionRobot = new nl.xillio.xill.components.Robot(robotID, debugger, robotStartedEvent, robotStoppedEvent);
+
+        nl.xillio.xill.components.Robot instructionRobot = new nl.xillio.xill.components.Robot(robotID, debugger, robotStartedEvent, robotStoppedEvent, compilerSerialId);
         compiledRobots.put(robot, new SimpleEntry<>(robotID, instructionRobot));
 
         for (xill.lang.xill.Instruction instruction : robot.getInstructionSet().getInstructions()) {
@@ -155,6 +153,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 
     @Override
     public void compile() throws XillParsingException {
+
         // Push all FunctionDeclarations after parsing
         while (!functionCalls.isEmpty()) {
             Entry<xill.lang.xill.FunctionCall, FunctionCall> pair = functionCalls.pop();
@@ -726,7 +725,8 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
             } else if (extraction.getChild() != null) {
                 result.add(new ExpressionBuilder(extraction.getChild()));
             } else {
-                result.add(new Add(parse(extraction.getValue()), new ExpressionBuilder(0)));
+                Processable size = new CollectionSize(parse(extraction.getValue()));
+                result.add(size);
             }
 
             if (extraction.getValue() instanceof ListExtraction) {
@@ -762,7 +762,8 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 
         // We used neither: listVariable[]. Interpret as
         // listVariable[listVariable + 0]
-        return new FromList(expression, new Add(expression, new ExpressionBuilder(0)));
+        Processable size = new CollectionSize(expression);
+        return new FromList(expression, size);
     }
 
     /**
@@ -869,7 +870,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 
         if (construct == null) {
             throw new XillParsingException("The construct " + token.getFunction() + " does not exist in package "
-                    + token.getPackage().getName(),
+                    + pluginPackage.getName(),
                     pos.getLineNumber(), pos.getRobotID());
         }
 
@@ -881,7 +882,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
         }
 
         // Check argument count by mocking the input
-        ConstructContext constructContext = new ConstructContext(robotID.get(token.eResource()), rootRobot, construct, debugger, robotStartedEvent, robotStoppedEvent);
+        ConstructContext constructContext = new ConstructContext(robotID.get(token.eResource()), rootRobot, construct, debugger, compilerSerialId, robotStartedEvent, robotStoppedEvent);
 
         try (ConstructProcessor processor = construct.prepareProcess(constructContext)) {
             return buildCall(construct, processor, arguments, constructContext, pos);
@@ -955,13 +956,13 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
      * @throws XillParsingException
      */
     Processable parseToken(final xill.lang.xill.MapExpression token) throws XillParsingException {
-        List<Processable> arguments = new ArrayList<>();
-
-        for (Expression expression : token.getArguments()) {
-            arguments.add(parse(expression));
+        if (token.getArguments().size() > 1) {
+            CodePosition pos = pos(token);
+            throw new XillParsingException("Too many arguments were provided.", pos.getLineNumber(), pos.getRobotID());
         }
+        Processable argument = parse(token.getArguments().get(0));
 
-        MapExpression map = new MapExpression(arguments);
+        MapExpression map = new MapExpression(argument);
 
         functionParameterExpressions.push(new SimpleEntry<>(token.getFunction(), map));
 
@@ -976,13 +977,13 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
      * @throws XillParsingException
      */
     Processable parseToken(final xill.lang.xill.FilterExpression token) throws XillParsingException {
-        List<Processable> arguments = new ArrayList<>();
-
-        for (Expression expression : token.getArguments()) {
-            arguments.add(parse(expression));
+        if (token.getArguments().size() > 1) {
+            CodePosition pos = pos(token);
+            throw new XillParsingException("Too many arguments were provided.", pos.getLineNumber(), pos.getRobotID());
         }
+        Processable argument = parse(token.getArguments().get(0));
 
-        FilterExpression filter = new FilterExpression(arguments);
+        FilterExpression filter = new FilterExpression(argument);
 
         functionParameterExpressions.push(new SimpleEntry<>(token.getFunction(), filter));
 

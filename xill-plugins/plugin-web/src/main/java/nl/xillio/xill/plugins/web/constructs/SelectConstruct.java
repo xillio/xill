@@ -14,47 +14,43 @@ import nl.xillio.xill.plugins.web.services.web.WebService;
  */
 public class SelectConstruct extends PhantomJSConstruct {
 
-	@Override
-	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(
-			(element, select) -> process(element, select, webService),
-			new Argument("element", ATOMIC),
-			new Argument("select", ATOMIC));
-	}
+    @Override
+    public ConstructProcessor prepareProcess(final ConstructContext context) {
+        return new ConstructProcessor(
+                (element, select) -> process(element, select, webService),
+                new Argument("element", ATOMIC),
+                new Argument("select", ATOMIC));
+    }
 
-	/**
-	 * @param elementVar
-	 *        input variable (should be of a NODE type) - web element
-	 * @param selectVar
-	 *        input boolean variable
-	 * @param webService
-	 *        The service we're using for accesing the web.
-	 * @return null variable
-	 */
-	public static MetaExpression process(final MetaExpression elementVar, final MetaExpression selectVar, final WebService webService) {
+    /**
+     * @param elementVar input variable (should be of a NODE type) - web element
+     * @param selectVar  input boolean variable
+     * @param webService The service we're using for accesing the web.
+     * @return null variable
+     */
+    public static MetaExpression process(final MetaExpression elementVar, final MetaExpression selectVar, final WebService webService) {
 
-		if(elementVar.isNull()){
-			return NULL;
-		}
-		
-		if (!checkNodeType(elementVar)) {
-			throw new RobotRuntimeException("Invalid variable type. NODE type expected!");
-		}
-		else {
+        if (elementVar.isNull()) {
+            return NULL;
+        }
 
-			boolean select = selectVar.getBooleanValue();
+        if (!checkNodeType(elementVar)) {
+            throw new RobotRuntimeException("Invalid variable type. NODE type expected!");
+        } else {
 
-			WebVariable element = getNode(elementVar);
+            boolean select = selectVar.getBooleanValue();
 
-			try {
-				// Check if we need to click
-				if (select != webService.isSelected(element)) {
-					webService.click(element);
-				}
-			} catch (Exception e) {
-				throw new RobotRuntimeException("Failed to access NODE correctly", e);
-			}
-		}
-		return NULL;
-	}
+            WebVariable element = getNode(elementVar);
+
+            try {
+                // Check if we need to click
+                if (select != webService.isSelected(element)) {
+                    webService.click(element);
+                }
+            } catch (Exception e) {
+                throw new RobotRuntimeException("Failed to access NODE correctly", e);
+            }
+        }
+        return NULL;
+    }
 }

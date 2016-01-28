@@ -24,6 +24,7 @@ import nl.xillio.migrationtool.dialogs.SettingsDialog;
 import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.api.Xill;
+import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.util.HotkeysHandler;
 import nl.xillio.xill.util.HotkeysHandler.Hotkeys;
 import nl.xillio.xill.util.settings.Settings;
@@ -46,7 +47,6 @@ import java.util.stream.Collectors;
  * This class is the global controller for the application
  */
 public class FXController implements Initializable, EventHandler<Event> {
-    private static final Logger log = LogManager.getLogger(FXController.class);
 
     /**
      * Instance of settings handler
@@ -63,11 +63,6 @@ public class FXController implements Initializable, EventHandler<Event> {
     private boolean cancelClose = false; // should be the closing of application interrupted?
 
     private static final Logger LOGGER = LogManager.getLogger();
-
-	/*
-     * ******************************************************* Buttons, fields,
-	 * etc.
-	 */
 
     @FXML
     private Button btnNewFile;
@@ -176,7 +171,7 @@ public class FXController implements Initializable, EventHandler<Event> {
         // Add window handler
         Platform.runLater(() -> apnRoot.getScene().getWindow().setOnCloseRequest(event -> {
             this.cancelClose = false;
-            LOGGER.info("Shutting down application");
+            LOGGER.info("Shutting down application.");
             if (!closeApplication()) {
                 event.consume(); // this cancel the process of the application closing
             }
@@ -196,7 +191,7 @@ public class FXController implements Initializable, EventHandler<Event> {
             btnNewFile.setDisable(true);
             btnOpenFile.setDisable(true);
         }
-        if (getTabs().size() == 0) {
+        if (getTabs().isEmpty()) {
             disableSaveButtons(true);
         }
     }
@@ -252,14 +247,14 @@ public class FXController implements Initializable, EventHandler<Event> {
 
         Platform.runLater(() -> {
             // Verify the license.
-            if(!LicenseUtils.performValidation(false)) {
+            if (!LicenseUtils.performValidation(false)) {
                 closeApplication();
             }
 
             try {
                 showReleaseNotes();
             } catch (IOException e) {
-                LOGGER.error("Failed to show release notes", e);
+                LOGGER.error("Failed to show release notes: " + e.getMessage(), e);
             }
 
             // Select the last opened tab.
@@ -288,102 +283,67 @@ public class FXController implements Initializable, EventHandler<Event> {
      */
     @FXML
     private void buttonNewFile() {
-        // Check if the button is enabled.
-        if (btnNewFile.isDisabled())
-            return;
+        if (!btnNewFile.isDisabled())
+            projectpane.newFile();
+    }
 
-        // Select project path
-        File projectfile;
-        if (projectpane.getCurrentProject() != null) {
-            projectfile = projectpane.getCurrentProject().getValue().getKey();
-        } else {
-            projectfile = new File(System.getProperty("user.home"));
+    /**
+     * Switch focus to an existing tab for a certain robot or create it.
+     *
+     * @param robotID the robot that should be viewed
+     */
+    public void viewOrOpenRobot(RobotID robotID) {
+        RobotTab tab = tpnBots.getTabs().stream()
+                .map(bot -> (RobotTab) bot)
+                .filter(robotTab -> robotTab.getProcessor().getRobotID().equals(robotID))
+                .map(this::reloadTab)
+                .findAny()
+                .orElseGet(() -> createTab(robotID.getPath(), robotID.getProjectPath()));
+
+        if (tab != null) {
+            tab.requestFocus();
         }
 
-        // Select initial directory
-        File initialFolder;
-        if (projectpane.getCurrentItem() != null) {
-            initialFolder = projectpane.getCurrentItem().getValue().getKey();
-        } else {
-            initialFolder = projectfile;
-        }
+    }
 
-        if (initialFolder.isFile()) {
-            initialFolder = initialFolder.getParentFile();
-        }
+    /**
+     * Try to make a tab and add it to the view.
+     *
+     * @param robotFile     the file that should be visible in the tab
+     * @param projectFolder the project folder for the robot
+     * @return the tab or null if it could not be created
+     */
+    private RobotTab createTab(File robotFile, File projectFolder) {
+        RobotTab robotTab = new RobotTab(projectFolder, robotFile, this);
+        tpnBots.getTabs().add(robotTab);
+        return robotTab;
+    }
 
-        // Select robot file
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setInitialDirectory(initialFolder);
-
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
-                "Xill Robot (*." + Xill.FILE_EXTENSION + ")", "*." + Xill.FILE_EXTENSION));
-        fileChooser.setTitle("New Robot");
-
-        File chosen = fileChooser.showSaveDialog(tpnBots.getScene().getWindow());
-
-        if (chosen == null) {
-            // No file was chosen so we abort
-            return;
-        }
-
-        // Fix for files being created out of projects
-        if (chosen.getParent().startsWith(projectfile.getAbsolutePath())) {
-            // The created file is in the project
-
-            // This code is because of different behaviour of FileChooser in Linux and Windows
-            // On Linux the FileChooser does not automatically add xill extension
-            String xillExt = "." + Xill.FILE_EXTENSION;
-            if (!chosen.getName().endsWith(xillExt)) {
-                chosen = new File(chosen.getPath() + xillExt);
-            }
-
-            RobotTab tab;
-            try {
-                if (!chosen.exists()) {
-                    chosen.createNewFile();
-                }
-
-                tab = new RobotTab(projectfile.getAbsoluteFile(), chosen, this);
-                tpnBots.getTabs().add(tab);
-                tab.requestFocus();
-            } catch (IOException e) {
-                LOGGER.error("Failed to perform operation.", e);
-            }
-        } else {
-            // The created file is not in the project
-
-            // Delete the created robot since it is not in a project
-            chosen.getAbsoluteFile().delete();
-
-            // Inform the user about the file being created outside of a project
-            Alert projectPathErrorAlert = new Alert(AlertType.ERROR);
-            projectPathErrorAlert.initModality(Modality.APPLICATION_MODAL);
-            projectPathErrorAlert.setTitle("Project path error");
-            projectPathErrorAlert.setHeaderText("Error");
-            projectPathErrorAlert.setContentText("Robots can only be created inside projects.");
-            projectPathErrorAlert.show();
-        }
-        // End fix for files being created out of projects
+    private RobotTab reloadTab(RobotTab robotTab) {
+        robotTab.reload();
+        return robotTab;
     }
 
     @FXML
     private void buttonOpenFile() {
         // Check if the button is enabled.
-        if (btnOpenFile.isDisabled())
+        if (btnOpenFile.isDisabled()) {
             return;
-
-        FileChooser fileChooser = new FileChooser();
-        String lastfolder = settings.simple().get(Settings.FILE, Settings.LastFolder);
-        if (lastfolder != null) {
-            fileChooser.setInitialDirectory(new File(lastfolder));
         }
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
-                "Xillio scripts (*" + "." + Xill.FILE_EXTENSION + ")", "*" + "." + Xill.FILE_EXTENSION));
-        File newfile = fileChooser.showOpenDialog(btnOpenFile.getScene().getWindow());
 
-        if (newfile != null) {
-            openFile(newfile);
+        // If the last picked folder exists, set the initial directory to that.
+        FileChooser fileChooser = new FileChooser();
+        File lastFolder = new File(settings.simple().get(Settings.FILE, Settings.LastFolder));
+        if (lastFolder.exists()) {
+            fileChooser.setInitialDirectory(lastFolder);
+        }
+
+        // Only show Xill scripts, show the dialog and open the file.
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Xillio scripts (*" + "." + Xill.FILE_EXTENSION + ")", "*" + "." + Xill.FILE_EXTENSION));
+        File newFile = fileChooser.showOpenDialog(btnOpenFile.getScene().getWindow());
+
+        if (newFile != null) {
+            openFile(newFile);
         }
     }
 
@@ -404,7 +364,7 @@ public class FXController implements Initializable, EventHandler<Event> {
     public RobotTab doOpenFile(final File newfile) {
         // Skip if the file doesn't exist
         if (!newfile.exists() || !newfile.isFile()) {
-            log.error("Failed to open file `" + newfile.getAbsolutePath() + "`. File not found.");
+            LOGGER.error("Failed to open file `" + newfile.getAbsolutePath() + "`. File not found.");
             return null;
         }
 
@@ -412,18 +372,16 @@ public class FXController implements Initializable, EventHandler<Event> {
         for (Tab tab : tpnBots.getTabs()) {
             RobotTab editor = (RobotTab) tab;
             try {
-                if (editor.getDocument() != null
-                        && editor.getDocument().getCanonicalPath().equals(newfile.getCanonicalPath())) {
+                if (editor.getDocument() != null && editor.getDocument().getCanonicalPath().equals(newfile.getCanonicalPath())) {
                     tpnBots.getSelectionModel().select(editor);
 
                     showTab(editor);
                     editor.requestFocus();
 
-
                     return editor;
                 }
             } catch (IOException e) {
-                log.error("Error while opening file: " + e.getMessage());
+                LOGGER.error("Error while opening file: " + e.getMessage(), e);
                 return null;
             }
         }
@@ -431,16 +389,10 @@ public class FXController implements Initializable, EventHandler<Event> {
         // Tab is not open yet: open new tab
         settings.simple().save(Settings.FILE, Settings.LastFolder, newfile.getParent());
 
-        RobotTab tab;
-        try {
-            tab = new RobotTab(new File(projectpane.getProjectPath(newfile).get()), newfile.getAbsoluteFile(), this);
-            tpnBots.getTabs().add(tab);
-            tab.requestFocus();
-            return tab;
-        } catch (IOException e) {
-            LOGGER.error("Failed to perform operation.", e);
-        }
-        return null;
+        RobotTab tab = new RobotTab(new File(projectpane.getProjectPath(newfile).orElse("")), newfile.getAbsoluteFile(), this);
+        tpnBots.getTabs().add(tab);
+        tab.requestFocus();
+        return tab;
     }
 
     /**
@@ -454,17 +406,17 @@ public class FXController implements Initializable, EventHandler<Event> {
         node.applyCss();
 
         node.lookupAll(".button")
-                .forEach((n) ->
+                .forEach(n ->
                         n.focusedProperty().addListener(
                                 returnFocusListener));
 
         // MenuButtons do not seem to get children, only items. Handle them as a special case.
-        node.lookupAll(".menu-button").forEach((mb) -> {
+        node.lookupAll(".menu-button").forEach(mb -> {
             if (mb instanceof MenuButton) {
                 ((MenuButton) mb).showingProperty().not().addListener(returnFocusListener);
             }
         });
-        node.lookupAll(".toggle-button").forEach((tb) -> tb.focusedProperty().addListener(returnFocusListener));
+        node.lookupAll(".toggle-button").forEach(tb -> tb.focusedProperty().addListener(returnFocusListener));
 
         //maybe need to add more here... since some things do not yet return focus.
     }
@@ -502,26 +454,6 @@ public class FXController implements Initializable, EventHandler<Event> {
             createSettingsWindow();
             settingsDialog.show();
         }
-    }
-
-    @FXML
-    private void buttonSearch() {
-    }
-
-    @FXML
-    private void buttonBrowser() {
-    }
-
-    @FXML
-    private void buttonRegexTester() {
-    }
-
-    @FXML
-    private void buttonPreviewOpenBrowser() {
-    }
-
-    @FXML
-    private void buttonPreviewOpenRegex() {
     }
 
     @FXML
@@ -563,7 +495,7 @@ public class FXController implements Initializable, EventHandler<Event> {
         settings.simple().save(Settings.WORKSPACE, Settings.OpenTabs, openTabs, true);
 
         // Save active tab
-        final String activeTab[] = {null};
+        final String[] activeTab = {null};
         getTabs().stream().filter(Tab::isSelected).forEach(tab -> activeTab[0] = tab.getDocument().getAbsolutePath());
         if (activeTab[0] != null) {
             settings.simple().save(Settings.WORKSPACE, Settings.ActiveTab, activeTab[0], true);
@@ -573,7 +505,7 @@ public class FXController implements Initializable, EventHandler<Event> {
 
         // Check if there are tabs whose robots are running.
         List<RobotTab> running = getTabs().stream().filter(tab -> tab.getEditorPane().getControls().robotRunning()).collect(Collectors.toList());
-        if (running.size() > 0) {
+        if (!running.isEmpty()) {
             // Show the dialog.
             CloseAppStopRobotsDialog dlg = new CloseAppStopRobotsDialog(running);
             dlg.showAndWait();
@@ -598,7 +530,7 @@ public class FXController implements Initializable, EventHandler<Event> {
             try {
                 plugin.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                LOGGER.error("Error while closing plugin: " + e.getMessage(), e);
             }
         }
 
@@ -608,6 +540,10 @@ public class FXController implements Initializable, EventHandler<Event> {
         ESConsoleClient.getInstance().close();
         ApplicationKillThread.exit();
         return true;
+    }
+
+    private String formatEditorOptionJSRaw(final String optionJS, final String keyValue) {
+        return String.format("%1$s: %2$s,%n", optionJS, settings.simple().get(Settings.SETTINGS_EDITOR, keyValue));
     }
 
     private String formatEditorOptionJS(final String optionJS, final String keyValue) {
@@ -639,7 +575,7 @@ public class FXController implements Initializable, EventHandler<Event> {
         jsSettings += formatEditorOptionJS("printMarginColumn", Settings.PrintMarginColumn);
         jsSettings += formatEditorOptionJSBoolean("showGutter", Settings.ShowGutter);
         jsSettings += formatEditorOptionJSBoolean("showInvisibles", Settings.ShowInvisibles);
-        jsSettings += formatEditorOptionJS("tabSize", Settings.TabSize);
+        jsSettings += formatEditorOptionJSRaw("tabSize", Settings.TabSize);
         jsSettings += formatEditorOptionJSBoolean("useSoftTabs", Settings.UseSoftTabs);
         jsSettings += formatEditorOptionJSBoolean("wrap", Settings.WrapText);
         jsSettings += formatEditorOptionJSBoolean("showLineNumbers", Settings.ShowLineNumbers);
@@ -654,7 +590,7 @@ public class FXController implements Initializable, EventHandler<Event> {
         jsCode += String.format("editor.session.setWrapLimit(%1$s);%n", settings.simple().get(Settings.SETTINGS_EDITOR, Settings.WrapLimit));
         jsCode += String.format("editor.setHighlightSelectedWord(%1$s);%n", settings.simple().getBoolean(Settings.SETTINGS_EDITOR, Settings.HighlightSelectedWord));
 
-        return jsCode; //return jsCode;
+        return jsCode;
     }
 
 

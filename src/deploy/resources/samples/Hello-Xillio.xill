@@ -68,15 +68,15 @@ foreach(key,value in simpleObject) {
 // repeating tasks and to keep your code maintainable. Consider the following.
 function removeDiacritics(str) {
 	// Use the built in replace function with regular expressions
-	str = String.replace(str, "[éèêë]", "e");
-	str = String.replace(str, "[óòôö]", "o");
-	str = String.replace(str, "[áàâä]", "a");
-	str = String.replace(str, "[úùûü]", "u");
-	str = String.replace(str, "[íìîï]", "i");
-	str = String.replace(str, "[ıÿ]", "y");
+	str = String.replace(str, "[Ã©Ã¨ÃªÃ«]", "e");
+	str = String.replace(str, "[Ã³Ã²Ã´Ã¶]", "o");
+	str = String.replace(str, "[Ã¡Ã Ã¢Ã¤]", "a");
+	str = String.replace(str, "[ÃºÃ¹Ã»Ã¼]", "u");
+	str = String.replace(str, "[Ã­Ã¬Ã®Ã¯]", "i");
+	str = String.replace(str, "[Ã½Ã¿]", "y");
 	return(str);
 }
 
-System.print(removeDiacritics("Why livë lìfe tö the mâx when you can livê it to the méân."),"warn");
+System.print(removeDiacritics("Why livÃ« lÃ¬fe tÃ¶ the mÃ¢x when you can livÃª it to the mÃ©Ã¢n."),"warn");
 
 // Happy coding, from the team at Xillio

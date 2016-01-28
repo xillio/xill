@@ -18,7 +18,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 
-import static nl.xillio.xill.api.construct.ExpressionBuilderHelper.fromValue;
+import static nl.xillio.xill.api.components.ExpressionBuilderHelper.fromValue;
 
 /**
  * Support class for storing the content:
@@ -175,7 +175,7 @@ public class Content {
             try {
                 XmlNode xml = xmlNodeFactory.fromString(this.getContent());
                 MetaExpression result = fromValue(xml.toString());
-                result.storeMeta(XmlNode.class, xml);
+                result.storeMeta(xml);
                 return result;
             } catch (Exception e) {
                 LOGGER.error("Failed to parse XML. Falling back.", e);

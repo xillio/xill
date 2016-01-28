@@ -24,7 +24,7 @@ Outputs the string representation of an xml node.
                 use XML;
 
                 var note = XML.fromFile("C:/tmp/note.xml");
-                var from = XML.xpath(note, "//note/from");
+                var from = XML.xPath(note, "//note/from");
                 System.print(XML.toString(from));
             </code>
             <header>

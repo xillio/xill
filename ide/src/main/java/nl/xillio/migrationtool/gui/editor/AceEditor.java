@@ -24,10 +24,12 @@ import nl.xillio.migrationtool.gui.FXController;
 import nl.xillio.migrationtool.gui.HelpPane;
 import nl.xillio.migrationtool.gui.ReplaceBar;
 import nl.xillio.migrationtool.gui.RobotTab;
+import nl.xillio.xill.api.Issue;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.preview.Replaceable;
 import nl.xillio.xill.util.HotkeysHandler.Hotkeys;
 import nl.xillio.xill.util.settings.SettingsHandler;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -56,6 +58,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
     private JSObject ace;
     private RobotTab tab;
     private ContextMenu rightClickMenu;
+    private JSObject undoManager;
 
     static {
         try {
@@ -176,9 +179,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
      * Clears the history by loading a new UndoManager
      */
     public void clearHistory() {
-        executeJS("new UndoManager();", (u) ->
-                ((JSObject) callOnAceBlocking("getSession"))
-                        .call("setUndoManager", u));
+        executeJSBlocking("editor.session.setUndoManager(new UndoManager())");
     }
 
     /**
@@ -228,7 +229,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
      * Clears all breakpoints.
      */
     public void clearBreakpoints() {
-        callOnAce((session) -> ((JSObject) session).call("clearBreakpoints"), "getSession");
+        callOnAce(session -> ((JSObject) session).call("clearBreakpoints"), "getSession");
     }
 
     /**
@@ -276,7 +277,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
      * @param type type of highlighting to be used( "error" or "highlight" )
      */
     public void highlightLine(final int line, final String type) {
-        callOnAce("highlight", line - 1, type);
+        callOnAce("highlight", (line > 0 ? line - 1 : 0), type);
     }
 
     /**
@@ -318,7 +319,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
     public void setCode(final String code) {
         if (documentLoaded.get()) {
             if (ace != null) {
-                callOnAce("setCode", code);
+                callOnAceBlocking("setCode", code);
                 clearHistory();
             }
             this.code.setValue(code);
@@ -334,6 +335,16 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
         }
     }
 
+    public void snapshotUndoManager() {
+        undoManager = (JSObject) executeJSBlocking("editor.session.getUndoManager()");
+    }
+
+    public void restoreUndoManager() {
+        if (undoManager != null) {
+            ((JSObject) ace.getMember("session")).call("setUndoManager", undoManager);
+        }
+    }
+
     /**
      * Load breakpoints from a breakpoint pool for a particular robot
      *
@@ -341,7 +352,8 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
      */
     public void refreshBreakpoints(final RobotID robot) {
         List<Integer> bps = BreakpointPool.INSTANCE.get(robot).stream().map(bp -> bp - 1).collect(Collectors.toList());
-        callOnAce((s) -> ((JSObject) s).call("setBreakpoints", bps), "getSession");
+        clearBreakpoints();
+        bps.forEach(br -> callOnAce(s -> ((JSObject) s).call("setBreakpoint", br), "getSession"));
     }
 
     /**
@@ -467,7 +479,7 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
      * @see JSObject#call(String, Object...)
      */
     private void callOnAce(String method, Object... args) {
-        callOnAce((o) -> {
+        callOnAce(o -> {
         }, method, args);
     }
 
@@ -591,5 +603,18 @@ public class AceEditor implements EventHandler<javafx.event.Event>, Replaceable 
 
     public void setEditable(final boolean editable) {
         callOnAce("setReadOnly", !editable);
+    }
+
+    public void annotate(List<Issue> issues) {
+        List<String> annotations = issues.stream()
+                .map(this::toJavaScript)
+                .collect(Collectors.toList());
+        String param = StringUtils.join(annotations, ",");
+        executeJS("editor.session.setAnnotations([ " + param + "]);");
+    }
+
+    private String toJavaScript(Issue issue) {
+        return String.format("{row:%d,column:0,text:\"%s\",type:\"%s\"}", (issue.getLine() > 0 ? issue.getLine() - 1 : 0),
+                escape(issue.getMessage()), issue.getSeverity().toString().toLowerCase());
     }
 }

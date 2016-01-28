@@ -6,7 +6,7 @@ import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.MetaExpressionIterator;
 import nl.xillio.xill.api.components.Processable;
-import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
+import nl.xillio.xill.api.components.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 public class ForeachInstruction extends CompoundInstruction {
 
     private final InstructionSet instructionSet;
-    private final ExpressionInstruction list;
+    private final Processable list;
     private final VariableDeclaration valueVar;
     private final VariableDeclaration keyVar;
 
@@ -33,9 +33,14 @@ public class ForeachInstruction extends CompoundInstruction {
      */
     public ForeachInstruction(final InstructionSet instructionSet, final Processable list, final VariableDeclaration valueVar, final VariableDeclaration keyVar) {
         this.instructionSet = instructionSet;
-        this.list = new ExpressionInstruction(list);
+        instructionSet.setParentInstruction(this);
+        this.list = list;
         this.valueVar = valueVar;
+        valueVar.setHostInstruction(instructionSet);
         this.keyVar = keyVar;
+        if (keyVar != null) {
+            keyVar.setHostInstruction(instructionSet);
+        }
     }
 
     /**
@@ -54,9 +59,13 @@ public class ForeachInstruction extends CompoundInstruction {
     @SuppressWarnings("unchecked")
     @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-        debugger.startInstruction(list);
-        InstructionFlow<MetaExpression> flow = list.process(debugger);
-        debugger.endInstruction(list, flow);
+        ExpressionInstruction listInstruction = new ExpressionInstruction(list);
+        listInstruction.setHostInstruction(getHostInstruction());
+        listInstruction.setPosition(getPosition());
+        debugger.startInstruction(listInstruction);
+        InstructionFlow<MetaExpression> flow = listInstruction.process(debugger);
+        debugger.endInstruction(listInstruction, flow);
+
 
         MetaExpression result = flow.get();
 
@@ -65,7 +74,7 @@ public class ForeachInstruction extends CompoundInstruction {
             result.registerReference();
             return process(result, debugger);
         } finally {
-            result.releaseReference();
+            listInstruction.close();
         }
     }
 
@@ -209,7 +218,6 @@ public class ForeachInstruction extends CompoundInstruction {
     @Override
     public void setPosition(CodePosition position) {
         super.setPosition(position);
-        list.setPosition(position);
     }
 
     @Override
@@ -218,10 +226,6 @@ public class ForeachInstruction extends CompoundInstruction {
             return Arrays.asList(valueVar, keyVar, list, instructionSet);
         }
         return Arrays.asList(valueVar, list, instructionSet);
-    }
-
-    @Override
-    public void close() throws Exception {
     }
 
 }

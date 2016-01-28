@@ -22,7 +22,7 @@ public class BodyAddFileConstruct extends Construct {
     @Override
     public ConstructProcessor prepareProcess(ConstructContext context) {
         return new ConstructProcessor(
-            (body, name, fileName) -> process(body, name, fileName, restService),
+                (body, name, fileName) -> process(body, name, fileName, restService),
                 new Argument("body", ATOMIC),
                 new Argument("name", ATOMIC),
                 new Argument("fileName", ATOMIC)

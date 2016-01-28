@@ -22,6 +22,7 @@ public class ElseInstruction extends CompoundInstruction {
      */
     public ElseInstruction(final InstructionSet elseInstructions) {
         this.elseInstructions = elseInstructions;
+        elseInstructions.setParentInstruction(this);
 
     }
 
@@ -38,10 +39,6 @@ public class ElseInstruction extends CompoundInstruction {
     @Override
     public boolean preventDebugging() {
         return false;
-    }
-
-    @Override
-    public void close() throws Exception {
     }
 
 }

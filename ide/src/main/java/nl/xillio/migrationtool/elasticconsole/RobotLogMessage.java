@@ -5,34 +5,33 @@ package nl.xillio.migrationtool.elasticconsole;
  */
 public class RobotLogMessage {
 
-	private final String level;
-	private final String message;
+    private final String level;
+    private final String message;
 
-	/**
-	 * Creates a new log message.
-	 *
-	 * @param level
-	 * @param message
-	 *        the message to log
-	 */
-	public RobotLogMessage(final String level, final String message) {
-		this.level = level;
-		this.message = message;
-	}
+    /**
+     * Creates a new log message.
+     *
+     * @param level
+     * @param message the message to log
+     */
+    public RobotLogMessage(final String level, final String message) {
+        this.level = level;
+        this.message = message;
+    }
 
-	/**
-	 * Returns the level.
-	 *
-	 * @return the level
-	 */
-	public String getLevel() {
-		return level;
-	}
+    /**
+     * Returns the level.
+     *
+     * @return the level
+     */
+    public String getLevel() {
+        return level;
+    }
 
-	/**
-	 * @return the message
-	 */
-	public String getMessage() {
-		return message;
-	}
+    /**
+     * @return the message
+     */
+    public String getMessage() {
+        return message;
+    }
 }

@@ -18,42 +18,42 @@ import java.util.List;
 
 public class ListExpression extends MetaExpression {
 
-	private final List<? extends MetaExpression> value;
+    private final List<? extends MetaExpression> value;
 
-	/**
-	 * @param value the value to set
-	 */
-	public ListExpression(final List<MetaExpression> value) {
-		this.value = value;
+    /**
+     * @param value the value to set
+     */
+    public ListExpression(final List<MetaExpression> value) {
+        this.value = value;
 
-		setValue(value);
-		//Register references
-		value.forEach(MetaExpression::registerReference);
-	}
+        setValue(value);
+        //Register references
+        value.forEach(MetaExpression::registerReference);
+    }
 
-	@Override
-	public Collection<Processable> getChildren() {
-		return new ArrayList<>(value);
-	}
+    @Override
+    public Collection<Processable> getChildren() {
+        return new ArrayList<>(value);
+    }
 
-	@Override
-	public Number getNumberValue() {
-		return value.size();
-	}
+    @Override
+    public Number getNumberValue() {
+        return value.size();
+    }
 
-	@Override
-	public String getStringValue() {
-		return toString();
-	}
+    @Override
+    public String getStringValue() {
+        return toString();
+    }
 
-	@Override
-	public boolean getBooleanValue() {
-		return isNull();
-	}
+    @Override
+    public boolean getBooleanValue() {
+        return isNull();
+    }
 
-	@Override
-	public boolean isNull() {
-		return false;
+    @Override
+    public boolean isNull() {
+        return false;
 
-	}
+    }
 }

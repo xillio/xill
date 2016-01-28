@@ -1,8 +1,5 @@
 package nl.xillio.migrationtool.gui;
 
-import java.io.IOException;
-import java.util.List;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -16,118 +13,156 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import nl.xillio.xill.api.Debugger;
+import nl.xillio.xill.api.components.Instruction;
 import nl.xillio.xill.api.components.MetaExpression;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * This class represents a list of variables and their names
  */
 public class VariablePane extends AnchorPane implements RobotTabComponent, ListChangeListener<ObservableVariable> {
-	private final ObservableList<ObservableVariable> observableStateList = FXCollections.observableArrayList();
-	private ObservableVariable selectedItem = null;
+    private final ObservableList<ObservableVariable> observableStateList = FXCollections.observableArrayList();
+    private ObservableVariable selectedItem = null;
 
-	@FXML
-	private TableView<ObservableVariable> tblVariables;
+    private static final Logger LOGGER = LogManager.getLogger(VariablePane.class);
 
-	@FXML
-	private TableColumn<ObservableVariable, String> colVariableName;
-	@FXML
-	private TableColumn<ObservableVariable, String> colVariableType;
-	@FXML
-	private TableColumn<ObservableVariable, String> colVariableValue;
-	@FXML
-	private TableColumn<ObservableVariable, Boolean> colVariableGlobal;
+    @FXML
+    private TableView<ObservableVariable> tblVariables;
 
-	private Debugger debugger;
+    @FXML
+    private TableColumn<ObservableVariable, String> colVariableName;
+    @FXML
+    private TableColumn<ObservableVariable, String> colVariableType;
+    @FXML
+    private TableColumn<ObservableVariable, String> colVariableValue;
+    @FXML
+    private TableColumn<ObservableVariable, Boolean> colVariableGlobal;
 
-	private PreviewPane previewpane;
+    private RobotTab tab;
 
-	/**
-	 * Create a new {@link VariablePane}
-	 */
-	public VariablePane() {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/VariablePane.fxml"));
-			loader.setClassLoader(getClass().getClassLoader());
-			loader.setController(this);
-			Node ui = loader.load();
-			getChildren().add(ui);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+    private PreviewPane previewpane;
+    private InstructionStackPane stackPane;
 
-		tblVariables.setItems(observableStateList);
+    /**
+     * Create a new {@link VariablePane}
+     */
+    public VariablePane() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/VariablePane.fxml"));
+            loader.setClassLoader(getClass().getClassLoader());
+            loader.setController(this);
+            Node ui = loader.load();
+            getChildren().add(ui);
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
 
-		// Remove the default empty table text
-		tblVariables.setPlaceholder(new Label(""));
+        tblVariables.setItems(observableStateList);
 
-		colVariableName.setCellValueFactory(new PropertyValueFactory<ObservableVariable, String>("name"));
-		colVariableValue.setCellValueFactory(new PropertyValueFactory<ObservableVariable, String>("value"));
+        // Remove the default empty table text
+        tblVariables.setPlaceholder(new Label(""));
 
-		tblVariables.getSelectionModel().getSelectedItems().addListener(this);
-	}
+        colVariableName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        colVariableValue.setCellValueFactory(new PropertyValueFactory<>("value"));
 
-	/**
-	 * @return the table view
-	 */
-	public TableView<ObservableVariable> getTableView() {
-		return tblVariables;
-	}
+        tblVariables.getSelectionModel().getSelectedItems().addListener(this);
+    }
+
+    /**
+     * @return the table view
+     */
+    public TableView<ObservableVariable> getTableView() {
+        return tblVariables;
+    }
 
 
+    /**
+     * Refresh the variable pane.
+     */
+    public synchronized void refresh() {
+        clear();
 
-	/**
-	 * Refresh the variable pane.
-	 */
-	public synchronized void refresh() {
-		clear();
+        InstructionStackPane.Wrapper<Instruction> wrapper = stackPane.getInstructionBox().getValue();
 
-		debugger.getVariables().forEach(var -> {
-			String name = debugger.getVariableName(var);
-			MetaExpression value = debugger.getVariableValue(var);
-			ObservableVariable observable = new ObservableVariable(name, value, var);
-			observableStateList.add(observable);
+        if (wrapper == null) {
+            return;
+        }
 
-			// Re-select an item if it was selected before
-			if (selectedItem != null && selectedItem.getName().equals(name)) {
-				tblVariables.getSelectionModel().select(observable);
-			}
-		});
-	}
+        int selected = stackPane.getInstructionBox().getSelectionModel().getSelectedIndex();
 
-	private void clear() {
-		observableStateList.clear();
+        if (selected == -1) {
+            return;
+        }
 
-	}
+        HashMap<String, ObservableVariable> previousVars = new HashMap<>();
 
-	@Override
-	public void initialize(final RobotTab tab) {
-		debugger = tab.getProcessor().getDebugger();
-		debugger.getOnRobotPause().addListener(e -> refresh());
-		debugger.getOnRobotStop().addListener(e -> clear());
-	}
+        getDebugger().getVariables(wrapper.getValue()).forEach(var -> {
 
-	/**
-	 * Set the preview pane
-	 * 
-	 * @param previewpane
-	 */
-	public void setPreviewPane(final PreviewPane previewpane) {
-		this.previewpane = previewpane;
+            String name = getDebugger().getVariableName(var);
+            MetaExpression value = getDebugger().getVariableValue(var, stackPane.getInstructionBox().getItems().size() - selected);
+            ObservableVariable observable = new ObservableVariable(name, value, var);
 
-	}
+            // Delete shadowed variable for view
+            if (previousVars.containsKey(name)) {
+                observableStateList.remove(previousVars.get(name));
+            }
 
-	@Override
-	public void onChanged(final javafx.collections.ListChangeListener.Change<? extends ObservableVariable> change) {
-		Platform.runLater(() -> {
-			List<? extends ObservableVariable> selected = change.getList();
-			ObservableVariable observableVariable = getTableView().getSelectionModel().getSelectedItem();
-			if (!selected.isEmpty()) {
-				selectedItem = selected.get(0);
-			}
-			if (selectedItem != null && observableVariable != null) {
-				previewpane.preview(observableVariable);
-			}
+            previousVars.put(name, observable);
+            observableStateList.add(observable);
 
-		});
-	}
+            // Re-select an item if it was selected before
+            if (selectedItem != null && selectedItem.getName().equals(name)) {
+                tblVariables.getSelectionModel().select(observable);
+            }
+        });
+    }
+
+    private void clear() {
+        observableStateList.clear();
+
+    }
+
+    @Override
+    public void initialize(final RobotTab tab) {
+        this.tab = tab;
+        getDebugger().getOnRobotStop().addListener(e -> clear());
+    }
+
+    public void initialize(final InstructionStackPane pane) {
+        this.stackPane = pane;
+    }
+
+    /**
+     * Set the preview pane.
+     *
+     * @param previewpane The given preview pane to set.
+     */
+    public void setPreviewPane(final PreviewPane previewpane) {
+        this.previewpane = previewpane;
+
+    }
+
+    public Debugger getDebugger() {
+        return this.tab.getProcessor().getDebugger();
+    }
+
+    @Override
+    public void onChanged(final javafx.collections.ListChangeListener.Change<? extends ObservableVariable> change) {
+        Platform.runLater(() -> {
+            List<? extends ObservableVariable> selected = change.getList();
+            ObservableVariable observableVariable = getTableView().getSelectionModel().getSelectedItem();
+            if (!selected.isEmpty()) {
+                selectedItem = selected.get(0);
+            }
+            if (selectedItem != null && observableVariable != null) {
+                previewpane.preview(observableVariable);
+            }
+
+        });
+    }
 }

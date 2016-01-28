@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Tests whether the file identified by uri is a symbolic link. The test returns `true` if `uri` is a (symbolic) link.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Determine if the specified uri is a link to another file or directory.</header>
+            <code>
+                use File;
+                use System;
+
+                System.print(File.isLink("file.txt"));
+                // This will print: false
+
+                System.print(File.isLink("C:\\Windows"));
+                // This will print: false
+
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>canExecute</reference>
+        <reference>canRead</reference>
+        <reference>canWrite</reference>
+        <reference>isFile</reference>
+        <reference>isFolder</reference>
+        <reference>isHidden</reference>
+    </references>
+    <tags>
+        read, write, execute, hidden
+    </tags>
+</function>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Removes a collection from the database. This also removes any indexes associated with the dropped collection.
+Returns `true` if the collection was successfully dropped, or `false` otherwise.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Drop the assets collection</header>
+            <code>
+                use Mongo;
+                Mongo.connect("udm_default");
+
+                Mongo.drop("assets");
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>connect</reference>
+    </references>
+    <tags>
+        mongodb
+    </tags>
+</function>

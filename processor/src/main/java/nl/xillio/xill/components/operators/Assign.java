@@ -2,10 +2,10 @@ package nl.xillio.xill.components.operators;
 
 import com.google.common.collect.Lists;
 import nl.xillio.xill.api.Debugger;
+import nl.xillio.xill.api.components.ExpressionBuilderHelper;
 import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
-import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.components.instructions.Instruction;
 import nl.xillio.xill.components.instructions.VariableDeclaration;
@@ -32,34 +32,32 @@ public class Assign implements Processable {
      * @param path
      * @param expression          The expression to assign
      */
-    public Assign(final VariableDeclaration variableDeclaration, final List<Processable> path,
-                  final Processable expression) {
+    public Assign(final VariableDeclaration variableDeclaration, final List<Processable> path, final Processable expression) {
         this.variableDeclaration = variableDeclaration;
         this.path = Lists.reverse(path);
         this.expression = expression;
     }
 
     @Override
-    public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
+    public InstructionFlow<MetaExpression> process(final Debugger debugger) {
         processWithValue(debugger);
 
         return InstructionFlow.doResume(ExpressionBuilderHelper.NULL);
     }
 
     // Assignment to list
-    private void assign(final List<MetaExpression> target, final int pathID, final MetaExpression value,
-                        final Debugger debugger) throws RobotRuntimeException {
+    private void assign(final List<MetaExpression> target, final int pathID, final MetaExpression value, final Debugger debugger) {
         MetaExpression indexVal = path.get(pathID).process(debugger).get();
         indexVal.registerReference();
         int index = indexVal.getNumberValue().intValue();
         double indexD = indexVal.getNumberValue().doubleValue();
         indexVal.releaseReference();
 
-        if(!Double.isFinite(indexD)) {
-            throw new RobotRuntimeException("A list cannot have infinite elements.");
-        }
         if (Double.isNaN(indexD)) {
             throw new RobotRuntimeException("A list cannot have named elements.");
+        }
+        if (!Double.isFinite(indexD)) {
+            throw new RobotRuntimeException("A list cannot have infinite elements.");
         }
         if (path.size() - 1 == pathID) {
             // This is the value to write to
@@ -92,9 +90,8 @@ public class Assign implements Processable {
         }
     }
 
-    private void assign(final Map<String, MetaExpression> target, final int pathID, final MetaExpression value,
-                        final Debugger debugger) throws RobotRuntimeException {
-        MetaExpression indexValue =  path.get(pathID).process(debugger).get();
+    private void assign(final Map<String, MetaExpression> target, final int pathID, final MetaExpression value, final Debugger debugger) {
+        MetaExpression indexValue = path.get(pathID).process(debugger).get();
         indexValue.registerReference();
         String index = indexValue.getStringValue();
         indexValue.releaseReference();
@@ -124,7 +121,6 @@ public class Assign implements Processable {
 
     @SuppressWarnings("unchecked")
     private void moveOn(MetaExpression currentValue, int pathID, MetaExpression value, Debugger debugger) {
-
         switch (currentValue.getType()) {
             case LIST:
                 assign((List<MetaExpression>) currentValue.getValue(), pathID + 1, value, debugger);
@@ -133,7 +129,7 @@ public class Assign implements Processable {
                 assign((Map<String, MetaExpression>) currentValue.getValue(), pathID + 1, value, debugger);
                 break;
             default:
-                throw new IllegalStateException("Can only assign to children of Object and List types.");
+                throw new IllegalStateException("Can only assign to children of OBJECT and LIST types.");
         }
     }
 

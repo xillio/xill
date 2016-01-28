@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Determines if the currently authenticated user has read rights to the specified file/folder. The test returns `true` if
+`uri` can be read.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Determine if an authenticated user has read access to the specified file/folder.</header>
+            <code>
+                use File;
+                use System;
+
+                System.print(File.canRead("file.txt"));
+                // This will print: true
+
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>canExecute</reference>
+        <reference>canWrite</reference>
+        <reference>isFile</reference>
+        <reference>isFolder</reference>
+        <reference>isHidden</reference>
+        <reference>isLink</reference>
+    </references>
+    <tags>
+        read, write, execute, hidden
+    </tags>
+</function>

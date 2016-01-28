@@ -29,6 +29,15 @@ public class IfInstructionBlock extends CompoundInstruction {
     }
 
     @Override
+    public void setHostInstruction(InstructionSet hostInstruction) {
+        super.setHostInstruction(hostInstruction);
+        conditionInstructions.forEach(inst -> inst.setHostInstruction(hostInstruction));
+        if (elseInstruction != null) {
+            elseInstruction.setHostInstruction(hostInstruction);
+        }
+    }
+
+    @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
 
         // Find the first if instruction
@@ -54,9 +63,5 @@ public class IfInstructionBlock extends CompoundInstruction {
         children.addAll(conditionInstructions);
 
         return children;
-    }
-
-    @Override
-    public void close() throws Exception {
     }
 }

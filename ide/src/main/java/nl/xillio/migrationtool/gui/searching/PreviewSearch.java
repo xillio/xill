@@ -9,6 +9,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.util.Pair;
 import nl.xillio.xill.api.preview.Searchable;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,8 @@ import java.util.regex.PatternSyntaxException;
  * @author Zbynek Hochmann
  */
 public class PreviewSearch implements Searchable {
+
+    private static final Logger LOGGER = LogManager.getLogger();
 
     private class SearchTextOccurrence {
         private final int start;
@@ -70,6 +74,7 @@ public class PreviewSearch implements Searchable {
         this.apnPreviewPane = apnPreviewPane;
     }
 
+    @SuppressWarnings("squid:S1166") // PatternSyntaxException is handled correctly
     @Override
     public void searchPattern(String pattern, boolean caseSensitive) {
         // Clear selection
@@ -91,7 +96,7 @@ public class PreviewSearch implements Searchable {
 
         Node node = apnPreviewPane.getChildren().get(0);
         if (node instanceof TextArea) {
-            text = (TextArea)node;
+            text = (TextArea) node;
             tableView = null;
             searchText(); // Search in textarea
         } else {
@@ -148,13 +153,13 @@ public class PreviewSearch implements Searchable {
 
     private void selectText(final int occurrence) {
         if (occurrence >= 0 && occurrence < occurrences.size()) {
-            SearchTextOccurrence element = (SearchTextOccurrence)occurrences.get(occurrence);
+            SearchTextOccurrence element = (SearchTextOccurrence) occurrences.get(occurrence);
             text.selectRange(element.getStart(), element.getEnd());
         }
     }
 
     private void selectTreeItem(final int occurrence) {
-        SearchTreeOccurrence treeOccurrence = (SearchTreeOccurrence)occurrences.get(occurrence);
+        SearchTreeOccurrence treeOccurrence = (SearchTreeOccurrence) occurrences.get(occurrence);
 
         Node node = apnPreviewPane.getChildren().get(0);
         TreeTableView<Pair<String, Node>> nodeTableView = getTreeTableView(node);

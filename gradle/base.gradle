@@ -27,3 +27,41 @@ task copyToPluginsDir(type: Sync) {
 
     into new File(pluginsDir, project.name)
 }
+
+rootProject.run.dependsOn prepare
+
+/**
+ * Make sur UTF-8 is used during compiling using gradle
+ */
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+test {
+    exclude "test/integration/**"
+
+    binResultsDir = file("$buildDir/test-results/UT")
+
+    useTestNG() {
+        outputDirectory = file("$buildDir/test-output/UT")
+    }
+
+    jacoco {
+        destinationFile = file("$buildDir/jacoco-ut/jacoco-ut.exec")
+    }
+}
+
+task integrationTest(type: Test, dependsOn: prepare, group: 'xillio') {
+    include "**/integration/**"
+    workingDir rootProject.buildDir
+    rootProject.buildDir.mkdirs()
+    binResultsDir = file("$buildDir/test-results/IT")
+
+    useTestNG() {
+        outputDirectory = file("$buildDir/test-output/IT")
+    }
+
+    jacoco {
+        destinationFile = file("$buildDir/jacoco-it/jacoco-it.exec")
+    }
+}

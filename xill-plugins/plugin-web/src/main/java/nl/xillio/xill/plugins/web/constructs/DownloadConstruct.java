@@ -33,31 +33,24 @@ public class DownloadConstruct extends PhantomJSConstruct {
     }
 
     /**
-     * @param urlVar
-     *        The URL of the link that has to be downloaded
-     * @param fileNameVar
-     *        A file where the downloaded content is to be stored
-     * @param webContextVar
-     *        An optional page or node variable that is used for take-over the cookies and use is during the download
-     * @param timeoutVar
-     *        The timeout in miliseconds
-     * @param webService
-     *        Web service
-     * @param context
-     *        The context of this construct
-     * @return
-     *        null variable
+     * @param urlVar        The URL of the link that has to be downloaded
+     * @param fileNameVar   A file where the downloaded content is to be stored
+     * @param webContextVar An optional page or node variable that is used for take-over the cookies and use is during the download
+     * @param timeoutVar    The timeout in miliseconds
+     * @param webService    Web service
+     * @param context       The context of this construct
+     * @return null variable
      */
     public static MetaExpression process(final MetaExpression urlVar, final MetaExpression fileNameVar, final MetaExpression webContextVar, final MetaExpression timeoutVar, final WebService webService, final ConstructContext context) {
 
         String url = urlVar.getStringValue();
         if (url.isEmpty()) {
-            throw new RobotRuntimeException("Invalid variable value. Url is empty!");
+            throw new RobotRuntimeException("Invalid variable value. URL is empty.");
         }
 
         String fileName = fileNameVar.getStringValue();
         if (fileName.isEmpty()) {
-            throw new RobotRuntimeException("Invalid variable value. Filename is empty!");
+            throw new RobotRuntimeException("Invalid variable value. Filename is empty.");
         }
         File targetFile = getFile(context, fileName);
 
@@ -68,7 +61,7 @@ public class DownloadConstruct extends PhantomJSConstruct {
             } else if (checkNodeType(webContextVar)) {
                 webContext = getNode(webContextVar);
             } else {
-                throw new RobotRuntimeException("Invalid variable type. PAGE or NODE variable type expected!");
+                throw new RobotRuntimeException("Invalid variable type. PAGE or NODE variable type expected.");
             }
         }
 
@@ -80,9 +73,9 @@ public class DownloadConstruct extends PhantomJSConstruct {
         try {
             webService.download(url, targetFile, webContext, timeout);
         } catch (MalformedURLException e) {
-            throw new RobotRuntimeException("Invalid URL! " + e.getMessage());
+            throw new RobotRuntimeException("Invalid URL", e);
         } catch (IOException e) {
-            throw new RobotRuntimeException("Error occured during the download! " + e.getMessage());
+            throw new RobotRuntimeException("Error during download", e);
         }
 
         return NULL;

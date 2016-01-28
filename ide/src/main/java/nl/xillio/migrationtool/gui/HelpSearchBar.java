@@ -1,11 +1,5 @@
 package nl.xillio.migrationtool.gui;
 
-import java.io.IOException;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -23,6 +17,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Window;
 import nl.xillio.xill.docgen.DocumentationSearcher;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
 
 /**
  * A search bar, with the defined options and behavior.
@@ -30,186 +28,186 @@ import nl.xillio.xill.docgen.DocumentationSearcher;
  * @author Thomas Biesaart
  */
 public class HelpSearchBar extends AnchorPane {
-	private static final Logger LOGGER = LogManager.getLogger();
-	private static int ROW_HEIGHT = 29;
-	private final ListView<String> listView;
-	private HelpPane helpPane;
-	private final Tooltip hoverToolTip;
+    private static final Logger LOGGER = LogManager.getLogger();
+    private static int ROW_HEIGHT = 29;
+    private final ListView<String> listView;
+    private HelpPane helpPane;
+    private final Tooltip hoverToolTip;
 
-	@FXML
-	private TextField searchField;
+    @FXML
+    private TextField searchField;
 
-	private final ObservableList<String> data = FXCollections.observableArrayList();
-	private DocumentationSearcher searcher;
+    private final ObservableList<String> data = FXCollections.observableArrayList();
+    private DocumentationSearcher searcher;
 
-	/**
-	 * Default constructor.
-	 */
-	public HelpSearchBar() {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/HelpSearchBar.fxml"));
-			loader.setClassLoader(getClass().getClassLoader());
-			loader.setController(this);
-			Node ui = loader.load();
-			getChildren().add(ui);
-		} catch (IOException e) {
-			LOGGER.error("Failed to load help pane", e);
-		}
+    /**
+     * Default constructor.
+     */
+    public HelpSearchBar() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/HelpSearchBar.fxml"));
+            loader.setClassLoader(getClass().getClassLoader());
+            loader.setController(this);
+            Node ui = loader.load();
+            getChildren().add(ui);
+        } catch (IOException e) {
+            LOGGER.error("Failed to load help pane", e);
+        }
 
-		// Result list
-		listView = new ListView<>(data);
-		listView.setOnMouseClicked(this::onClick);
-		listView.setOnKeyPressed(this::onKeyPressed);
-		listView.setPrefHeight(ROW_HEIGHT);
-		listView.setFixedCellSize(ROW_HEIGHT);
+        // Result list
+        listView = new ListView<>(data);
+        listView.setOnMouseClicked(this::onClick);
+        listView.setOnKeyPressed(this::onKeyPressed);
+        listView.setPrefHeight(ROW_HEIGHT);
+        listView.setFixedCellSize(ROW_HEIGHT);
 
-		// Result wrapper
-		hoverToolTip = new Tooltip();
-		hoverToolTip.setGraphic(listView);
-		hoverToolTip.prefWidthProperty().bind(searchField.widthProperty());
+        // Result wrapper
+        hoverToolTip = new Tooltip();
+        hoverToolTip.setGraphic(listView);
+        hoverToolTip.prefWidthProperty().bind(searchField.widthProperty());
 
-		data.addListener((ListChangeListener<Object>) change -> listView.setPrefHeight((Math.min(10, data.size())) * ROW_HEIGHT + 2));
+        data.addListener((ListChangeListener<Object>) change -> listView.setPrefHeight((Math.min(10, data.size())) * ROW_HEIGHT + 2));
 
-		searchField.setPromptText("Type here to start a search");
-		// Listen to search changes
-		searchField.textProperty().addListener(this::searchTextChanged);
+        searchField.setPromptText("Type here to start a search");
+        // Listen to search changes
+        searchField.textProperty().addListener(this::searchTextChanged);
 
-		// Close on focus lost
-		searchField.focusedProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
-			if (newValue) {
-				showResults();
-			} else {
-				hoverToolTip.hide();
-			}
-		});
-	}
+        // Close on focus lost
+        searchField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                showResults();
+            } else {
+                hoverToolTip.hide();
+            }
+        });
+    }
 
-	/**
-	 * Handles a key press.
-	 * Checks for an ENTER and then tries to open a page.
-	 *
-	 * @param keyEvent
-	 */
-	public void onKeyPressed(final KeyEvent keyEvent) {
-		if (keyEvent.getCode() == KeyCode.ENTER) {
-			String content = searchField.getText();
+    /**
+     * Handles a key press.
+     * Checks for an ENTER and then tries to open a page.
+     *
+     * @param keyEvent The key that has been pressed.
+     */
+    public void onKeyPressed(final KeyEvent keyEvent) {
+        if (keyEvent.getCode() == KeyCode.ENTER) {
+            if (openSelected()) {
+                return;
+            }
+            String content = searchField.getText();
 
-			if (content.isEmpty()) {
-				helpPane.displayHome();
-				cleanup();
-			} else if (content.split(" ").length == 1) {
-				tryDisplayIndexOf(content);
-			}
-		}
-	}
+            if (content.isEmpty()) {
+                helpPane.displayHome();
+                cleanup();
+            } else if (content.split(" ").length == 1) {
+                tryDisplayIndexOf(content);
+            }
+        }
+    }
 
-	/**
-	 * Tries to display the index of a given package name.
-	 *
-	 * @param packet
-	 *        The name of the package we try to display.
-	 */
-	private void tryDisplayIndexOf(final String packet) {
-		try {
-			helpPane.display(packet, "_index");
-			cleanup();
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
-		}
-	}
+    /**
+     * Tries to display the index of a given package name.
+     *
+     * @param packet The name of the package we try to display.
+     */
+    private void tryDisplayIndexOf(final String packet) {
+        try {
+            helpPane.display(packet, "_index");
+            cleanup();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
 
-	/**
-	 * Handles the clicking mechanism.
-	 *
-	 * @param mouseEvent
-	 *        The mouseEvent.
-	 */
-	private void onClick(final MouseEvent mouseEvent) {
-		openSelected();
-	}
+    /**
+     * Handles the clicking mechanism.
+     *
+     * @param mouseEvent The mouseEvent.
+     */
+    private void onClick(final MouseEvent mouseEvent) {
+        openSelected();
+    }
 
-	/**
-	 * Opens the selected item.
-	 */
-	void openSelected() {
-		String selected = listView.getSelectionModel().getSelectedItem();
+    /**
+     * Opens the selected item.
+     */
+    boolean openSelected() {
+        String selected = listView.getSelectionModel().getSelectedItem();
 
-		if (selected == null) {
-			return;
-		}
+        if (selected == null) {
+            return false;
+        }
 
-		String[] parts = selected.split("\\.");
-		helpPane.display(parts[0], parts[1]);
-		cleanup();
-	}
+        String[] parts = selected.split("\\.");
+        helpPane.display(parts[0], parts[1]);
+        cleanup();
+        return true;
+    }
 
-	/**
-	 * Cleans the UI (hiding the tooltips, clearing its content etc).
-	 */
-	void cleanup() {
-		hoverToolTip.hide();
-		data.clear();
-		searchField.clear();
-		helpPane.requestFocus();
-	}
+    /**
+     * Cleans the UI (hiding the tooltips, clearing its content etc).
+     */
+    void cleanup() {
+        hoverToolTip.hide();
+        data.clear();
+        searchField.clear();
+        helpPane.requestFocus();
+    }
 
-	/**
-	 * Set the searcher that should be used.
-	 *
-	 * @param searcher
-	 *        the searcher
-	 */
-	public void setSearcher(final DocumentationSearcher searcher) {
-		this.searcher = searcher;
-	}
+    /**
+     * Set the searcher that should be used.
+     *
+     * @param searcher the searcher
+     */
+    public void setSearcher(final DocumentationSearcher searcher) {
+        this.searcher = searcher;
+    }
 
-	/**
-	 * Set the HelpPane.
-	 *
-	 * @param help
-	 *        The help pane in which the search bar is embedded
-	 */
-	public void setHelpPane(final HelpPane help) {
-		helpPane = help;
-	}
+    /**
+     * Set the HelpPane.
+     *
+     * @param help The help pane in which the search bar is embedded
+     */
+    public void setHelpPane(final HelpPane help) {
+        helpPane = help;
+    }
 
-	// Runs the search
-	private void runSearch(final String query) {
-		if (searcher == null) {
-			data.clear();
-			return;
-		}
+    // Runs the search
+    private void runSearch(final String query) {
+        if (searcher == null) {
+            data.clear();
+            return;
+        }
 
-		String[] results = searcher.search(query);
-		data.clear();
-		data.addAll(results);
-	}
+        String[] results = searcher.search(query);
+        data.clear();
+        data.addAll(results);
+    }
 
-	private void searchTextChanged(final Object source, final String oldValue, final String newValue) {
-		if (newValue == null || newValue.isEmpty()) {
-			hoverToolTip.hide();
-			return;
-		}
+    private void searchTextChanged(final Object source, final String oldValue, final String newValue) {
+        if (newValue == null || newValue.isEmpty()) {
+            hoverToolTip.hide();
+            return;
+        }
 
-		runSearch(searchField.getText());
+        runSearch(searchField.getText());
 
-		showResults();
-	}
+        showResults();
+    }
 
-	public void handleHeightChange() {
-		if (hoverToolTip.isShowing()) {
-			showResults();
-		}
-	}
+    public void handleHeightChange() {
+        if (hoverToolTip.isShowing()) {
+            showResults();
+        }
+    }
 
-	private void showResults() {
-		Point2D position = searchField.localToScene(0.0, 0.0);
-		Scene scene = searchField.getScene();
-		Window window = scene.getWindow();
+    private void showResults() {
+        Point2D position = searchField.localToScene(0.0, 0.0);
+        Scene scene = searchField.getScene();
+        Window window = scene.getWindow();
 
-		hoverToolTip.show(
-			searchField,
-			position.getX() + scene.getX() + window.getX(),
-			position.getY() + scene.getY() + window.getY() + searchField.getHeight());
-	}
+        hoverToolTip.show(
+                searchField,
+                position.getX() + scene.getX() + window.getX(),
+                position.getY() + scene.getY() + window.getY() + searchField.getHeight());
+    }
 }

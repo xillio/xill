@@ -2,7 +2,7 @@ package nl.xillio.migrationtool;
 
 /**
  * Custom Xillio runtime exception class
- *
+ * <p>
  * Created by Anwar on 11/17/2015.
  */
 public class XillioRuntimeException extends RuntimeException {

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Removes the specified index from a collection. For the `index` you can either use the name of the index or the index specification.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Drop the index old from the assets collection</header>
+            <code>
+                use Mongo;
+                Mongo.connect("udm_default");
+				
+                Mongo.dropIndex("assets", "old");
+            </code>
+			<header>Drop an index by index specification</header>
+            <code>
+                use Mongo;
+                Mongo.connect("udm_default");
+				
+                var index = {
+                    "metaData.meta2": 1
+                };
+                Mongo.dropIndex("assets", index);
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>connect</reference>
+        <reference>dropIndexes</reference>
+        <reference>listIndexes</reference>
+        <reference>createIndex</reference>
+    </references>
+    <tags>
+        mongodb, drop, key, primary
+    </tags>
+</function>

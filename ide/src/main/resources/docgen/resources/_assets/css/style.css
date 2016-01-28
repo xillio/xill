@@ -56,8 +56,8 @@ a:hover {
 }
 
 code {
-	-fx-font-family: 'Ubunt Mono';
-	font-family: 'Ubuntu Mono';
+	-fx-font-family: 'Ubuntu Mono';
+	font-family: xilliomono, 'Ubuntu Mono', "Lucida Console", Monaco, monospace;
 }
 
 em {
@@ -95,6 +95,12 @@ pre {
 	overflow-x: auto;
 }
 
+a[href^="http://"]:after,
+a[href^="https://"]:after {
+    content: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAHBJREFUeNpi/P//PwMuwMjICJdkYsAPzIH4NRD/AnH2AvF/JHwSaosZED8HYg+oOJhwAknCMJIiJyQxEI2h6AkQ26CJYyhcDcSWUPZhmDgjVCEjLl/D5Aj5mgEleIA6PbCYhiG2HS14kPF2mBsBAgwAHnpgZQ8cT2MAAAAASUVORK5CYII=');
+    margin: 0 0 0 5px;
+}
+
 /* ------ Table ------ */
 table {
 	border-radius: 8px;
@@ -126,7 +132,8 @@ th {
 
 /* ------ Signature ------ */
 #signature .signature-content {
-	font-family: 'Ubuntu Mono';
+	-fx-font-family: 'Ubuntu Mono';
+	font-family: xilliomono, 'Ubuntu Mono', 'Consolas',  'source-code-pro', Monaco, Menlo, monospace;
 	font-size: 1.2em;
 	color: #2F2F99;
 	font-weight: bold;
@@ -168,6 +175,6 @@ th {
 }
 
 /* ------ Package index ------ */
-.package li {
+#content li {
 	margin: 0.5em 0 0.5em 0;
 }

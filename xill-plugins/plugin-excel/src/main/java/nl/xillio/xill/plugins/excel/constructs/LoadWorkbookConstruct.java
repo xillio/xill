@@ -22,52 +22,52 @@ import java.io.InvalidObjectException;
  */
 public class LoadWorkbookConstruct extends Construct {
 
-	@Inject
-	private ExcelService excelService;
+    @Inject
+    private ExcelService excelService;
 
-	/**
-	 * Processes the xill code to load a XillWorkook from the given filepath.
-	 *
-	 * @param excelService the {@link ExcelService} provided by the construct
-	 * @param context      the {@link ConstructContext} provided by the construct
-	 * @param filePath     a (relative or absolute path) to where the Excel file is located
-	 * @return a {@link XillWorkbook} stored in a string pointing to the absolute path
-	 * where it has been loaded from
-	 * @throws RobotRuntimeException the path does not lead to an xls or xlsx file
-	 * @throws RobotRuntimeException there is no file at the given path
-	 * @throws RobotRuntimeException the file could not be opened
-	 */
-	static MetaExpression process(ExcelService excelService, ConstructContext context, MetaExpression filePath) {
+    /**
+     * Processes the xill code to load a XillWorkook from the given filepath.
+     *
+     * @param excelService the {@link ExcelService} provided by the construct
+     * @param context      the {@link ConstructContext} provided by the construct
+     * @param filePath     a (relative or absolute path) to where the Excel file is located
+     * @return a {@link XillWorkbook} stored in a string pointing to the absolute path
+     * where it has been loaded from
+     * @throws RobotRuntimeException the path does not lead to an xls or xlsx file
+     * @throws RobotRuntimeException there is no file at the given path
+     * @throws RobotRuntimeException the file could not be opened
+     */
+    static MetaExpression process(ExcelService excelService, ConstructContext context, MetaExpression filePath) {
 
-		String path = filePath.getStringValue();
-		File file = getFile(context, path);
-		String workbookText;
-		XillWorkbook workbook;
-		try {
-			workbook = excelService.loadWorkbook(file);
-			workbookText = workbook.getFileString();
-		} catch (IllegalArgumentException e) {
-			throw new RobotRuntimeException("Path does not lead to an xls or xlsx Microsoft Excel file", e);
-		} catch (FileNotFoundException e) {
-			throw new RobotRuntimeException("There is no file at the given path", e);
-		} catch (InvalidObjectException e) {
-			throw new RobotRuntimeException(e.getMessage(), e);
-		} catch (IOException e) {
-			throw new RobotRuntimeException("File could not be opened", e);
-		}
+        String path = filePath.getStringValue();
+        File file = getFile(context, path);
+        String workbookText;
+        XillWorkbook workbook;
+        try {
+            workbook = excelService.loadWorkbook(file);
+            workbookText = workbook.getFileString();
+        } catch (IllegalArgumentException e) {
+            throw new RobotRuntimeException("Path does not lead to an xls or xlsx Microsoft Excel file", e);
+        } catch (FileNotFoundException e) {
+            throw new RobotRuntimeException("There is no file at the given path", e);
+        } catch (InvalidObjectException e) {
+            throw new RobotRuntimeException(e.getMessage(), e);
+        } catch (IOException e) {
+            throw new RobotRuntimeException("File could not be opened", e);
+        }
 
-		if (workbook.isReadonly())
-			context.getRootLogger().warn("Opened in read-only mode.");
+        if (workbook.isReadonly())
+            context.getRootLogger().warn("Opened in read-only mode.");
 
-		MetaExpression returnValue = fromValue(workbookText);
-		returnValue.storeMeta(XillWorkbook.class, workbook);
-		return returnValue;
-	}
+        MetaExpression returnValue = fromValue(workbookText);
+        returnValue.storeMeta(workbook);
+        return returnValue;
+    }
 
-	@Override
-	public ConstructProcessor prepareProcess(ConstructContext context) {
-		return new ConstructProcessor(
-						a -> process(excelService, context, a),
-						new Argument("filePath", ATOMIC));
-	}
+    @Override
+    public ConstructProcessor prepareProcess(ConstructContext context) {
+        return new ConstructProcessor(
+                a -> process(excelService, context, a),
+                new Argument("filePath", ATOMIC));
+    }
 }

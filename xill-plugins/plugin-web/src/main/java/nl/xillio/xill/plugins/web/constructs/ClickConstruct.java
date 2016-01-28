@@ -13,34 +13,33 @@ import nl.xillio.xill.plugins.web.services.web.WebService;
  */
 public class ClickConstruct extends PhantomJSConstruct {
 
-	@Override
-	public ConstructProcessor prepareProcess(final ConstructContext context) {
-		return new ConstructProcessor(
-			element -> process(element, webService),
-			new Argument("element", ATOMIC));
-	}
+    @Override
+    public ConstructProcessor prepareProcess(final ConstructContext context) {
+        return new ConstructProcessor(
+                element -> process(element, webService),
+                new Argument("element", ATOMIC));
+    }
 
-	/**
-	 * @param elementVar
-	 *        input variable (should be of a NODE type)
-	 * @return null variable
-	 */
-	static MetaExpression process(final MetaExpression elementVar, final WebService webService) {
-		
-		if(elementVar.isNull()){
-			return NULL;
-		}
+    /**
+     * @param elementVar input variable (should be of a NODE type)
+     * @return null variable
+     */
+    static MetaExpression process(final MetaExpression elementVar, final WebService webService) {
 
-		if (!checkNodeType(elementVar)) {
-			throw new RobotRuntimeException("Invalid variable type. NODE type expected!");
-		}
-		// else
-		try {
-			webService.click(getNode(elementVar));
-		} catch (Exception e) {
-			throw new RobotRuntimeException("Stale element clicked.", e);
-		}
+        if (elementVar.isNull()) {
+            return NULL;
+        }
 
-		return NULL;
-	}
+        if (!checkNodeType(elementVar)) {
+            throw new RobotRuntimeException("Invalid variable type. NODE type expected!");
+        }
+        // else
+        try {
+            webService.click(getNode(elementVar));
+        } catch (Exception e) {
+            throw new RobotRuntimeException("Stale element clicked.", e);
+        }
+
+        return NULL;
+    }
 }

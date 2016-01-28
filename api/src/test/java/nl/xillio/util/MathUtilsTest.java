@@ -1,8 +1,8 @@
 package nl.xillio.util;
 
+import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import org.testng.Assert;
 
 /**
  * @author titusn

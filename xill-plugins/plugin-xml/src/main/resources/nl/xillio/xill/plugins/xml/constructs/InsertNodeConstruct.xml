@@ -24,7 +24,7 @@ Returns the newly created node.
                 use XML;
 
                 var note = XML.fromFile("C:/tmp/note.xml");
-                var parent = XML.xpath(note, "//note");
+                var parent = XML.xPath(note, "//note");
                 XML.insertNode(parent, "&lt; comment&gt;Comments are welcome.&lt; /comment&gt;");
                 System.print(XML.toString(note));
             </code>

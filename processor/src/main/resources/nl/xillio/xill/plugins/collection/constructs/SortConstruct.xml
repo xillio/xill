@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+        Returns the sorted list or object.
+
+        If recursive is true it will also sort the lists and object inside the given list or object.
+        If onKeys is true it will also sort object by key instead of by value.
+        If reverse is true it will also sort highest first.
+
+        Input will be sorted in order of: Lists -> Objects -> Numbers -> Strings
+        The given parameters will sort each of those segments.
+    </description>
+    <examples>
+        <example title="Sorting Lists">
+            <header>
+                Examples on how to use sorting for lists
+
+                (Note: onKey option has no effect for lists)
+            </header>
+            <code>
+                use Collection;
+
+                var list = [2,1,"c","a",[1,2],[4,3],{"a":2,"b":1},{"1":"a","2":"z"}];
+
+                // Sort normal:
+                Collection.sort(list);
+                // Result: [[1,2],[4,3],{"a":2,"b":1},{"1":"a","2":"z"},1,2,"a","c"]
+
+                // Sort recursive:
+                Collection.sort(list,true,false,false);
+                // Result: [[1,2],[3,4],{"b":1,"a":2},{"1":"a","2":"z"},1,2,"a","c"]
+
+                // Sort reverse:
+                Collection.sort(list,false,false,true);
+                // Result: [[1,2],[4,3],{"a":2,"b":1},{"1":"a","2":"z"},2,1,"c","a"]
+
+            </code>
+        </example>
+        <example title="Sorting Objects">
+            <header>
+                Examples on how to use sorting for objects
+            </header>
+            <code>
+                use Collection;
+
+                var obj = {
+                    "0": 50,
+                    "1": 0,
+                    "list": [1,3,2],
+                    "obj": {"a":50,"b":10},
+                };
+
+                // Sort normal:
+                Collection.sort(obj);
+                // Result: {"list":[1,3,2],"obj":{"a":50,"b":10},"1":0,"0":50}
+
+                // Sort recursive:
+                Collection.sort(obj,true);
+                // Result: {"list":[1,2,3],"obj":{"b":10,"a":50},"1":0,"0":50}
+
+                // Sort onKey:
+                Collection.sort(obj,false,true);
+                // Result: {"0":50,"1":0,"list":[1,3,2],"obj":{"a":50,"b":10}}
+
+                // Sort reverse:
+                Collection.sort(obj,false,false,true);
+                // Result: {"list":[1,3,2],"obj":{"a":50,"b":10},"0":50,"1":0}
+            </code>
+        </example>
+    </examples>
+</function>

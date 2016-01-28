@@ -1,7 +1,7 @@
 package nl.xillio.xill;
 
-import com.google.inject.Inject;
 import com.google.inject.Injector;
+import me.biesaart.utils.Log;
 import nl.xillio.plugins.PluginLoader;
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.api.Debugger;
@@ -15,10 +15,11 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.XillParsingException;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.XtextResourceSet;
@@ -26,9 +27,14 @@ import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue.IssueImpl;
+import org.slf4j.Logger;
 import xill.lang.XillStandaloneSetup;
+import xill.lang.scoping.XillScopeProvider;
 import xill.lang.validation.XillValidator;
+import xill.lang.xill.ConstructCall;
 import xill.lang.xill.IncludeStatement;
+import xill.lang.xill.InstructionSet;
+import xill.lang.xill.UseStatement;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,13 +45,13 @@ import java.util.stream.Collectors;
  * This class is responsible for processing a single Xill file
  */
 public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
+    private static final Logger LOGGER = Log.get();
     /**
      * The supported file extension
      */
     private final XtextResourceSet resourceSet;
 
-    @Inject
-    private IResourceValidator validator;
+    private final IResourceValidator validator;
 
     private Robot robot;
 
@@ -55,15 +61,13 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
     private final Debugger debugger;
     private final Map<Construct, String> argumentSignatures = new HashMap<>();
 
-    private final List<Resource> compiledResources = new ArrayList<>();
-
     /**
-     * Create a new processor that can run a file
+     * Create a new processor that can run a file.
      *
-     * @param projectFolder
-     * @param robotFile
-     * @param pluginLoader
-     * @param debugger
+     * @param projectFolder the project folder
+     * @param robotFile     the robot file
+     * @param pluginLoader  the plugin loader
+     * @param debugger      the debugger
      * @throws IOException
      */
     public XillProcessor(final File projectFolder, final File robotFile, final PluginLoader<XillPlugin> pluginLoader,
@@ -72,12 +76,13 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
         this.robotFile = robotFile;
         this.pluginLoader = pluginLoader;
         this.debugger = debugger;
-        Injector injector = new XillStandaloneSetup(projectFolder).createInjectorAndDoEMFRegistration();
+        Injector injector = new XillStandaloneSetup().createInjectorAndDoEMFRegistration();
         injector.injectMembers(this);
 
 
         // obtain a resource set
         resourceSet = injector.getInstance(XtextResourceSet.class);
+        validator = injector.getInstance(IResourceValidator.class);
     }
 
     @Override
@@ -85,25 +90,36 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
         return compileAsSubRobot(null);
     }
 
+    @Override
+    public List<Issue> validate() {
+        synchronized (XillValidator.LOCK) {
+            XillValidator.setProjectFolder(projectFolder);
+            XillScopeProvider.setProjectFolder(projectFolder);
+            debugger.reset();
+            Resource resource = resourceSet.getResource(URI.createFileURI(robotFile.getAbsolutePath()), true);
+            return validate(resource);
+        }
+    }
+
     /**
-     * Compile as a subrobot
+     * Compile as a sub robot.
      *
      * @param rootRobot The Root robot
      * @return a list of issues
      * @throws XillParsingException
      */
     public List<Issue> compileAsSubRobot(final RobotID rootRobot) throws XillParsingException {
-        compiledResources.clear();
-        debugger.reset();
-        return compile(robotFile, rootRobot);
+        synchronized (XillValidator.LOCK) {
+            XillValidator.setProjectFolder(projectFolder);
+            XillScopeProvider.setProjectFolder(projectFolder);
+            debugger.reset();
+            return compile(robotFile, rootRobot);
+        }
     }
 
     private List<Issue> compile(final File robotPath, RobotID rootRobot) throws XillParsingException {
         Resource resource = resourceSet.getResource(URI.createFileURI(robotPath.getAbsolutePath()), true);
 
-        gatherResources(resource);
-
-        List<Issue> issues = new ArrayList<>();
         RobotID robotID = RobotID.getInstance(robotPath, projectFolder);
         if (rootRobot == null) {
             rootRobot = robotID;
@@ -111,15 +127,17 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
 
         LanguageFactory<xill.lang.xill.Robot> factory = new XillProgramFactory(pluginLoader, getDebugger(), rootRobot);
 
-        xill.lang.xill.Robot mainRobotToken = null;
 
-        // Validate all resources
-        for (Resource currentResource : resourceSet.getResources()) {
-            // Build RobotID
-            File currentFile = new File(currentResource.getURI().toFileString());
+        List<Issue> issues = validate(resource);
 
-            issues.addAll(validate(currentResource, RobotID.getInstance(currentFile, projectFolder)));
+        // Throw an exception when an error was found
+        Optional<Issue> error = issues.stream().filter(issue -> issue.getSeverity() == Issue.Type.ERROR).findFirst();
+
+        if (error.isPresent()) {
+            throw new XillParsingException(error.get().getMessage(), error.get().getLine(), error.get().getRobot());
         }
+
+        xill.lang.xill.Robot mainRobotToken = null;
 
         // Parse all resources
         for (Resource currentResource : resourceSet.getResources()) {
@@ -142,6 +160,29 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
         robot = factory.getRobot(mainRobotToken);
         return issues;
 
+    }
+
+    private List<Issue> validate(Resource resource) {
+        try {
+            gatherResources(resource);
+        } catch (XillParsingException e) {
+            LOGGER.error("Could not find a robot", e);
+            File errorFile = new File(resource.getURI().toFileString());
+            RobotID robotID = RobotID.getInstance(errorFile, projectFolder);
+
+            Issue issue = new Issue(e.getMessage(), e.getLine(), Issue.Type.ERROR, robotID);
+            return Collections.singletonList(issue);
+        }
+
+        List<Issue> issues = new ArrayList<>();
+        // Validate all resources
+        for (Resource currentResource : resourceSet.getResources()) {
+            // Build RobotID
+            File currentFile = new File(currentResource.getURI().toFileString());
+
+            issues.addAll(validate(currentResource, RobotID.getInstance(currentFile, projectFolder)));
+        }
+        return issues;
     }
 
     private void gatherResources(final Resource resource) throws XillParsingException {
@@ -171,49 +212,102 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
         return URI.createFileURI(fullPath);
     }
 
-    private List<Issue> validate(final Resource resource, final RobotID robotID) throws XillParsingException {
-        // Throw errors
-        if (!resource.getErrors().isEmpty()) {
-            Diagnostic error = resource.getErrors().get(0);
-            throw new XillParsingException(error.getMessage(), error.getLine(), robotID);
+    private List<Issue> validate(final Resource resource, final RobotID robotID) {
+        try {
+            return doValidate(resource, robotID);
+        } catch (WrappedException e) {
+            // In rare cases xText throws an exception. That means we have no information except the robot with which it happened.
+            LOGGER.error("Exception during validation.", e);
+            return Collections.singletonList(new Issue("An unexpected exception occurred during compilation." +
+                    "\nThis can be caused by two reserved keywords incorrectly following each other somewhere in this robot.", -1, Issue.Type.ERROR, robotID));
         }
+    }
 
+    private List<Issue> doValidate(final Resource resource, final RobotID robotID) {
         // Validate
         List<Issue> issues = validator.validate(resource, CheckMode.ALL, CancelIndicator.NullImpl).stream()
                 .map(issue -> {
                     IssueImpl impl = (IssueImpl) issue;
-
                     Issue.Type type = null;
 
                     switch (impl.getSeverity()) {
                         case ERROR:
                             type = Issue.Type.ERROR;
                             break;
-                        case IGNORE:
-                            type = Issue.Type.INFO;
-                            break;
-                        case INFO:
-                            type = Issue.Type.INFO;
-                            break;
                         case WARNING:
                             type = Issue.Type.WARNING;
                             break;
+                        default:
+                            type = Issue.Type.INFO;
+                            break;
                     }
 
-                    return new Issue(impl.getMessage(), impl.getLineNumber(), type);
+                    return new Issue(impl.getMessage(), impl.getLineNumber(), type, robotID);
                 }).collect(Collectors.toList());
 
-        // Throw an exception when an error was found
-        Optional<Issue> error = issues.stream().filter(issue -> issue.getSeverity() == Issue.Type.ERROR).findFirst();
+        // Add warnings to issues
+        resource.getWarnings().forEach(warning -> issues.add(new Issue(warning.getMessage(), warning.getLine(), Issue.Type.WARNING, robotID)));
 
-        if (error.isPresent()) {
-            throw new XillParsingException(error.get().getMessage(), error.get().getLine(), robotID);
+        // Check for the existence of the plugins
+        for (EObject object : resource.getContents()) {
+            xill.lang.xill.Robot bot = (xill.lang.xill.Robot) object;
+
+            for (UseStatement useStatement : bot.getUses()) {
+                String name = getName(useStatement);
+
+                boolean found = pluginLoader.getPluginManager()
+                        .getPlugins()
+                        .stream()
+                        .anyMatch(plugin -> plugin.getName().equals(name));
+
+                if (!found) {
+                    INode node = NodeModelUtils.getNode(object);
+
+                    issues.add(new Issue("No plugin with name " + name + " was found.", node.getStartLine(), Issue.Type.ERROR, robotID));
+                }
+            }
         }
 
-        // Add warnings to issues
-        resource.getWarnings().forEach(warning -> issues.add(new Issue(warning.getMessage(), warning.getLine(), Issue.Type.WARNING)));
-
+        // Check for the existence of the constructs
+        if (issues.isEmpty()) {
+            for (EObject object : resource.getContents()) {
+                xill.lang.xill.Robot bot = (xill.lang.xill.Robot) object;
+                Issue issue = checkConstructs(bot.getInstructionSet(), robotID);
+                if (issue != null) {
+                    issues.add(issue);
+                }
+            }
+        }
         return issues;
+    }
+
+    private Issue checkConstructs(InstructionSet instructionSet, RobotID robotID) {
+        TreeIterator<EObject> iterator = instructionSet.eAllContents();
+
+        while (iterator.hasNext()) {
+            EObject object = iterator.next();
+
+            if (object instanceof ConstructCall) {
+                ConstructCall call = (ConstructCall) object;
+                String plugin = getName(call.getPackage());
+                XillPlugin xillPlugin = pluginLoader.getPluginManager()
+                        .getPlugins()
+                        .stream()
+                        .filter(p -> p.getName().equals(plugin))
+                        .findAny()
+                        .orElse(null);
+
+                if (xillPlugin.getConstruct(call.getFunction()) == null) {
+                    INode node = NodeModelUtils.getNode(object);
+                    return new Issue("No construct with name " + call.getFunction() + " was found in package " + plugin, node.getStartLine(), Issue.Type.ERROR, robotID);
+                }
+            }
+        }
+        return null;
+    }
+
+    private String getName(UseStatement statement) {
+        return statement.getPlugin() == null ? statement.getName() : statement.getPlugin();
     }
 
     /**
@@ -285,28 +379,20 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
         if (lastPeriod >= 0 && lastPeriod == column - prefix.length() - 1) {
             String tillColumn = currentLine.substring(0, lastPeriod);
 
-            // Test all plugins
-            for (XillPlugin xillPlugin : pluginLoader.getPluginManager().getPlugins()) {
+            pluginLoader.getPluginManager().getPlugins().stream()
+                    // Test if the plugin name is a match.
+                    .filter(xillPlugin ->tillColumn.endsWith(xillPlugin.getName()))
+                    .forEach(xillPlugin -> {
+                        // Test all constructs.
+                        List<String> constructs = xillPlugin.getConstructs().stream()
+                                .filter(construct -> prefix.isEmpty() || construct.getName().startsWith(prefix))
+                                .map(this::getSignature).collect(Collectors.toList());
 
-                // Test if the plugin name is a match
-                if (tillColumn.endsWith(xillPlugin.getName())) {
-                    List<String> constructs = new ArrayList<>();
-
-                    // Test all constructs
-                    for (Construct construct : xillPlugin.getConstructs()) {
-
-                        // Test if constructs are a match
-                        if (prefix.isEmpty() || construct.getName().startsWith(prefix)) {
-                            constructs.add(getSignature(construct));
+                        // If there are results put them in the map.
+                        if (!constructs.isEmpty()) {
+                            result.put(xillPlugin.getName(), constructs);
                         }
-                    }
-
-                    // If there are results put them in the map
-                    if (!constructs.isEmpty()) {
-                        result.put(xillPlugin.getName(), constructs);
-                    }
-                }
-            }
+                    });
         }
 
     }
@@ -319,16 +405,18 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
      */
     private String getSignature(Construct construct) {
         if (!argumentSignatures.containsKey(construct)) {
-            ConstructProcessor processor = construct.prepareProcess(new ConstructContext(getRobotID(), getRobotID(), construct, null, null, null));
+            ConstructContext context = new ConstructContext(getRobotID(), getRobotID(), construct, null, null, null, null);
+            try (ConstructProcessor processor = construct.prepareProcess(context)) {
 
-            List<String> args = new ArrayList<>();
-            for (int i = 0; i < processor.getNumberOfArguments(); i++) {
-                String arg = processor.getArgumentName(i);
-                args.add("${" + (i + 1) + ":" + arg + "}");
+                List<String> args = new ArrayList<>();
+                for (int i = 0; i < processor.getNumberOfArguments(); i++) {
+                    String arg = processor.getArgumentName(i);
+                    args.add("${" + (i + 1) + ":" + arg + "}");
+                }
+
+                String signature = construct.getName() + "(" + StringUtils.join(args, ", ") + ")";
+                argumentSignatures.put(construct, signature);
             }
-
-            String signature = construct.getName() + "(" + StringUtils.join(args, ", ") + ")";
-            argumentSignatures.put(construct, signature);
         }
 
         return argumentSignatures.get(construct);

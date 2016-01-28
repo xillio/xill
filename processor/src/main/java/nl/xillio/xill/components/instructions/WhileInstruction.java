@@ -27,6 +27,13 @@ public class WhileInstruction extends CompoundInstruction {
     public WhileInstruction(final Processable condition, final InstructionSet instructionSet) {
         this.condition = new ExpressionInstruction(condition);
         this.instructionSet = instructionSet;
+        instructionSet.setParentInstruction(this);
+    }
+
+    @Override
+    public void setHostInstruction(InstructionSet hostInstruction) {
+        super.setHostInstruction(hostInstruction);
+        this.condition.setHostInstruction(hostInstruction);
     }
 
     @Override
@@ -55,16 +62,17 @@ public class WhileInstruction extends CompoundInstruction {
     private boolean check(Debugger debugger) {
         debugger.startInstruction(condition);
         InstructionFlow<MetaExpression> result = condition.process(debugger);
+        MetaExpression expression = result.get();
+        expression.registerReference();
+        boolean isValue = expression.getBooleanValue();
         debugger.endInstruction(condition, result);
-        return result.get().getBooleanValue();
+        expression.releaseReference();
+        condition.clear();
+        return isValue;
     }
 
     @Override
     public Collection<Processable> getChildren() {
         return Arrays.asList(condition, instructionSet);
-    }
-
-    @Override
-    public void close() throws Exception {
     }
 }

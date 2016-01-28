@@ -172,7 +172,7 @@ public abstract class XillPlugin extends AbstractModule implements Loadable<Xill
                 Class<?> constructClass = classInfo.load();
                 if (Construct.class.isAssignableFrom(constructClass) && !Modifier.isAbstract(constructClass.getModifiers())) {
                     //This is a construct
-                    add((Construct)injector.getInstance(constructClass));
+                    add((Construct) injector.getInstance(constructClass));
                 }
             }
         } catch (IOException e) {

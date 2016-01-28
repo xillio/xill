@@ -5,32 +5,28 @@ package nl.xillio.xill.api.preview;
  */
 public interface Searchable {
 
-	/**
-	 * Search the object using a regular expression.
-	 *
-	 * @param pattern
-	 *        regular expression to search the component against
-	 * @param caseSensitive
-	 *        whether the search should take case into account
-	 */
-	void searchPattern(String pattern, boolean caseSensitive);
+    /**
+     * Search the object using a regular expression.
+     *
+     * @param pattern       regular expression to search the component against
+     * @param caseSensitive whether the search should take case into account
+     */
+    void searchPattern(String pattern, boolean caseSensitive);
 
-	/**
-	 * Search the object for occurrences of the needle.
-	 *
-	 * @param needle
-	 *        the text to search for
-	 * @param caseSensitive
-	 *        whether the search should take case into account
-	 */
-	void search(String needle, boolean caseSensitive);
+    /**
+     * Search the object for occurrences of the needle.
+     *
+     * @param needle        the text to search for
+     * @param caseSensitive whether the search should take case into account
+     */
+    void search(String needle, boolean caseSensitive);
 
-	/**
-	 * Returns the number of occurrences.
-	 *
-	 * @return the number of occurrences
-	 */
-	int getOccurrences();
+    /**
+     * Returns the number of occurrences.
+     *
+     * @return the number of occurrences
+     */
+    int getOccurrences();
 
     /**
      * Find the next occurrence.
@@ -46,8 +42,8 @@ public interface Searchable {
      */
     void findPrevious(int previous);
 
-	/**
-	 * Clear the search and any highlights.
-	 */
-	void clearSearch();
+    /**
+     * Clear the search and any highlights.
+     */
+    void clearSearch();
 }

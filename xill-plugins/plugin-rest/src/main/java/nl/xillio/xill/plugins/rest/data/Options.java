@@ -1,91 +1,97 @@
 package nl.xillio.xill.plugins.rest.data;
 
-import java.util.HashMap;
-import java.util.Map;
+import nl.xillio.xill.api.components.ExpressionBuilderHelper;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import org.apache.http.HttpHost;
 import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.fluent.Request;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Support class for processing request options
  */
 public class Options {
 
-	private int timeout = 5000;
+    private int timeout = 5000;
     private HashMap<String, String> headers = new HashMap<>();
-	private String proxyHost = "";
-	private int proxyPort = 0;
-	private String proxyUser = "";
-	private String proxyPass = "";
-	private String authUser = "";
-	private String authPass = "";
+    private String proxyHost = "";
+    private int proxyPort = 0;
+    private String proxyUser = "";
+    private String proxyPass = "";
+    private String authUser = "";
+    private String authPass = "";
+    private boolean insecure = false;
 
-	/**
-	 * @param optionsVar the map of options and their values for request operation
-	 */
-	public Options(final MetaExpression optionsVar) {
+    /**
+     * @param optionsVar the map of options and their values for request operation
+     */
+    public Options(final MetaExpression optionsVar) {
 
-		if (optionsVar == ExpressionBuilderHelper.NULL || optionsVar.isNull()) {
-			// no option specified - so default is used
-			return;
-		}
+        if (optionsVar == ExpressionBuilderHelper.NULL || optionsVar.isNull()) {
+            // no option specified - so default is used
+            return;
+        }
 
-		if (optionsVar.getType() != ExpressionDataType.OBJECT) {
-			throw new RobotRuntimeException("Invalid options variable!");
-		}
+        if (optionsVar.getType() != ExpressionDataType.OBJECT) {
+            throw new RobotRuntimeException("Invalid options variable!");
+        }
 
-		@SuppressWarnings("unchecked")
-		Map<String, MetaExpression> optionParameters = (Map<String, MetaExpression>) optionsVar.getValue();
-		for (Map.Entry<String, MetaExpression> entry : optionParameters.entrySet()) {
-			processOption(entry.getKey(), entry.getValue());
-		}
+        @SuppressWarnings("unchecked")
+        Map<String, MetaExpression> optionParameters = (Map<String, MetaExpression>) optionsVar.getValue();
+        for (Map.Entry<String, MetaExpression> entry : optionParameters.entrySet()) {
+            processOption(entry.getKey(), entry.getValue());
+        }
 
-		this.checkOptions();
-	}
+        this.checkOptions();
+    }
 
-	private void processOption(final String option, final MetaExpression value) {
-		switch (option) {
+    private void processOption(final String option, final MetaExpression value) {
+        switch (option) {
 
-			case "timeout":
-				this.timeout = value.getNumberValue().intValue();
-				break;
+            case "timeout":
+                this.timeout = value.getNumberValue().intValue();
+                break;
 
-			case "proxyhost":
-				this.proxyHost = value.getStringValue();
-				break;
+            case "proxyhost":
+                this.proxyHost = value.getStringValue();
+                break;
 
-			case "proxyport":
-				this.proxyPort = value.getNumberValue().intValue();
-				break;
+            case "proxyport":
+                this.proxyPort = value.getNumberValue().intValue();
+                break;
 
-			case "proxyuser":
-				this.proxyUser = value.getStringValue();
-				break;
+            case "proxyuser":
+                this.proxyUser = value.getStringValue();
+                break;
 
-			case "proxypass":
-				this.proxyPass = value.getStringValue();
-				break;
+            case "proxypass":
+                this.proxyPass = value.getStringValue();
+                break;
 
-			case "user":
-				this.authUser = value.getStringValue();
-				break;
+            case "user":
+                this.authUser = value.getStringValue();
+                break;
 
-			case "pass":
-				this.authPass = value.getStringValue();
-				break;
+            case "pass":
+                this.authPass = value.getStringValue();
+                break;
 
             case "headers":
                 this.processHeaders(value);
                 break;
 
-			default:
-				throw new RobotRuntimeException(String.format("Option [%1$s] is invalid!", option));
-		}
-	}
+            case "insecure":
+                this.insecure = value.getBooleanValue();
+                break;
+
+            default:
+                throw new RobotRuntimeException(String.format("Option [%1$s] is invalid!", option));
+        }
+    }
 
     private void processHeaders(final MetaExpression headersVar) {
         if (headersVar.getType() != ExpressionDataType.OBJECT) {
@@ -101,60 +107,69 @@ public class Options {
         }
     }
 
-	private void checkOptions() {
-		if (this.authUser.isEmpty() != this.authPass.isEmpty()) {
-			throw new RobotRuntimeException("User and password for server authentication must be set both or none!");
-		}
+    private void checkOptions() {
+        if (this.authUser.isEmpty() != this.authPass.isEmpty()) {
+            throw new RobotRuntimeException("User and password for server authentication must be set both or none!");
+        }
 
-		if (this.proxyUser.isEmpty() != this.proxyPass.isEmpty()) {
-			throw new RobotRuntimeException("User and password for proxy authentication must be set both or none!");
-		}
+        if (this.proxyUser.isEmpty() != this.proxyPass.isEmpty()) {
+            throw new RobotRuntimeException("User and password for proxy authentication must be set both or none!");
+        }
 
-		if ((this.proxyPort != 0) && (this.proxyHost.isEmpty())) {
-			throw new RobotRuntimeException("Proxy port cannot be set without host!");
-		}
-	}
+        if ((this.proxyPort != 0) && (this.proxyHost.isEmpty())) {
+            throw new RobotRuntimeException("Proxy port cannot be set without host!");
+        }
+    }
 
-	/**
-	 * @return the request processing timeout
-	 */
-	public int getTimeout() {
-		return this.timeout;
-	}
+    /**
+     * @return the request processing timeout
+     */
+    public int getTimeout() {
+        return this.timeout;
+    }
 
-	/**
-	 * Set a authentication method to executor
-	 * 
-	 * @param executor request executor
-	 */
-	public void setAuth(final Executor executor) {
-		// Server authentication
-		if (!this.authUser.isEmpty()) {
-			executor.auth(this.authUser, this.authPass);
-		}
+    /**
+     * whether this only accepts secure SSL connections or not.
+     *
+     * @return
+     */
+    public boolean isInsecure() {
+        return this.insecure;
+    }
 
-		// Proxy settings
-		HttpHost httpProxy;
-		if (!this.proxyHost.isEmpty()) {
-			if (this.proxyPort == 0) {
-				httpProxy = new HttpHost(this.proxyHost);
-			} else {
-				httpProxy = new HttpHost(this.proxyHost, this.proxyPort);
-			}
-			if (!this.proxyUser.isEmpty()) {
-				executor.auth(httpProxy, this.proxyUser, this.proxyPass);
-			}
+    /**
+     * Set a authentication method to executor
+     *
+     * @param executor request executor
+     */
+    public void setAuth(final Executor executor) {
+        // Server authentication
+        if (!this.authUser.isEmpty()) {
+            executor.auth(this.authUser, this.authPass);
+        }
+
+        // Proxy settings
+        HttpHost httpProxy;
+        if (!this.proxyHost.isEmpty()) {
+            if (this.proxyPort == 0) {
+                httpProxy = new HttpHost(this.proxyHost);
+            } else {
+                httpProxy = new HttpHost(this.proxyHost, this.proxyPort);
+            }
+            if (!this.proxyUser.isEmpty()) {
+                executor.auth(httpProxy, this.proxyUser, this.proxyPass);
+            }
             executor.authPreemptiveProxy(httpProxy);
-		}
-	}
+        }
+    }
 
     /**
      * Add HTTP header items from "headers" option
      *
      * @param request Existing REST request
      */
-	public void setHeaders(final Request request) {
-        this.headers.forEach((k,v) -> request.addHeader(k,v));
+    public void setHeaders(final Request request) {
+        this.headers.forEach((k, v) -> request.addHeader(k, v));
     }
 
 }

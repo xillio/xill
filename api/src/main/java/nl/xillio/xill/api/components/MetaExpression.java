@@ -2,13 +2,8 @@ package nl.xillio.xill.api.components;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import me.biesaart.utils.Log;
 import nl.xillio.util.MathUtils;
 import nl.xillio.xill.api.Debugger;
-import nl.xillio.xill.api.behavior.BooleanBehavior;
-import nl.xillio.xill.api.behavior.NumberBehavior;
-import nl.xillio.xill.api.behavior.StringBehavior;
-import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.data.Date;
 import nl.xillio.xill.api.data.DateFactory;
 import nl.xillio.xill.api.data.MetadataExpression;
@@ -37,12 +32,14 @@ public abstract class MetaExpression implements Expression, Processable {
     private static int counter;
     private int id;
 
+    private static final String EXPRESSION_CLOSED = "This expression has already been closed.";
+
     @Inject
     private static JsonParser jsonParser;
     @Inject
     private static Injector injector;
 
-    private final MetadataExpressionPool<MetadataExpression> metadataPool = new MetadataExpressionPool<>();
+    private MetadataExpressionPool<MetadataExpression> metadataPool;
     private Object value;
     private ExpressionDataType type = ExpressionDataType.ATOMIC;
     private boolean isClosed;
@@ -72,40 +69,41 @@ public abstract class MetaExpression implements Expression, Processable {
      */
     public <T extends MetadataExpression> T getMeta(final Class<T> clazz) {
         if (isClosed()) {
-            throw new IllegalStateException("This expression has already been closed.");
+            throw new IllegalStateException(EXPRESSION_CLOSED);
         }
+        if (metadataPool == null) {
+            return null;
+        }
+
         return metadataPool.get(clazz);
     }
 
     /**
      * Store a value in the {@link MetadataExpressionPool} and default the key to the class of the object as returned by {@link Object#getClass()}
      *
-     * @param <T>    the type key to store the object as
      * @param object The object to store
-     * @return The previous stored value in the pool or null if no value was
-     * stored.
      * @throws IllegalStateException if this expression has been closed
      */
     @SuppressWarnings("unchecked")
-    public <T extends MetadataExpression> T storeMeta(final T object) {
-        return storeMeta((Class<T>) object.getClass(), object);
+    public void storeMeta(final MetadataExpression object) {
+        if (isClosed()) {
+            throw new IllegalStateException(EXPRESSION_CLOSED);
+        }
+        if (metadataPool == null) {
+            metadataPool = new MetadataExpressionPool<>();
+        }
+
+        metadataPool.put(object);
     }
 
     /**
-     * Store a value in the {@link MetadataExpressionPool}
+     * Check if this expression has a class in its metadata.
      *
-     * @param <T>    the type key to store the object as
-     * @param clazz  The object type to store
-     * @param object the object to store
-     * @return The previous stored value in the pool or null if no value was
-     * stored.
-     * @throws IllegalStateException if this expression has been closed
+     * @param clazz the class to check
+     * @return true if and only if a class has been found that implements or extends the class to check
      */
-    public <T extends MetadataExpression> T storeMeta(final Class<T> clazz, final T object) {
-        if (isClosed()) {
-            throw new IllegalStateException("This expression has already been closed.");
-        }
-        return metadataPool.put(clazz, object);
+    public boolean hasMeta(Class<? extends MetadataExpression> clazz) {
+        return metadataPool != null && metadataPool.hasValue(clazz);
     }
 
     /**
@@ -117,7 +115,7 @@ public abstract class MetaExpression implements Expression, Processable {
      */
     protected MetaExpression setValue(final Expression value) {
         if (isClosed()) {
-            throw new IllegalStateException("This expression has already been closed.");
+            throw new IllegalStateException(EXPRESSION_CLOSED);
         }
         this.value = value;
         type = ExpressionDataType.ATOMIC;
@@ -133,7 +131,7 @@ public abstract class MetaExpression implements Expression, Processable {
      */
     protected MetaExpression setValue(final MetaExpression value) {
         if (isClosed()) {
-            throw new IllegalStateException("This expression has already been closed.");
+            throw new IllegalStateException(EXPRESSION_CLOSED);
         }
         this.value = value.getValue();
         type = value.getType();
@@ -149,7 +147,7 @@ public abstract class MetaExpression implements Expression, Processable {
      */
     protected MetaExpression setValue(final List<MetaExpression> value) {
         if (isClosed()) {
-            throw new IllegalStateException("This expression has already been closed.");
+            throw new IllegalStateException(EXPRESSION_CLOSED);
         }
         this.value = value;
         type = ExpressionDataType.LIST;
@@ -165,7 +163,7 @@ public abstract class MetaExpression implements Expression, Processable {
      */
     protected MetaExpression setValue(final LinkedHashMap<String, MetaExpression> value) {
         if (isClosed()) {
-            throw new IllegalStateException("This expression has already been closed.");
+            throw new IllegalStateException(EXPRESSION_CLOSED);
         }
         this.value = value;
         type = ExpressionDataType.OBJECT;
@@ -185,14 +183,16 @@ public abstract class MetaExpression implements Expression, Processable {
      * Map&lt;String, MetaExpression&gt;}</li>
      * </ul>
      *
+     * @param <T> the return type
      * @return the value according to the {@link ExpressionDataType} specification
      * @throws IllegalStateException if this expression has been closed
      */
-    public Object getValue() {
+    @SuppressWarnings("unchecked")
+    public <T> T getValue() {
         if (isClosed()) {
-            throw new IllegalStateException("This expression has already been closed.");
+            throw new IllegalStateException(EXPRESSION_CLOSED);
         }
-        return value;
+        return (T) value;
     }
 
     /**
@@ -210,7 +210,7 @@ public abstract class MetaExpression implements Expression, Processable {
      */
     public ExpressionDataType getType() {
         if (isClosed()) {
-            throw new IllegalStateException("This expression has already been closed.");
+            throw new IllegalStateException(EXPRESSION_CLOSED);
         }
         return type;
     }
@@ -243,73 +243,21 @@ public abstract class MetaExpression implements Expression, Processable {
      *
      * @param jsonParser The gson parser that should be used
      * @return JSON representation
+     * @throws JsonException if the value cannot be parsed by the JsonParser
      */
     public String toString(final JsonParser jsonParser) throws JsonException {
-        return jsonParser.toJson(extractValue(this));
-    }
-
-    /**
-     * Remove all circular references to prepare for serialisation
-     *
-     * @param metaExpression      the expression to remove references from
-     * @param currentlyProcessing the currently processing expressions
-     * @param replacement         The replacement for circular references
-     * @return a copy of the passed expression without any circular references
-     */
-    @SuppressWarnings("unchecked")
-    private static MetaExpression removeCircularReference(final MetaExpression metaExpression,
-                                                          final List<MetaExpression> currentlyProcessing, final MetaExpression replacement) {
-        MetaExpression result;
-        currentlyProcessing.add(metaExpression);
-
-        switch (metaExpression.getType()) {
-            case LIST:
-                List<MetaExpression> resultListValue = new ArrayList<>();
-
-                for (MetaExpression child : (List<MetaExpression>) metaExpression.getValue()) {
-                    if (currentlyProcessing.stream().anyMatch(metaExp -> metaExp == child)) {
-                        // Circular reference
-                        resultListValue.add(replacement);
-                    } else {
-                        // No Circular reference
-                        resultListValue.add(removeCircularReference(child, currentlyProcessing, replacement));
-                    }
-                }
-
-                result = ExpressionBuilderHelper.fromValue(resultListValue);
-
-                break;
-            case OBJECT:
-                LinkedHashMap<String, MetaExpression> resultMapValue = new LinkedHashMap<>();
-
-                for (Map.Entry<String, MetaExpression> pair : ((Map<String, MetaExpression>) metaExpression.getValue())
-                        .entrySet()) {
-
-                    if (currentlyProcessing.stream().anyMatch(metaExp -> metaExp == pair.getValue())) {
-                        // Circular reference
-                        resultMapValue.put(pair.getKey(), replacement);
-                    } else {
-                        resultMapValue.put(pair.getKey(), removeCircularReference(pair.getValue(), currentlyProcessing, replacement));
-                    }
-                }
-                result = ExpressionBuilderHelper.fromValue(resultMapValue);
-                break;
-
-            case ATOMIC:
-                result = new AtomicExpression((Expression) metaExpression.getValue());
-                break;
-            default:
-                throw new NotImplementedException("This type has not been implemented.");
-        }
-
-        currentlyProcessing.remove(metaExpression);
-        return result;
+        return jsonParser.toJson((Object) extractValue(this));
     }
 
     @Override
     public boolean equals(final Object obj) {
+        // First check if these objects are the same instance
+        if (obj == this) {
+            return true;
+        }
+
         if (obj instanceof MetaExpression) {
-            return equals((MetaExpression) obj);
+            return valueEquals((MetaExpression) obj);
         }
         return super.equals(obj);
     }
@@ -328,25 +276,48 @@ public abstract class MetaExpression implements Expression, Processable {
      * @param other the other
      * @return true if and only if the expressions have equal value
      */
-    public boolean equals(final MetaExpression other) {
-
-        // Compare the type
+    public boolean valueEquals(final MetaExpression other) {
+        // Compare the types.
         if (getType() != other.getType()) {
             return false;
         }
 
+        // Compare the values.
         switch (getType()) {
             case ATOMIC:
-                return getBooleanValue() == other.getBooleanValue() &&
-                        getStringValue().equals(other.getStringValue()) &&
-                        MathUtils.compare(getNumberValue(), other.getNumberValue()) == 0;
+                return compareAtomic(other);
             case LIST:
-                return getValue().equals(other.getValue());
             case OBJECT:
                 return getValue().equals(other.getValue());
             default:
                 throw new NotImplementedException("This type has not been implemented.");
         }
+    }
+
+    private boolean compareAtomic(MetaExpression other) {
+        // Check if one xor the other is null.
+        if (isNull() != other.isNull()) {
+            return false;
+        }
+
+        // Compare the string values.
+        if (getStringValue().equals(other.getStringValue())) {
+            return true;
+        }
+
+        // If both atomics might be numbers, only compare their number values.
+
+        // If one of them is not a number don't compare number value
+        Number number = getNumberValue();
+        if (Double.isNaN(number.doubleValue())) {
+            return false;
+        }
+        Number otherNumber = other.getNumberValue();
+        if (Double.isNaN(otherNumber.doubleValue())) {
+            return false;
+        }
+
+        return MathUtils.compare(number, otherNumber) == 0;
     }
 
     @Override
@@ -357,7 +328,8 @@ public abstract class MetaExpression implements Expression, Processable {
     /**
      * Extracts the actual Java Object value for this expression.
      *
-     * @param expression The {@link MetaExpression} to extract a value from.
+     * @param expression the {@link MetaExpression} to extract a value from
+     * @param <T>        the return type
      * @return <ul>
      * <li>{@link ExpressionDataType#ATOMIC}: returns an {@link Object} This represents a singular value that is parsed in the folowing way:
      * <ol>
@@ -373,13 +345,16 @@ public abstract class MetaExpression implements Expression, Processable {
      * Map&lt;String, Object&gt;} where {@link Object} is the result of a recursive call of this method.</li>
      * </ul>
      */
-    public static Object extractValue(final MetaExpression expression) {
-        return extractValue(expression, new IdentityHashMap<>());
-
+    public static <T> T extractValue(final MetaExpression expression) {
+        return extractValue(expression, MetaExpressionSerializer.NULL);
     }
 
     @SuppressWarnings("unchecked")
-    private static Object extractValue(final MetaExpression expression, final Map<MetaExpression, Object> results) {
+    public static <T> T extractValue(final MetaExpression expression, final MetaExpressionSerializer metaExpressionSerializer) {
+        return (T) extractValue(expression, new IdentityHashMap<>(), metaExpressionSerializer);
+    }
+
+    private static Object extractValue(final MetaExpression expression, final Map<MetaExpression, Object> results, final MetaExpressionSerializer metaExpressionSerializer) {
 
         if (results.containsKey(expression)) {
             return results.get(expression);
@@ -390,6 +365,12 @@ public abstract class MetaExpression implements Expression, Processable {
                 // null
                 if (expression.isNull()) {
                     return null;
+                }
+
+                result = metaExpressionSerializer.extractValue(expression);
+
+                if (result != null) {
+                    return result;
                 }
 
                 // First we check for the presence of a date
@@ -414,15 +395,15 @@ public abstract class MetaExpression implements Expression, Processable {
             case LIST:
                 List<Object> resultList = new ArrayList<>();
                 results.put(expression, resultList);
-                resultList.addAll(((List<MetaExpression>) expression.getValue()).stream().map(v -> extractValue(v, results))
+                resultList.addAll((expression.<List<MetaExpression>>getValue()).stream().map(v -> extractValue(v, results, metaExpressionSerializer))
                         .collect(Collectors.toList()));
                 result = resultList;
                 break;
             case OBJECT:
                 Map<String, Object> resultObject = new LinkedHashMap<>();
                 results.put(expression, resultObject);
-                for (Entry<String, MetaExpression> pair : ((Map<String, MetaExpression>) expression.getValue()).entrySet()) {
-                    resultObject.put(pair.getKey(), extractValue(pair.getValue(), results));
+                for (Entry<String, MetaExpression> pair : (expression.<Map<String, MetaExpression>>getValue()).entrySet()) {
+                    resultObject.put(pair.getKey(), extractValue(pair.getValue(), results, metaExpressionSerializer));
                 }
                 result = resultObject;
                 break;
@@ -535,10 +516,8 @@ public abstract class MetaExpression implements Expression, Processable {
      * Dispose all items in the {@link MetadataExpressionPool}
      */
     protected void closeMetaPool() {
-        try {
+        if (metadataPool != null) {
             metadataPool.close();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -556,12 +535,24 @@ public abstract class MetaExpression implements Expression, Processable {
      * @return a {@link MetaExpression}, not null
      * @throws IllegalArgumentException when the value cannot be parsed
      */
-    public static MetaExpression parseObject(final Object value) throws IllegalArgumentException {
-        return parseObject(value, new IdentityHashMap<>());
+    public static MetaExpression parseObject(final Object value) {
+        return parseObject(value, MetaExpressionDeserializer.NULL);
+    }
+
+    /**
+     * Attempt to parse an object into a MetaExpression
+     *
+     * @param value                      the object to parse
+     * @param metaExpressionDeserializer a specialized deserializer for plugin specific MetaExpressions
+     * @return a {@link MetaExpression}, not null
+     * @throws IllegalArgumentException when the value cannot be parsed
+     */
+    public static MetaExpression parseObject(final Object value, MetaExpressionDeserializer metaExpressionDeserializer) {
+        return parseObject(value, new IdentityHashMap<>(), metaExpressionDeserializer);
     }
 
     @SuppressWarnings("unchecked")
-    private static MetaExpression parseObject(final Object root, final Map<Object, MetaExpression> cache) throws IllegalArgumentException {
+    private static MetaExpression parseObject(final Object root, final Map<Object, MetaExpression> cache, final MetaExpressionDeserializer metaExpressionDeserializer) {
         // Check the cache (Don't use key because we need REFERENCE equality not CONTENT)
         for (Map.Entry<Object, MetaExpression> entry : cache.entrySet()) {
             if (entry.getKey() == root) {
@@ -578,11 +569,11 @@ public abstract class MetaExpression implements Expression, Processable {
             // Push stub
             MetaExpression result = ExpressionBuilderHelper.emptyList();
             cache.put(root, result);
-            List<MetaExpression> values = (List<MetaExpression>) result.getValue();
+            List<MetaExpression> values = result.getValue();
 
             // Parse children
             for (Object child : (List<?>) root) {
-                MetaExpression current = parseObject(child, cache);
+                MetaExpression current = parseObject(child, cache, metaExpressionDeserializer);
                 values.add(current);
                 current.registerReference();
             }
@@ -597,11 +588,11 @@ public abstract class MetaExpression implements Expression, Processable {
             // Push stub
             MetaExpression result = ExpressionBuilderHelper.emptyObject();
             cache.put(root, result);
-            LinkedHashMap<String, MetaExpression> values = (LinkedHashMap<String, MetaExpression>) result.getValue();
+            LinkedHashMap<String, MetaExpression> values = result.getValue();
 
             // Parse children
             for (Entry<?, ?> child : ((Map<?, ?>) root).entrySet()) {
-                MetaExpression current = parseObject(child.getValue(), cache);
+                MetaExpression current = parseObject(child.getValue(), cache, metaExpressionDeserializer);
                 values.put(child.getKey().toString(), current);
                 current.registerReference();
             }
@@ -630,10 +621,20 @@ public abstract class MetaExpression implements Expression, Processable {
         if (root instanceof java.util.Date) {
             Date date = injector.getInstance(DateFactory.class).from(((java.util.Date) root).toInstant());
             MetaExpression result = ExpressionBuilderHelper.fromValue(date.toString());
-            result.storeMeta(Date.class, date);
+            result.storeMeta(date);
             return result;
         }
 
-        throw new IllegalArgumentException("The class type " + root.getClass().getName() + " has not been implemented by parseObject");
+        // Temporary fix for binary data until that is implemented properly.
+        if (root instanceof byte[]) {
+            return ExpressionBuilderHelper.fromValue("[Binary content]");
+        }
+
+        MetaExpression result = metaExpressionDeserializer.parseObject(root);
+        if (result != null) {
+            return result;
+        }
+
+        throw new IllegalArgumentException("Unable to deserialize " + root.getClass().getName());
     }
 }

@@ -1,10 +1,10 @@
 package nl.xillio.xill.components.instructions;
 
 import nl.xillio.xill.api.Debugger;
+import nl.xillio.xill.api.components.ExpressionBuilderHelper;
 import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
-import nl.xillio.xill.api.construct.ExpressionBuilderHelper;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 import java.util.ArrayList;
@@ -28,7 +28,9 @@ public class FunctionDeclaration extends Instruction {
      */
     public FunctionDeclaration(final InstructionSet instructions, final List<VariableDeclaration> parameters) {
         this.instructions = instructions;
+        instructions.setParentInstruction(this);
         this.parameters = parameters;
+        parameters.forEach(param -> param.setHostInstruction(instructions));
     }
 
     @Override
@@ -62,9 +64,12 @@ public class FunctionDeclaration extends Instruction {
             parametersItt.next().replaceVariable(expression);
         }
 
+        debugger.startFunction(this);
+
         // Run the actual code
         InstructionFlow<MetaExpression> result = instructions.process(debugger);
 
+        debugger.endFunction(this);
         if (result.hasValue()) {
             result.get().preventDisposal();
 
@@ -93,8 +98,8 @@ public class FunctionDeclaration extends Instruction {
         return children;
     }
 
-    @Override
-    public void close() throws Exception {
+    public int getParametersSize() {
+        return parameters.size();
     }
 
 }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Saves the `content` to a file specified by `uri`.  
+
+It returns the absolute path of the affected file if the file was created, otherwise false.  
+If the file already exists, it's always overwritten.  
+
+*Remark:* The `content` can be of any variable type. This function always gets string value of provided variable as a content that is saved into the file.  
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Save the text of the webpage to a file.</header>
+            <code>
+use File;
+use Web;
+
+var uri = "c:/tmp/test.txt";
+var page = Web.loadPage("http://www.xillio.com");
+
+File.save(uri, Web.getText(page));            
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>delete</reference>
+        <reference>exists</reference>
+        <reference>copy</reference>
+    </references>
+    <tags>
+        save, write, text, content, file
+    </tags>
+</function>

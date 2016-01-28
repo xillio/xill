@@ -15,16 +15,16 @@ import static org.testng.Assert.assertTrue;
  */
 public class BodyAddTextConstructTest {
 
-	/**
-	 * Test the process method under normal circumstances
-	 */
-	@Test
-	public void testProcess() {
-		// Mock
+    /**
+     * Test the process method under normal circumstances
+     */
+    @Test
+    public void testProcess() {
+        // Mock
         MultipartBody body = mock(MultipartBody.class);
         when(body.toString()).thenReturn("REST multipart body");
 
-		MetaExpression bodyVar = mock(MetaExpression.class);
+        MetaExpression bodyVar = mock(MetaExpression.class);
         when(bodyVar.getMeta(MultipartBody.class)).thenReturn(body);
 
         MetaExpression nameVar = mock(MetaExpression.class);
@@ -34,13 +34,13 @@ public class BodyAddTextConstructTest {
 
         RestService restService = mock(RestService.class);
 
-		// Run
-		MetaExpression result = BodyAddTextConstruct.process(bodyVar, nameVar, textVar, restService);
+        // Run
+        MetaExpression result = BodyAddTextConstruct.process(bodyVar, nameVar, textVar, restService);
 
-		// Verify
-		verify(restService).bodyAddText(any(), anyString(), anyString());
+        // Verify
+        verify(restService).bodyAddText(any(), anyString(), anyString());
 
-		// Assert
+        // Assert
         assertTrue(result.isNull());
-	}
+    }
 }

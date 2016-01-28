@@ -1,82 +1,79 @@
 package nl.xillio.migrationtool;
 
+import nl.xillio.xill.api.Breakpoint;
+import nl.xillio.xill.api.components.RobotID;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import nl.xillio.xill.api.Breakpoint;
-import nl.xillio.xill.api.components.RobotID;
 
 /**
  * This class is responsible for the administration of breakpoints
  */
-public class BreakpointPool {
-	private final Map<RobotID, List<Integer>> breakpoints = new HashMap<>();
+public enum
+BreakpointPool {
+    INSTANCE;
+    //can be transient, because we do not serialize BreakpointPools
+    private final transient Map<RobotID, List<Integer>> breakpoints = new HashMap<>();
 
-	/**
-	 * Get all breakpoints in a certain robot
-	 * 
-	 * @param robot
-	 * @return a List of line numbers
-	 */
-	public List<Integer> get(final RobotID robot) {
-		List<Integer> bps = breakpoints.get(robot);
+    /**
+     * Get all breakpoints in a certain robot
+     *
+     * @param robot
+     * @return a List of line numbers
+     */
+    public List<Integer> get(final RobotID robot) {
+        List<Integer> bps = breakpoints.get(robot);
 
-		if (bps == null) {
-			return new ArrayList<>();
-		}
+        if (bps == null) {
+            return new ArrayList<>();
+        }
 
-		return bps;
-	}
+        return bps;
+    }
 
-	/**
-	 * Add a breakpoint to the pool
-	 * 
-	 * @param robot
-	 * @param line
-	 */
-	public void add(final RobotID robot, final int line) {
-		List<Integer> bpList = breakpoints.get(robot);
+    /**
+     * Add a breakpoint to the pool
+     *
+     * @param robot
+     * @param line
+     */
+    public void add(final RobotID robot, final int line) {
+        List<Integer> bpList = breakpoints.get(robot);
 
-		if (bpList == null) {
-			bpList = new ArrayList<>();
-			breakpoints.put(robot, bpList);
-		}
+        if (bpList == null) {
+            bpList = new ArrayList<>();
+            breakpoints.put(robot, bpList);
+        }
 
-		bpList.add(line);
-	}
+        bpList.add(line);
+    }
 
-	/**
-	 * @return A list of all breakpoints
-	 */
-	public List<Breakpoint> get() {
-		List<Breakpoint> bpList = new ArrayList<>();
+    /**
+     * @return A list of all breakpoints
+     */
+    public List<Breakpoint> get() {
+        List<Breakpoint> bpList = new ArrayList<>();
 
-		breakpoints.entrySet().forEach(entry -> entry.getValue().forEach(line -> bpList.add(new Breakpoint(entry.getKey(), line))));
+        breakpoints.entrySet().forEach(entry -> entry.getValue().forEach(line -> bpList.add(new Breakpoint(entry.getKey(), line))));
 
-		return bpList;
-	}
+        return bpList;
+    }
 
-	/**
-	 * Clear breakpoints in a certain robot
-	 * 
-	 * @param robot
-	 */
-	public void clear(final RobotID robot) {
-		breakpoints.remove(robot);
-	}
+    /**
+     * Clear breakpoints in a certain robot
+     *
+     * @param robot
+     */
+    public void clear(final RobotID robot) {
+        breakpoints.remove(robot);
+    }
 
-	/**
-	 * The singleton instance of {@link BreakpointPool}
-	 */
-	public static final BreakpointPool INSTANCE = new BreakpointPool();
-
-	private BreakpointPool() {}
-
-	/**
-	 * Remove all breakpoints
-	 */
-	public void clear() {
-		breakpoints.clear();
-	}
+    /**
+     * Remove all breakpoints
+     */
+    public void clear() {
+        breakpoints.clear();
+    }
 }

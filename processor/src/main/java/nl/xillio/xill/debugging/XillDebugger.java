@@ -5,22 +5,23 @@ import nl.xillio.events.EventHost;
 import nl.xillio.xill.api.Breakpoint;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.NullDebugger;
+import nl.xillio.xill.api.StoppableDebugger;
 import nl.xillio.xill.api.components.*;
-import nl.xillio.xill.api.components.Instruction;
-import nl.xillio.xill.api.components.InstructionSet;
 import nl.xillio.xill.api.errors.ErrorHandlingPolicy;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.events.RobotContinuedAction;
 import nl.xillio.xill.api.events.RobotPausedAction;
 import nl.xillio.xill.api.events.RobotStartedAction;
 import nl.xillio.xill.api.events.RobotStoppedAction;
-import nl.xillio.xill.components.instructions.*;
+import nl.xillio.xill.components.instructions.CompoundInstruction;
+import nl.xillio.xill.components.instructions.FunctionDeclaration;
+import nl.xillio.xill.components.instructions.Instruction;
+import nl.xillio.xill.components.instructions.VariableDeclaration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xill.lang.xill.Target;
 
 import java.util.*;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 /**
@@ -39,8 +40,11 @@ public class XillDebugger implements Debugger {
     private final EventHost<RobotContinuedAction> onRobotContinued = new EventHost<>();
     private final EventHostEx<Object> onRobotInterrupt = new EventHostEx<>();
     private ErrorHandlingPolicy handler = new NullDebugger();
-    private final Stack<Instruction> currentStack = new Stack<>();
+    private final Stack<nl.xillio.xill.api.components.Instruction> currentStack = new Stack<>();
+    private final Stack<CounterWrapper> functionStack = new Stack<>();
     private Mode mode = Mode.RUNNING;
+    private final LinkedList<Debugger> childDebuggers = new LinkedList<>();
+
 
     /**
      * Create a new {@link XillDebugger}.
@@ -58,6 +62,7 @@ public class XillDebugger implements Debugger {
     public void stop() {
         mode = Mode.STOPPED;
         onRobotInterrupt.invoke(null);
+        childDebuggers.forEach(Debugger::stop);
     }
 
     @Override
@@ -78,11 +83,12 @@ public class XillDebugger implements Debugger {
     }
 
     @Override
-    public void startInstruction(final Instruction instruction) {
-        currentStack.add(instruction);
-        checkBreakpoints(instruction);
+    public void startInstruction(final nl.xillio.xill.api.components.Instruction instruction) {
+        Instruction internalInstruction = (Instruction) instruction;
+        currentStack.add(internalInstruction);
+        checkBreakpoints(internalInstruction);
         checkStepIn();
-        checkPause(instruction);
+        checkPause(internalInstruction);
     }
 
     private void checkStepIn() {
@@ -93,16 +99,17 @@ public class XillDebugger implements Debugger {
 
     private void checkBreakpoints(Instruction instruction) {
         breakpoints.forEach(bp -> {
-            if (bp.matches(instruction)) {
+            if (bp.matches(instruction) && mode != Mode.STOPPED) {
                 mode = Mode.PAUSED;
             }
         });
     }
 
     @Override
-    public void endInstruction(final Instruction instruction, final InstructionFlow<MetaExpression> result) {
-        checkPause(instruction);
-        checkStepOver(instruction);
+    public void endInstruction(final nl.xillio.xill.api.components.Instruction instruction, final InstructionFlow<MetaExpression> result) {
+        Instruction internalInstruction = (Instruction) instruction;
+        checkPause(internalInstruction);
+        checkStepOver(internalInstruction);
         currentStack.pop();
     }
 
@@ -118,6 +125,7 @@ public class XillDebugger implements Debugger {
 
     /**
      * Check if this instruction is a compound instruction.
+     *
      * @param instruction the instruction to check
      * @return true if and only if the instruction is a compound instruction AND not a FunctionCall
      */
@@ -176,7 +184,7 @@ public class XillDebugger implements Debugger {
 
     @Override
     public void robotFinished(final Robot robot) {
-        onRobotStopped.invoke(new RobotStoppedAction(robot));
+        onRobotStopped.invoke(new RobotStoppedAction(robot, robot.getCompilerSerialId()));
 
         LOGGER.info("Robot finished.");
     }
@@ -222,40 +230,116 @@ public class XillDebugger implements Debugger {
         return mode == Mode.STOPPED;
     }
 
+    @SuppressWarnings("squid:S1166") // Ignored exception is correct here
     @Override
-    public Collection<Object> getVariables() {
+    public Collection<Object> getVariables(nl.xillio.xill.api.components.Instruction instruction) {
         if (mode != Mode.PAUSED) {
             throw new IllegalStateException("Cannot get variables if not paused.");
         }
-        List<Object> filtered = new ArrayList<>();
 
-        for (Entry<Target, VariableDeclaration> pair : debugInfo.getVariables().entrySet().stream()
-                .sorted((a, b) -> Integer.compare(a.getValue().getLineNumber(), b.getValue().getLineNumber())).collect(Collectors.toList())) {
+        if (instruction == null) {
+            // No instruction == no results
+            return Collections.emptyList();
+        }
 
-            try {
-                if (pair.getValue().getVariable() != null && isVisible(pair.getKey(), pausedOnInstruction)) {
-                    filtered.add(pair.getKey());
-                }
-            } catch (EmptyStackException ignored) {
+        nl.xillio.xill.components.instructions.InstructionSet instructionSet = ((nl.xillio.xill.components.instructions.Instruction) instruction).getHostInstruction();
+
+        if (instructionSet == null) {
+            LOGGER.warn("No instruction set found for " + instruction);
+            return Collections.emptyList();
+        }
+
+        return getVariableTokens((Instruction) instruction);
+    }
+
+    private List<Object> getVariableTokens(Instruction instruction) {
+        List<ScopeCheckResult> variables = debugInfo.getVariables()
+                .entrySet()
+                .stream()
+                .map(Map.Entry::getValue)
+                .filter(dec -> isVisible(dec, instruction))
+                .map(dec -> checkScope(dec, instruction, 0))
+                .filter(ScopeCheckResult::isInScope)
+                .collect(Collectors.toList());
+
+        Map<String, ScopeCheckResult> result = new HashMap<>();
+
+        for (ScopeCheckResult dec : variables) {
+            String name = dec.getDeclaration().getName();
+            if (!result.containsKey(name)) {
+                result.put(name, dec);
+            } else if (result.get(name).getScopeDepth() > dec.getScopeDepth()) {
+                result.put(name, dec);
             }
         }
 
-        return filtered;
+        return result.values()
+                .stream()
+                .map(ScopeCheckResult::getDeclaration)
+                .sorted((a, b) -> Integer.compare(a.getLineNumber(), b.getLineNumber()))
+                .map(debugInfo::getTarget)
+                .collect(Collectors.toList());
     }
 
-    private boolean isVisible(final Target target, final Instruction instruction) {
-        VariableDeclaration dec = debugInfo.getVariables().get(target);
+    private boolean isVisible(VariableDeclaration variableDeclaration, Instruction instruction) {
+        return variableDeclaration.getRobotID() == instruction.getRobotID();
+    }
 
-        // Has to be in the same robot
-        return dec.getRobotID() == instruction.getRobotID();
+    private ScopeCheckResult checkScope(VariableDeclaration variableDeclaration, Instruction checkInstruction, int checkDepth) {
+        if (variableDeclaration.getHostInstruction() == checkInstruction.getHostInstruction()) {
+            return new ScopeCheckResult(checkDepth, variableDeclaration.hasValue(), variableDeclaration);
+        }
 
+        nl.xillio.xill.components.instructions.InstructionSet instructionSet = checkInstruction.getHostInstruction();
+        Instruction parentInstruction = instructionSet.getParentInstruction();
+
+        // We have no parent... move on
+        if (parentInstruction == null) {
+            return new ScopeCheckResult(checkDepth, false, variableDeclaration);
+        }
+
+        return checkScope(variableDeclaration, parentInstruction, checkDepth + 1);
     }
 
     @Override
-    public MetaExpression getVariableValue(final Object identifier) {
+    public MetaExpression getVariableValue(final Object identifier, int stackPosition) {
         VariableDeclaration dec = debugInfo.getVariables().get(identifier);
 
-        return dec.getVariable();
+        int index = countRecursion(dec, currentStack.size() - stackPosition);
+
+        return dec.peek(index);
+    }
+
+    private int countRecursion(VariableDeclaration dec, int stackPosition) {
+        int count = -1;
+        FunctionDeclaration declaration = getParentFunction(dec);
+
+        if (declaration == null) {
+            return 0;
+        }
+
+        for (CounterWrapper wrapper : functionStack) {
+            if (wrapper.getProcessable() == declaration && wrapper.getStackSize() <= stackPosition) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private FunctionDeclaration getParentFunction(Instruction instruction) {
+        nl.xillio.xill.components.instructions.InstructionSet set = instruction.getHostInstruction();
+        Instruction parentInstruction = set.getParentInstruction();
+
+        if (parentInstruction == null) {
+            // No parent instruction found for instruction
+            return null;
+        }
+
+        if (parentInstruction instanceof FunctionDeclaration) {
+            return (FunctionDeclaration) parentInstruction;
+        }
+
+        return getParentFunction(parentInstruction);
     }
 
     @Override
@@ -283,13 +367,30 @@ public class XillDebugger implements Debugger {
     }
 
     @Override
-    public List<Instruction> getStackTrace() {
+    public List<nl.xillio.xill.api.components.Instruction> getStackTrace() {
         return currentStack;
     }
 
     @Override
     public Debugger createChild() {
-        return new NullDebugger();
+        Debugger debugger = new StoppableDebugger();
+        childDebuggers.add(debugger);
+        return debugger;
+    }
+
+    @Override
+    public void removeChild(final Debugger debugger) {
+        childDebuggers.remove(debugger);
+    }
+
+    @Override
+    public void startFunction(Processable functionDeclaration) {
+        functionStack.push(new CounterWrapper(functionDeclaration, currentStack.size()));
+    }
+
+    @Override
+    public void endFunction(Processable functionDeclaration) {
+        functionStack.pop();
     }
 
     private enum Mode {
@@ -298,5 +399,47 @@ public class XillDebugger implements Debugger {
         STEP_OVER,
         PAUSED,
         STOPPED
+    }
+
+    private class CounterWrapper {
+        private final Processable processable;
+        private final int stackSize;
+
+        private CounterWrapper(Processable processable, int stackSize) {
+            this.processable = processable;
+            this.stackSize = stackSize;
+        }
+
+        public Processable getProcessable() {
+            return processable;
+        }
+
+        public int getStackSize() {
+            return stackSize;
+        }
+    }
+
+    private class ScopeCheckResult {
+        private final int scopeDepth;
+        private final boolean inScope;
+        private final VariableDeclaration declaration;
+
+        private ScopeCheckResult(int scopeDepth, boolean inScope, VariableDeclaration declaration) {
+            this.scopeDepth = scopeDepth;
+            this.inScope = inScope;
+            this.declaration = declaration;
+        }
+
+        public int getScopeDepth() {
+            return scopeDepth;
+        }
+
+        public boolean isInScope() {
+            return inScope;
+        }
+
+        public VariableDeclaration getDeclaration() {
+            return declaration;
+        }
     }
 }

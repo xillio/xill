@@ -9,7 +9,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static nl.xillio.xill.api.construct.ExpressionBuilderHelper.fromValue;
+import static nl.xillio.xill.api.components.ExpressionBuilderHelper.fromValue;
 
 /**
  * This class represents the || operator

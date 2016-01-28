@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Removes selected documents from a collection and returns the number of deleted documents.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Delete all letters from the assets collection</header>
+            <code>
+                use Mongo;
+                use System;
+                Mongo.connect("udm_default");
+
+                var query = { "contenttype": "letter" };
+                var result = Mongo.remove("assets", query);
+
+                System.print("Deleted " :: result :: " documents.");
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>connect</reference>
+        <reference>find</reference>
+        <reference>update</reference>
+        <reference>insert</reference>
+        <reference>findOneAndDelete</reference>
+        <reference>findOneAndReplace</reference>
+    </references>
+    <tags>
+        mongodb, query, delete, filter
+    </tags>
+</function>

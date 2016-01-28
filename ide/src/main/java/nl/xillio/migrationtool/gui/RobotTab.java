@@ -17,10 +17,12 @@ import javafx.scene.shape.SVGPath;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import nl.xillio.migrationtool.Loader;
+import nl.xillio.migrationtool.dialogs.AlertDialog;
 import nl.xillio.migrationtool.dialogs.CloseTabStopRobotDialog;
 import nl.xillio.migrationtool.dialogs.SaveBeforeClosingDialog;
 import nl.xillio.migrationtool.elasticconsole.ESConsoleClient;
 import nl.xillio.migrationtool.gui.EditorPane.DocumentState;
+import nl.xillio.xill.api.Issue;
 import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.api.XillProcessor;
 import nl.xillio.xill.api.components.Robot;
@@ -38,14 +40,16 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 /**
  * A tab containing the editor, console and debug panel attached to a specific currentRobot.
  */
 public class RobotTab extends Tab implements Initializable, ChangeListener<DocumentState> {
-    private static final Logger log = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger();
     private static final SettingsHandler settings = SettingsHandler.getSettingsHandler();
 
     private static final String PATH_STATUSICON_RUNNING = "M256,92.481c44.433,0,86.18,17.068,117.553,48.064C404.794,171.411,422,212.413,422,255.999 s-17.206,84.588-48.448,115.455c-31.372,30.994-73.12,48.064-117.552,48.064s-86.179-17.07-117.552-48.064 C107.206,340.587,90,299.585,90,255.999s17.206-84.588,48.448-115.453C169.821,109.55,211.568,92.481,256,92.481 M256,52.481 c-113.771,0-206,91.117-206,203.518c0,112.398,92.229,203.52,206,203.52c113.772,0,206-91.121,206-203.52 C462,143.599,369.772,52.481,256,52.481L256,52.481z M206.544,357.161V159.833l160.919,98.666L206.544,357.161z";
@@ -75,12 +79,11 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
     /**
      * Create a new robottab that holds a currentRobot
      *
-     * @param projectPath
+     * @param projectPath      The project path
      * @param documentPath     The full path to the currentRobot (absolute)
-     * @param globalController
-     * @throws IOException
+     * @param globalController The FXController
      */
-    public RobotTab(final File projectPath, final File documentPath, final FXController globalController) throws IOException {
+    public RobotTab(final File projectPath, final File documentPath, final FXController globalController) {
         this.globalController = globalController;
 
         if (!documentPath.isAbsolute()) {
@@ -94,7 +97,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
         try {
             setContent(Loader.load(getClass().getResource("/fxml/RobotTabContent.fxml"), this));
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
         }
 
         // Add close request event handler
@@ -201,7 +204,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
                 editorPane.setLastSavedCode(code);
                 editorPane.getEditor().setCode(code);
             } catch (IOException e) {
-                log.info("Could not open " + document.getAbsolutePath());
+                LOGGER.info("Could not open " + document.getAbsolutePath(), e);
             }
         }
 
@@ -287,6 +290,9 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
 
         File document = getDocument();
         File projectPath = getProjectPath();
+        if (!projectPath.exists()) {
+            projectPath = document.getParentFile();
+        }
 
         if (showDialog) {
             // Show file picker
@@ -307,20 +313,29 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
             String code = editorPane.getEditor().getCodeProperty().get();
             FileUtils.write(document, code);
             editorPane.setLastSavedCode(code);
-            log.info("Saved currentRobot to " + document.getAbsolutePath());
-
+            LOGGER.info("Saved currentRobot to " + document.getAbsolutePath());
         } catch (IOException e) {
-            Alert errorAlert = new Alert(AlertType.ERROR);
-            errorAlert.initModality(Modality.APPLICATION_MODAL);
-            errorAlert.setTitle("Error");
-            errorAlert.setContentText(e.getMessage());
-            errorAlert.show();
-            log.error("Failed to save robot", e);
+            new AlertDialog(AlertType.ERROR, "Failed to save robot", "", e.getMessage()).show();
+            LOGGER.error("Failed to save robot", e);
         }
 
         loadProcessor(document, projectPath);
+        currentRobot = getProcessor().getRobotID();
+        setText(getName());
+
+        // Validate
+        validate();
 
         return true;
+    }
+
+    private void validate() {
+        List<Issue> issues = getProcessor().validate()
+                .stream()
+                .filter(issue -> issue.getRobot() == getCurrentRobot())
+                .collect(Collectors.toList());
+
+        getEditorPane().getEditor().annotate(issues);
     }
 
     /**
@@ -364,9 +379,6 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
         return globalController;
     }
 
-    /**
-     * @param event
-     */
     private void onClose(final Event event) {
         // Check if the robot is saved, else show the save before closing dialog.
         if (editorPane.getDocumentState().getValue() == DocumentState.CHANGED) {
@@ -467,6 +479,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
     /**
      * Automatically saves robot and runs it if the save is successful
      */
+    @SuppressWarnings("squid:S1166") // XillParsingException is handled correctly here
     private void autoSaveAndRunRobot() {
         save();
 
@@ -475,17 +488,17 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
         }
 
         try {
-            apnStatusBar.setCompiling(true);
+            apnStatusBar.setStatus(StatusBar.Status.COMPILING);
             processor.compile();
         } catch (IOException e) {
-            e.printStackTrace();
             errorPopup(-1, e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling.");
             return;
         } catch (XillParsingException e) {
             handleXillParsingError(e);
+            LOGGER.error(e.getMessage(), e);
             return;
         } finally {
-            apnStatusBar.setCompiling(false);
+            apnStatusBar.setStatus(StatusBar.Status.READY);
         }
 
         Robot robot = processor.getRobot();
@@ -494,7 +507,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
             try {
                 robot.process(processor.getDebugger());
             } catch (Exception e) {
-                log.error("Exception while processing", e);
+                LOGGER.error("Exception while processing", e);
                 Platform.runLater(() -> {
                     Alert error = new Alert(AlertType.ERROR);
                     error.initModality(Modality.APPLICATION_MODAL);
@@ -508,8 +521,34 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
             }
         });
 
+        robotThread.setUncaughtExceptionHandler((thread, e) -> {
+            // This error can occur if, e.g. deep recursion, is performed.
+            if (e instanceof StackOverflowError) {
+                handleStackOverFlowError(robot, e.getClass().getName());
+            }
+        });
+
         robotThread.start();
 
+    }
+
+    private void handleStackOverFlowError(Robot robot, String dialogTitle) {
+        // Release the robot resources.
+        try {
+            robot.close();
+        } catch (Exception ex) {
+            LOGGER.error(ex.getMessage(), ex);
+        }
+
+        // Notify the user of the error that occurred.
+        Platform.runLater(() -> {
+
+            editorPane.getControls().stop();
+            setGraphic(null);
+            apnStatusBar.setStatus(StatusBar.Status.STOPPED);
+
+            new AlertDialog(AlertType.ERROR, dialogTitle, "", "A stack overflow exception occurred.").show();
+        });
     }
 
     /**
@@ -531,15 +570,15 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
                 // Let's open the RobotTab where error occurred
                 Platform.runLater(() -> {
                     RobotTab newTab = globalController.openFile(e.getRobot().getPath());
-                    newTab.getEditorPane().getEditor().getOnDocumentLoaded().addListener((success) ->
-                        // We queue this for later execution because the tab has to display before we can scroll to the right location.
-                        Platform.runLater(() -> {
-                            if (success) {
-                                // Highlight the tab
-                                newTab.errorPopup(e.getLine(), e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling " + e.getRobot().getPath().getAbsolutePath());
-                                relatedHighlightTabs.add(newTab);
-                            }
-                        })
+                    newTab.getEditorPane().getEditor().getOnDocumentLoaded().addListener(success ->
+                            // We queue this for later execution because the tab has to display before we can scroll to the right location.
+                            Platform.runLater(() -> {
+                                if (success) {
+                                    // Highlight the tab
+                                    newTab.errorPopup(e.getLine(), e.getLocalizedMessage(), e.getClass().getSimpleName(), "Exception while compiling " + e.getRobot().getPath().getAbsolutePath());
+                                    relatedHighlightTabs.add(newTab);
+                                }
+                            })
                     );
                 });
             }
@@ -558,7 +597,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
     }
 
     /**
-     * <b>NOTE: </b> Do not save this processor over a long period as it will be swapped out often.
+     * <b>NOTE: </b> Do not save this processor over a long period as it will be spped out often.
      *
      * @return the processor for this tab
      */
@@ -577,7 +616,7 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
                 editorPane.setLastSavedCode(code);
                 editorPane.getEditor().setCode(code);
             } catch (IOException e) {
-                log.warn("Could not open " + document.getAbsolutePath());
+                LOGGER.error("Could not open " + document.getAbsolutePath(), e);
             }
         }
     }
@@ -608,10 +647,16 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
     /**
      * Show a different currentRobot in this tab and highlight the line
      *
-     * @param robot
-     * @param line
+     * @param robot The ID of the robot
+     * @param line  The line number to highlight
      */
+    @SuppressWarnings("squid:S1166")
     public void display(final RobotID robot, final int line) {
+
+        if (robot != getProcessor().getRobotID() && currentRobot == getProcessor().getRobotID()) {
+            // We are moving away from the main robot
+            getEditorPane().getEditor().snapshotUndoManager();
+        }
 
         // Update the code
         if (currentRobot != robot) {
@@ -621,12 +666,16 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
             try {
                 code = FileUtils.readFileToString(robot.getPath());
             } catch (IOException e) {
-                e.printStackTrace();
                 return;
             }
             // Load the code
             editorPane.getEditor().setCode(code);
             editorPane.getEditor().refreshBreakpoints(robot);
+
+            if (robot == getProcessor().getRobotID()) {
+                // We are moving back to the current robot
+                editorPane.getEditor().restoreUndoManager();
+            }
 
             // Blocker
             editorPane.getEditor().setEditable(currentRobot == getProcessor().getRobotID());
@@ -664,10 +713,6 @@ public class RobotTab extends Tab implements Initializable, ChangeListener<Docum
      */
     public void clearConsolePane() {
         this.consolePane.clear();
-    }
-
-    private Exception Exception(String empty_fucking_button) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**

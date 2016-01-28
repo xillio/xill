@@ -1,0 +1,17 @@
+use System, Assert;
+
+// Atomic values
+Assert.isNull(System.parseJSON("null"));
+Assert.equal(System.parseJSON("5"), 5);
+Assert.equal(System.parseJSON("false"), false);
+Assert.equal(System.parseJSON("true"), true);
+Assert.equal(System.parseJSON('"Hello World"'), "Hello World");
+
+// Object
+Assert.equal(System.parseJSON("{}"), {});
+Assert.equal(System.parseJSON('{"Hello": "World"}'), {"Hello":"World"});
+
+// List
+Assert.equal(System.parseJSON("[]"), []);
+Assert.equal(System.parseJSON("[null]"), [null]);
+Assert.equal(System.parseJSON("[1,2,3,4,{}]"), [1,2,3,4,{}]);

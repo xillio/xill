@@ -92,6 +92,6 @@ public class DeleteConstructTest extends TestUtils {
         when(optionsVar.getValue()).thenReturn(optionList);
 
         // Run
-        new DeleteConstruct(restService, null,null).processMeta(urlVar, optionsVar);
+        new DeleteConstruct(restService, null, null).processMeta(urlVar, optionsVar);
     }
 }

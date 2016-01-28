@@ -23,25 +23,25 @@ Get the names of all the sheets in a workbook.
             <header>Counting the sheet names</header>
             <code>
                 use Excel;
-                use List;
+                use Collection;
                 var workbook = Excel.loadWorkbook("workbook.xlsx");
                 var names = Excel.getSheetNames(workbook);
-                var numberOfSheets = List.length(names);
+                var numberOfSheets = Collection.length(names);
             </code>
         </example>
         <example title="Checking if sheet is in workbook">
             <code>
                 use Excel;
-                use List;
+                use Collection;
                 var workbook = Excel.loadWorkbook("workbook.xlsx");
                 var names = Excel.getSheetNames(workbook);
                 var nameToCheck = "RobotSheet";
-                var containsSheet = List.containsValue(names, nameToCheck);
+                var containsSheet = Collection.containsValue(names, nameToCheck);
             </code>
         </example>
     </examples>
     <references>
-        <reference>List.containsValue</reference>
+        <reference>Collection.containsValue</reference>
         <reference>loadWorkbook</reference>
         <reference>loadSheet</reference>
         <reference>System.print</reference>

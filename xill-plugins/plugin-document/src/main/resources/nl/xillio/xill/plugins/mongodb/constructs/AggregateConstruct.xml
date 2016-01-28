@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Calculates aggregate values for data in a collection.
+The `pipeline` is a list of data aggregation operations or stages.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Display a count of assets per content type</header>
+            <code>
+                use Mongo;
+                use System;
+                Mongo.connect("udm_default");
+
+                var pipeline = [
+                    {
+                        "$group": {
+                            "_id": "$contenttype",
+                            "count": {
+                                "$sum": 1
+                            }
+                        }
+                    }
+                ];
+
+                var contentTypes = Mongo.aggregate("documents", pipeline);
+
+                foreach(result in contentTypes) {
+                    System.print(result._id :: ": " :: result.count);
+                }
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>connect</reference>
+    </references>
+    <tags>
+        mongodb
+    </tags>
+</function>
