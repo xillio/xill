@@ -6,9 +6,12 @@ Rounds the provided value to the nearest whole number.
     <examples>
         <example title="Usage">
             <code>
-                Math.round(6) // 6
-                Math.round(3.14) // 3
-                Math.round(-3.78) // -4
+                use Math;
+
+                Math.round(6); // Result: 6
+                Math.round(3.14); // Result: 3
+                Math.round(-3.78); // Result: -4
+                Math.round(0.5); // Result: 1
             </code>
         </example>
     </examples>

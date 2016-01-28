@@ -28,7 +28,7 @@ public class ReverseConstruct extends Construct {
     public ConstructProcessor prepareProcess(final ConstructContext context) {
         return new ConstructProcessor(
                 (list, recursive) -> process(list, recursive, reverse),
-                new Argument("list", LIST, OBJECT),
+                new Argument("collection", LIST, OBJECT),
                 new Argument("recursive", FALSE, ATOMIC));
     }
 

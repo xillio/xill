@@ -24,7 +24,7 @@ public class LengthConstruct extends Construct {
     public ConstructProcessor prepareProcess(final ConstructContext context) {
         return new ConstructProcessor(
                 list -> process(list),
-                new Argument("list", LIST, OBJECT));
+                new Argument("collection", LIST, OBJECT));
     }
 
     static MetaExpression process(final MetaExpression input) {

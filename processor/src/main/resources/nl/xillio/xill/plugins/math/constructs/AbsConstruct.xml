@@ -5,11 +5,12 @@ Returns the absolute value of the provided value.
     </description>
     <examples>
         <example title="Usage">
-            <code><![CDATA[
-                Math.abs(6) // 6
-                Math.abs(-5) // 5
-                Math.abs(-3.14) // 3.14
-            ]]>
+            <code>
+                use Math;
+
+                Math.abs(6); // Result: 6
+                Math.abs(-5); // Result: 5
+                Math.abs(-3.14); // Result: 3.14
             </code>
         </example>
     </examples>
