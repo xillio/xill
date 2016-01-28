@@ -10,7 +10,7 @@ Throws an error with the provided message.
                 use Assert;
 
                 // Throw an error
-                Assert.fail("Something went wrong");
+                Assert.error("Something went wrong");
             </code>
         </example>
     </examples>
