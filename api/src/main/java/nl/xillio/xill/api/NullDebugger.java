@@ -88,7 +88,7 @@ public class NullDebugger implements Debugger {
     }
 
     @Override
-    public void pause() {
+    public void pause(boolean userAction) {
     }
 
     @Override

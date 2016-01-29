@@ -14,6 +14,7 @@ import nl.xillio.xill.api.errors.XillParsingException;
 import nl.xillio.xill.api.events.RobotStartedAction;
 import nl.xillio.xill.api.events.RobotStoppedAction;
 import nl.xillio.xill.components.expressions.CallbotExpression;
+import nl.xillio.xill.components.expressions.RunBulkExpression;
 import nl.xillio.xill.components.expressions.ConstructCall;
 import nl.xillio.xill.components.expressions.FilterExpression;
 import nl.xillio.xill.components.expressions.FunctionCall;
@@ -1026,6 +1027,29 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 
         if (token.getArgument() != null) {
             expression.setArgument(parse(token.getArgument()));
+        }
+
+        return expression;
+    }
+
+    /**
+     * Parse a {@link RunBulkExpression}
+     *
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    Processable parseToken(final xill.lang.xill.RunBulkExpression token) throws XillParsingException {
+        Processable path = parse(token.getPath());
+
+        RunBulkExpression expression = new RunBulkExpression(path, rootRobot, plugins);
+
+        if (token.getArgument() != null) {
+            expression.setArgument(parse(token.getArgument()));
+        }
+
+        if (token.getOptions() != null) {
+            expression.setOptions(parse(token.getOptions()));
         }
 
         return expression;
