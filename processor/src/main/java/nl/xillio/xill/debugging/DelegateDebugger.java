@@ -27,8 +27,8 @@ public class DelegateDebugger implements Debugger {
     }
 
     @Override
-    public void pause() {
-        debugger.pause();
+    public void pause(boolean isUser) {
+        debugger.pause(isUser);
     }
 
     @Override
