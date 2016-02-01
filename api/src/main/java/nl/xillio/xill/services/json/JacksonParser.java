@@ -29,8 +29,10 @@ public class JacksonParser implements JsonParser, PrettyJsonParser {
     public String toJson(Object object) throws JsonException {
         try {
             return mapper.writeValueAsString(object);
-        } catch (JsonProcessingException | StackOverflowError e) {
+        } catch (JsonProcessingException e) {
             throw new JsonException("Failed to parse json: " + e.getMessage(), e);
+        } catch (StackOverflowError e) {
+            throw new JsonException("A stack overflow error occurred while parsing the JSON, this is likely due a circular reference.");
         }
     }
 
