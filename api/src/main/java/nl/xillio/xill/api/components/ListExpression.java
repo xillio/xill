@@ -16,7 +16,7 @@ import java.util.List;
  * </ul>
  */
 
-public class ListExpression extends MetaExpression {
+public class ListExpression extends CollectionExpression {
 
     private final List<? extends MetaExpression> value;
 
@@ -41,19 +41,4 @@ public class ListExpression extends MetaExpression {
         return value.size();
     }
 
-    @Override
-    public String getStringValue() {
-        return toString();
-    }
-
-    @Override
-    public boolean getBooleanValue() {
-        return true;
-    }
-
-    @Override
-    public boolean isNull() {
-        return false;
-
-    }
 }

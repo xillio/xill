@@ -6,7 +6,6 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 /**
  * <p>
@@ -20,7 +19,7 @@ import java.util.List;
  * <li><b>{@link Number}: </b> the number of members in this object</li>
  * </ul>
  */
-public class ObjectExpression extends MetaExpression {
+public class ObjectExpression extends CollectionExpression {
 
     private final LinkedHashMap<String, MetaExpression> value;
 
@@ -41,9 +40,7 @@ public class ObjectExpression extends MetaExpression {
 
     @Override
     public Collection<Processable> getChildren() {
-        List<Processable> children = new ArrayList<>(value.values());
-
-        return children;
+        return new ArrayList<>(value.values());
     }
 
     @Override
@@ -51,18 +48,4 @@ public class ObjectExpression extends MetaExpression {
         return value.size();
     }
 
-    @Override
-    public String getStringValue() {
-        return toString();
-    }
-
-    @Override
-    public boolean getBooleanValue() {
-        return true;
-    }
-
-    @Override
-    public boolean isNull() {
-        return false;
-    }
 }
