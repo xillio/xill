@@ -48,7 +48,7 @@ public class ListExpression extends MetaExpression {
 
     @Override
     public boolean getBooleanValue() {
-        return isNull();
+        return true;
     }
 
     @Override
