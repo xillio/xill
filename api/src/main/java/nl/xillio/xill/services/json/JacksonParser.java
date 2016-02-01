@@ -29,7 +29,7 @@ public class JacksonParser implements JsonParser, PrettyJsonParser {
     public String toJson(Object object) throws JsonException {
         try {
             return mapper.writeValueAsString(object);
-        } catch (JsonProcessingException e) {
+        } catch (JsonProcessingException | StackOverflowError e) {
             throw new JsonException("Failed to parse json: " + e.getMessage(), e);
         }
     }
