@@ -1,12 +1,10 @@
 package nl.xillio.xill.services.json;
 
 import nl.xillio.xill.api.components.MetaExpression;
-import org.testng.annotations.ExpectedExceptions;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import static nl.xillio.xill.api.components.ExpressionBuilderHelper.fromValue;
 import static org.testng.Assert.*;
@@ -32,7 +30,7 @@ public class JacksonParserTest {
         assertTrue(result.get(0) instanceof Integer);
     }
 
-    @Test(expectedExceptions = { JsonException.class })
+    @Test(expectedExceptions = {JsonException.class})
     public void testParserCircularReference() throws Exception {
         MetaExpression list = fromValue(new ArrayList<>());
         list.<ArrayList>getValue().add(list);
