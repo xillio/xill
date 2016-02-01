@@ -4,7 +4,9 @@ import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
+import nl.xillio.xill.plugins.system.services.info.RobotRuntimeInfo;
 import org.apache.logging.log4j.Logger;
 import org.testng.annotations.Test;
 
@@ -49,7 +51,7 @@ public class CopyConstructTest extends TestUtils {
 
     }
 
-    @Test
+    @Test(expectedExceptions = RobotRuntimeException.class)
     public void testProcessIOException() throws Exception {
 
         // Source
@@ -59,11 +61,9 @@ public class CopyConstructTest extends TestUtils {
         MetaExpression target = mock(MetaExpression.class);
 
         // Context
-        Logger logger = mock(Logger.class);
         RobotID robotID = mock(RobotID.class);
         ConstructContext context = mock(ConstructContext.class);
         when(context.getRobotID()).thenReturn(robotID);
-        when(context.getRootLogger()).thenReturn(logger);
 
         setFileResolverReturnValue(new File(""));
 
@@ -73,9 +73,6 @@ public class CopyConstructTest extends TestUtils {
 
         // Run the method
         CopyConstruct.process(context, fileUtils, source, target);
-
-        // Verify the error that was logged
-        verify(logger).error(contains("Something went wrong"), any(IOException.class));
 
     }
 }

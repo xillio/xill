@@ -1,11 +1,9 @@
 package nl.xillio.xill;
 
 import nl.xillio.events.EventHost;
-import nl.xillio.plugins.PluginLoader;
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.LanguageFactory;
-import nl.xillio.xill.api.Xill;
 import nl.xillio.xill.api.components.*;
 import nl.xillio.xill.api.components.Robot;
 import nl.xillio.xill.api.construct.Construct;
@@ -16,6 +14,7 @@ import nl.xillio.xill.api.errors.XillParsingException;
 import nl.xillio.xill.api.events.RobotStartedAction;
 import nl.xillio.xill.api.events.RobotStoppedAction;
 import nl.xillio.xill.components.expressions.CallbotExpression;
+import nl.xillio.xill.components.expressions.RunBulkExpression;
 import nl.xillio.xill.components.expressions.ConstructCall;
 import nl.xillio.xill.components.expressions.FilterExpression;
 import nl.xillio.xill.components.expressions.FunctionCall;
@@ -25,6 +24,7 @@ import nl.xillio.xill.components.expressions.MapExpression;
 import nl.xillio.xill.components.instructions.BreakInstruction;
 import nl.xillio.xill.components.instructions.ContinueInstruction;
 import nl.xillio.xill.components.instructions.*;
+import nl.xillio.xill.components.instructions.ErrorInstruction;
 import nl.xillio.xill.components.instructions.ExpressionInstruction;
 import nl.xillio.xill.components.instructions.FunctionDeclaration;
 import nl.xillio.xill.components.instructions.IfInstruction;
@@ -70,7 +70,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
     private final Map<xill.lang.xill.FunctionCall, List<Processable>> functionCallArguments = new HashMap<>();
     private final Map<xill.lang.xill.UseStatement, XillPlugin> useStatements = new HashMap<>();
     private final Map<Resource, RobotID> robotID = new HashMap<>();
-    private final PluginLoader<XillPlugin> pluginLoader;
+    private final List<XillPlugin> plugins;
     private final Debugger debugger;
     private final RobotID rootRobot;
     private final Map<EObject, Map.Entry<RobotID, Robot>> compiledRobots = new HashMap<>();
@@ -85,29 +85,29 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
     /**
      * Create a new {@link XillProgramFactory}
      *
-     * @param loader
+     * @param plugins
      * @param debugger
      * @param robotID
      */
-    public XillProgramFactory(final PluginLoader<XillPlugin> loader, final Debugger debugger,
+    public XillProgramFactory(final List<XillPlugin> plugins, final Debugger debugger,
                               final RobotID robotID) {
-        this(loader, debugger, robotID, false);
+        this(plugins, debugger, robotID, false);
     }
 
     /**
      * Create a new {@link XillProgramFactory}
      *
-     * @param loader
+     * @param plugins
      * @param debugger
      * @param robotID
      * @param verbose  verbose logging for the compiler
      */
-    public XillProgramFactory(final PluginLoader<XillPlugin> loader, final Debugger debugger, final RobotID robotID,
+    public XillProgramFactory(final List<XillPlugin> plugins, final Debugger debugger, final RobotID robotID,
                               final boolean verbose) {
         this.debugger = debugger;
         rootRobot = robotID;
         expressionParseInvoker.setVERBOSE(verbose);
-        pluginLoader = loader;
+        this.plugins = plugins;
     }
 
     @Override
@@ -128,7 +128,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
             // Really? Java...
             String searchName = pluginName;
 
-            Optional<XillPlugin> ActualPlugin = pluginLoader.getPluginManager().getPlugins().stream()
+            Optional<XillPlugin> ActualPlugin = plugins.stream()
                     .filter(pckage -> pckage.getName().equals(searchName)).findAny();
 
             if (!ActualPlugin.isPresent()) {
@@ -177,7 +177,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
             // Get includes
             for (IncludeStatement include : robotToken.getIncludes()) {
                 // Build robotID
-                String path = StringUtils.join(include.getName(), File.separator) + "." + Xill.FILE_EXTENSION;
+                String path = StringUtils.join(include.getName(), File.separator) + ".xill";
                 RobotID expectedID = RobotID.getInstance(new File(id.getProjectPath(), path),
                         id.getProjectPath());
                 CodePosition pos = pos(include);
@@ -321,6 +321,29 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
     }
 
     /**
+     * Parse a ErrorInstruction
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    ErrorInstruction parseToken(final xill.lang.xill.ErrorInstruction token) throws XillParsingException{
+
+        Target cause = token.getCause();
+        VariableDeclaration causeVar = null;
+        if(cause != null) {
+            causeVar = VariableDeclaration.nullDeclaration(pos(token.getErrorBlock()),cause.getName());
+            variables.put(cause, causeVar);
+        }
+
+        return new ErrorInstruction(
+                        token.getDoBlock() == null ? null : parseToken(token.getDoBlock().getInstructionSet()),
+                        token.getSuccessBlock() == null ? null : parseToken(token.getSuccessBlock().getInstructionSet()),
+                        token.getErrorBlock() == null ? null : parseToken(token.getErrorBlock().getInstructionSet()),
+                        token.getFinallyBlock() == null ? null : parseToken(token.getFinallyBlock().getInstructionSet()),
+                        causeVar);
+    }
+
+    /**
      * Parse a Foreach Instruction
      *
      * @param token
@@ -336,11 +359,11 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
             variables.put(token.getKeyVar(), keyDec);
 
             return new ForeachInstruction(parseToken(token.getInstructionBlock().getInstructionSet()),
-                    parse(token.getItterator()), valueDec, keyDec);
+                    parse(token.getIterator()), valueDec, keyDec);
         }
 
         return new ForeachInstruction(parseToken(token.getInstructionBlock().getInstructionSet()),
-                parse(token.getItterator()), valueDec);
+                parse(token.getIterator()), valueDec);
     }
 
     /**
@@ -1000,10 +1023,33 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
     Processable parseToken(final xill.lang.xill.CallbotExpression token) throws XillParsingException {
         Processable path = parse(token.getPath());
 
-        CallbotExpression expression = new CallbotExpression(path, rootRobot, pluginLoader);
+        CallbotExpression expression = new CallbotExpression(path, rootRobot, plugins);
 
         if (token.getArgument() != null) {
             expression.setArgument(parse(token.getArgument()));
+        }
+
+        return expression;
+    }
+
+    /**
+     * Parse a {@link RunBulkExpression}
+     *
+     * @param token
+     * @return
+     * @throws XillParsingException
+     */
+    Processable parseToken(final xill.lang.xill.RunBulkExpression token) throws XillParsingException {
+        Processable path = parse(token.getPath());
+
+        RunBulkExpression expression = new RunBulkExpression(path, rootRobot, plugins);
+
+        if (token.getArgument() != null) {
+            expression.setArgument(parse(token.getArgument()));
+        }
+
+        if (token.getOptions() != null) {
+            expression.setOptions(parse(token.getOptions()));
         }
 
         return expression;

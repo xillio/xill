@@ -7,6 +7,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 
 import java.io.File;
@@ -36,8 +37,7 @@ public class SaveConstruct extends Construct {
         try {
             fileUtils.saveStringToFile(contentString, file);
         } catch (IOException e) {
-            context.getRootLogger().error("Failed to write to file: " + e.getMessage(), e);
-            return FALSE;
+            throw new RobotRuntimeException("Failed to write to file: " + e.getMessage(), e);
         }
         return fromValue(file.getAbsolutePath());
     }

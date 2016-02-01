@@ -6,6 +6,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.system.services.version.VersionProvider;
 import org.apache.logging.log4j.Logger;
 
@@ -44,8 +45,7 @@ public class VersionConstruct extends Construct {
 
                     if (versionParts[i] < requiredVersionParts[i]) {
                         // This is an older version
-                        log.error("Version " + requiredVersion.getStringValue() + " is not supported in " + version);
-                        break;
+                        throw new RobotRuntimeException("Version " + requiredVersion.getStringValue() + " is not supported in " + version);
                     }
                 }
 

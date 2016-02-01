@@ -20,8 +20,10 @@ public interface Debugger extends ErrorHandlingPolicy {
 
     /**
      * pause the robot
+     *
+     * @param userAction true when the pause has been invoked by the user stop, false if the reason was caught error/warn
      */
-    void pause();
+    void pause(boolean userAction);
 
     /**
      * Stop and kill the current robot

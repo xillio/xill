@@ -13,7 +13,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
  *
  * @author Thomas Biesaart
  */
-public class FailConstruct extends Construct {
+public class ErrorConstruct extends Construct {
     @Override
     public ConstructProcessor prepareProcess(ConstructContext context) {
         return new ConstructProcessor(this::process, new Argument("message", NULL, ATOMIC));
