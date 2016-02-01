@@ -395,25 +395,15 @@ public abstract class MetaExpression implements Expression, Processable {
             case LIST:
                 List<Object> resultList = new ArrayList<>();
                 results.put(expression, resultList);
-                try {
-                    resultList.addAll((expression.<List<MetaExpression>>getValue()).stream().map(v -> extractValue(v, results, metaExpressionSerializer))
-                            .collect(Collectors.toList()));
-                } catch (StackOverflowError e) {
-                    throw new RobotRuntimeException("A stack overflow error occurred while extracting the expression value." +
-                            "This is likely due to a circular reference.");
-                }
+                resultList.addAll((expression.<List<MetaExpression>>getValue()).stream().map(v -> extractValue(v, results, metaExpressionSerializer))
+                        .collect(Collectors.toList()));
                 result = resultList;
                 break;
             case OBJECT:
                 Map<String, Object> resultObject = new LinkedHashMap<>();
                 results.put(expression, resultObject);
-                try {
-                    for (Entry<String, MetaExpression> pair : (expression.<Map<String, MetaExpression>>getValue()).entrySet()) {
-                        resultObject.put(pair.getKey(), extractValue(pair.getValue(), results, metaExpressionSerializer));
-                    }
-                } catch (StackOverflowError e) {
-                    throw new RobotRuntimeException("A stack overflow error occurred while extracting the expression value." +
-                            "This is likely due to a circular reference.");
+                for (Entry<String, MetaExpression> pair : (expression.<Map<String, MetaExpression>>getValue()).entrySet()) {
+                    resultObject.put(pair.getKey(), extractValue(pair.getValue(), results, metaExpressionSerializer));
                 }
                 result = resultObject;
                 break;
