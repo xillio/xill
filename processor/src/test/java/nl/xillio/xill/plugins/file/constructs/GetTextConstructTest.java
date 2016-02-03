@@ -40,7 +40,7 @@ public class GetTextConstructTest extends TestUtils {
         // File
         filePath = mock(MetaExpression.class);
         mockExpression(ATOMIC, false, 0, TEST_PATH);
-        file = mock(File.class);
+        file = new File("TestFile");
         setFileResolverReturnValue(file);
 
         // Context
@@ -90,7 +90,7 @@ public class GetTextConstructTest extends TestUtils {
 
         MetaExpression nullExpression = mockExpression(ATOMIC);
         when(nullExpression.isNull()).thenReturn(true);
-
+        setFileResolverReturnValue(file);
         // Run
         MetaExpression result = GetTextConstruct.process(context, fileUtils, filePath, nullExpression);
 
@@ -108,7 +108,7 @@ public class GetTextConstructTest extends TestUtils {
     public void testProcessInvalidCharset() {
         // Mock
         MetaExpression invalidCharset = mockExpression(ATOMIC, false, 0, "INVALID");
-
+        setFileResolverReturnValue(new File(""));
         // Run the Method
         GetTextConstruct.process(context, fileUtils, filePath, invalidCharset);
     }

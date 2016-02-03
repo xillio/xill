@@ -6,8 +6,6 @@ import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
-import nl.xillio.xill.plugins.system.services.info.RobotRuntimeInfo;
-import org.apache.logging.log4j.Logger;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -15,7 +13,6 @@ import java.io.IOException;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 
@@ -24,7 +21,7 @@ import static org.testng.Assert.assertEquals;
  *
  * @author Thomas Biesaart
  */
-public class AppendToConstructTest {
+public class AppendToConstructTest extends TestUtils {
     /**
      * Test the process method under normal circumstances
      */
@@ -51,9 +48,8 @@ public class AppendToConstructTest {
         when(context.getRobotID()).thenReturn(robotID);
 
         // File
-        File file = mock(File.class);
-        when(file.getAbsolutePath()).thenReturn("Absolute Path");
-        when(TestUtils.CONSTRUCT_FILE_RESOLVER.buildFile(any(), anyString())).thenReturn(file);
+        File file = new File("TestFile");
+        setFileResolverReturnValue(file);
 
         // Run the method
         MetaExpression result = AppendToConstruct.process(context, fileUtils, path, content);
@@ -62,7 +58,7 @@ public class AppendToConstructTest {
         verify(fileUtils, times(1)).appendStringToFile(textContent, file);
 
         // Assert
-        assertEquals(result.getStringValue(), "Absolute Path");
+        assertEquals(result.getStringValue(), file.getAbsolutePath());
     }
 
     /**
@@ -83,8 +79,8 @@ public class AppendToConstructTest {
         MetaExpression content = mock(MetaExpression.class);
 
         // File
-        File file = mock(File.class);
-        TestUtils.setFileResolverReturnValue(file);
+        File file = new File("");
+        setFileResolverReturnValue(file);
 
         // Context
         ConstructContext context = mock(ConstructContext.class);

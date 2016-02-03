@@ -6,7 +6,6 @@ import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
-import org.apache.logging.log4j.Logger;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -19,7 +18,7 @@ import static org.testng.Assert.assertEquals;
 /**
  * Test the CreateFolderConstruct
  */
-public class CreateFolderConstructTest {
+public class CreateFolderConstructTest extends TestUtils {
 
     @Test
     public void testProcessNormal() throws Exception {
@@ -35,9 +34,7 @@ public class CreateFolderConstructTest {
         when(context.getRobotID()).thenReturn(robotID);
 
         // File
-        File file = mock(File.class);
-        when(file.getAbsolutePath()).thenReturn("ABSPATH");
-        when(TestUtils.CONSTRUCT_FILE_RESOLVER.buildFile(any(ConstructContext.class), anyString())).thenReturn(file);
+        setFileResolverReturnValue(new File("ABSPATH"));
 
         // FileUtilities
         FileUtilities fileUtils = mock(FileUtilities.class);
@@ -49,7 +46,7 @@ public class CreateFolderConstructTest {
         verify(fileUtils, times(1)).createFolder(any(File.class));
 
         // Assert
-        assertEquals(result.getStringValue(), "ABSPATH");
+        assertEquals(result.getStringValue(), new File("ABSPATH").getAbsolutePath());
     }
 
     @Test(expectedExceptions = RobotRuntimeException.class)
@@ -62,9 +59,8 @@ public class CreateFolderConstructTest {
         ConstructContext context = mock(ConstructContext.class);
 
         // File
-        File file = mock(File.class);
-        when(file.getAbsolutePath()).thenReturn("ABSPATH");
-        when(TestUtils.CONSTRUCT_FILE_RESOLVER.buildFile(any(ConstructContext.class), anyString())).thenReturn(file);
+        File file = new File("ABSPATH");
+        setFileResolverReturnValue(file);
 
         // FileUtilities
         FileUtilities fileUtils = mock(FileUtilities.class);

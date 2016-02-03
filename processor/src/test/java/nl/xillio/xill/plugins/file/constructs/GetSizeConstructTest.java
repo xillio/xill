@@ -18,7 +18,7 @@ import static org.testng.Assert.assertEquals;
 /**
  * Test the GetSizeConstruct
  */
-public class GetSizeConstructTest {
+public class GetSizeConstructTest extends TestUtils {
 
     @Test
     public void testProcessNormal() throws IOException {
@@ -33,8 +33,8 @@ public class GetSizeConstructTest {
         when(context.getRobotID()).thenReturn(robotID);
 
         // File
-        File file = mock(File.class);
-        when(TestUtils.CONSTRUCT_FILE_RESOLVER.buildFile(any(), anyString())).thenReturn(file);
+        File file = new File("Target File");
+        setFileResolverReturnValue(file);
 
         // FileUtilities
         long size = 10;
@@ -58,7 +58,7 @@ public class GetSizeConstructTest {
         // FileUtils
         FileUtilities fileUtils = mock(FileUtilities.class);
         when(fileUtils.getByteSize(any())).thenThrow(new IOException("This is an error message"));
-
+        setFileResolverReturnValue(new File("."));
         // Run the method
         GetSizeConstruct.process(mock(ConstructContext.class), fileUtils, mock(MetaExpression.class));
     }

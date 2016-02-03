@@ -47,10 +47,12 @@ public class TestUtils extends ExpressionBuilderHelper {
     }
 
     public static void setFileResolverReturnValue(File file) {
+        doReturn(file).when(CONSTRUCT_FILE_RESOLVER).buildFile(any(), anyString());
         doReturn(file.toPath()).when(CONSTRUCT_FILE_RESOLVER).buildPath(any(), anyString());
     }
 
     public static void setFileResolverReturnValue(Path file) {
+        doReturn(file.toFile()).when(CONSTRUCT_FILE_RESOLVER).buildFile(any(), anyString());
         doReturn(file).when(CONSTRUCT_FILE_RESOLVER).buildPath(any(), anyString());
     }
 

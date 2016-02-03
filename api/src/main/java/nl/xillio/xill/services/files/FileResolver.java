@@ -24,4 +24,7 @@ public interface FileResolver {
      * @return the file
      */
     Path buildPath(ConstructContext context, String path);
+
+    @Deprecated
+    File buildFile(ConstructContext context, String path);
 }

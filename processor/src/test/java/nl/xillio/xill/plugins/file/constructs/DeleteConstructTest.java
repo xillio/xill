@@ -58,7 +58,7 @@ public class DeleteConstructTest {
 
         // FileUtilities
         FileUtilities fileUtils = mock(FileUtilities.class);
-        doThrow(new IOException("Something crashed")).when(fileUtils).delete(file);
+        doThrow(new IOException("Something crashed")).when(fileUtils).delete(any());
 
         // Run the method
         DeleteConstruct.process(context, fileUtils, uri);

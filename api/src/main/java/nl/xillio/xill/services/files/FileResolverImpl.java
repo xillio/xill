@@ -3,6 +3,7 @@ package nl.xillio.xill.services.files;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
+import java.io.File;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -26,6 +27,11 @@ public class FileResolverImpl implements FileResolver {
             file = context.getRobotID().getProjectPath().toPath().resolve(file);
         }
         return file;
+    }
+
+    @Override
+    public File buildFile(ConstructContext context, String path) {
+        return buildPath(context, path).toFile();
     }
 
     private Path tryPath(String path) {
