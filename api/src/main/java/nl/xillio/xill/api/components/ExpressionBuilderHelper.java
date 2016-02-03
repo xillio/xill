@@ -77,7 +77,7 @@ public class ExpressionBuilderHelper {
      * @return expression
      */
     public static MetaExpression fromValue(final boolean value) {
-        return buildAtomicOrNull(value, BooleanBehavior::new);
+        return value ? TRUE : FALSE;
     }
 
     /**

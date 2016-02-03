@@ -35,14 +35,12 @@ import java.util.*;
  * used internally to store the list. (This class is roughly equivalent to
  * <tt>Vector</tt>, except that it is unsynchronized.)
  * <p>
- * <p>
  * The <tt>size</tt>, <tt>isEmpty</tt>, <tt>get</tt>, <tt>set</tt>,
  * <tt>iterator</tt>, and <tt>listIterator</tt> operations run in constant
  * time. The <tt>add</tt> operation runs in <i>amortized constant time</i>,
  * that is, adding n elements requires O(n) time. All of the other operations
  * run in linear time (roughly speaking). The constant factor is low compared
  * to that for the <tt>LinkedList</tt> implementation.
- * <p>
  * <p>
  * Each <tt>IdentityArrayList</tt> instance has a <i>capacity</i>. The capacity is
  * the size of the array used to store the elements in the list. It is always
@@ -51,11 +49,9 @@ import java.util.*;
  * specified beyond the fact that adding an element has constant amortized
  * time cost.
  * <p>
- * <p>
  * An application can increase the capacity of an <tt>IdentityArrayList</tt> instance
  * before adding a large number of elements using the <tt>ensureCapacity</tt>
  * operation. This may reduce the amount of incremental reallocation.
- * <p>
  * <p>
  * <strong>Note that this implementation is not synchronized.</strong>
  * If multiple threads access an <tt>IdentityArrayList</tt> instance concurrently,
@@ -71,10 +67,9 @@ import java.util.*;
  * method. This is best done at creation time, to prevent accidental
  * unsynchronized access to the list:
  * <p>
- * <pre>
- *   List list = Collections.synchronizedList(new IdentityArrayList(...));
- * </pre>
- * <p>
+ * <code>
+ * List list = Collections.synchronizedList(new IdentityArrayList(...));
+ * </code>
  * <p>
  * The iterators returned by this class's <tt>iterator</tt> and
  * <tt>listIterator</tt> methods are <i>fail-fast</i>: if the list is
@@ -85,7 +80,6 @@ import java.util.*;
  * rather than risking arbitrary, non-deterministic behavior at an undetermined
  * time in the future.
  * <p>
- * <p>
  * Note that the fail-fast behavior of an iterator cannot be guaranteed
  * as it is, generally speaking, impossible to make any hard guarantees in the
  * presence of unsynchronized concurrent modification. Fail-fast iterators
@@ -93,7 +87,6 @@ import java.util.*;
  * Therefore, it would be wrong to write a program that depended on this
  * exception for its correctness: <i>the fail-fast behavior of iterators
  * should be used only to detect bugs.</i>
- * <p>
  *
  * @param <E> The type of element stored in this list
  */

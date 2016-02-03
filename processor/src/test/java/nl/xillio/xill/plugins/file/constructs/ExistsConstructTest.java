@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.file.constructs;
 
+import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
@@ -13,7 +14,7 @@ import static org.testng.Assert.assertSame;
 /**
  * Test the ExistsConstruct
  */
-public class ExistsConstructTest {
+public class ExistsConstructTest extends TestUtils {
 
     @Test
     public void testProcessNormalTrueAndFalse() throws Exception {
