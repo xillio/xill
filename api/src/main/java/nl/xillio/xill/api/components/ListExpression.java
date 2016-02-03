@@ -16,7 +16,7 @@ import java.util.List;
  * </ul>
  */
 
-public class ListExpression extends MetaExpression {
+class ListExpression extends MetaExpression {
 
     private final List<? extends MetaExpression> value;
 
@@ -55,5 +55,10 @@ public class ListExpression extends MetaExpression {
     public boolean isNull() {
         return false;
 
+    }
+
+    @Override
+    public IOStream getBinaryValue() {
+        return new EmptyIOStream();
     }
 }

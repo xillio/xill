@@ -8,7 +8,7 @@ import java.util.Collection;
 /**
  * This class represents a constant literal in the xill language
  */
-public class ImmutableLiteral extends MetaExpression {
+class ImmutableLiteral extends MetaExpression {
 
     private final Expression value;
 
@@ -38,6 +38,11 @@ public class ImmutableLiteral extends MetaExpression {
     @Override
     public boolean isNull() {
         return value.isNull();
+    }
+
+    @Override
+    public IOStream getBinaryValue() {
+        return value.getBinaryValue();
     }
 
     @Override

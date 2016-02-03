@@ -20,7 +20,7 @@ import java.util.List;
  * <li><b>{@link Number}: </b> the number of members in this object</li>
  * </ul>
  */
-public class ObjectExpression extends MetaExpression {
+class ObjectExpression extends MetaExpression {
 
     private final LinkedHashMap<String, MetaExpression> value;
 
@@ -64,5 +64,10 @@ public class ObjectExpression extends MetaExpression {
     @Override
     public boolean isNull() {
         return false;
+    }
+
+    @Override
+    public IOStream getBinaryValue() {
+        return new EmptyIOStream();
     }
 }

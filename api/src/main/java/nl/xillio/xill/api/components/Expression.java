@@ -29,6 +29,11 @@ public interface Expression extends AutoCloseable {
      */
     boolean isNull();
 
+    /**
+     * @return the IOStream representation of the expression
+     */
+    IOStream getBinaryValue();
+
     default void close() {
     }
 }

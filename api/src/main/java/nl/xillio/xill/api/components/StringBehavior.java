@@ -2,6 +2,7 @@ package nl.xillio.xill.api.components;
 
 import nl.xillio.util.MathUtils;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -16,7 +17,7 @@ import java.util.regex.Pattern;
  * <li><b>{@link Number}: </b> if the value is a number then that number as a {@link Double}, otherwise {@link Double#NaN}</li>
  * </ul>
  */
-class StringBehavior implements Expression {
+class StringBehavior extends AbstractBehavior {
     private static final Pattern NUMBER_PATTERN = Pattern.compile("((-?\\d*\\.\\d+(E[-\\+]\\d+)?)|(-?\\d+))");
     private Number cachedNumber;
     private final String value;
@@ -26,7 +27,8 @@ class StringBehavior implements Expression {
      *
      * @param value the value to set
      */
-    public StringBehavior(final String value) {
+    public StringBehavior(String value) {
+        Objects.requireNonNull(value);
         this.value = value;
     }
 
@@ -50,16 +52,6 @@ class StringBehavior implements Expression {
 
     @Override
     public boolean getBooleanValue() {
-        return value != null && !value.isEmpty();
-    }
-
-    @Override
-    public boolean isNull() {
-        return value == null;
-    }
-
-    @Override
-    public String toString() {
-        return getStringValue();
+        return !value.isEmpty();
     }
 }

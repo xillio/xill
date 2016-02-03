@@ -1,0 +1,45 @@
+package nl.xillio.xill.api.components;
+
+import java.util.Objects;
+
+/**
+ * This class represents the behavior of an expression that contains binary data.
+ *
+ * @author Thomas biesaart
+ */
+class BinaryBehavior extends AbstractBehavior {
+
+    private final IOStream value;
+    private final String reference;
+
+    BinaryBehavior(IOStream value) {
+        this(value, null);
+    }
+
+    BinaryBehavior(IOStream value, String description) {
+        Objects.requireNonNull(value);
+        this.value = value;
+
+        if (description == null) {
+            reference = "[Binary data]";
+        } else {
+            reference = "{Binary data: " + description + "]";
+        }
+    }
+
+
+    @Override
+    public String getStringValue() {
+        return reference;
+    }
+
+    @Override
+    public boolean getBooleanValue() {
+        return true;
+    }
+
+    @Override
+    public IOStream getBinaryValue() {
+        return value;
+    }
+}
