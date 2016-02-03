@@ -11,27 +11,28 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.AccessDeniedException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 
 /**
- * Save content to a target file or binary location.
- * If the operation fails this will return null.
- * If the target was a file this will return the path to that file.
- * If the target was a binary location this will return true.
+ * Write content from a source to a target.
+ * Returns the number of written bytes.
  *
  * @author Thomas biesaart
  */
 @Singleton
-public class SaveConstruct extends Construct {
+public class WriteConstruct extends Construct {
 
     private final FileUtilsService fileUtilsService;
     private final IOUtilsService ioUtilsService;
 
     @Inject
-    public SaveConstruct(FileUtilsService fileUtilsService, IOUtilsService ioUtilsService) {
+    public WriteConstruct(FileUtilsService fileUtilsService, IOUtilsService ioUtilsService) {
         this.fileUtilsService = fileUtilsService;
         this.ioUtilsService = ioUtilsService;
     }
@@ -49,18 +50,15 @@ public class SaveConstruct extends Construct {
         try (OutputStream output = getStream(target, context); InputStream input = getInput(content)) {
 
             // Then we copy the input stream to the output stream
-            ioUtilsService.copy(input, output);
-
+            long count = ioUtilsService.copyLarge(input, output);
+            return fromValue(count);
+        } catch (AccessDeniedException e) {
+            throw new RobotRuntimeException("Access denied: " + e.getMessage(), e);
         } catch (IOException e) {
             throw new RobotRuntimeException("Could not write to " + target + ": " + e.getMessage(), e);
         }
 
-        // Only return the path if we did not write to binary content
-        if (target.getBinaryValue().hasOutputStream()) {
-            return TRUE;
-        } else {
-            return fromValue(getFile(context, target.getStringValue()).getAbsolutePath());
-        }
+
     }
 
     private InputStream getInput(MetaExpression content) throws IOException {
@@ -68,16 +66,18 @@ public class SaveConstruct extends Construct {
             return content.getBinaryValue().openInputStream();
         }
 
+        if (content.isNull()) {
+            return ioUtilsService.toInputStream("");
+        }
+
         return ioUtilsService.toInputStream(content.getStringValue());
     }
 
-    private OutputStream getStream(MetaExpression uri, ConstructContext context) throws IOException {
-        if (uri.getBinaryValue().hasOutputStream()) {
-            return uri.getBinaryValue().openOutputStream();
+    private OutputStream getStream(MetaExpression target, ConstructContext context) throws IOException {
+        if (target.getBinaryValue().hasOutputStream()) {
+            return target.getBinaryValue().openOutputStream();
         }
 
-        File target = getFile(context, uri.getStringValue());
-
-        return fileUtilsService.openOutputStream(target);
+        throw new RobotRuntimeException("Path as target not implemented yet");
     }
 }

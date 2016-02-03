@@ -13,6 +13,7 @@ import nl.xillio.xill.services.json.JsonParser;
 import nl.xillio.xill.services.json.PrettyJsonParser;
 
 import java.io.File;
+import java.nio.file.Path;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -46,7 +47,11 @@ public class TestUtils extends ExpressionBuilderHelper {
     }
 
     public static void setFileResolverReturnValue(File file) {
-        doReturn(file).when(CONSTRUCT_FILE_RESOLVER).buildFile(any(), anyString());
+        doReturn(file.toPath()).when(CONSTRUCT_FILE_RESOLVER).buildPath(any(), anyString());
+    }
+
+    public static void setFileResolverReturnValue(Path file) {
+        doReturn(file).when(CONSTRUCT_FILE_RESOLVER).buildPath(any(), anyString());
     }
 
 

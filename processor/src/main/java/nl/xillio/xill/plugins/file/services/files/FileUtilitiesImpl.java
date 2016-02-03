@@ -11,7 +11,10 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.Iterator;
@@ -74,12 +77,24 @@ public class FileUtilitiesImpl implements FileUtilities {
      * @throws IOException If an I/O operation has failed.
      */
     @Override
-    public void delete(final File file) throws IOException {
-        try {
-            FileUtils.forceDelete(file);
-        } catch (FileNotFoundException e) {
-            LOGGER.info("Failed to delete " + file.getAbsolutePath(), e);
+    public void delete(final Path file) throws IOException {
+        if (!Files.exists(file)) {
+            return;
         }
+
+        Files.walkFileTree(file, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.delete(file);
+                return super.visitFile(file, attrs);
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                Files.delete(dir);
+                return super.postVisitDirectory(dir, exc);
+            }
+        });
     }
 
     @Override

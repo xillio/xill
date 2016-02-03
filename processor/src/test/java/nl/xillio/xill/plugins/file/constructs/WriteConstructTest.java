@@ -6,7 +6,6 @@ import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
-import org.apache.logging.log4j.Logger;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -19,9 +18,9 @@ import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 
 /**
- * Test the SaveConstruct
+ * Test the WriteConstruct
  */
-public class SaveConstructTest extends TestUtils {
+public class WriteConstructTest extends TestUtils {
 
     @Test
     public void testProcessNormal() throws IOException {
@@ -47,7 +46,7 @@ public class SaveConstructTest extends TestUtils {
         FileUtilities fileUtils = mock(FileUtilities.class);
 
         // Run the Method
-        MetaExpression result = SaveConstruct.process(context, fileUtils, uri, content);
+        MetaExpression result = WriteConstruct.process(context, fileUtils, uri, content);
 
         // Verify
         verify(fileUtils, times(1)).saveStringToFile(contentString, file);
@@ -67,7 +66,7 @@ public class SaveConstructTest extends TestUtils {
         doThrow(new IOException("Failed to save")).when(fileUtils).saveStringToFile(anyString(), any(File.class));
 
         // Run the Method
-        SaveConstruct.process(context, fileUtils, mock(MetaExpression.class), mock(MetaExpression.class));
+        WriteConstruct.process(context, fileUtils, mock(MetaExpression.class), mock(MetaExpression.class));
     }
 
     @Test
@@ -91,7 +90,7 @@ public class SaveConstructTest extends TestUtils {
         FileUtilities fileUtils = mock(FileUtilities.class);
 
         // Run the Method
-        MetaExpression result = SaveConstruct.process(context, fileUtils, uri, content);
+        MetaExpression result = WriteConstruct.process(context, fileUtils, uri, content);
 
         // Verify
         verify(fileUtils, times(1)).saveStringToFile(null, file);

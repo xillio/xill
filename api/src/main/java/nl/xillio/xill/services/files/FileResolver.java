@@ -4,6 +4,7 @@ import com.google.inject.ImplementedBy;
 import nl.xillio.xill.api.construct.ConstructContext;
 
 import java.io.File;
+import java.nio.file.Path;
 
 /**
  * <p>
@@ -22,5 +23,5 @@ public interface FileResolver {
      * @param path    the path
      * @return the file
      */
-    File buildFile(ConstructContext context, String path);
+    Path buildPath(ConstructContext context, String path);
 }

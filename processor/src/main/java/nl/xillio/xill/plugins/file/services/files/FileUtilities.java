@@ -7,6 +7,7 @@ import nl.xillio.xill.services.XillService;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.util.Iterator;
 
@@ -55,7 +56,7 @@ public interface FileUtilities extends XillService {
      * @param file the file
      * @throws IOException when the operation failed
      */
-    void delete(File file) throws IOException;
+    void delete(Path file) throws IOException;
 
     /**
      * Create the required folders and save content to a file

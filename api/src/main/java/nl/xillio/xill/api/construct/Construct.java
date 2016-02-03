@@ -11,6 +11,7 @@ import org.apache.commons.lang3.text.WordUtils;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Path;
 
 /**
  * This interface contains the core functionality for all constructs
@@ -121,9 +122,22 @@ public abstract class Construct extends ExpressionBuilderHelper implements HelpC
      * @param context the construct context
      * @param path    the path
      * @return the file
+     * @deprecated Use getPath
      */
+    @Deprecated
     protected static File getFile(ConstructContext context, String path) {
-        return fileResolver.buildFile(context, path);
+        return fileResolver.buildPath(context, path).toFile();
+    }
+
+    /**
+     * Uses the FileResolver service to get a File object from a path
+     *
+     * @param context the construct context
+     * @param path    the path
+     * @return the path
+     */
+    protected static Path getPath(ConstructContext context, String path) {
+        return fileResolver.buildPath(context, path);
     }
 
     /**
