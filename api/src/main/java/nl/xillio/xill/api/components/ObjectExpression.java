@@ -20,8 +20,11 @@ import java.util.List;
  * <li><b>{@link Boolean}: </b> false if the object is null else true</li>
  * <li><b>{@link Number}: </b> the number of members in this object</li>
  * </ul>
+ *
+ * @deprecated This class will become package protected soon
  */
-class ObjectExpression extends MetaExpression {
+@Deprecated
+public class ObjectExpression extends MetaExpression {
 
     private final LinkedHashMap<String, MetaExpression> value;
 

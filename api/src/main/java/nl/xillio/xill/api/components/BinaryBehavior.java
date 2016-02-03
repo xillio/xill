@@ -25,7 +25,7 @@ class BinaryBehavior extends AbstractBehavior {
         if (description == null) {
             reference = "[Binary data]";
         } else {
-            reference = "{Binary data: " + description + "]";
+            reference = "[Binary data: " + description + "]";
         }
     }
 
