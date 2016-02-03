@@ -1,4 +1,4 @@
-package nl.xillio.xill.api.components;
+package nl.xillio.xill.api.io;
 
 import java.io.IOException;
 import java.io.InputStream;

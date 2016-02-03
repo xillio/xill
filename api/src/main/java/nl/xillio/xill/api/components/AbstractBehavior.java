@@ -1,5 +1,7 @@
 package nl.xillio.xill.api.components;
 
+import nl.xillio.xill.api.io.IOStream;
+
 /**
  * This class represents a null implementation of the expression class.
  *

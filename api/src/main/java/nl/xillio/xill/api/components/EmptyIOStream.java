@@ -1,6 +1,7 @@
 package nl.xillio.xill.api.components;
 
-import nl.xillio.xill.api.NoStreamAvailableException;
+import nl.xillio.xill.api.io.IOStream;
+import nl.xillio.xill.api.io.NoStreamAvailableException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,7 +13,7 @@ import java.io.OutputStream;
  *
  * @author Thomas biesaart
  */
-public class EmptyIOStream implements IOStream {
+class EmptyIOStream implements IOStream {
     @Override
     public boolean hasInputStream() {
         return false;

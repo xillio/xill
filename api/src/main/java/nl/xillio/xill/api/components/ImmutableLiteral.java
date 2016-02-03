@@ -1,6 +1,7 @@
 package nl.xillio.xill.api.components;
 
 import nl.xillio.xill.api.data.MetadataExpression;
+import nl.xillio.xill.api.io.IOStream;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -1,5 +1,7 @@
 package nl.xillio.xill.api.components;
 
+import nl.xillio.xill.api.io.IOStream;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
