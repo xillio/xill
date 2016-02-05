@@ -38,7 +38,7 @@ abstract class AbstractOpenConstruct extends Construct {
         Path path = getPath(context, pathVar);
         IOStream stream = tryOpen(path);
 
-        return fromValue(stream, path.toString());
+        return fromValue(stream);
     }
 
     protected IOStream tryOpen(Path path) {

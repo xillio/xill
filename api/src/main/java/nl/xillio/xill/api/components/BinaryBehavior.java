@@ -15,13 +15,10 @@ class BinaryBehavior extends AbstractBehavior {
     private final String reference;
 
     BinaryBehavior(IOStream value) {
-        this(value, null);
-    }
-
-    BinaryBehavior(IOStream value, String description) {
         Objects.requireNonNull(value);
         this.value = value;
 
+        String description = value.getDescription();
         if (description == null) {
             reference = "[Stream]";
         } else {

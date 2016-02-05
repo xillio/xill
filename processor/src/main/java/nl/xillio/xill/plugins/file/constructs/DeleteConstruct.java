@@ -11,6 +11,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.Path;
 
 /**
@@ -34,6 +35,8 @@ public class DeleteConstruct extends Construct {
         Path file = getPath(context, uri);
         try {
             fileUtils.delete(file);
+        } catch (AccessDeniedException e) {
+            throw new RobotRuntimeException("Access denied to " + e.getFile(), e);
         } catch (IOException e) {
             throw new RobotRuntimeException("Failed to delete " + file.toAbsolutePath(), e);
         }

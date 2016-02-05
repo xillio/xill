@@ -1,8 +1,5 @@
 package nl.xillio.xill.api.io;
 
-import me.biesaart.utils.Log;
-import org.slf4j.Logger;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -12,20 +9,20 @@ import java.io.OutputStream;
  *
  * @author Thomas biesaart
  */
-public class SimpleIOStream implements IOStream {
-    private static final Logger LOGGER = Log.get();
+public class SimpleIOStream extends AbstractIOStream {
     private final InputStream inputStream;
     private final OutputStream outputStream;
 
-    public SimpleIOStream(InputStream stream) {
-        this(stream, null);
+    public SimpleIOStream(InputStream stream, String description) {
+        this(stream, null, description);
     }
 
-    public SimpleIOStream(OutputStream stream) {
-        this(null, stream);
+    public SimpleIOStream(OutputStream stream, String description) {
+        this(null, stream, description);
     }
 
-    public SimpleIOStream(InputStream inputStream, OutputStream outputStream) {
+    public SimpleIOStream(InputStream inputStream, OutputStream outputStream, String description) {
+        super(description);
         this.inputStream = inputStream;
         this.outputStream = outputStream;
     }
@@ -54,23 +51,5 @@ public class SimpleIOStream implements IOStream {
             throw new NoStreamAvailableException("No stream is available");
         }
         return outputStream;
-    }
-
-    @Override
-    public void close() {
-        tryClose(inputStream);
-        tryClose(outputStream);
-    }
-
-    private void tryClose(AutoCloseable stream) {
-        if (stream == null) {
-            return;
-        }
-
-        try {
-            stream.close();
-        } catch (Exception e) {
-            LOGGER.error("Exception while closing stream", e);
-        }
     }
 }

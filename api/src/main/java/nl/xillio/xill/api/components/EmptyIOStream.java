@@ -38,4 +38,9 @@ class EmptyIOStream implements IOStream {
     public void close() {
         // There are no streams to close
     }
+
+    @Override
+    public String getDescription() {
+        return null;
+    }
 }

@@ -49,4 +49,11 @@ public interface IOStream extends AutoCloseable {
      */
     void close();
 
+    /**
+     * Get the description of this IOStream if there is one.
+     *
+     * @return the description or null
+     */
+    String getDescription();
+
 }

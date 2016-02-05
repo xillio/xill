@@ -12,7 +12,7 @@ import java.nio.file.attribute.FileTime;
 import java.util.Iterator;
 
 /**
- * This is the main implementation of the {@link FileUtilities} service
+ * This is the main implementation of the {@link FileUtilities} service.
  */
 @Singleton
 public class FileUtilitiesImpl implements FileUtilities {
@@ -22,10 +22,43 @@ public class FileUtilitiesImpl implements FileUtilities {
         if (!Files.exists(source)) {
             throw new NoSuchFileException("No such file: " + source.toAbsolutePath());
         }
-        if (target.getParent() != null) {
-            Files.createDirectories(target.getParent());
+
+
+        if (Files.isDirectory(source)) {
+            copyDirectory(source, target);
+        } else {
+            createDir(target.getParent());
+            copyFile(source, target);
         }
+    }
+
+    private void copyDirectory(Path source, Path target) throws IOException {
+        Files.walkFileTree(source, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Path relative = source.relativize(file);
+                copyFile(file, target.resolve(relative));
+                return super.visitFile(file, attrs);
+            }
+
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                Path relative = source.relativize(dir);
+                Path targetDir = target.resolve(relative);
+                createDir(targetDir);
+                return super.preVisitDirectory(dir, attrs);
+            }
+        });
+    }
+
+    private void copyFile(Path source, Path target) throws IOException {
         Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    private void createDir(Path path) throws IOException {
+        if (path != null) {
+            Files.createDirectories(path);
+        }
     }
 
     @Override

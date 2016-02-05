@@ -25,8 +25,11 @@ public class FileStreamFactory {
             throw new RobotRuntimeException("Cannot append to " + path);
         }
 
+        if (path.getParent() != null) {
+            Files.createDirectories(path.getParent());
+        }
 
-        return new SimpleIOStream(Files.newInputStream(path, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.APPEND));
+        return new SimpleIOStream(Files.newInputStream(path, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.APPEND), path.toString());
     }
 
     public IOStream openRead(Path path) throws IOException {
@@ -37,7 +40,7 @@ public class FileStreamFactory {
             throw new RobotRuntimeException(path + " is not readable");
         }
 
-        return new SimpleIOStream(Files.newInputStream(path, StandardOpenOption.READ));
+        return new SimpleIOStream(Files.newInputStream(path, StandardOpenOption.READ), path.toString());
 
     }
 
@@ -48,7 +51,11 @@ public class FileStreamFactory {
             throw new RobotRuntimeException("Cannot write to " + path);
         }
 
-        return new SimpleIOStream(Files.newOutputStream(path, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING));
+        if (path.getParent() != null) {
+            Files.createDirectories(path.getParent());
+        }
+
+        return new SimpleIOStream(Files.newOutputStream(path, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING), path.toString());
     }
 
     private void assertNotDirectoryAndExists(Path target, String targetType) {

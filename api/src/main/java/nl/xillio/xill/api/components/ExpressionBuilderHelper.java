@@ -50,17 +50,6 @@ public class ExpressionBuilderHelper {
     }
 
     /**
-     * Create a new expression containing binary data
-     *
-     * @param value       the value of the expression
-     * @param description the description of the source of this data
-     * @return expression
-     */
-    public static MetaExpression fromValue(final IOStream value, String description) {
-        return buildAtomicOrNull(value, input -> new BinaryBehavior(input, description));
-    }
-
-    /**
      * Create a new expression containing a number
      *
      * @param value the value of the expression
