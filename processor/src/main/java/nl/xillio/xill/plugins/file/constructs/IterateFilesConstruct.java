@@ -11,11 +11,11 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.NotDirectoryException;
+import java.nio.file.Path;
 import java.util.Iterator;
 
 /**
@@ -38,12 +38,12 @@ public class IterateFilesConstruct extends Construct {
 
     static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils,
                                   final MetaExpression uri, final MetaExpression recursive) {
-        File file = getFile(context, uri.getStringValue());
+        Path file = getPath(context, uri);
         boolean isRecursive = recursive.getBooleanValue();
         try {
-            MetaExpression result = fromValue("List files " + (isRecursive ? "recursively " : "") + "in " + file.getAbsolutePath());
-            Iterator<File> iterator = fileUtils.iterateFiles(file, isRecursive);
-            result.storeMeta(new MetaExpressionIterator<>(iterator, entry -> fromValue(entry.getAbsolutePath())));
+            MetaExpression result = fromValue("List files " + (isRecursive ? "recursively " : "") + "in " + file);
+            Iterator<Path> iterator = fileUtils.iterateFiles(file, isRecursive);
+            result.storeMeta(new MetaExpressionIterator<>(iterator, entry -> fromValue(entry.toString())));
 
             return result;
 

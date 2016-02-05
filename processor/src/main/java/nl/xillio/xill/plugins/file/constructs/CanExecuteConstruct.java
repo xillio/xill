@@ -9,8 +9,8 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * Determines whether a file or folder is executable or not.
@@ -19,8 +19,12 @@ import java.io.IOException;
  */
 public class CanExecuteConstruct extends Construct {
 
+    private final FileUtilities fileUtilities;
+
     @Inject
-    private FileUtilities fileUtilities;
+    CanExecuteConstruct(FileUtilities fileUtilities) {
+        this.fileUtilities = fileUtilities;
+    }
 
     @Override
     public ConstructProcessor prepareProcess(final ConstructContext context) {
@@ -30,10 +34,9 @@ public class CanExecuteConstruct extends Construct {
         );
     }
 
-    static MetaExpression process(final ConstructContext constructContext, final FileUtilities fileUtilities,
-                                  final MetaExpression uri) {
+    MetaExpression process(final ConstructContext constructContext, final FileUtilities fileUtilities, final MetaExpression uri) {
         try {
-            File file = getFile(constructContext, uri.getStringValue());
+            Path file = getPath(constructContext, uri);
             return fromValue(fileUtilities.canExecute(file));
         } catch (IOException e) {
             throw new RobotRuntimeException("File not found, or not accessible", e);

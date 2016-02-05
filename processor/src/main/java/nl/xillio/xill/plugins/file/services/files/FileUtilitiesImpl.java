@@ -2,19 +2,11 @@ package nl.xillio.xill.plugins.file.services.files;
 
 import com.google.inject.Singleton;
 import nl.xillio.xill.plugins.file.utils.FileIterator;
-import nl.xillio.xill.plugins.file.utils.Folder;
 import nl.xillio.xill.plugins.file.utils.FolderIterator;
-import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.Iterator;
@@ -24,29 +16,24 @@ import java.util.Iterator;
  */
 @Singleton
 public class FileUtilitiesImpl implements FileUtilities {
-    private static final Logger LOGGER = LogManager.getLogger();
 
     @Override
-    public void copy(final File source, final File target) throws IOException {
-        if (source.isDirectory()) {
-            FileUtils.copyDirectory(source, target);
-        } else {
-            FileUtils.copyFile(source, target);
+    public void copy(final Path source, final Path target) throws IOException {
+        if (!Files.exists(source)) {
+            throw new NoSuchFileException("No such file: " + source.toAbsolutePath());
         }
+        if (target.getParent() != null) {
+            Files.createDirectories(target.getParent());
+        }
+        Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
     }
 
     @Override
-    public boolean createFolder(final File folder) throws IOException {
-        if (folder.isFile()) {
-            throw new IOException(folder.getAbsolutePath() + " is not a folder.");
+    public void createFolder(final Path folder) throws IOException {
+        if (Files.isRegularFile(folder)) {
+            throw new FileAlreadyExistsException("A file already exists at " + folder.toAbsolutePath());
         }
-
-        boolean madeFolders = folder.mkdirs();
-        if (!folder.exists()) {
-            throw new IOException("Could not create folder " + folder.getAbsolutePath());
-        }
-
-        return madeFolders;
+        Files.createDirectories(folder);
     }
 
     /**
@@ -56,14 +43,14 @@ public class FileUtilitiesImpl implements FileUtilities {
      * @return <tt>true</tt> if it exists. <tt>false</tt> otherwise.
      */
     @Override
-    public boolean exists(final File file) {
-        return file.exists();
+    public boolean exists(final Path file) {
+        return Files.exists(file);
     }
 
     @Override
-    public long getByteSize(final File file) throws IOException {
+    public long getByteSize(final Path file) throws IOException {
         try {
-            return FileUtils.sizeOf(file);
+            return Files.size(file);
         } catch (IllegalArgumentException e) {
             throw new IOException(e.getMessage(), e);
         }
@@ -98,80 +85,71 @@ public class FileUtilitiesImpl implements FileUtilities {
     }
 
     @Override
-    public void saveStringToFile(final String content, final File file) throws IOException {
-        FileUtils.writeStringToFile(file, content, false);
-    }
-
-    @Override
-    public void appendStringToFile(final String content, final File file) throws IOException {
-        FileUtils.writeStringToFile(file, content, true);
-    }
-
-    @Override
-    public Iterator<File> iterateFiles(File folder, boolean recursive) throws IOException {
+    public Iterator<Path> iterateFiles(Path folder, boolean recursive) throws IOException {
         return new FileIterator(folder, recursive);
     }
 
     @Override
-    public Iterator<Folder> iterateFolders(File folder, boolean recursive) throws IOException {
+    public Iterator<Path> iterateFolders(Path folder, boolean recursive) throws IOException {
         return new FolderIterator(folder, recursive);
     }
 
     @Override
-    public FileTime getCreationDate(File file) throws IOException {
+    public FileTime getCreationDate(Path file) throws IOException {
         return stat(file).creationTime();
     }
 
     @Override
-    public FileTime getLastModifiedDate(File file) throws IOException {
+    public FileTime getLastModifiedDate(Path file) throws IOException {
         return stat(file).lastModifiedTime();
     }
 
-    public boolean canRead(File file) throws IOException {
-        return fileCheck(file, Files.isReadable(file.toPath()));
+    @Override
+    public boolean canRead(Path file) throws IOException {
+        return fileCheck(file, Files.isReadable(file));
     }
 
     @Override
-    public boolean canWrite(File file) throws IOException {
-        return fileCheck(file, Files.isWritable(file.toPath()));
+    public boolean canWrite(Path file) throws IOException {
+        return fileCheck(file, Files.isWritable(file));
     }
 
     @Override
-    public boolean canExecute(File file) throws IOException {
+    public boolean canExecute(Path file) throws IOException {
 
-        return fileCheck(file, Files.isExecutable(file.toPath()));
+        return fileCheck(file, Files.isExecutable(file));
     }
 
     @Override
-    public boolean isHidden(File file) throws IOException {
-        return fileCheck(file, Files.isHidden(file.toPath()));
+    public boolean isHidden(Path file) throws IOException {
+        return fileCheck(file, Files.isHidden(file));
     }
 
     @Override
-    public boolean isFile(File file) throws IOException {
-        return fileCheck(file, Files.isRegularFile(file.toPath()));
+    public boolean isFile(Path file) throws IOException {
+        return fileCheck(file, Files.isRegularFile(file));
     }
 
     @Override
-    public boolean isFolder(File file) throws IOException {
-        return fileCheck(file, Files.isDirectory(file.toPath()));
+    public boolean isFolder(Path file) throws IOException {
+        return fileCheck(file, Files.isDirectory(file));
     }
 
     @Override
-    public boolean isLink(File file) throws IOException {
-        return fileCheck(file, Files.isSymbolicLink(file.toPath()));
+    public boolean isLink(Path file) throws IOException {
+        return fileCheck(file, Files.isSymbolicLink(file));
     }
 
-    private boolean fileCheck(File file, boolean statement) throws FileNotFoundException {
-        if (!Files.notExists(file.toPath())) {
+    private boolean fileCheck(Path file, boolean statement) throws FileNotFoundException {
+        if (!Files.notExists(file)) {
             return statement;
         } else {
             throw new FileNotFoundException("The specified file folder does not exist.");
         }
     }
 
-    private static BasicFileAttributes stat(File file) throws IOException {
-        return Files.readAttributes(file.toPath(), BasicFileAttributes.class);
+    private static BasicFileAttributes stat(Path file) throws IOException {
+        return Files.readAttributes(file, BasicFileAttributes.class);
     }
 
 }

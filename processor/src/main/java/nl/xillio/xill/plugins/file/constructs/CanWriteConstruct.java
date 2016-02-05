@@ -9,8 +9,8 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * Determines whether a file or folder is readable or not.
@@ -33,7 +33,7 @@ public class CanWriteConstruct extends Construct {
     static MetaExpression process(final ConstructContext constructContext, final FileUtilities fileUtilities,
                                   final MetaExpression uri) {
         try {
-            File file = getFile(constructContext, uri.getStringValue());
+            Path file = getPath(constructContext, uri);
             return fromValue(fileUtilities.canWrite(file));
         } catch (IOException e) {
             throw new RobotRuntimeException("File not found, or not accessible", e);

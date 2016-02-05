@@ -203,7 +203,7 @@ public class RunBulkExpression implements Processable {
     public InstructionFlow<MetaExpression> process(final Debugger debugger) {
         MetaExpression pathExpression = path.process(debugger).get();
 
-        File otherRobot = resolver.buildPath(new ConstructContext(robotID, robotID, null, null, null, null, null), pathExpression.getStringValue()).toFile();
+        File otherRobot = resolver.buildPath(new ConstructContext(robotID, robotID, null, null, null, null, null), pathExpression).toFile();
 
         LOGGER.debug("Evaluating runBulk for " + otherRobot.getAbsolutePath());
 

@@ -13,6 +13,7 @@ import nl.xillio.xill.plugins.file.services.permissions.FilePermissionsProvider;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 import java.util.LinkedHashMap;
 
 /**
@@ -37,25 +38,25 @@ public class GetPermissionsConstruct extends Construct {
     }
 
     MetaExpression process(MetaExpression path, ConstructContext context) {
-        File file = getFile(context, path.getStringValue());
+        Path file = getPath(context, path);
 
         FilePermissions permissions = getPermissions(file);
 
         if (permissions == null) {
-            throw new RobotRuntimeException("Failed to read permissions for " + file.getAbsolutePath() + ". No results were found.");
+            throw new RobotRuntimeException("Failed to read permissions for " + file + ". No results were found.");
         }
 
         LinkedHashMap<String, Object> mapResult = new LinkedHashMap<>(permissions.toMap());
         return parseObject(mapResult);
     }
 
-    private FilePermissions getPermissions(File file) {
+    private FilePermissions getPermissions(Path file) {
         try {
             return permissionsProvider.readPermissions(file);
         } catch (NoSuchFileException e) {
-            throw new RobotRuntimeException("Could not find " + file.getAbsolutePath(), e);
+            throw new RobotRuntimeException("Could not find " + file, e);
         } catch (IOException e) {
-            throw new RobotRuntimeException("Failed to read permissions for " + file.getAbsolutePath() + ": " + e.getMessage(), e);
+            throw new RobotRuntimeException("Failed to read permissions for " + file + ": " + e.getMessage(), e);
         }
     }
 }

@@ -11,6 +11,7 @@ import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * Tests whether the file denoted by this abstract pathname is a normal file.
@@ -33,7 +34,7 @@ public class IsFileConstruct extends Construct {
     static MetaExpression process(final ConstructContext constructContext, final FileUtilities fileUtilities,
                                   final MetaExpression uri) {
         try {
-            File file = getFile(constructContext, uri.getStringValue());
+            Path file = getPath(constructContext, uri);
             return fromValue(fileUtilities.isFile(file));
         } catch (IOException e) {
             throw new RobotRuntimeException("File not found, or not accessible", e);

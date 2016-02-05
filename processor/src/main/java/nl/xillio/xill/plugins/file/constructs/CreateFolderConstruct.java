@@ -10,8 +10,8 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * This Construct will create a folder and return the absolute path to that folder
@@ -31,13 +31,13 @@ public class CreateFolderConstruct extends Construct {
 
     static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri) {
 
-        File folder = getFile(context, uri.getStringValue());
+        Path folder = getPath(context, uri);
 
         try {
             fileUtils.createFolder(folder);
         } catch (IOException e) {
-            throw new RobotRuntimeException("Failed to create " + folder.getAbsolutePath(), e);
+            throw new RobotRuntimeException("Failed to create " + folder, e);
         }
-        return fromValue(folder.getAbsolutePath());
+        return fromValue(folder.toString());
     }
 }

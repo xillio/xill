@@ -10,8 +10,8 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.LinkedHashMap;
 
 /**
@@ -33,18 +33,18 @@ public class CopyConstruct extends Construct {
 
     static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression source, final MetaExpression target) {
 
-        File sourceFile = getFile(context, source.getStringValue());
-        File targetFile = getFile(context, target.getStringValue());
+        Path sourceFile = getPath(context, source);
+        Path targetFile = getPath(context, target);
         try {
             fileUtils.copy(sourceFile, targetFile);
         } catch (IOException e) {
-            throw new RobotRuntimeException("Failed to copy " + sourceFile.getName() + " to " + targetFile.getName() + ": " + e.getMessage(), e);
+            throw new RobotRuntimeException("Failed to copy " + sourceFile + " to " + targetFile + ": " + e.getMessage(), e);
         }
 
         //Build the result
         LinkedHashMap<String, MetaExpression> result = new LinkedHashMap<>();
-        result.put("from", fromValue(sourceFile.getAbsolutePath()));
-        result.put("into", fromValue(targetFile.getAbsolutePath()));
+        result.put("from", fromValue(sourceFile.toString()));
+        result.put("into", fromValue(targetFile.toString()));
         return fromValue(result);
     }
 }

@@ -11,6 +11,8 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertTrue;
@@ -46,15 +48,15 @@ public class CanExecuteConstructTest extends TestUtils {
     @Test
     public void testProcess() throws IOException {
 
-        setFileResolverReturnValue(new File(""));
+        setFileResolverReturnValue(Paths.get("."));
 
         when(metaExpression.getStringValue()).thenReturn("");
-        when(fileUtilities.canExecute(any(File.class))).thenReturn(true);
+        when(fileUtilities.canExecute(any(Path.class))).thenReturn(true);
 
         MetaExpression result = CanExecuteConstruct.process(constructContext, fileUtilities, metaExpression);
 
         assertTrue(result.getBooleanValue());
-        verify(fileUtilities, times(1)).canExecute(any(File.class));
+        verify(fileUtilities, times(1)).canExecute(any(Path.class));
     }
 
     /**
@@ -65,10 +67,10 @@ public class CanExecuteConstructTest extends TestUtils {
     @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "File not found, or not accessible")
     public void testProcessException() throws IOException {
 
-        doThrow(new FileNotFoundException("")).when(fileUtilities).canExecute(any(File.class));
+        doThrow(new FileNotFoundException("")).when(fileUtilities).canExecute(any(Path.class));
 
         CanExecuteConstruct.process(constructContext, fileUtilities, metaExpression);
 
-        verify(fileUtilities, times(1)).canExecute(any(File.class));
+        verify(fileUtilities, times(1)).canExecute(any(Path.class));
     }
 }

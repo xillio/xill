@@ -20,7 +20,7 @@ class EmptyIOStream implements IOStream {
     }
 
     @Override
-    public InputStream openInputStream() throws IOException {
+    public InputStream getInputStream() throws IOException {
         throw new NoStreamAvailableException("This is no binary content");
     }
 
@@ -30,7 +30,12 @@ class EmptyIOStream implements IOStream {
     }
 
     @Override
-    public OutputStream openOutputStream() throws IOException {
+    public OutputStream getOutputStream() throws IOException {
         throw new NoStreamAvailableException("This is no binary content");
+    }
+
+    @Override
+    public void close() {
+        // There are no streams to close
     }
 }

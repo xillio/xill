@@ -47,7 +47,7 @@ public class GetLastModifiedDate extends Construct {
 
     static MetaExpression process(final ConstructContext context, final DateFactory dateFactory, final FileUtilities io, final MetaExpression expr) {
         try {
-            Date date = dateFactory.from(io.getLastModifiedDate(getFile(context, expr.getStringValue())).toInstant());
+            Date date = dateFactory.from(io.getLastModifiedDate(getPath(context, expr)).toInstant());
             MetaExpression result = fromValue(date.toString());
             result.storeMeta(date);
             return result;

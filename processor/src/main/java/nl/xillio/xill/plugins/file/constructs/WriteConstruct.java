@@ -2,7 +2,6 @@ package nl.xillio.xill.plugins.file.constructs;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import me.biesaart.utils.FileUtilsService;
 import me.biesaart.utils.IOUtilsService;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
@@ -10,14 +9,12 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.plugins.file.services.files.FileStreamFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.AccessDeniedException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 
 /**
  * Write content from a source to a target.
@@ -28,56 +25,57 @@ import java.nio.file.StandardOpenOption;
 @Singleton
 public class WriteConstruct extends Construct {
 
-    private final FileUtilsService fileUtilsService;
     private final IOUtilsService ioUtilsService;
+    private final FileStreamFactory fileStreamFactory;
 
     @Inject
-    public WriteConstruct(FileUtilsService fileUtilsService, IOUtilsService ioUtilsService) {
-        this.fileUtilsService = fileUtilsService;
+    public WriteConstruct(IOUtilsService ioUtilsService, FileStreamFactory fileStreamFactory) {
         this.ioUtilsService = ioUtilsService;
+        this.fileStreamFactory = fileStreamFactory;
     }
 
     @Override
     public ConstructProcessor prepareProcess(final ConstructContext context) {
         return new ConstructProcessor(
-                (uri, content) -> process(context, uri, content),
-                new Argument("target", ATOMIC),
-                new Argument("content", NULL, ATOMIC));
+                (source, target) -> process(context, source, target),
+                new Argument("source", ATOMIC),
+                new Argument("target", ATOMIC)
+        );
     }
 
-    MetaExpression process(final ConstructContext context, final MetaExpression target, final MetaExpression content) {
-        // First we open up the streams
-        try (OutputStream output = getStream(target, context); InputStream input = getInput(content)) {
+    MetaExpression process(final ConstructContext context, final MetaExpression source, final MetaExpression target) {
 
-            // Then we copy the input stream to the output stream
-            long count = ioUtilsService.copyLarge(input, output);
-            return fromValue(count);
+        try {
+            return fromValue(write(source, target, context));
         } catch (AccessDeniedException e) {
             throw new RobotRuntimeException("Access denied: " + e.getMessage(), e);
         } catch (IOException e) {
             throw new RobotRuntimeException("Could not write to " + target + ": " + e.getMessage(), e);
         }
 
-
     }
 
-    private InputStream getInput(MetaExpression content) throws IOException {
-        if (content.getBinaryValue().hasInputStream()) {
-            return content.getBinaryValue().openInputStream();
-        }
-
-        if (content.isNull()) {
-            return ioUtilsService.toInputStream("");
-        }
-
-        return ioUtilsService.toInputStream(content.getStringValue());
-    }
-
-    private OutputStream getStream(MetaExpression target, ConstructContext context) throws IOException {
+    private long write(MetaExpression source, MetaExpression target, ConstructContext context) throws IOException {
+        // If we have a stream, write to it
         if (target.getBinaryValue().hasOutputStream()) {
-            return target.getBinaryValue().openOutputStream();
+            return write(source, target.getBinaryValue().getOutputStream());
         }
 
-        throw new RobotRuntimeException("Path as target not implemented yet");
+        // Otherwise we try to write to the path
+        try (OutputStream outputStream = fileStreamFactory.openWrite(getPath(context, target)).getOutputStream()) {
+            return write(source, outputStream);
+        }
+    }
+
+    private long write(MetaExpression source, OutputStream target) throws IOException {
+        // If we have a stream, read it
+        if (source.getBinaryValue().hasInputStream()) {
+            return ioUtilsService.copy(source.getBinaryValue().getInputStream(), target);
+        }
+
+        // Otherwise we read the text
+        try (InputStream stream = ioUtilsService.toInputStream(source.getStringValue())) {
+            return ioUtilsService.copy(stream, target);
+        }
     }
 }

@@ -10,7 +10,7 @@ import java.io.OutputStream;
  *
  * @author Thomas biesaart
  */
-public interface IOStream {
+public interface IOStream extends AutoCloseable {
 
     /**
      * Check if this IOStream has an input stream.
@@ -20,13 +20,13 @@ public interface IOStream {
     boolean hasInputStream();
 
     /**
-     * Create an input stream.
-     * Note: Make sure you close this stream manually.
+     * Get the input stream.
      *
      * @return the stream
-     * @throws IOException if the stream could not be created
+     * @throws IOException                if the stream could not be created
+     * @throws NoStreamAvailableException if there was no stream
      */
-    InputStream openInputStream() throws IOException;
+    InputStream getInputStream() throws IOException;
 
     /**
      * Check if this IOStream has an output stream.
@@ -36,12 +36,17 @@ public interface IOStream {
     boolean hasOutputStream();
 
     /**
-     * Create an output stream.
-     * Note: Make sure you close this stream manually
+     * Get the output stream.
      *
      * @return the stream
-     * @throws IOException if the stream could not be created
+     * @throws IOException                if the stream could not be created
+     * @throws NoStreamAvailableException if there was no stream
      */
-    OutputStream openOutputStream() throws IOException;
+    OutputStream getOutputStream() throws IOException;
+
+    /**
+     * Close both streams if they are present.
+     */
+    void close();
 
 }

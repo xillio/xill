@@ -42,4 +42,9 @@ class AbstractBehavior implements Expression {
     public String toString() {
         return getStringValue();
     }
+
+    @Override
+    public void close() {
+        getBinaryValue().close();
+    }
 }

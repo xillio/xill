@@ -23,9 +23,9 @@ class BinaryBehavior extends AbstractBehavior {
         this.value = value;
 
         if (description == null) {
-            reference = "[Binary data]";
+            reference = "[Stream]";
         } else {
-            reference = "[Binary data: " + description + "]";
+            reference = "[Stream: " + description + "]";
         }
     }
 

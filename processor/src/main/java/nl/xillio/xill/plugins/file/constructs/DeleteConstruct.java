@@ -31,7 +31,7 @@ public class DeleteConstruct extends Construct {
 
     static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri) {
 
-        Path file = getPath(context, uri.getStringValue());
+        Path file = getPath(context, uri);
         try {
             fileUtils.delete(file);
         } catch (IOException e) {

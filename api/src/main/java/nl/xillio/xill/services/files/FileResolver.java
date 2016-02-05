@@ -1,6 +1,7 @@
 package nl.xillio.xill.services.files;
 
 import com.google.inject.ImplementedBy;
+import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ConstructContext;
 
 import java.io.File;
@@ -20,10 +21,10 @@ public interface FileResolver {
      * Resolve a file using the general file system rules
      *
      * @param context the robot to resolve the file for
-     * @param path    the path
+     * @param path    the path expression
      * @return the file
      */
-    Path buildPath(ConstructContext context, String path);
+    Path buildPath(ConstructContext context, MetaExpression path);
 
     @Deprecated
     File buildFile(ConstructContext context, String path);

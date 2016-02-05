@@ -126,7 +126,7 @@ public abstract class Construct extends ExpressionBuilderHelper implements HelpC
      */
     @Deprecated
     protected static File getFile(ConstructContext context, String path) {
-        return fileResolver.buildPath(context, path).toFile();
+        return fileResolver.buildFile(context, path);
     }
 
     /**
@@ -136,7 +136,7 @@ public abstract class Construct extends ExpressionBuilderHelper implements HelpC
      * @param path    the path
      * @return the path
      */
-    protected static Path getPath(ConstructContext context, String path) {
+    protected static Path getPath(ConstructContext context, MetaExpression path) {
         return fileResolver.buildPath(context, path);
     }
 

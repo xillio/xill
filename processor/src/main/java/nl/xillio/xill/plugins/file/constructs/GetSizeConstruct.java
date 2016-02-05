@@ -12,6 +12,7 @@ import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * This construct returns the size of a file or throws an error when the file was not found
@@ -28,12 +29,8 @@ public class GetSizeConstruct extends Construct {
     }
 
     static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri) {
-        // Check if the specified uri is not null.
-        if (uri.isNull())
-            throw new RobotRuntimeException("The specified uri cannot be null.");
-
         // Get the file and return the size.
-        File file = getFile(context, uri.getStringValue());
+        Path file = getPath(context, uri);
         try {
             return fromValue(fileUtils.getByteSize(file));
         } catch (IOException e) {

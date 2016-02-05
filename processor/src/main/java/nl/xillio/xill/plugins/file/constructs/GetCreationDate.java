@@ -47,7 +47,7 @@ public class GetCreationDate extends Construct {
 
     static MetaExpression process(final ConstructContext c, final DateFactory dateFactory, final FileUtilities io, final MetaExpression expr) {
         try {
-            Date date = dateFactory.from(io.getCreationDate(getFile(c, expr.getStringValue())).toInstant());
+            Date date = dateFactory.from(io.getCreationDate(getPath(c, expr)).toInstant());
             MetaExpression result = fromValue(date.toString());
             result.storeMeta(date);
             return result;

@@ -1,10 +1,8 @@
 package nl.xillio.xill.plugins.file.services.files;
 
 import com.google.inject.ImplementedBy;
-import nl.xillio.xill.plugins.file.utils.Folder;
 import nl.xillio.xill.services.XillService;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -24,7 +22,7 @@ public interface FileUtilities extends XillService {
      * @param target the target file
      * @throws IOException when the operation failed
      */
-    void copy(File source, File target) throws IOException;
+    void copy(Path source, Path target) throws IOException;
 
     /**
      * Create a folder at the specific location if it does not exist
@@ -32,7 +30,7 @@ public interface FileUtilities extends XillService {
      * @param folder the folder
      * @throws IOException when the operation failed
      */
-    boolean createFolder(File folder) throws IOException;
+    void createFolder(Path folder) throws IOException;
 
     /**
      * Returns true if the file exists
@@ -40,7 +38,7 @@ public interface FileUtilities extends XillService {
      * @param file the file to check
      * @return true if and only if the file exists
      */
-    boolean exists(File file);
+    boolean exists(Path file);
 
     /**
      * Check the size of a file
@@ -48,7 +46,7 @@ public interface FileUtilities extends XillService {
      * @param file the file to check
      * @return the size in bytes
      */
-    long getByteSize(File file) throws IOException;
+    long getByteSize(Path file) throws IOException;
 
     /**
      * Delete a file or folder
@@ -59,24 +57,6 @@ public interface FileUtilities extends XillService {
     void delete(Path file) throws IOException;
 
     /**
-     * Create the required folders and save content to a file
-     *
-     * @param content the content to save
-     * @param file    the target file
-     * @throws IOException when the operation failed
-     */
-    void saveStringToFile(String content, File file) throws IOException;
-
-    /**
-     * Create the required folders and append content to a file
-     *
-     * @param content the content to append
-     * @param file    the target file
-     * @throws IOException when the operation failed
-     */
-    void appendStringToFile(String content, File file) throws IOException;
-
-    /**
      * Create an Iterator that will cover only files in a specific directory
      *
      * @param folder    the folder to list files from
@@ -84,7 +64,7 @@ public interface FileUtilities extends XillService {
      * @return the iterator
      * @throws IOException when the folder does not exist or is not a folder at all
      */
-    Iterator<File> iterateFiles(File folder, boolean recursive) throws IOException;
+    Iterator<Path> iterateFiles(Path folder, boolean recursive) throws IOException;
 
     /**
      * Create an Iterator that will cover only folders in a specific directory
@@ -94,7 +74,7 @@ public interface FileUtilities extends XillService {
      * @return the iterator
      * @throws IOException when the folder does not exist or is not a folder at all
      */
-    Iterator<Folder> iterateFolders(File folder, boolean recursive) throws IOException;
+    Iterator<Path> iterateFolders(Path folder, boolean recursive) throws IOException;
 
     /**
      * Determine creation time (ctime) of specified file.
@@ -103,7 +83,7 @@ public interface FileUtilities extends XillService {
      * @return ctime
      * @throws IOException if the file does not exist, file statistics do not work, or some I/O operation failed.
      */
-    FileTime getCreationDate(File file) throws IOException;
+    FileTime getCreationDate(Path file) throws IOException;
 
     /**
      * Determine last modified time (mtime) of specified file.
@@ -112,7 +92,7 @@ public interface FileUtilities extends XillService {
      * @return mtime
      * @throws IOException if the file does not exist, file statistics do not work, or some I/O operation failed.
      */
-    FileTime getLastModifiedDate(File file) throws IOException;
+    FileTime getLastModifiedDate(Path file) throws IOException;
 
     /**
      * Verifies whether an authenticated user has read access to a specified file/folder.
@@ -121,7 +101,7 @@ public interface FileUtilities extends XillService {
      * @return True if an authenticated user has read access to the specified file. Otherwise, false.
      * @throws FileNotFoundException If the file does not exist.
      */
-    boolean canRead(File file) throws IOException;
+    boolean canRead(Path file) throws IOException;
 
     /**
      * Verifies whether an authenticated user has write access to a specified file/folder.
@@ -129,7 +109,7 @@ public interface FileUtilities extends XillService {
      * @param file The associated file object.
      * @return True if an authenticated user has write access to a specified file. Otherwise, false.
      */
-    boolean canWrite(File file) throws IOException;
+    boolean canWrite(Path file) throws IOException;
 
     /**
      * Verifies whether an authenticated user has executability rights to the specified file/folder.
@@ -138,7 +118,7 @@ public interface FileUtilities extends XillService {
      * @return True if an authenticated user has executability rights to a specified file. Otherwise, false.
      * @throws FileNotFoundException If the file does not exist.
      */
-    boolean canExecute(File file) throws IOException;
+    boolean canExecute(Path file) throws IOException;
 
     /**
      * Verifies whether a file/folder is hidden or not.
@@ -147,7 +127,7 @@ public interface FileUtilities extends XillService {
      * @return True if the file is hidden. Otherwise, false.
      * @throws IOException
      */
-    boolean isHidden(File file) throws IOException;
+    boolean isHidden(Path file) throws IOException;
 
     /**
      * Tests whether the file denoted by this abstract pathname is a normal file. A file is normal if it is not a
@@ -158,7 +138,7 @@ public interface FileUtilities extends XillService {
      * @return true if and only if the file denoted by this abstract pathname exists and is a normal file; false otherwise
      * @throws IOException
      */
-    boolean isFile(File file) throws IOException;
+    boolean isFile(Path file) throws IOException;
 
     /**
      * Tests whether the file denoted by this abstract pathname is a folder. This method does follow symbolic links.
@@ -167,7 +147,7 @@ public interface FileUtilities extends XillService {
      * @return true if and only if the file denoted by this abstract pathname exists and is a directory; false otherwise
      * @throws IOException
      */
-    boolean isFolder(File file) throws IOException;
+    boolean isFolder(Path file) throws IOException;
 
     /**
      * Tests whether a file is a symbolic link.
@@ -177,5 +157,5 @@ public interface FileUtilities extends XillService {
      * cannot be determined if the file is a symbolic link or not.
      * @throws IOException
      */
-    boolean isLink(File file) throws IOException;
+    boolean isLink(Path file) throws IOException;
 }
