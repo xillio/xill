@@ -42,6 +42,7 @@ public interface XillEnvironment {
      * Load plugins from the added folders.
      *
      * @return self
+     * @throws IOException if we could not read the plugins
      */
     XillEnvironment loadPlugins() throws IOException;
 
@@ -51,6 +52,7 @@ public interface XillEnvironment {
      * @param projectRoot the root folder of the project
      * @param robotPath   the path to the main robot
      * @return the processor
+     * @throws IOException if we could not load the processor
      */
     XillProcessor buildProcessor(Path projectRoot, Path robotPath) throws IOException;
 
@@ -61,6 +63,7 @@ public interface XillEnvironment {
      * @param robotPath   the path to the main robot
      * @param debugger    the debugger that should be used
      * @return the processor
+     * @throws IOException if we could not load the processor
      */
     XillProcessor buildProcessor(Path projectRoot, Path robotPath, Debugger debugger) throws IOException;
 

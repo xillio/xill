@@ -13,12 +13,13 @@ import nl.xillio.xill.api.io.IOStream;
 import nl.xillio.xill.plugins.file.services.files.FileStreamFactory;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 
 /**
- * Read text from a plain text file using the given encoding
+ * Read text from a plain text file using the given encoding.
+ *
+ * @author Thomas biesaart
  */
 @Singleton
 public class GetTextConstruct extends Construct {
@@ -68,14 +69,6 @@ public class GetTextConstruct extends Construct {
         } catch (IOException e) {
             throw new RobotRuntimeException("Failed to get text: " + e.getMessage(), e);
         }
-    }
-
-    private InputStream openStream(MetaExpression file, ConstructContext context) throws IOException {
-        if (file.getBinaryValue().hasInputStream()) {
-            return file.getBinaryValue().getInputStream();
-        }
-
-        return fileStreamFactory.openRead(getPath(context, file)).getInputStream();
     }
 
     private Charset getCharset(MetaExpression encoding) {

@@ -134,14 +134,18 @@ public interface Debugger extends ErrorHandlingPolicy {
     // VARIABLE DEBUGGING
 
     /**
-     * Returns a list of variable identifiers
+     * Returns a list of variable identifiers from the perspective (scope) of an instruction.
      *
+     * @param instruction the instruction
      * @return The variables
      */
     Collection<Object> getVariables(Instruction instruction);
 
     /**
-     * @param identifier the identifier returned by {@link Debugger#getVariables(Instruction)}
+     * Get the value of a variable, keeping recursivity in mind.
+     *
+     * @param identifier    the identifier returned by {@link Debugger#getVariables(Instruction)}
+     * @param stackPosition the amount of elements relative to the current stack
      * @return The current value in a variable
      * @see Debugger#getVariables(Instruction)
      */

@@ -37,7 +37,8 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
     /**
      * Create a new {@link ExpressionBuilder} that will produce a string
      *
-     * @param value the value to set
+     * @param value      the value to set
+     * @param isConstant set this to true to create a string constant
      */
     public ExpressionBuilder(final String value, final boolean isConstant) {
         expressionSupplier = () -> fromValue(value, isConstant);

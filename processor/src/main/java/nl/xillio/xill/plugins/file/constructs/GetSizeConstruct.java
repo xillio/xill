@@ -1,40 +1,25 @@
 package nl.xillio.xill.plugins.file.constructs;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.construct.Argument;
-import nl.xillio.xill.api.construct.Construct;
-import nl.xillio.xill.api.construct.ConstructContext;
-import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
  * This construct returns the size of a file or throws an error when the file was not found
  */
 @Singleton
-public class GetSizeConstruct extends Construct {
-
-    @Inject
-    private FileUtilities fileUtils;
+public class GetSizeConstruct extends AbstractFilePropertyConstruct<Long> {
 
     @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
-        return new ConstructProcessor(uri -> process(context, fileUtils, uri), new Argument("uri", ATOMIC));
+    protected Long process(Path path) throws IOException {
+        return Files.size(path);
     }
 
-    static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri) {
-        // Get the file and return the size.
-        Path file = getPath(context, uri);
-        try {
-            return fromValue(fileUtils.getByteSize(file));
-        } catch (IOException e) {
-            throw new RobotRuntimeException("Failed to get size of file: " + e.getMessage(), e);
-        }
+    @Override
+    protected MetaExpression parse(Long input) {
+        return fromValue(input);
     }
 }

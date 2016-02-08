@@ -251,13 +251,9 @@ public class IdentityArrayList<E> extends AbstractList<E>
     /**
      * Returns an array containing all of the elements in this list
      * in proper sequence (from first to last element).
-     * <p>
-     * <p>
      * The returned array will be "safe" in that no references to it are
      * maintained by this list. (In other words, this method must allocate
      * a new array). The caller is thus free to modify the returned array.
-     * <p>
-     * <p>
      * This method acts as bridge between array-based and collection-based
      * APIs.
      *
@@ -276,7 +272,6 @@ public class IdentityArrayList<E> extends AbstractList<E>
      * specified array, it is returned therein. Otherwise, a new array is
      * allocated with the runtime type of the specified array and the size of
      * this list.
-     * <p>
      * <p>
      * If the list fits in the specified array with room to spare
      * (i.e., the array has more elements than the list), the element in

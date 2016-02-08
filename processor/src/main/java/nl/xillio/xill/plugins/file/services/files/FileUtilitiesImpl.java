@@ -4,7 +4,6 @@ import com.google.inject.Singleton;
 import nl.xillio.xill.plugins.file.utils.FileIterator;
 import nl.xillio.xill.plugins.file.utils.FolderIterator;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -69,12 +68,6 @@ public class FileUtilitiesImpl implements FileUtilities {
         Files.createDirectories(folder);
     }
 
-    /**
-     * Determine whether the specified file is present
-     *
-     * @param file the file to check
-     * @return <tt>true</tt> if it exists. <tt>false</tt> otherwise.
-     */
     @Override
     public boolean exists(final Path file) {
         return Files.exists(file);
@@ -89,13 +82,6 @@ public class FileUtilitiesImpl implements FileUtilities {
         }
     }
 
-    /**
-     * Force remove the specified file.
-     * If the file does not exist, it will log a failure message.
-     *
-     * @param file the file
-     * @throws IOException If an I/O operation has failed.
-     */
     @Override
     public void delete(final Path file) throws IOException {
         if (!Files.exists(file)) {
@@ -135,50 +121,6 @@ public class FileUtilitiesImpl implements FileUtilities {
     @Override
     public FileTime getLastModifiedDate(Path file) throws IOException {
         return stat(file).lastModifiedTime();
-    }
-
-    @Override
-    public boolean canRead(Path file) throws IOException {
-        return fileCheck(file, Files.isReadable(file));
-    }
-
-    @Override
-    public boolean canWrite(Path file) throws IOException {
-        return fileCheck(file, Files.isWritable(file));
-    }
-
-    @Override
-    public boolean canExecute(Path file) throws IOException {
-
-        return fileCheck(file, Files.isExecutable(file));
-    }
-
-    @Override
-    public boolean isHidden(Path file) throws IOException {
-        return fileCheck(file, Files.isHidden(file));
-    }
-
-    @Override
-    public boolean isFile(Path file) throws IOException {
-        return fileCheck(file, Files.isRegularFile(file));
-    }
-
-    @Override
-    public boolean isFolder(Path file) throws IOException {
-        return fileCheck(file, Files.isDirectory(file));
-    }
-
-    @Override
-    public boolean isLink(Path file) throws IOException {
-        return fileCheck(file, Files.isSymbolicLink(file));
-    }
-
-    private boolean fileCheck(Path file, boolean statement) throws FileNotFoundException {
-        if (!Files.notExists(file)) {
-            return statement;
-        } else {
-            throw new FileNotFoundException("The specified file folder does not exist.");
-        }
     }
 
     private static BasicFileAttributes stat(Path file) throws IOException {

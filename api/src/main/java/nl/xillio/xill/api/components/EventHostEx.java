@@ -7,7 +7,7 @@ import java.util.function.Consumer;
  * This class represents an {@link EventEx} with raised permissions
  * This version is thread-safe
  *
- * @param <T>
+ * @param <T> The type of the parameter for this event
  */
 public class EventHostEx<T> {
     private final EventEx<T> event;

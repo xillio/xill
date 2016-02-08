@@ -41,6 +41,6 @@ public class DeleteConstruct extends Construct {
             throw new RobotRuntimeException("Failed to delete " + file.toAbsolutePath(), e);
         }
 
-        return fromValue(file.toAbsolutePath().toString());
+        return fromValue(file.toString());
     }
 }

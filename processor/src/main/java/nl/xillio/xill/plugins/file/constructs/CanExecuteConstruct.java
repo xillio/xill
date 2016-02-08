@@ -1,46 +1,18 @@
 package nl.xillio.xill.plugins.file.constructs;
 
-import com.google.inject.Inject;
-import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.construct.Argument;
-import nl.xillio.xill.api.construct.Construct;
-import nl.xillio.xill.api.construct.ConstructContext;
-import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.file.services.files.FileUtilities;
-
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * Determines whether a file or folder is executable or not.
- * <p>
- * Created by Anwar on 11/30/2015.
+ * Check if an existing file is executable.
+ *
+ * @author Thomas biesaart
  */
-public class CanExecuteConstruct extends Construct {
-
-    private final FileUtilities fileUtilities;
-
-    @Inject
-    CanExecuteConstruct(FileUtilities fileUtilities) {
-        this.fileUtilities = fileUtilities;
-    }
+public class CanExecuteConstruct extends AbstractFlagConstruct {
 
     @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
-        return new ConstructProcessor(
-                uri -> process(context, fileUtilities, uri),
-                new Argument("uri", ATOMIC)
-        );
+    protected Boolean process(Path path) throws IOException {
+        return Files.isExecutable(path);
     }
-
-    MetaExpression process(final ConstructContext constructContext, final FileUtilities fileUtilities, final MetaExpression uri) {
-        try {
-            Path file = getPath(constructContext, uri);
-            return fromValue(fileUtilities.canExecute(file));
-        } catch (IOException e) {
-            throw new RobotRuntimeException("File not found, or not accessible", e);
-        }
-    }
-
 }
