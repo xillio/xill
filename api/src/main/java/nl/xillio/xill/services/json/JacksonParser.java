@@ -26,6 +26,7 @@ public class JacksonParser implements JsonParser, PrettyJsonParser {
     }
 
     @Override
+    @SuppressWarnings("squid:S1166") // Ignore StackOverflowError not being handled since it is too large due to the circular reference.
     public String toJson(Object object) throws JsonException {
         try {
             return mapper.writeValueAsString(object);
