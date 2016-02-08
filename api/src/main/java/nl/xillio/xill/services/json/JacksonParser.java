@@ -32,7 +32,7 @@ public class JacksonParser implements JsonParser, PrettyJsonParser {
         } catch (JsonProcessingException e) {
             throw new JsonException("Failed to parse json: " + e.getMessage(), e);
         } catch (StackOverflowError e) {
-            throw new JsonException("A stack overflow error occurred while parsing the JSON, this is likely due a circular reference.");
+            throw new JsonException("A stack overflow error occurred while parsing the JSON, this is likely due a circular reference.", e);
         }
     }
 
@@ -43,9 +43,9 @@ public class JacksonParser implements JsonParser, PrettyJsonParser {
 
     @Override
     public <T> T fromJson(String json, Class<T> type) throws JsonException {
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper newMapper = new ObjectMapper();
         try {
-            return mapper.readValue(json, type);
+            return newMapper.readValue(json, type);
         } catch (IOException e) {
             throw new JsonException("Failed to parse json: " + e.getMessage(), e);
         }
