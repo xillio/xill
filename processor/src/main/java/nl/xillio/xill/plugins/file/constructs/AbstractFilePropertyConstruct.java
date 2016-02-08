@@ -8,6 +8,7 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -37,6 +38,8 @@ abstract class AbstractFilePropertyConstruct<T> extends Construct {
 
         try {
             return parse(process(file));
+        } catch (AccessDeniedException e) {
+            throw new RobotRuntimeException("Access denied to " + e.getFile(), e);
         } catch (IOException e) {
             throw new RobotRuntimeException(file + " could not be read", e);
         }
@@ -53,7 +56,7 @@ abstract class AbstractFilePropertyConstruct<T> extends Construct {
     protected abstract T process(Path path) throws IOException;
 
     /**
-     * Parse a result from {@link this#process(Path)} to a {@link MetaExpression}.
+     * Parse a result from {@link #process(Path)} to a {@link MetaExpression}.
      *
      * @param input the input
      * @return the expression
