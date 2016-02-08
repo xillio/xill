@@ -33,6 +33,8 @@ public class GetTextConstruct extends Construct {
         this.ioUtilsService = ioUtilsService;
     }
 
+
+
     @Override
     public ConstructProcessor prepareProcess(final ConstructContext context) {
         return new ConstructProcessor(
