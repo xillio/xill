@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file
 
 ###Fixed
 - Issue where focus would be lost on the project view [CTC-1254](https://xillio.atlassian.net/browse/CTC-1254)
+- Issue where lists would always evaluate to false [CTC-1315](https://xillio.atlassian.net/browse/CTC-1315)
 
 ##[3.0.0]
  - Initial release
