@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 /**
- * This Construct will create a folder and return the absolute path to that folder
+ * This Construct will create a folder and return the absolute path to that folder.
  */
 @Singleton
 public class CreateFolderConstruct extends Construct {
@@ -38,6 +38,7 @@ public class CreateFolderConstruct extends Construct {
         } catch (IOException e) {
             throw new RobotRuntimeException("Failed to create " + folder, e);
         }
+
         return fromValue(folder.toString());
     }
 }

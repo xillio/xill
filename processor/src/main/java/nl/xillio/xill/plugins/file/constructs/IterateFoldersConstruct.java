@@ -12,13 +12,17 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.file.services.FileSystemIterator;
 
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.FileSystemException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 /**
  * Creates an iterator that iterates over all files in a specific folder. If recursive is set to true the iterator will
- * also cover all files in the subdirectories
+ * also cover all files in the subdirectories.
+ *
+ * @author Thomas biesaart
  */
 @Singleton
 public class IterateFoldersConstruct extends Construct {
@@ -45,12 +49,8 @@ public class IterateFoldersConstruct extends Construct {
 
             return result;
 
-        } catch (NoSuchFileException e) {
-            throw new RobotRuntimeException("The specified folder does not exist:  " + e.getMessage(), e);
-        } catch (AccessDeniedException e) {
-            throw new RobotRuntimeException("Access to the specified folder is denied:  " + e.getMessage(), e);
-        } catch (NotDirectoryException e) {
-            throw new RobotRuntimeException("The specified folder is not a directory:  " + e.getMessage(), e);
+        } catch (FileSystemException e) {
+            throw new RobotRuntimeException("Could not read directory:  " + e.getFile(), e);
         } catch (IOException e) {
             throw new RobotRuntimeException("An error occurred: " + e.getMessage(), e);
         }
@@ -62,6 +62,7 @@ public class IterateFoldersConstruct extends Construct {
      * @param folder the folder
      * @return the MetaExpression
      */
+    @SuppressWarnings("squid:UnusedPrivateMethod") // Sonar doesn't do lambdas
     private static MetaExpression createExpression(Path folder) {
         LinkedHashMap<String, MetaExpression> value = new LinkedHashMap<>();
 

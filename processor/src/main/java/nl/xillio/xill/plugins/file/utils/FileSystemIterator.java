@@ -6,8 +6,10 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Stack;
 import java.util.function.Predicate;
 
@@ -18,7 +20,7 @@ import java.util.function.Predicate;
  * @see FolderIterator
  */
 abstract class FileSystemIterator implements Iterator<Path> {
-    private static final Logger logger = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger();
     private final Stack<DirectoryStreamWithIterator> stack = new Stack<>();
     private Path nextValue;
     private final boolean recursive;
@@ -46,6 +48,7 @@ abstract class FileSystemIterator implements Iterator<Path> {
      *
      * @return true if there is a next value
      */
+    @Override
     public boolean hasNext() {
         selectNext();
 
@@ -68,14 +71,14 @@ abstract class FileSystemIterator implements Iterator<Path> {
                     try {
                         addFolder(current);
                     } catch (IOException e) {
-                        logger.error("Failed to open " + current.toAbsolutePath(), e);
+                        LOGGER.error("Failed to open " + current.toAbsolutePath(), e);
                     }
                 }
             } else {
                 try {
                     stack.pop().close();
                 } catch (IOException e) {
-                    logger.error("Failed to close the stream.", e);
+                    LOGGER.error("Failed to close the stream.", e);
                 }
             }
         }
@@ -84,7 +87,7 @@ abstract class FileSystemIterator implements Iterator<Path> {
     @Override
     public Path next() {
         if (!hasNext()) {
-            throw new IllegalStateException("No next file present");
+            throw new NoSuchElementException("No next file present");
         }
 
         Path next = nextValue;

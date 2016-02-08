@@ -5,12 +5,12 @@ import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 
 /**
- * Construct for accessing creating time (ctime) on a file system.
+ * This construct will extract the last modification date from a file.
  *
  * @author Folkert van Verseveld
  * @author Thomas biesaart
  */
-public class GetCreationDate extends AbstractDateFilePropertyConstruct {
+public class GetLastModifiedDateConstruct extends AbstractDateFilePropertyConstruct {
 
     @Override
     protected FileTime process(Path path) throws IOException {
