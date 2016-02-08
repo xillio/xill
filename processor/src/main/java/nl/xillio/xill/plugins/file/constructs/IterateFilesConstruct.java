@@ -1,20 +1,10 @@
 package nl.xillio.xill.plugins.file.constructs;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.MetaExpressionIterator;
-import nl.xillio.xill.api.construct.Argument;
-import nl.xillio.xill.api.construct.Construct;
-import nl.xillio.xill.api.construct.ConstructContext;
-import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.file.services.FileSystemIterator;
 
 import java.io.IOException;
-import java.nio.file.AccessDeniedException;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.NotDirectoryException;
 import java.nio.file.Path;
 import java.util.Iterator;
 
@@ -23,38 +13,13 @@ import java.util.Iterator;
  * also cover all files in the subdirectories
  */
 @Singleton
-public class IterateFilesConstruct extends Construct {
-
-    @Inject
-    private FileSystemIterator fileUtils;
+public class IterateFilesConstruct extends AbstractIteratorConstruct {
 
     @Override
-    public ConstructProcessor prepareProcess(final ConstructContext context) {
-        return new ConstructProcessor(
-                (uri, content) -> process(context, fileUtils, uri, content),
-                new Argument("uri", ATOMIC),
-                new Argument("recursive", FALSE, ATOMIC));
-    }
-
-    static MetaExpression process(final ConstructContext context, final FileSystemIterator fileUtils,
-                                  final MetaExpression uri, final MetaExpression recursive) {
-        Path file = getPath(context, uri);
-        boolean isRecursive = recursive.getBooleanValue();
-        try {
-            MetaExpression result = fromValue("List files " + (isRecursive ? "recursively " : "") + "in " + file);
-            Iterator<Path> iterator = fileUtils.iterateFiles(file, isRecursive);
-            result.storeMeta(new MetaExpressionIterator<>(iterator, entry -> fromValue(entry.toString())));
-
-            return result;
-
-        } catch (NoSuchFileException e) {
-            throw new RobotRuntimeException("The specified folder does not exist:  " + e.getMessage(), e);
-        } catch (AccessDeniedException e) {
-            throw new RobotRuntimeException("Access to the specified folder is denied:  " + e.getMessage(), e);
-        } catch (NotDirectoryException e) {
-            throw new RobotRuntimeException("The specified folder is not a directory:  " + e.getMessage(), e);
-        } catch (IOException e) {
-            throw new RobotRuntimeException("An error occurred: " + e.getMessage(), e);
-        }
+    protected MetaExpression buildIterator(Path file, boolean isRecursive) throws IOException {
+        MetaExpression result = fromValue("List files " + (isRecursive ? "recursively " : "") + "in " + file);
+        Iterator<Path> iterator = iterateFiles(file, isRecursive);
+        result.storeMeta(new MetaExpressionIterator<>(iterator, entry -> fromValue(entry.toString())));
+        return result;
     }
 }
