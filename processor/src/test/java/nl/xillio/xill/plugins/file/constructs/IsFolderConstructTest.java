@@ -1,6 +1,5 @@
 package nl.xillio.xill.plugins.file.constructs;
 
-import junit.framework.Assert;
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ConstructContext;
@@ -14,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Tests the IsFileConstruct.
@@ -44,12 +44,12 @@ public class IsFolderConstructTest extends TestUtils {
         setFileResolverReturnValue(new File(""));
 
         when(metaExpression.getStringValue()).thenReturn("");
-        when(fileUtilities.isFile(any())).thenReturn(true);
+        when(fileUtilities.isFile(any(File.class))).thenReturn(true);
 
         MetaExpression result = IsFileConstruct.process(constructContext, fileUtilities, metaExpression);
 
-        Assert.assertTrue(result.getBooleanValue());
-        verify(fileUtilities, times(1)).isFile(any());
+        assertTrue(result.getBooleanValue());
+        verify(fileUtilities, times(1)).isFile(any(File.class));
     }
 
     @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "File not found, or not accessible")

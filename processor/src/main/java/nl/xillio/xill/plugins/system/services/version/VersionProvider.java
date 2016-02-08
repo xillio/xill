@@ -1,6 +1,5 @@
 package nl.xillio.xill.plugins.system.services.version;
 
-import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.services.XillService;
 
 /**
@@ -19,7 +18,7 @@ public class VersionProvider implements XillService {
      * @return the current version
      */
     public String getVersion() {
-        String version = XillPlugin.class.getPackage().getImplementationVersion();
+        String version = getClass().getPackage().getSpecificationVersion();
 
         if (version == null) {
             version = DEVELOP;

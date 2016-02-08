@@ -1,6 +1,5 @@
 package nl.xillio.xill.plugins.file.constructs;
 
-import junit.framework.Assert;
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ConstructContext;
@@ -13,8 +12,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+import static org.testng.AssertJUnit.assertTrue;
 
 /**
  * Tests the CanWrite construct.
@@ -48,11 +47,11 @@ public class CanWriteConstructTest extends TestUtils {
         setFileResolverReturnValue(new File(""));
 
         when(metaExpression.getStringValue()).thenReturn("");
-        when(fileUtilities.canWrite(any())).thenReturn(true);
+        when(fileUtilities.canWrite(any(File.class))).thenReturn(true);
 
         MetaExpression result = CanWriteConstruct.process(constructContext, fileUtilities, metaExpression);
 
-        Assert.assertTrue(result.getBooleanValue());
+        assertTrue(result.getBooleanValue());
         verify(fileUtilities, times(1)).canWrite(any(File.class));
 
     }

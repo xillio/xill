@@ -38,7 +38,7 @@ public class WhileInstruction extends CompoundInstruction {
 
     @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-        while (check(debugger)) {
+        while (check(debugger) && !debugger.shouldStop()) {
             InstructionFlow<MetaExpression> result = instructionSet.process(debugger);
 
             if (result.returns()) {

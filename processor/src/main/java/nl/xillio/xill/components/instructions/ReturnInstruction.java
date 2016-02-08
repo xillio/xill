@@ -38,6 +38,8 @@ public class ReturnInstruction extends Instruction {
 
     @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) {
+
+
         if (value == null) {
             return InstructionFlow.doReturn(ExpressionBuilderHelper.NULL);
         }

@@ -54,8 +54,9 @@ public class XillDebugger implements Debugger {
     }
 
     @Override
-    public void pause() {
+    public void pause(boolean userAction) {
         mode = Mode.PAUSED;
+        childDebuggers.forEach(dbg -> dbg.pause(userAction));
     }
 
     @Override
@@ -180,6 +181,7 @@ public class XillDebugger implements Debugger {
         onRobotStarted.invoke(new RobotStartedAction(robot));
         resume();
         currentStack.clear();
+        functionStack.clear();
     }
 
     @Override

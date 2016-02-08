@@ -5,7 +5,7 @@ dependencies{
 	compile 'com.google.code.gson:gson:2.3.1'
 	compile 'org.apache.commons:commons-lang3:3.4'
 	compile 'commons-io:commons-io:2.4'
-	compile 'nl.xillio.xill:xill.lang.Xill:3.0.43'
+	compile 'nl.xillio.xill:xill.lang.Xill:3.1.1'
 	compile 'commons-codec:commons-codec:1.10'
 
 	testCompile project(':testutils')
@@ -16,6 +16,3 @@ jar{
 		attributes  "Class-Path": configurations.runtime.files.collect {File file-> file.name }.join(" ")
 	}
 }
-
-// To prepare for execution we need to copy the plugins to the plugin directory
-prepare.dependsOn copyToPluginsDir
