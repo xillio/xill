@@ -32,7 +32,7 @@ public class JacksonParser implements JsonParser, PrettyJsonParser {
         } catch (JsonProcessingException e) {
             throw new JsonException("Failed to parse json: " + e.getMessage(), e);
         } catch (StackOverflowError e) {
-            throw new JsonException("A stack overflow error occurred while parsing the JSON, this is likely due a circular reference.", e);
+            throw new JsonException("A stack overflow error occurred while parsing the JSON, this is likely due a circular reference.");
         }
     }
 
