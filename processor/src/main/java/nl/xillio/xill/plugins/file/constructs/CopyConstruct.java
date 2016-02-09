@@ -11,6 +11,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.LinkedHashMap;
 
@@ -37,6 +38,8 @@ public class CopyConstruct extends Construct {
         Path targetFile = getPath(context, target);
         try {
             fileUtils.copy(sourceFile, targetFile);
+        } catch (NoSuchFileException e) {
+            throw new RobotRuntimeException(e.getFile() + " does not exist");
         } catch (IOException e) {
             throw new RobotRuntimeException("Failed to copy " + sourceFile + " to " + targetFile + ": " + e.getMessage(), e);
         }

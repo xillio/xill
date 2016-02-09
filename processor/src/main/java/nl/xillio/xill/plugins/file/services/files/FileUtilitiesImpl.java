@@ -20,7 +20,7 @@ public class FileUtilitiesImpl implements FileUtilities, FileSizeCalculator, Fil
     @Override
     public void copy(final Path source, final Path target) throws IOException {
         if (!Files.exists(source)) {
-            throw new NoSuchFileException("No such file: " + source.toAbsolutePath());
+            throw new NoSuchFileException(source.toAbsolutePath().toString());
         }
 
 

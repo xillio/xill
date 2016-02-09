@@ -29,7 +29,7 @@ public class FileStreamFactory {
             Files.createDirectories(path.getParent());
         }
 
-        return new SimpleIOStream(Files.newInputStream(path, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.APPEND), path.toString());
+        return new SimpleIOStream(Files.newOutputStream(path, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.APPEND), path.toString());
     }
 
     public IOStream openRead(Path path) throws IOException {

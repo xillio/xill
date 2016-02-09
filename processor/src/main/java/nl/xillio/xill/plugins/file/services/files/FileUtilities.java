@@ -5,7 +5,6 @@ import nl.xillio.xill.services.XillService;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Iterator;
 
 /**
  * This {@link XillService} is responsible for various file operations
