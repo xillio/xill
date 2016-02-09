@@ -48,7 +48,7 @@ public class VariableDeclaration extends Instruction {
     }
 
     @Override
-    public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
+    public InstructionFlow<MetaExpression> process(final Debugger debugger) {
         pushVariable(ExpressionBuilderHelper.NULL);
         assignation.process(debugger);
 
@@ -149,7 +149,7 @@ public class VariableDeclaration extends Instruction {
         }
 
         @Override
-        public InstructionFlow<MetaExpression> process(Debugger debugger) throws RobotRuntimeException {
+        public InstructionFlow<MetaExpression> process(Debugger debugger) {
             if (robot.hasArgument()) {
                 return InstructionFlow.doResume(robot.getArgument());
             }
