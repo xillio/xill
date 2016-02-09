@@ -10,6 +10,7 @@ import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.mockito.Matchers.any;
@@ -153,6 +154,6 @@ public class ErrorInstructionTest {
 
         Collection<Processable> returnValue = instruction.getChildren();
 
-        assertEquals(returnValue, children);
+        assertEquals(new HashSet<>(returnValue), new HashSet<>(children));
     }
 }
