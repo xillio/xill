@@ -57,28 +57,36 @@ abstract class FileSystemIterator implements Iterator<Path> {
     private void selectNext() {
         //We should try to select the next value
         while (!stack.isEmpty() && nextValue == null) {
-            if (stack.peek().iterator().hasNext()) {
-                Path current = stack.peek().iterator().next();
+            tryCacheNext();
+        }
+    }
 
-                if (resultChecker.test(current)) {
-                    //Found the next hit!
-                    nextValue = current;
-                }
+    private void tryCacheNext() {
+        if (stack.peek().iterator().hasNext()) {
+            cacheNext();
+        } else {
+            try {
+                stack.pop().close();
+            } catch (IOException e) {
+                LOGGER.error("Failed to close the stream.", e);
+            }
+        }
+    }
 
-                if (Files.isDirectory(current) && recursive) {
-                    //We should go recursive
-                    try {
-                        addFolder(current);
-                    } catch (IOException e) {
-                        LOGGER.error("Failed to open " + current.toAbsolutePath(), e);
-                    }
-                }
-            } else {
-                try {
-                    stack.pop().close();
-                } catch (IOException e) {
-                    LOGGER.error("Failed to close the stream.", e);
-                }
+    private void cacheNext() {
+        Path current = stack.peek().iterator().next();
+
+        if (resultChecker.test(current)) {
+            //Found the next hit!
+            nextValue = current;
+        }
+
+        if (Files.isDirectory(current) && recursive) {
+            //We should go recursive
+            try {
+                addFolder(current);
+            } catch (IOException e) {
+                LOGGER.error("Failed to open " + current.toAbsolutePath(), e);
             }
         }
     }

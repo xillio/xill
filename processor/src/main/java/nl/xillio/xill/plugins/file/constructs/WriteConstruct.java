@@ -48,14 +48,14 @@ public class WriteConstruct extends Construct {
         try {
             return fromValue(write(source, target, context));
         } catch (AccessDeniedException e) {
-            throw new RobotRuntimeException("Access denied: " + e.getMessage(), e);
+            throw new RobotRuntimeException("Access denied to " + e.getFile(), e);
         } catch (IOException e) {
             throw new RobotRuntimeException("Could not write to " + target + ": " + e.getMessage(), e);
         }
 
     }
 
-    private long write(MetaExpression source, MetaExpression target, ConstructContext context) throws IOException {
+    long write(MetaExpression source, MetaExpression target, ConstructContext context) throws IOException {
         // If we have a stream, write to it
         if (target.getBinaryValue().hasOutputStream()) {
             return write(source, target.getBinaryValue().getOutputStream());
