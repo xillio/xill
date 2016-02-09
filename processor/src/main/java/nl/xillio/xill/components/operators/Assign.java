@@ -80,7 +80,6 @@ public class Assign implements Processable {
             return;
         }
 
-
         // We need to go deeper
         MetaExpression currentValue = target.get(index).process(debugger).get();
         try {

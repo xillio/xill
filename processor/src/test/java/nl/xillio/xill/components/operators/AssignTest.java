@@ -20,7 +20,6 @@ public class AssignTest extends TestUtils {
         VariableDeclaration variableDeclaration = new VariableDeclaration(fromValue("Hello"), "testVar");
         variableDeclaration.process(debugger);
 
-
         Assign assign = new Assign(variableDeclaration, Collections.emptyList(), fromValue("World"));
 
         assertEquals(variableDeclaration.getVariable().getStringValue(), "Hello");
@@ -31,10 +30,8 @@ public class AssignTest extends TestUtils {
 
     @Test
     public void testAssignToList() {
-        ArrayList<MetaExpression> value = new ArrayList<>();
-        value.add(fromValue("Hello"));
         VariableDeclaration variableDeclaration = new VariableDeclaration(
-                fromValue(value),
+                list(fromValue("Hello")),
                 "testVar"
         );
         variableDeclaration.process(debugger);
@@ -63,20 +60,21 @@ public class AssignTest extends TestUtils {
 
         VariableDeclaration variableDeclaration = new VariableDeclaration(value, "test");
         variableDeclaration.process(debugger);
-
         Assign assign = new Assign(
                 variableDeclaration,
                 Arrays.asList(
+                        fromValue("hello"),
                         fromValue(0),
                         fromValue("test"),
-                        fromValue(2)),
+                        fromValue(0)
+                ),
                 fromValue("New Value")
         );
 
         assertEquals(variableDeclaration.getVariable().getStringValue(), "[{\"test\":[{\"other\":4}]}]");
 
         assign.process(debugger);
-        assertEquals(variableDeclaration.getVariable().getStringValue(), "[\"Hello\",\"World\"]");
+        assertEquals(variableDeclaration.getVariable().getStringValue(), "[{\"test\":[{\"other\":4,\"hello\":\"New Value\"}]}]");
     }
 
     private MetaExpression map(String key, MetaExpression value) {
