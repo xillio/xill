@@ -2,7 +2,6 @@ package nl.xillio.xill.api.components;
 
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.api.io.IOStream;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,7 +23,7 @@ import java.util.List;
  * @deprecated This class will become package protected soon
  */
 @Deprecated
-public class ObjectExpression extends MetaExpression {
+public class ObjectExpression extends CollectionExpression {
 
     private final LinkedHashMap<String, MetaExpression> value;
 
@@ -45,9 +44,7 @@ public class ObjectExpression extends MetaExpression {
 
     @Override
     public Collection<Processable> getChildren() {
-        List<Processable> children = new ArrayList<>(value.values());
-
-        return children;
+        return new ArrayList<>(value.values());
     }
 
     @Override
@@ -55,23 +52,4 @@ public class ObjectExpression extends MetaExpression {
         return value.size();
     }
 
-    @Override
-    public String getStringValue() {
-        return toString();
-    }
-
-    @Override
-    public boolean getBooleanValue() {
-        return true;
-    }
-
-    @Override
-    public boolean isNull() {
-        return false;
-    }
-
-    @Override
-    public IOStream getBinaryValue() {
-        return new EmptyIOStream();
-    }
 }

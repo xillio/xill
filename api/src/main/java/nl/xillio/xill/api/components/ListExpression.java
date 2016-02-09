@@ -1,7 +1,5 @@
 package nl.xillio.xill.api.components;
 
-import nl.xillio.xill.api.io.IOStream;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -18,7 +16,7 @@ import java.util.List;
  * </ul>
  */
 
-class ListExpression extends MetaExpression {
+class ListExpression extends CollectionExpression {
 
     private final List<? extends MetaExpression> value;
 
@@ -41,26 +39,5 @@ class ListExpression extends MetaExpression {
     @Override
     public Number getNumberValue() {
         return value.size();
-    }
-
-    @Override
-    public String getStringValue() {
-        return toString();
-    }
-
-    @Override
-    public boolean getBooleanValue() {
-        return isNull();
-    }
-
-    @Override
-    public boolean isNull() {
-        return false;
-
-    }
-
-    @Override
-    public IOStream getBinaryValue() {
-        return new EmptyIOStream();
     }
 }
