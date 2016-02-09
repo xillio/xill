@@ -14,6 +14,7 @@ import java.util.List;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotSame;
 
 public class ErrorInstructionTest {
@@ -151,5 +152,7 @@ public class ErrorInstructionTest {
         ErrorInstruction instruction = new ErrorInstruction(doBlock, successBlock, errorBlock, finallyBlock, cause);
 
         Collection<Processable> returnValue = instruction.getChildren();
+
+        assertEquals(returnValue, children);
     }
 }
