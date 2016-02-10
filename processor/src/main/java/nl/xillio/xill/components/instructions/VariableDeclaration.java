@@ -8,33 +8,47 @@ import nl.xillio.xill.components.operators.Assign;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Stack;
 
 /**
- * This {@link Instruction} represents the start of a variable's lifespan
+ * This {@link Instruction} represents the start of a variable's lifespan.
+ * <p>
+ * A VariableDeclaration can run in one of two modes: var or argument.
+ * In var mode the value of this variable will be
+ * set to the value after the assignment operator (or null).
+ * In argument mode the value of this variable will be set to the argument passed to this robot, or use the expression
+ * value as a fallback.
+ *
+ * @author Thomas biesaart
  */
 public class VariableDeclaration extends Instruction {
     private final Processable assignation;
     private final Stack<MetaExpression> valueStack = new Stack<>();
     /**
-     * This is here for debugging purposes
+     * This is here for debugging purposes.
      */
     private final String name;
 
     /**
-     * Create a new {@link VariableDeclaration}
+     * Create a new {@link VariableDeclaration}.
      *
-     * @param expression
-     * @param name
+     * @param expression the default value expression
+     * @param name       the name of this declaration for debugging purposes
+     * @param robot      if this declaration is an 'argument' then the robot that holds the argument
      */
-    public VariableDeclaration(final Processable expression, final String name) {
-        assignation = new Assign(this, Arrays.asList(), expression);
+    public VariableDeclaration(final Processable expression, final String name, Robot robot) {
         this.name = name;
+        Processable selectedExpression = robot == null ? expression : new ArgumentProvider(expression, robot);
+        assignation = new Assign(this, Collections.emptyList(), selectedExpression);
+    }
 
+    public VariableDeclaration(Processable expression, String name) {
+        this(expression, name, null);
     }
 
     @Override
-    public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
+    public InstructionFlow<MetaExpression> process(final Debugger debugger) {
         pushVariable(ExpressionBuilderHelper.NULL);
         assignation.process(debugger);
 
@@ -117,5 +131,35 @@ public class VariableDeclaration extends Instruction {
 
     public MetaExpression peek(int index) {
         return valueStack.elementAt(index);
+    }
+
+    /**
+     * This class represents an expression that has a variable source. It is used to make argument declarations possible.
+     *
+     * @author Thomas biesaart
+     */
+    private class ArgumentProvider implements Processable {
+
+        private final Processable expression;
+        private final Robot robot;
+
+        public ArgumentProvider(Processable expression, Robot robot) {
+            this.expression = expression;
+            this.robot = robot;
+        }
+
+        @Override
+        public InstructionFlow<MetaExpression> process(Debugger debugger) {
+            if (robot.hasArgument()) {
+                return InstructionFlow.doResume(robot.getArgument());
+            }
+
+            return InstructionFlow.doResume(expression.process(debugger).get());
+        }
+
+        @Override
+        public Collection<Processable> getChildren() {
+            return Collections.singletonList(expression);
+        }
     }
 }

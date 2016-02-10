@@ -1,18 +1,18 @@
 # Xill IDE - Change Log
 All notable changes to this project will be documented in this file
 
-##[3.1]
-###Added
-- Insecure option to the REST call constructs
-- (Un)escape XML constructs
-- More descriptive information in the robot status bar
-- Auto save functionality that saves after 2 seconds of inactivity
+##[3.1.0] 08-02-2016
+###Add
+- The argument keyword as a type of variable declaration [CTC-1253]
 - Error handling construction
 - The runBulk expression to run parallel robots
 
-###Fixed
-- Issue where focus would be lost on the project view [CTC-1254](https://xillio.atlassian.net/browse/CTC-1254)
-- Issue where lists would always evaluate to false [CTC-1315](https://xillio.atlassian.net/browse/CTC-1315)
+###Fix
+- Issue where lists would always evaluate to false [CTC-1315]
+- Issue where circular references would cause a robot to crash [CTC-1166]
 
-##[3.0.0]
+###Change
+- Update Xill Language to 3.1.1
+
+##[3.0.0] - 28-01-2016
  - Initial release

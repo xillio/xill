@@ -15,26 +15,31 @@ public interface Robot extends InstructionSet {
      * @param target the target to calculate the path to from the root
      * @return the path to the target or an empty list if the target wasn't found.
      */
-    public List<Processable> pathToInstruction(Instruction target);
+    List<Processable> pathToInstruction(Instruction target);
 
     /**
      * Initialize the robot to be used as a library
      *
      * @throws RobotRuntimeException when the library couldn't be initialized
      */
-    public void initializeAsLibrary() throws RobotRuntimeException;
+    void initializeAsLibrary() throws RobotRuntimeException;
 
     /**
      * Set the argument for this robot. This is used by the callbot component of the language
      *
      * @param expression the value to set for the argument expression
      */
-    public void setArgument(MetaExpression expression);
+    void setArgument(MetaExpression expression);
 
     /**
      * @return The argument set by {@link Robot#setArgument(MetaExpression)}
      */
-    public MetaExpression getArgument();
+    MetaExpression getArgument();
+
+    /**
+     * @return true if and only if an argument has been set for this robot
+     */
+    boolean hasArgument();
 
     UUID getCompilerSerialId();
 }
