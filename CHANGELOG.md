@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file
 
 ###Fix
 - Issue where lists would always evaluate to false [CTC-1315](https://xillio.atlassian.net/browse/CTC-1315)
+- Issue where circular references would cause a robot to crash [CTC-1166](https://xillio.atlassian.net/browse/CTC-1166)
 
 ###Change
 - Update Xill Language to 3.1.1
