@@ -1,8 +1,11 @@
 package nl.xillio.xill.api.components;
 
+import nl.xillio.xill.api.io.IOStream;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * This class contains various useful utility functions to create Expressions
@@ -37,17 +40,23 @@ public class ExpressionBuilderHelper {
     public static final MetaExpression NULL = new ImmutableLiteral(NullLiteral.Instance);
 
     /**
+     * Create a new expression containing binary data
+     *
+     * @param value the value of the expression
+     * @return expression
+     */
+    public static MetaExpression fromValue(final IOStream value) {
+        return buildAtomicOrNull(value, BinaryBehavior::new);
+    }
+
+    /**
      * Create a new expression containing a number
      *
      * @param value the value of the expression
      * @return expression
      */
     public static MetaExpression fromValue(final Number value) {
-        if (value == null) {
-            return ExpressionBuilder.NULL;
-        } else {
-            return new AtomicExpression(new NumberBehavior(value));
-        }
+        return buildAtomicOrNull(value, NumberBehavior::new);
     }
 
     /**
@@ -67,11 +76,7 @@ public class ExpressionBuilderHelper {
      * @return expression
      */
     public static MetaExpression fromValue(final String value) {
-        if (value == null) {
-            return ExpressionBuilder.NULL;
-        } else {
-            return new AtomicExpression(new StringBehavior(value));
-        }
+        return fromValue(value, false);
     }
 
     /**
@@ -82,14 +87,10 @@ public class ExpressionBuilderHelper {
      * @return the expression
      */
     public static MetaExpression fromValue(final String value, final boolean isConstant) {
-        if (value == null) {
-            return ExpressionBuilder.NULL;
-        } else {
-            if (!isConstant) {
-                return fromValue(value);
-            }
-            return new AtomicExpression(new StringConstantBehavior(value));
+        if (!isConstant) {
+            return buildAtomicOrNull(value, StringBehavior::new);
         }
+        return buildAtomicOrNull(value, StringConstantBehavior::new);
     }
 
     /**
@@ -99,11 +100,7 @@ public class ExpressionBuilderHelper {
      * @return the expression
      */
     public static MetaExpression fromValue(final List<MetaExpression> value) {
-        if (value == null) {
-            return ExpressionBuilder.NULL;
-        } else {
-            return new ListExpression(value);
-        }
+        return buildOrNull(value, ListExpression::new);
     }
 
     /**
@@ -113,11 +110,7 @@ public class ExpressionBuilderHelper {
      * @return the expression
      */
     public static MetaExpression fromValue(final LinkedHashMap<String, MetaExpression> value) {
-        if (value == null) {
-            return ExpressionBuilder.NULL;
-        } else {
-            return new ObjectExpression(value);
-        }
+        return buildOrNull(value, ObjectExpression::new);
     }
 
     /**
@@ -162,10 +155,22 @@ public class ExpressionBuilderHelper {
         return MetaExpression.parseObject(value);
     }
 
+    private static <T> MetaExpression buildAtomicOrNull(T value, Function<T, AbstractBehavior> builder) {
+        return buildOrNull(value, input -> new AtomicExpression(builder.apply(input)));
+    }
+
+    private static <T> MetaExpression buildOrNull(T value, Function<T, MetaExpression> builder) {
+        if (value == null) {
+            return NULL;
+        }
+
+        return builder.apply(value);
+    }
+
     /**
      * This {@link Expression} represents a null in literal form
      */
-    private static final class NullLiteral implements Expression {
+    private static final class NullLiteral extends AbstractBehavior {
 
         /**
          * The single instance of the null literal
@@ -194,5 +199,6 @@ public class ExpressionBuilderHelper {
         public boolean isNull() {
             return true;
         }
+
     }
 }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Returns an absolute path that is the input path with redundant name elements eliminated.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Clean up a complex path</header>
+            <code>
+                use File, System;
+
+                var complexPath = "test/folder/../might/./../../not/../exist/.././data";
+                var path = File.normalize(complexPath);
+
+                // Will print an absolute path that ends with: "/data"
+                System.print(path);
+            </code>
+            <header>Get the path of the folder containing this robot</header>
+            <code>
+                use File, System;
+
+                var folder = File.normalize(".");
+                System.print(folder);
+            </code>
+        </example>
+    </examples>
+    <tags>
+        clean, path, absolute
+    </tags>
+</function>

@@ -22,10 +22,12 @@ public class Issue {
         /**
          * Can't compile
          */
-        ERROR, /**
+        ERROR,
+        /**
          * Needs attention
          */
-        WARNING, /**
+        WARNING,
+        /**
          * Friendly notice
          */
         INFO
@@ -37,6 +39,7 @@ public class Issue {
      * @param message  the message to display
      * @param line     the line where the issue occurred
      * @param severity the severity of the issue
+     * @param robot    the robot
      * @see Type
      */
     public Issue(final String message, final int line, final Type severity, final RobotID robot) {

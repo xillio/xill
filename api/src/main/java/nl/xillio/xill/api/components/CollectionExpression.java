@@ -1,5 +1,7 @@
 package nl.xillio.xill.api.components;
 
+import nl.xillio.xill.api.io.IOStream;
+
 /**
  * Abstraction for Objects and Lists since they have commonalities.
  *
@@ -20,5 +22,10 @@ public abstract class CollectionExpression extends MetaExpression {
     @Override
     public boolean isNull() {
         return false;
+    }
+
+    @Override
+    public IOStream getBinaryValue() {
+        return new EmptyIOStream();
     }
 }

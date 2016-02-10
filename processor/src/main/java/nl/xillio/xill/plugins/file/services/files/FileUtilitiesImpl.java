@@ -1,162 +1,132 @@
 package nl.xillio.xill.plugins.file.services.files;
 
 import com.google.inject.Singleton;
+import nl.xillio.xill.plugins.file.services.FileSizeCalculator;
+import nl.xillio.xill.plugins.file.services.FileSystemIterator;
 import nl.xillio.xill.plugins.file.utils.FileIterator;
-import nl.xillio.xill.plugins.file.utils.Folder;
 import nl.xillio.xill.plugins.file.utils.FolderIterator;
-import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.nio.file.attribute.FileTime;
 import java.util.Iterator;
 
 /**
- * This is the main implementation of the {@link FileUtilities} service
+ * This is the main implementation of the {@link FileUtilities} service.
  */
 @Singleton
-public class FileUtilitiesImpl implements FileUtilities {
-    private static final Logger LOGGER = LogManager.getLogger();
+public class FileUtilitiesImpl implements FileUtilities, FileSizeCalculator, FileSystemIterator {
 
     @Override
-    public void copy(final File source, final File target) throws IOException {
-        if (source.isDirectory()) {
-            FileUtils.copyDirectory(source, target);
+    public void copy(final Path source, final Path target) throws IOException {
+        if (!Files.exists(source)) {
+            throw new NoSuchFileException(source.toAbsolutePath().toString());
+        }
+
+
+        if (Files.isDirectory(source)) {
+            copyDirectory(source, target);
         } else {
-            FileUtils.copyFile(source, target);
+            createDir(target.getParent());
+            copyFile(source, target);
+        }
+    }
+
+    private void copyDirectory(Path source, Path target) throws IOException {
+        Files.walkFileTree(source, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Path relative = source.relativize(file);
+                copyFile(file, target.resolve(relative));
+                return super.visitFile(file, attrs);
+            }
+
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                Path relative = source.relativize(dir);
+                Path targetDir = target.resolve(relative);
+                createDir(targetDir);
+                return super.preVisitDirectory(dir, attrs);
+            }
+        });
+    }
+
+    private void copyFile(Path source, Path target) throws IOException {
+        Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    private void createDir(Path path) throws IOException {
+        if (path != null) {
+            Files.createDirectories(path);
         }
     }
 
     @Override
-    public boolean createFolder(final File folder) throws IOException {
-        if (folder.isFile()) {
-            throw new IOException(folder.getAbsolutePath() + " is not a folder.");
+    public void createFolder(final Path folder) throws IOException {
+        if (Files.isRegularFile(folder)) {
+            throw new FileAlreadyExistsException("A file already exists at " + folder.toAbsolutePath());
+        }
+        Files.createDirectories(folder);
+    }
+
+    @Override
+    public boolean exists(final Path file) {
+        return Files.exists(file);
+    }
+
+    @Override
+    public void delete(final Path file) throws IOException {
+        if (!Files.exists(file)) {
+            return;
         }
 
-        boolean madeFolders = folder.mkdirs();
-        if (!folder.exists()) {
-            throw new IOException("Could not create folder " + folder.getAbsolutePath());
-        }
+        Files.walkFileTree(file, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.delete(file);
+                return super.visitFile(file, attrs);
+            }
 
-        return madeFolders;
-    }
-
-    /**
-     * Determine whether the specified file is present
-     *
-     * @param file the file to check
-     * @return <tt>true</tt> if it exists. <tt>false</tt> otherwise.
-     */
-    @Override
-    public boolean exists(final File file) {
-        return file.exists();
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                Files.delete(dir);
+                return super.postVisitDirectory(dir, exc);
+            }
+        });
     }
 
     @Override
-    public long getByteSize(final File file) throws IOException {
-        try {
-            return FileUtils.sizeOf(file);
-        } catch (IllegalArgumentException e) {
-            throw new IOException(e.getMessage(), e);
-        }
-    }
-
-    /**
-     * Force remove the specified file.
-     * If the file does not exist, it will log a failure message.
-     *
-     * @param file the file
-     * @throws IOException If an I/O operation has failed.
-     */
-    @Override
-    public void delete(final File file) throws IOException {
-        try {
-            FileUtils.forceDelete(file);
-        } catch (FileNotFoundException e) {
-            LOGGER.info("Failed to delete " + file.getAbsolutePath(), e);
-        }
-    }
-
-    @Override
-    public void saveStringToFile(final String content, final File file) throws IOException {
-        FileUtils.writeStringToFile(file, content, false);
-    }
-
-    @Override
-    public void appendStringToFile(final String content, final File file) throws IOException {
-        FileUtils.writeStringToFile(file, content, true);
-    }
-
-    @Override
-    public Iterator<File> iterateFiles(File folder, boolean recursive) throws IOException {
+    public Iterator<Path> iterateFiles(Path folder, boolean recursive) throws IOException {
         return new FileIterator(folder, recursive);
     }
 
     @Override
-    public Iterator<Folder> iterateFolders(File folder, boolean recursive) throws IOException {
+    public Iterator<Path> iterateFolders(Path folder, boolean recursive) throws IOException {
         return new FolderIterator(folder, recursive);
     }
 
     @Override
-    public FileTime getCreationDate(File file) throws IOException {
-        return stat(file).creationTime();
-    }
-
-    @Override
-    public FileTime getLastModifiedDate(File file) throws IOException {
-        return stat(file).lastModifiedTime();
-    }
-
-    public boolean canRead(File file) throws IOException {
-        return fileCheck(file, Files.isReadable(file.toPath()));
-    }
-
-    @Override
-    public boolean canWrite(File file) throws IOException {
-        return fileCheck(file, Files.isWritable(file.toPath()));
-    }
-
-    @Override
-    public boolean canExecute(File file) throws IOException {
-
-        return fileCheck(file, Files.isExecutable(file.toPath()));
-    }
-
-    @Override
-    public boolean isHidden(File file) throws IOException {
-        return fileCheck(file, Files.isHidden(file.toPath()));
-    }
-
-    @Override
-    public boolean isFile(File file) throws IOException {
-        return fileCheck(file, Files.isRegularFile(file.toPath()));
-    }
-
-    @Override
-    public boolean isFolder(File file) throws IOException {
-        return fileCheck(file, Files.isDirectory(file.toPath()));
-    }
-
-    @Override
-    public boolean isLink(File file) throws IOException {
-        return fileCheck(file, Files.isSymbolicLink(file.toPath()));
-    }
-
-    private boolean fileCheck(File file, boolean statement) throws FileNotFoundException {
-        if (!Files.notExists(file.toPath())) {
-            return statement;
+    public long getSize(Path path) throws IOException {
+        if (Files.isRegularFile(path)) {
+            return Files.size(path);
         } else {
-            throw new FileNotFoundException("The specified file folder does not exist.");
+            FileSizeWalker walker = new FileSizeWalker();
+            Files.walkFileTree(path, walker);
+            return walker.getSize();
         }
     }
 
-    private static BasicFileAttributes stat(File file) throws IOException {
-        return Files.readAttributes(file.toPath(), BasicFileAttributes.class);
-    }
+    private static class FileSizeWalker extends SimpleFileVisitor<Path> {
+        private long size = 0;
 
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            size += Files.size(file);
+            return super.visitFile(file, attrs);
+        }
+
+        public long getSize() {
+            return size;
+        }
+    }
 }

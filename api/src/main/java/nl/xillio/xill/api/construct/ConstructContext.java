@@ -36,9 +36,10 @@ public class ConstructContext {
      * @param robot             the robotID of the current robot
      * @param rootRobot         the robotID of the root robot
      * @param construct         the construct that will be using this context
+     * @param debugger          the debugger that is being used
      * @param compilerSerialId  the serial id of the compiler instance
      * @param robotStartedEvent The event host for started robots
-     * @param robotStoppedEvent
+     * @param robotStoppedEvent the event host for stopped robots
      */
     public ConstructContext(final RobotID robot, final RobotID rootRobot, final Construct construct, final Debugger debugger, UUID compilerSerialId, final EventHost<RobotStartedAction> robotStartedEvent,
                             final EventHost<RobotStoppedAction> robotStoppedEvent) {

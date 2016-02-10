@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Returns a stream that will write to the start of a file. This will clear the file contents when invoked.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Write three lines to a file</header>
+            <code>
+                use File;
+
+                var target = File.openWrite("./target.txt");
+
+                File.write("Hello World\n", target);
+                File.write("Hello World\n", target);
+                File.write("Hello World\n", target);
+            </code>
+            <header>Copy a file</header>
+            <code>
+                use File;
+
+                var source = File.openRead("./source.txt");
+                var target = File.openWrite("./source-copy.txt");
+                File.write(source, target);
+            </code>
+            <header>Create an empty file and if it exists</header>
+            <code>
+                use File;
+
+                File.write("./target.txt");
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>openRead</reference>
+        <reference>openAppend</reference>
+        <reference>getText</reference>
+        <reference>write</reference>
+    </references>
+    <tags>
+        read, write, append, text, content, create
+    </tags>
+</function>

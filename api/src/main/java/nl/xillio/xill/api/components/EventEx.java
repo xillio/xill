@@ -8,7 +8,7 @@ import java.util.function.Consumer;
  * This class allows other classes to subscribe to an event that can be fired by the {@link EventHostEx}.
  * This version is thread-safe
  *
- * @param <T>
+ * @param <T> the type of the argument passed to this event
  */
 public class EventEx<T> {
 

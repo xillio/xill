@@ -1,8 +1,8 @@
 package nl.xillio.xill.plugins.file.services.permissions;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.attribute.*;
 
 /**
@@ -12,8 +12,8 @@ import java.nio.file.attribute.*;
  */
 public class AclFilePermissionsProvider implements FilePermissionsProvider {
     @Override
-    public FilePermissions readPermissions(File file) throws IOException {
-        AclFileAttributeView aclView = Files.getFileAttributeView(file.toPath(), AclFileAttributeView.class);
+    public FilePermissions readPermissions(Path file) throws IOException {
+        AclFileAttributeView aclView = Files.getFileAttributeView(file, AclFileAttributeView.class);
         if (aclView == null) {
             // We have no results
             return null;
