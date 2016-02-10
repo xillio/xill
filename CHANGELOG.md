@@ -3,12 +3,13 @@ All notable changes to this project will be documented in this file
 
 ##[3.1.0] 08-02-2016
 ###Add
+- The argument keyword as a type of variable declaration [CTC-1253]
 - Error handling construction
 - The runBulk expression to run parallel robots
 
 ###Fix
-- Issue where lists would always evaluate to false [CTC-1315](https://xillio.atlassian.net/browse/CTC-1315)
-- Issue where circular references would cause a robot to crash [CTC-1166](https://xillio.atlassian.net/browse/CTC-1166)
+- Issue where lists would always evaluate to false [CTC-1315]
+- Issue where circular references would cause a robot to crash [CTC-1166]
 
 ###Change
 - Update Xill Language to 3.1.1
