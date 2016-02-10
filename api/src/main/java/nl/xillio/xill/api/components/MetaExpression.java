@@ -229,7 +229,7 @@ public abstract class MetaExpression implements Expression, Processable {
         try {
             return toString(jsonParser);
         } catch (JsonException e) {
-            throw new RobotRuntimeException("Failed to parse expressing to string", e);
+            throw new RobotRuntimeException("Failed to parse expression to string.", e);
         }
     }
 
