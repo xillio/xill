@@ -229,7 +229,7 @@ public abstract class MetaExpression implements Expression, Processable {
         try {
             return toString(jsonParser);
         } catch (JsonException e) {
-            throw new RobotRuntimeException("Failed to parse expressing to string", e);
+            throw new RobotRuntimeException("Failed to parse expression to string.", e);
         }
     }
 
@@ -388,6 +388,9 @@ public abstract class MetaExpression implements Expression, Processable {
                     result = expression.getStringValue();
                 } else if (behaviour instanceof NumberBehavior) {
                     result = expression.getNumberValue();
+                } else if (behaviour instanceof BinaryBehavior) {
+                    LOGGER.warn("Lost binary reference during extraction");
+                    result = expression.getStringValue();
                 } else {
                     throw new UnsupportedOperationException("No extraction found for " + behaviour.getClass().getSimpleName());
                 }

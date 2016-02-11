@@ -14,6 +14,7 @@ public interface JsonParser extends XillService {
      *
      * @param object the object to parse
      * @return a json string
+     * @throws JsonException when parsing the json failed
      */
     String toJson(Object object) throws JsonException;
 
@@ -22,6 +23,7 @@ public interface JsonParser extends XillService {
      *
      * @param metaExpression the expression
      * @return a json string
+     * @throws JsonException when parsing the json failed
      */
     String toJson(MetaExpression metaExpression) throws JsonException;
 
@@ -32,6 +34,7 @@ public interface JsonParser extends XillService {
      * @param json the json string
      * @param type the type of object to build
      * @return the object
+     * @throws JsonException when parsing the json failed
      */
     <T> T fromJson(String json, Class<T> type) throws JsonException;
 }

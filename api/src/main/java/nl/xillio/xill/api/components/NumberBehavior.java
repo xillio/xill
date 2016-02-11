@@ -11,7 +11,7 @@ package nl.xillio.xill.api.components;
  * <li><b>{@link Number}: </b> the acual value</li>
  * </ul>
  */
-class NumberBehavior implements Expression {
+class NumberBehavior extends AbstractBehavior {
 
     private final Number value;
 
@@ -37,15 +37,5 @@ class NumberBehavior implements Expression {
     @Override
     public boolean getBooleanValue() {
         return Double.doubleToRawLongBits(value.doubleValue()) != 0;
-    }
-
-    @Override
-    public boolean isNull() {
-        return false;
-    }
-
-    @Override
-    public String toString() {
-        return getStringValue();
     }
 }

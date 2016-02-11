@@ -29,4 +29,13 @@ public class JacksonParserTest {
         assertEquals(result.get(0), 42);
         assertTrue(result.get(0) instanceof Integer);
     }
+
+    @Test(expectedExceptions = {JsonException.class})
+    public void testParserCircularReference() throws Exception {
+        MetaExpression list = fromValue(new ArrayList<>());
+        list.<ArrayList>getValue().add(list);
+
+        JsonParser parser = new JacksonParser(false);
+        parser.toJson(list);
+    }
 }

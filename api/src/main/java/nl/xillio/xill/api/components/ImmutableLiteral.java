@@ -1,6 +1,7 @@
 package nl.xillio.xill.api.components;
 
 import nl.xillio.xill.api.data.MetadataExpression;
+import nl.xillio.xill.api.io.IOStream;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,7 +9,7 @@ import java.util.Collection;
 /**
  * This class represents a constant literal in the xill language
  */
-public class ImmutableLiteral extends MetaExpression {
+class ImmutableLiteral extends MetaExpression {
 
     private final Expression value;
 
@@ -38,6 +39,11 @@ public class ImmutableLiteral extends MetaExpression {
     @Override
     public boolean isNull() {
         return value.isNull();
+    }
+
+    @Override
+    public IOStream getBinaryValue() {
+        return value.getBinaryValue();
     }
 
     @Override

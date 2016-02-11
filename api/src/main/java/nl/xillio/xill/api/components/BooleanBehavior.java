@@ -11,7 +11,7 @@ package nl.xillio.xill.api.components;
  * <li><b>{@link Number}: </b> if value equals true then 1 else 0</li>
  * </ul>
  */
-class BooleanBehavior implements Expression {
+class BooleanBehavior extends AbstractBehavior {
 
     private final boolean value;
 
@@ -37,16 +37,6 @@ class BooleanBehavior implements Expression {
     @Override
     public boolean getBooleanValue() {
         return value;
-    }
-
-    @Override
-    public boolean isNull() {
-        return false;
-    }
-
-    @Override
-    public String toString() {
-        return getStringValue();
     }
 
 }

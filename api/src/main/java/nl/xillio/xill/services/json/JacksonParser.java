@@ -26,11 +26,14 @@ public class JacksonParser implements JsonParser, PrettyJsonParser {
     }
 
     @Override
+    @SuppressWarnings("squid:S1166") // Ignore StackOverflowError not being handled since it is too large due to the circular reference.
     public String toJson(Object object) throws JsonException {
         try {
             return mapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
             throw new JsonException("Failed to parse json: " + e.getMessage(), e);
+        } catch (StackOverflowError e) {
+            throw new JsonException("A stack overflow error occurred while parsing the JSON, this is likely due a circular reference.");
         }
     }
 
@@ -41,9 +44,9 @@ public class JacksonParser implements JsonParser, PrettyJsonParser {
 
     @Override
     public <T> T fromJson(String json, Class<T> type) throws JsonException {
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper newMapper = new ObjectMapper();
         try {
-            return mapper.readValue(json, type);
+            return newMapper.readValue(json, type);
         } catch (IOException e) {
             throw new JsonException("Failed to parse json: " + e.getMessage(), e);
         }

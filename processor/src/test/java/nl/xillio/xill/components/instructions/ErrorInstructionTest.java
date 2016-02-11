@@ -10,10 +10,12 @@ import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotSame;
 
 public class ErrorInstructionTest {
@@ -151,5 +153,7 @@ public class ErrorInstructionTest {
         ErrorInstruction instruction = new ErrorInstruction(doBlock, successBlock, errorBlock, finallyBlock, cause);
 
         Collection<Processable> returnValue = instruction.getChildren();
+
+        assertEquals(new HashSet<>(returnValue), new HashSet<>(children));
     }
 }

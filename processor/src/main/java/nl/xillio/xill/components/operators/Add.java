@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import static nl.xillio.xill.api.components.ExpressionBuilderHelper.fromValue;
+
 /**
  * This class represents the + operation.
  */
@@ -89,14 +91,14 @@ public final class Add extends BinaryNumberOperator {
         List<MetaExpression> result = new ArrayList<>(leftValue);
         result.addAll(rightValue);
 
-        return new ListExpression(result);
+        return fromValue(result);
     }
 
     private static MetaExpression processObjects(final LinkedHashMap<String, MetaExpression> leftValue, final LinkedHashMap<String, MetaExpression> rightValue) {
         LinkedHashMap<String, MetaExpression> result = new LinkedHashMap<>(leftValue);
         result.putAll(rightValue);
 
-        return ExpressionBuilderHelper.fromValue(result);
+        return fromValue(result);
     }
 
     private static MetaExpression processListObject(final List<MetaExpression> leftValue, final LinkedHashMap<String, MetaExpression> rightValue) {
@@ -106,7 +108,7 @@ public final class Add extends BinaryNumberOperator {
         }
         result.putAll(rightValue);
 
-        return ExpressionBuilderHelper.fromValue(result);
+        return fromValue(result);
     }
 
     private static MetaExpression processObjectList(final LinkedHashMap<String, MetaExpression> leftValue, final List<MetaExpression> rightValue) {
@@ -115,6 +117,6 @@ public final class Add extends BinaryNumberOperator {
             result.put(Integer.toString(i), rightValue.get(i));
         }
 
-        return ExpressionBuilderHelper.fromValue(result);
+        return fromValue(result);
     }
 }

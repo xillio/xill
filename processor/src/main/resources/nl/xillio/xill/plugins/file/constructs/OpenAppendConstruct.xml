@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Returns a stream that will write to the end of a file. This will leave the file as-is.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Append three lines to a file</header>
+            <code>
+                use File;
+
+                var target = File.openAppend("./target.txt");
+
+                File.write("Hello World\n", target);
+                File.write("Hello World\n", target);
+                File.write("Hello World\n", target);
+            </code>
+            <header>Create an empty file if it doesn't exist</header>
+            <code>
+                use File;
+                File.write("./target.txt");
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>openRead</reference>
+        <reference>openAppend</reference>
+        <reference>getText</reference>
+        <reference>write</reference>
+    </references>
+    <tags>
+        read, write, append, text, content, create
+    </tags>
+</function>
