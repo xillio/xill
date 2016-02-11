@@ -19,7 +19,7 @@ import java.util.*;
 public class Robot extends InstructionSet implements nl.xillio.xill.api.components.Robot {
     private final RobotID robotID;
     private final List<nl.xillio.xill.api.components.Robot> libraries = new ArrayList<>();
-    private MetaExpression callArgument = ExpressionBuilder.NULL;
+    private MetaExpression callArgument;
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -166,7 +166,15 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
 
     @Override
     public MetaExpression getArgument() {
+        if (callArgument == null) {
+            return ExpressionBuilderHelper.NULL;
+        }
         return callArgument;
+    }
+
+    @Override
+    public boolean hasArgument() {
+        return callArgument != null;
     }
 
     @Override

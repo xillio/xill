@@ -6,6 +6,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * <p>
@@ -18,7 +19,10 @@ import java.util.LinkedHashMap;
  * <li><b>{@link Boolean}: </b> false if the object is null else true</li>
  * <li><b>{@link Number}: </b> the number of members in this object</li>
  * </ul>
+ *
+ * @deprecated This class will become package protected soon
  */
+@Deprecated
 public class ObjectExpression extends CollectionExpression {
 
     private final LinkedHashMap<String, MetaExpression> value;

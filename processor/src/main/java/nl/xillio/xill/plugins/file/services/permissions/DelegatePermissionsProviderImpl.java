@@ -3,8 +3,8 @@ package nl.xillio.xill.plugins.file.services.permissions;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -22,7 +22,7 @@ public class DelegatePermissionsProviderImpl implements FilePermissionsProvider 
     }
 
     @Override
-    public FilePermissions readPermissions(File file) throws IOException {
+    public FilePermissions readPermissions(Path file) throws IOException {
         for (FilePermissionsProvider provider : providers) {
             FilePermissions permissions = provider.readPermissions(file);
 

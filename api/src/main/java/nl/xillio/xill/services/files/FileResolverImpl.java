@@ -1,8 +1,15 @@
 package nl.xillio.xill.services.files;
 
+import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ConstructContext;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 import java.io.File;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import static nl.xillio.xill.api.components.ExpressionBuilderHelper.fromValue;
 
 /**
  * <p>
@@ -15,13 +22,31 @@ import java.io.File;
 public class FileResolverImpl implements FileResolver {
 
     @Override
-    public File buildFile(ConstructContext context, String path) {
+    public Path buildPath(ConstructContext context, MetaExpression path) {
         //First check if the provided path is absolute
-        File file = new File(path);
+        if (path.isNull()) {
+            throw new RobotRuntimeException("Provided path cannot be null");
+        }
+        Path file = tryPath(path.getStringValue());
         if (!file.isAbsolute()) {
             //It's not absolute so we make it relative to the robot
-            file = new File(context.getRootRobot().getPath().getParentFile(), file.getPath());
+            file = context.getRobotID().getProjectPath().toPath().resolve(file);
         }
-        return file;
+        return file.normalize().toAbsolutePath();
+    }
+
+    @Override
+    public File buildFile(ConstructContext context, String path) {
+        try (MetaExpression expression = fromValue(path)) {
+            return buildPath(context, expression).toFile();
+        }
+    }
+
+    private Path tryPath(String path) {
+        try {
+            return Paths.get(path);
+        } catch (InvalidPathException e) {
+            throw new RobotRuntimeException("Invalid path: " + e.getMessage(), e);
+        }
     }
 }

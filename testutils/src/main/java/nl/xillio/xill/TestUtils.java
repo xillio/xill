@@ -2,10 +2,14 @@ package nl.xillio.xill;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
+import nl.xillio.events.EventHost;
+import nl.xillio.xill.api.NullDebugger;
 import nl.xillio.xill.api.components.ExpressionBuilderHelper;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.Construct;
+import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.services.files.FileResolver;
 import nl.xillio.xill.services.json.JacksonParser;
 import nl.xillio.xill.services.json.JsonException;
@@ -13,6 +17,8 @@ import nl.xillio.xill.services.json.JsonParser;
 import nl.xillio.xill.services.json.PrettyJsonParser;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.util.UUID;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -47,6 +53,12 @@ public class TestUtils extends ExpressionBuilderHelper {
 
     public static void setFileResolverReturnValue(File file) {
         doReturn(file).when(CONSTRUCT_FILE_RESOLVER).buildFile(any(), anyString());
+        doReturn(file.toPath()).when(CONSTRUCT_FILE_RESOLVER).buildPath(any(), any());
+    }
+
+    public static void setFileResolverReturnValue(Path file) {
+        doReturn(file.toFile()).when(CONSTRUCT_FILE_RESOLVER).buildFile(any(), anyString());
+        doReturn(file).when(CONSTRUCT_FILE_RESOLVER).buildPath(any(), any());
     }
 
 
@@ -78,5 +90,10 @@ public class TestUtils extends ExpressionBuilderHelper {
         when(expression.getNumberValue()).thenReturn(numberValue);
         when(expression.getStringValue()).thenReturn(stringValue);
         return expression;
+    }
+
+
+    protected ConstructContext context(Construct construct) {
+        return new ConstructContext(RobotID.dummyRobot(), RobotID.dummyRobot(), construct, new NullDebugger(), UUID.randomUUID(), new EventHost<>(), new EventHost<>());
     }
 }

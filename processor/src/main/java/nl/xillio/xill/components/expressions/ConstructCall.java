@@ -65,7 +65,6 @@ public class ConstructCall implements Processable {
         try {
 
             // Process
-
             return InstructionFlow.doResume(processor.process());
 
 

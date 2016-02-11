@@ -1,115 +1,72 @@
 package nl.xillio.xill.plugins.file.constructs;
 
-import me.biesaart.utils.FileUtilsService;
+import me.biesaart.utils.IOUtils;
+import me.biesaart.utils.IOUtilsService;
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.components.RobotID;
-import nl.xillio.xill.api.construct.ConstructContext;
+import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import org.testng.annotations.BeforeMethod;
+import nl.xillio.xill.api.io.IOStream;
+import nl.xillio.xill.api.io.SimpleIOStream;
+import nl.xillio.xill.plugins.file.services.files.FileStreamFactory;
 import org.testng.annotations.Test;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 
-/**
- * Test the {@link GetTextConstruct}
- */
+
 public class GetTextConstructTest extends TestUtils {
+    @Test
+    public void testNormalUsageFromStream() {
+        IOStream stream = new SimpleIOStream(IOUtils.toInputStream("Hello World"), null);
+        MetaExpression input = fromValue(stream);
+        GetTextConstruct construct = new GetTextConstruct(null, new IOUtilsService());
 
-    private static final String TEST_PATH = "This is a path", RESULT_TEXT = "Result";
+        MetaExpression result = ConstructProcessor.process(
+                construct.prepareProcess(context(construct)),
+                input,
+                fromValue("UTF-8")
+        );
 
-    private MetaExpression filePath, encoding;
-    private File file;
-    private ConstructContext context;
-    private FileUtilsService fileUtils;
+        assertEquals(result.getStringValue(), "Hello World");
+    }
 
-    /**
-     * Mock needed variables
-     *
-     * @throws IOException
-     */
-    @BeforeMethod
-    public void initialize() throws IOException {
-        // File
-        filePath = mock(MetaExpression.class);
-        mockExpression(ATOMIC, false, 0, TEST_PATH);
-        file = mock(File.class);
+    @Test
+    public void testNormalUsageFromFile() throws IOException {
+        // Create test file
+        Path file = Files.createTempFile(getClass().getSimpleName(), ".txt");
+        Files.copy(IOUtils.toInputStream("File Test"), file, StandardCopyOption.REPLACE_EXISTING);
+
+        GetTextConstruct construct = new GetTextConstruct(new FileStreamFactory(), new IOUtilsService());
         setFileResolverReturnValue(file);
 
-        // Context
-        RobotID robotID = mock(RobotID.class);
-        context = mock(ConstructContext.class);
-        when(context.getRobotID()).thenReturn(robotID);
+        MetaExpression result = ConstructProcessor.process(
+                construct.prepareProcess(context(construct)),
+                fromValue(file.toAbsolutePath().toString())
+        );
 
-        // FileUtils
-        fileUtils = mock(FileUtilsService.class);
+        assertEquals(result.getStringValue(), "File Test");
 
-
-        // Charset
-        String charset = "UTF-8";
-        encoding = mockExpression(ATOMIC, false, 0, charset);
+        // Delete test file
+        Files.delete(file);
     }
 
-    /**
-     * Test {@link GetTextConstruct#process(ConstructContext, FileUtilsService, MetaExpression, MetaExpression)} under normal circumstances
-     *
-     * @throws IOException
-     * @throws Exception
-     */
-    @Test
-    public void testProcessNormal() throws IOException {
-        // Mock
-        when(fileUtils.readFileToString(any(File.class), any(Charset.class))).thenReturn(RESULT_TEXT);
+    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = ".*I don't exist.*")
+    public void testFromFileNotExists() {
+        // Create test file
+        Path file = Paths.get("I don't exist");
 
-        // Run the Method
-        MetaExpression result = GetTextConstruct.process(context, fileUtils, filePath, encoding);
+        GetTextConstruct construct = new GetTextConstruct(new FileStreamFactory(), new IOUtilsService());
+        setFileResolverReturnValue(file);
 
-        // Verify
-        verify(fileUtils).readFileToString(eq(file), any(Charset.class));
-
-        // Assert
-        assertEquals(result.getStringValue(), RESULT_TEXT);
-    }
-
-    /**
-     * Test {@link GetTextConstruct#process(ConstructContext, FileUtilsService, MetaExpression, MetaExpression)} when no encoding is given.
-     *
-     * @throws IOException
-     */
-    @Test
-    public void testProcessNoCharset() throws IOException {
-        // Mock
-        when(fileUtils.readFileToString(any(File.class))).thenReturn(RESULT_TEXT);
-
-        MetaExpression nullExpression = mockExpression(ATOMIC);
-        when(nullExpression.isNull()).thenReturn(true);
-
-        // Run
-        MetaExpression result = GetTextConstruct.process(context, fileUtils, filePath, nullExpression);
-
-        // Verify
-        verify(fileUtils).readFileToString(eq(file));
-
-        // Assert
-        assertEquals(result.getStringValue(), RESULT_TEXT);
-    }
-
-    /**
-     * Test {@link GetTextConstruct#process(ConstructContext, FileUtilsService, MetaExpression, MetaExpression)} when an invalid encoding is given
-     */
-    @Test(expectedExceptions = RobotRuntimeException.class)
-    public void testProcessInvalidCharset() {
-        // Mock
-        MetaExpression invalidCharset = mockExpression(ATOMIC, false, 0, "INVALID");
-
-        // Run the Method
-        GetTextConstruct.process(context, fileUtils, filePath, invalidCharset);
+        ConstructProcessor.process(
+                construct.prepareProcess(context(construct)),
+                fromValue(file.toAbsolutePath().toString())
+        );
     }
 }

@@ -14,6 +14,7 @@ public class XillioHomeFolder extends File {
 
     /**
      * Get the home directory for xill 3.0.
+     * @return the file
      */
     public static File forXill3() {
         return new File(new XillioHomeFolder(), "xill/" + VERSION);
@@ -22,6 +23,7 @@ public class XillioHomeFolder extends File {
 
     /**
      * Get the home directory for xill IDE 3.0.
+     * @return the file
      */
     public static File forXillIDE() {
         return new File(new XillioHomeFolder(), "xill_ide/" + VERSION);
@@ -30,6 +32,7 @@ public class XillioHomeFolder extends File {
 
     /**
      * Get the home directory for xill Server.
+     * @return the file
      */
     public static File forXillServer() {
         return new File(new XillioHomeFolder(), "xill_server/" + VERSION);

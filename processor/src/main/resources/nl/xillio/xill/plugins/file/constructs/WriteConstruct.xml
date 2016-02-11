@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Write content from the source parameter to the target parameter.
+
+If the source is a stream, it will be read. Otherwise it will be treated as text.
+
+if the target is a stream, the content will be written to it. Otherwise it will be treated as a file path and the
+current content will be replaced.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Write 3 lines to a file</header>
+            <code>
+                use File;
+
+                var target = File.openWrite("./target.txt");
+
+                File.write("Hello World\n", target);
+                File.write("Hello World\n", target);
+                File.write("Hello World\n", target);
+            </code>
+            <header>Copy a file</header>
+            <code>
+                use File;
+
+                var source = File.openRead("./source.txt");
+                var target = File.openWrite("./source-copy.txt");
+                File.write(source, target);
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>openRead</reference>
+        <reference>openAppend</reference>
+        <reference>getText</reference>
+        <reference>write</reference>
+    </references>
+    <tags>
+        read, write, append, text, content, create
+    </tags>
+</function>

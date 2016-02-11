@@ -16,7 +16,7 @@ import java.util.List;
  * </ul>
  */
 
-public class ListExpression extends CollectionExpression {
+class ListExpression extends CollectionExpression {
 
     private final List<? extends MetaExpression> value;
 
@@ -40,5 +40,4 @@ public class ListExpression extends CollectionExpression {
     public Number getNumberValue() {
         return value.size();
     }
-
 }

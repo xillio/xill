@@ -11,6 +11,9 @@ Returns the absolute path to that folder
             <code>
                 use File;
                 var folder = File.createFolder("newFolder");
+
+                // prints absolute/path/to/newFolder
+                System.print(folder);
             </code>
         </example>
     </examples>
