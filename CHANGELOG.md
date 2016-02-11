@@ -1,15 +1,12 @@
 # Xill IDE - Change Log
 All notable changes to this project will be documented in this file
 
-## [3.2.0] - 11-02-2016
-### Add
-- The argument keyword as a type of variable declaration [CTC-1253]
+## [3.1.1] 11-02-2016
 
-### Change
-- Implement the new file api with stream support [CTC-1327]
-- Update xill_language to 3.1.2
+### Fix
+- Disappearing variables in variable pane when debugging [CTC-1292]
 
-## [3.1.0] - 08-02-2016
+##[3.1.0] 08-02-2016
 
 ### Add
 - Error handling construction
