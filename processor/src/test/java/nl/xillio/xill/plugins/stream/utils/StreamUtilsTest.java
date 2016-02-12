@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
 
@@ -24,7 +25,7 @@ public class StreamUtilsTest extends TestUtils {
         InputStream stream = IOUtils.toInputStream("Hey");
         MetaExpression value = fromValue(new SimpleIOStream(stream, null));
         InputStream result = StreamUtils.getInputStream(value, "");
-        assertSame(result, stream);
+        assertEquals(IOUtils.toString(result), "Hey");
         stream.close();
     }
 

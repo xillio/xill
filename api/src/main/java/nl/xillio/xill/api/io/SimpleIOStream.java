@@ -1,5 +1,6 @@
 package nl.xillio.xill.api.io;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -10,7 +11,7 @@ import java.io.OutputStream;
  * @author Thomas biesaart
  */
 public class SimpleIOStream extends AbstractIOStream {
-    private final InputStream inputStream;
+    private final BufferedInputStream inputStream;
     private final OutputStream outputStream;
 
     public SimpleIOStream(InputStream stream, String description) {
@@ -23,8 +24,15 @@ public class SimpleIOStream extends AbstractIOStream {
 
     public SimpleIOStream(InputStream inputStream, OutputStream outputStream, String description) {
         super(description);
-        this.inputStream = inputStream;
+        this.inputStream = toBufferedStream(inputStream);
         this.outputStream = outputStream;
+    }
+
+    private BufferedInputStream toBufferedStream(InputStream inputStream) {
+        if (inputStream instanceof BufferedInputStream) {
+            return (BufferedInputStream) inputStream;
+        }
+        return new BufferedInputStream(inputStream);
     }
 
     @Override
@@ -33,7 +41,7 @@ public class SimpleIOStream extends AbstractIOStream {
     }
 
     @Override
-    public InputStream getInputStream() throws IOException {
+    public BufferedInputStream getInputStream() throws IOException {
         if (!hasInputStream()) {
             throw new NoStreamAvailableException("No stream is available");
         }

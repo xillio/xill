@@ -3,8 +3,8 @@ package nl.xillio.xill.api.components;
 import nl.xillio.xill.api.io.IOStream;
 import nl.xillio.xill.api.io.NoStreamAvailableException;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
@@ -20,7 +20,7 @@ class EmptyIOStream implements IOStream {
     }
 
     @Override
-    public InputStream getInputStream() throws IOException {
+    public BufferedInputStream getInputStream() throws IOException {
         throw new NoStreamAvailableException("This is no binary content");
     }
 
