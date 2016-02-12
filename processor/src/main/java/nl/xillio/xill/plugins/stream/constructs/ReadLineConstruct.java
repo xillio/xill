@@ -14,6 +14,11 @@ import java.nio.charset.Charset;
 
 import static nl.xillio.xill.plugins.stream.utils.StreamUtils.getInputStream;
 
+/**
+ * This construct will read a single line from a stream without consuming more than just that line.
+ *
+ * @author Thomas biesaart
+ */
 class ReadLineConstruct extends Construct {
 
     @Override

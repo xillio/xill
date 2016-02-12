@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Create a single output stream that will forward all output to other streams.
+You can use this construct to read and stream data once to multiple targets.
+The outputs parameter must be a list of at least two stream.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Make two copies of a file</header>
+            <code>
+                use File, Stream;
+
+                var source = File.openRead("./source.txt");
+                var output = Stream.fork([
+                    File.openWrite("./source-copy.txt"),
+                    File.openWrite("./source-copy-2.txt")
+                ]);
+
+                Stream.write(source, output);
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>File.openRead</reference>
+        <reference>File.openAppend</reference>
+        <reference>File.openWrite</reference>
+        <reference>write</reference>
+    </references>
+    <tags>
+        read, write, fork
+    </tags>
+</function>

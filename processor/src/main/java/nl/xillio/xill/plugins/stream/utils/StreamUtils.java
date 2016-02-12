@@ -92,4 +92,8 @@ public class StreamUtils {
 
         return output.toString(charset.name());
     }
+
+    public static OutputStream fork(MetaExpression hostingExpression, OutputStream... streams) {
+        return new ForkingOutputStream(streams, hostingExpression);
+    }
 }

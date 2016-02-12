@@ -30,7 +30,7 @@ class WriteConstruct extends Construct {
                 this::process,
                 new Argument("source", ATOMIC),
                 new Argument("target", ATOMIC),
-                new Argument("limit", fromValue(-1))
+                new Argument("limit", fromValue(-1), ATOMIC)
         );
     }
 
