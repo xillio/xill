@@ -11,6 +11,7 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.io.IOStream;
 import nl.xillio.xill.plugins.file.services.files.FileStreamFactory;
+import nl.xillio.xill.plugins.stream.utils.StreamUtils;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -44,7 +45,7 @@ public class GetTextConstruct extends Construct {
 
     MetaExpression process(final ConstructContext context, final MetaExpression source, final MetaExpression encoding) {
         // Get the charset safely, if it was given
-        Charset charset = getCharset(encoding);
+        Charset charset = StreamUtils.getCharset(encoding);
 
         // Else read the provided path
         Path path = getPath(context, source);
@@ -65,17 +66,5 @@ public class GetTextConstruct extends Construct {
         } catch (IOException e) {
             throw new RobotRuntimeException("Failed to get text: " + e.getMessage(), e);
         }
-    }
-
-    private Charset getCharset(MetaExpression encoding) {
-        if (!encoding.isNull()) {
-            try {
-                return Charset.forName(encoding.getStringValue());
-            } catch (IllegalArgumentException e) {
-                throw new RobotRuntimeException("Encoding not supported: " + e.getMessage(), e);
-            }
-        }
-
-        return Charset.defaultCharset();
     }
 }
