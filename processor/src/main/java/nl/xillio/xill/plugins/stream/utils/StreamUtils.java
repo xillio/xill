@@ -94,6 +94,6 @@ public class StreamUtils {
     }
 
     public static OutputStream fork(MetaExpression hostingExpression, OutputStream... streams) {
-        return new ForkingOutputStream(streams, hostingExpression);
+        return new ForkingOutputStream(hostingExpression, streams);
     }
 }

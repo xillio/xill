@@ -34,6 +34,7 @@ class WriteConstruct extends Construct {
         );
     }
 
+    @SuppressWarnings("squid:UnusedPrivateMethod") // Sonar does not detect method references
     private MetaExpression process(MetaExpression source, MetaExpression target, MetaExpression limit) {
 
         if (Double.isNaN(limit.getNumberValue().doubleValue())) {

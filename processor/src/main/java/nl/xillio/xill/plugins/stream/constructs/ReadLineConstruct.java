@@ -30,6 +30,7 @@ class ReadLineConstruct extends Construct {
         );
     }
 
+    @SuppressWarnings("squid:UnusedPrivateMethod") // Sonar does not detect method references
     private MetaExpression process(MetaExpression stream, MetaExpression encoding) {
         Charset charset = getCharSet(encoding);
         BufferedInputStream inputStream = getInputStream(stream, "stream");

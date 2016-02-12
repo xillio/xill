@@ -28,6 +28,7 @@ class ForkConstruct extends Construct {
         );
     }
 
+    @SuppressWarnings("squid:UnusedPrivateMethod") // Sonar does not detect method references
     private MetaExpression process(MetaExpression outputs) {
         List<MetaExpression> outputsValue = outputs.getValue();
 

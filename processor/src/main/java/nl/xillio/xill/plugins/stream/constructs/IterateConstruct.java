@@ -26,6 +26,7 @@ class IterateConstruct extends Construct {
         );
     }
 
+    @SuppressWarnings("squid:UnusedPrivateMethod") // Sonar does not detect method references
     private MetaExpression process(MetaExpression stream, MetaExpression delimiter) {
         if (delimiter.isNull()) {
             throw new RobotRuntimeException("The delimiter cannot be null");

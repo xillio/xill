@@ -15,7 +15,7 @@ class ForkingOutputStream extends OutputStream {
     private final MetaExpression hostedList;
 
 
-    public ForkingOutputStream(OutputStream[] streams, MetaExpression hostedList) {
+    public ForkingOutputStream(MetaExpression hostedList, OutputStream... streams) {
         this.streams = streams;
         this.hostedList = hostedList;
         hostedList.registerReference();
