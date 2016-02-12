@@ -355,7 +355,9 @@ public class XillDebugger implements Debugger {
 
     @Override
     public void reset() {
-        debugInfo = new DebugInfo();
+        if (mode == Mode.STOPPED) {
+            debugInfo = new DebugInfo();
+        }
     }
 
     @Override
