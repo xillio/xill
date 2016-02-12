@@ -36,31 +36,18 @@ class ForkConstruct extends Construct {
             throw new RobotRuntimeException("Please provide at least two outputs");
         }
 
-        OutputStream[] streams = tryGetStreams(outputsValue);
-        OutputStream outputStream = StreamUtils.fork(outputs, streams);
+        OutputStream outputStream = tryGetStreams(outputs);
         IOStream ioStream = new SimpleIOStream(outputStream, "forked: " + outputs);
         return fromValue(ioStream);
     }
 
-    private OutputStream[] tryGetStreams(List<MetaExpression> outputsValue) {
+    private OutputStream tryGetStreams(MetaExpression expression) {
         try {
-            return getStreams(outputsValue);
+            return StreamUtils.fork(expression);
         } catch (IOException e) {
             throw new RobotRuntimeException("Could not create fork: " + e.getMessage(), e);
         }
     }
 
-    private OutputStream[] getStreams(List<MetaExpression> outputsValue) throws IOException {
-        OutputStream[] result = new OutputStream[outputsValue.size()];
 
-        int i = 0;
-        for (MetaExpression expression : outputsValue) {
-            if (!expression.getBinaryValue().hasOutputStream()) {
-                throw new RobotRuntimeException(expression + " does not contain binary data");
-            }
-            result[i++] = expression.getBinaryValue().getOutputStream();
-        }
-
-        return result;
-    }
 }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Read text from a stream.
+If you provide a value for the limit parameter the amount of bytes read from the stream will be limited to that value.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Read text from a file</header>
+            <code>
+                use File, Stream, System;
+
+                var file = File.openRead("./file.txt");
+                var text = Stream.getText(file);
+                System.print(text);
+            </code>
+            <header>Read the first 20 bytes from a file</header>
+            <code>
+                use File, Stream, System;
+
+                var file = File.openRead("./file.txt");
+                var text = Stream.getText(file, "UTF-8", 20);
+                System.print(text);
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>File.openRead</reference>
+    </references>
+    <tags>
+        read, text, string
+    </tags>
+</function>

@@ -34,7 +34,6 @@ public class GetTextConstruct extends Construct {
     }
 
 
-
     @Override
     public ConstructProcessor prepareProcess(final ConstructContext context) {
         return new ConstructProcessor(
@@ -46,11 +45,6 @@ public class GetTextConstruct extends Construct {
     MetaExpression process(final ConstructContext context, final MetaExpression source, final MetaExpression encoding) {
         // Get the charset safely, if it was given
         Charset charset = getCharset(encoding);
-
-        // If the input is a binary datasource, read that
-        if (source.getBinaryValue().hasInputStream()) {
-            return fromValue(toString(source.getBinaryValue(), charset));
-        }
 
         // Else read the provided path
         Path path = getPath(context, source);

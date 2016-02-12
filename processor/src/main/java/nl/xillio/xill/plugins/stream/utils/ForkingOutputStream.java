@@ -51,9 +51,6 @@ class ForkingOutputStream extends OutputStream {
 
     @Override
     public void close() throws IOException {
-        for (OutputStream stream : streams) {
-            stream.close();
-        }
         hostedList.releaseReference();
     }
 }

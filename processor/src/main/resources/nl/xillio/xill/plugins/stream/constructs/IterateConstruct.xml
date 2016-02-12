@@ -19,7 +19,7 @@ be split on new lines.
             </code>
             <header>Read all words from a file</header>
             <code>
-                use File, Stream;
+                use File, Stream, System;
 
                 var file = File.openRead("path/to/file.txt");
                 var splitPattern = "[^\\w]+";

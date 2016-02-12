@@ -21,20 +21,6 @@ import static org.testng.Assert.assertEquals;
 
 
 public class GetTextConstructTest extends TestUtils {
-    @Test
-    public void testNormalUsageFromStream() {
-        IOStream stream = new SimpleIOStream(IOUtils.toInputStream("Hello World"), null);
-        MetaExpression input = fromValue(stream);
-        GetTextConstruct construct = new GetTextConstruct(null, new IOUtilsService());
-
-        MetaExpression result = ConstructProcessor.process(
-                construct.prepareProcess(context(construct)),
-                input,
-                fromValue("UTF-8")
-        );
-
-        assertEquals(result.getStringValue(), "Hello World");
-    }
 
     @Test
     public void testNormalUsageFromFile() throws IOException {

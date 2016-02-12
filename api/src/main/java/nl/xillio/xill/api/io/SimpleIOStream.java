@@ -29,6 +29,10 @@ public class SimpleIOStream extends AbstractIOStream {
     }
 
     private BufferedInputStream toBufferedStream(InputStream inputStream) {
+        if (inputStream == null) {
+            return null;
+        }
+
         if (inputStream instanceof BufferedInputStream) {
             return (BufferedInputStream) inputStream;
         }

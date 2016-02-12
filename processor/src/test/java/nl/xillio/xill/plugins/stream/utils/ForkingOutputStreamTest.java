@@ -2,12 +2,14 @@ package nl.xillio.xill.plugins.stream.utils;
 
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.io.SimpleIOStream;
 import org.testng.annotations.Test;
 
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 
 public class ForkingOutputStreamTest extends TestUtils {
@@ -64,13 +66,19 @@ public class ForkingOutputStreamTest extends TestUtils {
     public void testClose() throws Exception {
         OutputStream stream1 = mock(OutputStream.class);
         OutputStream stream2 = mock(OutputStream.class);
-        MetaExpression expression = mock(MetaExpression.class);
+        List<MetaExpression> list = new ArrayList<>();
+        list.add(fromValue(new SimpleIOStream(stream1, null)));
+        list.add(fromValue(new SimpleIOStream(stream2, null)));
+        MetaExpression expression = fromValue(list);
+
         OutputStream fork = new ForkingOutputStream(expression, stream1, stream2);
-        verify(expression).registerReference();
+
+        verify(stream1, never()).close();
+        verify(stream2, never()).close();
         fork.close();
 
         verify(stream1).close();
         verify(stream2).close();
-        verify(expression).releaseReference();
     }
+
 }
