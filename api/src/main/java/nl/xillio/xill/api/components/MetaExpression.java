@@ -389,7 +389,6 @@ public abstract class MetaExpression implements Expression, Processable {
                 } else if (behaviour instanceof NumberBehavior) {
                     result = expression.getNumberValue();
                 } else if (behaviour instanceof BinaryBehavior) {
-                    LOGGER.warn("Lost binary reference during extraction");
                     result = expression.getStringValue();
                 } else {
                     throw new UnsupportedOperationException("No extraction found for " + behaviour.getClass().getSimpleName());

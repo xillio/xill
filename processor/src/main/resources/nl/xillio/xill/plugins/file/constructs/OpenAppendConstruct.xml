@@ -7,18 +7,18 @@ Returns a stream that will write to the end of a file. This will leave the file 
         <example title="Usage">
             <header>Append three lines to a file</header>
             <code>
-                use File;
+                use File, Stream;
 
                 var target = File.openAppend("./target.txt");
 
-                File.write("Hello World\n", target);
-                File.write("Hello World\n", target);
-                File.write("Hello World\n", target);
+                Stream.write("Hello World\n", target);
+                Stream.write("Hello World\n", target);
+                Stream.write("Hello World\n", target);
             </code>
             <header>Create an empty file if it doesn't exist</header>
             <code>
                 use File;
-                File.write("./target.txt");
+                File.openAppend("./target.txt");
             </code>
         </example>
     </examples>
@@ -26,7 +26,6 @@ Returns a stream that will write to the end of a file. This will leave the file 
         <reference>openRead</reference>
         <reference>openAppend</reference>
         <reference>getText</reference>
-        <reference>write</reference>
     </references>
     <tags>
         read, write, append, text, content, create

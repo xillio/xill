@@ -16,7 +16,14 @@ import java.io.OutputStream;
 import static nl.xillio.xill.plugins.stream.utils.StreamUtils.getInputStream;
 import static nl.xillio.xill.plugins.stream.utils.StreamUtils.getOutputStream;
 
+/**
+ * This construct will read data from an input stream and pass it to an output stream.
+ * It has a limit parameter that allows a user to limit the amount of data that is streamed.
+ *
+ * @author Thomas biesaart
+ */
 class WriteConstruct extends Construct {
+
     @Override
     public ConstructProcessor prepareProcess(ConstructContext context) {
         return new ConstructProcessor(
@@ -28,15 +35,23 @@ class WriteConstruct extends Construct {
     }
 
     private MetaExpression process(MetaExpression source, MetaExpression target, MetaExpression limit) {
-        InputStream inputStream = getInputStream(source, "source");
-        OutputStream outputStream = getOutputStream(target, "target");
 
         if (Double.isNaN(limit.getNumberValue().doubleValue())) {
             throw new RobotRuntimeException(limit + " is not a valid number");
         }
 
+        InputStream inputStream = openInputStream(source);
+        OutputStream outputStream = getOutputStream(target, "target");
+
         long dataCount = write(inputStream, outputStream, limit.getNumberValue().longValue());
         return fromValue(dataCount);
+    }
+
+    private InputStream openInputStream(MetaExpression source) {
+        if (source.getBinaryValue().hasInputStream()) {
+            return getInputStream(source, "source");
+        }
+        return IOUtils.toInputStream(source.getStringValue());
     }
 
     private long write(InputStream inputStream, OutputStream outputStream, long limit) {

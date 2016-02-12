@@ -9,8 +9,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class StreamUtils {
-    private static final int BUFFER_SIZE = 1024 * 4;
-
     private StreamUtils() {
         // No one shall have an instance
     }
