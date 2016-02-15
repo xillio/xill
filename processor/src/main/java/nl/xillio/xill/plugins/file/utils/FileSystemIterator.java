@@ -3,12 +3,12 @@ package nl.xillio.xill.plugins.file.utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Stack;
 import java.util.function.Predicate;
 
@@ -18,8 +18,8 @@ import java.util.function.Predicate;
  * @see FileIterator
  * @see FolderIterator
  */
-abstract class FileSystemIterator {
-    private static final Logger logger = LogManager.getLogger();
+abstract class FileSystemIterator implements Iterator<Path> {
+    private static final Logger LOGGER = LogManager.getLogger();
     private final Stack<DirectoryStreamWithIterator> stack = new Stack<>();
     private Path nextValue;
     private final boolean recursive;
@@ -32,10 +32,10 @@ abstract class FileSystemIterator {
      * @param recursive  weather the stream should also list files in sub folders
      * @throws IOException if the rootFolder does not exist
      */
-    FileSystemIterator(File rootFolder, boolean recursive, Predicate<Path> resultChecker) throws IOException {
+    FileSystemIterator(Path rootFolder, boolean recursive, Predicate<Path> resultChecker) throws IOException {
         this.recursive = recursive;
         this.resultChecker = resultChecker;
-        addFolder(rootFolder.toPath());
+        addFolder(rootFolder);
     }
 
     private void addFolder(Path folder) throws IOException {
@@ -47,6 +47,7 @@ abstract class FileSystemIterator {
      *
      * @return true if there is a next value
      */
+    @Override
     public boolean hasNext() {
         selectNext();
 
@@ -56,35 +57,44 @@ abstract class FileSystemIterator {
     private void selectNext() {
         //We should try to select the next value
         while (!stack.isEmpty() && nextValue == null) {
-            if (stack.peek().iterator().hasNext()) {
-                Path current = stack.peek().iterator().next();
+            tryCacheNext();
+        }
+    }
 
-                if (resultChecker.test(current)) {
-                    //Found the next hit!
-                    nextValue = current;
-                }
-
-                if (Files.isDirectory(current) && recursive) {
-                    //We should go recursive
-                    try {
-                        addFolder(current);
-                    } catch (IOException e) {
-                        logger.error("Failed to open " + current.toAbsolutePath(), e);
-                    }
-                }
-            } else {
-                try {
-                    stack.pop().close();
-                } catch (IOException e) {
-                    logger.error("Failed to close the stream.", e);
-                }
+    private void tryCacheNext() {
+        if (stack.peek().iterator().hasNext()) {
+            cacheNext();
+        } else {
+            try {
+                stack.pop().close();
+            } catch (IOException e) {
+                LOGGER.error("Failed to close the stream.", e);
             }
         }
     }
 
-    Path getNextValue() {
+    private void cacheNext() {
+        Path current = stack.peek().iterator().next();
+
+        if (resultChecker.test(current)) {
+            //Found the next hit!
+            nextValue = current;
+        }
+
+        if (Files.isDirectory(current) && recursive) {
+            //We should go recursive
+            try {
+                addFolder(current);
+            } catch (IOException e) {
+                LOGGER.error("Failed to open " + current.toAbsolutePath(), e);
+            }
+        }
+    }
+
+    @Override
+    public Path next() {
         if (!hasNext()) {
-            throw new IllegalStateException("No next file present");
+            throw new NoSuchElementException("No next file present");
         }
 
         Path next = nextValue;

@@ -1,6 +1,6 @@
 package nl.xillio.xill.plugins.file.services.permissions;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -11,11 +11,11 @@ import java.util.stream.Collectors;
  * @author Thomas Biesaart
  */
 public class FilePermissions {
-    private final File file;
+    private final Path file;
     private final Map<String, FileOperations> users = new HashMap<>();
     private final Map<String, FileOperations> groups = new HashMap<>();
 
-    public FilePermissions(File file) {
+    public FilePermissions(Path file) {
         this.file = file;
     }
 
@@ -49,7 +49,7 @@ public class FilePermissions {
         }
     }
 
-    public File getFile() {
+    public Path getFile() {
         return file;
     }
 

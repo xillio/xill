@@ -1,12 +1,14 @@
 package nl.xillio.xill.api.components;
 
+import nl.xillio.xill.api.io.IOStream;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
 /**
  * This {@link MetaExpression} represents an expression that holds an {@link ExpressionDataType#ATOMIC} value.
  */
-public class AtomicExpression extends MetaExpression {
+class AtomicExpression extends MetaExpression {
 
     private final Expression expressionValue;
 
@@ -67,6 +69,11 @@ public class AtomicExpression extends MetaExpression {
     @Override
     public boolean isNull() {
         return expressionValue.isNull();
+    }
+
+    @Override
+    public IOStream getBinaryValue() {
+        return expressionValue.getBinaryValue();
     }
 
     @Override

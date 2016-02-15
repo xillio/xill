@@ -16,8 +16,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This {@link Instruction} represents the assignment of an expression value to
- * a variable
+ * This {@link Instruction} represents the assignment of an expression value to a variable.
+ *
+ * @author Thomas biesaart
  */
 public class Assign implements Processable {
 
@@ -29,7 +30,7 @@ public class Assign implements Processable {
      * Create a new {@link Assign}
      *
      * @param variableDeclaration The declaration to assign to
-     * @param path
+     * @param path                the path to assign to
      * @param expression          The expression to assign
      */
     public Assign(final VariableDeclaration variableDeclaration, final List<Processable> path, final Processable expression) {
@@ -78,7 +79,6 @@ public class Assign implements Processable {
 
             return;
         }
-
 
         // We need to go deeper
         MetaExpression currentValue = target.get(index).process(debugger).get();
@@ -164,11 +164,11 @@ public class Assign implements Processable {
             // Seems like we have a path
             switch (variableDeclaration.getVariable().getType()) {
                 case LIST:
-                    List<MetaExpression> listValue = (List<MetaExpression>) variableDeclaration.getVariable().getValue();
+                    List<MetaExpression> listValue = variableDeclaration.getVariable().getValue();
                     assign(listValue, 0, value, debugger);
                     break;
                 case OBJECT:
-                    Map<String, MetaExpression> mapValue = (Map<String, MetaExpression>) variableDeclaration.getVariable()
+                    Map<String, MetaExpression> mapValue = variableDeclaration.getVariable()
                             .getValue();
                     assign(mapValue, 0, value, debugger);
                     break;

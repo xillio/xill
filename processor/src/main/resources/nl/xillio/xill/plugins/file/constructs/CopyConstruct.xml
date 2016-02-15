@@ -3,8 +3,8 @@
     <description>
 Copy a file or folder to a target destination, overwriting it if it exists.  
 
-Returns an object containing the source destination [from], the target destination [into] and weather the operation was successful [success]
-    </description>
+Returns an object containing the source destination [from] and the target destination [into].
+</description>
     <examples>
         <example title="Usage">
             <header>Copy a file</header>
@@ -12,9 +12,9 @@ Returns an object containing the source destination [from], the target destinati
                 use System;
                 use File;
                 var result = File.copy("file.txt", "file_copy.txt");
-                if(!result.success) {
-                System.print("Copy Failed", "error");
-                }
+
+                // Prints {"from": "absolute/path/to/file.txt", "into": "absolute/path/to/file_copy.txt"}
+                System.print(result);
             </code>
         </example>
     </examples>

@@ -2,8 +2,8 @@ package nl.xillio.xill.plugins.file.services.permissions;
 
 import com.google.inject.ImplementedBy;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * This interface represents an object that can produce a summary of file permissions regardless of operating system.
@@ -19,5 +19,5 @@ public interface FilePermissionsProvider {
      * @param file the file
      * @return the permissions or null if no permissions could be extracted
      */
-    FilePermissions readPermissions(File file) throws IOException;
+    FilePermissions readPermissions(Path file) throws IOException;
 }

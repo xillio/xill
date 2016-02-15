@@ -9,7 +9,7 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 
-import java.io.File;
+import java.nio.file.Path;
 
 /**
  * This Construct checks if a file or folder exists and only returns true if it does, otherwise false
@@ -28,7 +28,7 @@ public class ExistsConstruct extends Construct {
     }
 
     static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression uri) {
-        File file = getFile(context, uri.getStringValue());
+        Path file = getPath(context, uri);
         return fromValue(fileUtils.exists(file));
     }
 }

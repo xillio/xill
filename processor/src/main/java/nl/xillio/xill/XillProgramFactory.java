@@ -14,13 +14,12 @@ import nl.xillio.xill.api.errors.XillParsingException;
 import nl.xillio.xill.api.events.RobotStartedAction;
 import nl.xillio.xill.api.events.RobotStoppedAction;
 import nl.xillio.xill.components.expressions.CallbotExpression;
-import nl.xillio.xill.components.expressions.RunBulkExpression;
 import nl.xillio.xill.components.expressions.ConstructCall;
 import nl.xillio.xill.components.expressions.FilterExpression;
 import nl.xillio.xill.components.expressions.FunctionCall;
 import nl.xillio.xill.components.expressions.*;
-import nl.xillio.xill.components.expressions.GetArgumentExpression;
 import nl.xillio.xill.components.expressions.MapExpression;
+import nl.xillio.xill.components.expressions.RunBulkExpression;
 import nl.xillio.xill.components.instructions.BreakInstruction;
 import nl.xillio.xill.components.instructions.ContinueInstruction;
 import nl.xillio.xill.components.instructions.*;
@@ -322,25 +321,26 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
 
     /**
      * Parse a ErrorInstruction
+     *
      * @param token
      * @return
      * @throws XillParsingException
      */
-    ErrorInstruction parseToken(final xill.lang.xill.ErrorInstruction token) throws XillParsingException{
+    ErrorInstruction parseToken(final xill.lang.xill.ErrorInstruction token) throws XillParsingException {
 
         Target cause = token.getCause();
         VariableDeclaration causeVar = null;
-        if(cause != null) {
-            causeVar = VariableDeclaration.nullDeclaration(pos(token.getErrorBlock()),cause.getName());
+        if (cause != null) {
+            causeVar = VariableDeclaration.nullDeclaration(pos(token.getErrorBlock()), cause.getName());
             variables.put(cause, causeVar);
         }
 
         return new ErrorInstruction(
-                        token.getDoBlock() == null ? null : parseToken(token.getDoBlock().getInstructionSet()),
-                        token.getSuccessBlock() == null ? null : parseToken(token.getSuccessBlock().getInstructionSet()),
-                        token.getErrorBlock() == null ? null : parseToken(token.getErrorBlock().getInstructionSet()),
-                        token.getFinallyBlock() == null ? null : parseToken(token.getFinallyBlock().getInstructionSet()),
-                        causeVar);
+                token.getDoBlock() == null ? null : parseToken(token.getDoBlock().getInstructionSet()),
+                token.getSuccessBlock() == null ? null : parseToken(token.getSuccessBlock().getInstructionSet()),
+                token.getErrorBlock() == null ? null : parseToken(token.getErrorBlock().getInstructionSet()),
+                token.getFinallyBlock() == null ? null : parseToken(token.getFinallyBlock().getInstructionSet()),
+                causeVar);
     }
 
     /**
@@ -437,11 +437,37 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
     VariableDeclaration parseToken(final xill.lang.xill.VariableDeclaration token) throws XillParsingException {
         Processable expression = token.getValue() == null ? ExpressionBuilderHelper.NULL : parse(token.getValue());
 
-        VariableDeclaration declaration = new VariableDeclaration(expression, token.getName().getName());
+        VariableDeclaration declaration = buildDeclaration(expression, token);
 
         variables.put(token.getName(), declaration);
 
         return declaration;
+    }
+
+    private VariableDeclaration buildDeclaration(Processable expression, xill.lang.xill.VariableDeclaration token) throws XillParsingException {
+        if ("var".equalsIgnoreCase(token.getType())) {
+            return new VariableDeclaration(expression, token.getName().getName());
+        }
+
+        xill.lang.xill.Robot robotToken = findRobot(token);
+        Robot robot = compiledRobots.get(robotToken).getValue();
+
+        return new VariableDeclaration(expression, token.getName().getName(), robot);
+    }
+
+    private xill.lang.xill.Robot findRobot(EObject object) throws XillParsingException {
+        EObject current = object;
+
+        while (current != null) {
+            if (current instanceof xill.lang.xill.Robot) {
+                return (xill.lang.xill.Robot) current;
+            }
+
+            current = current.eContainer();
+        }
+
+        CodePosition pos = pos(object);
+        throw new XillParsingException("Could not detect robot for " + object, pos.getLineNumber(), pos.getRobotID());
     }
 
     /**
@@ -1053,32 +1079,6 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
         }
 
         return expression;
-    }
-
-    /**
-     * Parse a {@link GetArgumentExpression}
-     *
-     * @param token
-     * @return
-     * @throws XillParsingException
-     */
-    Processable parseToken(final xill.lang.xill.GetArgumentExpression token) throws XillParsingException {
-        // First we need to find the robot of this token. To do this we need the
-        // token's root
-        EObject robot = token;
-        while (!(robot instanceof xill.lang.xill.Robot || robot == null)) {
-            robot = robot.eContainer();
-        }
-
-        if (robot == null) {
-            CodePosition pos = pos(token);
-            throw new XillParsingException("Could not find robot node of " + token, pos.getLineNumber(),
-                    pos.getRobotID());
-        }
-
-        Robot thisRobot = compiledRobots.get(robot).getValue();
-
-        return new GetArgumentExpression((nl.xillio.xill.components.Robot) thisRobot);
     }
 
     /**

@@ -1,7 +1,6 @@
 package nl.xillio.xill.plugins.string.constructs;
 
 import com.google.inject.Inject;
-import nl.xillio.xill.api.components.AtomicExpression;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
@@ -41,13 +40,13 @@ public class AbsoluteURLConstruct extends Construct {
         }
 
         if (relativeUrl.isEmpty()) {
-            return new AtomicExpression(urlUtilityService.cleanupUrl(pageUrl));
+            return fromValue(urlUtilityService.cleanupUrl(pageUrl));
         }
         try {
             String processed = urlUtilityService.tryConvert(pageUrl, relativeUrl);
 
             if (processed != null) {
-                return new AtomicExpression(processed);
+                return fromValue(processed);
             } else {
                 throw new RobotRuntimeException("The page url is invalid.");
             }
