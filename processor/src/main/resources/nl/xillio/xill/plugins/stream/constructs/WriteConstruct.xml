@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Returns a stream that will write to the start of a file. This will clear the file contents when invoked.
+Write content to an output stream.
+If the source parameter contains binary data, consume that data.
+Otherwise the string value of the source parameter will be written to the target stream.
+
+This construct accepts a limit parameter, when this parameter is provided this construct will stop writing at X
+bytes where X is the number value passed to the limit parameter.
     </description>
     <examples>
         <example title="Usage">
-            <header>Write three lines to a file</header>
+            <header>Write 3 lines to a file</header>
             <code>
                 use File, Stream;
 
@@ -26,9 +31,9 @@ Returns a stream that will write to the start of a file. This will clear the fil
         </example>
     </examples>
     <references>
-        <reference>openRead</reference>
-        <reference>openAppend</reference>
-        <reference>getText</reference>
+        <reference>File.openRead</reference>
+        <reference>File.openAppend</reference>
+        <reference>File.openWrite</reference>
     </references>
     <tags>
         read, write, append, text, content, create

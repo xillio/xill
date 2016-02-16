@@ -1,5 +1,6 @@
 package nl.xillio.xill.api.io;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -26,7 +27,7 @@ public interface IOStream extends AutoCloseable {
      * @throws IOException                if the stream could not be created
      * @throws NoStreamAvailableException if there was no stream
      */
-    InputStream getInputStream() throws IOException;
+    BufferedInputStream getInputStream() throws IOException;
 
     /**
      * Check if this IOStream has an output stream.
