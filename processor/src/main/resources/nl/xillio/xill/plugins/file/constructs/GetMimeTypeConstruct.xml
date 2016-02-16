@@ -4,6 +4,9 @@
 Get the MIME type of a file.  
 
 Returns a string value containing the MIME type of the specified file, or null if it could not identify it.
+
+There is a known Java bug with OS X which can cause getting the MIME type of a file to always return null.
+To fix this download [this file](https://raw.githubusercontent.com/jeantil/jdk7-mimeutils/v1.0.0/mime.types) containing a list of MIME types and put it in your home folder (e.g.: /Users/Xillio).
     </description>
     <examples>
         <example title="Usage">
