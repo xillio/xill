@@ -3,7 +3,6 @@ package nl.xillio.xill.components.instructions;
 import nl.xillio.xill.CodePosition;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.*;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.components.operators.Assign;
 
 import java.util.Arrays;
@@ -62,7 +61,7 @@ public class VariableDeclaration extends Instruction {
         if (!valueStack.isEmpty()) {
             return valueStack.peek();
         }
-        return null;
+        return ExpressionBuilder.NULL;
     }
 
     /**
@@ -71,9 +70,11 @@ public class VariableDeclaration extends Instruction {
      * @param value
      */
     public void replaceVariable(final MetaExpression value) {
-        MetaExpression current = valueStack.pop();
-        pushVariable(value);
-        current.releaseReference();
+        if (!valueStack.empty()) {
+            MetaExpression current = valueStack.pop();
+            pushVariable(value);
+            current.releaseReference();
+        }
     }
 
     /**
