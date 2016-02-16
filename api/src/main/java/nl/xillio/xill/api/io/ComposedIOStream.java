@@ -30,7 +30,7 @@ public class ComposedIOStream extends SimpleIOStream {
 
     @Override
     public void close() {
-        composedExpression.releaseReference();
         super.close();
+        composedExpression.releaseReference();
     }
 }
