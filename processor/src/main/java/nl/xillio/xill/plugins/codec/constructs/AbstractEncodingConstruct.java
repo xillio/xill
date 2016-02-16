@@ -32,6 +32,7 @@ public abstract class AbstractEncodingConstruct extends Construct {
         );
     }
 
+    @SuppressWarnings("squid:UnusedPrivateMethod") // Sonar still doesn't support method references
     private MetaExpression tryProcess(MetaExpression input, MetaExpression charset) {
         try {
             return process(input, charset);
