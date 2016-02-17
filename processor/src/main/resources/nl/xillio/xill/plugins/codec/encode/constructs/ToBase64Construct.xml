@@ -22,7 +22,7 @@ for the input string.
 
                 // Results in a file named 'output.txt' containing: SGVsbG8gV29ybGQ=
             </code>
-            <header>Decode an in-memory base64 string</header>
+            <header>Encode an in-memory string</header>
             <code>
                 use Encode, System;
 
