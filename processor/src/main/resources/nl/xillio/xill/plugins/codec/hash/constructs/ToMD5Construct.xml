@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Create an md5 hash for an input stream of a string.
+If the input is a stream it will be consumed and this construct will return the md5 string.
+If the input is a string this construct will return the md5 string.
+
+You can optionally provide an output stream as the second parameter, all the data that is read from the input will be
+forwarded to the output stream.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Get the md5 hash of a file</header>
+            <code>
+                use Hash, File, System;
+
+                var filePath = "C:\\tmp\\note.pdf";
+                var fileStream = File.openRead(filePath);
+                var md5 = Hash.toMD5(fileStream);
+                System.print(md5);
+            </code>
+            <header>Get the md5 hash of a string</header>
+            <code>
+                use Hash, System;
+
+                var md5 = Hash.toMD5("Hello World");
+                System.print(md5);
+            </code>
+            <header>Get the base64 encoding and md5 hash of a file</header>
+            <code>
+                use Hash, Encode, File, System;
+
+                var filePath = "C:\\tmp\\note.pdf";
+                var base64Path = "C:\\tmp\\node.pdf.base64";
+
+                var fileStream = File.openRead(filePath);
+                var targetStream = File.openWrite(base64Path);
+
+                var base64Stream = Encode.toBase64(targetStream);
+
+                // Read input stream to get md5 hash and forward to base64 stream
+                var md5 = Hash.toMD5(fileStream, base64Stream);
+                System.print(md5);
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference></reference>
+    </references>
+	    <tags>
+        hash, file, conversion
+    </tags>
+</function>

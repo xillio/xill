@@ -2,8 +2,6 @@ package nl.xillio.xill.plugins.codec.encode.services;
 
 import com.google.inject.ImplementedBy;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 /**
