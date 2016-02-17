@@ -2,8 +2,10 @@ package nl.xillio.xill.plugins.codec.decode.constructs;
 
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.io.IOStream;
 import nl.xillio.xill.api.io.SimpleIOStream;
+import nl.xillio.xill.plugins.codec.hash.constructs.ToMD5ConstructTest;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.testng.annotations.Test;
@@ -56,5 +58,10 @@ public class FromBase64ConstructTest extends TestUtils {
         IOUtils.write("VGhlIG5ld2x5IGNyZWF0ZWQgb3V0cHV0IHN0cmVhbSBzZWVtcyB0byBiZSBmdWxseSBvcGVyYXRpb25hbA==", base64Stream);
 
         assertEquals(outputStream.toString(), "The newly created output stream seems to be fully operational");
+    }
+
+    @Test(expectedExceptions = RobotRuntimeException.class)
+    public void testIOException() {
+        process(construct, fromValue(new ToMD5ConstructTest.ErrorIOStream()));
     }
 }

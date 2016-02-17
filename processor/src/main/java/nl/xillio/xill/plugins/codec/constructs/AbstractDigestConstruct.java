@@ -109,7 +109,7 @@ public abstract class AbstractDigestConstruct extends Construct {
         try {
             return getDigest();
         } catch (NoSuchAlgorithmException e) {
-            throw new RobotRuntimeException("The algorithm could not be found, please contact the support team.");
+            throw new RobotRuntimeException("The algorithm could not be found, please contact the support team.", e);
         }
     }
 

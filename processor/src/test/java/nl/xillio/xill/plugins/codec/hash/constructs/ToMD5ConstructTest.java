@@ -60,7 +60,7 @@ public class ToMD5ConstructTest extends TestUtils {
         process(construct, input);
     }
 
-    private class ErrorIOStream implements IOStream {
+    public static class ErrorIOStream implements IOStream {
         @Override
         public boolean hasInputStream() {
             return true;
@@ -73,12 +73,12 @@ public class ToMD5ConstructTest extends TestUtils {
 
         @Override
         public boolean hasOutputStream() {
-            return false;
+            return true;
         }
 
         @Override
         public OutputStream getOutputStream() throws IOException {
-            return null;
+            throw new IOException("THIS IS AN ERROR STREAM");
         }
 
         @Override
