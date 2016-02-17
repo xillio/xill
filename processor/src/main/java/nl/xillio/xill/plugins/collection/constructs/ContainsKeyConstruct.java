@@ -16,6 +16,13 @@ public class ContainsKeyConstruct extends Construct {
                 new Argument("key", ATOMIC));
     }
 
+    /**
+     * Returns true if the object contains the given key, or false otherwise.
+     *
+     * @param object The object.
+     * @param key    The key to check.
+     * @return True if the object contains the key, or false otherwise.
+     */
     static MetaExpression process(final MetaExpression object, final MetaExpression key) {
         Map<String, MetaExpression> map = object.getValue();
         return fromValue(map.containsKey(key.getStringValue()));
