@@ -7,13 +7,14 @@ Returns true if the value is contained in the given list or object. Otherwise fa
         <example title="Usage:">
             <code>
                 use Collection;
-                use System
-                var list = ["a","b","c"];
+
+                var list = ["a", "b", "c"];
                 Collection.contains(list, "b"); // TRUE
                 Collection.contains(list, "e"); // FALSE
-                var object ={1:"a",2:"b",3:"c"};
-                Collection.contains(object,"b"); // TRUE
-                Collection.contains(object,"e"); // FALSE
+
+                var object = {1:"a", 2:"b", 3:"c"};
+                Collection.contains(object, "b"); // TRUE
+                Collection.contains(object, "e"); // FALSE
             </code>
         </example>
     </examples>
