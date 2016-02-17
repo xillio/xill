@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Returns true if the key is contained in the given object. Otherwise false.
+Returns true if the key is contained in the given object, or false otherwise.
     </description>
     <examples>
-        <example title="Usage:">
+        <example title="Usage">
             <code>
+                use System;
                 use Collection;
 
                 var object = {
@@ -14,8 +15,10 @@ Returns true if the key is contained in the given object. Otherwise false.
                     "dolor": 3
                 };
 
-                Collection.containsKey(object, "lorem"); // true
-                Collection.containsKey(object, "foo"); // false
+                var key = "lorem";
+                if (Collection.containsKey(object, key)) {
+                    System.print("Object contains key: " :: key);
+                }
             </code>
         </example>
     </examples>
