@@ -1,10 +1,10 @@
 package nl.xillio.xill.plugins.string.services.string;
 
 import com.google.inject.Singleton;
+import me.biesaart.utils.Log;
 import nl.xillio.xill.plugins.string.constructs.RegexConstruct;
 import nl.xillio.xill.plugins.string.exceptions.FailedToGetMatcherException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.stream.IntStream;
 @Singleton
 public class RegexServiceImpl implements RegexService {
     private RegexTimer regexTimer = null;
-    private static Logger logger = LogManager.getLogger();
+    private static Logger logger = Log.get();
 
     /**
      * The implementation of the {@link RegexService}

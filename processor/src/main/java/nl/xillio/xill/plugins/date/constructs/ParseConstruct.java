@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.date.constructs;
 
+import me.biesaart.utils.Log;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
@@ -8,8 +9,7 @@ import nl.xillio.xill.api.data.Date;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.date.BaseDateConstruct;
 import nl.xillio.xill.plugins.date.services.DateService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 import java.time.DateTimeException;
 
@@ -22,7 +22,7 @@ import java.time.DateTimeException;
  */
 public class ParseConstruct extends BaseDateConstruct {
 
-    private static final Logger log = LogManager.getLogger();
+    private static final Logger log = Log.get();
 
     @Override
     public ConstructProcessor prepareProcess(final ConstructContext context) {

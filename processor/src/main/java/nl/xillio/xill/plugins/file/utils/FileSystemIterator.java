@@ -1,7 +1,7 @@
 package nl.xillio.xill.plugins.file.utils;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import me.biesaart.utils.Log;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -19,7 +19,7 @@ import java.util.function.Predicate;
  * @see FolderIterator
  */
 abstract class FileSystemIterator implements Iterator<Path> {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = Log.get();
     private final Stack<DirectoryStreamWithIterator> stack = new Stack<>();
     private Path nextValue;
     private final boolean recursive;

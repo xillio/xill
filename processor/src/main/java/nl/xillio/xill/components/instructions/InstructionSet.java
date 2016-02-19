@@ -1,14 +1,13 @@
 package nl.xillio.xill.components.instructions;
 
+import me.biesaart.utils.Log;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.ExpressionBuilderHelper;
 import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.debugging.ErrorBlockDebugger;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 import java.util.*;
 
@@ -21,7 +20,7 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
     private final Debugger debugger;
     private Instruction parentInstruction;
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = Log.get();
 
     /**
      * Create a new {@link InstructionSet} in debugging mode

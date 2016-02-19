@@ -1,12 +1,10 @@
 package nl.xillio.xill.components.instructions;
 
 import nl.xillio.xill.api.Debugger;
+import nl.xillio.xill.api.components.ExpressionBuilderHelper;
 import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
-import nl.xillio.xill.api.components.ExpressionBuilderHelper;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -17,8 +15,6 @@ import java.util.Collections;
 public class ReturnInstruction extends Instruction {
 
     private final Processable value;
-
-    private static final Logger LOGGER = LogManager.getLogger();
 
     /**
      * Create a new {@link ReturnInstruction}
