@@ -1,18 +1,19 @@
 package nl.xillio.xill.components.expressions;
 
+import com.google.inject.Inject;
+import me.biesaart.utils.Log;
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.Xill;
 import nl.xillio.xill.XillProcessor;
 import nl.xillio.xill.api.Debugger;
-import nl.xillio.xill.api.RobotAppender;
+import nl.xillio.xill.api.LogUtil;
 import nl.xillio.xill.api.components.*;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.errors.XillParsingException;
 import nl.xillio.xill.services.files.FileResolver;
 import nl.xillio.xill.services.files.FileResolverImpl;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +25,11 @@ import java.util.List;
  * This class represents calling another robot
  */
 public class CallbotExpression implements Processable {
-    private static final Logger LOGGER = LogManager.getLogger();
+
+    @Inject
+    private LogUtil logUtil;
+
+    private static final Logger LOGGER = Log.get();
     private final Logger robotLogger;
     private final Processable path;
     private final RobotID robotID;
@@ -43,7 +48,7 @@ public class CallbotExpression implements Processable {
         this.path = path;
         this.robotID = robotID;
         this.plugins = plugins;
-        robotLogger = RobotAppender.getLogger(robotID);
+        robotLogger = logUtil.getLogger(robotID);
         resolver = new FileResolverImpl();
     }
 

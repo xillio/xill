@@ -1,17 +1,17 @@
 package nl.xillio.xill.plugins.math.constructs;
 
+import me.biesaart.utils.Log;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 /**
  * This construct will return the meaning of life as proven by Deep Thought
  */
 public class PowerConstuct extends Construct {
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = Log.get();
 
     @Override
     public String getName() {

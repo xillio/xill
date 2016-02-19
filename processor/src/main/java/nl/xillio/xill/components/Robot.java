@@ -1,6 +1,7 @@
 package nl.xillio.xill.components;
 
 import com.google.common.collect.Lists;
+import me.biesaart.utils.Log;
 import nl.xillio.events.EventHost;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.*;
@@ -8,8 +9,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.events.RobotStartedAction;
 import nl.xillio.xill.api.events.RobotStoppedAction;
 import nl.xillio.xill.components.instructions.InstructionSet;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 import java.util.*;
 
@@ -21,7 +21,7 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
     private final List<nl.xillio.xill.api.components.Robot> libraries = new ArrayList<>();
     private MetaExpression callArgument;
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = Log.get();
 
     /**
      * Events for signalling that a robot has started or stopped
