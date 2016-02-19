@@ -21,7 +21,7 @@ public class ContainsConstruct extends Construct {
     @Override
     public ConstructProcessor prepareProcess(final ConstructContext context) {
         return new ConstructProcessor(
-                (input, value) -> process(input, value),
+                ContainsConstruct::process,
                 new Argument("collection", LIST, OBJECT),
                 new Argument("value", ATOMIC));
     }
@@ -37,8 +37,7 @@ public class ContainsConstruct extends Construct {
         boolean result;
         switch (input.getType()) {
             case OBJECT:
-                @SuppressWarnings("unchecked")
-                Map<String, MetaExpression> m = (Map<String, MetaExpression>) input.getValue();
+                Map<String, MetaExpression> m = input.getValue();
                 try {
                     result = m.containsValue(value);
                 } catch (ClassCastException | NullPointerException e) {
@@ -46,8 +45,7 @@ public class ContainsConstruct extends Construct {
                 }
                 break;
             case LIST:
-                @SuppressWarnings("unchecked")
-                List<MetaExpression> l = (List<MetaExpression>) input.getValue();
+                List<MetaExpression> l = input.getValue();
                 try {
                     result = l.contains(value);
                 } catch (ClassCastException | NullPointerException e) {
