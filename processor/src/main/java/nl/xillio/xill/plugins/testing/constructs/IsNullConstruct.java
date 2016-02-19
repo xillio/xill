@@ -19,7 +19,7 @@ public class IsNullConstruct extends Construct {
         return new ConstructProcessor(
                 this::process,
                 new Argument("value"),
-                new Argument("message", NULL, ATOMIC)
+                new Argument("message", NULL)
         );
     }
 

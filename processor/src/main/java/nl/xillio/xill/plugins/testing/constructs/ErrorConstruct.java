@@ -16,7 +16,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 public class ErrorConstruct extends Construct {
     @Override
     public ConstructProcessor prepareProcess(ConstructContext context) {
-        return new ConstructProcessor(this::process, new Argument("message", NULL, ATOMIC));
+        return new ConstructProcessor(this::process, new Argument("message", NULL));
     }
 
     MetaExpression process(MetaExpression message) {

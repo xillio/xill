@@ -10,6 +10,7 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
+import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.services.files.FileResolver;
 import nl.xillio.xill.services.json.JacksonParser;
 import nl.xillio.xill.services.json.JsonException;
@@ -95,5 +96,12 @@ public class TestUtils extends ExpressionBuilderHelper {
 
     protected ConstructContext context(Construct construct) {
         return new ConstructContext(RobotID.dummyRobot(), RobotID.dummyRobot(), construct, new NullDebugger(), UUID.randomUUID(), new EventHost<>(), new EventHost<>());
+    }
+
+    protected MetaExpression process(Construct construct, MetaExpression... arguments) {
+        return ConstructProcessor.process(
+                construct.prepareProcess(context(construct)),
+                arguments
+        );
     }
 }
