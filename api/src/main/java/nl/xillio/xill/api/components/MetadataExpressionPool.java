@@ -1,7 +1,7 @@
 package nl.xillio.xill.api.components;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import me.biesaart.utils.Log;
+import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.NoSuchElementException;
  * @param <T> The base type of the stored objects
  */
 public class MetadataExpressionPool<T> implements AutoCloseable {
-    private static final Logger LOGGER = LogManager.getLogger(MetadataExpressionPool.class);
+    private static final Logger LOGGER = Log.get();
     private final List<T> data = new ArrayList<>();
 
     /**

@@ -1,13 +1,13 @@
 package nl.xillio.xill.services.inject;
 
 import com.google.inject.AbstractModule;
+import me.biesaart.utils.Log;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.services.json.JacksonParser;
 import nl.xillio.xill.services.json.JsonParser;
 import nl.xillio.xill.services.json.PrettyJsonParser;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 
 /**
  * This module is the main module that will run for the injector at runtime.
@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
  */
 public class DefaultInjectorModule extends AbstractModule {
 
-    private static final Logger LOGGER = LogManager.getLogger(DefaultInjectorModule.class);
+    private static final Logger LOGGER = Log.get();
 
     @Override
     protected void configure() {

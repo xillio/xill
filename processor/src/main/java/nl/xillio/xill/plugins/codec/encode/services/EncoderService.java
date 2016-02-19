@@ -2,8 +2,6 @@ package nl.xillio.xill.plugins.codec.encode.services;
 
 import com.google.inject.ImplementedBy;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 /**
@@ -37,23 +35,6 @@ public interface EncoderService {
      * @throws UnsupportedEncodingException If something goes wrong during the encoding
      */
     String urlEncode(String text, boolean usePlusEncoding) throws UnsupportedEncodingException;
-
-    /**
-     * Makes a file which represents the given file in Base64-encoding.
-     *
-     * @param input  The file we want to convert to base64
-     * @param output The file to which we are writing the output
-     */
-    void encodeFileBase64(File input, File output) throws IOException;
-
-    /**
-     * Returns a string which represents the base-64-encoded value of the given string.
-     *
-     * @param stringInput The string to encode
-     * @return String       The encoded string
-     * @throws IOException
-     */
-    String encodeStringBase64(String stringInput) throws IOException;
 
     /**
      * Escapes the XML.

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Wrap an iterator around a stream.
+You can provide a regex pattern that will split the input stream in parts, if no delimiter is provided the stream will
+be split on new lines.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Read a file line by line</header>
+            <code>
+                use File, Stream, System;
+
+                var file = File.openRead("path/to/file.txt");
+
+                foreach(line in Stream.iterate(file)) {
+                    System.print(line);
+                }
+            </code>
+            <header>Read all words from a file</header>
+            <code>
+                use File, Stream, System;
+
+                var file = File.openRead("path/to/file.txt");
+                var splitPattern = "[^\\w]+";
+
+                foreach(word in Stream.iterate(file, splitPattern)) {
+                    System.print(word);
+                }
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>File.openRead</reference>
+        <reference>File.openAppend</reference>
+        <reference>File.openWrite</reference>
+        <reference>Stream.write</reference>
+    </references>
+    <tags>
+        read, write, append, text, content, create
+    </tags>
+</function>

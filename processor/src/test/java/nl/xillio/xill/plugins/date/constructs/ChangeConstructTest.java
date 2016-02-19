@@ -1,11 +1,11 @@
 package nl.xillio.xill.plugins.date.constructs;
 
+import me.biesaart.utils.Log;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.data.Date;
 import nl.xillio.xill.plugins.date.services.DateService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.mockito.stubbing.Answer;
+import org.slf4j.Logger;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -23,7 +23,7 @@ import static org.testng.Assert.assertSame;
  */
 public class ChangeConstructTest {
 
-    private static final Logger log = LogManager.getLogger();
+    private static final Logger log = Log.get();
 
     private DateService dateService;
     private Date date;

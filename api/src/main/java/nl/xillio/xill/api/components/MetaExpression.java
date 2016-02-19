@@ -2,6 +2,7 @@ package nl.xillio.xill.api.components;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import me.biesaart.utils.Log;
 import nl.xillio.util.MathUtils;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.data.Date;
@@ -11,8 +12,7 @@ import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.services.json.JsonException;
 import nl.xillio.xill.services.json.JsonParser;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -27,7 +27,7 @@ public abstract class MetaExpression implements Expression, Processable {
      * Enable this to get debug information
      */
     private static final boolean DEBUG = false;
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = Log.get();
     private static final Map<Integer, MetaExpression> expressions = new HashMap<>();
     private static int counter;
     private int id;
@@ -389,7 +389,6 @@ public abstract class MetaExpression implements Expression, Processable {
                 } else if (behaviour instanceof NumberBehavior) {
                     result = expression.getNumberValue();
                 } else if (behaviour instanceof BinaryBehavior) {
-                    LOGGER.warn("Lost binary reference during extraction");
                     result = expression.getStringValue();
                 } else {
                     throw new UnsupportedOperationException("No extraction found for " + behaviour.getClass().getSimpleName());
