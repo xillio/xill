@@ -1,7 +1,7 @@
 package nl.xillio.xill;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import me.biesaart.utils.Log;
+import org.slf4j.Logger;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -14,7 +14,7 @@ import java.lang.reflect.Modifier;
  * @param <I> The argument base type for the method.
  */
 public class DynamicInvoker<I> {
-    private static final Logger logger = LogManager.getLogger();
+    private static final Logger logger = Log.get();
     /**
      * If set to true the invocation process will be logged more verbose.
      */

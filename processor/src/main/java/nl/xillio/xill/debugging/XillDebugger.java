@@ -1,5 +1,6 @@
 package nl.xillio.xill.debugging;
 
+import me.biesaart.utils.Log;
 import nl.xillio.events.Event;
 import nl.xillio.events.EventHost;
 import nl.xillio.xill.api.Breakpoint;
@@ -17,8 +18,7 @@ import nl.xillio.xill.components.instructions.CompoundInstruction;
 import nl.xillio.xill.components.instructions.FunctionDeclaration;
 import nl.xillio.xill.components.instructions.Instruction;
 import nl.xillio.xill.components.instructions.VariableDeclaration;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 import xill.lang.xill.Target;
 
 import java.util.*;
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
  * @author Thomas Biesaart
  */
 public class XillDebugger implements Debugger {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = Log.get();
     private final List<Breakpoint> breakpoints;
     private DebugInfo debugInfo = new DebugInfo();
     private Instruction pausedOnInstruction = null;

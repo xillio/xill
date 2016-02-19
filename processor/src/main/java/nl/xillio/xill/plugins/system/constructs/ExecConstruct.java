@@ -1,5 +1,6 @@
 package nl.xillio.xill.plugins.system.constructs;
 
+import me.biesaart.utils.Log;
 import nl.xillio.xill.api.components.Expression;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
@@ -14,8 +15,7 @@ import nl.xillio.xill.plugins.system.exec.ProcessOutput;
 import nl.xillio.xill.services.inject.FactoryBuilderException;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.time.StopWatch;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.InputStream;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  */
 public class ExecConstruct extends Construct {
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final org.slf4j.Logger LOGGER = Log.get();
 
     private final ProcessFactory processFactory = new ProcessFactory();
 

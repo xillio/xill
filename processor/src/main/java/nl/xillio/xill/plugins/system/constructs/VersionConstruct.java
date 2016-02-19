@@ -8,7 +8,7 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.system.services.version.VersionProvider;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 import java.util.Arrays;
 

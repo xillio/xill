@@ -1,15 +1,15 @@
 package nl.xillio.xill.plugins.system.services.wait;
 
+import me.biesaart.utils.Log;
 import nl.xillio.xill.services.XillService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 /**
  * This service waits when called
  */
 public class WaitService implements XillService {
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = Log.get();
 
     /**
      * Wait for a time
