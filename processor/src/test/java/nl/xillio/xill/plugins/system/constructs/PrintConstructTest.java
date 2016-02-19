@@ -2,7 +2,7 @@ package nl.xillio.xill.plugins.system.constructs;
 
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 import org.testng.annotations.Test;
 
 import static org.mockito.Matchers.eq;

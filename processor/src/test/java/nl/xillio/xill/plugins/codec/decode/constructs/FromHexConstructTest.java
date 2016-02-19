@@ -25,7 +25,7 @@ public class FromHexConstructTest extends TestUtils {
     @BeforeMethod
     public void initTest() {
         ConstructContext context = mock(ConstructContext.class);
-        FromHexConstruct construct = new FromHexConstruct(new DecoderServiceImpl(null, null));
+        FromHexConstruct construct = new FromHexConstruct(new DecoderServiceImpl());
         processor = construct.prepareProcess(context);
     }
 
@@ -33,7 +33,7 @@ public class FromHexConstructTest extends TestUtils {
     public void testPrepareProcess() throws Exception {
         processor.setArgument(0, fromValue("C3A4C3ABC384"));
         MetaExpression expression = processor.process();
-        
+
         assertEquals(expression.getStringValue(), "äëÄ");
     }
 

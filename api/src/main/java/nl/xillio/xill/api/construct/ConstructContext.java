@@ -2,12 +2,12 @@ package nl.xillio.xill.api.construct;
 
 import nl.xillio.events.EventHost;
 import nl.xillio.xill.api.Debugger;
-import nl.xillio.xill.api.RobotAppender;
+import nl.xillio.xill.api.LogUtil;
 import nl.xillio.xill.api.components.EventEx;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.events.RobotStartedAction;
 import nl.xillio.xill.api.events.RobotStoppedAction;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -16,6 +16,7 @@ import java.util.function.Consumer;
  * This class represents a context in which a construct can be processed.
  */
 public class ConstructContext {
+
     private final RobotID robotID;
     private Logger robotLogger;
     private final RobotID rootRobot;
@@ -72,7 +73,7 @@ public class ConstructContext {
 
         // Make sure the logger is set
         if (robotLogger == null) {
-            robotLogger = RobotAppender.getLogger(robotID);
+            robotLogger = LogUtil.getLogger(robotID);
         }
 
         return robotLogger;
@@ -85,7 +86,7 @@ public class ConstructContext {
 
         // Make sure the logger is set
         if (rootLogger == null) {
-            rootLogger = RobotAppender.getLogger(rootRobot);
+            rootLogger = LogUtil.getLogger(rootRobot);
         }
 
         return rootLogger;

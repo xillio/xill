@@ -1,9 +1,9 @@
 package nl.xillio.xill.plugins.system.exec;
 
+import me.biesaart.utils.Log;
 import nl.xillio.events.Event;
 import nl.xillio.events.EventHost;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,7 +18,7 @@ public class InputStreamListener implements Runnable {
     private final EventHost<String> onLineComplete = new EventHost<>();
     private Thread thread;
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = Log.get();
 
     /**
      * Create a new {@link InputStreamListener}

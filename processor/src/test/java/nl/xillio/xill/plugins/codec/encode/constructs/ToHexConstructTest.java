@@ -25,7 +25,7 @@ public class ToHexConstructTest extends TestUtils {
     @BeforeMethod
     public void initTest() {
         ConstructContext context = mock(ConstructContext.class);
-        ToHexConstruct construct = new ToHexConstruct(new EncoderServiceImpl(null, null));
+        ToHexConstruct construct = new ToHexConstruct(new EncoderServiceImpl());
         processor = construct.prepareProcess(context);
     }
 
