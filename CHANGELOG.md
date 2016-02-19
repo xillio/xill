@@ -1,9 +1,9 @@
 # Xill IDE - Change Log
 All notable changes to this project will be documented in this file
 
-## [3.3.1] - unreleased
+## [3.3.2] - unreleased
 
-## [3.3.0] - 19-02-2016
+## [3.3.1] - 19-02-2016
 ### Add
 - Hash.toSHA1 and Hash.toSHA256 constructs [CTC-1332]
 - Collection.containsKey construct [CTC-1230]

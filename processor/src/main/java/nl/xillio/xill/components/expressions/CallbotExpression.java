@@ -1,6 +1,5 @@
 package nl.xillio.xill.components.expressions;
 
-import com.google.inject.Inject;
 import me.biesaart.utils.Log;
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.Xill;
@@ -26,9 +25,6 @@ import java.util.List;
  */
 public class CallbotExpression implements Processable {
 
-    @Inject
-    private LogUtil logUtil;
-
     private static final Logger LOGGER = Log.get();
     private final Logger robotLogger;
     private final Processable path;
@@ -48,7 +44,7 @@ public class CallbotExpression implements Processable {
         this.path = path;
         this.robotID = robotID;
         this.plugins = plugins;
-        robotLogger = logUtil.getLogger(robotID);
+        robotLogger = LogUtil.getLogger(robotID);
         resolver = new FileResolverImpl();
     }
 

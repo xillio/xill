@@ -10,6 +10,9 @@ import org.slf4j.LoggerFactory;
  * Created by Anwar on 2/18/2016.
  */
 public class LogUtil {
+    private LogUtil() {
+        // No LogUtil for you
+    }
 
     public static final String ROBOT_LOGGER_PREFIX = "robot.";
 
@@ -19,7 +22,7 @@ public class LogUtil {
      * @param robotID ID of a robot
      * @return        An instance of the logger.
      */
-    public Logger getLogger(final RobotID robotID) {
+    public static Logger getLogger(final RobotID robotID) {
         return LoggerFactory.getLogger(ROBOT_LOGGER_PREFIX + robotID.toString());
     }
 }

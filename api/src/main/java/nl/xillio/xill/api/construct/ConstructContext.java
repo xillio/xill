@@ -1,6 +1,5 @@
 package nl.xillio.xill.api.construct;
 
-import com.google.inject.Inject;
 import nl.xillio.events.EventHost;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.LogUtil;
@@ -17,9 +16,6 @@ import java.util.function.Consumer;
  * This class represents a context in which a construct can be processed.
  */
 public class ConstructContext {
-
-    @Inject
-    private LogUtil logUtil;
 
     private final RobotID robotID;
     private Logger robotLogger;
@@ -77,7 +73,7 @@ public class ConstructContext {
 
         // Make sure the logger is set
         if (robotLogger == null) {
-            robotLogger = logUtil.getLogger(robotID);
+            robotLogger = LogUtil.getLogger(robotID);
         }
 
         return robotLogger;
@@ -90,7 +86,7 @@ public class ConstructContext {
 
         // Make sure the logger is set
         if (rootLogger == null) {
-            rootLogger = logUtil.getLogger(rootRobot);
+            rootLogger = LogUtil.getLogger(rootRobot);
         }
 
         return rootLogger;

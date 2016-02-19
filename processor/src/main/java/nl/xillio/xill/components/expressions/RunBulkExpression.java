@@ -1,6 +1,5 @@
 package nl.xillio.xill.components.expressions;
 
-import com.google.inject.Inject;
 import me.biesaart.utils.Log;
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.xill.Xill;
@@ -28,9 +27,6 @@ import java.util.concurrent.TimeUnit;
  * This class represents calling another robot multiple times in a separate threads
  */
 public class RunBulkExpression implements Processable {
-
-    @Inject
-    private LogUtil logUtil;
 
     private static final Logger LOGGER = Log.get();
     private final Logger robotLogger;
@@ -199,7 +195,7 @@ public class RunBulkExpression implements Processable {
         this.path = path;
         this.robotID = robotID;
         this.plugins = plugins;
-        robotLogger = logUtil.getLogger(robotID);
+        robotLogger = LogUtil.getLogger(robotID);
         resolver = new FileResolverImpl();
         maxThreadsVal = 0;
     }
