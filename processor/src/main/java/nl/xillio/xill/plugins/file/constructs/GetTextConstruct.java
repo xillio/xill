@@ -12,7 +12,6 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.io.IOStream;
 import nl.xillio.xill.plugins.file.services.files.FileStreamFactory;
 import nl.xillio.xill.plugins.stream.utils.StreamUtils;
-import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -28,13 +27,11 @@ public class GetTextConstruct extends Construct {
 
     private final FileStreamFactory fileStreamFactory;
     private final IOUtilsService ioUtilsService;
-    private final StringUtilityService stringUtilityService;
 
     @Inject
-    GetTextConstruct(FileStreamFactory fileStreamFactory, IOUtilsService ioUtilsService, StringUtilityService stringUtilityService) {
+    GetTextConstruct(FileStreamFactory fileStreamFactory, IOUtilsService ioUtilsService) {
         this.fileStreamFactory = fileStreamFactory;
         this.ioUtilsService = ioUtilsService;
-        this.stringUtilityService = stringUtilityService;
     }
 
     @Override
@@ -53,7 +50,12 @@ public class GetTextConstruct extends Construct {
         Path path = getPath(context, source);
         String text = toString(buildStream(path), charset);
 
-        return fromValue(stringUtilityService.removeBomCharacter(text));
+        // Remove leading BOM character.
+        if (text.startsWith("\uFEFF")) {
+            text = text.substring(1);
+        }
+
+        return fromValue(text);
     }
 
     private IOStream buildStream(Path path) {
