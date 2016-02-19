@@ -7,27 +7,21 @@ Returns a stream that will write to the start of a file. This will clear the fil
         <example title="Usage">
             <header>Write three lines to a file</header>
             <code>
-                use File;
+                use File, Stream;
 
                 var target = File.openWrite("./target.txt");
 
-                File.write("Hello World\n", target);
-                File.write("Hello World\n", target);
-                File.write("Hello World\n", target);
+                Stream.write("Hello World\n", target);
+                Stream.write("Hello World\n", target);
+                Stream.write("Hello World\n", target);
             </code>
             <header>Copy a file</header>
             <code>
-                use File;
+                use File, Stream;
 
                 var source = File.openRead("./source.txt");
                 var target = File.openWrite("./source-copy.txt");
-                File.write(source, target);
-            </code>
-            <header>Create an empty file and if it exists</header>
-            <code>
-                use File;
-
-                File.write("./target.txt");
+                Stream.write(source, target);
             </code>
         </example>
     </examples>
@@ -35,7 +29,6 @@ Returns a stream that will write to the start of a file. This will clear the fil
         <reference>openRead</reference>
         <reference>openAppend</reference>
         <reference>getText</reference>
-        <reference>write</reference>
     </references>
     <tags>
         read, write, append, text, content, create

@@ -1,38 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Read text from a plain text file.
-
-If the input parameter is a stream the stream will be consumed as text. Otherwise the input is treated as a file path.
-Character encoding can be set manually, using a string identifying the format.  
-By default, i.e. without specifying any encoding type, de getText function will use the system encoding.
+Read all text from a file.
     </description>
     <examples>
         <example title="Usage">
-            <header>Get the text of a file</header>
+            <header>Read text from a file</header>
             <code>
                 use File, System;
 
-                var file = File.write("This is the content", "tmp.txt");
-
-                // Read as UTF-8, supported formats are listed here: https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html
-                var text = File.getText(file, "UTF-8");
-
-                // Will print "This is the content");
+                var text = File.getText("path/to/file.txt");
                 System.print(text);
             </code>
-            <header>Get the text of a stream</header>
+            <header>Read text from a file using streams</header>
             <code>
-                use File, System;
+                use File, Stream, System;
 
-                File.write("This is the content", "tmp.txt");
-                var file = File.openRead("tmp.txt");
+                var file = File.openStream("path/to/file.txt");
 
-                var text = File.getText(file, "UTF-8");
-
-                // Will print "This is the content");
+                // Note we are using the Stream package
+                var text = Stream.getText(file);
                 System.print(text);
             </code>
         </example>
     </examples>
+    <references>
+        <reference>Stream.getText</reference>
+    </references>
+    <tags>
+        read, text, file
+    </tags>
 </function>

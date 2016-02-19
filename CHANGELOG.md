@@ -1,18 +1,25 @@
 # Xill IDE - Change Log
 All notable changes to this project will be documented in this file
 
+## [3.3.0] - unreleased
+### Add
+- Hash.toSHA1 and Hash.toSHA256 constructs [CTC-1332]
+
+### Change
+- Add a new stream api for data streaming [CTC-1373]
+- Refactory Encode.toBase64, Decode.fromBase6, Hash.toMD5 to work with streams [CTC-1332]
+
 ## [3.2.0] - 11-02-2016
 ### Add
 - The argument keyword as a type of variable declaration [CTC-1253]
 
-### Change
-## [3.1.1] 11-02-2016
+## [3.1.1] - 11-02-2016
 
 ### Fix
 - Disappearing variables in variable pane when debugging [CTC-1292]
 
 - Implement the new file api with stream support [CTC-1327]
-## [3.1.0] 08-02-2016
+## [3.1.0] - 08-02-2016
 
 ### Add
 - Error handling construction
