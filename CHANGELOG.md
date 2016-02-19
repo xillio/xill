@@ -11,16 +11,13 @@ All notable changes to this project will be documented in this file
 - Refactory Encode.toBase64, Decode.fromBase6, Hash.toMD5 to work with streams [CTC-1332]
 - Rafactor logging [CTC-1196]
 
-## [3.2.0] - 11-02-2016
-### Add
-- The argument keyword as a type of variable declaration [CTC-1253]
 
 ## [3.1.1] - 11-02-2016
 
 ### Fix
 - Disappearing variables in variable pane when debugging [CTC-1292]
-
 - Implement the new file api with stream support [CTC-1327]
+
 ## [3.1.0] - 08-02-2016
 
 ### Add
