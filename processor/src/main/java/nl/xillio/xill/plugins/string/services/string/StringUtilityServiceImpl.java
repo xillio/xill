@@ -16,6 +16,7 @@ import java.util.List;
  */
 @Singleton
 public class StringUtilityServiceImpl implements StringUtilityService {
+    private static final String UTF8_BOM = "\uFEFF";
 
     @Override
     public boolean contains(final String parent, final String child) {
@@ -104,5 +105,10 @@ public class StringUtilityServiceImpl implements StringUtilityService {
     @Override
     public String wrap(final String text, final int width, final boolean wrapLongWords) {
         return WordUtils.wrap(text, width, "\n", wrapLongWords);
+    }
+
+    @Override
+    public String removeBomCharacter(String text) {
+        return text.startsWith(UTF8_BOM) ? text.substring(1) : text;
     }
 }

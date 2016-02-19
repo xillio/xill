@@ -12,6 +12,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.io.IOStream;
 import nl.xillio.xill.plugins.file.services.files.FileStreamFactory;
 import nl.xillio.xill.plugins.stream.utils.StreamUtils;
+import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -27,13 +28,14 @@ public class GetTextConstruct extends Construct {
 
     private final FileStreamFactory fileStreamFactory;
     private final IOUtilsService ioUtilsService;
+    private final StringUtilityService stringUtilityService;
 
     @Inject
-    GetTextConstruct(FileStreamFactory fileStreamFactory, IOUtilsService ioUtilsService) {
+    GetTextConstruct(FileStreamFactory fileStreamFactory, IOUtilsService ioUtilsService, StringUtilityService stringUtilityService) {
         this.fileStreamFactory = fileStreamFactory;
         this.ioUtilsService = ioUtilsService;
+        this.stringUtilityService = stringUtilityService;
     }
-
 
     @Override
     public ConstructProcessor prepareProcess(final ConstructContext context) {
@@ -44,12 +46,14 @@ public class GetTextConstruct extends Construct {
     }
 
     MetaExpression process(final ConstructContext context, final MetaExpression source, final MetaExpression encoding) {
-        // Get the charset safely, if it was given
+        // Get the charset safely, if it was given.
         Charset charset = StreamUtils.getCharset(encoding);
 
-        // Else read the provided path
+        // Read the provided path.
         Path path = getPath(context, source);
-        return fromValue(toString(buildStream(path), charset));
+        String text = toString(buildStream(path), charset);
+
+        return fromValue(stringUtilityService.removeBomCharacter(text));
     }
 
     private IOStream buildStream(Path path) {

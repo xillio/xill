@@ -167,4 +167,12 @@ public interface StringUtilityService {
      * @return Returns the wrapped text.
      */
     String wrap(String text, int width, boolean wrapLongWords);
+
+    /**
+     * Removes the leading BOM character, or does nothing if the text does not have a BOM character.
+     *
+     * @param text The text to remove the BOM character from.
+     * @return The text without a BOM character.
+     */
+    String removeBomCharacter(String text);
 }
