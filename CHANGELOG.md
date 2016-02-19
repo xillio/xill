@@ -1,7 +1,7 @@
 # Xill IDE - Change Log
 All notable changes to this project will be documented in this file
 
-## [3.3.0] - unreleased
+## [3.3.0] - 19-02-2016
 ### Add
 - Hash.toSHA1 and Hash.toSHA256 constructs [CTC-1332]
 - Collection.containsKey construct [CTC-1230]
@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file
 ### Change
 - Add a new stream api for data streaming [CTC-1373]
 - Refactory Encode.toBase64, Decode.fromBase6, Hash.toMD5 to work with streams [CTC-1332]
+- Rafactor logging [CTC-1196]
 
 ## [3.2.0] - 11-02-2016
 ### Add
