@@ -20,6 +20,5 @@ Returns true if the file or folder exists otherwise false
     </examples>
     <references>
         <reference>createFolder</reference>
-        <reference>saveTo</reference>
     </references>
 </function>

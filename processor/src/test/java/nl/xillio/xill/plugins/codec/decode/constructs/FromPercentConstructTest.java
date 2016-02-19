@@ -1,7 +1,5 @@
 package nl.xillio.xill.plugins.codec.decode.constructs;
 
-import me.biesaart.utils.FileUtilsService;
-import me.biesaart.utils.IOUtilsService;
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ConstructContext;
@@ -28,7 +26,7 @@ public class FromPercentConstructTest extends TestUtils {
         MetaExpression EXPECTED_TEXT = fromValue("Th!s is my e*pected string \\/\\/!th s0/\\/\\e weird ch@r@cters :D");
         MetaExpression DEPLOY_PERCENT = fromValue("Th%21s+is+my+e%2Apected+string+%5C%2F%5C%2F%21th+s0%2F%5C%2F%5Ce+weird+ch%40r%40cters+%3AD");
 
-        DecoderService decoderService = new DecoderServiceImpl(new FileUtilsService(), new IOUtilsService());
+        DecoderService decoderService = new DecoderServiceImpl();
         FromPercentConstruct construct = new FromPercentConstruct(decoderService);
         ConstructContext context = mock(ConstructContext.class);
 

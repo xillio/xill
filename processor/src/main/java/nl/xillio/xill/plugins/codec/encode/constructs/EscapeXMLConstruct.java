@@ -9,9 +9,7 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.plugins.codec.encode.services.EncoderService;
 
 /**
- * <p>
  * Encodes all special XML characters (&lt;,&gt;,&amp;,&quot;,&#39;) to their respective xml entities.
- * </p>
  *
  * @author Sander Visser
  */

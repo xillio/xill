@@ -3,9 +3,6 @@ package nl.xillio.xill.plugins.codec.decode.services;
 import com.google.inject.ImplementedBy;
 import org.apache.commons.codec.DecoderException;
 
-import java.io.File;
-import java.io.IOException;
-
 /**
  * Interface defining behavior of decoding constructs.
  *
@@ -36,23 +33,6 @@ public interface DecoderService {
      * @return urlDecoded string
      */
     String urlDecode(String text);
-
-    /**
-     * Makes a file which represents the decoded version of a given base64-encoded file.
-     *
-     * @param input  The file we want to convert to base64.
-     * @param output The file to which we are writing the output
-     */
-    void decodeFileBase64(File input, File output) throws IOException;
-
-    /**
-     * Returns a string which represents the decoded string given.
-     *
-     * @param inputString The string to decode
-     * @return String       The decoded string
-     * @throws IOException
-     */
-    String decodeStringBase64(String inputString) throws IOException;
 
     /**
      * Unescapes a text containing an XML entity.
