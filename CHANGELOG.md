@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file
 ## [3.3.0] - unreleased
 ### Add
 - Hash.toSHA1 and Hash.toSHA256 constructs [CTC-1332]
+- Collection.containsKey construct [CTC-1230]
 
 ### Change
 - Add a new stream api for data streaming [CTC-1373]
