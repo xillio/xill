@@ -41,6 +41,7 @@ public class DynamicInvoker<I> {
     /**
      * Invoke the best method found by name that has one parameter and best parameter type.
      *
+     * @param <O>        The argument base type for the method.
      * @param argument   The input argument for the method
      * @param returnType The return type of the method
      * @return The result of the selected method

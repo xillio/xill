@@ -119,7 +119,7 @@ public class CallbotExpression implements Processable {
     /**
      * Set the argument that will be passed to the called robot
      *
-     * @param argument
+     * @param argument    the argument to be passed to the called robot.
      */
     public void setArgument(final Processable argument) {
         this.argument = argument;

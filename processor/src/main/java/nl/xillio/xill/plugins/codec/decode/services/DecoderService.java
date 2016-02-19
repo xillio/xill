@@ -42,6 +42,7 @@ public interface DecoderService {
      *
      * @param input  The file we want to convert to base64.
      * @param output The file to which we are writing the output
+     * @throws IOException  Is thrown if a file(-related) operation fails.
      */
     void decodeFileBase64(File input, File output) throws IOException;
 
@@ -50,7 +51,7 @@ public interface DecoderService {
      *
      * @param inputString The string to decode
      * @return String       The decoded string
-     * @throws IOException
+     * @throws IOException  Is thrown if a file(-related) operation fails.
      */
     String decodeStringBase64(String inputString) throws IOException;
 

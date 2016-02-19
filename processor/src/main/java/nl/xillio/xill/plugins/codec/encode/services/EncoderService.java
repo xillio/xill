@@ -43,6 +43,7 @@ public interface EncoderService {
      *
      * @param input  The file we want to convert to base64
      * @param output The file to which we are writing the output
+     * @throws IOException  Is thrown if a file(-related) exception occurs during operation on the files.
      */
     void encodeFileBase64(File input, File output) throws IOException;
 
@@ -51,7 +52,7 @@ public interface EncoderService {
      *
      * @param stringInput The string to encode
      * @return String       The encoded string
-     * @throws IOException
+     * @throws IOException  Is thrown if a file(-related) exception occurs during operation on the files.
      */
     String encodeStringBase64(String stringInput) throws IOException;
 

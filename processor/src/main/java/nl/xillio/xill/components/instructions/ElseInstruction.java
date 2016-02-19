@@ -18,7 +18,7 @@ public class ElseInstruction extends CompoundInstruction {
     /**
      * Create a new {@link ElseInstruction}
      *
-     * @param elseInstructions
+     * @param elseInstructions A collection of elseInstructions.
      */
     public ElseInstruction(final InstructionSet elseInstructions) {
         this.elseInstructions = elseInstructions;

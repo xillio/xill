@@ -36,8 +36,8 @@ public class FunctionCall implements Processable {
     /**
      * Initialize this {@link FunctionCall}
      *
-     * @param function
-     * @param arguments
+     * @param function     the function declaration.
+     * @param arguments    the arguments of the function.
      */
     public void initialize(final FunctionDeclaration function, final List<Processable> arguments) {
         this.function = function;

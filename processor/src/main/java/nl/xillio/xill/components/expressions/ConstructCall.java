@@ -24,10 +24,11 @@ public class ConstructCall implements Processable {
     private final Processable[] arguments;
 
     /**
-     * Create a new {@link ConstructCall}
+     * Create a new {@link ConstructCall}-object.
      *
-     * @param construct the construct to call
-     * @param arguments the arguments to insert into the construct
+     * @param construct the construct to call.
+     * @param arguments the arguments to insert into the construct.
+     * @param context   the associated context.
      */
     public ConstructCall(final Construct construct, final List<Processable> arguments, ConstructContext context) {
         this.construct = construct;

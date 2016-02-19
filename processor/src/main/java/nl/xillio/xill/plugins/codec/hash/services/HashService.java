@@ -14,22 +14,22 @@ import java.security.NoSuchAlgorithmException;
 @ImplementedBy(HashServiceImpl.class)
 public interface HashService {
     /**
-     * Do MD5 hash from the provided file
+     * Do MD5 hash from the provided file.
      *
      * @param file The filename
      * @return md5 hash
-     * @throws NoSuchAlgorithmException
-     * @throws IOException
+     * @throws NoSuchAlgorithmException Is thrown if the provided hashing algorithm is not found.
+     * @throws IOException  Is thrown if a file (related) operation fails.
      */
     String fileToMD5(String file) throws NoSuchAlgorithmException, IOException;
 
     /**
-     * Do MD5 hash from the provided string
+     * Do MD5 hash from the provided string.
      *
      * @param value The string
      * @return md5 hash
-     * @throws NoSuchAlgorithmException
-     * @throws IOException
+     * @throws NoSuchAlgorithmException Is thrown if the provided hashing algorithm is not found.
+     * @throws IOException  Is thrown if a file (related) operation fails.
      */
     String stringToMD5(String value) throws NoSuchAlgorithmException, IOException;
 }

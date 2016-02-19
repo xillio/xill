@@ -1,14 +1,13 @@
 package nl.xillio.xill.components.instructions;
 
+import me.biesaart.utils.Log;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.ExpressionBuilderHelper;
 import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.debugging.ErrorBlockDebugger;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 import java.util.*;
 
@@ -21,12 +20,12 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
     private final Debugger debugger;
     private Instruction parentInstruction;
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = Log.get();
 
     /**
      * Create a new {@link InstructionSet} in debugging mode
      *
-     * @param debugger
+     * @param debugger    The debugger object necessary for processing the instruction.
      */
     public InstructionSet(final Debugger debugger) {
         this.debugger = debugger;
@@ -35,7 +34,7 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
     /**
      * Add an instruction to the instructionSet
      *
-     * @param instruction
+     * @param instruction    The instruction to be added to the InstructionSet object.
      */
     public void add(final Instruction instruction) {
         instruction.setHostInstruction(this);
@@ -131,7 +130,7 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
      * Run only declarations.
      * This is required to run functions in this robot as a library.
      *
-     * @throws RobotRuntimeException
+     * @throws RobotRuntimeException Is thrown if an exception occurs when running a robot.
      */
     public void initialize() throws RobotRuntimeException {
         for (Instruction instruction : instructions) {

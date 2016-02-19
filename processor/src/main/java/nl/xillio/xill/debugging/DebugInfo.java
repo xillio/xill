@@ -19,9 +19,9 @@ public class DebugInfo implements nl.xillio.xill.api.DebugInfo {
     private Map<UseStatement, XillPlugin> using = new HashMap<>();
 
     /**
-     * Add all information from into to this
+     * Add all information from into to this.
      *
-     * @param info
+     * @param info    the debugging info to be added.
      */
     public void add(final DebugInfo info) {
         variables.putAll(info.getVariables());

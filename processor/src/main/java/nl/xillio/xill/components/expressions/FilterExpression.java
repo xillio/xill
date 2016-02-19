@@ -19,9 +19,9 @@ import java.util.Map.Entry;
  */
 public class FilterExpression extends MapFilterHandler {
     /**
-     * Create a new {@link FilterExpression}
+     * Create a new {@link FilterExpression}-object.
      *
-     * @param argument
+     * @param argument    the argument passed when a new FilterExpression-object is created.
      */
     public FilterExpression(final Processable argument) {
         super(argument);
@@ -155,9 +155,9 @@ public class FilterExpression extends MapFilterHandler {
     }
 
     /**
-     * Set the function parameter
+     * Set the function parameter.
      *
-     * @param functionDeclaration
+     * @param functionDeclaration    the value to which the function declaration needs to be set.
      */
     @Override
     public void setFunction(final FunctionDeclaration functionDeclaration) {
