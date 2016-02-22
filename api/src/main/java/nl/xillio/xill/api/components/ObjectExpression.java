@@ -49,7 +49,7 @@ public class ObjectExpression extends CollectionExpression {
 
     @Override
     public Number getNumberValue() {
-        return value.size();
+        return Double.NaN;
     }
 
 }

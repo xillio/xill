@@ -38,6 +38,6 @@ class ListExpression extends CollectionExpression {
 
     @Override
     public Number getNumberValue() {
-        return value.size();
+        return Double.NaN;
     }
 }
