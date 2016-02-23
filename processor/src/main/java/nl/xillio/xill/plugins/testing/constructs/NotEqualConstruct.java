@@ -20,7 +20,7 @@ public class NotEqualConstruct extends Construct {
                 this::process,
                 new Argument("actual"),
                 new Argument("expected"),
-                new Argument("message", NULL, ATOMIC)
+                new Argument("message", NULL)
         );
     }
 

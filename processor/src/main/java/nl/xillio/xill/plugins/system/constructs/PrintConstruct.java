@@ -5,7 +5,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 /**
  * Prints the provided text to the log. Optional the log level can be set:

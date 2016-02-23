@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Returns true if the key is contained in the given object, or false otherwise.
+    </description>
+    <examples>
+        <example title="Usage">
+            <code>
+                use System;
+                use Collection;
+
+                var object = {
+                    "lorem": 1,
+                    "ipsum": 2,
+                    "dolor": 3
+                };
+
+                var key = "lorem";
+                if (Collection.containsKey(object, key)) {
+                    System.print("Object contains key: " :: key);
+                }
+            </code>
+        </example>
+    </examples>
+    <searchTags>
+        contains, containsKey, key, filter, object
+    </searchTags>
+</function>

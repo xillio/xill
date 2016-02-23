@@ -13,6 +13,17 @@ import java.util.List;
  * @author Thomas Biesaart
  */
 public interface XillEnvironment {
+
+    /**
+     * The default file extension for robot files.
+     */
+    public static final String ROBOT_EXTENSION = ".xill";
+
+    /**
+     * The default file extension for robot templates.
+     */
+    public static final String ROBOT_TEMPLATE_EXTENSION = ".xilt";
+
     /**
      * Enable or disable loading plugins from the user's home folder.
      *

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Encode a stream or string to base64.
+If the input is a string then the output is the encoded base64 string.
+If the input is a stream then the output is a base64 encoded stream.
+
+The charset parameter is only relevant when a string is provided and determines what character set should be used
+for the input string.
+    </description>
+    <examples>
+        <example title="Usage">
+            <p>Assuming we have a file 'note.xml' containing 'Hello World'</p>
+            <code>
+                use Encode, File, Stream;
+
+                var file = File.openRead("C:/tmp/note.xml");
+                var base64Read = Encode.toBase64(file);
+
+                var targetFile = File.openWrite("C:/tmp/output.txt");
+                Stream.write(base64Read, targetFile);
+
+                // Results in a file named 'output.txt' containing: SGVsbG8gV29ybGQ=
+            </code>
+            <header>Encode an in-memory string</header>
+            <code>
+                use Encode, System;
+
+                var text = "Hello World";
+                var base64 = Encode.toBase64(text);
+
+                // Prints SGVsbG8gV29ybGQ=
+                System.print(base64);
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>Decode.fromBase64</reference>
+    </references>
+    <searchTags>
+        encode, file, decode, base64
+    </searchTags>
+</function>
