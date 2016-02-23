@@ -31,23 +31,6 @@ public final class Add extends BinaryNumberOperator {
         rightValue.registerReference();
 
         try {
-            //If you try to add a null value to anything it should give an error.
-            if (leftValue.isNull() || rightValue.isNull()) {
-                throw new RobotRuntimeException("An addition has been tried upon a null value");
-            }
-
-            //If you try to add an atomic to an object it should give an error since this has to be done differently.
-            if ((leftValue.getType() == ExpressionDataType.ATOMIC && rightValue.getType() == ExpressionDataType.OBJECT)
-                    || (leftValue.getType() == ExpressionDataType.OBJECT && rightValue.getType() == ExpressionDataType.ATOMIC)) {
-                throw new RobotRuntimeException("You should not add an atomic to an object this way. Use object.newKey = newValue instead.");
-            }
-
-            //If you try to add an atomic to a list it should give an error since this has to be done differently.
-            if ((leftValue.getType() == ExpressionDataType.ATOMIC && rightValue.getType() == ExpressionDataType.LIST)
-                    || (leftValue.getType() == ExpressionDataType.LIST && rightValue.getType() == ExpressionDataType.ATOMIC)) {
-                throw new RobotRuntimeException("You should not add an atomic to a list this way. Use 'list[] = atomic' instead.");
-            }
-
             // If both entries are a list, then add them as such
             if (leftValue.getType() == rightValue.getType() && leftValue.getType() == ExpressionDataType.LIST) {
                 return InstructionFlow.doResume(
