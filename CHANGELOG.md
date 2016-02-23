@@ -3,8 +3,9 @@ All notable changes to this project will be documented in this file
 
 ## [3.3.2] - unreleased
 ### Change
-- for ATOMIC variables for all the basic operators (+, -, *, /, ^, %, ++, --, +=, -=, *=, /=):
-if one of them (or both) is NOT a number return NaN [CTC-1368]
+- For ATOMIC variables for all the basic operators (+, -, *, /, ^, %, ++, --, +=, -=, *=, /=):
+if one of them (or both) is NOT a number return NaN. [CTC-1368]
+- LIST and OBJECT variables also return NaN [CTC-1411]
 
 ## [3.3.1] - 19-02-2016
 ### Add
