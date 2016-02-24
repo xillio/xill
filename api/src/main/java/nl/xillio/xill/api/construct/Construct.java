@@ -150,9 +150,10 @@ public abstract class Construct extends ExpressionBuilderHelper implements HelpC
     }
 
     /**
-     * Determines if this construct is deprecated
+     * Determines if this construct is deprecated.
      *
-     * @implNote Looks for an {@link Deprecated} annotation by default
+     * Looks for an {@link Deprecated} annotation by default.
+     *
      * @return True if this construct is deprecated, false if not
      */
     public boolean isDeprecated(){
