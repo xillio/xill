@@ -28,4 +28,9 @@ public abstract class CollectionExpression extends MetaExpression {
     public IOStream getBinaryValue() {
         return new EmptyIOStream();
     }
+
+    @Override
+    public Number getSize(){
+        return 0;
+    }
 }
