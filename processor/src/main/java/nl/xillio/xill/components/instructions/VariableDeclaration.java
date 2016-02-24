@@ -3,6 +3,7 @@ package nl.xillio.xill.components.instructions;
 import nl.xillio.xill.CodePosition;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.*;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.components.operators.Assign;
 
 import java.util.Arrays;
@@ -70,10 +71,12 @@ public class VariableDeclaration extends Instruction {
      * @param value
      */
     public void replaceVariable(final MetaExpression value) {
-        if (!valueStack.empty()) {
+        if (hasValue()){
             MetaExpression current = valueStack.pop();
             pushVariable(value);
             current.releaseReference();
+        }else{
+            throw new RobotRuntimeException("Reference to unknown variable '" + getName() +"', could not assign value.");
         }
     }
 
