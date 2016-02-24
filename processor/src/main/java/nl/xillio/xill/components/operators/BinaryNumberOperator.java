@@ -38,6 +38,9 @@ abstract class BinaryNumberOperator implements Processable {
     }
 
     protected InstructionFlow<MetaExpression> process(MetaExpression leftValue, MetaExpression rightValue) {
+        if(leftValue.isNull() || rightValue.isNull()){
+            return InstructionFlow.doResume(ExpressionBuilder.fromValue(Double.NaN));
+        }
         leftValue.registerReference();
         rightValue.registerReference();
         Number result = operator.apply(leftValue.getNumberValue(), rightValue.getNumberValue());
