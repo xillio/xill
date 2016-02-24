@@ -957,6 +957,10 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
                     pos.getLineNumber(), pos.getRobotID());
         }
 
+        // Check whether a construct is deprecated (has a Deprecated annotation) and log a warning if this is the case
+        if (construct.isDeprecated()){
+            context.getRootLogger().warn("Call to deprecated construct with name \"{}\" at {}", construct.getName(), pos.toString());
+        }
 
         return new ConstructCall(construct, arguments, context);
     }
