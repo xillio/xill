@@ -2,7 +2,6 @@
 All notable changes to this project will be documented in this file
 
 ## [3.1.2] 24-02-2016
-
 ### Fix
 - Issue where File.getLastModifiedDate returns the creation date
 
