@@ -50,10 +50,8 @@ public class GetTextConstruct extends Construct {
         Path path = getPath(context, source);
         String text = toString(buildStream(path), charset);
 
-        // Remove leading BOM character.
-        if (text.startsWith("\uFEFF")) {
-            text = text.substring(1);
-        }
+        // Remove leading BOM characters.
+        text = text.replaceAll("^\uFEFF+", "");
 
         return fromValue(text);
     }
