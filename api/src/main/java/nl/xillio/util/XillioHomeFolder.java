@@ -3,7 +3,7 @@ package nl.xillio.util;
 import java.io.File;
 
 /**
- * This class is a utility to address the xillio home directory.
+ * This is a utility class to handle the xillio home directory.
  */
 public class XillioHomeFolder extends File {
     private static final String VERSION = "3.0";

@@ -3,7 +3,7 @@ package nl.xillio.xill.api;
 import nl.xillio.xill.api.components.RobotID;
 
 /**
- * This class represents an issue with the code
+ * This class represents an issue with the code.
  */
 public class Issue {
     private final String message;
@@ -20,26 +20,26 @@ public class Issue {
      */
     public enum Type {
         /**
-         * Can't compile
+         * Can't compile.
          */
         ERROR,
         /**
-         * Needs attention
+         * Needs attention.
          */
         WARNING,
         /**
-         * Friendly notice
+         * Friendly notice.
          */
         INFO
     }
 
     /**
-     * Create a new Issue
+     * Default constructor to create a new Issue.
      *
      * @param message  the message to display
      * @param line     the line where the issue occurred
      * @param severity the severity of the issue
-     * @param robot    the robot
+     * @param robot    the robot in which the issue occures
      * @see Type
      */
     public Issue(final String message, final int line, final Type severity, final RobotID robot) {
@@ -50,6 +50,8 @@ public class Issue {
     }
 
     /**
+     * Returns the robot attached to this issue.
+     *
      * @return the robot
      */
     public RobotID getRobot() {
@@ -57,6 +59,8 @@ public class Issue {
     }
 
     /**
+     * Return the issue's message.
+     *
      * @return the message
      */
     public String getMessage() {
@@ -64,6 +68,8 @@ public class Issue {
     }
 
     /**
+     * Returns the line where the issue occured.
+     *
      * @return the line
      */
     public int getLine() {
@@ -71,6 +77,8 @@ public class Issue {
     }
 
     /**
+     * Returns the severity of the issue.
+     *
      * @return the severity
      */
     public Type getSeverity() {

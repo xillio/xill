@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.ServiceLoader;
 
 /**
- * @author Thomas Biesaart
+ * A utility class to create environments.
  */
 public class XillLoader {
     /**
-     * Load a XillEnvironment from a specific folder.
+     * Loads a XillEnvironment from a specific folder.
      *
      * @param coreFolder the folder
      * @return the environment
@@ -41,7 +41,7 @@ public class XillLoader {
     }
 
     /**
-     * This class will save a list of all .jar files.
+     * This class will collect a list of all .jar files.
      */
     private static class JarFinder extends SimpleFileVisitor<Path> {
         private static final PathMatcher JAR_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**.jar");

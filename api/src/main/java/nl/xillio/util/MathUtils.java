@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import java.math.BigInteger;
 
 /**
- * This class represents some basic arithmetic operations on abstract Numbers.
+ * This utility class provides some basic arithmetic operations on abstract Numbers.
  */
 public class MathUtils {
     private static final Logger LOGGER = Log.get();
@@ -14,7 +14,7 @@ public class MathUtils {
     private static int LONG_MAX_VALUE_LENGTH = Long.toString(Long.MAX_VALUE).length();
 
     /**
-     * Perform the arithmetic addition operation on two abstract numbers.
+     * Performs the arithmetic addition operation on two abstract numbers.
      *
      * @param a the left operand
      * @param b the right operand
@@ -54,7 +54,7 @@ public class MathUtils {
     }
 
     /**
-     * Perform the arithmetic subtraction operation on two abstract numbers.
+     * Performs the arithmetic subtraction operation on two abstract numbers.
      *
      * @param a the left operand
      * @param b the right operand
@@ -86,7 +86,7 @@ public class MathUtils {
     }
 
     /**
-     * Perform the arithmetic division operation on two abstract numbers.
+     * Performs the arithmetic division operation on two abstract numbers.
      *
      * @param a the left operand
      * @param b the right operand
@@ -128,7 +128,7 @@ public class MathUtils {
     }
 
     /**
-     * Perform the arithmetic multiplication operation on two abstract numbers.
+     * Performs the arithmetic multiplication operation on two abstract numbers.
      *
      * @param a the left operand
      * @param b the right operand
@@ -160,7 +160,7 @@ public class MathUtils {
     }
 
     /**
-     * Perform the arithmetic modulo operation on two abstract numbers.
+     * Performs the arithmetic modulo operation on two abstract numbers.
      *
      * @param a the left operand
      * @param b the right operand
@@ -186,7 +186,7 @@ public class MathUtils {
     }
 
     /**
-     * Perform the arithmetic exponential operation on two abstract numbers.
+     * Performs the arithmetic exponential operation on two abstract numbers.
      *
      * @param a the left operand
      * @param b the right operand
@@ -211,7 +211,7 @@ public class MathUtils {
     }
 
     /**
-     * Perform the comparison operation on two abstract numbers.
+     * Performs the comparison operation on two abstract numbers.
      *
      * @param a the left operand
      * @param b the right operand
@@ -239,10 +239,10 @@ public class MathUtils {
     }
 
     /**
-     * Recreate the addExact method from Math.java to check for overflow while avoiding throwing and handling
-     * of Exceptions (including empty catch blocks)
+     * Recreates the addExact method from Math.java to check for overflow while avoiding throwing and handling
+     * Exceptions (including empty catch blocks).
      *
-     * @return null if an overflow would occur else the result of the addition
+     * @return null if an overflow would occur, the result of the addition otherwise
      */
     static Integer addExactWithoutException(int x, int y) {
         int r = x + y;
@@ -253,10 +253,10 @@ public class MathUtils {
     }
 
     /**
-     * Recreate the addExact method from Math.java to check for overflow while avoiding throwing and handling
-     * of Exceptions (including empty catch blocks)
+     * Recreates the addExact method from Math.java to check for overflow while avoiding throwing and handling
+     * Exceptions (including empty catch blocks).
      *
-     * @return null if an overflow would occur else the result of the addition
+     * @return null if an overflow would occur, the result of the addition otherwise
      */
     static Long addExactWithoutException(long x, long y) {
         long r = x + y;
@@ -267,10 +267,10 @@ public class MathUtils {
     }
 
     /**
-     * Recreate the subtractExact method from Math.java to check for overflow while avoiding throwing and handling
-     * of Exceptions (including empty catch blocks)
+     * Recreates the subtractExact method from Math.java to check for overflow while avoiding throwing and handling
+     * Exceptions (including empty catch blocks).
      *
-     * @return null if an overflow would occur else the result of the subtraction
+     * @return null if an overflow would occur, the result of the subtraction otherwise
      */
     static Integer subtractExactWithoutException(int x, int y) {
         int r = x - y;
@@ -281,10 +281,10 @@ public class MathUtils {
     }
 
     /**
-     * Recreate the subtractExact method from Math.java to check for overflow while avoiding throwing and handling
-     * of Exceptions (including empty catch blocks)
+     * Recreates the subtractExact method from Math.java to check for overflow while avoiding throwing and handling
+     * Exceptions (including empty catch blocks).
      *
-     * @return null if an overflow would occur else the result of the subtraction
+     * @return null if an overflow would occur, the result of the subtraction otherwise
      */
     static Long subtractExactWithoutException(long x, long y) {
         long r = x - y;
@@ -296,9 +296,9 @@ public class MathUtils {
 
     /**
      * Recreate the multiplyExact method from Math.java to check for overflow while avoiding throwing and handling
-     * of Exceptions (including empty catch blocks)
+     * Exceptions (including empty catch blocks).
      *
-     * @return null if an overflow would occur else the result of the multiplication
+     * @return null if an overflow would occur, the result of the multiplication otherwise
      */
     static Integer multiplyExactWithoutException(int x, int y) {
         long r = (long) x * (long) y;
@@ -310,9 +310,9 @@ public class MathUtils {
 
     /**
      * Recreate the multiplyExact method from Math.java to check for overflow while avoiding throwing and handling
-     * of Exceptions (including empty catch blocks)
+     * Exceptions (including empty catch blocks).
      *
-     * @return null if an overflow would occur else the result of the multiplication
+     * @return null if an overflow would occur, the result of the multiplication otherwise
      */
     static Long multiplyExactWithoutException(long x, long y) {
         long r = x * y;
@@ -330,6 +330,11 @@ public class MathUtils {
         return r;
     }
 
+    /**
+     * Tries to parse a number from a String. Returns {@link Double#NaN} if the argument could not be parsed.
+     * @param value the String representing a number
+     * @return the actual number or NaN
+     */
     public static Number parse(String value) {
         try {
             return tryParse(value);
@@ -375,7 +380,7 @@ public class MathUtils {
 
     /**
      * The supported number types.
-     * Note that these types should be ordered from low to high precedence
+     * Note that these types should be ordered from low to high precedence.
      */
     private enum NumberType {
         DOUBLE(Double.class, Float.class),
@@ -392,7 +397,7 @@ public class MathUtils {
         }
 
         /**
-         * Test if this type supports a class
+         * Tests whether this type supports a class.
          *
          * @param clazz the class
          * @return true if and only if this type supports the number
@@ -413,7 +418,7 @@ public class MathUtils {
                     return type;
                 }
             }
-            throw new IllegalArgumentException("No compatible number type for " + classA.getSimpleName() + " or " + classB);
+            throw new IllegalArgumentException("Incompatible number type for " + classA.getSimpleName() + " or " + classB);
         }
     }
 }

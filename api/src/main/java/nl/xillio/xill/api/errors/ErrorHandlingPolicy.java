@@ -1,7 +1,7 @@
 package nl.xillio.xill.api.errors;
 
 /**
- * This interface represents a class that defines how to handle errors and exceptions in robots
+ * This interface represents a class that defines how to handle errors and exceptions in robots.
  */
 public interface ErrorHandlingPolicy {
     /**
