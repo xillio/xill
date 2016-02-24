@@ -182,7 +182,7 @@ public class ExpressionBuilderHelper {
 
         @Override
         public Number getNumberValue() {
-            return 0;
+            return Double.NaN;
         }
 
         @Override
