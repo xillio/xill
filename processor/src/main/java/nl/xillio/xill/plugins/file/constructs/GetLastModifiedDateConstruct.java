@@ -14,6 +14,6 @@ public class GetLastModifiedDateConstruct extends AbstractDateFilePropertyConstr
 
     @Override
     protected FileTime process(Path path) throws IOException {
-        return attributes(path).creationTime();
+        return attributes(path).lastModifiedTime();
     }
 }

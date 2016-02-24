@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file
 
 ## [3.3.2] - unreleased
+### Change
+- For ATOMIC variables for all the basic operators (+, -, *, /, ^, %, ++, --, +=, -=, *=, /=):
+if one of them (or both) is NOT a number return NaN. [CTC-1368]
+- LIST and OBJECT variables also return NaN [CTC-1411]
+
+## [3.1.2] - 24-02-2016
+
+### Fix
+- Issue where File.getLastModifiedDate returns the creation date
+
+## [3.1.1] 11-02-2016
 
 ## [3.3.1] - 19-02-2016
 ### Add
