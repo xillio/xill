@@ -25,6 +25,12 @@ public class ErrorInstruction extends CompoundInstruction {
 
     /**
      * Instantiate an {@link ErrorInstruction}
+     *
+     * @param doInstructions         A collection of instructions that need to be executed.
+     * @param successInstructions    A collection of successfull instructions.
+     * @param errorInstructions      A collection of erroneous instructions.
+     * @param finallyInstructions    A collection of finally instructions.
+     * @param cause                  Cause of the error.
      */
     public ErrorInstruction(InstructionSet doInstructions, InstructionSet successInstructions, InstructionSet errorInstructions, InstructionSet finallyInstructions, VariableDeclaration cause) {
         this.doInstructions = doInstructions;

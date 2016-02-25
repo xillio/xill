@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  * Values:
  * <ul>
  * <li><b>{@link String}: </b> actual value</li>
- * <li><b>{@link Boolean}: </b> if the value is null or empty then false otherwise true</li>
+ * <li><b>{@link Boolean}: </b> {@code false} if the value is null or empty, {@code true} otherwise</li>
  * <li><b>{@link Number}: </b> if the value is a number then that number as a {@link Double}, otherwise {@link Double#NaN}</li>
  * </ul>
  */
@@ -23,7 +23,7 @@ class StringBehavior extends AbstractBehavior {
     private final String value;
 
     /**
-     * Create a new {@link StringBehavior}.
+     * Default constructor.
      *
      * @param value the value to set
      */

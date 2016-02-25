@@ -20,8 +20,8 @@ public class IfInstruction extends CompoundInstruction {
     /**
      * Create a new {@link IfInstruction}
      *
-     * @param condition
-     * @param instructionSet
+     * @param condition         The condition passed to the if-instruction.
+     * @param instructionSet    Relevant for processing the if-instruction.
      */
     public IfInstruction(final Processable condition, final InstructionSet instructionSet) {
         this.condition = condition;

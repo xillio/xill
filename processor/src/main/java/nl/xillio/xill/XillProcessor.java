@@ -66,7 +66,7 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
      * @param robotFile     the robot file
      * @param plugins       the plugins
      * @param debugger      the debugger
-     * @throws IOException
+     * @throws IOException  is thrown if a file(-related) operation fails.
      */
     public XillProcessor(final File projectFolder, final File robotFile, final List<XillPlugin> plugins,
                          final Debugger debugger) throws IOException {
@@ -104,7 +104,7 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
      *
      * @param rootRobot The Root robot
      * @return a list of issues
-     * @throws XillParsingException
+     * @throws XillParsingException     Is thrown when a parsing error occurs.
      */
     public List<Issue> compileAsSubRobot(final RobotID rootRobot) throws XillParsingException {
         synchronized (XillValidator.LOCK) {

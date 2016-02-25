@@ -9,7 +9,7 @@ public interface FunctionParameterExpression {
     /**
      * Set the functional parameter
      *
-     * @param function
+     * @param function  the value to which the function declaration needs to be set.
      */
     public void setFunction(FunctionDeclaration function);
 }

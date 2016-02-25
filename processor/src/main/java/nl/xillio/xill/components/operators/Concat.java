@@ -19,7 +19,9 @@ public class Concat implements Processable {
     private final Processable[] parts;
 
     /**
-     * @param parts
+     * Create a new {@link Concat}-object.
+     *
+     * @param parts    The string parts to be concatenated.
      */
     public Concat(final Processable... parts) {
         this.parts = parts;

@@ -18,9 +18,9 @@ public class VariableAccessExpression implements Processable {
 
     /**
      * Create a new {@link VariableAccessExpression} what will access provided
-     * declaration
+     * declaration.
      *
-     * @param declaration
+     * @param declaration    the provided declaration.
      */
     public VariableAccessExpression(final VariableDeclaration declaration) {
         this.declaration = declaration;

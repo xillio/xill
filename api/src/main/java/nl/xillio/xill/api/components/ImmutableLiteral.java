@@ -7,14 +7,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * This class represents a constant literal in the xill language
+ * This class represents a constant literal in the Xill language.
  */
 class ImmutableLiteral extends MetaExpression {
 
     private final Expression value;
 
     /**
-     * @param value the value to set
+     * @param value the expression to create a constant of.
      */
     public ImmutableLiteral(final Expression value) {
         this.value = value;

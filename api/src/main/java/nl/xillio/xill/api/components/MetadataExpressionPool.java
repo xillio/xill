@@ -17,12 +17,12 @@ public class MetadataExpressionPool<T> implements AutoCloseable {
     private final List<T> data = new ArrayList<>();
 
     /**
-     * Get a value from the pool
+     * Fetches a value from the pool.
      *
      * @param <C>   the type to fetch
      * @param clazz the type of object to get from the pool
-     * @return The requested value or null is none was found
-     * @throws ClassCastException     When the requested value is of a wrong type
+     * @return the requested value or null is none was found
+     * @throws ClassCastException     when the requested value is of a wrong type
      * @throws NoSuchElementException when the requested interface or class does not exist in this pool.
      */
     @SuppressWarnings("unchecked")
@@ -34,7 +34,7 @@ public class MetadataExpressionPool<T> implements AutoCloseable {
     }
 
     /**
-     * Store a value in the pool
+     * Stores a value in the pool.
      *
      * @param object object to store.
      */
@@ -44,7 +44,7 @@ public class MetadataExpressionPool<T> implements AutoCloseable {
     }
 
     /**
-     * Returns true if the pool contains a mapping for this type
+     * Returns whether the pool contains a mapping for this type.
      *
      * @param clazz the class to check the value for
      * @return true if an object was mapped else false
@@ -54,15 +54,15 @@ public class MetadataExpressionPool<T> implements AutoCloseable {
     }
 
     /**
-     * @return The number of objects stored in this pool
+     * @return the number of objects stored in this pool
      */
     public int size() {
         return data.size();
     }
 
     /**
-     * Close all objects implementing the {@link AutoCloseable} interface and
-     * clear the map
+     * Tries to close all objects implementing the {@link AutoCloseable} interface, and
+     * clears the map.
      */
     @Override
     public void close() {

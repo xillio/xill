@@ -18,9 +18,9 @@ public interface RegexService {
      * @param value   the haystack
      * @param timeout in seconds
      * @return the matcher
-     * @throws FailedToGetMatcherException
-     * @throws IllegalArgumentException
-     * @throws PatternSyntaxException
+     * @throws FailedToGetMatcherException  Is thrown when the matcher fails.
+     * @throws IllegalArgumentException     Is thrown when an illegal argument is passed to the regular expression.
+     * @throws PatternSyntaxException       Is thrown when the regular expression has a syntax error.
      */
     Matcher getMatcher(String regex, String value, int timeout) throws FailedToGetMatcherException, IllegalArgumentException;
 

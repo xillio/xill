@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public abstract class MetaExpression implements Expression, Processable {
 
     /**
-     * Enable this to get debug information
+     * Enable this to get debug information.
      */
     private static final boolean DEBUG = false;
     private static final Logger LOGGER = Log.get();
@@ -60,11 +60,11 @@ public abstract class MetaExpression implements Expression, Processable {
     }
 
     /**
-     * Get a value from the {@link MetadataExpressionPool}
+     * Gets a value from the {@link MetadataExpressionPool}.
      *
      * @param <T>   the type of object to fetch
-     * @param clazz The type of class to fetch. <b>Note</b> that this doesn't take inheritance into account.
-     * @return The stored value or null if none was found
+     * @param clazz the type of class to fetch. <b>Note</b> that this doesn't take inheritance into account.
+     * @return the stored value or null if none was found
      * @throws IllegalStateException if this expression has been closed
      */
     public <T extends MetadataExpression> T getMeta(final Class<T> clazz) {
@@ -79,9 +79,9 @@ public abstract class MetaExpression implements Expression, Processable {
     }
 
     /**
-     * Store a value in the {@link MetadataExpressionPool} and default the key to the class of the object as returned by {@link Object#getClass()}
+     * Stores a value in the {@link MetadataExpressionPool} and default the key to the class of the object as returned by {@link Object#getClass()}.
      *
-     * @param object The object to store
+     * @param object the object to store
      * @throws IllegalStateException if this expression has been closed
      */
     @SuppressWarnings("unchecked")
@@ -97,7 +97,7 @@ public abstract class MetaExpression implements Expression, Processable {
     }
 
     /**
-     * Check if this expression has a class in its metadata.
+     * Checks if this expression has a class in its metadata.
      *
      * @param clazz the class to check
      * @return true if and only if a class has been found that implements or extends the class to check
@@ -107,9 +107,9 @@ public abstract class MetaExpression implements Expression, Processable {
     }
 
     /**
-     * Set the value of this variable to an {@link ExpressionDataType#ATOMIC} value
+     * Sets the value of this variable to an {@link ExpressionDataType#ATOMIC} value.
      *
-     * @param value The {@link ExpressionDataType#ATOMIC} value to store
+     * @param value the {@link ExpressionDataType#ATOMIC} value to store
      * @return self
      * @throws IllegalStateException if this expression has been closed
      */
@@ -123,9 +123,9 @@ public abstract class MetaExpression implements Expression, Processable {
     }
 
     /**
-     * Set the value of this expression to that of another one
+     * Sets the value of this expression to that of another one.
      *
-     * @param value The other {@link MetaExpression} to copy the value from
+     * @param value the other {@link MetaExpression} to copy the value from
      * @return this
      * @throws IllegalStateException if this expression has been closed
      */
@@ -139,7 +139,7 @@ public abstract class MetaExpression implements Expression, Processable {
     }
 
     /**
-     * Set the value of this variable to a {@link ExpressionDataType#LIST} value
+     * Sets the value of this variable to a {@link ExpressionDataType#LIST} value.
      *
      * @param value the {@link ExpressionDataType#LIST} to set the value to
      * @return self
@@ -155,7 +155,7 @@ public abstract class MetaExpression implements Expression, Processable {
     }
 
     /**
-     * Set the value of this variable to an {@link ExpressionDataType#OBJECT} value
+     * Sets the value of this variable to an {@link ExpressionDataType#OBJECT} value.
      *
      * @param value in a linked hash map to enforce order
      * @return self
@@ -172,8 +172,9 @@ public abstract class MetaExpression implements Expression, Processable {
 
     /**
      * <p>
-     * Get the contained value of this {@link MetaExpression}. The return type of this method will be different for each type of {@link ExpressionDataType} which can be found by calling
-     * {@link #getType()}.
+     * Gets the contained value of this {@link MetaExpression}.
+     * The return type of this method will be different for each type of {@link ExpressionDataType},
+     * which can be found by calling {@link #getType()}:
      * </p>
      * <ul>
      * <li>{@link ExpressionDataType#ATOMIC}: Returns an {@link Expression}</li>
@@ -197,7 +198,7 @@ public abstract class MetaExpression implements Expression, Processable {
 
     /**
      * <p>
-     * Returns the type of data stored in this {@link MetaExpression}
+     * Returns the type of data stored in this {@link MetaExpression}:
      * </p>
      * <ul>
      * <li>{@link ExpressionDataType#ATOMIC}: A single value</li>
@@ -217,10 +218,10 @@ public abstract class MetaExpression implements Expression, Processable {
 
     /**
      * <p>
-     * Generate the JSON representation of this expression using a {@link JsonParser} parser.
+     * Generates the JSON representation of this expression using a {@link JsonParser} parser.
      * </p>
      * <b>NOTE: </b> This is not the string value of this expression. It is
-     * JSON. For the string value use {@link MetaExpression#getStringValue()}
+     * JSON. For the string value use {@link MetaExpression#getStringValue()}.
      *
      * @return JSON representation
      */
@@ -235,13 +236,13 @@ public abstract class MetaExpression implements Expression, Processable {
 
     /**
      * <p>
-     * Generate the JSON representation of this expression using a {@link JsonParser}.
+     * Generates the JSON representation of this expression using a {@link JsonParser}.
      * </p>
      * <p>
-     * <b>NOTE: </b> This is not the string value of this expression. It is JSON. For the string value use {@link MetaExpression#getStringValue()}
+     * <b>NOTE: </b> This is not the string value of this expression. It is JSON. For the string value use {@link MetaExpression#getStringValue()}.
      * </p>
      *
-     * @param jsonParser The gson parser that should be used
+     * @param jsonParser the json parser that should be used
      * @return JSON representation
      * @throws JsonException if the value cannot be parsed by the JsonParser
      */
@@ -275,9 +276,9 @@ public abstract class MetaExpression implements Expression, Processable {
     }
 
     /**
-     * Check equality to other {@link MetaExpression}
+     * Checks equality on meta expression on the value level. This uses the equals method.
      *
-     * @param other the other
+     * @param other the other meta expression
      * @return true if and only if the expressions have equal value
      */
     public boolean valueEquals(final MetaExpression other) {
@@ -421,8 +422,8 @@ public abstract class MetaExpression implements Expression, Processable {
     }
 
     /**
-     * Register a reference to this variable.
-     * This generally only happens during assignment
+     * Registers a reference to this variable.
+     * This generally only happens during assignment.
      */
     public final void registerReference() {
         // When this variable is assigned, take over ownership
@@ -430,8 +431,8 @@ public abstract class MetaExpression implements Expression, Processable {
     }
 
     /**
-     * Release a reference to this expression
-     * This generally only happens at the end of scope
+     * Releases a reference to this expression.
+     * This generally only happens at the end of scope.
      */
     public final void releaseReference() {
         referenceCount--;
@@ -442,21 +443,21 @@ public abstract class MetaExpression implements Expression, Processable {
     }
 
     /**
-     * Prevent this expression from being disposed.
+     * Prevents this expression from being disposed.
      */
     public final void preventDisposal() {
         setPreventDispose(true);
     }
 
     /**
-     * @return true if disposal is being prevented.
+     * @return whether disposal is being prevented.
      */
     public final boolean isDisposalPrevented() {
         return preventDispose;
     }
 
     /**
-     * Allow this expression to be disposed.
+     * Allows this expression to be disposed.
      */
     public final void allowDisposal() {
         setPreventDispose(false);
@@ -482,7 +483,7 @@ public abstract class MetaExpression implements Expression, Processable {
     }
 
     /**
-     * @return true if this expression has been closed using {@link MetaExpression#close()}
+     * @return whether this expression has been closed using {@link #close()}
      */
     public final boolean isClosed() {
         return isClosed;
@@ -519,7 +520,7 @@ public abstract class MetaExpression implements Expression, Processable {
 
 
     /**
-     * Dispose all items in the {@link MetadataExpressionPool}
+     * Disposes all items in the {@link MetadataExpressionPool}.
      */
     protected void closeMetaPool() {
         if (metadataPool != null) {
@@ -528,14 +529,14 @@ public abstract class MetaExpression implements Expression, Processable {
     }
 
     /**
-     * Reset the reference count to 0
+     * Resets the reference count to 0.
      */
     protected void resetReferences() {
         referenceCount = 0;
     }
 
     /**
-     * Attempt to parse an object into a MetaExpression
+     * Attempts to parse an object into a MetaExpression.
      *
      * @param value the object to parse
      * @return a {@link MetaExpression}, not null
@@ -546,7 +547,7 @@ public abstract class MetaExpression implements Expression, Processable {
     }
 
     /**
-     * Attempt to parse an object into a MetaExpression
+     * Attempts to parse an object into a MetaExpression.
      *
      * @param value                      the object to parse
      * @param metaExpressionDeserializer a specialized deserializer for plugin specific MetaExpressions

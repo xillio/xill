@@ -10,7 +10,7 @@ import nl.xillio.xill.services.json.PrettyJsonParser;
 import org.slf4j.Logger;
 
 /**
- * This module is the main module that will run for the injector at runtime.
+ * This is the main module that will run for the injector at runtime.
  *
  * @author Thomas Biesaart
  */

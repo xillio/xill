@@ -25,7 +25,7 @@ public abstract class BaseDateConstruct extends Construct {
      *
      * @param dateVar The expression
      * @param name    The name of the parameter
-     * @return
+     * @return        The date.
      */
     protected static Date getDate(final MetaExpression dateVar, final String name) {
         Date date = dateVar.getMeta(Date.class);
@@ -38,6 +38,8 @@ public abstract class BaseDateConstruct extends Construct {
     }
 
     /**
+     * Get the current date and time.
+     *
      * @return the current {@link ZonedDateTime}
      */
     protected static ZonedDateTime now() {
@@ -47,8 +49,8 @@ public abstract class BaseDateConstruct extends Construct {
     /**
      * Create a {@link MetaExpression} from {@link ZonedDateTime}
      *
-     * @param date
-     * @return
+     * @param date    The provided date object from to retrieve the value.
+     * @return        The date value.
      */
     protected static MetaExpression fromValue(final Date date) {
         MetaExpression value = fromValue(date.toString());

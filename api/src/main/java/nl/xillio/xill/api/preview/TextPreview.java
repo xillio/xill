@@ -9,7 +9,7 @@ import nl.xillio.xill.api.data.MetadataExpression;
  */
 public interface TextPreview extends MetadataExpression {
     /**
-     * Render a plain text preview of this object.
+     * Renders a plain text preview of this object.
      *
      * @return the preview
      */

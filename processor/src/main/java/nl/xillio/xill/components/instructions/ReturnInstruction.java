@@ -17,9 +17,9 @@ public class ReturnInstruction extends Instruction {
     private final Processable value;
 
     /**
-     * Create a new {@link ReturnInstruction}
+     * Create a new {@link ReturnInstruction}.
      *
-     * @param processable
+     * @param processable    Pass the object to be returned.
      */
     public ReturnInstruction(final Processable processable) {
         value = processable;

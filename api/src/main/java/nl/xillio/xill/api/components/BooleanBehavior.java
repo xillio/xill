@@ -16,7 +16,7 @@ class BooleanBehavior extends AbstractBehavior {
     private final boolean value;
 
     /**
-     * Create a new {@link BooleanBehavior}
+     * Default constructor.
      *
      * @param value the value to set the boolean to
      */
