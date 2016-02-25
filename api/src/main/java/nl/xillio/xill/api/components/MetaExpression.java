@@ -249,6 +249,10 @@ public abstract class MetaExpression implements Expression, Processable {
         return jsonParser.toJson((Object) extractValue(this));
     }
 
+    public Number getSize(){
+        return null;
+    }
+
     @Override
     public boolean equals(final Object obj) {
         // First check if these objects are the same instance

@@ -40,4 +40,9 @@ class ListExpression extends CollectionExpression {
     public Number getNumberValue() {
         return Double.NaN;
     }
+
+    @Override
+    public Number getSize(){
+        return value.size();
+    }
 }

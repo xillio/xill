@@ -52,4 +52,9 @@ public class ObjectExpression extends CollectionExpression {
         return Double.NaN;
     }
 
+    @Override
+    public Number getSize(){
+        return value.size();
+    }
+
 }
