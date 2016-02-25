@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file
 ### Fix
 - List append operator not working [CTC-1417]
 - Collection size wrong in debugger pane [CTC-1418]
+- Unclear error message when variable used in function is declared after function call [CTC-1388]
 
 ## [3.3.2] - 24-02-2016
 ### Change
