@@ -29,7 +29,7 @@ public interface Searchable {
     int getOccurrences();
 
     /**
-     * Find the next occurrence.
+     * Finds the next occurrence.
      *
      * @param next the zero-based index of the next occurrence.
      */
