@@ -62,7 +62,7 @@ public class VariableDeclaration extends Instruction {
         if (!valueStack.isEmpty()) {
             return valueStack.peek();
         }
-        return null;
+        return ExpressionBuilder.NULL;
     }
 
     /**
@@ -71,9 +71,13 @@ public class VariableDeclaration extends Instruction {
      * @param value
      */
     public void replaceVariable(final MetaExpression value) {
-        MetaExpression current = valueStack.pop();
-        pushVariable(value);
-        current.releaseReference();
+        if (hasValue()){
+            MetaExpression current = valueStack.pop();
+            pushVariable(value);
+            current.releaseReference();
+        }else{
+            throw new RobotRuntimeException("Reference to unknown variable '" + getName() +"', could not assign value.");
+        }
     }
 
     /**
