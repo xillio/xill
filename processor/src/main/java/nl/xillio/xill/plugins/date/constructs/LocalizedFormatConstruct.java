@@ -14,12 +14,12 @@ import java.time.format.FormatStyle;
 import java.util.Locale;
 
 /**
- * converts the date to a string using the provided Language tag if no tag is given the pattern "yyyy-MM-dd HH:mm:ss" is used.
- * If the parameters 'timestyle' and 'datestyle' are both null, it will use the FormatStyle MEDIUM.
- * If only 'timestyle' is null, it will return the date. if only 'datestyle' is null. it will return the time.
+ * Converts the date to a string using the provided Language tag. If no tag is given the pattern "yyyy-MM-dd HH:mm:ss" is used.
+ * If the parameters 'timeStyle' and 'dateStyle' are both null, it will use the FormatStyle MEDIUM.
+ * If only 'timeStyle' is null, it will return the date. if only 'dateStyle' is null. it will return the time.
  * if both are not null it will return the date and time;
  * <p>
- * timestyle and datestyle have to be 'full','long','medium' or 'short'.
+ * timeStyle and dateStyle have to be 'full','long','medium' or 'short'.
  *
  * @author Sander
  */
