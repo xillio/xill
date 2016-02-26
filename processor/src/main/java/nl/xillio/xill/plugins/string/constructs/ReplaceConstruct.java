@@ -40,8 +40,8 @@ public class ReplaceConstruct extends Construct {
                 new Argument("text", ATOMIC),
                 new Argument("needle", ATOMIC),
                 new Argument("replacement", ATOMIC),
-                new Argument("useregex", TRUE, ATOMIC),
-                new Argument("replaceall", TRUE, ATOMIC),
+                new Argument("useRegex", TRUE, ATOMIC),
+                new Argument("replaceAll", TRUE, ATOMIC),
                 new Argument("timeout", fromValue(RegexConstruct.REGEX_TIMEOUT), ATOMIC)};
 
         return new ConstructProcessor(a -> process(a, regexService, stringService), args);

@@ -29,8 +29,8 @@ public class LocalizedFormatConstruct extends BaseDateConstruct {
     public ConstructProcessor prepareProcess(final ConstructContext context) {
 
         return new ConstructProcessor((dateVar, localeVar, dateStyleVar, timeStyleVar) -> process(dateVar, localeVar, dateStyleVar, timeStyleVar, getDateService()),
-                new Argument("date"), new Argument("format", NULL), new Argument("datestyle", NULL),
-                new Argument("timestyle", NULL));
+                new Argument("date"), new Argument("format", NULL), new Argument("dateStyle", NULL),
+                new Argument("timeStyle", NULL));
     }
 
     static MetaExpression process(final MetaExpression dateVar,
