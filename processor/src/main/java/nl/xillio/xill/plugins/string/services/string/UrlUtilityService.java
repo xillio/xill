@@ -6,6 +6,7 @@ import nl.xillio.xill.plugins.string.StringXillPlugin;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.regex.PatternSyntaxException;
 
 /**
@@ -25,11 +26,11 @@ public interface UrlUtilityService {
     /**
      * Reads a file to a byte array given a filename.
      *
-     * @param fileName The name of the file we want to read.
+     * @param fileNamePath The name of the file we want to read.
      * @return A bytearray with content.
      * @throws IOException  Is thrown when a file(-related) operation fails.
      */
-    byte[] readFileToByteArray(File fileName) throws IOException;
+    byte[] readFileToByteArray(Path fileNamePath) throws IOException;
 
     /**
      * Tries to convert the relativeUrl using the pageUrl
