@@ -16,6 +16,7 @@ import nl.xillio.xill.plugins.stream.utils.StreamUtils;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+import java.util.regex.Pattern;
 
 /**
  * Read text from a plain text file using the given encoding.
@@ -24,6 +25,7 @@ import java.nio.file.Path;
  */
 @Singleton
 public class GetTextConstruct extends Construct {
+    private static final Pattern LEADING_BOM_PATTERN = Pattern.compile("^\uFEFF+");
 
     private final FileStreamFactory fileStreamFactory;
     private final IOUtilsService ioUtilsService;
@@ -51,7 +53,7 @@ public class GetTextConstruct extends Construct {
         String text = toString(buildStream(path), charset);
 
         // Remove leading BOM characters.
-        text = text.replaceAll("^\uFEFF+", "");
+        text = LEADING_BOM_PATTERN.matcher(text).replaceFirst("");
 
         return fromValue(text);
     }
