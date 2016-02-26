@@ -20,7 +20,6 @@ import java.util.LinkedHashMap;
  */
 @Singleton
 public class CopyConstruct extends Construct {
-
     @Inject
     private FileUtilities fileUtils;
 
