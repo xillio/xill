@@ -26,11 +26,11 @@ public interface UrlUtilityService {
     /**
      * Reads a file to a byte array given a filename.
      *
-     * @param fileNamePath The name of the file we want to read.
-     * @return A bytearray with content.
+     * @param filePath The path to the file we want to read.
+     * @return A byteArray with content.
      * @throws IOException  Is thrown when a file(-related) operation fails.
      */
-    byte[] readFileToByteArray(Path fileNamePath) throws IOException;
+    byte[] readFileToByteArray(Path filePath) throws IOException;
 
     /**
      * Tries to convert the relativeUrl using the pageUrl

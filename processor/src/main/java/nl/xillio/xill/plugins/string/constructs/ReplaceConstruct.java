@@ -16,9 +16,9 @@ import java.util.regex.PatternSyntaxException;
 
 /**
  * Returns a new string in which occurrences of regex needle found in the text
- * have been replaced by the replacement string. If the parameter 'replaceall'
+ * have been replaced by the replacement string. If the parameter 'replaceAll'
  * is set to false, the routine will only replace the first occurrence. If the
- * parameter 'useregex' is set to false, the routine will not use a regex.
+ * parameter 'useRegex' is set to false, the routine will not use a regex.
  *
  * @author Sander
  */
@@ -79,6 +79,5 @@ public class ReplaceConstruct extends Construct {
             return fromValue(stringService.replaceAll(text, needle, replacement));
         }
         return fromValue(stringService.replaceFirst(text, needle, replacement));
-
     }
 }
