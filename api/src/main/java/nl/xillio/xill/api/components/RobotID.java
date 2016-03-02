@@ -6,7 +6,7 @@ import java.util.Hashtable;
 import java.util.Map;
 
 /**
- *
+ * A unique identifier for robots.
  */
 public class RobotID implements Serializable {
     private static Map<String, RobotID> ids = new Hashtable<>();
@@ -60,6 +60,11 @@ public class RobotID implements Serializable {
         return projectPath;
     }
 
+    /**
+     * Used in tests to create a dummy ID.
+     *
+     * @return a dummy IDfor testing.
+     */
     public static RobotID dummyRobot() {
         return new RobotID(new File("."), new File("."));
     }

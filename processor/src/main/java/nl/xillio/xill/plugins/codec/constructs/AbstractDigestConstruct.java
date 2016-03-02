@@ -127,6 +127,7 @@ public abstract class AbstractDigestConstruct extends Construct {
      * Create a new digest that can be used for processing.
      *
      * @return the digest
+     * @throws NoSuchAlgorithmException is thrown if no algorithm is found
      */
     protected abstract MessageDigest getDigest() throws NoSuchAlgorithmException;
 }

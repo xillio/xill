@@ -1,12 +1,12 @@
 package nl.xillio.xill.api.preview;
 
 /**
- * Interface for an object of which content can be searched.
+ * An object of which content can be searched.
  */
 public interface Searchable {
 
     /**
-     * Search the object using a regular expression.
+     * Searches the object using a regular expression.
      *
      * @param pattern       regular expression to search the component against
      * @param caseSensitive whether the search should take case into account
@@ -14,7 +14,7 @@ public interface Searchable {
     void searchPattern(String pattern, boolean caseSensitive);
 
     /**
-     * Search the object for occurrences of the needle.
+     * Searches the object for occurrences of the needle.
      *
      * @param needle        the text to search for
      * @param caseSensitive whether the search should take case into account
@@ -29,21 +29,21 @@ public interface Searchable {
     int getOccurrences();
 
     /**
-     * Find the next occurrence.
+     * Finds the next occurrence.
      *
-     * @param next The zero-based index of the next occurrence.
+     * @param next the zero-based index of the next occurrence.
      */
     void findNext(int next);
 
     /**
-     * Find the previous occurrence.
+     * Finds the previous occurrence.
      *
-     * @param previous The zero-based index of the previous occurrence.
+     * @param previous the zero-based index of the previous occurrence.
      */
     void findPrevious(int previous);
 
     /**
-     * Clear the search and any highlights.
+     * Clears the search and any highlights.
      */
     void clearSearch();
 }

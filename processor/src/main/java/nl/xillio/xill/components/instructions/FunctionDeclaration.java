@@ -23,8 +23,8 @@ public class FunctionDeclaration extends Instruction {
     /**
      * Create a new {@link FunctionDeclaration}
      *
-     * @param instructions
-     * @param parameters
+     * @param instructions    The instructions associated with the function.
+     * @param parameters      The function parameters.
      */
     public FunctionDeclaration(final InstructionSet instructions, final List<VariableDeclaration> parameters) {
         this.instructions = instructions;
@@ -41,12 +41,12 @@ public class FunctionDeclaration extends Instruction {
     }
 
     /**
-     * Run the actual code
+     * Run the actual code.
      *
-     * @param debugger
-     * @param arguments
+     * @param debugger     Contains all of the debugging information relevant for the function declaration.
+     * @param arguments    The arguments passed to the robot.
      * @return The flow result
-     * @throws RobotRuntimeException
+     * @throws RobotRuntimeException    Is thrown when an exception occurs during robot execution.
      */
     public InstructionFlow<MetaExpression> run(final Debugger debugger, final List<MetaExpression> arguments)
             throws RobotRuntimeException {

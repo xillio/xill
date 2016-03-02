@@ -4,7 +4,7 @@ import nl.xillio.xill.api.components.Instruction;
 import nl.xillio.xill.api.components.RobotID;
 
 /**
- * This class contains all information on what happened when a robot paused
+ * This class contains all information on what happened when a robot got paused.
  */
 public class RobotPausedAction {
     private final Instruction instruction;

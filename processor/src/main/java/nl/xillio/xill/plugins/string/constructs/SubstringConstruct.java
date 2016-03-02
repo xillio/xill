@@ -12,7 +12,7 @@ import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 /**
  * <p>
  * Returns the substring of text between position start and position end.
- * <p>
+ * </p>
  * <p>
  * If the end position equals 0 it will take the full length of the string.
  * </p>

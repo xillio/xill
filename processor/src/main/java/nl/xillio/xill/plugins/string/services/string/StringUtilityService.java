@@ -18,7 +18,7 @@ public interface StringUtilityService {
      *
      * @param input The string to be hashed.
      * @return A hashed string.
-     * @throws NoSuchAlgorithmException
+     * @throws NoSuchAlgorithmException Is thrown when the provided MD5 algorithm could not be found.
      */
     String createMD5Construct(String input) throws NoSuchAlgorithmException;
 
@@ -46,7 +46,7 @@ public interface StringUtilityService {
      * @param text The text we format.
      * @param args The arguments we give.
      * @return Returns the formatted text.
-     * @throws IllegalFormatException
+     * @throws IllegalFormatException   Is thrown when the string formatting fails.
      */
     String format(String text, List<Object> args) throws IllegalFormatException;
 

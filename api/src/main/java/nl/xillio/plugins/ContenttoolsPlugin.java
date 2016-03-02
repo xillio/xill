@@ -8,10 +8,10 @@ import nl.xillio.xill.api.XillEnvironment;
  */
 public interface ContenttoolsPlugin {
     /**
-     * Start the plugin
+     * Starts the plugin.
      *
-     * @param stage The main stage of the UI
-     * @param xill  The Xill entry point
+     * @param stage the main stage of the UI
+     * @param xill  the Xill entry point
      */
     void start(Stage stage, XillEnvironment xill);
 }

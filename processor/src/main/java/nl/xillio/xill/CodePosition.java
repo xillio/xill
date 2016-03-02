@@ -11,8 +11,10 @@ public class CodePosition {
     private final int lineNumber;
 
     /**
-     * @param robot
-     * @param lineNumber
+     * Create a new {@link CodePosition}-object.
+     *
+     * @param robot         the robot from which we would like to know the position.
+     * @param lineNumber    the line number on which code has stopped execution.
      */
     public CodePosition(final RobotID robot, final int lineNumber) {
         this.robot = robot;
@@ -20,6 +22,8 @@ public class CodePosition {
     }
 
     /**
+     * Get the line number of the robot.
+     *
      * @return the lineNumber
      */
     public int getLineNumber() {
@@ -27,6 +31,8 @@ public class CodePosition {
     }
 
     /**
+     * Get the robot.
+     *
      * @return the robot
      */
     public RobotID getRobotID() {

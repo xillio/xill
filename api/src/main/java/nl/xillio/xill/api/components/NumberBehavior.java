@@ -16,7 +16,7 @@ class NumberBehavior extends AbstractBehavior {
     private final Number value;
 
     /**
-     * Create a new {@link NumberBehavior}
+     * Default creator.
      *
      * @param value the value to set
      */

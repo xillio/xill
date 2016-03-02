@@ -5,8 +5,7 @@ import nl.xillio.xill.api.components.Robot;
 import java.util.UUID;
 
 /**
- * This class represents the object passed to all listeners when a robot is
- * stopped.
+ * This class represents the object passed to all listeners when a robot is stopped.
  */
 public class RobotStoppedAction {
 
@@ -14,7 +13,7 @@ public class RobotStoppedAction {
     private final UUID compilerSerialID;
 
     /**
-     * Create a new {@link RobotStoppedAction}
+     * Default constructor.
      *
      * @param robot            the robot that stopped
      * @param compilerSerialID the serial id of the compile job

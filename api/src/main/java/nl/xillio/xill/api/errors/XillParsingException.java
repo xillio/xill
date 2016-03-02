@@ -4,15 +4,14 @@ import nl.xillio.xill.api.LanguageFactory;
 import nl.xillio.xill.api.components.RobotID;
 
 /**
- * This {@link Exception} is generally thrown when the {@link LanguageFactory} was unable to generate a program tree from the provide token tree.
+ * This {@link Exception} is generally thrown when the {@link LanguageFactory} was unable to generate a program tree from the provided token tree.
  */
 public class XillParsingException extends Exception {
-    private static final long serialVersionUID = 62988736232220717L;
     private final int line;
     private final RobotID robot;
 
     /**
-     * Create a {@link XillParsingException} with a message
+     * Creates a {@link XillParsingException} with a message.
      *
      * @param message the message to display
      * @param line    the line where the error occurred
@@ -25,7 +24,7 @@ public class XillParsingException extends Exception {
     }
 
     /**
-     * Create a {@link XillParsingException} with a cause
+     * Creates a {@link XillParsingException} with a message and a cause.
      *
      * @param message the message to display
      * @param line    the line where the error occurred
@@ -39,14 +38,14 @@ public class XillParsingException extends Exception {
     }
 
     /**
-     * @return the line
+     * @return the line where the exception occurred
      */
     public int getLine() {
         return line;
     }
 
     /**
-     * @return the robot
+     * @return the robot in which the exception occured
      */
     public RobotID getRobot() {
         return robot;

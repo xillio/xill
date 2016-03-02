@@ -84,9 +84,9 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
     /**
      * Create a new {@link XillProgramFactory}
      *
-     * @param plugins
-     * @param debugger
-     * @param robotID
+     * @param plugins     list of xill plug-ins.
+     * @param debugger    debugger object necessary for processing the robot.
+     * @param robotID     the robot.
      */
     public XillProgramFactory(final List<XillPlugin> plugins, final Debugger debugger,
                               final RobotID robotID) {
@@ -96,9 +96,9 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
     /**
      * Create a new {@link XillProgramFactory}
      *
-     * @param plugins
-     * @param debugger
-     * @param robotID
+     * @param plugins  list of xill plug-ins.
+     * @param debugger debugger object necessary for processing the robot.
+     * @param robotID  the robot.
      * @param verbose  verbose logging for the compiler
      */
     public XillProgramFactory(final List<XillPlugin> plugins, final Debugger debugger, final RobotID robotID,
