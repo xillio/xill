@@ -1,7 +1,9 @@
 # Xill IDE - Change Log
 All notable changes to this project will be documented in this file
 
-## [3.3.4] - unreleased
+## [3.3.5] - unreleased
+
+## [3.3.4] - 3-3-2016
 ### Add
 - possibility to deprecate constructs [CTC-1297]
 
