@@ -66,7 +66,7 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
      * @param robotFile     the robot file
      * @param plugins       the plugins
      * @param debugger      the debugger
-     * @throws IOException
+     * @throws IOException  is thrown if a file(-related) operation fails.
      */
     public XillProcessor(final File projectFolder, final File robotFile, final List<XillPlugin> plugins,
                          final Debugger debugger) throws IOException {
@@ -104,7 +104,7 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
      *
      * @param rootRobot The Root robot
      * @return a list of issues
-     * @throws XillParsingException
+     * @throws XillParsingException     Is thrown when a parsing error occurs.
      */
     public List<Issue> compileAsSubRobot(final RobotID rootRobot) throws XillParsingException {
         synchronized (XillValidator.LOCK) {
@@ -269,17 +269,17 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
         if (issues.isEmpty()) {
             for (EObject object : resource.getContents()) {
                 xill.lang.xill.Robot bot = (xill.lang.xill.Robot) object;
-                Issue issue = checkConstructs(bot.getInstructionSet(), robotID);
-                if (issue != null) {
-                    issues.add(issue);
-                }
+                List<Issue> constructIssues = checkConstructs(bot.getInstructionSet(), robotID);
+                issues.addAll(constructIssues);
             }
         }
         return issues;
     }
 
-    private Issue checkConstructs(InstructionSet instructionSet, RobotID robotID) {
+    private List<Issue> checkConstructs(InstructionSet instructionSet, RobotID robotID) {
         TreeIterator<EObject> iterator = instructionSet.eAllContents();
+
+        List<Issue> issues = new ArrayList<>();
 
         while (iterator.hasNext()) {
             EObject object = iterator.next();
@@ -292,13 +292,20 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
                         .findAny()
                         .orElse(null);
 
-                if (xillPlugin.getConstruct(call.getFunction()) == null) {
-                    INode node = NodeModelUtils.getNode(object);
-                    return new Issue("No construct with name " + call.getFunction() + " was found in package " + plugin, node.getStartLine(), Issue.Type.ERROR, robotID);
+                Construct construct = xillPlugin.getConstruct(call.getFunction());
+                INode node = NodeModelUtils.getNode(object);
+                if (construct == null) {
+                    // Create an error if the construct does not exist
+                    Issue issue = new Issue("No construct with name " + call.getFunction() + " was found in package " + plugin, node.getStartLine(), Issue.Type.ERROR, robotID);
+                    issues.add(issue);
+                }
+                else if(construct.isDeprecated()){
+                    Issue issue = new Issue("Call to deprecated construct with name " + call.getFunction(), node.getStartLine(), Issue.Type.WARNING, robotID);
+                    issues.add(issue);
                 }
             }
         }
-        return null;
+        return issues;
     }
 
     private String getName(UseStatement statement) {

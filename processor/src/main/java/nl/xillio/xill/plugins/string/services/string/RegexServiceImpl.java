@@ -18,7 +18,7 @@ import java.util.stream.IntStream;
 @Singleton
 public class RegexServiceImpl implements RegexService {
     private RegexTimer regexTimer = null;
-    private static Logger logger = Log.get();
+    private static final Logger LOGGER = Log.get();
 
     /**
      * The implementation of the {@link RegexService}
@@ -85,7 +85,7 @@ public class RegexServiceImpl implements RegexService {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    logger.error("Exception while running timer.", e);
+                    LOGGER.error("Exception while running timer.", e);
                 }
                 if (targetTime > 0 && targetTime < System.currentTimeMillis()) {
                     timeout = true;

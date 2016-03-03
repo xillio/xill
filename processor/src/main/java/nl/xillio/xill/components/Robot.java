@@ -34,9 +34,13 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
     private final UUID compilerSerialId;
 
     /**
-     * @param robotID
-     * @param debugger
-     * @param compilerSerialId
+     * Create a {@link Robot}-object.
+     *
+     * @param robotID             The ID of the robot.
+     * @param debugger            The processor associated with the code in this robot.
+     * @param startEvent          The event indicating the start of the execution of a robot.
+     * @param endEvent            The event indicating the halting of a robot.
+     * @param compilerSerialId    Serial ID of the compiler.
      */
     public Robot(final RobotID robotID, final Debugger debugger, EventHost<RobotStartedAction> startEvent, EventHost<RobotStoppedAction> endEvent, UUID compilerSerialId) {
         super(debugger);
@@ -89,7 +93,7 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
     /**
      * Use a BFS algorithm to find a target among the children
      *
-     * @param target
+     * @param target    The item to be found.
      * @return the path to the target or an empty list if the target wasn't
      * found.
      */
@@ -153,7 +157,7 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
     /**
      * Add a library to this robot
      *
-     * @param lib
+     * @param lib    The library to be added.
      */
     public void addLibrary(final Robot lib) {
         libraries.add(lib);

@@ -18,6 +18,7 @@ public interface FilePermissionsProvider {
      *
      * @param file the file
      * @return the permissions or null if no permissions could be extracted
+     * @throws IOException  Is thrown if a failure of the file permissions occurs.
      */
     FilePermissions readPermissions(Path file) throws IOException;
 }

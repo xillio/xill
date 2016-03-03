@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * This class represents an {@link EventEx} with raised permissions
- * This version is thread-safe
+ * This class represents an {@link EventEx} with raised permissions.
+ * This version is thread-safe.
  *
  * @param <T> The type of the parameter for this event
  */
@@ -13,14 +13,14 @@ public class EventHostEx<T> {
     private final EventEx<T> event;
 
     /**
-     * Create a new {@link EventHostEx}
+     * Creates a new {@link EventHostEx}.
      */
     public EventHostEx() {
         this.event = new EventEx<>();
     }
 
     /**
-     * Invoke this event with a given argument.
+     * Invokes this event with a given argument.
      *
      * @param argument an argument
      */
@@ -29,7 +29,7 @@ public class EventHostEx<T> {
     }
 
     /**
-     * Gets a list of listeners.
+     * Gets the list of listeners.
      *
      * @return listeners
      */

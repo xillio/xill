@@ -13,7 +13,7 @@ import static nl.xillio.xill.api.components.ExpressionBuilderHelper.fromValue;
 
 /**
  * <p>
- * This class is the main implementation of the FileResolver
+ * This class is the main implementation of the FileResolver.
  * </p>
  *
  * @author Thomas Biesaart

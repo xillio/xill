@@ -20,8 +20,10 @@ public class NotEquals implements Processable {
     private final Processable right;
 
     /**
-     * @param left
-     * @param right
+     * Create a new {@link NotEquals}-object.
+     *
+     * @param left     The left-hand side of the expression.
+     * @param right    The right-hand side of the expression.
      */
     public NotEquals(final Processable left, final Processable right) {
         this.left = left;

@@ -65,7 +65,7 @@ public class StreamUtils {
      * @param inputStream the input stream
      * @param charset     the character encoding
      * @return the line or null if the
-     * @throws IOException
+     * @throws IOException  Is thrown if a stream(-related) operation fails.
      */
     public static String readLine(BufferedInputStream inputStream, Charset charset) throws IOException {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -157,6 +157,7 @@ public class StreamUtils {
      * @param charset     the encoding that should be used
      * @param limit       the maximum amount of bytes that should be read
      * @return the string
+     * @throws IOException  Is thrown if a stream(-related) operation fails.
      */
     public static String readText(BufferedInputStream inputStream, Charset charset, long limit) throws IOException {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {

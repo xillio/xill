@@ -26,7 +26,7 @@ public class ExpressionInstruction extends Instruction {
     /**
      * Create a new {@link ExpressionInstruction}.
      *
-     * @param expression
+     * @param expression    The expression.
      */
     public ExpressionInstruction(final Processable expression) {
         this.expression = expression;

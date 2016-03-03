@@ -31,16 +31,16 @@ public class StoppableDebugger extends NullDebugger {
     }
 
     /**
-     * @return true if error occurred
+     * @return whether an error occurred
      */
     public boolean hasErrorOccurred() {
         return errorOccurred;
     }
 
     /**
-     * Set the debugger behaviour in a way that if error occurred then stop the running robot
+     * Sets whether the debugger should stop if an error occurs.
      *
-     * @param stopOnError true if robot will stop on error
+     * @param stopOnError whether the robot will stop when an error occurs
      */
     public void setStopOnError(boolean stopOnError) {
         this.stopOnError = stopOnError;

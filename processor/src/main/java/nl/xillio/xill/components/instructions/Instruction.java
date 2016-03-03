@@ -23,9 +23,10 @@ public abstract class Instruction implements nl.xillio.xill.api.components.Instr
 
     /**
      * Set the code position of this instruction.
+     *
      * <b>Note!</b> This value can only be set once!
      *
-     * @param position
+     * @param position The position of the instruction in the code to which it needs to be set.
      */
     public void setPosition(final CodePosition position) {
         if (this.position != null) {

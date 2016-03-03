@@ -20,8 +20,10 @@ public class Or implements Processable {
     private final Processable right;
 
     /**
-     * @param left
-     * @param right
+     * Create a new {@link Or}-object.
+     *
+     * @param left     The left-hand side of the expression.
+     * @param right    The right-hand side of the expression.
      */
     public Or(final Processable left, final Processable right) {
         this.left = left;

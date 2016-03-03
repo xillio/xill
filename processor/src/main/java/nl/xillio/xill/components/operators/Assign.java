@@ -27,7 +27,7 @@ public class Assign implements Processable {
     private final List<Processable> path;
 
     /**
-     * Create a new {@link Assign}
+     * Create a new {@link Assign}.
      *
      * @param variableDeclaration The declaration to assign to
      * @param path                the path to assign to
@@ -146,8 +146,8 @@ public class Assign implements Processable {
     /**
      * Process this {@link Assign} and return the assigned value
      *
-     * @param debugger
-     * @return The assigned value
+     * @param debugger    The debugger object for processing the Assign-object.
+     * @return            The assigned value
      */
     @SuppressWarnings("unchecked")
     public MetaExpression processWithValue(final Debugger debugger) {

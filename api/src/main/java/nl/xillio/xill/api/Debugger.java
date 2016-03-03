@@ -19,53 +19,55 @@ public interface Debugger extends ErrorHandlingPolicy {
     // BREAKPOINTS
 
     /**
-     * pause the robot
+     * Pauses the robot.
      *
-     * @param userAction true when the pause has been invoked by the user stop, false if the reason was caught error/warn
+     * @param userAction {@code true} when the pause has been triggered by the user, {@code false} if the reason was an error or warning
      */
     void pause(boolean userAction);
 
     /**
-     * Stop and kill the current robot
+     * Stops and kills the current robot.
      */
     void stop();
 
     /**
-     * Resume running
+     * Resumes the robot execution.
      */
     void resume();
 
     /**
-     * Step into the current instruction
+     * Steps into the current instruction.
      */
     void stepIn();
 
     /**
-     * Step over to the next instruction
+     * Steps over to the next instruction.
      */
     void stepOver();
 
     /**
-     * @param breakpoint the breakpoint that should be added
+     * Adds a new breakpoint.
+     *
+     * @param breakpoint the breakpoint to add
      */
     void addBreakpoint(final Breakpoint breakpoint);
 
     /**
-     * Replace all the breakpoints in this debugger
+     * Replaces the breakpoints in this debugger with the provided list.
      *
-     * @param breakpoints the breakpoints that should be set
+     * @param breakpoints the list of breakpoints to set
      */
     void setBreakpoints(final List<Breakpoint> breakpoints);
 
     /**
-     * This method is called before processing an instruction
+     * This method is called before processing an instruction.
      *
      * @param instruction the instruction that started
      */
     void startInstruction(final Instruction instruction);
 
     /**
-     * This method is called after an instruction has been processed
+     * This method is called after an instruction has been processed.
      *
      * @param instruction the instruction that ended
      * @param result      the result of the instruction
@@ -79,21 +81,21 @@ public interface Debugger extends ErrorHandlingPolicy {
     void returning(final InstructionSet instructionSet, final InstructionFlow<MetaExpression> result);
 
     /**
-     * This method is called whenever a robot starts
+     * This method is called whenever a robot starts.
      *
      * @param robot the robot that started
      */
     void robotStarted(final Robot robot);
 
     /**
-     * This method is called whenever a robot ends
+     * This method is called whenever a robot ends.
      *
      * @param robot the robot that finished
      */
     void robotFinished(final Robot robot);
 
     /**
-     * Add debugging info
+     * Adds debugging info.
      *
      * @param info the info that should be added
      */
@@ -127,7 +129,7 @@ public interface Debugger extends ErrorHandlingPolicy {
     EventEx<Object> getOnRobotInterrupt();
 
     /**
-     * @return true if the robot should be killed
+     * @return whether the robot should be killed
      */
     boolean shouldStop();
 
@@ -137,12 +139,12 @@ public interface Debugger extends ErrorHandlingPolicy {
      * Returns a list of variable identifiers from the perspective (scope) of an instruction.
      *
      * @param instruction the instruction
-     * @return The variables
+     * @return the variables
      */
     Collection<Object> getVariables(Instruction instruction);
 
     /**
-     * Get the value of a variable, keeping recursivity in mind.
+     * Gets the value of a variable, keeping recursivity in mind.
      *
      * @param identifier    the identifier returned by {@link Debugger#getVariables(Instruction)}
      * @param stackPosition the amount of elements relative to the current stack
@@ -159,7 +161,7 @@ public interface Debugger extends ErrorHandlingPolicy {
     String getVariableName(final Object identifier);
 
     /**
-     * Purge all information
+     * Purges all information.
      */
     void reset();
 
@@ -174,29 +176,29 @@ public interface Debugger extends ErrorHandlingPolicy {
     List<Instruction> getStackTrace();
 
     /**
-     * Instantiate a child debugger
+     * Instantiates a child debugger.
      *
      * @return the debugger
      */
     Debugger createChild();
 
     /**
-     * Removes the child debugger's internal reference
-     * It should be called when the child debugger created by createChild is no longer needed
+     * Removes the child debugger's internal reference.
+     * It should be called when the child debugger created by createChild is no longer needed.
      *
      * @param debugger the child debugger
      */
     void removeChild(final Debugger debugger);
 
     /**
-     * Start processing a function call.
+     * Starts processing a function call.
      *
      * @param functionDeclaration the function
      */
     void startFunction(Processable functionDeclaration);
 
     /**
-     * End the function.
+     * Ends the function.
      *
      * @param functionDeclaration the function
      */
