@@ -2,6 +2,8 @@
 All notable changes to this project will be documented in this file
 
 ## [3.3.4] - unreleased
+### Add
+- possibility to deprecate constructs [CTC-1297]
 
 ## [3.3.3] - 25-02-2016
 ### Fix

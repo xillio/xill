@@ -147,4 +147,15 @@ public abstract class Construct extends ExpressionBuilderHelper implements HelpC
     public boolean hideDocumentation() {
         return false;
     }
+
+    /**
+     * Determines if this construct is deprecated.
+     *
+     * Looks for an {@link Deprecated} annotation by default.
+     *
+     * @return True if this construct is deprecated, false if not
+     */
+    public boolean isDeprecated(){
+        return getClass().isAnnotationPresent(Deprecated.class);
+    }
 }
