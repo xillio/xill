@@ -104,7 +104,7 @@ public class LocalizedFormatConstructTest {
      * @param dateStyleExpression Sate style String MetaExpression
      * @param timeStyleExpression Time style String MetaExpression
      */
-    @Test(dataProvider = "wrongStyle", expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "^.*style\\shas\\sto\\sbe\\s'full','long','medium'\\sor\\s'short'.*$")
+    @Test(dataProvider = "wrongStyle", expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "^.*Style\\shas\\sto\\sbe\\s'full','long','medium'\\sor\\s'short'.*$")
     public void testProcessWrongFormat(MetaExpression dateStyleExpression, MetaExpression timeStyleExpression) {
         // Mock
         DateService dateService = mock(DateService.class);

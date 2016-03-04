@@ -47,7 +47,7 @@ public class LocalizedFormatConstruct extends BaseDateConstruct {
             try {
                 dateStyle = FormatStyle.valueOf(dateStyleVar.getStringValue().toUpperCase());
             } catch (IllegalArgumentException e) {
-                throw new RobotRuntimeException("DateStyle has to be 'full','long','medium' or 'short'.", e);
+                throw new RobotRuntimeException("dateStyle has to be 'full','long','medium' or 'short'.", e);
             }
         }
 
@@ -57,7 +57,7 @@ public class LocalizedFormatConstruct extends BaseDateConstruct {
             try {
                 timeStyle = FormatStyle.valueOf(timeStyleVar.getStringValue().toUpperCase());
             } catch (IllegalArgumentException e) {
-                throw new RobotRuntimeException("TimeStyle has to be 'full','long','medium' or 'short'.", e);
+                throw new RobotRuntimeException("timeStyle has to be 'full','long','medium' or 'short'.", e);
             }
         }
 
