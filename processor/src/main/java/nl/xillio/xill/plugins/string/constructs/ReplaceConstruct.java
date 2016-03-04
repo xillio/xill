@@ -70,9 +70,9 @@ public class ReplaceConstruct extends Construct {
                 }
                 return fromValue(regexService.replaceFirst(m, replacement));
             } catch (PatternSyntaxException e) {
-                throw new RobotRuntimeException("Invalid pattern in regex()");
+                throw new RobotRuntimeException("Invalid pattern in regex()", e);
             } catch (IllegalArgumentException | FailedToGetMatcherException e) {
-                throw new RobotRuntimeException("Error while executing the regex");
+                throw new RobotRuntimeException("Error while executing the regex", e);
             }
         }
         if (replaceall) {
