@@ -58,17 +58,14 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
         List<Instruction> processedInstructions = new ArrayList<>();
 
         for (Instruction instruction : instructions) {
+            if (!instruction.preventDebugging()) {
+                debugger.startInstruction(instruction);
+            }
 
             if (debugger.shouldStop()) {
                 processResult = InstructionFlow.doReturn(ExpressionBuilderHelper.NULL);
                 break;
             }
-
-            if (!instruction.preventDebugging()) {
-                debugger.startInstruction(instruction);
-            }
-
-
 
             InstructionFlow<MetaExpression> result = processInstruction(instruction, debugger);
             processedInstructions.add(instruction);
