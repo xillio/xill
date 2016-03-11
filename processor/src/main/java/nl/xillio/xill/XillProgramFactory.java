@@ -163,7 +163,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
         while (!functionParameterExpressions.isEmpty()) {
             Entry<xill.lang.xill.FunctionDeclaration, FunctionParameterExpression> pair = functionParameterExpressions
                     .pop();
-            paseToken(pair.getKey(), pair.getValue());
+            parseToken(pair.getKey(), pair.getValue());
         }
 
         // Push all libraries
@@ -995,7 +995,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
         declaration.initialize(functionDeclaration, arguments);
     }
 
-    private void paseToken(final xill.lang.xill.FunctionDeclaration key, final FunctionParameterExpression expression) {
+    private void parseToken(final xill.lang.xill.FunctionDeclaration key, final FunctionParameterExpression expression) {
 
         FunctionDeclaration functionDeclaration = functions.get(key);
         expression.setFunction(functionDeclaration);
