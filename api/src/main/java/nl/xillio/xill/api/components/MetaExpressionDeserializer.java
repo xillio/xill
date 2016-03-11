@@ -7,10 +7,11 @@ package nl.xillio.xill.api.components;
  * @author Titus Nachbauer
  */
 public interface MetaExpressionDeserializer {
+
     MetaExpression parseObject(Object object);
 
     /**
-     * Provides a null implementation.
+     * A null implementation.
      */
     MetaExpressionDeserializer NULL = a -> null;
 }

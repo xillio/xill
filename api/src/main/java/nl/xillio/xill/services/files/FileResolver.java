@@ -9,7 +9,7 @@ import java.nio.file.Path;
 
 /**
  * <p>
- * This interface describes a service that will resolve files from RobotIDs and paths
+ * This interface describes a service that will resolve files from RobotIDs and paths.
  * </p>
  *
  * @author Thomas Biesaart
@@ -18,7 +18,7 @@ import java.nio.file.Path;
 @ImplementedBy(FileResolverImpl.class)
 public interface FileResolver {
     /**
-     * Resolve a file using the general file system rules
+     * Resolves a file using the general file system rules.
      *
      * @param context the robot to resolve the file for
      * @param path    the path expression

@@ -62,24 +62,28 @@ public class VariableDeclaration extends Instruction {
         if (!valueStack.isEmpty()) {
             return valueStack.peek();
         }
-        return null;
+        return ExpressionBuilder.NULL;
     }
 
     /**
-     * Set the value of the variable
+     * Set the value of the variable.
      *
-     * @param value
+     * @param value    The value to which the variable needs to be set.
      */
     public void replaceVariable(final MetaExpression value) {
-        MetaExpression current = valueStack.pop();
-        pushVariable(value);
-        current.releaseReference();
+        if (hasValue()){
+            MetaExpression current = valueStack.pop();
+            pushVariable(value);
+            current.releaseReference();
+        }else{
+            throw new RobotRuntimeException("Reference to unknown variable '" + getName() +"', could not assign value.");
+        }
     }
 
     /**
      * Set the value of the variable without popping the last one
      *
-     * @param value
+     * @param value    The value of the variable.
      */
     public void pushVariable(final MetaExpression value) {
         value.registerReference();
@@ -94,8 +98,10 @@ public class VariableDeclaration extends Instruction {
     }
 
     /**
-     * @param position
-     * @param name
+     * A variable declared to be null.
+     *
+     * @param position    The position in code where the null variable occurs.
+     * @param name        The name of the variable that is declared to be null.
      * @return A declaration with value {@link ExpressionBuilder#NULL}
      */
     public static VariableDeclaration nullDeclaration(final CodePosition position, final String name) {

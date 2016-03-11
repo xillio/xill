@@ -27,7 +27,7 @@ public interface UrlUtilityService {
      *
      * @param fileName The name of the file we want to read.
      * @return A bytearray with content.
-     * @throws IOException
+     * @throws IOException  Is thrown when a file(-related) operation fails.
      */
     byte[] readFileToByteArray(File fileName) throws IOException;
 
@@ -37,8 +37,8 @@ public interface UrlUtilityService {
      * @param pageUrl     The pageUrl.
      * @param relativeUrl The relativeUrl.
      * @return A converted relativeUrl as a string.
-     * @throws IllegalArgumentException
-     * @throws PatternSyntaxException
+     * @throws IllegalArgumentException Is thrown when an illegal argument has been provided.
+     * @throws PatternSyntaxException   Is thrown when the relative URL cannot be converted.
      */
     String tryConvert(final String pageUrl, final String relativeUrl) throws IllegalArgumentException;
 
@@ -47,8 +47,8 @@ public interface UrlUtilityService {
      *
      * @param fileName The name of the file.
      * @param output   The output to write.
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws FileNotFoundException    Is thrown when the provided file is not found.
+     * @throws IOException              Is thrown when a file(-related) operation fails.
      */
     void write(File fileName, byte[] output) throws IOException;
 

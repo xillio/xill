@@ -13,22 +13,13 @@ import java.util.Map.Entry;
 @Singleton
 public class DuplicateImpl implements Duplicate {
 
-    @SuppressWarnings("unchecked")
     @Override
     public Object duplicate(final Object input) {
-        Object copy = new Object();
-        if (input instanceof List<?>) {
-            copy = deepCopyList(input, new IdentityHashMap<>()); // input is a list.
-        } else {
-            copy = deepCopyList(input, new IdentityHashMap<>());
-            //copy = deepCopyMap(input,new IdentityHashMap<>()); // input is an object
-        }
-        return copy;
+        return deepCopyList(input, new IdentityHashMap<>());
     }
 
     @SuppressWarnings("unchecked")
     private Object deepCopyList(Object input, IdentityHashMap<Object, Object> results) {
-        List<Object> copy = new ArrayList<Object>();
         if (results.containsKey(input)) {
             return results.get(input);
         }

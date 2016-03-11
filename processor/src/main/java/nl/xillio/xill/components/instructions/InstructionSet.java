@@ -25,7 +25,7 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
     /**
      * Create a new {@link InstructionSet} in debugging mode
      *
-     * @param debugger
+     * @param debugger    The debugger object necessary for processing the instruction.
      */
     public InstructionSet(final Debugger debugger) {
         this.debugger = debugger;
@@ -34,7 +34,7 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
     /**
      * Add an instruction to the instructionSet
      *
-     * @param instruction
+     * @param instruction    The instruction to be added to the InstructionSet object.
      */
     public void add(final Instruction instruction) {
         instruction.setHostInstruction(this);
@@ -130,7 +130,7 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
      * Run only declarations.
      * This is required to run functions in this robot as a library.
      *
-     * @throws RobotRuntimeException
+     * @throws RobotRuntimeException Is thrown if an exception occurs when running a robot.
      */
     public void initialize() throws RobotRuntimeException {
         for (Instruction instruction : instructions) {

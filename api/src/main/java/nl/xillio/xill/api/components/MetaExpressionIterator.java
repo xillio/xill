@@ -8,15 +8,15 @@ import java.util.function.Function;
 
 /**
  * This Iterator represents a type of metadata that can be stored in an ATOMIC MetaExpression. Whenever a foreach
- * construction loops over an ATOMIC value holding this element it will iterate over all the values in this
- * MetaExpressionIterator instead
+ * construction loops over an ATOMIC value holding this element, it will iterate over all the values in this
+ * MetaExpressionIterator instead.
  */
 public class MetaExpressionIterator<E> implements Iterator<MetaExpression>, MetadataExpression, AutoCloseable {
     private final Iterator<E> iterator;
     private final Function<E, MetaExpression> transformer;
 
     /**
-     * Create a new MetaExpressionIterator from a source and a transformation
+     * Creates a new metaExpression iterator from a source and a transformation.
      *
      * @param source      the source Iterator
      * @param transformer the function used to transform the elements of the source to usable MetaExpression

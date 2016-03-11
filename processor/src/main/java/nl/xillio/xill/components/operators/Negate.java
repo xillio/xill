@@ -19,7 +19,9 @@ public class Negate implements Processable {
     private final Processable value;
 
     /**
-     * @param value
+     * Create a new {@link Negate}-object.
+     *
+     * @param value    The value to be negated.
      */
     public Negate(final Processable value) {
         this.value = value;

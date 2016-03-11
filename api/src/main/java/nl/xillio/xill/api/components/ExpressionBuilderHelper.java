@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.function.Function;
 
 /**
- * This class contains various useful utility functions to create Expressions
+ * This class contains various useful utility functions to create Expressions.
  */
 public class ExpressionBuilderHelper {
 
@@ -40,47 +40,47 @@ public class ExpressionBuilderHelper {
     public static final MetaExpression NULL = new ImmutableLiteral(NullLiteral.Instance);
 
     /**
-     * Create a new expression containing binary data
+     * Creates a new expression containing binary data.
      *
      * @param value the value of the expression
-     * @return expression
+     * @return the expression
      */
     public static MetaExpression fromValue(final IOStream value) {
         return buildAtomicOrNull(value, BinaryBehavior::new);
     }
 
     /**
-     * Create a new expression containing a number
+     * Creates a new expression containing a number.
      *
      * @param value the value of the expression
-     * @return expression
+     * @return the expression
      */
     public static MetaExpression fromValue(final Number value) {
         return buildAtomicOrNull(value, NumberBehavior::new);
     }
 
     /**
-     * Create a new expression containing a boolean
+     * Creates a new expression containing a boolean.
      *
      * @param value the value of the expression
-     * @return expression
+     * @return the expression
      */
     public static MetaExpression fromValue(final boolean value) {
         return value ? TRUE : FALSE;
     }
 
     /**
-     * Create a new expression containing a string
+     * Creates a new expression containing a string.
      *
      * @param value the value of the expression
-     * @return expression
+     * @return the expression
      */
     public static MetaExpression fromValue(final String value) {
         return fromValue(value, false);
     }
 
     /**
-     * Create a new constant expression.
+     * Creates a new constant expression.
      *
      * @param value      the value
      * @param isConstant true if this expression should be a string constant
@@ -94,7 +94,8 @@ public class ExpressionBuilderHelper {
     }
 
     /**
-     * Create a new {@link ExpressionDataType#LIST} containing a value. For empty lists you can use {@link ExpressionBuilderHelper#emptyList()}
+     * Creates a new {@link ExpressionDataType#LIST} containing a value.
+     * For empty lists you can use {@link ExpressionBuilderHelper#emptyList()}.
      *
      * @param value the value of the expression
      * @return the expression
@@ -104,7 +105,8 @@ public class ExpressionBuilderHelper {
     }
 
     /**
-     * Create a new {@link ExpressionDataType#OBJECT} containing a value. For empty lists you can use {@link ExpressionBuilderHelper#emptyObject()}
+     * Creates a new {@link ExpressionDataType#OBJECT} containing a value.
+     * For empty lists you can use {@link ExpressionBuilderHelper#emptyObject()}.
      *
      * @param value the value of the expression
      * @return the expression
@@ -114,7 +116,7 @@ public class ExpressionBuilderHelper {
     }
 
     /**
-     * Create a new {@link ListExpression} with no values
+     * Creates a new {@link ListExpression} with no values (empty List).
      *
      * @return the expression
      */
@@ -123,7 +125,7 @@ public class ExpressionBuilderHelper {
     }
 
     /**
-     * Create a new {@link ObjectExpression} with no values
+     * Creates a new {@link ObjectExpression} with no values.
      *
      * @return the expression
      */
@@ -132,7 +134,7 @@ public class ExpressionBuilderHelper {
     }
 
     /**
-     * A shortcut to {@link MetaExpression#extractValue(MetaExpression)}
+     * A shortcut to {@link MetaExpression#extractValue(MetaExpression)}.
      *
      * @param expression The expression to extract Java objects from
      * @return The value specified in
@@ -144,7 +146,7 @@ public class ExpressionBuilderHelper {
     }
 
     /**
-     * A shortcut to {@link MetaExpression#parseObject(Object)}
+     * A shortcut to {@link MetaExpression#parseObject(Object)}.
      *
      * @param value the object to parse into a {@link MetaExpression}
      * @return the {@link MetaExpression} not null
@@ -168,12 +170,12 @@ public class ExpressionBuilderHelper {
     }
 
     /**
-     * This {@link Expression} represents a null in literal form
+     * This {@link Expression} represents a null in literal form.
      */
     private static final class NullLiteral extends AbstractBehavior {
 
         /**
-         * The single instance of the null literal
+         * The single instance of the null literal.
          */
         static final NullLiteral Instance = new NullLiteral();
 
@@ -182,7 +184,7 @@ public class ExpressionBuilderHelper {
 
         @Override
         public Number getNumberValue() {
-            return 0;
+            return Double.NaN;
         }
 
         @Override

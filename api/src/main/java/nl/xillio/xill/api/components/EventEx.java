@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 
 /**
  * This class allows other classes to subscribe to an event that can be fired by the {@link EventHostEx}.
- * This version is thread-safe
+ * This version is thread-safe.
  *
  * @param <T> the type of the argument passed to this event
  */
@@ -18,7 +18,7 @@ public class EventEx<T> {
     private List<Consumer<T>> listeners = new ArrayList<>();
 
     /**
-     * Adds a listener to the event.
+     * Registers a listener to the event.
      *
      * @param listener the listener to add
      */
@@ -40,7 +40,7 @@ public class EventEx<T> {
     }
 
     /**
-     * Invoke this event with a given argument.
+     * Invokes this event with a given argument.
      *
      * @param argument an argument
      */
@@ -49,7 +49,7 @@ public class EventEx<T> {
     }
 
     /**
-     * Gets a list of listeners.
+     * Gets the list of registered listeners.
      *
      * @return listeners
      */

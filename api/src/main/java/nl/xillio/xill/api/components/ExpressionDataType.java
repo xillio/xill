@@ -1,19 +1,19 @@
 package nl.xillio.xill.api.components;
 
 /**
- * This enum represents the type of variable
+ * This enum represents the type of variables.
  */
 public enum ExpressionDataType {
     /**
-     * Single value. (Number, String, Boolean)
+     * Atomic value (Number, String, Boolean).
      */
     ATOMIC,
     /**
-     * A list of values
+     * A list of values.
      */
     LIST,
     /**
-     * An object with named fields
+     * An object with named fields.
      */
     OBJECT;
 
@@ -27,10 +27,10 @@ public enum ExpressionDataType {
     private static ExpressionDataType[] values = values();
 
     /**
-     * Returns the {@link ExpressionDataType} corresponding to the provided ordinal
+     * Returns the expression datatype corresponding to the provided ordinal.
      *
      * @param ordinal the ordinal
-     * @return the {@link ExpressionDataType}
+     * @return one of {@link #ATOMIC}, {@link #LIST}, {@link #OBJECT}
      */
     public static ExpressionDataType get(int ordinal) {
         return values[ordinal];

@@ -10,14 +10,15 @@ import java.util.List;
 import java.util.function.Supplier;
 
 /**
- * This is a utility class that will build expressions from values when processed. This is generally used to create representations of the literal values at runtime.
+ * This is a utility class that will build expressions from values when processed.
+ * This is generally used to create representations of the literal values at runtime.
  */
 public class ExpressionBuilder extends ExpressionBuilderHelper implements Processable {
 
     private final Supplier<MetaExpression> expressionSupplier;
 
     /**
-     * Create a new {@link ExpressionBuilder} that will produce a Number
+     * Creates a new expression builder that will produce a Number.
      *
      * @param value the value to set
      */
@@ -26,7 +27,7 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
     }
 
     /**
-     * Create a new {@link ExpressionBuilder} that will produce a string
+     * Creates a new expression builder that will produce a string.
      *
      * @param value the value to set
      */
@@ -35,17 +36,17 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
     }
 
     /**
-     * Create a new {@link ExpressionBuilder} that will produce a string
+     * Creates a new expression builder that will produce a string.
      *
      * @param value      the value to set
-     * @param isConstant set this to true to create a string constant
+     * @param isConstant whether to create a string constant
      */
     public ExpressionBuilder(final String value, final boolean isConstant) {
         expressionSupplier = () -> fromValue(value, isConstant);
     }
 
     /**
-     * Create a new {@link ExpressionBuilder} that will produce a List
+     * Creates a new expression builder that will produce a List.
      *
      * @param value the value to set
      */
@@ -54,10 +55,10 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
     }
 
     /**
-     * Create a new {@link ExpressionBuilder} that will produce a List
+     * Creates a new expression builder that will produce a List.
      *
      * @param value    the value to set
-     * @param debugger The debugger to use
+     * @param debugger the debugger to use
      */
     public ExpressionBuilder(final List<Processable> value, final Debugger debugger) {
         expressionSupplier = () -> {
@@ -72,7 +73,7 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
     }
 
     /**
-     * Create a new {@link ExpressionBuilder} that will produce an object
+     * Creates a new expression builder that will produce an object.
      *
      * @param value    the value to set
      * @param debugger the debugger
@@ -88,7 +89,7 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
     }
 
     /**
-     * Create a new {@link ExpressionBuilder} that will produce a double
+     * Creates a new expression builder that will produce a double.
      *
      * @param value the value to set
      */

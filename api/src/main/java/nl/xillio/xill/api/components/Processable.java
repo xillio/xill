@@ -6,12 +6,12 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import java.util.Collection;
 
 /**
- * This interface represents an object that can be processed
+ * This interface represents an object that can be processed.
  */
 public interface Processable {
 
     /**
-     * Process this object
+     * Processes this object.
      *
      * @param debugger The debugger that should be used when processing this
      * @return The return value is there is one
@@ -20,7 +20,7 @@ public interface Processable {
     public InstructionFlow<MetaExpression> process(Debugger debugger) throws RobotRuntimeException;
 
     /**
-     * Collect all {@link Processable} used by this one. This is used to search through program trees
+     * Collects all {@link Processable} used by this one. This is used to search through program trees.
      *
      * @return all Children
      */

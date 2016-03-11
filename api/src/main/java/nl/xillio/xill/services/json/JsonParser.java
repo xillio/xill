@@ -10,7 +10,7 @@ import nl.xillio.xill.services.XillService;
  */
 public interface JsonParser extends XillService {
     /**
-     * Parse an object to json.
+     * Parses an object to json.
      *
      * @param object the object to parse
      * @return a json string
@@ -19,7 +19,7 @@ public interface JsonParser extends XillService {
     String toJson(Object object) throws JsonException;
 
     /**
-     * Parse a {@link MetaExpression} to a json {@link String}.
+     * Parses a {@link MetaExpression} to a json string.
      *
      * @param metaExpression the expression
      * @return a json string
@@ -28,7 +28,7 @@ public interface JsonParser extends XillService {
     String toJson(MetaExpression metaExpression) throws JsonException;
 
     /**
-     * Parse a json string to an object.
+     * Parses a json string to an object.
      *
      * @param <T>  the type of object to build
      * @param json the json string

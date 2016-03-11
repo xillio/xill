@@ -12,15 +12,16 @@ The iterator returns an object containing various pieces of information about th
             <code>
                 use File;
                 use System;
+
                 var iterator = File.iterateFolders("C:/Users");
                 foreach(folder in iterator) {
                     System.print(folder);
                 }
             </code>
             <header>Will print</header>
-            <p>
-                INFO: {"path":"C:\\Users\\Public","canRead":1,"canWrite":1,"isAccessible":1,"parent":"C:\\Users"}
-            </p>
+            <code>
+                INFO: {"path":"C:\\Users\\Public","canRead":true,"canWrite":true,"isAccessible":true,"parent":"C:\\Users"}
+            </code>
         </example>
     </examples>
     <references>

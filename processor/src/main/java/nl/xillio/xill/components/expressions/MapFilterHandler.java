@@ -73,9 +73,9 @@ public abstract class MapFilterHandler implements Processable, FunctionParameter
 
 
     /**
-     * Set the function parameter
+     * Set the function parameter.
      *
-     * @param functionDeclaration
+     * @param functionDeclaration   the value to which the function declaration needs to be set.
      */
     @Override
     public void setFunction(final FunctionDeclaration functionDeclaration) {

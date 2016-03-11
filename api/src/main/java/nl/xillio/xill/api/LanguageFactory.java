@@ -11,23 +11,23 @@ import nl.xillio.xill.api.errors.XillParsingException;
  */
 public interface LanguageFactory<T> {
     /**
-     * Process a token into a {@link Robot} which can be processed
+     * Processes a token into a {@link Robot} which can be processed.
      *
-     * @param token   The token that should be processed
+     * @param token   the token that should be processed
      * @param robotID the id that should be set for the robot
      * @throws XillParsingException when the robot cannot be parsed
      */
     public void parse(final T token, final RobotID robotID) throws XillParsingException;
 
     /**
-     * Finish compiling
+     * Finishes compiling.
      *
      * @throws XillParsingException when the robot cannot be compiled
      */
     public void compile() throws XillParsingException;
 
     /**
-     * Get a compiled robot
+     * Gets a compiled robot.
      *
      * @param token the token used to compile the robot
      * @return the compiled robot for that token or null if none was found

@@ -20,8 +20,10 @@ public final class And implements Processable {
     private final Processable right;
 
     /**
-     * @param left
-     * @param right
+     * The constructor to create a new {@link And}-object.
+     *
+     * @param left     The left-hand side of the expression.
+     * @param right    The right-hand side of the expression.
      */
     public And(final Processable left, final Processable right) {
         this.left = left;

@@ -1,27 +1,28 @@
 package nl.xillio.xill.api.errors;
 
 /**
- * This {@link Exception} is generally thrown when something goes wrong during processing
+ * This {@link Exception} is generally thrown when something goes wrong during processing.
  */
 public class RobotRuntimeException extends RuntimeException {
-    private static final long serialVersionUID = -2417475642600377589L;
 
     /**
-     * Create a new {@link RobotRuntimeException}
+     * Constructs a new exception with the specified detail message.
+     * The cause is not initialized, and may subsequently be initialized by a call to initCause.
      *
-     * @param message the message to display
-     * @param cause   the exception that caused this
+     * @param message the message
+     */
+    public RobotRuntimeException(final String message) {
+        this(message, null);
+    }
+
+    /**
+     * Constructs a new exception with the specified detail message and cause.
+     *
+     * @param message the detail message
+     * @param cause the cause
      */
     public RobotRuntimeException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    /**
-     * Create a new {@link RobotRuntimeException} without a Throwable cause
-     *
-     * @param message the message to display
-     */
-    public RobotRuntimeException(final String message) {
-        this(message, null);
-    }
 }

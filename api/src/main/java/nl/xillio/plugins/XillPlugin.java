@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * This class represents the base for all Xill plugins
+ * This class represents the base for all Xill plugins.
  */
 public abstract class XillPlugin extends AbstractModule implements AutoCloseable {
     private static final Logger LOGGER = Log.get();
@@ -28,7 +28,7 @@ public abstract class XillPlugin extends AbstractModule implements AutoCloseable
     private Injector injector;
 
     /**
-     * Create a new {@link XillPlugin} and set the default name
+     * Creates a new {@link XillPlugin} and sets the default name.
      */
     public XillPlugin() {
         // Set the default name
@@ -41,14 +41,13 @@ public abstract class XillPlugin extends AbstractModule implements AutoCloseable
     }
 
     /**
-     * Configure bindings for Injection.
+     * Configures bindings for Injection.
      */
     public void configure() {
-
     }
 
     /**
-     * Get a construct from this package
+     * Gets a construct from this package.
      *
      * @param name the name of the construct
      * @return the construct or null if none was found for the provided name
@@ -63,7 +62,8 @@ public abstract class XillPlugin extends AbstractModule implements AutoCloseable
     }
 
     /**
-     * By default the name of a {@link XillPlugin} is the concrete implementation name acquired using {@link Class#getSimpleName()} without the {@link XillPlugin} suffix
+     * By default, the name of a {@link XillPlugin} is the concrete implementation name acquired using {@link Class#getSimpleName()}
+     * without the {@link XillPlugin} suffix.
      *
      * @return the name of the package
      */
@@ -72,9 +72,9 @@ public abstract class XillPlugin extends AbstractModule implements AutoCloseable
     }
 
     /**
-     * Add a construct to the package
+     * Adds a construct to the package.
      *
-     * @param construct the construct to be added
+     * @param construct the construct to add
      * @throws IllegalArgumentException when a construct with the same name already exists
      */
     protected final void add(final Construct construct) throws IllegalArgumentException {
@@ -89,8 +89,7 @@ public abstract class XillPlugin extends AbstractModule implements AutoCloseable
     }
 
     /**
-     * Add constructs to the package.
-     * This is a shortcut to calling {@link #add(Construct)} multiple times.
+     * Adds constructs to the package.
      *
      * @param constructs the constructs to add the the list
      * @throws IllegalArgumentException when a construct with the same name already exists
@@ -105,8 +104,7 @@ public abstract class XillPlugin extends AbstractModule implements AutoCloseable
     }
 
     /**
-     * Add constructs to the package.
-     * This is a shortcut to calling {@link #add(Construct)} multiple times.
+     * Adds a list of constructs to the package.
      *
      * @param constructs the constructs to add to the list
      * @throws IllegalArgumentException when a construct with the same name already exists
@@ -119,7 +117,7 @@ public abstract class XillPlugin extends AbstractModule implements AutoCloseable
     }
 
     /**
-     * Remove all constructs from this package and call the {@link AutoCloseable#close()} on all constructs that implement it.
+     * Removes all constructs from this package and call {@link AutoCloseable#close()} on all constructs that implements it.
      */
     protected final void purge() {
         getConstructs().stream()
@@ -136,7 +134,9 @@ public abstract class XillPlugin extends AbstractModule implements AutoCloseable
     }
 
     /**
-     * @return Returns the version of the package
+     * Returns the version of the package.
+     *
+     * @return the version of the package
      */
     public String getVersion() {
         return getClass().getPackage().getImplementationVersion();
@@ -148,7 +148,7 @@ public abstract class XillPlugin extends AbstractModule implements AutoCloseable
     }
 
     /**
-     * Load all the constructs in the package
+     * Loads all the constructs in the package.
      */
     public final void initialize() {
         loadingConstructs = true;
@@ -157,7 +157,7 @@ public abstract class XillPlugin extends AbstractModule implements AutoCloseable
     }
 
     /**
-     * This is where the package can add all the constructs. If this method is not overridden it will load all constructs in the subpackage 'construct'
+     * This is where the package can add all the constructs. If this method is not overridden it will load all constructs in the subpackage 'construct'.
      */
     public void loadConstructs() {
         //Load all constructs
