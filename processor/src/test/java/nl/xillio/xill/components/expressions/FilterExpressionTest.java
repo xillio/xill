@@ -13,6 +13,7 @@ import org.testng.annotations.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.mockito.Mockito.mock;
 import static org.testng.Assert.assertEquals;
@@ -43,6 +44,17 @@ public class FilterExpressionTest extends TestUtils {
         MetaExpressionIterator iterator = result.getMeta(MetaExpressionIterator.class);
 
         assertFalse(iterator.hasNext());
+    }
+
+    @Test(expectedExceptions = NoSuchElementException.class)
+    public void testException() {
+        MapExpression expression = new MapExpression(NULL);
+        expression.setFunction(new IsEvenFunction());
+
+        MetaExpression result = expression.process(mock(Debugger.class)).get();
+        MetaExpressionIterator iterator = result.getMeta(MetaExpressionIterator.class);
+
+        iterator.next();
     }
 
     private class IsEvenFunction extends FunctionDeclaration {

@@ -1,7 +1,10 @@
 package nl.xillio.xill.components.expressions;
 
 import nl.xillio.xill.api.Debugger;
-import nl.xillio.xill.api.components.*;
+import nl.xillio.xill.api.components.InstructionFlow;
+import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.components.Processable;
+import nl.xillio.xill.api.components.WrappingIterator;
 import nl.xillio.xill.components.instructions.FunctionDeclaration;
 
 import java.util.Collections;
@@ -44,10 +47,8 @@ public class MapExpression extends PipelineExpression {
         @Override
         protected MetaExpression transformItem(MetaExpression item) {
             InstructionFlow<MetaExpression> result = function.run(debugger, Collections.singletonList(item));
-            if (result.hasValue()) {
-                return result.get();
-            }
-            return ExpressionBuilder.NULL;
+
+            return result.get();
         }
     }
 }

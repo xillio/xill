@@ -5,7 +5,6 @@ import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.components.WrappingIterator;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.components.instructions.FunctionDeclaration;
 
 import java.util.Arrays;
@@ -32,13 +31,13 @@ abstract class PipelineExpression implements Processable, FunctionParameterExpre
     }
 
     @Override
-    public InstructionFlow<MetaExpression> process(Debugger debugger) throws RobotRuntimeException {
+    public InstructionFlow<MetaExpression> process(Debugger debugger) {
         // Evaluate the input argument
-        MetaExpression input = this.input.process(debugger).get();
+        MetaExpression inputValue = input.process(debugger).get();
 
         // Wrap it
-        MetaExpression result = fromValue(String.format("%s(%s)", describe(), input.getStringValue()));
-        result.storeMeta(wrap(input, functionDeclaration, debugger));
+        MetaExpression result = fromValue(String.format("%s(%s)", describe(), inputValue.getStringValue()));
+        result.storeMeta(wrap(inputValue, functionDeclaration, debugger));
         return InstructionFlow.doResume(result);
     }
 
