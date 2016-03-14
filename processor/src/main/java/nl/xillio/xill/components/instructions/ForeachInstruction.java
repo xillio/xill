@@ -63,6 +63,9 @@ public class ForeachInstruction extends CompoundInstruction {
         listInstruction.setHostInstruction(getHostInstruction());
         listInstruction.setPosition(getPosition());
         debugger.startInstruction(listInstruction);
+        if (debugger.shouldStop()) {
+            instructionSet.stop();
+        }
         InstructionFlow<MetaExpression> flow = listInstruction.process(debugger);
         debugger.endInstruction(listInstruction, flow);
 

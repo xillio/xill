@@ -61,6 +61,10 @@ public class WhileInstruction extends CompoundInstruction {
 
     private boolean check(Debugger debugger) {
         debugger.startInstruction(condition);
+        if (debugger.shouldStop()) {
+            instructionSet.stop();
+            return false;
+        }
         InstructionFlow<MetaExpression> result = condition.process(debugger);
         MetaExpression expression = result.get();
         expression.registerReference();

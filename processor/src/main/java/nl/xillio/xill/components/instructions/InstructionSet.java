@@ -25,7 +25,7 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
     /**
      * Create a new {@link InstructionSet} in debugging mode
      *
-     * @param debugger    The debugger object necessary for processing the instruction.
+     * @param debugger The debugger object necessary for processing the instruction.
      */
     public InstructionSet(final Debugger debugger) {
         this.debugger = debugger;
@@ -34,7 +34,7 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
     /**
      * Add an instruction to the instructionSet
      *
-     * @param instruction    The instruction to be added to the InstructionSet object.
+     * @param instruction The instruction to be added to the InstructionSet object.
      */
     public void add(final Instruction instruction) {
         instruction.setHostInstruction(this);
@@ -58,12 +58,17 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
         List<Instruction> processedInstructions = new ArrayList<>();
 
         for (Instruction instruction : instructions) {
+            if (debugger.shouldStop()) {
+                stop();
+                break;
+            }
+
             if (!instruction.preventDebugging()) {
                 debugger.startInstruction(instruction);
             }
 
             if (debugger.shouldStop()) {
-                processResult = InstructionFlow.doReturn(ExpressionBuilderHelper.NULL);
+                stop();
                 break;
             }
 
@@ -111,6 +116,13 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
         }
 
         return InstructionFlow.doResume();
+    }
+    /**
+     * Stop the instructionSet
+     */
+    public void stop() {
+        InstructionFlow<MetaExpression> processResult = InstructionFlow.doReturn(ExpressionBuilderHelper.NULL);
+        debugger.returning(this, processResult);
     }
 
     private InstructionFlow<MetaExpression> processInstruction(Instruction instruction, Debugger debugger) {

@@ -20,8 +20,8 @@ public class IfInstruction extends CompoundInstruction {
     /**
      * Create a new {@link IfInstruction}
      *
-     * @param condition         The condition passed to the if-instruction.
-     * @param instructionSet    Relevant for processing the if-instruction.
+     * @param condition      The condition passed to the if-instruction.
+     * @param instructionSet Relevant for processing the if-instruction.
      */
     public IfInstruction(final Processable condition, final InstructionSet instructionSet) {
         this.condition = condition;
@@ -40,6 +40,10 @@ public class IfInstruction extends CompoundInstruction {
             conditionInstruction.setHostInstruction(getHostInstruction());
             conditionInstruction.setPosition(getPosition());
             debugger.startInstruction(conditionInstruction);
+            if (debugger.shouldStop()) {
+                instructionSet.stop();
+                return false;
+            }
             InstructionFlow<MetaExpression> result = conditionInstruction.process(debugger);
             result.get().registerReference();
             debugger.endInstruction(conditionInstruction, result);
