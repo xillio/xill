@@ -17,9 +17,11 @@ import nl.xillio.xill.components.expressions.CallbotExpression;
 import nl.xillio.xill.components.expressions.ConstructCall;
 import nl.xillio.xill.components.expressions.FilterExpression;
 import nl.xillio.xill.components.expressions.FunctionCall;
-import nl.xillio.xill.components.expressions.*;
+import nl.xillio.xill.components.expressions.FunctionParameterExpression;
 import nl.xillio.xill.components.expressions.MapExpression;
+import nl.xillio.xill.components.expressions.PeekExpression;
 import nl.xillio.xill.components.expressions.RunBulkExpression;
+import nl.xillio.xill.components.expressions.*;
 import nl.xillio.xill.components.instructions.BreakInstruction;
 import nl.xillio.xill.components.instructions.ContinueInstruction;
 import nl.xillio.xill.components.instructions.*;
@@ -50,6 +52,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.function.Function;
 
 /**
  * This class is responsible for processing the Robot token into a functional
@@ -1004,43 +1007,44 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
     /**
      * Parse a {@link MapExpression}
      *
-     * @param token
-     * @return
-     * @throws XillParsingException
+     * @param token the token
+     * @return the expression
+     * @throws XillParsingException if a compile error occurs
      */
     Processable parseToken(final xill.lang.xill.MapExpression token) throws XillParsingException {
-        if (token.getArguments().size() > 1) {
-            CodePosition pos = pos(token);
-            throw new XillParsingException("Too many arguments were provided.", pos.getLineNumber(), pos.getRobotID());
-        }
-        Processable argument = parse(token.getArguments().get(0));
-
-        MapExpression map = new MapExpression(argument);
-
-        functionParameterExpressions.push(new SimpleEntry<>(token.getFunction(), map));
-
-        return map;
+        return parseFunctionParameter(token, MapExpression::new);
     }
 
     /**
      * Parse a {@link FilterExpression}
      *
-     * @param token
-     * @return
-     * @throws XillParsingException
+     * @param token the token
+     * @return the expression
+     * @throws XillParsingException if a compile error occurs
      */
     Processable parseToken(final xill.lang.xill.FilterExpression token) throws XillParsingException {
-        if (token.getArguments().size() > 1) {
-            CodePosition pos = pos(token);
-            throw new XillParsingException("Too many arguments were provided.", pos.getLineNumber(), pos.getRobotID());
-        }
-        Processable argument = parse(token.getArguments().get(0));
+        return parseFunctionParameter(token, FilterExpression::new);
+    }
 
-        FilterExpression filter = new FilterExpression(argument);
+    /**
+     * Parse a {@link PeekExpression}
+     *
+     * @param token the token
+     * @return the expression
+     * @throws XillParsingException if a compile error occurs
+     */
+    Processable parseToken(final xill.lang.xill.PeekExpression token) throws XillParsingException {
+        return parseFunctionParameter(token, PeekExpression::new);
+    }
 
-        functionParameterExpressions.push(new SimpleEntry<>(token.getFunction(), filter));
+    private Processable parseFunctionParameter(xill.lang.xill.FunctionParameterExpression token, Function<Processable, FunctionParameterExpression> constructor) throws XillParsingException {
+        Processable argument = parse(token.getArguments());
 
-        return filter;
+        FunctionParameterExpression result = constructor.apply(argument);
+
+        functionParameterExpressions.push(new SimpleEntry<>(token.getFunction(), result));
+
+        return result;
     }
 
     /**
