@@ -84,9 +84,9 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
     /**
      * Create a new {@link XillProgramFactory}
      *
-     * @param plugins     list of xill plug-ins.
-     * @param debugger    debugger object necessary for processing the robot.
-     * @param robotID     the robot.
+     * @param plugins  list of xill plug-ins.
+     * @param debugger debugger object necessary for processing the robot.
+     * @param robotID  the robot.
      */
     public XillProgramFactory(final List<XillPlugin> plugins, final Debugger debugger,
                               final RobotID robotID) {
@@ -958,7 +958,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
         }
 
         // Check whether a construct is deprecated (has a Deprecated annotation) and log a warning if this is the case
-        if (construct.isDeprecated()){
+        if (construct.isDeprecated()) {
             context.getRootLogger().warn("Call to deprecated construct with name \"{}\" at {}", construct.getName(), pos.toString());
         }
 

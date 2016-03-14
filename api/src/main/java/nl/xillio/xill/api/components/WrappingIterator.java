@@ -1,6 +1,10 @@
 package nl.xillio.xill.api.components;
 
-import java.util.Iterator;
+import nl.xillio.xill.api.errors.NotImplementedException;
+
+import java.util.*;
+
+import static nl.xillio.xill.api.components.ExpressionBuilderHelper.fromValue;
 
 /**
  * This class represents a base implementation of an iterator that contains a child expression. This child should be
@@ -13,8 +17,39 @@ public abstract class WrappingIterator extends MetaExpressionIterator<MetaExpres
 
     private final MetaExpression host;
 
+    private static Iterator<MetaExpression> iterate(MetaExpression expression) {
+        if (expression.isNull()) {
+            return Collections.emptyIterator();
+        }
+
+        switch (expression.getType()) {
+            case ATOMIC:
+                if (expression.hasMeta(MetaExpressionIterator.class)) {
+                    return expression.getMeta(MetaExpressionIterator.class);
+                }
+                return Collections.singletonList(expression).iterator();
+            case LIST:
+                return expression.<List<MetaExpression>>getValue().iterator();
+            case OBJECT:
+                return expression.<Map<String, MetaExpression>>getValue()
+                        .entrySet()
+                        .stream()
+                        .map(WrappingIterator::mapEntry)
+                        .iterator();
+            default:
+                throw new NotImplementedException("An unknown type " + expression.getType() + " was passed");
+        }
+
+    }
+
+    private static MetaExpression mapEntry(Map.Entry<String, MetaExpression> entry) {
+        LinkedHashMap<String, MetaExpression> result = new LinkedHashMap<>();
+        result.put(entry.getKey(), entry.getValue());
+        return fromValue(result);
+    }
+
     public WrappingIterator(MetaExpression host) {
-        this(host, host.getMeta(MetaExpressionIterator.class));
+        this(host, iterate(host));
     }
 
     public WrappingIterator(MetaExpression host, Iterator<MetaExpression> source) {
