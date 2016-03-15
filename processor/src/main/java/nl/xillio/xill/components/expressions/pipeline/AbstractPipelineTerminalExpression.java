@@ -5,7 +5,6 @@ import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.components.WrappingIterator;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -24,7 +23,7 @@ public abstract class AbstractPipelineTerminalExpression implements Processable 
     }
 
     @Override
-    public InstructionFlow<MetaExpression> process(Debugger debugger) throws RobotRuntimeException {
+    public InstructionFlow<MetaExpression> process(Debugger debugger) {
         MetaExpression iterableValue = input.process(debugger).get();
 
         return InstructionFlow.doResume(reduce(iterableValue, debugger));
