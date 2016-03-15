@@ -42,6 +42,21 @@ public abstract class WrappingIterator extends MetaExpressionIterator<MetaExpres
 
     }
 
+    /**
+     * Create a simple implementation of the WrappingIterator that will not touch the elements themselves.
+     *
+     * @param input the iterable input
+     * @return the iterator
+     */
+    public static WrappingIterator identity(MetaExpression input) {
+        return new WrappingIterator(input) {
+            @Override
+            protected MetaExpression transformItem(MetaExpression item) {
+                return item;
+            }
+        };
+    }
+
     private static MetaExpression mapEntry(Map.Entry<String, MetaExpression> entry) {
         LinkedHashMap<String, MetaExpression> result = new LinkedHashMap<>();
         result.put(entry.getKey(), entry.getValue());
@@ -66,7 +81,7 @@ public abstract class WrappingIterator extends MetaExpressionIterator<MetaExpres
     protected abstract MetaExpression transformItem(MetaExpression item);
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         host.releaseReference();
     }
 }

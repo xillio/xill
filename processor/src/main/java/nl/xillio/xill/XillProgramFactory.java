@@ -22,6 +22,10 @@ import nl.xillio.xill.components.expressions.MapExpression;
 import nl.xillio.xill.components.expressions.PeekExpression;
 import nl.xillio.xill.components.expressions.RunBulkExpression;
 import nl.xillio.xill.components.expressions.*;
+import nl.xillio.xill.components.expressions.parallel.CollectTerminalExpression;
+import nl.xillio.xill.components.expressions.parallel.ConsumeTerminalExpression;
+import nl.xillio.xill.components.expressions.parallel.ForeachTerminalExpression;
+import nl.xillio.xill.components.expressions.parallel.ReduceTerminalExpression;
 import nl.xillio.xill.components.instructions.BreakInstruction;
 import nl.xillio.xill.components.instructions.ContinueInstruction;
 import nl.xillio.xill.components.instructions.*;
@@ -1037,15 +1041,60 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
         return parseFunctionParameter(token, PeekExpression::new);
     }
 
+    /**
+     * Parse a {@link ForeachExpression}
+     *
+     * @param token the token
+     * @return the expression
+     * @throws XillParsingException if a compile error occurs
+     */
+    Processable parseToken(final xill.lang.xill.ForeachExpression token) throws XillParsingException {
+        return parseFunctionParameter(token, ForeachTerminalExpression::new);
+    }
+
+    /**
+     * Parse a {@link ReduceTerminalExpression}
+     *
+     * @param token the token
+     * @return the expression
+     * @throws XillParsingException if a compile error occurs
+     */
+    Processable parseToken(final xill.lang.xill.ReduceExpression token) throws XillParsingException {
+        Processable accumulator = parse(token.getAccumulator());
+        return parseFunctionParameter(token, iterable -> new ReduceTerminalExpression(accumulator, iterable));
+    }
+
     private Processable parseFunctionParameter(xill.lang.xill.FunctionParameterExpression token, Function<Processable, FunctionParameterExpression> constructor) throws XillParsingException {
-        Processable argument = parse(token.getArguments());
-
+        Processable argument = parse(token.getArgument());
         FunctionParameterExpression result = constructor.apply(argument);
-
         functionParameterExpressions.push(new SimpleEntry<>(token.getFunction(), result));
-
         return result;
     }
+
+    /**
+     * Parse a {@link ConsumeExpression}
+     *
+     * @param expression the token
+     * @return the expression
+     * @throws XillParsingException if a compile error occurs
+     */
+    Processable parseToken(final xill.lang.xill.ConsumeExpression expression) throws XillParsingException {
+        Processable iterableInput = parse(expression.getArgument());
+        return new ConsumeTerminalExpression(iterableInput);
+    }
+
+    /**
+     * Parse a {@link CollectExpression}
+     *
+     * @param expression the token
+     * @return the expression
+     * @throws XillParsingException if a compile error occurs
+     */
+    Processable parseToken(final xill.lang.xill.CollectExpression expression) throws XillParsingException {
+        Processable iterableInput = parse(expression.getArgument());
+        return new CollectTerminalExpression(iterableInput);
+    }
+
 
     /**
      * Parse a {@link CallbotExpression}

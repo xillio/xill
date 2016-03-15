@@ -59,9 +59,14 @@ public class FilterExpression extends PipelineExpression {
                 MetaExpression shouldKeep = function.run(debugger, Collections.singletonList(value)).get();
                 if (shouldKeep.getBooleanValue()) {
                     // We are done with this but since we are returning it we don't want to dispose
+                    boolean isPrevented = value.isDisposalPrevented();
+
                     value.preventDisposal();
                     value.releaseReference();
-                    value.allowDisposal();
+
+                    if(!isPrevented) {
+                        value.allowDisposal();
+                    }
 
                     next = value;
                 } else {
