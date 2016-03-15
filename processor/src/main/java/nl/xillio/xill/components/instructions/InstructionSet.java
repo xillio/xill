@@ -59,7 +59,8 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
 
         for (Instruction instruction : instructions) {
             if (debugger.shouldStop()) {
-                stop();
+                processResult = InstructionFlow.doReturn(ExpressionBuilderHelper.NULL);
+                debugger.returning(this, processResult);
                 break;
             }
 
@@ -68,7 +69,9 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
             }
 
             if (debugger.shouldStop()) {
-                stop();
+                processResult = InstructionFlow.doReturn(ExpressionBuilderHelper.NULL);
+                debugger.endInstruction(instruction, processResult);
+                debugger.returning(this, processResult);
                 break;
             }
 
@@ -117,13 +120,6 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
 
         return InstructionFlow.doResume();
     }
-    /**
-     * Stop the instructionSet
-     */
-    public void stop() {
-        InstructionFlow<MetaExpression> processResult = InstructionFlow.doReturn(ExpressionBuilderHelper.NULL);
-        debugger.returning(this, processResult);
-    }
 
     private InstructionFlow<MetaExpression> processInstruction(Instruction instruction, Debugger debugger) {
         try {
@@ -131,7 +127,6 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
         } catch (RobotRuntimeException e) {
             debugger.handle(e);
         }
-
         return InstructionFlow.doResume(ExpressionBuilderHelper.NULL);
     }
 

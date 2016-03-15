@@ -2,6 +2,7 @@ package nl.xillio.xill.components.instructions;
 
 import nl.xillio.xill.CodePosition;
 import nl.xillio.xill.api.Debugger;
+import nl.xillio.xill.api.components.ExpressionBuilderHelper;
 import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
@@ -41,7 +42,7 @@ public class IfInstruction extends CompoundInstruction {
             conditionInstruction.setPosition(getPosition());
             debugger.startInstruction(conditionInstruction);
             if (debugger.shouldStop()) {
-                instructionSet.stop();
+                debugger.endInstruction(conditionInstruction, InstructionFlow.doReturn(ExpressionBuilderHelper.NULL));
                 return false;
             }
             InstructionFlow<MetaExpression> result = conditionInstruction.process(debugger);
