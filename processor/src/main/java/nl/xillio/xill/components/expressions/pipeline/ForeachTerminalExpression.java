@@ -1,4 +1,4 @@
-package nl.xillio.xill.components.expressions.parallel;
+package nl.xillio.xill.components.expressions.pipeline;
 
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.*;

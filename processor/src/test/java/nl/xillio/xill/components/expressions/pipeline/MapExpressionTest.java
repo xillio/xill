@@ -1,4 +1,4 @@
-package nl.xillio.xill.components.expressions;
+package nl.xillio.xill.components.expressions.pipeline;
 
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.Debugger;
@@ -6,6 +6,7 @@ import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.MetaExpressionIterator;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.components.expressions.pipeline.MapExpression;
 import nl.xillio.xill.components.instructions.FunctionDeclaration;
 import nl.xillio.xill.components.instructions.InstructionSet;
 import org.testng.annotations.Test;

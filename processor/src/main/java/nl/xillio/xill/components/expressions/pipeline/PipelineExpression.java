@@ -1,10 +1,11 @@
-package nl.xillio.xill.components.expressions;
+package nl.xillio.xill.components.expressions.pipeline;
 
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.components.WrappingIterator;
+import nl.xillio.xill.components.expressions.FunctionParameterExpression;
 import nl.xillio.xill.components.instructions.FunctionDeclaration;
 
 import java.util.Arrays;
