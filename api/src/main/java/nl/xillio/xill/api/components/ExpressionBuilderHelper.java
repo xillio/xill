@@ -111,6 +111,8 @@ public class ExpressionBuilderHelper {
      * @param value the value of the expression
      * @return the expression
      */
+    @SuppressWarnings("squid:S1319")
+    // We should use LinkedHashMap as a parameter here to enforce ordering in the map
     public static MetaExpression fromValue(final LinkedHashMap<String, MetaExpression> value) {
         return buildOrNull(value, ObjectExpression::new);
     }
