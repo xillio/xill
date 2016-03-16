@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * This class represents a debugger that does absolutely nothing
+ * This class represents a debugger that does absolutely nothing.
  */
 public class NullDebugger implements Debugger {
 
@@ -124,7 +124,6 @@ public class NullDebugger implements Debugger {
         if (e instanceof RobotRuntimeException) {
             throw (RobotRuntimeException) e;
         }
-
         throw new RobotRuntimeException("Exception in robot.", e);
     }
 
@@ -148,12 +147,10 @@ public class NullDebugger implements Debugger {
 
     @Override
     public void startFunction(Processable functionDeclaration) {
-
     }
 
     @Override
     public void endFunction(Processable functionDeclaration) {
-
     }
 
 }

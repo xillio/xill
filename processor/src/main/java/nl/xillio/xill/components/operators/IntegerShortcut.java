@@ -23,10 +23,12 @@ public final class IntegerShortcut implements Processable {
     private final int additiveValue;
 
     /**
-     * @param variable
-     * @param path
-     * @param value
-     * @param additiveValue
+     * Create a new {@link IntegerShortcut}-object.
+     *
+     * @param variable      The result of the addition.
+     * @param path          The path to assign to.
+     * @param value         The first value in the expression.
+     * @param additiveValue The second value in the expression.
      * @param returnFirst   true for suffix mode, false for prefix
      */
     public IntegerShortcut(final VariableDeclaration variable, final List<Processable> path, final Processable value, final int additiveValue, final boolean returnFirst) {

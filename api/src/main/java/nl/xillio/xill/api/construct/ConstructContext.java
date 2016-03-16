@@ -25,21 +25,21 @@ public class ConstructContext {
     private final UUID compilerSerialId;
 
     /**
-     * Events for signalling to constructs that robots have started or stopped.
-     * Can be used for things like initialization and cleanup.
+     * Events for notifying constructs that robots have started or stopped.
+     * Example uses are initialization and cleanup.
      */
     private final EventHost<RobotStartedAction> robotStartedEvent;
     private final EventHost<RobotStoppedAction> robotStoppedEvent;
 
     /**
-     * Create a new {@link ConstructContext} for a specific robot
+     * Creates a new {@link ConstructContext} for a specific robot.
      *
      * @param robot             the robotID of the current robot
      * @param rootRobot         the robotID of the root robot
      * @param construct         the construct that will be using this context
      * @param debugger          the debugger that is being used
      * @param compilerSerialId  the serial id of the compiler instance
-     * @param robotStartedEvent The event host for started robots
+     * @param robotStartedEvent the event host for started robots
      * @param robotStoppedEvent the event host for stopped robots
      */
     public ConstructContext(final RobotID robot, final RobotID rootRobot, final Construct construct, final Debugger debugger, UUID compilerSerialId, final EventHost<RobotStartedAction> robotStartedEvent,
@@ -93,9 +93,9 @@ public class ConstructContext {
     }
 
     /**
-     * Add a listener that will be called when a robot is started
+     * Adds a listener that will be called when a robot is started.
      *
-     * @param listener The listener to be added
+     * @param listener the listener to add
      */
     public void addRobotStartedListener(Consumer<RobotStartedAction> listener) {
         if (robotStartedEvent != null) {
@@ -104,9 +104,9 @@ public class ConstructContext {
     }
 
     /**
-     * Add a listener that will be called when a robot is stopped
+     * Adds a listener that will be called when a robot is stopped.
      *
-     * @param listener The listener to be added
+     * @param listener the listener to add
      */
     public void addRobotStoppedListener(Consumer<RobotStoppedAction> listener) {
         if (robotStoppedEvent != null) {
@@ -126,7 +126,7 @@ public class ConstructContext {
     }
 
     /**
-     * Get the serial number of the compiler used to compile the script of this context.
+     * Gets the serial number of the compiler used to compile the script of this context.
      *
      * @return the serial number
      */

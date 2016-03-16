@@ -34,7 +34,7 @@ public final class CollectionSize implements Processable {
             metaCollection.releaseReference();
             throw new RobotRuntimeException("You can not retrieve a size of an atomic");
         } else {
-            InstructionFlow<MetaExpression> instructionFlow = InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(metaCollection.getNumberValue()));
+            InstructionFlow<MetaExpression> instructionFlow = InstructionFlow.doResume(ExpressionBuilderHelper.fromValue(metaCollection.getSize()));
             metaCollection.releaseReference();
             return instructionFlow;
 

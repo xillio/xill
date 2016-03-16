@@ -1,11 +1,29 @@
 # Xill IDE - Change Log
 All notable changes to this project will be documented in this file
 
-## [3.3.2] - unreleased
+## [3.3.5] - unreleased
+
+## [3.3.4] - 3-3-2016
+### Add
+- possibility to deprecate constructs [CTC-1297]
+
+## [3.3.3] - 25-02-2016
+### Fix
+- List append operator not working [CTC-1417]
+- Collection size wrong in debugger pane [CTC-1418]
+- Unclear error message when variable used in function is declared after function call [CTC-1388]
+
+## [3.3.2] - 24-02-2016
 ### Change
 - For ATOMIC variables for all the basic operators (+, -, *, /, ^, %, ++, --, +=, -=, *=, /=):
 if one of them (or both) is NOT a number return NaN. [CTC-1368]
 - LIST and OBJECT variables also return NaN [CTC-1411]
+
+## [3.1.2] - 24-02-2016
+### Fix
+- Issue where File.getLastModifiedDate returns the creation date
+
+## [3.1.1] 11-02-2016
 
 ## [3.3.1] - 19-02-2016
 ### Add

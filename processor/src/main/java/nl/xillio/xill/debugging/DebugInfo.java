@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * This class represents a wrapper for various kinds of information that can be used for debugging
+ * This class represents a wrapper for various kinds of information that can be used for debugging.
  */
 public class DebugInfo implements nl.xillio.xill.api.DebugInfo {
 
@@ -19,9 +19,9 @@ public class DebugInfo implements nl.xillio.xill.api.DebugInfo {
     private Map<UseStatement, XillPlugin> using = new HashMap<>();
 
     /**
-     * Add all information from into to this
+     * Adds all information from another DebugInfo to this instance.
      *
-     * @param info
+     * @param info    the debugging info to be added.
      */
     public void add(final DebugInfo info) {
         variables.putAll(info.getVariables());

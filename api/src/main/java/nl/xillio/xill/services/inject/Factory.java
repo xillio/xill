@@ -5,7 +5,7 @@ import com.google.inject.Provider;
 import java.util.function.Supplier;
 
 /**
- * This class represents a factory that will create a new instance of
+ * This class represents a factory that will create a new instance of the parameter class.
  *
  * @param <T> the class that will be made
  */
@@ -13,7 +13,7 @@ public class Factory<T> implements Provider<T> {
     private final Supplier<T> supplier;
 
     /**
-     * Create a new {@link Factory} that will run a {@link Supplier} to get an instance
+     * Creates a new factory that will run a {@link Supplier} to get an instance.
      *
      * @param supplier the supplier
      */
@@ -22,7 +22,7 @@ public class Factory<T> implements Provider<T> {
     }
 
     /**
-     * Create a new {@link Factory} that will instantiate a class using an empty constructor
+     * Creates a new factory that will instantiate a class using an empty constructor.
      *
      * @param clazz the type of class
      */

@@ -20,10 +20,10 @@ public class ConstructProcessor implements AutoCloseable {
     private final Argument[] parameters;
 
     /**
-     * Create a process from input and operation
+     * Creates a process from input and operation.
      *
-     * @param processor  The function used to process the input
-     * @param parameters The expected parameters with default values
+     * @param processor  the function used to process the input
+     * @param parameters the expected parameters with default values
      */
     public ConstructProcessor(final Function<MetaExpression[], MetaExpression> processor, final Argument[] parameters) {
         this.processor = processor;
@@ -31,33 +31,33 @@ public class ConstructProcessor implements AutoCloseable {
     }
 
     /**
-     * Create a single-argument processor from input and operation
+     * Creates a single-argument processor from input and operation.
      *
-     * @param processor The function used to process the input
-     * @param parameter The expected parameter
+     * @param processor the function used to process the input
+     * @param parameter the expected parameter
      */
     public ConstructProcessor(final Function<MetaExpression, MetaExpression> processor, final Argument parameter) {
         this(args -> processor.apply(args[0]), new Argument[]{parameter});
     }
 
     /**
-     * Create a two-argument processor from input and operation
+     * Creates a two-argument processor from input and operation.
      *
-     * @param processor      The function used to process the input
-     * @param firstArgument  The first parameter
-     * @param secondArgument The second parameter
+     * @param processor      the function used to process the input
+     * @param firstArgument  the first parameter
+     * @param secondArgument the second parameter
      */
     public ConstructProcessor(final BiFunction<MetaExpression, MetaExpression, MetaExpression> processor, final Argument firstArgument, final Argument secondArgument) {
         this(args -> processor.apply(args[0], args[1]), new Argument[]{firstArgument, secondArgument});
     }
 
     /**
-     * Create a three-argument processor from input and operation
+     * Creates a three-argument processor from input and operation,
      *
-     * @param processor      The function used to process the input
-     * @param firstArgument  The first parameter
-     * @param secondArgument The second parameter
-     * @param thirdArgument  The third parameter
+     * @param processor      the function used to process the input
+     * @param firstArgument  the first parameter
+     * @param secondArgument the second parameter
+     * @param thirdArgument  the third parameter
      */
     public ConstructProcessor(final TriFunction<MetaExpression, MetaExpression, MetaExpression, MetaExpression> processor, final Argument firstArgument, final Argument secondArgument,
                               final Argument thirdArgument) {
@@ -65,13 +65,13 @@ public class ConstructProcessor implements AutoCloseable {
     }
 
     /**
-     * Create a four-argument processor from input and operation
+     * Creates a four-argument processor from input and operation.
      *
-     * @param processor      The function used to process the input
-     * @param firstArgument  The first parameter
-     * @param secondArgument The second parameter
-     * @param thirdArgument  The third parameter
-     * @param forthArgument  The forth parameter
+     * @param processor      the function used to process the input
+     * @param firstArgument  the first parameter
+     * @param secondArgument the second parameter
+     * @param thirdArgument  the third parameter
+     * @param forthArgument  the forth parameter
      */
     public ConstructProcessor(final QuadFunction<MetaExpression, MetaExpression, MetaExpression, MetaExpression, MetaExpression> processor, final Argument firstArgument, final Argument secondArgument,
                               final Argument thirdArgument, final Argument forthArgument) {
@@ -79,14 +79,14 @@ public class ConstructProcessor implements AutoCloseable {
     }
 
     /**
-     * Create a five-argument processor from input and operation
+     * Creates a five-argument processor from input and operation.
      *
-     * @param processor      The function used to process the input
-     * @param firstArgument  The first parameter
-     * @param secondArgument The second parameter
-     * @param thirdArgument  The third parameter
-     * @param forthArgument  The forth parameter
-     * @param fifthArgument  The fifth parameter
+     * @param processor      the function used to process the input
+     * @param firstArgument  the first parameter
+     * @param secondArgument the second parameter
+     * @param thirdArgument  the third parameter
+     * @param forthArgument  the forth parameter
+     * @param fifthArgument  the fifth parameter
      */
     public ConstructProcessor(final PentaFunction<MetaExpression, MetaExpression, MetaExpression, MetaExpression, MetaExpression, MetaExpression> processor, final Argument firstArgument,
                               final Argument secondArgument, final Argument thirdArgument, final Argument forthArgument, final Argument fifthArgument) {
@@ -96,7 +96,7 @@ public class ConstructProcessor implements AutoCloseable {
     /**
      * Creates a process without input.
      *
-     * @param processor The function used to process the input
+     * @param processor the function used to process the input
      */
     public ConstructProcessor(final Supplier<MetaExpression> processor) {
         this(a -> processor.get(), new Argument[]{});
@@ -107,7 +107,7 @@ public class ConstructProcessor implements AutoCloseable {
      *
      * @param index the index of the argument from 0 to {@link ConstructProcessor#getNumberOfArguments()} - 1
      * @param value the value to set the argument to
-     * @return True if the argument was set, false if it was rejected
+     * @return whether the argument was set or rejected
      */
     public boolean setArgument(final int index, final MetaExpression value) {
         if (parameters.length <= index || index < 0) {
@@ -120,7 +120,7 @@ public class ConstructProcessor implements AutoCloseable {
     /**
      * Finds the first missing argument.
      *
-     * @return The first missing argument or null when there are no missing arguments
+     * @return the first missing argument or null when there are no missing arguments
      */
     public Optional<String> getMissingArgument() {
         return Arrays.stream(parameters).parallel().filter(argument -> !argument.isSet()).map(Argument::getName).findAny();
@@ -154,9 +154,9 @@ public class ConstructProcessor implements AutoCloseable {
     }
 
     /**
-     * Gets a string representation with a friendly name.
+     * Gets a string representation with a user-friendly name.
      *
-     * @param name the friendly construct name
+     * @param name the construct's name
      * @return a string representation of the construct
      */
     public String toString(final String name) {
@@ -166,15 +166,15 @@ public class ConstructProcessor implements AutoCloseable {
     /**
      * Gets the name of an argument.
      *
-     * @param i the index of the argument to get the name of
+     * @param index the index of the argument
      * @return the name of the argument
      */
-    public String getArgumentName(final int i) {
-        return parameters[i].getName();
+    public String getArgumentName(final int index) {
+        return parameters[index].getName();
     }
 
     /**
-     * Get a string description of the expected types for an argument
+     * Gets a string description of the expected types for an argument.
      *
      * @param index the index of the argument
      * @return the string description
@@ -184,7 +184,7 @@ public class ConstructProcessor implements AutoCloseable {
     }
 
     /**
-     * Clears all arguments
+     * Clears all arguments.
      */
     public void reset() {
         for (Argument arg : parameters) {

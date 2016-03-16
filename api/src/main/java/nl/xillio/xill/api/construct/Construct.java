@@ -14,7 +14,7 @@ import java.net.URL;
 import java.nio.file.Path;
 
 /**
- * This interface contains the core functionality for all constructs
+ * This interface contains the core functionality for all constructs.
  */
 public abstract class Construct extends ExpressionBuilderHelper implements HelpComponent {
     private final String defaultName;
@@ -23,7 +23,7 @@ public abstract class Construct extends ExpressionBuilderHelper implements HelpC
     private static FileResolver fileResolver;
 
     /**
-     * Instantiate a new {@link Construct} and pick a default name
+     * Instantiates a new construct and picks a default name.
      */
     public Construct() {
         // Set the default name
@@ -40,8 +40,8 @@ public abstract class Construct extends ExpressionBuilderHelper implements HelpC
      * Returns the name of the construct. This name is also the command by which this construct can be called inside scripts.
      * </p>
      * <p>
-     * By default the name of a {@link XillPlugin} is the concrete implementation name acquired using {@link Class#getSimpleName()} without the {@link XillPlugin} suffix. It is also uncapitalized using
-     * {@link WordUtils#uncapitalize(String)}
+     * By default the name of a {@link XillPlugin} is the concrete implementation name acquired using {@link Class#getSimpleName()},
+     * without the {@link XillPlugin} suffix. It is also uncapitalized using {@link WordUtils#uncapitalize(String)}.
      * </p>
      *
      * @return the name of the construct. This name is also the command by which
@@ -52,19 +52,18 @@ public abstract class Construct extends ExpressionBuilderHelper implements HelpC
     }
 
     /**
-     * Build a new process and return it ready for input
+     * Builds a new process and return it ready for input.
      *
-     * @param context The context for which to prepare the {@link Construct}
-     * @return A prepared processor loaded with the {@link Construct} behaviour.
+     * @param context the context for which to prepare the {@link Construct}
+     * @return a prepared processor loaded with the {@link Construct} behaviour
      */
     public abstract ConstructProcessor prepareProcess(final ConstructContext context);
 
     /**
-     * Check if a {@link MetaExpression} is <b>NOT</b> null. This is checked by
-     * calling {@link MetaExpression#isNull()}.
+     * Checks whether a {@link MetaExpression} is <b>NOT</b> null, by calling {@link MetaExpression#isNull()}.
      *
-     * @param expression   The expression to check
-     * @param argumentName The name of the expression. This is used to generate understandable debug messages.
+     * @param expression   the expression to check
+     * @param argumentName the name of the expression. This is used to generate understandable debug messages.
      * @throws RobotRuntimeException when the assertion fails
      */
     protected static void assertNotNull(final MetaExpression expression, final String argumentName) {
@@ -74,10 +73,10 @@ public abstract class Construct extends ExpressionBuilderHelper implements HelpC
     }
 
     /**
-     * Check if a {@link MetaExpression} is null. This is checked by calling {@link MetaExpression#isNull()}.
+     * Checks whether a {@link MetaExpression} is null. This is done by calling {@link MetaExpression#isNull()}.
      *
-     * @param expression   The expression to check
-     * @param argumentName The name of the expression. This is used to generate understandable debug messages.
+     * @param expression   the expression to check
+     * @param argumentName the name of the expression. This is used to generate understandable debug messages.
      * @throws RobotRuntimeException when the assertion fails
      */
     protected static void assertIsNull(final MetaExpression expression, final String argumentName) {
@@ -87,16 +86,16 @@ public abstract class Construct extends ExpressionBuilderHelper implements HelpC
     }
 
     /**
-     * Check if the {@link MetaExpression} contains an instance of meta
-     * information and fetch it
+     * Checks whether the {@link MetaExpression} contains an instance of meta
+     * information and fetches it.
      *
-     * @param <T>              The type of meta information to assert
-     * @param expression       The expression to check
-     * @param expressionName   The name of the expression. This would generally be a
+     * @param <T>              the type of meta information to assert
+     * @param expression       the expression to check
+     * @param expressionName   the name of the expression. This would generally be a
      *                         parameter name in the construct. It is used to give the
      *                         developer an understandable message.
-     * @param type             The {@link Class} of the meta object to fetch
-     * @param friendlyTypeName The friendly name of the type. This will be used to generate
+     * @param type             the {@link Class} of the meta object to fetch
+     * @param friendlyTypeName the friendly name of the type. This will be used to generate
      *                         an understandable message
      * @return the requested meta object
      * @throws RobotRuntimeException when the assertion fails
@@ -117,12 +116,12 @@ public abstract class Construct extends ExpressionBuilderHelper implements HelpC
     }
 
     /**
-     * Uses the FileResolver service to get a File object from a path
+     * Uses the FileResolver service to get a File object from a path.
      *
      * @param context the construct context
      * @param path    the path
      * @return the file
-     * @deprecated Use getPath
+     * @deprecated Use {@link #getPath(ConstructContext, MetaExpression)} instead
      */
     @Deprecated
     protected static File getFile(ConstructContext context, String path) {
@@ -130,7 +129,7 @@ public abstract class Construct extends ExpressionBuilderHelper implements HelpC
     }
 
     /**
-     * Uses the FileResolver service to get a File object from a path
+     * Uses the FileResolver service to get a File object from a path.
      *
      * @param context the construct context
      * @param path    the path
@@ -141,11 +140,22 @@ public abstract class Construct extends ExpressionBuilderHelper implements HelpC
     }
 
     /**
-     * Hide this construct from documentation
+     * Hides this construct from documentation.
      *
-     * @return true if it should be hidden
+     * @return whether the construct's documentation should be hidden
      */
     public boolean hideDocumentation() {
         return false;
+    }
+
+    /**
+     * Determines if this construct is deprecated.
+     *
+     * Looks for an {@link Deprecated} annotation by default.
+     *
+     * @return True if this construct is deprecated, false if not
+     */
+    public boolean isDeprecated(){
+        return getClass().isAnnotationPresent(Deprecated.class);
     }
 }

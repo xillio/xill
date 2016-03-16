@@ -9,7 +9,7 @@ import nl.xillio.xill.api.data.MetadataExpression;
  */
 public interface HtmlPreview extends MetadataExpression {
     /**
-     * Render the HTML preview of this object.
+     * Renders the HTML preview of this object.
      *
      * @return valid HTML5
      */

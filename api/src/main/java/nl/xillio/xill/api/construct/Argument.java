@@ -21,7 +21,7 @@ public class Argument implements AutoCloseable {
      * Creates a complex argument, which accepts various variable types.
      *
      * @param name          the name of the argument
-     * @param acceptedTypes All accepted types
+     * @param acceptedTypes all accepted types
      */
     public Argument(final String name, final ExpressionDataType... acceptedTypes) {
         this(name, null, acceptedTypes);
@@ -80,7 +80,7 @@ public class Argument implements AutoCloseable {
      * Sets the value of this argument.
      *
      * @param value the value to set
-     * @return true only and only if the value was accepted
+     * @return whether the value was accepted
      */
     boolean setValue(final MetaExpression value) {
         if (!acceptedTypes[value.getType().toInt()]) {
@@ -101,7 +101,7 @@ public class Argument implements AutoCloseable {
     }
 
     /**
-     * Resets the argument to initial state.
+     * Resets the argument to its initial state.
      */
     public void clear() {
         if (value != null) {
@@ -130,7 +130,7 @@ public class Argument implements AutoCloseable {
     /**
      * Returns the default values as a string.
      *
-     * @return The string representation of the default value or null if non is set
+     * @return the string representation of the default value, or null if none is set
      */
     public String getDefaultValueAsString() {
         if (defaultValue == null) {

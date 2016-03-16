@@ -11,8 +11,8 @@ import java.util.List;
  * Values:
  * <ul>
  * <li><b>{@link String}: </b> the JSON representation</li>
- * <li><b>{@link Boolean}: </b> false if the list is null else true (even if empty)</li>
- * <li><b>{@link Number}: </b> the length of the list</li>
+ * <li><b>{@link Boolean}: </b> {@code false} if the list is {@code null}, {@code true} otherwise (even if empty)</li>
+ * <li><b>{@link Number}: </b> {@link Double#NaN}</li>
  * </ul>
  */
 
@@ -39,5 +39,10 @@ class ListExpression extends CollectionExpression {
     @Override
     public Number getNumberValue() {
         return Double.NaN;
+    }
+
+    @Override
+    public Number getSize(){
+        return value.size();
     }
 }

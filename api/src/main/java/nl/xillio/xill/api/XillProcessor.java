@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This interface represents the main processing object
+ * This interface represents the main processing object.
  */
 public interface XillProcessor {
     /**
-     * Compiles the code in the file used to instantiate this {@link XillProcessor}
+     * Compiles the code in the file used to instantiate this processor.
      *
      * @return A list of {@link Issue} with the code. (Does not contain errors)
      * @throws IOException          When the file could not be read
@@ -23,26 +23,26 @@ public interface XillProcessor {
     List<Issue> compile() throws IOException, XillParsingException;
 
     /**
-     * Test a robot for syntax errors.
+     * Tests a robot for syntax errors.
      *
      * @return a list of issues
      */
     List<Issue> validate();
 
     /**
-     * Run {@link XillProcessor#compile()} first
+     * Returns the compiled robot, AFTER you have run {@link XillProcessor#compile()}.
      *
-     * @return the compiled robot.
+     * @return the compiled robot
      */
     Robot getRobot();
 
     /**
-     * @return the RobotID
+     * @return the ID of this robot.
      */
     RobotID getRobotID();
 
     /**
-     * @return The debugger for this processor
+     * @return the debugger for this processor
      */
     Debugger getDebugger();
 

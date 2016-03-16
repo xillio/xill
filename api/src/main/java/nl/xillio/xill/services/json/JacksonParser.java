@@ -10,11 +10,11 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 
 /**
- * This implementation of the JsonParser uses Jackson to parse json.
+ * This implementation of the JsonParser uses Jackson.
  *
  * @author Thomas Biesaart
  */
-public class JacksonParser implements JsonParser, PrettyJsonParser {
+public class JacksonParser implements PrettyJsonParser {
     private final ObjectMapper mapper = new ObjectMapper();
 
     public JacksonParser(boolean pretty) {
