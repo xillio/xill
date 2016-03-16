@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Returns the amount of bytes in a string.
+    </description>
+    <examples>
+        <example title="Usage">
+            <header>Get the byte length.</header>
+            <code>
+                use System, String;
+
+                var byteLength = String.byteLength("foo");
+                System.print("\"foo\" contains " :: byteLength :: " bytes.");
+                // Prints: "foo" contains 3 bytes.
+            </code>
+            <header>Get the byte length with a different encoding.</header>
+            <code>
+                use System, String;
+
+                var byteLength = String.byteLength("foo", "UTF-16");
+                System.print("\"foo\" in UTF-16 contains " :: byteLength :: " bytes.");
+                // Prints: "foo" in UTF-16 contains 8 bytes.
+            </code>
+        </example>
+    </examples>
+    <searchTags>
+        size, length, bytes
+    </searchTags>
+</function>
