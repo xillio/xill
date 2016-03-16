@@ -44,4 +44,12 @@ public class ByteLengthConstructTest extends TestUtils {
     public void processNullValue() {
         ByteLengthConstruct.process(NULL, NULL);
     }
+
+    /**
+     * Test the process when the given encoding is invalid.
+     */
+    @Test(expectedExceptions = RobotRuntimeException.class)
+    public void processInvalidEncoding() {
+        ByteLengthConstruct.process(fromValue("foo"), fromValue("invalid encoding"));
+    }
 }
