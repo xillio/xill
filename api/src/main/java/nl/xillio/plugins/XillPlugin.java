@@ -43,6 +43,7 @@ public abstract class XillPlugin extends AbstractModule implements AutoCloseable
     /**
      * Configures bindings for Injection.
      */
+    @Override
     public void configure() {
     }
 
