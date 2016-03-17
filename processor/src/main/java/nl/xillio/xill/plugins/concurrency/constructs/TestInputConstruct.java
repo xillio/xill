@@ -32,6 +32,7 @@ public class TestInputConstruct extends Construct {
         LinkedHashMap<String, MetaExpression> result = configuration.getValue();
         result.put("input", buildQueue(input, context));
         result.put("output", buildQueue(input, context));
+        result.put("threadId", fromValue(0));
         return fromValue(result);
     }
 

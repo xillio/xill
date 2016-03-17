@@ -21,6 +21,7 @@ public class TestInputConstructTest extends TestUtils {
         Map<String, MetaExpression> internalMap = result.getValue();
 
         assertTrue(internalMap.containsKey("key"));
+        assertTrue(internalMap.containsKey("threadId"));
         assertTrue(internalMap.containsKey("input"));
         assertTrue(internalMap.containsKey("output"));
 
