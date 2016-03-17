@@ -7,6 +7,7 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.plugins.concurrency.data.Pipeline;
+import nl.xillio.xill.plugins.concurrency.services.PipelineExecutor;
 import nl.xillio.xill.plugins.concurrency.services.PipelineFactory;
 
 /**
@@ -17,6 +18,7 @@ import nl.xillio.xill.plugins.concurrency.services.PipelineFactory;
  */
 public class RunConstruct extends Construct {
     private final PipelineFactory pipelineFactory;
+    private final PipelineExecutor pipelineExecutor;
 
     @Inject
     public RunConstruct(PipelineFactory pipelineFactory) {
