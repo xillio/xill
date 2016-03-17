@@ -5,6 +5,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.plugins.concurrency.data.XillQueue;
 
 /**
  * This construct will push an item into a queue. It will block while the queue is full and throw an error of the queue
@@ -25,6 +26,8 @@ public class PushConstruct extends Construct {
     }
 
     private MetaExpression process(MetaExpression item, MetaExpression outputQueue) {
+        XillQueue queue = assertMeta(outputQueue, "outputQueue", XillQueue.class, "Concurrency Queue");
+        queue.push(item);
         return NULL;
     }
 }
