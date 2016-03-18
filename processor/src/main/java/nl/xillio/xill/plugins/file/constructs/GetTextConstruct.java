@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
  */
 @Singleton
 public class GetTextConstruct extends Construct {
-    private static final Pattern LEADING_BOM_PATTERN = Pattern.compile("^\uFEFF+");
+    private static final Pattern LEADING_BOM_PATTERN = Pattern.compile("^\uFEFF+"); // Duplicated in plugin-XML::NodeServiceImpl.
 
     private final FileStreamFactory fileStreamFactory;
     private final IOUtilsService ioUtilsService;
