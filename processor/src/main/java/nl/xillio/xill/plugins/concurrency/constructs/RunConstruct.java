@@ -1,6 +1,7 @@
 package nl.xillio.xill.plugins.concurrency.constructs;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
@@ -29,14 +30,15 @@ class RunConstruct extends Construct {
     @Override
     public ConstructProcessor prepareProcess(ConstructContext context) {
         return new ConstructProcessor(
-                this::process,
+                configuration -> process(configuration, context),
                 new Argument("pipeline", LIST)
         );
     }
 
-    private MetaExpression process(MetaExpression configuration) {
+    private MetaExpression process(MetaExpression configuration, ConstructContext context) {
         Pipeline pipeline = pipelineFactory.build(configuration.getValue());
-        
+
+        pipelineExecutor.execute(pipeline, context);
         return NULL;
     }
 }

@@ -97,6 +97,9 @@ public class TestUtils extends ExpressionBuilderHelper {
         return expression;
     }
 
+    protected ConstructContext context() {
+        return context(mock(Construct.class));
+    }
 
     protected ConstructContext context(Construct construct) {
         return new ConstructContext(RobotID.dummyRobot(), RobotID.dummyRobot(), construct, new NullDebugger(), UUID.randomUUID(), new EventHost<>(), new EventHost<>());

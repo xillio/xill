@@ -32,4 +32,8 @@ public class Stage extends Thread {
             }
         }
     }
+
+    public Worker[] getWorkers() {
+        return workers;
+    }
 }
