@@ -4,6 +4,9 @@ import nl.xillio.xill.api.components.MetaExpression;
 import org.slf4j.Logger;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+import static nl.xillio.xill.api.components.ExpressionBuilderHelper.NULL;
 
 /**
  * This implementation of the XillQueue logs every item pushed into it to the console and
@@ -32,12 +35,17 @@ public class MockXillQueue extends XillQueue {
     }
 
     @Override
-    public boolean hasNext() {
-        return iterator.hasNext();
-    }
-
-    @Override
-    public synchronized MetaExpression next() {
-        return iterator.next();
+    public MetaExpression pop() {
+        try {
+            MetaExpression result = iterator.next();
+            if (!iterator.hasNext()) {
+                close();
+            }
+            return result;
+        } catch (NoSuchElementException e) {
+            // This has to be caught because of concurrency issues
+            close();
+            return NULL;
+        }
     }
 }

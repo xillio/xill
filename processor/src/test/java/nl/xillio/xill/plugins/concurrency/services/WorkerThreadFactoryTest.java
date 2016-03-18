@@ -1,6 +1,5 @@
 package nl.xillio.xill.plugins.concurrency.services;
 
-import com.sun.org.apache.bcel.internal.generic.RET;
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.XillEnvironment;
 import nl.xillio.xill.api.components.MetaExpression;
@@ -39,7 +38,7 @@ public class WorkerThreadFactoryTest extends TestUtils {
         Robot robot = new nl.xillio.xill.components.Robot(RobotID.dummyRobot(), null, null, null, null);
         when(environment.buildProcessor(any(), any(), any()).getRobot()).thenReturn(robot);
 
-        Worker worker = workerThreadFactory.build(configuration, constructContext, 12342);
+        Worker worker = workerThreadFactory.build(configuration, constructContext, 12342, outputQueue);
 
         MetaExpression argument = robot.getArgument();
         Map<String, MetaExpression> internalMap = argument.getValue();

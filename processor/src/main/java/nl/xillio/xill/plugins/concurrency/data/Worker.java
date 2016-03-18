@@ -15,12 +15,10 @@ public class Worker extends Thread {
 
     private final Robot robot;
     private final Debugger debugger;
-    private XillQueue outputQueue;
 
-    public Worker(Robot robot, Debugger debugger, XillQueue outputQueue) {
+    public Worker(Robot robot, Debugger debugger) {
         this.robot = robot;
         this.debugger = debugger;
-        this.outputQueue = outputQueue;
     }
 
     @Override
@@ -29,8 +27,6 @@ public class Worker extends Thread {
             robot.process(debugger);
         } catch (Exception e) {
             debugger.handle(e);
-        } finally {
-            outputQueue.close();
         }
     }
 
@@ -38,15 +34,28 @@ public class Worker extends Thread {
      * Calling this method will set the input field of the argument of this option to the output queue
      * of the passed worker.
      *
-     * @param inputWorker the worker
+     * @param inputQueue the queue
      */
-    public void setInputWorker(Worker inputWorker) {
+    void setInputQueue(XillQueue inputQueue) {
         MetaExpression argument = robot.getArgument();
         Map<String, MetaExpression> internalMap = argument.getValue();
 
         MetaExpression queue = fromValue("[Queue]");
-        queue.storeMeta(inputWorker.outputQueue);
+        queue.storeMeta(inputQueue);
         queue.registerReference();
         internalMap.put("input", queue);
+    }
+
+    /**
+     * Remove the reference to the output queue. This method should be called on all workers
+     * in the last stage.
+     */
+    void removeOutputQueue() {
+        MetaExpression argument = robot.getArgument();
+        Map<String, MetaExpression> internalMap = argument.getValue();
+        MetaExpression expression = internalMap.remove("output");
+        if (expression != null) {
+            expression.releaseReference();
+        }
     }
 }

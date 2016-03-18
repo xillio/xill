@@ -1,12 +1,11 @@
 package nl.xillio.xill.plugins.concurrency.services;
 
 import com.google.inject.Inject;
-import nl.xillio.xill.api.Debugger;
-import nl.xillio.xill.api.NullDebugger;
 import nl.xillio.xill.api.XillEnvironment;
 import nl.xillio.xill.api.XillProcessor;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.errors.XillParsingException;
@@ -17,7 +16,6 @@ import nl.xillio.xill.services.files.FileResolver;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Map;
 
 import static nl.xillio.xill.api.components.ExpressionBuilderHelper.emptyObject;
@@ -46,16 +44,21 @@ class WorkerThreadFactory {
      * @param workerConfiguration the configuration
      * @param context             the context of the worker
      * @param threadId            the id of the worker thread. This should be 0 for the first worker.
+     * @param outputQueue         the queue that should be used
      * @return the worker
      */
-    public Worker build(WorkerConfiguration workerConfiguration, ConstructContext context, int threadId) {
+    public Worker build(WorkerConfiguration workerConfiguration, ConstructContext context, int threadId, XillQueue outputQueue) {
         XillProcessor processor = compile(workerConfiguration, context);
 
-        XillQueue outputQueue = new XillQueue(workerConfiguration.getOutputQueueSize());
+        // Set the error handler
+        processor.getDebugger().setErrorHandler(e ->
+                context.getRootLogger().error("An error occurred in " + workerConfiguration.getRobot() + ": " + e.getMessage(), e)
+        );
+
         MetaExpression argument = buildArgument(outputQueue, workerConfiguration.getConfiguration(), threadId);
         processor.getRobot().setArgument(argument);
 
-        return new Worker(processor.getRobot(), processor.getDebugger(), outputQueue);
+        return new Worker(processor.getRobot(), processor.getDebugger());
     }
 
     /**
@@ -91,13 +94,13 @@ class WorkerThreadFactory {
         Path robot = fileResolver.buildPath(context, fromValue(workerConfiguration.getRobot()));
         XillProcessor processor = getProcessor(robot, context);
 
-        compile(processor);
+        compile(processor, context.getRobotID());
         return processor;
     }
 
-    private void compile(XillProcessor processor) {
+    private void compile(XillProcessor processor, RobotID parentRobotId) {
         try {
-            processor.compile();
+            processor.compileAsSubRobot(parentRobotId);
         } catch (IOException e) {
             throw new RobotRuntimeException("An IO error occurred while parsing a robot: " + e.getMessage(), e);
         } catch (XillParsingException e) {

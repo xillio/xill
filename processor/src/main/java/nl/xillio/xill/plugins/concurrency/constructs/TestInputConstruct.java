@@ -29,10 +29,16 @@ class TestInputConstruct extends Construct {
     }
 
     private MetaExpression process(MetaExpression configuration, MetaExpression input, ConstructContext context) {
-        LinkedHashMap<String, MetaExpression> result = configuration.getValue();
+        LinkedHashMap<String, MetaExpression> result = new LinkedHashMap<>();
+        result.putAll(configuration.getValue());
+
         result.put("input", buildQueue(input, context));
         result.put("output", buildQueue(input, context));
-        result.put("threadId", fromValue(0));
+
+        MetaExpression threadId = fromValue(0);
+        threadId.registerReference();
+        result.put("threadId", threadId);
+
         return fromValue(result);
     }
 

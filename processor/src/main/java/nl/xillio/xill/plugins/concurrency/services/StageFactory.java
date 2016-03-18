@@ -5,6 +5,7 @@ import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.plugins.concurrency.data.Stage;
 import nl.xillio.xill.plugins.concurrency.data.Worker;
 import nl.xillio.xill.plugins.concurrency.data.WorkerConfiguration;
+import nl.xillio.xill.plugins.concurrency.data.XillQueue;
 
 /**
  * This class is responsible for creating a single stage.
@@ -22,18 +23,11 @@ class StageFactory {
     public Stage build(WorkerConfiguration workerConfiguration, ConstructContext context) {
         // First we build all threads
         Worker[] workers = new Worker[workerConfiguration.getThreadCount()];
+        XillQueue outputQueue = new XillQueue(workerConfiguration.getOutputQueueSize());
         for (int i = 0; i < workers.length; i++) {
-            workers[i] = workerThreadFactory.build(workerConfiguration, context, i);
+            workers[i] = workerThreadFactory.build(workerConfiguration, context, i, outputQueue);
         }
 
-        // Then we connect the queues
-        for (int i = 1; i < workers.length; i++) {
-            Worker inputWorker = workers[i - 1];
-            Worker targetWorker = workers[i];
-
-            targetWorker.setInputWorker(inputWorker);
-        }
-
-        return new Stage(workers);
+        return new Stage(workers, outputQueue);
     }
 }

@@ -264,6 +264,7 @@ public abstract class MetaExpression implements Expression, Processable {
         if (obj instanceof MetaExpression) {
             return valueEquals((MetaExpression) obj);
         }
+
         return super.equals(obj);
     }
 
