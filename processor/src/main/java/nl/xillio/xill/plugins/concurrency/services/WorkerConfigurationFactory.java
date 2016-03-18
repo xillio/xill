@@ -14,7 +14,7 @@ import java.util.Map;
  * @author Thomas Biesaart
  * @author Titus Nachbauer
  */
-public class WorkerConfigurationFactory {
+class WorkerConfigurationFactory {
 
     public WorkerConfiguration build(MetaExpression expression) {
         Map<String, MetaExpression> options = assertObject(expression);

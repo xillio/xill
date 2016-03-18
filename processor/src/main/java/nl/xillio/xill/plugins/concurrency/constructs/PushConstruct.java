@@ -14,7 +14,7 @@ import nl.xillio.xill.plugins.concurrency.data.XillQueue;
  * @author Thomas Biesaart
  * @author Titus Nachbauer
  */
-public class PushConstruct extends Construct {
+class PushConstruct extends Construct {
 
     @Override
     public ConstructProcessor prepareProcess(ConstructContext context) {

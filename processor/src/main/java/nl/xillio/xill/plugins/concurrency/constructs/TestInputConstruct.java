@@ -17,7 +17,7 @@ import java.util.LinkedHashMap;
  * @author Thomas Biesaart
  * @author Titus Nachbauer
  */
-public class TestInputConstruct extends Construct {
+class TestInputConstruct extends Construct {
 
     @Override
     public ConstructProcessor prepareProcess(ConstructContext context) {

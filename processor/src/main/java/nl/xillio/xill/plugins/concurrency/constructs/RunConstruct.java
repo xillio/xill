@@ -16,13 +16,14 @@ import nl.xillio.xill.plugins.concurrency.services.PipelineFactory;
  * @author Thomas Biesaart
  * @author Titus Nachbauer
  */
-public class RunConstruct extends Construct {
+class RunConstruct extends Construct {
     private final PipelineFactory pipelineFactory;
     private final PipelineExecutor pipelineExecutor;
 
     @Inject
-    public RunConstruct(PipelineFactory pipelineFactory) {
+    public RunConstruct(PipelineFactory pipelineFactory, PipelineExecutor pipelineExecutor) {
         this.pipelineFactory = pipelineFactory;
+        this.pipelineExecutor = pipelineExecutor;
     }
 
     @Override
