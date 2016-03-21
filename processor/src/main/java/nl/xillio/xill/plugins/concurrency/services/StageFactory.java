@@ -24,6 +24,7 @@ class StageFactory {
         // First we build all threads
         Worker[] workers = new Worker[workerConfiguration.getThreadCount()];
         XillQueue outputQueue = new XillQueue(workerConfiguration.getOutputQueueSize());
+
         for (int i = 0; i < workers.length; i++) {
             workers[i] = workerThreadFactory.build(workerConfiguration, context, i, outputQueue);
         }

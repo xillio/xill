@@ -27,6 +27,7 @@ public interface XillProcessor {
      * This robot wil run as a subrobot of another robot. This means that whenever any
      * component requests the root robot it will receive the parent.
      *
+     * @param parentRobotId the parent of this robot
      * @return A list of {@link Issue} with the code. (Does not contain errors)
      * @throws IOException          When the file could not be read
      * @throws XillParsingException When the code was not compiled correctly

@@ -16,9 +16,8 @@ import nl.xillio.xill.services.files.FileResolver;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Map;
+import java.util.LinkedHashMap;
 
-import static nl.xillio.xill.api.components.ExpressionBuilderHelper.emptyObject;
 import static nl.xillio.xill.api.components.ExpressionBuilderHelper.fromValue;
 
 /**
@@ -51,8 +50,11 @@ class WorkerThreadFactory {
         XillProcessor processor = compile(workerConfiguration, context);
 
         // Set the error handler
-        processor.getDebugger().setErrorHandler(e ->
-                context.getRootLogger().error("An error occurred in " + workerConfiguration.getRobot() + ": " + e.getMessage(), e)
+        processor.getDebugger().setErrorHandler(e -> {
+                    String robot = workerConfiguration.getRobot();
+                    String message = String.format("An error occurred in %s: %s", robot, e.getMessage());
+                    context.getRootLogger().error(message, e);
+                }
         );
 
         MetaExpression argument = buildArgument(outputQueue, workerConfiguration.getConfiguration(), threadId);
@@ -71,23 +73,21 @@ class WorkerThreadFactory {
      * @return the argument
      */
     private MetaExpression buildArgument(XillQueue outputQueue, MetaExpression configuration, int threadId) {
-        MetaExpression result = configuration;
-        if (result == null || result.getType() != ExpressionDataType.OBJECT) {
-            result = emptyObject();
+        LinkedHashMap<String, MetaExpression> map = new LinkedHashMap<>();
+
+        if (configuration != null && configuration.getType() == ExpressionDataType.OBJECT) {
+            map.putAll(configuration.getValue());
         }
 
-        Map<String, MetaExpression> internalMap = result.getValue();
 
         MetaExpression outputValue = fromValue("[Queue]");
         outputValue.storeMeta(outputQueue);
-        outputValue.registerReference();
-        internalMap.put("output", outputValue);
+        map.put("output", outputValue);
 
         MetaExpression threadIdValue = fromValue(threadId);
-        threadIdValue.registerReference();
-        internalMap.put("threadId", threadIdValue);
+        map.put("threadId", threadIdValue);
 
-        return result;
+        return fromValue(map);
     }
 
     private XillProcessor compile(WorkerConfiguration workerConfiguration, ConstructContext context) {

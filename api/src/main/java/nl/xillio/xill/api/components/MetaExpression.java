@@ -2,7 +2,6 @@ package nl.xillio.xill.api.components;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import me.biesaart.utils.Log;
 import nl.xillio.util.MathUtils;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.data.Date;
@@ -12,7 +11,6 @@ import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.services.json.JsonException;
 import nl.xillio.xill.services.json.JsonParser;
-import org.slf4j.Logger;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -25,14 +23,10 @@ public abstract class MetaExpression implements Expression, Processable {
 
     /**
      * Enable this to get debug information.
+     * This will prevent disposal of the value field and add it to the error messages.
      */
-    private static final boolean DEBUG = false;
-    private static final Logger LOGGER = Log.get();
-    private static final Map<Integer, MetaExpression> expressions = new HashMap<>();
-    private static int counter;
-    private int id;
-
-    private static final String EXPRESSION_CLOSED = "This expression has already been closed.";
+    private static final boolean DEBUG = true;
+    private Throwable closedLocation;
 
     @Inject
     private static JsonParser jsonParser;
@@ -46,19 +40,6 @@ public abstract class MetaExpression implements Expression, Processable {
     private int referenceCount;
     private boolean preventDispose;
 
-
-    public MetaExpression() {
-        id = counter++;
-        if (DEBUG) {
-            expressions.put(id, this);
-            printDebug();
-        }
-    }
-
-    private void printDebug() {
-        LOGGER.debug("Open Expressions: {}", expressions.size());
-    }
-
     /**
      * Gets a value from the {@link MetadataExpressionPool}.
      *
@@ -68,14 +49,27 @@ public abstract class MetaExpression implements Expression, Processable {
      * @throws IllegalStateException if this expression has been closed
      */
     public <T extends MetadataExpression> T getMeta(final Class<T> clazz) {
-        if (isClosed()) {
-            throw new IllegalStateException(EXPRESSION_CLOSED);
-        }
+
         if (metadataPool == null) {
             return null;
         }
 
         return metadataPool.get(clazz);
+    }
+
+    private void assertOpen() {
+        if (isClosed()) {
+            String message = "This expression has already been closed.";
+            if (DEBUG) {
+                try {
+                    message += "\nValue: " + value;
+                } catch (IllegalStateException e) {
+                    // This only happens if we cannot get the string representation
+                }
+                throw new IllegalStateException(message, closedLocation);
+            }
+            throw new IllegalStateException(message);
+        }
     }
 
     /**
@@ -86,9 +80,7 @@ public abstract class MetaExpression implements Expression, Processable {
      */
     @SuppressWarnings("unchecked")
     public void storeMeta(final MetadataExpression object) {
-        if (isClosed()) {
-            throw new IllegalStateException(EXPRESSION_CLOSED);
-        }
+        assertOpen();
         if (metadataPool == null) {
             metadataPool = new MetadataExpressionPool<>();
         }
@@ -114,9 +106,7 @@ public abstract class MetaExpression implements Expression, Processable {
      * @throws IllegalStateException if this expression has been closed
      */
     protected MetaExpression setValue(final Expression value) {
-        if (isClosed()) {
-            throw new IllegalStateException(EXPRESSION_CLOSED);
-        }
+        assertOpen();
         this.value = value;
         type = ExpressionDataType.ATOMIC;
         return this;
@@ -130,9 +120,7 @@ public abstract class MetaExpression implements Expression, Processable {
      * @throws IllegalStateException if this expression has been closed
      */
     protected MetaExpression setValue(final MetaExpression value) {
-        if (isClosed()) {
-            throw new IllegalStateException(EXPRESSION_CLOSED);
-        }
+        assertOpen();
         this.value = value.getValue();
         type = value.getType();
         return this;
@@ -146,9 +134,7 @@ public abstract class MetaExpression implements Expression, Processable {
      * @throws IllegalStateException if this expression has been closed
      */
     protected MetaExpression setValue(final List<MetaExpression> value) {
-        if (isClosed()) {
-            throw new IllegalStateException(EXPRESSION_CLOSED);
-        }
+        assertOpen();
         this.value = value;
         type = ExpressionDataType.LIST;
         return this;
@@ -162,9 +148,7 @@ public abstract class MetaExpression implements Expression, Processable {
      * @throws IllegalStateException if this expression has been closed
      */
     protected MetaExpression setValue(final LinkedHashMap<String, MetaExpression> value) {
-        if (isClosed()) {
-            throw new IllegalStateException(EXPRESSION_CLOSED);
-        }
+        assertOpen();
         this.value = value;
         type = ExpressionDataType.OBJECT;
         return this;
@@ -190,9 +174,7 @@ public abstract class MetaExpression implements Expression, Processable {
      */
     @SuppressWarnings("unchecked")
     public <T> T getValue() {
-        if (isClosed()) {
-            throw new IllegalStateException(EXPRESSION_CLOSED);
-        }
+        assertOpen();
         return (T) value;
     }
 
@@ -210,9 +192,7 @@ public abstract class MetaExpression implements Expression, Processable {
      * @throws IllegalStateException if this expression has been closed
      */
     public ExpressionDataType getType() {
-        if (isClosed()) {
-            throw new IllegalStateException(EXPRESSION_CLOSED);
-        }
+        assertOpen();
         return type;
     }
 
@@ -250,7 +230,7 @@ public abstract class MetaExpression implements Expression, Processable {
         return jsonParser.toJson((Object) extractValue(this));
     }
 
-    public Number getSize(){
+    public Number getSize() {
         return null;
     }
 
@@ -486,7 +466,7 @@ public abstract class MetaExpression implements Expression, Processable {
     /**
      * @return whether this expression has been closed using {@link #close()}
      */
-    public final boolean isClosed() {
+    private boolean isClosed() {
         return isClosed;
     }
 
@@ -511,11 +491,10 @@ public abstract class MetaExpression implements Expression, Processable {
             default:
                 break;
         }
-        if (DEBUG) {
-            expressions.remove(id);
-            printDebug();
-        } else {
+        if (!DEBUG) {
             value = null;
+        } else {
+            closedLocation = new RobotRuntimeException("This is where this expression got closed");
         }
     }
 

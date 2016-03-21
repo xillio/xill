@@ -36,7 +36,6 @@ class TestInputConstruct extends Construct {
         result.put("output", buildQueue(input, context));
 
         MetaExpression threadId = fromValue(0);
-        threadId.registerReference();
         result.put("threadId", threadId);
 
         return fromValue(result);
@@ -47,7 +46,6 @@ class TestInputConstruct extends Construct {
 
         MetaExpression result = fromValue("[Mock Queue]");
         result.storeMeta(new MockXillQueue(iterator, context.getRootLogger()));
-        result.registerReference();
         return result;
     }
 }

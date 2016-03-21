@@ -43,6 +43,7 @@ public class Worker extends Thread {
         MetaExpression queue = fromValue("[Queue]");
         queue.storeMeta(inputQueue);
         queue.registerReference();
+
         internalMap.put("input", queue);
     }
 

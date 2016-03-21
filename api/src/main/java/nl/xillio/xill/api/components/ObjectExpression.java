@@ -19,17 +19,15 @@ import java.util.LinkedHashMap;
  * <li><b>{@link Number}: </b> {@link Double#NaN}</li>
  * </ul>
  *
- * @deprecated This class will become package protected soon
  */
-@Deprecated
-public class ObjectExpression extends CollectionExpression {
+class ObjectExpression extends CollectionExpression {
 
     private final LinkedHashMap<String, MetaExpression> value;
 
     /**
      * @param object the value to set
      */
-    public ObjectExpression(final LinkedHashMap<String, MetaExpression> object) {
+    ObjectExpression(final LinkedHashMap<String, MetaExpression> object) {
         value = object;
 
         setValue(value);

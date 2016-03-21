@@ -42,12 +42,14 @@ public class XillQueue implements MetadataExpression {
     }
 
     public MetaExpression pop() {
-        while (!closed) {
+        while (true) {
             MetaExpression result = getNext(200);
 
             if (result != null) {
                 result.allowDisposal();
                 return result;
+            } else if (closed) {
+                break;
             }
         }
 
