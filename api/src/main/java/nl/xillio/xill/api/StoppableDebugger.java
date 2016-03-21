@@ -24,17 +24,11 @@ public class StoppableDebugger extends NullDebugger {
     }
 
     @Override
-    public void pause(boolean userAction) {
-        if (!userAction) {
-            errorOccurred = true;
-            if (stopOnError) {
-                stop = true;
-            }
+    public void handle(Throwable e) {
+        errorOccurred = true;
+        if (stopOnError) {
+            stop = true;
         }
-    }
-
-    @Override
-    public void handle(Throwable e) throws RobotRuntimeException {
         if (errorHandlingPolicy == null) {
             super.handle(e);
         } else {
