@@ -29,9 +29,7 @@ public class TestInputConstructTest extends TestUtils {
         assertTrue(internalMap.get("output").hasMeta(XillQueue.class));
 
         XillQueue queue = internalMap.get("input").getMeta(XillQueue.class);
-        assertTrue(queue.hasNext());
-        assertEquals(queue.next().getStringValue(), "Value 1");
-        assertEquals(queue.next().getStringValue(), "Value 2");
-        assertFalse(queue.hasNext());
+        assertEquals(queue.pop().getStringValue(), "Value 1");
+        assertEquals(queue.pop().getStringValue(), "Value 2");
     }
 }

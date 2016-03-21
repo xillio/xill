@@ -17,7 +17,7 @@ public class StageFactoryTest extends TestUtils {
     @Test
     public void testBuild() {
         WorkerThreadFactory workerThreadFactory = mock(WorkerThreadFactory.class);
-        when(workerThreadFactory.build(any(), any(), anyInt(), outputQueue)).thenReturn(mock(Worker.class));
+        when(workerThreadFactory.build(any(), any(), anyInt(), any())).thenReturn(mock(Worker.class));
 
         StageFactory stageFactory = new StageFactory(workerThreadFactory);
         WorkerConfiguration workerConfiguration = new WorkerConfiguration();

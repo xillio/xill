@@ -5,7 +5,8 @@ import org.testng.annotations.Test;
 
 import java.util.NoSuchElementException;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 
 
 public class XillQueueTest extends TestUtils {
@@ -15,7 +16,7 @@ public class XillQueueTest extends TestUtils {
         XillQueue queue = new XillQueue(100);
 
         queue.close();
-        assertFalse(queue.hasNext());
+        assertEquals(queue.pop(), NULL);
     }
 
     @Test
@@ -27,11 +28,10 @@ public class XillQueueTest extends TestUtils {
         queue.push(emptyList());
         queue.close();
 
-        assertTrue(queue.hasNext());
-        assertEquals(queue.next().getStringValue(), "firstItem");
-        assertEquals(queue.next().getStringValue(), "SECOND_ITEM");
-        assertEquals(queue.next().getStringValue(), "[]");
-        assertFalse(queue.hasNext());
+        assertEquals(queue.pop().getStringValue(), "firstItem");
+        assertEquals(queue.pop().getStringValue(), "SECOND_ITEM");
+        assertEquals(queue.pop().getStringValue(), "[]");
+        assertEquals(queue.pop(), NULL);
     }
 
     @Test
@@ -43,14 +43,6 @@ public class XillQueueTest extends TestUtils {
         queue.push(emptyList());
         queue.closeAndClear();
 
-        assertFalse(queue.hasNext());
-    }
-
-    @Test(expectedExceptions = NoSuchElementException.class)
-    public void testNextOnClosedEmptyQueue() {
-        XillQueue queue = new XillQueue(10);
-
-        queue.close();
-        queue.next();
+        assertEquals(queue.pop(), NULL);
     }
 }

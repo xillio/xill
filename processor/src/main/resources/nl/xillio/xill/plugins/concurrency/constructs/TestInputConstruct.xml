@@ -1,16 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
+Create a fake argument for this robot for testing purposes. It will add input and output queues that contain the items
+from the *input* parameter and log all elements that are pushed.
+The threadId is always 0.
+See the *run* construct for more information.
     </description>
     <examples>
         <example title="Usage">
-            <header>Template</header>
+            <header>Use testInput to mock input</header>
             <code>
+                use Concurrency;
+
+                argument data = Concurrency.testInput(
+                    {
+                        "property": "value"
+                    },
+                    [ 1, 2, 3 ]
+                );
+
+                // Process the queue
+
             </code>
         </example>
     </examples>
     <references>
-        <reference></reference>
+        <reference>run</reference>
     </references>
     <tags>
     </tags>

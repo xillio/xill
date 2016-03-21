@@ -17,10 +17,9 @@ import java.io.IOException;
 import java.util.Map;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.*;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 
 public class WorkerThreadFactoryTest extends TestUtils {
@@ -38,7 +37,7 @@ public class WorkerThreadFactoryTest extends TestUtils {
         Robot robot = new nl.xillio.xill.components.Robot(RobotID.dummyRobot(), null, null, null, null);
         when(environment.buildProcessor(any(), any(), any()).getRobot()).thenReturn(robot);
 
-        Worker worker = workerThreadFactory.build(configuration, constructContext, 12342, outputQueue);
+        Worker worker = workerThreadFactory.build(configuration, constructContext, 12342, mock(XillQueue.class));
 
         MetaExpression argument = robot.getArgument();
         Map<String, MetaExpression> internalMap = argument.getValue();

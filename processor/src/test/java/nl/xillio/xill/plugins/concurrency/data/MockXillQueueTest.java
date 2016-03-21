@@ -9,6 +9,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static nl.xillio.xill.api.components.ExpressionBuilderHelper.NULL;
 import static nl.xillio.xill.api.components.ExpressionBuilderHelper.fromValue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -34,8 +35,12 @@ public class MockXillQueueTest {
 
         List<MetaExpression> result = new ArrayList<>();
 
-        while (queue.hasNext()) {
-            result.add(queue.next());
+        while (true) {
+            MetaExpression item = queue.pop();
+            if(item == NULL) {
+                break;
+            }
+            result.add(item);
         }
 
         assertEquals(result, input);
