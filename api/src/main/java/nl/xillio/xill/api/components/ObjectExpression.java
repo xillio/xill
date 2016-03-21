@@ -27,6 +27,8 @@ class ObjectExpression extends CollectionExpression {
     /**
      * @param object the value to set
      */
+    @SuppressWarnings("squid:S1319")
+    // We should use LinkedHashMap as a parameter here to enforce ordering in the map
     ObjectExpression(final LinkedHashMap<String, MetaExpression> object) {
         value = object;
 
