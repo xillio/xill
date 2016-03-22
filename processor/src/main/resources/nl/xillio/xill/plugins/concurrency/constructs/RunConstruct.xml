@@ -1,17 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
+Run a concurrent pipeline of robots.
+This construct will set up the concurrency framework in which multiple instances of robots can be
+connected to each other using queues. These robots will then start processing in parallel which allows
+a xill programmer to utilize all the available resources.
+
+## Workers
+This framework is based on the principle of workers. These workers are represented by single xill robots
+and their responsibility is to take input and/or provide output. Intuitively there are 3 types of workers.
+Check out the examples to see code for each of the types.
+
+### Provider
+The provider will generally be the first type of worker. The sole responsibility of this worker is to provide
+the first unit of work. An example of this would be a file scraper for a file system analysis or an indexer
+for an ecm migration. Providers do not take input but must provide output.
+
+### Transformer
+The transformer can have a variety of responsibilities. It will take input, modify it in some way and then
+output the modified value. An example of this would be the attribute reader for file system analysis or
+a html source cleaner for web migrations. Transformers must consume all input and provide output.
+
+**Tip:** To boost the performance of your transformers you should try to only use one main type of resource.
+(File IO, Database IO, CPU, etc...) This will allow that resource to be utilized completely while the other
+workers can still keep running.
+
+### Consumer
+The consumer is responsible for processing the results of a pipeline. Generally this is the last robot
+of the pipeline and most of the times it will store the results in a database.
     </description>
     <examples>
-        <example title="Usage">
-            <header>Template</header>
+        <example title="Configuration Examples">
+
+        </example>
+        <example title="Worker Examples">
+            <header>A provider that provides numbers</header>
             <code>
+                use Concurrency;
+
+                argument data = Concurrency.testInput();
+
+                // This provider simply pushes numbers into the queue
+                var i = 0;
+                while(++i &lt;= 500) {
+                    Concurrency.push(i, data.output);
+                }
+            </code>
+            <header>A transformer that structures a document</header>
+            <code>
+                use Concurrency;
+
+                argument data = Concurrency.testInput();
+
+                var item = Concurrency.pop(data.input);
+                while(item != null) {
+                    var document = process(item);
+                    Concurrency.push(document, data.output);
+
+                    item = Concurrency.pop(data.input);
+                }
+
+                // This function will restructure a document
+                function process(input) {
+                    var document = {
+                        "_id": input.id,
+                        "nodes": input.content
+                    };
+
+                    return document;
+                }
+            </code>
+            <header>A consumer that saves json files</header>
+            <code>
+                use Concurrency, System;
+                use File, Stream;
+
+                argument data = Concurrency.testInput();
+
+                var item = Concurrency.pop(data.input);
+                while(item != null) {
+                    save(item);
+
+                    item = Concurrency.pop(data.input);
+                }
+
+                // This function will save a document to a json file
+                function save(document) {
+                    var path = "data/" :: document._id :: ".json";
+                    var target = File.openWrite(path);
+                    var json = System.toJSON(document, true);
+                    Stream.write(json, target);
+                }
             </code>
         </example>
     </examples>
     <references>
-        <reference></reference>
+        <reference>push</reference>
+        <reference>pop</reference>
     </references>
     <tags>
+        pipeline, worker, queue
     </tags>
 </function>

@@ -22,7 +22,9 @@ This construct will halt execution until there is space remaining in the queue.
     <references>
         <reference>testInput</reference>
         <reference>run</reference>
+        <reference>pop</reference>
     </references>
     <tags>
+        queue, push, put
     </tags>
 </function>

@@ -10,7 +10,7 @@ See the *run* construct for more information.
         <example title="Usage">
             <header>Use testInput to mock input</header>
             <code>
-                use Concurrency;
+                use Concurrency, System;
 
                 argument data = Concurrency.testInput(
                     {
@@ -20,7 +20,12 @@ See the *run* construct for more information.
                 );
 
                 // Process the queue
+                var one = Concurrency.pop(data.input);
+                var two = Concurrency.pop(data.input);
+                var three = Concurrency.pop(data.input);
 
+                // Prints: "1 2 3"
+                System.print(one :: " " :: two :: " " :: three);
             </code>
         </example>
     </examples>
@@ -28,5 +33,6 @@ See the *run* construct for more information.
         <reference>run</reference>
     </references>
     <tags>
+        mock, queue, test
     </tags>
 </function>

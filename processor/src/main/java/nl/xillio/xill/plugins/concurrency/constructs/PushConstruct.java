@@ -5,6 +5,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.concurrency.data.XillQueue;
 
 /**
@@ -26,6 +27,9 @@ class PushConstruct extends Construct {
     }
 
     private MetaExpression process(MetaExpression item, MetaExpression outputQueue) {
+        if (item.isNull()) {
+            throw new RobotRuntimeException("You cannot push a null value into a queue.");
+        }
         XillQueue queue = assertMeta(outputQueue, "outputQueue", XillQueue.class, "Concurrency Queue");
         queue.push(item);
         return NULL;
