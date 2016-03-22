@@ -8,8 +8,8 @@ import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.plugins.concurrency.data.XillQueue;
 
 /**
- * This construct will push an item into a queue. It will block while the queue is full and throw an error of the queue
- * is closed.
+ * This construct will take an item from a queue. It will block while the queue is empty or return null
+ * if the queue is closed.
  *
  * @author Thomas Biesaart
  * @author Titus Nachbauer
