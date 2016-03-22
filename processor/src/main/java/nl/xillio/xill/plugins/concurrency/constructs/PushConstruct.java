@@ -26,6 +26,7 @@ class PushConstruct extends Construct {
         );
     }
 
+    @SuppressWarnings("squid:UnusedPrivateMethod") // Sonar does not do method references
     private MetaExpression process(MetaExpression item, MetaExpression outputQueue) {
         if (item.isNull()) {
             throw new RobotRuntimeException("You cannot push a null value into a queue.");

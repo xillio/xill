@@ -1,7 +1,6 @@
 package nl.xillio.xill.plugins.concurrency.constructs;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;

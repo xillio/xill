@@ -1,7 +1,6 @@
 package nl.xillio.xill.api;
 
 import nl.xillio.xill.api.errors.ErrorHandlingPolicy;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 /**
  * This class represents a debugger that can be stopped (this is only behaviour that is supported).

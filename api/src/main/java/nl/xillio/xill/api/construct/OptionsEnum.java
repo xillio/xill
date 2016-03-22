@@ -45,7 +45,7 @@ public interface OptionsEnum {
      * @throws NullPointerException if {@code enumType} or {@code name}
      *         is null
      */
-    @SuppressWarnings("squid:") // This exception is handled by returning a non-result
+    @SuppressWarnings("squid:S1166") // This exception is handled by returning a non-result
     static <T extends Enum<T>> Optional<T> ofLabel(Class<T> enumType, String label) {
         String name = LOWER_CAMEL.to(UPPER_UNDERSCORE, label);
 

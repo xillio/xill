@@ -17,6 +17,10 @@ import static nl.xillio.xill.api.components.ExpressionBuilderHelper.NULL;
  */
 public class MockXillQueue extends XillQueue {
     private final Iterator<MetaExpression> iterator;
+    /**
+     * This is not a normal logger. It is the logger for a robot.
+     */
+    @SuppressWarnings("squid:S1312")
     private final Logger logger;
 
     public MockXillQueue(Iterable<MetaExpression> iterable, Logger logger) {
@@ -34,6 +38,10 @@ public class MockXillQueue extends XillQueue {
         logger.info("Pushing a value to the mock output: {}", expression);
     }
 
+    // The exception is handled by returning null
+    // Note that this must happen instead of hasNext to
+    // make this method threadsafe
+    @SuppressWarnings("squid:S1312")
     @Override
     public MetaExpression pop() {
         try {

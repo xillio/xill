@@ -61,11 +61,6 @@ public abstract class MetaExpression implements Expression, Processable {
         if (isClosed()) {
             String message = "This expression has already been closed.";
             if (DEBUG) {
-                try {
-                    message += "\nValue: " + value;
-                } catch (IllegalStateException e) {
-                    // This only happens if we cannot get the string representation
-                }
                 throw new IllegalStateException(message, closedLocation);
             }
             throw new IllegalStateException(message);

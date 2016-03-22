@@ -24,6 +24,7 @@ class PopConstruct extends Construct {
         );
     }
 
+    @SuppressWarnings("squid:UnusedPrivateMethod") // Sonar does not do method references
     private MetaExpression process(MetaExpression outputQueue) {
         XillQueue queue = assertMeta(outputQueue, "inputQueue", XillQueue.class, "Concurrency Queue");
         return queue.pop();
