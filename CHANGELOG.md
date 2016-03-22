@@ -2,6 +2,8 @@
 All notable changes to this project will be documented in this file
 
 ## [3.3.5] - unreleased
+### Add
+- `String.byteLength()` construct to determine length of a string in bytes [CTC-1279]
 
 ## [3.3.4] - 3-3-2016
 ### Add
