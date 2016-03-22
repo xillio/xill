@@ -6,6 +6,7 @@ import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.api.components.WrappingIterator;
 
 import static nl.xillio.xill.api.components.ExpressionBuilderHelper.fromValue;
+import static nl.xillio.xill.api.components.ExpressionDataType.ATOMIC;
 
 /**
  * This class represents the implementation of the consume function. This function will iterate an iterable argument and
@@ -28,12 +29,10 @@ public class ConsumeTerminalExpression extends AbstractPipelineTerminalExpressio
     }
 
     private long process(MetaExpression inputValue) {
-        switch (inputValue.getType()) {
-            case ATOMIC:
-                return count(inputValue);
-            default:
-                return inputValue.getSize().longValue();
+        if (inputValue.getType() == ATOMIC) {
+            return count(inputValue);
         }
+        return inputValue.getSize().longValue();
     }
 
     private long count(MetaExpression inputValue) {

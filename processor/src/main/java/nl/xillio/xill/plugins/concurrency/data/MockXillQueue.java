@@ -41,7 +41,7 @@ public class MockXillQueue extends XillQueue {
     // The exception is handled by returning null
     // Note that this must happen instead of hasNext to
     // make this method threadsafe
-    @SuppressWarnings("squid:S1312")
+    @SuppressWarnings("squid:S1166")
     @Override
     public MetaExpression pop() {
         try {
