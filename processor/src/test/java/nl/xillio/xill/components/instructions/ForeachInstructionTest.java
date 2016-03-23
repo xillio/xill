@@ -25,7 +25,7 @@ public class ForeachInstructionTest extends TestUtils {
         instructions = spy(new InstructionSet(debugger));
     }
 
-    private void verifyAll(VariableDeclaration keyVar, List<MetaExpression> keys, VariableDeclaration valueVar, List<MetaExpression> values) {
+    private void verifyAll(VariableDeclaration keyVar, List<MetaExpression> keys, VariableDeclaration valueVar, List<MetaExpression> values, InstructionFlow<MetaExpression> result) {
         // Verify the instructions were processed as many times as there are values.
         verify(instructions, times(values != null ? values.size() : 0)).process(debugger);
 
@@ -40,6 +40,11 @@ public class ForeachInstructionTest extends TestUtils {
         } else {
             verify(valueVar, times(0)).pushVariable(any());
         }
+
+        // Assert that the result does not have a value.
+        if (result != null) {
+            assertThrows(NoSuchElementException.class, result::get);
+        }
     }
 
     @Test
@@ -50,14 +55,10 @@ public class ForeachInstructionTest extends TestUtils {
 
         // Process.
         ForeachInstruction foreach = new ForeachInstruction(instructions, NULL, value, key);
-        InstructionFlow<MetaExpression> returned = foreach.process(debugger);
-
-        // Assert that the result is a resumed instruction flow.
-        assertEquals(returned.resumes(), true);
-        assertThrows(NoSuchElementException.class, returned::get);
+        InstructionFlow<MetaExpression> result = foreach.process(debugger);
 
         // Verify.
-        verifyAll(key, null, value, null);
+        verifyAll(key, null, value, null, result);
     }
 
     @Test
@@ -71,10 +72,10 @@ public class ForeachInstructionTest extends TestUtils {
 
         // Process.
         ForeachInstruction foreach = new ForeachInstruction(instructions, atomic, value, key);
-        foreach.process(debugger);
+        InstructionFlow<MetaExpression> result = foreach.process(debugger);
 
         // Verify.
-        verifyAll(key, Collections.singletonList(fromValue(0)), value, Collections.singletonList(atomic));
+        verifyAll(key, Collections.singletonList(fromValue(0)), value, Collections.singletonList(atomic), result);
     }
 
     @Test
@@ -91,14 +92,14 @@ public class ForeachInstructionTest extends TestUtils {
 
         // Process.
         ForeachInstruction foreach = new ForeachInstruction(instructions, atomic, value, key);
-        foreach.process(debugger);
+        InstructionFlow<MetaExpression> result = foreach.process(debugger);
 
         // Verify.
         List<MetaExpression> keyList = new ArrayList<>(valueList.size()); // Not used in the actual list, just to verify.
         for (int i = 0; i < valueList.size(); i++) {
             keyList.add(fromValue(i));
         }
-        verifyAll(key, keyList, value, valueList);
+        verifyAll(key, keyList, value, valueList, result);
     }
 
     @Test
@@ -113,14 +114,14 @@ public class ForeachInstructionTest extends TestUtils {
 
         // Process.
         ForeachInstruction foreach = new ForeachInstruction(instructions, list, value, key);
-        foreach.process(debugger);
+        InstructionFlow<MetaExpression> result = foreach.process(debugger);
 
         // Verify.
         List<MetaExpression> keyList = new ArrayList<>(valueList.size()); // Not used in the actual list, just to verify.
         for (int i = 0; i < valueList.size(); i++) {
             keyList.add(fromValue(i));
         }
-        verifyAll(key, keyList, value, valueList);
+        verifyAll(key, keyList, value, valueList, result);
     }
 
     @Test
@@ -137,13 +138,13 @@ public class ForeachInstructionTest extends TestUtils {
 
         // Process.
         ForeachInstruction foreach = new ForeachInstruction(instructions, map, value, key);
-        foreach.process(debugger);
+        InstructionFlow<MetaExpression> result = foreach.process(debugger);
 
         // Verify.
         List<MetaExpression> keyList = new ArrayList<>();
         values.keySet().forEach(k -> keyList.add(fromValue(k)));
         List<MetaExpression> valueList = new ArrayList<>(values.values());
-        verifyAll(key, keyList, value, valueList);
+        verifyAll(key, keyList, value, valueList, result);
     }
 
     @Test
@@ -171,5 +172,27 @@ public class ForeachInstructionTest extends TestUtils {
 
         // Verify that the children match the created items.
         assertEqualsNoOrder(foreach.getChildren().toArray(), new Processable[]{value, key, atomic, instructions});
+    }
+
+    @Test
+    public void testProcessInstructionReturns() {
+        // Create the atomic.
+        MetaExpression atomic = fromValue("baz");
+
+        // Create the instruction.
+        MetaExpression toReturn = fromValue(3.14);
+        instructions.add(new ReturnInstruction(toReturn)); // Return an arbitrary value.
+
+        // Mock the key and value var.
+        VariableDeclaration key = mock(VariableDeclaration.class);
+        VariableDeclaration value = mock(VariableDeclaration.class);
+
+        // Process.
+        ForeachInstruction foreach = new ForeachInstruction(instructions, atomic, value, key);
+        InstructionFlow<MetaExpression> result = foreach.process(debugger);
+
+        // Verify.
+        assertEquals(result.get(), toReturn);
+        verifyAll(key, Collections.singletonList(fromValue(0)), value, Collections.singletonList(atomic), null);
     }
 }
