@@ -78,6 +78,8 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
      * @param value    the value to set
      * @param debugger the debugger
      */
+    @SuppressWarnings("squid:S1319")
+    // We should use LinkedHashMap as a parameter here to enforce ordering in the map
     public ExpressionBuilder(final LinkedHashMap<Processable, Processable> value, final Debugger debugger) {
         expressionSupplier = () -> {
             LinkedHashMap<String, MetaExpression> entries = new LinkedHashMap<>();
