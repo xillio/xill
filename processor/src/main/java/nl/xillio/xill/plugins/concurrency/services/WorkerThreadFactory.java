@@ -87,6 +87,9 @@ class WorkerThreadFactory {
         MetaExpression threadIdValue = fromValue(threadId);
         map.put("threadId", threadIdValue);
 
+        // Register references
+        map.values().forEach(MetaExpression::registerReference);
+
         return fromValue(map);
     }
 
