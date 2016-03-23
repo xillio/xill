@@ -85,11 +85,7 @@ public class ForeachInstruction extends CompoundInstruction {
 
         switch (result.getType()) {
             case ATOMIC:
-                if (result.hasMeta(MetaExpressionIterator.class)) {
-                    return doIterations(debugger, result.getMeta(MetaExpressionIterator.class), null);
-                } else {
-                    return processIteration(() -> ExpressionBuilderHelper.fromValue(0), result, debugger);
-                }
+                return iterateAtomic(debugger, result);
             case LIST:
                 return tryIterations(debugger, ((List<MetaExpression>) result.getValue()).iterator(), null);
             case OBJECT:
@@ -97,6 +93,15 @@ public class ForeachInstruction extends CompoundInstruction {
                 return tryIterations(debugger, map.values().iterator(), map.keySet());
             default:
                 throw new NotImplementedException("This type has not been implemented."); // Should never happen.
+        }
+    }
+
+    private InstructionFlow<MetaExpression> iterateAtomic(Debugger debugger, MetaExpression value) {
+        // If the atomic has an iterable meta, iterate over that. Otherwise do a single iteration.
+        if (value.hasMeta(MetaExpressionIterator.class)) {
+            return doIterations(debugger, value.getMeta(MetaExpressionIterator.class), null);
+        } else {
+            return processIteration(() -> ExpressionBuilderHelper.fromValue(0), value, debugger);
         }
     }
 
