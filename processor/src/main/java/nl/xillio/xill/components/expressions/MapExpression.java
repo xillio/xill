@@ -51,6 +51,9 @@ public class MapExpression extends MapFilterHandler {
         int i = -1;
 
         while (iterator.hasNext()) {
+            if (debugger.shouldStop()) {
+                break;
+            }
             MetaExpression value = iterator.next();
             value.registerReference();
 
