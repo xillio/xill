@@ -15,8 +15,7 @@ public class ForeachInstruction extends CompoundInstruction {
 
     private final InstructionSet instructionSet;
     private final Processable list;
-    private final VariableDeclaration valueVar;
-    private final VariableDeclaration keyVar;
+    private final VariableDeclaration valueVar, keyVar;
 
     /**
      * Create a {@link ForeachInstruction} with key and value variables
@@ -29,10 +28,12 @@ public class ForeachInstruction extends CompoundInstruction {
     public ForeachInstruction(final InstructionSet instructionSet, final Processable list, final VariableDeclaration valueVar, final VariableDeclaration keyVar) {
         this.instructionSet = instructionSet;
         instructionSet.setParentInstruction(this);
+
         this.list = list;
         this.valueVar = valueVar;
-        valueVar.setHostInstruction(instructionSet);
         this.keyVar = keyVar;
+
+        valueVar.setHostInstruction(instructionSet);
         if (keyVar != null) {
             keyVar.setHostInstruction(instructionSet);
         }
@@ -45,25 +46,24 @@ public class ForeachInstruction extends CompoundInstruction {
      * @param list           the list of values
      * @param valueVar       the reference to the value variable
      */
-    public ForeachInstruction(final InstructionSet instructionSet, final Processable list,
-                              final VariableDeclaration valueVar) {
+    public ForeachInstruction(final InstructionSet instructionSet, final Processable list, final VariableDeclaration valueVar) {
         this(instructionSet, list, valueVar, null);
-
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) {
+        // Create the list instruction, set the host instruction and position.
         ExpressionInstruction listInstruction = new ExpressionInstruction(list);
         listInstruction.setHostInstruction(getHostInstruction());
         listInstruction.setPosition(getPosition());
+
+        // Start, process, and end the instruction.
         debugger.startInstruction(listInstruction);
         InstructionFlow<MetaExpression> flow = listInstruction.process(debugger);
         debugger.endInstruction(listInstruction, flow);
 
-
         MetaExpression result = flow.get();
-
 
         try {
             result.registerReference();
@@ -90,15 +90,12 @@ public class ForeachInstruction extends CompoundInstruction {
                     //We have a MetaExpressionIterator in this value, this means we should iterate over that
                     MetaExpressionIterator iterator = result.getMeta(MetaExpressionIterator.class);
                     int i = 0;
+
                     while (iterator.hasNext()) {
                         MetaExpression value = iterator.next();
 
                         int keyValue = i++;
-                        InstructionFlow<MetaExpression> instructionResult = processIteration(
-                                () -> ExpressionBuilderHelper.fromValue(keyValue),
-                                value,
-                                debugger
-                        );
+                        InstructionFlow<MetaExpression> instructionResult = processIteration(() -> ExpressionBuilderHelper.fromValue(keyValue), value, debugger);
 
                         if (instructionResult.skips()) {
                             continue;
@@ -113,20 +110,15 @@ public class ForeachInstruction extends CompoundInstruction {
                             foreachResult = InstructionFlow.doResume();
                             break;
                         }
-
-
                     }
                 }
                 break;
-            case LIST: // Iterate over list
+            case LIST:
                 try {
                     int i = 0;
                     for (MetaExpression value : (List<MetaExpression>) result.getValue()) {
-
                         int keyValue = i++;
-                        InstructionFlow<MetaExpression> instructionResult = processIteration(
-                                () -> ExpressionBuilderHelper.fromValue(keyValue), value, debugger);
-
+                        InstructionFlow<MetaExpression> instructionResult = processIteration(() -> ExpressionBuilderHelper.fromValue(keyValue), value, debugger);
 
                         if (instructionResult.skips()) {
                             continue;
@@ -141,7 +133,6 @@ public class ForeachInstruction extends CompoundInstruction {
                             foreachResult = InstructionFlow.doResume();
                             break;
                         }
-
                     }
                 } catch (ConcurrentModificationException e) {
                     throw new RobotRuntimeException("You cannot modify (add to, or remove from) a list while you are iterating over it.", e);
@@ -150,8 +141,6 @@ public class ForeachInstruction extends CompoundInstruction {
             case OBJECT:
                 try {
                     for (Map.Entry<String, MetaExpression> value : ((Map<String, MetaExpression>) result.getValue()).entrySet()) {
-
-
                         InstructionFlow<MetaExpression> instructionResult = processIteration(() -> ExpressionBuilderHelper.fromValue(value.getKey()), value.getValue(), debugger);
                         if (instructionResult.skips()) {
                             continue;
@@ -166,15 +155,13 @@ public class ForeachInstruction extends CompoundInstruction {
                             foreachResult = InstructionFlow.doResume();
                             break;
                         }
-
                     }
                 } catch (ConcurrentModificationException e) {
                     throw new RobotRuntimeException("You cannot modify (add to, or remove from) an object while you are iterating over it.", e);
                 }
                 break;
             default:
-                throw new NotImplementedException("This type has not been implemented.");
-
+                throw new NotImplementedException("This type has not been implemented."); // Should never happen.
         }
 
         return foreachResult;
@@ -189,12 +176,9 @@ public class ForeachInstruction extends CompoundInstruction {
         InstructionFlow<MetaExpression> instructionResult = instructionSet.process(debugger);
 
         if (instructionResult.returns() && instructionResult.hasValue()) {
+            // Prevent the instruction result from being disposed.
             instructionResult.get().preventDisposal();
-
-            // Release
             releaseVariables();
-
-
             instructionResult.get().allowDisposal();
         } else {
             releaseVariables();

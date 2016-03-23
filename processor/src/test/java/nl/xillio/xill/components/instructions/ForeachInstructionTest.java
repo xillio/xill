@@ -176,12 +176,12 @@ public class ForeachInstructionTest extends TestUtils {
 
     @Test
     public void testProcessInstructionReturns() {
-        // Create the atomic.
+        // Create the iterable.
         MetaExpression atomic = fromValue("baz");
 
         // Create the instruction.
         MetaExpression toReturn = fromValue(3.14);
-        instructions.add(new ReturnInstruction(toReturn)); // Return an arbitrary value.
+        instructions.add(new ReturnInstruction(toReturn));
 
         // Mock the key and value var.
         VariableDeclaration key = mock(VariableDeclaration.class);
