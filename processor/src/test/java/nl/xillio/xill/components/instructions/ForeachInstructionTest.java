@@ -4,6 +4,7 @@ import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.InstructionFlow;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.MetaExpressionIterator;
+import nl.xillio.xill.api.components.Processable;
 import nl.xillio.xill.debugging.XillDebugger;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -12,8 +13,7 @@ import java.util.*;
 import java.util.function.Function;
 
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertThrows;
+import static org.testng.Assert.*;
 
 public class ForeachInstructionTest extends TestUtils {
     private XillDebugger debugger;
@@ -74,7 +74,7 @@ public class ForeachInstructionTest extends TestUtils {
         foreach.process(debugger);
 
         // Verify.
-        verifyAll(key, Arrays.asList(fromValue(0)), value, Arrays.asList(atomic));
+        verifyAll(key, Collections.singletonList(fromValue(0)), value, Collections.singletonList(atomic));
     }
 
     @Test
@@ -144,5 +144,32 @@ public class ForeachInstructionTest extends TestUtils {
         values.keySet().forEach(k -> keyList.add(fromValue(k)));
         List<MetaExpression> valueList = new ArrayList<>(values.values());
         verifyAll(key, keyList, value, valueList);
+    }
+
+    @Test
+    public void testGetChildrenWithoutKey() {
+        // The iterable and value.
+        MetaExpression atomic = fromValue("bar");
+        VariableDeclaration value = mock(VariableDeclaration.class);
+
+        // Create the instruction.
+        ForeachInstruction foreach = new ForeachInstruction(instructions, atomic, value);
+
+        // Verify that the children match the created items.
+        assertEqualsNoOrder(foreach.getChildren().toArray(), new Processable[]{value, atomic, instructions});
+    }
+
+    @Test
+    public void testGetChildrenWithKey() {
+        // The iterable, key and value.
+        MetaExpression atomic = fromValue("bar");
+        VariableDeclaration value = mock(VariableDeclaration.class);
+        VariableDeclaration key = mock(VariableDeclaration.class);
+
+        // Create the instruction.
+        ForeachInstruction foreach = new ForeachInstruction(instructions, atomic, value, key);
+
+        // Verify that the children match the created items.
+        assertEqualsNoOrder(foreach.getChildren().toArray(), new Processable[]{value, key, atomic, instructions});
     }
 }
