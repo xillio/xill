@@ -20,7 +20,6 @@ import java.util.LinkedHashMap;
  */
 @Singleton
 public class CopyConstruct extends Construct {
-
     @Inject
     private FileUtilities fileUtils;
 
@@ -31,7 +30,6 @@ public class CopyConstruct extends Construct {
                 new Argument("source", ATOMIC),
                 new Argument("target", ATOMIC));
     }
-
     static MetaExpression process(final ConstructContext context, final FileUtilities fileUtils, final MetaExpression source, final MetaExpression target) {
 
         Path sourceFile = getPath(context, source);
