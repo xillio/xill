@@ -1,6 +1,10 @@
 # Xill IDE - Change Log
 All notable changes to this project will be documented in this file
 
+## [3.3.8] - 23-03-2016
+### Fix
+- Line with a breakpoint is executed on stop [CTC-1409]
+
 ## [3.3.7] - 23-03-2016
 ### Change
 - Check naming conventions [CTC-1396]
