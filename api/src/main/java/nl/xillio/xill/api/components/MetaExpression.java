@@ -25,7 +25,7 @@ public abstract class MetaExpression implements Expression, Processable {
      * Enable this to get debug information.
      * This will prevent disposal of the value field and add it to the error messages.
      */
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     private Throwable closedLocation;
 
     @Inject
