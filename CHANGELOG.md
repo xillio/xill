@@ -1,6 +1,10 @@
 # Xill IDE - Change Log
 All notable changes to this project will be documented in this file
 
+## [3.3.7] - unreleased
+### Change
+- Check naming conventions [CTC-1396]
+
 ## [3.3.6] - 22-3-2016
 ### Fix
 - Remove BOM characters [CTC-1365]
