@@ -106,14 +106,13 @@ public class ForeachInstructionTest extends TestUtils {
     public void testProcessList() {
         // Create the list.
         List<MetaExpression> valueList = Arrays.asList(fromValue("a"), fromValue("b"), fromValue("c"));
-        MetaExpression list = fromValue(valueList);
 
         // Mock the key and value var.
         VariableDeclaration key = mock(VariableDeclaration.class);
         VariableDeclaration value = mock(VariableDeclaration.class);
 
         // Process.
-        ForeachInstruction foreach = new ForeachInstruction(instructions, list, value, key);
+        ForeachInstruction foreach = new ForeachInstruction(instructions, fromValue(valueList), value, key);
         InstructionFlow<MetaExpression> result = foreach.process(debugger);
 
         // Verify.
@@ -127,23 +126,22 @@ public class ForeachInstructionTest extends TestUtils {
     @Test
     public void testProcessObject() {
         // Create the map.
-        LinkedHashMap<String, MetaExpression> values = new LinkedHashMap<>();
-        values.put("a", fromValue(true));
-        values.put("b", fromValue(false));
-        MetaExpression map = fromValue(values);
+        LinkedHashMap<String, MetaExpression> map = new LinkedHashMap<>();
+        map.put("a", fromValue(true));
+        map.put("b", fromValue(false));
 
         // Mock the key and value var.
         VariableDeclaration key = mock(VariableDeclaration.class);
         VariableDeclaration value = mock(VariableDeclaration.class);
 
         // Process.
-        ForeachInstruction foreach = new ForeachInstruction(instructions, map, value, key);
+        ForeachInstruction foreach = new ForeachInstruction(instructions, fromValue(map), value, key);
         InstructionFlow<MetaExpression> result = foreach.process(debugger);
 
         // Verify.
         List<MetaExpression> keyList = new ArrayList<>();
-        values.keySet().forEach(k -> keyList.add(fromValue(k)));
-        List<MetaExpression> valueList = new ArrayList<>(values.values());
+        map.keySet().forEach(k -> keyList.add(fromValue(k)));
+        List<MetaExpression> valueList = new ArrayList<>(map.values());
         verifyAll(key, keyList, value, valueList, result);
     }
 
@@ -176,10 +174,10 @@ public class ForeachInstructionTest extends TestUtils {
 
     @Test
     public void testProcessInstructionReturns() {
-        // Create the iterable.
-        MetaExpression atomic = fromValue("baz");
+        // Create the list.
+        List<MetaExpression> valueList = Collections.singletonList(fromValue("baz"));
 
-        // Create the instruction.
+        // Create the return instruction.
         MetaExpression toReturn = fromValue(3.14);
         instructions.add(new ReturnInstruction(toReturn));
 
@@ -188,11 +186,11 @@ public class ForeachInstructionTest extends TestUtils {
         VariableDeclaration value = mock(VariableDeclaration.class);
 
         // Process.
-        ForeachInstruction foreach = new ForeachInstruction(instructions, atomic, value, key);
+        ForeachInstruction foreach = new ForeachInstruction(instructions, fromValue(valueList), value, key);
         InstructionFlow<MetaExpression> result = foreach.process(debugger);
 
         // Verify.
         assertEquals(result.get(), toReturn);
-        verifyAll(key, Collections.singletonList(fromValue(0)), value, Collections.singletonList(atomic), null);
+        verifyAll(key, Collections.singletonList(fromValue(0)), value, valueList, null);
     }
 }
