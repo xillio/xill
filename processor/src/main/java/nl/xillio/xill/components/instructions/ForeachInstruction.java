@@ -1,12 +1,7 @@
 package nl.xillio.xill.components.instructions;
 
-import nl.xillio.xill.CodePosition;
 import nl.xillio.xill.api.Debugger;
-import nl.xillio.xill.api.components.InstructionFlow;
-import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.components.MetaExpressionIterator;
-import nl.xillio.xill.api.components.Processable;
-import nl.xillio.xill.api.components.ExpressionBuilderHelper;
+import nl.xillio.xill.api.components.*;
 import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
@@ -58,7 +53,7 @@ public class ForeachInstruction extends CompoundInstruction {
 
     @SuppressWarnings("unchecked")
     @Override
-    public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
+    public InstructionFlow<MetaExpression> process(final Debugger debugger) {
         ExpressionInstruction listInstruction = new ExpressionInstruction(list);
         listInstruction.setHostInstruction(getHostInstruction());
         listInstruction.setPosition(getPosition());
@@ -213,11 +208,6 @@ public class ForeachInstruction extends CompoundInstruction {
         if (keyVar != null) {
             keyVar.releaseVariable();
         }
-    }
-
-    @Override
-    public void setPosition(CodePosition position) {
-        super.setPosition(position);
     }
 
     @Override
