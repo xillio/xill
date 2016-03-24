@@ -139,9 +139,10 @@ public class ExecConstructTest extends TestUtils {
 
     /**
      * Mock a {@link ProcessFactory} that will output a given number of null characters on the output and error stream
+     *
      * @param outputStreamLength Number of null characters the output stream returns
-     * @param errorStreamLength Number of null characters the error stream returns
-     *                          @param exitCode The exit code the process should have
+     * @param errorStreamLength  Number of null characters the error stream returns
+     * @param exitCode           The exit code the process should have
      * @return The mocked {@link ProcessFactory}
      */
     private ProcessFactory mockProcessFactory(int outputStreamLength, int errorStreamLength, int exitCode) throws InterruptedException {

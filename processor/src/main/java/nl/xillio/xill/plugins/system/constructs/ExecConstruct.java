@@ -74,7 +74,7 @@ public class ExecConstruct extends Construct {
 
         // Log an error when the process quit with an error
         // This is not an exception since the user should be able to get the output of the process
-        if (exitCode!=0){
+        if (exitCode != 0) {
             log.error("Process exited with non-zero exit code " + exitCode);
         }
 
