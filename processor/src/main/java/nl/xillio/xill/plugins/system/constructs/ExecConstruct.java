@@ -55,7 +55,7 @@ public class ExecConstruct extends Construct {
         Process process = startProcess(processFactory, processDescription);
 
         // Subscribe to output
-        ProcessOutput output = listenToStreams(process.getInputStream(), process.getErrorStream(), processDescription, log);
+        ProcessOutput output = listenToStreams(process.getInputStream(), process.getErrorStream());
 
         // Wait for the process to stop
         try {
@@ -133,29 +133,23 @@ public class ExecConstruct extends Construct {
     /**
      * Start listening to the stderr and stdout streams of a {@link Process}
      *
-     * @param out         the stdout stream
-     * @param err         the stdin stream
-     * @param description the {@link ProcessDescription} for the {@link Process} hosting the two streams
-     * @param log         the logger to log to when an error occurs
+     * @param out the stdout stream
+     * @param err the stdin stream
      * @return an {@link ProcessOutput} object that holds the currently streamed output
      */
-    private static ProcessOutput listenToStreams(final InputStream out, final InputStream err, final ProcessDescription description, final Logger log) {
-        List<String> errors = new ArrayList<>();
+    private static ProcessOutput listenToStreams(final InputStream out, final InputStream err) {
 
-        // Listen to errors
+        // Read from input and output as soon as a line is available
+        // Not reading from output and error streams fast enough could cause the process to hang
+
+        List<String> errors = new ArrayList<>();
         InputStreamListener errListener = new InputStreamListener(err);
-        errListener.getOnLineComplete().addListener(line -> {
-            log.error(description.getFriendlyName() + ": " + line);
-            errors.add(line);
-        });
+        errListener.getOnLineComplete().addListener(errors::add);
         errListener.start();
 
         List<String> output = new ArrayList<>();
         InputStreamListener outListener = new InputStreamListener(out);
-        outListener.getOnLineComplete().addListener(line -> {
-            output.add(line);
-            ;
-        });
+        outListener.getOnLineComplete().addListener(output::add);
         outListener.start();
 
         return new ProcessOutput(output, errors, outListener, errListener);
