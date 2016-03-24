@@ -1,6 +1,10 @@
 # Xill IDE - Change Log
 All notable changes to this project will be documented in this file
 
+## [3.3.9] - 24-03-2016
+### Add
+- Concurrency package and pipeline processing [CTC-1454][CTC-1455][CTC-1456][CTC-1458][CTC-1459][CTC-1460]
+
 ## [3.3.8] - 23-03-2016
 ### Fix
 - Line with a breakpoint is executed on stop [CTC-1409]

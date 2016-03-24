@@ -3,12 +3,16 @@ package nl.xillio.xill.api.construct;
 import nl.xillio.events.EventHost;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.LogUtil;
+import nl.xillio.xill.api.XillEnvironment;
+import nl.xillio.xill.api.XillProcessor;
 import nl.xillio.xill.api.components.EventEx;
 import nl.xillio.xill.api.components.RobotID;
 import nl.xillio.xill.api.events.RobotStartedAction;
 import nl.xillio.xill.api.events.RobotStoppedAction;
 import org.slf4j.Logger;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -132,5 +136,17 @@ public class ConstructContext {
      */
     public UUID getCompilerSerialId() {
         return compilerSerialId;
+    }
+
+    /**
+     * Create a processor using the current debugger as the parent.
+     *
+     * @param robot           the robot that should be compiled
+     * @param xillEnvironment the xill environment
+     * @return the processor
+     * @throws IOException if an IO error occurs
+     */
+    public XillProcessor createChildProcessor(Path robot, XillEnvironment xillEnvironment) throws IOException {
+        return xillEnvironment.buildProcessor(robotID.getProjectPath().toPath(), robot, debugger.createChild());
     }
 }
