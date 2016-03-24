@@ -25,7 +25,7 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
     /**
      * Create a new {@link InstructionSet} in debugging mode
      *
-     * @param debugger    The debugger object necessary for processing the instruction.
+     * @param debugger The debugger object necessary for processing the instruction.
      */
     public InstructionSet(final Debugger debugger) {
         this.debugger = debugger;
@@ -34,7 +34,7 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
     /**
      * Add an instruction to the instructionSet
      *
-     * @param instruction    The instruction to be added to the InstructionSet object.
+     * @param instruction The instruction to be added to the InstructionSet object.
      */
     public void add(final Instruction instruction) {
         instruction.setHostInstruction(this);
@@ -58,9 +58,9 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
         List<Instruction> processedInstructions = new ArrayList<>();
 
         for (Instruction instruction : instructions) {
-
             if (debugger.shouldStop()) {
                 processResult = InstructionFlow.doReturn(ExpressionBuilderHelper.NULL);
+                debugger.returning(this, processResult);
                 break;
             }
 
@@ -68,7 +68,12 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
                 debugger.startInstruction(instruction);
             }
 
-
+            if (debugger.shouldStop()) {
+                processResult = InstructionFlow.doReturn(ExpressionBuilderHelper.NULL);
+                debugger.endInstruction(instruction, processResult);
+                debugger.returning(this, processResult);
+                break;
+            }
 
             InstructionFlow<MetaExpression> result = processInstruction(instruction, debugger);
             processedInstructions.add(instruction);
@@ -122,7 +127,6 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
         } catch (RobotRuntimeException e) {
             debugger.handle(e);
         }
-
         return InstructionFlow.doResume(ExpressionBuilderHelper.NULL);
     }
 
