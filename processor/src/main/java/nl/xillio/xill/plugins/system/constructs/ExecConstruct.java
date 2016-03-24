@@ -58,8 +58,9 @@ public class ExecConstruct extends Construct {
         ProcessOutput output = listenToStreams(process.getInputStream(), process.getErrorStream());
 
         // Wait for the process to stop
+        int exitCode = -1;
         try {
-            process.waitFor();
+            exitCode = process.waitFor();
         } catch (InterruptedException e) {
             LOGGER.error("Execution interrupted: " + e.getMessage(), e);
         }
@@ -70,6 +71,12 @@ public class ExecConstruct extends Construct {
 
         // Stop stopwatch
         sw.stop();
+
+        // Log an error when the process quit with an error
+        // This is not an exception since the user should be able to get the output of the process
+        if (exitCode!=0){
+            log.error("Process exited with non-zero exit code " + exitCode);
+        }
 
         // Return results
         return parseResult(output, sw.getTime());
