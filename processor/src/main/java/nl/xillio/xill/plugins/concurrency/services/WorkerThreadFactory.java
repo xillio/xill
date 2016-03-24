@@ -57,6 +57,12 @@ class WorkerThreadFactory {
                 }
         );
 
+        context.getOnRobotInterrupt().addListener(e -> {
+            context.getRootLogger().info("Interrupting Concurrent Pipeline");
+            outputQueue.clearAndClose();
+            processor.getDebugger().stop();
+        });
+
         MetaExpression argument = buildArgument(outputQueue, workerConfiguration.getConfiguration(), threadId);
         processor.getRobot().setArgument(argument);
 
@@ -86,9 +92,6 @@ class WorkerThreadFactory {
 
         MetaExpression threadIdValue = fromValue(threadId);
         map.put("threadId", threadIdValue);
-
-        // Register references
-        map.values().forEach(MetaExpression::registerReference);
 
         return fromValue(map);
     }

@@ -72,4 +72,9 @@ public class XillQueue implements MetadataExpression {
     public void close() {
         closed = true;
     }
+
+    public void clearAndClose() {
+        queue.clear();
+        close();
+    }
 }
