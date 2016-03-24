@@ -3,6 +3,7 @@ package nl.xillio.xill;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import nl.xillio.events.EventHost;
+import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.NullDebugger;
 import nl.xillio.xill.api.components.ExpressionBuilderHelper;
 import nl.xillio.xill.api.components.ExpressionDataType;
@@ -102,7 +103,7 @@ public class TestUtils extends ExpressionBuilderHelper {
     }
 
     protected ConstructContext context(Construct construct) {
-        return new ConstructContext(RobotID.dummyRobot(), RobotID.dummyRobot(), construct, new NullDebugger(), UUID.randomUUID(), new EventHost<>(), new EventHost<>());
+        return new ConstructContext(RobotID.dummyRobot(), RobotID.dummyRobot(), construct, mock(Debugger.class, RETURNS_DEEP_STUBS), UUID.randomUUID(), new EventHost<>(), new EventHost<>());
     }
 
     protected MetaExpression process(Construct construct, MetaExpression... arguments) {

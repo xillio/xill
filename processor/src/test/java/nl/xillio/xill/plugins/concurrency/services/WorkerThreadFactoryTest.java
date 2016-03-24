@@ -33,7 +33,7 @@ public class WorkerThreadFactoryTest extends TestUtils {
 
         // Create input
         WorkerConfiguration configuration = new WorkerConfiguration();
-        ConstructContext constructContext = context(mock(Construct.class));
+        ConstructContext constructContext = context();
         Robot robot = new nl.xillio.xill.components.Robot(RobotID.dummyRobot(), null, null, null, null);
         when(environment.buildProcessor(any(), any(), any()).getRobot()).thenReturn(robot);
 
