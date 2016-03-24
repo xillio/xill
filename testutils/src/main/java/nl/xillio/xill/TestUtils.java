@@ -19,7 +19,11 @@ import nl.xillio.xill.services.json.PrettyJsonParser;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -93,6 +97,9 @@ public class TestUtils extends ExpressionBuilderHelper {
         return expression;
     }
 
+    protected ConstructContext context() {
+        return context(mock(Construct.class));
+    }
 
     protected ConstructContext context(Construct construct) {
         return new ConstructContext(RobotID.dummyRobot(), RobotID.dummyRobot(), construct, new NullDebugger(), UUID.randomUUID(), new EventHost<>(), new EventHost<>());
@@ -103,5 +110,32 @@ public class TestUtils extends ExpressionBuilderHelper {
                 construct.prepareProcess(context(construct)),
                 arguments
         );
+    }
+
+    protected MetaExpression map(Object... input) {
+        if (input.length % 2 != 0) {
+            throw new IllegalArgumentException("Input must be an even amount of elements");
+        }
+
+        LinkedHashMap<String, MetaExpression> map = new LinkedHashMap<>();
+        for (int i = 0; i < input.length; i += 2) {
+            map.put(input[i].toString(), parseValue(input[i + 1]));
+        }
+
+        return fromValue(map);
+    }
+
+    protected MetaExpression list(Object... input) {
+        List<MetaExpression> list = Arrays.stream(input)
+                .map(this::parseValue)
+                .collect(Collectors.toList());
+        return fromValue(list);
+    }
+
+    private MetaExpression parseValue(Object input) {
+        if (input instanceof MetaExpression) {
+            return (MetaExpression) input;
+        }
+        return MetaExpression.parseObject(input);
     }
 }

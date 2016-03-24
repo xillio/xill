@@ -2,6 +2,7 @@ package nl.xillio.xill.services.inject;
 
 import com.google.inject.AbstractModule;
 import me.biesaart.utils.Log;
+import nl.xillio.xill.api.XillEnvironment;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.services.json.JacksonParser;
@@ -17,6 +18,11 @@ import org.slf4j.Logger;
 public class DefaultInjectorModule extends AbstractModule {
 
     private static final Logger LOGGER = Log.get();
+    private final XillEnvironment xillEnvironment;
+
+    public DefaultInjectorModule(XillEnvironment xillEnvironment) {
+        this.xillEnvironment = xillEnvironment;
+    }
 
     @Override
     protected void configure() {
@@ -30,6 +36,7 @@ public class DefaultInjectorModule extends AbstractModule {
             bind(ProcessBuilder.class).toConstructor(ProcessBuilder.class.getConstructor(String[].class));
             bind(JsonParser.class).toInstance(new JacksonParser(false));
             bind(PrettyJsonParser.class).toInstance(new JacksonParser(true));
+            bind(XillEnvironment.class).toInstance(xillEnvironment);
 
             requestStaticInjection(Construct.class);
             requestStaticInjection(MetaExpression.class);

@@ -9,3 +9,4 @@ nl.xillio.xill.plugins.codec.hash.HashXillPlugin
 nl.xillio.xill.plugins.string.StringXillPlugin
 nl.xillio.xill.plugins.testing.AssertXillPlugin
 nl.xillio.xill.plugins.stream.StreamXillPlugin
+nl.xillio.xill.plugins.concurrency.ConcurrencyXillPlugin

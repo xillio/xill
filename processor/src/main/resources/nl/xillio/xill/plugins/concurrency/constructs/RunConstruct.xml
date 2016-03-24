@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Run a concurrent pipeline of robots.
+This construct will set up the concurrency framework in which multiple instances of robots can be
+connected to each other using queues. These robots will then start processing in parallel which allows
+a xill programmer to utilize all the available resources.
+
+## Worker Configuration
+There are some options available for workers that allow you to configure the behavior of the pipeline step.
+
+    {
+        /**
+         * Required
+         *
+         * The path to the robot that represents the worker.
+         */
+        "robot": "worker.xill",
+
+        /**
+         * Default: amount of cores on the current system
+         *
+         * The amount of instances of the robot that
+         * should run in parallel.
+         */
+        "threadCount": 1,
+
+        /**
+         * Default: 100
+         *
+         * The capacity of the output queue of this step.
+         */
+        "queueSize": 500,
+
+        /**
+         * Default: {}
+         *
+         * The configuration that will be passed to the
+         * worker. This allows you to parameterize your
+         * workers.
+         */
+        "config": {
+            "rootFolder": "C:\\",
+            "database": "myDatabase",
+            "otherOption": false
+        }
+    }
+
+## Workers
+This framework is based on the principle of workers. These workers are represented by single xill robots
+and their responsibility is to take input and/or provide output. Intuitively there are 3 types of workers.
+Check out the examples to see code for each of the types.
+
+### Provider
+The provider will generally be the first type of worker. The sole responsibility of this worker is to provide
+the first unit of work. An example of this would be a file scraper for a file system analysis or an indexer
+for an ecm migration. Providers do not take input but must provide output.
+
+### Transformer
+The transformer can have a variety of responsibilities. It will take input, modify it in some way and then
+output the modified value. An example of this would be the attribute reader for file system analysis or
+a html source cleaner for web migrations. Transformers must consume all input and provide output.
+
+**Tip:** To boost the performance of your transformers you should try to only use one main type of resource.
+(File IO, Database IO, CPU, etc...) This will allow that resource to be utilized completely while the other
+workers can still keep running.
+
+### Consumer
+The consumer is responsible for processing the results of a pipeline. Generally this is the last robot
+of the pipeline and most of the times it will store the results in a database.
+    </description>
+    <examples>
+        <example title="Configuration Examples">
+            <header>Default pipeline with 3 steps</header>
+            <code>
+                use Concurrency;
+
+                Concurrency.run([
+                    {
+                        "robot": "provider.xill"
+                    },
+                    {
+                        "robot": "transformer.xill"
+                    },
+                    {
+                        "robot": "consumer.xill"
+                    }
+                ]);
+            </code>
+            <header>Use some settings</header>
+            <code>
+                use Concurrency;
+
+                Concurrency.run([
+                    {
+                        "robot": "provider.xill",
+                        // Override the amount of threads
+                        "threadCount": 1
+                    },
+                    {
+                        "robot": "transformer.xill",
+                        // Override the output queue size
+                        "queueSize": 500
+                    },
+                    {
+                        "robot": "consumer.xill",
+                        // Provide some configuration for the worker
+                        "config": {
+                            "outputFolder": "output"
+                        }
+                    }
+                ]);
+            </code>
+        </example>
+        <example title="Worker Examples">
+            <header>A provider that provides numbers</header>
+            <code>
+                use Concurrency;
+
+                argument data = Concurrency.testInput();
+
+                // This provider simply pushes numbers into the queue
+                var i = 0;
+                while(++i &lt;= 500) {
+                    Concurrency.push(i, data.output);
+                }
+            </code>
+            <header>A transformer that structures a document</header>
+            <code>
+                use Concurrency;
+
+                argument data = Concurrency.testInput();
+
+                var item = Concurrency.pop(data.input);
+                while(item != null) {
+                    var document = process(item);
+                    Concurrency.push(document, data.output);
+
+                    item = Concurrency.pop(data.input);
+                }
+
+                // This function will restructure a document
+                function process(input) {
+                    var document = {
+                        "_id": input.id,
+                        "nodes": input.content
+                    };
+
+                    return document;
+                }
+            </code>
+            <header>A consumer that saves json files</header>
+            <code>
+                use Concurrency, System;
+                use File, Stream;
+
+                argument data = Concurrency.testInput();
+
+                var item = Concurrency.pop(data.input);
+                while(item != null) {
+                    save(item);
+
+                    item = Concurrency.pop(data.input);
+                }
+
+                // This function will save a document to a json file
+                function save(document) {
+                    var path = "data/" :: document._id :: ".json";
+                    var target = File.openWrite(path);
+                    var json = System.toJSON(document, true);
+                    Stream.write(json, target);
+                }
+            </code>
+        </example>
+    </examples>
+    <references>
+        <reference>push</reference>
+        <reference>pop</reference>
+    </references>
+    <tags>
+        pipeline, worker, queue
+    </tags>
+</function>

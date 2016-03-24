@@ -37,6 +37,9 @@ public class Argument implements AutoCloseable {
     public Argument(final String name, final MetaExpression defaultValue, final ExpressionDataType... acceptedTypes) {
         this.name = name;
         this.defaultValue = defaultValue;
+        if(defaultValue != null) {
+            defaultValue.registerReference();
+        }
 
         if (acceptedTypes.length == 0) {
             // No types provided so accept everything
@@ -86,7 +89,10 @@ public class Argument implements AutoCloseable {
         if (!acceptedTypes[value.getType().toInt()]) {
             return false;
         }
-
+        value.registerReference();
+        if(this.value != null) {
+            this.value.releaseReference();
+        }
         this.value = value;
         return true;
     }

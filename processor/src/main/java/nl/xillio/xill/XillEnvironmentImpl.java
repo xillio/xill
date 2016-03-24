@@ -67,7 +67,7 @@ public class XillEnvironmentImpl implements XillEnvironment {
         needLoad = false;
 
         List<Module> modules = new ArrayList<>(loadedPlugins.values());
-        modules.add(new DefaultInjectorModule());
+        modules.add(new DefaultInjectorModule(this));
         Injector configuredInjector = rootInjector.createChildInjector(modules);
 
         LOGGER.info("Injecting plugin members");
