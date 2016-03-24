@@ -3,8 +3,8 @@
     <description>
 Runs an application and returns the output.  
 
-The result will contain a list of errors, a list of output and the runtime in milliseconds.  
-All errors will also be logged in the console while running.  
+The result will contain a list of errors, a list of output and the runtime in milliseconds.
+When the application exits with a non-zero exit coe this will be logged to the console.
 The directory parameter is the working directory where you would like the command to be executed.
     </description>
     <examples>
