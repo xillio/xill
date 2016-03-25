@@ -66,7 +66,7 @@ public class ExecConstruct extends Construct {
         }
 
         while (output.isAlive()) {
-
+            // Wait for the program to finish.
         }
 
         // Stop stopwatch
