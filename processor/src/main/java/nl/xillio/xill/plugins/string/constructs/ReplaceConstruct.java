@@ -16,9 +16,9 @@ import java.util.regex.PatternSyntaxException;
 
 /**
  * Returns a new string in which occurrences of regex needle found in the text
- * have been replaced by the replacement string. If the parameter 'replaceall'
+ * have been replaced by the replacement string. If the parameter 'replaceAll'
  * is set to false, the routine will only replace the first occurrence. If the
- * parameter 'useregex' is set to false, the routine will not use a regex.
+ * parameter 'useRegex' is set to false, the routine will not use a regex.
  *
  * @author Sander
  */
@@ -40,8 +40,8 @@ public class ReplaceConstruct extends Construct {
                 new Argument("text", ATOMIC),
                 new Argument("needle", ATOMIC),
                 new Argument("replacement", ATOMIC),
-                new Argument("useregex", TRUE, ATOMIC),
-                new Argument("replaceall", TRUE, ATOMIC),
+                new Argument("useRegex", TRUE, ATOMIC),
+                new Argument("replaceAll", TRUE, ATOMIC),
                 new Argument("timeout", fromValue(RegexConstruct.REGEX_TIMEOUT), ATOMIC)};
 
         return new ConstructProcessor(a -> process(a, regexService, stringService), args);
@@ -70,15 +70,14 @@ public class ReplaceConstruct extends Construct {
                 }
                 return fromValue(regexService.replaceFirst(m, replacement));
             } catch (PatternSyntaxException e) {
-                throw new RobotRuntimeException("Invalid pattern in regex()");
+                throw new RobotRuntimeException("Invalid pattern in regex()", e);
             } catch (IllegalArgumentException | FailedToGetMatcherException e) {
-                throw new RobotRuntimeException("Error while executing the regex");
+                throw new RobotRuntimeException("Error while executing the regex", e);
             }
         }
         if (replaceall) {
             return fromValue(stringService.replaceAll(text, needle, replacement));
         }
         return fromValue(stringService.replaceFirst(text, needle, replacement));
-
     }
 }

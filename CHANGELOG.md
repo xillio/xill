@@ -1,7 +1,26 @@
 # Xill IDE - Change Log
 All notable changes to this project will be documented in this file
 
-## [3.3.5] - unreleased
+## [3.3.9] - 24-03-2016
+### Add
+- Concurrency package and pipeline processing [CTC-1454][CTC-1455][CTC-1456][CTC-1458][CTC-1459][CTC-1460]
+
+## [3.3.8] - 23-03-2016
+### Fix
+- Line with a breakpoint is executed on stop [CTC-1409]
+
+## [3.3.7] - 23-03-2016
+### Change
+- Check naming conventions [CTC-1396]
+- Update xill language definition to version 3.1.3
+
+## [3.3.6] - 22-3-2016
+### Fix
+- Remove BOM characters [CTC-1365]
+
+## [3.3.5] - 22-3-2016
+### Add
+- `String.byteLength()` construct to determine length of a string in bytes [CTC-1279]
 
 ## [3.3.4] - 3-3-2016
 ### Add
