@@ -18,7 +18,6 @@ build/
 bin/
 */test-output/
 
-
 # IntelliJ
 *.iml
 .idea/

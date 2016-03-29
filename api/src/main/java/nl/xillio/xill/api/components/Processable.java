@@ -17,12 +17,12 @@ public interface Processable {
      * @return The return value is there is one
      * @throws RobotRuntimeException When processing went wrong
      */
-    public InstructionFlow<MetaExpression> process(Debugger debugger) throws RobotRuntimeException;
+    InstructionFlow<MetaExpression> process(Debugger debugger);
 
     /**
      * Collects all {@link Processable} used by this one. This is used to search through program trees.
      *
      * @return all Children
      */
-    public Collection<Processable> getChildren();
+    Collection<Processable> getChildren();
 }

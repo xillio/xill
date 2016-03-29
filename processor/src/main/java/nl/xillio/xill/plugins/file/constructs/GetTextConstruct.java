@@ -16,6 +16,7 @@ import nl.xillio.xill.plugins.stream.utils.StreamUtils;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+import java.util.regex.Pattern;
 
 /**
  * Read text from a plain text file using the given encoding.
@@ -24,6 +25,7 @@ import java.nio.file.Path;
  */
 @Singleton
 public class GetTextConstruct extends Construct {
+    private static final Pattern LEADING_BOM_PATTERN = Pattern.compile("^\uFEFF+"); // Duplicated in plugin-XML::NodeServiceImpl.
 
     private final FileStreamFactory fileStreamFactory;
     private final IOUtilsService ioUtilsService;
@@ -34,7 +36,6 @@ public class GetTextConstruct extends Construct {
         this.ioUtilsService = ioUtilsService;
     }
 
-
     @Override
     public ConstructProcessor prepareProcess(final ConstructContext context) {
         return new ConstructProcessor(
@@ -44,12 +45,17 @@ public class GetTextConstruct extends Construct {
     }
 
     MetaExpression process(final ConstructContext context, final MetaExpression source, final MetaExpression encoding) {
-        // Get the charset safely, if it was given
+        // Get the charset safely, if it was given.
         Charset charset = StreamUtils.getCharset(encoding);
 
-        // Else read the provided path
+        // Read the provided path.
         Path path = getPath(context, source);
-        return fromValue(toString(buildStream(path), charset));
+        String text = toString(buildStream(path), charset);
+
+        // Remove leading BOM characters.
+        text = LEADING_BOM_PATTERN.matcher(text).replaceFirst("");
+
+        return fromValue(text);
     }
 
     private IOStream buildStream(Path path) {

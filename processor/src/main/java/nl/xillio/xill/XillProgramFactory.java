@@ -15,11 +15,17 @@ import nl.xillio.xill.api.events.RobotStartedAction;
 import nl.xillio.xill.api.events.RobotStoppedAction;
 import nl.xillio.xill.components.expressions.CallbotExpression;
 import nl.xillio.xill.components.expressions.ConstructCall;
-import nl.xillio.xill.components.expressions.FilterExpression;
+import nl.xillio.xill.components.expressions.pipeline.FilterExpression;
 import nl.xillio.xill.components.expressions.FunctionCall;
-import nl.xillio.xill.components.expressions.*;
-import nl.xillio.xill.components.expressions.MapExpression;
+import nl.xillio.xill.components.expressions.FunctionParameterExpression;
+import nl.xillio.xill.components.expressions.pipeline.MapExpression;
+import nl.xillio.xill.components.expressions.pipeline.PeekExpression;
 import nl.xillio.xill.components.expressions.RunBulkExpression;
+import nl.xillio.xill.components.expressions.*;
+import nl.xillio.xill.components.expressions.pipeline.CollectTerminalExpression;
+import nl.xillio.xill.components.expressions.pipeline.ConsumeTerminalExpression;
+import nl.xillio.xill.components.expressions.pipeline.ForeachTerminalExpression;
+import nl.xillio.xill.components.expressions.pipeline.ReduceTerminalExpression;
 import nl.xillio.xill.components.instructions.BreakInstruction;
 import nl.xillio.xill.components.instructions.ContinueInstruction;
 import nl.xillio.xill.components.instructions.*;
@@ -50,6 +56,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.function.Function;
 
 /**
  * This class is responsible for processing the Robot token into a functional
@@ -84,9 +91,9 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
     /**
      * Create a new {@link XillProgramFactory}
      *
-     * @param plugins     list of xill plug-ins.
-     * @param debugger    debugger object necessary for processing the robot.
-     * @param robotID     the robot.
+     * @param plugins  list of xill plug-ins.
+     * @param debugger debugger object necessary for processing the robot.
+     * @param robotID  the robot.
      */
     public XillProgramFactory(final List<XillPlugin> plugins, final Debugger debugger,
                               final RobotID robotID) {
@@ -163,7 +170,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
         while (!functionParameterExpressions.isEmpty()) {
             Entry<xill.lang.xill.FunctionDeclaration, FunctionParameterExpression> pair = functionParameterExpressions
                     .pop();
-            paseToken(pair.getKey(), pair.getValue());
+            parseToken(pair.getKey(), pair.getValue());
         }
 
         // Push all libraries
@@ -958,7 +965,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
         }
 
         // Check whether a construct is deprecated (has a Deprecated annotation) and log a warning if this is the case
-        if (construct.isDeprecated()){
+        if (construct.isDeprecated()) {
             context.getRootLogger().warn("Call to deprecated construct with name \"{}\" at {}", construct.getName(), pos.toString());
         }
 
@@ -995,7 +1002,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
         declaration.initialize(functionDeclaration, arguments);
     }
 
-    private void paseToken(final xill.lang.xill.FunctionDeclaration key, final FunctionParameterExpression expression) {
+    private void parseToken(final xill.lang.xill.FunctionDeclaration key, final FunctionParameterExpression expression) {
 
         FunctionDeclaration functionDeclaration = functions.get(key);
         expression.setFunction(functionDeclaration);
@@ -1004,44 +1011,90 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
     /**
      * Parse a {@link MapExpression}
      *
-     * @param token
-     * @return
-     * @throws XillParsingException
+     * @param token the token
+     * @return the expression
+     * @throws XillParsingException if a compile error occurs
      */
     Processable parseToken(final xill.lang.xill.MapExpression token) throws XillParsingException {
-        if (token.getArguments().size() > 1) {
-            CodePosition pos = pos(token);
-            throw new XillParsingException("Too many arguments were provided.", pos.getLineNumber(), pos.getRobotID());
-        }
-        Processable argument = parse(token.getArguments().get(0));
-
-        MapExpression map = new MapExpression(argument);
-
-        functionParameterExpressions.push(new SimpleEntry<>(token.getFunction(), map));
-
-        return map;
+        return parseFunctionParameter(token, MapExpression::new);
     }
 
     /**
      * Parse a {@link FilterExpression}
      *
-     * @param token
-     * @return
-     * @throws XillParsingException
+     * @param token the token
+     * @return the expression
+     * @throws XillParsingException if a compile error occurs
      */
     Processable parseToken(final xill.lang.xill.FilterExpression token) throws XillParsingException {
-        if (token.getArguments().size() > 1) {
-            CodePosition pos = pos(token);
-            throw new XillParsingException("Too many arguments were provided.", pos.getLineNumber(), pos.getRobotID());
-        }
-        Processable argument = parse(token.getArguments().get(0));
-
-        FilterExpression filter = new FilterExpression(argument);
-
-        functionParameterExpressions.push(new SimpleEntry<>(token.getFunction(), filter));
-
-        return filter;
+        return parseFunctionParameter(token, FilterExpression::new);
     }
+
+    /**
+     * Parse a {@link PeekExpression}
+     *
+     * @param token the token
+     * @return the expression
+     * @throws XillParsingException if a compile error occurs
+     */
+    Processable parseToken(final xill.lang.xill.PeekExpression token) throws XillParsingException {
+        return parseFunctionParameter(token, PeekExpression::new);
+    }
+
+    /**
+     * Parse a {@link ForeachExpression}
+     *
+     * @param token the token
+     * @return the expression
+     * @throws XillParsingException if a compile error occurs
+     */
+    Processable parseToken(final xill.lang.xill.ForeachExpression token) throws XillParsingException {
+        return parseFunctionParameter(token, ForeachTerminalExpression::new);
+    }
+
+    /**
+     * Parse a {@link ReduceTerminalExpression}
+     *
+     * @param token the token
+     * @return the expression
+     * @throws XillParsingException if a compile error occurs
+     */
+    Processable parseToken(final xill.lang.xill.ReduceExpression token) throws XillParsingException {
+        Processable accumulator = parse(token.getAccumulator());
+        return parseFunctionParameter(token, iterable -> new ReduceTerminalExpression(accumulator, iterable));
+    }
+
+    private Processable parseFunctionParameter(xill.lang.xill.FunctionParameterExpression token, Function<Processable, FunctionParameterExpression> constructor) throws XillParsingException {
+        Processable argument = parse(token.getArgument());
+        FunctionParameterExpression result = constructor.apply(argument);
+        functionParameterExpressions.push(new SimpleEntry<>(token.getFunction(), result));
+        return result;
+    }
+
+    /**
+     * Parse a {@link ConsumeExpression}
+     *
+     * @param expression the token
+     * @return the expression
+     * @throws XillParsingException if a compile error occurs
+     */
+    Processable parseToken(final xill.lang.xill.ConsumeExpression expression) throws XillParsingException {
+        Processable iterableInput = parse(expression.getArgument());
+        return new ConsumeTerminalExpression(iterableInput);
+    }
+
+    /**
+     * Parse a {@link CollectExpression}
+     *
+     * @param expression the token
+     * @return the expression
+     * @throws XillParsingException if a compile error occurs
+     */
+    Processable parseToken(final xill.lang.xill.CollectExpression expression) throws XillParsingException {
+        Processable iterableInput = parse(expression.getArgument());
+        return new CollectTerminalExpression(iterableInput);
+    }
+
 
     /**
      * Parse a {@link CallbotExpression}

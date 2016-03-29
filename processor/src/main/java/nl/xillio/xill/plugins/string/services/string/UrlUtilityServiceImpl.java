@@ -1,12 +1,14 @@
 package nl.xillio.xill.plugins.string.services.string;
 
 import com.google.inject.Singleton;
-import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,8 +41,8 @@ public class UrlUtilityServiceImpl implements UrlUtilityService {
     }
 
     @Override
-    public byte[] readFileToByteArray(final File file) throws IOException {
-        return FileUtils.readFileToByteArray(file);
+    public byte[] readFileToByteArray(final Path filePath) throws IOException {
+        return Files.readAllBytes(filePath);
     }
 
     @Override
