@@ -116,10 +116,10 @@ public class DateServiceImpl implements DateService, DateFactory {
 
     @Override
     public Map<String, Long> getFieldValues(Date date) {
-        Map<String, Long> fields = new HashMap<>();
+        LinkedHashMap<String, Long> fields = new LinkedHashMap<>();
         for (ChronoField field : ChronoField.values()) {
             if (date.getZoned().isSupported(field)) {
-                fields.put(field.toString(), date.getZoned().getLong(field));
+                fields.put(CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, field.toString()), date.getZoned().getLong(field));
             }
         }
         return fields;
