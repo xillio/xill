@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Converts the date to a string using the provided Language tag if no tag is given the pattern "yyyy-MM-dd HH:mm:ss" is used.  
+Converts the date to a string using the provided Language tag if no tag is given the pattern "yyyy-MM-dd HH:mm:ss" is used.
+For other format options see the Date.format help page.
 
-If the parameters 'timestyle' and 'datestyle' are both null, it will use the FormatStyle MEDIUM.  
+If the parameters 'timestyle' and 'datestyle' are both null, it will use the FormatStyle MEDIUM.
 If only 'timestyle' is null, it will return the date. if only 'datestyle' is null. it will return the time.  
 If both are not null it will return the date and time.  
 Timestyle and datestyle have to be 'full','long','medium' or 'short'.
@@ -21,6 +22,7 @@ System.print(Date.localizedFormat(date, "en-GB","full","full"));
     </examples>
     <references>
         <reference>info</reference>
+        <reference>format</reference>
     </references>
 	    <tags>
         date, time, datetime, format, locale

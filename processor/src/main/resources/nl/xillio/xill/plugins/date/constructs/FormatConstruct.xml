@@ -4,6 +4,24 @@
 Converts the date to a string using the provided format.  
  
 If no format is given the pattern "yyyy-MM-dd HH:mm:ss" is used.
+
+| Symbol | Meaning                      |
+| ------ | --------                     |
+| u/y/Y  | year                         |
+| Q/q    | quarter-of-year              |
+| M/L    | month-of-year                |
+| d      | day-of-month                 |
+| E      | day-of-week                  |
+| H      | hour-of-day                  |
+| m      | minute-of-hour               |
+| s      | second-of-minute             |
+| a      | am/pm                        |
+| '      | escape for text ('text')     |
+| ''     | literal '                    |
+
+Apart from the characters ' [ ] # { } any other special UTF-8 character has no functionality in the format and could be used freely.
+
+For more information see <a href="https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns">Java's pattern definition</a>
     </description>
     <examples>
         <example title="Usage">
