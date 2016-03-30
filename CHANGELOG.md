@@ -1,9 +1,10 @@
 # Xill IDE - Change Log
 All notable changes to this project will be documented in this file
 
-## [3.3.10] - unreleased
+## [3.3.10] - 30-03-2016
 ### Fix
 - Foreach loop fails with inline `Stream.iterate()` [CTC-1438]
+- Memory leak when using MySQL JDBC plugin [CTC-1500]
 
 ## [3.3.9] - 24-03-2016
 ### Add
