@@ -33,17 +33,15 @@ public class ExecConstructTest extends TestUtils {
         MetaExpression arguments = mockAtomicCommand();
 
         MetaExpression directory = NULL;
-        Logger log = mock(Logger.class);
         ProcessFactory processFactory = mockProcessFactory(1, 2, 0);
 
         ArgumentCaptor<ProcessDescription> descriptionCaptor = ArgumentCaptor.forClass(ProcessDescription.class);
 
         // Run the method
-        MetaExpression result = ExecConstruct.process(arguments, directory, log, processFactory);
+        MetaExpression result = ExecConstruct.process(arguments, directory, processFactory);
 
         // Make assertions
         verify(processFactory).apply(descriptionCaptor.capture());
-        verify(log, times(0)).error(any());
 
         assertEquals(descriptionCaptor.getValue().getCommands(), new String[]{"TestCommand"});
         assertEquals(result.getType(), OBJECT);
@@ -74,13 +72,12 @@ public class ExecConstructTest extends TestUtils {
                 fromValue("-t")));
 
         MetaExpression directory = NULL;
-        Logger log = mock(Logger.class);
         ProcessFactory processFactory = mockProcessFactory(6, 3, 0);
 
         ArgumentCaptor<ProcessDescription> descriptionCaptor = ArgumentCaptor.forClass(ProcessDescription.class);
 
         // Run the method
-        MetaExpression result = ExecConstruct.process(arguments, directory, log, processFactory);
+        MetaExpression result = ExecConstruct.process(arguments, directory, processFactory);
 
         // Make assertions
         verify(processFactory).apply(descriptionCaptor.capture());

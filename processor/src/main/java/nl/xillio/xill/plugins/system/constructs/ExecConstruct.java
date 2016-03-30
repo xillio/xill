@@ -37,12 +37,12 @@ public class ExecConstruct extends Construct {
     public ConstructProcessor prepareProcess(final ConstructContext context) {
 
         return new ConstructProcessor(
-                (program, directory) -> process(program, directory, context.getRootLogger(), processFactory),
+                (program, directory) -> process(program, directory, processFactory),
                 new Argument("arguments", ATOMIC, LIST),
                 new Argument("directory", NULL, ATOMIC));
     }
 
-    static MetaExpression process(final MetaExpression arguments, final MetaExpression directory, final Logger log, final ProcessFactory processFactory) {
+    static MetaExpression process(final MetaExpression arguments, final MetaExpression directory, final ProcessFactory processFactory) {
 
         // Get description
         ProcessDescription processDescription = parseInput(arguments, directory);
