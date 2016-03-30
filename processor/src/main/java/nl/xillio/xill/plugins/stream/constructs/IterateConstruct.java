@@ -27,14 +27,10 @@ class IterateConstruct extends Construct {
     }
 
     @SuppressWarnings("squid:UnusedPrivateMethod") // Sonar does not detect method references
-    private MetaExpression process(MetaExpression stream, MetaExpression delimiter) {
+    private MetaExpression process(final MetaExpression stream, final MetaExpression delimiter) {
         if (delimiter.isNull()) {
             throw new RobotRuntimeException("The delimiter cannot be null");
         }
-
-        // Need to register the stream otherwise it will be disposed of when the provider of the stream
-        // (for example a File.read...() call) is closed.
-        stream.registerReference();
 
         Scanner scanner = new Scanner(getInputStream(stream, "stream"));
 
