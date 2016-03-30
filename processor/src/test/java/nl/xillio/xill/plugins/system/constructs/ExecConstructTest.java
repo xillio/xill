@@ -5,7 +5,6 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.plugins.system.exec.ProcessDescription;
 import nl.xillio.xill.plugins.system.exec.ProcessFactory;
 import org.mockito.ArgumentCaptor;
-import org.slf4j.Logger;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
