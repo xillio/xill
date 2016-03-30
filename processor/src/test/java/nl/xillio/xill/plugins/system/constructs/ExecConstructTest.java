@@ -57,6 +57,8 @@ public class ExecConstructTest extends TestUtils {
         assertEquals(value.get("errors").getType(), LIST);
         assertNotNull(value.get("runtime"));
         assertEquals(value.get("runtime").getType(), ATOMIC);
+        assertEquals(value.get("exitCode").getNumberValue(), 0);
+        assertEquals(value.get("exitCode").getType(), ATOMIC);
     }
 
     /**
@@ -96,26 +98,8 @@ public class ExecConstructTest extends TestUtils {
         assertEquals(value.get("errors").getType(), LIST);
         assertNotNull(value.get("runtime"));
         assertEquals(value.get("runtime").getType(), ATOMIC);
-    }
-
-    /**
-     * Test that an error is logged when the process ends with a non-zero exit code
-     */
-    @Test
-    public void testProcessError() throws InterruptedException {
-        // Mock the context
-        MetaExpression arguments = mockAtomicCommand();
-
-        MetaExpression directory = NULL;
-        Logger log = mock(Logger.class);
-        ProcessFactory processFactory = mockProcessFactory(1, 2, 1);
-
-
-        // Run the method
-        MetaExpression result = ExecConstruct.process(arguments, directory, log, processFactory);
-
-        // Make assertions
-        verify(log, times(1)).error(any());
+        assertEquals(value.get("exitCode").getNumberValue(), 0);
+        assertEquals(value.get("exitCode").getType(), ATOMIC);
     }
 
     /**

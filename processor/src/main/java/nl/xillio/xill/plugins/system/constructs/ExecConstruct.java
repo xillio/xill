@@ -72,14 +72,8 @@ public class ExecConstruct extends Construct {
         // Stop stopwatch
         sw.stop();
 
-        // Log an error when the process quit with an error
-        // This is not an exception since the user should be able to get the output of the process
-        if (exitCode != 0) {
-            log.error("Process exited with non-zero exit code " + exitCode);
-        }
-
         // Return results
-        return parseResult(output, sw.getTime());
+        return parseResult(output, sw.getTime(), exitCode);
     }
 
     /**
@@ -165,11 +159,12 @@ public class ExecConstruct extends Construct {
     /**
      * Parse the result of running a {@link Process} to a {@link MetaExpression}
      *
-     * @param output the {@link ProcessOutput} from the streams
-     * @param timeMS the time in milliseconds it took the processor to run
+     * @param output   the {@link ProcessOutput} from the streams
+     * @param timeMS   the time in milliseconds it took the processor to run
+     * @param exitCode The exit code of the process
      * @return the {@link MetaExpression}
      */
-    private static MetaExpression parseResult(final ProcessOutput output, final long timeMS) {
+    private static MetaExpression parseResult(final ProcessOutput output, final long timeMS, int exitCode) {
         List<MetaExpression> outputList = output.getOutput().stream().map(ExecConstruct::fromValue).collect(Collectors.toList());
         List<MetaExpression> errorList = output.getErrors().stream().map(ExecConstruct::fromValue).collect(Collectors.toList());
 
@@ -177,6 +172,7 @@ public class ExecConstruct extends Construct {
         result.put("errors", fromValue(errorList));
         result.put("output", fromValue(outputList));
         result.put("runtime", fromValue(timeMS));
+        result.put("exitCode", fromValue(exitCode));
         return fromValue(result);
     }
 }
