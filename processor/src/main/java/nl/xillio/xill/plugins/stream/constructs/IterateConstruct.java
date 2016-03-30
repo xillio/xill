@@ -32,6 +32,10 @@ class IterateConstruct extends Construct {
             throw new RobotRuntimeException("The delimiter cannot be null");
         }
 
+        // Need to register the stream otherwise it will be disposed of when the provider of the stream
+        // (for example a File.read...() call) is closed.
+        stream.registerReference();
+
         Scanner scanner = new Scanner(getInputStream(stream, "stream"));
 
         if (!delimiter.getStringValue().isEmpty()) {
@@ -40,8 +44,16 @@ class IterateConstruct extends Construct {
             scanner.useDelimiter(LINE_SEPARATOR_PATTERN);
         }
 
+        // Now the stream is registered but will not be closed when the MetaExpressionIterator is closed (only the Scanner is)
+        // so we need to release both when the MetaExpressionIterator is closed
+        MetaExpressionIterator<String> iterator = new MetaExpressionIterator<String>(scanner, ExpressionBuilder::fromValue) {
+            @Override
+            public void close() throws Exception {
+                super.close(); // closes the Scanner
+                stream.releaseReference(); // release the reference shielded by the Scanner
+            }
+        };
 
-        MetaExpressionIterator<String> iterator = new MetaExpressionIterator<>(scanner, ExpressionBuilder::fromValue);
         MetaExpression result = fromValue(buildStringValue(stream, delimiter));
         result.storeMeta(iterator);
 
