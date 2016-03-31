@@ -70,7 +70,6 @@ public class ForeachInstruction extends CompoundInstruction {
 
         // Register a reference to the result and process it.
         try {
-            result.registerReference();
             return process(result, debugger);
         } finally {
             listInstruction.close();

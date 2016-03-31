@@ -19,10 +19,8 @@ import java.util.LinkedHashMap;
  * <li><b>{@link Number}: </b> {@link Double#NaN}</li>
  * </ul>
  *
- * @deprecated This class will become package protected soon
  */
-@Deprecated
-public class ObjectExpression extends CollectionExpression {
+class ObjectExpression extends CollectionExpression {
 
     private final LinkedHashMap<String, MetaExpression> value;
 
@@ -31,7 +29,7 @@ public class ObjectExpression extends CollectionExpression {
      */
     @SuppressWarnings("squid:S1319")
     // We should use LinkedHashMap as a parameter here to enforce ordering in the map
-    public ObjectExpression(final LinkedHashMap<String, MetaExpression> object) {
+    ObjectExpression(final LinkedHashMap<String, MetaExpression> object) {
         value = object;
 
         setValue(value);
