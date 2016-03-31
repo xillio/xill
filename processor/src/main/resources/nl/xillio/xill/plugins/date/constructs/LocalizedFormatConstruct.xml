@@ -2,6 +2,7 @@
 <function>
     <description>
 Converts the date to a string using the provided Language tag if no tag is given the pattern "yyyy-MM-dd HH:mm:ss" is used.
+
 For other format options see the Date.format help page.
 
 If the parameters 'timestyle' and 'datestyle' are both null, it will use the FormatStyle MEDIUM.
