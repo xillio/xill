@@ -5,7 +5,7 @@ Returns detailed information about provided date.
     </description>
     <examples>
         <example title="Usage">
-            <header>Showing information about current datetime.</header>
+            <header>Showing information about the given datetime.</header>
             <code>
                 use System,Date;
 
