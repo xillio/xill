@@ -55,9 +55,6 @@ public class ConstructCall implements Processable {
                 debugger.handle(e);
             }
 
-            // Reference for unnamed variable
-            result.registerReference();
-
             if (!processor.setArgument(i, result)) {
                 throw new RobotRuntimeException("Wrong type for argument `" + processor.getArgumentName(i) + "` in " + processor.toString(construct.getName()) + " expected [" + processor.getArgumentType(i) + "] but received [" + result.getType() + "]");
             }
