@@ -14,6 +14,7 @@ import nl.xillio.xill.plugins.system.exec.ProcessFactory;
 import nl.xillio.xill.plugins.system.exec.ProcessOutput;
 import nl.xillio.xill.services.inject.FactoryBuilderException;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.concurrent.ConcurrentException;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 
@@ -22,6 +23,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 /**
@@ -57,16 +62,6 @@ public class ExecConstruct extends Construct {
         // Subscribe to output
         ProcessOutput output = listenToStreams(process.getInputStream(), process.getErrorStream(), processDescription, log);
 
-        // Wait for the process to stop
-        try {
-            process.waitFor();
-        } catch (InterruptedException e) {
-            LOGGER.error("Execution interrupted: " + e.getMessage(), e);
-        }
-
-        while (output.isAlive()) {
-
-        }
 
         // Stop stopwatch
         sw.stop();
@@ -140,25 +135,23 @@ public class ExecConstruct extends Construct {
      * @return an {@link ProcessOutput} object that holds the currently streamed output
      */
     private static ProcessOutput listenToStreams(final InputStream out, final InputStream err, final ProcessDescription description, final Logger log) {
-        List<String> errors = new ArrayList<>();
+        String output, errors;
 
-        // Listen to errors
-        InputStreamListener errListener = new InputStreamListener(err);
-        errListener.getOnLineComplete().addListener(line -> {
-            log.error(description.getFriendlyName() + ": " + line);
-            errors.add(line);
-        });
-        errListener.start();
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        Future outListener = executorService.submit(new InputStreamListener(out));
+        Future errListener = executorService.submit(new InputStreamListener(err));
 
-        List<String> output = new ArrayList<>();
-        InputStreamListener outListener = new InputStreamListener(out);
-        outListener.getOnLineComplete().addListener(line -> {
-            output.add(line);
-            ;
-        });
-        outListener.start();
+        try {
+            output = (String)outListener.get();
+            errors = (String)errListener.get();
+        } catch (InterruptedException e) {
+            throw new RobotRuntimeException("Execution interrupted: " + e.getMessage(), e);
+        } catch (ExecutionException e) {
+            throw new RobotRuntimeException("Execution failed: " + e.getMessage(), e);
+        }
 
-        return new ProcessOutput(output, errors, outListener, errListener);
+        executorService.shutdown();
+        return new ProcessOutput(output, errors);
     }
 
     /**
@@ -169,12 +162,9 @@ public class ExecConstruct extends Construct {
      * @return the {@link MetaExpression}
      */
     private static MetaExpression parseResult(final ProcessOutput output, final long timeMS) {
-        List<MetaExpression> outputList = output.getOutput().stream().map(ExecConstruct::fromValue).collect(Collectors.toList());
-        List<MetaExpression> errorList = output.getErrors().stream().map(ExecConstruct::fromValue).collect(Collectors.toList());
-
         LinkedHashMap<String, MetaExpression> result = new LinkedHashMap<>();
-        result.put("errors", fromValue(errorList));
-        result.put("output", fromValue(outputList));
+        result.put("errors", fromValue(output.getErrors()));
+        result.put("output", fromValue(output.getOutput()));
         result.put("runtime", fromValue(timeMS));
         return fromValue(result);
     }

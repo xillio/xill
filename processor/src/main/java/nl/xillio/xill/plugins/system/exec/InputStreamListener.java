@@ -5,18 +5,16 @@ import nl.xillio.events.Event;
 import nl.xillio.events.EventHost;
 import org.slf4j.Logger;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.concurrent.Callable;
 
 /**
  * This class will listen for lines and call an event when data is found
  */
-public class InputStreamListener implements Runnable {
-    private final BufferedReader input;
-    private final EventHost<String> onLineComplete = new EventHost<>();
-    private Thread thread;
+public class InputStreamListener implements Callable<String> {
+    private final InputStreamReader input;
 
     private static final Logger LOGGER = Log.get();
 
@@ -25,55 +23,24 @@ public class InputStreamListener implements Runnable {
      *
      * @param input the input
      */
-    public InputStreamListener(final InputStream input) {
-        this.input = new BufferedReader(new InputStreamReader(input));
-    }
-
-    /**
-     * Start the thread
-     */
-    public void start() {
-        if (thread != null && thread.isAlive()) {
-            throw new IllegalStateException("This listener is already running.");
-        }
-
-        thread = new Thread(this);
-        thread.start();
+    public
+    InputStreamListener(final InputStream input) {
+        this.input = new InputStreamReader(input);
     }
 
     @Override
-    public void run() {
-        boolean shouldStop = false;
+    public String call() {
+        StringBuilder output = new StringBuilder();
 
-        while (!shouldStop) {
-            String line = "";
-            try {
-                line = input.readLine();
-            } catch (IOException e) {
-                LOGGER.error("Error while listening to input stream: " + e.getMessage(), e);
+        int chars;
+        try {
+            while ((chars = input.read()) != -1) {
+                output.append((char) chars);
             }
-
-            if (line == null) {
-                shouldStop = true;
-            } else {
-                onLineComplete.invoke(line);
-            }
+        } catch (IOException e) {
+            LOGGER.error("Error while listening to input stream: " + e.getMessage(), e);
         }
-    }
 
-    /**
-     * @return true if and only if the thread is running
-     */
-    public boolean isAlive() {
-        return thread != null && thread.isAlive();
-    }
-
-    /**
-     * This event is called whenever the reader reads a full line
-     *
-     * @return the event
-     */
-    public Event<String> getOnLineComplete() {
-        return onLineComplete.getEvent();
+        return output.toString();
     }
 }

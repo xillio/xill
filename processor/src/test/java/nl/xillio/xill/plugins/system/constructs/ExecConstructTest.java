@@ -49,7 +49,6 @@ public class ExecConstructTest extends TestUtils {
         MetaExpression result = ExecConstruct.process(arguments, directory, log, processFactory);
 
         // Make assertions
-        verify(log).error("TestCommand: \u0000\u0000");
         verify(processFactory).apply(descriptionCaptor.capture());
 
         assertEquals(descriptionCaptor.getValue().getCommands(), new String[]{"TestCommand"});
@@ -58,10 +57,10 @@ public class ExecConstructTest extends TestUtils {
         @SuppressWarnings("unchecked")
         Map<String, MetaExpression> value = (Map<String, MetaExpression>) result.getValue();
 
-        assertEquals(value.get("output").getStringValue(), "[\"\\u0000\"]");
-        assertEquals(value.get("output").getType(), LIST);
-        assertEquals(value.get("errors").getStringValue(), "[\"\\u0000\\u0000\"]");
-        assertEquals(value.get("errors").getType(), LIST);
+        assertEquals(value.get("output").toString(), "\"\\u0000\"");
+        assertEquals(value.get("output").getType(), ATOMIC);
+        assertEquals(value.get("errors").toString(), "\"\\u0000\\u0000\"");
+        assertEquals(value.get("errors").getType(), ATOMIC);
         assertNotNull(value.get("runtime"));
         assertEquals(value.get("runtime").getType(), ATOMIC);
     }
@@ -94,7 +93,6 @@ public class ExecConstructTest extends TestUtils {
         MetaExpression result = ExecConstruct.process(arguments, directory, log, processFactory);
 
         // Make assertions
-        verify(log).error("Test: \u0000\u0000\u0000");
         verify(processFactory).apply(descriptionCaptor.capture());
 
         assertEquals(descriptionCaptor.getValue().getCommands(), new String[]{"Test", "command", "-t"});
@@ -104,10 +102,10 @@ public class ExecConstructTest extends TestUtils {
         @SuppressWarnings("unchecked")
         Map<String, MetaExpression> value = (Map<String, MetaExpression>) result.getValue();
 
-        assertEquals(value.get("output").getStringValue(), "[\"\\u0000\\u0000\\u0000\\u0000\\u0000\\u0000\"]");
-        assertEquals(value.get("output").getType(), LIST);
-        assertEquals(value.get("errors").getStringValue(), "[\"\\u0000\\u0000\\u0000\"]");
-        assertEquals(value.get("errors").getType(), LIST);
+        assertEquals(value.get("output").toString(), "\"\\u0000\\u0000\\u0000\\u0000\\u0000\\u0000\"");
+        assertEquals(value.get("output").getType(), ATOMIC);
+        assertEquals(value.get("errors").toString(), "\"\\u0000\\u0000\\u0000\"");
+        assertEquals(value.get("errors").getType(), ATOMIC);
         assertNotNull(value.get("runtime"));
         assertEquals(value.get("runtime").getType(), ATOMIC);
     }
