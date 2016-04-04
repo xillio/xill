@@ -5,7 +5,6 @@ import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.plugins.system.exec.ProcessDescription;
 import nl.xillio.xill.plugins.system.exec.ProcessFactory;
 import org.mockito.ArgumentCaptor;
-import org.slf4j.Logger;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -28,28 +27,19 @@ public class ExecConstructTest extends TestUtils {
      * Test invoke the construct with a string as command and default working directory
      */
     @Test
-    public void testProcessString() {
+    public void testProcessString() throws InterruptedException {
         // Mock the context
-        MetaExpression arguments = mockExpression(ATOMIC);
-        when(arguments.getStringValue()).thenReturn("TestCommand");
+        MetaExpression arguments = mockAtomicCommand();
 
         MetaExpression directory = NULL;
-        Logger log = mock(Logger.class);
-        ProcessFactory processFactory = mock(ProcessFactory.class);
-        Process process = mock(Process.class);
-        InputStream out = mockStream(1);
-        InputStream err = mockStream(2);
-        when(process.getInputStream()).thenReturn(out);
-        when(process.getErrorStream()).thenReturn(err);
-        when(processFactory.apply(any())).thenReturn(process);
+        ProcessFactory processFactory = mockProcessFactory(1, 2, 0);
 
         ArgumentCaptor<ProcessDescription> descriptionCaptor = ArgumentCaptor.forClass(ProcessDescription.class);
 
         // Run the method
-        MetaExpression result = ExecConstruct.process(arguments, directory, log, processFactory);
+        MetaExpression result = ExecConstruct.process(arguments, directory, processFactory);
 
         // Make assertions
-        verify(log).error("TestCommand: \u0000\u0000");
         verify(processFactory).apply(descriptionCaptor.capture());
 
         assertEquals(descriptionCaptor.getValue().getCommands(), new String[]{"TestCommand"});
@@ -64,13 +54,15 @@ public class ExecConstructTest extends TestUtils {
         assertEquals(value.get("errors").getType(), LIST);
         assertNotNull(value.get("runtime"));
         assertEquals(value.get("runtime").getType(), ATOMIC);
+        assertEquals(value.get("exitCode").getNumberValue(), 0);
+        assertEquals(value.get("exitCode").getType(), ATOMIC);
     }
 
     /**
      * Test invoke the construct with a list as command and default working directory
      */
     @Test
-    public void testProcessList() {
+    public void testProcessList() throws InterruptedException {
         // Mock the context
         MetaExpression arguments = mockExpression(LIST);
         when(arguments.getValue()).thenReturn(Arrays.asList(
@@ -79,22 +71,14 @@ public class ExecConstructTest extends TestUtils {
                 fromValue("-t")));
 
         MetaExpression directory = NULL;
-        Logger log = mock(Logger.class);
-        ProcessFactory processFactory = mock(ProcessFactory.class);
-        Process process = mock(Process.class);
-        InputStream out = mockStream(6);
-        InputStream err = mockStream(3);
-        when(process.getInputStream()).thenReturn(out);
-        when(process.getErrorStream()).thenReturn(err);
-        when(processFactory.apply(any())).thenReturn(process);
+        ProcessFactory processFactory = mockProcessFactory(6, 3, 0);
 
         ArgumentCaptor<ProcessDescription> descriptionCaptor = ArgumentCaptor.forClass(ProcessDescription.class);
 
         // Run the method
-        MetaExpression result = ExecConstruct.process(arguments, directory, log, processFactory);
+        MetaExpression result = ExecConstruct.process(arguments, directory, processFactory);
 
         // Make assertions
-        verify(log).error("Test: \u0000\u0000\u0000");
         verify(processFactory).apply(descriptionCaptor.capture());
 
         assertEquals(descriptionCaptor.getValue().getCommands(), new String[]{"Test", "command", "-t"});
@@ -110,6 +94,8 @@ public class ExecConstructTest extends TestUtils {
         assertEquals(value.get("errors").getType(), LIST);
         assertNotNull(value.get("runtime"));
         assertEquals(value.get("runtime").getType(), ATOMIC);
+        assertEquals(value.get("exitCode").getNumberValue(), 0);
+        assertEquals(value.get("exitCode").getType(), ATOMIC);
     }
 
     /**
@@ -130,4 +116,34 @@ public class ExecConstructTest extends TestUtils {
         }
         return stream;
     }
+
+    /**
+     * Mock a {@link ProcessFactory} that will output a given number of null characters on the output and error stream
+     *
+     * @param outputStreamLength Number of null characters the output stream returns
+     * @param errorStreamLength  Number of null characters the error stream returns
+     * @param exitCode           The exit code the process should have
+     * @return The mocked {@link ProcessFactory}
+     */
+    private ProcessFactory mockProcessFactory(int outputStreamLength, int errorStreamLength, int exitCode) throws InterruptedException {
+        ProcessFactory processFactory = mock(ProcessFactory.class);
+        Process process = mock(Process.class);
+        InputStream out = mockStream(outputStreamLength);
+        InputStream err = mockStream(errorStreamLength);
+        when(process.getInputStream()).thenReturn(out);
+        when(process.getErrorStream()).thenReturn(err);
+        when(process.waitFor()).thenReturn(exitCode);
+        when(processFactory.apply(any())).thenReturn(process);
+        return processFactory;
+    }
+
+    /**
+     * @return A single atomic argument containing a string value
+     */
+    private MetaExpression mockAtomicCommand() {
+        MetaExpression arguments = mockExpression(ATOMIC);
+        when(arguments.getStringValue()).thenReturn("TestCommand");
+        return arguments;
+    }
+
 }
