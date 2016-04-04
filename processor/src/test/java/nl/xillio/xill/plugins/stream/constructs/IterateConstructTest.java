@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 
 public class IterateConstructTest extends TestUtils {
@@ -91,6 +92,29 @@ public class IterateConstructTest extends TestUtils {
                 NULL,
                 NULL
         );
+    }
+
+    @Test
+    public void testStreamIsRegisteredReleased() {
+        List<String> lines = Arrays.asList("Hello", "World");
+        InputStream input = IOUtils.toInputStream(StringUtils.join(lines, " "));
+        IOStream inputStream = spy(new SimpleIOStream(input, "Irrelevant Description"));
+        MetaExpression metaExpressionStream = fromValue(inputStream);
+
+        MetaExpression iterateInstance = ConstructProcessor.process(
+                construct.prepareProcess(context(construct)),
+                metaExpressionStream,
+                fromValue("\\s")
+        );
+        MetaExpressionIterator iterator = iterateInstance.getMeta(MetaExpressionIterator.class);
+
+        for(String word : lines) {
+            assertEquals(iterator.next().getStringValue(), word);
+        }
+
+        verify(inputStream, never()).close();
+        iterateInstance.close();
+        verify(inputStream, times(1)).close();
     }
 
     private MetaExpression process(IOStream stream, String delim) {
