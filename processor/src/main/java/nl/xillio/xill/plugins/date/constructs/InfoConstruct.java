@@ -31,9 +31,9 @@ public class InfoConstruct extends BaseDateConstruct {
         // Get ChronoField values
         dateService.getFieldValues(date).forEach((k, v) -> info.put(k, fromValue(v)));
 
-        info.put("TimeZone", fromValue(dateService.getTimezone(date).toString()));
-        info.put("IsInFuture", fromValue(dateService.isInFuture(date)));
-        info.put("IsInPast", fromValue(dateService.isInPast(date)));
+        info.put("timeZone", fromValue(dateService.getTimezone(date).toString()));
+        info.put("isInFuture", fromValue(dateService.isInFuture(date)));
+        info.put("isInPast", fromValue(dateService.isInPast(date)));
 
         return fromValue(info);
 

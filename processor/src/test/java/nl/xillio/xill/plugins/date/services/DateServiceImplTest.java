@@ -68,14 +68,14 @@ public class DateServiceImplTest {
         DateService ds = new DateServiceImpl();
         Date justOneDate = ds.constructDate(2015, 2, 14, 12, 32, 15, 12, ZoneId.of("GMT"));
         Map<String, Long> values = ds.getFieldValues(justOneDate);
-        Assert.assertEquals(values.get(ChronoField.YEAR.toString()), new Long(2015L));
-        Assert.assertEquals(values.get(ChronoField.MONTH_OF_YEAR.toString()), new Long(2L));
-        Assert.assertEquals(values.get(ChronoField.DAY_OF_MONTH.toString()), new Long(14L));
-        Assert.assertEquals(values.get(ChronoField.HOUR_OF_DAY.toString()), new Long(12L));
-        Assert.assertEquals(values.get(ChronoField.MINUTE_OF_HOUR.toString()), new Long(32L));
-        Assert.assertEquals(values.get(ChronoField.SECOND_OF_MINUTE.toString()), new Long(15L));
-        Assert.assertEquals(values.get(ChronoField.NANO_OF_SECOND.toString()), new Long(12L));
-        Assert.assertEquals(values.get(ChronoField.MINUTE_OF_DAY.toString()), new Long(12L * 60 + 32L));
+        Assert.assertEquals(values.get("year"), new Long(2015L));
+        Assert.assertEquals(values.get("monthOfYear"), new Long(2L));
+        Assert.assertEquals(values.get("dayOfMonth"), new Long(14L));
+        Assert.assertEquals(values.get("hourOfDay"), new Long(12L));
+        Assert.assertEquals(values.get("minuteOfHour"), new Long(32L));
+        Assert.assertEquals(values.get("secondOfMinute"), new Long(15L));
+        Assert.assertEquals(values.get("nanoOfSecond"), new Long(12L));
+        Assert.assertEquals(values.get("minuteOfDay"), new Long(12L * 60 + 32L));
     }
 
     @Test
