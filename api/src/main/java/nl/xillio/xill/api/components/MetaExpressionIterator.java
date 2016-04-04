@@ -16,6 +16,17 @@ public class MetaExpressionIterator<E> implements Iterator<MetaExpression>, Meta
     private final Function<E, MetaExpression> transformer;
 
     /**
+     * Creates a new metaExpression iterator from a source and no transformation.
+     * Note that this will require implementation of the transform method since it will
+     * cause a {@link NullPointerException}.
+     *
+     * @param source the source Iterator
+     */
+    protected MetaExpressionIterator(Iterator<E> source) {
+        this(source, null);
+    }
+
+    /**
      * Creates a new metaExpression iterator from a source and a transformation.
      *
      * @param source      the source Iterator
@@ -26,6 +37,10 @@ public class MetaExpressionIterator<E> implements Iterator<MetaExpression>, Meta
         this.transformer = transformer;
     }
 
+    protected MetaExpression transform(E item) {
+        return transformer.apply(item);
+    }
+
     @Override
     public boolean hasNext() {
         return iterator.hasNext();
@@ -33,7 +48,7 @@ public class MetaExpressionIterator<E> implements Iterator<MetaExpression>, Meta
 
     @Override
     public MetaExpression next() {
-        return transformer.apply(iterator.next());
+        return transform(iterator.next());
     }
 
     @Override

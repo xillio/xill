@@ -99,13 +99,7 @@ public class XillProcessor implements nl.xillio.xill.api.XillProcessor {
         }
     }
 
-    /**
-     * Compile as a sub robot.
-     *
-     * @param rootRobot The Root robot
-     * @return a list of issues
-     * @throws XillParsingException     Is thrown when a parsing error occurs.
-     */
+    @Override
     public List<Issue> compileAsSubRobot(final RobotID rootRobot) throws XillParsingException {
         synchronized (XillValidator.LOCK) {
             XillValidator.setProjectFolder(projectFolder);
