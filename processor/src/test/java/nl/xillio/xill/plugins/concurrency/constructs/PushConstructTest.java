@@ -17,11 +17,14 @@ public class PushConstructTest extends TestUtils {
     public void testProcess() {
         XillQueue queue = mock(XillQueue.class);
         MetaExpression input = fromValue("All your base are belong to us");
+        input.registerReference();
         input.storeMeta(queue);
+        MetaExpression item = fromValue("Braaaiiiinz");
+        item.registerReference();
 
-        process(new PushConstruct(), fromValue("Braaaiiiinz"), input);
+        process(new PushConstruct(), item, input);
 
-        verify(queue).push(eq(fromValue("Braaaiiiinz")));
+        verify(queue).push(eq(item));
     }
 
     @Test(expectedExceptions = RobotRuntimeException.class)
