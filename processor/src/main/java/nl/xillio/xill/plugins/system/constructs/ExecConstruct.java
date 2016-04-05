@@ -42,12 +42,12 @@ public class ExecConstruct extends Construct {
     public ConstructProcessor prepareProcess(final ConstructContext context) {
 
         return new ConstructProcessor(
-                (program, directory) -> process(program, directory, context.getRootLogger(), processFactory),
+                (program, directory) -> process(program, directory, processFactory),
                 new Argument("arguments", ATOMIC, LIST),
                 new Argument("directory", NULL, ATOMIC));
     }
 
-    static MetaExpression process(final MetaExpression arguments, final MetaExpression directory, final Logger log, final ProcessFactory processFactory) {
+    static MetaExpression process(final MetaExpression arguments, final MetaExpression directory, final ProcessFactory processFactory) {
 
         // Get description
         ProcessDescription processDescription = parseInput(arguments, directory);
@@ -60,14 +60,22 @@ public class ExecConstruct extends Construct {
         Process process = startProcess(processFactory, processDescription);
 
         // Subscribe to output
-        ProcessOutput output = listenToStreams(process.getInputStream(), process.getErrorStream(), processDescription, log);
+        ProcessOutput output = listenToStreams(process.getInputStream(), process.getErrorStream());
 
+
+        // Wait for the process to stop
+        int exitCode = -1;
+        try {
+            exitCode = process.waitFor();
+        } catch (InterruptedException e) {
+            LOGGER.error("Execution interrupted: " + e.getMessage(), e);
+        }
 
         // Stop stopwatch
         sw.stop();
 
         // Return results
-        return parseResult(output, sw.getTime());
+        return parseResult(output, sw.getTime(), exitCode);
     }
 
     /**
@@ -128,13 +136,11 @@ public class ExecConstruct extends Construct {
     /**
      * Start listening to the stderr and stdout streams of a {@link Process}
      *
-     * @param out         the stdout stream
-     * @param err         the stdin stream
-     * @param description the {@link ProcessDescription} for the {@link Process} hosting the two streams
-     * @param log         the logger to log to when an error occurs
+     * @param out the stdout stream
+     * @param err the stdin stream
      * @return an {@link ProcessOutput} object that holds the currently streamed output
      */
-    private static ProcessOutput listenToStreams(final InputStream out, final InputStream err, final ProcessDescription description, final Logger log) {
+    private static ProcessOutput listenToStreams(final InputStream out, final InputStream err) {
         String output, errors;
 
         ExecutorService executorService = Executors.newFixedThreadPool(2);
@@ -142,8 +148,8 @@ public class ExecConstruct extends Construct {
         Future errListener = executorService.submit(new InputStreamListener(err));
 
         try {
-            output = (String)outListener.get();
-            errors = (String)errListener.get();
+            output = (String) outListener.get();
+            errors = (String) errListener.get();
         } catch (InterruptedException e) {
             throw new RobotRuntimeException("Execution interrupted: " + e.getMessage(), e);
         } catch (ExecutionException e) {
@@ -153,19 +159,20 @@ public class ExecConstruct extends Construct {
         executorService.shutdown();
         return new ProcessOutput(output, errors);
     }
-
     /**
      * Parse the result of running a {@link Process} to a {@link MetaExpression}
      *
-     * @param output the {@link ProcessOutput} from the streams
-     * @param timeMS the time in milliseconds it took the processor to run
+     * @param output   the {@link ProcessOutput} from the streams
+     * @param timeMS   the time in milliseconds it took the processor to run
+     * @param exitCode The exit code of the process
      * @return the {@link MetaExpression}
      */
-    private static MetaExpression parseResult(final ProcessOutput output, final long timeMS) {
+    private static MetaExpression parseResult(final ProcessOutput output, final long timeMS, int exitCode) {
         LinkedHashMap<String, MetaExpression> result = new LinkedHashMap<>();
         result.put("errors", fromValue(output.getErrors()));
         result.put("output", fromValue(output.getOutput()));
         result.put("runtime", fromValue(timeMS));
+        result.put("exitCode", fromValue(exitCode));
         return fromValue(result);
     }
 }

@@ -1,6 +1,10 @@
 # Xill IDE - Change Log
 All notable changes to this project will be documented in this file
 
+## [3.3.11] - unreleased
+### Change
+- Errors from external programs run using `System.exec()` are not logged as Xill errors anymore [CTC-1465]
+
 ## [3.3.11] - 30-03-2016
 ### Fix
 - Variables are not disposed leading to write lock on files [CTC-1503]
