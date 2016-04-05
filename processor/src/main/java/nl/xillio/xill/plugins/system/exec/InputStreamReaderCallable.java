@@ -1,8 +1,6 @@
 package nl.xillio.xill.plugins.system.exec;
 
 import me.biesaart.utils.Log;
-import nl.xillio.events.Event;
-import nl.xillio.events.EventHost;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -15,7 +13,6 @@ import java.util.concurrent.Callable;
  */
 public class InputStreamReaderCallable implements Callable<String> {
     private final InputStreamReader input;
-
     private static final Logger LOGGER = Log.get();
 
     /**
