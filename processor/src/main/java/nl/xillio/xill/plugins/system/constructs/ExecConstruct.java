@@ -14,20 +14,16 @@ import nl.xillio.xill.plugins.system.exec.ProcessFactory;
 import nl.xillio.xill.plugins.system.exec.ProcessOutput;
 import nl.xillio.xill.services.inject.FactoryBuilderException;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.concurrent.ConcurrentException;
 import org.apache.commons.lang3.time.StopWatch;
-import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.stream.Collectors;
 
 /**
  * Runs an application and waits for it to complete
@@ -159,6 +155,7 @@ public class ExecConstruct extends Construct {
         executorService.shutdown();
         return new ProcessOutput(output, errors);
     }
+
     /**
      * Parse the result of running a {@link Process} to a {@link MetaExpression}
      *
