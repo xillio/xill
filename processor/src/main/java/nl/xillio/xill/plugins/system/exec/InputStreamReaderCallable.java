@@ -11,20 +11,20 @@ import java.io.InputStreamReader;
 import java.util.concurrent.Callable;
 
 /**
- * This class will listen for lines and call an event when data is found
+ * This class will read all characters and returns the result in a string
  */
-public class InputStreamListener implements Callable<String> {
+public class InputStreamReaderCallable implements Callable<String> {
     private final InputStreamReader input;
 
     private static final Logger LOGGER = Log.get();
 
     /**
-     * Create a new {@link InputStreamListener}
+     * Create a new {@link InputStreamReaderCallable}
      *
      * @param input the input
      */
     public
-    InputStreamListener(final InputStream input) {
+    InputStreamReaderCallable(final InputStream input) {
         this.input = new InputStreamReader(input);
     }
 
