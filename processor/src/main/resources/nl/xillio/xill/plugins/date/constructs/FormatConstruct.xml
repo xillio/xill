@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Converts the date to a string using the provided format.  
- 
-If no format is given the pattern "yyyy-MM-dd HH:mm:ss" is used.
+Converts a given date to a value with the provided `format`.
+
+The `format` parameter can be composed using various symbols. The most commonly used symbols are listed in the table below. The default format is: "yyyy-MM-dd HH:mm:ss".
 
 | Symbol | Meaning                  | Presentation  | Example                |
 | ------ | --------                 | ------------- | ---------------------- |
@@ -19,20 +19,16 @@ If no format is given the pattern "yyyy-MM-dd HH:mm:ss" is used.
 | '      | escape for text ('text') | delimiter     |                        |
 | ''     | literal '                | literal       | '                      |
 
-Apart from the characters ' [ ] # { } no other special UTF-8 character has functionality in the format and could be used freely.
+The Symbol column in the table lists the symbols that may directly be used in the `format` parameter. The way the value that corresponds to the symbol is represented, depends on the number of characters used in the symbol. For example: using "M" would result in "8", while "MM" results in "08" and "MMM" results in "Aug". A more thorough description of how these values are represented and what other options are available, can be found in [Java's pattern definition](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns).
 
-Text: The text style is determined based on the number of pattern letters used. Less than 4 pattern letters will use the short form. Exactly 4 pattern letters will use the full form. Exactly 5 pattern letters will use the narrow form.
+The `format` parameter can also include other characters that are not used for representing date values (except for: ',[,],#,{,}). For example: using "HH.mm" results in "16.14".
+Text can be shown by putting single quotation marks around it. For example: "'Current Year: 'YYYY" results in "Current Year: 2016".
 
-Number: If the count of letters is one, then the value is output using the minimum number of digits and without padding. Otherwise, the count of digits is used as the width of the output field, with the value zero-padded as necessary. Some patterns have exceptional behavior however.
-
-Number/Text: If the count of pattern letters is 3 or greater, use the Text rules above. Otherwise use the Number rules above.
-
-For more information and use see: [Java's pattern definition](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns).
 
     </description>
     <examples>
         <example title="Usage">
-            <header>Showing formated current datetime.</header>
+            <header>Printing the formatted current datetime.</header>
             <code>
 use System, Date;
 var date = Date.now();
