@@ -1,12 +1,7 @@
 package nl.xillio.xill.components.instructions;
 
-import nl.xillio.xill.CodePosition;
 import nl.xillio.xill.api.Debugger;
-import nl.xillio.xill.api.components.InstructionFlow;
-import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.components.MetaExpressionIterator;
-import nl.xillio.xill.api.components.Processable;
-import nl.xillio.xill.api.components.ExpressionBuilderHelper;
+import nl.xillio.xill.api.components.*;
 import nl.xillio.xill.api.errors.NotImplementedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
@@ -17,11 +12,9 @@ import java.util.function.Supplier;
  * This {@link Instruction} represents the foreach looping context.
  */
 public class ForeachInstruction extends CompoundInstruction {
-
     private final InstructionSet instructionSet;
     private final Processable list;
-    private final VariableDeclaration valueVar;
-    private final VariableDeclaration keyVar;
+    private final VariableDeclaration valueVar, keyVar;
 
     /**
      * Create a {@link ForeachInstruction} with key and value variables
@@ -34,10 +27,12 @@ public class ForeachInstruction extends CompoundInstruction {
     public ForeachInstruction(final InstructionSet instructionSet, final Processable list, final VariableDeclaration valueVar, final VariableDeclaration keyVar) {
         this.instructionSet = instructionSet;
         instructionSet.setParentInstruction(this);
+
         this.list = list;
         this.valueVar = valueVar;
-        valueVar.setHostInstruction(instructionSet);
         this.keyVar = keyVar;
+
+        valueVar.setHostInstruction(instructionSet);
         if (keyVar != null) {
             keyVar.setHostInstruction(instructionSet);
         }
@@ -50,18 +45,19 @@ public class ForeachInstruction extends CompoundInstruction {
      * @param list           the list of values
      * @param valueVar       the reference to the value variable
      */
-    public ForeachInstruction(final InstructionSet instructionSet, final Processable list,
-                              final VariableDeclaration valueVar) {
+    public ForeachInstruction(final InstructionSet instructionSet, final Processable list, final VariableDeclaration valueVar) {
         this(instructionSet, list, valueVar, null);
-
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
+    public InstructionFlow<MetaExpression> process(final Debugger debugger) {
+        // Create the list instruction, set the host instruction and position.
         ExpressionInstruction listInstruction = new ExpressionInstruction(list);
         listInstruction.setHostInstruction(getHostInstruction());
         listInstruction.setPosition(getPosition());
+
+        // Start, process, and end the instruction.
         debugger.startInstruction(listInstruction);
         if (debugger.shouldStop()) {
             debugger.endInstruction(listInstruction, InstructionFlow.doReturn(ExpressionBuilderHelper.NULL));
@@ -70,10 +66,9 @@ public class ForeachInstruction extends CompoundInstruction {
         InstructionFlow<MetaExpression> flow = listInstruction.process(debugger);
         debugger.endInstruction(listInstruction, flow);
 
-
         MetaExpression result = flow.get();
 
-
+        // Register a reference to the result and process it.
         try {
             return process(result, debugger);
         } finally {
@@ -82,113 +77,78 @@ public class ForeachInstruction extends CompoundInstruction {
     }
 
     private InstructionFlow<MetaExpression> process(MetaExpression result, Debugger debugger) {
-        InstructionFlow<MetaExpression> foreachResult = InstructionFlow.doResume();
-
+        // Check if the input is null.
         if (result.isNull()) {
-            // The input was null. Skip this
-            return foreachResult;
+            return InstructionFlow.doResume();
         }
 
         switch (result.getType()) {
             case ATOMIC:
-                if (result.getMeta(MetaExpressionIterator.class) == null) {
-                    //This is an atomic value with no MetaExpressionIterator. So we just iterate over the single value
-                    foreachResult = processIteration(() -> ExpressionBuilderHelper.fromValue(0), result, debugger);
-                } else {
-                    //We have a MetaExpressionIterator in this value, this means we should iterate over that
-                    MetaExpressionIterator iterator = result.getMeta(MetaExpressionIterator.class);
-                    int i = 0;
-                    while (iterator.hasNext()) {
-                        MetaExpression value = iterator.next();
-
-                        int keyValue = i++;
-                        InstructionFlow<MetaExpression> instructionResult = processIteration(
-                                () -> ExpressionBuilderHelper.fromValue(keyValue),
-                                value,
-                                debugger
-                        );
-
-                        if (instructionResult.skips()) {
-                            continue;
-                        }
-
-                        if (instructionResult.returns()) {
-                            foreachResult = instructionResult;
-                            break;
-                        }
-
-                        if (instructionResult.breaks()) {
-                            foreachResult = InstructionFlow.doResume();
-                            break;
-                        }
-
-
-                    }
-                }
-                break;
-            case LIST: // Iterate over list
-                try {
-                    int i = 0;
-                    for (MetaExpression value : (List<MetaExpression>) result.getValue()) {
-
-                        int keyValue = i++;
-                        InstructionFlow<MetaExpression> instructionResult = processIteration(
-                                () -> ExpressionBuilderHelper.fromValue(keyValue), value, debugger);
-
-
-                        if (instructionResult.skips()) {
-                            continue;
-                        }
-
-                        if (instructionResult.returns()) {
-                            foreachResult = instructionResult;
-                            break;
-                        }
-
-                        if (instructionResult.breaks()) {
-                            foreachResult = InstructionFlow.doResume();
-                            break;
-                        }
-
-                    }
-                } catch (ConcurrentModificationException e) {
-                    throw new RobotRuntimeException("You cannot modify (add to, or remove from) a list while you are iterating over it.", e);
-                }
-                break;
+                return iterateAtomic(debugger, result);
+            case LIST:
+                return tryIterations(debugger, ((List<MetaExpression>) result.getValue()).iterator(), null);
             case OBJECT:
-                try {
-                    for (Map.Entry<String, MetaExpression> value : ((Map<String, MetaExpression>) result.getValue()).entrySet()) {
-
-
-                        InstructionFlow<MetaExpression> instructionResult = processIteration(() -> ExpressionBuilderHelper.fromValue(value.getKey()), value.getValue(), debugger);
-                        if (instructionResult.skips()) {
-                            continue;
-                        }
-
-                        if (instructionResult.returns()) {
-                            foreachResult = instructionResult;
-                            break;
-                        }
-
-                        if (instructionResult.breaks()) {
-                            foreachResult = InstructionFlow.doResume();
-                            break;
-                        }
-
-                    }
-                } catch (ConcurrentModificationException e) {
-                    throw new RobotRuntimeException("You cannot modify (add to, or remove from) an object while you are iterating over it.", e);
-                }
-                break;
+                Map<String, MetaExpression> map = result.getValue();
+                return tryIterations(debugger, map.values().iterator(), map.keySet());
             default:
-                throw new NotImplementedException("This type has not been implemented.");
+                throw new NotImplementedException("This type has not been implemented."); // Should never happen.
+        }
+    }
 
+    private InstructionFlow<MetaExpression> iterateAtomic(Debugger debugger, MetaExpression value) {
+        // If the atomic has an iterable meta, iterate over that. Otherwise do a single iteration.
+        if (value.hasMeta(MetaExpressionIterator.class)) {
+            return doIterations(debugger, value.getMeta(MetaExpressionIterator.class), null);
+        } else {
+            return processIteration(() -> ExpressionBuilderHelper.fromValue(0), value, debugger);
+        }
+    }
+
+    private InstructionFlow<MetaExpression> tryIterations(Debugger debugger, Iterator<MetaExpression> valueIterable, Set<String> keySet) {
+        // Try to do the iterations, catching exceptions that will occur when modifying the collection.
+        try {
+            return doIterations(debugger, valueIterable, keySet);
+        } catch (ConcurrentModificationException e) {
+            throw new RobotRuntimeException("You cannot modify a collection while you are iterating over it.", e);
+        }
+    }
+
+    // Two breaks keep the code readable, while adding code in between if blocks is not possible here
+    @SuppressWarnings("squid:S135")
+    private InstructionFlow<MetaExpression> doIterations(Debugger debugger, Iterator<MetaExpression> valueIterator, Set<String> keySet) {
+        InstructionFlow<MetaExpression> result = InstructionFlow.doResume();
+        int index = 0;
+        Iterator<String> keys = keySet != null ? keySet.iterator() : null;
+
+        // Iterate over all values.
+        while (valueIterator.hasNext()) {
+            MetaExpression value = valueIterator.next();
+
+            // If there are string keys, get the next one.
+            String keyString = keys != null ? keys.next() : null;
+
+            // Get the next key as a meta expression.
+            MetaExpression key = keyString != null ? ExpressionBuilderHelper.fromValue(keyString) : ExpressionBuilderHelper.fromValue(index);
+
+            InstructionFlow<MetaExpression> instructionResult = processIteration(() -> key, value, debugger);
+
+            // Check if the instruction skips, returns or breaks.
+            if (instructionResult.returns()) {
+                result = instructionResult;
+                break;
+            } else if (instructionResult.breaks()) {
+                result = InstructionFlow.doResume();
+                break;
+            } else if (!instructionResult.skips()) {
+                index++;
+            }
         }
 
-        return foreachResult;
+        return result;
     }
 
     private InstructionFlow<MetaExpression> processIteration(Supplier<MetaExpression> key, MetaExpression value, Debugger debugger) {
+        // Push the value and key variable values.
         valueVar.pushVariable(value);
         if (keyVar != null) {
             keyVar.pushVariable(key.get());
@@ -197,12 +157,9 @@ public class ForeachInstruction extends CompoundInstruction {
         InstructionFlow<MetaExpression> instructionResult = instructionSet.process(debugger);
 
         if (instructionResult.returns() && instructionResult.hasValue()) {
+            // Prevent the instruction result from being disposed.
             instructionResult.get().preventDisposal();
-
-            // Release
             releaseVariables();
-
-
             instructionResult.get().allowDisposal();
         } else {
             releaseVariables();
@@ -212,15 +169,11 @@ public class ForeachInstruction extends CompoundInstruction {
     }
 
     private void releaseVariables() {
+        // Release the value and key variables.
         valueVar.releaseVariable();
         if (keyVar != null) {
             keyVar.releaseVariable();
         }
-    }
-
-    @Override
-    public void setPosition(CodePosition position) {
-        super.setPosition(position);
     }
 
     @Override
@@ -230,5 +183,4 @@ public class ForeachInstruction extends CompoundInstruction {
         }
         return Arrays.asList(valueVar, list, instructionSet);
     }
-
 }

@@ -56,8 +56,8 @@ public class InfoConstructTest {
         // Assert
         Map<String, MetaExpression> infoMap = (Map<String, MetaExpression>) info.getValue();
         fieldValues.forEach((k, v) -> assertEquals(infoMap.get(k).getNumberValue().longValue(), (long) v));
-        assertEquals(infoMap.get("TimeZone").getStringValue(), zoneId.toString());
-        assertEquals(infoMap.get("IsInFuture").getBooleanValue(), isInFuture);
-        assertEquals(infoMap.get("IsInPast").getBooleanValue(), isInPast);
+        assertEquals(infoMap.get("timeZone").getStringValue(), zoneId.toString());
+        assertEquals(infoMap.get("isInFuture").getBooleanValue(), isInFuture);
+        assertEquals(infoMap.get("isInPast").getBooleanValue(), isInPast);
     }
 }
