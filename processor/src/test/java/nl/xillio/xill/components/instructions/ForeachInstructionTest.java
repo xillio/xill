@@ -106,13 +106,17 @@ public class ForeachInstructionTest extends TestUtils {
     public void testProcessList() {
         // Create the list.
         List<MetaExpression> valueList = Arrays.asList(fromValue("a"), fromValue("b"), fromValue("c"));
+        MetaExpression metaValueList = fromValue(valueList);
+
+        // Prevent expressions from being closed
+        metaValueList.preventDisposal();
 
         // Mock the key and value var.
         VariableDeclaration key = mock(VariableDeclaration.class);
         VariableDeclaration value = mock(VariableDeclaration.class);
 
         // Process.
-        ForeachInstruction foreach = new ForeachInstruction(instructions, fromValue(valueList), value, key);
+        ForeachInstruction foreach = new ForeachInstruction(instructions, metaValueList, value, key);
         InstructionFlow<MetaExpression> result = foreach.process(debugger);
 
         // Verify.
