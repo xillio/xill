@@ -110,6 +110,8 @@ public class StringUtilityServiceImpl implements StringUtilityService {
 
     @Override
     public String escapeRegex(String toEscape) {
-        return toEscape.replaceAll("\\\\(?=[a-zA-Z0-9])|\\[|\\]|\\^|\\$|\\-|\\.|\\{|\\}|\\?|\\*|\\+|\\|", "\\\\");
+        Pattern pattern = Pattern.compile("\\\\[a-zA-Z0-9]|\\[|\\]|\\^|\\$|\\-|\\.|\\{|\\}|\\?|\\*|\\+|\\||\\(|\\)");
+        Matcher matcher = pattern.matcher(toEscape);
+        return matcher.replaceAll("\\\\$0");
     }
 }
