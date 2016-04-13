@@ -7,7 +7,6 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.plugins.string.services.string.RegexService;
-import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 
 /**
  * Escapes a string so that it can be used as a literal in a regex
@@ -21,7 +20,7 @@ public class RegexEscapeConstruct extends Construct {
 
     @Override
     public ConstructProcessor prepareProcess(ConstructContext context) {
-        return new ConstructProcessor((toEscape) -> process(toEscape, regexService),
+        return new ConstructProcessor(toEscape -> process(toEscape, regexService),
                 new Argument("toEscape", ATOMIC));
     }
 

@@ -3,7 +3,6 @@ package nl.xillio.xill.plugins.string.constructs;
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.plugins.string.services.string.RegexService;
-import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 import org.testng.annotations.Test;
 
 import static org.mockito.Matchers.anyString;
