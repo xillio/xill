@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.string.constructs;
 
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.plugins.string.services.string.RegexService;
 import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 import org.testng.annotations.Test;
 
@@ -23,16 +24,16 @@ public class RegexEscapeConstructTest extends TestUtils {
     @Test
     public void testNormalUsage() {
         //mock
-        StringUtilityService stringUtilityService = mock(StringUtilityService.class);
-        when(stringUtilityService.escapeRegex(anyString())).thenReturn(ESCAPED);
+        RegexService regexService = mock(RegexService.class);
+        when(regexService.escapeRegex(anyString())).thenReturn(ESCAPED);
 
         MetaExpression toEscape = mockExpression(ATOMIC, true, Double.NaN, UNESCAPED);
 
         //run
-        MetaExpression result = RegexEscapeConstruct.process(toEscape, stringUtilityService);
+        MetaExpression result = RegexEscapeConstruct.process(toEscape, regexService);
 
         //verify
-        verify(stringUtilityService).escapeRegex(eq(UNESCAPED));
+        verify(regexService).escapeRegex(eq(UNESCAPED));
 
         //assert
         assertEquals(result.getStringValue(), ESCAPED, "Escaped value does not match expected value");
