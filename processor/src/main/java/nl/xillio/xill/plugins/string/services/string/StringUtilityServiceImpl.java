@@ -107,11 +107,4 @@ public class StringUtilityServiceImpl implements StringUtilityService {
     public String wrap(final String text, final int width, final boolean wrapLongWords) {
         return WordUtils.wrap(text, width, "\n", wrapLongWords);
     }
-
-    @Override
-    public String escapeRegex(String toEscape) {
-        Pattern pattern = Pattern.compile("\\\\[a-zA-Z0-9]|\\[|\\]|\\^|\\$|\\-|\\.|\\{|\\}|\\?|\\*|\\+|\\||\\(|\\)");
-        Matcher matcher = pattern.matcher(toEscape);
-        return matcher.replaceAll("\\\\$0");
-    }
 }

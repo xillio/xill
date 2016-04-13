@@ -70,6 +70,13 @@ public class RegexServiceImpl implements RegexService {
         return list;
     }
 
+    @Override
+    public String escapeRegex(String toEscape) {
+        Pattern pattern = Pattern.compile("\\\\[a-zA-Z0-9]|\\[|\\]|\\^|\\$|\\-|\\.|\\{|\\}|\\?|\\*|\\+|\\||\\(|\\)");
+        Matcher matcher = pattern.matcher(toEscape);
+        return matcher.replaceAll("\\\\$0");
+    }
+
     private class RegexTimer implements Runnable {
         private long targetTime = 0;
         private boolean stop = false;

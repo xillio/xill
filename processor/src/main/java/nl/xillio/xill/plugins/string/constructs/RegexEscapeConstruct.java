@@ -6,6 +6,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.plugins.string.services.string.RegexService;
 import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 
 /**
@@ -16,15 +17,15 @@ import nl.xillio.xill.plugins.string.services.string.StringUtilityService;
 public class RegexEscapeConstruct extends Construct {
 
     @Inject
-    StringUtilityService stringUtilityService;
+    RegexService regexService;
 
     @Override
     public ConstructProcessor prepareProcess(ConstructContext context) {
-        return new ConstructProcessor((toEscape) -> process(toEscape, stringUtilityService),
+        return new ConstructProcessor((toEscape) -> process(toEscape, regexService),
                 new Argument("toEscape", ATOMIC));
     }
 
-    static MetaExpression process(MetaExpression toEscape, StringUtilityService service) {
+    static MetaExpression process(MetaExpression toEscape, RegexService service) {
         String escaped = service.escapeRegex(toEscape.getStringValue());
         return fromValue(escaped);
     }

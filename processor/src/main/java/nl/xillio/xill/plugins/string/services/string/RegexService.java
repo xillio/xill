@@ -66,5 +66,11 @@ public interface RegexService {
      */
     List<String> tryMatchElseNull(Matcher matcher);
 
+    /**
+     * Escape the input string so it can be included in a regex as a literal
+     * @param toEscape The string to escape
+     * @return A string that can be included in a regex as a literal
+     */
+    String escapeRegex(String toEscape);
 
 }
