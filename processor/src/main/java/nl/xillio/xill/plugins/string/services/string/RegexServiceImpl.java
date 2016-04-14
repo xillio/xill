@@ -17,6 +17,10 @@ import java.util.stream.IntStream;
  */
 @Singleton
 public class RegexServiceImpl implements RegexService {
+
+    // Regex for escaping a string so it can be included inside a regex
+    public static final Pattern REGEX_ESCAPE_PATTERN = Pattern.compile("\\\\[a-zA-Z0-9]|\\[|\\]|\\^|\\$|\\-|\\.|\\{|\\}|\\?|\\*|\\+|\\||\\(|\\)");
+
     private RegexTimer regexTimer = null;
     private static final Logger LOGGER = Log.get();
 
@@ -68,6 +72,12 @@ public class RegexServiceImpl implements RegexService {
             list.add(matcher.group(i));
         }
         return list;
+    }
+
+    @Override
+    public String escapeRegex(String toEscape) {
+        Matcher matcher = REGEX_ESCAPE_PATTERN.matcher(toEscape);
+        return matcher.replaceAll("\\\\$0");
     }
 
     private class RegexTimer implements Runnable {
