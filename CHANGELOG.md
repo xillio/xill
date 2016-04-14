@@ -2,8 +2,11 @@
 All notable changes to this project will be documented in this file
 
 ## [3.3.13] - 14-04-2016
+### Add
+- `String.regexEscape()` construct to escape strings that will be part of a regular expression [CTC-1406]
+
 ### Change
-- Move Concurrency plugin package to separate repository [CTC-1519]
+- Move Concurrency plugin package to separate repository [CTC-1519] 
 
 ## [3.3.12] - 12-04-2016
 ### Change
