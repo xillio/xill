@@ -1,7 +1,7 @@
-# Xill IDE - Change Log
+# Xill Core, Codec, Collection, Date, File, Math, Stream, String, System plugins - Change Log
 All notable changes to this project will be documented in this file
 
-## [3.3.11] - unreleased
+## [3.3.12] - 12-04-2016
 ### Change
 - Errors from external programs run using `System.exec()` are not logged as Xill errors anymore [CTC-1465]
 
