@@ -1,6 +1,10 @@
 # Xill Core, Codec, Collection, Date, File, Math, Stream, String, System plugins - Change Log
 All notable changes to this project will be documented in this file
 
+## [3.3.13] - 14-04-2016
+### Change
+- Move Concurrency plugin package to separate repository [CTC-1519]
+
 ## [3.3.12] - 12-04-2016
 ### Change
 - Errors from external programs run using `System.exec()` are not logged as Xill errors anymore [CTC-1465]
