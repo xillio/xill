@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Escape a string so it can be used as a literal within a regex.
+    </description>
+    <examples>
+        <example title="Usage">
+            <code>
+                use String;
+                use System;
+
+                // Search string, could be from a source that can contain regex special characters
+                var search = "\\d";
+
+                // Text to search in
+                var text = "A single number can be matched by: \\d";
+
+                // Escape and find
+                var escaped = String.regexEscape(search);
+                var result = String.allMatches(text, escaped);
+
+                System.print(result);
+
+            </code>
+            <header>
+                Expected output
+            </header>
+            <code>
+                ["\\d"]
+            </code>
+        </example>
+    </examples>
+    <searchTags>
+        regex, match, escape
+    </searchTags>
+</function>
