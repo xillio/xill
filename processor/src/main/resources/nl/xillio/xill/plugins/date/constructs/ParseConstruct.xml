@@ -3,9 +3,11 @@
     <description>
 Creates a date variable from provided datetime string. Returns new date variable.  
 
-If no parameters are passed, now() is used.  
+If no parameters are passed, Date.now() is used.
 The default format for string date values is ISO.  
 Optionally a different format can be passed as second parameter.
+
+For other format options see the Date.format help page.
     </description>
     <examples>
         <example title="Usage">
@@ -21,6 +23,7 @@ System.print(date);
     <references>
         <reference>now</reference>
         <reference>of</reference>
+        <reference>format</reference>
     </references>
 	    <tags>
         date, time, parse, datetime, timezone, now
