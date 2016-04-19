@@ -37,12 +37,12 @@ public class ExecConstruct extends Construct {
     public ConstructProcessor prepareProcess(final ConstructContext context) {
 
         return new ConstructProcessor(
-                (program, directory) -> process(program, directory, context.getRootLogger(), processFactory),
+                (program, directory) -> process(program, directory, processFactory),
                 new Argument("arguments", ATOMIC, LIST),
                 new Argument("directory", NULL, ATOMIC));
     }
 
-    static MetaExpression process(final MetaExpression arguments, final MetaExpression directory, final Logger log, final ProcessFactory processFactory) {
+    static MetaExpression process(final MetaExpression arguments, final MetaExpression directory, final ProcessFactory processFactory) {
 
         // Get description
         ProcessDescription processDescription = parseInput(arguments, directory);
@@ -55,24 +55,25 @@ public class ExecConstruct extends Construct {
         Process process = startProcess(processFactory, processDescription);
 
         // Subscribe to output
-        ProcessOutput output = listenToStreams(process.getInputStream(), process.getErrorStream(), processDescription, log);
+        ProcessOutput output = listenToStreams(process.getInputStream(), process.getErrorStream());
 
         // Wait for the process to stop
+        int exitCode = -1;
         try {
-            process.waitFor();
+            exitCode = process.waitFor();
         } catch (InterruptedException e) {
             LOGGER.error("Execution interrupted: " + e.getMessage(), e);
         }
 
         while (output.isAlive()) {
-
+            // Wait for the program to finish.
         }
 
         // Stop stopwatch
         sw.stop();
 
         // Return results
-        return parseResult(output, sw.getTime());
+        return parseResult(output, sw.getTime(), exitCode);
     }
 
     /**
@@ -133,29 +134,23 @@ public class ExecConstruct extends Construct {
     /**
      * Start listening to the stderr and stdout streams of a {@link Process}
      *
-     * @param out         the stdout stream
-     * @param err         the stdin stream
-     * @param description the {@link ProcessDescription} for the {@link Process} hosting the two streams
-     * @param log         the logger to log to when an error occurs
+     * @param out the stdout stream
+     * @param err the stdin stream
      * @return an {@link ProcessOutput} object that holds the currently streamed output
      */
-    private static ProcessOutput listenToStreams(final InputStream out, final InputStream err, final ProcessDescription description, final Logger log) {
-        List<String> errors = new ArrayList<>();
+    private static ProcessOutput listenToStreams(final InputStream out, final InputStream err) {
 
-        // Listen to errors
+        // Read from input and output as soon as a line is available
+        // Not reading from output and error streams fast enough could cause the process to hang
+
+        List<String> errors = new ArrayList<>();
         InputStreamListener errListener = new InputStreamListener(err);
-        errListener.getOnLineComplete().addListener(line -> {
-            log.error(description.getFriendlyName() + ": " + line);
-            errors.add(line);
-        });
+        errListener.getOnLineComplete().addListener(errors::add);
         errListener.start();
 
         List<String> output = new ArrayList<>();
         InputStreamListener outListener = new InputStreamListener(out);
-        outListener.getOnLineComplete().addListener(line -> {
-            output.add(line);
-            ;
-        });
+        outListener.getOnLineComplete().addListener(output::add);
         outListener.start();
 
         return new ProcessOutput(output, errors, outListener, errListener);
@@ -164,11 +159,12 @@ public class ExecConstruct extends Construct {
     /**
      * Parse the result of running a {@link Process} to a {@link MetaExpression}
      *
-     * @param output the {@link ProcessOutput} from the streams
-     * @param timeMS the time in milliseconds it took the processor to run
+     * @param output   the {@link ProcessOutput} from the streams
+     * @param timeMS   the time in milliseconds it took the processor to run
+     * @param exitCode The exit code of the process
      * @return the {@link MetaExpression}
      */
-    private static MetaExpression parseResult(final ProcessOutput output, final long timeMS) {
+    private static MetaExpression parseResult(final ProcessOutput output, final long timeMS, int exitCode) {
         List<MetaExpression> outputList = output.getOutput().stream().map(ExecConstruct::fromValue).collect(Collectors.toList());
         List<MetaExpression> errorList = output.getErrors().stream().map(ExecConstruct::fromValue).collect(Collectors.toList());
 
@@ -176,6 +172,7 @@ public class ExecConstruct extends Construct {
         result.put("errors", fromValue(errorList));
         result.put("output", fromValue(outputList));
         result.put("runtime", fromValue(timeMS));
+        result.put("exitCode", fromValue(exitCode));
         return fromValue(result);
     }
 }

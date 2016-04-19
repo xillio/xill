@@ -29,23 +29,23 @@ public class LocalizedFormatConstruct extends BaseDateConstruct {
     public ConstructProcessor prepareProcess(final ConstructContext context) {
 
         return new ConstructProcessor((dateVar, localeVar, dateStyleVar, timeStyleVar) -> process(dateVar, localeVar, dateStyleVar, timeStyleVar, getDateService()),
-                new Argument("date"), new Argument("format", NULL), new Argument("dateStyle", NULL),
+                new Argument("date"), new Argument("languageTag", NULL), new Argument("dateStyle", NULL),
                 new Argument("timeStyle", NULL));
     }
 
     static MetaExpression process(final MetaExpression dateVar,
-                                  final MetaExpression localeVar, final MetaExpression dateStyleVar, final MetaExpression timeStyleVar, DateService dateService) {
+                                  final MetaExpression localeVar, final MetaExpression languageTag, final MetaExpression timeStyleVar, DateService dateService) {
 
         Date date = getDate(dateVar, "date");
         FormatStyle dateStyle;
         FormatStyle timeStyle;
 
         // no styles are given so we use medium
-        if (dateStyleVar.isNull()) {
+        if (languageTag.isNull()) {
             dateStyle = FormatStyle.MEDIUM;
         } else {
             try {
-                dateStyle = FormatStyle.valueOf(dateStyleVar.getStringValue().toUpperCase());
+                dateStyle = FormatStyle.valueOf(languageTag.getStringValue().toUpperCase());
             } catch (IllegalArgumentException e) {
                 throw new RobotRuntimeException("dateStyle has to be 'full','long','medium' or 'short'.", e);
             }
