@@ -23,7 +23,7 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
      * @param value the value to set
      */
     public ExpressionBuilder(final Number value) {
-        expressionFunction = (debugger) -> fromValue(value);
+        expressionFunction = debugger -> fromValue(value);
     }
 
     /**
@@ -32,7 +32,7 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
      * @param value the value to set
      */
     public ExpressionBuilder(final String value) {
-        expressionFunction = (debugger) -> fromValue(value);
+        expressionFunction = debugger -> fromValue(value);
     }
 
     /**
@@ -42,7 +42,7 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
      * @param isConstant whether to create a string constant
      */
     public ExpressionBuilder(final String value, final boolean isConstant) {
-        expressionFunction = (debugger) -> fromValue(value, isConstant);
+        expressionFunction = debugger -> fromValue(value, isConstant);
     }
 
     /**
@@ -51,7 +51,7 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
      * @param value    the value to set
      */
     public ExpressionBuilder(final List<Processable> value) {
-        expressionFunction = (debugger) -> {
+        expressionFunction = debugger -> {
             List<MetaExpression> result = new ArrayList<>();
 
             for (Processable proc : value) {
@@ -70,7 +70,7 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
     @SuppressWarnings("squid:S1319")
     // We should use LinkedHashMap as a parameter here to enforce ordering in the map
     public ExpressionBuilder(final LinkedHashMap<Processable, Processable> value) {
-        expressionFunction = (debugger) -> {
+        expressionFunction = debugger -> {
             LinkedHashMap<String, MetaExpression> entries = new LinkedHashMap<>();
 
             value.forEach((key, expression) -> entries.put(key.process(debugger).get().getStringValue(), expression.process(debugger).get()));
@@ -85,11 +85,11 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
      * @param value the value to set
      */
     public ExpressionBuilder(final boolean value) {
-        expressionFunction = (debugger) -> fromValue(value);
+        expressionFunction = debugger -> fromValue(value);
     }
 
     @Override
-    public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
+    public InstructionFlow<MetaExpression> process(final Debugger debugger) {
         return InstructionFlow.doResume(expressionFunction.apply(debugger));
     }
 
