@@ -34,11 +34,11 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
     /**
      * Create a {@link Robot}-object.
      *
-     * @param robotID             The ID of the robot.
-     * @param debugger            The processor associated with the code in this robot.
-     * @param startEvent          The event indicating the start of the execution of a robot.
-     * @param endEvent            The event indicating the halting of a robot.
-     * @param compilerSerialId    Serial ID of the compiler.
+     * @param robotID          The ID of the robot.
+     * @param debugger         The processor associated with the code in this robot.
+     * @param startEvent       The event indicating the start of the execution of a robot.
+     * @param endEvent         The event indicating the halting of a robot.
+     * @param compilerSerialId Serial ID of the compiler.
      */
     public Robot(final RobotID robotID, final Debugger debugger, EventHost<RobotStartedAction> startEvent, EventHost<RobotStoppedAction> endEvent, UUID compilerSerialId) {
         super(debugger);
@@ -59,9 +59,9 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
         startEvent.invoke(new RobotStartedAction(this));
 
         // Initialize all libraries and their children
-        for (Robot robot : getReferencedLibraries()){
+        for (Robot robot : getReferencedLibraries()) {
             // Skip initialization of the root robot in case of circular references
-            if (robot!=this) {
+            if (robot != this) {
                 robot.initializeAsLibrary();
             }
         }
@@ -93,7 +93,7 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
     /**
      * Use a BFS algorithm to find a target among the children
      *
-     * @param target    The item to be found.
+     * @param target The item to be found.
      * @return the path to the target or an empty list if the target wasn't
      * found.
      */
@@ -147,14 +147,14 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
         }
     }
 
-    private void closeLibrary(){
+    private void closeLibrary() {
         super.close();
     }
 
     /**
      * Add a library to this robot
      *
-     * @param lib    The library to be added.
+     * @param lib The library to be added.
      */
     public void addLibrary(final Robot lib) {
         libraries.add(lib);
@@ -190,9 +190,10 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
 
     /**
      * Construct a set of all robots referenced by this robot using Depth First Search.
+     *
      * @return A set of all referenced robots
      */
-    private Set<Robot> getReferencedLibraries(){
+    private Set<Robot> getReferencedLibraries() {
         Set<Robot> referencedLibraries = new HashSet<>();
         walkLibraries(referencedLibraries);
         return referencedLibraries;
@@ -200,12 +201,13 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
 
     /**
      * One step in a Depth First Search of included robots. Should only be called by {@link Robot#getReferencedLibraries()}.
+     *
      * @param referencedLibraries The set to add libraries to
      */
-    private void walkLibraries(Set<Robot> referencedLibraries){
+    private void walkLibraries(Set<Robot> referencedLibraries) {
         for (Robot library : libraries) {
             // Don't continue down this branch if the library was already added
-            if (referencedLibraries.add(library)){
+            if (referencedLibraries.add(library)) {
                 library.walkLibraries(referencedLibraries);
             }
         }
