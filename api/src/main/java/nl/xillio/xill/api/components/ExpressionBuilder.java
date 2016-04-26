@@ -1,7 +1,6 @@
 package nl.xillio.xill.api.components;
 
 import nl.xillio.xill.api.Debugger;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 import java.util.ArrayList;
 import java.util.Collection;
