@@ -836,7 +836,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
             expressions.add(parse(exp));
         }
 
-        return new ExpressionBuilder(expressions, debugger);
+        return new ExpressionBuilder(expressions);
     }
 
     /**
@@ -855,7 +855,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
             object.put(parse(keys.next()), parse(values.next()));
         }
 
-        return new ExpressionBuilder(object, debugger);
+        return new ExpressionBuilder(object);
 
     }
 

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 /**
  * This is a utility class that will build expressions from values when processed.
@@ -15,7 +15,7 @@ import java.util.function.Supplier;
  */
 public class ExpressionBuilder extends ExpressionBuilderHelper implements Processable {
 
-    private final Supplier<MetaExpression> expressionSupplier;
+    private final Function<Debugger, MetaExpression> expressionFunction;
 
     /**
      * Creates a new expression builder that will produce a Number.
@@ -23,7 +23,7 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
      * @param value the value to set
      */
     public ExpressionBuilder(final Number value) {
-        expressionSupplier = () -> fromValue(value);
+        expressionFunction = (debugger) -> fromValue(value);
     }
 
     /**
@@ -32,7 +32,7 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
      * @param value the value to set
      */
     public ExpressionBuilder(final String value) {
-        expressionSupplier = () -> fromValue(value);
+        expressionFunction = (debugger) -> fromValue(value);
     }
 
     /**
@@ -42,26 +42,16 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
      * @param isConstant whether to create a string constant
      */
     public ExpressionBuilder(final String value, final boolean isConstant) {
-        expressionSupplier = () -> fromValue(value, isConstant);
-    }
-
-    /**
-     * Creates a new expression builder that will produce a List.
-     *
-     * @param value the value to set
-     */
-    public ExpressionBuilder(final List<MetaExpression> value) {
-        expressionSupplier = () -> fromValue(value);
+        expressionFunction = (debugger) -> fromValue(value, isConstant);
     }
 
     /**
      * Creates a new expression builder that will produce a List.
      *
      * @param value    the value to set
-     * @param debugger the debugger to use
      */
-    public ExpressionBuilder(final List<Processable> value, final Debugger debugger) {
-        expressionSupplier = () -> {
+    public ExpressionBuilder(final List<Processable> value) {
+        expressionFunction = (debugger) -> {
             List<MetaExpression> result = new ArrayList<>();
 
             for (Processable proc : value) {
@@ -76,12 +66,11 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
      * Creates a new expression builder that will produce an object.
      *
      * @param value    the value to set
-     * @param debugger the debugger
      */
     @SuppressWarnings("squid:S1319")
     // We should use LinkedHashMap as a parameter here to enforce ordering in the map
-    public ExpressionBuilder(final LinkedHashMap<Processable, Processable> value, final Debugger debugger) {
-        expressionSupplier = () -> {
+    public ExpressionBuilder(final LinkedHashMap<Processable, Processable> value) {
+        expressionFunction = (debugger) -> {
             LinkedHashMap<String, MetaExpression> entries = new LinkedHashMap<>();
 
             value.forEach((key, expression) -> entries.put(key.process(debugger).get().getStringValue(), expression.process(debugger).get()));
@@ -96,12 +85,12 @@ public class ExpressionBuilder extends ExpressionBuilderHelper implements Proces
      * @param value the value to set
      */
     public ExpressionBuilder(final boolean value) {
-        expressionSupplier = () -> fromValue(value);
+        expressionFunction = (debugger) -> fromValue(value);
     }
 
     @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
-        return InstructionFlow.doResume(expressionSupplier.get());
+        return InstructionFlow.doResume(expressionFunction.apply(debugger));
     }
 
     @Override
