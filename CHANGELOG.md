@@ -1,6 +1,10 @@
 # Xill Core, Codec, Collection, Date, File, Math, Stream, String, System plugins - Change Log
 All notable changes to this project will be documented in this file
 
+## [3.3.15] - 26-04-2016
+### Fix
+- Fix `stream closed too early` [CTC-1502]
+
 ## [3.3.14] - 19-04-2016
 ### Fix
 - `Date` package help files [CTC-1474]
