@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file
 ## [3.3.15] - 28-04-2016
 ### Fix
 - Find all referenced libraries before initializing or closing them [CTC-1493]
+- Fix `stream closed too early` [CTC-1502]
 
 ## [3.3.14] - 19-04-2016
 ### Fix

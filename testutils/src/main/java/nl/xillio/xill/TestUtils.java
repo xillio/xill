@@ -4,7 +4,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import nl.xillio.events.EventHost;
 import nl.xillio.xill.api.Debugger;
-import nl.xillio.xill.api.NullDebugger;
 import nl.xillio.xill.api.components.ExpressionBuilderHelper;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
@@ -107,10 +106,12 @@ public class TestUtils extends ExpressionBuilderHelper {
     }
 
     protected MetaExpression process(Construct construct, MetaExpression... arguments) {
-        return ConstructProcessor.process(
-                construct.prepareProcess(context(construct)),
-                arguments
-        );
+        try (ConstructProcessor processor = construct.prepareProcess(context(construct))) {
+            return ConstructProcessor.process(
+                    processor,
+                    arguments
+            );
+        }
     }
 
     protected MetaExpression map(Object... input) {
