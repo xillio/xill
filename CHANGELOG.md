@@ -1,6 +1,10 @@
 # Xill Core, Codec, Collection, Date, File, Math, Stream, String, System plugins - Change Log
 All notable changes to this project will be documented in this file
 
+## [3.3.15] - 28-04-2016
+### Fix
+- Find all referenced libraries before initializing or closing them [CTC-1493]
+
 ## [3.3.14] - 19-04-2016
 ### Fix
 - `Date` package help files [CTC-1474]
