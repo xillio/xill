@@ -18,7 +18,7 @@ import java.util.*;
  */
 public class Robot extends InstructionSet implements nl.xillio.xill.api.components.Robot {
     private final RobotID robotID;
-    private final List<nl.xillio.xill.api.components.Robot> libraries = new ArrayList<>();
+    private final List<Robot> libraries = new ArrayList<>();
     private MetaExpression callArgument;
 
     private static final Logger LOGGER = Log.get();
@@ -29,18 +29,16 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
     private EventHost<RobotStartedAction> startEvent;
     private EventHost<RobotStoppedAction> endEvent;
 
-    private final static List<nl.xillio.xill.api.components.Robot> initializingRobots = new ArrayList<>();
-    private final static List<nl.xillio.xill.api.components.Robot> closingRobots = new ArrayList<>();
     private final UUID compilerSerialId;
 
     /**
      * Create a {@link Robot}-object.
      *
-     * @param robotID             The ID of the robot.
-     * @param debugger            The processor associated with the code in this robot.
-     * @param startEvent          The event indicating the start of the execution of a robot.
-     * @param endEvent            The event indicating the halting of a robot.
-     * @param compilerSerialId    Serial ID of the compiler.
+     * @param robotID          The ID of the robot.
+     * @param debugger         The processor associated with the code in this robot.
+     * @param startEvent       The event indicating the start of the execution of a robot.
+     * @param endEvent         The event indicating the halting of a robot.
+     * @param compilerSerialId Serial ID of the compiler.
      */
     public Robot(final RobotID robotID, final Debugger debugger, EventHost<RobotStartedAction> startEvent, EventHost<RobotStoppedAction> endEvent, UUID compilerSerialId) {
         super(debugger);
@@ -60,11 +58,13 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
         getDebugger().robotStarted(this);
         startEvent.invoke(new RobotStartedAction(this));
 
-        initializingRobots.add(this);
-        for (nl.xillio.xill.api.components.Robot robot : libraries) {
-            robot.initializeAsLibrary();
+        // Initialize all libraries and their children
+        for (Robot robot : getReferencedLibraries()) {
+            // Skip initialization of the root robot in case of circular references
+            if (robot != this) {
+                robot.initializeAsLibrary();
+            }
         }
-        initializingRobots.remove(this);
 
         InstructionFlow<MetaExpression> result = super.process(debugger);
 
@@ -93,7 +93,7 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
     /**
      * Use a BFS algorithm to find a target among the children
      *
-     * @param target    The item to be found.
+     * @param target The item to be found.
      * @return the path to the target or an empty list if the target wasn't
      * found.
      */
@@ -137,27 +137,24 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
     public void close() {
         super.close();
 
-        if (closingRobots.contains(this)) {
-            return;
-        }
-
-        closingRobots.add(this);
-        // Close all external robots
-        for (nl.xillio.xill.api.components.Robot robot : libraries) {
+        // Close all libraries and their children
+        for (Robot robot : getReferencedLibraries()) {
             try {
-                robot.close();
+                robot.closeLibrary();
             } catch (Exception e) {
                 LOGGER.error(e.getMessage(), e);
             }
         }
+    }
 
-        closingRobots.remove(this);
+    private void closeLibrary() {
+        super.close();
     }
 
     /**
      * Add a library to this robot
      *
-     * @param lib    The library to be added.
+     * @param lib The library to be added.
      */
     public void addLibrary(final Robot lib) {
         libraries.add(lib);
@@ -188,13 +185,31 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
 
     @Override
     public void initializeAsLibrary() throws RobotRuntimeException {
-        for (nl.xillio.xill.api.components.Robot robot : libraries) {
-            if (!initializingRobots.contains(robot)) {
-                initializingRobots.add(robot);
-                robot.initializeAsLibrary();
-                initializingRobots.remove(robot);
+        super.initialize();
+    }
+
+    /**
+     * Construct a set of all robots referenced by this robot using Depth First Search.
+     *
+     * @return A set of all referenced robots
+     */
+    private Set<Robot> getReferencedLibraries() {
+        Set<Robot> referencedLibraries = new HashSet<>();
+        walkLibraries(referencedLibraries);
+        return referencedLibraries;
+    }
+
+    /**
+     * One step in a Depth First Search of included robots. Should only be called by {@link Robot#getReferencedLibraries()}.
+     *
+     * @param referencedLibraries The set to add libraries to
+     */
+    private void walkLibraries(Set<Robot> referencedLibraries) {
+        for (Robot library : libraries) {
+            // Don't continue down this branch if the library was already added
+            if (referencedLibraries.add(library)) {
+                library.walkLibraries(referencedLibraries);
             }
         }
-        super.initialize();
     }
 }

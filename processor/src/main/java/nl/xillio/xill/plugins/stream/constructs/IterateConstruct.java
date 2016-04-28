@@ -32,6 +32,10 @@ class IterateConstruct extends Construct {
             throw new RobotRuntimeException("The delimiter cannot be null");
         }
 
+        // Need to register the stream, otherwise it will be disposed of when the provider of the stream (a ConstructCall, for example)
+        // is closed. Consider the case it is declared inline the Stream.iterate
+        stream.registerReference();
+
         Scanner scanner = new Scanner(getInputStream(stream, "stream"));
 
         if (!delimiter.getStringValue().isEmpty()) {
