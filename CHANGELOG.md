@@ -1,7 +1,23 @@
-# Xill IDE - Change Log
+# Xill Core, Codec, Collection, Date, File, Math, Stream, String, System plugins - Change Log
 All notable changes to this project will be documented in this file
 
-## [3.3.11] - unreleased
+## [3.3.15] - 28-04-2016
+### Fix
+- Find all referenced libraries before initializing or closing them [CTC-1493]
+- Fix `stream closed too early` [CTC-1502]
+
+## [3.3.14] - 19-04-2016
+### Fix
+- `Date` package help files [CTC-1474]
+
+## [3.3.13] - 14-04-2016
+### Add
+- `String.regexEscape()` construct to escape strings that will be part of a regular expression [CTC-1406]
+
+### Change
+- Move Concurrency plugin package to separate repository [CTC-1519] 
+
+## [3.3.12] - 12-04-2016
 ### Change
 - Errors from external programs run using `System.exec()` are not logged as Xill errors anymore [CTC-1465]
 

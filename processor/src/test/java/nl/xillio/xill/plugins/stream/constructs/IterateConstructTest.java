@@ -101,11 +101,7 @@ public class IterateConstructTest extends TestUtils {
         IOStream inputStream = spy(new SimpleIOStream(input, "Irrelevant Description"));
         MetaExpression metaExpressionStream = fromValue(inputStream);
 
-        MetaExpression iterateInstance = ConstructProcessor.process(
-                construct.prepareProcess(context(construct)),
-                metaExpressionStream,
-                fromValue("\\s")
-        );
+        MetaExpression iterateInstance = process(construct, metaExpressionStream, fromValue("\\s"));
         MetaExpressionIterator iterator = iterateInstance.getMeta(MetaExpressionIterator.class);
 
         for(String word : lines) {
