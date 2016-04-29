@@ -119,13 +119,30 @@ public class ConstructContext {
     }
 
     /**
-     * @return event that is invoked when the debugger is being stopped
+     * Adds a listener that will be called when a robot is interrupted.
+     *
+     * @param listener the listener to add
      */
-    public EventEx<Object> getOnRobotInterrupt() {
-        if (debugger == null) {
-            return null;
+    public boolean addRobotInterruptListener(Consumer<Object> listener) {
+        if (debugger == null || debugger.getOnRobotInterrupt() == null) {
+            return false;
         } else {
-            return debugger.getOnRobotInterrupt();
+            debugger.getOnRobotInterrupt().addListener(listener);
+            return true;
+        }
+    }
+
+    /**
+     * Removes a listener that was previously added by addRobotInterruptListener method
+     *
+     * @param listener the listener to remove
+     */
+    public boolean removeRobotInterruptListener(Consumer<Object> listener) {
+        if (debugger == null || debugger.getOnRobotInterrupt() == null) {
+            return false;
+        } else {
+            debugger.getOnRobotInterrupt().removeListener(listener);
+            return true;
         }
     }
 
