@@ -37,10 +37,19 @@ public class RegexServiceImpl implements RegexService {
 
     @Override
     public Matcher getMatcher(final String regex, final String value, int timeout) throws FailedToGetMatcherException, IllegalArgumentException {
+        long targetTime;
+
         if (timeout < 0) {
-            timeout = RegexConstruct.REGEX_TIMEOUT * 1000;
+            // If no (valid) timeout is given, use the default timeout
+            targetTime = RegexConstruct.REGEX_TIMEOUT * 1000 + cachedTimer.getCachedTime();
+        } else if (timeout == 0) {
+            // Use no time out
+            targetTime = Long.MAX_VALUE;
+        } else {
+            targetTime = timeout + cachedTimer.getCachedTime();
         }
-        return Pattern.compile(regex, Pattern.DOTALL).matcher(new TimeoutCharSequence(value, timeout + cachedTimer.getCachedTime()));
+
+        return Pattern.compile(regex, Pattern.DOTALL).matcher(new TimeoutCharSequence(value, targetTime));
     }
 
     @Override
@@ -85,17 +94,17 @@ public class RegexServiceImpl implements RegexService {
     private class TimeoutCharSequence implements CharSequence {
 
         private final CharSequence inner;
-        private final long endtime;
+        private final long targetTime;
 
-        public TimeoutCharSequence(final CharSequence inner, long endtime) {
+        public TimeoutCharSequence(final CharSequence inner, long targetTime) {
             super();
-            this.endtime = endtime;
+            this.targetTime = targetTime;
             this.inner = inner;
         }
 
         @Override
         public char charAt(final int index) {
-            if (cachedTimer.getCachedTime() > this.endtime) {
+            if (targetTime != 0 && cachedTimer.getCachedTime() > this.targetTime) {
                 throw new RobotRuntimeException("Pattern match timed out!");
             }
             return inner.charAt(index);
@@ -118,7 +127,7 @@ public class RegexServiceImpl implements RegexService {
 
         @Override
         public CharSequence subSequence(final int start, final int end) {
-            return new TimeoutCharSequence(inner.subSequence(start, end), endtime);
+            return new TimeoutCharSequence(inner.subSequence(start, end), targetTime);
         }
 
         @Override
