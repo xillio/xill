@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.string.services.string;
 
 import com.google.inject.Singleton;
 import me.biesaart.utils.Log;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.string.constructs.RegexConstruct;
 import nl.xillio.xill.plugins.string.exceptions.FailedToGetMatcherException;
 import org.slf4j.Logger;
@@ -38,6 +39,7 @@ public class RegexServiceImpl implements RegexService {
             timeout = RegexConstruct.REGEX_TIMEOUT;
         }
         regexTimer.setTimer(timeout);
+        new Thread(regexTimer).start();
         return Pattern.compile(regex, Pattern.DOTALL).matcher(new TimeoutCharSequence(value));
     }
 
@@ -131,7 +133,7 @@ public class RegexServiceImpl implements RegexService {
         @Override
         public char charAt(final int index) {
             if (regexTimer.timeOut()) {
-                throw new RuntimeException("Pattern match timed out!");
+                throw new RobotRuntimeException("Pattern match timed out!");
             }
             return inner.charAt(index);
         }
