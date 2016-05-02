@@ -22,25 +22,25 @@ public class RegexServiceImpl implements RegexService {
     // Regex for escaping a string so it can be included inside a regex
     public static final Pattern REGEX_ESCAPE_PATTERN = Pattern.compile("\\\\[a-zA-Z0-9]|\\[|\\]|\\^|\\$|\\-|\\.|\\{|\\}|\\?|\\*|\\+|\\||\\(|\\)");
 
-    private RegexTimer regexTimer = null;
     private static final Logger LOGGER = Log.get();
+    private final CachedTimer cachedTimer;
+
 
     /**
      * The implementation of the {@link RegexService}
      */
     public RegexServiceImpl() {
-        this.regexTimer = new RegexTimer();
+        cachedTimer = new CachedTimer();
+        new Thread(cachedTimer).start();
     }
 
 
     @Override
     public Matcher getMatcher(final String regex, final String value, int timeout) throws FailedToGetMatcherException, IllegalArgumentException {
         if (timeout < 0) {
-            timeout = RegexConstruct.REGEX_TIMEOUT;
+            timeout = RegexConstruct.REGEX_TIMEOUT * 1000;
         }
-        regexTimer.setTimer(timeout);
-        new Thread(regexTimer).start();
-        return Pattern.compile(regex, Pattern.DOTALL).matcher(new TimeoutCharSequence(value));
+        return Pattern.compile(regex, Pattern.DOTALL).matcher(new TimeoutCharSequence(value, timeout + cachedTimer.getCachedTime()));
     }
 
     @Override
@@ -82,57 +82,20 @@ public class RegexServiceImpl implements RegexService {
         return matcher.replaceAll("\\\\$0");
     }
 
-    private class RegexTimer implements Runnable {
-        private long targetTime = 0;
-        private boolean stop = false;
-        private boolean timeout = false;
-
-        public RegexTimer() {
-            Runtime.getRuntime().addShutdownHook(new Thread(this::stop));
-        }
-
-        @Override
-        public void run() {
-            while (!stop) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    LOGGER.error("Exception while running timer.", e);
-                }
-                if (targetTime > 0 && targetTime < System.currentTimeMillis()) {
-                    timeout = true;
-                    targetTime = 0;
-                    stop = true;
-                }
-            }
-        }
-
-        public void setTimer(final int millis) {
-            timeout = false;
-            targetTime = System.currentTimeMillis() + millis;
-        }
-
-        public void stop() {
-            stop = true;
-        }
-
-        public synchronized boolean timeOut() {
-            return timeout;
-        }
-    }
-
     private class TimeoutCharSequence implements CharSequence {
 
         private final CharSequence inner;
+        private final long endtime;
 
-        public TimeoutCharSequence(final CharSequence inner) {
+        public TimeoutCharSequence(final CharSequence inner, long endtime) {
             super();
+            this.endtime = endtime;
             this.inner = inner;
         }
 
         @Override
         public char charAt(final int index) {
-            if (regexTimer.timeOut()) {
+            if (cachedTimer.getCachedTime() > this.endtime) {
                 throw new RobotRuntimeException("Pattern match timed out!");
             }
             return inner.charAt(index);
@@ -155,13 +118,43 @@ public class RegexServiceImpl implements RegexService {
 
         @Override
         public CharSequence subSequence(final int start, final int end) {
-            return new TimeoutCharSequence(inner.subSequence(start, end));
+            return new TimeoutCharSequence(inner.subSequence(start, end), endtime);
         }
 
         @Override
         public String toString() {
             return inner.toString();
         }
+    }
+
+    private class CachedTimer implements Runnable {
+        private long cachedTime;
+        private boolean isRunning = true;
+
+        public CachedTimer() {
+            Runtime.getRuntime().addShutdownHook(new Thread(this::stop));
+        }
+
+        @Override
+        public void run() {
+            while (isRunning) {
+                cachedTime = System.currentTimeMillis();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    LOGGER.error("Exception while running timer", e);
+                }
+            }
+        }
+
+        public long getCachedTime() {
+            return cachedTime;
+        }
+
+        public void stop() {
+            this.isRunning = false;
+        }
+
     }
 
 }
