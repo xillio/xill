@@ -91,6 +91,9 @@ public class RegexServiceImpl implements RegexService {
         return matcher.replaceAll("\\\\$0");
     }
 
+    /**
+     * Char sequence that can be timed out (to prevent "infinite"  loops for regex checking)
+     */
     private class TimeoutCharSequence implements CharSequence {
 
         private final CharSequence inner;
@@ -136,6 +139,10 @@ public class RegexServiceImpl implements RegexService {
         }
     }
 
+    /**
+     * Class to cache time retrieved from System.currentTimeMillis.
+     * This is cached because the high precision is not necessary and would be a too great performance hit.
+     */
     private class CachedTimer implements Runnable {
         private long cachedTime;
         private boolean isRunning = true;
