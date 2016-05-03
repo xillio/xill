@@ -122,6 +122,7 @@ public class ConstructContext {
      * Adds a listener that will be called when a robot is interrupted.
      *
      * @param listener the listener to add
+     * @return true if listener has been added
      */
     public boolean addRobotInterruptListener(Consumer<Object> listener) {
         if (debugger == null || debugger.getOnRobotInterrupt() == null) {
@@ -136,6 +137,7 @@ public class ConstructContext {
      * Removes a listener that was previously added by addRobotInterruptListener method
      *
      * @param listener the listener to remove
+     * @return true if listener has been removed
      */
     public boolean removeRobotInterruptListener(Consumer<Object> listener) {
         if (debugger == null || debugger.getOnRobotInterrupt() == null) {
