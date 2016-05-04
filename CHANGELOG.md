@@ -9,6 +9,9 @@ All notable changes to this project will be documented in this file
 - Do-fail block does not work on errors that are thrown inside an object declaration [CTC-1566]
 - MySQL.connect fails from inside runBulk with "Unknown Internal Error" [CTC-1568] [CTC-1492]
 
+### Add
+- Add floor and ceiling construct [CTC-1530]
+
 ## [3.3.14] - 19-04-2016
 ### Fix
 - `Date` package help files [CTC-1474]
