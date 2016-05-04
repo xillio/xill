@@ -7,7 +7,6 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.plugins.math.services.math.MathOperations;
-import nl.xillio.xill.plugins.math.services.math.MathOperationsImpl;
 
 public class FloorConstruct extends Construct {
     @Inject
@@ -23,5 +22,4 @@ public class FloorConstruct extends Construct {
     static MetaExpression process(final MetaExpression value, final MathOperations math) {
         return fromValue(math.floor(value.getNumberValue()));
     }
-
 }

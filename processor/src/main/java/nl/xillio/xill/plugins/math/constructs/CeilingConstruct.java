@@ -22,5 +22,4 @@ public class CeilingConstruct extends Construct {
     static MetaExpression process(final MetaExpression value, final MathOperations math) {
         return fromValue(math.ceiling(value.getNumberValue()));
     }
-
 }
