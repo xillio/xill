@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file
 ### Fix
 - Find all referenced libraries before initializing or closing them [CTC-1493]
 - Fix `stream closed too early` [CTC-1502]
+- Fix timeout on regex and make it threadsafe [CTC-1545]
+- Do-fail block does not work on errors that are thrown inside an object declaration [CTC-1566]
 
 ## [3.3.14] - 19-04-2016
 ### Fix
