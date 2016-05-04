@@ -8,10 +8,10 @@ Returns the smallest number greater than or equal to the given value.
             <code>
                 use Math;
 
-                Math.floor(6); // Result: 6
-                Math.floor(3.14); // Result: 4
-                Math.floor(-3.78); // Result: -3
-                Math.floor(0.7); // Result: 1
+                Math.ceiling(6); // Result: 6
+                Math.ceiling(3.14); // Result: 4
+                Math.ceiling(-3.78); // Result: -3
+                Math.ceiling(0.7); // Result: 1
             </code>
         </example>
     </examples>
