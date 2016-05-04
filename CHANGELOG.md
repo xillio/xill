@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file
 - Fix `stream closed too early` [CTC-1502]
 - Fix timeout on regex and make it threadsafe [CTC-1545]
 - Do-fail block does not work on errors that are thrown inside an object declaration [CTC-1566]
+- MySQL.connect fails from inside runBulk with "Unknown Internal Error" [CTC-1568] [CTC-1492]
 
 ## [3.3.14] - 19-04-2016
 ### Fix
