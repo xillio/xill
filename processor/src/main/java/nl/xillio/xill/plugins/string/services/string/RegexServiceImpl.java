@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.string.services.string;
 
 import com.google.inject.Singleton;
 import me.biesaart.utils.Log;
+import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.string.constructs.RegexConstruct;
 import nl.xillio.xill.plugins.string.exceptions.FailedToGetMatcherException;
 import org.slf4j.Logger;
@@ -21,24 +22,34 @@ public class RegexServiceImpl implements RegexService {
     // Regex for escaping a string so it can be included inside a regex
     public static final Pattern REGEX_ESCAPE_PATTERN = Pattern.compile("\\\\[a-zA-Z0-9]|\\[|\\]|\\^|\\$|\\-|\\.|\\{|\\}|\\?|\\*|\\+|\\||\\(|\\)");
 
-    private RegexTimer regexTimer = null;
     private static final Logger LOGGER = Log.get();
+    private final CachedTimer cachedTimer;
+
 
     /**
      * The implementation of the {@link RegexService}
      */
     public RegexServiceImpl() {
-        this.regexTimer = new RegexTimer();
+        cachedTimer = new CachedTimer();
+        new Thread(cachedTimer).start();
     }
 
 
     @Override
     public Matcher getMatcher(final String regex, final String value, int timeout) throws FailedToGetMatcherException, IllegalArgumentException {
+        long targetTime;
+
         if (timeout < 0) {
-            timeout = RegexConstruct.REGEX_TIMEOUT;
+            // If no (valid) timeout is given, use the default timeout
+            targetTime = RegexConstruct.REGEX_TIMEOUT * 1000 + cachedTimer.getCachedTime();
+        } else if (timeout == 0) {
+            // Use no time out
+            targetTime = Long.MAX_VALUE;
+        } else {
+            targetTime = timeout + cachedTimer.getCachedTime();
         }
-        regexTimer.setTimer(timeout);
-        return Pattern.compile(regex, Pattern.DOTALL).matcher(new TimeoutCharSequence(value));
+
+        return Pattern.compile(regex, Pattern.DOTALL).matcher(new TimeoutCharSequence(value, targetTime));
     }
 
     @Override
@@ -80,58 +91,24 @@ public class RegexServiceImpl implements RegexService {
         return matcher.replaceAll("\\\\$0");
     }
 
-    private class RegexTimer implements Runnable {
-        private long targetTime = 0;
-        private boolean stop = false;
-        private boolean timeout = false;
-
-        public RegexTimer() {
-            Runtime.getRuntime().addShutdownHook(new Thread(this::stop));
-        }
-
-        @Override
-        public void run() {
-            while (!stop) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    LOGGER.error("Exception while running timer.", e);
-                }
-                if (targetTime > 0 && targetTime < System.currentTimeMillis()) {
-                    timeout = true;
-                    targetTime = 0;
-                    stop = true;
-                }
-            }
-        }
-
-        public void setTimer(final int millis) {
-            timeout = false;
-            targetTime = System.currentTimeMillis() + millis;
-        }
-
-        public void stop() {
-            stop = true;
-        }
-
-        public synchronized boolean timeOut() {
-            return timeout;
-        }
-    }
-
+    /**
+     * Char sequence that can be timed out (to prevent "infinite"  loops for regex checking)
+     */
     private class TimeoutCharSequence implements CharSequence {
 
         private final CharSequence inner;
+        private final long targetTime;
 
-        public TimeoutCharSequence(final CharSequence inner) {
+        public TimeoutCharSequence(final CharSequence inner, long targetTime) {
             super();
+            this.targetTime = targetTime;
             this.inner = inner;
         }
 
         @Override
         public char charAt(final int index) {
-            if (regexTimer.timeOut()) {
-                throw new RuntimeException("Pattern match timed out!");
+            if (targetTime != 0 && cachedTimer.getCachedTime() > this.targetTime) {
+                throw new RobotRuntimeException("Pattern match timed out!");
             }
             return inner.charAt(index);
         }
@@ -153,13 +130,47 @@ public class RegexServiceImpl implements RegexService {
 
         @Override
         public CharSequence subSequence(final int start, final int end) {
-            return new TimeoutCharSequence(inner.subSequence(start, end));
+            return new TimeoutCharSequence(inner.subSequence(start, end), targetTime);
         }
 
         @Override
         public String toString() {
             return inner.toString();
         }
+    }
+
+    /**
+     * Class to cache time retrieved from System.currentTimeMillis.
+     * This is cached because the high precision is not necessary and would be a too great performance hit.
+     */
+    private class CachedTimer implements Runnable {
+        private long cachedTime;
+        private boolean isRunning = true;
+
+        public CachedTimer() {
+            Runtime.getRuntime().addShutdownHook(new Thread(this::stop));
+        }
+
+        @Override
+        public void run() {
+            while (isRunning) {
+                cachedTime = System.currentTimeMillis();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    LOGGER.error("Exception while running timer", e);
+                }
+            }
+        }
+
+        public long getCachedTime() {
+            return cachedTime;
+        }
+
+        public void stop() {
+            this.isRunning = false;
+        }
+
     }
 
 }

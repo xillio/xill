@@ -60,4 +60,14 @@ public class MathOperationsImpl implements MathOperations {
                 throw new NotImplementedException("This type has not been implemented.");
         }
     }
+
+    @Override
+    public long floor(Number value) {
+        return (long) Math.floor(value.doubleValue());
+    }
+
+    @Override
+    public long ceiling(Number value) {
+        return (long) Math.ceil(value.doubleValue());
+    }
 }
