@@ -184,11 +184,6 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
         super.initialize();
     }
 
-    @Override
-    public void closeLibrary() {
-        super.closeLibrary();
-    }
-
     /**
      * Construct a set of all robots referenced by this robot using Depth First Search.
      *
