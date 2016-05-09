@@ -34,6 +34,17 @@ public class OperationFailedException extends RobotRuntimeException {
     }
 
     /**
+     * Constructs a new exception with the specified detail message and cause without advice.
+     *
+     * @param operation the operation that failed (imperative form without explicit casing)
+     * @param reason what went wrong (full human readable sentence)
+     * @param cause the cause
+     */
+    public OperationFailedException(final String operation, final String reason, final Throwable cause) {
+        this(operation, reason, null, cause);
+    }
+
+    /**
      * Constructs a new exception with the specified detail message without advice.
      *
      * @param operation the operation that failed (imperative form without explicit casing)

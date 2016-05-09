@@ -34,6 +34,17 @@ public class InvalidUserInputException extends RobotRuntimeException {
     }
 
     /**
+     * Constructs a new exception with the specified detail message and cause without example.
+     *
+     * @param reason the short reason for this exception
+     * @param actualInput the representation of the input value that was not valid
+     * @param expectedInput the explanation of what is correct input (noun with article)
+     * @param cause the cause
+     */
+    public InvalidUserInputException(final String reason, final String actualInput, final String expectedInput, final Throwable cause) {
+        this(reason, actualInput, expectedInput, null, cause);
+    }
+    /**
      * Constructs a new exception with the specified detail message without example.
      *
      * @param reason the short reason for this exception
