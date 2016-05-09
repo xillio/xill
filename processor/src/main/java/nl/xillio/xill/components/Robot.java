@@ -147,10 +147,6 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
         }
     }
 
-    private void closeLibrary() {
-        super.close();
-    }
-
     /**
      * Add a library to this robot
      *
