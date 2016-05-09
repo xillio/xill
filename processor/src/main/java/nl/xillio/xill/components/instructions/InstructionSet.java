@@ -147,14 +147,13 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
     /**
      * Close variables and functions in an initialized library
      */
-    public void closeLibrary()
-    {
+    public void closeLibrary() {
         for (Instruction instruction : instructions) {
             if (instruction instanceof VariableDeclaration || instruction instanceof FunctionDeclaration) {
                 try {
                     instruction.close();
                 } catch (Exception e) {
-                    throw new RobotRuntimeException("Could not close instruction in a library");
+                    throw new RobotRuntimeException("Could not close instruction in a library", e);
                 }
             }
         }
