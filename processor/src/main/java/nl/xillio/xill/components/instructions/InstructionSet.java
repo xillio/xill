@@ -140,6 +140,11 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
         for (Instruction instruction : instructions) {
             if (instruction instanceof VariableDeclaration || instruction instanceof FunctionDeclaration) {
                 instruction.process(debugger);
+                try {
+                    instruction.close();
+                } catch (Exception e) {
+                    throw new RobotRuntimeException("Could not close instruction in library");
+                }
             }
         }
     }
