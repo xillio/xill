@@ -5,6 +5,8 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.data.Date;
+import nl.xillio.xill.api.errors.InvalidUserInputException;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.date.BaseDateConstruct;
 import nl.xillio.xill.plugins.date.services.DateService;
@@ -49,12 +51,12 @@ public class OfConstruct extends BaseDateConstruct {
         try {
             zone = ZoneId.of(input[7].getStringValue());
         } catch (DateTimeException e) {
-            throw new RobotRuntimeException("Invalid zone ID");
+            throw new InvalidUserInputException("Invalid zone ID", input[7].getStringValue(), "A valid timezone.");
         }
         try {
             date = dateService.constructDate(year, month, day, hour, minute, second, nano, zone);
         } catch (DateTimeException e) {
-            throw new RobotRuntimeException(e.getLocalizedMessage());
+            throw new OperationFailedException("create a date variable", e.getLocalizedMessage(), e);
         }
 
         return fromValue(date);

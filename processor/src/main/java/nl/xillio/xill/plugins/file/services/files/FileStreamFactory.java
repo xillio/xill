@@ -1,6 +1,7 @@
 package nl.xillio.xill.plugins.file.services.files;
 
 import com.google.inject.Singleton;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.io.IOStream;
 import nl.xillio.xill.api.io.SimpleIOStream;
@@ -22,7 +23,7 @@ public class FileStreamFactory {
         assertNotDirectory(path, "append");
 
         if (!Files.isWritable(path) && Files.exists(path)) {
-            throw new RobotRuntimeException("Cannot append to " + path);
+            throw new OperationFailedException("open stream for appending", "The path " + path + " is not writable or does not exist.");
         }
 
         if (path.getParent() != null) {
@@ -35,20 +36,18 @@ public class FileStreamFactory {
     public IOStream openRead(Path path) throws IOException {
         assertNotDirectoryAndExists(path, "read");
 
-
         if (!Files.isReadable(path)) {
-            throw new RobotRuntimeException(path + " is not readable");
+            throw new OperationFailedException("open stream for reading", "The path " + path + " is not readable.");
         }
 
         return new SimpleIOStream(Files.newInputStream(path, StandardOpenOption.READ), path.toString());
-
     }
 
     public IOStream openWrite(Path path) throws IOException {
         assertNotDirectory(path, "write");
 
         if (!Files.isWritable(path) && Files.exists(path)) {
-            throw new RobotRuntimeException("Cannot write to " + path);
+            throw new OperationFailedException("open stream for writing", "The path " + path + " is not writable or does not exist.");
         }
 
         if (path.getParent() != null) {
@@ -66,13 +65,13 @@ public class FileStreamFactory {
 
     private void assertNotDirectory(Path target, String targetType) {
         if (Files.isDirectory(target)) {
-            throw new RobotRuntimeException("Cannot create " + targetType + " target for a directory");
+            throw new OperationFailedException("create " + targetType + " target for a directory", target.toFile().getAbsolutePath() + " is not a directory.");
         }
     }
 
     private void assertExists(Path target) {
         if (!Files.exists(target)) {
-            throw new RobotRuntimeException("Could not find " + target);
+            throw new OperationFailedException("find " + target, "The target does not exist.");
         }
     }
 }

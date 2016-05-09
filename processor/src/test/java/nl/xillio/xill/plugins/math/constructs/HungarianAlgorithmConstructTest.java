@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.math.constructs;
 
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.errors.InvalidUserInputException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -72,9 +73,9 @@ public class HungarianAlgorithmConstructTest extends TestUtils {
     }
 
     /**
-     * Tests wheter the exception is thrown when there are too little rows provided.
+     * Tests whether the exception is thrown when there are too little rows provided.
      */
-    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Not enough data, Expected at least 1 row with data")
+    @Test(expectedExceptions = InvalidUserInputException.class, expectedExceptionsMessageRegExp = "Not enough data..*At least 1 row with data.")
     public void processTooFewRows() {
 
         MetaExpression matrix = mock(MetaExpression.class);
@@ -85,13 +86,12 @@ public class HungarianAlgorithmConstructTest extends TestUtils {
         when(max.getBooleanValue()).thenReturn(true);
 
         HungarianAlgorithmConstruct.process(matrix, max);
-
     }
 
     /**
-     * Tests wheter the exception is throwns when enough rows but too little columns are provided.
+     * Tests whether the exception is thrown when enough rows but too little columns are provided.
      */
-    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Not enough data, Expected at least 1 column with data")
+    @Test(expectedExceptions = InvalidUserInputException.class, expectedExceptionsMessageRegExp = "Not enough data..*At least 1 column with data.")
     public void processTooFewColumns() {
         MetaExpression matrix = mock(MetaExpression.class);
         when(matrix.getType()).thenReturn(LIST);
@@ -101,11 +101,10 @@ public class HungarianAlgorithmConstructTest extends TestUtils {
         when(max.getBooleanValue()).thenReturn(true);
 
         HungarianAlgorithmConstruct.process(matrix, max);
-
     }
 
     /**
-     * Tests wheter an exception is thrown when invalid input is provided.
+     * Tests whether an exception is thrown when invalid input is provided.
      */
     @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid value `error` in matrix at \\[1,1\\]")
     public void processInvalidInputInMatrix() {

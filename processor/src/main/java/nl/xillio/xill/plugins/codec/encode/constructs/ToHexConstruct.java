@@ -6,6 +6,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.InvalidUserInputException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.codec.encode.services.EncoderService;
 
@@ -39,7 +40,7 @@ public class ToHexConstruct extends Construct {
         try {
             return inputString.isNull() ? NULL : fromValue(encoderService.toHex(inputString.getStringValue(), toLowerCase.getBooleanValue(), charsetName.getStringValue()));
         } catch (UnsupportedCharsetException e) {
-            throw new RobotRuntimeException("Unknown character set: " + charsetName.getStringValue(), e);
+            throw new InvalidUserInputException("Unknown character set.", charsetName.getStringValue(), "A valid character set.", e);
         }
     }
 }

@@ -6,6 +6,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.io.IOStream;
 import nl.xillio.xill.plugins.file.services.files.FileStreamFactory;
@@ -45,7 +46,7 @@ abstract class AbstractOpenConstruct extends Construct {
         try {
             return open(path);
         } catch (IOException e) {
-            throw new RobotRuntimeException("Could not open stream to " + path + ": " + e.getMessage(), e);
+            throw new OperationFailedException(" open stream to " + path, e.getMessage(), e);
         }
     }
 

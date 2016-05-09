@@ -8,6 +8,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.io.IOStream;
 import nl.xillio.xill.plugins.file.services.files.FileStreamFactory;
@@ -62,7 +63,7 @@ public class GetTextConstruct extends Construct {
         try {
             return fileStreamFactory.openRead(path);
         } catch (IOException e) {
-            throw new RobotRuntimeException("Failed to open file " + path + ": " + e.getMessage(), e);
+            throw new OperationFailedException("open file " + path, e.getMessage(), e);
         }
     }
 
@@ -70,7 +71,7 @@ public class GetTextConstruct extends Construct {
         try {
             return ioUtilsService.toString(stream.getInputStream(), charset);
         } catch (IOException e) {
-            throw new RobotRuntimeException("Failed to get text: " + e.getMessage(), e);
+            throw new OperationFailedException("get text", e.getMessage(), e);
         }
     }
 }

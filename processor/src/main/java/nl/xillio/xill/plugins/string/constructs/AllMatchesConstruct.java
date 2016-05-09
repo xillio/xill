@@ -6,6 +6,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.InvalidUserInputException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.string.exceptions.FailedToGetMatcherException;
 import nl.xillio.xill.plugins.string.services.string.RegexService;
@@ -52,9 +53,9 @@ public class AllMatchesConstruct extends Construct {
                 list.add(fromValue(s));
             }
         } catch (PatternSyntaxException e) {
-            throw new RobotRuntimeException("Invalid pattern: " + e.getMessage(), e);
+            throw new InvalidUserInputException("Invalid pattern: " + e.getMessage(), regex, "A valid regular expression.", e);
         } catch (IllegalArgumentException | FailedToGetMatcherException e) {
-            throw new RobotRuntimeException("Illegal argument: " + e.getMessage(), e);
+            throw new InvalidUserInputException("Illegal argument: " + e.getMessage(), text, "A valid text value.", e);
         }
         return fromValue(list);
     }

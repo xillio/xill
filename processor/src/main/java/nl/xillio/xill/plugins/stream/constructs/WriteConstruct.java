@@ -6,6 +6,8 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.InvalidUserInputException;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import org.apache.commons.io.IOUtils;
 
@@ -38,7 +40,7 @@ class WriteConstruct extends Construct {
     private MetaExpression process(MetaExpression source, MetaExpression target, MetaExpression limit) {
 
         if (Double.isNaN(limit.getNumberValue().doubleValue())) {
-            throw new RobotRuntimeException(limit + " is not a valid number");
+            throw new InvalidUserInputException("The passed 'limit' parameter is not a valid number.", limit.getStringValue(), "A valid number.");
         }
 
         InputStream inputStream = openInputStream(source);
@@ -59,7 +61,7 @@ class WriteConstruct extends Construct {
         try {
             return IOUtils.copyLarge(inputStream, outputStream, 0, limit);
         } catch (IOException e) {
-            throw new RobotRuntimeException("Failed to write to stream: " + e.getMessage(), e);
+            throw new OperationFailedException("write to stream", e.getMessage(), e);
         }
     }
 

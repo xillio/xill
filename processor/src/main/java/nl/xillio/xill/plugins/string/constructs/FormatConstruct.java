@@ -6,6 +6,8 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.InvalidUserInputException;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.string.exceptions.FailedToGetMatcherException;
 import nl.xillio.xill.plugins.string.services.string.RegexService;
@@ -111,17 +113,17 @@ public class FormatConstruct extends Construct {
                     break;
                 case 't':
                 case 'T':
-                    throw new RobotRuntimeException("Date/Time conversions are not supported.");
+                    throw new OperationFailedException("format a date/time", "Date/Time conversions are not supported.", "Use Date package for formatting the date/time.");
                 default:
-                    throw new RobotRuntimeException("Unexpected conversion type: " + typeString);
+                    throw new InvalidUserInputException("Unexpected conversion type.", typeString, "A supported conversion type.");
             }
         }
         try {
             return fromValue(stringService.format(textVar.getStringValue(), list));
         } catch (MissingFormatArgumentException e) {
-            throw new RobotRuntimeException("Not enough arguments: " + e.getMessage(), e);
+            throw new InvalidUserInputException("Not enough arguments: " + e.getMessage(), valueVar.getStringValue(), "A correct list of arguments.", e);
         } catch (IllegalFormatException e) {
-            throw new RobotRuntimeException("Illegal format handed: " + e.getMessage(), e);
+            throw new InvalidUserInputException("Illegal format handed: " + e.getMessage(), textVar.getStringValue(), "A valid format specifier.", e);
         }
     }
 }

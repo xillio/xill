@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.system.constructs;
 
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.services.json.JsonException;
 import nl.xillio.xill.services.json.JsonParser;
@@ -58,7 +59,7 @@ public class ParseJSONConstructTest extends TestUtils {
      *
      * @throws Throwable while testing
      */
-    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid JSON input: (.+)")
+    @Test(expectedExceptions = OperationFailedException.class, expectedExceptionsMessageRegExp = "Could not parse JSON input..*")
     public void testProcessInvalid() throws Throwable {
         // Mock context
         MetaExpression expression = mockExpression(ATOMIC);

@@ -7,6 +7,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 
@@ -36,9 +37,9 @@ public class DeleteConstruct extends Construct {
         try {
             fileUtils.delete(file);
         } catch (AccessDeniedException e) {
-            throw new RobotRuntimeException("Access denied to " + e.getFile(), e);
+            throw new OperationFailedException("delete the target", "Access is denied to " + e.getFile(), e);
         } catch (IOException e) {
-            throw new RobotRuntimeException("Failed to delete " + file.toAbsolutePath(), e);
+            throw new OperationFailedException("delete " + file.toAbsolutePath(), e.getMessage(), e);
         }
 
         return fromValue(file.toString());
