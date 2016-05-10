@@ -8,21 +8,22 @@ import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
-import nl.xillio.xill.plugins.system.exec.InputStreamListener;
+import nl.xillio.xill.plugins.system.exec.InputStreamReaderCallable;
 import nl.xillio.xill.plugins.system.exec.ProcessDescription;
 import nl.xillio.xill.plugins.system.exec.ProcessFactory;
 import nl.xillio.xill.plugins.system.exec.ProcessOutput;
 import nl.xillio.xill.services.inject.FactoryBuilderException;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.time.StopWatch;
-import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Runs an application and waits for it to complete
@@ -57,16 +58,13 @@ public class ExecConstruct extends Construct {
         // Subscribe to output
         ProcessOutput output = listenToStreams(process.getInputStream(), process.getErrorStream());
 
+
         // Wait for the process to stop
         int exitCode = -1;
         try {
             exitCode = process.waitFor();
         } catch (InterruptedException e) {
             LOGGER.error("Execution interrupted: " + e.getMessage(), e);
-        }
-
-        while (output.isAlive()) {
-            // Wait for the program to finish.
         }
 
         // Stop stopwatch
@@ -139,21 +137,23 @@ public class ExecConstruct extends Construct {
      * @return an {@link ProcessOutput} object that holds the currently streamed output
      */
     private static ProcessOutput listenToStreams(final InputStream out, final InputStream err) {
+        String output, errors;
 
-        // Read from input and output as soon as a line is available
-        // Not reading from output and error streams fast enough could cause the process to hang
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        Future outListener = executorService.submit(new InputStreamReaderCallable(out));
+        Future errListener = executorService.submit(new InputStreamReaderCallable(err));
 
-        List<String> errors = new ArrayList<>();
-        InputStreamListener errListener = new InputStreamListener(err);
-        errListener.getOnLineComplete().addListener(errors::add);
-        errListener.start();
+        try {
+            output = (String) outListener.get();
+            errors = (String) errListener.get();
+        } catch (InterruptedException e) {
+            throw new RobotRuntimeException("Execution interrupted: " + e.getMessage(), e);
+        } catch (ExecutionException e) {
+            throw new RobotRuntimeException("Execution failed: " + e.getMessage(), e);
+        }
 
-        List<String> output = new ArrayList<>();
-        InputStreamListener outListener = new InputStreamListener(out);
-        outListener.getOnLineComplete().addListener(output::add);
-        outListener.start();
-
-        return new ProcessOutput(output, errors, outListener, errListener);
+        executorService.shutdown();
+        return new ProcessOutput(output, errors);
     }
 
     /**
@@ -165,12 +165,9 @@ public class ExecConstruct extends Construct {
      * @return the {@link MetaExpression}
      */
     private static MetaExpression parseResult(final ProcessOutput output, final long timeMS, int exitCode) {
-        List<MetaExpression> outputList = output.getOutput().stream().map(ExecConstruct::fromValue).collect(Collectors.toList());
-        List<MetaExpression> errorList = output.getErrors().stream().map(ExecConstruct::fromValue).collect(Collectors.toList());
-
         LinkedHashMap<String, MetaExpression> result = new LinkedHashMap<>();
-        result.put("errors", fromValue(errorList));
-        result.put("output", fromValue(outputList));
+        result.put("errors", fromValue(output.getErrors()));
+        result.put("output", fromValue(output.getOutput()));
         result.put("runtime", fromValue(timeMS));
         result.put("exitCode", fromValue(exitCode));
         return fromValue(result);
