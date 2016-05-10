@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Returns the largest number smaller than or equal to the given value.
+    </description>
+    <examples>
+        <example title="Usage">
+            <code>
+                use Math;
+
+                Math.floor(6); // Result: 6
+                Math.floor(3.14); // Result: 3
+                Math.floor(-3.78); // Result: -4
+                Math.floor(0.7); // Result: 0
+            </code>
+        </example>
+    </examples>
+</function>

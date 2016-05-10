@@ -1,10 +1,16 @@
 # Xill Core, Codec, Collection, Date, File, Math, Stream, String, System plugins - Change Log
 All notable changes to this project will be documented in this file
 
-## [3.3.15] - 28-04-2016
+## [3.3.15] - 06-05-2016
 ### Fix
 - Find all referenced libraries before initializing or closing them [CTC-1493]
 - Fix `stream closed too early` [CTC-1502]
+- Fix timeout on regex and make it threadsafe [CTC-1545]
+- Do-fail block does not work on errors that are thrown inside an object declaration [CTC-1566]
+- MySQL.connect fails from inside runBulk with "Unknown Internal Error" [CTC-1568] [CTC-1492]
+
+### Add
+- Add floor and ceiling construct [CTC-1530]
 
 ## [3.3.14] - 19-04-2016
 ### Fix
