@@ -1,6 +1,10 @@
 # Xill Core, Codec, Collection, Date, File, Math, Stream, String, System plugins - Change Log
 All notable changes to this project will be documented in this file
 
+## [3.3.16] - 09-05-2016
+### Change
+- Do not split System.exec() output by line [CTC-1466]
+
 ## [3.3.15] - 06-05-2016
 ### Fix
 - Find all referenced libraries before initializing or closing them [CTC-1493]
