@@ -48,10 +48,10 @@ public class ExecConstructTest extends TestUtils {
         @SuppressWarnings("unchecked")
         Map<String, MetaExpression> value = (Map<String, MetaExpression>) result.getValue();
 
-        assertEquals(value.get("output").getStringValue(), "[\"\\u0000\"]");
-        assertEquals(value.get("output").getType(), LIST);
-        assertEquals(value.get("errors").getStringValue(), "[\"\\u0000\\u0000\"]");
-        assertEquals(value.get("errors").getType(), LIST);
+        assertEquals(value.get("output").toString(), "\"\\u0000\"");
+        assertEquals(value.get("output").getType(), ATOMIC);
+        assertEquals(value.get("errors").toString(), "\"\\u0000\\u0000\"");
+        assertEquals(value.get("errors").getType(), ATOMIC);
         assertNotNull(value.get("runtime"));
         assertEquals(value.get("runtime").getType(), ATOMIC);
         assertEquals(value.get("exitCode").getNumberValue(), 0);
@@ -88,10 +88,10 @@ public class ExecConstructTest extends TestUtils {
         @SuppressWarnings("unchecked")
         Map<String, MetaExpression> value = (Map<String, MetaExpression>) result.getValue();
 
-        assertEquals(value.get("output").getStringValue(), "[\"\\u0000\\u0000\\u0000\\u0000\\u0000\\u0000\"]");
-        assertEquals(value.get("output").getType(), LIST);
-        assertEquals(value.get("errors").getStringValue(), "[\"\\u0000\\u0000\\u0000\"]");
-        assertEquals(value.get("errors").getType(), LIST);
+        assertEquals(value.get("output").toString(), "\"\\u0000\\u0000\\u0000\\u0000\\u0000\\u0000\"");
+        assertEquals(value.get("output").getType(), ATOMIC);
+        assertEquals(value.get("errors").toString(), "\"\\u0000\\u0000\\u0000\"");
+        assertEquals(value.get("errors").getType(), ATOMIC);
         assertNotNull(value.get("runtime"));
         assertEquals(value.get("runtime").getType(), ATOMIC);
         assertEquals(value.get("exitCode").getNumberValue(), 0);
