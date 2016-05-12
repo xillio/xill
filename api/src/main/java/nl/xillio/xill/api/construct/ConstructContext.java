@@ -36,6 +36,7 @@ public class ConstructContext {
     private final EventHost<RobotStoppedAction> robotStoppedEvent;
     /**
      * This event is used to forward deprecated method calls to the correct methods.
+     * @deprecated Used to support the deprecated {@link ConstructContext#getOnRobotInterrupt()}
      */
     @Deprecated
     private final EventEx<Object> mockInterruptEvent = new MockInterruptEvent();
