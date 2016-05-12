@@ -153,7 +153,7 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
                 try {
                     instruction.close();
                 } catch (Exception e) {
-                    throw new RobotRuntimeException("Could not close instruction in a library", e);
+                    LOGGER.error("Could not close instruction in a library", e);
                 }
             }
         }
