@@ -54,26 +54,6 @@ public class StoppableDebugger extends NullDebugger {
     }
 
     @Override
-    public Event<RobotStartedAction> getOnRobotStart() {
-        return parent.getOnRobotStart();
-    }
-
-    @Override
-    public Event<RobotStoppedAction> getOnRobotStop() {
-        return parent.getOnRobotStop();
-    }
-
-    @Override
-    public Event<RobotPausedAction> getOnRobotPause() {
-        return parent.getOnRobotPause();
-    }
-
-    @Override
-    public Event<RobotContinuedAction> getOnRobotContinue() {
-        return parent.getOnRobotContinue();
-    }
-
-    @Override
     public EventEx<Object> getOnRobotInterrupt() {
         return parent.getOnRobotInterrupt();
     }
