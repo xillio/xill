@@ -3,7 +3,7 @@
     <description>
 Runs an application and returns the output.
 
-The result will contain a list of errors, a list of output, the runtime in milliseconds and the process' exit code.
+The result will contain the errors, the output, the runtime in milliseconds and the process' exit code.
 The directory parameter is the working directory where you would like the command to be executed.
     </description>
     <examples>
@@ -11,7 +11,7 @@ The directory parameter is the working directory where you would like the comman
             <header>
             Running on windows.
 
-            Possible output: {"errors":[],"output":["test"],"runtime":14,"exitCode":0}.
+            Possible output: {"errors":"","output":"test\r\n","runtime":32,"exitCode":0}.
             </header>
             <code>
                 use System;
@@ -27,7 +27,7 @@ The directory parameter is the working directory where you would like the comman
             the name of the new file is target.jpg. The copy, i.e. target.jpg, is created in the
             specified working directory, in this case C:/tmp.
 
-            Possible output: {"errors":[],"output":["        1 file(s) copied."],"runtime":19,"exitCode":0}.
+            Possible output: {"errors":"","output":"        1 file(s) copied.\r\n","runtime":40,"exitCode":0}.
             </header>
             <code>
                 use System;
