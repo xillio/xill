@@ -34,6 +34,11 @@ public class ConstructContext {
      */
     private final EventHost<RobotStartedAction> robotStartedEvent;
     private final EventHost<RobotStoppedAction> robotStoppedEvent;
+    /**
+     * This event is used to forward deprecated method calls to the correct methods.
+     */
+    @Deprecated
+    private final EventEx<Object> mockInterruptEvent = new MockInterruptEvent();
 
     /**
      * Creates a new {@link ConstructContext} for a specific robot.
@@ -119,6 +124,17 @@ public class ConstructContext {
     }
 
     /**
+     * This method is deprecated. Use {@link ConstructContext#addRobotInterruptListener(Consumer)}.
+     *
+     * @return a mocked {@link EventEx} that will forward the calls to the non-deprecated api
+     * @deprecated Replaced be addRobotInterruptListener and removeRobotInterruptListener
+     */
+    @Deprecated
+    public EventEx<Object> getOnRobotInterrupt() {
+        return mockInterruptEvent;
+    }
+
+    /**
      * Adds a listener that will be called when a robot is interrupted.
      *
      * @param listener the listener to add
@@ -167,5 +183,22 @@ public class ConstructContext {
      */
     public XillProcessor createChildProcessor(Path robot, XillEnvironment xillEnvironment) throws IOException {
         return xillEnvironment.buildProcessor(robotID.getProjectPath().toPath(), robot, debugger.createChild());
+    }
+
+    /**
+     * This class forwards deprecated calls to the correct implementation
+     * @deprecated we no longer use the getter. Use the delegation methods instead.
+     */
+    @Deprecated
+    private class MockInterruptEvent extends EventEx<Object> {
+        @Override
+        public synchronized void addListener(Consumer<Object> listener) {
+            addRobotInterruptListener(listener);
+        }
+
+        @Override
+        public synchronized void removeListener(Consumer<Object> listener) {
+            removeRobotInterruptListener(listener);
+        }
     }
 }
