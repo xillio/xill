@@ -1,12 +1,7 @@
 package nl.xillio.xill.api;
 
-import nl.xillio.events.Event;
 import nl.xillio.xill.api.components.EventEx;
 import nl.xillio.xill.api.errors.ErrorHandlingPolicy;
-import nl.xillio.xill.api.events.RobotContinuedAction;
-import nl.xillio.xill.api.events.RobotPausedAction;
-import nl.xillio.xill.api.events.RobotStartedAction;
-import nl.xillio.xill.api.events.RobotStoppedAction;
 
 /**
  * This class represents a debugger that can be stopped (this is only behaviour that is supported).
