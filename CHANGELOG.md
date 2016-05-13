@@ -1,6 +1,10 @@
 # Xill Core, Codec, Collection, Date, File, Math, Stream, String, System plugins - Change Log
 All notable changes to this project will be documented in this file
 
+## [3.3.17] - 13-05-2016
+### Fix
+- Fix break of backward compatibility of API change in [CTC-1492]
+ 
 ## [3.3.16] - 09-05-2016
 ### Change
 - Do not split System.exec() output by line [CTC-1466]
