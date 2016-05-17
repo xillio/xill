@@ -1,5 +1,6 @@
 package nl.xillio.xill.api;
 
+import nl.xillio.xill.api.components.EventEx;
 import nl.xillio.xill.api.errors.ErrorHandlingPolicy;
 
 /**
@@ -11,6 +12,12 @@ public class StoppableDebugger extends NullDebugger {
     private boolean stop = false;
     private boolean errorOccurred = false;
     private boolean stopOnError = false;
+    private final Debugger parent;
+
+    public StoppableDebugger(Debugger parent) {
+        this.parent = parent;
+    }
+
 
     @Override
     public void stop() {
@@ -35,9 +42,15 @@ public class StoppableDebugger extends NullDebugger {
         }
     }
 
+
     @Override
     public void setErrorHandler(ErrorHandlingPolicy handler) {
         this.errorHandlingPolicy = handler;
+    }
+
+    @Override
+    public EventEx<Object> getOnRobotInterrupt() {
+        return parent.getOnRobotInterrupt();
     }
 
     /**

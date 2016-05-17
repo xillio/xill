@@ -377,7 +377,7 @@ public class XillDebugger implements Debugger {
 
     @Override
     public Debugger createChild() {
-        Debugger debugger = new StoppableDebugger();
+        Debugger debugger = new StoppableDebugger(this);
         childDebuggers.add(debugger);
         return debugger;
     }
