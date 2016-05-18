@@ -32,7 +32,7 @@ public class ExecConstruct extends Construct {
     private static final org.slf4j.Logger LOGGER = Log.get();
     private final ProcessFactory processFactory = new ProcessFactory();
 
-    private static Process process = null;
+    private Process process = null;
 
     @Override
     public ConstructProcessor prepareProcess(final ConstructContext context) {
@@ -45,13 +45,13 @@ public class ExecConstruct extends Construct {
                 new Argument("directory", NULL, ATOMIC));
     }
 
-    private static void killProcess() {
+    private void killProcess() {
         if (process != null) {
             process.destroyForcibly();
         }
     }
 
-    static MetaExpression process(final MetaExpression arguments, final MetaExpression directory, final ProcessFactory processFactory) {
+    MetaExpression process(final MetaExpression arguments, final MetaExpression directory, final ProcessFactory processFactory) {
         // Get description
         ProcessDescription processDescription = parseInput(arguments, directory);
 
