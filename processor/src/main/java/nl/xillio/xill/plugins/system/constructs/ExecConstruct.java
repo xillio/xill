@@ -29,13 +29,15 @@ import java.util.concurrent.Future;
  * Runs an application and waits for it to complete
  */
 public class ExecConstruct extends Construct {
-
     private static final org.slf4j.Logger LOGGER = Log.get();
-
     private final ProcessFactory processFactory = new ProcessFactory();
+
+    private static Process process = null;
 
     @Override
     public ConstructProcessor prepareProcess(final ConstructContext context) {
+        // Add a hook to the robot interrupt, to kill the process.
+        context.addRobotInterruptListener(e -> killProcess());
 
         return new ConstructProcessor(
                 (program, directory) -> process(program, directory, processFactory),
@@ -43,8 +45,13 @@ public class ExecConstruct extends Construct {
                 new Argument("directory", NULL, ATOMIC));
     }
 
-    static MetaExpression process(final MetaExpression arguments, final MetaExpression directory, final ProcessFactory processFactory) {
+    private static void killProcess() {
+        if (process != null) {
+            process.destroyForcibly();
+        }
+    }
 
+    static MetaExpression process(final MetaExpression arguments, final MetaExpression directory, final ProcessFactory processFactory) {
         // Get description
         ProcessDescription processDescription = parseInput(arguments, directory);
 
@@ -53,11 +60,10 @@ public class ExecConstruct extends Construct {
         sw.start();
 
         // Start process
-        Process process = startProcess(processFactory, processDescription);
+        process = startProcess(processFactory, processDescription);
 
         // Subscribe to output
         ProcessOutput output = listenToStreams(process.getInputStream(), process.getErrorStream());
-
 
         // Wait for the process to stop
         int exitCode = -1;
@@ -92,8 +98,7 @@ public class ExecConstruct extends Construct {
 
         if (command.getType() == LIST) {
             // Multiple arguments
-            @SuppressWarnings("unchecked")
-            List<MetaExpression> args = (List<MetaExpression>) command.getValue();
+            List<MetaExpression> args = command.getValue();
             if (args.isEmpty()) {
                 throw new RobotRuntimeException("input cannot be empty");
             }
