@@ -5,9 +5,11 @@ import me.biesaart.utils.Log;
 import nl.xillio.events.EventHost;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.*;
+import nl.xillio.xill.api.components.Instruction;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.events.RobotStartedAction;
 import nl.xillio.xill.api.events.RobotStoppedAction;
+import nl.xillio.xill.components.instructions.*;
 import nl.xillio.xill.components.instructions.InstructionSet;
 import org.slf4j.Logger;
 
@@ -181,7 +183,26 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
 
     @Override
     public void initializeAsLibrary() throws RobotRuntimeException {
-        super.initialize();
+        for (nl.xillio.xill.components.instructions.Instruction instruction : getInstructions()) {
+            if (instruction instanceof VariableDeclaration || instruction instanceof FunctionDeclaration) {
+                instruction.process(getDebugger());
+            }
+        }
+    }
+
+    /**
+     * Close variables and functions in an initialized library
+     */
+    public void closeLibrary() {
+        for (nl.xillio.xill.components.instructions.Instruction instruction : getInstructions()) {
+            if (instruction instanceof VariableDeclaration || instruction instanceof FunctionDeclaration) {
+                try {
+                    instruction.close();
+                } catch (Exception e) {
+                    LOGGER.error("Could not close instruction in a library", e);
+                }
+            }
+        }
     }
 
     /**
