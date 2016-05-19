@@ -7,6 +7,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.InvalidUserInputException;
 import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
@@ -38,7 +39,11 @@ public class CopyConstruct extends Construct {
         try {
             fileUtils.copy(sourceFile, targetFile);
         } catch (NoSuchFileException e) {
-            throw new RobotRuntimeException(e.getFile() + " does not exist");
+            if (e.getFile().equals(sourceFile.toFile().getPath())) {
+                throw new InvalidUserInputException("Source file does not exist.", sourceFile.toFile().getPath(), "An existing file.");
+            } else {
+                throw new RobotRuntimeException(e.getFile() + " does not exist");
+            }
         } catch (IOException e) {
             throw new OperationFailedException("copy " + sourceFile + " to " + targetFile, e.getMessage(), "Check if target path can be created.", e);
         }
