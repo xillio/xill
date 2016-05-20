@@ -5,7 +5,7 @@ package nl.xillio.xill.api.errors;
  */
 public class InvalidUserInputException extends RobotRuntimeException {
 
-    protected String reason;
+    protected final String reason;
 
     /**
      * Constructs a new exception with the specified detail message and cause.

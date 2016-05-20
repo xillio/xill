@@ -5,8 +5,8 @@ package nl.xillio.xill.api.errors;
  */
 public class OperationFailedException extends RobotRuntimeException {
 
-    protected String reason;
-    protected String operation;
+    protected final String reason;
+    protected final String operation;
 
     /**
      * Constructs a new exception with the specified detail message and cause.

@@ -2,7 +2,6 @@ package nl.xillio.xill.plugins.file.services.files;
 
 import com.google.inject.Singleton;
 import nl.xillio.xill.api.errors.OperationFailedException;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.io.IOStream;
 import nl.xillio.xill.api.io.SimpleIOStream;
 
