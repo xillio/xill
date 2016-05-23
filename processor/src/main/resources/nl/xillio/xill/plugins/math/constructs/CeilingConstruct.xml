@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<function>
+    <description>
+Returns the smallest number greater than or equal to the given value.
+    </description>
+    <examples>
+        <example title="Usage">
+            <code>
+                use Math;
+
+                Math.ceiling(6); // Result: 6
+                Math.ceiling(3.14); // Result: 4
+                Math.ceiling(-3.78); // Result: -3
+                Math.ceiling(0.7); // Result: 1
+            </code>
+        </example>
+    </examples>
+</function>
