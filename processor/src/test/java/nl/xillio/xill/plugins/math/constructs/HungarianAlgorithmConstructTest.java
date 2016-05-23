@@ -75,7 +75,7 @@ public class HungarianAlgorithmConstructTest extends TestUtils {
     /**
      * Tests whether the exception is thrown when there are too little rows provided.
      */
-    @Test(expectedExceptions = InvalidUserInputException.class, expectedExceptionsMessageRegExp = "Not enough data..*At least 1 row with data.")
+    @Test(expectedExceptions = InvalidUserInputException.class, expectedExceptionsMessageRegExp = "Not enough data..*At least 1 row with data..*")
     public void processTooFewRows() {
 
         MetaExpression matrix = mock(MetaExpression.class);
@@ -91,7 +91,7 @@ public class HungarianAlgorithmConstructTest extends TestUtils {
     /**
      * Tests whether the exception is thrown when enough rows but too little columns are provided.
      */
-    @Test(expectedExceptions = InvalidUserInputException.class, expectedExceptionsMessageRegExp = "Not enough data..*At least 1 column with data.")
+    @Test(expectedExceptions = InvalidUserInputException.class, expectedExceptionsMessageRegExp = "Not enough data..*At least 1 column with data..*")
     public void processTooFewColumns() {
         MetaExpression matrix = mock(MetaExpression.class);
         when(matrix.getType()).thenReturn(LIST);
