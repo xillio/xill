@@ -74,7 +74,8 @@ public class RegexConstruct extends Construct {
             }
             return NULL;
         } catch (PatternSyntaxException e) {
-            throw new InvalidUserInputException("Invalid pattern in regex().", regex, "A valid regular expression.", e);
+            throw new InvalidUserInputException("Invalid pattern in regex().", regex, "A valid regular expression.", "use String;\nvar url = \"http://www.xillio.com/wp-content/uploads/screenshot-ns-website.png\";\n" +
+                    "String.regex(url, \"http.*/(.*?)\\\\.(.*?)\");", e);
         } catch (IllegalArgumentException | FailedToGetMatcherException e) {
             throw new RobotRuntimeException("Error while executing the regex", e);
         }

@@ -52,7 +52,8 @@ public class AbsoluteURLConstruct extends Construct {
                 throw new OperationFailedException("convert relative URL to absolute URL", "The page url parameter is invalid.", "Pass correct page url.");
             }
         } catch (IllegalArgumentException e) {
-            throw new InvalidUserInputException("Illegal argument was handed to the matcher when trying to convert the URL.", pageUrl, "Correct page url.", e);
+            throw new InvalidUserInputException("Illegal argument was handed to the matcher when trying to convert the URL.", pageUrl, "Correct page url.",
+                    "use String;\nString.absoluteURL(\"http://www.xillio.nl/calendar/\", \"movies\");", e);
         }
 
     }

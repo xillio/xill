@@ -48,7 +48,9 @@ public class LocalizedFormatConstruct extends BaseDateConstruct {
             try {
                 dateStyle = FormatStyle.valueOf(languageTag.getStringValue().toUpperCase());
             } catch (IllegalArgumentException e) {
-                throw new InvalidUserInputException("Invalid dateStyle value.", languageTag.getStringValue(), "A one of following values: 'full','long','medium' or 'short'", e);
+                throw new InvalidUserInputException("Invalid dateStyle value.", languageTag.getStringValue(), "A one of following values: 'full','long','medium' or 'short'", "use System, Date;\n" +
+                        "var date = Date.now();\n" +
+                        "System.print(Date.localizedFormat(date, \"en-GB\",\"full\",\"full\"));", e);
             }
         }
 
@@ -58,7 +60,9 @@ public class LocalizedFormatConstruct extends BaseDateConstruct {
             try {
                 timeStyle = FormatStyle.valueOf(timeStyleVar.getStringValue().toUpperCase());
             } catch (IllegalArgumentException e) {
-                throw new InvalidUserInputException("Invalid timeStyle value.", timeStyleVar.getStringValue(), "A one of following values: 'full','long','medium' or 'short'", e);
+                throw new InvalidUserInputException("Invalid timeStyle value.", timeStyleVar.getStringValue(), "A one of following values: 'full','long','medium' or 'short'", "use System, Date;\n" +
+                        "var date = Date.now();\n" +
+                        "System.print(Date.localizedFormat(date, \"en-GB\",\"full\",\"full\"));", e);
             }
         }
 

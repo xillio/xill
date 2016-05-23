@@ -42,7 +42,13 @@ public class FromHexConstruct extends Construct {
         } catch (DecoderException e) {
             throw new OperationFailedException("convert hex to normal", e.getMessage(), e);
         } catch (UnsupportedCharsetException e) {
-            throw new InvalidUserInputException("Unknown character set.", charsetName.getStringValue(), "A valid character set.", e);
+            throw new InvalidUserInputException("Unknown character set.", charsetName.getStringValue(), "A valid character set.","use Decode;\n" +
+                    "use System\n" +
+                    "\n" +
+                    "System.print(Decode.fromHex(\"C3A4C3ABC384\"));\n" +
+                    "// prints äëÄ\n" +
+                    "System.print(Decode.fromHex(\"e4ebc4\", \"ISO-8859-1\"));\n" +
+                    "// also prints äëÄ" ,e);
         }
     }
 }

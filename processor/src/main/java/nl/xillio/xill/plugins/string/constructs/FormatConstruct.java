@@ -115,15 +115,15 @@ public class FormatConstruct extends Construct {
                 case 'T':
                     throw new OperationFailedException("format a date/time", "Date/Time conversions are not supported.", "Use Date package for formatting the date/time.");
                 default:
-                    throw new InvalidUserInputException("Unexpected conversion type.", typeString, "A supported conversion type.");
+                    throw new InvalidUserInputException("Unexpected conversion type.", typeString, "A supported conversion type.", "use String;\nString.format(\"%3$2s %1$2s %1$2s %2$2s\" , [\"a\", \"b\", \"c\"] );");
             }
         }
         try {
             return fromValue(stringService.format(textVar.getStringValue(), list));
         } catch (MissingFormatArgumentException e) {
-            throw new InvalidUserInputException("Not enough arguments: " + e.getMessage(), valueVar.getStringValue(), "A correct list of arguments.", e);
+            throw new InvalidUserInputException("Not enough arguments: " + e.getMessage(), valueVar.getStringValue(), "A correct list of arguments.", "use String;\nString.format(\"%3$2s %1$2s %1$2s %2$2s\" , [\"a\", \"b\", \"c\"] );", e);
         } catch (IllegalFormatException e) {
-            throw new InvalidUserInputException("Illegal format handed: " + e.getMessage(), textVar.getStringValue(), "A valid format specifier.", e);
+            throw new InvalidUserInputException("Illegal format handed: " + e.getMessage(), textVar.getStringValue(), "A valid format specifier.", "use String;\nString.format(\"%3$2s %1$2s %1$2s %2$2s\" , [\"a\", \"b\", \"c\"] );", e);
         }
     }
 }

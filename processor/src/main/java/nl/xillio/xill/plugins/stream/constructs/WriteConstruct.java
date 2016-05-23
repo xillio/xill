@@ -38,7 +38,10 @@ class WriteConstruct extends Construct {
     private MetaExpression process(MetaExpression source, MetaExpression target, MetaExpression limit) {
 
         if (Double.isNaN(limit.getNumberValue().doubleValue())) {
-            throw new InvalidUserInputException("The passed 'limit' parameter is not a valid number.", limit.getStringValue(), "A valid number.");
+            throw new InvalidUserInputException("The passed 'limit' parameter is not a valid number.", limit.getStringValue(), "A valid number.",
+                    "use File, Stream;\n" +
+                    "var target = File.openWrite(\"./target.txt\");\n" +
+                    "Stream.write(\"Hello World\\n\", target, 100)");
         }
 
         InputStream inputStream = openInputStream(source);

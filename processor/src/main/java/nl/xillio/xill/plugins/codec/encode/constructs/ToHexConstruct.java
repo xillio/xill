@@ -39,7 +39,13 @@ public class ToHexConstruct extends Construct {
         try {
             return inputString.isNull() ? NULL : fromValue(encoderService.toHex(inputString.getStringValue(), toLowerCase.getBooleanValue(), charsetName.getStringValue()));
         } catch (UnsupportedCharsetException e) {
-            throw new InvalidUserInputException("Unknown character set.", charsetName.getStringValue(), "A valid character set.", e);
+            throw new InvalidUserInputException("Unknown character set.", charsetName.getStringValue(), "A valid character set.", "use Encode;\n" +
+                    "use System\n" +
+                    "\n" +
+                    "System.print(Encode.toHex(\"äëÄ\"));\n" +
+                    "// prints C3A4C3ABC384\n" +
+                    "System.print(Encode.toHex(\"äëÄ\", true, \"ISO-8859-1\"));\n" +
+                    "// prints e4ebc4", e);
         }
     }
 }

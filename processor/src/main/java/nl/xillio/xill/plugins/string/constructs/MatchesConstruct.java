@@ -49,7 +49,7 @@ public class MatchesConstruct extends Construct {
             Matcher matcher = regexService.getMatcher(regex, value, timeout);
             return fromValue(regexService.matches(matcher));
         } catch (PatternSyntaxException p) {
-            throw new InvalidUserInputException("Invalid pattern in regex().", regex, "A valid regular expression.", p);
+            throw new InvalidUserInputException("Invalid pattern in regex().", regex, "A valid regular expression.", "use String;\nString.matches(\"I need help!\", \".*help.*\");", p);
         } catch (IllegalArgumentException | FailedToGetMatcherException e) {
             throw new RobotRuntimeException("Illegal argument given.", e);
         }

@@ -71,7 +71,7 @@ public class ReplaceConstruct extends Construct {
                 }
                 return fromValue(regexService.replaceFirst(m, replacement));
             } catch (PatternSyntaxException e) {
-                throw new InvalidUserInputException("Invalid pattern in regex().", needle, "A valid regular expression.", e);
+                throw new InvalidUserInputException("Invalid pattern in regex().", needle, "A valid regular expression.", "use String;\nString.replace(\"The quick brown fox.\", \"fox\", \"dog\");", e);
             } catch (IllegalArgumentException | FailedToGetMatcherException e) {
                 throw new RobotRuntimeException("Error while executing the regex", e);
             }

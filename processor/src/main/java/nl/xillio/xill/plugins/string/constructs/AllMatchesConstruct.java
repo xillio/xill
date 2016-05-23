@@ -52,9 +52,13 @@ public class AllMatchesConstruct extends Construct {
                 list.add(fromValue(s));
             }
         } catch (PatternSyntaxException e) {
-            throw new InvalidUserInputException("Invalid pattern: " + e.getMessage(), regex, "A valid regular expression.", e);
+            throw new InvalidUserInputException("Invalid pattern: " + e.getMessage(), regex, "A valid regular expression.", "use String;\n" +
+                    "var s = \"abc def ghi jkl. Mno\";\n" +
+                    "String.allMatches(s, \"\\\\w+\");", e);
         } catch (IllegalArgumentException | FailedToGetMatcherException e) {
-            throw new InvalidUserInputException("Illegal argument: " + e.getMessage(), text, "A valid text value.", e);
+            throw new InvalidUserInputException("Illegal argument: " + e.getMessage(), text, "A valid text value.", "use String;\n" +
+                    "var s = \"abc def ghi jkl. Mno\";\n" +
+                    "String.allMatches(s, \"\\\\w+\");", e);
         }
         return fromValue(list);
     }

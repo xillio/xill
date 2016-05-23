@@ -38,7 +38,13 @@ class ForkConstruct extends Construct {
             if (outputsValue.size() == 1) {
                 outputProvided = outputsValue.get(0).getStringValue();
             }
-            throw new InvalidUserInputException("Too few output provided.", outputProvided, "At least two outputs.");
+            throw new InvalidUserInputException("Too few output provided.", outputProvided, "At least two outputs.", "use File, Stream;\n" +
+                    "var source = File.openRead(\"./source.txt\");\n" +
+                    "var output = Stream.fork([\n" +
+                    "    File.openWrite(\"./source-copy.txt\"),\n" +
+                    "    File.openWrite(\"./source-copy-2.txt\")\n" +
+                    "]);\n" +
+                    "Stream.write(source, output);");
         }
 
         OutputStream outputStream = tryGetStreams(outputs);

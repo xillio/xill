@@ -72,7 +72,9 @@ public class HungarianAlgorithmConstruct extends Construct {
             // Prepare array
             int rows = matrix.size();
             if (rows < 1) {
-                throw new InvalidUserInputException("Not enough data.", matrixVar.getStringValue(), "At least 1 row with data.");
+                throw new InvalidUserInputException("Not enough data.", matrixVar.getStringValue(), "At least 1 row with data.", "use Math;\n" +
+                        "var matrix = [[0,1,3], [2,2,3], [5,4,1]];\n" +
+                        "Math.hungarianAlgorithm(matrix, true);");
             }
 
             MetaExpression var = matrix.get(0);
@@ -86,7 +88,9 @@ public class HungarianAlgorithmConstruct extends Construct {
             int columns = varList.size();
 
             if (columns < 1) {
-                throw new InvalidUserInputException("Not enough data.", matrixVar.getStringValue(), "At least 1 column with data.");
+                throw new InvalidUserInputException("Not enough data.", matrixVar.getStringValue(), "At least 1 column with data.", "use Math;\n" +
+                        "var matrix = [[0,1,3], [2,2,3], [5,4,1]];\n" +
+                        "Math.hungarianAlgorithm(matrix, true);");
             }
 
             if (rows == 0 || columns == 0) {
@@ -151,7 +155,9 @@ public class HungarianAlgorithmConstruct extends Construct {
             return fromValue(result);
 
         }
-        throw new InvalidUserInputException("No matrix given.", matrixVar.getStringValue(), "Two-dimensional list containing numbers.");
+        throw new InvalidUserInputException("No matrix given.", matrixVar.getStringValue(), "Two-dimensional list containing numbers.", "use Math;\n" +
+                "var matrix = [[0,1,3], [2,2,3], [5,4,1]];\n" +
+                "Math.hungarianAlgorithm(matrix, true);");
     }
 
     private static double getMatrixValue(final List<MetaExpression> matrix, final int row, final int col) {

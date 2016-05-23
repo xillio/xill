@@ -40,7 +40,9 @@ public class CopyConstruct extends Construct {
             fileUtils.copy(sourceFile, targetFile);
         } catch (NoSuchFileException e) {
             if (e.getFile().equals(sourceFile.toFile().getPath())) {
-                throw new InvalidUserInputException("Source file does not exist.", sourceFile.toFile().getPath(), "An existing file.", e);
+                throw new InvalidUserInputException("Source file does not exist.", sourceFile.toFile().getPath(), "An existing file.", "use System, File;\n" +
+                        "var result = File.copy(\"file.txt\", \"file_copy.txt\");\n" +
+                        "System.print(result);", e);
             } else {
                 throw new RobotRuntimeException(e.getFile() + " does not exist", e);
             }

@@ -50,7 +50,10 @@ public class OfConstruct extends BaseDateConstruct {
         try {
             zone = ZoneId.of(input[7].getStringValue());
         } catch (DateTimeException e) {
-            throw new InvalidUserInputException("Invalid zone ID", input[7].getStringValue(), "A valid timezone.");
+            throw new InvalidUserInputException("Invalid zone ID", input[7].getStringValue(), "A valid timezone.", "use System;\n" +
+                    "use Date;\n" +
+                    "var date = Date.of(2015, 12, 31, 10, 5, 0);\n" +
+                    "System.print(date);", e);
         }
         try {
             date = dateService.constructDate(year, month, day, hour, minute, second, nano, zone);

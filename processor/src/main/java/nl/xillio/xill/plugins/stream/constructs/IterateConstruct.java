@@ -29,7 +29,12 @@ class IterateConstruct extends Construct {
     @SuppressWarnings("squid:UnusedPrivateMethod") // Sonar does not detect method references
     private MetaExpression process(final MetaExpression stream, final MetaExpression delimiter) {
         if (delimiter.isNull()) {
-            throw new InvalidUserInputException("The delimiter in iterator cannot be null.", "null", "A valid regular expression or \"\" or nothing");
+            throw new InvalidUserInputException("The delimiter in iterator cannot be null.", "null", "A valid regular expression or \"\" or nothing",
+                    "use File, Stream, System;\n" +
+                    "var file = File.openRead(\"path/to/file.txt\");\n" +
+                    "foreach(line in Stream.iterate(file)) {\n" +
+                    "    System.print(line);\n" +
+                    "}");
         }
 
         // Need to register the stream, otherwise it will be disposed of when the provider of the stream (a ConstructCall, for example)
