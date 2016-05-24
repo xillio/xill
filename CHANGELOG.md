@@ -1,6 +1,10 @@
 # Xill Core, Codec, Collection, Date, File, Math, Stream, String, System plugins - Change Log
 All notable changes to this project will be documented in this file
 
+## [3.3.19] - unreleased
+### Add
+- Configurable logging [CTC-1535]
+
 ## [3.3.18] - 23-05-2016
 ### Fix
 - Change File.getMimeType() to make use of internal mime type list [CTC-1477]
