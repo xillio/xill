@@ -24,6 +24,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.function.Consumer;
 
 /**
  * Runs an application and waits for it to complete
@@ -32,26 +33,15 @@ public class ExecConstruct extends Construct {
     private static final org.slf4j.Logger LOGGER = Log.get();
     private final ProcessFactory processFactory = new ProcessFactory();
 
-    private Process process = null;
-
     @Override
     public ConstructProcessor prepareProcess(final ConstructContext context) {
-        // Add a hook to the robot interrupt, to kill the process.
-        context.addRobotInterruptListener(e -> killProcess());
-
         return new ConstructProcessor(
-                (program, directory) -> process(program, directory, processFactory),
+                (program, directory) -> process(program, directory, processFactory, context),
                 new Argument("arguments", ATOMIC, LIST),
                 new Argument("directory", NULL, ATOMIC));
     }
 
-    private void killProcess() {
-        if (process != null) {
-            process.destroyForcibly();
-        }
-    }
-
-    MetaExpression process(final MetaExpression arguments, final MetaExpression directory, final ProcessFactory processFactory) {
+    MetaExpression process(final MetaExpression arguments, final MetaExpression directory, final ProcessFactory processFactory, final ConstructContext context) {
         // Get description
         ProcessDescription processDescription = parseInput(arguments, directory);
 
@@ -60,7 +50,11 @@ public class ExecConstruct extends Construct {
         sw.start();
 
         // Start process
-        process = startProcess(processFactory, processDescription);
+        Process process = startProcess(processFactory, processDescription);
+
+        // Add an interrupt listener to stop the process when the robot is stopped
+        Consumer<Object> processDestroyer = e -> process.destroyForcibly();
+        context.addRobotInterruptListener(processDestroyer);
 
         // Subscribe to output
         ProcessOutput output = listenToStreams(process.getInputStream(), process.getErrorStream());
@@ -72,6 +66,9 @@ public class ExecConstruct extends Construct {
         } catch (InterruptedException e) {
             LOGGER.error("Execution interrupted: " + e.getMessage(), e);
         }
+
+        // Remove the interrupt listener
+        context.removeRobotInterruptListener(processDestroyer);
 
         // Stop stopwatch
         sw.stop();
