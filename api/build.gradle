@@ -1,12 +1,8 @@
 description = 'this project contains the classes required by both users and implementations of the xill language'
 
 dependencies {
-    compile ('nl.xillio.xill:xill-data-types:3.0.22') {
-        // We do not need the utilservice annotation processors so skip this.
-        exclude group: 'me.biesaart', module: 'utilservice'
-    }
-
-    compile 'nl.xillio:commons-events:1.0'
+    compile 'me.biesaart:commons:1.5.0'
+    compile 'com.google.inject:guice:4.0'
     compile 'com.fasterxml.jackson.core:jackson-core:2.6.3'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6.3'
     compile 'com.google.guava:guava:18.0'
