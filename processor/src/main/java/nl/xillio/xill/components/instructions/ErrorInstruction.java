@@ -133,7 +133,7 @@ public class ErrorInstruction extends CompoundInstruction {
                     errorVar.put("robot", fromValue(errorBlockDebugger.getErroredInstruction().getRobotID().getPath().toString()));
                 }
 
-                cause.pushVariable(fromValue(errorVar));
+                cause.pushVariable(fromValue(errorVar), errorBlockDebugger.getStackDepth());
             }
 
             errorInstructions.process(debugger);

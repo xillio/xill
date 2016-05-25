@@ -308,25 +308,23 @@ public class XillDebugger implements Debugger {
     public MetaExpression getVariableValue(final Object identifier, int stackPosition) {
         VariableDeclaration dec = debugInfo.getVariables().get(identifier);
 
-        int index = countRecursion(dec, currentStack.size() - stackPosition);
+        // Go through all scopes of the current function to find a value on the stack
+        // Stop at the function scope to prevent variables assigned in a previous recursive scope to be returned
+        MetaExpression value;
+        Instruction parent = dec;
+        do {
+            value = dec.peek(stackPosition);
+            parent = parent.getHostInstruction().getParentInstruction();
+            stackPosition--;
+        }
+        while (value==null && parent!=null && !(parent instanceof FunctionDeclaration));
 
-        return dec.peek(index);
-    }
-
-    private int countRecursion(VariableDeclaration dec, int stackPosition) {
-        int count = -1;
-        FunctionDeclaration declaration = getParentFunction(dec);
-
-        if (declaration == null) {
-            return 0;
+        // If the variable was not found in a function call, look for it at robot level
+        if (value==null) {
+            value = dec.peek(0);
         }
 
-        for (CounterWrapper wrapper : functionStack) {
-            if (wrapper.getProcessable() == declaration && wrapper.getStackSize() <= stackPosition) {
-                count++;
-            }
-        }
-        return count;
+        return value;
     }
 
     private FunctionDeclaration getParentFunction(Instruction instruction) {
@@ -374,6 +372,11 @@ public class XillDebugger implements Debugger {
     @Override
     public List<nl.xillio.xill.api.components.Instruction> getStackTrace() {
         return currentStack;
+    }
+
+    @Override
+    public int getStackDepth() {
+        return currentStack.size() - 1;
     }
 
     @Override

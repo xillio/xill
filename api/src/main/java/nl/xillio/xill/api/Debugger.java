@@ -147,7 +147,7 @@ public interface Debugger extends ErrorHandlingPolicy {
      * Gets the value of a variable, keeping recursivity in mind.
      *
      * @param identifier    the identifier returned by {@link Debugger#getVariables(Instruction)}
-     * @param stackPosition the amount of elements relative to the current stack
+     * @param stackPosition The index of the stack to start looking from (top down)
      * @return The current value in a variable
      * @see Debugger#getVariables(Instruction)
      */
@@ -174,6 +174,11 @@ public interface Debugger extends ErrorHandlingPolicy {
      * @return the stack trace to the current instruction
      */
     List<Instruction> getStackTrace();
+
+    /**
+     * @return The index of the last frame on the stack
+     */
+    int getStackDepth();
 
     /**
      * Instantiates a child debugger.

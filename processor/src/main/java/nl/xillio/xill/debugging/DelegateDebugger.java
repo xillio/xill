@@ -152,6 +152,11 @@ public class DelegateDebugger implements Debugger {
     }
 
     @Override
+    public int getStackDepth() {
+        return debugger.getStackDepth();
+    }
+
+    @Override
     public Debugger createChild() {
         return debugger.createChild();
     }
