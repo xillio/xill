@@ -322,11 +322,6 @@ public class XillDebugger implements Debugger {
         }
         while (value==null && parent!=null && !(parent instanceof FunctionDeclaration));
 
-        // If the variable was not found in a function call, look for it at robot level
-        if (value==null) {
-            value = dec.peek(0);
-        }
-
         return value;
     }
 
