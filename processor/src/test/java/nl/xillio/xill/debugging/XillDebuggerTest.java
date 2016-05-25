@@ -52,6 +52,25 @@ public class XillDebuggerTest extends TestUtils{
         assertSame(value, result);
     }
 
+    @Test
+    public void testGetVariableValueRootFromFunction() {
+        // Mock
+        VariableDeclaration var = mock(VariableDeclaration.class, RETURNS_DEEP_STUBS);
+        when(var.getHostInstruction().getParentInstruction()).thenReturn(mock(FunctionDeclaration.class));
+        Target target = mock(Target.class);
+        MetaExpression result = mockVariable(target, var, 0)[0];
+        startInstructions(1);
+
+        // Run
+        MetaExpression value = debugger.getVariableValue(target, 1);
+
+        // Verify
+        verify(var, never()).peek(1);
+
+        // Assert
+        assertSame(value, result);
+    }
+
     /**
      * Test {@link XillDebugger#getVariableValue(Object, int)} when a function is called.
      */
