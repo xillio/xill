@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file
 ### Change
 - Make error messages more descriptive by providing a template [CTC-1420]
 
+### Fix
+- `System.exec()` can make robots unstoppable [CTC-1582]
+
 ### Add
 - Configurable logging [CTC-1535]
 
