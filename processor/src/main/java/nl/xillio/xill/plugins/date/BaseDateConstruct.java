@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.data.Date;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.api.errors.InvalidUserInputException;
 import nl.xillio.xill.plugins.date.services.DateService;
 
 import java.time.ZonedDateTime;
@@ -31,7 +31,7 @@ public abstract class BaseDateConstruct extends Construct {
         Date date = dateVar.getMeta(Date.class);
 
         if (date == null) {
-            throw new RobotRuntimeException("Expected a date. Create a date using either Date.parse() or Date.of().");
+            throw new InvalidUserInputException("Expected a date variable.", dateVar.getStringValue(), "Create a date using either Date.parse() or Date.of().");
         }
 
         return date;

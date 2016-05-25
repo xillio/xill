@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.codec.encode.constructs;
 
 import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.codec.encode.services.EncoderService;
 import nl.xillio.xill.plugins.codec.encode.services.EncoderServiceImpl;
@@ -43,7 +44,7 @@ public class ToPercentConstructTest extends TestUtils {
     /**
      * Test the process method when URL encoding fails.
      */
-    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Cannot URL encode the string")
+    @Test(expectedExceptions = OperationFailedException.class, expectedExceptionsMessageRegExp = "Could not URL encode the string..*")
     public void processUnsupportedEncodingException() throws UnsupportedEncodingException {
         // Mock
         String inputValue = "this+-is / test";

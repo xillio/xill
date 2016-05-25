@@ -6,6 +6,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.InvalidUserInputException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.string.exceptions.FailedToGetMatcherException;
 import nl.xillio.xill.plugins.string.services.string.RegexService;
@@ -70,7 +71,7 @@ public class ReplaceConstruct extends Construct {
                 }
                 return fromValue(regexService.replaceFirst(m, replacement));
             } catch (PatternSyntaxException e) {
-                throw new RobotRuntimeException("Invalid pattern in regex()", e);
+                throw new InvalidUserInputException("Invalid pattern in regex().", needle, "A valid regular expression.", "use String;\nString.replace(\"The quick brown fox.\", \"fox\", \"dog\");", e);
             } catch (IllegalArgumentException | FailedToGetMatcherException e) {
                 throw new RobotRuntimeException("Error while executing the regex", e);
             }

@@ -4,6 +4,7 @@ import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.InvalidUserInputException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.codec.encode.services.EncoderServiceImpl;
 import org.testng.annotations.BeforeMethod;
@@ -52,7 +53,7 @@ public class ToHexConstructTest extends TestUtils {
         assertEquals(result.getStringValue(), "e4ebc4");
     }
 
-    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Unknown character set: DOES-NOT-EXIST")
+    @Test(expectedExceptions = InvalidUserInputException.class, expectedExceptionsMessageRegExp = "Unknown character set..*DOES-NOT-EXIST.*")
     public void testPrepareProcessInvalidCharset() throws Exception {
         processor.setArgument(0, fromValue("äëÄ"));
         processor.setArgument(1, fromValue(true));

@@ -1,6 +1,7 @@
 package nl.xillio.xill.plugins.date.constructs;
 
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.errors.InvalidUserInputException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.date.data.Date;
 import nl.xillio.xill.plugins.date.services.DateService;
@@ -104,7 +105,7 @@ public class LocalizedFormatConstructTest {
      * @param dateStyleExpression Sate style String MetaExpression
      * @param timeStyleExpression Time style String MetaExpression
      */
-    @Test(dataProvider = "wrongStyle", expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "^.*Style\\shas\\sto\\sbe\\s'full','long','medium'\\sor\\s'short'.*$")
+    @Test(dataProvider = "wrongStyle", expectedExceptions = InvalidUserInputException.class, expectedExceptionsMessageRegExp = "^Invalid .* value..*A one of following values: 'full','long','medium' or 'short'.*$")
     public void testProcessWrongFormat(MetaExpression dateStyleExpression, MetaExpression timeStyleExpression) {
         // Mock
         DateService dateService = mock(DateService.class);

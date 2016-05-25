@@ -6,7 +6,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.plugins.file.services.FileSystemIterator;
 
 import java.io.IOException;
@@ -50,9 +50,9 @@ abstract class AbstractIteratorConstruct extends Construct {
         try {
             return buildIterator(file, isRecursive);
         } catch (FileSystemException e) {
-            throw new RobotRuntimeException("Could not read " + e.getFile(), e);
+            throw new OperationFailedException("read " + e.getFile(), e.getMessage(), e);
         } catch (IOException e) {
-            throw new RobotRuntimeException("Could not iterate " + file + ": " + e.getMessage(), e);
+            throw new OperationFailedException("iterate " + file, e.getMessage(), e);
         }
     }
 

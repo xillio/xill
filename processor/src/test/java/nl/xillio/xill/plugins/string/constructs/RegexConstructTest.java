@@ -2,6 +2,7 @@ package nl.xillio.xill.plugins.string.constructs;
 
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.components.ExpressionBuilderHelper;
+import nl.xillio.xill.api.errors.InvalidUserInputException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.string.exceptions.FailedToGetMatcherException;
 import nl.xillio.xill.plugins.string.services.string.RegexService;
@@ -70,7 +71,7 @@ public class RegexConstructTest extends ExpressionBuilderHelper {
      * @throws IllegalArgumentException
      * @throws PatternSyntaxException
      */
-    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Invalid pattern in regex\\(\\)")
+    @Test(expectedExceptions = InvalidUserInputException.class, expectedExceptionsMessageRegExp = "Invalid pattern in regex\\(\\)..*")
     public void processInvalidPattern() throws IllegalArgumentException, FailedToGetMatcherException {
         // Mock
         String valueValue = "I need a doctor";
