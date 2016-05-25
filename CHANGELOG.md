@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file
 ### Change
 - Make error messages more descriptive by providing a template [CTC-1420]
 
+### Add
+- Configurable logging [CTC-1535]
+
 ## [3.3.18] - 23-05-2016
 ### Change
 - Change File.getMimeType() to make use of internal mime type list [CTC-1477]
