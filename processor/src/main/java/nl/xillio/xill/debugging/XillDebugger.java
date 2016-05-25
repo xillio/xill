@@ -308,14 +308,17 @@ public class XillDebugger implements Debugger {
     public MetaExpression getVariableValue(final Object identifier, int stackPosition) {
         VariableDeclaration dec = debugInfo.getVariables().get(identifier);
 
+        // position counting from the bottom of the stack
+        int bottomPosition = currentStack.size() - stackPosition;
+
         // Go through all scopes of the current function to find a value on the stack
         // Stop at the function scope to prevent variables assigned in a previous recursive scope to be returned
         MetaExpression value;
         Instruction parent = dec;
         do {
-            value = dec.peek(stackPosition);
+            value = dec.peek(bottomPosition);
             parent = parent.getHostInstruction().getParentInstruction();
-            stackPosition--;
+            bottomPosition--;
         }
         while (value==null && parent!=null && !(parent instanceof FunctionDeclaration));
 
