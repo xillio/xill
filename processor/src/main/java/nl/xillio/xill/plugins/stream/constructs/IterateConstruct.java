@@ -7,7 +7,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.api.errors.InvalidUserInputException;
 
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -29,7 +29,12 @@ class IterateConstruct extends Construct {
     @SuppressWarnings("squid:UnusedPrivateMethod") // Sonar does not detect method references
     private MetaExpression process(final MetaExpression stream, final MetaExpression delimiter) {
         if (delimiter.isNull()) {
-            throw new RobotRuntimeException("The delimiter cannot be null");
+            throw new InvalidUserInputException("The delimiter in iterator cannot be null.", "null", "A valid regular expression or \"\" or nothing",
+                    "use File, Stream, System;\n" +
+                    "var file = File.openRead(\"path/to/file.txt\");\n" +
+                    "foreach(line in Stream.iterate(file)) {\n" +
+                    "    System.print(line);\n" +
+                    "}");
         }
 
         // Need to register the stream, otherwise it will be disposed of when the provider of the stream (a ConstructCall, for example)

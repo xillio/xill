@@ -6,6 +6,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.InvalidUserInputException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.string.exceptions.FailedToGetMatcherException;
 import nl.xillio.xill.plugins.string.services.string.RegexService;
@@ -48,7 +49,7 @@ public class MatchesConstruct extends Construct {
             Matcher matcher = regexService.getMatcher(regex, value, timeout);
             return fromValue(regexService.matches(matcher));
         } catch (PatternSyntaxException p) {
-            throw new RobotRuntimeException("Invalid pattern in matches.", p);
+            throw new InvalidUserInputException("Invalid pattern in regex().", regex, "A valid regular expression.", "use String;\nString.matches(\"I need help!\", \".*help.*\");", p);
         } catch (IllegalArgumentException | FailedToGetMatcherException e) {
             throw new RobotRuntimeException("Illegal argument given.", e);
         }

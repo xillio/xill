@@ -6,7 +6,8 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.api.errors.InvalidUserInputException;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.plugins.string.services.string.UrlUtilityService;
 
 /**
@@ -48,10 +49,11 @@ public class AbsoluteURLConstruct extends Construct {
             if (processed != null) {
                 return fromValue(processed);
             } else {
-                throw new RobotRuntimeException("The page url is invalid.");
+                throw new OperationFailedException("convert relative URL to absolute URL", "The page url parameter is invalid.", "Pass correct page url.");
             }
         } catch (IllegalArgumentException e) {
-            throw new RobotRuntimeException("Illegal argument was handed to the matcher when trying to convert the URL: " + e.getMessage(), e);
+            throw new InvalidUserInputException("Illegal argument was handed to the matcher when trying to convert the URL.", pageUrl, "Correct page url.",
+                    "use String;\nString.absoluteURL(\"http://www.xillio.nl/calendar/\", \"movies\");", e);
         }
 
     }

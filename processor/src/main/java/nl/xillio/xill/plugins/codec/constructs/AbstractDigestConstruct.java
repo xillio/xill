@@ -5,6 +5,8 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.InvalidUserInputException;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.IOUtils;
@@ -39,14 +41,14 @@ public abstract class AbstractDigestConstruct extends Construct {
         try {
             return process(input, output);
         } catch (IOException e) {
-            throw new RobotRuntimeException("Could not get digest: " + e.getMessage(), e);
+            throw new OperationFailedException("get digest", e.getMessage(), e);
         }
     }
 
     private MetaExpression process(MetaExpression input, MetaExpression output) throws IOException {
 
         if (input.isNull()) {
-            throw new RobotRuntimeException("The provided input cannot be null");
+            throw new InvalidUserInputException("The provided input cannot be null.", "null", "A string or input stream.");
         }
 
         if (input.getBinaryValue().hasInputStream()) {
@@ -102,7 +104,7 @@ public abstract class AbstractDigestConstruct extends Construct {
             return output.getBinaryValue().getOutputStream();
         }
 
-        throw new RobotRuntimeException("Please provide a stream for the output parameter");
+        throw new InvalidUserInputException("The output parameter is invalid.", output.getStringValue(), "An output stream.");
     }
 
     private MessageDigest digest() {

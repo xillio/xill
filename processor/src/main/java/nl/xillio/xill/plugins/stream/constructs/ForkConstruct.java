@@ -5,7 +5,8 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.api.errors.InvalidUserInputException;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.api.io.IOStream;
 import nl.xillio.xill.api.io.SimpleIOStream;
 import nl.xillio.xill.plugins.stream.utils.StreamUtils;
@@ -33,7 +34,17 @@ class ForkConstruct extends Construct {
         List<MetaExpression> outputsValue = outputs.getValue();
 
         if (outputsValue.size() < 2) {
-            throw new RobotRuntimeException("Please provide at least two outputs");
+            String outputProvided = "";
+            if (outputsValue.size() == 1) {
+                outputProvided = outputsValue.get(0).getStringValue();
+            }
+            throw new InvalidUserInputException("Too few output provided.", outputProvided, "At least two outputs.", "use File, Stream;\n" +
+                    "var source = File.openRead(\"./source.txt\");\n" +
+                    "var output = Stream.fork([\n" +
+                    "    File.openWrite(\"./source-copy.txt\"),\n" +
+                    "    File.openWrite(\"./source-copy-2.txt\")\n" +
+                    "]);\n" +
+                    "Stream.write(source, output);");
         }
 
         OutputStream outputStream = tryGetStreams(outputs);
@@ -45,7 +56,7 @@ class ForkConstruct extends Construct {
         try {
             return StreamUtils.fork(expression);
         } catch (IOException e) {
-            throw new RobotRuntimeException("Could not create fork: " + e.getMessage(), e);
+            throw new OperationFailedException("create fork", e.getMessage(), e);
         }
     }
 

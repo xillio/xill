@@ -1,6 +1,8 @@
 package nl.xillio.xill.plugins.string.constructs;
 
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.errors.InvalidUserInputException;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.string.services.string.UrlUtilityService;
 import org.testng.Assert;
@@ -75,7 +77,7 @@ public class AbsoluteURLConstructTest {
     /**
      * Tests the process when it fails to return a value.
      */
-    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "The page url is invalid.")
+    @Test(expectedExceptions = OperationFailedException.class, expectedExceptionsMessageRegExp = "Could not convert relative URL to absolute URL..*The page url parameter is invalid. Pass correct page url.")
     public void processFailureToConvert() {
         // Mock
         String pageUrlValue = "http://www.xillio.nl/calendar/";
@@ -99,7 +101,7 @@ public class AbsoluteURLConstructTest {
     /**
      * Tests the process when it fails to return a value.
      */
-    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Illegal argument was handed to the matcher when trying to convert the URL: .*")
+    @Test(expectedExceptions = InvalidUserInputException.class, expectedExceptionsMessageRegExp = "Illegal argument was handed to the matcher when trying to convert the URL..*")
     public void processErrorOnConvert() {
         // Mock
         String pageUrlValue = "http://www.xillio.nl/calendar/";

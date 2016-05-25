@@ -5,6 +5,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 
 import java.io.IOException;
@@ -41,7 +42,7 @@ abstract class AbstractFilePropertyConstruct<T> extends Construct {
         } catch (AccessDeniedException e) {
             throw new RobotRuntimeException("Access denied to " + e.getFile(), e);
         } catch (IOException e) {
-            throw new RobotRuntimeException(file + " could not be read", e);
+            throw new OperationFailedException("read " + file.toFile().getAbsolutePath(), e.getMessage(), e);
         }
     }
 

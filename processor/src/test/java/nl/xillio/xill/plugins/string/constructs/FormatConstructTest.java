@@ -1,6 +1,8 @@
 package nl.xillio.xill.plugins.string.constructs;
 
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.errors.InvalidUserInputException;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.string.exceptions.FailedToGetMatcherException;
 import nl.xillio.xill.plugins.string.services.string.RegexService;
@@ -113,7 +115,7 @@ public class FormatConstructTest {
      * @throws IllegalArgumentException
      * @throws PatternSyntaxException
      */
-    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Date/Time conversions are not supported.")
+    @Test(expectedExceptions = OperationFailedException.class, expectedExceptionsMessageRegExp = "Could not format a date/time..*Date/Time conversions are not supported..*")
     public void processDateTimeConversion() throws IllegalArgumentException, FailedToGetMatcherException {
         // Mock
         String fileNameValue = "decimal %T%n";
@@ -151,7 +153,7 @@ public class FormatConstructTest {
      * @throws IllegalArgumentException
      * @throws PatternSyntaxException
      */
-    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Unexpected conversion type: Z")
+    @Test(expectedExceptions = InvalidUserInputException.class, expectedExceptionsMessageRegExp = "Unexpected conversion type..*Z.*")
     public void processUnexpectedConversion() throws IllegalArgumentException, FailedToGetMatcherException {
         // Mock
         String fileNameValue = "decimal %Z%n";
