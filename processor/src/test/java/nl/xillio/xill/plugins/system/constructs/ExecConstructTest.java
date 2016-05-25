@@ -37,7 +37,7 @@ public class ExecConstructTest extends TestUtils {
         ArgumentCaptor<ProcessDescription> descriptionCaptor = ArgumentCaptor.forClass(ProcessDescription.class);
 
         // Run the method
-        MetaExpression result = ExecConstruct.process(arguments, directory, processFactory);
+        MetaExpression result = new ExecConstruct().process(arguments, directory, processFactory, context());
 
         // Make assertions
         verify(processFactory).apply(descriptionCaptor.capture());
@@ -76,7 +76,7 @@ public class ExecConstructTest extends TestUtils {
         ArgumentCaptor<ProcessDescription> descriptionCaptor = ArgumentCaptor.forClass(ProcessDescription.class);
 
         // Run the method
-        MetaExpression result = ExecConstruct.process(arguments, directory, processFactory);
+        MetaExpression result = new ExecConstruct().process(arguments, directory, processFactory, context());
 
         // Make assertions
         verify(processFactory).apply(descriptionCaptor.capture());
