@@ -5,7 +5,8 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.data.Date;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.api.errors.InvalidUserInputException;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.plugins.date.BaseDateConstruct;
 import nl.xillio.xill.plugins.date.services.DateService;
 
@@ -47,7 +48,9 @@ public class LocalizedFormatConstruct extends BaseDateConstruct {
             try {
                 dateStyle = FormatStyle.valueOf(languageTag.getStringValue().toUpperCase());
             } catch (IllegalArgumentException e) {
-                throw new RobotRuntimeException("dateStyle has to be 'full','long','medium' or 'short'.", e);
+                throw new InvalidUserInputException("Invalid dateStyle value.", languageTag.getStringValue(), "A one of following values: 'full','long','medium' or 'short'", "use System, Date;\n" +
+                        "var date = Date.now();\n" +
+                        "System.print(Date.localizedFormat(date, \"en-GB\",\"full\",\"full\"));", e);
             }
         }
 
@@ -57,7 +60,9 @@ public class LocalizedFormatConstruct extends BaseDateConstruct {
             try {
                 timeStyle = FormatStyle.valueOf(timeStyleVar.getStringValue().toUpperCase());
             } catch (IllegalArgumentException e) {
-                throw new RobotRuntimeException("timeStyle has to be 'full','long','medium' or 'short'.", e);
+                throw new InvalidUserInputException("Invalid timeStyle value.", timeStyleVar.getStringValue(), "A one of following values: 'full','long','medium' or 'short'", "use System, Date;\n" +
+                        "var date = Date.now();\n" +
+                        "System.print(Date.localizedFormat(date, \"en-GB\",\"full\",\"full\"));", e);
             }
         }
 
@@ -66,7 +71,7 @@ public class LocalizedFormatConstruct extends BaseDateConstruct {
         try {
             result = fromValue(dateService.formatDateLocalized(date, dateStyle, timeStyle, locale));
         } catch (DateTimeException | IllegalArgumentException e) {
-            throw new RobotRuntimeException("Date could not be formatted", e);
+            throw new OperationFailedException("format the date", e.getMessage(), e);
         }
         return result;
 

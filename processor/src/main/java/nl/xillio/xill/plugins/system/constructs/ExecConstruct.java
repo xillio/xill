@@ -7,6 +7,8 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.InvalidUserInputException;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.system.exec.InputStreamReaderCallable;
 import nl.xillio.xill.plugins.system.exec.ProcessDescription;
@@ -97,7 +99,10 @@ public class ExecConstruct extends Construct {
             // Multiple arguments
             List<MetaExpression> args = command.getValue();
             if (args.isEmpty()) {
-                throw new RobotRuntimeException("input cannot be empty");
+                throw new InvalidUserInputException("The input cannot be empty.", "[]", "A list of arguments.",
+                        "use System;\n\n" +
+                        "var result = System.exec([\"cmd.exe\", \"/C\", \"echo test\"]);\n" +
+                        "System.print(result);");
             }
             String[] commands = args.stream().map(Expression::getStringValue).toArray(String[]::new);
             description = new ProcessDescription(workingDir, commands);
@@ -125,7 +130,7 @@ public class ExecConstruct extends Construct {
         try {
             process = factory.apply(description);
         } catch (FactoryBuilderException e) {
-            throw new RobotRuntimeException("Failed to run " + description.getFriendlyName() + ": " + e.getMessage(), e);
+            throw new OperationFailedException("run " + description.getFriendlyName(), e.getMessage(), "Check the executable path and name.", e);
         }
 
         return process;

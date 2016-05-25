@@ -2,7 +2,7 @@ package nl.xillio.xill.plugins.file.constructs;
 
 import com.google.inject.Inject;
 import nl.xillio.xill.api.components.MetaExpression;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.plugins.file.services.permissions.FilePermissions;
 import nl.xillio.xill.plugins.file.services.permissions.FilePermissionsProvider;
 
@@ -28,7 +28,7 @@ public class GetPermissionsConstruct extends AbstractFilePropertyConstruct<FileP
         try {
             return permissionsProvider.readPermissions(path);
         } catch (IOException e) {
-            throw new RobotRuntimeException("Failed to read permissions for " + path + ": " + e.getMessage(), e);
+            throw new OperationFailedException("read permissions for " + path, e.getMessage(), e);
         }
     }
 

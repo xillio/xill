@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.data.Date;
 import nl.xillio.xill.api.data.DateFactory;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.api.errors.OperationFailedException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -39,7 +39,7 @@ abstract class AbstractDateFilePropertyConstruct extends AbstractFilePropertyCon
         try {
             return Files.readAttributes(path, BasicFileAttributes.class);
         } catch (IOException e) {
-            throw new RobotRuntimeException("Could not read attributes from " + path, e);
+            throw new OperationFailedException("read attributes from " + path, e.getMessage(), e);
         }
     }
 }

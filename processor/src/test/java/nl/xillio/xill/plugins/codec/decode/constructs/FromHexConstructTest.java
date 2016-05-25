@@ -4,6 +4,8 @@ import nl.xillio.xill.TestUtils;
 import nl.xillio.xill.api.components.MetaExpression;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.InvalidUserInputException;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.codec.decode.services.DecoderServiceImpl;
 import org.testng.annotations.BeforeMethod;
@@ -52,21 +54,21 @@ public class FromHexConstructTest extends TestUtils {
         assertTrue(expression.isNull());
     }
 
-    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Could not convert hex to normal: Illegal hexadecimal character w at index 1")
+    @Test(expectedExceptions = OperationFailedException.class, expectedExceptionsMessageRegExp = "Could not convert hex to normal..*Illegal hexadecimal character w at index 1.*")
     public void testPrepareProcessIllegalValue() throws Exception {
         processor.setArgument(0, fromValue("ew"));
         processor.process();
         fail();
     }
 
-    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Could not convert hex to normal: Odd number of characters.")
+    @Test(expectedExceptions = OperationFailedException.class, expectedExceptionsMessageRegExp = "Could not convert hex to normal..*Odd number of characters..*")
     public void testPrepareProcessIllegalValueOdd() throws Exception {
         processor.setArgument(0, fromValue("a"));
         processor.process();
         fail();
     }
 
-    @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = "Unknown character set: DOES-NOT-EXIST")
+    @Test(expectedExceptions = InvalidUserInputException.class, expectedExceptionsMessageRegExp = "Unknown character set..*DOES-NOT-EXIST.*")
     public void testPrepareProcessIllegalCharacterset() throws Exception {
         processor.setArgument(0, fromValue("30"));
         processor.setArgument(1, fromValue("DOES-NOT-EXIST"));

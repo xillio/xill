@@ -19,6 +19,7 @@ import nl.xillio.xill.components.instructions.FunctionDeclaration;
 import nl.xillio.xill.components.instructions.Instruction;
 import nl.xillio.xill.components.instructions.VariableDeclaration;
 import org.slf4j.Logger;
+import org.slf4j.MarkerFactory;
 import xill.lang.xill.Target;
 
 import java.util.*;
@@ -188,7 +189,7 @@ public class XillDebugger implements Debugger {
     public void robotFinished(final Robot robot) {
         onRobotStopped.invoke(new RobotStoppedAction(robot, robot.getCompilerSerialId()));
 
-        LOGGER.info("Robot finished.");
+        LOGGER.info(MarkerFactory.getMarker("ROBOT_END"), "Robot (CSID: " + robot.getCompilerSerialId() + ") finished.");
     }
 
     @Override
