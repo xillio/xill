@@ -290,7 +290,7 @@ public class XillDebugger implements Debugger {
 
     private ScopeCheckResult checkScope(VariableDeclaration variableDeclaration, Instruction checkInstruction, int checkDepth) {
         if (variableDeclaration.getHostInstruction() == checkInstruction.getHostInstruction()) {
-            return new ScopeCheckResult(checkDepth, variableDeclaration.hasValue(), variableDeclaration);
+            return new ScopeCheckResult(checkDepth, variableDeclaration.hasValue() && checkInstruction.getLineNumber() > variableDeclaration.getLineNumber(), variableDeclaration);
         }
 
         nl.xillio.xill.components.instructions.InstructionSet instructionSet = checkInstruction.getHostInstruction();
@@ -308,8 +308,8 @@ public class XillDebugger implements Debugger {
     public MetaExpression getVariableValue(final Object identifier, int stackPosition) {
         VariableDeclaration dec = debugInfo.getVariables().get(identifier);
 
-        // position counting from the bottom of the stack
-        int bottomPosition = currentStack.size() - stackPosition;
+        // position counting from the bottom of the stack starting at 0
+        int bottomPosition = getStackDepth() - (stackPosition - 1);
 
         // Go through all scopes of the current function to find a value on the stack
         // Stop at the function scope to prevent variables assigned in a previous recursive scope to be returned

@@ -88,7 +88,7 @@ public class VariableDeclaration extends Instruction {
      * Set the value of the variable without popping the last one
      *
      * @param value         The value of the variable.
-     * @param stackPosition The position the variable is in counting from the robot root
+     * @param stackPosition The position the variable is in counting from the robot root, starting at 0
      */
     public void pushVariable(final MetaExpression value, final int stackPosition) {
         value.registerReference();
@@ -136,6 +136,10 @@ public class VariableDeclaration extends Instruction {
         return name;
     }
 
+    /**
+     * Check if there is a value at any position in the stack
+     * @return True if a value exists, false if not
+     */
     public boolean hasValue() {
         return !valueStack.empty();
     }
@@ -143,7 +147,7 @@ public class VariableDeclaration extends Instruction {
     /**
      * Peek at the value at the given stack position
      *
-     * @param stackPosition The position in the stack counting from the top
+     * @param stackPosition The position in the stack counting from the root of the robot, starting at 0
      * @return The variable at the stack position, or null of it does not exist
      */
     public MetaExpression peek(int stackPosition) {
