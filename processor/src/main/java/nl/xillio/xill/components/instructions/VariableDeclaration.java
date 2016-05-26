@@ -52,10 +52,19 @@ public class VariableDeclaration extends Instruction {
 
     @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) {
-        pushVariable(ExpressionBuilderHelper.NULL, debugger.getStackDepth());
+        pushVariable(ExpressionBuilderHelper.NULL, getInsertionIndex(debugger));
         assignation.process(debugger);
 
         return InstructionFlow.doResume();
+    }
+
+    /**
+     * Get the index to insert a value at in the value stack
+     * @param debugger The current debugger
+     * @return The index
+     */
+    protected int getInsertionIndex(Debugger debugger) {
+        return debugger.getStackDepth();
     }
 
     /**
