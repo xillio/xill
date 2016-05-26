@@ -25,4 +25,10 @@ public class RobotRuntimeException extends RuntimeException {
         super(message, cause);
     }
 
+    /**
+     * @return The short version of exception message
+     */
+    public String getShortMessage() {
+        return getMessage();
+    }
 }

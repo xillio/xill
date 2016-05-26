@@ -7,6 +7,8 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
+import nl.xillio.xill.api.errors.InvalidUserInputException;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.plugins.system.exec.InputStreamReaderCallable;
 import nl.xillio.xill.plugins.system.exec.ProcessDescription;
@@ -24,27 +26,24 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.function.Consumer;
 
 /**
  * Runs an application and waits for it to complete
  */
 public class ExecConstruct extends Construct {
-
     private static final org.slf4j.Logger LOGGER = Log.get();
-
     private final ProcessFactory processFactory = new ProcessFactory();
 
     @Override
     public ConstructProcessor prepareProcess(final ConstructContext context) {
-
         return new ConstructProcessor(
-                (program, directory) -> process(program, directory, processFactory),
+                (program, directory) -> process(program, directory, processFactory, context),
                 new Argument("arguments", ATOMIC, LIST),
                 new Argument("directory", NULL, ATOMIC));
     }
 
-    static MetaExpression process(final MetaExpression arguments, final MetaExpression directory, final ProcessFactory processFactory) {
-
+    MetaExpression process(final MetaExpression arguments, final MetaExpression directory, final ProcessFactory processFactory, final ConstructContext context) {
         // Get description
         ProcessDescription processDescription = parseInput(arguments, directory);
 
@@ -55,9 +54,12 @@ public class ExecConstruct extends Construct {
         // Start process
         Process process = startProcess(processFactory, processDescription);
 
+        // Add an interrupt listener to stop the process when the robot is stopped
+        Consumer<Object> processDestroyer = e -> process.destroyForcibly();
+        context.addRobotInterruptListener(processDestroyer);
+
         // Subscribe to output
         ProcessOutput output = listenToStreams(process.getInputStream(), process.getErrorStream());
-
 
         // Wait for the process to stop
         int exitCode = -1;
@@ -66,6 +68,9 @@ public class ExecConstruct extends Construct {
         } catch (InterruptedException e) {
             LOGGER.error("Execution interrupted: " + e.getMessage(), e);
         }
+
+        // Remove the interrupt listener
+        context.removeRobotInterruptListener(processDestroyer);
 
         // Stop stopwatch
         sw.stop();
@@ -92,10 +97,12 @@ public class ExecConstruct extends Construct {
 
         if (command.getType() == LIST) {
             // Multiple arguments
-            @SuppressWarnings("unchecked")
-            List<MetaExpression> args = (List<MetaExpression>) command.getValue();
+            List<MetaExpression> args = command.getValue();
             if (args.isEmpty()) {
-                throw new RobotRuntimeException("input cannot be empty");
+                throw new InvalidUserInputException("The input cannot be empty.", "[]", "A list of arguments.",
+                        "use System;\n\n" +
+                        "var result = System.exec([\"cmd.exe\", \"/C\", \"echo test\"]);\n" +
+                        "System.print(result);");
             }
             String[] commands = args.stream().map(Expression::getStringValue).toArray(String[]::new);
             description = new ProcessDescription(workingDir, commands);
@@ -123,7 +130,7 @@ public class ExecConstruct extends Construct {
         try {
             process = factory.apply(description);
         } catch (FactoryBuilderException e) {
-            throw new RobotRuntimeException("Failed to run " + description.getFriendlyName() + ": " + e.getMessage(), e);
+            throw new OperationFailedException("run " + description.getFriendlyName(), e.getMessage(), "Check the executable path and name.", e);
         }
 
         return process;

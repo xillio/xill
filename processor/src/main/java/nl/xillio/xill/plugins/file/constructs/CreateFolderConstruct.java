@@ -7,7 +7,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.plugins.file.services.files.FileUtilities;
 
 import java.io.IOException;
@@ -36,7 +36,7 @@ public class CreateFolderConstruct extends Construct {
         try {
             fileUtils.createFolder(folder);
         } catch (IOException e) {
-            throw new RobotRuntimeException("Failed to create " + folder, e);
+            throw new OperationFailedException("create " + folder, e.getMessage(), e);
         }
 
         return fromValue(folder.toString());

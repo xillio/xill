@@ -137,6 +137,11 @@ public class NullDebugger implements Debugger {
     }
 
     @Override
+    public int getStackDepth() {
+        return 0;
+    }
+
+    @Override
     public Debugger createChild() {
         return this;
     }

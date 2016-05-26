@@ -6,7 +6,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
 import nl.xillio.xill.api.data.Date;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.plugins.date.BaseDateConstruct;
 import nl.xillio.xill.plugins.date.services.DateService;
 import org.slf4j.Logger;
@@ -44,7 +44,7 @@ public class ParseConstruct extends BaseDateConstruct {
                 result = dateService.parseDate(dateVar.getStringValue(), formatString);
             } catch (DateTimeException | IllegalArgumentException e) {
                 log.error("Exception while parsing date", e);
-                throw new RobotRuntimeException(String.format("Could not parse date %s", e.getMessage()), e);
+                throw new OperationFailedException("parse date", e.getMessage(), "Try to check if 'date' and 'format' are correct.", e);
             }
         }
 

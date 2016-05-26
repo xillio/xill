@@ -16,12 +16,14 @@ import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 
 public class ForeachInstructionTest extends TestUtils {
+    public static final int STACK_DEPTH = 2;
     private XillDebugger debugger;
     private InstructionSet instructions;
 
     @BeforeMethod
     public void setUp() {
         debugger = mock(XillDebugger.class);
+        when(debugger.getStackDepth()).thenReturn(STACK_DEPTH);
         instructions = spy(new InstructionSet(debugger));
     }
 
@@ -31,14 +33,14 @@ public class ForeachInstructionTest extends TestUtils {
 
         // For each key and value, verify it was pushed to the var once. If the list is null, verify nothing was pushed.
         if (keys != null) {
-            keys.forEach(verify(keyVar, times(1))::pushVariable);
+            keys.forEach(key -> verify(keyVar, times(1)).pushVariable(eq(key), eq(STACK_DEPTH)));
         } else {
-            verify(keyVar, times(0)).pushVariable(any());
+            verify(keyVar, times(0)).pushVariable(any(), anyInt());
         }
         if (values != null) {
-            values.forEach(verify(valueVar, times(1))::pushVariable);
+            values.forEach(value -> verify(valueVar, times(1)).pushVariable(eq(value), eq(STACK_DEPTH)));
         } else {
-            verify(valueVar, times(0)).pushVariable(any());
+            verify(valueVar, times(0)).pushVariable(any(), anyInt());
         }
 
         // Assert that the result does not have a value.

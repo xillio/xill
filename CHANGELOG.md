@@ -1,8 +1,19 @@
 # Xill Core, Codec, Collection, Date, File, Math, Stream, String, System plugins - Change Log
 All notable changes to this project will be documented in this file
 
-## [3.3.18] - 23-05-2016
+## [3.3.19] - 26-05-2016
+### Change
+- Make error messages more descriptive by providing a template [CTC-1420]
+
 ### Fix
+- `System.exec()` can make robots unstoppable [CTC-1582]
+- Debugger variable view must show relevant scope in recursive function [CTC-1584]
+
+### Add
+- Configurable logging [CTC-1535]
+
+## [3.3.18] - 23-05-2016
+### Change
 - Change File.getMimeType() to make use of internal mime type list [CTC-1477]
 
 ## [3.3.17] - 13-05-2016

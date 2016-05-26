@@ -5,7 +5,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.plugins.stream.utils.StreamUtils;
 
 import java.io.BufferedInputStream;
@@ -42,7 +42,7 @@ class ReadLineConstruct extends Construct {
         try {
             return StreamUtils.readLine(inputStream, charset);
         } catch (IOException e) {
-            throw new RobotRuntimeException("Failed to read line: " + e.getMessage(), e);
+            throw new OperationFailedException("read line", e.getMessage(), e);
         }
     }
 

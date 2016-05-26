@@ -5,6 +5,8 @@ import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.*;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.components.operators.Assign;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -24,7 +26,8 @@ import java.util.Stack;
  */
 public class VariableDeclaration extends Instruction {
     private final Processable assignation;
-    private final Stack<MetaExpression> valueStack = new Stack<>();
+    // A stack of stack position, value pairs
+    private final Stack<Pair<Integer, MetaExpression>> valueStack = new Stack<>();
     /**
      * This is here for debugging purposes.
      */
@@ -49,10 +52,19 @@ public class VariableDeclaration extends Instruction {
 
     @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) {
-        pushVariable(ExpressionBuilderHelper.NULL);
+        pushVariable(ExpressionBuilderHelper.NULL, getInsertionIndex(debugger));
         assignation.process(debugger);
 
         return InstructionFlow.doResume();
+    }
+
+    /**
+     * Get the index to insert a value at in the value stack
+     * @param debugger The current debugger
+     * @return The index
+     */
+    protected int getInsertionIndex(Debugger debugger) {
+        return debugger.getStackDepth();
     }
 
     /**
@@ -60,7 +72,7 @@ public class VariableDeclaration extends Instruction {
      */
     public MetaExpression getVariable() {
         if (!valueStack.isEmpty()) {
-            return valueStack.peek();
+            return valueStack.peek().getValue();
         }
         return ExpressionBuilder.NULL;
     }
@@ -68,40 +80,42 @@ public class VariableDeclaration extends Instruction {
     /**
      * Set the value of the variable.
      *
-     * @param value    The value to which the variable needs to be set.
+     * @param value The value to which the variable needs to be set.
      */
     public void replaceVariable(final MetaExpression value) {
-        if (hasValue()){
-            MetaExpression current = valueStack.pop();
-            pushVariable(value);
+        if (hasValue()) {
+            Pair<Integer, MetaExpression> replace = valueStack.pop();
+            MetaExpression current = replace.getValue();
+            pushVariable(value, replace.getKey());
             current.releaseReference();
-        }else{
-            throw new RobotRuntimeException("Reference to unknown variable '" + getName() +"', could not assign value.");
+        } else {
+            throw new RobotRuntimeException("Reference to unknown variable '" + getName() + "', could not assign value.");
         }
     }
 
     /**
      * Set the value of the variable without popping the last one
      *
-     * @param value    The value of the variable.
+     * @param value         The value of the variable.
+     * @param stackPosition The position the variable is in counting from the robot root, starting at 0
      */
-    public void pushVariable(final MetaExpression value) {
+    public void pushVariable(final MetaExpression value, final int stackPosition) {
         value.registerReference();
-        valueStack.push(value);
+        valueStack.push(new ImmutablePair<>(stackPosition, value));
     }
 
     /**
      * Release the current variable.
      */
     public void releaseVariable() {
-        valueStack.pop().releaseReference();
+        valueStack.pop().getValue().releaseReference();
     }
 
     /**
      * A variable declared to be null.
      *
-     * @param position    The position in code where the null variable occurs.
-     * @param name        The name of the variable that is declared to be null.
+     * @param position The position in code where the null variable occurs.
+     * @param name     The name of the variable that is declared to be null.
      * @return A declaration with value {@link ExpressionBuilder#NULL}
      */
     public static VariableDeclaration nullDeclaration(final CodePosition position, final String name) {
@@ -131,12 +145,32 @@ public class VariableDeclaration extends Instruction {
         return name;
     }
 
+    /**
+     * Check if there is a value at any position in the stack
+     * @return True if a value exists, false if not
+     */
     public boolean hasValue() {
         return !valueStack.empty();
     }
 
-    public MetaExpression peek(int index) {
-        return valueStack.elementAt(index);
+    /**
+     * Peek at the value at the given stack position
+     *
+     * @param stackPosition The position in the stack counting from the root of the robot, starting at 0
+     * @return The variable at the stack position, or null of it does not exist
+     */
+    public MetaExpression peek(int stackPosition) {
+        for (Pair<Integer, MetaExpression> stackElement : valueStack) {
+            // Already past the stack position
+            int position = stackElement.getKey();
+            if (position > stackPosition) {
+                return null;
+            }
+            if (position == stackPosition) {
+                return stackElement.getValue();
+            }
+        }
+        return null;
     }
 
     /**
