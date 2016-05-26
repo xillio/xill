@@ -290,7 +290,7 @@ public class XillDebugger implements Debugger {
 
     private ScopeCheckResult checkScope(VariableDeclaration variableDeclaration, Instruction checkInstruction, int checkDepth) {
         if (variableDeclaration.getHostInstruction() == checkInstruction.getHostInstruction()) {
-            return new ScopeCheckResult(checkDepth, variableDeclaration.hasValue(), variableDeclaration);
+            return new ScopeCheckResult(checkDepth, variableDeclaration.hasValue() && checkInstruction.getLineNumber() > variableDeclaration.getLineNumber(), variableDeclaration);
         }
 
         nl.xillio.xill.components.instructions.InstructionSet instructionSet = checkInstruction.getHostInstruction();
@@ -308,25 +308,26 @@ public class XillDebugger implements Debugger {
     public MetaExpression getVariableValue(final Object identifier, int stackPosition) {
         VariableDeclaration dec = debugInfo.getVariables().get(identifier);
 
-        int index = countRecursion(dec, currentStack.size() - stackPosition);
+        // position counting from the bottom of the stack starting at 0
+        int bottomPosition = getStackDepth() - (stackPosition - 1);
 
-        return dec.peek(index);
-    }
+        // Go through all scopes of the current function to find a value on the stack
+        // Stop at the function scope to prevent variables assigned in a previous recursive scope to be returned
+        MetaExpression value;
+        Instruction parent = dec;
+        do {
+            value = dec.peek(bottomPosition);
+            parent = parent.getHostInstruction().getParentInstruction();
+            bottomPosition--;
+        }
+        while (value==null && parent!=null && !(parent instanceof FunctionDeclaration));
 
-    private int countRecursion(VariableDeclaration dec, int stackPosition) {
-        int count = -1;
-        FunctionDeclaration declaration = getParentFunction(dec);
-
-        if (declaration == null) {
-            return 0;
+        // If the variable was not found in a function call, look for it at robot level
+        if (value==null) {
+            value = dec.peek(0);
         }
 
-        for (CounterWrapper wrapper : functionStack) {
-            if (wrapper.getProcessable() == declaration && wrapper.getStackSize() <= stackPosition) {
-                count++;
-            }
-        }
-        return count;
+        return value;
     }
 
     private FunctionDeclaration getParentFunction(Instruction instruction) {
@@ -374,6 +375,13 @@ public class XillDebugger implements Debugger {
     @Override
     public List<nl.xillio.xill.api.components.Instruction> getStackTrace() {
         return currentStack;
+    }
+
+    @Override
+    public int getStackDepth() {
+        int stackSize = currentStack.size();
+        // The stack size is 0 for variable initializers in included robots, those should be on depth 0 too
+        return stackSize > 0 ? stackSize - 1 : 0;
     }
 
     @Override

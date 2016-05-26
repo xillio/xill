@@ -149,9 +149,9 @@ public class ForeachInstruction extends CompoundInstruction {
 
     private InstructionFlow<MetaExpression> processIteration(Supplier<MetaExpression> key, MetaExpression value, Debugger debugger) {
         // Push the value and key variable values.
-        valueVar.pushVariable(value);
+        valueVar.pushVariable(value, debugger.getStackDepth());
         if (keyVar != null) {
-            keyVar.pushVariable(key.get());
+            keyVar.pushVariable(key.get(), debugger.getStackDepth());
         }
 
         InstructionFlow<MetaExpression> instructionResult = instructionSet.process(debugger);
