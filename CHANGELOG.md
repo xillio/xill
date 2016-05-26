@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file
 
 ### Fix
 - `System.exec()` can make robots unstoppable [CTC-1582]
+- Debugger variable view must show relevant scope in recursive function [CTC-1584]
 
 ### Add
 - Configurable logging [CTC-1535]
