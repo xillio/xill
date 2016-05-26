@@ -379,7 +379,9 @@ public class XillDebugger implements Debugger {
 
     @Override
     public int getStackDepth() {
-        return currentStack.size() - 1;
+        int stackSize = currentStack.size();
+        // The stack size is 0 for variable initializers in included robots, those should be on depth 0 too
+        return stackSize > 0 ? stackSize - 1 : 0;
     }
 
     @Override
