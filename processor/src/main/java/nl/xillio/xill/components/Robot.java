@@ -5,12 +5,12 @@ import me.biesaart.utils.Log;
 import nl.xillio.events.EventHost;
 import nl.xillio.xill.api.Debugger;
 import nl.xillio.xill.api.components.*;
-import nl.xillio.xill.api.components.Instruction;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.events.RobotStartedAction;
 import nl.xillio.xill.api.events.RobotStoppedAction;
-import nl.xillio.xill.components.instructions.*;
+import nl.xillio.xill.components.instructions.FunctionDeclaration;
 import nl.xillio.xill.components.instructions.InstructionSet;
+import nl.xillio.xill.components.instructions.VariableDeclaration;
 import org.slf4j.Logger;
 
 import java.util.*;
