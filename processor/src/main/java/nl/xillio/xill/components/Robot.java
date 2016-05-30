@@ -23,6 +23,8 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
     private final List<Robot> libraries = new ArrayList<>();
     private MetaExpression callArgument;
 
+    private List<Instruction> libraryProcessedInstructions = new ArrayList<>();
+
     private static final Logger LOGGER = Log.get();
 
     /**
@@ -185,7 +187,10 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
     public void initializeAsLibrary() throws RobotRuntimeException {
         for (nl.xillio.xill.components.instructions.Instruction instruction : getInstructions()) {
             if (instruction instanceof VariableDeclaration || instruction instanceof FunctionDeclaration) {
-                instruction.process(getDebugger());
+                if (!getDebugger().shouldStop()) {
+                    instruction.process(getDebugger());
+                    libraryProcessedInstructions.add(instruction);
+                }
             }
         }
     }
@@ -194,13 +199,11 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
      * Close variables and functions in an initialized library
      */
     public void closeLibrary() {
-        for (nl.xillio.xill.components.instructions.Instruction instruction : getInstructions()) {
-            if (instruction instanceof VariableDeclaration || instruction instanceof FunctionDeclaration) {
-                try {
-                    instruction.close();
-                } catch (Exception e) {
-                    LOGGER.error("Could not close instruction in a library", e);
-                }
+        for (Instruction instruction : libraryProcessedInstructions) {
+            try {
+                instruction.close();
+            } catch (Exception e) {
+                LOGGER.error("Could not close instruction in a library", e);
             }
         }
     }
