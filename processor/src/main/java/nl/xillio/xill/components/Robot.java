@@ -186,11 +186,9 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
     @Override
     public void initializeAsLibrary() throws RobotRuntimeException {
         for (nl.xillio.xill.components.instructions.Instruction instruction : getInstructions()) {
-            if (instruction instanceof VariableDeclaration || instruction instanceof FunctionDeclaration) {
-                if (!getDebugger().shouldStop()) {
-                    instruction.process(getDebugger());
-                    libraryProcessedInstructions.add(instruction);
-                }
+            if ((instruction instanceof VariableDeclaration || instruction instanceof FunctionDeclaration) && !getDebugger().shouldStop()) {
+                instruction.process(getDebugger());
+                libraryProcessedInstructions.add(instruction);
             }
         }
     }
