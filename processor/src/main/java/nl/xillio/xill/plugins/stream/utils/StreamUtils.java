@@ -4,6 +4,7 @@ package nl.xillio.xill.plugins.stream.utils;
 import me.biesaart.utils.IOUtils;
 import nl.xillio.xill.api.components.ExpressionDataType;
 import nl.xillio.xill.api.components.MetaExpression;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 
@@ -25,6 +26,7 @@ public class StreamUtils {
      * @param parameterName the parameter name
      * @return the stream
      * @throws RobotRuntimeException if the provided expression does not have an input stream
+     * @throws OperationFailedException if the provided stream cannot be opened
      */
     public static BufferedInputStream getInputStream(MetaExpression expression, String parameterName) {
         if (!expression.getBinaryValue().hasInputStream()) {
@@ -34,7 +36,7 @@ public class StreamUtils {
         try {
             return expression.getBinaryValue().getInputStream();
         } catch (IOException e) {
-            throw new RobotRuntimeException("Could not open stream: " + e.getMessage(), e);
+            throw new OperationFailedException("open stream",e.getMessage(), e);
         }
     }
 
@@ -45,6 +47,7 @@ public class StreamUtils {
      * @param parameterName the parameter name
      * @return the stream
      * @throws RobotRuntimeException if the provided expression does not have an output stream
+     * @throws OperationFailedException if the provided stream cannot be opened
      */
     public static OutputStream getOutputStream(MetaExpression expression, String parameterName) {
         if (!expression.getBinaryValue().hasOutputStream()) {
@@ -54,7 +57,7 @@ public class StreamUtils {
         try {
             return expression.getBinaryValue().getOutputStream();
         } catch (IOException e) {
-            throw new RobotRuntimeException("Could not open stream: " + e.getMessage(), e);
+            throw new OperationFailedException("open stream",e.getMessage(), e);
         }
     }
 

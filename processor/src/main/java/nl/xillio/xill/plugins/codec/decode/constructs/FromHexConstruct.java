@@ -6,7 +6,8 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.api.errors.InvalidUserInputException;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.plugins.codec.decode.services.DecoderService;
 import org.apache.commons.codec.DecoderException;
 
@@ -39,9 +40,15 @@ public class FromHexConstruct extends Construct {
         try {
             return hexString.isNull() ? NULL : fromValue(decoderService.fromHex(hexString.getStringValue(), charsetName.getStringValue()));
         } catch (DecoderException e) {
-            throw new RobotRuntimeException("Could not convert hex to normal: " + e.getMessage(), e);
+            throw new OperationFailedException("convert hex to normal", e.getMessage(), e);
         } catch (UnsupportedCharsetException e) {
-            throw new RobotRuntimeException("Unknown character set: " + charsetName.getStringValue(), e);
+            throw new InvalidUserInputException("Unknown character set.", charsetName.getStringValue(), "A valid character set.","use Decode;\n" +
+                    "use System\n" +
+                    "\n" +
+                    "System.print(Decode.fromHex(\"C3A4C3ABC384\"));\n" +
+                    "// prints äëÄ\n" +
+                    "System.print(Decode.fromHex(\"e4ebc4\", \"ISO-8859-1\"));\n" +
+                    "// also prints äëÄ" ,e);
         }
     }
 }

@@ -6,7 +6,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.services.json.JsonException;
 import nl.xillio.xill.services.json.JsonParser;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -39,7 +39,7 @@ public class ParseJSONConstruct extends Construct {
                 exception = e;
             }
 
-            throw new RobotRuntimeException("Invalid JSON input: " + exception.getMessage(), e);
+            throw new OperationFailedException("parse JSON input", exception.getMessage(), e);
         }
     }
 }

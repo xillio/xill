@@ -5,7 +5,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.plugins.stream.utils.StreamUtils;
 
 import java.io.BufferedInputStream;
@@ -44,7 +44,7 @@ class GetTextConstruct extends Construct {
         try {
             return StreamUtils.readText(inputStream, charset, limit);
         } catch (IOException e) {
-            throw new RobotRuntimeException("Failed to read text: " + e.getMessage(), e);
+            throw new OperationFailedException("read text", e.getMessage(), e);
         }
     }
 }

@@ -6,7 +6,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.plugins.codec.encode.services.EncoderService;
 
 import java.io.UnsupportedEncodingException;
@@ -37,7 +37,7 @@ public class ToPercentConstruct extends Construct {
         try {
             return string.isNull() ? NULL : fromValue(encoderService.urlEncode(string.getStringValue(), !xWwwFormVar.isNull() && xWwwFormVar.getBooleanValue()));
         } catch (UnsupportedEncodingException e) {
-            throw new RobotRuntimeException("Cannot URL encode the string", e);
+            throw new OperationFailedException("URL encode the string", e.getMessage(), e);
         }
     }
 }

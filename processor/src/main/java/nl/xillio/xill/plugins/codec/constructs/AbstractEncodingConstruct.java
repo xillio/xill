@@ -6,7 +6,7 @@ import nl.xillio.xill.api.construct.Argument;
 import nl.xillio.xill.api.construct.Construct;
 import nl.xillio.xill.api.construct.ConstructContext;
 import nl.xillio.xill.api.construct.ConstructProcessor;
-import nl.xillio.xill.api.errors.RobotRuntimeException;
+import nl.xillio.xill.api.errors.OperationFailedException;
 import nl.xillio.xill.api.io.ComposedIOStream;
 import nl.xillio.xill.api.io.IOStream;
 import nl.xillio.xill.plugins.stream.utils.StreamUtils;
@@ -37,7 +37,7 @@ public abstract class AbstractEncodingConstruct extends Construct {
         try {
             return process(input, charset);
         } catch (IOException e) {
-            throw new RobotRuntimeException("Failed to encode " + input + ": " + e.getMessage(), e);
+            throw new OperationFailedException("encode " + input, e.getMessage(), e);
         }
     }
 

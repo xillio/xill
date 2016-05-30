@@ -420,7 +420,7 @@ public class XillProgramFactory implements LanguageFactory<xill.lang.xill.Robot>
         List<VariableDeclaration> parameters = new ArrayList<>(token.getParameters().size());
         for (Target parameter : token.getParameters()) {
             // TODO Default values
-            VariableDeclaration declaration = VariableDeclaration.nullDeclaration(pos(token), parameter.getName());
+            VariableDeclaration declaration = FunctionParameterDeclaration.nullDeclaration(pos(token), parameter.getName());
 
             parameters.add(declaration);
             variables.put(parameter, declaration);
