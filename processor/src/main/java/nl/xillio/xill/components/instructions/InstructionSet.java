@@ -129,26 +129,20 @@ public class InstructionSet implements nl.xillio.xill.api.components.Instruction
         }
         return InstructionFlow.doResume(ExpressionBuilderHelper.NULL);
     }
-
-    /**
-     * Run only declarations.
-     * This is required to run functions in this robot as a library.
-     *
-     * @throws RobotRuntimeException Is thrown if an exception occurs when running a robot.
-     */
-    public void initialize() throws RobotRuntimeException {
-        for (Instruction instruction : instructions) {
-            if (instruction instanceof VariableDeclaration || instruction instanceof FunctionDeclaration) {
-                instruction.process(debugger);
-            }
-        }
-    }
+    
 
     /**
      * @return the debugger
      */
     public Debugger getDebugger() {
         return debugger;
+    }
+
+    /**
+     * @return list of instructions
+     */
+    protected List<Instruction> getInstructions() {
+        return instructions;
     }
 
     @Override

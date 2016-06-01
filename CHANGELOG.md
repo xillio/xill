@@ -1,6 +1,10 @@
 # Xill Core, Codec, Collection, Date, File, Math, Stream, String, System plugins - Change Log
 All notable changes to this project will be documented in this file
 
+## [3.3.20] - unreleased
+### Fix
+- PhantomJS gives error after starting robot with library ten times [CTC-1543]
+
 ## [3.3.19] - 26-05-2016
 ### Change
 - Make error messages more descriptive by providing a template [CTC-1420]
