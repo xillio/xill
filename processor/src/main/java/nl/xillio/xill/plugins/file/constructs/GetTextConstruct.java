@@ -50,12 +50,15 @@ public class GetTextConstruct extends Construct {
 
         // Read the provided path.
         Path path = getPath(context, source);
-        String text = toString(buildStream(path), charset);
 
-        // Remove leading BOM characters.
-        text = LEADING_BOM_PATTERN.matcher(text).replaceFirst("");
+        try(IOStream stream = buildStream(path)) {
+            String text = toString(stream, charset);
 
-        return fromValue(text);
+            // Remove leading BOM characters.
+            text = LEADING_BOM_PATTERN.matcher(text).replaceFirst("");
+
+            return fromValue(text);
+        }
     }
 
     private IOStream buildStream(Path path) {
