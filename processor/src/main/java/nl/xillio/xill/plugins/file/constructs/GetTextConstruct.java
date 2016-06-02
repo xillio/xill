@@ -51,7 +51,7 @@ public class GetTextConstruct extends Construct {
         // Read the provided path.
         Path path = getPath(context, source);
 
-        try(IOStream stream = buildStream(path)) {
+        try (IOStream stream = buildStream(path)) {
             String text = toString(stream, charset);
 
             // Remove leading BOM characters.
