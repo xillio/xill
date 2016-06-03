@@ -7,19 +7,30 @@ Returns a stream with read access to a file. This construct will throw an error 
         <example title="Usage">
             <header>Open a stream and read the text content</header>
             <code>
-                use File, Stream;
-                use System;
+                use File, Stream, System;
 
-                var file = File.openRead("./source.txt");
+                // We create a file that we can work with.
+                var path = "TestFile.txt";
+                var testFile = File.openWrite(path);
+                Stream.write("test", testFile);
+
+
+                var file = File.openRead(path);
                 var text = Stream.getText(file);
                 System.print(text);
+                // This should print "test"
             </code>
             <header>Copy a file</header>
             <code>
-                use File, Stream;
+                use File, Stream, System;
 
-                var source = File.openRead("./source.txt");
-                var target = File.openWrite("./source-copy.txt");
+                // We create a file that we can work with.
+                var path = "TestFile.txt";
+                var testFile = File.openWrite(path);
+                Stream.write("test", testFile);
+
+                var source = File.openRead(path);
+                var target = File.openWrite("TestFile_copy.txt");
                 Stream.write(source, target);
             </code>
         </example>

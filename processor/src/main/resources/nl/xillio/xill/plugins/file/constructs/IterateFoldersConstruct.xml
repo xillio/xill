@@ -10,18 +10,16 @@ The iterator returns an object containing various pieces of information about th
         <example title="Usage">
             <header>Executing</header>
             <code>
-                use File;
-                use System;
+                use File, System;
 
                 var iterator = File.iterateFolders("C:/Users");
                 foreach(folder in iterator) {
                     System.print(folder);
                 }
+                // This will contain a print:
+                //INFO: {"path":"C:\\Users\\Public","canRead":true,"canWrite":true,"isAccessible":true,"parent":"C:\\Users"}
             </code>
-            <header>Will print</header>
-            <code>
-                INFO: {"path":"C:\\Users\\Public","canRead":true,"canWrite":true,"isAccessible":true,"parent":"C:\\Users"}
-            </code>
+
         </example>
     </examples>
     <references>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Returns a stream that will write to the end of a file. This will leave the file as-is.
+Returns a stream that will write to the end of a file. This will leave the file as-is or create a new file when none exists.
     </description>
     <examples>
         <example title="Usage">
