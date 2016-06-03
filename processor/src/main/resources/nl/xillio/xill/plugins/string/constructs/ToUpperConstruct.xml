@@ -6,6 +6,8 @@ Returns the string uppercased.
     <examples>
         <example title="Usage">
             <code>
+                use String;
+
                 String.toUpper("LoWer");
                 // Result: LOWER
             </code>

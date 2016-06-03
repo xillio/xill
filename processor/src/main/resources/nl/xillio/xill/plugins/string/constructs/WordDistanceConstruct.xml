@@ -9,6 +9,8 @@ If the optional boolean argument relative is set to false, then the absolute dis
     <examples>
         <example title="Usage">
             <code>
+                use String;
+
                 String.wordDistance("boy", "boy");                      // 1
                 String.wordDistance("boy", "boys");                     // 0.75
                 String.wordDistance("boys", "girl");                    // 0

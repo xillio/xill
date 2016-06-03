@@ -6,6 +6,8 @@ Returns a boolean whether the string1 starts with string2.
     <examples>
         <example title="Usage">
             <code>
+                use String;
+
                 String.startsWith("testing", "ing"); // FALSE
                 String.startsWith("testing", "test"); // TRUE
             </code>

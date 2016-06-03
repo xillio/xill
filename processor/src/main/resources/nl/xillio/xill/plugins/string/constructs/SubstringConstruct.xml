@@ -9,6 +9,8 @@ Optionally end can be left out or made 0, which means the returned string will e
     <examples>
         <example title="Usage">
             <code>
+                use String;
+
                 String.substring("Welcome to our site!", 0, 7);
                 // Result: Welcome
 

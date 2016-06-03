@@ -6,6 +6,8 @@ Returns the string lowercased.
     <examples>
         <example title="Usage">
             <code>
+                use String;
+
                 String.toLower("HiGher");
                 // Result: higher
             </code>

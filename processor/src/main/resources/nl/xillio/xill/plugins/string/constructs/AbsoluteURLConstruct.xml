@@ -9,11 +9,15 @@ Returns the resulting URL as a string.
         <example title="Usage">
             <header>Child page</header>
             <code>
+                use String;
+
                 String.absoluteURL("http://www.xillio.nl/calendar/", "movies");
                 // Result: http://www.xillio.nl/calendar/movies
             </code>
             <header>One page up</header>
             <code>
+                use String;
+
                 String.absoluteURL("http://www.xillio.nl/calendar/", "../");
                 // Result: http://www.xillio.nl/
             </code>

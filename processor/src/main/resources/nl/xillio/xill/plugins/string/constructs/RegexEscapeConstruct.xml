@@ -19,14 +19,8 @@ Escape a string so it can be used as a literal within a regex.
                 var escaped = String.regexEscape(search);
                 var result = String.allMatches(text, escaped);
 
+                // This prints: ["\\d"]
                 System.print(result);
-
-            </code>
-            <header>
-                Expected output
-            </header>
-            <code>
-                ["\\d"]
             </code>
         </example>
     </examples>

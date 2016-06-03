@@ -9,23 +9,23 @@ Leading spaces on a new line are stripped. Trailing spaces are not stripped.
     <examples>
         <example description="Usage">
             <code>
-                var test = "     \n      Time is an illusion. Lunchtime doubly so.                           \n    ";
+                use String;
+
+                var test = "Time is an illusion. Lunchtime doubly so.";
                 String.wrap(test, 10, false);
                 /*
                     Outputs:
 
-                        Time is an
-                        illusion.
-                        Lunchtime
-                        doubly
-                        so.
-
-
+                    Time is an
+                    illusion.
+                    Lunchtime
+                    doubly
+                    so.
                 */
             </code>
         </example>
     </examples>
     <searchTags>
-        format
+        format, wrap
     </searchTags>
 </function>

@@ -6,6 +6,8 @@ Receives a string and repeats it count times concatenated.
     <examples>
         <example title="Usage">
             <code>
+                use String;
+
                 String.repeat("thisIsAString", 3);
                 // Result: thisIsAStringthisIsAStringthisIsAString
             </code>

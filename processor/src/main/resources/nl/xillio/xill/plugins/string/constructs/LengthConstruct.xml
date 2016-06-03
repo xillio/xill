@@ -5,10 +5,14 @@ Returns the length of a string.
     </description>
     <examples>
         <example title="Usage">
-            String.length("four"); // Result: 4
+            <code>
+                use String;
+
+                String.length("four"); // Result: 4
+            </code>
         </example>
     </examples>
     <searchTags>
-        size
+        size, length
     </searchTags>
 </function>
