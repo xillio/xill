@@ -2,7 +2,7 @@
 <function>
 	<description>
 Duplicates the given list. Duplicate makes a copy from the original list.
-		This means that after copying, changes to the first list will not change the duplicated list.
+This means that after copying, changes to the first list will not change the duplicated list.
 	</description>
 	<examples>
 		<example title="Usage">
