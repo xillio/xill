@@ -55,4 +55,27 @@ public class GetTextConstructTest extends TestUtils {
                 fromValue(file.toAbsolutePath().toString())
         );
     }
+
+    @Test
+    public void testIfStreamClosed() throws IOException {
+        // Create test file
+        Path file = Files.createTempFile(getClass().getSimpleName(), ".txt");
+        Files.copy(IOUtils.toInputStream("File Test"), file, StandardCopyOption.REPLACE_EXISTING);
+
+        GetTextConstruct construct = new GetTextConstruct(new FileStreamFactory(), new IOUtilsService());
+        setFileResolverReturnValue(file);
+
+        MetaExpression result = ConstructProcessor.process(
+                construct.prepareProcess(context(construct)),
+                fromValue(file.toAbsolutePath().toString())
+        );
+
+        assertEquals(result.getStringValue(), "File Test");
+
+        // Delete test file
+        Files.delete(file);
+
+        // This throws an error of the getText construct did not close the stream.
+        Files.newInputStream(file.toAbsolutePath());
+    }
 }
