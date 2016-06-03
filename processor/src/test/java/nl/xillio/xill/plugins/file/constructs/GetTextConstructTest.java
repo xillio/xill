@@ -81,7 +81,7 @@ public class GetTextConstructTest extends TestUtils {
             Files.newInputStream(file.toAbsolutePath());
         }
         catch(java.nio.file.NoSuchFileException e)        {
-            // We found the correct exception. This is expcected behavior.
+            // We found the correct exception. This is expected behavior.
         }
     }
 }
