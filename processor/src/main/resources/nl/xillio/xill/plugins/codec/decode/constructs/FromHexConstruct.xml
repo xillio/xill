@@ -12,12 +12,11 @@ An error occurs if the passed `hexString` has an odd number of characters or con
             <header>Convert a hex value to String</header>
             <code>
                 use Decode;
-                use System
+                use System;
 
+                // These both print: äëÄ
                 System.print(Decode.fromHex("C3A4C3ABC384"));
-                // prints äëÄ
                 System.print(Decode.fromHex("e4ebc4", "ISO-8859-1"));
-                // also prints äëÄ
             </code>
         </example>
     </examples>
