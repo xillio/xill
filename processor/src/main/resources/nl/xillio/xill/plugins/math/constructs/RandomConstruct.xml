@@ -3,22 +3,20 @@
     <description>
 Returns a randomized value based on the optional parameter value.  
 
-If an integer argument N is provided the return value is a random integer between 0 and N.  
-If a list argument L is provided it is a random entry from the list.  
-If no parameter is provided, a random floating point number between 0 and 1 will be generated.
+If an integer argument N is provided the return value is a random integer between 0 (inclusive) and N (exclusive).
+If a list argument is provided, the result is a random entry from the list.
+If no parameter or a negative number is provided, a random floating point number between 0 and 1 will be generated.
     </description>
     <examples>
-        <example title="Roll a 6-sided dice:">
+        <example title="Get a number between 1 and 6 (inclusive)">
             <code>
                 use Math;
 
-                Math.random(6)+1;
+                // Note that we add 1 to the result, to get a number between 1 and 6 inclusive.
+                Math.random(6) + 1;
             </code>
-            <p>
-                Note: the + 1 is needed, because the result of random is 0 to 6, but not including 6.
-            </p>
         </example>
-        <example title="Determine a random work day:">
+        <example title="Get a random item from a list">
             <code>
                 use Math;
 
@@ -26,18 +24,15 @@ If no parameter is provided, a random floating point number between 0 and 1 will
                 Math.random(list);
             </code>
         </example>
-        <example title="Random number between 0 and 1:">
+        <example title="Get a random number between 0 and 1">
             <code>
                 use Math;
 
                 Math.random();
             </code>
-            <p>
-                Note: This excludes 1 but includes 0
-            </p>
         </example>
     </examples>
     <searchTags>
-        random, dice
+        random
     </searchTags>
 </function>
