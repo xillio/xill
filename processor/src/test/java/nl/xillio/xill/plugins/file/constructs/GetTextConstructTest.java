@@ -72,10 +72,16 @@ public class GetTextConstructTest extends TestUtils {
 
         assertEquals(result.getStringValue(), "File Test");
 
-        // Delete test file
+        // Try to delete the test file, this can only happen if the getText actually closed the stream
         Files.delete(file);
 
-        // This throws an error of the getText construct did not close the stream.
-        Files.newInputStream(file.toAbsolutePath());
+        // If the stream is correctly closed, the delete is not queued and we will get a no such file Exception
+        // Else you would get an exception when trying to open a stream with the not yet deleted file. in this case the test fails.
+        try {
+            Files.newInputStream(file.toAbsolutePath());
+        }
+        catch(java.nio.file.NoSuchFileException e)        {
+            // We found the correct exception. This is expcected behavior.
+        }
     }
 }
