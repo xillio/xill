@@ -9,7 +9,7 @@ Returns a boolean whether the string haystack contains the element needle.
                 use String;
 
                 String.contains("testing", "ing"); // TRUE
-                String.contains("TESTING", "ing"); // FALSE
+                String.contains("foo", "bar"); // FALSE
             </code>
         </example>
     </examples>
