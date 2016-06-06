@@ -10,25 +10,25 @@ If no parameter or a negative number is provided, a random floating point number
     <examples>
         <example title="Get a number between 1 and 6 (inclusive)">
             <code>
-                use Math;
+                use Math, System;
 
                 // Note that we add 1 to the result, to get a number between 1 and 6 inclusive.
-                Math.random(6) + 1;
+                System.print(Math.random(6) + 1);
             </code>
         </example>
         <example title="Get a random item from a list">
             <code>
-                use Math;
+                use Math, System;
 
                 var list = ["monday", "tuesday", "wednesday", "thursday", "friday"];
-                Math.random(list);
+                System.print(Math.random(list));
             </code>
         </example>
         <example title="Get a random number between 0 and 1">
             <code>
-                use Math;
+                use Math, System;
 
-                Math.random();
+                System.print(Math.random());
             </code>
         </example>
     </examples>
