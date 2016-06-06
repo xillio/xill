@@ -9,8 +9,10 @@ Returns a stream that will write to the start of a file. This will clear the fil
             <code>
                 use File, Stream;
 
-                var target = File.openWrite("./target.txt");
+                // Open the file
+                var target = File.openWrite("target.txt");
 
+                // Write "Hello World" three times
                 Stream.write("Hello World\n", target);
                 Stream.write("Hello World\n", target);
                 Stream.write("Hello World\n", target);
@@ -19,11 +21,12 @@ Returns a stream that will write to the start of a file. This will clear the fil
             <code>
                 use File, Stream, System;
 
-                // We create a file that we can work with.
+                // We create a file called "TestFile.txt".
                 var path = "TestFile.txt";
                 var testFile = File.openWrite(path);
                 Stream.write("test", testFile);
 
+                // We copy the newly made file to a new file named "TestFile_copy.txt".
                 var source = File.openRead(path);
                 var target = File.openWrite("TestFile_copy.txt");
                 Stream.write(source, target);
