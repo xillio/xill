@@ -10,17 +10,17 @@ Optionally you can provide the number of passes the decoder should run (defaults
         <example title="Usage">
             <header>Single pass</header>
             <code><![CDATA[
-                use Decode;
+                use Decode, System;
 
-                Decode.unescapeXML("Money &amp;lt;&amp;amp;gt; Health");
+                System.print(Decode.unescapeXML("Money &amp;lt;&amp;amp;gt; Health"));
 
                 // Result: "Money &lt;&amp;gt; Health"
             ]]></code>
             <header>Multiple passes</header>
             <code><![CDATA[
-                use Decode;
+                use Decode, System;
 
-                Decode.unescapeXML("Money &amp;lt;&amp;amp;gt; Health", 2);
+                System.print(Decode.unescapeXML("Money &amp;lt;&amp;amp;gt; Health", 2));
 
                 // Result: "Money <&gt; Health"
                 ]]>
