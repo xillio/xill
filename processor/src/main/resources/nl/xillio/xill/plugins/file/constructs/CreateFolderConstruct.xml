@@ -9,7 +9,7 @@ Returns the absolute path to that folder
         <example title="Usage">
             <header>Create a folder</header>
             <code>
-                use File;
+                use File, System;
                 var folder = File.createFolder("newFolder");
 
                 // prints absolute/path/to/newFolder

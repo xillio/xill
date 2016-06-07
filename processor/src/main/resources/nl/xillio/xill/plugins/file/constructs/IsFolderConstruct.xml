@@ -7,10 +7,14 @@ Tests whether the file identified by uri is a folder. The test returns `true` if
         <example title="Usage">
             <header>Determine if the specified uri is a folder or not.</header>
             <code>
-                use File;
-                use System;
+                use File, System, Stream;
 
-                System.print(File.isFolder("file.txt"));
+                // We create a file that we can work with.
+                var path = "TestFile.txt";
+                var testFile = File.openWrite(path);
+                Stream.write("test", testFile);
+
+                System.print(File.isFolder(path));
                 // This will print: false
 
                 System.print(File.isFolder("C:\\Windows"));
