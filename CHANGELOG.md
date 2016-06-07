@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file
 ## [3.3.20] - unreleased
 ### Fix
 - PhantomJS gives error after starting robot with library ten times [CTC-1543]
+- `File.getText()` keeps stream open [CTC-1609]
 
 ## [3.3.19] - 26-05-2016
 ### Change
