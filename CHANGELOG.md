@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file
 
 ## [3.3.20] - unreleased
+### Change
+- Split System.exec() output by line again [CTC-1466]
+
 ### Fix
 - PhantomJS gives error after starting robot with library ten times [CTC-1543]
 - `File.getText()` keeps stream open [CTC-1609]
