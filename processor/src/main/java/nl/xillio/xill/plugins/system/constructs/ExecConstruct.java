@@ -20,6 +20,8 @@ import org.apache.commons.lang3.time.StopWatch;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -27,6 +29,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * Runs an application and waits for it to complete
@@ -172,9 +175,13 @@ public class ExecConstruct extends Construct {
      * @return the {@link MetaExpression}
      */
     private static MetaExpression parseResult(final ProcessOutput output, final long timeMS, int exitCode) {
+        //functional revert of CTC-1466 to prevent breaking backwards compatibility, output as String again when releasing Xill IDE 3.2
+        List<MetaExpression> errorList = Arrays.asList(output.getErrors().split("\\R")).stream().map(ExecConstruct::fromValue).collect(Collectors.toList());
+        List<MetaExpression> outputList = Arrays.asList(output.getOutput().split("\\R")).stream().map(ExecConstruct::fromValue).collect(Collectors.toList());
+
         LinkedHashMap<String, MetaExpression> result = new LinkedHashMap<>();
-        result.put("errors", fromValue(output.getErrors()));
-        result.put("output", fromValue(output.getOutput()));
+        result.put("errors", fromValue(errorList));
+        result.put("output", fromValue(outputList));
         result.put("runtime", fromValue(timeMS));
         result.put("exitCode", fromValue(exitCode));
         return fromValue(result);
