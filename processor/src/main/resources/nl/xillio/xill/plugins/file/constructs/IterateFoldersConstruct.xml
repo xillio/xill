@@ -16,7 +16,7 @@ The iterator returns an object containing various pieces of information about th
                 foreach(folder in iterator) {
                     System.print(folder);
                 }
-                // This will contain a print:
+                // This might print something like this:
                 //INFO: {"path":"C:\\Users\\Public","canRead":true,"canWrite":true,"isAccessible":true,"parent":"C:\\Users"}
             </code>
 
