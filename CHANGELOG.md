@@ -1,6 +1,14 @@
 # Xill Core, Codec, Collection, Date, File, Math, Stream, String, System plugins - Change Log
 All notable changes to this project will be documented in this file
 
+## [3.3.20] - 07-06-2016
+### Change
+- Split System.exec() output by line again [CTC-1466]
+
+### Fix
+- PhantomJS gives error after starting robot with library ten times [CTC-1543]
+- `File.getText()` keeps stream open [CTC-1609]
+
 ## [3.3.19] - 26-05-2016
 ### Change
 - Make error messages more descriptive by providing a template [CTC-1420]

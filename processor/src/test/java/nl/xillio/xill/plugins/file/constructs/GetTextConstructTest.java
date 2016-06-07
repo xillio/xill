@@ -55,4 +55,33 @@ public class GetTextConstructTest extends TestUtils {
                 fromValue(file.toAbsolutePath().toString())
         );
     }
+
+    @Test
+    public void testIfStreamClosed() throws IOException {
+        // Create test file
+        Path file = Files.createTempFile(getClass().getSimpleName(), ".txt");
+        Files.copy(IOUtils.toInputStream("File Test"), file, StandardCopyOption.REPLACE_EXISTING);
+
+        GetTextConstruct construct = new GetTextConstruct(new FileStreamFactory(), new IOUtilsService());
+        setFileResolverReturnValue(file);
+
+        MetaExpression result = ConstructProcessor.process(
+                construct.prepareProcess(context(construct)),
+                fromValue(file.toAbsolutePath().toString())
+        );
+
+        assertEquals(result.getStringValue(), "File Test");
+
+        // Try to delete the test file, this can only happen if the getText actually closed the stream
+        Files.delete(file);
+
+        // If the stream is correctly closed, the delete is not queued and we will get a no such file Exception
+        // Else you would get an exception when trying to open a stream with the not yet deleted file. in this case the test fails.
+        try {
+            Files.newInputStream(file.toAbsolutePath());
+        }
+        catch(java.nio.file.NoSuchFileException e)        {
+            // We found the correct exception. This is expected behavior.
+        }
+    }
 }

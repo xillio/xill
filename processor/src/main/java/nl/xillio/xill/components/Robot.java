@@ -8,7 +8,9 @@ import nl.xillio.xill.api.components.*;
 import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.api.events.RobotStartedAction;
 import nl.xillio.xill.api.events.RobotStoppedAction;
+import nl.xillio.xill.components.instructions.FunctionDeclaration;
 import nl.xillio.xill.components.instructions.InstructionSet;
+import nl.xillio.xill.components.instructions.VariableDeclaration;
 import org.slf4j.Logger;
 
 import java.util.*;
@@ -20,6 +22,8 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
     private final RobotID robotID;
     private final List<Robot> libraries = new ArrayList<>();
     private MetaExpression callArgument;
+
+    private List<Instruction> libraryProcessedInstructions = new ArrayList<>();
 
     private static final Logger LOGGER = Log.get();
 
@@ -147,10 +151,6 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
         }
     }
 
-    private void closeLibrary() {
-        super.close();
-    }
-
     /**
      * Add a library to this robot
      *
@@ -185,7 +185,25 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
 
     @Override
     public void initializeAsLibrary() throws RobotRuntimeException {
-        super.initialize();
+        for (nl.xillio.xill.components.instructions.Instruction instruction : getInstructions()) {
+            if ((instruction instanceof VariableDeclaration || instruction instanceof FunctionDeclaration) && !getDebugger().shouldStop()) {
+                instruction.process(getDebugger());
+                libraryProcessedInstructions.add(instruction);
+            }
+        }
+    }
+
+    /**
+     * Close variables and functions in an initialized library
+     */
+    public void closeLibrary() {
+        for (Instruction instruction : libraryProcessedInstructions) {
+            try {
+                instruction.close();
+            } catch (Exception e) {
+                LOGGER.error("Could not close instruction in a library", e);
+            }
+        }
     }
 
     /**

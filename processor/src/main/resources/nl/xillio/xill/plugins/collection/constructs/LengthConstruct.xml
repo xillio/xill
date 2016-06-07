@@ -6,10 +6,12 @@ Returns the length of the given list or object.
     <examples>
         <example title="Usage">
             <code>
+                use Collection, System;
+
                 var list = ["a","b","c","d","e"]; //list with five elements
-                Collection.length(list); // 5
+                System.print(Collection.length(list)); // 5
                 var object = {1:"a",2:"b",3:"c"}; //object with three elements
-                Collection.length(object); // 3
+                System.print(Collection.length(object)); // 3
             </code>
         </example>
     </examples>

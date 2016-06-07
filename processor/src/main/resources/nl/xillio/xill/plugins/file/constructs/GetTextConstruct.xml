@@ -7,20 +7,34 @@ Read all text from a file.
         <example title="Usage">
             <header>Read text from a file</header>
             <code>
-                use File, System;
+                use File, System, Stream;
 
-                var text = File.getText("path/to/file.txt");
+                // We create a file that we can work with.
+                var path = "TestFile.txt";
+                var testFile = File.openWrite(path);
+                Stream.write("test", testFile);
+
+                // We can get the text from that file without using the Stream package.
+                var text = File.getText(path);
                 System.print(text);
+                // This prints: "test"
             </code>
             <header>Read text from a file using streams</header>
             <code>
                 use File, Stream, System;
 
-                var file = File.openStream("path/to/file.txt");
+                // We create a file that we can work with.
+                var path = "TestFile.txt";
+                var testFile = File.openWrite(path);
+                Stream.write("test number 2", testFile);
+
+
+                var file = File.openRead(path);
 
                 // Note we are using the Stream package
                 var text = Stream.getText(file);
                 System.print(text);
+                // This prints: "test number 2"
             </code>
         </example>
     </examples>

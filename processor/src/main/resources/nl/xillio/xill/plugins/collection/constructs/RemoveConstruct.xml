@@ -7,13 +7,15 @@ If the input is an object it will remove the element with the given key.
     <examples>
         <example title="Usage">
             <code>
+                use Collection, System;
+
                 var list = ["a","b","c","d"];
-                Collection.remove(list,2);
+                System.print(Collection.remove(list,2));
                 
                 // Result: ["a","b","d"] 
                 
                 var object = {"a":"first","b":"second","c":"third"};
-                Collection.remove(object,"b");
+                System.print(Collection.remove(object,"b"));
                 
                 // Result: {"a":"first,"c":"third"}
                 

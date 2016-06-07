@@ -41,9 +41,10 @@ public class XillDebuggerTest extends TestUtils{
         VariableDeclaration var = mock(VariableDeclaration.class, RETURNS_DEEP_STUBS);
         Target target = mock(Target.class);
         MetaExpression result = mockVariable(target, var, 0)[0];
+        startInstructions(1);
 
         // Run
-        MetaExpression value = debugger.getVariableValue(target, 0);
+        MetaExpression value = debugger.getVariableValue(target, 1);
 
         // Verify
         verify(var).peek(0);
@@ -59,13 +60,13 @@ public class XillDebuggerTest extends TestUtils{
         when(var.getHostInstruction().getParentInstruction()).thenReturn(mock(FunctionDeclaration.class));
         Target target = mock(Target.class);
         MetaExpression result = mockVariable(target, var, 0)[0];
-        startInstructions(1);
+        startInstructions(2);
 
         // Run
-        MetaExpression value = debugger.getVariableValue(target, 1);
+        MetaExpression value = debugger.getVariableValue(target, 2);
 
         // Verify
-        verify(var, never()).peek(1);
+        verify(var).peek(0);
 
         // Assert
         assertSame(value, result);
@@ -81,10 +82,10 @@ public class XillDebuggerTest extends TestUtils{
         when(var.getHostInstruction().getParentInstruction()).thenReturn(mock(FunctionDeclaration.class));
         Target target = mock(Target.class);
         MetaExpression result = mockVariable(target, var, 1)[0];
-        startInstructions(1);
+        startInstructions(2);
 
         // Run
-        MetaExpression value = debugger.getVariableValue(target, 0);
+        MetaExpression value = debugger.getVariableValue(target, 1);
 
         // Verify
         verify(var, never()).peek(0);
@@ -104,10 +105,10 @@ public class XillDebuggerTest extends TestUtils{
         when(var.getHostInstruction().getParentInstruction()).thenReturn(mock(FunctionDeclaration.class));
         Target target = mock(Target.class);
         MetaExpression[] results = mockVariable(target, var, 1,2,3);
-        startInstructions(3);
+        startInstructions(4);
 
         // Run
-        MetaExpression value = debugger.getVariableValue(target, 1);
+        MetaExpression value = debugger.getVariableValue(target, 2);
 
         // Verify
         verify(var, never()).peek(1);
