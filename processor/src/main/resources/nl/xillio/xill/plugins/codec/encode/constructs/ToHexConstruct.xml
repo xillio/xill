@@ -13,12 +13,12 @@ to represent any given character.
             <header>Convert a String to a hex value</header>
             <code>
                 use Encode;
-                use System
+                use System;
 
+                // Prints: C3A4C3ABC384
                 System.print(Encode.toHex("äëÄ"));
-                // prints C3A4C3ABC384
+                // Prints: e4ebc4
                 System.print(Encode.toHex("äëÄ", true, "ISO-8859-1"));
-                // prints e4ebc4
             </code>
         </example>
     </examples>

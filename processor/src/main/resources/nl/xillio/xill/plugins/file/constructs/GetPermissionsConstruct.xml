@@ -9,29 +9,37 @@ permissions for the file. So __not__ the effective permissions (i.e. automatic i
         <example title="Usage">
             <header>Get the permissions</header>
             <code>
-                use System;
-                use File;
+                use System, File, Stream;
 
-                var permissions = File.getPermissions("file.txt");
+                // This creates a test file which we can work with.
+                var path = "TestFile.txt";
+                var testFile = File.openWrite(path);
+                Stream.write("test", testFile);
+
+                var permissions = File.getPermissions(path);
                 var json = System.toJSON(permissions, true);
                 System.print(json);
 
                 /* This will output:
                 {
-                    "groups": {
-                        "myGroupName": {
-                            "read": true,
-                            "write": false,
-                            "execute": false
-                        }
-                    },
-                    "user" : {
-                        "me": {
-                            "read": true,
-                            "write": true,
-                            "execute": false,
-                        }
-                    }
+                "groups" : {
+                "BUILTIN\\Administrators" : {
+                "read" : true,
+                "write" : true,
+                "execute" : true
+                },
+                "NT AUTHORITY\\SYSTEM" : {
+                "read" : true,
+                "write" : true,
+                "execute" : true
+                }
+                },
+                "users" : {
+                "USER" : {
+                "read" : true,
+                "write" : true,
+                "execute" : true
+                }
                 }
                 */
             </code>

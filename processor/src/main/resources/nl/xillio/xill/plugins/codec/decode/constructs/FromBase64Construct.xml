@@ -29,7 +29,7 @@ for the output string.
                 var base64 = "SGVsbG8gV29ybGQ=";
                 var text = Decode.fromBase64(base64);
 
-                // Prints Hello World
+                // Prints: Hello World
                 System.print(text);
             </code>
         </example>

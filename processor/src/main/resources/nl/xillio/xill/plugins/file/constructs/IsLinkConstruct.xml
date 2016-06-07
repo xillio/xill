@@ -7,15 +7,17 @@ Tests whether the file identified by uri is a symbolic link. The test returns `t
         <example title="Usage">
             <header>Determine if the specified uri is a link to another file or directory.</header>
             <code>
-                use File;
-                use System;
+                use File, System;
 
-                System.print(File.isLink("file.txt"));
-                // This will print: false
+                // We create a link which we can work with
+                System.exec( ["cmd.exe", "/C",
+                "mklink /D \"C:\\test\" \"C:\\Windows\"" ]);
+
+                System.print(File.isLink("C:/test"));
+                // This will print: true
 
                 System.print(File.isLink("C:\\Windows"));
                 // This will print: false
-
             </code>
         </example>
     </examples>

@@ -8,15 +8,15 @@ When using a relative uri, its starting point is the containing folder of the ro
 	</description>
     <examples>
         <example title="Usage">
-            <header>Get the size of a folder</header>
+            <header>Get the size of file</header>
             <code>
-                use File;
-                var size = File.getSize("C:/Users/Me");
-            </code>
-			<header>Get the size of a robot in the same folder</header>
-            <code>
-                use File;
-                var size = File.getSize("SiblingRobot.xill");
+                use File, System, Stream;
+
+                var path = "TestFile.txt";
+                var testFile = File.openWrite(path);
+                Stream.write("test", testFile);
+
+                System.print(File.getSize(path));
             </code>
         </example>
     </examples>

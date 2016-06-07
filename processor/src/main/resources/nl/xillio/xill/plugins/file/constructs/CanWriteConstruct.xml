@@ -8,10 +8,14 @@ Determines if the currently authenticated user has write access to the specified
         <example title="Usage">
             <header>Determine if an authenticated user has write access to the specified file/folder.</header>
             <code>
-                use File;
-                use System;
+                use File, System, Stream;
 
-                System.print(File.canWrite("file.txt"));
+                // This creates a test file which we can work with.
+                var path = "TestFile.txt";
+                var testFile = File.openWrite(path);
+                Stream.write("test", testFile);
+
+                System.print(File.canWrite(path));
                 // This will print: true
 
             </code>
