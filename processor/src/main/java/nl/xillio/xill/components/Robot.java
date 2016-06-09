@@ -64,7 +64,7 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
     public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
         if (hasRun) {
             // Cannot run a robot twice
-            throw new RobotRuntimeException("This robot can not run again.");
+            throw new RobotRuntimeException("This robot cannot run twice. It has to be re-initialized before running.");
         }
         getDebugger().robotStarted(this);
         startEvent.invoke(new RobotStartedAction(this));
