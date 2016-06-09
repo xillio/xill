@@ -21,9 +21,10 @@ public interface Robot extends InstructionSet {
     /**
      * Initializes the robot to be used as a library.
      *
+     * @param skipSelf set this to true to skip initializing self and only initialize children
      * @throws RobotRuntimeException when the library couldn't be initialized
      */
-    void initializeAsLibrary() throws RobotRuntimeException;
+    void initializeAsLibrary(boolean skipSelf) throws RobotRuntimeException;
 
     /**
      * Sets the argument for this robot. This is used by the callbot component of the language.
