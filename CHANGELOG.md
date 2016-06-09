@@ -1,6 +1,10 @@
 # Xill Core, Codec, Collection, Date, File, Math, Stream, String, System plugins - Change Log
 All notable changes to this project will be documented in this file
 
+## [3.3.21] - 09-06-2016
+### Fix
+- Sometimes included libraries do not initialize variables [CTC-1631]
+
 ## [3.3.20] - 07-06-2016
 ### Change
 - Split System.exec() output by line again [CTC-1466]
