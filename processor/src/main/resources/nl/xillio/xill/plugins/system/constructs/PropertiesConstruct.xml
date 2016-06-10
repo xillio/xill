@@ -8,11 +8,12 @@ When a property key is provided only that specific property will be fetched.
     <examples>
         <example title="Usage">
 			<code>
+                use System;
                 // Get all environmental variables
-                System.properties();
+                System.print(System.properties());
 
-                // Get the PATH envirionmental variable
-                System.properties("PATH");
+                // Get the PATH environmental variable
+                System.print(System.properties("PATH"));
             </code>
         </example>
     </examples>

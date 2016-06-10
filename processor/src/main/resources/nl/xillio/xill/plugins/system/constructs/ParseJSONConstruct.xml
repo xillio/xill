@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Parse a json string to an expression.
+Parse a json string to a Xill OBJECT Expression.
     </description>
     <examples>
         <example title="Usage">
             <code>
-                System.parseJSON("[1,2,3, { \"Title\": \"Hello Xillio\" }]");
+                use System;
+                var result = System.parseJSON("[1,2,3, { \"Title\": \"Hello Xillio\" }]");
                 System.print(result[3].Title);
 
                 // Prints: Hello Xillio

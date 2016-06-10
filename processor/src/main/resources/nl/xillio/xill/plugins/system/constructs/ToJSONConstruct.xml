@@ -9,13 +9,14 @@ To pretty print the JSON string set pretty to true
     <examples>
         <example title="Usage">
             <code>
+                use System;
                 System.toJSON([1,2,3, "Hello Xillio"]);
                 // Result: "[1,2,3,\"Hello Xillio\"]"
 
                 var list = [1];
                 list[] = list;
                 System.toJSON(list, true);
-                // Result: "[1,\"&lt;&lt;CIRCULAR REFERENCE&gt;&gt;\"]"
+                // This will throw a circular reference error.
             </code>
         </example>
     </examples>
