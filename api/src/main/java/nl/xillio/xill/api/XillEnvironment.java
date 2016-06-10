@@ -1,6 +1,7 @@
 package nl.xillio.xill.api;
 
 import com.google.inject.Injector;
+import nl.xillio.plugins.PluginLoadFailure;
 import nl.xillio.plugins.XillPlugin;
 
 import java.io.IOException;
@@ -86,4 +87,11 @@ public interface XillEnvironment {
      * @return all loaded plugins.
      */
     List<XillPlugin> getPlugins();
+
+    /**
+     * Gets a list of found plugins that could not be loaded due to licensing issues.
+     *
+     * @return all rejected plugins
+     */
+    List<PluginLoadFailure> getMissingLicensePlugins();
 }
