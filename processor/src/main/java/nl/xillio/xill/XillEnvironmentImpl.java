@@ -112,7 +112,7 @@ public class XillEnvironmentImpl implements XillEnvironment {
             Files.walkFileTree(folder, processor);
             for (Path jarFile : processor.getJarFiles()) {
                 URL url = jarFile.toUri().toURL();
-                URLClassLoader classLoader = new URLClassLoader(new URL[]{url});
+                URLClassLoader classLoader = new URLClassLoader(new URL[]{url}, XillPlugin.class.getClassLoader());
                 ServiceLoader<XillPlugin> serviceLoader = ServiceLoader.load(XillPlugin.class, classLoader);
                 loadPlugins(serviceLoader);
             }
