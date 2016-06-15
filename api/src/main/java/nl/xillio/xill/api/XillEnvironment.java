@@ -6,6 +6,7 @@ import nl.xillio.plugins.XillPlugin;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -93,5 +94,7 @@ public interface XillEnvironment {
      *
      * @return all rejected plugins
      */
-    List<PluginLoadFailure> getMissingLicensePlugins();
+    default List<PluginLoadFailure> getMissingLicensePlugins() {
+        return Collections.emptyList();
+    }
 }
