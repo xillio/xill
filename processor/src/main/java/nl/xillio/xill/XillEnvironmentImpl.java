@@ -4,6 +4,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import me.biesaart.utils.Log;
+import nl.xillio.plugins.PluginLoadFailure;
 import nl.xillio.plugins.XillPlugin;
 import nl.xillio.util.XillioHomeFolder;
 import nl.xillio.xill.api.Debugger;
@@ -11,6 +12,7 @@ import nl.xillio.xill.api.XillEnvironment;
 import nl.xillio.xill.api.XillProcessor;
 import nl.xillio.xill.debugging.XillDebugger;
 import nl.xillio.xill.services.inject.DefaultInjectorModule;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -32,6 +34,7 @@ public class XillEnvironmentImpl implements XillEnvironment {
     private final List<Path> folders = new ArrayList<>();
     private Injector rootInjector;
     private Map<String, XillPlugin> loadedPlugins = new HashMap<>();
+    private List<PluginLoadFailure> invalidPlugins = new ArrayList<>();
     private boolean needLoad = true;
 
     @Override
@@ -100,6 +103,11 @@ public class XillEnvironmentImpl implements XillEnvironment {
         return new ArrayList<>(loadedPlugins.values());
     }
 
+    @Override
+    public List<PluginLoadFailure> getMissingLicensePlugins() {
+        return Collections.unmodifiableList(invalidPlugins);
+    }
+
     private void loadClasspathPlugins() {
         loadPlugins(ServiceLoader.load(XillPlugin.class));
     }
@@ -112,7 +120,7 @@ public class XillEnvironmentImpl implements XillEnvironment {
             Files.walkFileTree(folder, processor);
             for (Path jarFile : processor.getJarFiles()) {
                 URL url = jarFile.toUri().toURL();
-                URLClassLoader classLoader = new URLClassLoader(new URL[]{url});
+                URLClassLoader classLoader = new URLClassLoader(new URL[]{url}, XillPlugin.class.getClassLoader());
                 ServiceLoader<XillPlugin> serviceLoader = ServiceLoader.load(XillPlugin.class, classLoader);
                 loadPlugins(serviceLoader);
             }
@@ -120,13 +128,20 @@ public class XillEnvironmentImpl implements XillEnvironment {
     }
 
     private void loadPlugins(ServiceLoader<XillPlugin> serviceLoader) {
-        for (XillPlugin plugin : serviceLoader) {
-            String name = plugin.getName();
-            if (!loadedPlugins.containsKey(name)) {
-                LOGGER.info("Found plugin {}", name);
-                loadedPlugins.put(name, plugin);
+        for (Iterator<XillPlugin> pluginIterator = serviceLoader.iterator(); pluginIterator.hasNext(); ) {
+            try {
+                XillPlugin plugin = pluginIterator.next();
+                String name = plugin.getName();
+                if (!loadedPlugins.containsKey(name)) {
+                    LOGGER.info("Found plugin {}", name);
+                    loadedPlugins.put(name, plugin);
+                }
+            } catch (ServiceConfigurationError error) {
+                LOGGER.warn("Can not load plugin", error);
+                invalidPlugins.add(PluginLoadFailure.parse(error.getCause().getMessage()));
             }
         }
+
     }
 
     private void assertFolderExists(Path path) throws IOException {
