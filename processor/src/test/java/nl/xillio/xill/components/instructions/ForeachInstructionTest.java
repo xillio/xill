@@ -200,6 +200,7 @@ public class ForeachInstructionTest extends TestUtils {
         verifyAll(key, Collections.singletonList(fromValue(0)), value, valueList, null);
     }
 
+    // Test if the key index increases when skipping an iteration
     @Test
     public void testIndexIncreases() {
         instructions.add(new ContinueInstruction());
