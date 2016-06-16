@@ -199,4 +199,11 @@ public class ForeachInstructionTest extends TestUtils {
         assertEquals(result.get(), toReturn);
         verifyAll(key, Collections.singletonList(fromValue(0)), value, valueList, null);
     }
+
+    @Test
+    public void testIndexIncreases() {
+        instructions.add(new ContinueInstruction());
+
+        testProcessList();
+    }
 }
