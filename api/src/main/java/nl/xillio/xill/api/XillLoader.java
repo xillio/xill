@@ -21,6 +21,18 @@ public class XillLoader {
      * @throws IOException if no environment could be found
      */
     public static XillEnvironment getEnv(Path coreFolder) throws IOException {
+        return getEnv(coreFolder, XillEnvironment.class.getClassLoader());
+    }
+
+    /**
+     * Loads a XillEnvironment from a specific folder with a specified classloader as a parent.
+     *
+     * @param coreFolder        the folder
+     * @param parentClassLoader the parent classloader
+     * @return the environment
+     * @throws IOException if no environment could be found
+     */
+    public static XillEnvironment getEnv(Path coreFolder, ClassLoader parentClassLoader) throws IOException {
         JarFinder finder = new JarFinder();
         Files.walkFileTree(coreFolder, finder);
 
@@ -28,7 +40,7 @@ public class XillLoader {
             if (jarFile.toString().contains("processor")) {
                 // This check if to improve performance. We only load from processor jars
                 URL url = jarFile.toUri().toURL();
-                URLClassLoader classLoader = new URLClassLoader(new URL[]{url});
+                URLClassLoader classLoader = new URLClassLoader(new URL[]{url}, parentClassLoader);
                 ServiceLoader<XillEnvironment> loader = ServiceLoader.load(XillEnvironment.class, classLoader);
 
                 for (XillEnvironment environment : loader) {
