@@ -1,7 +1,10 @@
 # Xill Core, Codec, Collection, Date, File, Math, Stream, String, System plugins - Change Log
 All notable changes to this project will be documented in this file
 
-## [3.3.24] - unreleased
+## [3.3.25] - unreleased
+
+
+## [3.3.24] - 16-06-2016
 ### Fix
 - Error when parsing java.sql.Date from jdbc plugin [CTC-1644]
 - Licensing of plugins [CTC-1518]
