@@ -183,7 +183,6 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
 
     @Override
     public void initializeAsLibrary(boolean skipSelf) throws RobotRuntimeException {
-        LOGGER.debug("Initializing {} as library", robotID);
         initialized = true;
         for (Robot robot : libraries) {
             if (!robot.initialized) {
@@ -206,7 +205,6 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
      * Close variables and functions in an initialized library
      */
     public void closeAsLibrary() {
-        LOGGER.debug("Closing {} as library", robotID);
         closed = true;
         for (Robot robot : libraries) {
             if (!robot.closed) {

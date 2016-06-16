@@ -12,6 +12,7 @@ import nl.xillio.xill.api.errors.RobotRuntimeException;
 import nl.xillio.xill.services.json.JsonException;
 import nl.xillio.xill.services.json.JsonParser;
 
+import java.time.Instant;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -601,7 +602,14 @@ public abstract class MetaExpression implements Expression, Processable {
         }
 
         if (root instanceof java.util.Date) {
-            Date date = injector.getInstance(DateFactory.class).from(((java.util.Date) root).toInstant());
+            java.util.Date inputDate = (java.util.Date) root;
+            /*
+              Here we use getTime because in the case of java.sql.Date the getInstant()
+              method throws an exception.
+             */
+            long time = inputDate.getTime();
+            Instant instant = Instant.ofEpochMilli(time);
+            Date date = injector.getInstance(DateFactory.class).from(instant);
             MetaExpression result = ExpressionBuilderHelper.fromValue(date.toString());
             result.storeMeta(date);
             return result;
