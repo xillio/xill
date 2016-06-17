@@ -30,6 +30,6 @@ public class IsFalseConstruct extends Construct {
 
         String containedMessage = message.isNull() ? "" : ": " + message.getStringValue();
 
-        throw new RobotRuntimeException("Assertion failed. Found [" + value + "] but expected a false expression" + containedMessage);
+        throw new RobotRuntimeException("Assertion failed. Found [" + value.getStringValue() + "] but expected a false expression" + containedMessage);
     }
 }

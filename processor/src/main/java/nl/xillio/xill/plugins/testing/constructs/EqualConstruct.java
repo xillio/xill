@@ -31,6 +31,6 @@ public class EqualConstruct extends Construct {
 
         String containedMessage = message.isNull() ? "" : ": " + message.getStringValue();
 
-        throw new RobotRuntimeException("Assertion failed. Found [" + actual + "] but expected [" + expected + "]" + containedMessage);
+        throw new RobotRuntimeException("Assertion failed. Found [" + actual.getStringValue() + "] but expected [" + expected.getStringValue() + "]" + containedMessage);
     }
 }

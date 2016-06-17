@@ -31,6 +31,6 @@ public class NotEqualConstruct extends Construct {
 
         String containedMessage = message.isNull() ? "" : ": " + message.getStringValue();
 
-        throw new RobotRuntimeException("Assertion failed. Found [" + actual + "] but not allowed" + containedMessage);
+        throw new RobotRuntimeException("Assertion failed. Found [" + actual.getStringValue() + "] but expected to be not equal" + containedMessage);
     }
 }

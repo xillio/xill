@@ -30,6 +30,6 @@ public class NotNullConstruct extends Construct {
 
         String containedMessage = message.isNull() ? "" : ": " + message.getStringValue();
 
-        throw new RobotRuntimeException("Assertion failed. Found [" + value + "] but expected not null" + containedMessage);
+        throw new RobotRuntimeException("Assertion failed. Expected a not null expression" + containedMessage);
     }
 }
