@@ -9,8 +9,8 @@ Returns true if the file or folder exists otherwise false
         <example title="Usage">
             <header>Create and verify a folder</header>
             <code>
-                use File;
-                use System;
+                use File, System;
+
                 var folder = File.createFolder("toBeDeleted");
                 if(!File.exists(folder)) {
                 System.print("The folder was not created...", "error");

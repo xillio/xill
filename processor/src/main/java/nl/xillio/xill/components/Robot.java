@@ -24,6 +24,9 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
     private MetaExpression callArgument;
 
     private List<Instruction> libraryProcessedInstructions = new ArrayList<>();
+    private boolean initialized = false;
+    private boolean closed = false;
+    private boolean hasRun = false;
 
     private static final Logger LOGGER = Log.get();
 
@@ -59,17 +62,18 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
      */
     @Override
     public InstructionFlow<MetaExpression> process(final Debugger debugger) throws RobotRuntimeException {
+        if (hasRun) {
+            // Cannot run a robot twice
+            throw new RobotRuntimeException("This robot cannot run twice. It has to be re-initialized before running.");
+        }
         getDebugger().robotStarted(this);
         startEvent.invoke(new RobotStartedAction(this));
 
-        // Initialize all libraries and their children
-        for (Robot robot : getReferencedLibraries()) {
-            // Skip initialization of the root robot in case of circular references
-            if (robot != this) {
-                robot.initializeAsLibrary();
-            }
-        }
 
+        // Initialize all libraries and their children
+        initializeAsLibrary(true);
+
+        hasRun = true;
         InstructionFlow<MetaExpression> result = super.process(debugger);
 
         endEvent.invoke(new RobotStoppedAction(this, compilerSerialId));
@@ -142,13 +146,7 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
         super.close();
 
         // Close all libraries and their children
-        for (Robot robot : getReferencedLibraries()) {
-            try {
-                robot.closeLibrary();
-            } catch (Exception e) {
-                LOGGER.error(e.getMessage(), e);
-            }
-        }
+        closeAsLibrary();
     }
 
     /**
@@ -184,11 +182,21 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
     }
 
     @Override
-    public void initializeAsLibrary() throws RobotRuntimeException {
-        for (nl.xillio.xill.components.instructions.Instruction instruction : getInstructions()) {
-            if ((instruction instanceof VariableDeclaration || instruction instanceof FunctionDeclaration) && !getDebugger().shouldStop()) {
-                instruction.process(getDebugger());
-                libraryProcessedInstructions.add(instruction);
+    public void initializeAsLibrary(boolean skipSelf) throws RobotRuntimeException {
+        initialized = true;
+        for (Robot robot : libraries) {
+            if (!robot.initialized) {
+                robot.initializeAsLibrary(false);
+            }
+        }
+        if (!skipSelf) {
+            for (nl.xillio.xill.components.instructions.Instruction instruction : getInstructions()) {
+                if (getDebugger().shouldStop()) {
+                    break;
+                } else if ((instruction instanceof VariableDeclaration || instruction instanceof FunctionDeclaration)) {
+                    instruction.process(getDebugger());
+                    libraryProcessedInstructions.add(instruction);
+                }
             }
         }
     }
@@ -196,37 +204,11 @@ public class Robot extends InstructionSet implements nl.xillio.xill.api.componen
     /**
      * Close variables and functions in an initialized library
      */
-    public void closeLibrary() {
-        for (Instruction instruction : libraryProcessedInstructions) {
-            try {
-                instruction.close();
-            } catch (Exception e) {
-                LOGGER.error("Could not close instruction in a library", e);
-            }
-        }
-    }
-
-    /**
-     * Construct a set of all robots referenced by this robot using Depth First Search.
-     *
-     * @return A set of all referenced robots
-     */
-    private Set<Robot> getReferencedLibraries() {
-        Set<Robot> referencedLibraries = new HashSet<>();
-        walkLibraries(referencedLibraries);
-        return referencedLibraries;
-    }
-
-    /**
-     * One step in a Depth First Search of included robots. Should only be called by {@link Robot#getReferencedLibraries()}.
-     *
-     * @param referencedLibraries The set to add libraries to
-     */
-    private void walkLibraries(Set<Robot> referencedLibraries) {
-        for (Robot library : libraries) {
-            // Don't continue down this branch if the library was already added
-            if (referencedLibraries.add(library)) {
-                library.walkLibraries(referencedLibraries);
+    public void closeAsLibrary() {
+        closed = true;
+        for (Robot robot : libraries) {
+            if (!robot.closed) {
+                robot.closeAsLibrary();
             }
         }
     }

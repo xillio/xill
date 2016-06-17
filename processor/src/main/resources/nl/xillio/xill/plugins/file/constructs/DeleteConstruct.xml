@@ -9,9 +9,11 @@ Returns the absolute path to the file or folder
         <example title="Usage">
             <header>Create and delete a folder:</header>
             <code>
-                use File;
+                use File, System;
                 var folder = File.createFolder("toBeDeleted");
                 File.delete(folder);
+                System.print(File.exists(folder));
+                // This should print false since we've just deleted the file.
             </code>
         </example>
     </examples>

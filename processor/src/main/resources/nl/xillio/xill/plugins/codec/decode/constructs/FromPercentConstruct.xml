@@ -9,9 +9,8 @@ Returns the URL-decoded (percent-decoded) version of an encoded string. Essentia
                 use System;
                 use Decode;
 
+                // This will print: Together, we spent $50.95
                 System.print(Decode.fromPercent("Together%2C%20we%20spent%20%2450.95"));
-
-                // Result: Together, we spent $50.95
             </code>
         </example>
     </examples>

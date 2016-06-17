@@ -7,12 +7,15 @@ Determines if the specified file/folder is hidden or not. The test returns `true
         <example title="Usage">
             <header>Determine if the specified file/folder is hidden or not.</header>
             <code>
-                use File;
-                use System;
+                use File, System, Stream;
 
-                System.print(File.isHidden("file.txt"));
-                // This will print: true
+                // We create a file that we can work with.
+                var path = "TestFile.txt";
+                var testFile = File.openWrite(path);
+                Stream.write("test", testFile);
 
+                System.print(File.isHidden(path));
+                // This will print: false
             </code>
         </example>
     </examples>

@@ -6,6 +6,8 @@ Escapes all special XML characters (,&gt;,&amp;,",') to their respective XML ent
   <examples>
     <example title="Usage">
         <code>
+            use Encode;
+
             var text = "&lt;p&gt;&lt;a href=\&quot;default.asp\&quot;&gt;HTML Tutorial&lt;/a&gt; This is a link to a page on this website.&lt;/p&gt;";
             Encode.escapeXML(text);
 

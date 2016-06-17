@@ -9,11 +9,16 @@ Returns an object containing the source destination [from] and the target destin
         <example title="Usage">
             <header>Copy a file</header>
             <code>
-                use System;
-                use File;
-                var result = File.copy("file.txt", "file_copy.txt");
+                use File, System, Stream;
 
-                // Prints {"from": "absolute/path/to/file.txt", "into": "absolute/path/to/file_copy.txt"}
+                // This creates a test file which we can run canExecute on.
+                var path = "TestFile.txt";
+                var testFile = File.openWrite(path);
+                Stream.write("test", testFile);
+
+                var result = File.copy(path, "file_copy.txt");
+
+                // Prints {"from": "absolute/path/to/TestFile.txt", "into": "absolute/path/to/file_copy.txt"}
                 System.print(result);
             </code>
         </example>
