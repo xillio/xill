@@ -10,18 +10,10 @@ If you print an atomic value it will print the string value.
         <example title="Usage">
             <header>Printing a message to the console</header>
             <code>
-                use System;
                 System.print("Hello Xillio!");
-            </code>
-            <header>Printing an object into the console</header>
-            <code>
-                use System;
-                var obj = { "name" : "obj_name"};
-                System.print(obj);
             </code>
             <header>Throwing an error</header>
             <code>
-                use System;
                 System.print("Pause me", "error");
             </code>
         </example>

@@ -20,6 +20,21 @@ The directory parameter is the working directory where you would like the comman
                 System.print(result);
             </code>
         </example>
+        <example title="Usage">
+            <header>
+            Copying a file in a specified working directory. In this specific example,
+            the working directory is specified by C:/tmp. The source file source.jpg is copied and
+            the name of the new file is target.jpg. The copy, i.e. target.jpg, is created in the
+            specified working directory, in this case C:/tmp.
+
+            Possible output: {"errors":"","output":"        1 file(s) copied.\r\n","runtime":40,"exitCode":0}.
+            </header>
+            <code>
+                use System;
+
+                System.exec(["cmd.exe", "/C", "copy source.jpg target.jpg"], "C:/tmp")
+            </code>
+        </example>
     </examples>
     <searchTags>
         run, program, cmd, terminal, execute

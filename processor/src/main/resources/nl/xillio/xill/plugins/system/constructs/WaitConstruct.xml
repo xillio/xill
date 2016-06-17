@@ -7,11 +7,7 @@ Pause the robot for a period of time in milliseconds.
         <example title="Usage">
             <header>Wait 1 second</header>
             <code>
-                use System;
-
-                System.print("Start Waiting:");
                 System.wait(1000);
-                System.print("Done waiting!");
             </code>
         </example>
     </examples>

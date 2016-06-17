@@ -6,15 +6,10 @@ Check the value of a type. It will evaluate to either ATOMIC, LIST or OBJECT
     <examples>
         <example title="Usage">
             <code>
-                use System;
-
-                System.print(System.typeOf( { "name" : "obj_name"}));
-                // Result: OBJECT
-
-                System.print(System.typeOf([1,2,3, "Hello Xillio"]));
+                System.TypeOf([1,2,3, "Hello Xillio"]);
                 // Result: LIST
 
-                System.print(System.typeOf(null));
+                System.TypeOf(null);
                 // Result: ATOMIC
             </code>
         </example>

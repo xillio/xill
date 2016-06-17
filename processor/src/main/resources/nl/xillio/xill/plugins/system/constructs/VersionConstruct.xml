@@ -3,18 +3,16 @@
     <description>
 Returns the current version of the language.  
 
-If a required version is provided it will throw an error when an older version is used, else it will return the current version.
+If a required version is provided it will throw an error when an older version is used.
     </description>
     <examples>
         <example title="Usage">
             <code>
-                use System;
+                System.version();
+                // Result: 3.0.0
 
-                System.print(System.version());
-                // Result: 3.*.*
-
-                System.print(System.version("1984.0.0"));
-                // Throws an error and outputs: Version 1984.0.0 is not supported in 3.*.*
+                System.version("3.1.0");
+                // Throws an error and outputs: Version 3.1.0 is not supported in 3.0.0
             </code>
         </example>
     </examples>
