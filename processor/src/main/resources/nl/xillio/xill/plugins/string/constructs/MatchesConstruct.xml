@@ -11,11 +11,15 @@ See the regular expressions page for more about regular expression support in Xi
     <examples>
         <example title="Usage">
             <code><![CDATA[
-                use String;
+                use System, String;
 
-              	String.matches("I need help!", ".*help.*");                         // TRUE
-    	        String.matches("I need help!", "help.*");                           // FALSE
-		        String.matches("<p>paragraph text</p>", "<p\\b[^>]*>(.*?)</p>");    // TRUE
+              	if (String.matches("I need help!", ".*help.*")) {
+              	    System.print("Someone is calling for help!");
+                }
+
+		        if (String.matches("<p>paragraph text</p>", "<p\\b[^>]*>(.*?)</p>")) {
+		            System.print("This text contains a paragraph.");
+		        }
           ]]></code>
         </example>
     </examples>

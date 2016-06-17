@@ -7,12 +7,12 @@ Returns -1 if the index could not be found.
     <examples>
         <example title="Usage">
             <code>
-                use String;
+                use System, String;
 
-                String.indexOf("maxTestTest", "Test");      // Result: 3
-                String.indexOf("maxTestTest", "Test", 3);   // Result: 3
-                String.indexOf("maxTestTest", "Test", 5);   // Result: 7
-                String.indexOf("maxTestTest", "foo");      // Result: -1
+                System.print(String.indexOf("maxTestTest", "Test"));    // Result: 3
+                System.print(String.indexOf("maxTestTest", "Test", 3)); // Result: 3
+                System.print(String.indexOf("maxTestTest", "Test", 5)); // Result: 7
+                System.print(String.indexOf("maxTestTest", "foo"));     // Result: -1
             </code>
         </example>
     </examples>

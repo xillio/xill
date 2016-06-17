@@ -12,12 +12,12 @@ By default empty entries are skipped, but you can set keepEmpty to true to also 
         <example title="Usage">
             <header>Splitting a string</header>
             <code>
-                use String;
+                use System, String;
 
-                String.split("a--b---c", "-");
+                System.print(String.split("a--b---c", "-"));
                 // Result: ["a", "b", "c"]
 
-                String.split("a--b---c", "-", true);
+                System.print(String.split("a--b---c", "-", true));
                 // Result: ["a", "", "b", "", "", "c"]
             </code>
         </example>

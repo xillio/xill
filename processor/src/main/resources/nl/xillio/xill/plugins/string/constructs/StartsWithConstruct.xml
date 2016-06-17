@@ -6,10 +6,11 @@ Returns a boolean indicating whether the string1 starts with string2.
     <examples>
         <example title="Usage">
             <code>
-                use String;
+                use System, String;
 
-                String.startsWith("testing", "ing"); // FALSE
-                String.startsWith("testing", "test"); // TRUE
+                if (String.startsWith("testing", "test")) {
+                    System.print("testing starts with test");
+                }
             </code>
         </example>
     </examples>

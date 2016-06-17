@@ -8,10 +8,10 @@ Else it joins the string content with the provided delimiter.
     <examples>
         <example title="Usage">
             <code>
-                use String;
+                use System, String;
 
-                String.join(["a", "b", "c"]);       // Result: abc
-                String.join(["a", "b", "c"], "_");  // Result: a_b_c
+                System.print(String.join(["a", "b", "c"]));      // Result: abc
+                System.print(String.join(["a", "b", "c"], "_")); // Result: a_b_c
             </code>
         </example>
     </examples>

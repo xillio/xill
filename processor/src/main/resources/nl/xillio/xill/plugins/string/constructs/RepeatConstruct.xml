@@ -6,9 +6,9 @@ Repeats a string.
     <examples>
         <example title="Usage">
             <code>
-                use String;
+                use System, String;
 
-                String.repeat("thisIsAString", 3);
+                System.print(String.repeat("thisIsAString", 3));
                 // Result: thisIsAStringthisIsAStringthisIsAString
             </code>
         </example>

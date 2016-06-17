@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Wraps a single line of text, identifying words by ' '.  
+Wraps a single line of text, identifying words by a whitespace.
 
 If wrapLongWords is true then words are split as well.  
 Leading spaces on a new line are stripped. Trailing spaces are not stripped.
@@ -9,10 +9,10 @@ Leading spaces on a new line are stripped. Trailing spaces are not stripped.
     <examples>
         <example description="Usage">
             <code>
-                use String;
+                use System, String;
 
                 var test = "Time is an illusion. Lunchtime doubly so.";
-                String.wrap(test, 10, false);
+                System.print(String.wrap(test, 10, false));
                 /*
                     Outputs:
 

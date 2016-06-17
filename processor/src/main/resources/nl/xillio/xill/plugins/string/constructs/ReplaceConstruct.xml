@@ -17,12 +17,12 @@ See the regular expressions page for more about regular expression support in Xi
     <examples>
         <example title="Usage">
             <code>
-                use String;
+                use System, String;
 
-                String.replace("The quick brown fox.", "fox", "dog");
+                System.print(String.replace("The quick brown fox.", "fox", "dog"));
                 // Result: The quick brown dog.
 
-                String.replace("The quick brown fox, The quick brown fox.", "fox", "dog");
+                System.print(String.replace("The quick brown fox, The quick brown fox.", "fox", "dog"));
                 // Result: The quick brown dog, the quick brown dog.
             </code>
         </example>

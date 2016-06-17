@@ -6,9 +6,9 @@ Returns the string uppercased.
     <examples>
         <example title="Usage">
             <code>
-                use String;
+                use System, String;
 
-                String.toUpper("LoWer");
+                System.print(String.toUpper("LoWer"));
                 // Result: LOWER
             </code>
         </example>

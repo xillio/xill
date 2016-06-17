@@ -6,10 +6,11 @@ Returns a boolean indicating whether the string1 ends with string2.
     <examples>
         <example title="Usage">
             <code>
-                use String;
+                use System, String;
 
-                String.endsWith("testing", "ing"); // TRUE
-                String.endsWith("testing", "test"); // FALSE
+                if (String.endsWith("testing", "ing")) {
+                    System.print("testing ends with ing");
+                }
             </code>
         </example>
     </examples>

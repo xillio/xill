@@ -6,10 +6,11 @@ Returns a boolean whether the string haystack contains the element needle.
     <examples>
         <example title="String Usage">
             <code>
-                use String;
+                use System, String;
 
-                String.contains("testing", "ing"); // TRUE
-                String.contains("foo", "bar"); // FALSE
+                if (String.contains("testing", "tes")) {
+                    System.print("testing contains tes");
+                }
             </code>
         </example>
     </examples>

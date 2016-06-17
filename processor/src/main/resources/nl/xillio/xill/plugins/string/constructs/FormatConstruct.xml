@@ -25,14 +25,14 @@ Format specifiers begin with a percent sign (%) and end with a converter. The co
         </example>
         <example title="Usage">
             <code>
-                use String;
+                use System, String;
 
-                String.format("%3$2s %1$2s %1$2s %2$2s" , ["a", "b", "c"] );
+                System.print(String.format("%3$2s %1$2s %1$2s %2$2s", ["a", "b", "c"]));
                 // Result: c a a b
 
                 var v = 0.1234567891;
-                String.format("value = %+10.4f or value = %010.7f or value = %-8.1f or value= %+.3f" , [v, v , v, -v]);
-                // Result: "value = +0.1235 or value = 00.1234568 or value = 0.1 value = -0.123'
+                System.print(String.format("value = %+10.4f or value = %010.7f or value = %-8.1f or value= %+.3f", [v, v, v, -v]));
+                // Result: value = +0.1235 or value = 00.1234568 or value = 0.1 value = -0.123
             </code>
         </example>
     </examples>

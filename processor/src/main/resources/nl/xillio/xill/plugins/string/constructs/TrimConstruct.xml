@@ -9,12 +9,12 @@ tabs, non-breakable spaces and line feeds - inside the string with a single spac
     <examples>
         <example title="Usage">
             <code>
-                use String;
+                use System, String;
 
-                String.trim(" Xillio   ");
+                System.print(String.trim(" Xillio   "));
                 // Result: "Xillio"
 
-                String.trim(" Xillio     Xillio  ", true);
+                System.print(String.trim(" Xillio     Xillio  ", true));
                 // Result: "Xillio Xillio"
             </code>
         </example>

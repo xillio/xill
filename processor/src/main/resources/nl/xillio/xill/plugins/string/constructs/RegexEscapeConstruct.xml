@@ -6,8 +6,7 @@ Escape a string so it can be used as a literal within a regex.
     <examples>
         <example title="Usage">
             <code>
-                use String;
-                use System;
+                use System, String;
 
                 // Search string, could be from a source that can contain regex special characters
                 var search = "\\d";

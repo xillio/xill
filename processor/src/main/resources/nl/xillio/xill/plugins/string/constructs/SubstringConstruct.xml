@@ -9,13 +9,11 @@ Optionally end can be left out or set to 0, which means the returned string will
     <examples>
         <example title="Usage">
             <code>
-                use String;
+                use System, String;
 
-                String.substring("Welcome to our site!", 0, 7);
-                // Result: Welcome
-
-                String.substring("Welcome to our site!", 0);
-                // Result: Welcome to our site!
+                var firstTen = String.substring("Welcome to our site!", 0, 10);
+                // This will print: The first 10 characters are Welcome to
+                System.print("The first 10 characters are " :: firstTen);
             </code>
         </example>
     </examples>

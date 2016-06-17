@@ -15,10 +15,10 @@ See the regular expressions page for more about regular expression support in Xi
     <examples>
         <example title="Usage">
             <code>
-                use String;
+                use System, String;
 
                 var url = "http://www.xillio.com/wp-content/uploads/screenshot-ns-website.png";
-                String.regex(url, "http.*/(.*?)\\.(.*?)");
+                System.print(String.regex(url, "http.*/(.*?)\\.(.*?)"));
 
                 /*
                 Outputs:

@@ -11,11 +11,11 @@ See the regular expressions page for more about regular expression support in Xi
     <examples>
         <example title="Usage">
             <code>
-                use String;
+                use System, String;
 
                 var s = "abc def ghi jkl. Mno";
-                String.allMatches(s, "\\w+");
-                // Result: ["abc", "def", "ghi", "jkl", "Mno" ]
+                System.print(String.allMatches(s, "\\w+"));
+                // Result: ["abc", "def", "ghi", "jkl", "Mno"]
             </code>
         </example>
     </examples>

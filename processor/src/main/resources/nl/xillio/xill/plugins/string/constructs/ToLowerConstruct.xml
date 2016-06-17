@@ -6,9 +6,9 @@ Returns the string lowercased.
     <examples>
         <example title="Usage">
             <code>
-                use String;
+                use System, String;
 
-                String.toLower("HiGher");
+                System.print(String.toLower("HiGhER"));
                 // Result: higher
             </code>
         </example>
