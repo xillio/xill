@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Returns the trimmed version of the string.  
+Returns the trimmed version of `string`.
 
-If the optional boolean parameter `internal` is set to `true`, the routine will also replace slack white spaces - including
-tabs, non-breakable spaces and line feeds - inside the string with a single space.
+If the optional boolean parameter `internal` is set to `true`, `String.trim()` will also replace slack white spaces - including tabs, non-breakable spaces and line feeds - inside `string` with a single space.
     </description>
     <examples>
         <example title="Usage">
             <code>
-                String.trim(" Xillio   Xillio  Xillio   Xillio
-                Xillio ");
-                // Result: Xillio   Xillio  Xillio   Xillio
-                //         Xillio
+                use System, String;
 
-                String.trim(" Xillio   Xillio  Xillio   Xillio
-                Xillio ", true);
-                // Result: Xillio Xillio Xillio Xillio Xillio
+                System.print(String.trim(" Xillio   "));
+                // Result: "Xillio"
+
+                System.print(String.trim(" Xillio     Xillio  ", true));
+                // Result: "Xillio Xillio"
             </code>
         </example>
     </examples>

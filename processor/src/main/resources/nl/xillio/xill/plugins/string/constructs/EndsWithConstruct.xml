@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Returns a boolean whether the string1 ends with string2.
+Returns `true` if `string1` ends with `string2` or `false` if it does not.
     </description>
     <examples>
         <example title="Usage">
             <code>
-                String.endsWith("testing", "ing"); // TRUE
-                String.endsWith("testing", "test"); // FALSE
+                use System, String;
+
+                if (String.endsWith("testing", "ing")) {
+                    System.print("testing ends with ing");
+                }
             </code>
         </example>
     </examples>

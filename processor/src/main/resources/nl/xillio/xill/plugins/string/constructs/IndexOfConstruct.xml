@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Returns an integer higher or equal to startPos of the index of string2 in string1.  
+Returns the index at which `string2` occurs in `string1`. The search starts at index `startPos`.
 
-startPos defaults to 0.  
+`startPos` defaults to 0.
 Returns -1 if the index could not be found.
     </description>
     <examples>
-        <example description="Executing:">
-            String.indexOf("maxTestTest", "Test");      // Result: 3
-            String.indexOf("maxTestTest", "Test", 3);   // Result: 3
-            String.indexOf("maxTestTest", "Test", 5);   // Result: 7
-            String.indexOf("maxTestTest", "test");      // Result: -1
+        <example title="Usage">
+            <code>
+                use System, String;
+
+                System.print(String.indexOf("maxTestTest", "Test"));    // Result: 3
+                System.print(String.indexOf("maxTestTest", "Test", 3)); // Result: 3
+                System.print(String.indexOf("maxTestTest", "Test", 5)); // Result: 7
+                System.print(String.indexOf("maxTestTest", "foo"));     // Result: -1
+            </code>
         </example>
     </examples>
 </function>

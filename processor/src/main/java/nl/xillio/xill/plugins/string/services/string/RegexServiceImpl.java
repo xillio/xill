@@ -31,7 +31,9 @@ public class RegexServiceImpl implements RegexService {
      */
     public RegexServiceImpl() {
         cachedTimer = new CachedTimer();
-        new Thread(cachedTimer).start();
+        Thread thread = new Thread(cachedTimer);
+        thread.setDaemon(true);
+        thread.start();
     }
 
 

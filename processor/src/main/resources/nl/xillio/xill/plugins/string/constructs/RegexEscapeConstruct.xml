@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Escape a string so it can be used as a literal within a regex.
+Escape `string` so it can be used as a literal within a regex.
     </description>
     <examples>
         <example title="Usage">
             <code>
-                use String;
-                use System;
+                use System, String;
 
                 // Search string, could be from a source that can contain regex special characters
                 var search = "\\d";
@@ -19,14 +18,8 @@ Escape a string so it can be used as a literal within a regex.
                 var escaped = String.regexEscape(search);
                 var result = String.allMatches(text, escaped);
 
+                // This prints: ["\\d"]
                 System.print(result);
-
-            </code>
-            <header>
-                Expected output
-            </header>
-            <code>
-                ["\\d"]
             </code>
         </example>
     </examples>
