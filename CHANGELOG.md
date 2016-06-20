@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file
 ### Fix
 - `File.isFile()` incorrectly implemented (returns the same as `File.isReadable()`) [CTC-1622]
 - `continue` does not advance index [CTC-1639]
+- nl.xillio.xill.plugins.string.services.string.RegexServiceImpl prevents clean shutdown of xill engine [CTC-1657]
 
 ## [3.3.24] - 16-06-2016
 ### Fix
