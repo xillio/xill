@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-The first parameter, text, is a format string specifying how the objects in the second parameter, values, are to be formatted.   
-The format string contains plain text as well as format specifiers, which are special characters that format the arguments of values.  
-values accepts a single parameter. The format string expects parameters supplied as a list surrounded by "[]".  
+`text` is a format string specifying how the elements of the LIST `values`, are to be formatted.
+`text` contains plain text as well as format specifiers, which are special characters that format the arguments of values.
 Format specifiers begin with a percent sign (%) and end with a converter. The converter is a character indicating the type of argument to be formatted. In between the percent sign (%) and the converter you can have optional flags and specifiers.
     </description>
     <examples>

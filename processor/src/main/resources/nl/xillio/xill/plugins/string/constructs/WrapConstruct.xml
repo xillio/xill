@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Wraps a single line of text, identifying words by a whitespace.
+Wraps `text`, identifying words by a space character (" ").
 
-If wrapLongWords is true then words are split as well.  
+If `wrapLongWords` is `true`, then words are split as well.
+`width` specifies the number of characters after which the line is wrapped.
 Leading spaces on a new line are stripped. Trailing spaces are not stripped.
     </description>
     <examples>

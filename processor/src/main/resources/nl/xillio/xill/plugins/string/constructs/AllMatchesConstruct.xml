@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Returns a list with all substrings matching regex.  
+Returns a list with all substrings matching `regex`.
 
 Optionally a timeout can be provided in seconds, the default value is 5 seconds.
 Set timeout to zero to let the function run without timeout.

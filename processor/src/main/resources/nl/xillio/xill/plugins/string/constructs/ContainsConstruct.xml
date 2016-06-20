@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Returns a boolean whether the string haystack contains the element needle.
+Returns `true` if `haystack` contains `needle` or `false` if it does not.
     </description>
     <examples>
         <example title="String Usage">
