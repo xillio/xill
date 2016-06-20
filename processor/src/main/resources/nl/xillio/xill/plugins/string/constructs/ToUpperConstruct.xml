@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Returns the string uppercased.
+Returns `string` uppercased.
     </description>
     <examples>
         <example title="Usage">
             <code>
-                String.toUpper("LoWer");
+                use System, String;
+
+                System.print(String.toUpper("LoWer"));
                 // Result: LOWER
             </code>
         </example>

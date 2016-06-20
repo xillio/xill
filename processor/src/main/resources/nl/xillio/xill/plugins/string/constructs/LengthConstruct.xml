@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Returns the length of a string.
+Returns the length of `string` in characters.
     </description>
     <examples>
         <example title="Usage">
-            String.length("four"); // Result: 4
+            <code>
+                use System, String;
+
+                var length = String.length("four");
+                // This will print: four has 4 letters.
+                System.print("four has " :: length :: " letters.");
+            </code>
         </example>
     </examples>
     <searchTags>
-        size
+        size, length
     </searchTags>
 </function>

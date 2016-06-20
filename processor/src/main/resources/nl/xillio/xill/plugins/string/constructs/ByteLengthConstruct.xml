@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Returns the amount of bytes in a string.
+Returns the number of bytes in `string`.
     </description>
     <examples>
         <example title="Usage">
-            <header>Get the byte length. This prints: "foo" contains 3 bytes.</header>
+            <header>Get the byte length.</header>
             <code>
                 use System, String;
 
                 var byteLength = String.byteLength("foo");
+                // This prints: "foo" contains 3 bytes.
                 System.print("\"foo\" contains " :: byteLength :: " bytes.");
             </code>
-            <header>Get the byte length with a different encoding. This prints: "foo" in UTF-16 contains 8 bytes.</header>
+            <header>Get the byte length with a different encoding.</header>
             <code>
                 use System, String;
 
                 var byteLength = String.byteLength("foo", "UTF-16");
+                // This prints: "foo" in UTF-16 contains 8 bytes.
                 System.print("\"foo\" in UTF-16 contains " :: byteLength :: " bytes.");
             </code>
         </example>
