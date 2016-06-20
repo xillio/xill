@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Splits the string value into a list of strings based on the provided delimiter, and returns that list.
+Splits `string` into a LIST of strings, based on the provided `delimiter`.
 
-The delimiter is interpreted as a Java regular expression, but since all backslash characters will be interpreted as
-an escape character for the next one by Xill all backslashes you want to be evaluated by the regex have to be doubled.
-This means that "\\\\\\\\" would denote a single literal backslash "\", and "\\\\\*" would denote a literal asterisk "\*".
-By default empty entries are skipped, but you can set keepEmpty to true to also add empty entries to the resulting list.
+`delimiter` is interpreted as a Java Regular expression. Since all backslash "\" characters will be interpreted (by the Xill IDE) as an escape character, all forward slashes you want to be evaluated by the regex have to be doubled.
+This means that "\\" would denote a single literal backslash "\" and "\*" would denote a literal asterisk "*".
+
+Empty entries are skipped by default. You can optionally set `keepempty` to `true` to also add empty entries to the resulting list.
+Read more about Java regular expressions here:
     </description>
     <examples>
         <example title="Usage">

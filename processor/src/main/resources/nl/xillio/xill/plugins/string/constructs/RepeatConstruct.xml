@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Repeats a string.
+Repeats `string` for `count` times and concatenates the result.
     </description>
     <examples>
         <example title="Usage">

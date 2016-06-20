@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Returns a boolean indicating whether the string1 starts with string2.
+Returns `true` if the `string` starts with `prefix`, or `false` if it does not.
     </description>
     <examples>
         <example title="Usage">

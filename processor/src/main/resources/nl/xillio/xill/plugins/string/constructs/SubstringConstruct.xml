@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Returns the substring of string text between integer positions start and position end.
+Returns the substring of `string` between integer positions `start` and `end`.
 
-The first character in the string is numbered 0. The last character returned by substring is the character before position end.
-Optionally end can be left out or set to 0, which means the returned string will end at the last position of text.
+The first character in `string` is numbered 0. The last character returned by substring is the character before position `end`.
+Optionally `end` can be left out or set to 0, which means the returned string will end at the last position.
     </description>
     <examples>
         <example title="Usage">

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Escape a string so it can be used as a literal within a regex.
+Escape `string` so it can be used as a literal within a regex.
     </description>
     <examples>
         <example title="Usage">

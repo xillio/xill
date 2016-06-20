@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Returns a floating point number between 0 (no likeness) and 1 (identical), indicating how similar the source and target strings are.  
+Returns a floating point number between 0 (no likeness) and 1 (identical), indicating how similar the `source` and `target` are.
 
 This routine uses the Damereau Levenshtein distance to calculate the similarity.
-If the optional boolean argument relative is set to false, then the absolute distance will be returned rather than a relative distance.
+If `relative` is set to `false`, then the absolute distance will be returned rather than a relative distance.
     </description>
     <examples>
         <example title="Usage">
