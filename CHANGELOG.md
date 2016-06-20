@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file
 ## [3.3.25] - unreleased
 ### Fix
 - `File.isFile()` incorrectly implemented (returns the same as `File.isReadable()`) [CTC-1622]
+- `continue` does not advance index [CTC-1639]
 
 ## [3.3.24] - 16-06-2016
 ### Fix
