@@ -14,6 +14,6 @@ public class IsFileConstruct extends AbstractFlagConstruct {
 
     @Override
     protected Boolean process(Path path) throws IOException {
-        return Files.isReadable(path);
+        return Files.isRegularFile(path);
     }
 }

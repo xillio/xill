@@ -132,16 +132,17 @@ public class ForeachInstruction extends CompoundInstruction {
 
             InstructionFlow<MetaExpression> instructionResult = processIteration(() -> key, value, debugger);
 
-            // Check if the instruction skips, returns or breaks.
+            // If the instruction returns or breaks, set the result and break out of the loop.
             if (instructionResult.returns()) {
                 result = instructionResult;
                 break;
             } else if (instructionResult.breaks()) {
                 result = InstructionFlow.doResume();
                 break;
-            } else if (!instructionResult.skips()) {
-                index++;
             }
+
+            // Increase the index.
+            index++;
         }
 
         return result;
