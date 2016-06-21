@@ -1,6 +1,10 @@
 # Xill Core, Codec, Collection, Date, File, Math, Stream, String, System plugins - Change Log
 All notable changes to this project will be documented in this file
 
+## [3.4.0] - unreleased
+### Fix
+- Assert construct(s) may not escape strings properly [CTC-1627]
+
 ## [3.3.25] - 20-06-2016
 ### Fix
 - `File.isFile()` incorrectly implemented (returns the same as `File.isReadable()`) [CTC-1622]

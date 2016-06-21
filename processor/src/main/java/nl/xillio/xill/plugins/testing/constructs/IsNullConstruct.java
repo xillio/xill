@@ -30,6 +30,6 @@ public class IsNullConstruct extends Construct {
 
         String containedMessage = message.isNull() ? "" : ": " + message.getStringValue();
 
-        throw new RobotRuntimeException("Assertion failed. Found [" + value + "] but expected null" + containedMessage);
+        throw new RobotRuntimeException("Assertion failed. Found [" + value.getStringValue() + "] but expected null" + containedMessage);
     }
 }
