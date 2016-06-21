@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Returns the string lowercased.
+Returns `string` lowercased.
     </description>
     <examples>
         <example title="Usage">
             <code>
-                String.toLower("HiGher");
+                use System, String;
+
+                System.print(String.toLower("HiGhER"));
                 // Result: higher
             </code>
         </example>

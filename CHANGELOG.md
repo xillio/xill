@@ -1,8 +1,11 @@
 # Xill Core, Codec, Collection, Date, File, Math, Stream, String, System plugins - Change Log
 All notable changes to this project will be documented in this file
 
-## [3.3.25] - unreleased
-
+## [3.3.25] - 20-06-2016
+### Fix
+- `File.isFile()` incorrectly implemented (returns the same as `File.isReadable()`) [CTC-1622]
+- `continue` does not advance index [CTC-1639]
+- nl.xillio.xill.plugins.string.services.string.RegexServiceImpl prevents clean shutdown of xill engine [CTC-1657]
 
 ## [3.3.24] - 16-06-2016
 ### Fix

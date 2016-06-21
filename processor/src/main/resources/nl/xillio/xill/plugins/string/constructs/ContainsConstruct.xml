@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Returns a boolean whether the string haystack contains the element needle.
+Returns `true` if `haystack` contains `needle` or `false` if it does not.
     </description>
     <examples>
         <example title="String Usage">
             <code>
-                String.contains("testing", "ing"); // TRUE
-                String.contains("TESTING", "ing"); // FALSE
+                use System, String;
+
+                if (String.contains("testing", "tes")) {
+                    System.print("testing contains tes");
+                }
             </code>
         </example>
     </examples>

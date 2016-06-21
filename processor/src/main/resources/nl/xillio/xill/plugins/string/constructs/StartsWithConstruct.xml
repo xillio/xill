@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <function>
     <description>
-Returns a boolean whether the string1 starts with string2.
+Returns `true` if the `string` starts with `prefix`, or `false` if it does not.
     </description>
     <examples>
         <example title="Usage">
             <code>
-                String.startsWith("testing", "ing"); // FALSE
-                String.startsWith("testing", "test"); // TRUE
+                use System, String;
+
+                if (String.startsWith("testing", "test")) {
+                    System.print("testing starts with test");
+                }
             </code>
         </example>
     </examples>
