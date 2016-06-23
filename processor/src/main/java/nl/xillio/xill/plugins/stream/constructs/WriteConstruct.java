@@ -10,7 +10,6 @@ import nl.xillio.xill.api.errors.OperationFailedException;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
-import java.nio.charset.Charset;
 
 import static nl.xillio.xill.plugins.stream.utils.StreamUtils.getInputStream;
 import static nl.xillio.xill.plugins.stream.utils.StreamUtils.getOutputStream;
@@ -76,7 +75,10 @@ class WriteConstruct extends Construct {
                         new InputStreamReader(inputStream) : new InputStreamReader(inputStream, inputCharset);
                 OutputStreamWriter outputStreamWriter = outputCharset==null ?
                         new OutputStreamWriter(outputStream) : new OutputStreamWriter(outputStream, outputCharset);
-                return IOUtils.copyLarge(inputStreamReader, outputStreamWriter, 0, limit);
+                long bytesRead = IOUtils.copyLarge(inputStreamReader, outputStreamWriter, 0, limit);
+                // We should not close the OutputStreamWriter as this will close the underlying stream, which can be reused
+                outputStreamWriter.flush();
+                return bytesRead;
             }
         } catch (IOException e) {
             throw new OperationFailedException("write to stream", e.getMessage(), e);
