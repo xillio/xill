@@ -32,8 +32,8 @@ public class WriteConstructTest extends TestUtils {
         IOStream ioStream = new SimpleIOStream(inputStream, outputStream, "UnitTest");
         MetaExpression input = fromValue(ioStream);
 
-        MetaExpression result = ConstructProcessor.process(
-                construct.prepareProcess(context(construct)),
+        MetaExpression result = process(
+                construct,
                 input,
                 input
         );
@@ -53,8 +53,8 @@ public class WriteConstructTest extends TestUtils {
         IOStream ioStream = new SimpleIOStream(inputStream, outputStream, "UnitTest");
         MetaExpression input = fromValue(ioStream);
 
-        MetaExpression result = ConstructProcessor.process(
-                construct.prepareProcess(context(construct)),
+        MetaExpression result = process(
+                construct,
                 input,
                 input,
                 fromValue(limit)
@@ -74,8 +74,8 @@ public class WriteConstructTest extends TestUtils {
         IOStream ioStream = new SimpleIOStream(inputStream, outputStream, "UnitTest");
         MetaExpression input = fromValue(ioStream);
 
-        ConstructProcessor.process(
-                construct.prepareProcess(context(construct)),
+        process(
+                construct,
                 input,
                 input
         );
@@ -90,8 +90,8 @@ public class WriteConstructTest extends TestUtils {
         MetaExpression input = fromValue(inputText);
         MetaExpression output = fromValue(ioStream);
 
-        MetaExpression result = ConstructProcessor.process(
-                construct.prepareProcess(context(construct)),
+        MetaExpression result = process(
+                construct,
                 input,
                 output
         );
@@ -103,8 +103,8 @@ public class WriteConstructTest extends TestUtils {
     @Test(expectedExceptions = RobotRuntimeException.class, expectedExceptionsMessageRegExp = ".*number.*")
     public void testLimitIsNaN() {
 
-        ConstructProcessor.process(
-                construct.prepareProcess(context(construct)),
+        process(
+                construct,
                 NULL,
                 NULL,
                 fromValue("Hello World")

@@ -49,8 +49,8 @@ class WriteConstruct extends Construct {
         OutputStream outputStream = getOutputStream(target, "target");
 
         // Ignore input encoding if the input is a string (not a stream)
-        String inputCharsetName = source.getBinaryValue().hasInputStream() ? inputCharset.getStringValue() : null;
-        String outputCharsetName = outputCharset.getStringValue();
+        String inputCharsetName = !source.getBinaryValue().hasInputStream() || inputCharset.isNull() ? null : inputCharset.getStringValue();
+        String outputCharsetName = outputCharset.isNull() ? null : outputCharset.getStringValue();
 
         long dataCount = write(inputStream, outputStream, outputCharsetName, inputCharsetName,
                 limit.getNumberValue().longValue());
