@@ -1,0 +1,4 @@
+use Assert, File;
+
+File.createFolder("testFolder");
+Assert.equal(File.exists("testFolder"), true);

@@ -1,0 +1,12 @@
+use Assert, File, Stream;
+
+File.createFolder("testFolder");
+Assert.equal(File.exists("testFolder"), true);
+File.delete("testFolder");
+Assert.equal(File.exists("testFolder"), false);
+
+var s = File.openWrite("test.txt");
+Stream.write("test", s);
+Assert.equal(File.exists("test.txt"), true);
+File.delete("test.txt");
+Assert.equal(File.exists("test.txt"), false);

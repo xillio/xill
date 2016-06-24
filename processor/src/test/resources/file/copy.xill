@@ -1,0 +1,11 @@
+use Assert, Stream, File;
+
+var s = File.openWrite("test.txt");
+Stream.write("This is a test." , s);
+File.copy("test.txt", "test2.txt");
+
+Assert.equal(File.exists("test2.txt"), true);
+Assert.equal(File.isFile("test2.txt"), true);
+Assert.equal(File.getText("test2.txt"), "This is a test.");
+
+

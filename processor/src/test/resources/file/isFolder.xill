@@ -1,0 +1,10 @@
+use Assert, Stream, File;
+
+var s = File.openWrite("test2.txt");
+Stream.write("test", s);
+File.createFolder("test");
+
+Assert.equal(File.isFolder("test2.txt"), false);
+Assert.equal(File.isFolder("test"), true);
+Assert.equal(File.isFolder(""), true);
+Assert.equal(File.isFolder("../"), true);
