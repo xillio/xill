@@ -33,7 +33,7 @@ public class RegexConstruct extends Construct {
     /**
      * The default timeout for regular expressions.
      */
-    public final static int REGEX_TIMEOUT = 5000;
+    public static final int REGEX_TIMEOUT = 5000;
 
     /**
      * Create a new {@link RegexConstruct} and start the regexTimer {@link Thread}
