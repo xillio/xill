@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file
 ## [3.4.0] - unreleased
 ### Fix
 - Assert construct(s) may not escape strings properly [CTC-1627]
+- RegexServiceImpl.getMatcher uses incorrect timeout [CoreCTC-1629
+]
 
 ## [3.3.25] - 20-06-2016
 ### Fix
