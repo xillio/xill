@@ -21,6 +21,7 @@ import static org.mockito.Mockito.*;
  * Test the {@link AllMatchesConstruct}.
  */
 public class AllMatchesConstructTest extends ExpressionBuilderHelper {
+    private int timeoutValue = 10000;
 
     /**
      * Test the process method under normal circumstances.
@@ -40,7 +41,6 @@ public class AllMatchesConstructTest extends ExpressionBuilderHelper {
         MetaExpression regex = mock(MetaExpression.class);
         when(regex.getStringValue()).thenReturn(regexValue);
 
-        int timeoutValue = 10;
         MetaExpression timeout = mock(MetaExpression.class);
         when(timeout.getNumberValue()).thenReturn(timeoutValue);
 
@@ -54,7 +54,7 @@ public class AllMatchesConstructTest extends ExpressionBuilderHelper {
 
         // Verify
         verify(regexService, times(1)).tryMatch(any());
-        verify(regexService, times(1)).getMatcher(regexValue, text, timeoutValue * 1000);
+        verify(regexService, times(1)).getMatcher(regexValue, text, timeoutValue);
 
         // Assert
         Assert.assertEquals(result.getType(), LIST);
@@ -79,19 +79,18 @@ public class AllMatchesConstructTest extends ExpressionBuilderHelper {
         MetaExpression regex = mock(MetaExpression.class);
         when(regex.getStringValue()).thenReturn(regexValue);
 
-        int timeoutValue = 10;
         MetaExpression timeout = mock(MetaExpression.class);
         when(timeout.getNumberValue()).thenReturn(timeoutValue);
 
         RegexService regexService = mock(RegexService.class);
         Arrays.asList("abc", "def", "ghi", "jkl", "Mno");
-        when(regexService.getMatcher(regexValue, text, timeoutValue * 1000)).thenThrow(new PatternSyntaxException(regexValue, text, timeoutValue * 1000));
+        when(regexService.getMatcher(regexValue, text, timeoutValue)).thenThrow(new PatternSyntaxException(regexValue, text, timeoutValue));
 
         AllMatchesConstruct.process(value, regex, timeout, regexService);
 
         // Verify
         verify(regexService, times(0)).tryMatch(any());
-        verify(regexService, times(1)).getMatcher(regexValue, text, timeoutValue * 1000);
+        verify(regexService, times(1)).getMatcher(regexValue, text, timeoutValue);
     }
 
     /**
@@ -111,19 +110,18 @@ public class AllMatchesConstructTest extends ExpressionBuilderHelper {
         String regexValue = "\\w+";
         MetaExpression regex = mock(MetaExpression.class);
         when(regex.getStringValue()).thenReturn(regexValue);
-
-        int timeoutValue = 10;
+        
         MetaExpression timeout = mock(MetaExpression.class);
         when(timeout.getNumberValue()).thenReturn(timeoutValue);
 
         RegexService regexService = mock(RegexService.class);
         Arrays.asList("abc", "def", "ghi", "jkl", "Mno");
-        when(regexService.getMatcher(regexValue, text, timeoutValue * 1000)).thenThrow(new IllegalArgumentException());
+        when(regexService.getMatcher(regexValue, text, timeoutValue)).thenThrow(new IllegalArgumentException());
 
         AllMatchesConstruct.process(value, regex, timeout, regexService);
 
         // Verify
         verify(regexService, times(0)).tryMatch(any());
-        verify(regexService, times(1)).getMatcher(regexValue, text, timeoutValue * 1000);
+        verify(regexService, times(1)).getMatcher(regexValue, text, timeoutValue);
     }
 }
