@@ -2,10 +2,12 @@
 All notable changes to this project will be documented in this file
 
 ## [3.4.0] - unreleased
+### Add
+- Add support for writing files/streams with custom character sets [CTC-1628]
+
 ### Fix
 - Assert construct(s) may not escape strings properly [CTC-1627]
-- RegexServiceImpl.getMatcher uses incorrect timeout [CTC-1629
-]
+- RegexServiceImpl.getMatcher uses incorrect timeout [CTC-1629]
 
 ## [3.3.25] - 20-06-2016
 ### Fix
